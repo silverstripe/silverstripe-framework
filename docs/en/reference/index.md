@@ -9,7 +9,6 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [Database Structure](database-structure): Conventions and best practices for database tables and fields
 * [DataObject](dataobject): Base class for database records
 * [DataExtension](dataextension): A "mixin" system allowing to extend core classes
-* [DataObjectSet](dataobjectset): The base collection of database records in the ORM
 * [Director](director): Routes URLs and handles HTTP requests
 * [Execution Pipeline](execution-pipeline): Detailed look on the way an HTTP request takes through the system
 * [Form Field Types](form-field-types): Highlevel overview of field classes
@@ -32,8 +31,3 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [TableListField](tablelistfield): View and delete records in the CMS
 * [Typography](typography): CSS file to enable WYSIWYG previews in the CMS
 * [urlvariabletools](urlvariabletools): Debug and maintenance switches
-* [Versioned](versioned): Extension for SiteTree and other classes to store old versions and provide "staging"
-
-## Feedback
-
-If you have a topic you would like covered in these section please ask for it on our [Bug Tracker](http://open.silverstripe.org)

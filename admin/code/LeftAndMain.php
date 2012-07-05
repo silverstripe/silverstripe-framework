@@ -1170,7 +1170,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return int 
 	 */
 	public function currentPageID() {
-		if($this->request->requestVar('ID'))	{
+		if($this->request->requestVar('ID') && is_numeric($this->request->requestVar('ID')))	{
 			return $this->request->requestVar('ID');
 		} elseif (isset($this->urlParams['ID']) && is_numeric($this->urlParams['ID'])) {
 			return $this->urlParams['ID'];

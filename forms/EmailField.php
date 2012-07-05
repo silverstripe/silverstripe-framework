@@ -1,6 +1,8 @@
 <?php
 /**
- * Text field with Email Validation.
+ * Text input field with validation for correct email format
+ * according to RFC 2822.
+ * 
  * @package forms
  * @subpackage fields-formattedinput
  */

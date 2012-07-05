@@ -24,6 +24,7 @@ For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3
 *  DataObject::castedUpdate()
 *  DataObject->Property = 'val', DataObject->setField('Property','val')
 *  DataObject::write()
+*  DataList->byID()
 *  Form->saveInto()
 *  FormField->saveInto()
 *  DBField->saveInto()
@@ -65,7 +66,7 @@ Example:
 	class MyForm extends Form {
 	  public function save($RAW_data, $form) {
 	    $SQL_data = Convert::raw2sql($RAW_data); // works recursively on an array
-	    $objs = DataObject::get('Player', "Name = '{$SQL_data[name]}'");
+	    $objs = Player::get()->where("Name = '{$SQL_data[name]}'");
 	    // ...
 	  }
 	}
@@ -80,7 +81,7 @@ Example:
 	class MyController extends Controller {
 	  public function myurlaction($RAW_urlParams) {
 	    $SQL_urlParams = Convert::raw2sql($RAW_urlParams); // works recursively on an array
-	    $objs = DataObject::get('Player', "Name = '{$SQL_data[OtherID]}'");
+	    $objs = Player::get()->where("Name = '{$SQL_data[OtherID]}'");
 	    // ...
 	  }
 	}
@@ -314,8 +315,8 @@ Below is an example with different ways you would use this casting technique:
 	   // cast the 'category' GET variable as an integer
 	   $categoryID = (int)$_GET['category'];
 	
-	   // perform a get_by_id, ensure the ID is an integer before querying
-	   return DataObject::get_by_id('CaseStudy', $categoryID);
+	   // perform a byID(), which ensures the ID is an integer before querying
+	   return CaseStudy::get()->byID($categoryID);
 	}
 
 

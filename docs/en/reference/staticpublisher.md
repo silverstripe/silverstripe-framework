@@ -32,7 +32,7 @@ publisher to generate folders and HTML-files.
 	    $urls = array();
 	
 	    // memory intensive depending on number of pages
-	    $pages = DataObject::get("SiteTree");
+	    $pages = SiteTree::get();
 	
 	    foreach($pages as $page) {
 	      $urls = array_merge($urls, (array)$page->subPagesToCache());
@@ -78,7 +78,7 @@ you can also add an exclusion
 	:::php
 	public function allPagesToCache() {
 		$urls = array();
-		$pages = DataObject::get("SiteTree");
+		$pages = SiteTree::get();
 		
 		// ignored page types
 		$ignored = array('UserDefinedForm');
@@ -93,12 +93,12 @@ you can also add an exclusion
 		return $urls;
 	}
 
-You can also pass the filtering to the original DataObject::get("SiteTree");
+You can also pass the filtering to the original `SiteTree::get()`;
 
 	:::php
 	public function allPagesToCache() {
 		$urls = array();
-		$pages = DataObject::get("SiteTree", "ClassName != 'UserDefinedForm'");
+		$pages = SiteTree::get()->where("ClassName != 'UserDefinedForm'");
 		...
 
 ## Single server Caching

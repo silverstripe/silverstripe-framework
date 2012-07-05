@@ -30,7 +30,7 @@ but rather just the returned collection,
 	:::php
 	$myPage = $this->objFromFixture('Page', 'mypage');
 	$myOtherPage = $this->objFromFixture('Page', 'myotherpage');
-	$pages = DataObject::get('Page');
+	$pages = Page::get();
 	// Bad: Assumptions about IDs and their order
 	$this->assertEquals(array(1,2), $pages->column('ID'));
 	// Good: Uses actually created IDs, independent of their order

@@ -35,17 +35,6 @@ $gf_border_radius:	5px;
 $gf_grid_y:	12px;
 $gf_grid_x:	16px;
 
-@mixin box-shadow-none {
-	-moz-box-shadow: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-}
-@mixin hide-text-overflow {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	o-text-overflow: ellipsis;
-}
 
 .cms {
 	.ss-gridfield {

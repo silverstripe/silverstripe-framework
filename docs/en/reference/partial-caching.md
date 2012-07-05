@@ -23,7 +23,7 @@ The way you mark a section of the template as being cached is to wrap that secti
 
 
 Each cache block has a cache key - an unlimited number of comma separated variables (in the same form as `if` and
-`control` tag variables) and quoted strings.
+`loop`/`with` tag variables) and quoted strings.
 
 Every time the cache key returns a different result, the contents of the block are recalculated. If the cache key is the
 same as a previous render, the cached value stored last time is used.
@@ -207,7 +207,7 @@ could also write the last example as:
 
 ## The important rule
 
-Currently cached blocks can not be contained within if or control blocks. The template engine will throw an error
+Currently cached blocks can not be contained within if or loop blocks. The template engine will throw an error
 letting you know if you've done this. You can often get around this using aggregates.
 
 Failing example:
@@ -215,11 +215,11 @@ Failing example:
 	:::ss
 	<% cached LastEdited %>
 	
-	  <% control Children %>
+	  <% loop Children %>
 	    <% cached LastEdited %>
 	      $Name
 	    <% end_cached %>
-	  <% end_control %>
+	  <% end_loop %>
 	
 	<% end_cached %>
 
@@ -231,9 +231,9 @@ Can be re-written as:
 	<% cached LastEdited %>
 	
 	  <% cached Children.max(LastEdited) %>
-	    <% control Children %>
+	    <% loop Children %>
 	      $Name
-	    <% end_control %>
+	    <% end_loop %>
 	  <% end_cached %>
 	
 	<% end_cached %>

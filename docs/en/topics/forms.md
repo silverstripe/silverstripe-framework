@@ -60,78 +60,42 @@ The real difference, however, is that you can then define your controller method
 
 ## Form Field Types
 
-There are many classes extending `[api:FormField]`. Some examples:
-
-*  `[api:TextField]`
-*  `[api:EmailField]`
-*  `[api:NumericField]`
-*  `[api:DateField]`
-*  `[api:CheckboxField]`
-*  `[api:DropdownField]`
-*  `[api:OptionsetField]`
-*  `[api:CheckboxSetField]`
-
-Full overview at [form-field-types](/reference/form-field-types)
+There are many classes extending `[api:FormField]`,
+there's a full overview at [form-field-types](/reference/form-field-types)
 
 
 ### Using Form Fields
 
-To get these fields automatically rendered into a form element, all you need to do is create a new instance of the
+To get these fields automatically rendered into a form element, 
+all you need to do is create a new instance of the
 class, and add it to the fieldlist of the form. 
 
 	:::php
 	$form = new Form(
-	        $controller = $this,
-	        $name = "SignupForm",
-	        $fields = new FieldList(
-	            new TextField(
-	                $name = "FirstName", 
-	                $title = "First name"
-	            ),
-	            new TextField("Surname"),
-	            new EmailField("Email", "Email address"),
-	         ), 
-	        $actions = new FieldList(
-	            // List the action buttons here
-	            new FormAction("signup", "Sign up")
-	        ), 
-	        $requiredFields = new RequiredFields(
-	            // List the required fields here: "Email", "FirstName"
-	        )
+		$this, // controller
+		"SignupForm", // form name
+		new FieldList( // fields
+			TextField::create("FirstName")
+				->setTitle('First name')
+			TextField::create("Surname")
+				->setTitle('Last name')
+				->setMaxLength(50),
+			EmailField::create("Email")
+				->setTitle("Email address")
+				->setAttribute('type', 'email')
+		), 
+		new FieldList( // actions
+			FormAction::create("signup")->setTitle("Sign up")
+		), 
+		new RequiredFields( // validation
+			"Email", "FirstName"
+		)
 	);
 
-
-You'll note some of the fields are optional.
-
-Implementing the more complex fields requires extra arguments.
-
-	:::php
-	$form = new Form(
-	        $controller = $this,
-	        $name = "SignupForm",
-	        $fields = new FieldList(
-	            // List the your fields here
-	            new TextField(
-	                $name = "FirstName", 
-	                $title = "First name"
-	            ),
-	            new TextField("Surname"),
-	            new EmailField("Email", "Email address")
-	            new DropdownField(
-	                 $name = "Country",
-	                 $title = "Country (if outside nz)",
-	                 $source = Geoip::getCountryDropDown(),
-	                 $value = Geoip::visitor_country()
-	            )
-	        ), new FieldList(
-	            // List the action buttons here
-	            new FormAction("signup", "Sign up")
-	 
-	        ), new RequiredFields(
-	            // List the required fields here: "Email", "FirstName"
-	        )
-	);
-
+You'll notice that we've used a new notation for creating form fields,
+using `create()` instead of the `new` operator. These are functionally equivalent,
+but allows PHP to chain operations like `setTitle()` without assigning
+the field instance to a temporary variable.
 
 ##  Readonly
 
@@ -144,7 +108,7 @@ Readonly on a Form
 Readonly on a FieldList
 
 	:::php
-	$myFieldSet->makeReadonly();
+	$myFieldList->makeReadonly();
 
 
 Readonly on a FormField
@@ -167,29 +131,29 @@ First of all, you need to create your form on it's own class, that way you can d
 	:::php
 	class MyForm extends Form {
 	
-	   public function __construct($controller, $name) {
-	      $fields = new FieldList(
-	         new TextField('FirstName', 'First name'),
-	         new EmailField('Email', 'Email address')
-	      );
+		 public function __construct($controller, $name) {
+				$fields = new FieldList(
+					 new TextField('FirstName', 'First name'),
+					 new EmailField('Email', 'Email address')
+				);
 	
-	      $actions = new FieldList(
-	         new FormAction('submit', 'Submit')
-	      );
+				$actions = new FieldList(
+					 new FormAction('submit', 'Submit')
+				);
 	
-	      parent::__construct($controller, $name, $fields, $actions);
-	   }
+				parent::__construct($controller, $name, $fields, $actions);
+		 }
 	
-	   public function forTemplate() {
-	      return $this->renderWith(array(
-	         $this->class,
-	         'Form'
-	      ));
-	   }
+		 public function forTemplate() {
+				return $this->renderWith(array(
+					 $this->class,
+					 'Form'
+				));
+		 }
 	
-	   public function submit($data, $form) {
-	      // do stuff here
-	   }
+		 public function submit($data, $form) {
+				// do stuff here
+		 }
 	
 	}
 
@@ -201,31 +165,31 @@ basic customisation:
 
 	:::ss
 	<form $FormAttributes>
-	   <% if Message %>
-	      <p id="{$FormName}_error" class="message $MessageType">$Message</p>
-	   <% else %>
-	      <p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
-	   <% end_if %>
-	   
-	   <fieldset>
-	      <div id="FirstName" class="field text">
-	         <label class="left" for="{$FormName}_FirstName">First name</label>
-	         $dataFieldByName(FirstName)
-	      </div>
+		 <% if Message %>
+				<p id="{$FormName}_error" class="message $MessageType">$Message</p>
+		 <% else %>
+				<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
+		 <% end_if %>
+		 
+		 <fieldset>
+				<div id="FirstName" class="field text">
+					 <label class="left" for="{$FormName}_FirstName">First name</label>
+					 $dataFieldByName(FirstName)
+				</div>
 	
-	      <div id="Email" class="field email">
-	         <label class="left" for="{$FormName}_Email">Email</label>
-	         $dataFieldByName(Email)
-	      </div>
+				<div id="Email" class="field email">
+					 <label class="left" for="{$FormName}_Email">Email</label>
+					 $dataFieldByName(Email)
+				</div>
 	
-	      $dataFieldByName(SecurityID)
-	   </fieldset>
+				$dataFieldByName(SecurityID)
+		 </fieldset>
 	
-	   <% if Actions %>
-	      <div class="Actions">
-	         <% control Actions %>$Field<% end_control %>
-	      </div>
-	   <% end_if %>
+		 <% if Actions %>
+				<div class="Actions">
+					 <% loop Actions %>$Field<% end_loop %>
+				</div>
+		 <% end_if %>
 	</form>
 
  `$dataFieldByName(FirstName)` will return the form control contents of `Field()` for the particular field object, in
@@ -234,7 +198,7 @@ for the type of field. Pass in the name of the field as the first parameter, as 
 template.
 
 To find more methods, have a look at the `[api:Form]` class, as there is a lot of different methods of customising the form
-templates, for example, you could use `<% control Fields %>` instead of specifying each field manually, as we've done
+templates, for example, you could use `<% loop Fields %>` instead of specifying each field manually, as we've done
 above.
 
 ### Custom form field templates

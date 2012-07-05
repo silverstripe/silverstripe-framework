@@ -57,7 +57,7 @@ something like this:
 	
 		public function LatestUpdates() {
 			// 10 is the number of pages
-			return DataObject::get("Page", "", "LastEdited DESC", "", 10);
+			return Page::get()->sort("LastEdited", "DESC")->limit(10);
 		} 
 	}
 	

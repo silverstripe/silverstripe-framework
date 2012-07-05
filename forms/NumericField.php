@@ -1,7 +1,7 @@
 <?php
 /**
- * A Single Numeric field extending a typical 
- * TextField but with validation.
+ * Text input field with validation for numeric values.
+ * 
  * @package forms
  * @subpackage fields-formattedinput
  */

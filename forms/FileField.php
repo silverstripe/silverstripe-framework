@@ -205,4 +205,16 @@ class FileField extends FormField {
 		
 		return true;
 	}
+
+	/**
+	 * @return Upload
+	 */
+	public function getUpload() {
+		return $this->upload;
+	}
+
+	public function setUpload(Upload $upload) {
+		$this->upload = $upload;
+	}
+
 }

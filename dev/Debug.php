@@ -380,12 +380,15 @@ class Debug {
 	 */
 	static function showError($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
 		if(!headers_sent()) {
-			$errText = "$errtype: \"$errstr\" at line $errline of $errfile";
+			$errText = "$errtype at line $errline of $errfile";
 			$errText = str_replace(array("\n","\r")," ",$errText);
+
 			if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " 500 $errText");
 			
 			// if error is displayed through ajax with CliDebugView, use plaintext output
-			if(Director::is_ajax()) header('Content-Type: text/plain');
+			if(Director::is_ajax()) {
+				header('Content-Type: text/plain');
+			} 
 		}
 		
 		// Legacy error handling for customized prototype.js Ajax.Base.responseIsSuccess()

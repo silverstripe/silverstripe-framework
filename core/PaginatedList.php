@@ -13,6 +13,7 @@ class PaginatedList extends SS_ListDecorator {
 	protected $pageLength = 10;
 	protected $pageStart;
 	protected $totalItems;
+	protected $limitItems = true;
 
 	/**
 	 * Constructs a new paginated list instance around a list.
@@ -145,12 +146,38 @@ class PaginatedList extends SS_ListDecorator {
 	}
 
 	/**
+	 * Returns whether or not the underlying list is limited to the current
+	 * pagination range when iterating.
+	 *
+	 * By default the limit method will be called on the underlying list to
+	 * extract the subset for the current page. In some situations, if the list
+	 * is custom generated and already paginated you don't want to additionally
+	 * limit the list. You can use {@link setLimitItems} to control this.
+	 *
+	 * @return bool
+	 */
+	public function getLimitItems() {
+		return $this->limitItems;
+	}
+
+	/**
+	 * @param bool $limit
+	 */
+	public function setLimitItems($limit) {
+		$this->limitItems = (bool) $limit;
+	}
+
+	/**
 	 * @return IteratorIterator
 	 */
 	public function getIterator() {
-		return new IteratorIterator(
-			$this->list->limit($this->pageLength, $this->getPageStart())
-		);
+		if($this->limitItems) {
+			return new IteratorIterator(
+				$this->list->limit($this->pageLength, $this->getPageStart())
+			);
+		} else {
+			return new IteratorIterator($this->list);
+		}
 	}
 
 	/**

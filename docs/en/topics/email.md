@@ -34,7 +34,7 @@ The default HTML template is located in `framework/templates/email/GenericEmail.
 ### Templates
 
 *  Create a SS-template file called, in this example we will use 'MyEmail.ss' inside `mysite/templates/email`.
-*  Fill this out with the body text for your email. You can use any [SS-template syntax](/topics/templates) (e.g. `<% control %>`,
+*  Fill this out with the body text for your email. You can use any [SS-template syntax](/topics/templates) (e.g. `<% loop %>`,
 `<% if %>`, $FirstName etc)
 *  Choose your template with **setTemplate()**
 *  Populate any custom data into the template before sending with **populateTemplate()**

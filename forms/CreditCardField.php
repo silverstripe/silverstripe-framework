@@ -1,6 +1,10 @@
 <?php
 /**
- * CreditCard field, contains validation and formspec for creditcard fields.
+ * Allows input of credit card numbers via four separate form fields,
+ * including generic validation of its numeric values.
+ * 
+ * @todo Validate
+ * 
  * @package forms
  * @subpackage fields-formattedinput
  */

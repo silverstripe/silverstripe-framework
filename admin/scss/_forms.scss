@@ -241,6 +241,10 @@ form.small .field, .field.small {
 		max-width: ($grid-x * 12);
 	}
 
+	input.month, input.day, input.year { 
+		width: ($grid-x * 7); 
+	}
+
 	input.time { 
 		width: ($grid-x * 8); // smaller time field, since input is restricted
 	}
