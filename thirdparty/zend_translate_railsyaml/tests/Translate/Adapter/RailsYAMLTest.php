@@ -6,7 +6,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 /**
  * Translate_Adapter_RailsYAML
  */
-require_once 'Translate/Adapter/RailsYAML.php';
+require_once dirname(__FILE__) . '/../../../library/Translate/Adapter/RailsYAML.php';
 
 /**
  * @category   Zend
