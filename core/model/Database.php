@@ -393,7 +393,11 @@ abstract class SS_Database {
 		
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
-			$this->alterationMessage("Index $table.$index: created as $spec","created");
+			if(is_array($spec))
+				$spec_msg = isset($spec['value']) ? strval($spec['value']) : 'something';
+			else
+				$spec_msg = strval($spec);
+			$this->alterationMessage("Index $table.$index: created as $spec_msg","created");
 		} else if($array_spec != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
 			$spec_msg=DB::getConn()->convertIndexSpec($spec);

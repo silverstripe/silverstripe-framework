@@ -81,7 +81,7 @@ HTML;
 	 */
 	 
 	function performReadonlyTransformation() {
-		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No'));
+		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
 		return $field;	
 	}
