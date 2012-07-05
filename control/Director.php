@@ -134,15 +134,7 @@ class Director implements TemplateGlobalProvider {
 			
 			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 			if ($res !== false) {
-				// ?debug_memory=1 will output the number of bytes of memory used for this request
-				if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
-					Debug::message(sprintf(
-						"Peak memory usage in bytes: %s", 
-						number_format(memory_get_peak_usage(),0)
-					));
-				} else {
-					$response->output();
-				}
+				$response->output();
 			} else {
 				// @TODO Proper response here.
 				throw new SS_HTTPResponse_Exception("Invalid response");

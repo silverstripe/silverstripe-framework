@@ -351,10 +351,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param string $cacheName a custom cache name
 	 */
 	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
-		if(isset($_REQUEST['debug_profile'])) {
-			Profiler::mark("obj.$fieldName", "on a $this->class object");
-		}
-		
 		if(!$cacheName) $cacheName = $arguments ? $fieldName . implode(',', $arguments) : $fieldName;
 		
 		if(!isset($this->objCache[$cacheName])) {
@@ -382,10 +378,6 @@ class ViewableData extends Object implements IteratorAggregate {
 			if($cache) $this->objCache[$cacheName] = $value;
 		} else {
 			$value = $this->objCache[$cacheName];
-		}
-		
-		if(isset($_REQUEST['debug_profile'])) {
-			Profiler::unmark("obj.$fieldName", "on a $this->class object");
 		}
 		
 		if(!is_object($value) && $forceReturnedObject) {
