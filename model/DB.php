@@ -58,7 +58,7 @@ class DB {
 			return self::$connections[$name];
 		}
 	}
-	
+
 	/**
 	 * Set an alternative database to use for this browser session.
 	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
@@ -67,12 +67,98 @@ class DB {
 	static function set_alternative_database_name($dbname) {
 		$_SESSION["alternativeDatabaseName"] = $dbname;
 	}
-	
+
 	/**
 	 * Get the name of the database in use
 	 */
 	static function get_alternative_database_name() {
-		return $_SESSION["alternativeDatabaseName"];	
+		if (!isset($_SESSION, $_SESSION["alternativeDatabaseName"])) return null;
+		return $_SESSION["alternativeDatabaseName"];
+	}
+
+	/**
+	 * Set an alternative database server to use for this browser session.
+	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set it to null to revert to the main database server.
+	 */
+	static function set_alternative_database_server($dbserver) {
+		$_SESSION["alternativeDatabaseServer"] = $dbserver;
+	}
+
+	/**
+	 * Get the server address of the database in use
+	 */
+	static function get_alternative_database_server() {
+		if (!isset($_SESSION, $_SESSION["alternativeDatabaseServer"])) return null;
+		return $_SESSION["alternativeDatabaseServer"];
+	}
+
+	/**
+	 * Set an alternative database username to use for this browser session.
+	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set it to null to revert to the main database username.
+	 */
+	static function set_alternative_database_username($dbuser) {
+		$_SESSION["alternativeDatabaseUsername"] = $dbuser;
+	}
+
+	/**
+	 * Get the username used to connect the database in use
+	 */
+	static function get_alternative_database_username() {
+		if (!isset($_SESSION, $_SESSION["alternativeDatabaseUsername"])) return null;
+		return $_SESSION["alternativeDatabaseUsername"];
+	}
+
+	/**
+	 * Set an alternative database password to use for this browser session.
+	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set it to null to revert to the main database password.
+	 */
+	static function set_alternative_database_password($dbpassword) {
+		$_SESSION["alternativeDatabasePassword"] = $dbpassword;
+	}
+
+	/**
+	 * Get the password used to connect to the database in use
+	 */
+	static function get_alternative_database_password() {
+		if (!isset($_SESSION, $_SESSION["alternativeDatabasePassword"])) return null;
+		return $_SESSION["alternativeDatabasePassword"];
+	}
+
+	/**
+	 * Set an alternative database path to use for this browser session.
+	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set it to null to revert to the main database path.
+	 */
+	static function set_alternative_database_path($dbpath) {
+		$_SESSION["alternativeDatabasePath"] = $dbpath;
+	}
+
+	/**
+	 * Get the path of the database in use
+	 */
+	static function get_alternative_database_path() {
+		if (!isset($_SESSION, $_SESSION["alternativeDatabasePath"])) return null;
+		return $_SESSION["alternativeDatabasePath"];
+	}
+
+	/**
+	 * Set an alternative database type to use for this browser session.
+	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set it to null to revert to the main database type.
+	 */
+	static function set_alternative_database_type($dbtype) {
+		$_SESSION["alternativeDatabaseType"] = $dbtype;
+	}
+
+	/**
+	 * Get the type of the database in use
+	 */
+	static function get_alternative_database_type() {
+		if (!isset($_SESSION, $_SESSION["alternativeDatabaseType"])) return null;
+		return $_SESSION["alternativeDatabaseType"];
 	}
 
 	/**
@@ -82,10 +168,20 @@ class DB {
 	 * @param array $database A map of options. The 'type' is the name of the subclass of SS_Database to use. For the rest of the options, see the specific class.
 	 */
 	static function connect($databaseConfig) {
-		// This is used by TestRunner::startsession() to test up a test session using an alt
-		if(isset($_SESSION) && !empty($_SESSION['alternativeDatabaseName'])) {
-			$databaseConfig['database'] = $_SESSION['alternativeDatabaseName'];
-		}
+		// Start session if it's not started already
+		if(!isset($_SESSION)) Session::start();
+
+		/*
+		 * This is used by TestRunner::startsession() to test up a test session
+		 * using an alternative database.
+		 * It is also used by Behat to connect to test up with a test database.
+		 */
+		$databaseConfig['database'] = self::get_alternative_database_name() ?: $databaseConfig['database'];
+		$databaseConfig['server'] = self::get_alternative_database_server() ?: $databaseConfig['server'];
+		$databaseConfig['username'] = self::get_alternative_database_username() ?: $databaseConfig['username'];
+		$databaseConfig['password'] = self::get_alternative_database_password() ?: $databaseConfig['password'];
+		$databaseConfig['path'] = self::get_alternative_database_path() ?: $databaseConfig['path'];
+		$databaseConfig['type'] = self::get_alternative_database_type() ?: $databaseConfig['type'];
 
 		if(!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
 			user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
