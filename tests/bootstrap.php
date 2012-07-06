@@ -42,9 +42,6 @@ if(isset($_SERVER['argv'][2])) {
 	$_REQUEST = array_merge($_REQUEST, $_GET);
 }
 
-// Always flush the manifest for phpunit test runs
-$_GET['flush'] = 1;
-
 // Connect to database
 require_once $frameworkPath . '/core/Core.php';
 require_once $frameworkPath . '/tests/FakeController.php';
