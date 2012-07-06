@@ -890,7 +890,15 @@ abstract class SS_Database {
 	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
 	 */
 	abstract function datetimeDifferenceClause($date1, $date2);
-	
+
+	/**
+	 * Can the database override timezone as a connection setting,
+	 * or does it use the system timezone exclusively?
+	 * 
+	 * @return Boolean
+	 */
+	abstract function supportsTimezoneOverride();
+
 	/*
 	 * Does this database support transactions?
 	 * 
