@@ -185,7 +185,51 @@ body.cms {
 				}
 			}
 		}
-	}		
+	}
+
+	.cms-content-fields .ui-tabs-nav {
+		border-bottom: none;
+		float: right;
+		margin: $grid-y 0 -1px 0;
+		padding: 0 $grid-x*3 0 0;
+
+		li {
+			float: left;
+
+			a {
+				font-weight: bold;
+				line-height: $grid-y * 2;
+				padding: $grid-y $grid-x*2.5 $grid-y;
+			}
+		}
+		.ui-state-default,
+		.ui-widget-content .ui-state-default,
+		.ui-widget-header .ui-state-default {
+			border:1px solid $color-button-generic-border;
+		}
+		.ui-state-active,
+		.ui-widget-content .ui-state-active,
+		.ui-widget-header .ui-state-active {
+			padding-bottom:1px;
+			background: $tab-panel-texture-background;
+			border:1px solid $color-button-generic-border;
+		}
+	}
+
+	.ss-tabset {
+		.ss-tabset {
+			position: static;
+		}
+
+		.ui-tabs-panel {
+			border-top:1px solid $color-button-generic-border;
+			clear: both;
+		}
+
+		&.ss-tabset-tabshidden .ui-tabs-panel {
+			border-top: none;
+		}
+	}
 }
 
 /** --------------------------------------------
@@ -1780,54 +1824,22 @@ form.import-form {
 .cms-container {
 	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 		// Fix pixel gap between nav tree and main page header
-	 	margin-left: -1px; // Removed to close gap far right of right tabs?
-	 	//Styling of tabs on page edit
-	 	.cms-edit-form {
-	 		background:darken($color-widget-bg, 2%);
-	 		
+		margin-left: -1px; // Removed to close gap far right of right tabs?
+
+		.cms-edit-form {
+			background:darken($color-widget-bg, 2%);
+
 			.ui-tabs-nav {
-				border-bottom: none;
-				float: right;
-				margin: $grid-y 0 -1px 0;
-				padding: 0 $grid-x*3 0 0;
-				
-				li {
-					float: left;
-					
-					a {
-						font-weight: bold;
-						line-height: $grid-y * 2;
-						padding: $grid-y $grid-x*2.5 $grid-y;
-					}
-				}
-				.ui-state-default,
-				.ui-widget-content .ui-state-default,
-				.ui-widget-header .ui-state-default {
-					border:1px solid $color-button-generic-border;
-				}
 				.ui-state-active,
 				.ui-widget-content .ui-state-active,
 				.ui-widget-header .ui-state-active {
-					padding-bottom:1px;
 					background:darken($color-widget-bg, 2%);
-					border:1px solid $color-button-generic-border;
 				}
 			}
 		}
-		.ss-tabset {
-			.ss-tabset {
-				position: static;
-			}
 
-			.ui-tabs-panel {
-				background: darken($color-widget-bg, 2%);
-				border-top:1px solid $color-button-generic-border;
-				clear: both;
-			}
-
-			&.ss-tabset-tabshidden .ui-tabs-panel {
-				border-top: none;
-			}
+		.ss-tabset .ui-tabs-panel {
+			background: darken($color-widget-bg, 2%);
 		}
 	}
 }
