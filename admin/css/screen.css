@@ -336,6 +336,7 @@ body.cms { overflow: hidden; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
 .message.error, .message.bad, .message.required { background-color: #ffbe66; border-color: #ff9300; }
 .message.good { background-color: #65a839; background-color: rgba(101, 168, 57, 0.7); border-color: #65a839; color: #fff; text-shadow: 1px -1px 0 #1f9433; -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
+.message.good a { text-shadow: none; }
 .message p { margin: 0; }
 
 /** -------------------------------------------- Page icons -------------------------------------------- */
