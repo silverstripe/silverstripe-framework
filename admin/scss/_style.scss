@@ -462,6 +462,9 @@ body.cms {
 		color:#fff;
 		@include text-shadow(1px -1px 0 $color-button-constructive);
 		@include border-radius(3px 3px 3px 3px);
+		a {
+			text-shadow:none;
+		}
 	}
 	
 	p {
