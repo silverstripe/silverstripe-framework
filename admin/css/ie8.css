@@ -40,8 +40,8 @@
 
 .filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
 
-.cms-panel .cms-panel-content-collapsed { width: 40px; }
-.cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { display: none; }
+.cms-panel .cms-panel-content-collapsed { position: relative; width: 40px; }
+.cms-panel .cms-panel-content-collapsed h2.cms-panel-header, .cms-panel .cms-panel-content-collapsed h3.cms-panel-header { zoom: 1; position: absolute; top: 10px; right: 10px; writing-mode: tb-rl; float: right; z-index: 5000; }
 
 .cms-content-toolbar .cms-tree-view-modes .checkboxAboveTree { margin-right: 1px; }
 
@@ -52,3 +52,6 @@
 .filter-buttons button.ss-gridfield-button-close { margin-right: -7px !important; }
 
 .col-buttons { width: 18px; }
+
+/* fix for actions buttons on edit page content overlapping */
+.cms-content-actions .ss-ui-buttonset button { margin-right: 0; }
