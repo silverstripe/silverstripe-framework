@@ -468,7 +468,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 * which are toggled through a type dropdown. Variations share fields, so there's only one "title" field in the form.
 		 */
 		$('form.htmleditorfield-linkform').entwine({
-
 			// TODO Entwine doesn't respect submits triggered by ENTER key
 			onsubmit: function(e) {
 				this.insertLink();
@@ -477,35 +476,26 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 			resetFields: function() {
 				this._super();
-				this.find('fieldset :input:not(:radio)').val('').change();
+
+				// Reset the form using a native call. This will also correctly reset checkboxes and radio buttons.
+				this[0].reset();
 			},
-			redraw: function(setDefaults) {
+			redraw: function() {
 				this._super();
 
 				var linkType = this.find(':input[name=LinkType]:checked').val(), list = ['internal', 'external', 'file', 'email'];
 
-				// If we haven't selected an existing link, then just make sure we default to "internal" for the link type.
-				if(!linkType) {
-					this.find(':input[name=LinkType]').val(['internal']);
-					linkType = 'internal';
-				}
-
 				this.addAnchorSelector();
 
-				// Toggle field visibility and state based on type selection
+				// Toggle field visibility depending on the link type.
 				this.find('div.content .field').hide();
 				this.find('.field#LinkType').show();
 				this.find('.field#' + linkType).show();
 				if(linkType == 'internal' || linkType == 'anchor') this.find('.field#Anchor').show();
+				if(linkType !== 'email') this.find('.field#TargetBlank').show();
 				if(linkType == 'anchor') {
 					this.find('.field#AnchorSelector').show();
 					this.find('.field#AnchorRefresh').show();
-				}
-
-				this.find(':input[name=TargetBlank]').attr('disabled', (linkType == 'email'));
-
-				if(typeof setDefaults == 'undefined' || setDefaults) {
-					this.find(':input[name=TargetBlank]').attr('checked', (linkType == 'file'));
 				}
 			},
 			insertLink: function() {
@@ -614,16 +604,24 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					selector.append($('<option value="'+anchors[j]+'">'+anchors[j]+'</option>'));
 				}
 			},
+			/**
+			 * Updates the state of the dialog inputs to match the editor selection.
+			 * If selection does not contain a link, resets the fields.
+			 */
 			updateFromEditor: function() {
 				var htmlTagPattern = /<\S[^><]*>/g, fieldName, data = this.getCurrentLink();
-				
+
 				if(data) {
 					for(fieldName in data) {
 						var el = this.find(':input[name=' + fieldName + ']'), selected = data[fieldName];
 						// Remove html tags in the selected text that occurs on IE browsers
 						if(typeof(selected) == 'string') selected = selected.replace(htmlTagPattern, ''); 
-						if(el.is(':radio')) {
-							el.val([selected]).change(); // setting as an arry due to jQuery quirks
+
+						// Set values and invoke the triggers (e.g. for TreeDropdownField).
+						if(el.is(':checkbox')) {
+							el.prop('checked', selected).change();
+						} else if(el.is(':radio')) {
+							el.val([selected]).change();
 						} else {
 							el.val(selected).change();
 						}
