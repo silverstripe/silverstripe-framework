@@ -631,8 +631,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 			},
 		/**
-		 * Return information about the currently selected link, suitable for population of the link
-		 * form.
+		 * Return information about the currently selected link, suitable for population of the link form.
+		 *
+		 * Returns null if no link was currently selected.
 		 */
 		getCurrentLink: function() {
 			var selectedEl = this.getSelection(),
@@ -682,7 +683,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return {
 					LinkType: 'file',
 					file: RegExp.$1,
-					Description: title
+					Description: title,
+					TargetBlank: target ? true : false
 				};
 			} else if(href.match(/^#(.*)$/)) {
 				return {
@@ -707,9 +709,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					TargetBlank: target ? true : false
 				};
 			} else {
-				return {
-					LinkType: 'internal'
-				};
+				// No link/invalid link selected.
+				return null;
 			}
 		}
 		});
