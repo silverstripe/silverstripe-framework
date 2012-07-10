@@ -40,3 +40,12 @@
 .col-buttons{
 	width:18px;
 }
+
+/* fix for actions buttons on edit page content overlapping */
+.cms-content-actions {
+	.ss-ui-buttonset {
+		button {
+			margin-right: 0;
+		}
+	}
+}
