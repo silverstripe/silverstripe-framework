@@ -241,10 +241,10 @@ de:
     FILE: Datei
     FOLDER: Ordner
     FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
+    FROMCOMPUTER: 'Von Ihrem Computer'
+    FROMWEB: 'Aus dem Internet'
     FindInFolder: 'In Ordner suchen'
-    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALT: 'Alternativer Text (alt)'
     IMAGEALTTEXT: 'Alternativer Text (alt) - angezeigt, wenn das Bild nicht dargestellt werden kann'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensionen
@@ -284,7 +284,7 @@ de:
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Gespeichert.
-    VersionUnknown: unknown
+    VersionUnknown: unbekannt
   LoginAttempt:
     Email: E-Mail-Adresse
     IP: IP-Adresse
