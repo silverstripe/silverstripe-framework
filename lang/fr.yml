@@ -1,17 +1,28 @@
 fr:
   AssetAdmin:
-    NEWFOLDER: 'Nouveau dossier'
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: 'Premier chargement'
-    DIM: Dimensions
-    FILENAME: 'Nom du fichier'
-    FOLDER: Dossier
-    LASTEDIT: 'Dernière modification'
-    OWNER: Propriétaire
-    SIZE: Taille
-    TITLE: Titre
-    TYPE: Type
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Choisissez les fichiers'
     DRAGFILESHERE: 'Glissez des fichiers ici'
@@ -53,39 +64,57 @@ fr:
     ERRORNOTADMIN: 'Cet utilisateur n''est pas un administrateur.'
     ERRORNOTREC: 'Cet identifiant / mot de passe n''est pas reconnu'
   Boolean:
-    ANY: Tout
-    0: Non
-    LOGOUT: 'Log out'
-    1: Oui
+    ANY:
+      - null
+    0:
+      - null
+    LOGOUT:
+      - null
+    1:
+      - null
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Accès à toutes les sections du CMS'
-    ACCESSALLINTERFACESHELP: 'Prioritaire sur les droits plus spécifiques d''accès.'
-    SAVE: Enregistrer
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE:
+      - null
   CheckboxField:
-    - Non
-    - Oui
+    -
+      - null
+    -
+      - null
   ComplexTableField:
     CLOSEPOPUP: 'Ferme Popup'
     SUCCESSADD2: '{name} ajouté'
     SUCCESSEDIT: 'Sauvegardé %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Changer le mot de passe'
+    ATLEAST:
+      - null
+    BETWEEN:
+      - null
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: premier
     FOURTH: quatrième
     SECOND: second
     THIRD: troisième
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Date:
     DAY: jour
     DAYS: jours
@@ -111,7 +140,8 @@ fr:
     ADD: Ajouter
     INVALID_REQUEST: 'Requête non valide'
   DropdownField:
-    CHOOSE: (Choisir)
+    CHOOSE:
+      - null
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -121,18 +151,30 @@ fr:
     ANY: Tous
     LOADING: Chargement...
   File:
-    Content: Contenu
-    Filename: 'Nom du fichier'
-    INVALIDEXTENSION: 'Cette extension n’est pas autorisée (les valides sont&nbsp;: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    NOFILESIZE: 'La taille du fichier est de zéro bytes.'
-    NOVALIDUPLOAD: 'Le fichier n’est pas valide pour le téléversement'
-    Name: Nom
-    PLURALNAME: Fichiers
-    SINGULARNAME: Fichier
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    Title: Titre
+    Content:
+      - null
+    Filename:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    Title:
+      - null
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -149,21 +191,33 @@ fr:
     SEARCHLISTINGS: Rechercher
     SYNCRESULTS: 'Synchronisation terminée&nbsp;: {createdcount} éléments créés, {deletedcount} éléments supprimés '
   Form:
-    FIELDISREQUIRED: '%s est requis'
-    TITLE: 'Iframe de chargement d’images'
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'La valeur entrée n''est pas unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Les mots de passe ne correspondent pas'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Les mots de passe peuvent être vides'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validateur
-    VALIDCURRENCY: 'Please enter a valid currency'
+    FIELDISREQUIRED:
+      - null
+    TITLE:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
     NONE: aucun
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Supprimer
-    UnlinkRelation: Séparer
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Ajouter {name}'
     Filter: Filtrer
@@ -215,13 +269,19 @@ fr:
     has_many_Permissions: Autorisations
     many_many_Members: Membres
   GroupImportForm:
-    Help1: '<p>Importer un ou plusieurs groupe(s) au format <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Montrer l''usage avancé</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Utilisations avancée</h4>\\n<ul>\\n<li>Colonnes autorisées&nbsp;: <em>%s</em></li>\\n<li>Les groupes existants dont la valeur <em>Code</em> concorde seront mis à jour avec les données du fichier importé.</li>\\n<li>Des hiérarchies entre groupes peuvent être créées à l’aide de la colonne <em>ParentCode</em>.</li>\\n<li>Des autorisations peuvent être assignées par la colonne <em>PermissionCode</em>. Les autorisations existantes ne seront pas effacées.</li>\\n</ul>\\n</div>"
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: '%d groupes supprimés'
-    ResultUpdated: '%d groupes mises à jour'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultUpdated:
+      - null
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Détails &amp; dimensions'
@@ -331,27 +391,47 @@ fr:
     db_Password: 'Mot de passe'
     db_PasswordExpiry: 'Date d''expiration du mot de passe'
   MemberAuthenticator:
-    TITLE: 'Email &amp; Mot de passe'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
-    Custom: Personnalisé
-    DATEFORMATBAD: 'Format de date incorrect'
-    DAYNOLEADING: 'Le jour du mois sans zéro initial'
-    DIGITSDECFRACTIONSECOND: 'Un ou plusieurs chiffres représentant la fraction décimale d’une seconde'
-    FOURDIGITYEAR: 'L’année sur 4 chiffres'
-    FULLNAMEMONTH: 'Le nom complet du mois (p. ex. janvier)'
-    HOURNOLEADING: 'L’heure sans zéro initial'
-    MINUTENOLEADING: 'La minute sans zéro initial'
-    MONTHNOLEADING: 'Le chiffre du mois sans zéro initial'
-    Preview: Aperçu
-    SHORTMONTH: 'Le nom abrégé du mois (p. ex. : jan.)'
-    TOGGLEHELP: 'Afficher l’aide de mise en forme'
-    TWODIGITDAY: 'Le jour du mois sur deux chiffres'
-    TWODIGITHOUR: 'L’heure sur deux chiffres (de 00 à 23)'
-    TWODIGITMINUTE: 'La minute sur deux chiffres (de 00 à 59)'
-    TWODIGITMONTH: 'Le mois sur deux chiffres (p. ex. 01=janvier)'
-    TWODIGITSECOND: 'La seconde sur deux chiffres (de 00 à 59)'
-    TWODIGITYEAR: 'L’année sur deux chiffres'
+    AMORPM:
+      - null
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Importer les membres au format<em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Afficher l''usage avancé.</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Utilisations avancée</h4>\\n<ul>\\n<li>Colonnes autorisées&nbsp;: <em>%s</em></li>\\n<li>Les membres existants dont la valeur <em>Code</em> concorde seront mis à jour avec les données du fichier importé.</li>\\n<li>Des groupes peuvent être assignés par la colonne <em>Groups</em>. Plusieurs groupes, identifiés par leur <em>Code</em>, peuvent être assignés en les séparant par des virgules. Les groupes existants ne seront pas effacés.</li>\\n</ul>\\n</div>\\n"
@@ -361,15 +441,24 @@ fr:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Supprime
-    DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Importer de CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Veuillez choisir un fichier CSV à importer'
-    NOIMPORT: 'Rien à importer'
-    RESET: Réinitialiser
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   MoneyField:
     FIELDLABELAMOUNT: Quantité
     FIELDLABELCURRENCY: Devise
@@ -378,12 +467,18 @@ fr:
   NumericField:
     VALIDATION: '« {value} » n’est pas un chiffre, seule donnée acceptée dans ce champ '
   Permission:
-    AdminGroup: Administrateur
-    CMS_ACCESS_CATEGORY: 'Accès au CMS'
-    FULLADMINRIGHTS: 'Droits d''administration complets'
-    FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
     FromGroup: 'hérité du groupe « {title} »'
@@ -395,19 +490,32 @@ fr:
     Back: Retour
     VALIDATION: 'Entrer un numéro de téléphone valide'
   Security:
-    ALREADYLOGGEDIN: 'Vous n''avez pas accès à cette page. Si vous avez un autre identifiant pouvant accéder à cette page, vous pouvez l''utiliser ci-dessous.'
-    BUTTONSEND: 'Envoyer moi le lien pour modifier le mot de passe'
-    CHANGEPASSWORDBELOW: 'Vous pouvez modifier votre mot de passe ci-dessous.'
-    CHANGEPASSWORDHEADER: 'Modifier votre mot de passe'
-    ENTERNEWPASSWORD: 'Entrer un nouveau mot de passe s''il vous plaît.'
-    ERRORPASSWORDPERMISSION: 'Vous devez être connecté pour modifier votre mot de passe !'
-    LOGGEDOUT: 'Vous avez été déconnecté. Si vous voulez vous reconnecter, entrer vos détaisl ci-dessous.'
-    LOGIN: Connectez-vous
-    NOTEPAGESECURED: 'Cette page est sécurisée. Entrer vos détails ci-dessous et nous vous enverrons directement.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Entrer votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Permet de consulter, d’ajouter et d’éditer les utilisateurs, aussi bien que de leur assigner des autorisations et des rôles.'
     APPLY_ROLES: 'Appliquer des rôles aux groupes'
@@ -427,8 +535,10 @@ fr:
     TABROLES: Rôles
     Users: Utilisateurs
   SecurityAdmin_MemberImportForm:
-    BtnImport: Importer
-    FileFieldLabel: 'Fichier CSV <small>(extension autorisée&nbsp;: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: 'Tout modifier'
     FILTER: Filtrer
@@ -442,10 +552,14 @@ fr:
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ADDITEM: 'Ajoute %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'Classer en ordre croissant'
-    SORTDESC: 'Classer en ordre décroissant'
+    ADDITEM:
+      - null
+    ISREQUIRED:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField:
     CSVEXPORT: 'Exporter vers un fichier CSV'
     PRINT: Imprimer

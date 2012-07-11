@@ -1,17 +1,28 @@
 mi_NZ:
   AssetAdmin:
-    NEWFOLDER: NewFolder
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Nuinga
-    FILENAME: Filename
-    FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Kaiūmanga
-    SIZE: Nuinga
-    TITLE: 'Ingoa '
-    TYPE: 'Tūmomo '
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -53,39 +64,57 @@ mi_NZ:
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    ANY: Any
-    0: 'False'
-    LOGOUT: 'Log out'
-    1: 'True'
+    ANY:
+      - null
+    0:
+      - null
+    LOGOUT:
+      - null
+    1:
+      - null
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: tiakina
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE:
+      - null
   CheckboxField:
-    - 'False'
-    - 'True'
+    -
+      - null
+    -
+      - null
   ComplexTableField:
     CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    ATLEAST:
+      - null
+    BETWEEN:
+      - null
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: first
     FOURTH: fourth
     SECOND: second
     THIRD: third
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Date:
     DAY: ' day'
     DAYS: ' days'
@@ -111,7 +140,8 @@ mi_NZ:
     ADD: Add
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Choose)
+    CHOOSE:
+      - null
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -121,18 +151,30 @@ mi_NZ:
     ANY: Any
     LOADING: Loading...
   File:
-    Content: Content
-    Filename: Filename
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    NOFILESIZE: 'Filesize is zero bytes.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Name
-    PLURALNAME: Files
-    SINGULARNAME: File
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    Title: Title
+    Content:
+      - null
+    Filename:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    Title:
+      - null
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -149,21 +191,33 @@ mi_NZ:
     SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED: '%s is required'
-    TITLE: 'Image Uploading Iframe'
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validator
-    VALIDCURRENCY: 'Please enter a valid currency'
+    FIELDISREQUIRED:
+      - null
+    TITLE:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
     NONE: none
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -215,13 +269,19 @@ mi_NZ:
     has_many_Permissions: Permissions
     many_many_Members: Members
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultUpdated:
+      - null
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -331,27 +391,47 @@ mi_NZ:
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    AMORPM:
+      - null
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -361,15 +441,24 @@ mi_NZ:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Delete
-    DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -378,12 +467,18 @@ mi_NZ:
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 'Full administrative rights'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -395,19 +490,32 @@ mi_NZ:
     Back: Back
     VALIDATION: 'Please enter a valid phone number'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
-    LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -427,8 +535,10 @@ mi_NZ:
     TABROLES: Roles
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: Edit
     FILTER: Filter
@@ -442,10 +552,14 @@ mi_NZ:
   SiteTree:
     TABMAIN: Main
   TableField:
-    ADDITEM: Whakaurunga
-    ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+    ADDITEM:
+      - null
+    ISREQUIRED:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: Print
