@@ -365,11 +365,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// TODO Handle through GridState within field - currently this state set too late to be useful here (during request handling)
 		$parentID = $this->controller->getRequest()->requestVar('ParentID');
 
-		$fileFieldConfig = GridFieldConfig::create();
-		$fileFieldConfig->addComponent(new GridFieldSortableHeader());
-		$fileFieldConfig->addComponent(new GridFieldFilterHeader());
-		$fileFieldConfig->addComponent(new GridFieldDataColumns());
-		$fileFieldConfig->addComponent(new GridFieldPaginator(5));
+		$fileFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldFilterHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldPaginator(5),
+			new GridFieldDeleteAction(),
+			new GridFieldDetailForm()
+		);
 		$fileField = new GridField('Files', false, null, $fileFieldConfig);
 		$fileField->setList($this->getFiles($parentID));
 		$fileField->setAttribute('data-selectable', true);
