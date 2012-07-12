@@ -253,8 +253,7 @@ jQuery.noConflict();
 						});
 
 						newForm.trigger('aftersubmitform', {status: status, xhr: xhr, formData: formData});
-					}, 
-					dataType: 'json'
+					}
 				}, ajaxOptions));
 	
 				return false;
