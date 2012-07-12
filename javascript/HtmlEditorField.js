@@ -691,7 +691,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					Description: title,
 					TargetBlank: target ? true : false
 				};
-			} else if(href.match(/^\[sitetree_link\s*(?:%20)?id=([0-9]+)\]?(#.*)?$/)) {
+			} else if(href.match(/^\[sitetree_link(?:\s*|%20|,)?id=([0-9]+)\]?(#.*)?$/i)) {
 				return {
 					LinkType: 'internal',
 					internal: RegExp.$1,

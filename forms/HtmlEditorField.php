@@ -63,14 +63,14 @@ class HtmlEditorField extends TextareaField {
 		if($links = $value->getElementsByTagName('a')) foreach($links as $link) {
 			$matches = array();
 			
-			if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
+			if(preg_match('/\[sitetree_link(?:\s*|%20|,)?id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
 				if(!DataObject::get_by_id('SiteTree', $matches[1])) {
 					$class = $link->getAttribute('class');
 					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
 				}
 			}
 
-			if(preg_match('/\[file_link id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
+			if(preg_match('/\[file_link(?:\s*|%20|,)?id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
 				if(!DataObject::get_by_id('File', $matches[1])) {
 					$class = $link->getAttribute('class');
 					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
@@ -114,7 +114,7 @@ class HtmlEditorField extends TextareaField {
 				$href = Director::makeRelative($link->getAttribute('href'));
 
 				if($href) {
-					if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $href, $matches)) {
+					if(preg_match('/\[sitetree_link,id=([0-9]+)\]/i', $href, $matches)) {
 						$ID = $matches[1];
 
 						// clear out any broken link classes
