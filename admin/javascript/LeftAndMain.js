@@ -714,7 +714,8 @@ jQuery.noConflict();
 			showDetailView: function(url) {
 				// Include any GET parameters from the current URL, as the view state might depend on it.
 				// For example, a list prefiltered through external search criteria might be passed to GridField.
-				url = $.path.addSearchParams(url, window.location.search.replace(/^\?/, ''));
+				var params = window.location.search.replace(/^\?/, '');
+				if(params) url = $.path.addSearchParams(url, params);
 				$('.cms-container').loadPanel(url);
 			}
 		});
