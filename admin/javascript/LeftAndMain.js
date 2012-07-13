@@ -444,6 +444,8 @@ jQuery.noConflict();
 				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {
 					var id = $(el).attr('id');
 					if(!id) return; // we need a unique reference
+					if(!$(el).data('tabs')) return; // don't act on uninit'ed controls
+					if($(el).data('ignoreTabState')) return; // allow opt-out
 					selectedTabs.push({id:id, selected:$(el).tabs('option', 'selected')});
 				});
 				if(selectedTabs) window.sessionStorage.setItem('tabs-' + url, JSON.stringify(selectedTabs));
@@ -461,7 +463,9 @@ jQuery.noConflict();
 					selectedTabs = data ? JSON.parse(data) : false;
 				if(selectedTabs) {
 					$.each(selectedTabs, function(i, selectedTab) {
-						self.find('#' + selectedTab.id).tabs('select', selectedTab.selected);
+						var el = self.find('#' + selectedTab.id);
+						if(!el.data('tabs')) return; // don't act on uninit'ed controls
+						el.tabs('select', selectedTab.selected);
 					});
 				}
 			},
