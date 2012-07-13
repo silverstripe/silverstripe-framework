@@ -287,7 +287,8 @@ jQuery.noConflict();
 
 				var self = this, h = window.History, state = h.getState(),
 					fragments = state.data.pjax || 'Content', headers = {},
-					contentEls = this._findFragments(fragments.split(','));
+					fragmentsArr = fragments.split(','),
+					contentEls = this._findFragments(fragmentsArr);
 
 				// For legacy IE versions (IE7 and IE8), reload without ajax
 				// as a crude way to fix memory leaks through whole window refreshes.
@@ -296,6 +297,14 @@ jQuery.noConflict();
 				if(isLegacyIE && this.getStateChangeCount() > 20) {
 					document.location.href = state.url;
 					return;
+				}
+
+				// If any of the requested Pjax fragments don't exist in the current view,
+				// fetch the "Content" view instead, which is the "outermost" fragment
+				// that can be reloaded without reloading the whole window.
+				if(contentEls.length < fragmentsArr.length) {
+					fragments = 'Content', fragmentsArr = ['Content'];
+					contentEls = this._findFragments(fragmentsArr);					
 				}
 				
 				this.trigger('beforestatechange', {state: state, element: contentEls});
