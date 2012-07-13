@@ -2596,7 +2596,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Todo: Determine if we can deprecate for 3.0.0 and use DI or something instead
 		// Todo: Make the $containerClass method redundant
 		if($containerClass != 'DataList') {
-			Deprecation::notice('3.0', '$containerClass argument is deprecated.');
+			Deprecation::notice('3.0', 'DataObject::get() - $containerClass argument is deprecated.', Deprecation::SCOPE_GLOBAL);
 		}
 
 		$result = DataList::create($callerClass)->where($filter)->sort($sort);

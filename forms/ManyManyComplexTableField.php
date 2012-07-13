@@ -43,7 +43,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 		
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
-		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor');
+		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor', Deprecation::SCOPE_CLASS);
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		

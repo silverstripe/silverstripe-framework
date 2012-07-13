@@ -66,13 +66,40 @@ class DeprecationTest extends SapphireTest {
 		$this->callThatOriginatesFromFramework();
 	}
 
+	function testMethodNameCalculation() {
+		$this->assertEquals(DeprecationTest_Deprecation::get_method(), 'DeprecationTest->testMethodNameCalculation');
+	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 * @expectedExceptionMessage DeprecationTest->testScopeMethod is deprecated. Method scope
+	 */
+	function testScopeMethod() {
+		Deprecation::notification_version('2.0.0');
+		Deprecation::notice('2.0.0', 'Method scope', Deprecation::SCOPE_METHOD);
+	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 * @expectedExceptionMessage DeprecationTest is deprecated. Class scope
+	 */
+	function testScopeClass() {
+		Deprecation::notification_version('2.0.0');
+		Deprecation::notice('2.0.0', 'Class scope', Deprecation::SCOPE_CLASS);
+	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 * @expectedExceptionMessage Global scope
+	 */
+	function testScopeGlobal() {
+		Deprecation::notification_version('2.0.0');
+		Deprecation::notice('2.0.0', 'Global scope', Deprecation::SCOPE_GLOBAL);
+	}
+
 	protected function callThatOriginatesFromFramework() {
 		$this->assertEquals(DeprecationTest_Deprecation::get_module(), FRAMEWORK_DIR);
 		Deprecation::notice('2.0', 'Deprecation test passed');
-	}
-
-	function testMethodNameCalculation() {
-		$this->assertEquals(DeprecationTest_Deprecation::get_method(), 'DeprecationTest->testMethodNameCalculation');
 	}
 
 }
