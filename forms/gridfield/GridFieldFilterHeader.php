@@ -91,12 +91,13 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		} 
 		
 		$filterArguments = $state->Columns->toArray();
+		$dataListClone = null;
 		foreach($filterArguments as $columnName => $value ) {
 			if($dataList->canFilterBy($columnName) && $value) {
-				$dataList->filter($columnName.':PartialMatch', $value);
+				$dataListClone = $dataList->filter($columnName.':PartialMatch', $value);
 			}
 		}
-		return $dataList;
+		return ($dataListClone) ? $dataListClone : $dataList;
 	}
 
 	public function getHTMLFragments($gridField) {
@@ -120,6 +121,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 				}
 				$field = new TextField('filter['.$columnField.']', '', $value);
 				$field->addExtraClass('ss-gridfield-sort');
+				$field->addExtraClass('no-change-track');
 
 				$field->setAttribute('placeholder', _t('GridField.FilterBy', "Filter by ") . _t('GridField.'.$metadata['title'], $metadata['title']));
 
@@ -144,6 +146,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 							->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
 					);
 					$field->addExtraClass('filter-buttons');
+					$field->addExtraClass('no-change-track');
 				}else{
 					$field = new LiteralField('', '');
 				}

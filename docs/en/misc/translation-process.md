@@ -88,6 +88,23 @@ and merge it back manually to your 'master' as required.
 	cp build.properties # Add your own getlocalization config to 'build.properties'
 	phing -Dmodule=<yourmodule> -propertyfile build.properties translations-sync
 
+### Merge back existing translations
+
+Since the latest translations are downloaded into a "translations-staging"
+branch, you need to get them back into your main project repository.
+This depends on your release strategy: For simpler modules,
+just merge back to master:
+
+	git checkout master
+	git merge translations-staging
+
+In case you are maintaining release branches, its a bit more complicated:
+The "translations-staging" branch is (correctly) based off master,
+but you don't want to merge all other master changes into your release branch.
+Use the following task to copy & commit the specific files instead:
+
+	phing -Dmodule=<yourmodule> translations-mergeback
+
 ### Converting your language files from 2.4 PHP format
 
 The conversion from PHP format to YML is taken care of by a module
@@ -107,9 +124,9 @@ Special characters (such as german umlauts) need to be entered in their native f
 
 Currently translated entities are not directly factored into code (for security reasons and release/review-control), so you can't see them straight away. 
 
-
 It is strongly encouraged that you check your translation this way, as its a good way to doublecheck your translation works in the right context.
-Please use our [daily-builds](http://www.silverstripe.org/daily-builds/) for your local installation, to ensure you're looking at the most up to date interface.
+Please use our [daily-builds](http://www.silverstripe.org/daily-builds/) for your local installation, to ensure you're looking at the most up to date interface. See "Download Translations" above
+to find out how to retrieve the latest translation files.
 
 ### Can I change a translation just for one SilverStripe version?
 

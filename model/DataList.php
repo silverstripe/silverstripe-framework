@@ -141,7 +141,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			return $this;
 		}
 		if($limit && !is_numeric($limit)) {
-			Deprecation::notice('3.0', 'Please pass limits as 2 arguments, rather than an array or SQL fragment.');
+			Deprecation::notice('3.0', 'Please pass limits as 2 arguments, rather than an array or SQL fragment.', Deprecation::SCOPE_GLOBAL);
 		}
 		$this->dataQuery->limit($limit, $offset);
 		return $this;
@@ -599,7 +599,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function getRange($offset, $length) {
-		Deprecation::notice("3.0", 'getRange($offset, $length) is deprecated.  Use limit($length, $offset) instead.  Note the new argument order.');
+		Deprecation::notice("3.0", 'Use limit($length, $offset) instead.  Note the new argument order.');
 		return $this->limit($length, $offset);
 	}
 	

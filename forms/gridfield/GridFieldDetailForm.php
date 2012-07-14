@@ -328,11 +328,15 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-			// TODO Link back to controller action (and edited root record) rather than index,
-			// which requires more URL knowledge than the current link to this field gives us.
-			// The current root record is held in session only, 
-			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
-			$form->Backlink = $toplevelController->hasMethod('Backlink') ? $toplevelController->Backlink() : $toplevelController->Link();
+
+			if($toplevelController->hasMethod('Backlink')) {
+				$form->Backlink = $toplevelController->Backlink();
+			} elseif($this->popupController->hasMethod('Breadcrumbs')) {
+				$parents = $this->popupController->Breadcrumbs(false)->items;
+				$form->Backlink = array_pop($parents)->Link;
+			} else {
+				$form->Backlink = $toplevelController->Link();
+			}
 		}
 
 		$cb = $this->component->getItemEditFormCallback();

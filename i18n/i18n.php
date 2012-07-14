@@ -1465,7 +1465,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		if(is_numeric($context) && in_array($context, array(PR_LOW, PR_MEDIUM, PR_HIGH))) {
 			Deprecation::notice(
 				'3.0',
-				'The $priority argument to _t() is deprecated, please use module inclusion priorities instead'
+				'The $priority argument to _t() is deprecated, please use module inclusion priorities instead',
+				Deprecation::SCOPE_GLOBAL
 			);
 		}
 

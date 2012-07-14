@@ -212,7 +212,7 @@ bg:
     RolesAddEditLink: 'Manage roles'
     Sort: Сортиране
     TITLE: 'Качване на изображението Iрамка'
-    has_many_Permissions: 'Разрешения'
+    has_many_Permissions: Разрешения
     many_many_Members: Членове
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -247,7 +247,7 @@ bg:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: 'Размери'
+    IMAGEDIMENSIONS: Размери
     IMAGEHEIGHTPX: Височина
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
@@ -421,10 +421,10 @@ bg:
     MENUTITLE: Security
     MemberListCaution: 'Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни.'
     NEWGROUP: 'New Group'
-    PERMISSIONS: 'Разрешения'
-    ROLES: 'Роли'
+    PERMISSIONS: Разрешения
+    ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-    TABROLES: 'Роли'
+    TABROLES: Роли
     Users: Users
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'

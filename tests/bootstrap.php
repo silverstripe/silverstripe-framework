@@ -42,9 +42,6 @@ if(isset($_SERVER['argv'][2])) {
 	$_REQUEST = array_merge($_REQUEST, $_GET);
 }
 
-// Always flush the manifest for phpunit test runs
-$_GET['flush'] = 1;
-
 // Connect to database
 require_once $frameworkPath . '/core/Core.php';
 require_once $frameworkPath . '/tests/FakeController.php';
@@ -66,3 +63,11 @@ TestRunner::use_test_manifest();
 
 // Remove the error handler so that PHPUnit can add its own
 restore_error_handler();
+
+if(!isset($_GET['flush']) || !$_GET['flush']) {
+	Debug::message(
+		"WARNING: Manifest not flushed. " .
+		"Add flush=1 as an argument to discover new classes or files.\n",
+		false
+	);
+}

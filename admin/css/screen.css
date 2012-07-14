@@ -364,17 +364,18 @@ body.cms { overflow: hidden; }
 .cms-add-form .step-label .title { padding-top: 5px; font-weight: bold; text-shadow: 1px 1px 0 white; }
 .cms-add-form ul.SelectionGroup { padding-left: 28px; }
 .cms-add-form .parent-mode { padding: 8px; overflow: auto; }
-.cms-add-form #PageType li { float: none; width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
-.cms-add-form #PageType li:last-child { border-bottom: none; }
-.cms-add-form #PageType li:hover, .cms-add-form #PageType li.selected { background-color: rgba(255, 255, 102, 0.3); }
-.cms-add-form #PageType li.disabled { color: #aaaaaa; }
-.cms-add-form #PageType li.disabled:hover { background: none; }
-.cms-add-form #PageType li input { margin: inherit; }
-.cms-add-form #PageType li label { padding-left: 0; padding-bottom: 0; }
-.cms-add-form #PageType li input, .cms-add-form #PageType li label, .cms-add-form #PageType li .page-icon, .cms-add-form #PageType li .title { float: left; line-height: 1.3em; }
-.cms-add-form #PageType li .page-icon { margin: 0 4px; }
-.cms-add-form #PageType li .title { width: 120px; font-weight: bold; padding-right: 10px; }
-.cms-add-form #PageType li .description { font-style: italic; }
+.cms-add-form #PageType ul { padding-left: 20px; }
+.cms-add-form #PageType ul li { float: none; width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
+.cms-add-form #PageType ul li:last-child { border-bottom: none; }
+.cms-add-form #PageType ul li:hover, .cms-add-form #PageType ul li.selected { background-color: rgba(255, 255, 102, 0.3); }
+.cms-add-form #PageType ul li.disabled { color: #aaaaaa; }
+.cms-add-form #PageType ul li.disabled:hover { background: none; }
+.cms-add-form #PageType ul li input { margin: inherit; }
+.cms-add-form #PageType ul li label { padding-left: 0; padding-bottom: 0; }
+.cms-add-form #PageType ul li input, .cms-add-form #PageType ul li label, .cms-add-form #PageType ul li .page-icon, .cms-add-form #PageType ul li .title { float: left; line-height: 1.3em; }
+.cms-add-form #PageType ul li .page-icon { margin: 0 4px; }
+.cms-add-form #PageType ul li .title { width: 120px; font-weight: bold; padding-right: 10px; }
+.cms-add-form #PageType ul li .description { font-style: italic; }
 
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
 .cms-content-toolbar { display: block; margin: 0 0 15px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); *zoom: 1; /* smaller treedropdown */ }

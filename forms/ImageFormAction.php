@@ -18,7 +18,7 @@ class ImageFormAction extends FormAction {
 	 * @param form The parent form, auto-set when the field is placed inside a form 
 	 */
 	function __construct($action, $title = "", $image = "", $hoverImage = null, $className = null, $form = null) {
-		Deprecation::notice('3.0', "Use FormAction with setAttribute('src', 'myimage.png') and custom JavaScript to achieve hover effect");
+		Deprecation::notice('3.0', "Use FormAction with setAttribute('src', 'myimage.png') and custom JavaScript to achieve hover effect", Deprecation::SCOPE_CLASS);
 
 		$this->image = $image;
 		$this->hoverImage = $hoverImage;

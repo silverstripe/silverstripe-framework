@@ -46,7 +46,7 @@ class HtmlEditorField extends TextareaField {
 	 * @see TextareaField::__construct()
 	 */
 	public function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments');
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
 
 		parent::__construct($name, $title, $value);
 		
@@ -63,14 +63,14 @@ class HtmlEditorField extends TextareaField {
 		if($links = $value->getElementsByTagName('a')) foreach($links as $link) {
 			$matches = array();
 			
-			if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
+			if(preg_match('/\[sitetree_link(?:\s*|%20|,)?id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
 				if(!DataObject::get_by_id('SiteTree', $matches[1])) {
 					$class = $link->getAttribute('class');
 					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
 				}
 			}
 
-			if(preg_match('/\[file_link id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
+			if(preg_match('/\[file_link(?:\s*|%20|,)?id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
 				if(!DataObject::get_by_id('File', $matches[1])) {
 					$class = $link->getAttribute('class');
 					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
@@ -114,7 +114,7 @@ class HtmlEditorField extends TextareaField {
 				$href = Director::makeRelative($link->getAttribute('href'));
 
 				if($href) {
-					if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $href, $matches)) {
+					if(preg_match('/\[sitetree_link,id=([0-9]+)\]/i', $href, $matches)) {
 						$ID = $matches[1];
 
 						// clear out any broken link classes
@@ -365,11 +365,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// TODO Handle through GridState within field - currently this state set too late to be useful here (during request handling)
 		$parentID = $this->controller->getRequest()->requestVar('ParentID');
 
-		$fileFieldConfig = GridFieldConfig::create();
-		$fileFieldConfig->addComponent(new GridFieldSortableHeader());
-		$fileFieldConfig->addComponent(new GridFieldFilterHeader());
-		$fileFieldConfig->addComponent(new GridFieldDataColumns());
-		$fileFieldConfig->addComponent(new GridFieldPaginator(5));
+		$fileFieldConfig = GridFieldConfig::create()->addComponents(
+			new GridFieldFilterHeader(),
+			new GridFieldSortableHeader(),
+			new GridFieldDataColumns(),
+			new GridFieldPaginator(5),
+			new GridFieldDeleteAction(),
+			new GridFieldDetailForm()
+		);
 		$fileField = new GridField('Files', false, null, $fileFieldConfig);
 		$fileField->setList($this->getFiles($parentID));
 		$fileField->setAttribute('data-selectable', true);

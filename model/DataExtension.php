@@ -41,7 +41,7 @@ abstract class DataExtension extends Extension {
 		$statics = Injector::inst()->get($extensionClass, true, $args)->$extraStaticsMethod($class, $extensionClass);
 
 		if ($statics) {
-			Deprecation::notice('3.1.0', "$extraStaticsMethod deprecated. Just define statics on your extension, or use add_to_class");
+			Deprecation::notice('3.1.0', "$extraStaticsMethod deprecated. Just define statics on your extension, or use add_to_class", Deprecation::SCOPE_GLOBAL);
 
 			// TODO: This currently makes extraStatics the MOST IMPORTANT config layer, not the least
 			foreach (self::$extendable_statics as $key => $merge) {
