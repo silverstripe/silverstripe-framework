@@ -143,10 +143,12 @@ jQuery.noConflict();
 			 *  - {String} url
 			 *  - {String} title New window title
 			 *  - {Object} data Any additional data passed through to History.pushState()
+			 *  - {boolean} replace Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
 			 */
-			loadPanel: function(url, title, data) {
+			loadPanel: function(url, title, data, replace) {
 				if(!data) data = {};
 				if(!title) title = "";
+				if(typeof replace==='undefined') replace = false;
 
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var contentEls = this._findFragments(data.pjax ? data.pjax.split(',') : ['Content']);
@@ -168,10 +170,23 @@ jQuery.noConflict();
 				if(window.History.enabled) {
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu
-					window.History.pushState(data, title, url);
+					if (replace) {
+						// Add a parameter to make sure the page gets reloaded even if the URL is the same.
+						$.extend(data, {__forceReload: Math.random()});
+						window.History.replaceState(data, title, url);
+					} else {
+						window.History.pushState(data, title, url);
+					}
 				} else {
 					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 				}
+			},
+
+			/**
+			 * Nice wrapper for reloading current history state.
+			 */
+			reloadCurrentPanel: function() {
+				this.loadPanel(window.History.getState().url, null, null, true);
 			},
 
 			/**
