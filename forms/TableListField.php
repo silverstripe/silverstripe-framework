@@ -104,8 +104,8 @@ class TableListField extends FormField {
 	 * array(
 	 * 	'delete' => array(
 	 * 		'label' => 'Delete', 
-	 * 		'icon' => 'sapphire/images/delete.gif',
-	 * 		'icon_disabled' => 'sapphire/images/delete_disabled.gif',
+	 * 		'icon' => 'framework/images/delete.gif',
+	 * 		'icon_disabled' => 'framework/images/delete_disabled.gif',
 	 * 		'class' => 'deletelink',
 	 * 	)
 	 * )
@@ -113,8 +113,8 @@ class TableListField extends FormField {
 	public $actions = array(
 		'delete' => array(
 			'label' => 'Delete',
-			'icon' => 'sapphire/images/delete.gif',
-			'icon_disabled' => 'sapphire/images/delete_disabled.gif',
+			'icon' => 'framework/images/delete.gif',
+			'icon_disabled' => 'framework/images/delete_disabled.gif',
 			'class' => 'deletelink' 
 		)
 	);
@@ -238,9 +238,6 @@ class TableListField extends FormField {
 	 */
 	public function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null,
 		$sourceSort = null, $sourceJoin = null) {
-		if(FRAMEWORK_DIR != 'sapphire' && !SapphireTest::is_running_test()) {
-			user_error('TableListField requires FRAMEWORK_DIR to be sapphire.', E_USER_WARNING);
-		}
 
 		if($sourceClass) {
 			// You can optionally pass a list
@@ -1106,7 +1103,6 @@ JS
 			Requirements::css(CMS_DIR . '/css/typography.css');
 			Requirements::css(CMS_DIR . '/css/cms_right.css');
 		}
-		Requirements::css('sapphire/css/TableListField_print.css');
 		
 		$this->cachedSourceItems = null;
 		$oldShowPagination = $this->showPagination;
