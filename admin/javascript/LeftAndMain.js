@@ -23,6 +23,7 @@ jQuery.noConflict();
 		var applyChosen = function(el){
 			if(el.outerWidth()){
 				el.chosen({
+					'disable_search_threshold' : 20,
 					'allow_single_deselect': true
 				}).addClass("has-chzn");
 				// Copy over title attribute if required
