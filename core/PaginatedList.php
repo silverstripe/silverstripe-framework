@@ -172,8 +172,9 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function getIterator() {
 		if($this->limitItems) {
+			$tmptList = clone $this->list;
 			return new IteratorIterator(
-				$this->list->limit($this->pageLength, $this->getPageStart())
+				$tmptList->limit($this->pageLength, $this->getPageStart())
 			);
 		} else {
 			return new IteratorIterator($this->list);
