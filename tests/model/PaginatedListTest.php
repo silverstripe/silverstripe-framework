@@ -7,6 +7,14 @@
  */
 class PaginatedListTest extends SapphireTest {
 
+	static $fixture_file = 'DataObjectTest.yml';
+
+	protected $extraDataObjects = array(
+		'DataObjectTest_Team',		
+		'DataObjectTest_SubTeam',
+		'DataObjectTest_Player'
+	);
+
 	public function testPageStart() {
 		$list = new PaginatedList(new ArrayList());
 		$this->assertEquals(0, $list->getPageStart(), 'The start defaults to 0.');
@@ -84,6 +92,12 @@ class PaginatedListTest extends SapphireTest {
 
 		$list->setCurrentPage(999);
 		$this->assertDOSEquals(array(), $list->getIterator());
+
+		$players = DataObjectTest_Player::get();
+		$list = new PaginatedList($players);
+		$list->setPageLength(1);
+		$list->getIterator();
+		$this->assertEquals(4, $list->getTotalItems(), 'Getting an iterator should not trim the list to the page length.');
 	}
 
 	public function testPages() {
