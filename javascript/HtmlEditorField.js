@@ -283,7 +283,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				onbeforestatechange: function(){
 					this.css('visibility', 'hidden');
 
-					var ed = this.getEditor(), container = ed.getInstance() ? ed.getContainer() : null;
+					var ed = this.getEditor(), container = (ed && ed.getInstance()) ? ed.getContainer() : null;
 					if(container && container.length) container.remove();
 				}
 			},
