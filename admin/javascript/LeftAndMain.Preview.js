@@ -67,7 +67,7 @@
 				if(this.is('.is-collapsed')) return;
 
 				// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
-				var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
+				var url = $('.cms-edit-form').find(':input[name=PreviewURL],:input[name=StageURLSegment]').val();
 				if(url) {
 					this.loadUrl(url);
 					this.unblock();
@@ -286,7 +286,7 @@
 			onclick: function(e) {
 				e.preventDefault();
 				
-				var preview = $('.cms-preview'), url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
+				var preview = $('.cms-preview'), url = $('.cms-edit-form').find(':input[name=PreviewURL],:input[name=StageURLSegment]').val();
 				if(url) {
 						preview.loadUrl(url);
 						preview.unblock();
