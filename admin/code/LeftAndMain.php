@@ -358,6 +358,17 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($this->request->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
 				$this->response->addHeader('X-Pjax', $this->request->getHeader('X-Pjax'));
 			}
+			$oldResponse = $this->response;
+			$newResponse = new LeftAndMain_HTTPResponse(
+				$oldResponse->getBody(), 
+				$oldResponse->getStatusCode(),
+				$oldResponse->getStatusDescription()
+			);
+			foreach($oldResponse->getHeaders() as $k => $v) {
+				$newResponse->addHeader($k, $v);
+			}
+			$newResponse->setIsFinished(true);
+			$this->response = $newResponse;
 			return ''; // Actual response will be re-requested by client
 		} else {
 			parent::redirect($url, $code);
@@ -1471,3 +1482,19 @@ class LeftAndMainMarkingFilter {
 	}
 }
 
+/**
+ * Allow overriding finished state for faux redirects.
+ */
+class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
+
+	protected $isFinished = false;
+
+	function isFinished() {
+		return (parent::isFinished() || $this->isFinished);
+	}
+
+	function setIsFinished($bool) {
+		$this->isFinished = $bool;
+	}
+
+}
