@@ -163,9 +163,10 @@
 				// which means the browser auto-selects the first available form button.
 				// This might be an unrelated button of the form field,
 				// or a destructive action (if "save" is not available, or not on first position).
-				if(button) this.closest('.cms-container').submitForm(this, button);
-				
-				return false;
+				if(this.prop("target") != "_blank") {
+					if(button) this.closest('.cms-container').submitForm(this, button);
+					return false;
+				}
 			},
 
 			/**
