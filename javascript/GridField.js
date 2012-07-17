@@ -301,7 +301,7 @@
 								"X-Pjax" : 'Partial'
 							},
 							type: "GET",
-							url: suggestionUrl+'/'+request.term,
+							url: suggestionUrl,
 							data: form.serialize()+'&'+escape(searchField.attr('name'))+'='+escape(searchField.val()), 
 							success: function(data) {
 								response( $.map(JSON.parse(data), function( name, id ) {

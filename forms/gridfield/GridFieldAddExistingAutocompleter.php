@@ -156,7 +156,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 */
 	public function getURLHandlers($gridField) {
 		return array(
-			'search/$ID' => 'doSearch',
+			'search' => 'doSearch',
 		);
 	}
 	
@@ -181,7 +181,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 
 		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
 		foreach($searchFields as $searchField) {
-			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, $request->param('ID'));
+			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, Convert::raw2sql($request->getVar('gridfield_relationsearch')));
 		}
 		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
 		$results = $results->sort($searchFields[0], 'ASC');
