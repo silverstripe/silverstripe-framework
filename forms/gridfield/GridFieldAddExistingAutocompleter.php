@@ -40,7 +40,12 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 * @var String Text shown on the search field, instructing what to search for.
 	 */
 	protected $placeholderText;
-	
+
+	/**
+	 * @var int
+	 */
+	protected $resultsLimit = 20;
+
 	/**
 	 *
 	 * @param array $searchFields Which fields on the object in the list should be searched
@@ -69,7 +74,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
-		$searchField->addExtraClass('relation-search');
+		$searchField->addExtraClass('relation-search no-change-track');
 		
 		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
 		$findAction->setAttribute('data-icon', 'relationfind');
@@ -180,6 +185,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		}
 		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
 		$results = $results->sort($searchFields[0], 'ASC');
+		$results = $results->limit($this->getResultsLimit());
 
 		$json = array();
 		foreach($results as $result) {
@@ -271,7 +277,23 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	public function setPlaceholderText($text) {
 		$this->placeholderText = $text;
 	}
-	
+
+	/**
+	 * Gets the maximum number of autocomplete results to display.
+	 *
+	 * @return int
+	 */
+	public function getResultsLimit() {
+		return $this->resultsLimit;
+	}
+
+	/**
+	 * @param int $limit
+	 */
+	public function setResultsLimit($limit) {
+		$this->resultsLimit = $limit;
+	}
+
 	/**
 	 * This will provide a StartsWith search that only returns a value if we are
 	 * matching ONE object only. We wouldn't want to attach used any object to
