@@ -473,6 +473,30 @@ jQuery.noConflict();
 				}
 			},
 
+			/**
+			 * Remove any previously saved state.
+			 *
+			 * Parameters:
+			 *  (String) url Optional (sanitized) URL to clear a specific state.
+			 */
+			clearTabState: function(url) {
+				if(typeof(window.sessionStorage)=="undefined") return;
+
+				var s = window.sessionStorage;
+				if(url) {
+					s.removeItem('tabs-' + url);	
+				} else {
+					for(var i=0;i<s.length;i++) s.removeItem(s.key(i));
+				}
+			},
+
+			/**
+			 * Remove tab state for the current URL.
+			 */
+			clearCurrentTabState: function() {
+				this.clearTabState(this._tabStateUrl());
+			},
+
 			_tabStateUrl: function() {
 				return History.getState().url
 					.replace(/\?.*/, '')
