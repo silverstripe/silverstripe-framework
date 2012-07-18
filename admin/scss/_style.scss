@@ -387,6 +387,8 @@ body.cms {
  * -------------------------------------------- */
 
 .message {
+	display: block;
+	clear: both;
 	margin: 0 0 $grid-y 0;
 	padding: $grid-y - 1 $grid-x - 1;
 	font-weight: bold;
@@ -406,7 +408,7 @@ body.cms {
 		background-color: lighten($color-warning, 20%);
 		border-color: $color-warning;
 	}
-	&.error, &.bad, &.required {
+	&.error, &.bad, &.required, &.validation {
 		background-color: lighten($color-error, 20%);
 		border-color: $color-error;
 	}

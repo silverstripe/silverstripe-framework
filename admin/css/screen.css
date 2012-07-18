@@ -331,11 +331,11 @@ body.cms { overflow: hidden; }
 .cms-content-actions { margin: 0; padding: 12px 16px; z-index: 0; border-top: 1px solid rgba(201, 205, 206, 0.8); border-top: 1px solid #FAFAFA; -webkit-box-shadow: #cccccc 0 -1px 1px; -moz-box-shadow: #cccccc 0 -1px 1px; box-shadow: #cccccc 0 -1px 1px; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
-.message { margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
+.message { display: block; clear: both; margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
 .message.notice { background-color: #ffbe66; border-color: #ff9300; }
 .message.notice a { color: #999; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
-.message.error, .message.bad, .message.required { background-color: #ffbe66; border-color: #ff9300; }
+.message.error, .message.bad, .message.required, .message.validation { background-color: #ffbe66; border-color: #ff9300; }
 .message.good { background-color: #65a839; background-color: rgba(101, 168, 57, 0.7); border-color: #65a839; color: #fff; text-shadow: 1px -1px 0 #1f9433; -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
 .message p { margin: 0; }
 
