@@ -148,6 +148,13 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	}
 	
 	/**
+	 * Reset the token to a new value.
+	 */
+	public function reset() {
+		$this->setValue($this->generate());
+	}
+	
+	/**
 	 * Checks for an existing CSRF token in the current users session.
 	 * This check is automatically performed in {@link Form->httpSubmission()}
 	 * if a form has security tokens enabled.
@@ -291,6 +298,5 @@ class NullSecurityToken extends SecurityToken {
 	 */
 	function generate() {
 		return null;
-	}
-	
+	}	
 }

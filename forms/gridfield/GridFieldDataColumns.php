@@ -83,11 +83,6 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	}
 
 	/**
-	 * Specify custom formatting for fields, e.g. to render a link instead of pure text.
-	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
-	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
-	 * Alternatively, pass a anonymous function, which takes one parameter: The list item.
-	 *
 	 * @return array
 	 */
 	public function getFieldCasting() {
@@ -95,6 +90,12 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	}
 
 	/**
+	 * Specify custom formatting for fields, e.g. to render a link instead of pure text.
+	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
+	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
+	 * Alternatively, pass a anonymous function, which takes two parameters:
+	 *  The value returned by Convert::raw2xml and the original list item.
+	 *
 	 * @param array $formatting
 	 */
 	public function setFieldFormatting($formatting) {

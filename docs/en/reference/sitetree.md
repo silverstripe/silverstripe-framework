@@ -1,11 +1,13 @@
-
 # Sitetree
 
 ## Introduction
 
-Basic data-object representing all pages within the site tree. The omnipresent *Page* class (located in
-*mysite/code/Page.php*) is based on this class.
+Basic data-object representing all pages within the site tree. 
+The omnipresent *Page* class (located in `mysite/code/Page.php`) is based on this class.
 
+## Creating, Modifying and Finding Pages
+
+See the ["datamodel" topic](/topics/datamodel).
 
 ## Linking
 
@@ -15,6 +17,11 @@ Basic data-object representing all pages within the site tree. The omnipresent *
 	// right
 	$mylink = $mypage->Link(); // alternatively: AbsoluteLink(), RelativeLink()
 
+In a nutshell, the nested URLs feature means that your site URLs now reflect the actual parent/child page structure of
+your site. The URLs map directly to the chain of parent and child pages. The
+below table shows a quick summary of what these changes mean for your site:
+
+![url table](http://silverstripe.org/assets/screenshots/Nested-URLs-Table.png)
 
 ## Querying
 
@@ -23,50 +30,76 @@ might consist of more than one *URLSegment*).
 
 	:::php
 	// wrong
-	$mypage = DataObject::get_one('SiteTree', '"URLSegment" = \'<mylink>\'');
+	$mypage = SiteTree::get()->filter("URLSegment", '<mylink>')->First();
 	// right
 	$mypage = SiteTree::get_by_link('<mylink>');
 
+### Versioning
+	
+The `SiteTree` class automatically has an extension applied to it: `[Versioned](api:Versioned)`.
+This provides the basis for the CMS to operate on different stages,
+and allow authors to save their changes without publishing them to
+website visitors straight away.
+`Versioned` is a generic extension which can be applied to any `DataObject`,
+so most of its functionality is explained in the `["versioning" topic](/topics/versioning)`.
 
+Since `SiteTree` makes heavy use of the extension, it adds some additional
+functionality and helpers on top of it.
 
-## Nested/Hierarchical URLs
+Permission control:
 
-In a nutshell, the nested URLs feature means that your site URLs now reflect the actual parent/child page structure of
-your site. The URLs map directly to the chain of parent and child pages. The
-below table shows a quick summary of what these changes mean for your site:
+	:::php
+	class MyPage extends Page {
+		function canPublish($member = null) {
+			// return boolean from custom logic
+		}
+		function canDeleteFromLive($member = null) {
+			// return boolean from custom logic
+		}
+	}
 
-![url table](http://silverstripe.org/assets/screenshots/Nested-URLs-Table.png)
+Stage operations:
 
-## Limiting Children/Parent
+ * `$page->doUnpublish()`: removes the "Live" record, with additional permission checks,
+	as well as special logic for VirtualPage and RedirectorPage associations
+ * `$page->doPublish()`: Inverse of doUnpublish()
+ * `$page->doRevertToLive()`: Reverts current record to live state (makes sense to save to "draft" stage afterwards)
+ * `$page->doRestoreToStage()`: Restore the content in the active copy of this SiteTree page to the stage site.
+	
 
-By default, any page type can be the child of any other page type.  However, there are 4 static properties that can be
+Hierarchy operations (defined on `[api:Hierarchy]`:
+
+ * `$page->liveChildren()`: Return results only from live table
+ * `$page->stageChildren()`: Return results from the stage table
+ * `$page->AllHistoricalChildren()`: Return all the children this page had, including pages that were deleted from both stage & live.
+ * `$page->AllChildrenIncludingDeleted()`: Return all children, including those that have been deleted but are still in live.
+
+## Limiting Hierarchy
+
+By default, any page type can be the child of any other page type.  
+However, there are static properties that can be
 used to set up restrictions that will preserve the integrity of the page hierarchy.
+
+Example: Restrict blog entry pages to nesting underneath their blog holder
 
 	:::php
 	class BlogHolder extends Page {
-	
 	  // Blog holders can only contain blog entries
 	  static $allowed_children = array("BlogEntry");
-	
 	  static $default_child = "BlogEntry";
-	
-	...
+	  // ...
+	}
 	
 	class BlogEntry extends Page {
 	  // Blog entries can't contain children
 	  static $allowed_children = "none";
-	
-	  static $default_parent = "blog";
-	
 	  static $can_be_root = false;
-	
-	...
-	
+	  // ...
+	}	
 	
 	class Page extends SiteTree {
 	  // Don't let BlogEntry pages be underneath Pages.  Only underneath Blog holders.
 	  static $allowed_children = array("*Page,", "BlogHolder");
-	  
 	}
 
 
@@ -77,209 +110,33 @@ subclasses.  Otherwise, the class and all its subclasses are allowed.
 *  **default_child:** If a page is allowed more than 1 type of child, you can set a default.  This is the value that
 will be automatically selected in the page type dropdown when you create a page in the CMS.
 
-*  **default_parent:** This should be set to the *URLSegment* of a specific page, not to a class name.  If you have
-asked to create a page of a particular type that's not allowed underneath the page that you have selected, then the
-default_parent page will be selected.  For example, if you have a gallery page open in the CMS, and you select add blog
-entry, you can set your site up to automatically select the blog page as a parent.
-
 *  **can_be_root:** This is a boolean variable.  It lets you specify whether the given page type can be in the top
 level.
 
-Note that there is no allowed_parents control.  To set this, you will need to specify the allowed_children of all other
-page types to exclude the page type in question.  IMO this is less than ideal; it's possible that in a future release we
-will add allowed_parents, but right now we're trying to limit the amount of mucking around with the API we do.
+Note that there is no allowed_parents` control.  To set this, you will need to specify the `allowed_children` of all other page types to exclude the page type in question.
 
-Here is an overview of everything you can add to a class that extends sitetree.  NOTE: this example will not work, but
-it is a good starting point, for choosing your customisation.
-
-	:::php
-	class Page extends SiteTree {
-	
-		// tree customisation
-	
-		static $icon = "";
-		static $allowed_children = array("SiteTree"); // set to string "none" or array of classname(s)
-		static $default_child = "Page"; //one classname
-		static $default_parent = null; // NOTE: has to be a URL segment NOT a class name
-		static $can_be_root = true; //
-		static $hide_ancestor = null; //dont show ancestry class
-	
-		// extensions and functionality
-	
-		static $versioning = array();
-		static $default_sort = "Sort";
-		/static $extensions = array();
-		public static $breadcrumbs_delimiter = " &raquo; ";
-	
-	
-		public function canCreate() {
-			//here is a trick to only allow one (e.g. holder) of a page
-			return !DataObject::get_one($this->class);
-		}
-	
-		public function canDelete() {
-			return false;
-		}
-	
-		public function getCMSFields() {
-			$fields = parent::getCMSFields();
-			return $fields;
-		}
+## Permission Control
 
 
-## Recipes
 
-### Automatic Child Selection
+## Tree Display (Description, Icons and Badges)
 
-By default, `[api:SiteTree]` class to build a tree using the ParentID field.  However, sometimes, you want to change
-this default behaviour.
+The page tree in the CMS is a central element to manage page hierarchies,
+hence its display of pages can be customized as well.
 
-For example, in our e-commerce module, we use a many-to-many join, Product::Parents, to let you put Products in multiple
-groups.  Here's how to implement such a change:
-
-*  **Set up your new data model:** Create the appropriate many-many join or whatever it is that you're going to use to
-store parents.
-
-*  **Define stageChildren method:** This method should return the children of the current page, for the current version.
- If you use DataObject::get, the `[api:Versioned]` class will rewrite your query to access the live site when
-appropriate.
-
-*  **Define liveChildren method:** The method should return the children of the current page, for the live site.
-
-Both the CMS and the site's data controls will make use of this, so navigation, breadcrumbs, etc will be updated.  If 1
-node appears in the tree more than once, it will be represented differently. 
-
-**TO DO:** Work out this representation.
-
-
-###  Custom Children Getters
-
-Returning custom children for a specific `SiteTree` subclass can be handy to influence the tree display within the
-CMS. An example of custom children might be products which belong to multiple categories. One category would get its
-products from a `$many_many` join rather than the default relations.
-
-Children objects are generated from two functions `stageChildren()` and `liveChildren()` and the tree generation in
-the CMS is calculated from `numChildren()`. Please keep in mind that the returned children should still be instances
-of `SiteTree`.
-
-Example:
+On a most basic level, you can specify a custom page icon
+to make it easier for CMS authors to identify pages of this type,
+when navigating the tree or adding a new page:
 
 	:::php
-	class MyProduct extends Page {
-		static $belongs_many_many = array(
-			'MyCategories' => 'MyCategory'
-		);
-	}
-	class MyCategory extends Page {
-		static $many_many = array(
-			'MyProducts' => 'MyProduct'
-		);
-		public function stageChildren($showAll = false) {
-			// @todo Implement $showAll
-			return $this->MyProducts();
-		}
-	
-		public function liveChildren($showAll = false) {
-			// @todo Implement $showAll
-			return $this->MyProducts();
-		}
-		public function numChildren() {
-			return $this->MyProducts()->Count();
-		}
-	}	}
+	class StaggPage extends Page {
+		static $singular_name = 'Staff Directory';
+		static $plural_name = 'Staff Directories';
+		static $description = 'Two-column layout with a list of staff members';
+		static $icon = 'mysite/images/staff-icon.png';
+		// ...
 	}
 
-
-
-### Multiple parents in the tree
-
-The `[api:LeftAndMain]` tree supports multiple parents.  We overload CMSTreeClasses and make it include "manyparents" in
-the class list.
-
-	:::php
-	public function CMSTreeClasses($controller) {
-		return parent::CMSTreeClasses($controller) . ' manyparents';
-	}
-
-
-Don't forget to define a new Parent() method that also references your new many-many join (or however it is you've set
-up the hierarchy!
-
-	:::php
-	public function getParent() {
-	  return $this->Parent();
-	}
-	public function Parent() {
-	  $parents = $this->Parents();
-	  if($parents) return $parents->First();
-	}
-
-
-Sometimes, you don't want to mess with the CMS in this manner.  In this case, leave stageChildren() and liveChildren()
-as-is, and instead make another method, such as ChildProducts(), to get the data from your many-many join.
-
-### Dynamic Grouping
-
-Something that has been talked about [here](http://www.silverstripe.com/site-builders-forum/flat/15416#post15940) is the
-concept of "dynamic grouping".  In essence, it means adding navigational tree nodes to the tree that don't correspond to
-a database record.
-
-How would we do this?  In our example, we're going to update BlogHolder to show BlogEntry children grouped into months.
-
-We will create a class called BlogMonthTreeNode, which will extend ViewableData instead of DataRecord, since it's not
-saved into the database.  This will represent our dynamic groups.
-
-### LeftAndMain::getSiteTreeFor()
-
-Currently LeftAndMain::getSiteTreeFor() Calls LeftAndMain::getRecord($id) to get a new record.  We need to instead
-create a new public function getTreeRecord($id) which will be able to create BlogMonthTreeNode objects as well as look up
-SiteTree records from the database.
-
-The IDs don't **need** be numeric; so we can set the system to allow for 2 $id formats.
-
-*  (ID): A regular SiteTree object
-*  BlogMonthTreeNode-(BlogHolderID)-(Year)-(Month): A BlogMonthTreeNode object
-
-To keep the code generic, we will assume that if the $id isn't numeric, then we should explode('-', $id), and use the
-first part as the classname, and all the remaining parts as arguments to the constructor.
-
-Your BlogMonthTreeNode constructor will then need to take $blogHolderID, $year, $month as arguments.
-
-### Divorcing front-end site's Children() and the CMS's AllChildrenIncludingDeleted()
-
-We need a way of cleanly specifying that there are two different child sources - children for the CMS tree, and children
-for the front-end site.
-
-*  We currently have stageChildren() / liveChildren()
-*  We should probably add cmsStageChildren() and cmsLiveChildren() into the mix, for SiteTree.
-
-AllChildrenIncludingDeleted() could then call the "cms..." versions of the functions, but if we were to to this, we
-should probably rename AllChildrenIncludingDeleted() to CMSTreeChildren() or something like that.
-
-### BlogHolder::cmsStageChildren() & BlogHolder::cmsLiveChildren()
-
-We will need to define these methods, to 
-
-*  Get the stage/live children of the page, grouped by month
-*  For each entry returned, generate a new BlogMonthTreeNode object.
-*  Return that as a dataobjectset.
-
-### BlogMonthTreeNode
-
-*  Parameter 'ID': should return 'BlogMonthTreeNode-(BlogHolderID)-(Year)-(Month)'.  You can do  this by implementing
-getID().
-*  Methods cmsStageChildren() and cmsLiveChildren(): These should return the blog-entries for that month.
-
-After that, there will be some other things to tweak, like the tree icons.
-
-### Where to from here?
-
-This is a lot of work for the specific example of blog-entries grouped by month.  Instead of BlogMonthTreeNode, you
-could genericise this to a DynamicTreeGroup class, which would let you specify the parent node, the type of grouping,
-and the specific group.
-
-## TODO
-Clean up this documentation
-
-## API Documentation
-`[api:Sitetree]`
+You can also add custom "badges" to each page in the tree,
+which denote status. Built-in examples are "Draft" and "Deleted" flags.
+This is detailed in the ["Customize the CMS Tree" howto](/howto/customize-cms-tree).

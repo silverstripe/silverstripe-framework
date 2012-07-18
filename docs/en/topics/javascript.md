@@ -375,9 +375,9 @@ Template:
 
 	:::ss
 	<ul>
-	<% control Results %>
+	<% loop Results %>
 	  <li id="Result-$ID">$Title</li>
-	<% end_control %>
+	<% end_loop %>
 	</ul>
 
 
@@ -386,8 +386,7 @@ PHP:
 	:::php
 	class MyController {
 	  function autocomplete($request) {
-	    $SQL_title = Convert::raw2sql($request->getVar('title'));
-	    $results = DataObject::get("Page", "Title = '$SQL_title'");
+	    $results = Page::get()->filter("Title", $request->getVar('title'));
 	    if(!$results) return new HTTPResponse("Not found", 404);
 	    
 	    // Use HTTPResponse to pass custom status messages

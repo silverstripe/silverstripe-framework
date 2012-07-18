@@ -122,16 +122,22 @@ class DirectorTest extends SapphireTest {
 	public function testMakeRelative() {
 		$siteUrl = Director::absoluteBaseURL();
 		$siteUrlNoProtocol = preg_replace('/https?:\/\//', '', $siteUrl);
+		
 		$this->assertEquals(Director::makeRelative("$siteUrl"), '');
-		//$this->assertEquals(Director::makeRelative("https://$siteUrlNoProtocol"), '');
+		$this->assertEquals(Director::makeRelative("https://$siteUrlNoProtocol"), '');
+		$this->assertEquals(Director::makeRelative("http://$siteUrlNoProtocol"), '');
+
 		$this->assertEquals(Director::makeRelative("   $siteUrl/testpage   "), 'testpage');
-		//$this->assertEquals(Director::makeRelative("$siteUrlNoProtocol/testpage"), 'testpage');
+		$this->assertEquals(Director::makeRelative("$siteUrlNoProtocol/testpage"), 'testpage');
+		
 		$this->assertEquals(Director::makeRelative('ftp://test.com'), 'ftp://test.com');
 		$this->assertEquals(Director::makeRelative('http://test.com'), 'http://test.com');
-		// the below is not a relative URL, test makes no sense
-		// $this->assertEquals(Director::makeRelative('/relative'), '/relative');
+
 		$this->assertEquals(Director::makeRelative('relative'), 'relative');
 		$this->assertEquals(Director::makeRelative("$siteUrl/?url=http://test.com"), '?url=http://test.com');
+
+		$this->assertEquals("test", Director::makeRelative("https://".$siteUrlNoProtocol."/test"));
+		$this->assertEquals("test", Director::makeRelative("http://".$siteUrlNoProtocol."/test"));
 	}
 	
 	/**

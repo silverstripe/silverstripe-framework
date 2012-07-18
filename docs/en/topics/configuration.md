@@ -8,7 +8,7 @@ itself.
 
 This lack of a configuration-GUI is on purpose, as we'd like to keep developer-level options where they belong (into
 code), without cluttering up the interface. See this core forum discussion ["The role of the
-CMS"](http://www.silverstripe.com/core-team-discussion/flat/2723) for further reasoning.
+CMS"](http://www.silverstripe.org/archive/show/532) for further reasoning.
 
 In addition to these principle, some settings are 
  * Author-level configuration like interface language or date/time formats can be performed in the CMS "My Profile" section (`admin/myprofile`). 
@@ -36,9 +36,7 @@ incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
  | Authenticator::register_authenticator($authenticator);|              | Enable an authentication method (for more details see [security](/topics/security)). |        
  | Authenticator::set_default_authenticator($authenticator); |          | Modify tab-order on login-form.|        
  | BBCodeParser::disable_autolink_urls(); |                             | Disables plain hyperlinks from being turned into links when bbcode is parsed. |     
- | BlogEntry::allow_wysiwyg_editing();  |                               | Enable rich text editing for blog posts.  |                                                                                  
- | ContentNegotiator::set_encoding(string $encoding)  |					| The encoding charset to use - UTF-8 by default  |        
- | ContentNegotiator::disable()  |										| Disables the negotiation of content type -usually used to stop it from rewriting the DOCTYPE of the document                                                         
+ | DataObject::$create_table_options['MySQLDatabase'] = 'ENGINE=MyISAM';|	| Set the default database engine to MyISAM (versions 2.4 and below already default to MyISAM) |        
  | Debug::send_errors_to(string $email) |								| Send live errors on your site to this address (site has to be in 'live' mode using Director::set_environment_type(live) for this to occur |        
  | Director::set_environment_type(string dev,test,live) | 				| Sets the environment type (e.g. dev site will show errors, live site hides them and displays a 500 error instead) | 
  | Director::set_dev_servers(array('localhost', 'dev.mysite.com)) |     | Set servers that should be run in dev mode (see [debugging](debugging)) |                                                                                         
@@ -47,13 +45,10 @@ incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
  | Email::send_all_emails_to(string $email)  |                          | Sends all emails to this address. Useful for debugging your email sending functions  |        
  | Email::cc_all_emails_to(string $email)  |                            | Useful for CC'ing all emails to someone checking correspondence |        
  | Email::bcc_all_emails_to(string $email) |                            | BCC all emails to this address, similar to CC'ing emails (above)  |        
- | MathSpamProtection::setEnabled()  |                                  | Adds a math spam question to all page comment forms |        
- | PageComment::enableModeration();  |                                  | Enables comment moderation |        
  | Requirements::set_suffix_requirements(false); |                      | Disable appending the current date to included files |   
  | Security::encrypt_passwords($encrypt_passwords);  |                  | Specify if you want store your passwords in clear text or encrypted (for more details see [security](/topics/security)) |        
  | Security::set_password_encryption_algorithm($algorithm, $use_salt);| | If you choose to encrypt your passwords, you can choose which algorithm is used to and if a salt should be used to increase the security level even more (for more details see [security](/topics/security)). |        
  | Security::setDefaultAdmin('admin','password'); |                     | Set default admin email and password, helpful for recovering your password |        
- | SSAkismet::setAPIKey(string $key)  |                                 | Enables use of the Akismet spam filter. The key must be a valid WordPress API key. |        
  | SSViewer::set_theme(string $themename) |                             | Choose the default theme for your site |   
 
 ## Constants

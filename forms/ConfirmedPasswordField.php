@@ -1,6 +1,6 @@
 <?php
 /**
- * Shows two password-fields, and checks for matching passwords.
+ * Two masked input fields, checks for matching passwords.
  * Optionally hides the fields by default and shows
  * a link to toggle their visibility.
  * 

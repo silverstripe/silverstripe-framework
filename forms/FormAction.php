@@ -1,9 +1,6 @@
 <?php
 /**
- * Single action button.
- * The action buttons are <input type="submit"> tags.
- * 
- * <b>Usage</b>
+ * The action buttons are <input type="submit"> as well as <button> tags.
  * 
  * Upon clicking the button below will redirect the user to doAction under the current controller.
  * 

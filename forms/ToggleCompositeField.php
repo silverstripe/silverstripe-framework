@@ -66,6 +66,7 @@ class ToggleCompositeField extends CompositeField {
 	 */
 	public function setStartClosed($bool) {
 		$this->startClosed = (bool) $bool;
+		return $this;
 	}
 
 	/**
@@ -80,6 +81,7 @@ class ToggleCompositeField extends CompositeField {
 	 */
 	public function setHeadingLevel($level) {
 		$this->headingLevel = $level;
+		return $this;
 	}
 
 	/**

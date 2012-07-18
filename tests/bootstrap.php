@@ -28,7 +28,8 @@ if(!defined('BASE_PATH')) define('BASE_PATH', dirname($frameworkPath));
 // Copied from cli-script.php, to enable same behaviour through phpunit runner.
 if(isset($_SERVER['argv'][2])) {
     $args = array_slice($_SERVER['argv'],2);
-    $_GET = array();
+    if(!isset($_GET)) $_GET = array();
+    if(!isset($_REQUEST)) $_REQUEST = array();
     foreach($args as $arg) {
        if(strpos($arg,'=') == false) {
            $_GET['args'][] = $arg;
@@ -38,11 +39,8 @@ if(isset($_SERVER['argv'][2])) {
            $_GET = array_merge($_GET, $newItems);
        }
     }
-	$_REQUEST = $_GET;
+	$_REQUEST = array_merge($_REQUEST, $_GET);
 }
-
-// Always flush the manifest for phpunit test runs
-$_GET['flush'] = 1;
 
 // Connect to database
 require_once $frameworkPath . '/core/Core.php';
@@ -65,3 +63,11 @@ TestRunner::use_test_manifest();
 
 // Remove the error handler so that PHPUnit can add its own
 restore_error_handler();
+
+if(!isset($_GET['flush']) || !$_GET['flush']) {
+	Debug::message(
+		"WARNING: Manifest not flushed. " .
+		"Add flush=1 as an argument to discover new classes or files.\n",
+		false
+	);
+}

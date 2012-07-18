@@ -29,7 +29,7 @@
 		 * @todo Expand title height to fit all elements
 		 */
 		$('.TreeDropdownField').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this.append(
 					'<span class="treedropdownfield-title"></span>' +
 					'<div class="treedropdownfield-toggle-panel-link"><a href="#" class="ui-icon ui-icon-triangle-1-s"></a></div>' +
@@ -41,9 +41,6 @@
 				if(this.data('title')) this.setTitle(decodeURIComponent(this.data('title')));
 				
 				this.getPanel().hide();
-				this._super();
-			},
-			onunmatch: function() {
 				this._super();
 			},
 			getPanel: function() {
@@ -260,7 +257,7 @@
 		});
 		
 		$('.TreeDropdownField.searchable').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this._super();
 				
 				var title = this.data('title');
@@ -269,9 +266,6 @@
 				);
 				
 				this.setTitle(title ? title : strings.searchFieldTitle);
-			},
-			onunmatch: function() {
-				this._super();
 			},
 			setTitle: function(title) {
 				if(!title && title !== '') title = strings.fieldTitle;
@@ -372,8 +366,13 @@
 		});
 
 		$('.TreeDropdownField input[type=hidden]').entwine({
-			onchange: function() {
-				this.getField().updateTitle();
+			onadd: function() {
+				this.bind('change.TreeDropdownField', function() {
+					$(this).getField().updateTitle();
+				});
+			},
+			onremove: function() {
+				this.unbind('.TreeDropdownField');
 			}
 		});
 	});

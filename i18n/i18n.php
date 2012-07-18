@@ -444,7 +444,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'mfe_MU' => 'Morisyen (Mauritius)',
 			'mg_MG' => 'Malagasy (Madagascar)',
 			'mh_MH' => 'Marshallese (Marshall Islands)',
-			'mi_NZ' => 'Maori (New Zealand)',
+			'mi_NZ' => 'Māori (New Zealand)',
 			'min_ID' => 'Minangkabau (Indonesia)',
 			'mk_MK' => 'Macedonian (Macedonia)',
 			'ml_IN' => 'Malayalam (India)',
@@ -685,7 +685,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'lt' => array('Lithuanian', 'lietuvi&#353;kai'),
 		'lmo' => array('Lombard', 'Lombardo'),
 		'mk' => array('Macedonian', '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'),
-		'mi' => array('Maori', 'Maori'),
+		'mi' => array('Maori', 'Māori'),
 		'ms' => array('Malay', 'Bahasa melayu'),
 		'mt' => array('Maltese', 'Malti'),
 		'mr' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
@@ -777,7 +777,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'lv_LV' => array('Latvian', 'latvie&#353;u'),
 		'lt_LT' => array('Lithuanian', 'lietuvi&#353;kai'),
 		'mk_MK' => array('Macedonian', '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'),
-		'mi_NZ' => array('Maori', 'Maori'),
+		'mi_NZ' => array('Maori', 'Māori'),
 		'ms_MY' => array('Malay', 'Bahasa melayu'),
 		'mt_MT' => array('Maltese', 'Malti'),
 		'mr_IN' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
@@ -1465,7 +1465,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		if(is_numeric($context) && in_array($context, array(PR_LOW, PR_MEDIUM, PR_HIGH))) {
 			Deprecation::notice(
 				'3.0',
-				'The $priority argument to _t() is deprecated, please use module inclusion priorities instead'
+				'The $priority argument to _t() is deprecated, please use module inclusion priorities instead',
+				Deprecation::SCOPE_GLOBAL
 			);
 		}
 

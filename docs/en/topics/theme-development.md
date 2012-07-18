@@ -74,9 +74,9 @@ our theme in action. The code for mine is below.
 	  <div id="Navigation">
 	    <% if Menu(1) %>
 	    <ul>
-	      <% control Menu(1) %>	  
+	      <% loop Menu(1) %>	  
 	        <li><a href="$Link" title="Go to the $Title page" class="$LinkingMode">$MenuTitle</a></li>
-	      <% end_control %>
+	      <% end_loop %>
 	    </ul>
 	   <% end_if %>
 	  </div>
@@ -99,7 +99,6 @@ our theme in action. The code for mine is below.
 	<h1>$Title</h1>
 	$Content
 	$Form
-	$PageComments
 
 
 All you have to do now is tell your site to use your new theme - This is defined in the **mysite/_config.php** file
@@ -183,9 +182,9 @@ Next is a division for the main navigation. This may contain something like:
 	<div id="Navigation">
 	  <% if Menu(1) %>
 	  <ul>
-	    <% control Menu(1) %>	  
+	    <% loop Menu(1) %>	  
 	      <li><a href="$Link" title="Go to the $Title page" class="$LinkingMode">$MenuTitle</a></li>
-	    <% end_control %>
+	    <% end_loop %>
 	 </ul>
 	 <% end_if %>
 	</div>
@@ -193,14 +192,14 @@ Next is a division for the main navigation. This may contain something like:
 
 This is the standard for creating the main Navigation. As you can see it outputs the Menu 1 in a unordered list.
 
-Before stepping into a control (a foreach loop) it's good practise to check if it exists first. This is not only
+Before stepping into a loop it's good practise to check if it exists first. This is not only
 important in manipulating SilverStripe templates, but in any programming language!
 
 	:::ss
 	<% if MyFunction %>
-	  <% control MyFunction %>
+	  <% loop MyFunction %>
 	    $Title
-	  <% end_control %>
+	  <% end_loop %>
 	<% end_if %>
 
 

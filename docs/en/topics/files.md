@@ -10,7 +10,7 @@ TODO Screenshot of admin interface
 
 ## Upload
 
-TODO Link to Upload and FileIframeField classes
+TODO Link to UploadField and FileField classes
 
 ## Image Resizing
 

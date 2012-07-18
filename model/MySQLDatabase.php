@@ -87,6 +87,10 @@ class MySQLDatabase extends SS_Database {
 		return true;
 	}
 
+	public function supportsTimezoneOverride() {
+		return true;
+	}
+
 	/**
 	 * Get the version of MySQL.
 	 * @return string
@@ -879,6 +883,9 @@ class MySQLDatabase extends SS_Database {
 		$list->setPageStart($start);
 		$list->setPageLEngth($pageLength);
 		$list->setTotalItems($totalCount);
+
+		// The list has already been limited by the query above
+		$list->setLimitItems(false);
 
 		return $list;
 	}

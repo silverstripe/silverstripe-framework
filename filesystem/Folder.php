@@ -41,7 +41,7 @@ class Folder extends File {
 	 * @deprecated in favor of the correct name find_or_make
 	 */
 	public static function findOrMake($folderPath) {
-		Deprecation::notice('3.0', "Folder::findOrMake() is deprecated in favor of Folder::find_or_make()");
+		Deprecation::notice('3.0', "Use Folder::find_or_make() instead.");
 		return self::find_or_make($folderPath);
 	}
 	

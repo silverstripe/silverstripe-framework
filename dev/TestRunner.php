@@ -106,6 +106,14 @@ class TestRunner extends Controller {
 		if(!PhpUnitWrapper::has_php_unit()) {
 			die("Please install PHPUnit using pear");
 		}
+
+		if(!isset($_GET['flush']) || !$_GET['flush']) {
+			Debug::message(
+				"WARNING: Manifest not flushed. " .
+				"Add flush=1 as an argument to discover new classes or files.\n",
+				false
+			);
+		}
 	}
 	
 	public function Link() {

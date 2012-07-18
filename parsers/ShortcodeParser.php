@@ -29,7 +29,7 @@
  * 
  * <b>Inbuilt Shortcodes</b>
  * 
- * From 2.4 onwards links inserted via the CMS into a content field are in the form ''<a href="[sitetree_link id=n]">''. At runtime this is replaced by a plain link to the page with the ID in question.
+ * From 2.4 onwards links inserted via the CMS into a content field are in the form ''<a href="[sitetree_link id=n]">'', and from 3.0 the comma is used as a separator instead ''<a href="[sitetree_link,id=n]">''. At runtime this is replaced by a plain link to the page with the ID in question.
  * 
  * <b>Limitations</b>
  * 

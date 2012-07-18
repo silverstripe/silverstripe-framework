@@ -214,7 +214,7 @@ To use your *HasOneComplexTableField* table for a **1-to-1** relation, make this
 			
 			$tablefield->setOneToOne();
 			
-			$fields->addFieldToTab( 'Root.Content.Student', $tablefield );
+			$fields->addFieldToTab( 'Root.Student', $tablefield );
 			
 			return $fields;
 		}
@@ -505,44 +505,44 @@ Let's start with the *ProjectsHolder* page created before. For this template, we
 	            </tr>
 	        </thead>
 	        <tbody>
-	            <% control Children %>
+	            <% loop Children %>
 	                <tr>
 	                    <td>$Title</td>
 	                    <td>
 	                        <% if MyStudent %>
-	                            <% control MyStudent %>
+	                            <% loop MyStudent %>
 	                                $FirstName $Lastname
-	                            <% end_control %>
+	                            <% end_loop %>
 	                        <% else %>
 	                            No Student
 	                        <% end_if %>
 	                    </td>
 	                    <td>
 	                        <% if MyStudent %>
-	                            <% control MyStudent %>
+	                            <% loop MyStudent %>
 	                                <% if MyMentor %>
-	                                    <% control MyMentor %>
+	                                    <% loop MyMentor %>
 	                                        $FirstName $Lastname
-	                                    <% end_control %>
+	                                    <% end_loop %>
 	                                <% else %>
 	                                    No Mentor
 	                                <% end_if %>
-	                            <% end_control %>
+	                            <% end_loop %>
 	                        <% else %>
 	                            No Mentor
 	                        <% end_if %>
 	                    </td>
 	                    <td>
 	                        <% if Modules %>
-	                            <% control Modules %>
+	                            <% loop Modules %>
 	                                $Name &nbsp;
-	                            <% end_control %>
+	                            <% end_loop %>
 	                        <% else %>
 	                            No Modules
 	                        <% end_if %>
 	                    </td>
 	                </tr>
-	            <% end_control %>
+	            <% end_loop %>
 	        </tbody>
 	    </table>
 
@@ -579,7 +579,7 @@ We can now do the same for every *Project* page by creating its own template.
 		$Content
 
 		<% if MyStudent %>
-	        <% control MyStudent %>
+	        <% loop MyStudent %>
 	            <p>First Name: <strong>$FirstName</strong></p>
 	            <p>Lastname: <strong>$Lastname</strong></p>
 	            <p>Nationality: <strong>$Nationality</strong></p>
@@ -587,15 +587,15 @@ We can now do the same for every *Project* page by creating its own template.
 	            <h3>Mentor</h3>
 
 	            <% if MyMentor %>
-	                <% control MyMentor %>
+	                <% loop MyMentor %>
 	                    <p>First Name: <strong>$FirstName</strong></p>
 	                    <p>Lastname: <strong>$Lastname</strong></p>
 	                    <p>Nationality: <strong>$Nationality</strong></p>
-	                <% end_control %>
+	                <% end_loop %>
 	            <% else %>
 	                <p>This student doesn't have any mentor.</p>
 	            <% end_if %>
-	        <% end_control %>
+	        <% end_loop %>
 	    <% else %>
 	        <p>There is no any student working on this project.</p>
 	    <% end_if %>
@@ -604,9 +604,9 @@ We can now do the same for every *Project* page by creating its own template.
 
 	    <% if Modules %>
 	        <ul>
-	            <% control Modules %>
+	            <% loop Modules %>
 	                <li>$Name</li>
-	            <% end_control %>
+	            <% end_loop %>
 	        </ul>
 	    <% else %>
 	        <p>This project has not used any modules.</p>
@@ -655,13 +655,13 @@ We can now modify the *Project.ss* template.
 	
 		<h3>Mentor</h3>
 		
-		<% control MyStudent %>
+		<% loop MyStudent %>
 			<% if MyMentor %>
 				$MyMentor.PersonalInfo
 			<% else %>
 				<p>This student doesn't have any mentor.</p>
 			<% end_if %>
-		<% end_control %>
+		<% end_loop %>
 	<% else %>
 		<p>There is no any student working on this project.</p>
 	<% end_if %>
@@ -703,7 +703,7 @@ it *MyProject* for instance.
 		...
 	
 		public function MyProject() {
-			return DataObject::get( 'Project', "`MyStudentID` = '{$this->ID}'" );
+			return Project::get()->filter("MyStudentID", $this->ID);
 		}
 	
 	}
@@ -738,20 +738,20 @@ That's how we can use this function in the *Mentor* template.
 	                </tr>
 	            </thead>
 	            <tbody>
-	                <% control Students %>
+	                <% loop Students %>
 	                    <tr>
 	                        <td>$FirstName $Lastname</td>
 	                        <td>
 	                            <% if MyProject %>
-	                                <% control MyProject %>
+	                                <% loop MyProject %>
 	                                    $Title
-	                                <% end_control %>
+	                                <% end_loop %>
 	                            <% else %>
 	                                No Project
 	                            <% end_if %>
 	                        </td>
 	                    </tr>
-	                <% end_control %>
+	                <% end_loop %>
 	            </tbody>
 	        </table>
 	    <% else %>

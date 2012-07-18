@@ -2,207 +2,142 @@
 
 ## Introduction
 
-An object representing a SQL query. It is easier to deal with object-wrappers than string-parsing a raw SQL-query. This
-object is used by `[api:DataObject]`, though...
+An object representing a SQL query, which can be serialized into a SQL statement. 
+It is easier to deal with object-wrappers than string-parsing a raw SQL-query. 
+This object is used by the SilverStripe ORM internally.
 
-A word of caution: Dealing with low-level SQL is not encouraged in the SilverStripe [datamodel](/topics/datamodel) for various
-reasons. You'll break the behaviour of:
+Dealing with low-level SQL is not encouraged, since the ORM provides
+powerful abstraction APIs (see [datamodel](/topics/datamodel). 
+Starting with SilverStripe 3, records in collections are lazy loaded,
+and these collections have the ability to run efficient SQL
+such as counts or returning a single column.
 
-*  Custom getters/setters
-*  DataObject::onBeforeWrite/onBeforeDelete
+For example, if you want to run a simple `COUNT` SQL statement,
+the following three statements are functionally equivalent:
+
+	:::php
+	// Through raw SQL
+	$count = DB::query('SELECT COUNT(*) FROM "Member"')->value();
+	// Through SQLQuery abstraction layer
+	$query = new SQLQuery();
+	$count = $query->setFrom('Member')->setSelect('COUNT(*)')->value();
+	// Through the ORM
+	$count = Member::get()->count();
+
+If you do use raw SQL, you'll run the risk of breaking 
+various assumptions the ORM and code based on it have:
+
+*  Custom getters/setters (object property can differ from database column)
+*  DataObject hooks like onBeforeWrite() and onBeforeDelete()
 *  Automatic casting
-*  Default-setting through object-model
-*  `[api:DataObject]`
+*  Default values set through objects
 *  Database abstraction
 
-We'll explain some ways to use *SELECT* with the full power of SQL, but still maintain a connection to the SilverStripe
-[datamodel](/topics/datamodel).
+We'll explain some ways to use *SELECT* with the full power of SQL, 
+but still maintain a connection to the ORM where possible.
+
+<div class="warning" markdown="1">
+	Please read our ["security" topic](/topics/security) to find out
+	how to sanitize user input before using it in SQL queries.
+</div>
 
 ## Usage
-
 
 ### SELECT
 
 	:::php
 	$sqlQuery = new SQLQuery();
-	$sqlQuery->select = array(
-	  'Firstname AS Name',
-	  'YEAR(Birthday) AS BirthYear'
-	);
-	$sqlQuery->from = "
-	  Player
-	  LEFT JOIN Team ON Player.TeamID = Team.ID
-	";
-	$sqlQuery->where = "
-	  YEAR(Birthday) = 1982
-	";
-	// $sqlQuery->orderby = "";
-	// $sqlQuery->groupby = "";
-	// $sqlQuery->having = "";
-	// $sqlQuery->limit = "";
-	// $sqlQuery->distinct = true;
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->selectField('FieldName', 'Name');
+	$sqlQuery->selectField('YEAR("Birthday")', 'Birthyear');
+	$sqlQuery->addLeftJoin('Team','"Player"."TeamID" = "Team"."ID"');
+	$sqlQuery->addWhere('YEAR("Birthday") = 1982');
+	// $sqlQuery->setOrderBy(...);
+	// $sqlQuery->setGroupBy(...);
+	// $sqlQuery->setHaving(...);
+	// $sqlQuery->setLimit(...);
+	// $sqlQuery->setDistinct(true);
 	
-	// get the raw SQL
+	// Get the raw SQL (optional)
 	$rawSQL = $sqlQuery->sql();
 	
-	// execute and return a Query-object
+	// Execute and return a Query object
 	$result = $sqlQuery->execute();
 
-
-### DELETE
-
-	:::php
-	// ...
-	$sqlQuery->delete = true;
-
-
-### INSERT/UPDATE
-
-(currently not supported -see below for alternative solutions)
-
-## Working with results
-
-The result is an array lightly wrapped in a database-specific subclass of `[api:Query]`. This class implements the
-*Iterator*-interface defined in PHP5, and provides convenience-methods for accessing the data.
-
-### Iterating
-
-	:::php
+	// Iterate over results
 	foreach($result as $row) {
 	  echo $row['BirthYear'];
 	}
 
+The result is an array lightly wrapped in a database-specific subclass of `[api:Query]`. 
+This class implements the *Iterator*-interface, and provides convenience-methods for accessing the data.
 
-### Quick value checking
-
-Raw SQL is handy for performance-optimized calls. 
-
-	:::php
-	class Team extends DataObject {
-	  public function getPlayerCount() {
-	    $sqlQuery = new SQLQuery(
-	      "COUNT(Player.ID)",
-	      "Team LEFT JOIN Player ON Team.ID = Player.TeamID"
-	    );
-	    return $sqlQuery->execute()->value();
-	}
-
-Way faster than dealing with `[api:DataObject]`s, but watch out for premature optimisation:
+### DELETE
 
 	:::php
-	$players = $myTeam->Players();
-	echo $players->Count();
+	$sqlQuery->setDelete(true);
 
+### INSERT/UPDATE
 
-### Mapping
-
-Useful for creating dropdowns.
+Currently not supported through the `SQLQuery` class, please use raw `DB::query()` calls instead.
 
 	:::php
-	$sqlQuery = new SQLQuery(
-	  array('YEAR(Birthdate)', 'Birthdate'),
-	  'Player'
-	);
-	$map = $sqlQuery->execute()->map();
-	$field = new DropdownField('Birthdates', 'Birthdates', $map);
+	DB::query('UPDATE "Player" SET "Status"=\'Active\'');
 
+### Value Checks
 
-### "Raw" SQL with DB::query()
+Raw SQL is handy for performance-optimized calls,
+e.g. when you want a single column rather than a full-blown object representation.
 
-This is not recommended for most cases, but you can also use the SilverStripe database-layer to fire off a raw query:
-
-	:::php
-	DB::query("UPDATE Player SET Status='Active'");
-
-One example for using a raw DB::query is when you are wanting to order twice in the database:
-
-	:::php
-	$records = DB::query('SELECT *, CASE WHEN "ThumbnailID" = 0 THEN 2 ELSE 1 END AS "HasThumbnail" FROM "TempDoc" ORDER BY "HasThumbnail", "Name" ASC');
-	$items = singleton('TempDoc')->buildDataObjectSet($records);
-
-This CASE SQL creates a second field "HasThumbnail" depending if "ThumbnailID" exists in the database which you can then
-order by "HasThumbnail" to make sure the thumbnails are at the top of the list and then order by another field "Name"
-separately for both the items that have a thumbnail and then for those that don't have thumbnails.
-
-### "Semi-raw" SQL with buildSQL()
-
-You can gain some ground on the datamodel-side when involving the selected class for querying. You don't necessarily
-need to call *buildSQL* from a specific object-instance, a *singleton* will do just fine.
-
-	:::php
-	$sqlQuery = singleton('Player')->buildSQL(
-	  'YEAR(Birthdate) = 1982'
-	);
-
-
-This form of building a query has the following advantages:
-
-*  Respects DataObject::$default_sort
-*  Automatically LEFT JOIN on all base-tables (see [database-structure](database-structure))
-*  Selection of *ID*, *ClassName*, *RecordClassName*, which are necessary to use *buildDataObjectSet* later on
-*  Filtering records for correct *ClassName*
-
-### Transforming a result to `[api:DataObjectSet]`
-
-This is a commonly used technique inside SilverStripe: Use raw SQL, but transfer the resulting rows back into
-`[api:DataObject]`s.
+Example: Get the count from a relationship.
 
 	:::php
 	$sqlQuery = new SQLQuery();
-	$sqlQuery->select = array(
-	  'Firstname AS Name',
-	  'YEAR(Birthday) AS BirthYear',
-	  // IMPORTANT: Needs to be set after other selects to avoid overlays
-	  'Player.ClassName AS ClassName',
-	  'Player.ClassName AS RecordClassName',
-	  'Player.ID AS ID'
-	);
-	$sqlQuery->from = array(
-	  "Player",
-	  "LEFT JOIN Team ON Player.TeamID = Team.ID"
-	);
-	$sqlQuery->where = array(
-	  "YEAR(Player.Birthday) = 1982"
-	);
-	
-	$result = $sqlQuery->execute();
-	var_dump($result->first()); // array
-	
-	// let Silverstripe work the magic
-	$myDataObjectSet = singleton('Player')->buildDataObjectSet($result);
-	var_dump($myDataObjectSet->First()); // DataObject
-	
-	// this is where it gets tricky
-	$myFirstPlayer = $myDataObjectSet->First();
-	var_dump($myFirstPlayer->Name); // 'John'
-	var_dump($myFirstPlayer->Firstname); // undefined, as it was not part of the SELECT-clause;
-	var_dump($myFirstPlayer->Surname); // undefined, as it was not part of the SELECT-clause
-	
-	// lets assume that class Player extends BasePlayer,
-	// and BasePlayer has a database-column "Status"
-	var_dump($myFirstPlayer->Status); // undefined, as we didn't LEFT JOIN the BasePlayer-table
+  $sqlQuery->setFrom('Player');
+  $sqlQuery->addSelect('COUNT("Player"."ID")');
+  $sqlQuery->addWhere('"Team"."ID" = 99');
+  $sqlQuery->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
+  $count = $sqlQuery->execute()->value();
 
+Note that in the ORM, this call would be executed in an efficient manner as well:
 
-**CAUTION:** Depending on the selected columns in your query, you might get into one of the following scenarios:
+	:::php
+	$count = $myTeam->Players()->count();
 
-*  Not all object-properties accessible: You need to take care of selecting the right stuff yourself
-*  Overlayed object-properties: If you *LEFT JOIN* a table which also has a column 'Birthdate' and do a global select on
-this table, you might not be able to access original object-properties.
-*  You can't create `[api:DataObject]`s where no scalar record-data is available, e.g. when using *GROUP BY*
-*  Naming conflicts with custom getters: A getter like Player->getName() will overlay the column-data selected in the
-above example
+### Mapping
 
-Be careful when saving back `[api:DataObject]`s created through *buildDataObjectSet*, you might get strange side-effects due to
-the issues noted above.
-## Using FormFields with custom SQL
+Creates a map based on the first two columns of the query result. 
+This can be useful for creating dropdowns.
 
-Some subclasses of `[api:FormField]` for ways to create sophisticated report-tables based on SQL.
+Example: Show player names with their birth year, but set their birth dates as values.
+
+	:::php
+	$sqlQuery = new SQLQuery();
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->setSelect('Birthdate');
+	$sqlQuery->selectField('CONCAT("Name", ' - ', YEAR("Birthdate")', 'NameWithBirthyear');
+	$map = $sqlQuery->execute()->map();
+	$field = new DropdownField('Birthdates', 'Birthdates', $map);
+
+Note that going through SQLQuery is just necessary here 
+because of the custom SQL value transformation (`YEAR()`). 
+An alternative approach would be a custom getter in the object definition.
+
+	:::php
+	class Player extends DataObject {
+		static $db = array(
+			'Name' => 
+			'Birthdate' => 'Date'
+		);
+		function getNameWithBirthyear() {
+			return date('y', $this->Birthdate);
+		}
+	}
+	$players = Player::get();
+	$map = $players->map('Name', 'NameWithBirthyear');
 
 ## Related
 
 *  [datamodel](/topics/datamodel)
 *  `[api:DataObject]`
 *  [database-structure](database-structure)
-
-## API Documentation
-`[api:SQLQuery]`

@@ -3,21 +3,21 @@
 SilverStripe uses an [object-relational model](http://en.wikipedia.org/wiki/Object-relational_model) that assumes the
 following connections:
 
-*  Each database-table maps to a php-class
-*  Each database-row maps to a php-object
-*  Each database-column maps to a property on a php-object
+*  Each database-table maps to a PHP class
+*  Each database-row maps to a PHP object
+*  Each database-column maps to a property on a PHP object
  
 All data tables in SilverStripe are defined as subclasses of `[api:DataObject]`. Inheritance is supported in the data
 model: seperate tables will be linked together, the data spread across these tables. The mapping and saving/loading
 logic is handled by SilverStripe, you don't need to worry about writing SQL most of the time. 
 
-The advanced object-relational layer in SilverStripe is one of the main reasons for requiring PHP5. Most of its
-customizations are possible through [PHP5 Object
+Most of the ORM customizations are possible through [PHP5 Object
 Overloading](http://www.onlamp.com/pub/a/php/2005/06/16/overloading.html) handled in the `[api:Object]`-class.
 
-See [database-structure](/reference/database-structure) for in-depth information on the database-schema.
+See [database-structure](/reference/database-structure) for in-depth information on the database-schema,
+and the ["sql queries" topic](/reference/sqlquery) in case you need to drop down to the bare metal.
 
-## Generating the database-schema
+## Generating the Database Schema
 
 The SilverStripe database-schema is generated automatically by visiting the URL.
 `http://<mysite>/dev/build`
@@ -28,21 +28,20 @@ Note: You need to be logged in as an administrator to perform this command.
 
 ## Querying Data
 
-Every query to data starts with a `DataList::create($class)` or `$class::get()` call. For example, this query would return
-all of the Member objects:
+Every query to data starts with a `DataList::create(<class>)` or `<class>::get()` call. For example, this query would return all of the `Member` objects:
 
 	:::php
 	$members = Member::get();
 
 The ORM uses a "fluent" syntax, where you specify a query by chaining together different methods.  Two common methods 
-are filter() and sort():
+are `filter()` and `sort()`:
 
 	:::php
 	$members = Member::get()->filter(array('FirstName' => 'Sam'))->sort('Surname');
 	
 Those of you who know a bit about SQL might be thinking "it looks like you're querying all members, and then filtering
 to those with a first name of 'Sam'. Isn't this very slow?"  Is isn't, because the ORM doesn't actually execute the 
-query until you iterate on the result with a `foreach()` or `<% control %>`.
+query until you iterate on the result with a `foreach()` or `<% loop %>`.
 
 	:::php
 	// The SQL query isn't executed here...
@@ -83,19 +82,18 @@ If you have constructed a query that you know should return a single record, you
 
 Quiet often you would like to sort a list. Doing this on a list could be done in a few ways.
 
-If would like to sort the list by FirstName in a ascending way (from A to Z).
+If would like to sort the list by `FirstName` in a ascending way (from A to Z).
 
 	:::php
-	$member = Member::get()->sort('FirstName');
-	// Or the more expressive way
 	$member = Member::get()->sort('FirstName', 'ASC');
+	$member = Member::get()->sort('FirstName'); // Ascending is implied
 
 To reverse the sort
 
 	:::php
 	$member = Member::get()->sort('FirstName', 'DESC');
 
-However you might have several entries with the same FirstName and would like to sort them by FirstName and LastName
+However you might have several entries with the same `FirstName` and would like to sort them by `FirstName` and `LastName`
 
 	:::php
 	$member = Member::get()->sort(array(
@@ -206,7 +204,7 @@ will return all members whose first name or surname contain the string 'sam'.
 
 	:::php
 	$members = Member::get()->filter(array(
-		'FirstName,Surname:Contains' => 'sam'
+		'FirstName,Surname:PartialMatch' => 'sam'
 	));
 
 If you wish to match against any of a number of values, you can pass an array as the value.  This will return all 
@@ -395,7 +393,7 @@ Note: Alternatively you can set defaults directly in the database-schema (rather
 
 Properties defined in *static $db* are automatically casted to their [data-types](data-types) when used in templates. 
 You can also cast the return-values of your custom functions (e.g. your "virtual properties").
-Calling those functions directly will still return whatever type your php-code generates,
+Calling those functions directly will still return whatever type your PHP code generates,
 but using the *obj()*-method or accessing through a template will cast the value according to the $casting-definition.
 
 	:::php
@@ -406,7 +404,7 @@ but using the *obj()*-method or accessing through a template will cast the value
 	
 	  // $myPlayer->MembershipFee() returns a float (e.g. 123.45)
 	  // $myPlayer->obj('MembershipFee') returns a object of type Currency
-	  // In a template: <% control MyPlayer %>MembershipFee.Nice<% end_control %> returns a casted string (e.g. "$123.45")
+	  // In a template: <% loop MyPlayer %>MembershipFee.Nice<% end_loop %> returns a casted string (e.g. "$123.45")
 	  public function getMembershipFee() {
 	    return $this->Team()->BaseFee * $this->MembershipYears;
 	  }
@@ -526,8 +524,10 @@ accessors available on both ends.
 
 ### Adding relations
 
-Inside SilverStripe it doesn't matter if you're editing a *has_many*- or a *many_many*-relationship. You need to get a
-`[api:ComponentSet]`.
+Adding new items to a relations works the same,
+regardless if you're editing a *has_many*- or a *many_many*. 
+They are encapsulated by `[api:HasManyList]` and `[api:ManyManyList]`,
+both of which provide very similar APIs, e.g. an `add()` and `remove()` method.
 
 	:::php
 	class Team extends DataObject {
@@ -536,20 +536,8 @@ Inside SilverStripe it doesn't matter if you're editing a *has_many*- or a *many
 	    "Categories" => "Category",
 	  );
 		
-	  /**
-	
-	   * @param DataObjectSet
-	   */
-	  public function addCategories($additionalCategories) {
-	    $existingCategories = $this->Categories();
-	    
-	    // method 1: Add many by iteration
-	    foreach($additionalCategories as $category) {
-	      $existingCategories->add($category);
-	    }
-	
-	    // method 2: Add many by ID-List
-	    $existingCategories->addMany(array(1,2,45,745));
+	  public function addCategories(SS_List $cats) {
+	    foreach($cats as $cat) $this->Categories()->add($cat);
 	  }
 	}
 
@@ -557,8 +545,8 @@ Inside SilverStripe it doesn't matter if you're editing a *has_many*- or a *many
 ### Custom Relations
 
 You can use the flexible datamodel to get a filtered result-list without writing any SQL. For example, this snippet gets
-you the "Players"-relation on a team, but only containing active players. (See `[api:DataObject::$has_many]` for more info on
-the described relations).
+you the "Players"-relation on a team, but only containing active players. 
+See `[api:DataObject::$has_many]` for more info on the described relations.
 
 	:::php
 	class Team extends DataObject {
@@ -570,6 +558,48 @@ the described relations).
 	  public function ActivePlayers() {
 	    return $this->Players("Status='Active'");
 	  }
+	}
+
+Note: Adding new records to a filtered `RelationList` like in the example above
+doesn't automatically set the filtered criteria on the added record.
+
+## Validation and Constraints
+
+Traditionally, validation in SilverStripe has been mostly handled on the controller
+through [form validation](/topics/form-validation).
+While this is a useful approach, it can lead to data inconsistencies if the
+record is modified outside of the controller and form context.
+Most validation constraints are actually data constraints which belong on the model.
+SilverStripe provides the `[api:DataObject->validate()]` method for this purpose.
+
+By default, there is no validation - objects are always valid!  
+However, you can overload this method in your
+DataObject sub-classes to specify custom validation, 
+or use the hook through `[api:DataExtension]`.
+
+Invalid objects won't be able to be written - a [api:ValidationException]` 
+will be thrown and no write will occur.
+It is expected that you call validate() in your own application to test that an object 
+is valid before attempting a write, and respond appropriately if it isn't.
+
+The return value of `validate()` is a `[api:ValidationResult]` object.
+You can append your own errors in there.
+
+Example: Validate postcodes based on the selected country
+
+	:::php
+	class MyObject extends DataObject {
+		static $db = array(
+			'Country' => 'Varchar',
+			'Postcode' => 'Varchar'
+		);
+		public function validate() {
+			$result = parent::validate();
+			if($this->Country == 'DE' && $this->Postcode && strlen($this->Postcode) != 5) {
+				$result->error('Need five digits for German postcodes');
+			}
+			return $result;
+		}
 	}
 
 ## Maps
@@ -593,6 +623,9 @@ This functionality is provided by the `SS_Map` class, which can be used to build
 	:::php
 	$members = Member::get();
 	$map = new SS_Map($members, 'ID', 'FirstName');
+
+Note: You can also retrieve a single property from all contained records
+through `[api:SS_List->column()]`.
 
 ## Data Handling
 
@@ -703,19 +736,13 @@ It checks if a member is logged in who belongs to a group containing the permiss
 	  }
 	}
 
-
-
-
 ### Saving data with forms
 
 See [forms](/topics/forms).
 
 ### Saving data with custom SQL
 
-See `[api:SQLQuery]` for custom *INSERT*, *UPDATE*, *DELETE* queries.
-
-
-
+See the ["sql queries" topic](/reference/sqlquery) for custom *INSERT*, *UPDATE*, *DELETE* queries.
 
 ## Extending DataObjects
 
@@ -724,18 +751,14 @@ code or subclassing.
 Please see `[api:DataExtension]` for a general description, and `[api:Hierarchy]` for our most
 popular examples.
 
-
-
 ## FAQ
 
 ### Whats the difference between DataObject::get() and a relation-getter?
-You can work with both in pretty much the same way, but relationship-getters return a special type of collection: 
-A `[api:ComponentSet]` with relation-specific functionality.
+
+You can work with both in pretty much the same way, 
+but relationship-getters return a special type of collection: 
+A `[api:HasManyList]` or a `[api:ManyManyList]` with relation-specific functionality.
 
 	:::php
-	$myTeam = DataObject::get_by_id('Team',$myPlayer->TeamID); // returns DataObject
-	$myTeam->add(new Player()); // fails
-	
-	$myTeam = $myPlayer->Team(); // returns Componentset
-	$myTeam->add(new Player()); // works
-
+	$myTeams = $myPlayer->Team(); // returns HasManyList
+	$myTeam->add($myOtherPlayer);

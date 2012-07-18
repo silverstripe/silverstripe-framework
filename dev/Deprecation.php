@@ -32,6 +32,10 @@
  */
 class Deprecation {
 
+	const SCOPE_METHOD = 1;
+	const SCOPE_CLASS = 2;
+	const SCOPE_GLOBAL = 4;
+
 	/**
 	 *
 	 * @var string
@@ -119,9 +123,10 @@ class Deprecation {
 	 * @static
 	 * @param $string - The notice to raise
 	 * @param $atVersion - The version at which this notice should start being raised
+	 * @param Boolean $scope - Notice relates to the method or class context its called in.
 	 * @return void
 	 */
-	public static function notice($atVersion, $string = '') {
+	public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD) {
 		// Never raise deprecation notices in a live environment
 		if(Director::isLive()) return;
 
@@ -139,9 +144,16 @@ class Deprecation {
 
 		// Check the version against the notice version
 		if ($checkVersion && version_compare($checkVersion, $atVersion, '>=')) {
-			// Get the calling method
-			if (!$backtrace) $backtrace = debug_backtrace(0);
-			$caller = self::get_called_method_from_trace($backtrace);
+			// Get the calling scope
+			if($scope == Deprecation::SCOPE_METHOD) {
+				if (!$backtrace) $backtrace = debug_backtrace(0);
+				$caller = self::get_called_method_from_trace($backtrace);
+			} elseif($scope == Deprecation::SCOPE_CLASS) {
+				if (!$backtrace) $backtrace = debug_backtrace(0);
+				$caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
+			} else {
+				$caller = false;
+			}
 
 			// Get the level to raise the notice as
 			$level = self::$notice_level;
@@ -152,7 +164,12 @@ class Deprecation {
 
 			$string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
 
-			user_error($caller.' is deprecated.'.($string ? ' '.$string : ''), $level);
+			if($caller) {
+				user_error($caller.' is deprecated.'.($string ? ' '.$string : ''), $level);	
+			} else {
+				user_error($string, $level);	
+			}
+			
 		}
 	}
 

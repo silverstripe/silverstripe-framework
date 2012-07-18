@@ -228,10 +228,30 @@ class SS_HTTPRequest implements ArrayAccess {
 	}
 	
 	/**
+	 * Returns the URL used to generate the page
+	 *
+	 * @param bool $includeGetVars whether or not to include the get parameters\
+	 * 
 	 * @return string
 	 */
-	function getURL() {
-		return ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
+	function getURL($includeGetVars = false) {
+		$url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
+
+		 if ($includeGetVars) { 
+		 	// if we don't unset $vars['url'] we end up with /my/url?url=my/url&foo=bar etc 
+ 			
+ 			$vars = $this->getVars();
+ 			unset($vars['url']);
+
+ 			if (count($vars)) {
+ 				$url .= '?' . http_build_query($vars);
+ 			}
+ 		}
+ 		else if(strpos($url, "?") !== false) {
+ 			$url = substr($url, 0, strpos($url, "?"));
+ 		}
+
+ 		return $url; 
 	}
 
 	/**

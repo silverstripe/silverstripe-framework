@@ -12,54 +12,37 @@ Here is a very simple template:
 
 	:::ss
 	<html>
-		<%-- This is my first template --%>
 		<head>
 			<% base_tag %>
 			<title>$Title</title>
-			$MetaTags
+			<% require themedCSS(screen) %>
 		</head>
 		<body>
-		<div id="Container">
-			<div id="Header">
+			<header>
 				<h1>Bob's Chicken Shack</h1>
-				<% with $CurrentMember %>
-				<p>You are logged in as $FirstName $Surname.</p>
-				<% end_if %>
-			</div>
-			<div id="Navigation">
-				<% if $Menu(1) %>
-				<ul>
-					<% loop $Menu(1) %>	  
-					<li><a href="$Link" title="Go to the $Title page" class="$LinkingMode">$MenuTitle</a></li>
-					<% end_loop %>
-				</ul>
-				<% end_if %>
-			</div>
-			<div class="typography">
-				$Layout
-			</div>
-			<div id="Footer">
-				<p>Copyright $Now.Year</p>
-			</div>
-		</div>
+			</header>
+
+			<% with $CurrentMember %>
+				<p>Welcome $FirstName $Surname.</p>
+			<% end_with %>
+			
+			<% if Dishes %>
+			<ul>
+				<% loop Dishes %>	  
+					<li>$Title ($Price.Nice)</li>
+				<% end_loop %>
+			</ul>
+			<% end_if %>
+			
+			<% include Footer %>
 		</body>
 	</html>
 
+More sophisticated use of templates for pages managed in the CMS,
+including template inheritance and navigation loops
+is documented in the [page types](/topics/page-types) topic.
+
 # Template elements
-
-### Base Tag
-
-The `<% base_tag %>` placeholder is replaced with the HTML base element. Relative links within a document (such as `<img
-src="someimage.jpg" />`) will become relative to the URI specified in the base tag. This ensures the browser knows where
-to locate your site’s images and css files. So it is a must for templates!
-
-It renders in the template as `<base href="http://www.mydomain.com" /><!--[if lte IE 6]></base><![endif]-->`
-
-### Layout Tag
-
-In every SilverStripe theme there is a default `Page.ss` file in the `/templates` folder. `$Layout` appears in this file
-and is a core variable which includes a Layout template inside the `/templates/Layout` folder once the page is rendered. 
-By default the `/templates/Layout/Page.ss` file is included in the html template.
 
 ## Variables
 
@@ -67,7 +50,6 @@ Variables are things you can use in a template that grab data from the page and 
 
 	:::ss
 	$Title
-	
 
 This inserts the value of the Title field of the page being displayed in place of `$Title`. This type of variable is called a **property**. It is often something that can be edited in the CMS.  Variables can be chained together, and include arguments.
 
@@ -141,81 +123,90 @@ See [CSS](/topics/css) and [Javascript](/topics/javascript) topics for individua
 [requirements](reference/requirements) for good examples of including both Javascript and CSS files.
 
 ## Conditional Logic
+
 You can conditionally include markup in the output. That is, test for something that is true or false, and based on that test, control what gets output.
 
 The simplest if block is to check for the presence of a value.
 
-    <% if $CurrentMember %>
-        <p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
-    <% end_if %>
+	:::ss
+  <% if $CurrentMember %>
+      <p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
+  <% end_if %>
 
 The following compares a page property called `MyDinner` with the value in quotes, `kipper`, which is a **literal**. If true, the text inside the if-block is output.
 
-    <% if $MyDinner="kipper" %>
-        Yummy, kipper for tea.
-    <% end_if %>
+	:::ss
+  <% if $MyDinner="kipper" %>
+      Yummy, kipper for tea.
+  <% end_if %>
 
 Note that inside a tag like this, variables should have a '$' prefix, and literals should have quotes.  SilverStripe 2.4 didn't include the quotes or $ prefix, and while this still works, we recommend the new syntax as it is less ambiguous.
 
 This example shows the use of the `else` option. The markup after `else` is output if the tested condition is *not* true.
 
-    <% if $MyDinner="kipper" %>
-        Yummy, kipper for tea
-    <% else %>
-        I wish I could have kipper :-(
-    <% end_if %>
+	:::ss
+  <% if $MyDinner="kipper" %>
+      Yummy, kipper for tea
+  <% else %>
+      I wish I could have kipper :-(
+  <% end_if %>
 
 This example shows the user of `else\_if`. There can be any number of `else\_if` clauses. The conditions are tested from first to last, until one of them is true, and the markup for that condition is used. If none of the conditions are true, the markup in the `else` clause is used, if that clause is present.
 
-    <% if $MyDinner="quiche" %>
-        Real men don't eat quiche
-    <% else_if $MyDinner=$YourDinner %>
-        We both have good taste
-    <% else %>
-        Can I have some of your chips?
-    <% end_if %>
+	:::ss
+  <% if $MyDinner="quiche" %>
+      Real men don't eat quiche
+  <% else_if $MyDinner=$YourDinner %>
+      We both have good taste
+  <% else %>
+      Can I have some of your chips?
+  <% end_if %>
 
 This example shows the use of `not` to negate the test.
 
-    <% if not $DinnerInOven %>
-        I'm going out for dinner tonight.
-    <% end_if %>
+	:::ss
+  <% if not $DinnerInOven %>
+      I'm going out for dinner tonight.
+  <% end_if %>
 
 You can combine two or more conditions with `||` ("or"). The markup is used if *either* of the conditions is true.
 
-    <% if $MyDinner=="kipper" || $MyDinner=="salmon" %>
-        yummy, fish for tea
-    <% end_if %>
+	:::ss
+  <% if $MyDinner=="kipper" || $MyDinner=="salmon" %>
+      yummy, fish for tea
+  <% end_if %>
 
 You can combine two or more conditions with `&&` ("and"). The markup is used if *both* of the conditions are true.
 
-    <% if $MyDinner=="quiche" && $YourDinner=="kipper" %>
-        Lets swap dinners
-    <% end_if %>
+	:::ss
+  <% if $MyDinner=="quiche" && $YourDinner=="kipper" %>
+      Lets swap dinners
+  <% end_if %>
 
-As you'd expect, these can be nested:
-
-    <% if $MyDinner=="chicken" %>
-        <% if $Wine=="red" %>
-            You're doing it wrong
-        <% else %>
-            Perfect
-        <% end_if %>
-    <% end_if %>
-
-## Looping Over Datasets
+## Looping Over Lists
 
 The `<% loop %>...<% end_loop %>` tag is used to **iterate** or loop over a collection of items. For example:
 
-    <ul>
-    <% loop $Children %>
-      <li>$Title</li>
-    <% end_loop %>
-    </ul>
+	:::ss
+	<ul>
+	<% loop $Children %>
+	  <li>$Title</li>
+	<% end_loop %>
+	</ul>
 
-This loops over the children of a page, and generates an unordered list showing the Title property from each one. Note that $Title <i>inside</i> the loop refers to the Title property on each object that is looped over, not the current page. (To refer to the current page's Title property inside the loop, you can do `$Up.Title`. More about `Up` later.
+This loops over the children of a page, and generates an unordered list showing the `Title` property from each one. Note that `$Title` *inside* the loop refers to the `Title` property on each object that is looped over, not the current page. To refer to the current page's `Title` property inside the loop, you can do `$Up.Title`. More about `Up` later.
 
-The value that given in the `<% loop %>` tags should be a collection variable.
+### Position Indicators
+
+Inside the loop scope, there are many variables at your disposal to determine the current position
+in the list and iteration:
+
+ * `$Even`, `$Odd`: Returns boolean, handy for zebra striping
+ * `$EvenOdd`: Returns a string, either 'even' or 'odd'. Useful for CSS classes.
+ * `$First`, `$Last`, `$Middle`: Booleans about the position in the list
+ * `$FirstLast`: Returns a string, "first", "last", or "". Useful for CSS classes.
+ * `$Pos`: The current position in the list (integer). Will start at 1.
+ * `$TotalItems`: Number of items in the list (integer)
 
 ### Modulus and MultipleOf
 
@@ -249,6 +240,8 @@ You can also use $MultipleOf(value, offset) to help build columned layouts. In t
 
 In the `<% loop %>` section, we saw an example of two **scopes**. Outside the `<% loop %>...<% end_loop %>`, we were in the scope of the page. But inside the loop, we were in the scope of an item in the list. The scope determines where the value comes from when you refer to a variable. Typically the outer scope of a page type's layout template is the page that is currently being rendered. The outer scope of an included template is the scope that it was included into.
 
+When we are in a scope, we sometimes want to refer to the scope outside the <% loop %> or <% with %>. We can do that easily by using `$Up`.
+
 ### With
 
 The `<% with %>...<% end_with %>` tag lets you introduce a new scope. Consider the following example:
@@ -265,31 +258,47 @@ Outside the `<% with %>...<% end_with %>`, we are in the page scope. Inside it, 
 
 returns the number of items in the $Children collection.
 
-### Top
+## Pagination
 
-    $Top.Title
+Lists can be paginated, and looped over page-by-page.
+For this to work, the list needs to be wrapped in a `[api:PaginatedList]`.
+The process is explained in detail on the ["pagination" howto](/howto/pagination).
+The list is split up in multiple "pages", each . Note that "page" is this context
+does not necessarily refer to a `Page` class (although it often happens to be one).
 
-### Up
+ * `$MoreThanOnePage`: Returns true when we have a multi-page list, restricted with a limit.
+ * `$NextLink`, `$PrevLink`: This returns links to the next and previous page in a multi-page datafeed.  They will return blank if there's no appropriate page to go to, so `$PrevLink` will return blank when you're on the first page.
+ * `$CurrentPage`: Current page iterated on
+ * `$TotalPages`: Total number of pages
+ * `$TotalItems`: This returns the total number of items across all pages.
+ * `$Pages`: The actual (limited) list of records, use in an inner loop
+ * `$PageNum`: Page number, starting at 1 (within `$Pages`)
+ * `$Link`: Links to the current controller URL, setting this page as current via a GET parameter (within `$Pages`)
+*  `$CurrentBool`: Returns true if you're currently on that page (within `$Pages`)
 
-When we are in a scope, we sometimes want to refer to the scope outside the <% loop %> or <% with %>. We can do that easily by using $Up.
+## Formatting and Casting
 
-    $Up.Owner
+Properties are usually auto-escaped in templates to ensure consistent representation,
+and avoid format clashes like displaying unescaped ampersands in HTML.
+By default, values are escaped as `XML`, which is equivalent to `HTML` for this purpose.
+There's some exceptions to this rule, see the ["security" topic](/topics/security).
 
-
-## Formatting Template Values
-
-The following example takes the Title field of our object, casts it to a `[api:Varchar]` object, and then calls
-the `$XML` object on that Varchar object.
+In case you want to explicitly allow unescaped HTML input,
+the property can be cast as `[api:HTMLText]`.
+The following example takes the `Content` field in a `SiteTree` class,
+which is of this type. It forces the content into an explicitly escaped format.
 
 	:::ss
-	<% with Title %>
-	$XML
-	<% end_with %>
+	$Content.XML // transforms e.g. "<em>alert</em>" to "&lt;em&gt;alert&lt;/em&gt;"
 
-Note that this code can be more concisely represented as follows:
+Apart from value formatting, there's many methods to transform them as well,
+For example, the built in `$Now` placeholder is an instance of `[api:Date]`,
+and returns the current date in a standard system format. 
+Since its an object, you can use the helper methods to return other formats:
 
 	:::ss
-	$Title.XML
+	$Now.Year // Current year
+	$Now.Nice // Localized date, based on i18n::get_locale()
 
 See [data-types](/topics/data-types) for more information.
 
@@ -311,49 +320,64 @@ Pulling apart this example we see:
 Using standard HTML comments is supported. These comments will be included in the published site. 
 
 	:::ss
-	$EditForm <!-- Some Comment About the Edit Form -->
+	$EditForm <!-- Some public comment about the form -->
 
 
 However you can also use special SilverStripe comments which will be stripped out of the published site. This is useful
 for adding notes for other developers but for things you don't want published in the public html.
 
 	:::ss
-	$EditForm <%-- This is Located in MemberEditForm.php --%>
+	$EditForm <%-- Some hidden comment about the form --%>
 
 ## Partial Caching
 
-Partial caching lets you define blocks of your template that are cached for better performance.  See [Partial Caching](/reference/partial-caching.md) for more information.
+Partial caching lets you define blocks of your template that are cached for better performance.  See [Partial Caching](/reference/partial-caching) for more information.
 
-## Creating your own Template Variables and Controls
+### Base Tag
+
+The `<% base_tag %>` placeholder is replaced with the HTML base element. Relative links within a document (such as `<img
+src="someimage.jpg" />`) will become relative to the URI specified in the base tag. This ensures the browser knows where
+to locate your site’s images and css files. So it is a must for templates!
+
+It renders in the template as `<base href="http://www.mydomain.com" /><!--[if lte IE 6]></base><![endif]-->`
+
+## CurrentMember
+
+Returns the currently logged in member, if there is one.  
+All of their details or any special Member page controls can be called on this.  
+Alternately, you can use `<% if CurrentMember %>` to detect whether someone has logged
+in. 
+
+	:::ss
+	<% if CurrentMember %>
+	  Welcome Back, $CurrentMember.FirstName
+	<% end_if %>
+
+## Custom Template Variables and Controls
 
 There are two ways you can extend the template variables you have available. You can create a new database field in your
 `$db` or if you do not need the variable to be editable in the cms you can create a function which returns a value in your
 `Page.php` class.
 
 	:::php
-	
-	**mysite/code/Page.php**
-	...
+	// mysite/code/Page.php
 	public function MyCustomValue() {
-	    return "Hi, this is my site";
+	 return "Hi, this is my site";
 	}
-
 
 Will give you the ability to call `$MyCustomValue` from anywhere in your template. 
 
 	:::ss
-	I've got one thing to say to you: <i>$MyCustomValue</i>
-	
+	I've got one thing to say to you: <i>$MyCustomValue</i>	
 	// output "I've got one thing to say to you: <i>Hi, this is my site</i>" 
-
 
 Your function could return a single value as above or it could be a subclass of `[api:ArrayData]` for example a
 `[api:DataObject]` with many values then each of these could be accessible via a control loop
 
 	:::php
-	..
+	// ...
 	public function MyCustomValues() {
-	    return new ArrayData(array("Hi" => "Kia Ora", "Name" => "John Smith"));
+	  return new ArrayData(array("Hi" => "Kia Ora", "Name" => "John Smith"));
 	}
 
 
@@ -363,23 +387,17 @@ And now you could call these values by using
 	<% with MyCustomValues %>
 	$Hi , $Name
 	<% end_with %>
-	
 	// output "Kia Ora , John Smith" 
-
 
 Or by using the dot notation you would have
 
 	:::ss
 	$MyCustomValues.Hi , $MyCustomValues.Name
-	
 	// output "Kia Ora , John Smith"
-
 
 ### Side effects
 
-All functions that provide data to templates must have no side effects, as the value is cached after first access.
-
-For example, this Controller method
+All functions that provide data to templates must have no side effects, as the value is cached after first access. For example, this controller method
 
 	:::php
 	private $counter = 0;
@@ -396,22 +414,7 @@ and this template
 	$Counter, $Counter, $Counter
 
 
-will give "1, 1, 1", not "1, 2, 3"
-
-### Casting and Escaping
-
-Method and variables names that deal with strings or arrays of strings should have one of the following 5 prefixes:
-
-*  **RAW_** Raw plain text, as a user would like to see it, without any HTML tags
-*  **XML_** Text suitable for insertion into an HTML or XML data-set.  This may contain HTML content, for example if the
-content came from a WYSIWYG editor.
-*  **JS_** Data that can safely be inserted into JavaScript code.
-*  **ATT_** Data that can safely be inserted into an XML or HTML attribute.
-
-The same prefixes are used for both strings and arrays of strings.  We did this to keep things simple: passing a string
-with the wrong encoding is a far subtler a problem than passing an array instead of a string, and therefore much harder
-to debug.
-
+will render as "1, 1, 1", not "1, 2, 3"
 
 ## .typography style
 
@@ -466,8 +469,7 @@ default if it exists and there is no action in the url parameters.
 		public function index() {
 			if(Director::is_ajax()) {
 				return $this->renderWith("myAjaxTemplate");
-			}
-			else {
+			} else {
 				return Array();// execution as usual in this case...
 			}
 		}
@@ -508,7 +510,18 @@ situations, you can disable fragment link rewriting like so:
 	:::php
 	SSViewer::setOption('rewriteHashlinks', false);
 
+### More Advanced Controls
 
+Template variables and controls are just PHP properties and methods
+on the underlying controllers and model classes.
+We've just shown you the most common once, in practice
+you can use any public API on those classes, and [extend](/reference/dataextension) them
+with your own. To get an overview on what's available to you,
+we recommend that you dive into the API docs for the following classes:
+
+ * `[api:Controller]`: Generic controller class
+ * `[api:DataObject]`: Generic model class
+ * `[api:ViewableData]`: Underlying object class for pretty much anything displayable
 
 ## Designing reusable templates
 
@@ -516,7 +529,7 @@ Although SilverStripe is ultimately flexible in how you create your templates, t
 will help you to design templates for modules, and make it easier for other site developers to integrate them into their
 own base templates.
 
-* Most of your templates should be Layout templates
+* Most of your templates should be `Layout` templates
 * Build your templates as a [Theme](/topics/themes) so you can easily re-use and exchange them
 * Your layout template should include a standard markup structure (`<div id="Layout">$Layout</div>`)
 * Layout templates only include content that could be completely replaced by another module (e.g. a forum thread). It
@@ -524,7 +537,7 @@ might be infeasible to do this 100%, but remember that every piece of navigation
 will mean that you have to customise templates when integrating the module.
 *  Any CSS applied to layout templates should be flexible width. This means the surrounding root template can set its
 width independently.
-*  Don't include any navigation elements in your Layout templates, they should be contained in the root template.
+*  Don't include any navigation elements in your `Layout` templates, they should be contained in the root template.
 *  Break down your templates into groups of includes.  Site integrators would then have the power to override individual
 includes, rather than entire templates.
 

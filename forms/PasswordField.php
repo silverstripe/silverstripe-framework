@@ -11,7 +11,7 @@ class PasswordField extends TextField {
 	 * maxlength
 	 */
 	function __construct($name, $title = null, $value = "") {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setMaxLength() instead of constructor arguments');
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setMaxLength() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
 
 		parent::__construct($name, $title, $value);
 	}

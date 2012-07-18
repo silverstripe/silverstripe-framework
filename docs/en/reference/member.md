@@ -113,9 +113,12 @@ things, you should add appropriate `[api:Permission::checkMember()]` calls to th
 	    }
 	  }
 	
-	  public function extraStatics() {
-	    // Return an array containing keys 'db', 'has_one', 'many_many', 'belongs_many_many',
-	  }
+		// define additional properties
+		static $db = array(); 
+		static $has_one = array(); 
+		static $has_many = array(); 
+		static $many_many = array(); 
+		static $belongs_many_many = array(); 
 	
 	  public function somethingElse() {
 	    // You can add any other methods you like, which you can call directly on the member object.

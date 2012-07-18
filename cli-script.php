@@ -37,7 +37,8 @@ chdir(dirname($_SERVER['SCRIPT_FILENAME']));
  */
 if(isset($_SERVER['argv'][2])) {
     $args = array_slice($_SERVER['argv'],2);
-    $_GET = array();
+    if(!isset($_GET)) $_GET = array();
+    if(!isset($_REQUEST)) $_REQUEST = array();
     foreach($args as $arg) {
        if(strpos($arg,'=') == false) {
            $_GET['args'][] = $arg;
@@ -47,7 +48,7 @@ if(isset($_SERVER['argv'][2])) {
            $_GET = array_merge($_GET, $newItems);
        }
     }
-	$_REQUEST = $_GET;
+  $_REQUEST = array_merge($_REQUEST, $_GET);
 }
 
 // Set 'url' GET parameter

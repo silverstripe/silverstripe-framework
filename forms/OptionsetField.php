@@ -1,7 +1,6 @@
 <?php
 /**
  * Set of radio buttons designed to emulate a dropdown.
- * It even uses the same constructor as a dropdown field.
  * 
  * This field allows you to ensure that a form element is submitted is not optional and is part of a fixed set of 
  * data. This field uses the input type of radio. It's a direct subclass of {@link DropdownField}, 

@@ -2,10 +2,10 @@
 	$.entwine('ss', function($){
 		$('.ss-toggle').entwine({
 			onadd: function() {
-				opts = {collapsible: true};
-				if (this.hasClass("ss-toggle-start-closed")) opts.active = false;
-
-				this.accordion({ collapsible: true });
+				this.accordion({
+					collapsible: true,
+					active: !this.hasClass("ss-toggle-start-closed")
+				});
 
 				this._super();
 			},

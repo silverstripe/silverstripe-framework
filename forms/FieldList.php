@@ -605,11 +605,14 @@ class FieldList extends ArrayList {
 		foreach($this->getTabPathRewrites() as $regex => $replace) {
 			if(preg_match($regex, $name)) {
 				$newName = preg_replace($regex, $replace, $name);
-				Deprecation::notice('3.0.0', sprintf(
-					'Using outdated tab path "%s", please use the new location "%s" instead',
-					$name,
-					$newName
-				));
+				Deprecation::notice('3.0.0', 
+					sprintf(
+						'Using outdated tab path "%s", please use the new location "%s" instead',
+						$name,
+						$newName
+					),
+					Deprecation::SCOPE_GLOBAL
+				);
 				return $newName;
 			}
 		}
