@@ -590,7 +590,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return ArrayList
 	 */
 	public function Breadcrumbs($unlinked = false) {
-		$title = self::menu_title_for_class($this->class);
+		$defaultTitle = LeftAndMain::menu_title_for_class($this->class);
+		$title = _t("{$this->class}.MENUTITLE", $defaultTitle);
 		$items = new ArrayList(array(
 			new ArrayData(array(
 				'Title' => $title,
