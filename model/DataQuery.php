@@ -223,7 +223,7 @@ class DataQuery {
 		}
 
 		$query->selectField("\"$baseClass\".\"ID\"", "ID");
-		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END", "RecordClassName");
+		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE ".DB::getConn()->prepStringForDB($baseClass)." END", "RecordClassName");
 
 		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
 

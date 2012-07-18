@@ -64,65 +64,67 @@ class BBCodeParser extends TextParser {
 	
 	static function usable_tags() {
 		return new ArrayList(
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.BOLD', 'Bold Text'),
-				"Example" => '[b]<b>'._t('BBCodeParser.BOLDEXAMPLE', 'Bold').'</b>[/b]'
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.ITALIC', 'Italic Text'),
-				"Example" => '[i]<i>'._t('BBCodeParser.ITALICEXAMPLE', 'Italics').'</i>[/i]'
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.UNDERLINE', 'Underlined Text'),
-				"Example" => '[u]<u>'._t('BBCodeParser.UNDERLINEEXAMPLE', 'Underlined').'</u>[/u]'
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.STRUCK', 'Struck-out Text'),
-				"Example" => '[s]<s>'._t('BBCodeParser.STRUCKEXAMPLE', 'Struck-out').'</s>[/s]'
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.COLORED', 'Colored text'),
-				"Example" => '[color=blue]'._t('BBCodeParser.COLOREDEXAMPLE', 'blue text').'[/color]'
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.ALIGNEMENT', 'Alignment'),
-				"Example" => '[align=right]'._t('BBCodeParser.ALIGNEMENTEXAMPLE', 'right aligned').'[/align]'
-			)),	
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.CODE', 'Code Block'),
-				"Description" => _t('BBCodeParser.CODEDESCRIPTION', 'Unformatted code block'),
-				"Example" => '[code]'._t('BBCodeParser.CODEEXAMPLE', 'Code block').'[/code]'
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.EMAILLINK', 'Email link'),
-				"Description" => _t('BBCodeParser.EMAILLINKDESCRIPTION', 'Create link to an email address'),
-				"Example" => "[email]you@yoursite.com[/email]"
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.EMAILLINK', 'Email link'),
-				"Description" => _t('BBCodeParser.EMAILLINKDESCRIPTION', 'Create link to an email address'),
-				"Example" => "[email=you@yoursite.com]Email[/email]"
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.UNORDERED', 'Unordered list'),
-				"Description" => _t('BBCodeParser.UNORDEREDDESCRIPTION', 'Unordered list'),
-				"Example" => '[ulist][*]'._t('BBCodeParser.UNORDEREDEXAMPLE1', 'unordered item 1').'[/ulist]'
-			)),			
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.IMAGE', 'Image'),
-				"Description" => _t('BBCodeParser.IMAGEDESCRIPTION', 'Show an image in your post'),
-				"Example" => "[img]http://www.website.com/image.jpg[/img]"
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.LINK', 'Website link'),
-				"Description" => _t('BBCodeParser.LINKDESCRIPTION', 'Link to another website or URL'),
-				"Example" => '[url]http://www.website.com/[/url]'
-			)),
-			new ArrayData(array(
-				"Title" => _t('BBCodeParser.LINK', 'Website link'),
-				"Description" => _t('BBCodeParser.LINKDESCRIPTION', 'Link to another website or URL'),
-				"Example" => "[url=http://www.website.com/]Website[/url]"
-			))		
+			array(
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.BOLD', 'Bold Text'),
+					"Example" => '[b]<b>'._t('BBCodeParser.BOLDEXAMPLE', 'Bold').'</b>[/b]'
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.ITALIC', 'Italic Text'),
+					"Example" => '[i]<i>'._t('BBCodeParser.ITALICEXAMPLE', 'Italics').'</i>[/i]'
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.UNDERLINE', 'Underlined Text'),
+					"Example" => '[u]<u>'._t('BBCodeParser.UNDERLINEEXAMPLE', 'Underlined').'</u>[/u]'
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.STRUCK', 'Struck-out Text'),
+					"Example" => '[s]<s>'._t('BBCodeParser.STRUCKEXAMPLE', 'Struck-out').'</s>[/s]'
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.COLORED', 'Colored text'),
+					"Example" => '[color=blue]'._t('BBCodeParser.COLOREDEXAMPLE', 'blue text').'[/color]'
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.ALIGNEMENT', 'Alignment'),
+					"Example" => '[align=right]'._t('BBCodeParser.ALIGNEMENTEXAMPLE', 'right aligned').'[/align]'
+				)),	
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.CODE', 'Code Block'),
+					"Description" => _t('BBCodeParser.CODEDESCRIPTION', 'Unformatted code block'),
+					"Example" => '[code]'._t('BBCodeParser.CODEEXAMPLE', 'Code block').'[/code]'
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.EMAILLINK', 'Email link'),
+					"Description" => _t('BBCodeParser.EMAILLINKDESCRIPTION', 'Create link to an email address'),
+					"Example" => "[email]you@yoursite.com[/email]"
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.EMAILLINK', 'Email link'),
+					"Description" => _t('BBCodeParser.EMAILLINKDESCRIPTION', 'Create link to an email address'),
+					"Example" => "[email=you@yoursite.com]Email[/email]"
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.UNORDERED', 'Unordered list'),
+					"Description" => _t('BBCodeParser.UNORDEREDDESCRIPTION', 'Unordered list'),
+					"Example" => '[ulist][*]'._t('BBCodeParser.UNORDEREDEXAMPLE1', 'unordered item 1').'[/ulist]'
+				)),			
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.IMAGE', 'Image'),
+					"Description" => _t('BBCodeParser.IMAGEDESCRIPTION', 'Show an image in your post'),
+					"Example" => "[img]http://www.website.com/image.jpg[/img]"
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.LINK', 'Website link'),
+					"Description" => _t('BBCodeParser.LINKDESCRIPTION', 'Link to another website or URL'),
+					"Example" => '[url]http://www.website.com/[/url]'
+				)),
+				new ArrayData(array(
+					"Title" => _t('BBCodeParser.LINK', 'Website link'),
+					"Description" => _t('BBCodeParser.LINKDESCRIPTION', 'Link to another website or URL'),
+					"Example" => "[url=http://www.website.com/]Website[/url]"
+				))		
+			)
 		);
 	}
 	

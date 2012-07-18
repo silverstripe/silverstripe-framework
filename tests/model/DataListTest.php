@@ -65,22 +65,25 @@ class DataListTest extends SapphireTest {
 	}
 	
 	function testSql() {
+		$db = DB::getConn();
 		$list = DataObjectTest_TeamComment::get();
-		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE \'DataObjectTest_TeamComment\' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"';
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment').' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"';
 		$this->assertEquals($expected, $list->sql());
 	}
 	
 	function testInnerJoin() {
+		$db = DB::getConn();
 		$list = DataObjectTest_TeamComment::get();
 		$list->innerJoin('DataObjectTest_Team', '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"', 'Team');
-		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE \'DataObjectTest_TeamComment\' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment').' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
 		$this->assertEquals($expected, $list->sql());
 	}
 	
 	function testLeftJoin() {
+		$db = DB::getConn();
 		$list = DataObjectTest_TeamComment::get();
 		$list->leftJoin('DataObjectTest_Team', '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"', 'Team');
-		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE \'DataObjectTest_TeamComment\' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment').' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
 		$this->assertEquals($expected, $list->sql());
 	}
 	

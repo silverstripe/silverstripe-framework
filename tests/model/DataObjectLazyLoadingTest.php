@@ -22,49 +22,53 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 	);
 
 	function testQueriedColumnsID() {
+		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('ID'));
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
 			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."ID", CASE WHEN '.
 			'"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			'\'DataObjectTest_Team\' END AS "RecordClassName" FROM "DataObjectTest_Team" WHERE ' .
-			'("DataObjectTest_Team"."ClassName" IN (\'DataObjectTest_SubTeam\'))';
+			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" WHERE ' .
+			'("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').'))';
 		$this->assertEquals($expected, $playerList->sql());
 	}
 
 	function testQueriedColumnsFromBaseTableAndSubTable() {
+		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('Title', 'SubclassDatabaseField'));
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
 			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."Title", ' .
 			'"DataObjectTest_SubTeam"."SubclassDatabaseField", "DataObjectTest_Team"."ID", CASE WHEN ' .
 			'"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			'\'DataObjectTest_Team\' END AS "RecordClassName" FROM "DataObjectTest_Team" LEFT JOIN ' .
+			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" LEFT JOIN ' .
 			'"DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
-			'("DataObjectTest_Team"."ClassName" IN (\'DataObjectTest_SubTeam\'))';
+			'("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').'))';
 		$this->assertEquals($expected, $playerList->sql());
 	}
 
 	function testQueriedColumnsFromBaseTable() {
+		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('Title'));
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
 			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."Title", "DataObjectTest_Team"."ID", ' .
 			'CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			'\'DataObjectTest_Team\' END AS "RecordClassName" FROM "DataObjectTest_Team" WHERE ' .
-			'("DataObjectTest_Team"."ClassName" IN (\'DataObjectTest_SubTeam\'))';
+			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" WHERE ' .
+			'("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').'))';
 		$this->assertEquals($expected, $playerList->sql());
 	}
 
 	function testQueriedColumnsFromSubTable() {
+		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('SubclassDatabaseField'));
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
 			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_SubTeam"."SubclassDatabaseField", ' .
 			'"DataObjectTest_Team"."ID", CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN ' .
-			'"DataObjectTest_Team"."ClassName" ELSE \'DataObjectTest_Team\' END AS "RecordClassName" FROM ' .
+			'"DataObjectTest_Team"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM ' .
 			'"DataObjectTest_Team" LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = ' .
-			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN (\'DataObjectTest_SubTeam\'))';
+			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').'))';
 		$this->assertEquals($expected, $playerList->sql());
 	}
 

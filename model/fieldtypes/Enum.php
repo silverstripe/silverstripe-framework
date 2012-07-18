@@ -1,12 +1,13 @@
 <?php
 /**
  * Class Enum represents an enumeration of a set of strings.
+ *
  * See {@link DropdownField} for a {@link FormField} to select enum values.
  * 
  * @package framework
  * @subpackage model
  */
-class Enum extends DBField {
+class Enum extends StringField {
 	
 	protected $enum, $default;
 	
@@ -15,22 +16,28 @@ class Enum extends DBField {
 	/**
 	 * Create a new Enum field.
 	 * 
-	 * Example usage in {@link DataObject::$db} with comma-separated string notation ('Val1' is default)
+	 * Example usage in {@link DataObject::$db} with comma-separated string 
+	 * notation ('Val1' is default)
+	 *
 	 * <code>
 	 *  "MyField" => "Enum('Val1, Val2, Val3', 'Val1')"
 	 * </code>
 	 * 
-	 * Example usage in in {@link DataObject::$db} with array notation ('Val1' is default)
+	 * Example usage in in {@link DataObject::$db} with array notation 
+	 * ('Val1' is default)
+	 *
 	 * <code>
 	 * "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')"
 	 * </code>
 	 * 
-	 * @param enum: A string containing a comma separated list of options or an array of Vals.
-	 * @param default The default option, which is either NULL or one of the items in the enumeration.
+	 * @param enum: A string containing a comma separated list of options or an 
+	 *				array of Vals.
+	 * @param string The default option, which is either NULL or one of the 
+	 *				 items in the enumeration.
 	 */
-	function __construct($name = null, $enum = NULL, $default = NULL) {
+	public function __construct($name = null, $enum = NULL, $default = NULL) {
 		if($enum) {
-			if(!is_array($enum)){
+			if(!is_array($enum)) {
 				$enum = preg_split("/ *, */", trim($enum));
 			}
 
@@ -49,19 +56,38 @@ class Enum extends DBField {
 				$this->default = reset($enum);
 			}
 		}
+
 		parent::__construct($name);
 	}
 	
-	function requireField(){
-		$parts=Array('datatype'=>'enum', 'enums'=>Convert::raw2sql($this->enum), 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>Convert::raw2sql($this->default), 'table'=>$this->tableName, 'arrayValue'=>$this->arrayValue);
-		$values=Array('type'=>'enum', 'parts'=>$parts);
+	/**
+	 * @return void
+	 */
+	public function requireField() {
+		$parts = array(
+			'datatype' => 'enum', 
+			'enums' => Convert::raw2sql($this->enum), 
+			'character set' => 'utf8', 
+			'collate' => 'utf8_general_ci', 
+			'default' => Convert::raw2sql($this->default), 
+			'table' => $this->tableName, 
+			'arrayValue' => $this->arrayValue
+		);
+		
+		$values = array(
+			'type' => 'enum', 
+			'parts' => $parts
+		);
+
 		DB::requireField($this->tableName, $this->name, $values);
-}
+	}
 	
 	/**
-	 * Return a dropdown field suitable for editing this field 
+	 * Return a dropdown field suitable for editing this field.
+	 *
+	 * @return DropdownField
 	 */
-	function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null, $emptyString = null) {
+	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null, $emptyString = null) {
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
@@ -71,28 +97,32 @@ class Enum extends DBField {
 		return $field;
 	}
 
+	/**
+	 * @return DropdownField
+	 */
 	public function scaffoldFormField($title = null, $params = null) {
 		return $this->formField($title);
 	}
 
-	function scaffoldSearchField($title = null) {
+	/**
+	 * @param string
+	 *
+	 * @return DropdownField
+	 */
+	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Enum.ANY', 'Any');
 		return $this->formField($title, null, false, '', null, "($anyText)");
 	}
 	
 	/**
-	 * Return the values of this enum, suitable for insertion into a dropdown field.
+	 * Returns the values of this enum as an array, suitable for insertion into 
+	 * a {@link DropdownField}
+	 *
+	 * @param boolean
+	 *
+	 * @return array
 	 */
-	function enumValues($hasEmpty = false) {
+	public function enumValues($hasEmpty = false) {
 		return ($hasEmpty) ? array_merge(array('' => ''), ArrayLib::valuekey($this->enum)) : ArrayLib::valuekey($this->enum);
 	}
-	
-	function Lower() {
-		return StringField::LowerCase();
-	}
-	function Upper() {
-		return StringField::UpperCase();
-	}
 }
-
-
