@@ -1920,7 +1920,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(self::is_composite_field($this->class, $field)) {
 			$helper = $this->castingHelper($field);
 			$fieldObj = Object::create_from_string($helper, $field);
-			
+
+			$compositeFields = $fieldObj->compositeDatabaseFields();
+			foreach ($compositeFields as $compositeName => $compositeType) {
+				if(isset($this->record[$field.$compositeName.'_Lazy'])) {
+					$tableClass = $this->record[$field.$compositeName.'_Lazy'];
+					$this->loadLazyFields($tableClass);
+				}
+			}
+
 			// write value only if either the field value exists,
 			// or a valid record has been loaded from the database
 			$value = (isset($this->record[$field])) ? $this->record[$field] : null;
@@ -2092,9 +2100,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// If we've just lazy-loaded the column, then we need to populate the $original array by
 			// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
 			// on a call to getChanged()?
-			if (isset($this->record[$fieldName.'_Lazy'])) {
-				$this->getField($fieldName);
-			}
+			$this->getField($fieldName);
 
 			$this->record[$fieldName] = $val;
 		// Situation 2: Passing a literal or non-DBField object
@@ -2120,9 +2126,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// If we've just lazy-loaded the column, then we need to populate the $original array by
 				// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
 				// on a call to getChanged()?
-				if (isset($this->record[$fieldName.'_Lazy'])) {
-					$this->getField($fieldName);
-				}
+				$this->getField($fieldName);
 
 				// Value is always saved back when strict check succeeds.
 				$this->record[$fieldName] = $val;
