@@ -18,9 +18,11 @@ fi:
     DROPAREA: Pudotusalue
     EDITALL: 'Muokkaa kaikkia'
     EDITANDORGANIZE: 'Muokkaa & järjestele'
+    EDITINFO: 'Edit files'
     FILES: Tiedostot
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Yhteensä
-    TOUPLOAD: 'Valitse siirrettävä(t) tiedosto(t)...'
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
     UPLOADOR: TAI
   BBCodeParser:
@@ -53,8 +55,9 @@ fi:
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
-    ANY: Yhtään
     0: Ei
+    ANY: Yhtään
+    Hello: Hi
     LOGOUT: 'Kirjaudu ulos'
     1: Kyllä
   CMSMain:
@@ -109,7 +112,9 @@ fi:
     VALIDDATEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava vähintään asetettuun minimiin ({date})'
   Director:
     ADD: Lisää
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Pyyntö on virheellinen'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Valitse)
   EmailField:
@@ -120,6 +125,7 @@ fi:
   Enum:
     ANY: Yhtään
     LOADING: Ladataan...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Sisältö
     Filename: Tiedostonimi
@@ -272,6 +278,7 @@ fi:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Suodata"  GridFieldItemEditView.ss:    Go back: "Takaisin"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Lisää uusi rivi'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu.'
     DELETED: Poistettu.
     DropdownBatchActionsDefault: Toimenpiteet
@@ -383,7 +390,9 @@ fi:
     FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
     FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
     IMPORTSPECFIELDS: 'Tietokannan sarakkeet'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Yhteydet
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
@@ -430,9 +439,12 @@ fi:
     BtnImport: Tuonti
     FileFieldLabel: 'CSV-tiedosto <small>(Sallitut päätteet: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Muokkaa
     FILTER: Suodin
     IMPORT: Tuo
+    OF: of
+    TO: to
     VIEWFIRST: 'Näytä ensimmäinen'
     VIEWLAST: 'Näytä viimeinen'
     VIEWNEXT: 'Näytä seuraava'
@@ -442,8 +454,9 @@ fi:
   SiteTree:
     TABMAIN: Yleiset
   TableField:
-    ADDITEM: 'Lisää %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'Kohteessa %s on ''%s'' pakollinen'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Järjestä nousevasti'
     SORTDESC: 'Järjestä laskevasti'
   TableListField:
@@ -460,14 +473,17 @@ fi:
     ATTACHFILE: 'Liitä tiedosto'
     ATTACHFILES: 'Liitä tiedostoja'
     AttachFile: 'Liitä tiedosto'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Poista tiedosto pysyvästi'
     DOEDIT: Tallenna
     DROPFILE: 'Pudota tiedosto'
     DROPFILES: 'pudota tiedostot'
     Dimensions: Mitat
+    EDIT: Edit
     EDITINFO: 'Muokkaa tätä tiedostoa'
     FIELDNOTSET: 'Tietoja tiedostosta ei löytynyt'
     FROMCOMPUTER: 'Omalta tietokoneeltasi'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: Tiedostoista
     MAXNUMBEROFFILES: 'Suurin sallittu määrä ({count}) tiedostoja ylitetty.'
     MAXNUMBEROFFILESSHORT: 'Voidaan siirtää vain {count} tiedostoa'
@@ -475,6 +491,7 @@ fi:
     REMOVEERROR: 'Virhe poistettaessa tiedostoa'
     REMOVEINFO: 'Poista tiedosto, mutta säilytä se tiedostovarastossa'
     STARTALL: 'Aloita kaikki'
+    STARTALLINFO: 'Start all uploads'
     Saved: Tallennettu
   Versioned:
     has_many_Versions: Versiot

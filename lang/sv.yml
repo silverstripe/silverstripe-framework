@@ -18,9 +18,11 @@ sv:
     DROPAREA: 'Släpp här'
     EDITALL: 'Redigera alla'
     EDITANDORGANIZE: 'Redigera och organisera'
+    EDITINFO: 'Edit files'
     FILES: Filer
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Totalt
-    TOUPLOAD: 'Välj fil(er) att ladda upp...'
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
   BBCodeParser:
@@ -53,8 +55,9 @@ sv:
     ERRORNOTADMIN: 'Den användaren är inte administratör'
     ERRORNOTREC: 'Användarnamnet / lösenordet hittas inte'
   Boolean:
-    ANY: 'Vilken som helst'
     0: Falskt
+    ANY: 'Vilken som helst'
+    Hello: Hi
     LOGOUT: 'Logga ut'
     1: Sant
   CMSMain:
@@ -109,7 +112,9 @@ sv:
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
   Director:
     ADD: 'Lägg till'
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Ogiltig förfrågan'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Välj)
   EmailField:
@@ -120,6 +125,7 @@ sv:
   Enum:
     ANY: 'Vilken som helst'
     LOADING: Laddar...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Innehåll
     Filename: Filnamn
@@ -272,9 +278,10 @@ sv:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Använd filter"  GridFieldItemEditView.ss:    Go back: "Gå tillbaka"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Lägg till ny rad'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Raderad
-    DropdownBatchActionsDefault: Åtgärder
+    DropdownBatchActionsDefault: 'Åtgärder'
     HELP: Hjälp
     PAGETYPE: Sidtyp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
@@ -383,7 +390,9 @@ sv:
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relationer
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
@@ -430,9 +439,12 @@ sv:
     BtnImport: 'Importera från CSV'
     FileFieldLabel: 'CSV-fil <small>(Tillåtna filtyper: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Ändra
     FILTER: 'Filtrera på'
     IMPORT: Importera
+    OF: of
+    TO: to
     VIEWFIRST: 'Visa första'
     VIEWLAST: 'Visa sista'
     VIEWNEXT: 'Visa nästa'
@@ -442,8 +454,9 @@ sv:
   SiteTree:
     TABMAIN: Main
   TableField:
-    ADDITEM: 'Lägg till'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sortera i stigande ordning'
     SORTDESC: 'Sortera i fallande ordning'
   TableListField:
@@ -460,14 +473,17 @@ sv:
     ATTACHFILE: 'Bifoga en fil'
     ATTACHFILES: 'Bifoga fil(er)'
     AttachFile: 'Bifoga en fil'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Ta bort filen permanent från filarkivet'
     DOEDIT: Spara
     DROPFILE: 'Släpp en fil'
     DROPFILES: 'släpp filer'
     Dimensions: Dimensioner
+    EDIT: Edit
     EDITINFO: 'Redigera filen'
     FIELDNOTSET: 'Hittade ingen filinformation'
     FROMCOMPUTER: 'Från din dator'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Från filer'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
     MAXNUMBEROFFILESSHORT: 'Kan bara ladda upp {count} files'
@@ -475,6 +491,7 @@ sv:
     REMOVEERROR: 'Fel när filen skulle tas bort'
     REMOVEINFO: 'Ta bort filen härifrån, men radera den inte från filarkivet'
     STARTALL: 'Starta alla'
+    STARTALLINFO: 'Start all uploads'
     Saved: Sparad
   Versioned:
     has_many_Versions: Versioner

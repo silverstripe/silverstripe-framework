@@ -18,9 +18,11 @@ ja_JP:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -40,7 +42,7 @@ ja_JP:
     ITALIC: テキストを斜体にする
     ITALICEXAMPLE: 斜体
     LINK: ウェブサイトのリンク
-    LINKDESCRIPTION: 別のウェブサイトかURLにリンクしてください
+    LINKDESCRIPTION: '別のウェブサイトかURLにリンクしてください'
     STRUCK: テキストに取り消し線を引く
     STRUCKEXAMPLE: 取り消し線
     UNDERLINE: テキストに下線を引く
@@ -49,12 +51,13 @@ ja_JP:
     UNORDEREDDESCRIPTION: 不規則なリストです
     UNORDEREDEXAMPLE1: '不規則なアイテム 1'
   BasicAuth:
-    ENTERINFO: ユーザー名とパスワードを入力してください
-    ERRORNOTADMIN: このユーザーは管理者（アドミニストレーター）ではありません
+    ENTERINFO: 'ユーザー名とパスワードを入力してください'
+    ERRORNOTADMIN: 'このユーザーは管理者（アドミニストレーター）ではありません'
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   Boolean:
-    ANY: Any
     0: 'False'
+    ANY: Any
+    Hello: Hi
     LOGOUT: 'Log out'
     1: 'True'
   CMSMain:
@@ -108,8 +111,10 @@ ja_JP:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: 追加
+    ADD: '追加'
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (選択)
   EmailField:
@@ -120,8 +125,9 @@ ja_JP:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content: 内容
+    Content: '内容'
     Filename: ファイル名
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
@@ -152,7 +158,7 @@ ja_JP:
     FIELDISREQUIRED: '%s が必要です'
     TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 入力された値はユニークではありません
+    VALIDATIONNOTUNIQUE: '入力された値はユニークではありません'
     VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
     VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
@@ -199,7 +205,7 @@ ja_JP:
     CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
     CHANGEPASSWORDTEXT2: '貴方は現在以下の証明書を使ってログインしています:'
     Code: グループコード
-    DefaultGroupTitleAdministrators: 管理者
+    DefaultGroupTitleAdministrators: '管理者'
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: 説明文
     EMAIL: メールアドレス
@@ -208,9 +214,9 @@ ja_JP:
     Locked: ロックしますか？
     NoRoles: 'No roles found'
     PASSWORD: パスワード
-    Parent: 元グループ
+    Parent: '元グループ'
     RolesAddEditLink: 'Manage roles'
-    Sort: 並び順
+    Sort: '並び順'
     TITLE: イメージアップロード（Iframe）
     has_many_Permissions: 承認
     many_many_Members: メンバー
@@ -227,15 +233,15 @@ ja_JP:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: アンカー
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: リンクを追加
+    BUTTONINSERTLINK: 'リンクを追加'
     BUTTONREMOVELINK: リンクを削除
     BUTTONUpdate: Update
     CAPTIONTEXT: タイトル
     CSSCLASS: '調整 / スタイル'
     CSSCLASSCENTER: 中央はテキストのみ
-    CSSCLASSLEFT: 左側にテキストと一緒に処理してください
+    CSSCLASSLEFT: '左側にテキストと一緒に処理してください'
     CSSCLASSLEFTALONE: 中央はテキストのみ
-    CSSCLASSRIGHT: 右側にテキストと一緒に処理してください
+    CSSCLASSRIGHT: '右側にテキストと一緒に処理してください'
     DETAILS: Details
     EMAIL: メールアドレス
     FILE: ファイル
@@ -254,7 +260,7 @@ ja_JP:
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: ハイライトテキストへのリンクの挿入/削除
+    LINK: 'ハイライトテキストへのリンクの挿入/削除'
     LINKANCHOR: このページにアンカーを置く
     LINKDESCR: リンクの説明
     LINKEMAIL: メールアドレス
@@ -271,7 +277,8 @@ ja_JP:
     IMAGE: 画像
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
-    ADD: 新しい行を追加
+    ADD: '新しい行を追加'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -300,12 +307,12 @@ ja_JP:
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: メールアドレス
-    EMPTYNEWPASSWORD: パスワードが空です。もう一度入力して下さい。
-    ENTEREMAIL: パスワードをリセットするためにメールアドレスを入力してください。
-    ERRORLOCKEDOUT: あなたのアカウントは何度もログインに失敗したため一時的に利用できなくなっています。20分後に試してください。
-    ERRORNEWPASSWORD: 入力されたパスワードが一致しません。再度お試しください
-    ERRORPASSWORDNOTMATCH: 登録されているパスワードと一致しません、もう一度入力し直してください
-    ERRORWRONGCRED: メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください
+    EMPTYNEWPASSWORD: 'パスワードが空です。もう一度入力して下さい。'
+    ENTEREMAIL: 'パスワードをリセットするためにメールアドレスを入力してください。'
+    ERRORLOCKEDOUT: 'あなたのアカウントは何度もログインに失敗したため一時的に利用できなくなっています。20分後に試してください。'
+    ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
+    ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
+    ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
     FIRSTNAME: 名
     INTERFACELANG: 画面言語
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
@@ -319,7 +326,7 @@ ja_JP:
     SUBJECTPASSWORDCHANGED: パスワードが変わりました。
     SUBJECTPASSWORDRESET: パスワード再発行
     SURNAME: 姓
-    VALIDATIONMEMBEREXISTS: 入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。
+    VALIDATIONMEMBEREXISTS: '入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 古いパスワード
@@ -327,7 +334,7 @@ ja_JP:
     db_LastVisited: 最終訪問日
     db_Locale: インターフェースの言語地域
     db_LockedOutUntil: DBロックがされています。
-    db_NumVisit: 訪問者数
+    db_NumVisit: '訪問者数'
     db_Password: パスワード
     db_PasswordExpiry: パスワードの有効期限
   MemberAuthenticator:
@@ -378,12 +385,14 @@ ja_JP:
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup: 管理者
+    AdminGroup: '管理者'
     CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 完全な管理権
+    FULLADMINRIGHTS: '完全な管理権'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -393,19 +402,19 @@ ja_JP:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
     Back: Back
-    VALIDATION: 電話番号を入力してください
+    VALIDATION: '電話番号を入力してください'
   Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
-    BUTTONSEND: パスワードリセットのリンクを送信してください
+    BUTTONSEND: 'パスワードリセットのリンクを送信してください'
     CHANGEPASSWORDBELOW: 以下のパスワードを変更できます
     CHANGEPASSWORDHEADER: パスワードを変更しました
-    ENTERNEWPASSWORD: 新しいパスワードを入力してください
+    ENTERNEWPASSWORD: '新しいパスワードを入力してください'
     ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
-    LOGGEDOUT: ログアウトしました。再度ログインする場合は証明書キーを入力してください
+    LOGGEDOUT: 'ログアウトしました。再度ログインする場合は証明書キーを入力してください'
     LOGIN: ログイン
-    NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
+    NOTEPAGESECURED: 'このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
+    NOTERESETPASSWORD: 'メールアドレスを入力してください、パスワードをリセットするURLを送信致します'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -430,9 +439,12 @@ ja_JP:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 一番目を表示
     VIEWLAST: 最新を表示
     VIEWNEXT: 次を表示
@@ -442,8 +454,9 @@ ja_JP:
   SiteTree:
     TABMAIN: メイン
   TableField:
-    ADDITEM: '%sを追加する'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort in ascending order'
     SORTDESC: 'Sort in descending order'
   TableListField:
@@ -455,19 +468,22 @@ ja_JP:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: 減少
-    MORE: 増加
+    MORE: '増加'
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
     AttachFile: 'Attach a file'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ ja_JP:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: バージョン
