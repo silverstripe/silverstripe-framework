@@ -19,7 +19,7 @@ class SQLMap extends Object implements IteratorAggregate {
 	 * @param SQLQuery $query The query to generate this map. THis isn't executed until it's needed.
 	 */
 	public function __construct(SQLQuery $query, $keyField = "ID", $titleField = "Title") {
-		Deprecation::notice('3.0', 'Use SS_Map or DataList::map() instead.');
+		Deprecation::notice('3.0', 'Use SS_Map or DataList::map() instead.', Deprecation::SCOPE_CLASS);
 		
 		if(!$query) {
 			user_error('SQLMap constructed with null query.', E_USER_ERROR);

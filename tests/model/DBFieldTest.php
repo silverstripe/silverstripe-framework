@@ -76,7 +76,6 @@ class DBFieldTest extends SapphireTest {
 		
 		/* Varchar behaviour */
 		$this->assertEquals($db->prepStringForDB("0"), singleton('Varchar')->prepValueForDB(0));
-		$this->assertEquals("'0'", singleton('Varchar')->prepValueForDB(0));
 		$this->assertEquals("null", singleton('Varchar')->prepValueForDB(null));
 		$this->assertEquals("null", singleton('Varchar')->prepValueForDB(false));
 		$this->assertEquals("null", singleton('Varchar')->prepValueForDB(''));

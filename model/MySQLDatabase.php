@@ -87,6 +87,10 @@ class MySQLDatabase extends SS_Database {
 		return true;
 	}
 
+	public function supportsTimezoneOverride() {
+		return true;
+	}
+
 	/**
 	 * Get the version of MySQL.
 	 * @return string

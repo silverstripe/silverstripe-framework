@@ -63,8 +63,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$surname   = $parser->getBySelector('#Form_ItemEditForm_Surname');
 
 		$this->assertFalse($response->isError());
-		$this->assertEquals('Joe', (string) $firstName[0]);
-		$this->assertEquals('Bloggs', (string) $surname[0]);
+		$this->assertEquals('Jane', (string) $firstName[0]);
+		$this->assertEquals('Doe', (string) $surname[0]);
 	}
 
 	function testEditForm() {
@@ -188,6 +188,8 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 		'Categories' => 'GridFieldDetailFormTest_Category'
 	);
 
+	static $default_sort = 'FirstName';
+
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
@@ -209,7 +211,9 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 	static $has_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
-	
+
+	static $default_sort = 'Name';
+
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
@@ -231,6 +235,8 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 	static $belongs_many_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
+
+	static $default_sort = 'Name';
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();

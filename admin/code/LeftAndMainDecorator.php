@@ -7,7 +7,7 @@
 abstract class LeftAndMainDecorator extends LeftAndMainExtension {
 	
 	public function __construct() {
-		Deprecation::notice('3.0', 'Use LeftAndMainExtension instead.');
+		Deprecation::notice('3.0', 'Use LeftAndMainExtension instead.', Deprecation::SCOPE_CLASS);
 		parent::__construct();
 	}
 	

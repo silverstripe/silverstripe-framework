@@ -162,6 +162,9 @@ jQuery.noConflict();
 					
 					if(abort) return;
 				}
+
+				// Save tab selections so we can restore them later
+				this.saveTabState();
 				
 				if(window.History.enabled) {
 					// Active menu item is set based on X-Controller ajax header,
@@ -209,12 +212,6 @@ jQuery.noConflict();
 					return false;
 				}
 				
-				// save tab selections in order to reconstruct them later
-				var selectedTabs = [];
-				form.find('.cms-tabset').each(function(i, el) {
-					if($(el).attr('id')) selectedTabs.push({id:$(el).attr('id'), selected:$(el).tabs('option', 'selected')});
-				});
-
 				// get all data from the form
 				var formData = form.serializeArray();
 				// add button action
@@ -223,6 +220,9 @@ jQuery.noConflict();
 				// Also rewrites anchors to their page counterparts, which is important
 				// as automatic browser ajax response redirects seem to discard the hash/fragment.
 				formData.push({name: 'BackURL', value:History.getPageUrl()});
+
+				// Save tab selections so we can restore them later
+				this.saveTabState();
 
 				// Standard Pjax behaviour is to replace the submitted form with new content.
 				// The returned view isn't always decided upon when the request
@@ -243,24 +243,13 @@ jQuery.noConflict();
 						var newContentEls = self.handleAjaxResponse(data, status, xhr);
 						if(!newContentEls) return;
 
-						var newForm = newContentEls.filter('form');
-
-						// Re-init tabs (in case the form tag itself is a tabset)
-						if(newForm.hasClass('cms-tabset')) newForm.removeClass('cms-tabset').addClass('cms-tabset');
-
-						// re-select previously saved tabs
-						$.each(selectedTabs, function(i, selectedTab) {
-							newForm.find('#' + selectedTab.id).tabs('select', selectedTab.selected);
-						});
-
-						newForm.trigger('aftersubmitform', {status: status, xhr: xhr, formData: formData});
-					}, 
-					dataType: 'json'
+						newContentEls.filter('form').trigger('aftersubmitform', {status: status, xhr: xhr, formData: formData});
+					}
 				}, ajaxOptions));
 	
 				return false;
 			},
-			
+
 			/**
 			 * Handles ajax loading of new panels through the window.History object.
 			 * To trigger loading, pass a new URL to window.History.pushState().
@@ -289,7 +278,8 @@ jQuery.noConflict();
 
 				var self = this, h = window.History, state = h.getState(),
 					fragments = state.data.pjax || 'Content', headers = {},
-					contentEls = this._findFragments(fragments.split(','));
+					fragmentsArr = fragments.split(','),
+					contentEls = this._findFragments(fragmentsArr);
 
 				// For legacy IE versions (IE7 and IE8), reload without ajax
 				// as a crude way to fix memory leaks through whole window refreshes.
@@ -298,6 +288,14 @@ jQuery.noConflict();
 				if(isLegacyIE && this.getStateChangeCount() > 20) {
 					document.location.href = state.url;
 					return;
+				}
+
+				// If any of the requested Pjax fragments don't exist in the current view,
+				// fetch the "Content" view instead, which is the "outermost" fragment
+				// that can be reloaded without reloading the whole window.
+				if(contentEls.length < fragmentsArr.length) {
+					fragments = 'Content', fragmentsArr = ['Content'];
+					contentEls = this._findFragments(fragmentsArr);					
 				}
 				
 				this.trigger('beforestatechange', {state: state, element: contentEls});
@@ -330,7 +328,7 @@ jQuery.noConflict();
 			 * Can be hooked into an ajax 'success' callback.
 			 */
 			handleAjaxResponse: function(data, status, xhr) {
-				var self = this;
+				var self = this, url, selectedTabs;
 
 				// Pseudo-redirects via X-ControllerURL might return empty data, in which
 				// case we'll ignore the response
@@ -394,7 +392,13 @@ jQuery.noConflict();
 					if(origVisible) newContentEl.css('visibility', 'visible');
 				});
 
+				// Re-init tabs (in case the form tag itself is a tabset)
+				var newForm = newContentEls.filter('form');
+				if(newForm.hasClass('cms-tabset')) newForm.removeClass('cms-tabset').addClass('cms-tabset');
+
 				this.redraw();
+
+				this.restoreTabState();
 
 				return newContentEls;
 			},
@@ -428,6 +432,50 @@ jQuery.noConflict();
 				$(window).trigger('statechange');
 				
 				$(this).redraw();
+			},
+
+			/**
+			 * Save tab selections in order to reconstruct them later.
+			 * Requires HTML5 sessionStorage support.
+			 */
+			saveTabState: function() {
+				if(typeof(window.sessionStorage)=="undefined") return;
+
+				var selectedTabs = [], url = this._tabStateUrl();
+				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {
+					var id = $(el).attr('id');
+					if(!id) return; // we need a unique reference
+					if(!$(el).data('tabs')) return; // don't act on uninit'ed controls
+					if($(el).data('ignoreTabState')) return; // allow opt-out
+					selectedTabs.push({id:id, selected:$(el).tabs('option', 'selected')});
+				});
+				if(selectedTabs) window.sessionStorage.setItem('tabs-' + url, JSON.stringify(selectedTabs));
+			},
+
+			/**
+			 * Re-select previously saved tabs.
+			 * Requires HTML5 sessionStorage support.
+			 */
+			restoreTabState: function() {
+				if(typeof(window.sessionStorage)=="undefined") return;
+
+				var self = this, url = this._tabStateUrl(),
+					data = window.sessionStorage.getItem('tabs-' + url),
+					selectedTabs = data ? JSON.parse(data) : false;
+				if(selectedTabs) {
+					$.each(selectedTabs, function(i, selectedTab) {
+						var el = self.find('#' + selectedTab.id);
+						if(!el.data('tabs')) return; // don't act on uninit'ed controls
+						el.tabs('select', selectedTab.selected);
+					});
+				}
+			},
+
+			_tabStateUrl: function() {
+				return History.getState().url
+					.replace(/\?.*/, '')
+					.replace(/#.*/, '')
+					.replace($('base').attr('href'), '');
 			}
 		});
 		
@@ -671,7 +719,8 @@ jQuery.noConflict();
 			showDetailView: function(url) {
 				// Include any GET parameters from the current URL, as the view state might depend on it.
 				// For example, a list prefiltered through external search criteria might be passed to GridField.
-				url = $.path.addSearchParams(url, window.location.search.replace(/^\?/, ''));
+				var params = window.location.search.replace(/^\?/, '');
+				if(params) url = $.path.addSearchParams(url, params);
 				$('.cms-container').loadPanel(url);
 			}
 		});

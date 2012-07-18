@@ -528,59 +528,63 @@ body.cms {
 		overflow: auto;
 	}
 
-	#PageType li {
-		float: none;
-		width: 100%;
-		padding: 9px 0 9px 15px;
-		overflow: hidden;
-		border-bottom-width: 2px;
-		border-bottom: 2px groove lighten($color-shadow-light, 95%);
-		-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-		border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	#PageType {
+		ul {
+			padding-left: 20px;
+			li {
+				float: none;
+				width: 100%;
+				padding: 9px 0 9px 15px;
+				overflow: hidden;
+				border-bottom-width: 2px;
+				border-bottom: 2px groove lighten($color-shadow-light, 95%);
+				-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+				border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
 
-		&:last-child {
-			border-bottom: none;
-		}
+				&:last-child {
+					border-bottom: none;
+				}
+						
+				&:hover, &.selected {
+					background-color: $color-highlight-opacity;
+				}
+
+				&.disabled {
+					color: $color-text-disabled;
+					&:hover {
+						background: none;
+					}
+				}
+
+				input {
+					margin: inherit;
+				}
+
+				label {
+					padding-left: 0;
+					padding-bottom: 0;
+				}
 				
-		&:hover, &.selected {
-			background-color: $color-highlight-opacity;
-		}
-
-		&.disabled {
-			color: $color-text-disabled;
-			&:hover {
-				background: none;
+				input, label, .page-icon, .title {
+					float: left;
+					line-height: 1.3em;
+				}
+				
+				.page-icon {
+					margin: 0 4px;
+				}
+				
+				.title {
+					width: 120px;
+					font-weight: bold;
+					padding-right: 10px;
+				}
+				
+				.description {
+					font-style: italic;
+				}
 			}
-		}
-
-		input {
-			margin: inherit;
-		}
-
-		label {
-			padding-left: 0;
-			padding-bottom: 0;
-		}
-		
-		input, label, .page-icon, .title {
-			float: left;
-			line-height: 1.3em;
-		}
-		
-		.page-icon {
-			margin: 0 4px;
-		}
-		
-		.title {
-			width: 120px;
-			font-weight: bold;
-			padding-right: 10px;
-		}
-		
-		.description {
-			font-style: italic;
-		}
-		
+		}	
 	}	
 }
 

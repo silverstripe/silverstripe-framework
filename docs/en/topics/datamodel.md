@@ -204,7 +204,7 @@ will return all members whose first name or surname contain the string 'sam'.
 
 	:::php
 	$members = Member::get()->filter(array(
-		'FirstName,Surname:Contains' => 'sam'
+		'FirstName,Surname:PartialMatch' => 'sam'
 	));
 
 If you wish to match against any of a number of values, you can pass an array as the value.  This will return all 

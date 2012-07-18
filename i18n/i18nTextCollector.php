@@ -310,9 +310,9 @@ class i18nTextCollector extends Object {
 
 		// use the old method of getting _t() style translatable entities
 		// Collect in actual template
-		if(preg_match_all('/<%\s*(_t\(.*)%>/ms', $content, $matches)) {
-			foreach($matches as $match) {
-				$entities = array_merge($entities, $this->collectFromCode($match[0], $module));
+		if(preg_match_all('/(_t\([^\)]*?\))/ms', $content, $matches)) {
+			foreach($matches[1] as $match) {
+				$entities = array_merge($entities, $this->collectFromCode($match, $module));
 			}
 		}
 

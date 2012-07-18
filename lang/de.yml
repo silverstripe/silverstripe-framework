@@ -5,7 +5,7 @@ de:
     CREATED: 'Erstmalig hochgeladen'
     DIM: Dimensionen
     FILENAME: Dateiname
-    FOLDER: Folder
+    FOLDER: Ordner
     LASTEDIT: 'Letztmals geändert'
     OWNER: Eigentümer
     SIZE: Größe
@@ -13,14 +13,14 @@ de:
     TYPE: Typ
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
-    FILES: Files
-    TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
+    ChooseFiles: 'Dateien auswählen'
+    DRAGFILESHERE: 'Dateien hier ablegen'
+    DROPAREA: Dateiablage
+    EDITALL: 'Alle Bearbeiten'
+    EDITANDORGANIZE: Bearbeiten
+    FILES: Dateien
+    TOTAL: Gesamt
+    TOUPLOAD: 'Datei(en) zum Hochladen auswählen'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: ODER
   BBCodeParser:
@@ -55,7 +55,7 @@ de:
   Boolean:
     ANY: alle
     0: Nein
-    LOGOUT: 'Log out'
+    LOGOUT: Ausloggen
     1: Ja
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
@@ -69,7 +69,7 @@ de:
     - Ja
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: '{name} hinzugefügt'
     SUCCESSEDIT: 'Gespeichert %s %s %s'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
@@ -97,7 +97,7 @@ de:
     MONTHS: Monat
     SEC: Sekunden
     SECS: Sekunden
-    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFAGO: 'vor {difference}'
     TIMEDIFFIN: 'in {difference}'
     YEAR: Jahr
     YEARS: Jahre
@@ -109,17 +109,17 @@ de:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Hinzufügen
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION: 'Bitte geben Sie eine E-Mail Adresse ein'
   Email_BounceRecord:
     PLURALNAME: 'E-Mail Rückläufer'
     SINGULARNAME: 'E-Mail Rückläufer'
   Enum:
     ANY: alle
-    LOADING: Loading...
+    LOADING: 'Lade Daten ...'
   File:
     Content: Inhalt
     Filename: Dateiname
@@ -134,7 +134,7 @@ de:
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Titel
   FileIFrameField:
-    ATTACH: 'Attach {type}'
+    ATTACH: '{type} anhängen'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
@@ -143,11 +143,11 @@ de:
     FROMCOMPUTER: 'Von Ihrem Computer'
     FROMFILESTORE: 'Aus dem Datei-Storage'
     NOSOURCE: 'Bitte wählen Sie eine Datei aus'
-    REPLACE: 'Replace {type}'
+    REPLACE: '{type} ersetzen'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    IMPORT_TAB_HEADER: Importieren
+    SEARCHLISTINGS: Suche
+    SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
     TITLE: 'Image Uploading Iframe'
@@ -161,41 +161,41 @@ de:
   FormField:
     NONE: keine
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    DELETE_DESCRIPTION: Löschen
+    Delete: Löschen
+    UnlinkRelation: 'Verbindung entfernen'
   GridField:
-    Add: 'Add {name}'
+    Add: '{name} Hinzufügen'
     Filter: Filter
-    FilterBy: 'Filter by '
-    Find: Find
+    FilterBy: 'Filter nach'
+    Find: Suchen
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
+    NewRecord: 'Neue(r) %s'
+    NoItemsFound: 'Keine Elemente gefunden.'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find {type}'
+    PlaceHolder: '{type} Suchen'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    ResetFilter: Zurücksetzen
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
     NEXT: nächste
     PREVIOUS: vorherige
   GridFieldDetailForm:
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    Create: Erstellen
+    Delete: Löschen
+    DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
+    Deleted: 'Gelöscht %s %s'
     HELLO: Hallo
-    Save: Save
-    Saved: 'Saved %s %s'
+    Save: Speichern
+    Saved: 'Gespeichert %s %s'
     TEXT1: 'Hier ist Ihr'
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Rolle für die Gruppe hinzufügen'
     CHANGEPASSWORDTEXT1: 'Sie haben ihr Passwort geändert für'
     CHANGEPASSWORDTEXT2: 'Sie können nun folgende Angaben benutzen um sich einzuloggen'
     Code: 'Gruppen Code'
@@ -203,10 +203,10 @@ de:
     DefaultGroupTitleContentAuthors: Inhaltsautoren
     Description: Beschreibung
     EMAIL: E-Mail
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Bei Zuweisung einer Übergruppe werden alle ihre Rollen übernommen'
     HELLO: Hi
     Locked: 'Gesperrt?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Keine Rollen gefunden'
     PASSWORD: Passwort
     Parent: Elterngruppe
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
@@ -223,13 +223,13 @@ de:
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ADDURL: 'URL hinzufügen'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; Dimensionen'
     ANCHORVALUE: Anker
-    BUTTONINSERT: Insert
+    BUTTONINSERT: Einfügen
     BUTTONINSERTLINK: 'Verweis einfügen'
     BUTTONREMOVELINK: 'Verweise entfernen'
-    BUTTONUpdate: Update
+    BUTTONUpdate: Aktualisieren
     CAPTIONTEXT: Beschriftungstext
     CSSCLASS: Ausrichtung/Stil
     CSSCLASSCENTER: 'Zentriert, selbstständig'
@@ -241,10 +241,10 @@ de:
     FILE: Datei
     FOLDER: Ordner
     FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
+    FROMCOMPUTER: 'Von Ihrem Computer'
+    FROMWEB: 'Aus dem Internet'
+    FindInFolder: 'In Ordner suchen'
+    IMAGEALT: 'Alternativer Text (alt)'
     IMAGEALTTEXT: 'Alternativer Text (alt) - angezeigt, wenn das Bild nicht dargestellt werden kann'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensionen
@@ -269,28 +269,28 @@ de:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Bild
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Filter anwenden"  GridFieldItemEditView.ss:    Go back: "Zurück"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Eine neue Zeile hinzufügen'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Aktionen
     HELP: Hilfe
     PAGETYPE: 'Seitentyp:'
     PERMAGAIN: 'Sie wurden aus dem System ausgeloggt. Falls Sie sich wieder einloggen möchten, geben Sie bitte Benutzernamen und Passwort im untenstehenden Formular an.'
     PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
     PERMDEFAULT: 'Bitte wählen Sie eine Authentifizierungsmethode und geben Sie Ihre Benutzerdaten für den Zugang zum CMS ein.'
     PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
-    PreviewButton: Preview
+    PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
-    VersionUnknown: unknown
+    SAVEDUP: Gespeichert.
+    VersionUnknown: unbekannt
   LoginAttempt:
     Email: E-Mail-Adresse
     IP: IP-Adresse
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Gruppe hinzufügen'
     BUTTONCHANGEPASSWORD: 'Passwort ändern'
     BUTTONLOGIN: Einloggen
     BUTTONLOGINOTHER: 'Als jemand anders einloggen'
@@ -334,23 +334,23 @@ de:
     TITLE: 'E-Mail &amp; Passwort'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
+    Custom: Benutzerdefiniert
+    DATEFORMATBAD: 'Ungültiges Datumsformat'
     DAYNOLEADING: 'Day of month without leading zero'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
+    FOURDIGITYEAR: Jahr
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
     HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
+    MINUTENOLEADING: Minute
     MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
+    Preview: Vorschau
     SHORTMONTH: 'Short name of month (e.g. Jun)'
     TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Two-digit day of month'
     TWODIGITHOUR: 'Two digits of hour (00 through 23)'
     TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITSECOND: Sekunde
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Mitglieder im <em>CSV</em>-Format (kommaseparierte Werte) importieren. <small><a href="#" class="toggle-advanced">Erweiterte Nutzung</a></small></p>'
@@ -362,14 +362,14 @@ de:
   MemberTableField: null
   ModelAdmin:
     DELETE: Löschen
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: '{count} Datensätze wurden gelöscht.'
     IMPORT: 'CSV Import'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: '{count} Datensätze wurden importiert.'
     NOCSVFILE: 'Wählen sie eine CSV-Datei zum Importieren'
     NOIMPORT: 'Kein Import notwendig.'
-    RESET: Reset
+    RESET: Zurücksetzen
     Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    UPDATEDRECORDS: '{count} Datensätze wurden aktualisiert.'
   MoneyField:
     FIELDLABELAMOUNT: Betrag
     FIELDLABELCURRENCY: Währung
@@ -385,14 +385,14 @@ de:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECRELATIONS: Relations
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    AssignedTo: 'Zugewiesen an "{title}"'
+    FromGroup: 'abgeleited von Gruppe "{title}"'
+    FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
   PhoneNumberField:
-    Back: Back
+    Back: Zurück
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
@@ -415,8 +415,8 @@ de:
     EDITPERMISSIONS: 'Bearbeiten der Rechte und IP-Adressen für jede Gruppe'
     EDITPERMISSIONS_HELP: 'Möglichkeit Berechtigungen und IP-Adressen einer Gruppen zu editieren. Erfordert Zugriff auf den Bereich "Sicherheit".'
     GROUPNAME: Gruppenname
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Gruppen importieren'
+    IMPORTUSERS: 'Benutzer importieren'
     MEMBERS: Mitglieder
     MENUTITLE: Security
     MemberListCaution: 'Achtung: Das Entfernen von Mitgliedern aus dieser Liste löscht diese auch aus der Datenbank sowie die entsprechenden Gruppenzuweisungen.'
@@ -425,14 +425,14 @@ de:
     ROLES: Rollen
     ROLESDESCRIPTION: 'Hier können Sie der Gruppe Rollen zuweisen. Rollen sind logische Gruppierungen von Berechtigungen.'
     TABROLES: Rollen
-    Users: Users
+    Users: Benutzer
   SecurityAdmin_MemberImportForm:
     BtnImport: Import
     FileFieldLabel: 'CSV Datei <small>(Erlaubte Dateierweiterung: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Bearbeiten
     FILTER: Filter
-    IMPORT: Import
+    IMPORT: Importieren
     VIEWFIRST: 'Ersten anzeigen'
     VIEWLAST: 'Letzten anzeigen'
     VIEWNEXT: 'Nächsten anzeigen'
@@ -443,7 +443,7 @@ de:
     TABMAIN: Hauptteil
   TableField:
     ADDITEM: '%s hinzufügen'
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED: 'In %s wird ''%s'' benötigt'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   TableListField:
@@ -457,21 +457,21 @@ de:
     LESS: weniger
     MORE: mehr
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    ATTACHFILE: 'Datei anhängen'
+    ATTACHFILES: 'Dateien anhängen'
+    AttachFile: 'Datei anhängen'
     DELETEINFO: 'Löscht die Datei dauerhaft aus dem Dateisystem'
     DOEDIT: Speichern
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
-    Dimensions: Dimensions
+    DROPFILE: 'Datei hier ablegen'
+    DROPFILES: 'Dateien hier ablegen'
+    Dimensions: Dimensionen
     EDITINFO: 'Diese Datei bearbeiten'
-    FIELDNOTSET: 'File information not found'
+    FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     FROMCOMPUTER: 'Von Ihrem Computer'
-    FROMFILES: 'From files'
+    FROMFILES: 'Von "Dateien"'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    REMOVE: Entfernen
     REMOVEERROR: 'Fehler beim Entfernen der Datei'
     REMOVEINFO: 'Entfernt die Datei von hier, löscht Sie aber nicht aus dem Dateisystem.'
     STARTALL: 'Alle starten'

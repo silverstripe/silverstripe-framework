@@ -45,7 +45,7 @@ class ImageField extends FileIFrameField {
 	 * @return Form
 	 */
 	public function EditFileForm() {
-		Deprecation::notice('3.0', 'Use UploadField');
+		Deprecation::notice('3.0', 'Use UploadField', Deprecation::SCOPE_CLASS);
 
 		$filter = create_function('$item', 'return (in_array("Folder", ClassInfo::ancestry($item->ClassName)) || in_array("Image", ClassInfo::ancestry($item->ClassName)));');
 		
