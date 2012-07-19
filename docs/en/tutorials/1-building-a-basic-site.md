@@ -97,8 +97,7 @@ You should ensure the URL for the home page is *home*, as that's the page Silver
 ## Templates
 
 All pages on a SilverStripe site are rendered using a template. A template is an file 
-with a special `*.ss` file extension, containing HTML augmented with some
-control codes. Because of this, you can have as much control of your site’s HTML code as you like.
+with a special `*.ss` file extension, containing HTML augmented with some control codes.  Through the use of templates, you can have as much control over your site’s HTML code as you like. In SilverStripe, these files and others for controlling your sites appearance – the CSS, images, and some javascript – are collectively described as a theme. Themes live in the 'themes' folder of your site.
 
 Every page in your site has a **page type**. We will briefly talk about page types later, and go into much more detail
 in tutorial two; right now all our pages will be of the page type *Page*. When rendering a page, SilverStripe will look
