@@ -102,13 +102,15 @@
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
-							
+							var idVal = $(form).find(':input[name=ID]').val();
+							if(!idVal) {
+								idVal = 0;
+							}
 							return [
 								{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()},
-								{name: 'ID', value: $(form).find(':input[name=ID]').val()}
+								{name: 'ID', value: idVal}
 							];
 						},
-						errorMessages: {
 							// errorMessages for all error codes suggested from the plugin author, some will be overwritten by the config comming from php
 							1: ss.i18n._t('UploadField.PHP_MAXFILESIZE'),
 							2: ss.i18n._t('UploadField.HTML_MAXFILESIZE'),
