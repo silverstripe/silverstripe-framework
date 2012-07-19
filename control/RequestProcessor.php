@@ -14,6 +14,10 @@ class RequestProcessor {
 		$this->filters = $filters;
 	}
 
+	public function setFilters($filters) {
+		$this->filters = $filters;
+	}
+
 	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		foreach ($this->filters as $filter) {
 			$res = $filter->preRequest($request, $session, $model);
