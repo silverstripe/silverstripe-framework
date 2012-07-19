@@ -1,56 +1,51 @@
 # How to make a simple contact form
 
-To make a contact form, begin by making a page type for the form to live on – we don't want to see the contact form on every page. Here we have the skeleton code for a ContactPage page type:
+In this how-to, we'll explain how to set up a specific page type
+holding a contact form, which submits a message via email.
+Let's start by defining a new `ContactPage` page type:
 
 	:::php
 	<?php
 	class ContactPage extends Page {
-		static $db = array(
-		);
 	}
 	class ContactPage_Controller extends Page_Controller {
-
+		function Form() { 
+			$fields = new FieldList( 
+				new TextField('Name'), 
+				new EmailField('Email'), 
+				new TextareaField('Message')
+			); 
+			$actions = new FieldList( 
+				new FormAction('submit', 'Submit') 
+			); 
+			return new Form($this, 'Form', $fields, $actions); 
+		}
 	}
 
-To create a form, we create a Form object on a function on our page controller. We'll call this function 'Form()' on our ContactPage_Controller class. It doesn't matter what you call your function, but it's standard practice to name the function Form() if there's only a single form on the page. Below is the function to create our contact form:
-
-	:::php
-	function Form() { 
-		$fields = new FieldSet( 
-			new TextField('Name'), 
-			new EmailField('Email'), 
-			new TextareaField('Message')
-		); 
-		 
-		$actions = new FieldSet( 
-			new FormAction('submit', 'Submit') 
-		); 
-		 
-		return new Form($this, 'Form', $fields, $actions); 
-	}
+To create a form, we instanciate a `Form` object on a function on our page controller. We'll call this function `Form()`. You're free to choose this name, but it's standard practice to name the function `Form()` if there's only a single form on the page.
 
 There's quite a bit in this function, so we'll step through one piece at a time.
 
 	:::php
-	$fields = new FieldSet(
+	$fields = new FieldList(
 		new TextField('Name'),
 		new EmailField('Email'),
 		new TextareaField('Message')
 	);
 
-First we create all the fields we want in the contact form, and put them inside a FieldSet. You can find a list of form fields available on the `[api:FormField]` page.   
+First we create all the fields we want in the contact form, and put them inside a FieldList. You can find a list of form fields available on the `[api:FormField]` page.   
 
 	:::php
-	$actions = FieldSet(
+	$actions = FieldList(
 		new FormAction('submit', 'Submit')
 	);
 
-We then create a `[api:FieldSet]` of the form actions, or the buttons that submit the form. Here we add a single form action, with the name 'submit', and the label 'Submit'. We'll use the name of the form action later.
+We then create a `[api:FieldList]` of the form actions, or the buttons that submit the form. Here we add a single form action, with the name 'submit', and the label 'Submit'. We'll use the name of the form action later.
 
 	:::php
 	return new Form('Form', $this, $fields, $actions);
 
-Finally we create the Form object and return it. The first argument is the name of the form – this has to be the same as the name of the function that creates the form, so we've used 'Form'. The second argument is the controller that the form is on – this is almost always $this. The third and fourth arguments are the fields and actions we created earlier.
+Finally we create the `Form` object and return it. The first argument is the name of the form – this has to be the same as the name of the function that creates the form, so we've used 'Form'. The second argument is the controller that the form is on – this is almost always $this. The third and fourth arguments are the fields and actions we created earlier.
 
 To show the form on the page, we need to render it in our template. We do this by appending $ to the name of the form – so for the form we just created we need to add $Form. Add $Form to the themes/currenttheme/Layout/Page.ss template, below $Content.
 
@@ -64,25 +59,37 @@ If you now create a ContactPage in the CMS (making sure you have rebuilt the dat
 Now that we have a contact form, we need some way of collecting the data submitted. We do this by creating a function on the controller with the same name as the form action. In this case, we create the function 'submit' on the ContactPage_Controller class.
 
 	:::php
-	function submit($data, $form) { 
-		$email = new Email(); 
-		 
-		$email->setTo('siteowner@mysite.com'); 
-		$email->setFrom($data['Email']); 
-		$email->setSubject("Contact Message from {$data["Name"]}"); 
-		 
-		$messageBody = " 
-			<p><strong>Name:</strong> {$data['Name']}</p> 
-			<p><strong>Website:</strong> {$data['Website']}</p> 
-			<p><strong>Message:</strong> {$data['Message']}</p> 
-		"; 
-		$email->setBody($messageBody); 
-		$email->send(); 
-		return array(
-			'Content' => '<p>Thank you for your feedback.</p>',
-			'Form' => ''
-		);
+	class ContactPage_Controller extends Page_Controller {
+		function Form() {
+			// ...
+		}
+		function submit($data, $form) { 
+			$email = new Email(); 
+			 
+			$email->setTo('siteowner@mysite.com'); 
+			$email->setFrom($data['Email']); 
+			$email->setSubject("Contact Message from {$data["Name"]}"); 
+			 
+			$messageBody = " 
+				<p><strong>Name:</strong> {$data['Name']}</p> 
+				<p><strong>Website:</strong> {$data['Website']}</p> 
+				<p><strong>Message:</strong> {$data['Message']}</p> 
+			"; 
+			$email->setBody($messageBody); 
+			$email->send(); 
+			return array(
+				'Content' => '<p>Thank you for your feedback.</p>',
+				'Form' => ''
+			);
+		}
 	}
+
+<div class="hint" markdown="1">
+	Caution: This form is prone to abuse by spammers,
+	since it doesn't enforce a rate limitation, or checks for bots.
+	We recommend to use a validation service like the ["recaptcha" module](http://www.silverstripe.org/recaptcha-module/)
+	for better security.
+</div>
 
 Any function that receives a form submission takes two arguments: the data passed to the form as an indexed array, and the form itself. In order to extract the data, you can either use functions on the form object to get the fields and query their values, or just use the raw data in the array. In the example above, we used the array, as it's the easiest way to get data without requiring the form fields to perform any special transformations.
 
@@ -95,20 +102,11 @@ The final thing we do is return a 'thank you for your feedback' message to the u
 
 All forms have some basic validation built in – email fields will only let the user enter email addresses, number fields will only accept numbers, and so on. Sometimes you need more complicated validation, so you can define your own validation by extending the Validator class.
 
-The Sapphire framework comes with a predefined validator called 'RequiredFields', which performs the common task of making sure particular fields are filled out. Below is the code to add validation to a contact form:
+The framework comes with a predefined validator called `[api:RequiredFields]`, which performs the common task of making sure particular fields are filled out. Below is the code to add validation to a contact form:
 
 	function Form() { 
-		$fields = new FieldSet( 
-			new TextField('Name'), 
-			new EmailField('Email'), 
-			new TextareaField('Message')
-		); 
-		 
-		$actions = new FieldSet( 
-			new FormAction('submit', 'Submit') 
-		); 
+		// ...
 		$validator = new RequiredFields('Name', 'Message');
-		 
 		return new Form($this, 'Form', $fields, $actions, $validator); 
 	}
 

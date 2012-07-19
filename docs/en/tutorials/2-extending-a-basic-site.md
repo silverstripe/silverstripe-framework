@@ -236,7 +236,7 @@ By default the field name *'Date'* or *'Author'* is shown as the title, however 
 
 Because our new pages inherit their templates from *Page*, we can view anything entered in the content area when navigating to these pages on our site. However, as there is no reference to the date or author fields in the *Page* template this data is not being displayed.
 
-To fix this we will create a template for each of our new page types. We'll put these in *themes/tutorial/templates/Layout* so we only have to define the page specific parts: SilverStripe will use *themes/tutorial/templates/Page.ss* for the basic
+To fix this we will create a template for each of our new page types. We'll put these in *themes/simple/templates/Layout* so we only have to define the page specific parts: SilverStripe will use *themes/simple/templates/Page.ss* for the basic
 page layout.
 
 ### ArticlePage Template
@@ -366,7 +366,7 @@ It would be nice to greet page visitors with a summary of the latest news when t
 
 This function simply runs a database query that gets the latest news articles from the database. By default, this is five, but you can change it by passing a number to the function. See the [Data Model](../topics/datamodel) documentation for details. We can reference this function as a page control in our *HomePage* template:
 
-**themes/tutorial/templates/Layout/Homepage.ss**
+**themes/simple/templates/Layout/Homepage.ss**
 
 	:::ss
 	...
@@ -514,7 +514,7 @@ resize the image every time the page is viewed.
 
 The *StaffPage* template is also very straight forward.
 
-**themes/tutorial/templates/Layout/StaffPage.ss**
+**themes/simple/templates/Layout/StaffPage.ss**
 
 	:::ss
 	<div class="content-container"> 
