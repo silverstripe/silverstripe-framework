@@ -102,10 +102,13 @@
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
-							
+							var idVal = $(form).find(':input[name=ID]').val();
+							if(!idVal) {
+								idVal = 0;
+							}
 							return [
 								{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()},
-								{name: 'ID', value: $(form).find(':input[name=ID]').val()}
+								{name: 'ID', value: idVal}
 							];
 						},
 						errorMessages: {
