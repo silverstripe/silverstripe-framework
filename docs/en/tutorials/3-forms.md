@@ -313,7 +313,7 @@ Create the function 'BrowserPollResults' on the *HomePage_Controller* class.
 		
 		$list = new ArrayList();
 		foreach($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
-			$percentage = (int) ($data->Count() / $total * 100);
+			$percentage = (int) ($browserSubmissions->Count() / $total * 100);
 			$list->push(new ArrayData(array(
 				'Browser' => $browserName,
 				'Percentage' => $percentage
