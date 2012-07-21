@@ -195,7 +195,7 @@ extending SiteTree (or `[api:Page]`) to create a page type, we extend DataObject
 	}
 
 
-If we then rebuild the database ([http://localhost/db/build?flush=1](http://localhost/db/build?flush=1)), we will see
+If we then rebuild the database ([http://localhost/dev/build?flush=1](http://localhost/dev/build?flush=1)), we will see
 that the *BrowserPollSubmission* table is created. Now we just need to define 'doBrowserPoll' on *HomePage_Controller*.
 
 *mysite/code/HomePage.php*
