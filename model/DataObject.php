@@ -679,13 +679,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array The data as a map.
 	 */
 	public function toMap() {
-		foreach ($this->record as $key => $value) {
-			if (strlen($key) > 5 && substr($key, -5) == '_Lazy') {
-				$this->loadLazyFields($value);
-				break;
-			}
-		}
-
+		$this->loadLazyFields();
 		return $this->record;
 	}
 
@@ -847,13 +841,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * if they are not already marked as changed.
 	 */
 	public function forceChange() {
+		// Ensure lazy fields loaded
+		$this->loadLazyFields();
+
 		// $this->record might not contain the blank values so we loop on $this->inheritedDatabaseFields() as well
 		$fieldNames = array_unique(array_merge(array_keys($this->record), array_keys($this->inheritedDatabaseFields())));
 		
 		foreach($fieldNames as $fieldName) {
 			if(!isset($this->changed[$fieldName])) $this->changed[$fieldName] = 1;
 			// Populate the null values in record so that they actually get written
-			if(!$this->$fieldName) $this->record[$fieldName] = null;
+			if(!isset($this->record[$fieldName])) $this->record[$fieldName] = null;
 		}
 		
 		// @todo Find better way to allow versioned to write a new version after forceChange
@@ -1920,7 +1917,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(self::is_composite_field($this->class, $field)) {
 			$helper = $this->castingHelper($field);
 			$fieldObj = Object::create_from_string($helper, $field);
-			
+
+			$compositeFields = $fieldObj->compositeDatabaseFields();
+			foreach ($compositeFields as $compositeName => $compositeType) {
+				if(isset($this->record[$field.$compositeName.'_Lazy'])) {
+					$tableClass = $this->record[$field.$compositeName.'_Lazy'];
+					$this->loadLazyFields($tableClass);
+				}
+			}
+
 			// write value only if either the field value exists,
 			// or a valid record has been loaded from the database
 			$value = (isset($this->record[$field])) ? $this->record[$field] : null;
@@ -1946,13 +1951,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Loads all the stub fields than an initial lazy load didn't load fully.
+	 * Loads all the stub fields that an initial lazy load didn't load fully.
 	 *
 	 * @param tableClass Base table to load the values from. Others are joined as required.
+	 *                   Not specifying a tableClass will load all lazy fields from all tables.
 	 */
 	protected function loadLazyFields($tableClass = null) {
-		// Smarter way to work out the tableClass? Should the functionality in toMap and getField be moved into here?
-		if (!$tableClass) $tableClass = $this->ClassName;
+		if (!$tableClass) {
+			$loaded = array();
+
+			foreach ($this->record as $key => $value) {
+				if (strlen($key) > 5 && substr($key, -5) == '_Lazy' && !array_key_exists($value, $loaded)) {
+					$this->loadLazyFields($value);
+					$loaded[$value] = $value;
+				}
+			}
+
+			return;
+		}
 
 		$dataQuery = new DataQuery($tableClass);
 
@@ -2092,9 +2108,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// If we've just lazy-loaded the column, then we need to populate the $original array by
 			// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
 			// on a call to getChanged()?
-			if (isset($this->record[$fieldName.'_Lazy'])) {
-				$this->getField($fieldName);
-			}
+			$this->getField($fieldName);
 
 			$this->record[$fieldName] = $val;
 		// Situation 2: Passing a literal or non-DBField object
@@ -2120,9 +2134,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// If we've just lazy-loaded the column, then we need to populate the $original array by
 				// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
 				// on a call to getChanged()?
-				if (isset($this->record[$fieldName.'_Lazy'])) {
-					$this->getField($fieldName);
-				}
+				$this->getField($fieldName);
 
 				// Value is always saved back when strict check succeeds.
 				$this->record[$fieldName] = $val;
