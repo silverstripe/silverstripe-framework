@@ -425,7 +425,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$fixtureFile);
 		
 		$fixture = new YamlFixture($fixtureFile);
-		$fixture->saveIntoDatabase();
+		$fixture->saveIntoDatabase($this->model);
 		$this->fixtures[] = $fixture;
 	}
 	
