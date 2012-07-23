@@ -72,6 +72,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'save',
 		'savetreenode',
 		'getsubtree',
+		'updatetreenodes',
 		'printable',
 		'show',
 		'ping',
@@ -678,16 +679,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$controller = $this;
 		$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
 		$titleFn = function(&$child) use(&$controller, &$recordController) {
-			$classes = $child->CMSTreeClasses();
-			if($controller->isCurrentPage($child)) $classes .= " current";
-			$flags = $child->hasMethod('getStatusFlags') ? $child->getStatusFlags() : false;
-			if($flags) $classes .= ' ' . implode(' ', array_keys($flags));
-			return "<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-pagetype=\"$child->ClassName\" class=\"" . $classes . "\">" .
-				"<ins class=\"jstree-icon\">&nbsp;</ins>" .
-				"<a href=\"" . Controller::join_links($recordController->Link("show"), $child->ID) . "\" title=\"" .
-				_t('LeftAndMain.PAGETYPE','Page type: ') .
-				"$child->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($child->TreeTitle).
-				"</span></a>";
+			$link = Controller::join_links($recordController->Link("show"), $child->ID);
+			return LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child))->forTemplate();
 		};
 		$html = $obj->getChildrenAsUL(
 			"",
@@ -739,6 +732,45 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$html = preg_replace('/<\/ul[^>]*>[\s\t\r\n]*$/','', $html);
 		
 		return $html;
+	}
+
+	/**
+	 * Allows requesting a view update on specific tree nodes.
+	 * Similar to {@link getsubtree()}, but doesn't enforce loading
+	 * all children with the node. Useful to refresh views after
+	 * state modifications, e.g. saving a form.
+	 * 
+	 * @return String JSON
+	 */
+	public function updatetreenodes($request) {
+		$data = array();
+		$ids = explode(',', $request->getVar('ids'));
+		foreach($ids as $id) {
+			$record = $this->getRecord($id);
+			$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
+
+			// Find the next & previous nodes, for proper positioning (Sort isn't good enough - it's not a raw offset)
+			// TODO: These methods should really be in hierarchy - for a start it assumes Sort exists
+			$next = $prev = null;
+
+			$className = $this->stat('tree_class');
+			$next = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort > '.$record->Sort)->first();
+			if (!$next) {
+				$prev = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort < '.$record->Sort)->reverse()->first();
+			}
+
+			$link = Controller::join_links($recordController->Link("show"), $record->ID);
+			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))->forTemplate() . '</li>';
+
+			$data[$id] = array(
+				'html' => $html, 
+				'ParentID' => $record->ParentID,
+				'NextID' => $next ? $next->ID : null,
+				'PrevID' => $prev ? $prev->ID : null
+			);
+		}
+		$this->response->addHeader('Content-Type', 'text/json');
+		return Convert::raw2json($data);
 	}
 	
 	/**
@@ -1496,6 +1528,90 @@ class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
 
 	function setIsFinished($bool) {
 		$this->isFinished = $bool;
+	}
+
+}
+
+/**
+ * Wrapper around objects being displayed in a tree.
+ * Caution: Volatile API.
+ *
+ * @todo Implement recursive tree node rendering
+ */
+class LeftAndMain_TreeNode extends ViewableData {
+	
+	/**
+	 * @var obj
+	 */
+	protected $obj;
+
+	/**
+	 * @var String Edit link to the current record in the CMS
+	 */
+	protected $link;
+
+	/**
+	 * @var Bool
+	 */
+	protected $isCurrent;
+
+	function __construct($obj, $link = null, $isCurrent = false) {
+		$this->obj = $obj;
+		$this->link = $link;
+		$this->isCurrent = $isCurrent;
+	}
+
+	/**
+	 * Returns template, for further processing by {@link Hierarchy->getChildrenAsUL()}.
+	 * Does not include closing tag to allow this method to inject its own children.
+	 *
+	 * @todo Remove hardcoded assumptions around returning an <li>, by implementing recursive tree node rendering
+	 * 
+	 * @return String
+	 */
+	function forTemplate() {
+		$obj = $this->obj;
+		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\"" . $this->getClasses() . "\">" .
+			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
+			"<a href=\"" . $this->getLink() . "\" title=\"" .
+			_t('LeftAndMain.PAGETYPE','Page type: ') .
+			"$obj->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle). 
+			"</span></a>";
+	}
+
+	function getClasses() {
+		$classes = $this->obj->CMSTreeClasses();
+		if($this->isCurrent) $classes .= " current";
+		$flags = $this->obj->hasMethod('getStatusFlags') ? $this->obj->getStatusFlags() : false;
+		if($flags) $classes .= ' ' . implode(' ', array_keys($flags));
+		return $classes;
+	}
+
+	function getObj() {
+		return $this->obj;
+	}
+
+	function setObj($obj) {
+		$this->obj = $obj;
+		return $this;
+	}
+
+	function getLink() {
+		return $this->link;
+	}
+
+	function setLink($link) {
+		$this->link = $link;
+		return $this;
+	}
+
+	function getIsCurrent() {
+		return $this->isCurrent;
+	}
+
+	function setIsCurrent($bool) {
+		$this->isCurrent = $bool;
+		return $this;
 	}
 
 }
