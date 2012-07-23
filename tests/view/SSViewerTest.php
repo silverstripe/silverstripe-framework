@@ -392,6 +392,10 @@ after')
 		$this->assertEquals('AD',
 			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% end_if %>D'));
 
+		// Bare words with ending space
+		$this->assertEquals('ABC',
+			$this->render('A<% if "RawVal" == RawVal %>B<% end_if %>C'));
+
 		// Else
 		$this->assertEquals('ADE',
 			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% else %>D<% end_if %>E'));
@@ -457,7 +461,7 @@ after')
 
 		$this->assertEquals(
 			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A Bare String, Arg2=B Bare String %>'),
-			'<p>A Bare String</p><p>B Bare String </p>'
+			'<p>A Bare String</p><p>B Bare String</p>'
 		);
 
 		$this->assertEquals(
