@@ -935,7 +935,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function Groups() {
 		$groups = Injector::inst()->create('Member_GroupSet', 'Group', 'Group_Members', 'GroupID', 'MemberID');
-		$groups->setForeignID($this->ID);
+		$groups = $groups->forForeignID($this->ID);
 		
 		$this->extend('updateGroups', $groups);
 

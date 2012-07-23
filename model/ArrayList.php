@@ -300,9 +300,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return ArrayList
 	 */
 	public function reverse() {
-		$this->items = array_reverse($this->items);
+		// TODO 3.1: This currently mutates existing array
+		$list = /* clone */ $this;
+		$list->items = array_reverse($this->items);
 		
-		return $this;
+		return $list;
 	}
 	
 	/**
@@ -362,11 +364,13 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			// First argument is the direction to be sorted, 
 			$multisortArgs[] = &$sortDirection[$column];
 		}
-		// As the last argument we pass in a reference to the items that all the sorting will be 
-		// applied upon
-		$multisortArgs[] = &$this->items;
+
+		// TODO 3.1: This currently mutates existing array
+		$list = /* clone */ $this;
+		// As the last argument we pass in a reference to the items that all the sorting will be applied upon
+		$multisortArgs[] = &$list->items;
 		call_user_func_array('array_multisort', $multisortArgs);
-		return $this;
+		return $list;
 	}
 	
 	/**
@@ -424,8 +428,10 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		$this->items = $itemsToKeep;
-		return $this;
+		// TODO 3.1: This currently mutates existing array
+		$list = /* clone */ $this;
+		$list->items = $itemsToKeep;
+		return $list;
 	}
 	
 	public function byID($id) {
@@ -478,12 +484,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		$keysToRemove = array_keys($matches,$hitsRequiredToRemove);
+		// TODO 3.1: This currently mutates existing array
+		$list = /* clone */ $this;
+
 		foreach($keysToRemove as $itemToRemoveIdx){
-			$this->remove($this->items[$itemToRemoveIdx]);
+			$list->remove($this->items[$itemToRemoveIdx]);
 		}
-		return;
-		
-		return $this;
+
+		return $list;
 	}
 
 	protected function shouldExclude($item, $args) {

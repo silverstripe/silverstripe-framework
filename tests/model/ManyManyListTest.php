@@ -29,8 +29,7 @@ class ManyManyListTest extends SapphireTest {
 		$player1->flushCache();
 
 		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
-		$compareTeams->forForeignID($player1->ID);
-		$compareTeams->byID($team1->ID);
+		$compareTeams = $compareTeams->forForeignID($player1->ID);
 		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),"Adding single record as DataObject to many_many");
 	}
 
@@ -40,8 +39,7 @@ class ManyManyListTest extends SapphireTest {
 		$player1->Teams()->remove($team1);
 		$player1->flushCache();
 		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
-		$compareTeams->forForeignID($player1->ID);
-		$compareTeams->byID($team1->ID);
+		$compareTeams = $compareTeams->forForeignID($player1->ID);
 		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),"Removing single record as DataObject from many_many");
 	}
 	
@@ -51,8 +49,7 @@ class ManyManyListTest extends SapphireTest {
 		$player1->Teams()->add($team1->ID);
 		$player1->flushCache();
 		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
-		$compareTeams->forForeignID($player1->ID);
-		$compareTeams->byID($team1->ID);
+		$compareTeams = $compareTeams->forForeignID($player1->ID);
 		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'), "Adding single record as ID to many_many");
 	}
 	
@@ -62,8 +59,7 @@ class ManyManyListTest extends SapphireTest {
 		$player1->Teams()->removeByID($team1->ID);
 		$player1->flushCache();
 		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
-		$compareTeams->forForeignID($player1->ID);
-		$compareTeams->byID($team1->ID);
+		$compareTeams = $compareTeams->forForeignID($player1->ID);
 		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'), "Removing single record as ID from many_many");
 	}
 	
@@ -85,7 +81,7 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 
-		$playersTeam1Team2 = DataObjectTest_Team::get()->relation('Players')->setForeignID(array($team1->ID, $team2->ID));
+		$playersTeam1Team2 = DataObjectTest_Team::get()->relation('Players')->forForeignID(array($team1->ID, $team2->ID));
 		$playersTeam1Team2->add($newPlayer);
 		$this->assertEquals(
 			array($team1->ID, $team2->ID),

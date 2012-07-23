@@ -2,7 +2,10 @@
 
 /**
  * Additional interface for {@link SS_List} classes that are limitable - able to have a subset of the list extracted.
- * 
+ *
+ * All methods in this interface are immutable - they should return new instances with the limit
+ * applied, rather than applying the limit in place
+ *
  * @see SS_List, SS_Sortable, SS_Filterable
  */
 interface SS_Limitable {
