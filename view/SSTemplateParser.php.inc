@@ -322,7 +322,7 @@ class SSTemplateParser extends Parser {
 	
 	function Argument_FreeString(&$res, $sub) {
 		$res['ArgumentMode'] = 'string';
-		$res['php'] = "'" . str_replace("'", "\\'", $sub['text']) . "'";
+		$res['php'] = "'" . str_replace("'", "\\'", trim($sub['text'])) . "'";
 	}
 	
 	/*!*
