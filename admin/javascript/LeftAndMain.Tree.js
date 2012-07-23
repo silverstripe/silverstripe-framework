@@ -10,6 +10,10 @@
 			
 			Hints: null,
 
+			IsUpdatingTree: false,
+
+			IsLoaded: false,
+
 			onadd: function(){
 				this._super();
 
@@ -22,7 +26,6 @@
 				/**
 				 * @todo Icon and page type hover support
 				 * @todo Sorting of sub nodes (originally placed in context menu)
-				 * @todo Refresh after language <select> change (with Translatable enabled)
 				 * @todo Automatic load of full subtree via ajax on node checkbox selection (minNodeCount = 0)
 				 *  to avoid doing partial selection with "hidden nodes" (unloaded markup)
 				 * @todo Disallow drag'n'drop when node has "noChildren" set (see siteTreeHints)
@@ -37,13 +40,12 @@
 				 * @todo Context menu - to be replaced by a bezel UI
 				 * @todo Refresh form for selected tree node if affected by reordering (new parent relationship)
 				 * @todo Cancel current form load via ajax when new load is requested (synchronous loading)
-				 * @todo When new edit form is loaded, automatically: Select matching node, set correct parent,
-				 *  update icon and title
 				 */
 				var self = this;
 					this
 						.jstree(this.getTreeConfig())
 						.bind('loaded.jstree', function(e, data) {
+							self.setIsLoaded(true);
 							self.updateFromEditForm();
 							self.css('visibility', 'visible');
 							// Add ajax settings after init period to avoid unnecessary initial ajax load
@@ -82,6 +84,8 @@
 							}
 						})
 						.bind('move_node.jstree', function(e, data) {
+							if(self.getIsUpdatingTree()) return;
+
 							var movedNode = data.rslt.o, newParentNode = data.rslt.np, oldParentNode = data.inst._get_parent(movedNode);
 							var siblingIDs = $.map($(movedNode).siblings().andSelf(), function(el) {
 								return $(el).data('id');
@@ -104,7 +108,7 @@
 						// Make some jstree events delegatable
 						.bind('select_node.jstree check_node.jstree uncheck_node.jstree', function(e, data) {
 							$(document).triggerHandler(e, data);
-						})
+						});
 			},
 			onremove: function(){
 				this.jstree('destroy');
@@ -113,11 +117,17 @@
 
 			'from .cms-container': {
 				onafterstatechange: function(e){
-					this.updateFromEditForm(e.origData);
-				},
+					this.updateFromEditForm();
+					// No need to refresh tree nodes, we assume only form submits cause state changes
+				}
+			},
 
+			'from .cms-container form': {
 				onaftersubmitform: function(e){
-					this.updateFromEditForm(e.origData);
+					var id = $('.cms-edit-form :input[name=ID]').val();
+					// TODO Trigger by implementing and inspecting "changed records" metadata 
+					// sent by form submission response (as HTTP response headers)
+					this.updateNodesFromServer([id]);
 				}
 			},
 
@@ -216,87 +226,165 @@
 			getNodeByID: function(id) {
 				return this.find('*[data-id='+id+']');
 			},
+
+			/**
+			 * Creates a new node from the given HTML.
+			 * Wrapping around jstree API because we want the flexibility to define
+			 * the node's <li> ourselves. Places the node in the tree
+			 * according to data.ParentID
+			 * 
+			 * Parameters:
+			 *  (String) HTML New node content (<li>)
+			 *  (Object) Map of additional data, e.g. ParentID
+			 *  (Function) Success callback
+			 */
+			createNode: function(html, data, callback) {
+				var self = this, 
+					parentNode = data.ParentID ? self.find('li[data-id='+data.ParentID+']') : false,
+					newNode = $(html);
+				
+				this.jstree(
+					'create_node', 
+					parentNode.length ? parentNode : -1, 
+					'last', 
+					'',
+					function(node) {
+						var origClasses = node.attr('class');
+						// Copy attributes
+						for(var i=0; i<newNode[0].attributes.length; i++){
+							var attr = newNode[0].attributes[i];
+							node.attr(attr.name, attr.value);
+						}
+						node.addClass(origClasses).html(newNode.html());
+						callback(node);
+					}
+				);
+			},
+
+			/**
+			 * Updates a node's state in the tree,
+			 * including all of its HTML, as well as its position.
+			 * 
+			 * Parameters:
+			 *  (DOMElement) Existing node
+			 *  (String) HTML New node content (<li>)
+			 *  (Object) Map of additional data, e.g. ParentID
+			 */
+			updateNode: function(node, html, data) {
+				var self = this, newNode = $(html), origClasses = node.attr('class');
+
+				var nextNode = data.NextID ? this.find('li[data-id='+data.NextID+']') : false;
+				var prevNode = data.PrevID ? this.find('li[data-id='+data.PrevID+']') : false;
+				var parentNode = data.ParentID ? this.find('li[data-id='+data.ParentID+']') : false;
+
+				// Copy attributes. We can't replace the node completely
+				// without removing or detaching its children nodes.
+				for(var i=0; i<newNode[0].attributes.length; i++){
+					var attr = newNode[0].attributes[i];
+					node.attr(attr.name, attr.value);
+				}
+
+				// Replace inner content
+				node.addClass(origClasses).html(newNode.html());
+
+				if (nextNode && nextNode.length) {
+					this.jstree('move_node', node, nextNode, 'before');
+				}
+				else if (prevNode && prevNode.length) {
+					this.jstree('move_node', node, prevNode, 'after');
+				}
+				else {
+					this.jstree('move_node', node, parentNode.length ? parentNode : -1);
+				}
+			},
 			
 			/**
-			 * Assumes to be triggered by a form element with the following input fields:
-			 * ID, ParentID, TreeTitle (or Title), ClassName.
-			 * 
-			 * @todo Serverside node refresh, see http://open.silverstripe.org/ticket/7450
+			 * Sets the current state based on the form the tree is managing.
 			 */
-			updateFromEditForm: function(origData) {
-				var self = this, 
-					form = $('.cms-edit-form').get(0),
-					id = form ? $(form.ID).val() : null,
-					urlEditPage = this.data('urlEditpage');
-
-				// check if a form with a valid ID exists
+			updateFromEditForm: function() {
+				var node, id = $('.cms-edit-form :input[name=ID]').val();
 				if(id) {
-					var parentID = $(form.ParentID).val(), 
-						parentNode = this.find('li[data-id='+parentID+']');
-						node = this.find('li[data-id='+id+']'),
-						title = $((form.TreeTitle) ? form.TreeTitle : form.Title).val(),
-						className = $(form.ClassName).val();
-
-					// set title (either from TreeTitle or from Title fields)
-					// Treetitle has special HTML formatting to denote the status changes.
-					// only update immediate text element, we don't want to update all the nested ones
-					if(title) node.find('.text:first').html(title);
-
-					// Collect flag classes and also apply to parent
-					var statusFlags = [];
-					node.children('a').find('.badge').each(function() {
-						statusFlags = statusFlags.concat($(this).attr('class').replace('badge', '').split(' '));
-					});
-					// TODO Doesn't remove classes, gets too complex: Best handled through complete serverside replacement
-					node.addClass(statusFlags.join(' ')); 
-
-					// check if node exists, might have been created instead
-					if(!node.length && urlEditPage) {
-						this.jstree(
-							'create_node', 
-							parentNode, 
-							'inside', 
-							{
-								data: '', 
-								attr: {
-									'data-class': className, 
-									'class': 'class-' + className, 
-									'data-id': id
-								}
-							},
-							function() {
-								var newNode = self.find('li[data-id='+id+']');
-								// TODO Fix replacement of jstree-icon inside <a> tag
-								newNode.find('a:first').html(title).attr('href', ss.i18n.sprintf(
-									urlEditPage, id
-								));
-								self.jstree('deselect_all');
-								self.jstree('select_node', newNode);
-							}
-						);
-					}
-
+					node = this.getNodeByID(id);
 					if(node.length) {
-						// set correct parent (only if it has changed)
-						if(parentID && parentID != node.parents('li:first').data('id')) {
-							this.jstree('move_node', node, parentNode.length ? parentNode : -1, 'last');
-						}
-
-						// Only single selection is supported on initial load
-						this.jstree('deselect_all');
 						this.jstree('select_node', node);
+					} else {
+						// If form is showing an ID that doesn't exist in the tree,
+						// get it from the server
+						this.updateNodesFromServer([id]);
 					}
 				} else {
 					// If no ID exists in a form view, we're displaying the tree on its own,
 					// hence to page should show as active
 					this.jstree('deselect_all');
-
-					if(typeof origData != 'undefined') {
-						var node = this.find('li[data-id='+origData.ID+']');
-						if(node && node.data('id') !== 0) this.jstree('delete_node', node);
-					}
 				}
+			},
 
+			/**
+			 * Reloads the view of one or more tree nodes
+			 * from the server, ensuring that their state is up to date
+			 * (icon, title, hierarchy, badges, etc).
+			 * This is easier, more consistent and more extensible 
+			 * than trying to correct all aspects via DOM modifications, 
+			 * based on the sparse data available in the current edit form.
+			 *
+			 * Parameters:
+			 *  (Array) List of IDs to retrieve
+			 */
+			updateNodesFromServer: function(ids) {
+				if(this.getIsUpdatingTree() || !this.getIsLoaded()) return;
+
+				var self = this, includesNewNode = false;
+				this.setIsUpdatingTree(true);
+
+				// TODO 'initially_opened' config doesn't apply here
+				self.jstree('open_node', this.getNodeByID(0));
+				self.jstree('save_opened');
+				self.jstree('save_selected');
+
+				$.ajax({
+					url: this.data('urlUpdatetreenodes') + '?ids=' + ids.join(','),
+					dataType: 'json',
+					success: function(data, xhr) {
+						$.each(data, function(nodeId, nodeData) {
+							var node = self.getNodeByID(nodeId);
+
+							// If no node data is given, assume the node has been removed
+							if(!nodeData) {
+								self.jstree('delete_node', node);
+								return;
+							}
+
+							// Check if node exists, create if necessary
+							if(node.length) {
+								self.updateNode(node, nodeData.html, nodeData);
+								setTimeout(function() {
+									self.jstree('deselect_all');
+									self.jstree('select_node', node);
+									// Manually correct state, which checks for children and
+									// removes toggle arrow (should really be done by jstree internally)
+									self.jstree('correct_state', node);	
+								}, 500);
+							} else {
+								includesNewNode = true;
+								self.createNode(nodeData.html, nodeData, function(newNode) {
+									self.jstree('deselect_all');
+									self.jstree('select_node', newNode);
+									// Manually remove toggle node, see above
+									self.jstree('correct_state', newNode);
+								});
+							}
+						});
+
+						if(!includesNewNode) {
+							self.jstree('deselect_all');
+							self.jstree('reselect');
+							self.jstree('reopen');
+						}
+					},
+					complete: function() {
+						self.setIsUpdatingTree(false);
+					}
+				});				
 			}
 
 		});
