@@ -1285,7 +1285,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$result = new HasManyList($componentClass, $joinField);
 		if($this->model) $result->setDataModel($this->model);
-		$result->setForeignID($this->ID);
+		$result = $result->forForeignID($this->ID);
 
 		$result = $result->where($filter)->limit($limit)->sort($sort);
 		if($join) $result = $result->join($join);
@@ -1409,7 +1409,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
 		// foreignID set elsewhere.
-		$result->setForeignID($this->ID);
+		$result = $result->forForeignID($this->ID);
 			
 		return $result->where($filter)->sort($sort)->limit($limit);
 	}
