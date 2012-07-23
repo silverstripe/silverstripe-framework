@@ -748,12 +748,25 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		foreach($ids as $id) {
 			$record = $this->getRecord($id);
 			$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
+
+			// Find the next & previous nodes, for proper positioning (Sort isn't good enough - it's not a raw offset)
+			// TODO: These methods should really be in hierarchy - for a start it assumes Sort exists
+			$next = $prev = null;
+
+			$className = $this->stat('tree_class');
+			$next = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort > '.$record->Sort)->first();
+			if (!$next) {
+				$prev = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort < '.$record->Sort)->reverse()->first();
+			}
+
 			$link = Controller::join_links($recordController->Link("show"), $record->ID);
 			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))->forTemplate() . '</li>';
+
 			$data[$id] = array(
 				'html' => $html, 
 				'ParentID' => $record->ParentID,
-				'Sort' => $record->Sort
+				'NextID' => $next ? $next->ID : null,
+				'PrevID' => $prev ? $prev->ID : null
 			);
 		}
 		$this->response->addHeader('Content-Type', 'text/json');
