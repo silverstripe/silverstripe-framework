@@ -837,7 +837,7 @@ class SSViewer {
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
-				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
+				$arguments[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
 		}
 
