@@ -328,7 +328,7 @@ jQuery.noConflict();
 			 * Can be hooked into an ajax 'success' callback.
 			 */
 			handleAjaxResponse: function(data, status, xhr) {
-				var self = this, url, selectedTabs;
+				var self = this, url, selectedTabs, guessFragment;
 
 				// Pseudo-redirects via X-ControllerURL might return empty data, in which
 				// case we'll ignore the response
@@ -343,7 +343,9 @@ jQuery.noConflict();
 					newFragments = data;
 				} else {
 					// Fall back to replacing the content fragment if HTML is returned
-					newFragments['Content'] = data;
+					$data = $(data);
+					guessFragment = $data.is('form') ? 'CurrentForm' : 'Content';
+					newFragments[guessFragment] = $data;
 				}
 
 				// Replace each fragment individually
@@ -469,6 +471,30 @@ jQuery.noConflict();
 						el.tabs('select', selectedTab.selected);
 					});
 				}
+			},
+
+			/**
+			 * Remove any previously saved state.
+			 *
+			 * Parameters:
+			 *  (String) url Optional (sanitized) URL to clear a specific state.
+			 */
+			clearTabState: function(url) {
+				if(typeof(window.sessionStorage)=="undefined") return;
+
+				var s = window.sessionStorage;
+				if(url) {
+					s.removeItem('tabs-' + url);	
+				} else {
+					for(var i=0;i<s.length;i++) s.removeItem(s.key(i));
+				}
+			},
+
+			/**
+			 * Remove tab state for the current URL.
+			 */
+			clearCurrentTabState: function() {
+				this.clearTabState(this._tabStateUrl());
 			},
 
 			_tabStateUrl: function() {

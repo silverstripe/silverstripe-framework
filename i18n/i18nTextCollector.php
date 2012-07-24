@@ -75,20 +75,11 @@ class i18nTextCollector extends Object {
 	public function run($restrictToModules = null) {
 		//Debug::message("Collecting text...", false);
 		
-		$modules = array();
+		$modules = scandir($this->basePath);
 		$themeFolders = array();
 		
 		// A master string tables array (one mst per module)
 		$entitiesByModule = array();
-		
-		//Search for and process existent modules, or use the passed one instead
-		if($restrictToModules && count($restrictToModules)) {
-			foreach($restrictToModules as $restrictToModule) {
-				$modules[] = basename($restrictToModule);
-			}
-		} else {
-			$modules = scandir($this->basePath);
-		}
 		
 		foreach($modules as $index => $module){
 			if($module != 'themes') continue;
@@ -143,6 +134,13 @@ class i18nTextCollector extends Object {
 					unset($entitiesByModule[$module][$fullName]);
 				}
 			}			
+		}
+
+		// Restrict modules we update to just the specified ones (if any passed)
+		if($restrictToModules && count($restrictToModules)) {
+			foreach (array_diff(array_keys($entitiesByModule), $restrictToModules) as $module) {
+				unset($entitiesByModule[$module]);
+			}
 		}
 
 		// Write each module language file
