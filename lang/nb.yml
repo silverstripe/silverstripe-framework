@@ -1,17 +1,28 @@
 nb:
   AssetAdmin:
-    NEWFOLDER: 'Ny Mappe'
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensjoner
-    FILENAME: Filnavn
-    FOLDER: Mappe
-    LASTEDIT: 'Sist endret'
-    OWNER: Eier
-    SIZE: Filstørrelse
-    TITLE: Tittel
-    TYPE: Filtype
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Velg filer'
     DRAGFILESHERE: 'Dra filer hit'
@@ -55,37 +66,49 @@ nb:
     ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
     ERRORNOTREC: 'Det brukernavnet / Passord er ikke gjenkjent'
   Boolean:
-    0: Usant
-    ANY: Any
-    Hello: Hi
-    LOGOUT: 'Logg ut'
-    1: Sant
+    0:
+      - null
+    ANY:
+      - null
+    Hello:
+      - null
+    LOGOUT:
+      - null
+    1:
+      - null
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Lagre
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE:
+      - null
   CheckboxField:
-    - 'False'
-    - 'True'
+    -
+      - null
+    -
+      - null
   ComplexTableField:
     CLOSEPOPUP: 'Lukk Popup'
     SUCCESSADD2: 'Lagt til {name}'
     SUCCESSEDIT: 'Lagret %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
+    ATLEAST:
+      - null
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
-    MAXIMUM: 'Passord må inneholde maks {max} skrifttegn'
-    SHOWONCLICKTITLE: 'Endre Passord'
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: første
     FOURTH: fjerde
     SECOND: andre
     THIRD: tredje
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
     PLURALNAME: 'Data Objekter'
     SINGULARNAME: 'Data Objekt'
@@ -116,7 +139,8 @@ nb:
     INVALID_REQUEST: 'Ugyldig forespørsel'
     NOTFOUND: 'No items found'
   DropdownField:
-    CHOOSE: (Velg)
+    CHOOSE:
+      - null
   EmailField:
     VALIDATION: 'Vennligst skriv inn en epostadresse'
   Email_BounceRecord:
@@ -127,18 +151,30 @@ nb:
     LOADING: 'Laster ...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content: Innhold
-    Filename: Filnavn
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    NOFILESIZE: 'Filstørrelsen var 0 bytes.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Navn
-    PLURALNAME: Filer
-    SINGULARNAME: Fil
-    TOOLARGE: 'Filstørrelse for stor, maksimum {size} tillatt '
-    TOOLARGESHORT: 'Filstørrelse overstiger {size}'
-    Title: Tittel
+    Content:
+      - null
+    Filename:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    Title:
+      - null
   FileIFrameField:
     ATTACH: 'Legg ved {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -155,21 +191,33 @@ nb:
     SEARCHLISTINGS: Søk
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED: 'mangler %s'
-    TITLE: 'Bildeopplastnings ramme'
-    VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
-    VALIDATIONNOTUNIQUE: 'Den spesifiserte verdien er ikke unik'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passordene passer ikke med hverandre'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passord kan ikke være tomt'
-    VALIDATIONSTRONGPASSWORD: 'Passord må inneholde minst ett siffer og en bokstav'
-    VALIDATOR: Validator
-    VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
+    FIELDISREQUIRED:
+      - null
+    TITLE:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
     NONE: ingen
   GridAction:
-    DELETE_DESCRIPTION: Slett
-    Delete: Slett
-    UnlinkRelation: Unlink
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Legg til {name}'
     Filter: Filter
@@ -227,7 +275,8 @@ nb:
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
     ADDURL: 'Legg til URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -338,27 +387,47 @@ nb:
     db_Password: Passord
     db_PasswordExpiry: 'Passord utløpsdato'
   MemberAuthenticator:
-    TITLE: 'Epost &amp; Passord'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    Custom: Custom
-    DATEFORMATBAD: 'Datoformat er ugyldig'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Firesifret årstall'
-    FULLNAMEMONTH: 'Fullt navn på måned (eks. juni)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Forhåndsvisning
-    SHORTMONTH: 'Forkortelse av måned (f.eks. jun)'
-    TOGGLEHELP: 'Vis/skjul formateringshjelp'
-    TWODIGITDAY: 'Tosifret månedstall'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Tosifret måned (01=Januar, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Tosifret årstall'
+    AMORPM:
+      - null
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -368,15 +437,24 @@ nb:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Slett
-    DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Importer fra CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Ingenting å importere'
-    RESET: Tilbakestille
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   MoneyField:
     FIELDLABELAMOUNT: Mengde
     FIELDLABELCURRENCY: Currency
@@ -385,14 +463,22 @@ nb:
   NumericField:
     VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
   Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 'Fulle administrative rettigheter'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -404,19 +490,32 @@ nb:
     Back: Tilbake
     VALIDATION: 'Vennligst skriv inn et gyldig tlf nummer'
   Security:
-    ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
-    BUTTONSEND: 'Send meg lenke for å gi nytt passord'
-    CHANGEPASSWORDBELOW: 'Du kan bytte passord nedenunder.'
-    CHANGEPASSWORDHEADER: 'Bytt ditt passord'
-    ENTERNEWPASSWORD: 'Venligst tast inn nytt passord.'
-    ERRORPASSWORDPERMISSION: 'Du må logge inn for å bytte passord.'
-    LOGGEDOUT: 'Du har blitt logget ut. Hvis du vil logge inn igjen, så vennligst gjør det under.'
-    LOGIN: 'Logg inn'
-    NOTEPAGESECURED: 'Den siden er sikret. Skriv inn gyldig innloggingsinfo så kommer du inn.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Skriv inn din epost adresse og vi vil sende deg en lenke som resetter passordet ditt.'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Legg til roller til grupper'
@@ -436,8 +535,10 @@ nb:
     TABROLES: Roller
     Users: Brukere
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Importer fra CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     DISPLAYING: Displaying
     Edit: Rediger
@@ -454,11 +555,16 @@ nb:
   SiteTree:
     TABMAIN: Hovedinnstillinger
   TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sorter i stigende rekkefølge'
-    SORTDESC: 'Sorter i synkende rekkefølge'
+    ADDITEM:
+      - null
+    ISREQUIRED:
+      - null
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField:
     CSVEXPORT: 'Eksporter til CSV'
     PRINT: 'Skriv ut'

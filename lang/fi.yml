@@ -1,17 +1,28 @@
 fi:
   AssetAdmin:
-    NEWFOLDER: 'Uusi kansio'
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
-    DIM: Mitat
-    FILENAME: 'Tiedoston nimi'
-    FOLDER: Kansio
-    LASTEDIT: 'Viimeksi muokattu'
-    OWNER: Omistaja
-    SIZE: Koko
-    TITLE: Otsikko
-    TYPE: Tyyppi
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Valitse tiedostot'
     DRAGFILESHERE: 'Raahaa tiedotot tähän'
@@ -55,37 +66,49 @@ fi:
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
-    0: Ei
-    ANY: Yhtään
-    Hello: Hei
-    LOGOUT: 'Kirjaudu ulos'
-    1: Kyllä
+    0:
+      - null
+    ANY:
+      - null
+    Hello:
+      - null
+    LOGOUT:
+      - null
+    1:
+      - null
   CMSMain:
     ACCESS: 'Pääsy ''{title}'' -osioon'
     ACCESSALLINTERFACES: 'Pääsy kaikkiin CMS-osioihin'
     ACCESSALLINTERFACESHELP: 'Ohittaa tarkemmat käyttöoikeudet.'
     SAVE: Tallenna
   CMSProfileController:
-    MENUTITLE: 'CMS-profiili kontrolleri'
+    MENUTITLE:
+      - null
   CheckboxField:
-    - Ei
-    - Kyllä
+    -
+      - null
+    -
+      - null
   ComplexTableField:
     CLOSEPOPUP: 'Sulje ponnahdusikkuna'
     SUCCESSADD2: 'Lisättiin {name}'
     SUCCESSEDIT: 'Tallennettu %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: 'Salasanan on oltava vähintään {min} merkkiä pitkä.'
+    ATLEAST:
+      - null
     BETWEEN: 'Salasanan on oltava väh. {min} ja enintään {max} merkkiä pitkä.'
-    MAXIMUM: 'Salasanan voi olla enintään {max} merkkiä pitkä.'
-    SHOWONCLICKTITLE: 'Vaihda salasana'
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: ensimmäinen
     FOURTH: neljäs
     SECOND: toinen
     THIRD: kolmas
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
     PLURALNAME: Dataobjektit
     SINGULARNAME: Dataobjekti
@@ -116,7 +139,8 @@ fi:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
     NOTFOUND: 'Merkintöjä ei löytynyt'
   DropdownField:
-    CHOOSE: (Valitse)
+    CHOOSE:
+      - null
   EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
   Email_BounceRecord:
@@ -127,18 +151,30 @@ fi:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
   File:
-    Content: Sisältö
-    Filename: Tiedostonimi
-    INVALIDEXTENSION: 'Tiedostopääte ei ole sallittu (sallitut muodot: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Tiedostopääte ei ole sallittu'
-    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
-    NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
-    Name: Nimi
-    PLURALNAME: Tiedostot
-    SINGULARNAME: Tiedosto
-    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
-    TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
-    Title: Otsikko
+    Content:
+      - null
+    Filename:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    Title:
+      - null
   FileIFrameField:
     ATTACH: 'Liitä {type}'
     ATTACHONCESAVED: '{type} voidaan liittää, kun olet tallentanut tietueen ensimmäistä kertaa.'
@@ -155,21 +191,33 @@ fi:
     SEARCHLISTINGS: Etsi
     SYNCRESULTS: 'Synkronointi valmis:  {createdcount} kohdetta luotu, {deletedcount} kohdetta poistettu'
   Form:
-    FIELDISREQUIRED: '%s on pakollinen.'
-    TITLE: 'Kuvansiirtoikkuna (iFrame)'
-    VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
-    VALIDATIONNOTUNIQUE: 'Syötetty arvo ei ole yksilöllinen'
-    VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Salasana ei voi olla tyhjä'
-    VALIDATIONSTRONGPASSWORD: 'Salasanassa on oltava vähintään yksi numero ja yksi kirjain'
-    VALIDATOR: Tarkistin
-    VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
+    FIELDISREQUIRED:
+      - null
+    TITLE:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
     NONE: 'Ei yhtään'
   GridAction:
-    DELETE_DESCRIPTION: Poista
-    Delete: Poista
-    UnlinkRelation: 'Pura linkitys'
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Lisää {name}'
     Filter: Suodatin
@@ -227,7 +275,8 @@ fi:
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
   Hierarchy:
-    InfiniteLoopNotAllowed: '"{type}" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman.'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
     ADDURL: 'Lisää URL-osoite'
     ADJUSTDETAILSDIMENSIONS: 'Tarkat tiedot &amp; mitat'
@@ -338,27 +387,47 @@ fi:
     db_Password: Salasana
     db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
   MemberAuthenticator:
-    TITLE: 'Sähköposti &amp; Salasana'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
-    Custom: Muokattu
-    DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
-    DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
-    DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
-    FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
-    FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
-    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
-    MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
-    MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
-    Preview: Esikatselu
-    SHORTMONTH: 'Kuukauden lyhyt nimi (esim. kesä)'
-    TOGGLEHELP: 'Vaihda muotoilu apuun'
-    TWODIGITDAY: 'Kaksinumeroinen päivämäärä (01–31)'
-    TWODIGITHOUR: 'Kaksinumeroinen tuntinäyttö (00–23)'
-    TWODIGITMINUTE: 'Kaksinumeroinen minuuttinäyttö (00–59)'
-    TWODIGITMONTH: 'Kaksinumeroinen kuukausi (01=tammikuu, jne.)'
-    TWODIGITSECOND: 'Kaksinumeroinen sekunti (00–59)'
-    TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
+    AMORPM:
+      - null
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
@@ -368,15 +437,24 @@ fi:
     ResultUpdated: 'Päivitettiin {count} käyttäjä(ä)'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Poista
-    DELETEDRECORDS: 'Poistettiin {count} tietuetta'
-    IMPORT: 'Tuo CSV:stä'
-    IMPORTEDRECORDS: 'Tuotiin {count} tietuetta'
-    NOCSVFILE: 'Selaa ja tuo CSV-tiedosto'
-    NOIMPORT: 'Ei tuotavia'
-    RESET: Nollaa
-    Title: Datamallit
-    UPDATEDRECORDS: 'Päivitettiin {count} tietuetta'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
@@ -385,14 +463,22 @@ fi:
   NumericField:
     VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
   Permission:
-    AdminGroup: Järjestelmänvalvoja
-    CMS_ACCESS_CATEGORY: CMS-pääsy
-    FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
-    FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
-    IMPORTSPECFIELDS: 'Tietokannan sarakkeet'
-    IMPORTSPECLINK: 'Näytä erittely kohteelle %s'
-    IMPORTSPECRELATIONS: Yhteydet
-    IMPORTSPECTITLE: 'Erittely kohteelle %s'
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
@@ -404,19 +490,32 @@ fi:
     Back: Takaisin
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
   Security:
-    ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
-    BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
-    CHANGEPASSWORDBELOW: 'Voit vaihtaa salasanaasi alla.'
-    CHANGEPASSWORDHEADER: 'Vaihda salasanasi'
-    ENTERNEWPASSWORD: 'Syötä uusi salasanasi'
-    ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään, jotta voit vaihtaa salasanasi.'
-    LOGGEDOUT: 'Kirjauduit ulos. Jos haluat kirjautua sisään, syötä tietosi alle.'
-    LOGIN: 'Kirjaudu sisään'
-    NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle ja annamme sinulle oikeat oikeudet.'
-    NOTERESETLINKINVALID: '<p>Salasanan nollauslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
-    NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
-    PASSWORDSENTHEADER: 'Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'''
-    PASSWORDSENTTEXT: 'Kiitos! Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'', joka on liitettynä tähän käyttäjätiliin.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Oikeuttaa käyttäjien katselun, lisäämisen ja muokkaamisen, kuten myös käyttöoikeuksien ja roolien määrittämisen heille.'
     APPLY_ROLES: 'Aseta roolit ryhmille'
@@ -436,8 +535,10 @@ fi:
     TABROLES: Roolit
     Users: Käyttäjät
   SecurityAdmin_MemberImportForm:
-    BtnImport: Tuonti
-    FileFieldLabel: 'CSV-tiedosto <small>(Sallitut päätteet: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     DISPLAYING: Näytetään
     Edit: Muokkaa
@@ -454,11 +555,16 @@ fi:
   SiteTree:
     TABMAIN: Yleiset
   TableField:
-    ADDITEM: 'Lisää %s'
-    ISREQUIRED: 'Kohteessa %s on ''%s'' pakollinen'
-    NOITEMSFOUND: 'Merkintöjä ei löytynyt'
-    SORTASC: 'Järjestä nousevasti'
-    SORTDESC: 'Järjestä laskevasti'
+    ADDITEM:
+      - null
+    ISREQUIRED:
+      - null
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField:
     CSVEXPORT: 'Vie CSV:nä'
     PRINT: Tulosta
