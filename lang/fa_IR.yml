@@ -462,7 +462,7 @@ fa_IR:
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: چاپ
-    Print: چاپ
+    Print: Print
     SELECT: انتخاب
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ fa_IR:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

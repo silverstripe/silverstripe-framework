@@ -462,7 +462,7 @@ es_MX:
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
     PRINT: Imprimir
-    Print: Imprimir
+    Print: Print
     SELECT: 'Seleccione:'
   TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
@@ -472,7 +472,7 @@ es_MX:
   UploadField:
     ATTACHFILE: 'Adjuntar un archivo'
     ATTACHFILES: 'Adjuntar archivos'
-    AttachFile: 'Adjuntar un archivo'
+    AttachFile: 'Adjuntar archivo(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Eliminar permanentemente este archivo desde el almacén'
     DOEDIT: Guardar

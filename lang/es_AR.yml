@@ -462,7 +462,7 @@ es_AR:
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
     PRINT: Imprimir
-    Print: Imprimir
+    Print: Print
     SELECT: 'Seleccionar:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ es_AR:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

@@ -462,7 +462,7 @@ uk:
   TableListField:
     CSVEXPORT: 'Експортувати в CSV'
     PRINT: Друкувати
-    Print: Друкувати
+    Print: Print
     SELECT: 'Вибрати:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ uk:
   UploadField:
     ATTACHFILE: 'Прикріпити файл'
     ATTACHFILES: 'Прикріпити файли'
-    AttachFile: 'Прикріпити файл'
+    AttachFile: 'Прикріпити файл(и)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Зберегти

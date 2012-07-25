@@ -462,7 +462,7 @@ sk:
   TableListField:
     CSVEXPORT: 'Exportovať do CSV'
     PRINT: Vytlačiť
-    Print: Vytlačiť
+    Print: Print
     SELECT: 'Vyberte:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ sk:
   UploadField:
     ATTACHFILE: 'Priložiť súbor'
     ATTACHFILES: 'Priložiť súbory'
-    AttachFile: 'Priložiť súbor'
+    AttachFile: 'Priložiť súbor(y)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Uložiť

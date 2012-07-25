@@ -462,7 +462,7 @@ is:
   TableListField:
     CSVEXPORT: 'Flytja út í CSV'
     PRINT: Prenta
-    Print: Prenta
+    Print: Print
     SELECT: 'Veldu:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ is:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

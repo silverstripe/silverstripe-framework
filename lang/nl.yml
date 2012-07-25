@@ -173,7 +173,7 @@ nl:
   GridField:
     Add: 'Add {name}'
     Filter: Filter
-    FilterBy: 'Filter by '
+    FilterBy: Filteren
     Find: Zoek
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
@@ -462,7 +462,7 @@ nl:
   TableListField:
     CSVEXPORT: 'Exporteer naar CSV'
     PRINT: Afdrukken
-    Print: Afdrukken
+    Print: Print
     SELECT: 'Selecteer:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ nl:
   UploadField:
     ATTACHFILE: 'Voeg een bestand toe'
     ATTACHFILES: 'Voeg bestanden toe'
-    AttachFile: 'Voeg een bestand toe'
+    AttachFile: 'Voeg bestanden toe'
     DELETE: 'Delete from files'
     DELETEINFO: 'Verwijder dit bestand uit bestandsopslag van de website.'
     DOEDIT: Bewaar

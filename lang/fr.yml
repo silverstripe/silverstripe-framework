@@ -462,7 +462,7 @@ fr:
   TableListField:
     CSVEXPORT: 'Exporter vers un fichier CSV'
     PRINT: Imprimer
-    Print: Imprimer
+    Print: Print
     SELECT: 'Sélectionner&nbsp;:'
   TimeField:
     VALIDATEFORMAT: 'Saisissez l’heure au format valide ({format})'
@@ -472,7 +472,7 @@ fr:
   UploadField:
     ATTACHFILE: 'Joindre un fichier'
     ATTACHFILES: 'Joindre des fichiers'
-    AttachFile: 'Joindre un fichier'
+    AttachFile: 'Joindre un ou plusieurs fichiers'
     DELETE: 'Delete from files'
     DELETEINFO: 'Effacer définitivement ce fichier des archives'
     DOEDIT: Enregistrer

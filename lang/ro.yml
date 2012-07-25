@@ -462,7 +462,7 @@ ro:
   TableListField:
     CSVEXPORT: 'Exportati ca CSV'
     PRINT: Imprima
-    Print: Imprima
+    Print: Print
     SELECT: Selecteaza
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ ro:
   UploadField:
     ATTACHFILE: 'Atasati un fisier'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Atasati un fisier'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Salveaza

@@ -462,7 +462,7 @@ tr:
   TableListField:
     CSVEXPORT: 'CSV olarak kaydet'
     PRINT: Yazdır
-    Print: Yazdır
+    Print: Print
     SELECT: Seç
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ tr:
   UploadField:
     ATTACHFILE: 'Dosya ekle'
     ATTACHFILES: 'Dosya ekle'
-    AttachFile: 'Dosya ekle'
+    AttachFile: 'Dosyalar ekle'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Kaydet

@@ -462,7 +462,7 @@ lv:
   TableListField:
     CSVEXPORT: 'Eksportēt uz CSV'
     PRINT: Drukāt
-    Print: Drukāt
+    Print: Print
     SELECT: 'Izvēlēties:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ lv:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

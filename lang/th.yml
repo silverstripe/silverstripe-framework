@@ -462,7 +462,7 @@ th:
   TableListField:
     CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
     PRINT: สั่งพิมพ์
-    Print: สั่งพิมพ์
+    Print: Print
     SELECT: เลือก
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ th:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

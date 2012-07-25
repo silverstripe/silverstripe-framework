@@ -462,7 +462,7 @@ et_EE:
   TableListField:
     CSVEXPORT: 'Ekspordi CSV-sse'
     PRINT: Prindi
-    Print: Prindi
+    Print: Print
     SELECT: 'Select:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ et_EE:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

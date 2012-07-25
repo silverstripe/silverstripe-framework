@@ -462,7 +462,7 @@ bs:
   TableListField:
     CSVEXPORT: 'Izvezi u CSV'
     PRINT: 'Štampaj'
-    Print: 'Štampaj'
+    Print: Print
     SELECT: 'Select:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ bs:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

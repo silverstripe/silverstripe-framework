@@ -462,7 +462,7 @@ gl_ES:
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
     PRINT: Imprimir
-    Print: Imprimir
+    Print: Print
     SELECT: 'Seleccionar:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -472,7 +472,7 @@ gl_ES:
   UploadField:
     ATTACHFILE: 'Anexar un ficheiro'
     ATTACHFILES: 'Anexar ficheiros'
-    AttachFile: 'Anexar un ficheiro'
+    AttachFile: 'Anexar ficheiro(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Eliminar permanentemente este ficheiro do almacén de ficheiros'
     DOEDIT: Gardar
