@@ -188,7 +188,7 @@ sr:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
     NEXT: Следеће
-    PREVIOUS: 'Претходно'
+    PREVIOUS: Претходно
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
