@@ -16,14 +16,14 @@ mi_NZ:
     ChooseFiles: 'Kōwhiri kōnae'
     DRAGFILESHERE: 'Tōia mai ngā kōnae ki konei'
     DROPAREA: 'Wāhi Taka'
-    EDITALL: 'Edit all'
+    EDITALL: 'Whakatika katoa'
     EDITANDORGANIZE: 'Whakatika me te Whakaraupapa'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: 'Ngā kōnae'
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    TOTAL: Tapeke
+    UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
     UPLOADOR: 'TĒNEI RĀNEI'
   BBCodeParser:
     ALIGNEMENT: Tiaroaro
@@ -100,8 +100,8 @@ mi_NZ:
     MONTHS: 'ngā marama'
     SEC: hēkona
     SECS: 'ngā hēkona'
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFAGO: '{difference} i mua'
+    TIMEDIFFIN: 'i roto i te {difference}'
     YEAR: tau
     YEARS: 'ngā tau'
   DateField:
@@ -113,7 +113,7 @@ mi_NZ:
   Director:
     ADD: Tāpiri
     CSVEXPORT: 'Export to CSV'
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Tono muhu'
     NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Kōwhiri)
@@ -124,7 +124,7 @@ mi_NZ:
     SINGULARNAME: 'Pūrongo Tāwhana Īmēra'
   Enum:
     ANY: 'Ko tētahi'
-    LOADING: Loading...
+    LOADING: 'Uta ana...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: 'Ngā Ihirangi'
@@ -171,18 +171,18 @@ mi_NZ:
     Delete: Muku
     UnlinkRelation: Wetehono
   GridField:
-    Add: 'Add {name}'
+    Add: 'Tāpiri {name}'
     Filter: Tātari
-    FilterBy: 'Filter by '
+    FilterBy: 'Tātari mā'
     Find: Rapu
-    LEVELUP: 'Level up'
+    LEVELUP: 'Whakaawhiwhi ki runga'
     LinkExisting: 'Hono Tīari'
     NewRecord: '%s hōu'
     NoItemsFound: 'Kāore i kitea he tūemi'
     PRINTEDAT: 'I tāngia i'
     PRINTEDBY: 'I tāngia e'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolder: 'Tapu {type}'
+    PlaceHolderWithLabels: 'Rapu {type} mā te {name}'
     RelationSearch: 'Rapu whanaunga'
     ResetFilter: 'Tautuhi anō'
   GridFieldAction_Delete:
@@ -297,7 +297,7 @@ mi_NZ:
     IP: 'Wāhitau KI'
     Status: Tūnga
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Tāpiri rōpū'
     BUTTONCHANGEPASSWORD: 'Huri Kupuhipa'
     BUTTONLOGIN: Takiuru
     BUTTONLOGINOTHER: 'Takiuru hei tangata kē'
@@ -327,7 +327,7 @@ mi_NZ:
     SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'
     SURNAME: 'Ingoa Whānau'
     VALIDATIONMEMBEREXISTS: 'Tīari kē ana tētahi mema me te %s ōrite'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    ValidationIdentifierFailed: 'Kāore e whakaaetia ki te tuhirua i te mema #{id} ki te pūtautuhi ōrite ({name} = {value}))'
     WELCOMEBACK: 'Nau mai, hoki mai, {firstname}'
     YOUROLDPASSWORD: 'Tō kupuhipa tawhito'
     belongs_many_many_Groups: 'Ngā Rōpū'
@@ -383,7 +383,7 @@ mi_NZ:
   NullableField:
     IsNullLabel: 'He Kore Tēnei'
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
   Permission:
     AdminGroup: Kaiwhakahaere
     CMS_ACCESS_CATEGORY: 'Uru CMS'
@@ -401,7 +401,7 @@ mi_NZ:
   Permissions:
     PERMISSIONS_CATEGORY: 'Ngā tūnga me ngā whakaaetanga uru'
   PhoneNumberField:
-    Back: Back
+    Back: Hoki
     VALIDATION: 'Tāurua he tau waea tika'
   Security:
     ALREADYLOGGEDIN: 'Kāore i te whakaaetia kia uru koe ki tēnei whārangi. Mēnā he pūkete anō tōu e taea ai te uru ki tēnā whārangi, ka taea te takiuru anō i raro.'
@@ -465,7 +465,7 @@ mi_NZ:
     Print: Print
     SELECT: 'Tīpako:'
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
   ToggleField:
     LESS: 'iti iho'
     MORE: 'nui ake'
@@ -478,16 +478,16 @@ mi_NZ:
     DOEDIT: Tiaki
     DROPFILE: 'whakamakeretia tētahi kōnae'
     DROPFILES: 'taka kōnae'
-    Dimensions: Dimensions
+    Dimensions: 'Ngā Rahinga'
     EDIT: Edit
     EDITINFO: 'Whakatikatia tēnei kōnae'
     FIELDNOTSET: 'Kāore i kitea te mōhiohio kōnae'
     FROMCOMPUTER: 'Mai i tō rorohiko'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'I ngā kōnae'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILES: 'Kua hipa te mōrahi o ngā kōnae {count}.'
+    MAXNUMBEROFFILESSHORT: 'Ka taea te tukuatu i ngā kōnae {count} anake '
+    REMOVE: Tango
     REMOVEERROR: 'Kua rarua te tango kōnae'
     REMOVEINFO: 'Tangohia tēnei kōane i konei, engari kaua e muku i te pātaka kōnae'
     STARTALL: 'Tīmata katoa'
