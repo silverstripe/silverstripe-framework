@@ -18,9 +18,11 @@ pl:
     DROPAREA: 'Obszar upuszczania'
     EDITALL: 'Edytuj wszystkie'
     EDITANDORGANIZE: 'Edytuj i organizuj'
+    EDITINFO: 'Edit files'
     FILES: Pliki
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Razem
-    TOUPLOAD: 'Wybierz pliki do przesłania...'
     UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
     UPLOADOR: LUB
   BBCodeParser:
@@ -53,8 +55,9 @@ pl:
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
     ERRORNOTREC: 'Nie istnieje taki username/hasło'
   Boolean:
-    ANY: Jakikolwiek
     0: Nie
+    ANY: Jakikolwiek
+    Hello: Hi
     LOGOUT: 'Wyloguj się'
     1: Tak
   CMSMain:
@@ -93,8 +96,8 @@ pl:
     HOURS: godziny
     MIN: min
     MINS: minuty
-    MONTH: miesiąc
-    MONTHS: miesiące
+    MONTH: 'miesiąc'
+    MONTHS: 'miesiące'
     SEC: sekunda
     SECS: sekundy
     TIMEDIFFAGO: '{difference} temu'
@@ -109,7 +112,9 @@ pl:
     VALIDDATEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
   Director:
     ADD: Dodaj
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (wybierz)
   EmailField:
@@ -120,6 +125,7 @@ pl:
   Enum:
     ANY: Jakikolwiek
     LOADING: Wczytywanie...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Zawartość
     Filename: 'Nazwa pliku'
@@ -272,6 +278,7 @@ pl:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Zastosuj filtr"  GridFieldItemEditView.ss:    Go back: "Wstecz"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Dodaj nowy rząd'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'Nie masz uprawnień by zmieniać strony na najwyższym poziomie. Twoje zmiany nie zostały zapisane.'
     DELETED: Usunięto.
     DropdownBatchActionsDefault: Akcje
@@ -281,7 +288,7 @@ pl:
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
     PLEASESAVE: 'Proszę Zapisz Stronę: Ta strona nie mogła zostać uaktualniona ponieważ nie została jeszcze zapisana.'
-    PreviewButton: Podgląd
+    PreviewButton: 'Podgląd'
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
@@ -343,7 +350,7 @@ pl:
     HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
-    Preview: Podgląd
+    Preview: 'Podgląd'
     SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
     TOGGLEHELP: 'Przełącz pomoc formatowania'
     TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
@@ -383,7 +390,9 @@ pl:
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
     IMPORTSPECFIELDS: 'Kolumny bazy danych'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relacje
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
@@ -430,9 +439,12 @@ pl:
     BtnImport: 'Import z CSV'
     FileFieldLabel: 'Plik CSV <small>(Dozwolone rozszerzenia: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edycja
     FILTER: Filtr
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'Zobacz pierwsze'
     VIEWLAST: 'Zobacz ostatnie'
     VIEWNEXT: 'Zobacz następne'
@@ -442,14 +454,15 @@ pl:
   SiteTree:
     TABMAIN: Główny
   TableField:
-    ADDITEM: 'Dodaj %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'W %s ''%s'' jest wymagany'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sortuj w porządku rosnącym'
     SORTDESC: 'Sortuj w porządku malejącym'
   TableListField:
     CSVEXPORT: 'Eksportuj do CSV'
     PRINT: Drukuj
-    Print: Drukuj
+    Print: Print
     SELECT: 'Wybierz:'
   TimeField:
     VALIDATEFORMAT: 'Proszę wprowadź prawidłowy format czasu ({format})'
@@ -459,15 +472,18 @@ pl:
   UploadField:
     ATTACHFILE: 'Załącz plik'
     ATTACHFILES: 'Załącz pliki'
-    AttachFile: 'Załącz plik'
+    AttachFile: 'Załącz plik(i)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Usuń ten plik z magazynu'
     DOEDIT: Zapisz
     DROPFILE: 'upuść plik'
     DROPFILES: 'upuść pliki'
     Dimensions: Rozmiar
+    EDIT: Edit
     EDITINFO: 'Edytuj plik'
     FIELDNOTSET: 'Nie znaleziono informacji o pliku'
     FROMCOMPUTER: 'Z komputera'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Z plików'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
     MAXNUMBEROFFILESSHORT: 'Można wgrać tylko {count} plik(ów/i)'
@@ -475,6 +491,7 @@ pl:
     REMOVEERROR: 'Błąd podczas usuwania pliku'
     REMOVEINFO: 'Usuń pliki z tego miejsca, ale nie usuwaj ich z magazynu'
     STARTALL: 'Rozpocznij wszystko'
+    STARTALLINFO: 'Start all uploads'
     Saved: Zapisano
   Versioned:
     has_many_Versions: Wersje

@@ -18,9 +18,11 @@ sk:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Editovať a organizovať'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: ALEBO
   BBCodeParser:
@@ -53,8 +55,9 @@ sk:
     ERRORNOTADMIN: 'Tento používateľ nie je administrátor.'
     ERRORNOTREC: 'Toto používateľské meno / heslo nebolo rozpoznané'
   Boolean:
-    ANY: Ktorýkoľvek
     0: Nie
+    ANY: Ktorýkoľvek
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Áno
   CMSMain:
@@ -109,7 +112,9 @@ sk:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Pridať
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: '(Vyberte si)'
   EmailField:
@@ -120,6 +125,7 @@ sk:
   Enum:
     ANY: Každý
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Obsah
     Filename: 'Meno súboru'
@@ -252,7 +258,7 @@ sk:
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Šírka
+    IMAGEWIDTHPX: 'Šírka'
     INSERTMEDIA: 'Insert Media'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
     LINKANCHOR: 'Odkaz na tejto stranke'
@@ -272,6 +278,7 @@ sk:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Použiť filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Pridať nový riadok'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ sk:
     FULLADMINRIGHTS: 'Plné administrátorské práva'
     FULLADMINRIGHTS_HELP: 'Ma prednosť pred všetkými ostatnými prideleniami a právomocami.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ sk:
     BtnImport: Importovať
     FileFieldLabel: 'CSV súbor <small>(Povoléné koncovki súborov: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'Zobraziť prvé'
     VIEWLAST: 'Zobraziť posledné'
     VIEWNEXT: 'Zobraziť nasledujúce'
@@ -442,14 +454,15 @@ sk:
   SiteTree:
     TABMAIN: Hlavné
   TableField:
-    ADDITEM: 'Pridať %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Zoradiť vzostupne'
     SORTDESC: 'Zoradiť zostupne'
   TableListField:
     CSVEXPORT: 'Exportovať do CSV'
     PRINT: Vytlačiť
-    Print: Vytlačiť
+    Print: Print
     SELECT: 'Vyberte:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ sk:
   UploadField:
     ATTACHFILE: 'Priložiť súbor'
     ATTACHFILES: 'Priložiť súbory'
-    AttachFile: 'Priložiť súbor'
+    AttachFile: 'Priložiť súbor(y)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Uložiť
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Editovať súbor'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ sk:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Uložené
   Versioned:
     has_many_Versions: verzie

@@ -18,9 +18,11 @@ fr:
     DROPAREA: 'Zone de dépose'
     EDITALL: 'Tout éditer'
     EDITANDORGANIZE: 'Modifier et organiser'
+    EDITINFO: 'Edit files'
     FILES: Fichiers
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choisissez les fichiers à télécharger'
     UPLOADINPROGRESS: 'Patientez s''il vous plaît… téléchargement en cours '
     UPLOADOR: OU
   BBCodeParser:
@@ -53,8 +55,9 @@ fr:
     ERRORNOTADMIN: 'Cet utilisateur n''est pas un administrateur.'
     ERRORNOTREC: 'Cet identifiant / mot de passe n''est pas reconnu'
   Boolean:
-    ANY: Tout
     0: Non
+    ANY: Tout
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Oui
   CMSMain:
@@ -109,7 +112,9 @@ fr:
     VALIDDATEMINDATE: 'La date doit être plus récente ou égale à celle qui a été autorisée ({date})'
   Director:
     ADD: Ajouter
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Requête non valide'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Choisir)
   EmailField:
@@ -120,6 +125,7 @@ fr:
   Enum:
     ANY: Tous
     LOADING: Chargement...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Contenu
     Filename: 'Nom du fichier'
@@ -272,6 +278,7 @@ fr:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Appliquer le filtre"  GridFieldItemEditView.ss:    Go back: "Revenir en arrière"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Ajouter une nouvelle ligne'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'Vous n’avez pas l’autorisation de modifier les pages de premier niveau. Vos modifications n’ont pas été enregistrées.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ fr:
     FULLADMINRIGHTS: 'Droits d''administration complets'
     FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
     FromGroup: 'hérité du groupe « {title} »'
@@ -430,9 +439,12 @@ fr:
     BtnImport: Importer
     FileFieldLabel: 'Fichier CSV <small>(extension autorisée&nbsp;: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: 'Tout modifier'
     FILTER: Filtrer
     IMPORT: Importer
+    OF: of
+    TO: to
     VIEWFIRST: 'Voir premier'
     VIEWLAST: 'Voir dernier'
     VIEWNEXT: 'Voir suivant'
@@ -442,14 +454,15 @@ fr:
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ADDITEM: 'Ajoute %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Classer en ordre croissant'
     SORTDESC: 'Classer en ordre décroissant'
   TableListField:
     CSVEXPORT: 'Exporter vers un fichier CSV'
     PRINT: Imprimer
-    Print: Imprimer
+    Print: Print
     SELECT: 'Sélectionner&nbsp;:'
   TimeField:
     VALIDATEFORMAT: 'Saisissez l’heure au format valide ({format})'
@@ -459,15 +472,18 @@ fr:
   UploadField:
     ATTACHFILE: 'Joindre un fichier'
     ATTACHFILES: 'Joindre des fichiers'
-    AttachFile: 'Joindre un fichier'
+    AttachFile: 'Joindre un ou plusieurs fichiers'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Effacer définitivement ce fichier des archives'
     DOEDIT: Enregistrer
     DROPFILE: 'glissez-déposez un fichier'
     DROPFILES: 'glissez-déposez les fichiers'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Modifier ce fichier'
     FIELDNOTSET: 'Aucune information sur le fichier n''a été trouvée '
     FROMCOMPUTER: 'Depuis votre ordinateur'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Depuis les fichiers'
     MAXNUMBEROFFILES: 'Le nombre maximal de {count} fichiers a été dépassé.'
     MAXNUMBEROFFILESSHORT: 'On ne peut pas télécharger plus de {count} fichiers'
@@ -475,6 +491,7 @@ fr:
     REMOVEERROR: 'Le fichier n’a pas pu être supprimé'
     REMOVEINFO: 'Supprimer ce fichier ici sans l’effacer des archives'
     STARTALL: 'Démarrer tout'
+    STARTALLINFO: 'Start all uploads'
     Saved: Enregistré
   Versioned:
     has_many_Versions: Versions

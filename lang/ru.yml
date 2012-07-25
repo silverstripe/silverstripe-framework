@@ -3,12 +3,12 @@ ru:
     NEWFOLDER: 'Новая папка'
   AssetTableField:
     CREATED: 'Первая загрузка'
-    DIM: Размеры
+    DIM: 'Размеры'
     FILENAME: 'Имя файла'
     FOLDER: Folder
     LASTEDIT: 'Последнее изменение'
     OWNER: Владелец
-    SIZE: Размер
+    SIZE: 'Размер'
     TITLE: Название
     TYPE: Тип
     URL: URL
@@ -18,9 +18,11 @@ ru:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -53,15 +55,16 @@ ru:
     ERRORNOTADMIN: 'Такой пользователь не является администратором.'
     ERRORNOTREC: 'Такое имя пользователя или пароль не существует'
   Boolean:
-    ANY: Any
     0: 'False'
+    ANY: Any
+    Hello: Hi
     LOGOUT: 'Log out'
     1: 'True'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Сохранить
+    SAVE: 'Сохранить'
   CMSProfileController:
     MENUTITLE: CMSProfileController
   CheckboxField:
@@ -109,7 +112,9 @@ ru:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Добавить
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Выберите)
   EmailField:
@@ -120,6 +125,7 @@ ru:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Содержание
     Filename: 'Имя файла'
@@ -247,7 +253,7 @@ ru:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Размеры
+    IMAGEDIMENSIONS: 'Размеры'
     IMAGEHEIGHTPX: Высота
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
@@ -272,6 +278,7 @@ ru:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Добавить новый ряд'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ ru:
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -402,7 +411,7 @@ ru:
     ENTERNEWPASSWORD: 'Пожалуйста, введите новый пароль.'
     ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
     LOGGEDOUT: 'Вы вышли. Если Вы хотите войти снова, введите ваши учетные данные ниже.'
-    LOGIN: Вход
+    LOGIN: 'Вход'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
@@ -430,9 +439,12 @@ ru:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: Первый
     VIEWLAST: Последний
     VIEWNEXT: Следующий
@@ -442,14 +454,15 @@ ru:
   SiteTree:
     TABMAIN: Основное
   TableField:
-    ADDITEM: 'Добавить %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'По возрастанию'
     SORTDESC: 'По убыванию'
   TableListField:
     CSVEXPORT: 'Экспорт в CSV'
     PRINT: Печать
-    Print: Печать
+    Print: Print
     SELECT: 'Select:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ ru:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ ru:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Версии

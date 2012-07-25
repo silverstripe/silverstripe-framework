@@ -7,8 +7,8 @@ ar:
     FILENAME: 'اسم الملف'
     FOLDER: Folder
     LASTEDIT: 'آخر التعديلات'
-    OWNER: المالك
-    SIZE: الحجم
+    OWNER: 'المالك'
+    SIZE: 'الحجم'
     TITLE: العنوان
     TYPE: النوع
     URL: الرابط
@@ -18,13 +18,15 @@ ar:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: المحاذاة
+    ALIGNEMENT: 'المحاذاة'
     ALIGNEMENTEXAMPLE: 'محاذاة إلى اليمين'
     BOLD: 'خط عريض'
     BOLDEXAMPLE: عريض
@@ -38,7 +40,7 @@ ar:
     IMAGE: الصورة
     IMAGEDESCRIPTION: 'عرض الصورة في الموضوع'
     ITALIC: 'خط مائل'
-    ITALICEXAMPLE: مائل
+    ITALICEXAMPLE: 'مائل'
     LINK: 'رابط الموقع'
     LINKDESCRIPTION: 'رابط إلى موقع آخر'
     STRUCK: 'خط في المنتصف'
@@ -53,10 +55,11 @@ ar:
     ERRORNOTADMIN: 'هذا المستخدم لا يملك صلاحيات الإدارة'
     ERRORNOTREC: 'اسم المستخدم أو الرقم السري غير صحيح'
   Boolean:
-    ANY: أي
     0: لا
+    ANY: أي
+    Hello: Hi
     LOGOUT: 'Log out'
-    1: نعم
+    1: 'نعم'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'الدخول إلى جميع واجهات إدارة المحتوى'
@@ -66,7 +69,7 @@ ar:
     MENUTITLE: CMSProfileController
   CheckboxField:
     - لا
-    - نعم
+    - 'نعم'
   ComplexTableField:
     CLOSEPOPUP: 'إغلاق النافذة'
     SUCCESSADD2: 'Added {name}'
@@ -87,8 +90,8 @@ ar:
     PLURALNAME: 'بيانات كائن'
     SINGULARNAME: 'بيانات كائن'
   Date:
-    DAY: اليوم
-    DAYS: الأيام
+    DAY: 'اليوم'
+    DAYS: 'الأيام'
     HOUR: ساعة
     HOURS: ساعات
     MIN: دقيقة
@@ -103,13 +106,15 @@ ar:
     YEARS: السنوات
   DateField:
     NOTSET: 'غير محدد'
-    TODAY: اليوم
+    TODAY: 'اليوم'
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: إضافة
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (اختر)
   EmailField:
@@ -120,16 +125,17 @@ ar:
   Enum:
     ANY: أي
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content: المحتوى
+    Content: 'المحتوى'
     Filename: 'اسم الملف'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'حجم الملف 0 بايت'
     NOVALIDUPLOAD: 'نوع الملف غير قابل للرفع'
-    Name: الاسم
-    PLURALNAME: الملفات
-    SINGULARNAME: الملف
+    Name: 'الاسم'
+    PLURALNAME: 'الملفات'
+    SINGULARNAME: 'الملف'
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: العنوان
@@ -139,7 +145,7 @@ ar:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: ملف
+    FILE: 'ملف'
     FROMCOMPUTER: 'من جهازك الشخصي'
     FROMFILESTORE: 'من مكتبة الملفات'
     NOSOURCE: 'الرجاء اختيارمصدر ملف المرفق'
@@ -156,7 +162,7 @@ ar:
     VALIDATIONPASSWORDSDONTMATCH: 'رقم المرور غير صحيح'
     VALIDATIONPASSWORDSNOTEMPTY: 'أرقام المرور لا يمكن أن تكون فارغة'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: المحقق
+    VALIDATOR: 'المحقق'
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
     NONE: لايوجد
@@ -238,8 +244,8 @@ ar:
     CSSCLASSRIGHT: 'إلى اليمين ، مع التفاف النص'
     DETAILS: Details
     EMAIL: 'بريد إلكتروني'
-    FILE: ملف
-    FOLDER: المجلد
+    FILE: 'ملف'
+    FOLDER: 'المجلد'
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -272,10 +278,11 @@ ar:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'إضافة صف جديد'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: مساعدة
+    HELP: 'مساعدة'
     PAGETYPE: 'نوع الصفحة:'
     PERMAGAIN: 'تم خروجك من النظام بنجاح. للدخول مرة أخرى أدحل البريد الإلكتروني و الرقم السري بالأسفل'
     PERMALREADY: 'عذراً , لكن لا يمكنك الوصول لهذا القسم من النظام. يتوجب عليك الدخول بصلاحية أخرى'
@@ -323,7 +330,7 @@ ar:
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'رقم المرور السابق'
-    belongs_many_many_Groups: المجموعات
+    belongs_many_many_Groups: 'المجموعات'
     db_LastVisited: 'تاريخ آخر زيارة'
     db_Locale: 'واجهة الموقع'
     db_LockedOutUntil: 'مغلق حتى تاريخ'
@@ -371,8 +378,8 @@ ar:
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
-    FIELDLABELAMOUNT: الكمية
-    FIELDLABELCURRENCY: العملة
+    FIELDLABELAMOUNT: 'الكمية'
+    FIELDLABELCURRENCY: 'العملة'
   NullableField:
     IsNullLabel: باطل
   NumericField:
@@ -383,7 +390,9 @@ ar:
     FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
     FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ ar:
     BtnImport: استيراد
     FileFieldLabel: ' CSV ملف <small>(الامتداد المسموح :*.csv )</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'عرض الأول'
     VIEWLAST: 'عرض الأخير'
     VIEWNEXT: 'عرض التالي'
@@ -442,14 +454,15 @@ ar:
   SiteTree:
     TABMAIN: الرئيسة
   TableField:
-    ADDITEM: أضف
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'فرز في ترتيب تصاعدي'
     SORTDESC: 'فرز في ترتيب تنازلي'
   TableListField:
     CSVEXPORT: 'تصدير إلى CSV'
     PRINT: طباعة
-    Print: طباعة
+    Print: Print
     SELECT: اختيار
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ ar:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ ar:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: الإصدارات

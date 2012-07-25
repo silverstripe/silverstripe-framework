@@ -18,9 +18,11 @@ gl_ES:
     DROPAREA: 'Área Contedor'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Editar e organizar'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -53,8 +55,9 @@ gl_ES:
     ERRORNOTADMIN: 'Ese usuario non é un administrador.'
     ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
   Boolean:
-    ANY: Ningún
     0: Falso
+    ANY: Ningún
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Verdadeiro
   CMSMain:
@@ -109,7 +112,9 @@ gl_ES:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Engadir
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Escoller)
   EmailField:
@@ -120,6 +125,7 @@ gl_ES:
   Enum:
     ANY: Ningún
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Contido
     Filename: 'Nome ficheiro'
@@ -272,6 +278,7 @@ gl_ES:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Aplicar Filtro"  GridFieldItemEditView.ss:    Go back: "Ir atrás"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Engadir unha nova fila'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Accións
@@ -383,7 +390,9 @@ gl_ES:
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'
     FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ gl_ES:
     BtnImport: 'Importar dende CSV'
     FileFieldLabel: 'Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'Ver primeiro'
     VIEWLAST: 'Ver último'
     VIEWNEXT: 'Ver seguinte'
@@ -442,14 +454,15 @@ gl_ES:
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ADDITEM: engadir
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Ordear ascendentemente'
     SORTDESC: 'Ordear descendentemente'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
     PRINT: Imprimir
-    Print: Imprimir
+    Print: Print
     SELECT: 'Seleccionar:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ gl_ES:
   UploadField:
     ATTACHFILE: 'Anexar un ficheiro'
     ATTACHFILES: 'Anexar ficheiros'
-    AttachFile: 'Anexar un ficheiro'
+    AttachFile: 'Anexar ficheiro(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Eliminar permanentemente este ficheiro do almacén de ficheiros'
     DOEDIT: Gardar
     DROPFILE: 'soltar un ficheiro'
     DROPFILES: 'ficheiros soltados'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Editar este ficheiro'
     FIELDNOTSET: 'Ficheiro de información non atopado'
     FROMCOMPUTER: 'Dende o teu Computador'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Dende ficheiros'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ gl_ES:
     REMOVEERROR: 'Erro eliminando o ficheiro'
     REMOVEINFO: 'Eliminar este ficheiro daquí, pero non eliminalo do almacén de ficheiros'
     STARTALL: 'Comezar todo'
+    STARTALLINFO: 'Start all uploads'
     Saved: Gardado
   Versioned:
     has_many_Versions: Versións

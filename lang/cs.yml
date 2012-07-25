@@ -18,9 +18,11 @@ cs:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -53,8 +55,9 @@ cs:
     ERRORNOTADMIN: 'Tento uživatel není administrátor.'
     ERRORNOTREC: 'Toto uživatelské jméno / heslo nebylo rozpoznáno'
   Boolean:
-    ANY: Jakkýkoliv
     0: Ne
+    ANY: Jakkýkoliv
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Ano
   CMSMain:
@@ -109,7 +112,9 @@ cs:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Přidat
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Vyberte)
   EmailField:
@@ -120,6 +125,7 @@ cs:
   Enum:
     ANY: Jakkýkoli
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Obsah
     Filename: 'Jméno souboru'
@@ -252,7 +258,7 @@ cs:
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Šířka
+    IMAGEWIDTHPX: 'Šířka'
     INSERTMEDIA: 'Insert Media'
     LINK: 'Vložit nebo upravit odkaz'
     LINKANCHOR: 'Záložka (kotva) na stránce'
@@ -272,6 +278,7 @@ cs:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Přidat nový řádek'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ cs:
     FULLADMINRIGHTS: 'Plná administrátorská práva'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ cs:
     BtnImport: Import
     FileFieldLabel: 'Soubor CSV <small>(Povoleny přípony: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'Zobraz první'
     VIEWLAST: 'Zobraz poslední'
     VIEWNEXT: 'Zobrazit další'
@@ -442,14 +454,15 @@ cs:
   SiteTree:
     TABMAIN: Hlavní
   TableField:
-    ADDITEM: 'Přidat %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Třídit v vzestupném pořadí'
     SORTDESC: 'Třídit v sestupném pořadí'
   TableListField:
     CSVEXPORT: 'Exportovat do souboru CSV'
     PRINT: Vytisknout
-    Print: Vytisknout
+    Print: Print
     SELECT: 'Vybrat:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ cs:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ cs:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Verze

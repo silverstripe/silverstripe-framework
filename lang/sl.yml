@@ -18,9 +18,11 @@ sl:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -53,8 +55,9 @@ sl:
     ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
     ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
   Boolean:
-    ANY: Katerikoli
     0: Ne
+    ANY: Katerikoli
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Da
   CMSMain:
@@ -109,7 +112,9 @@ sl:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Dodaj
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Izberi)
   EmailField:
@@ -120,6 +125,7 @@ sl:
   Enum:
     ANY: Katerikoli
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Vsebina
     Filename: 'Ime datoteke'
@@ -252,7 +258,7 @@ sl:
     IMAGETITLE: 'Naslov (tooltip)  bo izpisan kot dopolnitev k vsebini slike'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Širina
+    IMAGEWIDTHPX: 'Širina'
     INSERTMEDIA: 'Insert Media'
     LINK: Povezava
     LINKANCHOR: 'Sidro na tej strani'
@@ -272,6 +278,7 @@ sl:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Dodaj vrstico'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ sl:
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ sl:
     BtnImport: Uvozi
     FileFieldLabel: 'CSV-datoteka <small>(Samo končnica: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'Na začetek'
     VIEWLAST: 'Na konec'
     VIEWNEXT: Naslednja
@@ -442,14 +454,15 @@ sl:
   SiteTree:
     TABMAIN: Domov
   TableField:
-    ADDITEM: 'Dodaj %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Razvrsti naraščajoče'
     SORTDESC: 'Razvrsti padajoče'
   TableListField:
     CSVEXPORT: 'Izvozi kot CSV-datoteko'
     PRINT: Natisni
-    Print: Natisni
+    Print: Print
     SELECT: 'Izberi:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ sl:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ sl:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Verzije

@@ -18,9 +18,11 @@ tr:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: VEYA
   BBCodeParser:
@@ -53,8 +55,9 @@ tr:
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
     ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
   Boolean:
-    ANY: Herhangi
     0: Yanlış
+    ANY: Herhangi
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Doğru
   CMSMain:
@@ -109,7 +112,9 @@ tr:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Ekle
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Seçiniz)
   EmailField:
@@ -120,6 +125,7 @@ tr:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: İçerik
     Filename: 'Dosya adı'
@@ -272,6 +278,7 @@ tr:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Yeni bir satır ekle'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ tr:
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ tr:
     BtnImport: Aktar
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'İlkini görüntüle'
     VIEWLAST: 'Sonuncuyu görüntüle'
     VIEWNEXT: 'Sonrakini görüntüle'
@@ -442,14 +454,15 @@ tr:
   SiteTree:
     TABMAIN: 'Ana (Esas)'
   TableField:
-    ADDITEM: '%s ekle'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Artan olarak sırala'
     SORTDESC: 'Azalan olarak sırala'
   TableListField:
     CSVEXPORT: 'CSV olarak kaydet'
     PRINT: Yazdır
-    Print: Yazdır
+    Print: Print
     SELECT: Seç
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ tr:
   UploadField:
     ATTACHFILE: 'Dosya ekle'
     ATTACHFILES: 'Dosya ekle'
-    AttachFile: 'Dosya ekle'
+    AttachFile: 'Dosyalar ekle'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Kaydet
     DROPFILE: 'dosyası kaldır'
     DROPFILES: 'dosyaları kaldır'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Dosyayı düzenle'
     FIELDNOTSET: 'Dosya bilgisi bulunamadı'
     FROMCOMPUTER: 'Kendi makinenizden'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Kimden dosyaları'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ tr:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Tümünü başlat'
+    STARTALLINFO: 'Start all uploads'
     Saved: Kaydedilmiş
   Versioned:
     has_many_Versions: Versiyonlar

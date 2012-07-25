@@ -18,9 +18,11 @@ th:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -35,8 +37,8 @@ th:
     COLOREDEXAMPLE: 'blue text'
     EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
-    IMAGE: รูปภาพ
-    IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
+    IMAGE: 'รูปภาพ'
+    IMAGEDESCRIPTION: 'แสดงรูปภาพในหน้าบทความของคุณ'
     ITALIC: 'Italic Text'
     ITALICEXAMPLE: Italics
     LINK: 'Website link'
@@ -53,8 +55,9 @@ th:
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    ANY: Any
     0: ไม่ตกลง
+    ANY: Any
+    Hello: Hi
     LOGOUT: 'Log out'
     1: ตกลง
   CMSMain:
@@ -109,7 +112,9 @@ th:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: เพิ่ม
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (เลือก)
   EmailField:
@@ -120,6 +125,7 @@ th:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: เนื้อหา
     Filename: ชื่อไฟล์
@@ -230,7 +236,7 @@ th:
     BUTTONINSERTLINK: แทรกลิงค์
     BUTTONREMOVELINK: ลบลิงค์
     BUTTONUpdate: Update
-    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
+    CAPTIONTEXT: 'ข้อความคำอธิบายใต้ภาพ'
     CSSCLASS: 'การจัดวาง / รูปแบบ'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
@@ -268,10 +274,11 @@ th:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: รูปภาพ
+    IMAGE: 'รูปภาพ'
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: เพิ่มแถวใหม่
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -307,7 +314,7 @@ th:
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: ชื่อจริง
-    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
+    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: รหัสผ่านใหม่
@@ -325,7 +332,7 @@ th:
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
     db_LastVisited: วันที่เยี่ยมชมล่าสุด
-    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
+    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
     db_LockedOutUntil: 'Locked out until'
     db_NumVisit: จำนวนการเข้าชม
     db_Password: รหัสผ่าน
@@ -383,7 +390,9 @@ th:
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,26 +439,30 @@ th:
     BtnImport: นำเข้า
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: ดูหน้าแรก
     VIEWLAST: เปิดดูหน้าสุดท้าย
     VIEWNEXT: เปิดดูหน้าเว็บถัดไป
     VIEWPREVIOUS: เปิดดูหน้าเว็บก่อนหน้า
   SimpleImageField:
-    NOUPLOAD: ยังไม่มีรูปภาพที่ถูกอัพโหลด
+    NOUPLOAD: 'ยังไม่มีรูปภาพที่ถูกอัพโหลด'
   SiteTree:
     TABMAIN: หลัก
   TableField:
-    ADDITEM: 'เพิ่ม %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: จัดเรียงลำดับจากน้อยมามาก
     SORTDESC: จัดเรียงลำดับจากมากมาน้อย
   TableListField:
     CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
     PRINT: สั่งพิมพ์
-    Print: สั่งพิมพ์
+    Print: Print
     SELECT: เลือก
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ th:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ th:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: เวอร์ชั่น

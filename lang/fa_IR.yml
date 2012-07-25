@@ -8,7 +8,7 @@ fa_IR:
     FOLDER: Folder
     LASTEDIT: 'آخرین تغییرات'
     OWNER: دارنده
-    SIZE: حجم
+    SIZE: 'حجم'
     TITLE: عنوان
     TYPE: نوع
     URL: نشانی
@@ -18,9 +18,11 @@ fa_IR:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -53,8 +55,9 @@ fa_IR:
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    ANY: هر
     0: نه
+    ANY: هر
+    Hello: Hi
     LOGOUT: 'Log out'
     1: آری
   CMSMain:
@@ -78,9 +81,9 @@ fa_IR:
     SHOWONCLICKTITLE: 'تغيير كلمه عبور'
   CreditCardField:
     FIRST: نخست
-    FOURTH: چهارم
-    SECOND: دوم
-    THIRD: سوم
+    FOURTH: 'چهارم'
+    SECOND: 'دوم'
+    THIRD: 'سوم'
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
@@ -93,7 +96,7 @@ fa_IR:
     HOURS: ساعت
     MIN: دقیقه
     MINS: دقیقه
-    MONTH: ماه
+    MONTH: 'ماه'
     MONTHS: 'ماه ها'
     SEC: ثانیه
     SECS: ثانیه
@@ -103,13 +106,15 @@ fa_IR:
     YEARS: سال
   DateField:
     NOTSET: 'not set'
-    TODAY: امروز
+    TODAY: 'امروز'
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: افزودن
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (گزینش)
   EmailField:
@@ -120,14 +125,15 @@ fa_IR:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content: محتوا
+    Content: 'محتوا'
     Filename: 'نام پرونده'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: نام
+    Name: 'نام'
     PLURALNAME: 'فايل ها'
     SINGULARNAME: فايل
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
@@ -202,7 +208,7 @@ fa_IR:
     DefaultGroupTitleAdministrators: 'مدیران کل'
     DefaultGroupTitleContentAuthors: 'نویسندگان مطالب'
     Description: توضحیات
-    EMAIL: ايميل
+    EMAIL: 'ايميل'
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     HELLO: درود
     Locked: 'بسته شده است؟'
@@ -212,7 +218,7 @@ fa_IR:
     RolesAddEditLink: 'اضافه/ویرایش وظیفه'
     Sort: 'تربیت چیدن'
     TITLE: 'Image Uploading Iframe'
-    has_many_Permissions: مجوز‌ها
+    has_many_Permissions: 'مجوز‌ها'
     many_many_Members: اعضاء
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -272,10 +278,11 @@ fa_IR:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'افزودن ردیف تازه'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: کمک
+    HELP: 'کمک'
     PAGETYPE: 'نوع صفحه'
     PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
     PERMALREADY: 'من متاسفم، شما نمی توانید به آن قسمت از سیستم مدیریت محتوا دسترسی پیدا کنید. اگر میخواهید به عنوان شخص دیگری وارد شوید از قسمت زیر تلاش کنید'
@@ -306,7 +313,7 @@ fa_IR:
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: نام
+    FIRSTNAME: 'نام'
     INTERFACELANG: 'زبان برنامه'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
@@ -383,7 +390,9 @@ fa_IR:
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ fa_IR:
     BtnImport: 'وارد کردن'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'مشاهده اولی'
     VIEWLAST: 'مشاهده آخری'
     VIEWNEXT: 'مشاهده بعدی'
@@ -442,14 +454,15 @@ fa_IR:
   SiteTree:
     TABMAIN: اصلی
   TableField:
-    ADDITEM: افزودن
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'چینش صعودی'
     SORTDESC: 'چینش نزولی'
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: چاپ
-    Print: چاپ
+    Print: Print
     SELECT: انتخاب
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ fa_IR:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ fa_IR:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: 'نسخه ها'

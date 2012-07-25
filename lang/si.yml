@@ -18,9 +18,11 @@ si:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -53,8 +55,9 @@ si:
     ERRORNOTADMIN: 'ඵම පරිශීලකයා නියමුවෙකු නොවේ'
     ERRORNOTREC: 'ඵම නම/මුරපදය හදුනාගත නොහැක'
   Boolean:
-    ANY: Any
     0: 'False'
+    ANY: Any
+    Hello: Hi
     LOGOUT: 'Log out'
     1: 'True'
   CMSMain:
@@ -77,7 +80,7 @@ si:
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
   CreditCardField:
-    FIRST: පළමු
+    FIRST: 'පළමු'
     FOURTH: fourth
     SECOND: දෙවන
     THIRD: third
@@ -99,8 +102,8 @@ si:
     SECS: 'තත්පර '
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: අවුරුද්ද
-    YEARS: අවුරුදු
+    YEAR: 'අවුරුද්ද'
+    YEARS: 'අවුරුදු'
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -109,7 +112,9 @@ si:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: 'එකතු කරන්න'
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (තොරන්න)
   EmailField:
@@ -120,6 +125,7 @@ si:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Content
     Filename: Filename
@@ -212,7 +218,7 @@ si:
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
     TITLE: 'පිංතූර අප්ලෝඩ් කරන Iframe ඵක'
-    has_many_Permissions: අවසර
+    has_many_Permissions: 'අවසර'
     many_many_Members: සාමාජිකයින්
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -272,6 +278,7 @@ si:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'නව පෙළක් එකතුකරන්න'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ si:
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ si:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'පළමු එක පෙන්වන්න'
     VIEWLAST: 'අවසානය පෙන්වන්න'
     VIEWNEXT: 'ඊළඟ එක පෙන්වන්න'
@@ -442,32 +454,36 @@ si:
   SiteTree:
     TABMAIN: ප්‍රදාන
   TableField:
-    ADDITEM: 'එකතු කරන්න'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort in ascending order'
     SORTDESC: 'Sort in descending order'
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: 'මුද්රණය කරන්න'
-    Print: 'මුද්රණය කරන්න'
+    Print: Print
     SELECT: 'Select:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: අඩු
+    LESS: 'අඩු'
     MORE: වැඩි
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ si:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: වෙලුම

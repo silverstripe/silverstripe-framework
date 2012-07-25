@@ -7,7 +7,7 @@ zh_TW:
     FILENAME: 檔案名稱
     FOLDER: Folder
     LASTEDIT: 最後一次更新
-    OWNER: 擁有者
+    OWNER: '擁有者'
     SIZE: 大小
     TITLE: 標題
     TYPE: 類型
@@ -18,9 +18,11 @@ zh_TW:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -49,12 +51,13 @@ zh_TW:
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
   BasicAuth:
-    ENTERINFO: 請輸入帳號密碼。
-    ERRORNOTADMIN: 那個使用者不是管理員。
+    ENTERINFO: '請輸入帳號密碼。'
+    ERRORNOTADMIN: '那個使用者不是管理員。'
     ERRORNOTREC: 那組帳號密碼不對。
   Boolean:
-    ANY: Any
     0: 'False'
+    ANY: Any
+    Hello: Hi
     LOGOUT: 'Log out'
     1: 'True'
   CMSMain:
@@ -109,7 +112,9 @@ zh_TW:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Add
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (選擇)
   EmailField:
@@ -120,6 +125,7 @@ zh_TW:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Content
     Filename: Filename
@@ -152,8 +158,8 @@ zh_TW:
     FIELDISREQUIRED: '必須要填 %s'
     TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 您輸入的數值並不是獨特的。
-    VALIDATIONPASSWORDSDONTMATCH: 密碼不相配
+    VALIDATIONNOTUNIQUE: '您輸入的數值並不是獨特的。'
+    VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
     VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
@@ -197,7 +203,7 @@ zh_TW:
   Group:
     AddRole: 'Add a role for this group'
     CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
-    CHANGEPASSWORDTEXT2: 您可以用下列的帳號密碼登入：
+    CHANGEPASSWORDTEXT2: '您可以用下列的帳號密碼登入：'
     Code: 'Group Code'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
@@ -227,15 +233,15 @@ zh_TW:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 插入連結
+    BUTTONINSERTLINK: '插入連結'
     BUTTONREMOVELINK: 移除連結
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 對齊/樣式
     CSSCLASSCENTER: 獨立置中
-    CSSCLASSLEFT: 靠左被字包圍。
+    CSSCLASSLEFT: '靠左被字包圍。'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 靠右被字包圍。
+    CSSCLASSRIGHT: '靠右被字包圍。'
     DETAILS: Details
     EMAIL: 電子郵件地址
     FILE: 檔案
@@ -254,7 +260,7 @@ zh_TW:
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: 寬
     INSERTMEDIA: 'Insert Media'
-    LINK: 插入或編輯選取的連結
+    LINK: '插入或編輯選取的連結'
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 連結敘述
     LINKEMAIL: 電子郵件地址
@@ -263,7 +269,7 @@ zh_TW:
     LINKINTERNAL: 此網站
     LINKOPENNEWWIN: 在新視窗打開連結
     LINKTO: 連結至
-    PAGE: 網頁
+    PAGE: '網頁'
     URL: 網址
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
@@ -272,15 +278,16 @@ zh_TW:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Add a new row'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: 說明
-    PAGETYPE: 網頁類型：
-    PERMAGAIN: 您已被登出，請在下面重新登入。
-    PERMALREADY: 抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。
-    PERMDEFAULT: 請選擇一個認證方法並登入。
-    PLEASESAVE: 請儲存：這個網頁沒有被更新因為尚未被儲存。
+    PAGETYPE: '網頁類型：'
+    PERMAGAIN: '您已被登出，請在下面重新登入。'
+    PERMALREADY: '抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。'
+    PERMDEFAULT: '請選擇一個認證方法並登入。'
+    PLEASESAVE: '請儲存：這個網頁沒有被更新因為尚未被儲存。'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -292,8 +299,8 @@ zh_TW:
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 更改密碼
-    BUTTONLOGIN: 登入
-    BUTTONLOGINOTHER: 用別的帳戶登入
+    BUTTONLOGIN: '登入'
+    BUTTONLOGINOTHER: '用別的帳戶登入'
     BUTTONLOSTPASSWORD: 忘記密碼
     CONFIRMNEWPASSWORD: 確認新密碼
     CONFIRMPASSWORD: 確認密碼
@@ -303,7 +310,7 @@ zh_TW:
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 新密碼不相配，請再試一次。
+    ERRORNEWPASSWORD: '新密碼不相配，請再試一次。'
     ERRORPASSWORDNOTMATCH: 舊密碼不對，請再試一次。
     ERRORWRONGCRED: 密碼或電子郵件地址錯誤。請再是一次。
     FIRSTNAME: 名
@@ -383,7 +390,9 @@ zh_TW:
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -393,19 +402,19 @@ zh_TW:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
     Back: Back
-    VALIDATION: 請輸入有效的電話號碼
+    VALIDATION: '請輸入有效的電話號碼'
   Security:
-    ALREADYLOGGEDIN: 你不能瀏覽此頁。請用別的帳戶登入。
+    ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
     BUTTONSEND: 寄給我密碼重設網址。
     CHANGEPASSWORDBELOW: 請在下面更改密碼。
     CHANGEPASSWORDHEADER: 更改密碼
-    ENTERNEWPASSWORD: 請輸入新的密碼。
-    ERRORPASSWORDPERMISSION: 你必須先登入才能改密碼！
-    LOGGEDOUT: 你已登出。您在下面再登入一次。
+    ENTERNEWPASSWORD: '請輸入新的密碼。'
+    ERRORPASSWORDPERMISSION: '你必須先登入才能改密碼！'
+    LOGGEDOUT: '你已登出。您在下面再登入一次。'
     LOGIN: 'Log in'
-    NOTEPAGESECURED: 那的網頁是被保護的。請先登入。
+    NOTEPAGESECURED: '那的網頁是被保護的。請先登入。'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 請輸入您的電子郵件。我們將寄給你重設密媽的網址。
+    NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -430,9 +439,12 @@ zh_TW:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'View first'
     VIEWLAST: 'View last'
     VIEWNEXT: 'View next'
@@ -442,8 +454,9 @@ zh_TW:
   SiteTree:
     TABMAIN: 主要
   TableField:
-    ADDITEM: 新增
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort in ascending order'
     SORTDESC: 'Sort in descending order'
   TableListField:
@@ -459,15 +472,18 @@ zh_TW:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ zh_TW:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Versions

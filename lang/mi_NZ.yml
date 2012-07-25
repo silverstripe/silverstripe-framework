@@ -18,9 +18,11 @@ mi_NZ:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -53,8 +55,9 @@ mi_NZ:
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    ANY: Any
     0: 'False'
+    ANY: Any
+    Hello: Hi
     LOGOUT: 'Log out'
     1: 'True'
   CMSMain:
@@ -102,14 +105,16 @@ mi_NZ:
     YEAR: ' year'
     YEARS: ' years'
   DateField:
-    NOTSET: 'not set'
-    TODAY: today
+    NOTSET: 'kāore i tautuhia'
+    TODAY: 'i tēnei rā'
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Add
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Choose)
   EmailField:
@@ -120,6 +125,7 @@ mi_NZ:
   Enum:
     ANY: Any
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Content
     Filename: Filename
@@ -195,25 +201,25 @@ mi_NZ:
     TEXT2: 'password reset link'
     TEXT3: for
   Group:
-    AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
-    Code: 'Group Code'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Description
-    EMAIL: Email
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Hi
-    Locked: 'Locked?'
-    NoRoles: 'No roles found'
-    PASSWORD: Password
-    Parent: 'Parent Group'
-    RolesAddEditLink: 'Manage roles'
-    Sort: 'Sort Order'
-    TITLE: 'Image Uploading Iframe'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    AddRole: 'Tāpiritia he tūnga mō tēnei rōpū'
+    CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
+    CHANGEPASSWORDTEXT2: 'Ka taea te whakamahi i ēnei taipitopito tuakiri ināianei hei takiuru:'
+    Code: 'Waehere Rōpū'
+    DefaultGroupTitleAdministrators: 'Ngā Kaiwhakahaere'
+    DefaultGroupTitleContentAuthors: 'Ngā Kaituhi Ihirangi'
+    Description: Whakaahuatanga
+    EMAIL: Īmēra
+    GroupReminder: 'Mēnā ka kōwhiri koe i tētahi rōpū matua, ka whiwhi tēnei rōpū i ōna tūnga katoa'
+    HELLO: 'Kia ora'
+    Locked: 'Kua raka?'
+    NoRoles: 'Kāore i kitea he tūnga'
+    PASSWORD: Kupuhipa
+    Parent: 'Rōpū Matua'
+    RolesAddEditLink: 'Whakahaere tūnga'
+    Sort: 'Raupapa Kōmaka'
+    TITLE: 'Iframe Tukuatu Atahanga'
+    has_many_Permissions: 'Ngā Whakaaetanga'
+    many_many_Members: 'Ngā Mema'
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -272,6 +278,7 @@ mi_NZ:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Add a new row'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -383,7 +390,9 @@ mi_NZ:
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -416,13 +425,13 @@ mi_NZ:
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Group name'
     IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTUSERS: 'Kawe kaiwhakamahi mai'
     MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Roopu hou'
     PERMISSIONS: Permissions
-    ROLES: Roles
+    ROLES: 'Ngā Tūnga'
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
     Users: Users
@@ -430,9 +439,12 @@ mi_NZ:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'View first'
     VIEWLAST: 'View last'
     VIEWNEXT: 'View next'
@@ -442,8 +454,9 @@ mi_NZ:
   SiteTree:
     TABMAIN: Main
   TableField:
-    ADDITEM: Whakaurunga
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort in ascending order'
     SORTDESC: 'Sort in descending order'
   TableListField:
@@ -459,15 +472,18 @@ mi_NZ:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ mi_NZ:
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Versions
