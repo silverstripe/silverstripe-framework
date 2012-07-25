@@ -58,10 +58,10 @@ mi_NZ:
     0: Hē
     ANY: 'Ko tētahi'
     Hello: Hi
-    LOGOUT: 'Log out'
+    LOGOUT: Takiputa
     1: Pono
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'Uru ki te wāhanga ''{title}'''
     ACCESSALLINTERFACES: 'Uru ki ngā wāhanga CMS katoa'
     ACCESSALLINTERFACESHELP: 'Ka takahi i ngā tautuhinga uru tauwhāiti ake'
     SAVE: Tiaki
@@ -72,12 +72,12 @@ mi_NZ:
     - Pono
   ComplexTableField:
     CLOSEPOPUP: 'Kati Pakū-Ake'
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: 'Kua tāpiritia a  {name}'
     SUCCESSEDIT: 'I tiakina a %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    ATLEAST: 'Kia {min} pūāhua i te iti rawa te roa o ngā kupuhipa.'
+    BETWEEN: 'Me noho te roa o ngā kupuhipa i waenga i te {min} ki te {max} ngā pūāhua'
+    MAXIMUM: 'Kaua i hipa i te {max} pūāhua te roa o ngā kupuhipa.'
     SHOWONCLICKTITLE: 'Huri Kupuhipa'
   CreditCardField:
     FIRST: tuatahi
@@ -118,7 +118,7 @@ mi_NZ:
   DropdownField:
     CHOOSE: (Kōwhiri)
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION: 'Tāurua he wāhitau īmēra '
   Email_BounceRecord:
     PLURALNAME: 'Ngā Pūrongo Tāwhana Īmēra'
     SINGULARNAME: 'Pūrongo Tāwhana Īmēra'
@@ -129,45 +129,45 @@ mi_NZ:
   File:
     Content: 'Ngā Ihirangi'
     Filename: 'Ingoa Kōnae'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSION: 'Kāore e whakaaetia te toronga (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Kāore e whakaaetia te toronga'
     NOFILESIZE: 'He kore ngā paita kei te kōnae'
     NOVALIDUPLOAD: 'Ehara te kōnae i te tukuatu pono'
     Name: Ingoa
     PLURALNAME: 'Ngā Kōnae'
     SINGULARNAME: Kōnae
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGESHORT: 'Ka hipa te {size} i te rahi kōnae'
     Title: Taitara
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    ATTACH: 'Āpiti  {type}'
+    ATTACHONCESAVED: 'Ka taea te āpiti i ngā {type} ina oti te tiaki tuatahi o te pūkete.'
+    ATTACHONCESAVED2: 'Ka taea te āpiti kōnae ina oti te tiaki tuatahi o te pūkete.'
+    DELETE: 'Muku {type}'
     DISALLOWEDFILETYPE: 'Kāore e whakaaetia ki te tukuatu i tēnei momo kōnae'
     FILE: Kōnae
     FROMCOMPUTER: 'Mai i tō Rorohiko'
     FROMFILESTORE: 'Mai i te pātaka kōnae'
     NOSOURCE: 'Kōwhiria he kōnae pūtake hei tāpiri'
-    REPLACE: 'Replace {type}'
+    REPLACE: 'Whakakapi {type}'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    IMPORT_TAB_HEADER: Kawemai
+    SEARCHLISTINGS: Rapu
+    SYNCRESULTS: 'Kua oti te tukutahi: e {createdcount} ngā tūemi i hangaia, e {deletedcount} ngā tūemi i mukua'
   Form:
     FIELDISREQUIRED: 'Ka hiahiatia a %s'
     TITLE: 'Iframe Tukuatu Atahanga'
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
     VALIDATIONNOTUNIQUE: 'Ehara te uara i tāurua i te ahurei'
     VALIDATIONPASSWORDSDONTMATCH: 'Kāore ngā kupuhipa i te ōrite'
     VALIDATIONPASSWORDSNOTEMPTY: 'Kia kaua e noho piako ngā kupuhipa'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONSTRONGPASSWORD: 'Kia kotahi tonu te mati, kia tahi hoki te pūāhua retawhika i te iti rawa o ngā kupuhipa'
     VALIDATOR: Pūwhakamana
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: 'Tāurua he moni tika'
   FormField:
     NONE: Kore
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Muku
     Delete: Muku
     UnlinkRelation: Wetehono
   GridField:
@@ -190,13 +190,13 @@ mi_NZ:
     NEXT: Panuku
     PREVIOUS: Tōmua
   GridFieldDetailForm:
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
+    Create: Hanga
+    Delete: Muku
+    DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
     Deleted: 'Deleted %s %s'
     HELLO: 'Kia ora'
-    Save: Save
-    Saved: 'Saved %s %s'
+    Save: Tiaki
+    Saved: 'I tiakina a %s %s'
     TEXT1: 'Anei tō'
     TEXT2: 'hono tautuhi kupuhipa anō'
     TEXT3: mā
@@ -223,19 +223,19 @@ mi_NZ:
   GroupImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te hōputu <em>CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Whakamahinga ara atu anō</h4>\\n<ul>\\n<li>Ngā tīwae ka whakaaetia: <em>%s</em></li>\\n<li>Ka whakaritea ngā kaiwhakamahi mā tō rātou āhuatanga<em>Waehere</em> ahurei, ā, ka whakahōutia ki ngā uara hōu mai i te kōnae kua kawea mai</li>\\n<li>Ka taea te hanga aroākapanga rōpū mā te whakamahi i te tīwae <em>WaehereMatua</em>.</li>\\n<li>Ka taea te tautapa waehere whakaaetanga mā te tīwae<em>WaehereWhakaaetanga</em>. Kāore e ūkuia ngā waehere whakaaetanga o nāianei.</li>\\n</ul>\\n</div>"
-    ResultCreated: 'Created {count} groups'
+    ResultCreated: 'I hangaia e {count} ngā rōpū'
     ResultDeleted: 'Kua mukua e %d ngā rōpū'
     ResultUpdated: 'Kua whakahōutia e %d ngā rōpū'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ADDURL: 'Tāpiri PRO'
+    ADJUSTDETAILSDIMENSIONS: 'Ngā taipitopito &amp; ngā rahinga'
     ANCHORVALUE: Punga
     BUTTONINSERT: Kōkohu
     BUTTONINSERTLINK: 'Kōkuhu hono'
     BUTTONREMOVELINK: 'Tango hono'
-    BUTTONUpdate: Update
+    BUTTONUpdate: Whakahōu
     CAPTIONTEXT: 'Tuhinga tapanga'
     CSSCLASS: 'Tiaroaro / kāhua'
     CSSCLASSCENTER: 'I tauwaengatia, i tōna kotahi'
@@ -248,18 +248,18 @@ mi_NZ:
     FOLDER: Kōpaki
     FROMCMS: 'Mai i te CMS'
     FROMCOMPUTER: 'Mai i tō rorohiko'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
+    FROMWEB: 'Mai i te tukutuku'
+    FindInFolder: 'Rapu i te Kōpaki'
+    IMAGEALT: 'Tuhinga kē (alt)'
     IMAGEALTTEXT: 'Tuhinga kē - ka whakaaturia ki te kore e taea te whakaatu atahanga'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Ka whakaaturia ki ngā pūpānui mata, mēnā rānei kāore e taea te atahanga te whakaatu'
     IMAGEDIMENSIONS: 'Ngā Rahinga'
     IMAGEHEIGHTPX: Teitei
     IMAGETITLE: 'Tuhinga taitara (ākiutauta) - mō ngā mōhiohio tāpiri mō te atahanga'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGETITLETEXT: 'Tuhinga taitara (ākiutauta) '
+    IMAGETITLETEXTDESC: 'Mō ētahi atu mōhiohio mō te atahanga'
     IMAGEWIDTHPX: Whānui
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: 'Kōkuhu Pāpāho'
     LINK: 'Kōkuhu hono'
     LINKANCHOR: 'He punga kei tēnei whārangi'
     LINKDESCR: 'Whakaahuatanga hono'
@@ -271,16 +271,16 @@ mi_NZ:
     LINKTO: 'Hono ki'
     PAGE: Whārangi
     URL: PRO
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
+    UpdateMEDIA: 'Whakahōu Pāpāho'
   ImageField:
     IMAGE: Atahanga
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Hoatu Tātari"  GridFieldItemEditView.ss:    Go back: "Hoki"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Tāpiri haupae hōu'
     ADDITEM: 'Add %s'
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    CANT_REORGANISE: 'Kāore tō mana whakakē i ngā whārangi taumata Matua. Kāore tō huringa i tiakina.'
+    DELETED: 'I mukua'
     DropdownBatchActionsDefault: 'Ngā Mahi'
     HELP: Āwhina
     PAGETYPE: 'Momo whārangi:'
@@ -288,9 +288,9 @@ mi_NZ:
     PERMALREADY: 'Aroha mai, kāore e taea te whakauru i tērā wāhanga o te CMS. Ki te pīrangi koe ki te takiuru atu mā tētahi atu ingoa, whakamahia ki raro nei.'
     PERMDEFAULT: 'Whiriwhiria koa tētahi aratuka motuhēhēnga me te tāuru i ō pūkenga ki te whakauru i te CMS.'
     PLEASESAVE: 'Tiaki Whārangi: Kāore i taea tēnei whārangi te whakahōu nā te mea kāore anō kia tiakina.'
-    PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    PreviewButton: Arokite
+    REORGANISATIONSUCCESSFUL: 'Kua momoho te whakaraupapa anō i te rākau pae'
+    SAVEDUP: 'Kua Tiakina'
     VersionUnknown: 'tē mōhiotia'
   LoginAttempt:
     Email: 'Wāhitau Īmēra'
@@ -362,10 +362,10 @@ mi_NZ:
   MemberImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Whakamahinga ara atu anō</h4>\\n<ul>\\n<li>Ngā tīwae ka whakaaetia: <em>%s</em></li>\\n<li>Ka whakaritea ngā kaiwhakamahi mā tō rātou āhuatanga<em>Waehere</em> ahurei, ā, ka whakahōutia ki ngā uara hōu mai i te kōnae kua kawea mai.</li>\\n<li>Ka taea te tautapa rōpū mā te tīwae <em>Ngā Rōpū</em>. Ka tautohua ngā rōpū mā tō rātou āhuatanga <em>Waehere</em>, ka taea te whakawehe i ngā rōpū maha ki te piko. Kāore e ūkuia ngā mematanga rōpū o naianei.</li>\\n</ul>\\n</div>"
-    ResultCreated: 'Created {count} members'
+    ResultCreated: 'I hangaia e {count} ngā mema'
     ResultDeleted: 'Kua mukua e %d ngā mema'
     ResultNone: 'Kāore he huringa'
-    ResultUpdated: 'Updated {count} members'
+    ResultUpdated: 'I whakahōutia e {count} mhā mema'
   MemberTableField: null
   ModelAdmin:
     DELETE: Muku
@@ -378,7 +378,7 @@ mi_NZ:
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
-    FIELDLABELAMOUNT: Amount
+    FIELDLABELAMOUNT: Rahinga
     FIELDLABELCURRENCY: Moni
   NullableField:
     IsNullLabel: 'He Kore Tēnei'
@@ -389,14 +389,14 @@ mi_NZ:
     CMS_ACCESS_CATEGORY: 'Uru CMS'
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
-    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
     IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECRELATIONS: 'Ngā Pānga'
     IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    AssignedTo: 'kua tautapatia ki  "{title}"'
+    FromGroup: 'I tukuna iho i te rōpū "{title}"'
+    FromRole: 'I tukuna iho i te tūnga "{title}"'
     FromRoleOnGroup: 'i tukuna iho i "%s" i te rōpū "%s"'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ngā tūnga me ngā whakaaetanga uru'
@@ -413,10 +413,10 @@ mi_NZ:
     LOGGEDOUT: 'Kua takiputaina atu koe. Ki te pīrangi koe ki te takiuru atu anō, tāurutia ō taipitopito tuakiri ki raro. '
     LOGIN: Takiuru
     NOTEPAGESECURED: 'Kua ngita tēnā whārangi. Tāurua ō taipitoptio tuakiri ki raro, ā, mā mātou koe e tuku kia haere tonu.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>He muhu, kua mōnehu rānei te hono tautuhi kupuhipa anō.</p><p>Ka taea te tono i te mea hōu<a href="{link1}">i konei</a> ka huri rānei i tō kupuhipa ā muri i tō<a href="{link2}">takiuru</a>.</p>'
     NOTERESETPASSWORD: 'Tāurua tō wāhitau īmēra, mā mātou e tuku tētahi hono ki a koe e taea ai te tautuhi anō i tō kupuhipa'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'I tukuna he hono tautuhi kupuhipa anō ki ''{email}'''
+    PASSWORDSENTTEXT: 'Kia ora! Kua tukuna he hono tautuhi anō ki ''{email}'',engari rā kei te tīariari he pūkete mō taua wāhitau īmēra.'
   SecurityAdmin:
     ACCESS_HELP: 'Tukuna te tiro, te tāpiri me te whakatika i ngā kaiwhakamahi, me te tautapa anō hoki i ngā whakaaetanga me ngā tūnga ki a rātou.'
     APPLY_ROLES: 'Hoatu tūnga ki ngā rōpū'
@@ -440,9 +440,9 @@ mi_NZ:
     FileFieldLabel: 'Kōnae CSV <small>(Ngā toronga ka whakaaetia: *.csv)</small>'
   SilverStripeNavigator:
     DISPLAYING: Displaying
-    Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+    Edit: Whakatika
+    FILTER: Tātari
+    IMPORT: Kawemai
     OF: of
     TO: to
     VIEWFIRST: 'Tirohia te tuatahi'
@@ -455,7 +455,7 @@ mi_NZ:
     TABMAIN: Matua
   TableField:
     ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED: 'Ka hiahiatia te %s i te ''%s'' '
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Kōmakatia ki te raupapa aupiki'
     SORTDESC: 'Kōmakatia ki te raupapa auheke'
