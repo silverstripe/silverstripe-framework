@@ -3,6 +3,7 @@
 	<head>
 	<% base_tag %>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-language" content="$Locale.RFC1766" />
 	<meta name="viewport" content="width=720, maximum-scale=1.0" />
 	<title>$Title</title>
 </head>
