@@ -107,7 +107,7 @@ nb:
   DateField:
     NOTSET: mangler
     TODAY: 'i dag'
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
