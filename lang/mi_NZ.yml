@@ -18,10 +18,10 @@ mi_NZ:
     DROPAREA: 'Wāhi Taka'
     EDITALL: 'Whakatika katoa'
     EDITANDORGANIZE: 'Whakatika me te Whakaraupapa'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Whakatika kōnae'
     FILES: 'Ngā kōnae'
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTER: 'Kōwhiri kōnae mai i tō rorohiko'
+    FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
     TOTAL: Tapeke
     UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
     UPLOADOR: 'TĒNEI RĀNEI'
@@ -57,7 +57,7 @@ mi_NZ:
   Boolean:
     0: Hē
     ANY: 'Ko tētahi'
-    Hello: Hi
+    Hello: 'Kia ora'
     LOGOUT: Takiputa
     1: Pono
   CMSMain:
@@ -112,9 +112,9 @@ mi_NZ:
     VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
   Director:
     ADD: Tāpiri
-    CSVEXPORT: 'Export to CSV'
+    CSVEXPORT: 'Kaweatu ki CSV'
     INVALID_REQUEST: 'Tono muhu'
-    NOTFOUND: 'No items found'
+    NOTFOUND: 'Kāore i kitea he tūemi'
   DropdownField:
     CHOOSE: (Kōwhiri)
   EmailField:
@@ -125,7 +125,7 @@ mi_NZ:
   Enum:
     ANY: 'Ko tētahi'
     LOADING: 'Uta ana...'
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'Ka hiahia te CMS kia whakahohea te JavaScript'
   File:
     Content: 'Ngā Ihirangi'
     Filename: 'Ingoa Kōnae'
@@ -136,7 +136,7 @@ mi_NZ:
     Name: Ingoa
     PLURALNAME: 'Ngā Kōnae'
     SINGULARNAME: Kōnae
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGE: 'He rahi rawa te rahi kōnae, he {size} te rahi mōrahi ka taea'
     TOOLARGESHORT: 'Ka hipa te {size} i te rahi kōnae'
     Title: Taitara
   FileIFrameField:
@@ -278,7 +278,7 @@ mi_NZ:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Hoatu Tātari"  GridFieldItemEditView.ss:    Go back: "Hoki"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Tāpiri haupae hōu'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Tāpiri %s'
     CANT_REORGANISE: 'Kāore tō mana whakakē i ngā whārangi taumata Matua. Kāore tō huringa i tiakina.'
     DELETED: 'I mukua'
     DropdownBatchActionsDefault: 'Ngā Mahi'
@@ -369,14 +369,14 @@ mi_NZ:
   MemberTableField: null
   ModelAdmin:
     DELETE: Muku
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: 'I mukua e {count} ngā pūkete.'
     IMPORT: 'Kawemai i CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: 'I kawea mai e {count} ngā pūkete.'
     NOCSVFILE: 'Pūtirotiro kia kitea he kōnae CSV hei kawemai'
     NOIMPORT: 'Kāore he mea hei kawemai'
     RESET: 'Tautuhi Anō'
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    Title: 'Ngā Tauira Raraunga'
+    UPDATEDRECORDS: 'I whakahōutia e {count} ngā pūkete.'
   MoneyField:
     FIELDLABELAMOUNT: Rahinga
     FIELDLABELCURRENCY: Moni
@@ -390,9 +390,9 @@ mi_NZ:
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
     IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
     IMPORTSPECRELATIONS: 'Ngā Pānga'
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Whakapūtātanga mō %s'
   PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
@@ -439,12 +439,12 @@ mi_NZ:
     BtnImport: 'Kawemai i CSV'
     FileFieldLabel: 'Kōnae CSV <small>(Ngā toronga ka whakaaetia: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
+    DISPLAYING: 'Whakaatu ana'
     Edit: Whakatika
     FILTER: Tātari
     IMPORT: Kawemai
-    OF: of
-    TO: to
+    OF: o
+    TO: ki
     VIEWFIRST: 'Tirohia te tuatahi'
     VIEWLAST: 'Tirohia te whakamutunga'
     VIEWNEXT: 'Tiro panuku'
@@ -454,15 +454,15 @@ mi_NZ:
   SiteTree:
     TABMAIN: Matua
   TableField:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Tāpiri %s'
     ISREQUIRED: 'Ka hiahiatia te %s i te ''%s'' '
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Kāore i kitea he tūemi'
     SORTASC: 'Kōmakatia ki te raupapa aupiki'
     SORTDESC: 'Kōmakatia ki te raupapa auheke'
   TableListField:
     CSVEXPORT: 'Kaweake ki CSV'
     PRINT: Tā
-    Print: Print
+    Print: Tā
     SELECT: 'Tīpako:'
   TimeField:
     VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
@@ -473,17 +473,17 @@ mi_NZ:
     ATTACHFILE: 'Tāpiritia tētahi kōnae'
     ATTACHFILES: 'Tāpiri kōnae'
     AttachFile: 'Tāpiritia t/ētahi kōnae'
-    DELETE: 'Delete from files'
+    DELETE: 'Muku i ngā kōnae'
     DELETEINFO: 'Muku pūmautia tēnei kōnae i te pātaka kōnae'
     DOEDIT: Tiaki
     DROPFILE: 'whakamakeretia tētahi kōnae'
     DROPFILES: 'taka kōnae'
     Dimensions: 'Ngā Rahinga'
-    EDIT: Edit
+    EDIT: Whakatika
     EDITINFO: 'Whakatikatia tēnei kōnae'
     FIELDNOTSET: 'Kāore i kitea te mōhiohio kōnae'
     FROMCOMPUTER: 'Mai i tō rorohiko'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Tīpako mai i ngā kōnae'
     FROMFILES: 'I ngā kōnae'
     MAXNUMBEROFFILES: 'Kua hipa te mōrahi o ngā kōnae {count}.'
     MAXNUMBEROFFILESSHORT: 'Ka taea te tukuatu i ngā kōnae {count} anake '
@@ -491,7 +491,7 @@ mi_NZ:
     REMOVEERROR: 'Kua rarua te tango kōnae'
     REMOVEINFO: 'Tangohia tēnei kōane i konei, engari kaua e muku i te pātaka kōnae'
     STARTALL: 'Tīmata katoa'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Tīmataria ngā tukuatu katoa'
     Saved: 'Kua Tiakina'
   Versioned:
     has_many_Versions: 'Ngā Putanga'
