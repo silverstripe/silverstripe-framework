@@ -1,28 +1,17 @@
 gl_ES:
   AssetAdmin:
-    NEWFOLDER:
-      - null
+    NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Primeiro subido'
+    DIM: Dimensións
+    FILENAME: 'Nome ficheiro'
+    FOLDER: Cartafol
+    LASTEDIT: 'Último cambio'
+    OWNER: Propietario
+    SIZE: 'Tamaño ficheiro'
+    TITLE: Título
+    TYPE: 'Tipo ficheiro'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Escoller ficheiros'
     DRAGFILESHERE: 'Arrastrar ficheiro aquí'
@@ -66,49 +55,37 @@ gl_ES:
     ERRORNOTADMIN: 'Ese usuario non é un administrador.'
     ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    Hello:
-      - null
-    LOGOUT:
-      - null
-    1:
-      - null
+    0: Falso
+    ANY: Ningún
+    Hello: Hi
+    LOGOUT: 'Log out'
+    1: Verdadeiro
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Acceder a todas as seccións do CMS'
     ACCESSALLINTERFACESHELP: 'Anular a configuración de acceso máis específica.'
     SAVE: Gardar
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Falso
+    - Verdade
   ComplexTableField:
     CLOSEPOPUP: 'Pechar Ventá Emerxente'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Gardado %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Mudar Contrasinal'
   CreditCardField:
     FIRST: primeiro
     FOURTH: cuarto
     SECOND: segundo
     THIRD: terceiro
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: €
   DataObject:
     PLURALNAME: 'Obxectos de Datos'
     SINGULARNAME: 'Obxecto de Dato'
@@ -139,8 +116,7 @@ gl_ES:
     INVALID_REQUEST: 'Invalid request'
     NOTFOUND: 'No items found'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Escoller)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -151,30 +127,18 @@ gl_ES:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content:
-      - null
-    Filename:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    Title:
-      - null
+    Content: Contido
+    Filename: 'Nome ficheiro'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'O tamaño do ficheiro é cero bytes.'
+    NOVALIDUPLOAD: 'Ficheiro non v&aacute;lido para subir'
+    Name: Nome
+    PLURALNAME: Ficheiros
+    SINGULARNAME: Ficheiro
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Título
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -191,33 +155,21 @@ gl_ES:
     SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED:
-      - null
-    TITLE:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s é requirido'
+    TITLE: 'Iframe subindo imaxe'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'O valor inserido non é único'
+    VALIDATIONPASSWORDSDONTMATCH: 'Os contrasinais non emparellan'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Os contrasinais non pode ser baleiro'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validador
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
     NONE: ningún
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Eliminar
+    UnlinkRelation: Desligar
   GridField:
     Add: 'Add {name}'
     Filter: Filtro
@@ -275,8 +227,7 @@ gl_ES:
     ResultDeleted: 'Eliminados %d grupos'
     ResultUpdated: 'Actualizados %d grupos'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -387,47 +338,27 @@ gl_ES:
     db_Password: Contrasinal
     db_PasswordExpiry: 'Data de expiración do contrasinal'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'Correo-e e Contrasinal'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
+    Custom: Personalizado
+    DATEFORMATBAD: 'O formato da data é inválida'
+    DAYNOLEADING: 'Día do mes sen ceros a esquerda'
+    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
+    FOURDIGITYEAR: 'Catro díxitos ano'
+    FULLNAMEMONTH: 'Nome completo do mes (p.e. Xuño)'
+    HOURNOLEADING: 'Hora sen ceros a esquerda'
+    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
+    MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
+    Preview: Previsualizar
+    SHORTMONTH: 'Nome curto do mes (p.e. Xuñ)'
+    TOGGLEHELP: 'Mudar o formato de axuda'
+    TWODIGITDAY: 'Dous díxitos día do mes'
+    TWODIGITHOUR: 'Dous díxitos para a hora (00 ata 23)'
+    TWODIGITMINUTE: 'Dous díxitos minuto (00 ata 59)'
+    TWODIGITMONTH: 'Dous díxitos para o mes (01=Xaneiro, etc.)'
+    TWODIGITSECOND: 'Dous díxitos de segundo (00 ata 59)'
+    TWODIGITYEAR: 'Dous díxitos ano'
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Os usuarios existentes son emparellados polo súa propiedade <em>Code</em> única,  e actualizados con calquera novo valor do ficheiro importado.</li>\\n<li>Os grupos son asinados pola columna <em>Groups</em>. Os grupos son identificados pola súa propiedade <em>Code</em>, varios grupos poden aparecer separados por comas. A pertenencia a grupos non se borra.</li>\\n</ul>\\n</div>"
@@ -437,24 +368,15 @@ gl_ES:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Eliminar
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Importar dende CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Por favor navega por un ficheiro CSV para importar'
+    NOIMPORT: 'Nada para importar'
+    RESET: Reiniciar
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
     FIELDLABELAMOUNT: Cantidade
     FIELDLABELCURRENCY: Moeda
@@ -463,22 +385,14 @@ gl_ES:
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    AdminGroup: Administrador
+    CMS_ACCESS_CATEGORY: 'Acceso CMS'
+    FULLADMINRIGHTS: 'Todos os dereitos administrativos'
+    FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -490,32 +404,19 @@ gl_ES:
     Back: Back
     VALIDATION: 'Por favor insire un número de teléfono válido'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
+    BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'
+    CHANGEPASSWORDBELOW: 'Podes mudar o contrasinal abaixo.'
+    CHANGEPASSWORDHEADER: 'Mudar Contrasinal'
+    ENTERNEWPASSWORD: 'Por favor insire un novo contrasinal.'
+    ERRORPASSWORDPERMISSION: 'Debes iniciar sesión para poder mudar o teu contrasinal!'
+    LOGGEDOUT: 'Pechouse a túa sesión. Se desexas iniciar sesión de novo, insire as túas credenciais a continuación.'
+    LOGIN: 'Iniciar sesión'
+    NOTEPAGESECURED: 'Esa páxina é segura. Insire as túas credenciais abaixo e enviarémoste dereito a ela.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Insire o teu enderezo de correo-e e enviarémosche unha ligazón coa que reiniciar o teu contrasinal'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Permitir a visualización, adición e edición de usuarios, asemade asinar permisos e roles aos mesmos.'
     APPLY_ROLES: 'Aplicar roles aos grupos'
@@ -535,10 +436,8 @@ gl_ES:
     TABROLES: Roles
     Users: Usuarios
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: 'Importar dende CSV'
+    FileFieldLabel: 'Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>'
   SilverStripeNavigator:
     DISPLAYING: Displaying
     Edit: Edit
@@ -555,16 +454,11 @@ gl_ES:
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ADDITEM:
-      - null
-    ISREQUIRED:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Add %s'
+    ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordear ascendentemente'
+    SORTDESC: 'Ordear descendentemente'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
     PRINT: Imprimir

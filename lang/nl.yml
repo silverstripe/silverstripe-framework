@@ -1,28 +1,17 @@
 nl:
   AssetAdmin:
-    NEWFOLDER:
-      - null
+    NEWFOLDER: 'Nieuwe Map'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Eerste upload'
+    DIM: Dimensies
+    FILENAME: Bestandsnaam
+    FOLDER: Folder
+    LASTEDIT: 'Laatste wijziging'
+    OWNER: Eigenaar
+    SIZE: Grootte
+    TITLE: Titel
+    TYPE: Type
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Selecteer bestanden'
     DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
@@ -66,49 +55,37 @@ nl:
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
     ERRORNOTREC: 'De gebruikersnaam en/of wachtwoord wordt niet herkend'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    Hello:
-      - null
-    LOGOUT:
-      - null
-    1:
-      - null
+    0: Nee
+    ANY: Elke
+    Hello: Hi
+    LOGOUT: 'Log out'
+    1: Ja
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Toegang tot alle CMS onderdelen'
     ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
     SAVE: Bewaar
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Nee
+    - Ja
   ComplexTableField:
     CLOSEPOPUP: 'Sluit Popup'
     SUCCESSADD2: 'Toegevoegd {name}'
     SUCCESSEDIT: '%s %s %s Opgeslagen'
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Verander wachtwoord'
   CreditCardField:
     FIRST: eerste
     FOURTH: vierde
     SECOND: tweede
     THIRD: derde
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Gegeven Objecten'
     SINGULARNAME: 'Gegeven Object'
@@ -139,8 +116,7 @@ nl:
     INVALID_REQUEST: 'Invalid request'
     NOTFOUND: 'No items found'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Kies)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -151,30 +127,18 @@ nl:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content:
-      - null
-    Filename:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    Title:
-      - null
+    Content: Inhoud
+    Filename: 'Bestandsnaam '
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'Bestandsgrootte is nul bytes.'
+    NOVALIDUPLOAD: 'Geen geldig bestand'
+    Name: Naam
+    PLURALNAME: Bestanden
+    SINGULARNAME: Bestand
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: 'Titel '
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -191,33 +155,21 @@ nl:
     SEARCHLISTINGS: Zoeken
     SYNCRESULTS: 'Synchroniseren compleet: {createdcount} bestanden aangemaakt, {deletedcount} bestanden verwijderd.'
   Form:
-    FIELDISREQUIRED:
-      - null
-    TITLE:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s is verplicht'
+    TITLE: 'Afbeelding uploaden'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'De ingevoerde waarde is niet uniek'
+    VALIDATIONPASSWORDSDONTMATCH: 'Wachtwoorden komen niet overeen'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Wachtwoorden mogen niet leeg zijn'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Controleur
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
     NONE: geen
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Verwijder
+    UnlinkRelation: Ontkoppelen
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -275,8 +227,7 @@ nl:
     ResultDeleted: '%d groepen verwijderd'
     ResultUpdated: '%d groepen aangepast'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Voeg URL toe'
     ADJUSTDETAILSDIMENSIONS: 'Details $amp; afmeting'
@@ -387,47 +338,27 @@ nl:
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord Vervaldatum'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'Email &amp; Wachtwoord'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    Custom: Aangepast
+    DATEFORMATBAD: 'Datum is niet correct opgegeven'
+    DAYNOLEADING: 'Dag van de maand zonder voorloop-nul'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Voorbeeld
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Twee cijfer van het uur (00 tot 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Twee-cijferig jaar'
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
     Help2: '<div class="advanced"><h4>Geavanceerd gebruik</h4><ul><li>Toegestane kolommen: <em>%s</em></li><li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li><li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li></ul></div></ul></div>'
@@ -437,24 +368,15 @@ nl:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Verwijderen
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Importeren vanuit CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Selecteer een CSV bestand op uw computer om te importeren'
+    NOIMPORT: 'Niks om te importeren'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Valuta
@@ -463,22 +385,14 @@ nl:
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    AdminGroup: Beheerder
+    CMS_ACCESS_CATEGORY: 'CMS Toegang'
+    FULLADMINRIGHTS: 'Volledige admin rechten'
+    FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -490,32 +404,19 @@ nl:
     Back: Back
     VALIDATION: 'Voer een geldig telefoonnummer in'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier <a href="%s">opnieuw inloggen</a>.'
+    BUTTONSEND: 'Zend mij de link om mijn wachtwoord opnieuw aan te maken'
+    CHANGEPASSWORDBELOW: 'U kunt Uw wachtwoord hier beneden veranderen.'
+    CHANGEPASSWORDHEADER: 'Verander Uw wachtwoord'
+    ENTERNEWPASSWORD: 'Voer een nieuw wachtwoord in.'
+    ERRORPASSWORDPERMISSION: 'U moet ingelogd zijn om Uw wachtwoord te kunnen veranderen!'
+    LOGGEDOUT: 'U bent uitgelogd.  Als U weer wilt inloggen kunt U Uw gegevens hier beneden invoeren.'
+    LOGIN: 'Meld aan'
+    NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer Uw gegevens in en U wordt automatisch doorgestuurd.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Voer Uw emailadres in en we zenden U een link waarmee U Uw wachtwoord opnieuw kunt aanmaken'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Bevoegdheid voor bekijken, toevoegen en bewerken van leden, en toewijzen van rechten en rollen aan hen.'
     APPLY_ROLES: 'Pas rollen toe aan groepen'
@@ -535,10 +436,8 @@ nl:
     TABROLES: Rollen
     Users: Gebruikers
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: Importeer
+    FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
   SilverStripeNavigator:
     DISPLAYING: Displaying
     Edit: Bewerken
@@ -555,16 +454,11 @@ nl:
   SiteTree:
     TABMAIN: Hoofdgedeelte
   TableField:
-    ADDITEM:
-      - null
-    ISREQUIRED:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Add %s'
+    ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sorteer in oplopende volgorde'
+    SORTDESC: 'Sorteer in aflopende volgorde'
   TableListField:
     CSVEXPORT: 'Exporteer naar CSV'
     PRINT: Afdrukken

@@ -1,28 +1,17 @@
 sk:
   AssetAdmin:
-    NEWFOLDER:
-      - null
+    NEWFOLDER: 'Nový Adresár'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Prvýkrát nahrané'
+    DIM: Rozmery
+    FILENAME: Názov
+    FOLDER: Adresár
+    LASTEDIT: 'Posledne zmenené'
+    OWNER: Vlastník
+    SIZE: Veľkosť
+    TITLE: Titulok
+    TYPE: Typ
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -66,49 +55,37 @@ sk:
     ERRORNOTADMIN: 'Tento používateľ nie je administrátor.'
     ERRORNOTREC: 'Toto používateľské meno / heslo nebolo rozpoznané'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    Hello:
-      - null
-    LOGOUT:
-      - null
-    1:
-      - null
+    0: Nie
+    ANY: Ktorýkoľvek
+    Hello: Hi
+    LOGOUT: 'Log out'
+    1: Áno
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Pristup do všetkých častí CMS.'
     ACCESSALLINTERFACESHELP: 'Prepisuje viac špecifických  nastavení prístupu.'
     SAVE: Uložiť
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Nie
+    - Áno
   ComplexTableField:
     CLOSEPOPUP: 'Zatvoriť okno'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Uložené %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Zmeniť heslo'
   CreditCardField:
     FIRST: prvý
     FOURTH: štvrtý
     SECOND: druhý
     THIRD: tretí
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Datové objekty'
     SINGULARNAME: 'Dátový objekt'
@@ -139,8 +116,7 @@ sk:
     INVALID_REQUEST: 'Invalid request'
     NOTFOUND: 'No items found'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: '(Vyberte si)'
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -151,30 +127,18 @@ sk:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content:
-      - null
-    Filename:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    Title:
-      - null
+    Content: Obsah
+    Filename: 'Meno súboru'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'Veľkosť súboru je nula bajtov.'
+    NOVALIDUPLOAD: 'Subor nie je povolený pre nahratie'
+    Name: Meno
+    PLURALNAME: Súbory
+    SINGULARNAME: Súbor
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Názov
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -191,33 +155,21 @@ sk:
     SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED:
-      - null
-    TITLE:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s je požadované'
+    TITLE: 'Image Uploading Iframe'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'Zadaná hodnota nie je unikátna'
+    VALIDATIONPASSWORDSDONTMATCH: 'Hesla sa nezhodujú'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Heslá nemôžu byť prázdne'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validácia
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
     NONE: žiadne
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Odstrániť
+    UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -275,8 +227,7 @@ sk:
     ResultDeleted: 'Vymazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -387,47 +338,27 @@ sk:
     db_Password: Heslo
     db_PasswordExpiry: 'Dátum expirácie hesla'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: 'Importovať členov v <em>CSV formáte</em> (čiarkov oddelené hodnoty). Zobraziť pokročile použitie'
     Help2: 'Pokročile použitiePovolené stĺpceExistujúci uživatelia sú najdený podľa ich unikátnej <em>Code</em> hodnoty, a aktualizovaný novými hodnotami z importovaného súboru.Skupiny môžu byť pridelené cez stĺpec <em>Groups</em>. Skupiny sú identifikované cez ich <em>Code</em> hodnotu, viacero skupín môže byť oddelených pomocou čiarky. Existujúce členstvá v skupinách nie su vymazané.'
@@ -437,24 +368,15 @@ sk:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Vymazať
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Importovať z CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Prosím vyhľadajte CSV súbor pre importovanie'
+    NOIMPORT: 'Nie je čo importovať'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
@@ -463,22 +385,14 @@ sk:
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    AdminGroup: Administrátor
+    CMS_ACCESS_CATEGORY: 'Prístup do CMS'
+    FULLADMINRIGHTS: 'Plné administrátorské práva'
+    FULLADMINRIGHTS_HELP: 'Ma prednosť pred všetkými ostatnými prideleniami a právomocami.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -490,32 +404,19 @@ sk:
     Back: Back
     VALIDATION: 'Prosím zadajte platné telefónne číslo'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'K tejto stránke nemáte prístup. Ak máte iný účet, ktorý k nej má prístup, môžete sa <a href="%s">prihlásiť</a>.'
+    BUTTONSEND: 'Pošlite mi odkaz na resetovanie hesla'
+    CHANGEPASSWORDBELOW: 'Svoje heslo si môžete zmeniť nižšie.'
+    CHANGEPASSWORDHEADER: 'Zmeniť heslo'
+    ENTERNEWPASSWORD: 'Prosím zadajte nové heslo.'
+    ERRORPASSWORDPERMISSION: 'Pre zmenu hesla musíte byť prihlásený!'
+    LOGGEDOUT: 'Boli ste odhlásený. Ak sa chcete znovu prihlásiť, zadajte svoje prihlasovacie údaje.'
+    LOGIN: Prihlásiť
+    NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Povoliť prezeranie, pridávanie a úpravu uživaťeľov, ako aj pridelovanie právomoci pre nich.'
     APPLY_ROLES: 'Aplikovať úlohy skupinám'
@@ -535,10 +436,8 @@ sk:
     TABROLES: Úlohy
     Users: Bezpečnosť
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: Importovať
+    FileFieldLabel: 'CSV súbor <small>(Povoléné koncovki súborov: *.csv)</small>'
   SilverStripeNavigator:
     DISPLAYING: Displaying
     Edit: Edit
@@ -555,16 +454,11 @@ sk:
   SiteTree:
     TABMAIN: Hlavné
   TableField:
-    ADDITEM:
-      - null
-    ISREQUIRED:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Add %s'
+    ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Zoradiť vzostupne'
+    SORTDESC: 'Zoradiť zostupne'
   TableListField:
     CSVEXPORT: 'Exportovať do CSV'
     PRINT: Vytlačiť
