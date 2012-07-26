@@ -94,7 +94,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
 	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
 	 * Alternatively, pass a anonymous function, which takes two parameters:
-	 *  The value returned by Convert::raw2xml and the original list item.
+	 *  The value and the original list item.
 	 *
 	 * @param array $formatting
 	 */
@@ -126,18 +126,20 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 		// Allow callbacks
 		if(is_array($columnInfo) && isset($columnInfo['callback'])) {
 			$method = $columnInfo['callback'];
-			$value = Convert::raw2xml($method($record));
+			$value = $method($record);
 		
 		// This supports simple FieldName syntax
 		} else {
-			$value = Convert::raw2xml($gridField->getDataFieldValue($record, $columnName));
+			$value = $gridField->getDataFieldValue($record, $columnName);
 		}
 
-		$value = $this->castValue($gridField, $columnName, $value);
 		$value = $this->formatValue($gridField, $record, $columnName, $value);
+		$value = $this->castValue($gridField, $columnName, $value);
 		$value = $this->escapeValue($gridField, $value);
 
-		return $value;
+		return (is_object($value) && $value instanceof Object && $value->hasMethod('forTemplate')) 
+			? $value->forTemplate()
+			: Convert::raw2xml($value);
 	}
 	
 	/**
