@@ -193,7 +193,7 @@ mi_NZ:
     Create: Hanga
     Delete: Muku
     DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
-    Deleted: 'Deleted %s %s'
+    Deleted: 'Kua mukua %s %s'
     HELLO: 'Kia ora'
     Save: Tiaki
     Saved: 'I tiakina a %s %s'
@@ -227,7 +227,7 @@ mi_NZ:
     ResultDeleted: 'Kua mukua e %d ngā rōpū'
     ResultUpdated: 'Kua whakahōutia e %d ngā rōpū'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed: 'Kua kitea he koromeke mutunga kore i roto i te aroākapanga "{type}". Hurihia te matua hei whakaea i tēnei'
   HtmlEditorField:
     ADDURL: 'Tāpiri PRO'
     ADJUSTDETAILSDIMENSIONS: 'Ngā taipitopito &amp; ngā rahinga'
