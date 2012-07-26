@@ -10,9 +10,12 @@
  * create new SCSS files for larger components like the CMS menu or tree 
  * (see _tree.scss and _menu.scss).
  */
-@import "compass";
-@import "compass/css3";
-@import "compass/utilities";
+
+//Already included in screen.scss. Reimporting causes errors in latest 
+//version of compass
+//@import "compass";
+//@import "compass/css3";
+//@import "compass/utilities";
 
 /** ----------------------------------------------------
  * Core Styles.
