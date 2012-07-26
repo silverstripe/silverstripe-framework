@@ -344,7 +344,12 @@ jQuery.noConflict();
 				} else {
 					// Fall back to replacing the content fragment if HTML is returned
 					$data = $(data);
-					guessFragment = $data.is('form') ? 'CurrentForm' : 'Content';
+
+					// Try and guess the fragment if none is provided
+					// TODO: data-pjax-fragment might actually give us the fragment. For now we just check most common case
+					guessFragment = 'Content';
+					if ($data.is('form') && !$data.is('[data-pjax-fragment~=Content]')) guessFragment = 'CurrentForm';
+
 					newFragments[guessFragment] = $data;
 				}
 
