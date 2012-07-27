@@ -27,7 +27,7 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 
 ### Level 2: SilverStripe fundamentals
 
-*  [Templates](topics/templates): SilverStripe has its own templating engine
+*  [Templates](reference/templates): SilverStripe has its own templating engine
 *  [Themes](topics/themes): How to customize your site with themes
 *  [Controllers](topics/controller): Coordination from a URL-request to finding the controller-class
 *  [Pagetypes](topics/page-types): Clarifying the relationship between a page-object and a silverstripe-class
