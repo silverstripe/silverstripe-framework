@@ -139,7 +139,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 
 		return (is_object($value) && $value instanceof Object && $value->hasMethod('forTemplate')) 
 			? $value->forTemplate()
-			: Convert::raw2xml($value);
+			: $value;
 	}
 	
 	/**
