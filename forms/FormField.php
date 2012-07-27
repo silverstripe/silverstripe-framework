@@ -420,7 +420,7 @@ class FormField extends RequestHandler {
 	 * Returns $this.
 	 */
 	function setValue($value) {
-		$this->value = $value; return $this;
+		$this->value = $value;
 		return $this;
 	}
 	
