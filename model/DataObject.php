@@ -2514,13 +2514,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param $fieldPath string
 	 * @return string
 	 */
-	public function relField($fieldPath) {
-		if(strpos($fieldPath, '.') !== false) {
-			$parts = explode('.', $fieldPath);
+	public function relField($fieldName) {
+		$component = $this;
+
+		if(strpos($fieldName, '.') !== false) {
+			$parts = explode('.', $fieldName);
 			$fieldName = array_pop($parts);
 
 			// Traverse dot syntax
-			$component = $this;
 			foreach($parts as $relation) {
 				if($component instanceof SS_List) {
 					if(method_exists($component,$relation)) $component = $component->$relation();
@@ -2529,11 +2530,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$component = $component->$relation();
 				}
 			}
-
-			return $component->$fieldName;
-		} else {
-			return $this->$fieldPath;
 		}
+
+		if ($component->hasMethod($fieldName)) return $component->$fieldName();
+		return $component->$fieldName;
 	}
 
 	/**
