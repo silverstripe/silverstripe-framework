@@ -20,8 +20,8 @@ sv:
     EDITANDORGANIZE: 'Redigera och organisera'
     EDITINFO: 'Edit files'
     FILES: Filer
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTER: 'Välj filer från din dator'
+    FROMCOMPUTERINFO: 'Ladda upp från din dator'
     TOTAL: Totalt
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
@@ -57,7 +57,7 @@ sv:
   Boolean:
     0: Falskt
     ANY: 'Vilken som helst'
-    Hello: Hi
+    Hello: Hej
     LOGOUT: 'Logga ut'
     1: Sant
   CMSMain:
@@ -278,10 +278,10 @@ sv:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Använd filter"  GridFieldItemEditView.ss:    Go back: "Gå tillbaka"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Lägg till ny rad'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Lägg till %s'
     CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     DELETED: Raderad
-    DropdownBatchActionsDefault: 'Åtgärder'
+    DropdownBatchActionsDefault: Åtgärder
     HELP: Hjälp
     PAGETYPE: Sidtyp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
@@ -443,7 +443,7 @@ sv:
     Edit: Ändra
     FILTER: 'Filtrera på'
     IMPORT: Importera
-    OF: of
+    OF: av
     TO: to
     VIEWFIRST: 'Visa första'
     VIEWLAST: 'Visa sista'

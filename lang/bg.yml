@@ -3,7 +3,7 @@ bg:
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: Създаден
-    DIM: 'Размери'
+    DIM: Размери
     FILENAME: 'Име на файл'
     FOLDER: Папка
     LASTEDIT: 'Последна промяна'
@@ -218,7 +218,7 @@ bg:
     RolesAddEditLink: 'Управление на ролите'
     Sort: Сортиране
     TITLE: 'Iframe за качване на изображение'
-    has_many_Permissions: 'Разрешения'
+    has_many_Permissions: Разрешения
     many_many_Members: Потребители
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -253,7 +253,7 @@ bg:
     IMAGEALT: 'Алтернативен текст (alt)'
     IMAGEALTTEXT: 'Алтернативен текст (alt) - показва се ако изображението не е заредено'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: 'Размери'
+    IMAGEDIMENSIONS: Размери
     IMAGEHEIGHTPX: Височина
     IMAGETITLE: 'Описание (tooltip) - за допълнителна информация към изображението'
     IMAGETITLETEXT: 'Описание (tooltip)'
@@ -430,17 +430,17 @@ bg:
     MENUTITLE: Security
     MemberListCaution: 'Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни.'
     NEWGROUP: 'Нова група'
-    PERMISSIONS: 'Разрешения'
-    ROLES: 'Роли'
+    PERMISSIONS: Разрешения
+    ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-    TABROLES: 'Роли'
+    TABROLES: Роли
     Users: Users
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Внасяне от CSV'
     FileFieldLabel: 'CSV файл <small>(разширение: *.csv)</small>'
   SilverStripeNavigator:
     DISPLAYING: Displaying
-    Edit: 'Редакция'
+    Edit: Редакция
     FILTER: Филтър
     IMPORT: Внасяне
     OF: of
@@ -478,7 +478,7 @@ bg:
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
-    Dimensions: 'Размери'
+    Dimensions: Размери
     EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
@@ -487,7 +487,7 @@ bg:
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
     MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
-    REMOVE: 'Премахни'
+    REMOVE: Премахни
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'

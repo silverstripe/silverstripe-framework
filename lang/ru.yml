@@ -3,12 +3,12 @@ ru:
     NEWFOLDER: 'Новая папка'
   AssetTableField:
     CREATED: 'Первая загрузка'
-    DIM: 'Размеры'
+    DIM: Размеры
     FILENAME: 'Имя файла'
     FOLDER: Folder
     LASTEDIT: 'Последнее изменение'
     OWNER: Владелец
-    SIZE: 'Размер'
+    SIZE: Размер
     TITLE: Название
     TYPE: Тип
     URL: URL
@@ -64,7 +64,7 @@ ru:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: 'Сохранить'
+    SAVE: Сохранить
   CMSProfileController:
     MENUTITLE: CMSProfileController
   CheckboxField:
@@ -253,7 +253,7 @@ ru:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: 'Размеры'
+    IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
@@ -411,7 +411,7 @@ ru:
     ENTERNEWPASSWORD: 'Пожалуйста, введите новый пароль.'
     ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
     LOGGEDOUT: 'Вы вышли. Если Вы хотите войти снова, введите ваши учетные данные ниже.'
-    LOGIN: 'Вход'
+    LOGIN: Вход
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
