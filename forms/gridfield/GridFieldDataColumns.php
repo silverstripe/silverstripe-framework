@@ -212,16 +212,17 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 		// If a fieldCasting is specified, we assume the result is safe
 		if(array_key_exists($fieldName, $this->fieldCasting)) {
 			$value = $gridField->getCastedValue($value, $this->fieldCasting[$fieldName]);
-		}
-		// If the value is an object, we do one of two things
-		else if(is_object($value)) {
-			// If it has a "Nice" method, call that & make sure the result is safe
-			if (method_exists($value, 'Nice')) Convert::raw2xml($value->Nice());
-			// Otherwise call forTemplate - the result of this should already be safe
-			else $value = $value->forTemplate();
-		}
-		// Otherwise, just treat as a text string & make sure the result is safe
-		else {
+		} else if(is_object($value)) {
+			// If the value is an object, we do one of two things
+			if (method_exists($value, 'Nice')) {
+				// If it has a "Nice" method, call that & make sure the result is safe
+				$value = Convert::raw2xml($value->Nice());
+			} else {
+				// Otherwise call forTemplate - the result of this should already be safe
+				$value = $value->forTemplate();
+			}
+		} else {
+			// Otherwise, just treat as a text string & make sure the result is safe
 			$value = Convert::raw2xml($value);
 		}
 
