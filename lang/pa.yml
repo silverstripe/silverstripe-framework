@@ -187,7 +187,7 @@ pa:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: 'ਅਗਲਾ'
+    NEXT: ਅਗਲਾ
     PREVIOUS: ਪਿਛਲਾ
   GridFieldDetailForm:
     Create: Create

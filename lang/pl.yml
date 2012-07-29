@@ -96,8 +96,8 @@ pl:
     HOURS: godziny
     MIN: min
     MINS: minuty
-    MONTH: 'miesiąc'
-    MONTHS: 'miesiące'
+    MONTH: miesiąc
+    MONTHS: miesiące
     SEC: sekunda
     SECS: sekundy
     TIMEDIFFAGO: '{difference} temu'
@@ -288,7 +288,7 @@ pl:
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
     PLEASESAVE: 'Proszę Zapisz Stronę: Ta strona nie mogła zostać uaktualniona ponieważ nie została jeszcze zapisana.'
-    PreviewButton: 'Podgląd'
+    PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
@@ -350,7 +350,7 @@ pl:
     HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
-    Preview: 'Podgląd'
+    Preview: Podgląd
     SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
     TOGGLEHELP: 'Przełącz pomoc formatowania'
     TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
