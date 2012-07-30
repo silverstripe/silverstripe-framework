@@ -14,8 +14,6 @@
 
   SelectParser = (function() {
 
-    SelectParser.name = 'SelectParser';
-
     function SelectParser() {
       this.options_index = 0;
       this.parsed = [];
@@ -108,8 +106,6 @@ Copyright (c) 2011 by Harvest
   root = this;
 
   AbstractChosen = (function() {
-
-    AbstractChosen.name = 'AbstractChosen';
 
     function AbstractChosen(form_field, options) {
       this.form_field = form_field;
@@ -280,7 +276,7 @@ Copyright (c) 2011 by Harvest
 (function() {
   var $, Chosen, get_side_border_padding, root,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   root = this;
 
@@ -304,8 +300,6 @@ Copyright (c) 2011 by Harvest
   Chosen = (function(_super) {
 
     __extends(Chosen, _super);
-
-    Chosen.name = 'Chosen';
 
     function Chosen() {
       return Chosen.__super__.constructor.apply(this, arguments);
@@ -347,7 +341,7 @@ Copyright (c) 2011 by Harvest
 
       rise = this.rise_up(this.container, this.dropdown);
       dd_top = rise ? -this.container.find('.chzn-drop').height() : this.container.height();
-      dd_width = this.container.width - get_side_border_padding(this.dropdown);
+      dd_width = this.container.width() - get_side_border_padding(this.dropdown);
       this.dropdown.css({
         "width": dd_width + "px",
         "top": dd_top + "px"
