@@ -18,9 +18,11 @@ nl:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Bewerk en beheer'
+    EDITINFO: 'Edit files'
     FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OF
   BBCodeParser:
@@ -53,8 +55,9 @@ nl:
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
     ERRORNOTREC: 'De gebruikersnaam en/of wachtwoord wordt niet herkend'
   Boolean:
-    ANY: Elke
     0: Nee
+    ANY: Elke
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Ja
   CMSMain:
@@ -109,7 +112,9 @@ nl:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Toevoegen
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Kies)
   EmailField:
@@ -120,6 +125,7 @@ nl:
   Enum:
     ANY: Elke
     LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Inhoud
     Filename: 'Bestandsnaam '
@@ -167,7 +173,7 @@ nl:
   GridField:
     Add: 'Add {name}'
     Filter: Filter
-    FilterBy: 'Filter by '
+    FilterBy: Filteren
     Find: Zoek
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
@@ -272,6 +278,7 @@ nl:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Filter toepassen"  GridFieldItemEditView.ss:    Go back: "Ga terug"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Nieuwe rij toevoegen'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Acties
@@ -383,7 +390,9 @@ nl:
     FULLADMINRIGHTS: 'Volledige admin rechten'
     FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ nl:
     BtnImport: Importeer
     FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Bewerken
     FILTER: Filter
     IMPORT: Importeer
+    OF: of
+    TO: to
     VIEWFIRST: 'Bekijk eerste'
     VIEWLAST: 'Bekijk laatste'
     VIEWNEXT: 'Bekijk volgende'
@@ -442,14 +454,15 @@ nl:
   SiteTree:
     TABMAIN: Hoofdgedeelte
   TableField:
-    ADDITEM: 'Voeg %s toe'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sorteer in oplopende volgorde'
     SORTDESC: 'Sorteer in aflopende volgorde'
   TableListField:
     CSVEXPORT: 'Exporteer naar CSV'
     PRINT: Afdrukken
-    Print: Afdrukken
+    Print: Print
     SELECT: 'Selecteer:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ nl:
   UploadField:
     ATTACHFILE: 'Voeg een bestand toe'
     ATTACHFILES: 'Voeg bestanden toe'
-    AttachFile: 'Voeg een bestand toe'
+    AttachFile: 'Voeg bestanden toe'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Verwijder dit bestand uit bestandsopslag van de website.'
     DOEDIT: Bewaar
     DROPFILE: 'Bestand hiernaar toe slepen'
     DROPFILES: 'Sleep hier je bestanden'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Bewerk dit bestand'
     FIELDNOTSET: 'Bestandsinformatie niet gevonden'
     FROMCOMPUTER: 'Vanaf computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Bestaande bestanden'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ nl:
     REMOVEERROR: 'Fout bij verwijderen'
     REMOVEINFO: 'Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website.'
     STARTALL: 'Start alles'
+    STARTALLINFO: 'Start all uploads'
     Saved: 'Succesvol opgeslagen'
   Versioned:
     has_many_Versions: Versies

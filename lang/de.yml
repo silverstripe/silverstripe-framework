@@ -18,9 +18,11 @@ de:
     DROPAREA: Dateiablage
     EDITALL: 'Alle Bearbeiten'
     EDITANDORGANIZE: Bearbeiten
+    EDITINFO: 'Edit files'
     FILES: Dateien
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Gesamt
-    TOUPLOAD: 'Datei(en) zum Hochladen auswählen'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: ODER
   BBCodeParser:
@@ -53,8 +55,9 @@ de:
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
-    ANY: alle
     0: Nein
+    ANY: alle
+    Hello: Hi
     LOGOUT: Ausloggen
     1: Ja
   CMSMain:
@@ -109,7 +112,9 @@ de:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Hinzufügen
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Ungültige Anfrage'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Auswahl)
   EmailField:
@@ -120,6 +125,7 @@ de:
   Enum:
     ANY: alle
     LOADING: 'Lade Daten ...'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Inhalt
     Filename: Dateiname
@@ -272,6 +278,7 @@ de:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Filter anwenden"  GridFieldItemEditView.ss:    Go back: "Zurück"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Eine neue Zeile hinzufügen'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Aktionen
@@ -383,7 +390,9 @@ de:
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
@@ -430,9 +439,12 @@ de:
     BtnImport: Import
     FileFieldLabel: 'CSV Datei <small>(Erlaubte Dateierweiterung: *.csv)</small>'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Bearbeiten
     FILTER: Filter
     IMPORT: Importieren
+    OF: of
+    TO: to
     VIEWFIRST: 'Ersten anzeigen'
     VIEWLAST: 'Letzten anzeigen'
     VIEWNEXT: 'Nächsten anzeigen'
@@ -442,14 +454,15 @@ de:
   SiteTree:
     TABMAIN: Hauptteil
   TableField:
-    ADDITEM: '%s hinzufügen'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s wird ''%s'' benötigt'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   TableListField:
     CSVEXPORT: 'Exportieren zu CSV'
     PRINT: drucken
-    Print: drucken
+    Print: Print
     SELECT: 'Auswählen:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
@@ -459,15 +472,18 @@ de:
   UploadField:
     ATTACHFILE: 'Datei anhängen'
     ATTACHFILES: 'Dateien anhängen'
-    AttachFile: 'Datei anhängen'
+    AttachFile: 'Dateien anhängen'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Löscht die Datei dauerhaft aus dem Dateisystem'
     DOEDIT: Speichern
     DROPFILE: 'Datei hier ablegen'
     DROPFILES: 'Dateien hier ablegen'
     Dimensions: Dimensionen
+    EDIT: Edit
     EDITINFO: 'Diese Datei bearbeiten'
     FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     FROMCOMPUTER: 'Von Ihrem Computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Von "Dateien"'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
@@ -475,6 +491,7 @@ de:
     REMOVEERROR: 'Fehler beim Entfernen der Datei'
     REMOVEINFO: 'Entfernt die Datei von hier, löscht Sie aber nicht aus dem Dateisystem.'
     STARTALL: 'Alle starten'
+    STARTALLINFO: 'Start all uploads'
     Saved: Gespeichert
   Versioned:
     has_many_Versions: Versionen

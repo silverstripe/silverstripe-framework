@@ -94,7 +94,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
 	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
 	 * Alternatively, pass a anonymous function, which takes two parameters:
-	 *  The value returned by Convert::raw2xml and the original list item.
+	 *  The value and the original list item.
 	 *
 	 * @param array $formatting
 	 */
@@ -126,15 +126,18 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 		// Allow callbacks
 		if(is_array($columnInfo) && isset($columnInfo['callback'])) {
 			$method = $columnInfo['callback'];
-			$value = Convert::raw2xml($method($record));
+			$value = $method($record);
 		
 		// This supports simple FieldName syntax
 		} else {
-			$value = Convert::raw2xml($gridField->getDataFieldValue($record, $columnName));
+			$value = $gridField->getDataFieldValue($record, $columnName);
 		}
 
+		// Turn $value, whatever it is, into a HTML embeddable string
 		$value = $this->castValue($gridField, $columnName, $value);
+		// Make any formatting tweaks
 		$value = $this->formatValue($gridField, $record, $columnName, $value);
+		// Do any final escaping
 		$value = $this->escapeValue($gridField, $value);
 
 		return $value;
@@ -198,6 +201,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	}
 	
 	/**
+	 * Casts a field to a string which is safe to insert into HTML
 	 *
 	 * @param GridField $gridField
 	 * @param string $fieldName
@@ -205,11 +209,23 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 * @return string 
 	 */
 	protected function castValue($gridField, $fieldName, $value) {
+		// If a fieldCasting is specified, we assume the result is safe
 		if(array_key_exists($fieldName, $this->fieldCasting)) {
-			return $gridField->getCastedValue($value, $this->fieldCasting[$fieldName]);
-		} elseif(is_object($value) && method_exists($value, 'Nice')) {
-			return $value->Nice();
+			$value = $gridField->getCastedValue($value, $this->fieldCasting[$fieldName]);
+		} else if(is_object($value)) {
+			// If the value is an object, we do one of two things
+			if (method_exists($value, 'Nice')) {
+				// If it has a "Nice" method, call that & make sure the result is safe
+				$value = Convert::raw2xml($value->Nice());
+			} else {
+				// Otherwise call forTemplate - the result of this should already be safe
+				$value = $value->forTemplate();
+			}
+		} else {
+			// Otherwise, just treat as a text string & make sure the result is safe
+			$value = Convert::raw2xml($value);
 		}
+
 		return $value;
 	}
 	

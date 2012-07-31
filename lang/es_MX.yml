@@ -18,9 +18,11 @@ es_MX:
     DROPAREA: 'Área de arrastre'
     EDITALL: 'Editar todos'
     EDITANDORGANIZE: 'Editar y organizar'
+    EDITINFO: 'Edit files'
     FILES: Archivos
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Seleccionar archivos para subir'
     UPLOADINPROGRESS: 'Por favor espera, subida de archivos en progreso'
     UPLOADOR: o
   BBCodeParser:
@@ -53,8 +55,9 @@ es_MX:
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   Boolean:
-    ANY: Cualquiera
     0: No
+    ANY: Cualquiera
+    Hello: Hi
     LOGOUT: 'Log out'
     1: Sí
   CMSMain:
@@ -109,7 +112,9 @@ es_MX:
     VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
   Director:
     ADD: Agregar
+    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Solicitud no válida'
+    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Seleccione)
   EmailField:
@@ -120,6 +125,7 @@ es_MX:
   Enum:
     ANY: Cualquiera
     LOADING: Cargando...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Contenido
     Filename: 'Nombre de Archivo'
@@ -272,6 +278,7 @@ es_MX:
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Filtro"  GridFieldItemEditView.ss:    Go back: "Volver"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Agregar un nuevo renglón'
+    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Acciones
@@ -383,7 +390,9 @@ es_MX:
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
     FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
     IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -430,9 +439,12 @@ es_MX:
     BtnImport: Importar
     FileFieldLabel: 'Archivo CSV <small>(Extensiones permitidas: *.csv)'
   SilverStripeNavigator:
+    DISPLAYING: Displaying
     Edit: Edit
     FILTER: Filter
     IMPORT: Import
+    OF: of
+    TO: to
     VIEWFIRST: 'Ver primero'
     VIEWLAST: 'Ver último'
     VIEWNEXT: 'Ver siguiente'
@@ -442,14 +454,15 @@ es_MX:
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ADDITEM: 'Agregar %s'
+    ADDITEM: 'Add %s'
     ISREQUIRED: 'In %s ''%s'' is required'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Organizar en orden ascendente'
     SORTDESC: 'Organizar en orden descendente'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
     PRINT: Imprimir
-    Print: Imprimir
+    Print: Print
     SELECT: 'Seleccione:'
   TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
@@ -459,15 +472,18 @@ es_MX:
   UploadField:
     ATTACHFILE: 'Adjuntar un archivo'
     ATTACHFILES: 'Adjuntar archivos'
-    AttachFile: 'Adjuntar un archivo'
+    AttachFile: 'Adjuntar archivo(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Eliminar permanentemente este archivo desde el almacén'
     DOEDIT: Guardar
     DROPFILE: 'Arrastrar un archivo'
     DROPFILES: 'arrastrar archivo aquí'
     Dimensions: Dimensiones
+    EDIT: Edit
     EDITINFO: 'Editar este archivo'
     FIELDNOTSET: 'Información acerca del archivo no encontrada'
     FROMCOMPUTER: 'Desde tu computador'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Desde archivos'
     MAXNUMBEROFFILES: 'Máximo número {count} de archivos sobrepasado'
     MAXNUMBEROFFILESSHORT: 'Solo puedes subir {count} archivos'
@@ -475,6 +491,7 @@ es_MX:
     REMOVEERROR: 'Error removiendo archivo'
     REMOVEINFO: 'Remover este archivo de aquí, pero no borrarlo del almacén de archivos'
     STARTALL: 'Comenzar todas'
+    STARTALLINFO: 'Start all uploads'
     Saved: Guardado
   Versioned:
     has_many_Versions: Versiones

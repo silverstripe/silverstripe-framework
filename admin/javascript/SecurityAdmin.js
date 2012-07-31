@@ -21,20 +21,14 @@
 	 * Refresh the member listing every time the import iframe is loaded,
 	 * which is most likely a form submission.
 	 */
-	$(window).bind('load', function(e) {
-		$('#MemberImportFormIframe,#GroupImportFormIframe').entwine({
-			onmatch: function() {
-				this._super();
-				
-				// TODO entwine can't seem to bind to iframe load events
-				$(this).bind('load', refreshAfterImport);
-			},
-			onunmatch: function() {
-				this._super();
-			}
-		});
+	$('#MemberImportFormIframe, #GroupImportFormIframe').entwine({
+		onadd: function() {
+			this._super();
+			// TODO entwine can't seem to bind to iframe load events
+			$(this).bind('load', refreshAfterImport);
+		}
 	});
-	
+
 	$.entwine('ss', function($){
 		/**
 		 * Class: #Permissions .checkbox[value=ADMIN]
