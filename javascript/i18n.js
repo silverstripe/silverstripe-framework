@@ -174,6 +174,13 @@ ss.i18n = {
 				}
 			}
 
+			if(!rawLocale) {
+				// get by lang attribute on the body tag
+				if (document.getElementsByTagName('body')[0].attributes['lang']) {
+					rawLocale = document.getElementsByTagName('body')[0].attributes['lang'].nodeValue;
+				}
+			}
+			
 			// fallback to default locale
 			if(!rawLocale) rawLocale = this.defaultLocale;
 			
