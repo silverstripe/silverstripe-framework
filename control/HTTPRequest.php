@@ -335,8 +335,15 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * 
 	 * The pattern can optionally start with an HTTP method and a space.  For example, "POST $Controller/$Action".
 	 * This is used to define a rule that only matches on a specific HTTP method.
+	 * 
+	 * @param string $pattern The URL pattern to match against
+	 * @param boolean $shiftOnSuccess
+	 * @param array $routeArguments Any additional arguments specified in the routing table entry for the 
+	 * specified pattern
+	 * @return array The resulting map of request arguments to values, as specified in the routing entry for this
+	 * pattern, as well as any evaluated URL arguments
 	 */
-	function match($pattern, $shiftOnSuccess = false) {
+	function match($pattern, $shiftOnSuccess = false, $routeArguments = null) {
 		// Check if a specific method is required
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
 			$requiredMethod = $matches[1];
@@ -364,8 +371,7 @@ class SS_HTTPRequest implements ArrayAccess {
 			$shiftCount = sizeof($patternParts);
 		}
 
-		$matched = true;
-		$arguments = array();
+		$arguments = $routeArguments ? $routeArguments : array();
 		foreach($patternParts as $i => $part) {
 			$part = trim($part);
 
