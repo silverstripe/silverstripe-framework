@@ -192,10 +192,12 @@
 						// TODO Hack to avoid ajax load on init, see http://code.google.com/p/jstree/issues/detail?id=911
 						'data': this.getPanel().find('.tree-holder').html(),
 						'ajax': {
-							'url': this.data('urlTree'),
+							'url': function(node) {
+								return self.data('urlTree') + '/' + ($(node).data("id") ? $(node).data("id") : 0);
+							},
 							'data': function(node) {
-								var id = $(node).data("id") ? $(node).data("id") : 0, params = self.getRequestParams();
-								params = $.extend({}, params, {ID: id, ajax: 1});
+								var params = self.getRequestParams();
+								params = $.extend({}, params, {ajax: 1});
 								return params;
 							}
 						}
