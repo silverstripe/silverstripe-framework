@@ -343,7 +343,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return array The resulting map of request arguments to values, as specified in the routing entry for this
 	 * pattern, as well as any evaluated URL arguments
 	 */
-	function match($pattern, $shiftOnSuccess = false, $routeArguments = null) {
+	function match($pattern, $shiftOnSuccess = false, $routeArguments = array()) {
 		// Check if a specific method is required
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
 			$requiredMethod = $matches[1];
@@ -355,7 +355,9 @@ class SS_HTTPRequest implements ArrayAccess {
 		
 		// Special case for the root URL controller
 		if(!$pattern) {
-			return ($this->dirParts == array()) ? array('Matched' => true) : false;
+			return ($this->dirParts == array()) 
+				? array_merge($routeArguments, array('Matched' => true)) 
+				: false;
 		}
 
 		// Check for the '//' marker that represents the "shifting point"
@@ -371,7 +373,7 @@ class SS_HTTPRequest implements ArrayAccess {
 			$shiftCount = sizeof($patternParts);
 		}
 
-		$arguments = $routeArguments ? $routeArguments : array();
+		$arguments = $routeArguments;
 		foreach($patternParts as $i => $part) {
 			$part = trim($part);
 
