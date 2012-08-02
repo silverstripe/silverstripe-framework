@@ -22,6 +22,11 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	protected $targetFragment;
 
 	/**
+	 * @var SS_List
+	 */
+	protected $searchList;
+
+	/**
 	 * Which columns that should be used for doing a "StartsWith" search.
 	 * If multiple fields are provided, the filtering is performed non-exclusive.
 	 * If no fields are provided, tries to auto-detect a "Title" or "Name" field,
@@ -167,8 +172,12 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 * @param SS_HTTPRequest $request 
 	 */
 	public function doSearch($gridField, $request) {
-		$dataClass = $gridField->getList()->dataClass();
-		$allList = DataList::create($dataClass);
+		if($this->searchList) {
+			$allList = $this->searchList;
+		} else {
+			$allList = DataList::create($gridField->getList()->dataClass());
+		}
+
 		$filters = array();
 		$stmts = array();
 		
@@ -207,6 +216,16 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 */
 	public function getResultsFormat() {
 		return $this->resultsFormat;
+	}
+
+	/**
+	 * Sets the base list instance which will be used for the autocomplete
+	 * search.
+	 *
+	 * @param SS_List $list
+	 */
+	public function setSearchList(SS_List $list) {
+		$this->searchList = $list;
 	}
 
 	/**
