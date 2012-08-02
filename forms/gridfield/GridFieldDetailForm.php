@@ -316,7 +316,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$actions,
 			$this->component->getValidator()
 		);
-		$form->loadDataFrom($this->record);
+		if($this->record->ID !== 0) {
+		  $form->loadDataFrom($this->record);
+		}
 
 		// TODO Coupling with CMS
 		$toplevelController = $this->getToplevelController();
