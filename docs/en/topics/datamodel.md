@@ -262,7 +262,7 @@ other words, it will return all administrators.
 
 	:::php
 	$members = Member::get()->filter(array(
-		'Groups.Permissions.Code' => 'ADMIN',
+		'Groups.Permissions.Code:ExactMatch' => 'ADMIN',
 	));
 
 Note that we are just joining these tables to filter the records. Even if a member is in more than 1 administrator 
