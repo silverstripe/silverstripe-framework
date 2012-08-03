@@ -342,7 +342,7 @@
 				self.jstree('save_selected');
 
 				$.ajax({
-					url: this.data('urlUpdatetreenodes') + '?ids=' + ids.join(','),
+					url: $.path.addSearchParams(this.data('urlUpdatetreenodes'), 'ids=' + ids.join(',')),
 					dataType: 'json',
 					success: function(data, xhr) {
 						$.each(data, function(nodeId, nodeData) {
