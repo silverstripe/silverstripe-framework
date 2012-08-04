@@ -65,7 +65,7 @@ abstract class DBField extends ViewableData {
 	
 
 	static function create() {
-		Deprecation::notice('3.0', 'DBField::create_field() is deprecated as it clashes with Object::create(). Use DBField::create_field() instead.');
+		Deprecation::notice('3.0', 'DBField::create() is deprecated as it clashes with Object::create(). Use DBField::create_field() instead.');
 
 		return call_user_func_array(array('DBField', 'create_field'), func_get_args());
 	}
