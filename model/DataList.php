@@ -379,8 +379,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$fieldArgs = explode(':',$field);
 				$field = array_shift($fieldArgs);
 				foreach($fieldArgs as $fieldArg){
-					$comparisor = $this->applyFilterContext($field, $fieldArg, $value);
+					$this->applyFilterContext($field, $fieldArg, $value);
 				}
+			} elseif (strstr($field,'.') !== false) {
+				//Relation without a filter, use default filter (ExactMatch).
+				$this->applyFilterContext($field, 'ExactMatch', $value);
 			} else {
 				if($field == 'ID') {
 					$field = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
