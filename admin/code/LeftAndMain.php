@@ -1165,7 +1165,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			),
 			new FieldList(
 				// TODO i18n
-				new FormAction('submit', "Go")
+				new FormAction('submit', _t('CMSSiteTreeFilter_ChangedPages.GO', 'Go'))
 			)
 		);
 		$form->addExtraClass('cms-batch-actions nostyle');
