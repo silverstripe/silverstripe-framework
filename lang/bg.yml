@@ -13,7 +13,7 @@ bg:
     TYPE: 'Тип на файла'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
+    ChooseFiles: 'Избери файлове'
     DRAGFILESHERE: 'Завлечете файловете тук'
     DROPAREA: 'Drop Area'
     EDITALL: 'Редакция на всички'
@@ -24,7 +24,7 @@ bg:
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Общо
     UPLOADINPROGRESS: 'Моля, изчакайте... файловете се качват'
-    UPLOADOR: OR
+    UPLOADOR: ИЛИ
   BBCodeParser:
     ALIGNEMENT: Подреждане
     ALIGNEMENTEXAMPLE: 'подреди в дясно'
@@ -171,7 +171,7 @@ bg:
     Delete: Delete
     UnlinkRelation: Откачане
   GridField:
-    Add: 'Добваи {name}'
+    Add: 'Добави {name}'
     Filter: Филтър
     FilterBy: 'Филтриране по'
     Find: Find
@@ -294,7 +294,7 @@ bg:
     VersionUnknown: непозната
   LoginAttempt:
     Email: 'Email Address'
-    IP: 'IP Address'
+    IP: 'IP адрес'
     Status: Status
   Member:
     ADDGROUP: 'Добави група'
@@ -421,7 +421,7 @@ bg:
     ACCESS_HELP: 'Позволява преглед, добавяне и редактиране на потребители, както и задаване на разрешения и роли за тях.'
     APPLY_ROLES: 'Задаване роли на групи'
     APPLY_ROLES_HELP: 'Възможност за редактиране на ролите, възложени на група. Необходим е достъп до раздел "Потребители".'
-    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS: 'Управление на разрешенията на групите'
     EDITPERMISSIONS_HELP: 'Възможност за редактиране на Разрешенията и IP адресите за група. Необходим е достъп до раздел "Сигурност".'
     GROUPNAME: 'Име на група'
     IMPORTGROUPS: 'Внасяне на файл с групи'
@@ -434,7 +434,7 @@ bg:
     ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
     TABROLES: Роли
-    Users: Users
+    Users: Потребители
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Внасяне от CSV'
     FileFieldLabel: 'CSV файл <small>(разширение: *.csv)</small>'
@@ -471,27 +471,27 @@ bg:
     MORE: повече
   UploadField:
     ATTACHFILE: 'Прикачване на файл'
-    ATTACHFILES: 'Attach files'
+    ATTACHFILES: 'Прикачване на файлове'
     AttachFile: 'Прикачване на файл(ове)'
     DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DELETEINFO: 'Изтрий файла от сървъра'
+    DOEDIT: Запис
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Размери
     EDIT: Edit
-    EDITINFO: 'Edit this file'
+    EDITINFO: 'Редактирай този файл'
     FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTER: 'От компютъра'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
     MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
     REMOVE: Премахни
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    REMOVEERROR: 'Грешка при премахване на файл'
+    REMOVEINFO: 'Премахни файла без да го изтриваш'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: Записано
   Versioned:
     has_many_Versions: Версии

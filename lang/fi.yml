@@ -462,7 +462,7 @@ fi:
   TableListField:
     CSVEXPORT: 'Vie CSV:nä'
     PRINT: Tulosta
-    Print: Print
+    Print: Tulosta
     SELECT: 'Valitse:'
   TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
