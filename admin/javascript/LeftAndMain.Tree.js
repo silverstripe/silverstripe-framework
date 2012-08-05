@@ -340,11 +340,9 @@
 				self.jstree('open_node', this.getNodeByID(0));
 				self.jstree('save_opened');
 				self.jstree('save_selected');
-				
-				var updateURL = this.data('urlUpdatetreenodes');
 
 				$.ajax({
-					url: updateURL + ((updateURL.indexOf('?') >= 0) ? '&' : '?') + 'ids=' + ids.join(','),
+					url: $.path.addSearchParams(this.data('urlUpdatetreenodes'), 'ids=' + ids.join(',')),
 					dataType: 'json',
 					success: function(data, xhr) {
 						$.each(data, function(nodeId, nodeData) {

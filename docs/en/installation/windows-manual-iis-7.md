@@ -14,7 +14,7 @@ These versions of Windows will **NOT** work with this guide:
 
 **IMPORTANT**: Windows Server 2003 users should [follow this guide](http://doc.silverstripe.org/installation-on-windows-server-2003-iis-6) to installing SilverStripe.
 
-The goal is to get a good working web server platform so that one or more SilverStripe projects can be easily deployed onto the server using SVN.
+The goal is to get a good working web server platform so that one or more SilverStripe projects can be easily deployed onto the server using SVN/GIT.
 
 We'll also install SQL Server 2008 R2, and support for connecting to it in PHP.
 
@@ -194,6 +194,17 @@ Make sure that the SMTP and smtp_port are set to your mail server's hostname and
 
 That should do it for the PHP configuration.
 
+## Folder permissions for PHP
+
+Now we need to set up folder permissions for PHP. Open the php.ini and find the paths for sessions and file uploads. They will look like this:
+
+	upload_tmp_dir="C:\Windows\Temp"
+	session.save_path="C:\Windows\Temp"
+
+You will need to give the IIS permission to write to these folders. This can be done by giving **Modify** permission to **IIS** user and **IIS_IUSRS** group.
+
+Other important folders to give these permissions to are `assets` and `silverstripe-cache` (if used) in your web root.
+
 ## Test PHP installation
 
 Now that we've got PHP configured how we want it, let's test that PHP is working correctly.
@@ -246,6 +257,8 @@ First of all, install a copy of TortoiseSVN and then follow these steps:
   * Click OK
   * Click Yes when warned of creating a new directory
   * Drag the newly created folder to **C:\inetpub\wwwroot** (you'll be asked for admin permissions to do this)
+
+After gettng the code installed, make sure you set the folder permissions properly (see *Folder permissions for PHP* above).
 
 ## Install the SilverStripe SQL Server module ("mssql")
 
@@ -393,3 +406,9 @@ You can also [install wincache](http://learn.iis.net/page.aspx/678/use-the-windo
 You can also try installing and enabling static content compression for IIS on live sites. Do this in IIS Manager > Compression.
 
 Doing all of the above should provide a significant performance boost to your site.
+
+**Q: I can upload files, but I get server error when downloading them.**
+
+**Q: I get a lot of stale session files - garbage collector seems not running.**
+
+**A:** This is because of the permissions being incorrectly configured on the temporary upload or session storage folders that the PHP uses. See *Folder permissions for PHP* section for how to configure this correctly.

@@ -2,6 +2,11 @@
 
 ## Overview
 
+The CMS tree for viewing hierarchical structures (mostly pages) is powered
+by the [jstree](http://jstree.com) library. It is configured through
+`sapphire/admin/javascript/LeftAndMain.Tree.js`, as well as some
+HTML5 metadata generated on its container (see the `data-hints` attribute).
+
 The tree is rendered through `[api:LeftAndMain->getSiteTreeFor()]`,
 which recursively collects all nodes based on various filtering criteria.
 The node strictly just has to implement the `[api:Hierarchy]` extension,
