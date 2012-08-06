@@ -45,15 +45,6 @@ Append the option and corresponding value to your URL in your browser's address 
  | showqueries  | | 1      | | List all SQL queries executed                                                                | 
  | previewwrite | | 1      | | List all insert / update SQL queries, and **don't** execute them.  Useful for previewing writes to the database. | 
 
-## Profiling
-
- | URL Variable     | | Values | | Description                                                                                      | 
- | ------------     | | ------ | | -----------                                                                                      | 
- | debug_memory     | | 1      | | Output the number of bytes of memory used for this 
- | debug_memory     | | 1      | | Output the number of bytes of memory used for this request                                       | 
- | debug_profile    | | 1      | | Enable the [profiler](/topics/debugging) for the duration of the request                         | 
- | profile_trace    | | 1      | | Includes full stack traces, must be used with **debug_profile**                                  | 
-
 ## Security Redirects
 
 You can set an URL to redirect back to after a [Security](/topics/security) action.  See the section on [URL

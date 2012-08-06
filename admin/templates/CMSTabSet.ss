@@ -2,14 +2,14 @@
 	<%-- Tab nav is rendered in CMSEditForm.ss --%>
 
 	<% loop Tabs %>
-	<div $AttributesHTML>
-	<% if Tabs %>
-		$FieldHolder
-	<% else %>
-		<% loop Fields %>
-		$FieldHolder
-		<% end_loop %>
-	<% end_if %>
-	</div>
+		<% if Tabs %>
+			$FieldHolder
+		<% else %>
+			<div $AttributesHTML>
+				<% loop Fields %>
+					$FieldHolder
+				<% end_loop %>
+			</div>
+		<% end_if %>
 	<% end_loop %>
 </div>
