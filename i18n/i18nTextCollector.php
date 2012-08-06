@@ -326,7 +326,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * @uses i18nEntityProvider
 	 */
-	function collectFromEntityProviders($filePath) {
+	function collectFromEntityProviders($filePath, $module) {
 		$entities = array();
 		
 		$classes = ClassInfo::classes_for_file($filePath);
