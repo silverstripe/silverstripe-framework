@@ -37,8 +37,8 @@ th:
     COLOREDEXAMPLE: 'blue text'
     EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
-    IMAGE: 'รูปภาพ'
-    IMAGEDESCRIPTION: 'แสดงรูปภาพในหน้าบทความของคุณ'
+    IMAGE: รูปภาพ
+    IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
     ITALIC: 'Italic Text'
     ITALICEXAMPLE: Italics
     LINK: 'Website link'
@@ -241,7 +241,7 @@ th:
     BUTTONINSERTLINK: แทรกลิงค์
     BUTTONREMOVELINK: ลบลิงค์
     BUTTONUpdate: Update
-    CAPTIONTEXT: 'ข้อความคำอธิบายใต้ภาพ'
+    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
     CSSCLASS: 'การจัดวาง / รูปแบบ'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
@@ -279,7 +279,7 @@ th:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: 'รูปภาพ'
+    IMAGE: รูปภาพ
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
@@ -321,7 +321,7 @@ th:
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: ชื่อจริง
-    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
+    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: รหัสผ่านใหม่
@@ -339,7 +339,7 @@ th:
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
     db_LastVisited: วันที่เยี่ยมชมล่าสุด
-    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
+    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
     db_LockedOutUntil: 'Locked out until'
     db_NumVisit: จำนวนการเข้าชม
     db_Password: รหัสผ่าน
@@ -459,7 +459,7 @@ th:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'ยังไม่มีรูปภาพที่ถูกอัพโหลด'
+    NOUPLOAD: ยังไม่มีรูปภาพที่ถูกอัพโหลด
   SiteTree:
     TABMAIN: หลัก
   TableField:

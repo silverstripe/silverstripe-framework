@@ -212,14 +212,14 @@ it:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Aggiungi un ruolo per questo gruppo'
     Code: 'Codice gruppo'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
+    DefaultGroupTitleAdministrators: Amministratori
+    DefaultGroupTitleContentAuthors: 'Autori di contenuto'
     Description: Descrizione
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Se scegli un gruppo padre, questo gruppo erediterà tutti i suoi ruoli.'
     Locked: 'Bloccato?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Nessun ruolo trovato'
     Parent: 'Gruppo padre'
     RolesAddEditLink: 'Aggiungi/modifica ruoli'
     Sort: 'Tipo ordinamento'
@@ -443,13 +443,13 @@ it:
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Nome del gruppo'
     IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTUSERS: 'Importa utenti'
     MEMBERS: Membri
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Nuovo gruppo'
     PERMISSIONS: Permessi
-    ROLES: Roles
+    ROLES: Ruoli
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
     Users: Users
