@@ -3,7 +3,7 @@ bg:
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: Създаден
-    DIM: Размери
+    DIM: 'Размери'
     FILENAME: 'Име на файл'
     FOLDER: Папка
     LASTEDIT: 'Последна промяна'
@@ -13,7 +13,7 @@ bg:
     TYPE: 'Тип на файла'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
+    ChooseFiles: 'Избери файлове'
     DRAGFILESHERE: 'Завлечете файловете тук'
     DROPAREA: 'Drop Area'
     EDITALL: 'Редакция на всички'
@@ -24,7 +24,7 @@ bg:
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Общо
     UPLOADINPROGRESS: 'Моля, изчакайте... файловете се качват'
-    UPLOADOR: OR
+    UPLOADOR: ИЛИ
   BBCodeParser:
     ALIGNEMENT: Подреждане
     ALIGNEMENTEXAMPLE: 'подреди в дясно'
@@ -50,6 +50,8 @@ bg:
     UNORDERED: 'Неподреден лист'
     UNORDEREDDESCRIPTION: 'Неподреден лист'
     UNORDEREDEXAMPLE1: 'Неподреден предмет 1'
+  BackLink_Button.ss:
+    Back: Назад
   BasicAuth:
     ENTERINFO: 'Моля, въведете потребителско име и парола.'
     ERRORNOTADMIN: 'Този потребител не е администратор.'
@@ -57,9 +59,10 @@ bg:
   Boolean:
     0: 'False'
     ANY: Any
-    Hello: Здравей
-    LOGOUT: 'Log out'
     1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: 'Зареждане ...'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Достъп до всички секции на CMS'
@@ -67,6 +70,12 @@ bg:
     SAVE: Запис
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
+    CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
+    EMAIL: Email
+    HELLO: Здравей!
+    PASSWORD: Парола
   CheckboxField:
     - 'False'
     - 'True'
@@ -74,6 +83,14 @@ bg:
     CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Беше добавен {name}'
     SUCCESSEDIT: 'Съхранено %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Възходящ'
+    SORTDESC: 'Низходящ'
+  ComplexTableField_popup.ss:
+    NEXT: Следващо
+    PREVIOUS: Предишно
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ bg:
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
   Director:
-    ADD: Добави
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Грешна заявка'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Избери)
   EmailField:
@@ -124,8 +138,6 @@ bg:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: 'Зареждане ...'
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Съдържание
     Filename: 'Име на файл'
@@ -150,13 +162,17 @@ bg:
     FROMFILESTORE: 'От Файлове и Изображения'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Iframe за качване на изображение'
   Filesystem:
-    IMPORT_TAB_HEADER: Внасяне
-    SEARCHLISTINGS: Търсене
     SYNCRESULTS: 'Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента'
+  ForgotPasswordEmail.ss:
+    HELLO: Здравей!
+    TEXT1: 'Ето вашият'
+    TEXT2: 'адрес за рестартирване на парола'
+    TEXT3: за
   Form:
     FIELDISREQUIRED: 'нужно е %s'
-    TITLE: 'Iframe за качване на изображение'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Въведената стойност не е уникална'
     VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
@@ -171,7 +187,7 @@ bg:
     Delete: Delete
     UnlinkRelation: Откачане
   GridField:
-    Add: 'Добваи {name}'
+    Add: 'Добави {name}'
     Filter: Филтър
     FilterBy: 'Филтриране по'
     Find: Find
@@ -187,38 +203,27 @@ bg:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
-    NEXT: Следващо
-    PREVIOUS: Предишно
   GridFieldDetailForm:
     Create: Създай
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Изтрити %s %s'
-    HELLO: Здравей!
     Save: Запис
     Saved: 'Съхранени %s %s'
-    TEXT1: 'Ето вашият'
-    TEXT2: 'адрес за рестартирване на парола'
-    TEXT3: за
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Добавяне на роля към групата'
-    CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
-    CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
     Code: 'Group Code'
     DefaultGroupTitleAdministrators: Администратори
     DefaultGroupTitleContentAuthors: 'Редактори на съдържание'
     Description: Описание
-    EMAIL: Email
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Здравей!
     Locked: 'Заключена?'
     NoRoles: 'Няма намерени роли'
-    PASSWORD: Парола
     Parent: 'Parent Group'
     RolesAddEditLink: 'Управление на ролите'
     Sort: Сортиране
-    TITLE: 'Iframe за качване на изображение'
-    has_many_Permissions: Разрешения
+    has_many_Permissions: 'Разрешения'
     many_many_Members: Потребители
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -253,7 +258,7 @@ bg:
     IMAGEALT: 'Алтернативен текст (alt)'
     IMAGEALTTEXT: 'Алтернативен текст (alt) - показва се ако изображението не е заредено'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Размери
+    IMAGEDIMENSIONS: 'Размери'
     IMAGEHEIGHTPX: Височина
     IMAGETITLE: 'Описание (tooltip) - за допълнителна информация към изображението'
     IMAGETITLETEXT: 'Описание (tooltip)'
@@ -275,10 +280,9 @@ bg:
     UpdateMEDIA: 'Актуализация на медиа'
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Приложи филтър"  GridFieldItemEditView.ss:    Go back: "Обратно"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Iframe за качване на изображение'
   LeftAndMain:
-    ADD: 'Добави нов ред'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Изтрит
     DropdownBatchActionsDefault: Действия
@@ -292,9 +296,12 @@ bg:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Записано
     VersionUnknown: непозната
+  LeftAndMain_Menu.ss:
+    Hello: Здравей
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email Address'
-    IP: 'IP Address'
+    IP: 'IP адрес'
     Status: Status
   Member:
     ADDGROUP: 'Добави група'
@@ -368,6 +375,7 @@ bg:
     ResultUpdated: 'Бяха актуализирани {count} потребители'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Приложи филтър'
     DELETE: Изтрий
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -377,6 +385,17 @@ bg:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Филтър
+    IMPORT: Внасяне
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Внасяне
+    SEARCHLISTINGS: Търсене
   MoneyField:
     FIELDLABELAMOUNT: Сума
     FIELDLABELCURRENCY: Валута
@@ -389,10 +408,6 @@ bg:
     CMS_ACCESS_CATEGORY: 'Достъп до CMS'
     FULLADMINRIGHTS: 'Пълни административни права'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'
@@ -401,8 +416,11 @@ bg:
   Permissions:
     PERMISSIONS_CATEGORY: 'Роли и разрешения за достъп'
   PhoneNumberField:
-    Back: Назад
     VALIDATION: 'Моля, въведете валиден телефонен номер'
+  RelationComplexTableField.ss:
+    ADD: Добави
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
     BUTTONSEND: 'Пратете ми линка за промяна на паролата'
@@ -421,7 +439,7 @@ bg:
     ACCESS_HELP: 'Позволява преглед, добавяне и редактиране на потребители, както и задаване на разрешения и роли за тях.'
     APPLY_ROLES: 'Задаване роли на групи'
     APPLY_ROLES_HELP: 'Възможност за редактиране на ролите, възложени на група. Необходим е достъп до раздел "Потребители".'
-    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS: 'Управление на разрешенията на групите'
     EDITPERMISSIONS_HELP: 'Възможност за редактиране на Разрешенията и IP адресите за група. Необходим е достъп до раздел "Сигурност".'
     GROUPNAME: 'Име на група'
     IMPORTGROUPS: 'Внасяне на файл с групи'
@@ -430,40 +448,42 @@ bg:
     MENUTITLE: Security
     MemberListCaution: 'Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни.'
     NEWGROUP: 'Нова група'
-    PERMISSIONS: Разрешения
-    ROLES: Роли
+    PERMISSIONS: 'Разрешения'
+    ROLES: 'Роли'
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-    TABROLES: Роли
-    Users: Users
+    TABROLES: 'Роли'
+    Users: Потребители
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Внасяне от CSV'
     FileFieldLabel: 'CSV файл <small>(разширение: *.csv)</small>'
   SilverStripeNavigator:
+    Edit: 'Редакция'
+  SimpleImageField:
+    NOUPLOAD: 'Няма качени изображения'
+  SiteTree:
+    TABMAIN: Главно
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Добави нов ред'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Експортирай на CSV'
+    PRINT: Принтирай
+    Print: Print
+    SELECT: 'Избери:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField_PageControls.ss:
     DISPLAYING: Displaying
-    Edit: Редакция
-    FILTER: Филтър
-    IMPORT: Внасяне
     OF: of
     TO: to
     VIEWFIRST: 'Преглед на първото'
     VIEWLAST: 'Преглед на последното'
     VIEWNEXT: 'Преглед на следващото'
     VIEWPREVIOUS: 'Преглед на предишното'
-  SimpleImageField:
-    NOUPLOAD: 'Няма качени изображения'
-  SiteTree:
-    TABMAIN: Главно
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
-  TableListField:
-    CSVEXPORT: 'Експортирай на CSV'
-    PRINT: Принтирай
-    Print: Print
-    SELECT: 'Избери:'
   TimeField:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
   ToggleField:
@@ -471,27 +491,27 @@ bg:
     MORE: повече
   UploadField:
     ATTACHFILE: 'Прикачване на файл'
-    ATTACHFILES: 'Attach files'
+    ATTACHFILES: 'Прикачване на файлове'
     AttachFile: 'Прикачване на файл(ове)'
     DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DELETEINFO: 'Изтрий файла от сървъра'
+    DOEDIT: Запис
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
-    Dimensions: Размери
+    Dimensions: 'Размери'
     EDIT: Edit
-    EDITINFO: 'Edit this file'
+    EDITINFO: 'Редактирай този файл'
     FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTER: 'От компютъра'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
     MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
-    REMOVE: Премахни
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    REMOVE: 'Премахни'
+    REMOVEERROR: 'Грешка при премахване на файл'
+    REMOVEINFO: 'Премахни файла без да го изтриваш'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: Записано
   Versioned:
     has_many_Versions: Версии

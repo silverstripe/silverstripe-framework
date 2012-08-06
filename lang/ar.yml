@@ -7,8 +7,8 @@ ar:
     FILENAME: 'اسم الملف'
     FOLDER: Folder
     LASTEDIT: 'آخر التعديلات'
-    OWNER: المالك
-    SIZE: الحجم
+    OWNER: 'المالك'
+    SIZE: 'الحجم'
     TITLE: العنوان
     TYPE: النوع
     URL: الرابط
@@ -26,7 +26,7 @@ ar:
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: المحاذاة
+    ALIGNEMENT: 'المحاذاة'
     ALIGNEMENTEXAMPLE: 'محاذاة إلى اليمين'
     BOLD: 'خط عريض'
     BOLDEXAMPLE: عريض
@@ -40,7 +40,7 @@ ar:
     IMAGE: الصورة
     IMAGEDESCRIPTION: 'عرض الصورة في الموضوع'
     ITALIC: 'خط مائل'
-    ITALICEXAMPLE: مائل
+    ITALICEXAMPLE: 'مائل'
     LINK: 'رابط الموقع'
     LINKDESCRIPTION: 'رابط إلى موقع آخر'
     STRUCK: 'خط في المنتصف'
@@ -50,6 +50,8 @@ ar:
     UNORDERED: 'قائمة غير مرتبة'
     UNORDEREDDESCRIPTION: 'قائمة غير مرتبة'
     UNORDEREDEXAMPLE1: 'العنصر 1 غير مرتب'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'فضلاً أدخل اسم المستخدم و كلمة المرور'
     ERRORNOTADMIN: 'هذا المستخدم لا يملك صلاحيات الإدارة'
@@ -57,9 +59,10 @@ ar:
   Boolean:
     0: لا
     ANY: أي
-    Hello: Hi
-    LOGOUT: 'Log out'
-    1: نعم
+    1: 'نعم'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'الدخول إلى جميع واجهات إدارة المحتوى'
@@ -67,13 +70,27 @@ ar:
     SAVE: حفظ
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
+    CHANGEPASSWORDTEXT2: 'يمكنك الآن استخدام هذه البيانات للدخول إلى حسابك'
+    EMAIL: 'البريد الإلكتروني'
+    HELLO: أهلاً
+    PASSWORD: 'الرقم السري'
   CheckboxField:
     - لا
-    - نعم
+    - 'نعم'
   ComplexTableField:
     CLOSEPOPUP: 'إغلاق النافذة'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'حفظ %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'ترتيب تصاعدي'
+    SORTDESC: 'ترتيب تنازلي'
+  ComplexTableField_popup.ss:
+    NEXT: التالي
+    PREVIOUS: السابق
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -90,8 +107,8 @@ ar:
     PLURALNAME: 'بيانات كائن'
     SINGULARNAME: 'بيانات كائن'
   Date:
-    DAY: اليوم
-    DAYS: الأيام
+    DAY: 'اليوم'
+    DAYS: 'الأيام'
     HOUR: ساعة
     HOURS: ساعات
     MIN: دقيقة
@@ -106,15 +123,12 @@ ar:
     YEARS: السنوات
   DateField:
     NOTSET: 'غير محدد'
-    TODAY: اليوم
+    TODAY: 'اليوم'
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: إضافة
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (اختر)
   EmailField:
@@ -124,18 +138,16 @@ ar:
     SINGULARNAME: 'سجل البريد الإلكتروني Bounce'
   Enum:
     ANY: أي
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content: المحتوى
+    Content: 'المحتوى'
     Filename: 'اسم الملف'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'حجم الملف 0 بايت'
     NOVALIDUPLOAD: 'نوع الملف غير قابل للرفع'
-    Name: الاسم
-    PLURALNAME: الملفات
-    SINGULARNAME: الملف
+    Name: 'الاسم'
+    PLURALNAME: 'الملفات'
+    SINGULARNAME: 'الملف'
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: العنوان
@@ -145,24 +157,28 @@ ar:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: ملف
+    FILE: 'ملف'
     FROMCOMPUTER: 'من جهازك الشخصي'
     FROMFILESTORE: 'من مكتبة الملفات'
     NOSOURCE: 'الرجاء اختيارمصدر ملف المرفق'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: أهلاً
+    TEXT1: هنا
+    TEXT2: 'رابط إعادة تعيين كلمة المرور'
+    TEXT3: لـ
   Form:
     FIELDISREQUIRED: '%s مطلوب'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'القيمة المدخلة غير فريدة و قابلة للتكرار '
     VALIDATIONPASSWORDSDONTMATCH: 'رقم المرور غير صحيح'
     VALIDATIONPASSWORDSNOTEMPTY: 'أرقام المرور لا يمكن أن تكون فارغة'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: المحقق
+    VALIDATOR: 'المحقق'
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
     NONE: لايوجد
@@ -187,37 +203,26 @@ ar:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: التالي
-    PREVIOUS: السابق
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: أهلاً
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: هنا
-    TEXT2: 'رابط إعادة تعيين كلمة المرور'
-    TEXT3: لـ
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
-    CHANGEPASSWORDTEXT2: 'يمكنك الآن استخدام هذه البيانات للدخول إلى حسابك'
     Code: 'شفرة المجموعة'
     DefaultGroupTitleAdministrators: الإدارة
     DefaultGroupTitleContentAuthors: 'مؤلفي المحتوى'
     Description: الوصف
-    EMAIL: 'البريد الإلكتروني'
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: أهلاً
     Locked: 'مغلق ؟'
     NoRoles: 'No roles found'
-    PASSWORD: 'الرقم السري'
     Parent: 'المجموعة الرئيسة'
     RolesAddEditLink: 'قوانين التعديل/الإضافة'
     Sort: ترتيب
-    TITLE: 'إطار تحميل الصور'
     has_many_Permissions: الصلاحيات
     many_many_Members: الأعضاء
   GroupImportForm:
@@ -244,8 +249,8 @@ ar:
     CSSCLASSRIGHT: 'إلى اليمين ، مع التفاف النص'
     DETAILS: Details
     EMAIL: 'بريد إلكتروني'
-    FILE: ملف
-    FOLDER: المجلد
+    FILE: 'ملف'
+    FOLDER: 'المجلد'
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -275,14 +280,13 @@ ar:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: الصورة
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'إطار تحميل الصور'
   LeftAndMain:
-    ADD: 'إضافة صف جديد'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: مساعدة
+    HELP: 'مساعدة'
     PAGETYPE: 'نوع الصفحة:'
     PERMAGAIN: 'تم خروجك من النظام بنجاح. للدخول مرة أخرى أدحل البريد الإلكتروني و الرقم السري بالأسفل'
     PERMALREADY: 'عذراً , لكن لا يمكنك الوصول لهذا القسم من النظام. يتوجب عليك الدخول بصلاحية أخرى'
@@ -292,6 +296,9 @@ ar:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'عنوان البريد الإلكتروني'
     IP: 'عنوان IP'
@@ -330,7 +337,7 @@ ar:
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'رقم المرور السابق'
-    belongs_many_many_Groups: المجموعات
+    belongs_many_many_Groups: 'المجموعات'
     db_LastVisited: 'تاريخ آخر زيارة'
     db_Locale: 'واجهة الموقع'
     db_LockedOutUntil: 'مغلق حتى تاريخ'
@@ -368,6 +375,7 @@ ar:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: حذف
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'استيراد من CSV'
@@ -377,9 +385,20 @@ ar:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT: الكمية
-    FIELDLABELCURRENCY: العملة
+    FIELDLABELAMOUNT: 'الكمية'
+    FIELDLABELCURRENCY: 'العملة'
   NullableField:
     IsNullLabel: باطل
   NumericField:
@@ -389,10 +408,6 @@ ar:
     CMS_ACCESS_CATEGORY: 'الوصل لنظام إدارة المحتوى'
     FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
     FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ ar:
   Permissions:
     PERMISSIONS_CATEGORY: 'تصاريح القاعدة والوصول'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'فضلاً أدخل رقم هاتف صحيح'
+  RelationComplexTableField.ss:
+    ADD: إضافة
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'لاتملك صلاحية الدخول لهذه الصفحة ، إذا كنت تملك حساب آخر فيمكنك تسجيل الدخول'
     BUTTONSEND: 'أرسل لي رابط إعادة تهيئة كلمة المرور'
@@ -439,31 +457,33 @@ ar:
     BtnImport: استيراد
     FileFieldLabel: ' CSV ملف <small>(الامتداد المسموح :*.csv )</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'لا توجد صور مرفوعة'
+  SiteTree:
+    TABMAIN: الرئيسة
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'إضافة صف جديد'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'تصدير إلى CSV'
+    PRINT: طباعة
+    Print: Print
+    SELECT: اختيار
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'فرز في ترتيب تصاعدي'
+    SORTDESC: 'فرز في ترتيب تنازلي'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'عرض الأول'
     VIEWLAST: 'عرض الأخير'
     VIEWNEXT: 'عرض التالي'
     VIEWPREVIOUS: 'عرض السابق'
-  SimpleImageField:
-    NOUPLOAD: 'لا توجد صور مرفوعة'
-  SiteTree:
-    TABMAIN: الرئيسة
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'فرز في ترتيب تصاعدي'
-    SORTDESC: 'فرز في ترتيب تنازلي'
-  TableListField:
-    CSVEXPORT: 'تصدير إلى CSV'
-    PRINT: طباعة
-    Print: Print
-    SELECT: اختيار
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

@@ -37,8 +37,8 @@ th:
     COLOREDEXAMPLE: 'blue text'
     EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
-    IMAGE: รูปภาพ
-    IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
+    IMAGE: 'รูปภาพ'
+    IMAGEDESCRIPTION: 'แสดงรูปภาพในหน้าบทความของคุณ'
     ITALIC: 'Italic Text'
     ITALICEXAMPLE: Italics
     LINK: 'Website link'
@@ -50,6 +50,8 @@ th:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: กรุณากรอกชื่อผู้ใช้และรหัสผ่าน
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
@@ -57,9 +59,10 @@ th:
   Boolean:
     0: ไม่ตกลง
     ANY: Any
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: ตกลง
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด'
@@ -67,6 +70,12 @@ th:
     SAVE: บันทึก
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    EMAIL: อีเมล
+    HELLO: สวัสดี
+    PASSWORD: รหัสผ่าน
   CheckboxField:
     - ไม่ตกลง
     - ตกลง
@@ -74,6 +83,14 @@ th:
     CLOSEPOPUP: ปิดหน้าต่างป๊อปอัพ
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'บันทึกแล้ว %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: จัดเรียงจากน้อยมามาก
+    SORTDESC: จัดเรียงจากมากไปน้อย
+  ComplexTableField_popup.ss:
+    NEXT: ถัดไป
+    PREVIOUS: ก่อนหน้า
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ th:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: เพิ่ม
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (เลือก)
   EmailField:
@@ -124,8 +138,6 @@ th:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: เนื้อหา
     Filename: ชื่อไฟล์
@@ -150,13 +162,17 @@ th:
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: สวัสดี
+    TEXT1: นี่คือ
+    TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
+    TEXT3: สำหรับ
   Form:
     FIELDISREQUIRED: '%s is required'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: รหัสผ่านไม่ตรงกัน
@@ -187,37 +203,26 @@ th:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: ถัดไป
-    PREVIOUS: ก่อนหน้า
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: สวัสดี
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: นี่คือ
-    TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
-    TEXT3: สำหรับ
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     Code: รหัสกลุ่ม
     DefaultGroupTitleAdministrators: ผู้ดูและระบบ
     DefaultGroupTitleContentAuthors: ผู้แต่งเนื้อหา
     Description: คำอธิบาย
-    EMAIL: อีเมล
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: สวัสดี
     Locked: 'ล็อค?'
     NoRoles: 'No roles found'
-    PASSWORD: รหัสผ่าน
     Parent: กลุ่มหลักต้นทาง
     RolesAddEditLink: เพิ่ม/แก้ไขบทบาท
     Sort: จัดลำดับ
-    TITLE: 'Image Uploading Iframe'
     has_many_Permissions: สิทธิ์
     many_many_Members: สมาชิก
   GroupImportForm:
@@ -236,7 +241,7 @@ th:
     BUTTONINSERTLINK: แทรกลิงค์
     BUTTONREMOVELINK: ลบลิงค์
     BUTTONUpdate: Update
-    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
+    CAPTIONTEXT: 'ข้อความคำอธิบายใต้ภาพ'
     CSSCLASS: 'การจัดวาง / รูปแบบ'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
@@ -274,11 +279,10 @@ th:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: รูปภาพ
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+    IMAGE: 'รูปภาพ'
+  Image_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    ADD: เพิ่มแถวใหม่
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ th:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: ที่อยู่อีเมล
     IP: ไอพีเครื่อง
@@ -314,7 +321,7 @@ th:
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: ชื่อจริง
-    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
+    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: รหัสผ่านใหม่
@@ -332,7 +339,7 @@ th:
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
     db_LastVisited: วันที่เยี่ยมชมล่าสุด
-    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
+    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
     db_LockedOutUntil: 'Locked out until'
     db_NumVisit: จำนวนการเข้าชม
     db_Password: รหัสผ่าน
@@ -368,6 +375,7 @@ th:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: ลบ
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'นำเข้าจากไฟล์ CSV'
@@ -377,6 +385,17 @@ th:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: จำนวน
     FIELDLABELCURRENCY: สกุลเงิน
@@ -389,10 +408,6 @@ th:
     CMS_ACCESS_CATEGORY: 'การเข้าถึง CMS'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ th:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Please enter a valid phone number'
+  RelationComplexTableField.ss:
+    ADD: เพิ่ม
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ <a href="%s">เข้าสู่ระบบอีกครั้ง</a>'
     BUTTONSEND: ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน
@@ -439,31 +457,33 @@ th:
     BtnImport: นำเข้า
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'ยังไม่มีรูปภาพที่ถูกอัพโหลด'
+  SiteTree:
+    TABMAIN: หลัก
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: เพิ่มแถวใหม่
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
+    PRINT: สั่งพิมพ์
+    Print: Print
+    SELECT: เลือก
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: จัดเรียงลำดับจากน้อยมามาก
+    SORTDESC: จัดเรียงลำดับจากมากมาน้อย
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: ดูหน้าแรก
     VIEWLAST: เปิดดูหน้าสุดท้าย
     VIEWNEXT: เปิดดูหน้าเว็บถัดไป
     VIEWPREVIOUS: เปิดดูหน้าเว็บก่อนหน้า
-  SimpleImageField:
-    NOUPLOAD: ยังไม่มีรูปภาพที่ถูกอัพโหลด
-  SiteTree:
-    TABMAIN: หลัก
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: จัดเรียงลำดับจากน้อยมามาก
-    SORTDESC: จัดเรียงลำดับจากมากมาน้อย
-  TableListField:
-    CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
-    PRINT: สั่งพิมพ์
-    Print: Print
-    SELECT: เลือก
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

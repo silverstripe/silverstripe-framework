@@ -50,6 +50,8 @@ sv:
     UNORDERED: 'Oordnad lista'
     UNORDEREDDESCRIPTION: 'Oordnad lista'
     UNORDEREDEXAMPLE1: 'oordnad artikel 1'
+  BackLink_Button.ss:
+    Back: Tillbaka
   BasicAuth:
     ENTERINFO: 'Var god ange användarnamn och lösenord'
     ERRORNOTADMIN: 'Den användaren är inte administratör'
@@ -57,9 +59,10 @@ sv:
   Boolean:
     0: Falskt
     ANY: 'Vilken som helst'
-    Hello: Hej
-    LOGOUT: 'Logga ut'
     1: Sant
+  CMSLoadingScreen.ss:
+    LOADING: Laddar...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Tillgång till sektionen ''{title}'''
     ACCESSALLINTERFACES: 'Tillgång till alla CMS-sektioner'
@@ -67,6 +70,12 @@ sv:
     SAVE: Spara
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
+    CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
+    EMAIL: E-post
+    HELLO: Hej
+    PASSWORD: Lösenord
   CheckboxField:
     - Falskt
     - Sant
@@ -74,6 +83,14 @@ sv:
     CLOSEPOPUP: 'Stäng popup'
     SUCCESSADD2: 'Lade till {name}'
     SUCCESSEDIT: 'Sparade %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sortera stigande'
+    SORTDESC: 'Sortera fallande'
+  ComplexTableField_popup.ss:
+    NEXT: Nästa
+    PREVIOUS: Föregående
   ConfirmedPasswordField:
     ATLEAST: 'Lösenord måste vara minst {min} tecken långa.'
     BETWEEN: 'Lösenord måste vara {min} till {max} tecken långa.'
@@ -111,10 +128,7 @@ sv:
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
   Director:
-    ADD: 'Lägg till'
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Ogiltig förfrågan'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Välj)
   EmailField:
@@ -124,8 +138,6 @@ sv:
     SINGULARNAME: 'Studsade e-brev'
   Enum:
     ANY: 'Vilken som helst'
-    LOADING: Laddar...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Innehåll
     Filename: Filnamn
@@ -150,13 +162,17 @@ sv:
     FROMFILESTORE: 'Från filarkivet'
     NOSOURCE: 'Välj filen du vill bifoga'
     REPLACE: 'Ersätt {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Iframe för uppladdning av bild'
   Filesystem:
-    IMPORT_TAB_HEADER: Importera
-    SEARCHLISTINGS: Sök
     SYNCRESULTS: 'Synk genomförd: {createdcount} objekt skapades, {deletedcount} objekt raderades'
+  ForgotPasswordEmail.ss:
+    HELLO: Hej
+    TEXT1: 'Här är din'
+    TEXT2: 'Återställningslänk för lösenord'
+    TEXT3: för
   Form:
     FIELDISREQUIRED: '%s är obligatorisk'
-    TITLE: 'Iframe för uppladdning av bild'
     VALIDATIONCREDITNUMBER: 'Kontrollera att du angav kortnummret {number} rätt'
     VALIDATIONNOTUNIQUE: 'Det angivna värdet är inte unikt'
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
@@ -187,37 +203,26 @@ sv:
     ResetFilter: Rensa
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
-    NEXT: Nästa
-    PREVIOUS: Föregående
   GridFieldDetailForm:
     Create: Skapa
     Delete: Radera
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade %s %s'
-    HELLO: Hej
     Save: Spara
     Saved: 'Sparade %s %s'
-    TEXT1: 'Här är din'
-    TEXT2: 'Återställningslänk för lösenord'
-    TEXT3: för
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Lägg till roll för den här gruppen'
-    CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
-    CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
     Code: Gruppkod
     DefaultGroupTitleAdministrators: Administratörer
     DefaultGroupTitleContentAuthors: Författare
     Description: Beskrivning
-    EMAIL: E-post
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
-    HELLO: Hej
     Locked: 'Låst?'
     NoRoles: 'Inga roller funna'
-    PASSWORD: Lösenord
     Parent: Föräldragrupp
     RolesAddEditLink: 'Hantera roller'
     Sort: Sorteringsordning
-    TITLE: 'Iframe för uppladdning av bild'
     has_many_Permissions: Tillstånd
     many_many_Members: Medlemmar
   GroupImportForm:
@@ -275,13 +280,12 @@ sv:
     UpdateMEDIA: 'Uppdatera media'
   ImageField:
     IMAGE: Bild
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Använd filter"  GridFieldItemEditView.ss:    Go back: "Gå tillbaka"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Iframe för uppladdning av bild'
   LeftAndMain:
-    ADD: 'Lägg till ny rad'
-    ADDITEM: 'Lägg till %s'
     CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     DELETED: Raderad
-    DropdownBatchActionsDefault: Åtgärder
+    DropdownBatchActionsDefault: 'Åtgärder'
     HELP: Hjälp
     PAGETYPE: Sidtyp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
@@ -292,6 +296,9 @@ sv:
     REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
     SAVEDUP: Sparad.
     VersionUnknown: okänd
+  LeftAndMain_Menu.ss:
+    Hello: Hej
+    LOGOUT: 'Logga ut'
   LoginAttempt:
     Email: E-postadress
     IP: IP-adress
@@ -368,6 +375,7 @@ sv:
     ResultUpdated: 'Uppdaterade {count} medlemmar'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Använd filter'
     DELETE: Radera
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importera från CSV'
@@ -377,6 +385,17 @@ sv:
     RESET: Rensa
     Title: Datamodeller
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: Databaskolumner
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relationer
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: 'Filtrera på'
+    IMPORT: Importera
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Importera
+    SEARCHLISTINGS: Sök
   MoneyField:
     FIELDLABELAMOUNT: Belopp
     FIELDLABELCURRENCY: Valuta
@@ -389,10 +408,6 @@ sv:
     CMS_ACCESS_CATEGORY: CMS-tillgång
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
-    IMPORTSPECFIELDS: Databaskolumner
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relationer
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
@@ -401,8 +416,11 @@ sv:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och tillgångsinställningar'
   PhoneNumberField:
-    Back: Tillbaka
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
+  RelationComplexTableField.ss:
+    ADD: 'Lägg till'
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
     BUTTONSEND: 'Skicka återställningslänk'
@@ -439,31 +457,33 @@ sv:
     BtnImport: 'Importera från CSV'
     FileFieldLabel: 'CSV-fil <small>(Tillåtna filtyper: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Ändra
-    FILTER: 'Filtrera på'
-    IMPORT: Importera
+  SimpleImageField:
+    NOUPLOAD: 'Ingen bild uppladdad'
+  SiteTree:
+    TABMAIN: Huvudsaklig
+  TableField:
+    ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
+  TableField.ss:
+    ADD: 'Lägg till ny rad'
+    ADDITEM: 'Lägg till %s'
+  TableListField:
+    CSVEXPORT: 'Exportera till CSV'
+    PRINT: 'Skriv ut'
+    Print: Print
+    SELECT: 'Välj:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sortera i stigande ordning'
+    SORTDESC: 'Sortera i fallande ordning'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: av
     TO: to
     VIEWFIRST: 'Visa första'
     VIEWLAST: 'Visa sista'
     VIEWNEXT: 'Visa nästa'
     VIEWPREVIOUS: 'Visa föregående'
-  SimpleImageField:
-    NOUPLOAD: 'Ingen bild uppladdad'
-  SiteTree:
-    TABMAIN: Huvudsaklig
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sortera i stigande ordning'
-    SORTDESC: 'Sortera i fallande ordning'
-  TableListField:
-    CSVEXPORT: 'Exportera till CSV'
-    PRINT: 'Skriv ut'
-    Print: Print
-    SELECT: 'Välj:'
   TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   ToggleField:
