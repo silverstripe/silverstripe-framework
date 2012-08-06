@@ -468,7 +468,7 @@ de:
     ADD: 'Eine neue Zeile hinzufügen'
     ADDITEM: '%s hinzufügen'
   TableListField:
-    CSVEXPORT: 'Exportieren zu CSV'
+    CSVEXPORT: 'Als CSV-Datei exportieren'
     PRINT: drucken
     Print: Drucken
     SELECT: 'Auswählen:'
