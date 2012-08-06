@@ -50,6 +50,8 @@ eo:
     UNORDERED: 'Neordigita listo'
     UNORDEREDDESCRIPTION: 'Neordigita listo'
     UNORDEREDEXAMPLE1: 'neordigita ero 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'bonvolu enigi salutnomon kaj pasvorton.'
     ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
@@ -57,9 +59,10 @@ eo:
   Boolean:
     0: Ne
     ANY: Ajna
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Jes
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Aliro al ĉiuj interfacoj de CMS'
@@ -67,6 +70,12 @@ eo:
     SAVE: Konservi
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
+    CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
+    EMAIL: Retpoŝto
+    HELLO: Saluton
+    PASSWORD: Pasvorto
   CheckboxField:
     - Ne
     - Jes
@@ -74,6 +83,14 @@ eo:
     CLOSEPOPUP: 'Fermi Ŝprucfenestron'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Konservita %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordigi kreske'
+    SORTDESC: 'Ordigi malkreske'
+  ComplexTableField_popup.ss:
+    NEXT: Sekva
+    PREVIOUS: Antaŭa
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ eo:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Enmeti
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Elekti)
   EmailField:
@@ -124,8 +138,6 @@ eo:
     SINGULARNAME: 'Registro de neliverita mesaĝo'
   Enum:
     ANY: Ajna
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Enhavo
     Filename: Dosiernomo
@@ -150,13 +162,17 @@ eo:
     FROMFILESTORE: 'El la dosiera konservejo'
     NOSOURCE: 'Bonvolu elekti fontan dosieron por alkroĉi'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Saluton
+    TEXT1: 'Jen via'
+    TEXT2: 'pasvorta reagorda ligilo'
+    TEXT3: por
   Form:
     FIELDISREQUIRED: '%s estas postulita'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'La enirita valoron ne unika'
     VALIDATIONPASSWORDSDONTMATCH: 'Pasvortoj ne matĉas'
@@ -187,37 +203,26 @@ eo:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Sekva
-    PREVIOUS: Antaŭa
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Saluton
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Jen via'
-    TEXT2: 'pasvorta reagorda ligilo'
-    TEXT3: por
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
-    CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
     Code: 'Grupa Kodo'
     DefaultGroupTitleAdministrators: Administrantoj
     DefaultGroupTitleContentAuthors: Enhavaŭtoroj
     Description: Priskribo
-    EMAIL: Retpoŝto
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Saluton
     Locked: 'Ŝlosita?'
     NoRoles: 'No roles found'
-    PASSWORD: Pasvorto
     Parent: 'Patra Grupo'
     RolesAddEditLink: 'Aldoni/redakti rolojn'
     Sort: 'Ordiga Ordo'
-    TITLE: 'Iframe por alŝuti bildon'
     has_many_Permissions: Permesoj
     many_many_Members: Membroj
   GroupImportForm:
@@ -275,10 +280,9 @@ eo:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Bildo
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Iframe por alŝuti bildon'
   LeftAndMain:
-    ADD: 'Enmeti novan vicon'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ eo:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: Retadreso
     IP: IP-Adreso
@@ -368,6 +375,7 @@ eo:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: Forigi
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importi el CSV'
@@ -377,6 +385,17 @@ eo:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo
@@ -389,10 +408,6 @@ eo:
     CMS_ACCESS_CATEGORY: CMS-aliro
     FULLADMINRIGHTS: 'Ĉiuj administraj rajtoj'
     FULLADMINRIGHTS_HELP: 'Implicas kaj superregas ĉiujn aliajn agorditajn permesojn.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ eo:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Bonvolu enigi validan telefonnumeron'
+  RelationComplexTableField.ss:
+    ADD: Enmeti
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas <a href="%s">ensaluti denove</a>.'
     BUTTONSEND: 'Sendu al mi la ligilon reagordi pasvorton'
@@ -439,31 +457,33 @@ eo:
     BtnImport: Importi
     FileFieldLabel: 'CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Neniu Bildo Alŝutita'
+  SiteTree:
+    TABMAIN: Ĉefaj
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Enmeti novan vicon'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Eksporti al CSV'
+    PRINT: Presi
+    Print: Print
+    SELECT: 'Select:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordigi kreskante'
+    SORTDESC: 'Ordigi malkreskante'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Vidigi unuan'
     VIEWLAST: 'Vidigi lastan'
     VIEWNEXT: 'Vidigi sekvan'
     VIEWPREVIOUS: 'Vidigi antaŭan'
-  SimpleImageField:
-    NOUPLOAD: 'Neniu Bildo Alŝutita'
-  SiteTree:
-    TABMAIN: Ĉefaj
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Ordigi kreskante'
-    SORTDESC: 'Ordigi malkreskante'
-  TableListField:
-    CSVEXPORT: 'Eksporti al CSV'
-    PRINT: Presi
-    Print: Print
-    SELECT: 'Select:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
