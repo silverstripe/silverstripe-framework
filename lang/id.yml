@@ -50,6 +50,8 @@ id:
     UNORDERED: 'Daftar tak berurut'
     UNORDEREDDESCRIPTION: 'Daftar tak berurut'
     UNORDEREDEXAMPLE1: 'barang 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Harap masukkan username dan password.'
     ERRORNOTADMIN: 'User tersebut bukan administrator.'
@@ -57,9 +59,10 @@ id:
   Boolean:
     0: 'False'
     ANY: Any
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -67,6 +70,12 @@ id:
     SAVE: Simpan
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Anda merubah password anda untuk'
+    CHANGEPASSWORDTEXT2: 'Anda dapat menggunakan surat kepercayaan berikut untuk masuk:'
+    EMAIL: Email
+    HELLO: Hai
+    PASSWORD: Password
   CheckboxField:
     - 'False'
     - 'True'
@@ -74,6 +83,14 @@ id:
     CLOSEPOPUP: 'Tutup popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Telah menyimpan %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Urut ascending'
+    SORTDESC: 'Urut descending'
+  ComplexTableField_popup.ss:
+    NEXT: Selanjutnya
+    PREVIOUS: Sebelumnya
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ id:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Tambah
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Pilih)
   EmailField:
@@ -124,8 +138,6 @@ id:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Isi
     Filename: 'Nama File'
@@ -150,13 +162,17 @@ id:
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Hai
+    TEXT1: Inilah
+    TEXT2: 'link untuk mereset kata sandi'
+    TEXT3: untuk
   Form:
     FIELDISREQUIRED: '%s dibutuhkan'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Harga yang dimasukkan tidak unik'
     VALIDATIONPASSWORDSDONTMATCH: 'Password tidak cocok'
@@ -187,37 +203,26 @@ id:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Selanjutnya
-    PREVIOUS: Sebelumnya
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Hai
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: Inilah
-    TEXT2: 'link untuk mereset kata sandi'
-    TEXT3: untuk
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Anda merubah password anda untuk'
-    CHANGEPASSWORDTEXT2: 'Anda dapat menggunakan surat kepercayaan berikut untuk masuk:'
     Code: 'Kode Grup'
     DefaultGroupTitleAdministrators: Pengurus
     DefaultGroupTitleContentAuthors: 'Pencipta isi'
     Description: Deskripsi
-    EMAIL: Email
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Hai
     Locked: 'Terkunci?'
     NoRoles: 'No roles found'
-    PASSWORD: Password
     Parent: 'Grup induk'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Urutan Sortir'
-    TITLE: 'Iframe Meng-upload Gambar'
     has_many_Permissions: Ijin
     many_many_Members: Anggota-anggota
   GroupImportForm:
@@ -275,10 +280,9 @@ id:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Iframe Meng-upload Gambar'
   LeftAndMain:
-    ADD: 'Tambah sebuah baris'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ id:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Alamat Email'
     IP: 'Alamat IP'
@@ -368,6 +375,7 @@ id:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -377,6 +385,17 @@ id:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Jumlah
     FIELDLABELCURRENCY: 'Mata Uang'
@@ -389,10 +408,6 @@ id:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Hak-hak administratif yang penuh'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ id:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Harap masukkan nomor telepon yang valid'
+  RelationComplexTableField.ss:
+    ADD: Tambah
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Anda tidak memiliki akses ke halaman ini. Jika anda memiliki keanggotaan yang dapat mengakses halaman ini, anda dapat masuk di bawah ini.'
     BUTTONSEND: 'Kirimi saya link untuk mengeset ulang password '
@@ -439,31 +457,33 @@ id:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Tidak Ada Gambar yang Di-upload'
+  SiteTree:
+    TABMAIN: Utama
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Tambah sebuah baris'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Ekspor ke CSV'
+    PRINT: Cetak
+    Print: Print
+    SELECT: 'Pilih:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Tampil pertama'
     VIEWLAST: 'Tampil terakhir'
     VIEWNEXT: 'Tampil berikutnya'
     VIEWPREVIOUS: 'Tampil sebelumnya'
-  SimpleImageField:
-    NOUPLOAD: 'Tidak Ada Gambar yang Di-upload'
-  SiteTree:
-    TABMAIN: Utama
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
-  TableListField:
-    CSVEXPORT: 'Ekspor ke CSV'
-    PRINT: Cetak
-    Print: Print
-    SELECT: 'Pilih:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

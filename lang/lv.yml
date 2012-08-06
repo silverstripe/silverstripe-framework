@@ -50,6 +50,8 @@ lv:
     UNORDERED: 'Nesakārtots saraksts'
     UNORDEREDDESCRIPTION: 'Nesakārtots saraksts'
     UNORDEREDEXAMPLE1: 'nesakārtots elements 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Lūdz ievadiet lietotājvārdu un paroli.'
     ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
@@ -57,9 +59,10 @@ lv:
   Boolean:
     0: Nē
     ANY: Jebkurš
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Jā
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -67,6 +70,12 @@ lv:
     SAVE: Saglabāt
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
+    CHANGEPASSWORDTEXT2: 'Lai pieslēgtos, izmantojiet sekojošus datus:'
+    EMAIL: E-pasts
+    HELLO: Sveiki
+    PASSWORD: Parole
   CheckboxField:
     - Nē
     - Jā
@@ -74,6 +83,14 @@ lv:
     CLOSEPOPUP: 'Aizvērt izlēcošo logu'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saglabāts %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Kārtot augoši'
+    SORTDESC: 'Kārtot dilstoši'
+  ComplexTableField_popup.ss:
+    NEXT: Nākamais
+    PREVIOUS: Iepriekšējais
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ lv:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Pievienot
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Izvēlieties)
   EmailField:
@@ -124,8 +138,6 @@ lv:
     SINGULARNAME: 'Atgriezts e-pasta ieraksts'
   Enum:
     ANY: Jebkuru
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Saturs
     Filename: 'Faila nosaukums'
@@ -150,13 +162,17 @@ lv:
     FROMFILESTORE: 'No failu glabātuves'
     NOSOURCE: 'Lūdzu izvēlieties avota failu, kuru pievienot'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Sveiki
+    TEXT1: 'Šeit ir Jūsu'
+    TEXT2: 'paroles atiestatīšanas saite'
+    TEXT3: ' '
   Form:
     FIELDISREQUIRED: '%s ir obligāti aizpildāms.'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Ievadītā vērtība nav unikāla'
     VALIDATIONPASSWORDSDONTMATCH: 'Paroles nesakrīt'
@@ -187,37 +203,26 @@ lv:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Nākamais
-    PREVIOUS: Iepriekšējais
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Sveiki
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Šeit ir Jūsu'
-    TEXT2: 'paroles atiestatīšanas saite'
-    TEXT3: ' '
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
-    CHANGEPASSWORDTEXT2: 'Lai pieslēgtos, izmantojiet sekojošus datus:'
     Code: 'Grupas kods'
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Satura autori'
     Description: Apraksts
-    EMAIL: E-pasts
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Sveiki
     Locked: 'Slēgt?'
     NoRoles: 'No roles found'
-    PASSWORD: Parole
     Parent: 'Grupas vecāks'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Kārtošanas secība'
-    TITLE: 'Attēla augšupielādes iframe bloks'
     has_many_Permissions: Atļaujas
     many_many_Members: Dalībnieki
   GroupImportForm:
@@ -275,10 +280,9 @@ lv:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Attēls
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Attēla augšupielādes iframe bloks'
   LeftAndMain:
-    ADD: 'PIevienot jaunu rindu'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ lv:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'E-pasta adrese'
     IP: 'IP Adrese'
@@ -368,6 +375,7 @@ lv:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -377,6 +385,17 @@ lv:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Skaits
     FIELDLABELCURRENCY: Valūta
@@ -389,10 +408,6 @@ lv:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Pilnas administratora tiesības'
     FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ lv:
   Permissions:
     PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Lūdzu ievadiet derīgu tālruņa numuru'
+  RelationComplexTableField.ss:
+    ADD: Pievienot
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat <a href="%s">atkārtoti pieslēgties</a>. '
     BUTTONSEND: 'Nosūtīt man paroles atiestatīšanas saiti'
@@ -439,31 +457,33 @@ lv:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Netika augšupielādēts neviens attēls'
+  SiteTree:
+    TABMAIN: Sākums
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'PIevienot jaunu rindu'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Eksportēt uz CSV'
+    PRINT: Drukāt
+    Print: Print
+    SELECT: 'Izvēlēties:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Kārtot augošā secībā'
+    SORTDESC: 'Kārtot dilstošā secībā'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Skatīt pirmo'
     VIEWLAST: 'Skatīt pēdējo'
     VIEWNEXT: 'Skatīt nākamo'
     VIEWPREVIOUS: 'Skatīt iepriekšējo'
-  SimpleImageField:
-    NOUPLOAD: 'Netika augšupielādēts neviens attēls'
-  SiteTree:
-    TABMAIN: Sākums
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Kārtot augošā secībā'
-    SORTDESC: 'Kārtot dilstošā secībā'
-  TableListField:
-    CSVEXPORT: 'Eksportēt uz CSV'
-    PRINT: Drukāt
-    Print: Print
-    SELECT: 'Izvēlēties:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

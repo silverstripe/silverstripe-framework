@@ -50,6 +50,8 @@ nb:
     UNORDERED: Punktliste
     UNORDEREDDESCRIPTION: Punktliste
     UNORDEREDEXAMPLE1: 'punkt 1'
+  BackLink_Button.ss:
+    Back: Tilbake
   BasicAuth:
     ENTERINFO: 'Vennligst tast inn et brukernavn og passord'
     ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
@@ -57,9 +59,10 @@ nb:
   Boolean:
     0: Usant
     ANY: Any
-    Hello: Hi
-    LOGOUT: 'Logg ut'
     1: Sant
+  CMSLoadingScreen.ss:
+    LOADING: 'Laster ...'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Adgang til alle CMS-seksjoner'
@@ -67,6 +70,12 @@ nb:
     SAVE: Lagre
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
+    CHANGEPASSWORDTEXT2: 'Du kan nå bruke følgende informasjon for å logge deg inn:'
+    EMAIL: Epost
+    HELLO: Hei
+    PASSWORD: Passord
   CheckboxField:
     - 'False'
     - 'True'
@@ -74,6 +83,14 @@ nb:
     CLOSEPOPUP: 'Lukk Popup'
     SUCCESSADD2: 'Lagt til {name}'
     SUCCESSEDIT: 'Lagret %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sorter stigende'
+    SORTDESC: 'Sorter fallende'
+  ComplexTableField_popup.ss:
+    NEXT: Neste
+    PREVIOUS: Forrige
   ConfirmedPasswordField:
     ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
@@ -111,10 +128,7 @@ nb:
     VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'
     VALIDDATEMINDATE: 'Din dato må være nyere eller i samsvar med minimum tillatte dato ({date})'
   Director:
-    ADD: 'Legg til'
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Ugyldig forespørsel'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Velg)
   EmailField:
@@ -124,8 +138,6 @@ nb:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: 'Laster ...'
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Innhold
     Filename: Filnavn
@@ -150,13 +162,17 @@ nb:
     FROMFILESTORE: 'Fra filarkivet'
     NOSOURCE: 'Vennligst legg til en valgt kildefil'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Bildeopplastnings ramme'
   Filesystem:
-    IMPORT_TAB_HEADER: Importer
-    SEARCHLISTINGS: Søk
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Hei
+    TEXT1: 'Her er din'
+    TEXT2: 'passord resett link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: 'mangler %s'
-    TITLE: 'Bildeopplastnings ramme'
     VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
     VALIDATIONNOTUNIQUE: 'Den spesifiserte verdien er ikke unik'
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene passer ikke med hverandre'
@@ -187,37 +203,26 @@ nb:
     ResetFilter: Tilbakestille
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Ikke tillatt å slette'
-    NEXT: Neste
-    PREVIOUS: Forrige
   GridFieldDetailForm:
     Create: Create
     Delete: Slett
     DeletePermissionsFailure: 'Ikke tillatt å slette'
     Deleted: 'Slettet %s %s'
-    HELLO: Hei
     Save: Lagre
     Saved: 'Lagret %s %s'
-    TEXT1: 'Her er din'
-    TEXT2: 'passord resett link'
-    TEXT3: for
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Legg en rolle til denne gruppen'
-    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
-    CHANGEPASSWORDTEXT2: 'Du kan nå bruke følgende informasjon for å logge deg inn:'
     Code: 'Gruppe Kode'
     DefaultGroupTitleAdministrators: Administratorer
     DefaultGroupTitleContentAuthors: Innholdsforfattere
     Description: Beskrivelse
-    EMAIL: Epost
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
-    HELLO: Hei
     Locked: 'Låst?'
     NoRoles: 'Ingen roller funnet'
-    PASSWORD: Passord
     Parent: 'Foreldre Gruppe'
     RolesAddEditLink: 'Administrer roller'
     Sort: Sorteringsrekkefølge
-    TITLE: 'Bildeopplasnings ramme'
     has_many_Permissions: Tillatelser
     many_many_Members: Medlemmer
   GroupImportForm:
@@ -275,10 +280,9 @@ nb:
     UpdateMEDIA: 'Oppdater Media'
   ImageField:
     IMAGE: Bilde
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Legg til filter"  GridFieldItemEditView.ss:    Go back: "Gå tilbake"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Bildeopplasnings ramme'
   LeftAndMain:
-    ADD: 'Legg til en rad'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Slettet.
     DropdownBatchActionsDefault: Handlinger
@@ -292,6 +296,9 @@ nb:
     REORGANISATIONSUCCESSFUL: 'Omorganisering av sidetreet vellykket'
     SAVEDUP: Lagret.
     VersionUnknown: Ukjent
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Logg ut'
   LoginAttempt:
     Email: Epostadresse
     IP: 'IP adresse'
@@ -368,6 +375,7 @@ nb:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Legg til filter'
     DELETE: Slett
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importer fra CSV'
@@ -377,6 +385,17 @@ nb:
     RESET: Tilbakestille
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Importer
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Importer
+    SEARCHLISTINGS: Søk
   MoneyField:
     FIELDLABELAMOUNT: Mengde
     FIELDLABELCURRENCY: Currency
@@ -389,10 +408,6 @@ nb:
     CMS_ACCESS_CATEGORY: CMS-tilgang
     FULLADMINRIGHTS: 'Fulle administrative rettigheter'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'tilordnet "{title}"'
     FromGroup: 'Arvet fra gruppe "{title}"'
@@ -401,8 +416,11 @@ nb:
   Permissions:
     PERMISSIONS_CATEGORY: 'Rolle- og tilgangstillatelser'
   PhoneNumberField:
-    Back: Tilbake
     VALIDATION: 'Vennligst skriv inn et gyldig tlf nummer'
+  RelationComplexTableField.ss:
+    ADD: 'Legg til'
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
     BUTTONSEND: 'Send meg lenke for å gi nytt passord'
@@ -439,31 +457,33 @@ nb:
     BtnImport: 'Importer fra CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Rediger
-    FILTER: Filter
-    IMPORT: Importer
+  SimpleImageField:
+    NOUPLOAD: 'Ingen Bilder Lastet Opp'
+  SiteTree:
+    TABMAIN: Hovedinnstillinger
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Legg til en rad'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Eksporter til CSV'
+    PRINT: 'Skriv ut'
+    Print: Print
+    SELECT: 'Velg:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sorter i stigende rekkefølge'
+    SORTDESC: 'Sorter i synkende rekkefølge'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: til
     VIEWFIRST: 'Se første'
     VIEWLAST: 'Se siste'
     VIEWNEXT: 'Se neste'
     VIEWPREVIOUS: 'Se forrige'
-  SimpleImageField:
-    NOUPLOAD: 'Ingen Bilder Lastet Opp'
-  SiteTree:
-    TABMAIN: Hovedinnstillinger
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sorter i stigende rekkefølge'
-    SORTDESC: 'Sorter i synkende rekkefølge'
-  TableListField:
-    CSVEXPORT: 'Eksporter til CSV'
-    PRINT: 'Skriv ut'
-    Print: Print
-    SELECT: 'Velg:'
   TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   ToggleField:

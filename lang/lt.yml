@@ -50,6 +50,8 @@ lt:
     UNORDERED: 'Nerūšiuotas sąrašas'
     UNORDEREDDESCRIPTION: 'Nerūšiuotas sąrašas'
     UNORDEREDEXAMPLE1: 'nerūšiuota prekė 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Įveskite vartotojo vardą ir slaptažodį'
     ERRORNOTADMIN: 'Vartotojas nėra administratorius'
@@ -57,9 +59,10 @@ lt:
   Boolean:
     0: Ne
     ANY: 'Bet koks'
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Taip
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -67,6 +70,12 @@ lt:
     SAVE: Išsaugoti
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
+    CHANGEPASSWORDTEXT2: 'Nuo šiol galite naudoti šiuos prisijungimo duomenis:'
+    EMAIL: 'E. paštas'
+    HELLO: Sveiki
+    PASSWORD: Slaptažodis
   CheckboxField:
     - Ne
     - Taip
@@ -74,6 +83,14 @@ lt:
     CLOSEPOPUP: Uždaryti
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Išsaugota %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Rūšiuoti A-Z'
+    SORTDESC: 'Rūšiuoti Z-A'
+  ComplexTableField_popup.ss:
+    NEXT: Sekantis
+    PREVIOUS: Ankstesnis
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -92,7 +109,7 @@ lt:
   Date:
     DAY: diena
     DAYS: dienas
-    HOUR: valandą
+    HOUR: 'valandą'
     HOURS: valandas
     MIN: minutę
     MINS: minutes
@@ -111,10 +128,7 @@ lt:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Pridėti
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Pasirinkti)
   EmailField:
@@ -124,8 +138,6 @@ lt:
     SINGULARNAME: 'El.Pašto persiuntimų įrašas'
   Enum:
     ANY: 'Bet koks'
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Turinys
     Filename: 'Bylos pavadinimas'
@@ -150,13 +162,17 @@ lt:
     FROMFILESTORE: 'Š failų saugyklos '
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Sveiki
+    TEXT1: 'Štai Jūsų'
+    TEXT2: 'slaptažodžio atstatymo nuoroda'
+    TEXT3: kam
   Form:
     FIELDISREQUIRED: '%s yra būtinas'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Įvesta reikšmė nėra unikali'
     VALIDATIONPASSWORDSDONTMATCH: 'Nesutampa slaptažodžiai'
@@ -187,37 +203,26 @@ lt:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Sekantis
-    PREVIOUS: Ankstesnis
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Sveiki
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Štai Jūsų'
-    TEXT2: 'slaptažodžio atstatymo nuoroda'
-    TEXT3: kam
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
-    CHANGEPASSWORDTEXT2: 'Nuo šiol galite naudoti šiuos prisijungimo duomenis:'
     Code: 'Grupės kodas'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Aprašymas
-    EMAIL: 'E. paštas'
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Sveiki
     Locked: 'Užrakinta?'
     NoRoles: 'No roles found'
-    PASSWORD: Slaptažodis
     Parent: 'Priklauso grupei'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Rūšiavimo tvarka'
-    TITLE: 'Atvaizdo siuntimas iframe'
     has_many_Permissions: Leidimai
     many_many_Members: Nariai
   GroupImportForm:
@@ -275,10 +280,9 @@ lt:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Paveikslėlis
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Atvaizdo siuntimas iframe'
   LeftAndMain:
-    ADD: 'Pridėti naują eilutę'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ lt:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'E. pašto adresas'
     IP: 'IP adresas'
@@ -368,6 +375,7 @@ lt:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -377,6 +385,17 @@ lt:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Kiekis
     FIELDLABELCURRENCY: Valiuta
@@ -389,10 +408,6 @@ lt:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Pilnos administravimo teisės'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ lt:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Įveskite teisingą telefono numerį'
+  RelationComplexTableField.ss:
+    ADD: Pridėti
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, <a href="%s">spauskite čia</a>.'
     BUTTONSEND: 'Atsiųsti slaptažodžio atstatymo nuorodą'
@@ -439,31 +457,33 @@ lt:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Neįkrauta jokių paveikslėlių'
+  SiteTree:
+    TABMAIN: Pagrindinis
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Pridėti naują eilutę'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Ekportuoti į CSV'
+    PRINT: Spausdinti
+    Print: Print
+    SELECT: 'Select:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Rūšiuoti didėjimo tvarka'
+    SORTDESC: 'Rūšiuoti mažėjimo tvarka'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Žiūrėti pirmą'
     VIEWLAST: 'Žiūrėti paskutinį'
     VIEWNEXT: 'Žiūrėti sekantį'
     VIEWPREVIOUS: 'Žiūrėti ankstesnį'
-  SimpleImageField:
-    NOUPLOAD: 'Neįkrauta jokių paveikslėlių'
-  SiteTree:
-    TABMAIN: Pagrindinis
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Rūšiuoti didėjimo tvarka'
-    SORTDESC: 'Rūšiuoti mažėjimo tvarka'
-  TableListField:
-    CSVEXPORT: 'Ekportuoti į CSV'
-    PRINT: Spausdinti
-    Print: Print
-    SELECT: 'Select:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

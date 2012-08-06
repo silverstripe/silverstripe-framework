@@ -8,7 +8,7 @@ fa_IR:
     FOLDER: Folder
     LASTEDIT: 'آخرین تغییرات'
     OWNER: دارنده
-    SIZE: حجم
+    SIZE: 'حجم'
     TITLE: عنوان
     TYPE: نوع
     URL: نشانی
@@ -50,6 +50,8 @@ fa_IR:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
@@ -57,9 +59,10 @@ fa_IR:
   Boolean:
     0: نه
     ANY: هر
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: آری
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -67,6 +70,12 @@ fa_IR:
     SAVE: نگاهداری
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    EMAIL: 'ايميل'
+    HELLO: درود
+    PASSWORD: 'كلمه عبور'
   CheckboxField:
     - نه
     - آری
@@ -74,6 +83,14 @@ fa_IR:
     CLOSEPOPUP: 'بستن چنجره'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: '%s %s %s ذخيره شد'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
+  ComplexTableField_popup.ss:
+    NEXT: بعدی
+    PREVIOUS: قبلی
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -81,9 +98,9 @@ fa_IR:
     SHOWONCLICKTITLE: 'تغيير كلمه عبور'
   CreditCardField:
     FIRST: نخست
-    FOURTH: چهارم
-    SECOND: دوم
-    THIRD: سوم
+    FOURTH: 'چهارم'
+    SECOND: 'دوم'
+    THIRD: 'سوم'
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
@@ -96,7 +113,7 @@ fa_IR:
     HOURS: ساعت
     MIN: دقیقه
     MINS: دقیقه
-    MONTH: ماه
+    MONTH: 'ماه'
     MONTHS: 'ماه ها'
     SEC: ثانیه
     SECS: ثانیه
@@ -106,15 +123,12 @@ fa_IR:
     YEARS: سال
   DateField:
     NOTSET: 'not set'
-    TODAY: امروز
+    TODAY: 'امروز'
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: افزودن
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (گزینش)
   EmailField:
@@ -124,16 +138,14 @@ fa_IR:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
-    Content: محتوا
+    Content: 'محتوا'
     Filename: 'نام پرونده'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: نام
+    Name: 'نام'
     PLURALNAME: 'فايل ها'
     SINGULARNAME: فايل
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
@@ -150,13 +162,17 @@ fa_IR:
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'لطفا محل یک فایل را جهت پیوست انتخاب کنید'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: درود
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: برای
   Form:
     FIELDISREQUIRED: '%s نیاز است.'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: 'گذرواژه‌ها همانند هم نیستند'
@@ -187,38 +203,27 @@ fa_IR:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: بعدی
-    PREVIOUS: قبلی
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: درود
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: برای
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     Code: 'كد گروه'
     DefaultGroupTitleAdministrators: 'مدیران کل'
     DefaultGroupTitleContentAuthors: 'نویسندگان مطالب'
     Description: توضحیات
-    EMAIL: ايميل
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: درود
     Locked: 'بسته شده است؟'
     NoRoles: 'No roles found'
-    PASSWORD: 'كلمه عبور'
     Parent: 'گروه مادر'
     RolesAddEditLink: 'اضافه/ویرایش وظیفه'
     Sort: 'تربیت چیدن'
-    TITLE: 'Image Uploading Iframe'
-    has_many_Permissions: مجوز‌ها
+    has_many_Permissions: 'مجوز‌ها'
     many_many_Members: اعضاء
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -275,14 +280,13 @@ fa_IR:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    ADD: 'افزودن ردیف تازه'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: کمک
+    HELP: 'کمک'
     PAGETYPE: 'نوع صفحه'
     PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
     PERMALREADY: 'من متاسفم، شما نمی توانید به آن قسمت از سیستم مدیریت محتوا دسترسی پیدا کنید. اگر میخواهید به عنوان شخص دیگری وارد شوید از قسمت زیر تلاش کنید'
@@ -292,6 +296,9 @@ fa_IR:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'آدرس های ایمیل'
     IP: 'IP Address'
@@ -313,7 +320,7 @@ fa_IR:
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: نام
+    FIRSTNAME: 'نام'
     INTERFACELANG: 'زبان برنامه'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
@@ -368,6 +375,7 @@ fa_IR:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: حذف
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -377,6 +385,17 @@ fa_IR:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -389,10 +408,6 @@ fa_IR:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ fa_IR:
   Permissions:
     PERMISSIONS_CATEGORY: 'مجوز دسترسی ها و وظایف'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'لطفاً شماره تلفن معتبر وارد کنید'
+  RelationComplexTableField.ss:
+    ADD: افزودن
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید <a href="%s">دوباره وارد شوید.</a>.'
     BUTTONSEND: 'Send me the password reset link'
@@ -439,31 +457,33 @@ fa_IR:
     BtnImport: 'وارد کردن'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'No Image Uploaded'
+  SiteTree:
+    TABMAIN: اصلی
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'افزودن ردیف تازه'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Export to CSV'
+    PRINT: چاپ
+    Print: Print
+    SELECT: انتخاب
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'چینش صعودی'
+    SORTDESC: 'چینش نزولی'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'مشاهده اولی'
     VIEWLAST: 'مشاهده آخری'
     VIEWNEXT: 'مشاهده بعدی'
     VIEWPREVIOUS: 'مشاهده قبلی'
-  SimpleImageField:
-    NOUPLOAD: 'No Image Uploaded'
-  SiteTree:
-    TABMAIN: اصلی
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'چینش صعودی'
-    SORTDESC: 'چینش نزولی'
-  TableListField:
-    CSVEXPORT: 'Export to CSV'
-    PRINT: چاپ
-    Print: Print
-    SELECT: انتخاب
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

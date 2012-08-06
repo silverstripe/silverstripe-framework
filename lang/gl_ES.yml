@@ -50,6 +50,8 @@ gl_ES:
     UNORDERED: 'Lista desordenada'
     UNORDEREDDESCRIPTION: 'Lista desordenada'
     UNORDEREDEXAMPLE1: 'elemento desordenado 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Por favor insire un nome de usuario e contrasinal.'
     ERRORNOTADMIN: 'Ese usuario non é un administrador.'
@@ -57,9 +59,10 @@ gl_ES:
   Boolean:
     0: Falso
     ANY: Ningún
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Verdadeiro
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Acceder a todas as seccións do CMS'
@@ -67,6 +70,12 @@ gl_ES:
     SAVE: Gardar
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
+    CHANGEPASSWORDTEXT2: 'Podes empregar agora as seguintes credenciais para iniciar sesión:'
+    EMAIL: Correo-e
+    HELLO: Ola
+    PASSWORD: Contrasinal
   CheckboxField:
     - Falso
     - Verdade
@@ -74,6 +83,14 @@ gl_ES:
     CLOSEPOPUP: 'Pechar Ventá Emerxente'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Gardado %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Orde ascendente'
+    SORTDESC: 'Orde descendente'
+  ComplexTableField_popup.ss:
+    NEXT: Seguinte
+    PREVIOUS: Anterior
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ gl_ES:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Engadir
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Escoller)
   EmailField:
@@ -124,8 +138,6 @@ gl_ES:
     SINGULARNAME: 'Rexistro de Correo Rexeitado'
   Enum:
     ANY: Ningún
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Contido
     Filename: 'Nome ficheiro'
@@ -150,13 +162,17 @@ gl_ES:
     FROMFILESTORE: 'Dende o Almacén de Ficheiros'
     NOSOURCE: 'Por favor selecciona un ficheiro fonte para anexar'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Iframe subindo imaxe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Ola
+    TEXT1: 'Estás aquí'
+    TEXT2: 'ligazón de reinicio do contrasinal'
+    TEXT3: para
   Form:
     FIELDISREQUIRED: '%s é requirido'
-    TITLE: 'Iframe subindo imaxe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'O valor inserido non é único'
     VALIDATIONPASSWORDSDONTMATCH: 'Os contrasinais non emparellan'
@@ -187,37 +203,26 @@ gl_ES:
     ResetFilter: Reiniciar
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Non eliminar permisos'
-    NEXT: Seguinte
-    PREVIOUS: Anterior
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Ola
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Estás aquí'
-    TEXT2: 'ligazón de reinicio do contrasinal'
-    TEXT3: para
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Engadir un role para este grupo'
-    CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
-    CHANGEPASSWORDTEXT2: 'Podes empregar agora as seguintes credenciais para iniciar sesión:'
     Code: 'Código de Grupo'
     DefaultGroupTitleAdministrators: Administradores
     DefaultGroupTitleContentAuthors: 'Autores do Contido'
     Description: Descrición
-    EMAIL: Correo-e
     GroupReminder: 'Se escolles un grupo pai, este grupo collerá todos os seus roles'
-    HELLO: Ola
     Locked: 'Bloqueado?'
     NoRoles: 'Ningún rol atopado'
-    PASSWORD: Contrasinal
     Parent: 'Grupo Pai'
     RolesAddEditLink: 'Xestionar roles'
     Sort: 'Modo de ordenación'
-    TITLE: 'Iframe subindo imaxe'
     has_many_Permissions: Permisos
     many_many_Members: Membros
   GroupImportForm:
@@ -275,10 +280,9 @@ gl_ES:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Imaxe
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Aplicar Filtro"  GridFieldItemEditView.ss:    Go back: "Ir atrás"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Iframe subindo imaxe'
   LeftAndMain:
-    ADD: 'Engadir unha nova fila'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Accións
@@ -292,6 +296,9 @@ gl_ES:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: descoñecido
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Enderezo Correo-e'
     IP: 'Enderezo IP'
@@ -368,6 +375,7 @@ gl_ES:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Aplicar Filtro'
     DELETE: Eliminar
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importar dende CSV'
@@ -377,6 +385,17 @@ gl_ES:
     RESET: Reiniciar
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Cantidade
     FIELDLABELCURRENCY: Moeda
@@ -389,10 +408,6 @@ gl_ES:
     CMS_ACCESS_CATEGORY: 'Acceso CMS'
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'
     FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ gl_ES:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles e permisos de acceso'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Por favor insire un número de teléfono válido'
+  RelationComplexTableField.ss:
+    ADD: Engadir
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
     BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'
@@ -439,31 +457,33 @@ gl_ES:
     BtnImport: 'Importar dende CSV'
     FileFieldLabel: 'Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Ningunha Imaxe Subida'
+  SiteTree:
+    TABMAIN: Principal
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Engadir unha nova fila'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Exportar a CSV'
+    PRINT: Imprimir
+    Print: Print
+    SELECT: 'Seleccionar:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordear ascendentemente'
+    SORTDESC: 'Ordear descendentemente'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Ver primeiro'
     VIEWLAST: 'Ver último'
     VIEWNEXT: 'Ver seguinte'
     VIEWPREVIOUS: 'Ver anterior'
-  SimpleImageField:
-    NOUPLOAD: 'Ningunha Imaxe Subida'
-  SiteTree:
-    TABMAIN: Principal
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Ordear ascendentemente'
-    SORTDESC: 'Ordear descendentemente'
-  TableListField:
-    CSVEXPORT: 'Exportar a CSV'
-    PRINT: Imprimir
-    Print: Print
-    SELECT: 'Seleccionar:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

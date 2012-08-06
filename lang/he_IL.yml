@@ -50,6 +50,8 @@ he_IL:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
     ERRORNOTADMIN: 'משתמש זה אינו מנהל'
@@ -57,9 +59,10 @@ he_IL:
   Boolean:
     0: 'False'
     ANY: Any
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'גישה לכל ממשקי המערכת'
@@ -67,6 +70,12 @@ he_IL:
     SAVE: שמור
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
+    CHANGEPASSWORDTEXT2: 'כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:'
+    EMAIL: Email
+    HELLO: היי
+    PASSWORD: Password
   CheckboxField:
     - 'False'
     - 'True'
@@ -74,6 +83,14 @@ he_IL:
     CLOSEPOPUP: 'סגור חלון'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'סדר בסדר עולה'
+    SORTDESC: 'סדר בסדר יורד'
+  ComplexTableField_popup.ss:
+    NEXT: הבא
+    PREVIOUS: הקודם
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -98,12 +115,12 @@ he_IL:
     MINS: דקות
     MONTH: חודש
     MONTHS: חודשים
-    SEC: שניה
-    SECS: שניות
+    SEC: 'שניה'
+    SECS: 'שניות'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: שנה
-    YEARS: שנים
+    YEAR: 'שנה'
+    YEARS: 'שנים'
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -111,10 +128,7 @@ he_IL:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Add
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (בחר)
   EmailField:
@@ -124,8 +138,6 @@ he_IL:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Content
     Filename: Filename
@@ -150,13 +162,17 @@ he_IL:
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: היי
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: 'דרוש %s'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'הערך שהוקש אינו יחודי'
     VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
@@ -187,37 +203,26 @@ he_IL:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: הבא
-    PREVIOUS: הקודם
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: היי
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
-    CHANGEPASSWORDTEXT2: 'כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:'
     Code: 'קוד קבוצה'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
-    EMAIL: Email
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: היי
     Locked: 'נעול?'
     NoRoles: 'No roles found'
-    PASSWORD: Password
     Parent: 'קבוצת אב'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    TITLE: 'מסגרת העלאת תמונה'
     has_many_Permissions: הרשאות
     many_many_Members: 'חברים רשומים'
   GroupImportForm:
@@ -237,7 +242,7 @@ he_IL:
     BUTTONREMOVELINK: 'הסר קישור'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: יישור/סגנון
+    CSSCLASS: 'יישור/סגנון'
     CSSCLASSCENTER: 'ממורכז, ללא טקסט בצדדים.'
     CSSCLASSLEFT: 'לשמאל, עם טקסט מסודר מסביב.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
@@ -275,10 +280,9 @@ he_IL:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'מסגרת העלאת תמונה'
   LeftAndMain:
-    ADD: 'Add a new row'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ he_IL:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
@@ -368,6 +375,7 @@ he_IL:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: מחק
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'ייבא מקובץ CSV'
@@ -377,6 +385,17 @@ he_IL:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -389,10 +408,6 @@ he_IL:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ he_IL:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'יש להכניס מספר טלפון תקין'
+  RelationComplexTableField.ss:
+    ADD: Add
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
     BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'
@@ -439,31 +457,33 @@ he_IL:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'לא הועלתה תמונה'
+  SiteTree:
+    TABMAIN: Main
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Add a new row'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Export to CSV'
+    PRINT: Print
+    Print: Print
+    SELECT: 'Select:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'הצג ראשון'
     VIEWLAST: 'הצג אחרון'
     VIEWNEXT: 'הצג את הבא'
     VIEWPREVIOUS: 'הצג את הקודם'
-  SimpleImageField:
-    NOUPLOAD: 'לא הועלתה תמונה'
-  SiteTree:
-    TABMAIN: Main
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
-  TableListField:
-    CSVEXPORT: 'Export to CSV'
-    PRINT: Print
-    Print: Print
-    SELECT: 'Select:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

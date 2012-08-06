@@ -50,6 +50,8 @@ tr:
     UNORDERED: 'Sıralanmamış liste'
     UNORDEREDDESCRIPTION: 'Sıralanmamış liste'
     UNORDEREDEXAMPLE1: 'sıralanmamış madde 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
@@ -57,9 +59,10 @@ tr:
   Boolean:
     0: Yanlış
     ANY: Herhangi
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Doğru
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Tüm İYS arayüzlerine erişim'
@@ -67,6 +70,12 @@ tr:
     SAVE: Kaydet
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
+    CHANGEPASSWORDTEXT2: 'Sisteme giriş yapabilmek için aşağıdaki kullanıcı bilgilerinizi kullanabilirsiniz:'
+    EMAIL: E-Posta
+    HELLO: Merhaba
+    PASSWORD: Parola
   CheckboxField:
     - Yanlış
     - Doğru
@@ -74,6 +83,14 @@ tr:
     CLOSEPOPUP: 'Açılır Pancereyi Kapat'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Kaydedildi %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sırala (artan)'
+    SORTDESC: 'Sırala (azalan)'
+  ComplexTableField_popup.ss:
+    NEXT: Sonraki
+    PREVIOUS: Önceki
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ tr:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Ekle
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Seçiniz)
   EmailField:
@@ -124,8 +138,6 @@ tr:
     SINGULARNAME: 'Eposta Geri-dönüş Kaydı'
   Enum:
     ANY: Any
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: İçerik
     Filename: 'Dosya adı'
@@ -150,13 +162,17 @@ tr:
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Merhaba
+    TEXT1: 'Profilinize ait'
+    TEXT2: 'şifre sıfırlama linki'
+    TEXT3: için
   Form:
     FIELDISREQUIRED: '%s alanının girilmesi zorunludur'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Girilen değer benzersiz olmalıdır'
     VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
@@ -187,37 +203,26 @@ tr:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Sonraki
-    PREVIOUS: Önceki
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Merhaba
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Profilinize ait'
-    TEXT2: 'şifre sıfırlama linki'
-    TEXT3: için
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Bu gruba rol ekleyin'
-    CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
-    CHANGEPASSWORDTEXT2: 'Sisteme giriş yapabilmek için aşağıdaki kullanıcı bilgilerinizi kullanabilirsiniz:'
     Code: 'Grup Kodu'
     DefaultGroupTitleAdministrators: Yöneticiler
     DefaultGroupTitleContentAuthors: 'İçerik Editörleri'
     Description: Açıklama
-    EMAIL: E-Posta
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Merhaba
     Locked: 'Kilitli?'
     NoRoles: 'Rol bulunamadı'
-    PASSWORD: Parola
     Parent: 'Ana Grup'
     RolesAddEditLink: 'Rolleri yönet'
     Sort: Sırala
-    TITLE: 'Resim göndermek için gerekli IFrame'
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
   GroupImportForm:
@@ -275,10 +280,9 @@ tr:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Resim göndermek için gerekli IFrame'
   LeftAndMain:
-    ADD: 'Yeni bir satır ekle'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ tr:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Eposta Adresi'
     IP: 'IP Adresi'
@@ -368,6 +375,7 @@ tr:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: Sil
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'CSV''den içer aktar'
@@ -377,6 +385,17 @@ tr:
     RESET: Sıfırla
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -389,10 +408,6 @@ tr:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ tr:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
+  RelationComplexTableField.ss:
+    ADD: Ekle
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
     BUTTONSEND: Gönder
@@ -439,31 +457,33 @@ tr:
     BtnImport: Aktar
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Henüz Resim Yüklenmemiş'
+  SiteTree:
+    TABMAIN: 'Ana (Esas)'
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Yeni bir satır ekle'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'CSV olarak kaydet'
+    PRINT: Yazdır
+    Print: Print
+    SELECT: Seç
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Artan olarak sırala'
+    SORTDESC: 'Azalan olarak sırala'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'İlkini görüntüle'
     VIEWLAST: 'Sonuncuyu görüntüle'
     VIEWNEXT: 'Sonrakini görüntüle'
     VIEWPREVIOUS: 'Öncekini görüntüle'
-  SimpleImageField:
-    NOUPLOAD: 'Henüz Resim Yüklenmemiş'
-  SiteTree:
-    TABMAIN: 'Ana (Esas)'
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Artan olarak sırala'
-    SORTDESC: 'Azalan olarak sırala'
-  TableListField:
-    CSVEXPORT: 'CSV olarak kaydet'
-    PRINT: Yazdır
-    Print: Print
-    SELECT: Seç
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
