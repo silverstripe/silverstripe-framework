@@ -2,15 +2,15 @@ it:
   AssetAdmin:
     NEWFOLDER: NuovaCartella
   AssetTableField:
-    CREATED: 'Primo inserito'
+    CREATED: 'Inizialmente caricato'
     DIM: Dimensioni
     FILENAME: 'Nome del file'
     FOLDER: Cartella
-    LASTEDIT: 'Ultimo modificato'
+    LASTEDIT: 'Ultima modifica'
     OWNER: Proprietario
     SIZE: Dimensione
     TITLE: Titolo
-    TYPE: Tipo
+    TYPE: 'Tipo di file'
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Scegli file'
@@ -65,7 +65,7 @@ it:
     REQUIREJS: 'Il CMS richiede JavaScript abilitato.'
   CMSMain:
     ACCESS: 'Accesso alla sezione ''{title}'''
-    ACCESSALLINTERFACES: 'Accesso a tutte le interfaccia CMS'
+    ACCESSALLINTERFACES: 'Accesso a tutte le sezioni del CMS'
     ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
     SAVE: Salva
   CMSProfileController:
@@ -86,8 +86,8 @@ it:
   ComplexTableField.ss:
     ADDITEM: 'Aggiungi %s'
     NOITEMSFOUND: 'Nessun elemento trovato'
-    SORTASC: 'Ordina in modo crescente'
-    SORTDESC: 'Ordina in modo decrescente'
+    SORTASC: 'Ordina in modo ascendente'
+    SORTDESC: 'Ordina in modo discendente'
   ComplexTableField_popup.ss:
     NEXT: Prossimo
     PREVIOUS: Precedente
@@ -95,7 +95,7 @@ it:
     ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
     BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
-    SHOWONCLICKTITLE: 'Cambia la password'
+    SHOWONCLICKTITLE: 'Cambia password'
   CreditCardField:
     FIRST: primo
     FOURTH: quarto
@@ -104,8 +104,8 @@ it:
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Oggetti dati'
-    SINGULARNAME: 'Oggetto dati'
+    PLURALNAME: 'Data Objects'
+    SINGULARNAME: 'Data Object'
   Date:
     DAY: giorno
     DAYS: giorni
@@ -307,7 +307,7 @@ it:
     ADDGROUP: 'Aggiungi gruppo'
     BUTTONCHANGEPASSWORD: 'Cambia password'
     BUTTONLOGIN: Accedi
-    BUTTONLOGINOTHER: 'Autenticato come qualcun altro'
+    BUTTONLOGINOTHER: 'Autenticati come qualcun altro'
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
@@ -315,11 +315,11 @@ it:
     DefaultDateTime: predefinito
     EMAIL: Email
     EMPTYNEWPASSWORD: 'La nuova password non può essere vuota, riprova'
-    ENTEREMAIL: 'Indica un indirizzo e-mail per ricevere il collegamento di azzeramento della password'
+    ENTEREMAIL: 'Inserisci un indirizzo e-mail per ricevere il link di azzeramento della password'
     ERRORLOCKEDOUT: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra 20 minuti.'
     ERRORNEWPASSWORD: 'Hai inserito la tua nuova password in modo differente, prova di nuovo'
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
-    ERRORWRONGCRED: 'Non sembra esserci l''indirizzo e-mail corretto o la password. Per favore, prova di nuovo.'
+    ERRORWRONGCRED: 'E-mail o password non sembrano essere corretti. Per favore, prova di nuovo.'
     FIRSTNAME: Nome
     INTERFACELANG: 'Lingua dell''interfaccia'
     INVALIDNEWPASSWORD: 'Non possiamo accettare questa password: {password}'
@@ -331,7 +331,7 @@ it:
     REMEMBERME: 'Ricordati di me la prossima volta?'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
-    SUBJECTPASSWORDRESET: 'Indirizzo per reimpostare la tua password'
+    SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
     VALIDATIONMEMBEREXISTS: 'Esiste già un utente con l''e-mail %s'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
@@ -376,11 +376,11 @@ it:
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Applica filtro'
-    DELETE: Cancella
+    DELETE: Elimina
     DELETEDRECORDS: 'Eliminati {count} record.'
     IMPORT: 'Importa da CSV'
     IMPORTEDRECORDS: 'Importati {count} record.'
-    NOCSVFILE: 'Cerca un file CSV da importare'
+    NOCSVFILE: 'Scegli un file CSV da importare'
     NOIMPORT: 'Nulla da importare.'
     RESET: Azzera
     Title: 'Modelli di dati'
@@ -397,7 +397,7 @@ it:
     IMPORT_TAB_HEADER: Importa
     SEARCHLISTINGS: Cerca
   MoneyField:
-    FIELDLABELAMOUNT: Totale
+    FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
   NullableField:
     IsNullLabel: 'è nullo.'
@@ -412,7 +412,7 @@ it:
     AssignedTo: 'assegnato a "{title}"'
     FromGroup: 'ereditato dal gruppo "{title}"'
     FromRole: 'ereditato dal ruolo "{title}"'
-    FromRoleOnGroup: 'eredita dal ruolo "%s" sul gruppo "%s"'
+    FromRoleOnGroup: 'ereditato dal ruolo "%s" nel gruppo "%s"'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
   PhoneNumberField:
@@ -423,16 +423,16 @@ it:
     NOTFOUND: 'Nessun elemento trovato'
   Security:
     ALREADYLOGGEDIN: 'Non hai accesso a questa pagina. Se hai un altro account che può accederci, puoi autenticarti qui sotto.'
-    BUTTONSEND: 'Inviami il link per reimpostare la password'
-    CHANGEPASSWORDBELOW: 'Puoi cambiare la tua password qui di seguito.'
+    BUTTONSEND: 'Inviami il link per azzerare la password'
+    CHANGEPASSWORDBELOW: 'Puoi cambiare la tua password qui sotto.'
     CHANGEPASSWORDHEADER: 'Cambia la tua password'
     ENTERNEWPASSWORD: 'Per favore inserisci una nuova password.'
     ERRORPASSWORDPERMISSION: 'Devi essere autenticato per poter cambiare la tua password!'
-    LOGGEDOUT: 'Sei stato sloggato. Se vuoi autenticarti nuovamente, inserisci qui sotto le tue credenziali.'
+    LOGGEDOUT: 'Sei stato disconnesso. Se vuoi autenticarti nuovamente, inserisci qui sotto le tue credenziali.'
     LOGIN: Entra
-    NOTEPAGESECURED: 'La pagina è sicura. Inserisci le credenziali qui di seguito per poter andare avanti.'
+    NOTEPAGESECURED: 'La pagina è protetta. Inserisci le credenziali qui sotto per poter andare avanti.'
     NOTERESETLINKINVALID: '<p>Il link per azzerare la password non è valido o è scaduto.</p><p>Puoi richiederne uno nuovo <a href="{link1}">qui</a> o cambiare la tua password dopo che ti sei <a href="{link2}">connesso</a>.</p>'
-    NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter reimpostare la tua password.'
+    NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
     PASSWORDSENTHEADER: 'Link per azzeramento della password inviato a ''{email}'''
     PASSWORDSENTTEXT: 'Grazie! Un link di azzeramento è stato inviato a ''{email}'', fornito un account esistente per questo indirizzo e-mail.'
   SecurityAdmin:
