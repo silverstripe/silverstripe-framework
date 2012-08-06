@@ -6,7 +6,7 @@ de:
     DIM: Dimensionen
     FILENAME: Dateiname
     FOLDER: Ordner
-    LASTEDIT: 'Letztmals geändert'
+    LASTEDIT: 'Letzte Änderung'
     OWNER: Eigentümer
     SIZE: Größe
     TITLE: Titel
@@ -20,8 +20,8 @@ de:
     EDITANDORGANIZE: Bearbeiten
     EDITINFO: 'Dateien bearbeiten'
     FILES: Dateien
-    FROMCOMPUTER: 'Dateien von ihrem Computer auswählen'
-    FROMCOMPUTERINFO: 'Von ihrem Computer hochladen'
+    FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
+    FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
     TOTAL: Gesamt
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: ODER
@@ -71,7 +71,7 @@ de:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Sie haben ihr Passwort geändert für'
+    CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort geändert für'
     CHANGEPASSWORDTEXT2: 'Sie können nun folgende Angaben benutzen um sich einzuloggen'
     EMAIL: E-Mail
     HELLO: Hi
@@ -173,13 +173,13 @@ de:
     TEXT3: für
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
-    VALIDATIONCREDITNUMBER: 'Bitte stellen sie sicher, dass sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
+    VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
     VALIDATIONNOTUNIQUE: 'Der eingegebene Wert ist nicht einzigartig'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwörter stimmen nicht überein'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwortfelder dürfen nicht leer sein'
     VALIDATIONSTRONGPASSWORD: 'Passwörter müssen mindestens eine Zahl und ein alphanumerisches Zeichen enthalten'
     VALIDATOR: Prüfer
-    VALIDCURRENCY: 'Bitte geben sie einen korrekten Betrag ein'
+    VALIDCURRENCY: 'Bitte geben Sie einen korrekten Betrag ein'
   FormField:
     NONE: keine
   GridAction:
@@ -232,7 +232,7 @@ de:
     ResultDeleted: '%d Gruppen gelöscht'
     ResultUpdated: '%d Gruppen aktualisiert'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Es wurde eine Endlosschleife innerhalb der "{type}"-Hierarchie gefunden. Bitte ändern sie die übergeordnete Seite, um den Fehler zu beheben'
+    InfiniteLoopNotAllowed: 'Es wurde eine Endlosschleife innerhalb der "{type}"-Hierarchie gefunden. Bitte ändern Sie die übergeordnete Seite, um den Fehler zu beheben'
   HtmlEditorField:
     ADDURL: 'URL hinzufügen'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; Dimensionen'
@@ -380,7 +380,7 @@ de:
     DELETEDRECORDS: '{count} Datensätze wurden gelöscht.'
     IMPORT: 'CSV Import'
     IMPORTEDRECORDS: '{count} Datensätze wurden importiert.'
-    NOCSVFILE: 'Wählen sie eine CSV-Datei zum Importieren'
+    NOCSVFILE: 'Wählen Sie eine CSV-Datei zum Importieren'
     NOIMPORT: 'Kein Import notwendig.'
     RESET: Zurücksetzen
     Title: Datenmodelle
@@ -431,7 +431,7 @@ de:
     LOGGEDOUT: 'Sie wurden ausgeloggt. Wenn Sie sich wieder einloggen möchten, geben Sie bitte unten Ihre Zugangsdaten ein.'
     LOGIN: Anmelden
     NOTEPAGESECURED: 'Diese Seite ist geschützt. Bitte melden Sie sich an und Sie werden sofort weitergeleitet.'
-    NOTERESETLINKINVALID: '<p>Der Link zum Zurücksetzen des Passworts ist entweder nicht korrekt oder abgelaufen</p><p>Sie können <a href="{link1}">einen neuen Link anfordern</a> oder ihr Passwort nach dem <a href="{link2}">einloggen</a> ändern.</p>'
+    NOTERESETLINKINVALID: '<p>Der Link zum Zurücksetzen des Passworts ist entweder nicht korrekt oder abgelaufen</p><p>Sie können <a href="{link1}">einen neuen Link anfordern</a> oder Ihr Passwort nach dem <a href="{link2}">einloggen</a> ändern.</p>'
     NOTERESETPASSWORD: 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.'
     PASSWORDSENTHEADER: 'Der Link zum Zurücksetzen des Passworts wurde an {email} gesendet'
     PASSWORDSENTTEXT: 'Vielen Dank! Wenn ein Account zu der E-Mail Adresse {email} existiert, wurde eine E-Mail mit dem Link zum Zurücksetzen des Passworts verschickt.'
@@ -485,7 +485,7 @@ de:
     VIEWNEXT: 'Nächsten anzeigen'
     VIEWPREVIOUS: 'Vorherigen anzeigen'
   TimeField:
-    VALIDATEFORMAT: 'Bitte geben sie die Uhrzeit im korrekten Format ein ({format})'
+    VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   ToggleField:
     LESS: weniger
     MORE: mehr

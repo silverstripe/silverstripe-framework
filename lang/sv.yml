@@ -470,7 +470,7 @@ sv:
   TableListField:
     CSVEXPORT: 'Exportera till CSV'
     PRINT: 'Skriv ut'
-    Print: Print
+    Print: 'Skriv ut'
     SELECT: 'Välj:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
