@@ -99,3 +99,6 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .cms-content-header .cms-content-header-tabs { position: absolute; right: 0; }
 
 .ss-ui-button.ss-gridfield-button-filter { border: none !important; }
+
+.cms-panel-content-collapsed { position: relative; width: 40px; }
+.cms-panel-content-collapsed h2.cms-panel-header, .cms-panel-content-collapsed h3.cms-panel-header { zoom: 1; position: absolute; top: 10px; right: 10px; writing-mode: tb-rl; float: right; z-index: 5000; }
