@@ -32,6 +32,7 @@ class TestRunner extends Controller {
 		'sessionloadyml' => 'sessionloadyml',
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
+		'setdb' => 'setdb',
 		'cleanupdb' => 'cleanupdb',
 		'emptydb' => 'emptydb',
 		'module/$ModuleName' => 'module',
@@ -49,6 +50,7 @@ class TestRunner extends Controller {
 		'coverageOnly',
 		'startsession',
 		'endsession',
+		'setdb',
 		'cleanupdb',
 		'module',
 		'all',
@@ -403,6 +405,32 @@ HTML;
 						
 		} else {
 			return "<p>startession can only be used on dev and test sites</p>";
+		}
+	}
+
+	function setdb() {
+		if(!Director::isLive()) {
+			if (isset($_GET['database'])) {
+				$database_name = $_GET['database'];
+				$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+				$pattern = strtolower(sprintf('#%stmpdb\d{7}#', $prefix));
+				if (!preg_match($pattern, $database_name)) {
+					return "<p>Invalid database name format</p>";
+				}
+
+				DB::set_alternative_database_name($database_name);
+				return "<p>Set database session to '$database_name'.  Time to start testing; where would you like to start?</p>
+					<ul>
+						<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
+						<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
+						<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
+						<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">End your test session</a></li>
+					</ul>";
+			} else {
+				return "<p>dev/tests/setdb must be used with <em>database</em> parameter</p>";
+			}
+		} else {
+			return "<p>dev/tests/setdb can only be used on dev and test sites</p>";
 		}
 	}
 	
