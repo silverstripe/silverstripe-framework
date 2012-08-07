@@ -1143,8 +1143,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		
 		$mainFields->removeByName('Salt');
 		$mainFields->removeByName('NumVisit');
-		$mainFields->removeByName('LastVisited');
-	
+
+		$mainFields->makeFieldReadonly('LastVisited');
+
 		$fields->removeByName('Subscriptions');
 
 		// Groups relation will get us into logical conflicts because
@@ -1179,7 +1180,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$fields->findOrMakeTab('Root.Permissions', singleton('Permission')->i18n_plural_name());
 				$fields->addFieldToTab('Root.Permissions', $permissionsField);
 			}
-		}
+		}	
 		
 		$defaultDateFormat = Zend_Locale_Format::getDateFormat($this->Locale);
 		$dateFormatMap = array(
@@ -1214,7 +1215,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			)
 		);
 		$timeFormatField->setValue($this->TimeFormat);
-		
+
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;
