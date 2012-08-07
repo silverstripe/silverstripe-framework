@@ -258,6 +258,11 @@ sure that your controller follows the usual naming conventions, and it will be a
 	  function doAction($data, $form) {
 	    // $this->widget points to the widget
 	  }
+
+	  function Link()
+  	  {
+	    return $this;
+	  }
 	}
 
 
