@@ -320,10 +320,6 @@ form.small .field, .field.small {
 
 		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
 
-		&.buttonset {
-			margin: 0 -1px; // hack to avoid double borders
-		}
-
 		&.ui-state-hover, &:hover {
 			text-decoration: none;
 			background-color: lighten($color-button-generic, 10%);
@@ -420,6 +416,16 @@ form.small .field, .field.small {
 		&.ss-ui-button-loading {
 			opacity: 0.8;
 		}
+	}
+
+	.ss-ui-buttonset {
+		.ui-button {
+			margin-left: -1px;
+		}
+	}
+
+	.ss-ui-buttonset {
+		margin-left: 1px;
 	}
 	
 	.ss-ui-loading-icon {
