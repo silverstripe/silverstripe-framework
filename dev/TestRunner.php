@@ -32,6 +32,7 @@ class TestRunner extends Controller {
 		'sessionloadyml' => 'sessionloadyml',
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
+		'setdb' => 'setdb',
 		'cleanupdb' => 'cleanupdb',
 		'emptydb' => 'emptydb',
 		'module/$ModuleName' => 'module',
@@ -49,6 +50,7 @@ class TestRunner extends Controller {
 		'coverageOnly',
 		'startsession',
 		'endsession',
+		'setdb',
 		'cleanupdb',
 		'module',
 		'all',
@@ -341,6 +343,10 @@ class TestRunner extends Controller {
 	 * Start a test session.
 	 * Usage: visit dev/tests/startsession?fixture=(fixturefile).  A test database will be constructed, and your browser session will be amended
 	 * to use this database.  This can only be run on dev and test sites.
+	 *
+	 * See {@link setdb()} for an alternative approach which just sets a database
+	 * name, and is used for more advanced use cases like interacting with test databases
+	 * directly during functional tests.
 	 */
 	function startsession() {
 		if(!Director::isLive()) {
@@ -404,6 +410,47 @@ HTML;
 		} else {
 			return "<p>startession can only be used on dev and test sites</p>";
 		}
+	}
+
+	/**
+	 * Set an alternative database name in the current browser session.
+	 * Useful for functional testing libraries like behat to create a "clean slate". 
+	 * Does not actually create the database, that's usually handled
+	 * by {@link SapphireTest::create_temp_db()}.
+	 *
+	 * The database names are limited to a specific naming convention as a security measure:
+	 * The "tmpdb" prefix and a random sequence of seven digits.
+	 * This avoids the user gaining access to other production databases 
+	 * available on the same connection.
+	 *
+	 * See {@link startsession()} for a different approach which actually creates
+	 * the DB and loads a fixture file instead.
+	 */
+	function setdb() {
+		if(Director::isLive()) {
+			return $this->permissionFailure("dev/tests/setdb can only be used on dev and test sites");
+		}
+		
+		if(!isset($_GET['database'])) {
+			return $this->permissionFailure("dev/tests/setdb must be used with a 'database' parameter");
+		}
+		
+		$database_name = $_GET['database'];
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		$pattern = strtolower(sprintf('#^%stmpdb\d{7}#', $prefix));
+		if(!preg_match($pattern, $database_name)) {
+			return $this->permissionFailure("Invalid database name format");
+		}
+
+		DB::set_alternative_database_name($database_name);
+
+		return "<p>Set database session to '$database_name'.  Time to start testing; where would you like to start?</p>
+			<ul>
+				<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
+				<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
+				<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
+				<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">End your test session</a></li>
+			</ul>";
 	}
 	
 	function emptydb() {
