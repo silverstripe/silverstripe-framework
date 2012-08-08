@@ -193,11 +193,13 @@
 						'data': this.getPanel().find('.tree-holder').html(),
 						'ajax': {
 							'url': function(node) {
-								return self.data('urlTree') + '/' + ($(node).data("id") ? $(node).data("id") : 0);
+								var url = $.path.parseUrl(self.data('urlTree')).hrefNoSearch;
+								return url + '/' + ($(node).data("id") ? $(node).data("id") : 0);
 							},
 							'data': function(node) {
+								var query = $.query.load(self.data('urlTree')).keys;
 								var params = self.getRequestParams();
-								params = $.extend({}, params, {ajax: 1});
+								params = $.extend({}, query, params, {ajax: 1});
 								return params;
 							}
 						}
