@@ -31,7 +31,6 @@ class TestRunner extends Controller {
 		'coverage' => 'coverageAll',
 		'sessionloadyml' => 'sessionloadyml',
 		'startsession' => 'startsession',
-		'selectsession' => 'selectsession',
 		'endsession' => 'endsession',
 		'cleanupdb' => 'cleanupdb',
 		'emptydb' => 'emptydb',
@@ -49,7 +48,6 @@ class TestRunner extends Controller {
 		'coverageModule',
 		'coverageOnly',
 		'startsession',
-		'selectsession',
 		'endsession',
 		'cleanupdb',
 		'module',
@@ -423,54 +421,6 @@ HTML;
 			
 		} else {
 			return "<p>dev/tests/emptydb can only be used with a temporary database. Perhaps you should use dev/tests/startsession first?</p>";
-		}
-	}
-
-	function selectsession() {
-		if(!Director::isLive()) {
-			$tempDir = '/tmp';
-			$testSessionsDir = $tempDir . DIRECTORY_SEPARATOR . 'testsessions';
-
-			if (!is_dir($testSessionsDir)) {
-					return "<p>There are no test sessions available to select from.</p>";
-				}
-
-			if(!isset($_POST['testSessionKey'])) {
-				$me = Director::baseURL() . "dev/tests/selectsession";
-				return <<<HTML
-<form action="$me" method="post">
-	<p>Enter a testSessionKey to select test session associated with that key.  Don't forget to visit dev/tests/endsession when you're done!</p>
-	<input type="text" id="testSessionKey" name="testSessionKey" value="">
-	<p><input id="select-session" value="Select test session" type="submit" /></p>
-</form>
-HTML;
-			} else {
-				$testSessionKey = $_POST['testSessionKey'];
-
-				$testSessionFile = $testSessionsDir . DIRECTORY_SEPARATOR . $testSessionKey;
-
-				if (!is_file($testSessionFile) || !is_readable($testSessionFile)) {
-					return "<p>Invalid session key.</p>";
-				}
-
-				$testSessionDict = json_decode(file_get_contents($testSessionFile));
-				if (!isset($testSessionDict->databaseConfig, $testSessionDict->databaseConfig->database)) {
-					return "<p>Invalid database config.</p>";
-				}
-
-				DB::set_alternative_database_name($testSessionDict->databaseConfig->database);
-
-				return "<p>Selected test session $testSessionKey.</p>
-						<p>Time to start testing; where would you like to start?</p>
-						<ul>
-							<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
-							<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
-							<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
-							<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">End your test session</a></li>
-						</ul>";
-			}
-		} else {
-			return "<p>setdb can only be used on dev and test sites</p>";
 		}
 	}
 	
