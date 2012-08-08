@@ -13,17 +13,17 @@ sk:
     TYPE: Typ
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
+    ChooseFiles: 'Vyberte súbory'
     DRAGFILESHERE: 'Drag files here'
     DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
+    EDITALL: 'Editovať všetko'
     EDITANDORGANIZE: 'Editovať a organizovať'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Súbory
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    TOTAL: Súhrn
+    UPLOADINPROGRESS: 'Čakajte prosím… prebieha nahrávanie'
     UPLOADOR: ALEBO
   BBCodeParser:
     ALIGNEMENT: Zarovnanie
@@ -51,7 +51,7 @@ sk:
     UNORDEREDDESCRIPTION: 'neočíslovaný zoznam'
     UNORDEREDEXAMPLE1: 'neočíslovaná položka 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Späť
   BasicAuth:
     ENTERINFO: 'Prosím zadajte používateľské meno a heslo.'
     ERRORNOTADMIN: 'Tento používateľ nie je administrátor.'
@@ -61,7 +61,7 @@ sk:
     ANY: Ktorýkoľvek
     1: Áno
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: 'Načíta sa ...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
@@ -187,17 +187,17 @@ sk:
     Delete: Odstrániť
     UnlinkRelation: Unlink
   GridField:
-    Add: 'Add {name}'
+    Add: 'Pridať {name}'
     Filter: Filter
-    FilterBy: 'Filter by '
+    FilterBy: 'Filtrovať podľa'
     Find: Vyhľadať
-    LEVELUP: 'Level up'
+    LEVELUP: 'Úroveň vyššie'
     LinkExisting: 'Prepojenie existujúcich'
     NewRecord: 'Nový %s'
     NoItemsFound: 'Žiadne položky'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find {type}'
+    PlaceHolder: 'Vyhľadať {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Reset
@@ -217,7 +217,7 @@ sk:
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Autori obsahu'
     Description: Popis
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Nadriadená skupina'
     Locked: 'Zamknuté?'
     NoRoles: 'Nenašli sa žiadne úlohy'
     Parent: 'Nadradená skupina'
@@ -285,7 +285,7 @@ sk:
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
     PAGETYPE: 'Typ stránky:'
     PERMAGAIN: 'Boli ste odhlásený'
@@ -295,7 +295,7 @@ sk:
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    VersionUnknown: neznáme
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -304,7 +304,7 @@ sk:
     IP: 'IP adreasa'
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Pridať skupinu'
     BUTTONCHANGEPASSWORD: 'Zmeniť heslo'
     BUTTONLOGIN: 'Prihlásiť sa'
     BUTTONLOGINOTHER: 'Prihlásiť sa ako niekto iný'
@@ -335,7 +335,7 @@ sk:
     SURNAME: Priezvisko
     VALIDATIONMEMBEREXISTS: 'Člen s takýmto e-mailom už existuje'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Vitajte späť, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
     db_LastVisited: 'Dátum poslednej navštevy'
@@ -348,7 +348,7 @@ sk:
     TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    Custom: Custom
+    Custom: Vlastné
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
@@ -357,7 +357,7 @@ sk:
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
     MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
+    Preview: Náhľad
     SHORTMONTH: 'Short name of month (e.g. Jun)'
     TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Two-digit day of month'
@@ -445,7 +445,7 @@ sk:
     IMPORTGROUPS: 'Importovať skupiny'
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
-    MENUTITLE: Security
+    MENUTITLE: Zabezpečenie
     MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstáni zo všetkých skupín a databázy.'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Právomoci
@@ -485,7 +485,7 @@ sk:
     VIEWNEXT: 'Zobraziť nasledujúce'
     VIEWPREVIOUS: 'Zobraziť predchádzajúce'
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Prosím zadajte platný formát času ({format})'
   ToggleField:
     LESS: menej
     MORE: viac
@@ -498,16 +498,16 @@ sk:
     DOEDIT: Uložiť
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
-    Dimensions: Dimensions
+    Dimensions: Rozmery
     EDIT: Edit
     EDITINFO: 'Editovať súbor'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'Zo súborov'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILESSHORT: 'Môžte nahrať iba {count} súborov'
+    REMOVE: Odstrániť
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
