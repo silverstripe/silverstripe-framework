@@ -252,13 +252,13 @@ class Director implements TemplateGlobalProvider {
 
 		foreach($rules as $pattern => $controllerOptions) {
 			if(is_string($controllerOptions)) {
-				if(substr($controllerOptions,0,2) == '->') $controllerOptions = array('Redirect' => substr($controllerOptions,2));
-				else $controllerOptions = array('Controller' => $controllerOptions);
+				if(substr($controllerOptions,0,2) == '->')
+					$controllerOptions = array('Redirect' => substr($controllerOptions,2));
+				else 
+					$controllerOptions = array('Controller' => $controllerOptions);
 			}
 
-			if(($arguments = $request->match($pattern, true)) !== false) {
-				// controllerOptions provide some default arguments
-				$arguments = array_merge($controllerOptions, $arguments);
+			if(($arguments = $request->match($pattern, true, $controllerOptions)) !== false) {
 
 				// Find the controller name
 				if(isset($arguments['Controller'])) $controller = $arguments['Controller'];
