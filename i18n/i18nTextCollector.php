@@ -328,6 +328,14 @@ class i18nTextCollector extends Object {
 	 */
 	function collectFromEntityProviders($filePath, $module = null) {
 		$entities = array();
+
+		// HACK Ugly workaround to avoid "Cannot redeclare class PHPUnit_Framework_TestResult" error
+		// when running text collector with PHPUnit 3.4. There really shouldn't be any dependencies
+		// here, but the class reflection enforces autloading of seemingly unrelated classes.
+		// The main problem here is the CMSMenu class, which iterates through test classes,
+		// which in turn trigger autoloading of PHPUnit.
+		$phpunitwrapper = PhpUnitWrapper::inst();
+		$phpunitwrapper->init();
 		
 		$classes = ClassInfo::classes_for_file($filePath);
 		if($classes) foreach($classes as $class) {
