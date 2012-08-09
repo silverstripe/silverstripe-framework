@@ -3156,6 +3156,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// Final fail-over, just list ID field
 		if(!$fields) $fields['ID'] = 'ID';
+
+		// Localize fields (if possible)
+		$labels = $this->fieldLabels(false);
+		$fields = array_intersect_key($labels, $fields);
 		
 		return $fields;
 	}
