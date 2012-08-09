@@ -140,8 +140,11 @@ abstract class DBField extends ViewableData {
 	 * @return string The encoded value
 	 */
 	function prepValueForDB($value) {
+		$conn = DB::getConn();
 		if($value === null || $value === "" || $value === false) {
 			return "null";
+		} elseif(method_exists($conn, 'prepStringForDB')) {
+			return $conn->prepStringForDB($value);
 		} else {
 			return "'" . Convert::raw2sql($value) . "'";
 		}
