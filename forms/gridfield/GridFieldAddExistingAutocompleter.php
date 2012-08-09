@@ -172,14 +172,8 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 * @param SS_HTTPRequest $request 
 	 */
 	public function doSearch($gridField, $request) {
-		if($this->searchList) {
-			$allList = $this->searchList;
-		} else {
-			$allList = DataList::create($gridField->getList()->dataClass());
-		}
-
-		$filters = array();
-		$stmts = array();
+		$dataClass = $gridField->getList()->dataClass();
+		$allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
 		
 		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
 		if(!$searchFields) {
@@ -189,6 +183,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		}
 
 		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
+		$stmts = array();
 		foreach($searchFields as $searchField) {
 			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, Convert::raw2sql($request->getVar('gridfield_relationsearch')));
 		}
