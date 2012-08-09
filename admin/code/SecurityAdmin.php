@@ -109,7 +109,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						)
 					)
 				),
-				$groupsTab = new Tab('Groups', singleton('Group')->plural_name(),
+				$groupsTab = new Tab('Groups', singleton('Group')->i18n_plural_name(),
 					$groupList,
 					new HeaderField(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
 					new LiteralField(

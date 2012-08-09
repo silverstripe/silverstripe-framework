@@ -33,12 +33,12 @@
 					<ul>
 						<li class="first <% if Top.class == 'AssetAdmin' %>current<% end_if %>" id="Menu-AssetAdmin">
 							<a href="admin/assets/">
-								<span class="text">Edit &amp; organize</span>
+								<span class="text"><% _t('AssetAdmin.EditOrgMenu', 'Edit &amp; organize') %></span>
 							</a>
 						</li>
 						<li class="last <% if Top.class == 'CMSFileAddController' %>current<% end_if %>" id="Menu-CMSFileAddController">
 							<a href="admin/assets/add">
-								<span class="text">Add files</span>
+								<span class="text"><% _t('AssetAdmin.ADDFILES', 'Add files') %></span>
 							</a>
 						</li>
 					</ul>
