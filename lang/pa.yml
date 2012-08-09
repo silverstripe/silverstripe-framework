@@ -53,8 +53,8 @@ pa:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ username ਅਤੇ password ਪਾਉ'
-    ERRORNOTADMIN: 'ਇਹ user ਪ੍ਰਬੰਧਕ ਨਹੀ ਹੈ।'
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     0: 'False'
@@ -71,10 +71,10 @@ pa:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
-    HELLO: ਹਾਏ
+    HELLO: Hi
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -89,8 +89,8 @@ pa:
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: ਅਗਲਾ
-    PREVIOUS: ਪਿਛਲਾ
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -107,20 +107,20 @@ pa:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: 'ਿਦਨ	'
-    DAYS: ਿਦਨ
-    HOUR: 'ਘੰਟਾ	'
-    HOURS: 'ਘੰਟੇ	'
-    MIN: 'ਿਮੰਟ	'
-    MINS: 'ਿਮੰਟ	'
-    MONTH: ਮਹੀਨਾ
-    MONTHS: 'ਮਹੀਨੇੇੇੇੇ '
-    SEC: 'ਸਿਕ ੰਟ'
-    SECS: 'ਸਿਕ ੰਟ'
+    DAY: ' day'
+    DAYS: ' days'
+    HOUR: ' hour'
+    HOURS: ' hours'
+    MIN: ' min'
+    MINS: ' mins'
+    MONTH: ' month'
+    MONTHS: ' months'
+    SEC: ' sec'
+    SECS: ' secs'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ਸਾਲ
-    YEARS: ਸਾਲ
+    YEAR: ' year'
+    YEARS: ' years'
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -130,7 +130,7 @@ pa:
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: '( ਚੁਣੋ )'
+    CHOOSE: (Choose)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -157,7 +157,7 @@ pa:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: ਫਾਈਲ
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,16 +167,16 @@ pa:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: ਹਾਏ
+    HELLO: Hi
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s ਚਾਹੀਦਾ ਹੈ'
+    FIELDISREQUIRED: '%s is required'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
@@ -238,8 +238,8 @@ pa:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'ਿਲੰਕ ਪਾਉ'
-    BUTTONREMOVELINK: 'ਿਲੰਕ ਕੱਟੋਂ'
+    BUTTONINSERTLINK: 'Insert link'
+    BUTTONREMOVELINK: 'Remove link'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Alignment / style'
@@ -248,9 +248,9 @@ pa:
     CSSCLASSLEFTALONE: 'On the left, on its own.'
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
-    EMAIL: 'ਈਮੇਲ ਪਤਾ'
-    FILE: ਫਾਈਲ
-    FOLDER: ਫੋਲਡਰ
+    EMAIL: 'Email address'
+    FILE: File
+    FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -259,21 +259,21 @@ pa:
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: 'ਲੰਬਾਈ	'
+    IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: 'ਚੌੜਾਈ	'
+    IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert/edit link for highlighted text'
+    LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'ਜੋੜ ਵਰਣਨ'
-    LINKEMAIL: 'ਈਮੇਲ ਪਤਾ'
+    LINKDESCR: 'Link description'
+    LINKEMAIL: 'Email address'
     LINKEXTERNAL: 'ਦੂਸਰੀ ਵੈੱਬ-ਸਾਈਟ '
-    LINKFILE: ਡਾਉਨਲੋਡ
-    LINKINTERNAL: 'ਸਾਈਟ ਉੱਤੇ ਪੰਨਾ	'
-    LINKOPENNEWWIN: 'ਿਲੰਕ ਨੰੂ  ਨਵੀ window ਿਵੱਚ ਖੋਲੋ'
-    LINKTO: 'ਜੋੜ ਨੰੂ '
+    LINKFILE: 'Download a file'
+    LINKINTERNAL: 'Page on the site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link to'
     PAGE: ਪੰਨਾ
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -305,10 +305,10 @@ pa:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'ਤਬਦੀਲ Password'
+    BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'ਲੋਗ ਇਨ'
     BUTTONLOGINOTHER: 'Log in as someone else'
-    BUTTONLOSTPASSWORD: 'ਮੈਂ ਆਪਣਾ password ਗੁਆ ਿਲਆ ਹੈ।'
+    BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
     DefaultAdminFirstname: 'Default Admin'
@@ -317,26 +317,26 @@ pa:
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'Your have entered your new password differently, try again'
+    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: 'ਪਹਿਲਾਂ ਨਾਮ'
-    INTERFACELANG: 'ਦਖਲ ਭਾਸ਼ਾ'
+    FIRSTNAME: 'First Name'
+    INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'ਨਵਾਂ Password'
+    NEWPASSWORD: 'New Password'
     PASSWORD: Password
     PLURALNAME: Members
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'ਮੈਂਨੰੂ ਅਗਲੀ ਵਾਰ ਯਾਦ ਰੱਖਣਾ'
+    REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਬਦਲ ਗਆ ਹੈ।         '
-    SUBJECTPASSWORDRESET: 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਬਦਲਣ ਦਾ ਜੋੜ'
-    SURNAME: ਗੋਤ
-    VALIDATIONMEMBEREXISTS: 'There already exists a member with this email'
+    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
+    SURNAME: Surname
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'ਤੁਹਾਡਾ ਪੁਰਾਣਾ password'
+    YOUROLDPASSWORD: 'Your old password'
     belongs_many_many_Groups: Groups
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
@@ -345,7 +345,7 @@ pa:
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'ਈਮੇਲ &amp; '
+    TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -416,19 +416,19 @@ pa:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਸਹੀ ਫ਼ੋਨ ਨੰਬਰ ਪਾਉ'
+    VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in below.'
+    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
     BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'ਤੁਸੀਂ ਆਪਣਾ password ਹੇਠਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।ੋ'
-    CHANGEPASSWORDHEADER: 'password ਬਦਲੋ '
-    ENTERNEWPASSWORD: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਨਵਾਂ password ਪਾਉ।'
+    CHANGEPASSWORDBELOW: 'You can change your password below.'
+    CHANGEPASSWORDHEADER: 'Change your password'
+    ENTERNEWPASSWORD: 'Please enter a new password.'
     ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out. If you would like to log in again, enter your credentials below.'
+    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
@@ -459,7 +459,7 @@ pa:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'ਕੋਈ ਫੋਟੋ ਅੱਪਲੋਡ ਨਹੀ ਹੋਈ'
+    NOUPLOAD: 'No Image Uploaded'
   SiteTree:
     TABMAIN: 'ਮੁੱਖ	'
   TableField:
@@ -487,8 +487,8 @@ pa:
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: 'ਘੱਟ	'
-    MORE: 'ਹੋਰ	'
+    LESS: less
+    MORE: more
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'

@@ -71,7 +71,7 @@ vi_VN:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Bạn có thể thay đổi mật khẩu tại'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
     HELLO: Hi
@@ -107,30 +107,30 @@ vi_VN:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: ngày
-    DAYS: ngày
-    HOUR: giờ
-    HOURS: giờ
-    MIN: phút
-    MINS: phút
-    MONTH: tháng
-    MONTHS: tháng
-    SEC: giây
-    SECS: giây
+    DAY: ' day'
+    DAYS: ' days'
+    HOUR: ' hour'
+    HOURS: ' hours'
+    MIN: ' min'
+    MINS: ' mins'
+    MONTH: ' month'
+    MONTHS: ' months'
+    SEC: ' sec'
+    SECS: ' secs'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: năm
-    YEARS: năm
+    YEAR: ' year'
+    YEARS: ' years'
   DateField:
     NOTSET: 'not set'
-    TODAY: 'hôm nay'
+    TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (chọn)
+    CHOOSE: (Choose)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -286,11 +286,11 @@ vi_VN:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: 'Trợ giúp'
+    HELP: Help
     PAGETYPE: 'Loại:'
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Nhập email và mật khẩu để truy cập vào phần quản lý'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
@@ -321,7 +321,7 @@ vi_VN:
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: 'First Name'
-    INTERFACELANG: 'Ngôn ngữ'
+    INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
@@ -330,8 +330,8 @@ vi_VN:
     PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'Thay đổi mật khẩu'
-    SUBJECTPASSWORDRESET: 'Quên mật khẩu'
+    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'

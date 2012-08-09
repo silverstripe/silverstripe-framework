@@ -53,9 +53,9 @@ ne:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्'
-    ERRORNOTADMIN: 'यो प्रयोगकता मुख्य प्रयोगकता होइन'
-    ERRORNOTREC: 'त्यो प्रयोगकता / पासओड बुझन् सकिएन'
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
+    ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     0: 'False'
     ANY: Any
@@ -71,10 +71,10 @@ ne:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
-    CHANGEPASSWORDTEXT2: 'दिएको विवरण अनुसार भित्र जान सक्नुहुन्छ :'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
-    HELLO: हाई
+    HELLO: Hi
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -86,11 +86,11 @@ ne:
   ComplexTableField.ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'बढ्दो क्रमाङ्कन '
-    SORTDESC: 'घट्दो क्रमाङ्कन '
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: पछीको
-    PREVIOUS: पहिलाको
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -107,20 +107,20 @@ ne:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: दिन
-    DAYS: दिनहरु
-    HOUR: घण्टा
-    HOURS: घण्टाहरु
-    MIN: मिनेट
-    MINS: मिनेटहरु
-    MONTH: महिना
-    MONTHS: महिनाहरु
-    SEC: सेकेन्ड
-    SECS: सेकेन्डहरु
+    DAY: ' day'
+    DAYS: ' days'
+    HOUR: ' hour'
+    HOURS: ' hours'
+    MIN: ' min'
+    MINS: ' mins'
+    MONTH: ' month'
+    MONTHS: ' months'
+    SEC: ' sec'
+    SECS: ' secs'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: बर्ष
-    YEARS: बर्षाहरु
+    YEAR: ' year'
+    YEARS: ' years'
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -130,7 +130,7 @@ ne:
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (छान्)
+    CHOOSE: (Choose)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -157,7 +157,7 @@ ne:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: फाइल
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,16 +167,16 @@ ne:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: हाई
+    HELLO: Hi
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s चाहिन्छ'
+    FIELDISREQUIRED: '%s is required'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'लेखिएको मान भिन्न छैन '
-    VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
-    VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'
+    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
@@ -238,19 +238,19 @@ ne:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'लिन्क राखनुहोस्'
-    BUTTONREMOVELINK: 'लिन्क हटाउनुहोस्'
+    BUTTONINSERTLINK: 'Insert link'
+    BUTTONREMOVELINK: 'Remove link'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'समरेखिन / स्टाईल'
-    CSSCLASSCENTER: 'आँफैमा बिच्मा'
-    CSSCLASSLEFT: 'बाँयामा, टेक्स राप गरियोस्'
+    CSSCLASS: 'Alignment / style'
+    CSSCLASSCENTER: 'Centered, on its own.'
+    CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'दाँयामा, टेक्स राप गरियोस्'
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
-    EMAIL: 'ईमेल ठेगाना  '
-    FILE: फाइल
-    FOLDER: फोल्डर
+    EMAIL: 'Email address'
+    FILE: File
+    FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -258,22 +258,22 @@ ne:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: आयाम
-    IMAGEHEIGHTPX: उचाई
+    IMAGEDIMENSIONS: Dimensions
+    IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: चौडाई
+    IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: 'हाईलाईट गरिएको टेक्समा लिन्क हाल्नुहोस्/मिलाउनुहोस्'
+    LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'लिन्क विवरण'
-    LINKEMAIL: 'ईमेल ठेगाना  '
+    LINKDESCR: 'Link description'
+    LINKEMAIL: 'Email address'
     LINKEXTERNAL: 'अर्को वेबसाईट'
-    LINKFILE: 'फाइल डाउनलोओद गर्नु '
-    LINKINTERNAL: 'साईटको पेज'
-    LINKOPENNEWWIN: 'लिन्क नयाँ विन्डोमा खोल्नुहोस् '
-    LINKTO: 'लिन्क गर्नुस्'
+    LINKFILE: 'Download a file'
+    LINKINTERNAL: 'Page on the site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link to'
     PAGE: पेज
     URL: 'यू.र्.ल् '
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -281,7 +281,7 @@ ne:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'तस्बिर उप्लोओद गर्ने Iफ्रमे'
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -305,38 +305,38 @@ ne:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'पासओड परिवर्तन गर्नुहोस् '
+    BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'भित्र जानुस्'
-    BUTTONLOGINOTHER: 'अरु कोही भएर भित्र जानुस् '
-    BUTTONLOSTPASSWORD: 'मैले मेरो पासओड हराएँ'
-    CONFIRMNEWPASSWORD: 'नयाँ पासओड Confirm गर्नुहोस् '
-    CONFIRMPASSWORD: 'Confirm पासओड'
+    BUTTONLOGINOTHER: 'Log in as someone else'
+    BUTTONLOSTPASSWORD: 'I''ve lost my password'
+    CONFIRMNEWPASSWORD: 'Confirm New Password'
+    CONFIRMPASSWORD: 'Confirm Password'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: इमेल
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'तपाईले तपाईको नयाँ पासओड फरक लेखनुभयो, पुन प्रयास गर्नुहोल'
-    ERRORPASSWORDNOTMATCH: 'पासओडहरु मिल्दैन्नन, कृपया पुन प्रयास गर्नुहोल'
-    ERRORWRONGCRED: 'त्यो सहि ईमेल अथवा पासओड जस्तो देखिदैन् ।  कृपया पुन प्रयास गर्नुहोल ।'
-    FIRSTNAME: 'पहिलो नाम'
-    INTERFACELANG: 'चलाउने भाषा'
+    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
+    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
+    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
+    FIRSTNAME: 'First Name'
+    INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'नयाँ पासओड'
-    PASSWORD: पासओड
+    NEWPASSWORD: 'New Password'
+    PASSWORD: Password
     PLURALNAME: Members
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'अर्को पटक मलाई सम्झनुस् '
+    REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'तपाईंको पासओड परिवतन भएको छ ।'
-    SUBJECTPASSWORDRESET: 'तपाईंको पासओड पुनर्स्थापना लिक'
-    SURNAME: थर
-    VALIDATIONMEMBEREXISTS: 'यो ईमेल भएको प्रयोगकता पहिले देखि छ ।'
+    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
+    SURNAME: Surname
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
+    YOUROLDPASSWORD: 'Your old password'
     belongs_many_many_Groups: Groups
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
@@ -345,7 +345,7 @@ ne:
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'ईमेल &amp; पासओड'
+    TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -416,23 +416,23 @@ ne:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'कृपया मिल्ने फोन नम्बर हाल्नुहोस् '
+    VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'तपाईंसँग भित्र जाने आधिकार छैन । यदि तपाईंसँग अरुकुनै अकाउन्ट छ जस्ले पेज भित्र जान मिल्छ, भने त्यो अकाउन्टले भित्र जानुस् ।       '
-    BUTTONSEND: 'मलाई पासओड पुनर्स्थापना लिक पठाउ'
-    CHANGEPASSWORDBELOW: 'तपाईंले आफ्नो पासओड परिवर्तन गर्न सक्नुहुन्छ तल ।'
-    CHANGEPASSWORDHEADER: 'पासओड परिवर्तन गर्नुहोस्  '
-    ENTERNEWPASSWORD: 'कृपया नयाँ पासओड लेखनुहोस्'
-    ERRORPASSWORDPERMISSION: 'तपाईंले आफ्नो पासओड परिवर्तन गर्न चाहानुहुन्छ भन्ने तपाईं भित्र जानु भएको हुनुपर्छ    ।'
-    LOGGEDOUT: 'तपाईं बहिर निकलिनुभएको छ ।  यदि तपाईं फेरि भित्र जाने हो भन्ने, आफ्नो विवरण तल लेखनुहोस् ।  '
+    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    BUTTONSEND: 'Send me the password reset link'
+    CHANGEPASSWORDBELOW: 'You can change your password below.'
+    CHANGEPASSWORDHEADER: 'Change your password'
+    ENTERNEWPASSWORD: 'Please enter a new password.'
+    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
-    NOTEPAGESECURED: 'त्यो पजे सुरक्षा छ । तपाईंको विवरण लेखनुहोस् अनी हामि तपाईंलाई भित्र पठाउनेछौ । '
+    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'तपाईंको ईमेल ठेगाना लेखनुहोस् र हामि तपाईंलाई पासओड पुनर्स्थापना लिक पठाउनेछौ '
+    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -459,7 +459,7 @@ ne:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'कुनै पनि तस्बिर उप्लोओद गरिएको छैन '
+    NOUPLOAD: 'No Image Uploaded'
   SiteTree:
     TABMAIN: मुख्य
   TableField:
@@ -487,8 +487,8 @@ ne:
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: थोरै
-    MORE: धेरै
+    LESS: less
+    MORE: more
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'

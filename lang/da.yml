@@ -2,14 +2,14 @@ da:
   AssetAdmin:
     NEWFOLDER: 'Ny mappe'
   AssetTableField:
-    CREATED: 'Først uploadet'
-    DIM: Dimensioner
-    FILENAME: Filnavn
+    CREATED: 'First uploaded'
+    DIM: Dimensions
+    FILENAME: Filename
     FOLDER: Folder
-    LASTEDIT: 'Sidst ændret'
-    OWNER: Ejer
-    SIZE: Størrelse
-    TITLE: Titel
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
     TYPE: Type
     URL: 'URL Adresse'
   AssetUploadField:
@@ -65,7 +65,7 @@ da:
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Adgang til alle CMS grænseflader'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Gem
   CMSProfileController:
@@ -80,7 +80,7 @@ da:
     - 'False'
     - 'True'
   ComplexTableField:
-    CLOSEPOPUP: 'Luk popup'
+    CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
@@ -205,7 +205,7 @@ da:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Slet
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -286,12 +286,12 @@ da:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Hjælp
+    HELP: Help
     PAGETYPE: 'Sidetype:'
-    PERMAGAIN: 'Du er blevet logget ud af CMS, hvis du vil logge ind igen, indtast brugernavn og kodeord nedenfor.'
-    PERMALREADY: 'Beklager, men du kan ikke få adgang til denne del af CMS, hvis du vil logge ind som en anden, kan du gøre det nedenfor'
-    PERMDEFAULT: 'Indtast din email adresse og kodeord for at få adgang til CMS systemet'
-    PLEASESAVE: 'Gem siden: Denne side kunne ikke blive opdateret, fordi den endnu ikke er gemt.'
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -376,12 +376,12 @@ da:
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Apply Filter'
-    DELETE: Slet
+    DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Importer fra CSV'
+    IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Tryk p&aring; Gennemse for at v&aelig;lge en CSVfil til importering'
-    NOIMPORT: 'Intet at importere'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
@@ -439,7 +439,7 @@ da:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Rediger tilladelser og IP-adresser for hver gruppe'
+    EDITPERMISSIONS: 'Manage permissions for groups'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Group name'
     IMPORTGROUPS: 'Import groups'
@@ -447,7 +447,7 @@ da:
     MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'Ny gruppe'
+    NEWGROUP: 'New Group'
     PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'

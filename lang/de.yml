@@ -57,9 +57,9 @@ de:
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
-    0: Nein
+    0: 'False'
     ANY: alle
-    1: Ja
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Lade Daten ...'
     REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
@@ -77,8 +77,8 @@ de:
     HELLO: Hi
     PASSWORD: Passwort
   CheckboxField:
-    - Nein
-    - Ja
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
     SUCCESSADD2: '{name} hinzugefügt'
@@ -206,7 +206,7 @@ de:
   GridFieldDetailForm:
     Create: Erstellen
     Delete: Löschen
-    DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
+    DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
     Deleted: 'Gelöscht %s %s'
     Save: Speichern
     Saved: 'Gespeichert %s %s'
