@@ -50,6 +50,8 @@ sk:
     UNORDERED: 'neočíslovaný zoznam'
     UNORDEREDDESCRIPTION: 'neočíslovaný zoznam'
     UNORDEREDEXAMPLE1: 'neočíslovaná položka 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Prosím zadajte používateľské meno a heslo.'
     ERRORNOTADMIN: 'Tento používateľ nie je administrátor.'
@@ -57,9 +59,10 @@ sk:
   Boolean:
     0: Nie
     ANY: Ktorýkoľvek
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Áno
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Pristup do všetkých častí CMS.'
@@ -67,6 +70,12 @@ sk:
     SAVE: Uložiť
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
+    CHANGEPASSWORDTEXT2: 'Teraz môžete použiť nasledujúce prihlasovacie údaje na prihlásenie:'
+    EMAIL: Email
+    HELLO: 'Dobrý deň'
+    PASSWORD: Heslo
   CheckboxField:
     - Nie
     - Áno
@@ -74,6 +83,14 @@ sk:
     CLOSEPOPUP: 'Zatvoriť okno'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Uložené %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Zoradiť vzostupne'
+    SORTDESC: 'Zoradiť zostupne'
+  ComplexTableField_popup.ss:
+    NEXT: Ďalší
+    PREVIOUS: Predchádzajúci
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ sk:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Pridať
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: '(Vyberte si)'
   EmailField:
@@ -124,8 +138,6 @@ sk:
     SINGULARNAME: 'Záznam o odskočených e-mailoch'
   Enum:
     ANY: Každý
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Obsah
     Filename: 'Meno súboru'
@@ -150,13 +162,17 @@ sk:
     FROMFILESTORE: 'Z úložiska súborov'
     NOSOURCE: 'Prosím zvolte zdrojový súbor pre priloženie'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: 'Dobrý deň'
+    TEXT1: 'Tu je váš'
+    TEXT2: 'odkaz na resetovanie hesla'
+    TEXT3: pre
   Form:
     FIELDISREQUIRED: '%s je požadované'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota nie je unikátna'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla sa nezhodujú'
@@ -187,37 +203,26 @@ sk:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Ďalší
-    PREVIOUS: Predchádzajúci
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: 'Dobrý deň'
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Tu je váš'
-    TEXT2: 'odkaz na resetovanie hesla'
-    TEXT3: pre
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Pridať novú úlohu pre túto skupinu'
-    CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
-    CHANGEPASSWORDTEXT2: 'Teraz môžete použiť nasledujúce prihlasovacie údaje na prihlásenie:'
     Code: 'Kód skupiny'
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Autori obsahu'
     Description: Popis
-    EMAIL: Email
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: 'Dobrý deň'
     Locked: 'Zamknuté?'
     NoRoles: 'Nenašli sa žiadne úlohy'
-    PASSWORD: Heslo
     Parent: 'Nadradená skupina'
     RolesAddEditLink: 'Pridať/upraviť úlohy'
     Sort: 'Zoradiť podľa'
-    TITLE: 'Rámec pre nahranie obrázku'
     has_many_Permissions: Právomoci
     many_many_Members: Uživatelia
   GroupImportForm:
@@ -258,7 +263,7 @@ sk:
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Šírka
+    IMAGEWIDTHPX: 'Šírka'
     INSERTMEDIA: 'Insert Media'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
     LINKANCHOR: 'Odkaz na tejto stranke'
@@ -275,10 +280,9 @@ sk:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Obrázok
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Použiť filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Rámec pre nahranie obrázku'
   LeftAndMain:
-    ADD: 'Pridať nový riadok'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ sk:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Emailová adresa'
     IP: 'IP adreasa'
@@ -368,6 +375,7 @@ sk:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Použiť filter'
     DELETE: Vymazať
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importovať z CSV'
@@ -377,6 +385,17 @@ sk:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
@@ -389,10 +408,6 @@ sk:
     CMS_ACCESS_CATEGORY: 'Prístup do CMS'
     FULLADMINRIGHTS: 'Plné administrátorské práva'
     FULLADMINRIGHTS_HELP: 'Ma prednosť pred všetkými ostatnými prideleniami a právomocami.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ sk:
   Permissions:
     PERMISSIONS_CATEGORY: 'Úlohy a prístupové práva'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Prosím zadajte platné telefónne číslo'
+  RelationComplexTableField.ss:
+    ADD: Pridať
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'K tejto stránke nemáte prístup. Ak máte iný účet, ktorý k nej má prístup, môžete sa <a href="%s">prihlásiť</a>.'
     BUTTONSEND: 'Pošlite mi odkaz na resetovanie hesla'
@@ -439,31 +457,33 @@ sk:
     BtnImport: Importovať
     FileFieldLabel: 'CSV súbor <small>(Povoléné koncovki súborov: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Nebol nahraný žiaden obrázok'
+  SiteTree:
+    TABMAIN: Hlavné
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Pridať nový riadok'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Exportovať do CSV'
+    PRINT: Vytlačiť
+    Print: Print
+    SELECT: 'Vyberte:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Zoradiť vzostupne'
+    SORTDESC: 'Zoradiť zostupne'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Zobraziť prvé'
     VIEWLAST: 'Zobraziť posledné'
     VIEWNEXT: 'Zobraziť nasledujúce'
     VIEWPREVIOUS: 'Zobraziť predchádzajúce'
-  SimpleImageField:
-    NOUPLOAD: 'Nebol nahraný žiaden obrázok'
-  SiteTree:
-    TABMAIN: Hlavné
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Zoradiť vzostupne'
-    SORTDESC: 'Zoradiť zostupne'
-  TableListField:
-    CSVEXPORT: 'Exportovať do CSV'
-    PRINT: Vytlačiť
-    Print: Print
-    SELECT: 'Vyberte:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

@@ -2,17 +2,13 @@
 
 ## Overview
 
-This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that
-you have completed the earlier tutorials, especially the tutorial on forms, before attempting this tutorial. While this
-tutorial will add search functionality to the site built in the previous tutorials, it should be straight forward to
-follow this tutorial on any site of your own. 
+This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that you have completed the earlier tutorials  ([Building a basic site](1-building-a-basic-site), [Extending a basic site](2-extending-a-basic-site), [Forms](3-forms)), especially the tutorial on forms, before attempting this tutorial. While this tutorial will add search functionality to the site built in the previous tutorials, it should be straight  forward to follow this tutorial on any site of your own. 
 
 ## What are we working towards?
 
-We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a
-results page.
+We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a results page.
 
-![](_images/tutorial4_search.png)
+![](_images/tutorial4_search.jpg)
 
 ## Creating the search form
 
@@ -22,20 +18,18 @@ This will enable fulltext search on page content as well as names of all files i
 	:::php
 	FulltextSearchable::enable();
 
-After including that in your `_config.php` you will need to rebuild the database by visiting `http://yoursite.com/dev/build` in your web browser. This will add the fulltext search columns.
+After including that in your `_config.php` you will need to rebuild the database by visiting [http://localhost/your_site_name/home?flush=all](http://localhost/your_site_name/home?flush=all) in your web browser (replace localhost/your_site_name with a domain if applicable). This will add fulltext search columns.
 
-The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your
-`_config.php` you can add your form as `$SearchForm`.
+The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your `_config.php` you can add your form as `$SearchForm`.
 
 In the simple theme, the SearchForm is already added to the header. We will go through the code and explain it.
 
 
 ## Adding the search form
 
-To add the search form, we can add `$SearchForm` anywhere in our templates. In the simple theme, this is in
-*themes/simple/templates/Includes/Header.ss*
+To add the search form, we can add `$SearchForm` anywhere in our templates. In the simple theme, this is in *themes/simple/templates/Includes/Header.ss*
 
-*themes/simple/templates/Includes/Header.ss*
+**themes/simple/templates/Includes/Header.ss**
 
 	:::ss
 	...
@@ -43,21 +37,20 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 		<span class="search-dropdown-icon">L</span>
 		<div class="search-bar">
 			$SearchForm
-			<span class="search-bubble-arrow">}</span>
 		</div>      
 	<% end_if %>
 	<% include Navigation %>
 
-This results in:
+This displays as:
 
-![](_images/tutorial4_searchbox.png)
+![](_images/tutorial4_searchbox.jpg)
 
 ## Showing the results
 
 The results function is already included in the `ContentControllerSearchExtension` which
 is applied via `FulltextSearchable::enable()`
 
-*cms/code/search/ContentControllerSearchExtension.php*
+**cms/code/search/ContentControllerSearchExtension.php**
 
 	:::php
 	class ContentControllerSearchExtension extends Extension {
@@ -74,11 +67,9 @@ is applied via `FulltextSearchable::enable()`
 	}
 
 
-The code populates an array with the data we wish to pass to the template - the search results, query and title of the
-page. The final line is a little more complicated.
+The code populates an array with the data we wish to pass to the template - the search results, query and title of the page. The final line is a little more complicated.
 
-When we call a function by its url (eg http://localhost/home/results), SilverStripe will look for a template with the
-name `PageType_function.ss`. As we are implementing the *results* function on the *Page* page type, we create our
+When we call a function by its url (eg http://localhost/home/results), SilverStripe will look for a template with the name `PageType_function.ss`. As we are implementing the *results* function on the *Page* page type, we create our
 results page template as *Page_results.ss*. Unfortunately this doesn't work when we are using page types that are
 children of the *Page* page type. For example, if someone used the search on the homepage, it would be rendered with
 *Homepage.ss* rather than *Page_results.ss*. SilverStripe always looks for the template from the most specific page type
@@ -155,14 +146,13 @@ class.
 	    <% end_if %>
 	</div>
 
-Then finally add ?flush=1 to the URL and you should see the new template.
+Then finally add ?flush=all to the URL and you should see the new template.
 
 
-![](_images/tutorial4_search.png)
+![](_images/tutorial4_search.jpg)
 
 ## Summary
 
-This tutorial has demonstrated how easy it is to have full text searching on your site. To add search to a SilverStripe
-site, only a search form and a results page need to be created.
+This tutorial has demonstrated how easy it is to have full text searching on your site. To add search to a SilverStripe site add a search form, a results page, and you're done!
 
 [Next Tutorial >>](5-dataobject-relationship-management)

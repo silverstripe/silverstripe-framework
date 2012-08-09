@@ -135,9 +135,9 @@ To add our new fields to the CMS we have to override the *getCMSFields()* method
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$datefield = new DateField('Date');
-			$datefield->setConfig('showcalendar', true);
-			$fields->addFieldToTab('Root.Main', $datefield, 'Content');
+			$dateField = new DateField('Date');
+			$dateField->setConfig('showcalendar', true);
+			$fields->addFieldToTab('Root.Main', $dateField, 'Content');
 			$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
 			
 			return $fields;
@@ -202,18 +202,17 @@ the date field will have the date format defined by your locale.
 		$fields = parent::getCMSFields();
 		
 		$fields->addFieldToTab('Root.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
-		$dateField->setConfig('showcalendar', true);
-		$dateField->setConfig('dateformat', 'dd/MM/YYYY');
-		
-		$fields->addFieldToTab('Root.Main', new TextField('Author','Author Name'), 'Content');
-		
+        $dateField->setConfig('showcalendar', true);
+        $fields->addFieldToTab('Root.Main', $dateField, 'Content');
+        $fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
+
 		return $fields;
 	}
 
 Let's walk through these changes.
 
 	:::php
-	$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+	$fields->addFieldToTab('Root.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 
 *$dateField* is declared only to in order to change the configuration of the DateField.
 
@@ -228,7 +227,7 @@ By enabling *showCalendar* you show a calendar overlay when clicking on the fiel
 *dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the `[api:DateField]` documentation for more configuration options.
 
 	:::php
-	$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
+	$fields->addFieldToTab('Root.Main', new TextField('Author','Author Name'), 'Content');
 
 By default the field name *'Date'* or *'Author'* is shown as the title, however this might not be that helpful so to change the title, add the new title as the second argument.
 
@@ -237,7 +236,7 @@ By default the field name *'Date'* or *'Author'* is shown as the title, however 
 
 Because our new pages inherit their templates from *Page*, we can view anything entered in the content area when navigating to these pages on our site. However, as there is no reference to the date or author fields in the *Page* template this data is not being displayed.
 
-To fix this we will create a template for each of our new page types. We'll put these in *themes/tutorial/templates/Layout* so we only have to define the page specific parts: SilverStripe will use *themes/tutorial/templates/Page.ss* for the basic
+To fix this we will create a template for each of our new page types. We'll put these in *themes/simple/templates/Layout* so we only have to define the page specific parts: SilverStripe will use *themes/simple/templates/Page.ss* for the basic
 page layout.
 
 ### ArticlePage Template
@@ -309,7 +308,7 @@ We can make our templates more modular and easier to maintain by separating comm
 
 We'll separate the display of linked articles as we want to reuse this code later on.
 
-Cut the code in *ArticleHolder.ss** and replace it with an include statement:
+Cut the code between "loop Children" in *ArticleHolder.ss** and replace it with an include statement:
 
 **themes/simple/templates/Layout/ArticleHolder.ss**
 
@@ -367,11 +366,11 @@ It would be nice to greet page visitors with a summary of the latest news when t
 
 This function simply runs a database query that gets the latest news articles from the database. By default, this is five, but you can change it by passing a number to the function. See the [Data Model](../topics/datamodel) documentation for details. We can reference this function as a page control in our *HomePage* template:
 
-**themes/tutorial/templates/Layout/Homepage.ss**
+**themes/simple/templates/Layout/Homepage.ss**
 
 	:::ss
 	...
-	<div class="content">$Content</div>
+		<div class="content">$Content</div>
 	</article>
 	<% loop LatestNews %>
 		<% include ArticleTeaser %>
@@ -515,7 +514,7 @@ resize the image every time the page is viewed.
 
 The *StaffPage* template is also very straight forward.
 
-**themes/tutorial/templates/Layout/StaffPage.ss**
+**themes/simple/templates/Layout/StaffPage.ss**
 
 	:::ss
 	<div class="content-container"> 

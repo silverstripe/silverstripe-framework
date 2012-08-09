@@ -50,6 +50,8 @@ is:
     UNORDERED: 'Óraðaður listi'
     UNORDEREDDESCRIPTION: 'Óraðaður listi'
     UNORDEREDEXAMPLE1: 'Óraðaður hlutur 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
     ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
@@ -57,9 +59,10 @@ is:
   Boolean:
     0: Nei
     ANY: Einhver
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Já
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -67,6 +70,12 @@ is:
     SAVE: Vista
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
+    CHANGEPASSWORDTEXT2: 'Þú getur núna notað eftirfarandi auðkenni til að innskrá þig:'
+    EMAIL: Tölvupóstur
+    HELLO: Hæ
+    PASSWORD: Lykilorð
   CheckboxField:
     - Nei
     - Já
@@ -74,6 +83,14 @@ is:
     CLOSEPOPUP: 'Loka glugga'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Vitað %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Raða í hækkandi röð'
+    SORTDESC: 'Raða í lækkandi röð'
+  ComplexTableField_popup.ss:
+    NEXT: Næsta
+    PREVIOUS: Fyrri
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ is:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: 'Bæta við'
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Veldu)
   EmailField:
@@ -124,8 +138,6 @@ is:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Einhver
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Efni
     Filename: Skráarnafn
@@ -150,13 +162,17 @@ is:
     FROMFILESTORE: 'Frá skrárgeymslu'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  ForgotPasswordEmail.ss:
+    HELLO: Hæ
+    TEXT1: 'Hérna er þitt'
+    TEXT2: 'endursetja lykilorð'
+    TEXT3: fyrir
   Form:
     FIELDISREQUIRED: '%s er krafist'
-    TITLE: 'Image Uploading Iframe'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Gildið sem þú slóst inn er ekki einkvæmt'
     VALIDATIONPASSWORDSDONTMATCH: 'Lykilorðin stemma ekki'
@@ -187,37 +203,26 @@ is:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Næsta
-    PREVIOUS: Fyrri
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Hæ
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Hérna er þitt'
-    TEXT2: 'endursetja lykilorð'
-    TEXT3: fyrir
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
-    CHANGEPASSWORDTEXT2: 'Þú getur núna notað eftirfarandi auðkenni til að innskrá þig:'
     Code: 'Hóp kóði'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Lýsing
-    EMAIL: Tölvupóstur
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Hæ
     Locked: 'Læst?'
     NoRoles: 'No roles found'
-    PASSWORD: Lykilorð
     Parent: 'Yfir hópur'
     RolesAddEditLink: 'Manage roles'
     Sort: Röðun
-    TITLE: 'Image Uploading Iframe'
     has_many_Permissions: Leyfi
     many_many_Members: Félagar
   GroupImportForm:
@@ -275,10 +280,9 @@ is:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Mynd
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    ADD: 'Bæta við nýrri röð'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -292,6 +296,9 @@ is:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: Tölvupóstfang
     IP: 'IP tala'
@@ -368,6 +375,7 @@ is:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -377,6 +385,17 @@ is:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Reikningur
     FIELDLABELCURRENCY: Gjaldmiðill
@@ -389,10 +408,6 @@ is:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full stjórnanda réttindi'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ is:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
+  RelationComplexTableField.ss:
+    ADD: 'Bæta við'
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
     BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
@@ -439,31 +457,33 @@ is:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
+  SimpleImageField:
+    NOUPLOAD: 'Engin mynd sótt'
+  SiteTree:
+    TABMAIN: Aðal
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Bæta við nýrri röð'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Flytja út í CSV'
+    PRINT: Prenta
+    Print: Print
+    SELECT: 'Veldu:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Sýna first'
     VIEWLAST: 'Sýna síðast'
     VIEWNEXT: 'Sýna næsta'
     VIEWPREVIOUS: 'Sýna fyrri'
-  SimpleImageField:
-    NOUPLOAD: 'Engin mynd sótt'
-  SiteTree:
-    TABMAIN: Aðal
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
-  TableListField:
-    CSVEXPORT: 'Flytja út í CSV'
-    PRINT: Prenta
-    Print: Print
-    SELECT: 'Veldu:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

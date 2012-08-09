@@ -46,6 +46,7 @@ changes
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
 * We will attribute the change to you whereever possible (git does this automatically for pull requests)
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+* When working with the CMS, please read the ["CMS Architecture Guide"](/reference/cms-architecture) first
 
 The core team is responsible for reviewing patches and deciding if they will make it into core.  If
 there are any problems they will follow up with you, so please ensure they have a way to contact you! 
@@ -101,7 +102,7 @@ Example: Bad commit message
 
 Example: Good commit message
 
-	ENHANCEMENT Formatting through prepValueForDB() 
+	BUG Formatting through prepValueForDB() 
 
 	Added prepValueForDB() which is called on DBField->writeToManipulation() 
 	to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).

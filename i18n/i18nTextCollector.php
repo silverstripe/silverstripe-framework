@@ -326,7 +326,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * @uses i18nEntityProvider
 	 */
-	function collectFromEntityProviders($filePath) {
+	function collectFromEntityProviders($filePath, $module) {
 		$entities = array();
 		
 		$classes = ClassInfo::classes_for_file($filePath);
@@ -334,7 +334,7 @@ class i18nTextCollector extends Object {
 			// Not all classes can be instanciated without mandatory arguments,
 			// so entity collection doesn't work for all SilverStripe classes currently
 			// Requires PHP 5.1+
-			if(class_exists($class, false) && in_array('i18nEntityProvider', class_implements($class))) {
+			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
 				$reflectionClass = new ReflectionClass($class);
 				if($reflectionClass->isAbstract()) continue;
 

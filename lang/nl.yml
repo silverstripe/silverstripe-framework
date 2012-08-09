@@ -50,6 +50,8 @@ nl:
     UNORDERED: 'Ongesorteerde lijst'
     UNORDEREDDESCRIPTION: 'Ongesorteerde lijst'
     UNORDEREDEXAMPLE1: 'ongesorteerd item 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Voer een gebruikers naam en wachtwoord in.'
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
@@ -57,9 +59,10 @@ nl:
   Boolean:
     0: Nee
     ANY: Elke
-    Hello: Hi
-    LOGOUT: 'Log out'
     1: Ja
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Toegang tot alle CMS onderdelen'
@@ -67,6 +70,12 @@ nl:
     SAVE: Bewaar
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
+    CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
+    EMAIL: E-mail
+    HELLO: Hallo
+    PASSWORD: Wachtwoord
   CheckboxField:
     - Nee
     - Ja
@@ -74,6 +83,14 @@ nl:
     CLOSEPOPUP: 'Sluit Popup'
     SUCCESSADD2: 'Toegevoegd {name}'
     SUCCESSEDIT: '%s %s %s Opgeslagen'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sorteer oplopend'
+    SORTDESC: 'Sorteer aflopend'
+  ComplexTableField_popup.ss:
+    NEXT: Volgende
+    PREVIOUS: Vorige
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -111,10 +128,7 @@ nl:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
-    ADD: Toevoegen
-    CSVEXPORT: 'Export to CSV'
     INVALID_REQUEST: 'Invalid request'
-    NOTFOUND: 'No items found'
   DropdownField:
     CHOOSE: (Kies)
   EmailField:
@@ -124,8 +138,6 @@ nl:
     SINGULARNAME: 'Onbezorgbare email'
   Enum:
     ANY: Elke
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   File:
     Content: Inhoud
     Filename: 'Bestandsnaam '
@@ -150,13 +162,17 @@ nl:
     FROMFILESTORE: 'Vanaf de website''s bestandsopslag'
     NOSOURCE: 'Selecteer een bron bestand om toe te voegen'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Afbeelding uploaden'
   Filesystem:
-    IMPORT_TAB_HEADER: Importeer
-    SEARCHLISTINGS: Zoeken
     SYNCRESULTS: 'Synchroniseren compleet: {createdcount} bestanden aangemaakt, {deletedcount} bestanden verwijderd.'
+  ForgotPasswordEmail.ss:
+    HELLO: Hallo
+    TEXT1: 'Hier is uw'
+    TEXT2: 'wachtwoord reset link'
+    TEXT3: voor
   Form:
     FIELDISREQUIRED: '%s is verplicht'
-    TITLE: 'Afbeelding uploaden'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'De ingevoerde waarde is niet uniek'
     VALIDATIONPASSWORDSDONTMATCH: 'Wachtwoorden komen niet overeen'
@@ -187,37 +203,26 @@ nl:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
-    NEXT: Volgende
-    PREVIOUS: Vorige
   GridFieldDetailForm:
     Create: Create
     Delete: Verwijder
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Hallo
     Save: Opslaan
     Saved: '%s %s %s Opgeslagen'
-    TEXT1: 'Hier is uw'
-    TEXT2: 'wachtwoord reset link'
-    TEXT3: voor
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Voeg een rol toe aan deze groep'
-    CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
-    CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
     Code: 'Groep code'
     DefaultGroupTitleAdministrators: Beheerders
     DefaultGroupTitleContentAuthors: 'Inhoud Auteurs'
     Description: 'Omschrijving '
-    EMAIL: E-mail
     GroupReminder: 'Als je de bovenliggende groep selecteert, neemt deze groep alle rollen over'
-    HELLO: Hallo
     Locked: 'Gesloten?'
     NoRoles: 'Geen rollen gevonden'
-    PASSWORD: Wachtwoord
     Parent: 'Bovenliggende groep'
     RolesAddEditLink: 'Toevoegen/wijzigingen rollen'
     Sort: Sorteer-richting
-    TITLE: 'Afbeelding uploaden'
     has_many_Permissions: Rechten
     many_many_Members: Lid
   GroupImportForm:
@@ -275,10 +280,9 @@ nl:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Afbeelding
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Filter toepassen"  GridFieldItemEditView.ss:    Go back: "Ga terug"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss:
+    TITLE: 'Afbeelding uploaden'
   LeftAndMain:
-    ADD: 'Nieuwe rij toevoegen'
-    ADDITEM: 'Add %s'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Acties
@@ -292,6 +296,9 @@ nl:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: onbekend
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email adres '
     IP: 'IP Adres'
@@ -368,6 +375,7 @@ nl:
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
+    'APPLY FILTER': 'Filter toepassen'
     DELETE: Verwijderen
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importeren vanuit CSV'
@@ -377,6 +385,17 @@ nl:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Importeer
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Importeer
+    SEARCHLISTINGS: Zoeken
   MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Valuta
@@ -389,10 +408,6 @@ nl:
     CMS_ACCESS_CATEGORY: 'CMS Toegang'
     FULLADMINRIGHTS: 'Volledige admin rechten'
     FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -401,8 +416,11 @@ nl:
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen en toegangsrechten'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Voer een geldig telefoonnummer in'
+  RelationComplexTableField.ss:
+    ADD: Toevoegen
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier <a href="%s">opnieuw inloggen</a>.'
     BUTTONSEND: 'Zend mij de link om mijn wachtwoord opnieuw aan te maken'
@@ -439,31 +457,33 @@ nl:
     BtnImport: Importeer
     FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
   SilverStripeNavigator:
-    DISPLAYING: Displaying
     Edit: Bewerken
-    FILTER: Filter
-    IMPORT: Importeer
+  SimpleImageField:
+    NOUPLOAD: 'Geen afbeeldingen ontvangen'
+  SiteTree:
+    TABMAIN: Hoofdgedeelte
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+  TableField.ss:
+    ADD: 'Nieuwe rij toevoegen'
+    ADDITEM: 'Add %s'
+  TableListField:
+    CSVEXPORT: 'Exporteer naar CSV'
+    PRINT: Afdrukken
+    Print: Print
+    SELECT: 'Selecteer:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sorteer in oplopende volgorde'
+    SORTDESC: 'Sorteer in aflopende volgorde'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
     OF: of
     TO: to
     VIEWFIRST: 'Bekijk eerste'
     VIEWLAST: 'Bekijk laatste'
     VIEWNEXT: 'Bekijk volgende'
     VIEWPREVIOUS: 'Bekijk vorige'
-  SimpleImageField:
-    NOUPLOAD: 'Geen afbeeldingen ontvangen'
-  SiteTree:
-    TABMAIN: Hoofdgedeelte
-  TableField:
-    ADDITEM: 'Add %s'
-    ISREQUIRED: 'In %s ''%s'' is required'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sorteer in oplopende volgorde'
-    SORTDESC: 'Sorteer in aflopende volgorde'
-  TableListField:
-    CSVEXPORT: 'Exporteer naar CSV'
-    PRINT: Afdrukken
-    Print: Print
-    SELECT: 'Selecteer:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
