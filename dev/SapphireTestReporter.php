@@ -1,6 +1,6 @@
 <?php
-require_once 'PHPUnit/Framework/TestResult.php';
-require_once 'PHPUnit/Framework/TestListener.php';
+if(!class_exists('PHPUnit_Framework_TestResult', false)) require_once 'PHPUnit/Framework/TestResult.php';
+if(!class_exists('PHPUnit_Framework_TestListener', false)) require_once 'PHPUnit/Framework/TestListener.php';
 
 /**#@+
  * @var int
