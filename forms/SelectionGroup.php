@@ -37,6 +37,8 @@ class SelectionGroup extends CompositeField {
 
 		$count = 0;
 		$firstSelected = $checked ="";
+		$newItems = array();
+		
 		foreach($items as $key => $item) {
 			if(strpos($key,'//') !== false) {
 				list($key,$title) = explode('//', $key,2);
