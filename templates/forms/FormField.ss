@@ -5,5 +5,5 @@
 		$Value
 	</span>
 <% else %>
-	<input $AttributesHTML>
+	<input $AttributesHTML />
 <% end_if %>
