@@ -2,14 +2,14 @@ eo:
   AssetAdmin:
     NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
+    CREATED: 'Unue alŝutita'
+    DIM: Dimensioj
+    FILENAME: 'Nomo de dosiero'
     FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
+    LASTEDIT: 'Laste ŝanĝita'
+    OWNER: Posedanto
+    SIZE: Grando
+    TITLE: Titolo
     TYPE: Tipo
     URL: URL
   AssetUploadField:
@@ -19,138 +19,138 @@ eo:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Dosieroj
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: Alignment
-    ALIGNEMENTEXAMPLE: 'right aligned'
-    BOLD: 'Bold Text'
-    BOLDEXAMPLE: Bold
-    CODE: 'Code Block'
-    CODEDESCRIPTION: 'Unformatted code block'
-    CODEEXAMPLE: 'Code block'
-    COLORED: 'Colored text'
-    COLOREDEXAMPLE: 'blue text'
-    EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
+    ALIGNEMENT: Ĝisrandigo
+    ALIGNEMENTEXAMPLE: 'ĝisrandigita dekstren'
+    BOLD: 'Grasa Teksto'
+    BOLDEXAMPLE: Grasa
+    CODE: 'Koda Bloko'
+    CODEDESCRIPTION: 'Neformatita koda bloko'
+    CODEEXAMPLE: 'Koda bloko'
+    COLORED: 'Kolora teksto'
+    COLOREDEXAMPLE: 'blua teksto'
+    EMAILLINK: 'Retpoŝta ligilo'
+    EMAILLINKDESCRIPTION: 'Krei ligilon al retpoŝta adreso'
     IMAGE: Bildo
-    IMAGEDESCRIPTION: 'Show an image in your post'
-    ITALIC: 'Italic Text'
-    ITALICEXAMPLE: Italics
-    LINK: 'Website link'
-    LINKDESCRIPTION: 'Link to another website or URL'
-    STRUCK: 'Struck-out Text'
-    STRUCKEXAMPLE: Struck-out
-    UNDERLINE: 'Underlined Text'
-    UNDERLINEEXAMPLE: Underlined
-    UNORDERED: 'Unordered list'
-    UNORDEREDDESCRIPTION: 'Unordered list'
-    UNORDEREDEXAMPLE1: 'unordered item 1'
+    IMAGEDESCRIPTION: 'Vidigi bildon en via mesaĝo'
+    ITALIC: 'Kursiva Teksto'
+    ITALICEXAMPLE: Kursiva
+    LINK: 'Ligilo al retejo'
+    LINKDESCRIPTION: 'Ligilo al alia retejo aŭ URL'
+    STRUCK: 'Trastrekita Teksto'
+    STRUCKEXAMPLE: Trastreka
+    UNDERLINE: 'Substrekita Teksto'
+    UNDERLINEEXAMPLE: Substrekita
+    UNORDERED: 'Neordigita listo'
+    UNORDEREDDESCRIPTION: 'Neordigita listo'
+    UNORDEREDEXAMPLE1: 'neordigita ero 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Please enter a username and password.'
-    ERRORNOTADMIN: 'That user is not an administrator.'
-    ERRORNOTREC: 'That username / password isn''t recognised'
+    ENTERINFO: 'bonvolu enigi salutnomon kaj pasvorton.'
+    ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
+    ERRORNOTREC: 'Kiuj salutnomo / pasvorto ne estas rekonebla'
   Boolean:
-    0: 'False'
+    0: Ne
     ANY: Ajna
-    1: 'True'
+    1: Jes
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Konservi
+    ACCESSALLINTERFACES: 'Aliro al ĉiuj interfacoj de CMS'
+    ACCESSALLINTERFACESHELP: 'Nuligas pli specifajn alirajn agordojn.'
+    SAVE: Save
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
+    CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
     EMAIL: Retpoŝto
-    HELLO: Hi
+    HELLO: Saluton
     PASSWORD: Pasvorto
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Ne
+    - Jes
   ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
+    CLOSEPOPUP: 'Fermi Ŝprucfenestron'
     SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: 'Saved %s %s %s'
+    SUCCESSEDIT: 'Konservita %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Almeti je %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Ordigi kreske'
+    SORTDESC: 'Ordigi malkreske'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Sekva
+    PREVIOUS: Antaŭa
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   CreditCardField:
-    FIRST: first
-    FOURTH: fourth
-    SECOND: second
-    THIRD: third
+    FIRST: unuan
+    FOURTH: kvaran
+    SECOND: duan
+    THIRD: trian
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME: 'Datumaj Objektoj'
+    SINGULARNAME: 'Datuma Objekto'
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
-    MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    DAY: tago
+    DAYS: tagoj
+    HOUR: horo
+    HOURS: horoj
+    MIN: min
+    MINS: minutoj
+    MONTH: monato
+    MONTHS: monatoj
+    SEC: sek
+    SECS: sekundoj
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: jaro
+    YEARS: jaroj
   DateField:
-    NOTSET: 'not set'
-    TODAY: today
+    NOTSET: 'ne agordita'
+    TODAY: hodiaŭ
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Choose)
+    CHOOSE: (Elekti)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
-    PLURALNAME: 'Email Bounce Records'
-    SINGULARNAME: 'Email Bounce Record'
+    PLURALNAME: 'Registroj de neliveritaj mesaĝoj'
+    SINGULARNAME: 'Registro de neliverita mesaĝo'
   Enum:
     ANY: Ajna
   File:
     Content: Enhavo
-    Filename: Filename
+    Filename: Dosiernomo
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    NOFILESIZE: 'Filesize is zero bytes.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Name
-    PLURALNAME: Files
-    SINGULARNAME: File
+    NOFILESIZE: 'Dosiero havas nul bajtojn'
+    NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
+    Name: Nomo
+    PLURALNAME: Dosieroj
+    SINGULARNAME: Dosiero
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
-    Title: Title
+    Title: Titolo
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -158,30 +158,30 @@ eo:
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: Dosiero
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
+    FROMCOMPUTER: 'El via komputilo'
+    FROMFILESTORE: 'El la dosiera konservejo'
+    NOSOURCE: 'Bonvolu elekti fontan dosieron por alkroĉi'
     REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: Saluton
+    TEXT1: 'Jen via'
+    TEXT2: 'pasvorta reagorda ligilo'
+    TEXT3: por
   Form:
-    FIELDISREQUIRED: '%s is required'
+    FIELDISREQUIRED: '%s estas postulita'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
+    VALIDATIONNOTUNIQUE: 'La enirita valoron ne unika'
+    VALIDATIONPASSWORDSDONTMATCH: 'Pasvortoj ne matĉas'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Pasvortoj ne povas est malplena'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validator
+    VALIDATOR: Validigilo
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE: none
+    NONE: neniu
   GridAction:
     DELETE_DESCRIPTION: Delete
     Delete: Delete
@@ -205,7 +205,7 @@ eo:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Forigi
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -213,85 +213,85 @@ eo:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Group Code'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Description
+    Code: 'Grupa Kodo'
+    DefaultGroupTitleAdministrators: Administrantoj
+    DefaultGroupTitleContentAuthors: Enhavaŭtoroj
+    Description: Priskribo
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
+    Locked: 'Ŝlosita?'
     NoRoles: 'No roles found'
-    Parent: 'Parent Group'
-    RolesAddEditLink: 'Manage roles'
-    Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    Parent: 'Patra Grupo'
+    RolesAddEditLink: 'Aldoni/redakti rolojn'
+    Sort: 'Ordiga Ordo'
+    has_many_Permissions: Permesoj
+    many_many_Members: Membroj
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help1: '<p>Importi unu aŭ pliaj grupojn en formato <em>CSV</em> (perkome disigitaj valoroj values). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
+    Help2: '<div class="advanced"><h4>Spertula uzado</h4><ul><li>Permesitaj kolumnoj: <em>%s</em></li><li>Ekzistantaj grupoj estas kongrueblaj laŭ ili unika <em>Koda</em> valoro, kaj aktualigeblaj per eventualaj novaj valoroj el la importita dosiero</li><li>Grupaj hierarkioj estas kreeblaj per kolumno <em>PatroKodo</em>.</li><li>Permkodoj estas agordeblaj per kolumno <em>PermisKodo</em>. Ekzistantaj permiskodoj ne vakiĝos.</li></ul></div>'
     ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    ResultDeleted: 'Forigis %d grupojn'
+    ResultUpdated: 'Aktualigis %d grupojn'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    ANCHORVALUE: Anchor
+    ANCHORVALUE: Ankri
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Insert link'
-    BUTTONREMOVELINK: 'Remove link'
+    BUTTONINSERTLINK: 'Almeti ligilon'
+    BUTTONREMOVELINK: 'Forigi ligilon'
     BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    CAPTIONTEXT: 'Titola teksto'
+    CSSCLASS: 'Ĝisrandigo / stilo'
+    CSSCLASSCENTER: 'Centrita, sola.'
+    CSSCLASSLEFT: 'Maldekstre, kaj teksto ĉirkaŭfluas.'
+    CSSCLASSLEFTALONE: 'Maldekstre sole'
+    CSSCLASSRIGHT: 'Dekstre, kaj teksto ĉirkaŭfluas.'
     DETAILS: Details
-    EMAIL: 'Email address'
-    FILE: File
-    FOLDER: Folder
+    EMAIL: 'Retpoŝta adreso'
+    FILE: Dosiero
+    FOLDER: Dosierujo
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidigi ĝin se ne eblas vidigi bildon'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGEDIMENSIONS: Dimensioj
+    IMAGEHEIGHTPX: Alto
+    IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
+    IMAGEWIDTHPX: Larĝo
     INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert Link'
-    LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
+    LINK: Ligilo
+    LINKANCHOR: 'Ankri al ĉi tiu paĝo'
+    LINKDESCR: 'Ligila priskribo'
+    LINKEMAIL: 'Retpoŝta adreso'
     LINKEXTERNAL: 'Alia retejo'
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link to'
+    LINKFILE: 'Elŝuti dosieron'
+    LINKINTERNAL: 'Paĝo en la retejo'
+    LINKOPENNEWWIN: 'Malfermi ligilon en nova fenestro?'
+    LINKTO: 'Ligilo al'
     PAGE: Paĝo
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: Image
+    IMAGE: Bildo
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe por alŝuti bildon'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Help
+    HELP: Helpo
     PAGETYPE: 'Tipo de paĝo:'
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
+    PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas saluti kiel iu alia, tiel faru sube'
+    PERMDEFAULT: 'Enigi vian retadreson kaj pasvorton por aliri al la CMS.'
+    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -300,52 +300,52 @@ eo:
     Hello: Hi
     LOGOUT: 'Log out'
   LoginAttempt:
-    Email: 'Email Address'
-    IP: 'IP Address'
-    Status: Status
+    Email: Retadreso
+    IP: IP-Adreso
+    Status: Stato
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Change Password'
+    BUTTONCHANGEPASSWORD: 'Ŝanĝi Pasvorton'
     BUTTONLOGIN: Ensaluti
-    BUTTONLOGINOTHER: 'Log in as someone else'
-    BUTTONLOSTPASSWORD: 'I''ve lost my password'
-    CONFIRMNEWPASSWORD: 'Confirm New Password'
-    CONFIRMPASSWORD: 'Confirm Password'
-    DefaultAdminFirstname: 'Default Admin'
+    BUTTONLOGINOTHER: 'Ensaluti kiel alia homo'
+    BUTTONLOSTPASSWORD: 'Mi perdis mian pasvorton'
+    CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
+    CONFIRMPASSWORD: 'Konfirmu pasvorton'
+    DefaultAdminFirstname: 'Defaŭlta Administranto'
     DefaultDateTime: default
     EMAIL: Retpoŝto
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
-    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
-    ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
-    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: 'First Name'
-    INTERFACELANG: 'Interface Language'
+    ENTEREMAIL: 'Bonvolu enigi retadreson por atingi ligilon por reagordi pasvorton.'
+    ERRORLOCKEDOUT: 'Provizore malvalidigis vian konton ĉar okazis tro da provoj ensaluti. Bonvole provu denove post 20 minutoj.'
+    ERRORNEWPASSWORD: 'Via ricev enirita vian novan pasvorton malsame, prov denove'
+    ERRORPASSWORDNOTMATCH: 'Via aktuala pasvorto ne matĉo, bonvolu prov denove'
+    ERRORWRONGCRED: 'Tiu ŝajne ne estas la ĝusta retpoŝta adreso aŭ pasvorto. Bonvolu provi denove.'
+    FIRSTNAME: Antaŭnomo
+    INTERFACELANG: 'Interfaca Lingvo'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'New Password'
-    PASSWORD: Password
-    PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'Remember me next time?'
-    SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
-    SUBJECTPASSWORDRESET: 'Your password reset link'
-    SURNAME: Surname
-    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
+    NEWPASSWORD: 'Novan pasvorton'
+    PASSWORD: Pasvorto
+    PLURALNAME: Membroj
+    PROFILESAVESUCCESS: 'Sukcese konservis.'
+    REMEMBERME: 'Memoru min je la sekva fojo?'
+    SINGULARNAME: Membro
+    SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
+    SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
+    SURNAME: 'Familia nomo'
+    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: Groups
-    db_LastVisited: 'Last Visited Date'
-    db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Locked out until'
-    db_NumVisit: 'Number of Visits'
-    db_Password: Password
-    db_PasswordExpiry: 'Password Expiry Date'
+    YOUROLDPASSWORD: 'Vian malnovan pasvorton'
+    belongs_many_many_Groups: Grupoj
+    db_LastVisited: 'Dato de Lasta Vizito'
+    db_Locale: 'Interfaca Lokaĵaro'
+    db_LockedOutUntil: 'Elŝlosita ĝis'
+    db_NumVisit: 'Nombro da Vizitoj'
+    db_Password: Pasvorto
+    db_PasswordExpiry: 'Pasvorta Limdato'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE: 'Retpoŝto &amp; Pasvorto'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -367,21 +367,21 @@ eo:
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help1: '<p>Gravaj membroj en <em>CSV-formato</em> (perkome disigitaj valoroj ). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
+    Help2: '<div class="advanced"><h4>Spertula uzado</h4><ul><li>Permesitaj kolumnoj: <em>%s</em></li><li>Kongruas ekzistantajn membrojn laŭ ilia unika agordo <em>Kodo</em>, kaj aktualigas ilin laŭ eventualaj novaj valoroj el la importita dosiero.</li><li>Povas agordi grupojn laŭ la kolumno <em>Grupoj</em>. Identigas grupojn laŭ ilia agordo <em>Kodo</em>, povas apartigi pluroblan grupon per komoj. Ne vakigas ekzistantajn grupojn.</li></ul></div>'
     ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultDeleted: 'Forigis %d membrojn'
+    ResultNone: 'Neniu ŝanĝo'
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Apply Filter'
-    DELETE: Delete
+    DELETE: Forigi
     DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Import from CSV'
+    IMPORT: 'Importi el CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
+    NOCSVFILE: 'Bonvolu foliumi por CSV-dosiero importota'
+    NOIMPORT: 'Nenio importota'
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
@@ -397,98 +397,98 @@ eo:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT: Kvanto
+    FIELDLABELCURRENCY: Kurzo
   NullableField:
-    IsNullLabel: 'Is Null'
+    IsNullLabel: 'Estas senvalora'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: CMS-aliro
-    FULLADMINRIGHTS: 'Full administrative rights'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    AdminGroup: Administranto
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 'Ĉiuj administraj rajtoj'
+    FULLADMINRIGHTS_HELP: 'Implicas kaj superregas ĉiujn aliajn agorditajn permesojn.'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+    FromRoleOnGroup: 'heredita de rolo "%s" en grupo "%s"'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
+    PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
+    VALIDATION: 'Bonvolu enigi validan telefonnumeron'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: Enmeti
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
-    LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
+    ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas <a href="%s">ensaluti denove</a>.'
+    BUTTONSEND: 'Sendu al mi la ligilon reagordi pasvorton'
+    CHANGEPASSWORDBELOW: 'Vi povas ŝanĝi vian pasvorton malsupre.'
+    CHANGEPASSWORDHEADER: 'Ŝanĝi vian pasvorton'
+    ENTERNEWPASSWORD: 'Bonvolu enigi novan pasvorton.'
+    ERRORPASSWORDPERMISSION: 'Vi devas ensaluti por ŝanĝi vian pasvorton!'
+    LOGGEDOUT: 'Vi elsalutis. Se vi volas ensaluti denove, enigu viajn legitimaĵon sube.'
+    LOGIN: Ensaluti
+    NOTEPAGESECURED: 'Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
+    NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Manage permissions for groups'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: 'Group name'
+    ACCESS_HELP: 'Permesi vidigi, enmeti kaj redakti uzantojn, aldone al agordi permesojn kaj rolojn al ili.'
+    APPLY_ROLES: 'Apliki roloj al grupoj'
+    APPLY_ROLES_HELP: 'Eblo redakti la rolojn agorditajn al grupo. Bezonas la permesilon "Aliro al sekcio ''Sekureco''"'
+    EDITPERMISSIONS: 'Agordi permesojn kaj IP-adresojn ĉe ĉiu grupo'
+    EDITPERMISSIONS_HELP: 'Eblo redakti Permesojn kaj IP-adresojn por grupo. Bezonas la permesilon "Aliro al sekcio ''Sekureco''"'
+    GROUPNAME: 'Grupa Nomo'
     IMPORTGROUPS: 'Import groups'
     IMPORTUSERS: 'Import users'
-    MEMBERS: Members
+    MEMBERS: Membroj
     MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
-    PERMISSIONS: Permissions
-    ROLES: Roles
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
+    MemberListCaution: 'Averto: forigi membrojn el ĉi tiu listo forigos ilin el ĉiuj grupoj kaj la datumbazo.'
+    NEWGROUP: 'Nova Grupo'
+    PERMISSIONS: Permesoj
+    ROLES: Roloj
+    ROLESDESCRIPTION: 'Ĉi tiu sekcio ebligas aldoni rolojn al ĉi tiu grupo. Roloj estas logikaj grupoj de permesoj, kiuj estas redakteblaj en la langeto Roloj'
+    TABROLES: Roloj
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport: Importi
+    FileFieldLabel: 'CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'No Image Uploaded'
+    NOUPLOAD: 'Neniu Bildo Alŝutita'
   SiteTree:
     TABMAIN: Ĉefaj
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'Enmeti novan vicon'
     ADDITEM: 'Add %s'
   TableListField:
-    CSVEXPORT: 'Export to CSV'
-    PRINT: Print
+    CSVEXPORT: 'Eksporti al CSV'
+    PRINT: Presi
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Ordigi kreskante'
-    SORTDESC: 'Ordigi malkreskante'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
     TO: to
-    VIEWFIRST: 'Vidigi unuan'
-    VIEWLAST: 'Vidigi lastan'
-    VIEWNEXT: 'Vidigi sekvan'
-    VIEWPREVIOUS: 'Vidigi antaŭan'
+    VIEWFIRST: 'View first'
+    VIEWLAST: 'View last'
+    VIEWNEXT: 'View next'
+    VIEWPREVIOUS: 'View previous'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: less
-    MORE: more
+    LESS: malpli
+    MORE: pli
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
@@ -514,4 +514,4 @@ eo:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: Versions
+    has_many_Versions: Versioj

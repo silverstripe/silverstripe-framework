@@ -1,6 +1,6 @@
 de:
   AssetAdmin:
-    NEWFOLDER: 'Neuer Ordner'
+    NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'Erstmalig hochgeladen'
     DIM: Dimensionen
@@ -51,23 +51,23 @@ de:
     UNORDEREDDESCRIPTION: 'Ungeordnete Liste'
     UNORDEREDEXAMPLE1: 'Ungeordneter Eintrag 1'
   BackLink_Button.ss:
-    Back: Zurück
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Bitte geben Sie einen Nutzernamen und ein Passwort ein'
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
-    0: 'False'
+    0: Nein
     ANY: alle
-    1: 'True'
+    1: Ja
   CMSLoadingScreen.ss:
     LOADING: 'Lade Daten ...'
     REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
   CMSMain:
-    ACCESS: 'Zugang zum Bereich ''{title}'''
+    ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Zugriff auf alle Bereiche des CMS'
     ACCESSALLINTERFACESHELP: 'Hebt alle bereichspezifischen Berechtigungen auf.'
-    SAVE: Speichern
+    SAVE: Save
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
@@ -77,8 +77,8 @@ de:
     HELLO: Hi
     PASSWORD: Passwort
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Nein
+    - Ja
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
     SUCCESSADD2: '{name} hinzugefügt'
@@ -206,7 +206,7 @@ de:
   GridFieldDetailForm:
     Create: Erstellen
     Delete: Löschen
-    DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
+    DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
     Deleted: 'Gelöscht %s %s'
     Save: Speichern
     Saved: 'Gespeichert %s %s'
@@ -284,7 +284,7 @@ de:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
     CANT_REORGANISE: 'Sie besitzen nicht die benötigten Zugriffsrechte um Seiten der höchsten Ebene zu bearbeiten. Ihre Änderungen wurden nicht gespeichert.'
-    DELETED: Gelöscht.
+    DELETED: Deleted.
     DropdownBatchActionsDefault: Aktionen
     HELP: Hilfe
     PAGETYPE: 'Seitentyp:'
@@ -292,9 +292,9 @@ de:
     PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
     PERMDEFAULT: 'Bitte wählen Sie eine Authentifizierungsmethode und geben Sie Ihre Benutzerdaten für den Zugang zum CMS ein.'
     PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
-    PreviewButton: Vorschau
+    PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Der Seitenbaum wurde erfolgreich sortiert.'
-    SAVEDUP: Gespeichert.
+    SAVEDUP: Saved.
     VersionUnknown: Unbekannt
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -405,7 +405,7 @@ de:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Zugriff'
+    CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
   PermissionCheckboxSetField:
@@ -414,7 +414,7 @@ de:
     FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
+    PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   RelationComplexTableField.ss:
@@ -471,19 +471,19 @@ de:
     CSVEXPORT: 'Als CSV-Datei exportieren'
     PRINT: drucken
     Print: Drucken
-    SELECT: 'Auswählen:'
+    SELECT: 'Select:'
   TableListField.ss:
-    NOITEMSFOUND: 'Keine Elemente gefunden'
-    SORTASC: 'Aufsteigend sortieren'
-    SORTDESC: 'Absteigend sortieren'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
   TableListField_PageControls.ss:
-    DISPLAYING: Zeige
-    OF: von
-    TO: bis
-    VIEWFIRST: 'Ersten anzeigen'
-    VIEWLAST: 'Letzten anzeigen'
-    VIEWNEXT: 'Nächsten anzeigen'
-    VIEWPREVIOUS: 'Vorherigen anzeigen'
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'View first'
+    VIEWLAST: 'View last'
+    VIEWNEXT: 'View next'
+    VIEWPREVIOUS: 'View previous'
   TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   ToggleField:

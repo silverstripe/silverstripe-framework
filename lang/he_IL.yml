@@ -1,15 +1,15 @@
 he_IL:
   AssetAdmin:
-    NEWFOLDER: תיקיהחדשה
+    NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
+    CREATED: 'הועלה לראשונה'
+    DIM: מידות
+    FILENAME: 'שם הקובץ'
     FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
+    LASTEDIT: 'שונה לאחרונה'
+    OWNER: 'בעל הקובץ'
+    SIZE: גודל
+    TITLE: כותרת
     TYPE: סוג
     URL: 'כתובת הדף'
   AssetUploadField:
@@ -19,7 +19,7 @@ he_IL:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: קבצים
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -53,9 +53,9 @@ he_IL:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Please enter a username and password.'
-    ERRORNOTADMIN: 'That user is not an administrator.'
-    ERRORNOTREC: 'That username / password isn''t recognised'
+    ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
+    ERRORNOTADMIN: 'משתמש זה אינו מנהל'
+    ERRORNOTREC: 'שם המשתמש / סיסמא לא מזוהה'
   Boolean:
     0: 'False'
     ANY: Any
@@ -65,37 +65,37 @@ he_IL:
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACES: 'גישה לכל ממשקי המערכת'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: שמור
+    SAVE: Save
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
+    CHANGEPASSWORDTEXT2: 'כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:'
     EMAIL: Email
-    HELLO: Hi
+    HELLO: היי
     PASSWORD: Password
   CheckboxField:
     - 'False'
     - 'True'
   ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
+    CLOSEPOPUP: 'סגור חלון'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: הוסף
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'סדר בסדר עולה'
+    SORTDESC: 'סדר בסדר יורד'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: הבא
+    PREVIOUS: הקודם
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    SHOWONCLICKTITLE: 'שינוי סיסמה'
   CreditCardField:
     FIRST: first
     FOURTH: fourth
@@ -104,23 +104,23 @@ he_IL:
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME: 'אובייקטי מידע'
+    SINGULARNAME: 'אובייקט מידע'
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
-    MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    DAY: יום
+    DAYS: ימים
+    HOUR: שעה
+    HOURS: שעות
+    MIN: דקה
+    MINS: דקות
+    MONTH: חודש
+    MONTHS: חודשים
+    SEC: שניה
+    SECS: שניות
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: שנה
+    YEARS: שנים
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -130,7 +130,7 @@ he_IL:
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Choose)
+    CHOOSE: (בחר)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -146,8 +146,8 @@ he_IL:
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: קבצים
+    SINGULARNAME: קובץ
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
@@ -157,7 +157,7 @@ he_IL:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: קובץ
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,16 +167,16 @@ he_IL:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hi
+    HELLO: היי
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s is required'
+    FIELDISREQUIRED: 'דרוש %s'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
+    VALIDATIONNOTUNIQUE: 'הערך שהוקש אינו יחודי'
+    VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
+    VALIDATIONPASSWORDSNOTEMPTY: 'הסיסמאות לא יכול להיות ריקות'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
@@ -205,7 +205,7 @@ he_IL:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: מחק
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -213,18 +213,18 @@ he_IL:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Group Code'
+    Code: 'קוד קבוצה'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
+    Locked: 'נעול?'
     NoRoles: 'No roles found'
-    Parent: 'Parent Group'
+    Parent: 'קבוצת אב'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    has_many_Permissions: הרשאות
+    many_many_Members: 'חברים רשומים'
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -238,19 +238,19 @@ he_IL:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Insert link'
-    BUTTONREMOVELINK: 'Remove link'
+    BUTTONINSERTLINK: 'הכנס קישור'
+    BUTTONREMOVELINK: 'הסר קישור'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    CSSCLASS: יישור/סגנון
+    CSSCLASSCENTER: 'ממורכז, ללא טקסט בצדדים.'
+    CSSCLASSLEFT: 'לשמאל, עם טקסט מסודר מסביב.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    CSSCLASSRIGHT: 'לימין, עם טקסט מסודר מסביב.'
     DETAILS: Details
-    EMAIL: 'Email address'
-    FILE: File
-    FOLDER: Folder
+    EMAIL: 'כתובת אימייל'
+    FILE: קובץ
+    FOLDER: תיקיה
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -258,21 +258,21 @@ he_IL:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
+    IMAGEDIMENSIONS: ממדים
+    IMAGEHEIGHTPX: גובה
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
+    IMAGEWIDTHPX: רוחב
     INSERTMEDIA: 'Insert Media'
     LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'Link description'
+    LINKDESCR: 'תאור הקישור'
     LINKEMAIL: 'Email address'
     LINKEXTERNAL: 'Another website'
     LINKFILE: 'Download a file'
     LINKINTERNAL: 'Page on the site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKOPENNEWWIN: 'לפתוח קישור בחלון חדש?'
     LINKTO: 'Link to'
     PAGE: Page
     URL: URL
@@ -281,17 +281,17 @@ he_IL:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'מסגרת העלאת תמונה'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Help
+    HELP: עזרה
     PAGETYPE: 'סוג העמוד'
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PERMAGAIN: 'התנתקת מהמערכת. לחיבור מחדש נא להזין שם וסיסמה'
+    PERMALREADY: 'צר לנו, אך לא תוכל לגשת לחלק זה של מערכת ניהול התוכן. אם ברצונך להתחבר למערכת בתור משתמש אחר נא להשתמש בתיבה בעמוד זה'
+    PERMDEFAULT: 'נא לבחור בשיטת וידוא והזן פרטיך למערכת'
+    PLEASESAVE: 'נא לשמור עמוד זה. העמוד לא עודכן מכיוון ולא עודכן.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -305,47 +305,47 @@ he_IL:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Change Password'
+    BUTTONCHANGEPASSWORD: 'שנה סיסמא'
     BUTTONLOGIN: התחבר
-    BUTTONLOGINOTHER: 'Log in as someone else'
-    BUTTONLOSTPASSWORD: 'I''ve lost my password'
-    CONFIRMNEWPASSWORD: 'Confirm New Password'
-    CONFIRMPASSWORD: 'Confirm Password'
+    BUTTONLOGINOTHER: 'התחבר כמשתמש אחר'
+    BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
+    CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
+    CONFIRMPASSWORD: 'אשר סיסמא'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 'דואר אלקטרוני'
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
-    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: 'First Name'
-    INTERFACELANG: 'Interface Language'
+    ERRORNEWPASSWORD: 'הסיסמא החדשה שלך שגויה, נסה שנית.'
+    ERRORPASSWORDNOTMATCH: 'הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית'
+    ERRORWRONGCRED: 'שגיאה בכתובת הדואר או הסיסמא.נא  נסה שנית.'
+    FIRSTNAME: 'שם פרטי'
+    INTERFACELANG: 'שפת ממשק'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'New Password'
-    PASSWORD: Password
-    PLURALNAME: Members
+    NEWPASSWORD: 'סיסמא חדשה'
+    PASSWORD: סיסמא
+    PLURALNAME: 'חברים רשומים'
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'Remember me next time?'
-    SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
-    SUBJECTPASSWORDRESET: 'Your password reset link'
-    SURNAME: Surname
-    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
+    REMEMBERME: 'זכור אותי בפעם הבאה?'
+    SINGULARNAME: 'חבר רשום'
+    SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
+    SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
+    SURNAME: 'שם משפחה'
+    VALIDATIONMEMBEREXISTS: 'קיים כבר משתמש עם כתובת דואר זו.'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: Groups
+    YOUROLDPASSWORD: 'הסיסמא הישנה שלך'
+    belongs_many_many_Groups: קבוצות
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Locked out until'
+    db_LockedOutUntil: 'נעול עד '
     db_NumVisit: 'Number of Visits'
     db_Password: Password
-    db_PasswordExpiry: 'Password Expiry Date'
+    db_PasswordExpiry: 'תאריך תפוגת סיסמא'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE: 'דואר אלקטרוני וסיסמא'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -376,12 +376,12 @@ he_IL:
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Apply Filter'
-    DELETE: Delete
+    DELETE: מחק
     DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Import from CSV'
+    IMPORT: 'ייבא מקובץ CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
+    NOCSVFILE: 'בחר קובץ CSV לייבוא'
+    NOIMPORT: 'לא נמצאו פריטים לייבוא'
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
@@ -416,30 +416,30 @@ he_IL:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
+    VALIDATION: 'יש להכניס מספר טלפון תקין'
   RelationComplexTableField.ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
+    ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
+    BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'
+    CHANGEPASSWORDBELOW: 'אתה יכול לשנות את סיסמתך להלן.'
+    CHANGEPASSWORDHEADER: 'שנה את הסיסמא שלך'
+    ENTERNEWPASSWORD: 'נא הכנס סיסמא חדשה.'
+    ERRORPASSWORDPERMISSION: 'אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!'
+    LOGGEDOUT: 'נותקת . אם ברצונך להתחבר שנית הכנס את הפרטים שלך'
     LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
+    NOTEPAGESECURED: 'עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
+    NOTERESETPASSWORD: 'הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS: 'ערוך הרשאות וכתובות IP לכל קבוצה'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Group name'
     IMPORTGROUPS: 'Import groups'
@@ -447,7 +447,7 @@ he_IL:
     MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
+    NEWGROUP: 'קבוצה חדשה'
     PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
@@ -459,7 +459,7 @@ he_IL:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'No Image Uploaded'
+    NOUPLOAD: 'לא הועלתה תמונה'
   SiteTree:
     TABMAIN: Main
   TableField:
@@ -480,15 +480,15 @@ he_IL:
     DISPLAYING: Displaying
     OF: of
     TO: to
-    VIEWFIRST: 'הצג ראשון'
-    VIEWLAST: 'הצג אחרון'
-    VIEWNEXT: 'הצג את הבא'
-    VIEWPREVIOUS: 'הצג את הקודם'
+    VIEWFIRST: 'View first'
+    VIEWLAST: 'View last'
+    VIEWNEXT: 'View next'
+    VIEWPREVIOUS: 'View previous'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: less
-    MORE: more
+    LESS: פחות
+    MORE: עוד
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
@@ -514,4 +514,4 @@ he_IL:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: Versions
+    has_many_Versions: גירסאות

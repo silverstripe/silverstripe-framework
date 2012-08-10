@@ -19,7 +19,7 @@ km:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: ឯកសារ
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -71,7 +71,7 @@ km:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT1: អ្នកបានផ្លាស់ប្តូរពាក្យសំងាត់សំរាប់
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
     HELLO: Hi
@@ -84,7 +84,7 @@ km:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'បញ្ចូល %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'
@@ -95,7 +95,7 @@ km:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    SHOWONCLICKTITLE: ផ្លាស់ប្តូរពាក្យសំងាត់
   CreditCardField:
     FIRST: first
     FOURTH: fourth
@@ -105,22 +105,22 @@ km:
     CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    SINGULARNAME: 'Data Objects'
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
-    MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    DAY: ថ្ងៃ
+    DAYS: ថ្ងៃ
+    HOUR: ម៉ោង
+    HOURS: ម៉ោង
+    MIN: នាទី
+    MINS: នាទី
+    MONTH: ខែ
+    MONTHS: ខែ
+    SEC: វិនាទី
+    SECS: វិនាទី
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: ឆ្នាំ
+    YEARS: ឆ្នាំ
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -130,7 +130,7 @@ km:
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Choose)
+    CHOOSE: (ជ្រើសរើស)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -146,8 +146,8 @@ km:
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: ឯកសារ
+    SINGULARNAME: ឯកសារ
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
@@ -213,18 +213,18 @@ km:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Group Code'
+    Code: លេខកូដក្រុម
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
+    Locked: មិនអាចប្រើ
     NoRoles: 'No roles found'
-    Parent: 'Parent Group'
+    Parent: ចំណាត់ក្រុមដើម
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    has_many_Permissions: ការអនុញ្ញាតិ្ត
+    many_many_Members: សមាជិក
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -321,29 +321,29 @@ km:
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: 'First Name'
-    INTERFACELANG: 'Interface Language'
+    INTERFACELANG: ភាសាប្រើសំរាប់ទំព័រមុខ
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
-    PLURALNAME: Members
+    PLURALNAME: សមាជិក
     PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
-    SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
-    SUBJECTPASSWORDRESET: 'Your password reset link'
+    SINGULARNAME: សមាជិក
+    SUBJECTPASSWORDCHANGED: ពាក្យសំងាត់របស់អ្នកបានផ្លាស់ប្តូរ
+    SUBJECTPASSWORDRESET: លីងសំរាប់ប្តូរពាក្យសំងាត់របស់អ្នក
     SURNAME: Surname
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: Groups
+    belongs_many_many_Groups: ចំណាត់ក្រុម
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Locked out until'
+    db_LockedOutUntil: ដោះចេញរហូតដល់
     db_NumVisit: 'Number of Visits'
     db_Password: Password
-    db_PasswordExpiry: 'Password Expiry Date'
+    db_PasswordExpiry: កាលបរិច្ឆេទផុតកំណត់ពាក្យសំងាត់
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
@@ -400,7 +400,7 @@ km:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
   NullableField:
-    IsNullLabel: 'Is Null'
+    IsNullLabel: ទទេ
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
@@ -422,7 +422,7 @@ km:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    ALREADYLOGGEDIN: 'អ្នកមិនអាចមើលទំព័រនេះបានទេ។ សូមប្រើប្រាស់ព័ត៌មានសំរាប់ថ្មី មួយទៀតសំរាប់ចូលមើល។ សូមចូលតាម <a href="%s">'
     BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'
@@ -514,4 +514,4 @@ km:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: Versions
+    has_many_Versions: ជំនាន់
