@@ -1,15 +1,15 @@
 si:
   AssetAdmin:
-    NEWFOLDER: NewFolder
+    NEWFOLDER: 'අලත් ගොනුවක්'
   AssetTableField:
-    CREATED: 'පලමු ලිපිය අප්ලෝඩ් කරන ලදී'
-    DIM: මාන
-    FILENAME: 'ලිපි නම'
+    CREATED: 'First uploaded'
+    DIM: Dimensions
+    FILENAME: Filename
     FOLDER: Folder
-    LASTEDIT: 'අවසාන ලිපිය වෙනස්  කරන ලදී'
-    OWNER: 'හිමි කරැ'
-    SIZE: තරම
-    TITLE: මතකව
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
     TYPE: වර්ගය
     URL: URL
   AssetUploadField:
@@ -19,7 +19,7 @@ si:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: ලිපි
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -33,14 +33,14 @@ si:
     CODE: 'Code Block'
     CODEDESCRIPTION: 'Unformatted code block'
     CODEEXAMPLE: 'Code block'
-    COLORED: 'පාට කළ අකුරු'
-    COLOREDEXAMPLE: 'නිල් පැහැ අකුරු'
+    COLORED: 'Colored text'
+    COLOREDEXAMPLE: 'blue text'
     EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: 'Create link to an email address'
     IMAGE: පින්තූරය
     IMAGEDESCRIPTION: 'Show an image in your post'
-    ITALIC: 'ඇල අකුරු'
-    ITALICEXAMPLE: ඇල
+    ITALIC: 'Italic Text'
+    ITALICEXAMPLE: Italics
     LINK: 'Website link'
     LINKDESCRIPTION: 'Link to another website or URL'
     STRUCK: 'Struck-out Text'
@@ -53,9 +53,9 @@ si:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'නම හා මුර පදය ඇතුල් කරන්න'
-    ERRORNOTADMIN: 'ඵම පරිශීලකයා නියමුවෙකු නොවේ'
-    ERRORNOTREC: 'ඵම නම/මුරපදය හදුනාගත නොහැක'
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
+    ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     0: 'False'
     ANY: Any
@@ -67,14 +67,14 @@ si:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
+    SAVE: 'සේවි කරන්න'
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
-    CHANGEPASSWORDTEXT2: 'ප්රවිශ්ට වීමට පහත දත්ත යොදාගන්න'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
-    HELLO: කොහොමද
+    HELLO: Hi
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -84,43 +84,43 @@ si:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'එකතු කරන්න'
+    ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'ආරෝහන පිළිවෙලට'
-    SORTDESC: 'ආවරෝහන පිළිවෙලට'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: පසු
-    PREVIOUS: පෙර
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
+    SHOWONCLICKTITLE: 'Change Password'
   CreditCardField:
-    FIRST: පළමු
+    FIRST: first
     FOURTH: fourth
-    SECOND: දෙවන
+    SECOND: second
     THIRD: third
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'දත්ත වස්තු'
-    SINGULARNAME: 'දත්ත වස්තුව'
+    PLURALNAME: 'Data Objects'
+    SINGULARNAME: 'Data Object'
   Date:
-    DAY: ඳිනය
-    DAYS: ඳින
-    HOUR: පැය
-    HOURS: පැය
-    MIN: විනාඩිය
-    MINS: විනාඩි
-    MONTH: මාසය
-    MONTHS: මාස
-    SEC: තත්පරය
-    SECS: 'තත්පර '
+    DAY: ' day'
+    DAYS: ' days'
+    HOUR: ' hour'
+    HOURS: ' hours'
+    MIN: ' min'
+    MINS: ' mins'
+    MONTH: ' month'
+    MONTHS: ' months'
+    SEC: ' sec'
+    SECS: ' secs'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: අවුරුද්ද
-    YEARS: අවුරුදු
+    YEAR: ' year'
+    YEARS: ' years'
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -130,7 +130,7 @@ si:
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (තොරන්න)
+    CHOOSE: (Choose)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -146,8 +146,8 @@ si:
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: ලිපි
-    SINGULARNAME: ලිපිය
+    PLURALNAME: Files
+    SINGULARNAME: File
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
@@ -157,7 +157,7 @@ si:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: ලිපිය
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,16 +167,16 @@ si:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: කොහොමද
-    TEXT1: 'මෙය ඔබගේ'
+    HELLO: Hi
+    TEXT1: 'Here is your'
     TEXT2: 'password reset link'
-    TEXT3: සඳහා
+    TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s අවශ්යයි'
+    FIELDISREQUIRED: '%s is required'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'අගය අද්විතීය නොවේ'
-    VALIDATIONPASSWORDSDONTMATCH: 'මුර පද අසමානය'
-    VALIDATIONPASSWORDSNOTEMPTY: 'මුර පදය විය නොහැක'
+    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
@@ -213,18 +213,18 @@ si:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'කාන්ඩ සංකේතය'
+    Code: 'Group Code'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'අගුලුලාද?'
+    Locked: 'Locked?'
     NoRoles: 'No roles found'
-    Parent: 'මවු කාන්ඩය'
+    Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    has_many_Permissions: අවසර
-    many_many_Members: සාමාජිකයින්
+    has_many_Permissions: Permissions
+    many_many_Members: Members
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -238,19 +238,19 @@ si:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'බැදීමක් යොදන්න'
-    BUTTONREMOVELINK: 'බැදීම ගලවන්න'
+    BUTTONINSERTLINK: 'Insert link'
+    BUTTONREMOVELINK: 'Remove link'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'අලයින්මන්ට් / ස්ටයිල්'
+    CSSCLASS: 'Alignment / style'
     CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'වම් පැත්තට, අකුරැ වටේට යොදන්න'
+    CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'දකුනු පැත්තට, අකුරැ වටේට යොදන්න'
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
-    EMAIL: 'ඊමේල් ලිපිනය'
-    FILE: ලිපිය
-    FOLDER: ගොනුව
+    EMAIL: 'Email address'
+    FILE: File
+    FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -258,22 +258,22 @@ si:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: මාන
-    IMAGEHEIGHTPX: දිග
+    IMAGEDIMENSIONS: Dimensions
+    IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: පලල
+    IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: 'පාට කල වචන වලට බැදමක් යොදන්න/සංස්කරනය කරන්න'
+    LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'බැදීම් විස්තරය'
-    LINKEMAIL: 'ඊමේල් ලිපිනය'
+    LINKDESCR: 'Link description'
+    LINKEMAIL: 'Email address'
     LINKEXTERNAL: 'වෙනත් වෙබ් අඩවියක්'
-    LINKFILE: 'ලිපියක් බාගත කරන්න'
-    LINKINTERNAL: 'අඩවියේ පිටුවක්'
-    LINKOPENNEWWIN: 'අලුත් වින්ඩෝවක අරින්නද?'
-    LINKTO: බැදේ
+    LINKFILE: 'Download a file'
+    LINKINTERNAL: 'Page on the site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link to'
     PAGE: පිටුව
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -281,17 +281,17 @@ si:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'පිංතූර අප්ලෝඩ් කරන Iframe ඵක'
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: උදවි
+    HELP: Help
     PAGETYPE: 'පිටු වර්ගය'
-    PERMAGAIN: 'ඹබ CMS ඵකෙන් ඉවත් වී ඇත. නැවත ඇතුල් වීමට නම හා මුරපදය යොදන්න'
-    PERMALREADY: 'සමාවන්න ඔබට මෙම කොටස පරිශීලනය කල නොහැක. පහතින් වෙනත් නමකින් ඇතුල් වන්න'
-    PERMDEFAULT: 'හදුනාගැනීමේ ක්රමයක් තෝරා ඹබගේ දත්ත ඇතුල් කරන්න'
-    PLEASESAVE: 'පිටුව සේව් කරන්න, නැතිනම් මෙම පිටුව යාවත්කාලීන කල නොහැක'
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -305,47 +305,47 @@ si:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'මුර පදය අලුත් කරන්න'
+    BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: ඇතුල්වන්න
-    BUTTONLOGINOTHER: 'වෙනත් නමකින් ඇතුල්වන්න'
-    BUTTONLOSTPASSWORD: 'මුර පදය නැති වී ඇත'
-    CONFIRMNEWPASSWORD: 'අලුත් මුර පදය හරිද'
-    CONFIRMPASSWORD: 'මුර පදය හරිද'
+    BUTTONLOGINOTHER: 'Log in as someone else'
+    BUTTONLOSTPASSWORD: 'I''ve lost my password'
+    CONFIRMNEWPASSWORD: 'Confirm New Password'
+    CONFIRMPASSWORD: 'Confirm Password'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 'ඊමේල් '
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'අලුත් මුරපදය වෙනස් වී ඇත, උත්සාහ කරන්න'
-    ERRORPASSWORDNOTMATCH: 'ඔෙබ පිවිසුමි වචනය ෙනාගැලෙපේ, කරැණාකර නැවත උත්සාහ කරන්න'
-    ERRORWRONGCRED: 'ඵය නිවැරදි ඊමේල් ලිපිනය හෝ මුරපදය නොවේ. උත්සාහ කරන්න'
-    FIRSTNAME: 'මුල් නම'
-    INTERFACELANG: භාෂා
+    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
+    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
+    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
+    FIRSTNAME: 'First Name'
+    INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'අලුත් මුර පදයක්'
-    PASSWORD: 'මුර පදය'
-    PLURALNAME: සාමාජිකයින්
+    NEWPASSWORD: 'New Password'
+    PASSWORD: Password
+    PLURALNAME: Members
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'මතක‌ තබා ගන්න?'
-    SINGULARNAME: සාමාජිකයා
-    SUBJECTPASSWORDCHANGED: 'මුර පදය අලුත් කරන ලදී'
-    SUBJECTPASSWORDRESET: 'මුර පදය අලුත් කරන ලිපිනය'
-    SURNAME: වාසගම
-    VALIDATIONMEMBEREXISTS: 'මෙම ඊමේල් ලිපිනය ඇති සාමාජිකයකු ඇත'
+    REMEMBERME: 'Remember me next time?'
+    SINGULARNAME: Member
+    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
+    SURNAME: Surname
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'පරන මුර පදය'
-    belongs_many_many_Groups: කාන්ඩ
+    YOUROLDPASSWORD: 'Your old password'
+    belongs_many_many_Groups: Groups
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'අගුලුලා ඇත්තේ'
+    db_LockedOutUntil: 'Locked out until'
     db_NumVisit: 'Number of Visits'
     db_Password: Password
-    db_PasswordExpiry: 'මුර පදය කල් ඉකුත් වීමේ දිනය'
+    db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'ඊමේල් හා මුර පදය'
+    TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -416,23 +416,23 @@ si:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'නිවැරදි දුරකතන අ0කයක් යොදන්න'
+    VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
-    ADD: 'එකතු කරන්න'
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න'
-    BUTTONSEND: 'මුරපදය වෙනස් කරන ලිපිනය ඵවන්න'
-    CHANGEPASSWORDBELOW: 'පහතින් මුර පදය වෙනස්  කල හැක'
-    CHANGEPASSWORDHEADER: 'මුර පදය අලුත් කරන්න'
-    ENTERNEWPASSWORD: 'අලුත් මුර පදය ඇතුල් කරන්න'
-    ERRORPASSWORDPERMISSION: 'ඹබගේ මුරපදය වෙනස් කිරීමට ප්රවිශ්ට වන්න'
-    LOGGEDOUT: 'ඹබ පිටවී ඇත, නැවත ඇතුල් වීමට ඹබගේ දත්ත යොදන්න'
+    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    BUTTONSEND: 'Send me the password reset link'
+    CHANGEPASSWORDBELOW: 'You can change your password below.'
+    CHANGEPASSWORDHEADER: 'Change your password'
+    ENTERNEWPASSWORD: 'Please enter a new password.'
+    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'ඹබට ප්රතිස්තාපනය කල හැකි ලිංක් ඵක ඵවීමට ඹබගේ ඊමේල් ලිපිනය යොදන්න'
+    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -447,7 +447,7 @@ si:
     MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'අලුත් කන්ඩාමක්'
+    NEWGROUP: 'New Group'
     PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
@@ -459,17 +459,17 @@ si:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'පි0තුර අප්ලෝඩ් කර නැත'
+    NOUPLOAD: 'No Image Uploaded'
   SiteTree:
     TABMAIN: ප්‍රදාන
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'නව පෙළක් එකතුකරන්න'
+    ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Export to CSV'
-    PRINT: 'මුද්රණය කරන්න'
+    PRINT: Print
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
@@ -480,15 +480,15 @@ si:
     DISPLAYING: Displaying
     OF: of
     TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
+    VIEWFIRST: 'පළමු එක පෙන්වන්න'
+    VIEWLAST: 'අවසානය පෙන්වන්න'
+    VIEWNEXT: 'ඊළඟ එක පෙන්වන්න'
+    VIEWPREVIOUS: 'පෙර පෙන්වන්න'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: අඩු
-    MORE: වැඩි
+    LESS: less
+    MORE: more
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
@@ -514,4 +514,4 @@ si:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: වෙලුම
+    has_many_Versions: Versions

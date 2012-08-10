@@ -1,15 +1,15 @@
 ca:
   AssetAdmin:
-    NEWFOLDER: NewFolder
+    NEWFOLDER: NovaCarpeta
   AssetTableField:
-    CREATED: 'Carregat per primer cop'
+    CREATED: 'First uploaded'
     DIM: Dimensions
-    FILENAME: 'Nom del fitxer'
+    FILENAME: Filename
     FOLDER: Folder
-    LASTEDIT: 'Darrer canvi'
-    OWNER: Propietari
-    SIZE: Mida
-    TITLE: Títol
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
     TYPE: Tipus
     URL: URL
   AssetUploadField:
@@ -19,43 +19,43 @@ ca:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Fitxers
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: Alineació
-    ALIGNEMENTEXAMPLE: 'alineat a la dreta'
-    BOLD: 'Text en negreta'
-    BOLDEXAMPLE: Negreta
-    CODE: 'Bloc de codi'
-    CODEDESCRIPTION: 'Bloc de codi sense format'
-    CODEEXAMPLE: 'Bloc de codi'
-    COLORED: 'Text colorejat'
-    COLOREDEXAMPLE: 'text blau'
-    EMAILLINK: 'Enllaç a correu electrònic'
-    EMAILLINKDESCRIPTION: 'Crea un enllaç a una adreça de correu electrònic'
+    ALIGNEMENT: Alignment
+    ALIGNEMENTEXAMPLE: 'right aligned'
+    BOLD: 'Bold Text'
+    BOLDEXAMPLE: Bold
+    CODE: 'Code Block'
+    CODEDESCRIPTION: 'Unformatted code block'
+    CODEEXAMPLE: 'Code block'
+    COLORED: 'Colored text'
+    COLOREDEXAMPLE: 'blue text'
+    EMAILLINK: 'Email link'
+    EMAILLINKDESCRIPTION: 'Create link to an email address'
     IMAGE: Imatge
-    IMAGEDESCRIPTION: 'Mostra una imatge al vostre escrit'
-    ITALIC: 'Text en cursiva'
-    ITALICEXAMPLE: Cursiva
-    LINK: 'Enllaç web '
-    LINKDESCRIPTION: 'Enllaça a un altre web o URL'
-    STRUCK: 'Text tatxat'
-    STRUCKEXAMPLE: Tatxat
-    UNDERLINE: 'Text subratllat'
-    UNDERLINEEXAMPLE: Subratllat
-    UNORDERED: 'Llista no ordenada'
-    UNORDEREDDESCRIPTION: 'Llista no ordenada'
-    UNORDEREDEXAMPLE1: 'element no ordenat 1'
+    IMAGEDESCRIPTION: 'Show an image in your post'
+    ITALIC: 'Italic Text'
+    ITALICEXAMPLE: Italics
+    LINK: 'Website link'
+    LINKDESCRIPTION: 'Link to another website or URL'
+    STRUCK: 'Struck-out Text'
+    STRUCKEXAMPLE: Struck-out
+    UNDERLINE: 'Underlined Text'
+    UNDERLINEEXAMPLE: Underlined
+    UNORDERED: 'Unordered list'
+    UNORDEREDDESCRIPTION: 'Unordered list'
+    UNORDEREDEXAMPLE1: 'unordered item 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
-    ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
-    ERRORNOTREC: 'Aquest nom d''usuari / contrasenya no es reconeix'
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
+    ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     0: 'False'
     ANY: Any
@@ -67,70 +67,70 @@ ca:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
+    SAVE: Desa
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
-    CHANGEPASSWORDTEXT2: 'Podeu usar ara les següents credencials per a entrar:'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: 'Correu electrònic'
-    HELLO: Hola
+    HELLO: Hi
     PASSWORD: Contrasenya
   CheckboxField:
     - 'False'
     - 'True'
   ComplexTableField:
-    CLOSEPOPUP: 'Tanca la finestra'
+    CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: 'S''ha desat %s %s %s'
+    SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Afegir %s'
+    ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Ordena ascendentment'
-    SORTDESC: 'Ordena descendentment'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: Següent
-    PREVIOUS: Anterior
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Canvia la contrasenya'
+    SHOWONCLICKTITLE: 'Change Password'
   CreditCardField:
-    FIRST: primer
-    FOURTH: quart
-    SECOND: segon
-    THIRD: tercer
+    FIRST: first
+    FOURTH: fourth
+    SECOND: second
+    THIRD: third
   CurrencyField:
-    CURRENCYSYMBOL: €E
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Objectes de dades'
-    SINGULARNAME: 'Objecte de dades'
+    PLURALNAME: 'Data Objects'
+    SINGULARNAME: 'Data Object'
   Date:
-    DAY: dia
-    DAYS: dies
-    HOUR: hora
-    HOURS: hores
-    MIN: minut
-    MINS: minuts
-    MONTH: mes
-    MONTHS: mesos
-    SEC: segon
-    SECS: segons
+    DAY: ' day'
+    DAYS: ' days'
+    HOUR: ' hour'
+    HOURS: ' hours'
+    MIN: ' min'
+    MINS: ' mins'
+    MONTH: ' month'
+    MONTHS: ' months'
+    SEC: ' sec'
+    SECS: ' secs'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: any
-    YEARS: anys
+    YEAR: ' year'
+    YEARS: ' years'
   DateField:
-    NOTSET: 'no definit'
-    TODAY: avui
+    NOTSET: 'not set'
+    TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Trieu)
+    CHOOSE: (Choose)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -140,24 +140,24 @@ ca:
     ANY: Any
   File:
     Content: Contingut
-    Filename: 'Nom del fitxer'
+    Filename: Filename
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    NOFILESIZE: 'La mida del fitxer és de zero bytes.'
+    NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Nom
-    PLURALNAME: Fitxers
-    SINGULARNAME: Fitxer
+    Name: Name
+    PLURALNAME: Files
+    SINGULARNAME: File
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
-    Title: Títol
+    Title: Title
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: Fitxer
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,21 +167,21 @@ ca:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hola
-    TEXT1: 'Aquí teniu el vostre'
-    TEXT2: 'enllaç de reinici de la contrasenya'
-    TEXT3: per
+    HELLO: Hi
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
-    FIELDISREQUIRED: 'Es requereix %s'
+    FIELDISREQUIRED: '%s is required'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'El valor que heu introduït no és únic'
-    VALIDATIONPASSWORDSDONTMATCH: 'Les contrasenyes no concorden'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Les contrasenyes no poden deixar-se en blanc'
+    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validador
+    VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE: cap
+    NONE: none
   GridAction:
     DELETE_DESCRIPTION: Delete
     Delete: Delete
@@ -205,7 +205,7 @@ ca:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Suprimeix
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -213,18 +213,18 @@ ca:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Codi de grup'
+    Code: 'Group Code'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Descripció
+    Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Bloquejat?'
+    Locked: 'Locked?'
     NoRoles: 'No roles found'
-    Parent: 'Grup precedent'
+    Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
-    Sort: Ordre
-    has_many_Permissions: Permisos
-    many_many_Members: Membres
+    Sort: 'Sort Order'
+    has_many_Permissions: Permissions
+    many_many_Members: Members
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -236,21 +236,21 @@ ca:
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    ANCHORVALUE: Ancla
+    ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Insereix un enllaç'
-    BUTTONREMOVELINK: 'Suprimeix un enllaç'
+    BUTTONINSERTLINK: 'Insert link'
+    BUTTONREMOVELINK: 'Remove link'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alineació / estil'
-    CSSCLASSCENTER: 'Centrat, ell sol.'
-    CSSCLASSLEFT: 'A l''esquerra, amb text envoltant.'
-    CSSCLASSLEFTALONE: 'A l''esquerra, per si sol.'
-    CSSCLASSRIGHT: 'A la dreta, amb text envoltant.'
+    CSSCLASS: 'Alignment / style'
+    CSSCLASSCENTER: 'Centered, on its own.'
+    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
-    EMAIL: 'Adreça de correu electrònic'
-    FILE: Fitxer
-    FOLDER: Carpeta
+    EMAIL: 'Email address'
+    FILE: File
+    FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -259,21 +259,21 @@ ca:
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Alçada
+    IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Amplada
+    IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: Enllaç
-    LINKANCHOR: 'Ancla a aquesta pàgina'
-    LINKDESCR: 'Descripció de l''enllaç'
-    LINKEMAIL: 'Una adreça de correu electrònic'
+    LINK: 'Insert Link'
+    LINKANCHOR: 'Anchor on this page'
+    LINKDESCR: 'Link description'
+    LINKEMAIL: 'Email address'
     LINKEXTERNAL: 'Un altre lloc web'
-    LINKFILE: 'Descàrrega d''un fitxer'
-    LINKINTERNAL: 'Pàgina del lloc web'
-    LINKOPENNEWWIN: 'Obrir l''enllaç a una nova finestra?'
-    LINKTO: 'Enllaça a'
+    LINKFILE: 'Download a file'
+    LINKINTERNAL: 'Page on the site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link to'
     PAGE: Pàgina
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -281,17 +281,17 @@ ca:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'Iframe Carregador d''imatge'
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Ajuda
+    HELP: Help
     PAGETYPE: 'Tipus de pàgina:'
-    PERMAGAIN: 'Heu estat desconnectat del SGC. Si voleu entrar de nou, introduïu un nom d''usuari i contrasenya a sota'
-    PERMALREADY: 'Lamentant-ho molt, no podeu accedir a aquesta part del SGC. Si voleu entrar com a algú altre, feu-ho a sota'
-    PERMDEFAULT: 'Introduïu la vostra adreça de correu electrònic i la contrasenya per a entrar al SGC.'
-    PLEASESAVE: 'Si us plau, deseu la pàgina: aquesta pàgina no s''ha pogut actualitzar perquè encara no s''ha desat.'
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -300,52 +300,52 @@ ca:
     Hello: Hi
     LOGOUT: 'Log out'
   LoginAttempt:
-    Email: 'Adreça de correu'
-    IP: 'Adreça IP'
-    Status: Estat
+    Email: 'Email Address'
+    IP: 'IP Address'
+    Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Canvia la contrasenya'
+    BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: Entrar
-    BUTTONLOGINOTHER: 'Entreu com a algú diferent'
-    BUTTONLOSTPASSWORD: 'He perdut la meva contrasenya'
-    CONFIRMNEWPASSWORD: 'Confirmeu la nova contrasenya'
-    CONFIRMPASSWORD: 'Confirmeu la contrasenya'
+    BUTTONLOGINOTHER: 'Log in as someone else'
+    BUTTONLOSTPASSWORD: 'I''ve lost my password'
+    CONFIRMNEWPASSWORD: 'Confirm New Password'
+    CONFIRMPASSWORD: 'Confirm Password'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 'Correu electrònic'
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
-    ENTEREMAIL: 'Si us plau, introduïu una adreça de correu per a obtenir un enllaç de reinici de contrasenya.'
-    ERRORLOCKEDOUT: 'El vostre compte ha estat temporalment deshabilitat degut a massa intents fallats d''entrar. Si us plau, torneu-ho a provar en 20 minuts.'
-    ERRORNEWPASSWORD: 'Heu introduït la vostra nova contrasenya de forma diferent, proveu-ho de nou'
-    ERRORPASSWORDNOTMATCH: 'La vostra contrasenya actual no concorda, si us plau intenteu-ho de nou'
-    ERRORWRONGCRED: 'Aquests no semblen un correu electrònic o contrasenya correctes. Si us plau, torneu-ho a provar.'
-    FIRSTNAME: Nom
-    INTERFACELANG: 'Interfície de llengua'
+    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
+    ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
+    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
+    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
+    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
+    FIRSTNAME: 'First Name'
+    INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'Nova contrasenya'
-    PASSWORD: Contrasenya
-    PLURALNAME: Membres
-    PROFILESAVESUCCESS: 'S''ha desat amb èxit.'
-    REMEMBERME: 'Recorda''m el proper cop'
-    SINGULARNAME: Membre
-    SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
-    SUBJECTPASSWORDRESET: 'Enllaç per canviar la contrasenya'
-    SURNAME: Cognom
-    VALIDATIONMEMBEREXISTS: 'Ja existeix un membre amb aquesta adreça de correu electrònic'
+    NEWPASSWORD: 'New Password'
+    PASSWORD: Password
+    PLURALNAME: Members
+    PROFILESAVESUCCESS: 'Successfully saved.'
+    REMEMBERME: 'Remember me next time?'
+    SINGULARNAME: Member
+    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
+    SURNAME: Surname
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'La vostra contrasenya anterior'
-    belongs_many_many_Groups: Grups
-    db_LastVisited: 'Data de la darrera visita'
-    db_Locale: 'Idioma d''interfície'
-    db_LockedOutUntil: 'Bloquejat fins a'
-    db_NumVisit: 'Nombre de visites'
-    db_Password: Contrasenya
-    db_PasswordExpiry: 'Data d''expiració de la contrasenya'
+    YOUROLDPASSWORD: 'Your old password'
+    belongs_many_many_Groups: Groups
+    db_LastVisited: 'Last Visited Date'
+    db_Locale: 'Interface Locale'
+    db_LockedOutUntil: 'Locked out until'
+    db_NumVisit: 'Number of Visits'
+    db_Password: Password
+    db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'Correu electrònic i contrasenya'
+    TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -376,12 +376,12 @@ ca:
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Apply Filter'
-    DELETE: Suprimeix
+    DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Importa de CSV'
+    IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Si us plau, cerqueu el fitxer CSV per a importar'
-    NOIMPORT: 'No hi ha res a importar'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
@@ -406,7 +406,7 @@ ca:
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 'Drets administratius totals'
+    FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
@@ -416,39 +416,39 @@ ca:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'Si us plau, introduïu un número de telèfon vàlid'
+    VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
-    ADD: Afegeix
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota.'
-    BUTTONSEND: 'Envia''m l''enllaç per reiniciar la contrasenya'
-    CHANGEPASSWORDBELOW: 'Podeu canviar la vostra contrasenya a sota.'
-    CHANGEPASSWORDHEADER: 'Canviar la vostra contrasenya'
-    ENTERNEWPASSWORD: 'Si us plau, introduïu una nova contrasenya.'
-    ERRORPASSWORDPERMISSION: 'Heu d''estar connectat per a canviar la vostra contrasenya!'
-    LOGGEDOUT: 'Heu estat desconnectat. Si voleu entrar de nou, introduïu les vostres credencials a sota.'
-    LOGIN: Entrar
-    NOTEPAGESECURED: 'Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem.'
+    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    BUTTONSEND: 'Send me the password reset link'
+    CHANGEPASSWORDBELOW: 'You can change your password below.'
+    CHANGEPASSWORDHEADER: 'Change your password'
+    ENTERNEWPASSWORD: 'Please enter a new password.'
+    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya'
+    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Edita els permisos i les adreces IP de cada grup'
+    EDITPERMISSIONS: 'Manage permissions for groups'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: 'Nom de grup'
+    GROUPNAME: 'Group name'
     IMPORTGROUPS: 'Import groups'
     IMPORTUSERS: 'Import users'
-    MEMBERS: Membres
+    MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'Nou grup'
-    PERMISSIONS: Permisos
+    NEWGROUP: 'New Group'
+    PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
@@ -459,17 +459,17 @@ ca:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'No heu carregat cap imatge'
+    NOUPLOAD: 'No Image Uploaded'
   SiteTree:
     TABMAIN: Principal
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Afegeix una nova fila'
+    ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
-    CSVEXPORT: 'Exporta a CSV'
-    PRINT: Imprimeix
+    CSVEXPORT: 'Export to CSV'
+    PRINT: Print
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
@@ -480,15 +480,15 @@ ca:
     DISPLAYING: Displaying
     OF: of
     TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
+    VIEWFIRST: 'Veure el primer'
+    VIEWLAST: 'Veure el darrer'
+    VIEWNEXT: 'Veure el següent'
+    VIEWPREVIOUS: 'Veure l''anterior'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: menys
-    MORE: més
+    LESS: less
+    MORE: more
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'

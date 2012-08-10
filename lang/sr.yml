@@ -1,15 +1,15 @@
 sr:
   AssetAdmin:
-    NEWFOLDER: NewFolder
+    NEWFOLDER: 'Нова фасцикла'
   AssetTableField:
-    CREATED: 'Прво достављено'
-    DIM: Димензије
-    FILENAME: 'Име датотеке'
+    CREATED: 'First uploaded'
+    DIM: Dimensions
+    FILENAME: Filename
     FOLDER: Folder
-    LASTEDIT: 'Последње промењено'
-    OWNER: Власник
-    SIZE: Величина
-    TITLE: Наслов
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
     TYPE: Тип
     URL: URL
   AssetUploadField:
@@ -19,43 +19,43 @@ sr:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Fajlovi
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: Поравнање
-    ALIGNEMENTEXAMPLE: 'поравнат уз десну страну'
-    BOLD: 'Подебљан текст'
-    BOLDEXAMPLE: Подебљано
+    ALIGNEMENT: Alignment
+    ALIGNEMENTEXAMPLE: 'right aligned'
+    BOLD: 'Bold Text'
+    BOLDEXAMPLE: Bold
     CODE: 'Code Block'
     CODEDESCRIPTION: 'Unformatted code block'
     CODEEXAMPLE: 'Code block'
-    COLORED: 'Обојен текст'
-    COLOREDEXAMPLE: 'плави текст'
-    EMAILLINK: 'Веза е-поште'
-    EMAILLINKDESCRIPTION: 'Направите линк до адресе е-поште'
+    COLORED: 'Colored text'
+    COLOREDEXAMPLE: 'blue text'
+    EMAILLINK: 'Email link'
+    EMAILLINKDESCRIPTION: 'Create link to an email address'
     IMAGE: Слика
-    IMAGEDESCRIPTION: 'Прикажи слику у мојој поруци'
-    ITALIC: 'Искошен текст'
-    ITALICEXAMPLE: Искошено
+    IMAGEDESCRIPTION: 'Show an image in your post'
+    ITALIC: 'Italic Text'
+    ITALICEXAMPLE: Italics
     LINK: 'Website link'
-    LINKDESCRIPTION: 'Линк до другог вебсајта или URL'
-    STRUCK: 'Прецртан текст'
-    STRUCKEXAMPLE: Прецртано
-    UNDERLINE: 'Подвучен текст'
-    UNDERLINEEXAMPLE: Подвучено
-    UNORDERED: 'Неуређена листа'
-    UNORDEREDDESCRIPTION: 'Неуређена листа'
-    UNORDEREDEXAMPLE1: 'неуређена ставка 1'
+    LINKDESCRIPTION: 'Link to another website or URL'
+    STRUCK: 'Struck-out Text'
+    STRUCKEXAMPLE: Struck-out
+    UNDERLINE: 'Underlined Text'
+    UNDERLINEEXAMPLE: Underlined
+    UNORDERED: 'Unordered list'
+    UNORDEREDDESCRIPTION: 'Unordered list'
+    UNORDEREDEXAMPLE1: 'unordered item 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Унесите корисничко име и лозинку.'
-    ERRORNOTADMIN: 'Овај корисник није администратор.'
-    ERRORNOTREC: 'То корисничко име / лозинка није препознато'
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
+    ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     0: 'False'
     ANY: Any
@@ -67,14 +67,14 @@ sr:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
+    SAVE: Сачувај
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Променили сте своју лозинку за '
-    CHANGEPASSWORDTEXT2: 'Сада можете да користите следеће податке за пријављивање:'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
-    HELLO: Здраво
+    HELLO: Hi
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -84,53 +84,53 @@ sr:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Додај '
+    ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Сортирај у растућем поретку'
-    SORTDESC: 'Сортирају у опадајућем поретку'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: Следеће
-    PREVIOUS: Претходно
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Promeni Lozinku'
+    SHOWONCLICKTITLE: 'Change Password'
   CreditCardField:
-    FIRST: први
-    FOURTH: четврти
-    SECOND: други
-    THIRD: трећи
+    FIRST: first
+    FOURTH: fourth
+    SECOND: second
+    THIRD: third
   CurrencyField:
-    CURRENCYSYMBOL: дин.
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: дан
-    DAYS: дана
-    HOUR: сат
-    HOURS: сати
-    MIN: минут
-    MINS: минута
-    MONTH: месец
-    MONTHS: месеци
-    SEC: секунда
-    SECS: секунди
+    DAY: ' day'
+    DAYS: ' days'
+    HOUR: ' hour'
+    HOURS: ' hours'
+    MIN: ' min'
+    MINS: ' mins'
+    MONTH: ' month'
+    MONTHS: ' months'
+    SEC: ' sec'
+    SECS: ' secs'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: година
-    YEARS: година
+    YEAR: ' year'
+    YEARS: ' years'
   DateField:
     NOTSET: 'not set'
-    TODAY: данас
+    TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (изаберите)
+    CHOOSE: (Choose)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -146,8 +146,8 @@ sr:
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: Fajlovi
-    SINGULARNAME: Fajl
+    PLURALNAME: Files
+    SINGULARNAME: File
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
@@ -157,7 +157,7 @@ sr:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: Датотека
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,21 +167,21 @@ sr:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Здраво
+    HELLO: Hi
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s је захтевано'
+    FIELDISREQUIRED: '%s is required'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'Унета вредност није јединствена'
-    VALIDATIONPASSWORDSDONTMATCH: 'Лозинке се не поклапају'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Поља за лозинке не смеју да буду празна'
+    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE: без
+    NONE: none
   GridAction:
     DELETE_DESCRIPTION: Delete
     Delete: Delete
@@ -213,18 +213,18 @@ sr:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Grupni Kod'
+    Code: 'Group Code'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Zakljucano?'
+    Locked: 'Locked?'
     NoRoles: 'No roles found'
     Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    has_many_Permissions: Ovlašcenja
-    many_many_Members: članovi
+    has_many_Permissions: Permissions
+    many_many_Members: Members
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -238,19 +238,19 @@ sr:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Уметни линк'
-    BUTTONREMOVELINK: 'Уклони линк'
+    BUTTONINSERTLINK: 'Insert link'
+    BUTTONREMOVELINK: 'Remove link'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Поравнање / стил'
-    CSSCLASSCENTER: 'Центрирано, само за себе.'
-    CSSCLASSLEFT: 'Са леве стране, са текстом преломљеним около.'
+    CSSCLASS: 'Alignment / style'
+    CSSCLASSCENTER: 'Centered, on its own.'
+    CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'Са десне стране, са текстом преломљеним около.'
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
-    EMAIL: 'Адреса е-поште'
-    FILE: Датотека
-    FOLDER: Фасцикла
+    EMAIL: 'Email address'
+    FILE: File
+    FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -258,22 +258,22 @@ sr:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Димензије
-    IMAGEHEIGHTPX: Висина
+    IMAGEDIMENSIONS: Dimensions
+    IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Ширина
+    IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: Линк
+    LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'Опис линка'
-    LINKEMAIL: 'Имејл адреса'
+    LINKDESCR: 'Link description'
+    LINKEMAIL: 'Email address'
     LINKEXTERNAL: 'други сајт'
-    LINKFILE: 'Преузми датотеку'
-    LINKINTERNAL: 'страну на сајту'
-    LINKOPENNEWWIN: 'Отворити линк у  новом прозору?'
-    LINKTO: 'Повежи на'
+    LINKFILE: 'Download a file'
+    LINKINTERNAL: 'Page on the site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link to'
     PAGE: Страна
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -281,17 +281,17 @@ sr:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'Iframe за достављање слика'
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Помоћ
+    HELP: Help
     PAGETYPE: 'Тип стране:'
-    PERMAGAIN: 'Одјављени сте са CMS-а. Уколико желите да се поново пријавите, унесите корисничко име и лозинку.'
-    PERMALREADY: 'Не можете да приступите овом делу CMS-а. Ако желите да се пријавите као неко други, урадите то испод'
-    PERMDEFAULT: 'Унесите своју имејл адресу и лозинку за приступ CMS-у.'
-    PLEASESAVE: 'Сачувајте страну: ова страна не може да буде ажурирана јер још увек није сачувана.'
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -305,47 +305,47 @@ sr:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Промени лозинку'
+    BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Пријави се'
-    BUTTONLOGINOTHER: 'Пријавите се као неко други'
-    BUTTONLOSTPASSWORD: 'Заборавио сам лозинку'
-    CONFIRMNEWPASSWORD: 'Потврдите нову лозинку'
-    CONFIRMPASSWORD: 'Потврдите лозинку'
+    BUTTONLOGINOTHER: 'Log in as someone else'
+    BUTTONLOSTPASSWORD: 'I''ve lost my password'
+    CONFIRMNEWPASSWORD: 'Confirm New Password'
+    CONFIRMPASSWORD: 'Confirm Password'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: Е-пошта
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'Нова лозинка коју сте унели се не поклапа. Покушајте поново.'
-    ERRORPASSWORDNOTMATCH: 'Ваша тренутна лозинка се не поклапа. Покушајте поново.'
-    ERRORWRONGCRED: 'Ово не изгледа као исправна адреса е-поште или лозинка.'
-    FIRSTNAME: Име
-    INTERFACELANG: 'Језик интерфејса'
+    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
+    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
+    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
+    FIRSTNAME: 'First Name'
+    INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'Нова лозинка'
-    PASSWORD: Лозинка
-    PLURALNAME: članovi
+    NEWPASSWORD: 'New Password'
+    PASSWORD: Password
+    PLURALNAME: Members
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'Запамти ме за следећи пут'
-    SINGULARNAME: član
-    SUBJECTPASSWORDCHANGED: 'Ваша лозинка је промењена'
-    SUBJECTPASSWORDRESET: 'Линк за ресетовање ваше лозинке'
-    SURNAME: Презиме
-    VALIDATIONMEMBEREXISTS: 'Већ постоји члан са овом адресом е-поште'
+    REMEMBERME: 'Remember me next time?'
+    SINGULARNAME: Member
+    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
+    SURNAME: Surname
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'Ваша стара лозинка'
-    belongs_many_many_Groups: Grupe
+    YOUROLDPASSWORD: 'Your old password'
+    belongs_many_many_Groups: Groups
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Zaključan do'
+    db_LockedOutUntil: 'Locked out until'
     db_NumVisit: 'Number of Visits'
     db_Password: Password
-    db_PasswordExpiry: 'Datum Isteka Lozinke'
+    db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'Пошаљи лозинку'
+    TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -416,23 +416,23 @@ sr:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'Унесите исправан број телефона'
+    VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
-    ADD: Додај
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'Немате дозволу за приступ овој страни. Уколико имате други налог којим можете да приступите овој страни, пријавите се.'
-    BUTTONSEND: 'Пошаљи ми линк за ресетовање лозинке'
-    CHANGEPASSWORDBELOW: 'Овде можете да промените своју лозинку.'
-    CHANGEPASSWORDHEADER: 'Промени моју лозинку'
-    ENTERNEWPASSWORD: 'Унесите нову лозинку.'
-    ERRORPASSWORDPERMISSION: 'Морате да будете пријављени да бисте променили своју лозинку!'
-    LOGGEDOUT: 'Одјављени сте. Уколико желите да се поново пријавите, унесите своје податке.'
-    LOGIN: Пријављивање
-    NOTEPAGESECURED: 'Ова страна је обезбеђена. Унесите своје податке и ми ћемо вам послати садржај.'
+    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    BUTTONSEND: 'Send me the password reset link'
+    CHANGEPASSWORDBELOW: 'You can change your password below.'
+    CHANGEPASSWORDHEADER: 'Change your password'
+    ENTERNEWPASSWORD: 'Please enter a new password.'
+    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Унесите своју адресу е-поште и ми ћемо вам послати линк помоћу којег можете да промените своју лозинку'
+    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -447,7 +447,7 @@ sr:
     MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'Нова група'
+    NEWGROUP: 'New Group'
     PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
@@ -459,17 +459,17 @@ sr:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'Ниједна слика није достављена'
+    NOUPLOAD: 'No Image Uploaded'
   SiteTree:
     TABMAIN: Главно
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Додај нов ред'
+    ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
-    CSVEXPORT: 'Извези у CSV'
-    PRINT: Штампај
+    CSVEXPORT: 'Export to CSV'
+    PRINT: Print
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
@@ -482,13 +482,13 @@ sr:
     TO: to
     VIEWFIRST: 'View first'
     VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
+    VIEWNEXT: 'Погледај следеће'
+    VIEWPREVIOUS: 'Погледај претходно'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: мање
-    MORE: више
+    LESS: less
+    MORE: more
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'

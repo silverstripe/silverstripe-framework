@@ -57,14 +57,14 @@ de:
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
-    0: Nein
+    0: 'False'
     ANY: alle
-    1: Ja
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Lade Daten ...'
     REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
   CMSMain:
-    ACCESS: 'Zugang zum ''{title}'' Bereich'
+    ACCESS: 'Zugang zum Bereich ''{title}'''
     ACCESSALLINTERFACES: 'Zugriff auf alle Bereiche des CMS'
     ACCESSALLINTERFACESHELP: 'Hebt alle bereichspezifischen Berechtigungen auf.'
     SAVE: Speichern
@@ -77,8 +77,8 @@ de:
     HELLO: Hi
     PASSWORD: Passwort
   CheckboxField:
-    - Nein
-    - Ja
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
     SUCCESSADD2: '{name} hinzugefügt'
@@ -206,7 +206,7 @@ de:
   GridFieldDetailForm:
     Create: Erstellen
     Delete: Löschen
-    DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
+    DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
     Deleted: 'Gelöscht %s %s'
     Save: Speichern
     Saved: 'Gespeichert %s %s'
@@ -414,7 +414,7 @@ de:
     FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Rollen- und Zugriffsberechtigungen'
+    PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
   PhoneNumberField:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   RelationComplexTableField.ss:
@@ -473,17 +473,17 @@ de:
     Print: Drucken
     SELECT: 'Auswählen:'
   TableListField.ss:
-    NOITEMSFOUND: 'Keine Elemente gefunden.'
+    NOITEMSFOUND: 'Keine Elemente gefunden'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   TableListField_PageControls.ss:
     DISPLAYING: Zeige
     OF: von
     TO: bis
-    VIEWFIRST: 'Erste anzeigen'
-    VIEWLAST: 'Letzte anzeigen'
-    VIEWNEXT: 'Nächste anzeigen'
-    VIEWPREVIOUS: Vorheriger
+    VIEWFIRST: 'Ersten anzeigen'
+    VIEWLAST: 'Letzten anzeigen'
+    VIEWNEXT: 'Nächsten anzeigen'
+    VIEWPREVIOUS: 'Vorherigen anzeigen'
   TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   ToggleField:

@@ -1,15 +1,15 @@
 fo:
   AssetAdmin:
-    NEWFOLDER: NewFolder
+    NEWFOLDER: 'Nýggj skjátta'
   AssetTableField:
     CREATED: 'First uploaded'
     DIM: Dimensions
-    FILENAME: Fílunavn
+    FILENAME: Filename
     FOLDER: Folder
-    LASTEDIT: 'Seinast broyting'
-    OWNER: Eigari
-    SIZE: Stødd
-    TITLE: Heiti
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
     TYPE: Slag
     URL: URL
   AssetUploadField:
@@ -19,7 +19,7 @@ fo:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Fílur
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -34,28 +34,28 @@ fo:
     CODEDESCRIPTION: 'Unformatted code block'
     CODEEXAMPLE: 'Code block'
     COLORED: 'Colored text'
-    COLOREDEXAMPLE: 'bláur tekstur'
-    EMAILLINK: 'Teldupost leinka'
+    COLOREDEXAMPLE: 'blue text'
+    EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: 'Create link to an email address'
     IMAGE: Mynd
     IMAGEDESCRIPTION: 'Show an image in your post'
-    ITALIC: Skráskrift
-    ITALICEXAMPLE: Skráskrift
-    LINK: Heimasíðuleinka
+    ITALIC: 'Italic Text'
+    ITALICEXAMPLE: Italics
+    LINK: 'Website link'
     LINKDESCRIPTION: 'Link to another website or URL'
     STRUCK: 'Struck-out Text'
     STRUCKEXAMPLE: Struck-out
-    UNDERLINE: 'Undirstrikaður tekstur'
-    UNDERLINEEXAMPLE: Undirstrikað
+    UNDERLINE: 'Underlined Text'
+    UNDERLINEEXAMPLE: Underlined
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
-    ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'
-    ERRORNOTREC: 'Brúkaranavn / loyniorð er skeivt'
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
+    ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     0: 'False'
     ANY: Any
@@ -67,70 +67,70 @@ fo:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
+    SAVE: Goym
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Teldupostur
-    HELLO: Hey
+    HELLO: Hi
     PASSWORD: Loyniorð
   CheckboxField:
     - 'False'
     - 'True'
   ComplexTableField:
-    CLOSEPOPUP: 'Lat glugga aftur'
+    CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Stovna %s'
+    ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Raða hækkandi'
-    SORTDESC: 'Raða lækkandi'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: Næsta
-    PREVIOUS: Fyrra
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Broyt loyniorð'
+    SHOWONCLICKTITLE: 'Change Password'
   CreditCardField:
-    FIRST: fyrsta
-    FOURTH: fjóra
-    SECOND: næsta
-    THIRD: triða
+    FIRST: first
+    FOURTH: fourth
+    SECOND: second
+    THIRD: third
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Dáta eindir'
-    SINGULARNAME: 'Dáta eind'
+    PLURALNAME: 'Data Objects'
+    SINGULARNAME: 'Data Object'
   Date:
-    DAY: dagur
-    DAYS: dagar
-    HOUR: tími
-    HOURS: tímar
-    MIN: minuttur
-    MINS: minuttir
-    MONTH: máni
-    MONTHS: mánaðar
-    SEC: sekund
-    SECS: sekundir
+    DAY: ' day'
+    DAYS: ' days'
+    HOUR: ' hour'
+    HOURS: ' hours'
+    MIN: ' min'
+    MINS: ' mins'
+    MONTH: ' month'
+    MONTHS: ' months'
+    SEC: ' sec'
+    SECS: ' secs'
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ár
-    YEARS: ár
+    YEAR: ' year'
+    YEARS: ' years'
   DateField:
-    NOTSET: 'ikki ásett'
-    TODAY: 'í dag'
+    NOTSET: 'not set'
+    TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Áset)
+    CHOOSE: (Choose)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -140,24 +140,24 @@ fo:
     ANY: Any
   File:
     Content: Innihald
-    Filename: Fílunavn
+    Filename: Filename
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Navn
-    PLURALNAME: Fílur
-    SINGULARNAME: Fíla
+    Name: Name
+    PLURALNAME: Files
+    SINGULARNAME: File
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
-    Title: Heiti
+    Title: Title
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: Fíla
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,21 +167,21 @@ fo:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hey
-    TEXT1: 'Her er títt'
+    HELLO: Hi
+    TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s er kravt'
+    FIELDISREQUIRED: '%s is required'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'Virðið sum bleiv inntøppað er ikki eintýðugt'
-    VALIDATIONPASSWORDSDONTMATCH: 'Loyniorð samsvara ikki'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Loyniorð kunnu ikki verða tóm'
+    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE: einki
+    NONE: none
   GridAction:
     DELETE_DESCRIPTION: Delete
     Delete: Delete
@@ -205,7 +205,7 @@ fo:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Strika
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -213,18 +213,18 @@ fo:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Bólka kota'
+    Code: 'Group Code'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Frágreiðing
+    Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Læst?'
+    Locked: 'Locked?'
     NoRoles: 'No roles found'
-    Parent: Yvirbólkur
+    Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
-    Sort: 'Raða eftir'
-    has_many_Permissions: Loyvir
-    many_many_Members: Limir
+    Sort: 'Sort Order'
+    has_many_Permissions: Permissions
+    many_many_Members: Members
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -238,19 +238,19 @@ fo:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Stovna leinku'
-    BUTTONREMOVELINK: 'Strika leinku'
+    BUTTONINSERTLINK: 'Insert link'
+    BUTTONREMOVELINK: 'Remove link'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Í miðuni, einsamalt.'
-    CSSCLASSLEFT: 'Til vinstru, við tekstinum rundan um.'
+    CSSCLASSCENTER: 'Centered, on its own.'
+    CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'Til høgru, við tekstinum rundan um.'
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
-    EMAIL: Teldupostadressu
-    FILE: Fíla
-    FOLDER: Skjátta
+    EMAIL: 'Email address'
+    FILE: File
+    FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -259,21 +259,21 @@ fo:
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Hædd
+    IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Breidd
+    IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: Leinkja
+    LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'Leinku frágreiðing'
-    LINKEMAIL: Teldupostadressa
+    LINKDESCR: 'Link description'
+    LINKEMAIL: 'Email address'
     LINKEXTERNAL: 'Eina aðra heimasíðu'
-    LINKFILE: 'Heinta fílu niður'
+    LINKFILE: 'Download a file'
     LINKINTERNAL: 'Page on the site'
-    LINKOPENNEWWIN: 'Lat leinku upp í nýggjum vindeyga?'
-    LINKTO: 'Leinka til'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link to'
     PAGE: Síða
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -286,12 +286,12 @@ fo:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Leiðbeiningar
+    HELP: Help
     PAGETYPE: 'Slag av síðu:'
-    PERMAGAIN: 'Tú ert blivin útritaður av CMS skipanini. Um tú ynskir at innrita aftur, inntøppa so títt brúkaranavn og loyniorð niðanfyri:'
-    PERMALREADY: 'Tíanverri, tú hevur ikki atgongd til handan partin av CMS skipanini. Um tú ynskir at innrita sum onkur annar, so kann tú gera tað niðanfyri.'
-    PERMDEFAULT: 'Inntøppa tygara teldupost og loyniorð fyri at fáa atgongd til CMS skipanina.'
-    PLEASESAVE: 'Vinarliga goym síðuna: Hendan síðan kundi ikki blíva dagført, tí at hon er ikki goymd enn.'
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -300,17 +300,17 @@ fo:
     Hello: Hi
     LOGOUT: 'Log out'
   LoginAttempt:
-    Email: Teldupostur
-    IP: 'IP adressa'
-    Status: Støða
+    Email: 'Email Address'
+    IP: 'IP Address'
+    Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
+    BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: Innrita
-    BUTTONLOGINOTHER: 'Innrita sum onkur annar'
-    BUTTONLOSTPASSWORD: 'Eg havi gloymt mítt loyniorð'
-    CONFIRMNEWPASSWORD: 'Váttað nýtt loyniorð'
-    CONFIRMPASSWORD: 'Váttað loyniorð'
+    BUTTONLOGINOTHER: 'Log in as someone else'
+    BUTTONLOSTPASSWORD: 'I''ve lost my password'
+    CONFIRMNEWPASSWORD: 'Confirm New Password'
+    CONFIRMPASSWORD: 'Confirm Password'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: Teldupostur
@@ -318,34 +318,34 @@ fo:
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
-    ERRORPASSWORDNOTMATCH: 'Títt núverandi loyniorð samsvarar ikki, vinarliga royn aftur'
+    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: Fornavn
-    INTERFACELANG: 'Mál á markamóti'
+    FIRSTNAME: 'First Name'
+    INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'Nýtt loyniorð'
-    PASSWORD: Loyniorð
-    PLURALNAME: Limir
+    NEWPASSWORD: 'New Password'
+    PASSWORD: Password
+    PLURALNAME: Members
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'Minst til mín?'
-    SINGULARNAME: Limur
-    SUBJECTPASSWORDCHANGED: 'Títt loyniorð er nú broytt'
-    SUBJECTPASSWORDRESET: 'Leinka til at nullstilla títt loyniorð'
-    SURNAME: Eftirnavn
+    REMEMBERME: 'Remember me next time?'
+    SINGULARNAME: Member
+    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
+    SUBJECTPASSWORDRESET: 'Your password reset link'
+    SURNAME: Surname
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'Tygara gamla loyniorð'
-    belongs_many_many_Groups: Bólkur
+    YOUROLDPASSWORD: 'Your old password'
+    belongs_many_many_Groups: Groups
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Útihýstur inn til'
-    db_NumVisit: 'Tal av vitjanum'
-    db_Password: Loyniorð
-    db_PasswordExpiry: 'Loyniorð gongur út'
+    db_LockedOutUntil: 'Locked out until'
+    db_NumVisit: 'Number of Visits'
+    db_Password: Password
+    db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'Teldupostadressa &amp; Loyniorð'
+    TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -376,9 +376,9 @@ fo:
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Apply Filter'
-    DELETE: Strika
+    DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Innles frá CSV'
+    IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
     NOIMPORT: 'Nothing to import'
@@ -416,20 +416,20 @@ fo:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'Vinarliga inntøppa eitt galdandi telefonnummar'
+    VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
-    ADD: Stovna
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
-    CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
-    CHANGEPASSWORDHEADER: 'Broyt títt loyniorð'
-    ENTERNEWPASSWORD: 'Vinarliga inntøppa eitt nýtt loyniorð'
-    ERRORPASSWORDPERMISSION: 'Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!'
-    LOGGEDOUT: 'Tú ert blivin útritaður. Um tygum ynskja at innrita aftur, inntøppa so tínar upplýsningar niðanfyri.'
-    LOGIN: Innrita
+    BUTTONSEND: 'Send me the password reset link'
+    CHANGEPASSWORDBELOW: 'You can change your password below.'
+    CHANGEPASSWORDHEADER: 'Change your password'
+    ENTERNEWPASSWORD: 'Please enter a new password.'
+    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
+    LOGIN: 'Log in'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
@@ -441,14 +441,14 @@ fo:
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
     EDITPERMISSIONS: 'Manage permissions for groups'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: Bólkaheiti
+    GROUPNAME: 'Group name'
     IMPORTGROUPS: 'Import groups'
     IMPORTUSERS: 'Import users'
-    MEMBERS: Limir
+    MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'Nýggjur bólkur'
-    PERMISSIONS: Rættindi
+    NEWGROUP: 'New Group'
+    PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
@@ -468,8 +468,8 @@ fo:
     ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
-    CSVEXPORT: 'Útles til CSV'
-    PRINT: Prenta
+    CSVEXPORT: 'Export to CSV'
+    PRINT: Print
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
@@ -480,15 +480,15 @@ fo:
     DISPLAYING: Displaying
     OF: of
     TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
+    VIEWFIRST: 'Vís fyrstu'
+    VIEWLAST: 'Vís seinastu'
+    VIEWNEXT: 'Vís næstu'
+    VIEWPREVIOUS: 'Vís fyrru'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: minni
-    MORE: meira
+    LESS: less
+    MORE: more
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
@@ -514,4 +514,4 @@ fo:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: Útgávur
+    has_many_Versions: Versions
