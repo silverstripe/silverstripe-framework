@@ -446,7 +446,7 @@ jQuery.noConflict();
 			 * Requires HTML5 sessionStorage support.
 			 */
 			saveTabState: function() {
-				if(typeof(window.sessionStorage)=="undefined") return;
+				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage == null) return;
 
 				var selectedTabs = [], url = this._tabStateUrl();
 				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {
@@ -464,7 +464,7 @@ jQuery.noConflict();
 			 * Requires HTML5 sessionStorage support.
 			 */
 			restoreTabState: function() {
-				if(typeof(window.sessionStorage)=="undefined") return;
+				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage == null) return;
 
 				var self = this, url = this._tabStateUrl(),
 					data = window.sessionStorage.getItem('tabs-' + url),
