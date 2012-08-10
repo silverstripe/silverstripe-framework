@@ -1180,7 +1180,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$fields->findOrMakeTab('Root.Permissions', singleton('Permission')->i18n_plural_name());
 				$fields->addFieldToTab('Root.Permissions', $permissionsField);
 			}
-		}
+		}	
 		
 		$defaultDateFormat = Zend_Locale_Format::getDateFormat($this->Locale);
 		$dateFormatMap = array(
