@@ -154,7 +154,7 @@ class Versioned extends DataExtension {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
 
 				if($table != $baseTable) {
-					$query->addFrom(array($table => " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
+					$query->addWhere("\"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
 				}
 			}
 
