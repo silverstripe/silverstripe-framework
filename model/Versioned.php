@@ -145,7 +145,8 @@ class Versioned extends DataExtension {
 			$date = $dataQuery->getQueryParam('Versioned.date');
 			foreach($query->getFrom() as $table => $dummy) {
 				$query->renameTable($table, $table . '_versions');
-				$query->replaceText("\"$table\".\"ID\"", "\"$table\".\"RecordID\"");
+				$query->replaceText("\"{$table}_versions\".\"ID\"", "\"{$table}_versions\".\"RecordID\"");
+				$query->replaceText("`{$table}_versions`.`ID`", "`{$table}_versions`.`RecordID`");
 				
 				// Add all <basetable>_versions columns
 				foreach(self::$db_for_versions_table as $name => $type) {
