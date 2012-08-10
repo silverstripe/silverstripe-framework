@@ -1,6 +1,6 @@
 de:
   AssetAdmin:
-    NEWFOLDER: NewFolder
+    NEWFOLDER: 'Neuer Ordner'
   AssetTableField:
     CREATED: 'Erstmalig hochgeladen'
     DIM: Dimensionen
@@ -51,7 +51,7 @@ de:
     UNORDEREDDESCRIPTION: 'Ungeordnete Liste'
     UNORDEREDEXAMPLE1: 'Ungeordneter Eintrag 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Zurück
   BasicAuth:
     ENTERINFO: 'Bitte geben Sie einen Nutzernamen und ein Passwort ein'
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
@@ -64,10 +64,10 @@ de:
     LOADING: 'Lade Daten ...'
     REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'Zugang zum ''{title}'' Bereich'
     ACCESSALLINTERFACES: 'Zugriff auf alle Bereiche des CMS'
     ACCESSALLINTERFACESHELP: 'Hebt alle bereichspezifischen Berechtigungen auf.'
-    SAVE: Save
+    SAVE: Speichern
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
@@ -284,7 +284,7 @@ de:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
     CANT_REORGANISE: 'Sie besitzen nicht die benötigten Zugriffsrechte um Seiten der höchsten Ebene zu bearbeiten. Ihre Änderungen wurden nicht gespeichert.'
-    DELETED: Deleted.
+    DELETED: Gelöscht.
     DropdownBatchActionsDefault: Aktionen
     HELP: Hilfe
     PAGETYPE: 'Seitentyp:'
@@ -292,9 +292,9 @@ de:
     PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
     PERMDEFAULT: 'Bitte wählen Sie eine Authentifizierungsmethode und geben Sie Ihre Benutzerdaten für den Zugang zum CMS ein.'
     PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
-    PreviewButton: Preview
+    PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Der Seitenbaum wurde erfolgreich sortiert.'
-    SAVEDUP: Saved.
+    SAVEDUP: Gespeichert.
     VersionUnknown: Unbekannt
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -405,7 +405,7 @@ de:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
+    CMS_ACCESS_CATEGORY: 'CMS Zugriff'
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
   PermissionCheckboxSetField:
@@ -414,7 +414,7 @@ de:
     FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    PERMISSIONS_CATEGORY: 'Rollen- und Zugriffsberechtigungen'
   PhoneNumberField:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   RelationComplexTableField.ss:
@@ -471,19 +471,19 @@ de:
     CSVEXPORT: 'Als CSV-Datei exportieren'
     PRINT: drucken
     Print: Drucken
-    SELECT: 'Select:'
+    SELECT: 'Auswählen:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+    NOITEMSFOUND: 'Keine Elemente gefunden.'
+    SORTASC: 'Aufsteigend sortieren'
+    SORTDESC: 'Absteigend sortieren'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
+    DISPLAYING: Zeige
+    OF: von
+    TO: bis
+    VIEWFIRST: 'Erste anzeigen'
+    VIEWLAST: 'Letzte anzeigen'
+    VIEWNEXT: 'Nächste anzeigen'
+    VIEWPREVIOUS: Vorheriger
   TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
   ToggleField:
