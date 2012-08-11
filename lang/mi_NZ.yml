@@ -57,9 +57,9 @@ mi_NZ:
     ERRORNOTADMIN: 'Ehara tēnā kaiwhakamahi i te kaiwhakahaere'
     ERRORNOTREC: 'Kāore i te mōhiotia tēnā ingoa kaiwhakamahi / kupuhipa'
   Boolean:
-    0: 'False'
+    0: Hē
     ANY: 'Ko tētahi'
-    1: 'True'
+    1: Pono
   CMSLoadingScreen.ss:
     LOADING: 'Uta ana...'
     REQUIREJS: 'Ka hiahia te CMS kia whakahohea te JavaScript'
@@ -77,8 +77,8 @@ mi_NZ:
     HELLO: 'Kia ora'
     PASSWORD: Kupuhipa
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Hē
+    - Pono
   ComplexTableField:
     CLOSEPOPUP: 'Kati Pakū-Ake'
     SUCCESSADD2: 'Kua tāpiritia a  {name}'
