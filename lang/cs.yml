@@ -232,7 +232,7 @@ cs:
     ResultDeleted: 'Smazáno %d skupin'
     ResultUpdated: 'Aktualizováno %d skupin'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed: 'Nekonečná smyčka se nachází v "{type}" hierarchii. Prosím změňte rodiče pro vyřešení problému'
   HtmlEditorField:
     ADDURL: 'Přidat URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozměry'
@@ -347,25 +347,25 @@ cs:
   MemberAuthenticator:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
     Custom: Vlastní
     DATEFORMATBAD: 'Formát datumu není platný'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
+    DAYNOLEADING: 'Den měsíce bez nuly'
+    DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
+    FOURDIGITYEAR: 'Čtyřčíslí roku'
+    FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
+    HOURNOLEADING: 'Hodina bez nuly'
+    MINUTENOLEADING: 'Minuta bez nul'
+    MONTHNOLEADING: 'Číslo měsíce bez nuly'
     Preview: Náhled
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    SHORTMONTH: 'Krátký název měsíce (např. Čer)'
     TOGGLEHELP: 'Přepni nápovědu formátování'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    TWODIGITDAY: 'Dvojčíslí dne měsíce'
+    TWODIGITHOUR: 'Dvojčíslí hodiny (00 až 23)'
+    TWODIGITMINUTE: 'Dvojčíslí minuty (00 až 59)'
+    TWODIGITMONTH: 'Dvojčíslí měséce (01=Leden, atď.)'
+    TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
+    TWODIGITYEAR: 'Dvojčíslí roku'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -431,10 +431,10 @@ cs:
     LOGGEDOUT: 'Byli jste odhlášeni. Pokud se chcete znovu přihlásit, vložte své přihlašovací údaje.'
     LOGIN: Přihlásit
     NOTEPAGESECURED: 'Tato stránka je zabezpečená. Vložte své přihlašovací údaje a my Vám zároveň pošleme práva.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>Odkaz na resetování hesla není platný nebo je prošlý.</p><p>Můžete požádat o nový <a href="{link1}">zde</a> nebo změňte své heslo až <a href="{link2}">se přihlásíte</a>.</p>'
     NOTERESETPASSWORD: 'Zadejte svou e-mailovou adresu a bude vám zaslán nulovací odkaz pro Vaše heslo'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'Odkaz na resetování hesla byl odeslán na ''{email}'''
+    PASSWORDSENTTEXT: 'Děkujeme! Resetovací odkaz byl odeslán na ''{email}'', pokud účet existuje pro tuto emailovou adresu.'
   SecurityAdmin:
     ACCESS_HELP: 'Povolit prohlížení, přidávání a úpravu uživatelů, jako i přidělování oprávnění pro ně.'
     APPLY_ROLES: 'Použít role na skupiny'
