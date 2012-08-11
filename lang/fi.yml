@@ -18,10 +18,10 @@ fi:
     DROPAREA: Pudotusalue
     EDITALL: 'Muokkaa kaikkia'
     EDITANDORGANIZE: 'Muokkaa & järjestele'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Muokkaa tiedostoja'
     FILES: Tiedostot
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTER: 'Valitse tiedostoja omalta tietokoneeltasi'
+    FROMCOMPUTERINFO: 'Siirrä omalta tietokoneeltasi'
     TOTAL: Yhteensä
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
     UPLOADOR: TAI
@@ -57,12 +57,12 @@ fi:
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
-    0: 'False'
+    0: Epätosi
     ANY: Yhtään
-    1: 'True'
+    1: Tosi
   CMSLoadingScreen.ss:
     LOADING: Ladataan...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
   CMSMain:
     ACCESS: 'Pääsy ''{title}'' -osioon'
     ACCESSALLINTERFACES: 'Pääsy kaikkiin CMS-osioihin'
@@ -77,15 +77,15 @@ fi:
     HELLO: Hei
     PASSWORD: Salasana
   CheckboxField:
-    - 'False'
-    - 'True'
+    - 'Ei valintaa'
+    - Valittu
   ComplexTableField:
     CLOSEPOPUP: 'Sulje ponnahdusikkuna'
     SUCCESSADD2: 'Lisättiin {name}'
     SUCCESSEDIT: 'Tallennettu %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
-    NOITEMSFOUND: 'No items found'
+    ADDITEM: 'Lisää %s'
+    NOITEMSFOUND: 'Kohteita ei löytynyt'
     SORTASC: 'Nouseva järjestys'
     SORTDESC: 'Laskeva järjestys'
   ComplexTableField_popup.ss:
@@ -297,7 +297,7 @@ fi:
     SAVEDUP: Tallennettu.
     VersionUnknown: tuntematon
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: Hei
     LOGOUT: 'Kirjaudu ulos'
   LoginAttempt:
     Email: Sähköpostiosoite
@@ -387,9 +387,9 @@ fi:
     UPDATEDRECORDS: 'Päivitettiin {count} tietuetta'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Tietokannan sarakkeet'
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Näytä erittely kohteelle %s'
     IMPORTSPECRELATIONS: Yhteydet
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Erittely kohteelle %s'
   ModelAdmin_Tools.ss:
     FILTER: Suodin
     IMPORT: Tuo
@@ -419,8 +419,8 @@ fi:
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
   RelationComplexTableField.ss:
     ADD: Lisää
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Vie CSV-muodossa'
+    NOTFOUND: 'Yhtään kohdetta ei löytynyt'
   Security:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
@@ -466,20 +466,20 @@ fi:
     ISREQUIRED: 'Kohteessa %s on ''%s'' pakollinen'
   TableField.ss:
     ADD: 'Lisää uusi rivi'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Lisää %s'
   TableListField:
     CSVEXPORT: 'Vie CSV:nä'
     PRINT: Tulosta
     Print: Tulosta
     SELECT: 'Valitse:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Kohteita ei löytynyt'
     SORTASC: 'Järjestä nousevasti'
     SORTDESC: 'Järjestä laskevasti'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+    DISPLAYING: Näytetään
+    OF: /
+    TO: -»
     VIEWFIRST: 'Näytä ensimmäinen'
     VIEWLAST: 'Näytä viimeinen'
     VIEWNEXT: 'Näytä seuraava'
@@ -493,17 +493,17 @@ fi:
     ATTACHFILE: 'Liitä tiedosto'
     ATTACHFILES: 'Liitä tiedostoja'
     AttachFile: 'Liitä tiedostoja'
-    DELETE: 'Delete from files'
+    DELETE: 'Poista tiedostoista'
     DELETEINFO: 'Poista tiedosto pysyvästi'
     DOEDIT: Tallenna
     DROPFILE: 'Pudota tiedosto'
     DROPFILES: 'pudota tiedostot'
     Dimensions: Mitat
-    EDIT: Edit
+    EDIT: Muokkaa
     EDITINFO: 'Muokkaa tätä tiedostoa'
     FIELDNOTSET: 'Tietoja tiedostosta ei löytynyt'
     FROMCOMPUTER: 'Omalta tietokoneeltasi'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Valitse tiedostoista'
     FROMFILES: Tiedostoista
     MAXNUMBEROFFILES: 'Suurin sallittu määrä ({count}) tiedostoja ylitetty.'
     MAXNUMBEROFFILESSHORT: 'Voidaan siirtää vain {count} tiedostoa'
@@ -511,7 +511,7 @@ fi:
     REMOVEERROR: 'Virhe poistettaessa tiedostoa'
     REMOVEINFO: 'Poista tiedosto, mutta säilytä se tiedostovarastossa'
     STARTALL: 'Aloita kaikki'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Aloita kaikkien siirto'
     Saved: Tallennettu
   Versioned:
     has_many_Versions: Versiot

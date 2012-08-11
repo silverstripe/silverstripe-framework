@@ -19,7 +19,7 @@ it:
     EDITALL: 'Modifica tutti'
     EDITANDORGANIZE: 'Modifica & organizza'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: File
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Totale

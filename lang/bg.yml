@@ -188,8 +188,8 @@ bg:
     UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
-    Filter: Filter
-    FilterBy: 'Filter by '
+    Filter: Филтър
+    FilterBy: 'Филтриране по'
     Find: Find
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
@@ -205,7 +205,7 @@ bg:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Създай
-    Delete: Delete
+    Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -295,7 +295,7 @@ bg:
     PreviewButton: Преглед
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Записано
-    VersionUnknown: unknown
+    VersionUnknown: непозната
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -405,7 +405,7 @@ bg:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
+    CMS_ACCESS_CATEGORY: 'Достъп до CMS'
     FULLADMINRIGHTS: 'Пълни административни права'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
   PermissionCheckboxSetField:

@@ -183,7 +183,7 @@ ja_JP:
   FormField:
     NONE: 何もありません
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: 削除
     Delete: 削除
     UnlinkRelation: リンク解除
   GridField:

@@ -183,7 +183,7 @@ nl:
   FormField:
     NONE: geen
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Verwijder
     Delete: Verwijder
     UnlinkRelation: Ontkoppelen
   GridField:

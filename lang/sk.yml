@@ -183,7 +183,7 @@ sk:
   FormField:
     NONE: žiadne
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Odstrániť
     Delete: Odstrániť
     UnlinkRelation: Unlink
   GridField:
@@ -205,7 +205,7 @@ sk:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Vymazať
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
