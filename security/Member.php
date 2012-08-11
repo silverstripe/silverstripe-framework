@@ -396,9 +396,11 @@ class Member extends DataObject {
 				Session::set("loggedInAs", $member->ID);
 				// This lets apache rules detect whether the user has logged in
 				if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0, null, null, false, true);
-				
+
 				$generator = new RandomGenerator();
-				$member->RememberLoginToken = $generator->generateHash('sha1');
+
+				// Generate a new token; save it in the database and the alc_enc cookie
+				$member->RememberLoginToken = $token = $generator->generateHash('sha1');
 				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
 
 				$member->NumVisit++;
