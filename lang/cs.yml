@@ -5,7 +5,7 @@ cs:
     CREATED: 'Poprvé nahráno'
     DIM: Rozměry
     FILENAME: 'Název souboru'
-    FOLDER: Folder
+    FOLDER: Složka
     LASTEDIT: 'Naposledy změněno'
     OWNER: Vlastník
     SIZE: Velikost
@@ -18,10 +18,10 @@ cs:
     DROPAREA: 'Oblast tažení (Drop)'
     EDITALL: 'Editovat vše'
     EDITANDORGANIZE: 'Editovat & organizovat'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Editovat soubory'
     FILES: Soubory
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTER: 'Vyberte soubory z vašeho počítače'
+    FROMCOMPUTERINFO: 'Nahrát z vašeho počítače'
     TOTAL: Celkem
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: NEBO
@@ -57,12 +57,12 @@ cs:
     ERRORNOTADMIN: 'Tento uživatel není administrátor.'
     ERRORNOTREC: 'Toto uživatelské jméno / heslo nebylo rozpoznáno'
   Boolean:
-    0: 'False'
+    0: Nepravda
     ANY: Jakkýkoliv
-    1: 'True'
+    1: Pravda
   CMSLoadingScreen.ss:
     LOADING: 'Nahrávání ...'
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'CMS vyžaduje, aby jste měli JavaScript povolen.'
   CMSMain:
     ACCESS: 'Přístup k ''{title}'' sekci'
     ACCESSALLINTERFACES: 'Přístup ke všem sekcím CMS'
@@ -92,9 +92,9 @@ cs:
     NEXT: Další
     PREVIOUS: Předchozí
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    ATLEAST: 'Heslo musí být nejméně {min} znaků dlouhé.'
+    BETWEEN: 'Heslo musí být {min} až {max} znaků dlouhé.'
+    MAXIMUM: 'Heslo musí být nanejvýš {max} znaků dlouhé.'
     SHOWONCLICKTITLE: 'Změnit heslo'
   CreditCardField:
     FIRST: první
@@ -117,8 +117,8 @@ cs:
     MONTHS: měsíce
     SEC: sekunda
     SECS: sekundy
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFAGO: '{difference} před'
+    TIMEDIFFIN: 'v {difference}'
     YEAR: rok
     YEARS: roky
   DateField:
@@ -141,22 +141,22 @@ cs:
   File:
     Content: Obsah
     Filename: 'Jméno souboru'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSION: 'Extenze není povolena (platné: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extenze není povolena'
     NOFILESIZE: 'Velikost souboru je 0 bajtů.'
     NOVALIDUPLOAD: 'Soubor není validní pro nahrání'
     Name: Jméno
     PLURALNAME: Soubory
     SINGULARNAME: Soubor
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
+    TOOLARGESHORT: 'Velikost souboru překračuje {size}'
     Title: Titulek
   FileIFrameField:
     ATTACH: 'Připojit {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED: '{type} je možné připojit až budete mít nejdříve uložen záznam.'
+    ATTACHONCESAVED2: 'Soubor je možné připojit až budete mít nejdříve uložen záznam.'
     DELETE: 'Smazat {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    DISALLOWEDFILETYPE: 'Tento typ souboru není povoleno náhrát'
     FILE: Soubor
     FROMCOMPUTER: 'Z tvého počítače'
     FROMFILESTORE: 'Ze souborového úložiště'
@@ -173,13 +173,13 @@ cs:
     TEXT3: pro
   Form:
     FIELDISREQUIRED: '%s je požadováno.'
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONCREDITNUMBER: 'Prosím ujistěte se, že jste zadal/a {number} číslo kreditní karty správně'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota není unikátní'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla se neshodují'
     VALIDATIONPASSWORDSNOTEMPTY: 'Hesla nemohou být prázdná'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONSTRONGPASSWORD: 'Hesla musí obsahovat nejméně jednu číslici a jeden alfanumerický znak.'
     VALIDATOR: Validátor
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: 'Prosím zadejte platnou měnu'
   FormField:
     NONE: žádný
   GridAction:
@@ -196,10 +196,10 @@ cs:
     NewRecord: 'Nový %s'
     NoItemsFound: 'Žádné položky'
     PRINTEDAT: 'Vytištěno v'
-    PRINTEDBY: 'Printed by'
+    PRINTEDBY: Vytištěno
     PlaceHolder: 'Hledat {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
+    PlaceHolderWithLabels: 'Hledat {type} podle {name}'
+    RelationSearch: 'Vztah hledání'
     ResetFilter: Resetovat
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
@@ -257,7 +257,7 @@ cs:
     FindInFolder: 'Hledat ve složce'
     IMAGEALT: 'Alternativní text (alt)'
     IMAGEALTTEXT: 'Alternativní text (alt) - bude ukázán, když obrázek nemúže být zobrazen'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Zobrazeno na obrazovce, když obrázek nemůže být zobrazen'
     IMAGEDIMENSIONS: Rozměry
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
@@ -276,14 +276,14 @@ cs:
     LINKTO: 'Odkázat na'
     PAGE: Stránku
     URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Aktualizovat média'
   ImageField:
     IMAGE: Obrázek
   Image_iframe.ss:
     TITLE: 'Rámec pro nahrání obrázku'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    CANT_REORGANISE: 'Nemáte oprávnění měnit stránky nejvyšší úrovně. Vaše změna nebyla uložena.'
     DELETED: Smazáno.
     DropdownBatchActionsDefault: Akce
     HELP: Nápověda
@@ -293,12 +293,12 @@ cs:
     PERMDEFAULT: 'Pro přístup do CMS zadejte Vaši e-mailovou adresu a heslo.'
     PLEASESAVE: 'Prosím uložte stránku: Tato stránka nemohla být aktualizována, protože ještě nebyla uložena.'
     PreviewButton: Náhled
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.
     VersionUnknown: neznámé
   LeftAndMain_Menu.ss:
     Hello: Ahoj
-    LOGOUT: 'Log out'
+    LOGOUT: Odhlášení
   LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
@@ -334,7 +334,7 @@ cs:
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
     SURNAME: Příjmení
     VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejnou %s'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    ValidationIdentifierFailed: 'Nemůžete přepsat existujícího člena #{id} s identickým identifikátorem ({name} = {value}))'
     WELCOMEBACK: 'Vítejte zpět, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
@@ -359,7 +359,7 @@ cs:
     MONTHNOLEADING: 'Month digit without leading zero'
     Preview: Náhled
     SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
+    TOGGLEHELP: 'Přepni nápovědu formátování'
     TWODIGITDAY: 'Two-digit day of month'
     TWODIGITHOUR: 'Two digits of hour (00 through 23)'
     TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
@@ -377,16 +377,16 @@ cs:
   ModelAdmin:
     'APPLY FILTER': 'Použít filtr'
     DELETE: Smazat
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: 'Smazáno {count} záznamů.'
     IMPORT: 'Importovat ze souboru CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: 'Importováno {count} záznamů.'
     NOCSVFILE: 'Prosím, vyhledejte soubor CSV pro import'
     NOIMPORT: 'Nic k importu'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    RESET: Resetovat
+    Title: 'Modely dat'
+    UPDATEDRECORDS: 'Aktualizováno {count} záznamů.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECFIELDS: 'Sloupce databáze'
     IMPORTSPECLINK: 'Ukázat specifikaci pro %s'
     IMPORTSPECRELATIONS: Relace
     IMPORTSPECTITLE: 'Specifikace pro %s'
@@ -409,9 +409,9 @@ cs:
     FULLADMINRIGHTS: 'Plná administrátorská práva'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    AssignedTo: 'přiděleno "{title}"'
+    FromGroup: 'zděděno ze skupiny "{title}"'
+    FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a přístupová práva'
@@ -493,17 +493,17 @@ cs:
     ATTACHFILE: 'Připojit soubor'
     ATTACHFILES: 'Připojit soubory'
     AttachFile: 'Attach a file'
-    DELETE: 'Delete from files'
+    DELETE: 'Smazat ze souborů'
     DELETEINFO: 'Trvale odstranit tento soubor z úložiště souborů'
     DOEDIT: Uložit
     DROPFILE: 'pusť soubor'
     DROPFILES: 'pusť soubory'
     Dimensions: Rozměry
-    EDIT: Edit
+    EDIT: Editovat
     EDITINFO: 'Editovat tento soubor'
     FIELDNOTSET: 'Žádná informace o souboru'
     FROMCOMPUTER: 'Z vašeho počítače'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Vyberte ze souborů'
     FROMFILES: 'Ze souborů'
     MAXNUMBEROFFILES: 'Maximální počet {count} soubor(ů) překročen.'
     MAXNUMBEROFFILESSHORT: 'Můžete nahrát pouze {count} souborů'
@@ -511,7 +511,7 @@ cs:
     REMOVEERROR: 'Chyba odstranění souboru'
     REMOVEINFO: 'Odtranit tento soubor odsud, ale nesmazat ho z ůložiště souborů'
     STARTALL: 'Začni vše'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Začni vše nahrávat'
     Saved: Uloženo
   Versioned:
     has_many_Versions: Verze
