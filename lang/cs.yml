@@ -51,7 +51,7 @@ cs:
     UNORDEREDDESCRIPTION: 'Neuspořádaný seznam'
     UNORDEREDEXAMPLE1: 'Neuspořádaná položka 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Zpět
   BasicAuth:
     ENTERINFO: 'Prosím zadejte uživatelské jméno a heslo.'
     ERRORNOTADMIN: 'Tento uživatel není administrátor.'
@@ -64,17 +64,17 @@ cs:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'Přístup k ''{title}'' sekci'
     ACCESSALLINTERFACES: 'Přístup ke všem sekcím CMS'
     ACCESSALLINTERFACESHELP: 'Prepíše více specifické nastavení přístupu.'
     SAVE: Uložit
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Změnil/a jste své heslo na'
+    CHANGEPASSWORDTEXT2: 'Nyní můžete použít následující přihlašovací údaje pro přihlášení:'
     EMAIL: Email
-    HELLO: Hi
+    HELLO: Ahoj
     PASSWORD: Heslo
   CheckboxField:
     - 'False'
@@ -124,9 +124,9 @@ cs:
   DateField:
     NOTSET: nenastaveno
     TODAY: dnes
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+    VALIDDATEFORMAT2: 'Prosím zadejte platný formát datumu ({format})'
+    VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající miximu povoleného datumu ({date})'
+    VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -212,14 +212,14 @@ cs:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Přidat roli pro tuto skupinu'
     Code: 'Kód skupiny'
     DefaultGroupTitleAdministrators: Administrátoři
     DefaultGroupTitleContentAuthors: 'Autoři obsahu'
     Description: Popis
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Když vyberete nadřizenou skupinu, tato skupina bude mít všechny její role'
     Locked: 'Zamčený?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Žádné role nalezeny'
     Parent: 'Rodičovská skupina'
     RolesAddEditLink: 'Přidat/editovat role'
     Sort: Řazení
@@ -281,10 +281,10 @@ cs:
   ImageField:
     IMAGE: Obrázek
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Rámec pro nahrání obrázku'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    DELETED: Smazáno.
     DropdownBatchActionsDefault: Actions
     HELP: Nápověda
     PAGETYPE: 'Typ stránky:'
@@ -292,9 +292,9 @@ cs:
     PERMALREADY: 'Je nám líto, ale nemůžete vstoupit do této části CMS. Pokud se chcete přihlásit jako někdo jiný, udělejte tak níže'
     PERMDEFAULT: 'Pro přístup do CMS zadejte Vaši e-mailovou adresu a heslo.'
     PLEASESAVE: 'Prosím uložte stránku: Tato stránka nemohla být aktualizována, protože ještě nebyla uložena.'
-    PreviewButton: Preview
+    PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: Uloženo.
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -304,7 +304,7 @@ cs:
     IP: 'IP adresy'
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Přidat skupinu'
     BUTTONCHANGEPASSWORD: 'Změnit heslo'
     BUTTONLOGIN: 'Přihlásit se'
     BUTTONLOGINOTHER: 'Přihlásit se jako někdo jiný'
@@ -312,7 +312,7 @@ cs:
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
     DefaultAdminFirstname: 'Implicitní Admin'
-    DefaultDateTime: default
+    DefaultDateTime: implicitní
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Nové heslo nesmí být prázdné, zkuste to znovu'
     ENTEREMAIL: 'Zadejte e-mailovou adresu pro získání odkazu na restart hesla.'
@@ -322,8 +322,8 @@ cs:
     ERRORWRONGCRED: 'Toto nevypadá jako správná emailová adresa nebo heslo. Prosím zkuste to znovu.'
     FIRSTNAME: 'Křestní jméno'
     INTERFACELANG: 'Jazyk rozhraní'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Nemohli jsme připustit, že heslo: {password}'
+    LOGGEDINAS: 'Jste přihlášen/a jako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo
     PLURALNAME: Členové
@@ -335,7 +335,7 @@ cs:
     SURNAME: Příjmení
     VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejnou %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Vítejte zpět, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
     db_LastVisited: 'Datum poslední návštěvy'
@@ -442,17 +442,17 @@ cs:
     EDITPERMISSIONS: 'Upravit oprávnění pro skupiny'
     EDITPERMISSIONS_HELP: 'Možnost editovat oprávnění a IP adresy pro skupinu. Vyžaduje oprávnění  pro "Přístup do sekce ''Bezpečnost''".'
     GROUPNAME: 'Jméno skupiny'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Import skupin'
+    IMPORTUSERS: 'Import uživatelů'
     MEMBERS: Členové
-    MENUTITLE: Security
+    MENUTITLE: Zabezpečení
     MemberListCaution: 'Varování: Odstranění členů z tohoto seznamu způsobí, že členové budou odtraněni ze všech skupin a databáze'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Práva
     ROLES: Role
     ROLESDESCRIPTION: 'Tato sekce umožňuje přidat role této skupině. Role jsou logické seskupení oprávnění, které mohou být změněné v záložce Role'
     TABROLES: Role
-    Users: Users
+    Users: Uživatelé
   SecurityAdmin_MemberImportForm:
     BtnImport: Import
     FileFieldLabel: 'Soubor CSV <small>(Povoleny přípony: *.csv)</small>'
@@ -490,25 +490,25 @@ cs:
     LESS: méně
     MORE: více
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
+    ATTACHFILE: 'Připojit soubor'
+    ATTACHFILES: 'Připojit soubory'
     AttachFile: 'Attach a file'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DOEDIT: Uložit
     DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
-    Dimensions: Dimensions
+    DROPFILES: 'pusť soubory'
+    Dimensions: Rozměry
     EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
+    EDITINFO: 'Editovat tento soubor'
+    FIELDNOTSET: 'Informace o souboru nenalezena'
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    FROMFILES: 'Ze souborů'
+    MAXNUMBEROFFILES: 'Maximální počet {count} soubor(ů) překročen.'
+    MAXNUMBEROFFILESSHORT: 'Můžete nahrát pouze {count} souborů'
+    REMOVE: Odstranit
+    REMOVEERROR: 'Chyba odstranění souboru'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
