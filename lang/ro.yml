@@ -13,7 +13,7 @@ ro:
     TYPE: 'File type'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
+    ChooseFiles: 'Alegeti fisierele'
     DRAGFILESHERE: 'Drag files here'
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
@@ -33,8 +33,8 @@ ro:
     CODE: 'Code Block'
     CODEDESCRIPTION: 'Unformatted code block'
     CODEEXAMPLE: 'Code block'
-    COLORED: 'Colored text'
-    COLOREDEXAMPLE: 'blue text'
+    COLORED: 'Text colorat'
+    COLOREDEXAMPLE: 'Text albastru'
     EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: 'Create link to an email address'
     IMAGE: Image
@@ -46,15 +46,15 @@ ro:
     STRUCK: 'Struck-out Text'
     STRUCKEXAMPLE: Struck-out
     UNDERLINE: 'Underlined Text'
-    UNDERLINEEXAMPLE: Underlined
+    UNDERLINEEXAMPLE: Subliniat
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Please enter a username and password.'
-    ERRORNOTADMIN: 'That user is not an administrator.'
+    ENTERINFO: 'Va rugam introduceţi un user si o parolă.'
+    ERRORNOTADMIN: 'Acest utilizator nu este un administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     0: 'False'
@@ -71,10 +71,10 @@ ro:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
-    HELLO: Hi
+    HELLO: Salut
     PASSWORD: Parola
   CheckboxField:
     - 'False'
@@ -86,51 +86,51 @@ ro:
   ComplexTableField.ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Sortează ascendent'
+    SORTDESC: 'Sortează descendent'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Urmatorul
+    PREVIOUS: Anteriorul
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    SHOWONCLICKTITLE: 'Schimba Parola'
   CreditCardField:
-    FIRST: first
-    FOURTH: fourth
-    SECOND: second
-    THIRD: third
+    FIRST: primul
+    FOURTH: 'al patrulea'
+    SECOND: 'al doilea'
+    THIRD: 'al treilea'
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME: 'Obiecte Data'
+    SINGULARNAME: 'Obiect Data'
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
-    MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    DAY: zi
+    DAYS: zile
+    HOUR: oră
+    HOURS: ore
+    MIN: minut
+    MINS: minute
+    MONTH: lună
+    MONTHS: luni
+    SEC: secundă
+    SECS: secunde
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: an
+    YEARS: ani
   DateField:
     NOTSET: 'not set'
-    TODAY: today
+    TODAY: astazi
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Choose)
+    CHOOSE: (Alege)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -146,8 +146,8 @@ ro:
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Fisiere
+    SINGULARNAME: Fisier
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
@@ -167,14 +167,14 @@ ro:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hi
+    HELLO: Salut
     TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    TEXT2: 'link de resetare a parolei'
+    TEXT3: pentru
   Form:
     FIELDISREQUIRED: '%s is required'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
+    VALIDATIONNOTUNIQUE: 'Valoarea introdusă nu este unică'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
@@ -190,13 +190,13 @@ ro:
     Add: 'Add {name}'
     Filter: Filtru
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Gaseste
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
     NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    PRINTEDAT: 'Imprimat la'
+    PRINTEDBY: 'Imprimat de'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
@@ -213,18 +213,18 @@ ro:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Group Code'
-    DefaultGroupTitleAdministrators: Administrators
+    Code: 'Cod Grup'
+    DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Description
+    Description: Descriere
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
+    Locked: 'Blocat?'
     NoRoles: 'No roles found'
-    Parent: 'Parent Group'
+    Parent: 'Grup de Baza'
     RolesAddEditLink: 'Manage roles'
-    Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    Sort: 'Ordine de sortare'
+    has_many_Permissions: Permisiuni
+    many_many_Members: Membri
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -238,19 +238,19 @@ ro:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Insert link'
-    BUTTONREMOVELINK: 'Remove link'
+    BUTTONINSERTLINK: 'Insereaza link'
+    BUTTONREMOVELINK: 'Indeparteaza link'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
+    CSSCLASS: 'Aliniere / stil'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
-    EMAIL: 'Email address'
-    FILE: File
-    FOLDER: Folder
+    EMAIL: 'Adresa email'
+    FILE: Fisier
+    FOLDER: Director
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -258,28 +258,28 @@ ro:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
+    IMAGEDIMENSIONS: Dimensiuni
+    IMAGEHEIGHTPX: Inaltime
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
+    IMAGEWIDTHPX: Latime
     INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert Link'
+    LINK: 'Insereaza/editeaza linkul pentru textul selectat'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
+    LINKDESCR: 'Descriere link'
+    LINKEMAIL: 'Adresa email'
     LINKEXTERNAL: 'Alt site web'
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link to'
+    LINKFILE: 'Descarca un fisier'
+    LINKINTERNAL: 'Pagina de pe site'
+    LINKOPENNEWWIN: 'Deschideti link intr-o fereastra noua?'
+    LINKTO: 'Link la'
     PAGE: Pagina
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: Image
+    IMAGE: Imagine
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
@@ -301,51 +301,51 @@ ro:
     LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email Address'
-    IP: 'IP Address'
+    IP: 'Adresa IP'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: Autentificare
     BUTTONLOGINOTHER: 'Log in as someone else'
-    BUTTONLOSTPASSWORD: 'I''ve lost my password'
-    CONFIRMNEWPASSWORD: 'Confirm New Password'
-    CONFIRMPASSWORD: 'Confirm Password'
-    DefaultAdminFirstname: 'Default Admin'
-    DefaultDateTime: default
+    BUTTONLOSTPASSWORD: 'Am uitat parola'
+    CONFIRMNEWPASSWORD: 'Confirmati noua parola'
+    CONFIRMPASSWORD: 'Confirmati parola'
+    DefaultAdminFirstname: 'Administrator implicit'
+    DefaultDateTime: implicit
     EMAIL: Email
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
-    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
+    ENTEREMAIL: 'Va rog introduceti o adresa de email pentru a obtine un link de resetare a parolei'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: 'First Name'
-    INTERFACELANG: 'Interface Language'
+    FIRSTNAME: Prenume
+    INTERFACELANG: 'Limba interfetei'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'New Password'
-    PASSWORD: Password
-    PLURALNAME: Members
+    NEWPASSWORD: 'Noua parola'
+    PASSWORD: Parola
+    PLURALNAME: Membri
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'Remember me next time?'
-    SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
-    SUBJECTPASSWORDRESET: 'Your password reset link'
-    SURNAME: Surname
+    REMEMBERME: 'Tine-ma minte?'
+    SINGULARNAME: Membru
+    SUBJECTPASSWORDCHANGED: 'Parola dumneavoastra a fost schimbata'
+    SUBJECTPASSWORDRESET: 'Link-ul de resetare a parolei'
+    SURNAME: Nume
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: Groups
-    db_LastVisited: 'Last Visited Date'
+    YOUROLDPASSWORD: 'Vechea parola'
+    belongs_many_many_Groups: Grupuri
+    db_LastVisited: 'Data ultimei vizite'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Locked out until'
-    db_NumVisit: 'Number of Visits'
-    db_Password: Password
-    db_PasswordExpiry: 'Password Expiry Date'
+    db_LockedOutUntil: 'Blocat pana la'
+    db_NumVisit: 'Numarul de vizite'
+    db_Password: Parola
+    db_PasswordExpiry: 'Data de Expirare a Parolei'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE: 'E-mail si Parolă'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -418,7 +418,7 @@ ro:
   PhoneNumberField:
     VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: Adauga
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -427,7 +427,7 @@ ro:
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'
     ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    ERRORPASSWORDPERMISSION: 'Trebuie sa fii autentificat pentru a schimba parola.'
     LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
@@ -441,25 +441,25 @@ ro:
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
     EDITPERMISSIONS: 'Manage permissions for groups'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: 'Group name'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
-    MEMBERS: Members
+    GROUPNAME: 'Numele grupului'
+    IMPORTGROUPS: 'Importati grupuri'
+    IMPORTUSERS: 'Importa utilizatori'
+    MEMBERS: Membri
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
+    NEWGROUP: 'Grup nou'
     PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
-    Users: Users
+    Users: Utilizatori
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'No Image Uploaded'
+    NOUPLOAD: 'Nici o imagine incarcata'
   SiteTree:
     TABMAIN: Pincipal
   TableField:
@@ -468,8 +468,8 @@ ro:
     ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
-    CSVEXPORT: 'Export to CSV'
-    PRINT: Print
+    CSVEXPORT: 'Exportati ca CSV'
+    PRINT: Imprima
     Print: Print
     SELECT: Selecteaza
   TableListField.ss:
@@ -487,20 +487,20 @@ ro:
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: less
-    MORE: more
+    LESS: 'mai puţin '
+    MORE: 'mai mult'
   UploadField:
-    ATTACHFILE: 'Attach a file'
+    ATTACHFILE: 'Atasati un fisier'
     ATTACHFILES: 'Attach files'
     AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DOEDIT: Salveaza
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
     EDIT: Edit
-    EDITINFO: 'Edit this file'
+    EDITINFO: 'Editeaza acest fisier'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'Din calculatorul dumneavoastra'
     FROMCOMPUTERINFO: 'Select from files'
@@ -512,6 +512,6 @@ ro:
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: Salvat
   Versioned:
-    has_many_Versions: Versions
+    has_many_Versions: Versiune

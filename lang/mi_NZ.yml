@@ -18,10 +18,10 @@ mi_NZ:
     DROPAREA: 'Wāhi Taka'
     EDITALL: 'Whakatika katoa'
     EDITANDORGANIZE: 'Whakatika me te Whakaraupapa'
-    EDITINFO: 'Whakatika kōnae'
+    EDITINFO: 'Edit files'
     FILES: 'Ngā kōnae'
-    FROMCOMPUTER: 'Kōwhiri kōnae mai i tō rorohiko'
-    FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Tapeke
     UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
     UPLOADOR: 'TĒNEI RĀNEI'
@@ -62,7 +62,7 @@ mi_NZ:
     1: Pono
   CMSLoadingScreen.ss:
     LOADING: 'Uta ana...'
-    REQUIREJS: 'Ka hiahia te CMS kia whakahohea te JavaScript'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Uru ki te wāhanga ''{title}'''
     ACCESSALLINTERFACES: 'Uru ki ngā wāhanga CMS katoa'
@@ -84,8 +84,8 @@ mi_NZ:
     SUCCESSADD2: 'Kua tāpiritia a  {name}'
     SUCCESSEDIT: 'I tiakina a %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Tāpiri %s'
-    NOITEMSFOUND: 'Kāore i kitea he tūemi'
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Kōmaka aupiki'
     SORTDESC: 'Kōmaka auheke'
   ComplexTableField_popup.ss:
@@ -297,7 +297,7 @@ mi_NZ:
     SAVEDUP: 'Kua Tiakina'
     VersionUnknown: 'tē mōhiotia'
   LeftAndMain_Menu.ss:
-    Hello: 'Kia ora'
+    Hello: Hi
     LOGOUT: Takiputa
   LoginAttempt:
     Email: 'Wāhitau Īmēra'
@@ -387,9 +387,9 @@ mi_NZ:
     UPDATEDRECORDS: 'I whakahōutia e {count} ngā pūkete.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
-    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: 'Ngā Pānga'
-    IMPORTSPECTITLE: 'Whakapūtātanga mō %s'
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Tātari
     IMPORT: Kawemai
@@ -419,8 +419,8 @@ mi_NZ:
     VALIDATION: 'Tāurua he tau waea tika'
   RelationComplexTableField.ss:
     ADD: Tāpiri
-    CSVEXPORT: 'Kaweatu ki CSV'
-    NOTFOUND: 'Kāore i kitea he tūemi'
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Kāore i te whakaaetia kia uru koe ki tēnei whārangi. Mēnā he pūkete anō tōu e taea ai te uru ki tēnā whārangi, ka taea te takiuru anō i raro.'
     BUTTONSEND: 'Tukuna mai te hono tautuhi kupuhipa anō'
@@ -466,20 +466,20 @@ mi_NZ:
     ISREQUIRED: 'Ka hiahiatia te %s i te ''%s'' '
   TableField.ss:
     ADD: 'Tāpiri haupae hōu'
-    ADDITEM: 'Tāpiri %s'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Kaweake ki CSV'
     PRINT: Tā
     Print: Tā
     SELECT: 'Tīpako:'
   TableListField.ss:
-    NOITEMSFOUND: 'Kāore i kitea he tūemi'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Kōmakatia ki te raupapa aupiki'
     SORTDESC: 'Kōmakatia ki te raupapa auheke'
   TableListField_PageControls.ss:
-    DISPLAYING: 'Whakaatu ana'
-    OF: o
-    TO: ki
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
     VIEWFIRST: 'Tirohia te tuatahi'
     VIEWLAST: 'Tirohia te whakamutunga'
     VIEWNEXT: 'Tiro panuku'
@@ -493,17 +493,17 @@ mi_NZ:
     ATTACHFILE: 'Tāpiritia tētahi kōnae'
     ATTACHFILES: 'Tāpiri kōnae'
     AttachFile: 'Tāpiritia t/ētahi kōnae'
-    DELETE: 'Muku i ngā kōnae'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Muku pūmautia tēnei kōnae i te pātaka kōnae'
     DOEDIT: Tiaki
     DROPFILE: 'whakamakeretia tētahi kōnae'
     DROPFILES: 'taka kōnae'
     Dimensions: 'Ngā Rahinga'
-    EDIT: Whakatika
+    EDIT: Edit
     EDITINFO: 'Whakatikatia tēnei kōnae'
     FIELDNOTSET: 'Kāore i kitea te mōhiohio kōnae'
     FROMCOMPUTER: 'Mai i tō rorohiko'
-    FROMCOMPUTERINFO: 'Tīpako mai i ngā kōnae'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'I ngā kōnae'
     MAXNUMBEROFFILES: 'Kua hipa te mōrahi o ngā kōnae {count}.'
     MAXNUMBEROFFILESSHORT: 'Ka taea te tukuatu i ngā kōnae {count} anake '
@@ -511,7 +511,7 @@ mi_NZ:
     REMOVEERROR: 'Kua rarua te tango kōnae'
     REMOVEINFO: 'Tangohia tēnei kōane i konei, engari kaua e muku i te pātaka kōnae'
     STARTALL: 'Tīmata katoa'
-    STARTALLINFO: 'Tīmataria ngā tukuatu katoa'
+    STARTALLINFO: 'Start all uploads'
     Saved: 'Kua Tiakina'
   Versioned:
     has_many_Versions: 'Ngā Putanga'

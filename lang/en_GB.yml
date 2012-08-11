@@ -8,7 +8,7 @@ en_GB:
     FOLDER: Folder
     LASTEDIT: 'Last changed'
     OWNER: Owner
-    SIZE: 'File size'
+    SIZE: Size
     TITLE: Title
     TYPE: Type
     URL: URL
@@ -17,7 +17,7 @@ en_GB:
     DRAGFILESHERE: 'Drag files here'
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Edit & organise'
     EDITINFO: 'Edit files'
     FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
@@ -33,14 +33,14 @@ en_GB:
     CODE: 'Code Block'
     CODEDESCRIPTION: 'Unformatted code block'
     CODEEXAMPLE: 'Code block'
-    COLORED: 'Colored text'
+    COLORED: 'Coloured text'
     COLOREDEXAMPLE: 'blue text'
     EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: 'Create link to an email address'
     IMAGE: Image
     IMAGEDESCRIPTION: 'Show an image in your post'
     ITALIC: 'Italic Text'
-    ITALICEXAMPLE: Italics
+    ITALICEXAMPLE: 'Italic Text'
     LINK: 'Website link'
     LINKDESCRIPTION: 'Link to another website or URL'
     STRUCK: 'Struck-out Text'
@@ -74,7 +74,7 @@ en_GB:
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
-    HELLO: Hi
+    HELLO: Hello
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -107,20 +107,20 @@ en_GB:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    MIN: min
+    MINS: mins
+    MONTH: month
     MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -143,7 +143,7 @@ en_GB:
     Filename: Filename
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    NOFILESIZE: 'Filesize is zero bytes.'
+    NOFILESIZE: 'File size is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
     PLURALNAME: Files
@@ -167,12 +167,12 @@ en_GB:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hi
+    HELLO: Hello
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s is required'
+    FIELDISREQUIRED: '%s is required.'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
@@ -243,7 +243,7 @@ en_GB:
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
+    CSSCLASSCENTER: 'Centred, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
@@ -265,7 +265,7 @@ en_GB:
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert Link'
+    LINK: Link
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 'Link description'
     LINKEMAIL: 'Email address'
@@ -288,10 +288,10 @@ en_GB:
     DropdownBatchActionsDefault: Actions
     HELP: Help
     PAGETYPE: 'Page type:'
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMAGAIN: 'You have been logged out of the CMS. If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS. If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PLEASESAVE: 'Please Save Page: This page could not be updated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -317,7 +317,7 @@ en_GB:
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
+    ERRORNEWPASSWORD: 'Your have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: 'First Name'
@@ -422,13 +422,13 @@ en_GB:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can <a href="%s">log in again</a>.'
     BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'
     ENTERNEWPASSWORD: 'Please enter a new password.'
     ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
+    LOGGEDOUT: 'You have been logged out. If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'

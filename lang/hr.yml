@@ -2,14 +2,14 @@ hr:
   AssetAdmin:
     NEWFOLDER: 'Novi direktorij'
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
+    CREATED: Uploadano
+    DIM: Dimenzije
+    FILENAME: 'Ime datoteke'
     FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
+    LASTEDIT: 'Zadnja promjena'
+    OWNER: Vlasnik
+    SIZE: Veličina
+    TITLE: Naslov
     TYPE: Tip
     URL: URL
   AssetUploadField:
@@ -53,9 +53,9 @@ hr:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Please enter a username and password.'
-    ERRORNOTADMIN: 'That user is not an administrator.'
-    ERRORNOTREC: 'That username / password isn''t recognised'
+    ENTERINFO: 'Unesite korisničko ime i lozinu'
+    ERRORNOTADMIN: 'Korisnik nije administrator'
+    ERRORNOTREC: 'Korisničko ime / lozinka nije prepoznata'
   Boolean:
     0: 'False'
     ANY: Any
@@ -71,10 +71,10 @@ hr:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
+    CHANGEPASSWORDTEXT2: 'Za prijavu koristite slijedeće podatke'
     EMAIL: Email
-    HELLO: Hi
+    HELLO: Pozdrav
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -86,16 +86,16 @@ hr:
   ComplexTableField.ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Sortiraj (ascending)'
+    SORTDESC: 'Sortiraj (descending)'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Slijedeći
+    PREVIOUS: Prethodni
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    SHOWONCLICKTITLE: 'Promjeni Lozinku'
   CreditCardField:
     FIRST: first
     FOURTH: fourth
@@ -104,23 +104,23 @@ hr:
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME: 'Podatkovni Objekti'
+    SINGULARNAME: 'Podatkovni Objekt'
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
-    MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    DAY: dan
+    DAYS: dani
+    HOUR: sat
+    HOURS: sati
+    MIN: minute
+    MINS: minute
+    MONTH: mjesec
+    MONTHS: mjeseci
+    SEC: sekunde
+    SECS: sekundi
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: godina
+    YEARS: godine
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -130,7 +130,7 @@ hr:
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Choose)
+    CHOOSE: (Odaberi)
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -146,8 +146,8 @@ hr:
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Datoteke
+    SINGULARNAME: Datoteka
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
@@ -167,16 +167,16 @@ hr:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: Pozdrav
+    TEXT1: 'Ovdje je vaš'
+    TEXT2: 'link za resetiranje zaporke'
+    TEXT3: za
   Form:
-    FIELDISREQUIRED: '%s is required'
+    FIELDISREQUIRED: '%s je obavezan'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
+    VALIDATIONNOTUNIQUE: 'Unesena vrijednost nije unikatna'
+    VALIDATIONPASSWORDSDONTMATCH: 'Lozine se ne slažu'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
@@ -213,18 +213,18 @@ hr:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Group Code'
+    Code: 'Krupni kod'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
+    Locked: 'Zaključano?'
     NoRoles: 'No roles found'
-    Parent: 'Parent Group'
+    Parent: 'Roditeljska grupa'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    has_many_Permissions: Dozvole
+    many_many_Members: Članovi
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -238,19 +238,19 @@ hr:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Insert link'
-    BUTTONREMOVELINK: 'Remove link'
+    BUTTONINSERTLINK: 'Ubaci vezu'
+    BUTTONREMOVELINK: 'Obriši vezu'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    CSSCLASS: 'Poravnanje / Stil'
+    CSSCLASSCENTER: Centralno
+    CSSCLASSLEFT: 'Lijevo, sa okruženjem teksta.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    CSSCLASSRIGHT: 'Desno, sa okruženjem teksta'
     DETAILS: Details
-    EMAIL: 'Email address'
-    FILE: File
-    FOLDER: Folder
+    EMAIL: 'Email adresa'
+    FILE: Datoteka
+    FOLDER: Direktorij
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -258,22 +258,22 @@ hr:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
+    IMAGEDIMENSIONS: Dimenzije
+    IMAGEHEIGHTPX: Visina
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
+    IMAGEWIDTHPX: Širina
     INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert Link'
+    LINK: 'Ubaci/editiraj link za označeni tekst'
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
+    LINKDESCR: 'Opis veze'
+    LINKEMAIL: 'Email adresa'
     LINKEXTERNAL: 'Na drugom webu'
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link to'
+    LINKFILE: 'Downlad datoteke'
+    LINKINTERNAL: 'Stranicu na ovom webu'
+    LINKOPENNEWWIN: 'Otvori vezu (link) u novom prozoru?'
+    LINKTO: 'Poveži na'
     PAGE: Stranica
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -281,17 +281,17 @@ hr:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe za upload slike'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Help
+    HELP: Pomoć
     PAGETYPE: 'Tip Stranice:'
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PERMAGAIN: 'Odjavili ste se sa CMS-a. Želite li se ponovno prijaviti, upišite korisničko ime i lozinku'
+    PERMALREADY: 'Nažalost, ne možete pristupiti tom dijelu CMS-a. Želite li se prijaviti kao netko drugi, učinite to ispod'
+    PERMDEFAULT: 'Odaberite metodu autorizacije te upišite svoje podatke za pristup CMS-u.'
+    PLEASESAVE: 'Molim spremite stranicu: Nemože biti ažurirano dok nije spremljeno.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -305,47 +305,47 @@ hr:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Change Password'
+    BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
     BUTTONLOGIN: Prijavi
-    BUTTONLOGINOTHER: 'Log in as someone else'
-    BUTTONLOSTPASSWORD: 'I''ve lost my password'
-    CONFIRMNEWPASSWORD: 'Confirm New Password'
-    CONFIRMPASSWORD: 'Confirm Password'
+    BUTTONLOGINOTHER: 'Prijavite se kao netko drugi'
+    BUTTONLOSTPASSWORD: 'Zaboraljena lozinka'
+    CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
+    CONFIRMPASSWORD: 'Potvrdi lozinku'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: Email
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
-    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: 'First Name'
-    INTERFACELANG: 'Interface Language'
+    ERRORNEWPASSWORD: 'Pogrečno ste upisali novu lozinku, pokušajte ponovno'
+    ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne podudara, probajte ponovno'
+    ERRORWRONGCRED: 'Pogrešan Email ili lozinka. Pokušajte ponovno'
+    FIRSTNAME: Ime
+    INTERFACELANG: 'Jezik sučelja'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'New Password'
-    PASSWORD: Password
-    PLURALNAME: Members
+    NEWPASSWORD: 'Nova lozinka'
+    PASSWORD: Lozinka
+    PLURALNAME: Članovi
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'Remember me next time?'
-    SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
-    SUBJECTPASSWORDRESET: 'Your password reset link'
-    SURNAME: Surname
-    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
+    REMEMBERME: 'Zapamti me'
+    SINGULARNAME: Član
+    SUBJECTPASSWORDCHANGED: 'Vaša lozinka je promjenjena'
+    SUBJECTPASSWORDRESET: 'Link za reset lozinke'
+    SURNAME: Prezime
+    VALIDATIONMEMBEREXISTS: 'Već postoji korisnik sa tim Emailom'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: Groups
+    YOUROLDPASSWORD: 'Stara lozinka'
+    belongs_many_many_Groups: Grupe
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Locked out until'
+    db_LockedOutUntil: 'Zaključano do'
     db_NumVisit: 'Number of Visits'
     db_Password: Password
-    db_PasswordExpiry: 'Password Expiry Date'
+    db_PasswordExpiry: 'Lozinka ističe'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE: 'E-mail &amp; Lozinka'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -416,23 +416,23 @@ hr:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
+    VALIDATION: 'Molim unesite ispravan telefonski broj'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: Dodaj
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
-    LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
+    ALREADYLOGGEDIN: 'Nemate pristup na ovu stranicu. Imate li drugi korisnički račun, koristite njega'
+    BUTTONSEND: 'Pošalji mi link za reset lozinke'
+    CHANGEPASSWORDBELOW: 'Svoju lozinku možete promjeniti ovdje'
+    CHANGEPASSWORDHEADER: 'Promjeni lozinku'
+    ENTERNEWPASSWORD: 'Upišite novu lozinku'
+    ERRORPASSWORDPERMISSION: 'Morate biti prijavljeni kako bi ste promjenili lozinku'
+    LOGGEDOUT: 'Odlogirani ste. Želite li se ponovno logirati, upišite podatke'
+    LOGIN: 'Logiraj se'
+    NOTEPAGESECURED: 'Stranica je osigurana. Upišite svoje podatke i poslat ćemo Vam.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
+    NOTERESETPASSWORD: 'Upišite vaš e-mail i polati ćemo Vam link na kojem možete dobiti novu lozinku'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -447,7 +447,7 @@ hr:
     MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
+    NEWGROUP: 'Nova Grupa'
     PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
@@ -459,13 +459,13 @@ hr:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'No Image Uploaded'
+    NOUPLOAD: 'Nema uploadanih slika'
   SiteTree:
     TABMAIN: '''Main'''
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'Dodaj novi redak'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Export to CSV'
@@ -487,8 +487,8 @@ hr:
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: less
-    MORE: more
+    LESS: manje
+    MORE: više
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
@@ -514,4 +514,4 @@ hr:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: Versions
+    has_many_Versions: Verzije

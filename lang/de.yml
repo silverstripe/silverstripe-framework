@@ -18,10 +18,10 @@ de:
     DROPAREA: Dateiablage
     EDITALL: 'Alle Bearbeiten'
     EDITANDORGANIZE: Bearbeiten
-    EDITINFO: 'Dateien bearbeiten'
+    EDITINFO: 'Edit files'
     FILES: Dateien
-    FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
-    FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Gesamt
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: ODER
@@ -62,7 +62,7 @@ de:
     1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Lade Daten ...'
-    REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Zugang zum Bereich ''{title}'''
     ACCESSALLINTERFACES: 'Zugriff auf alle Bereiche des CMS'
@@ -84,8 +84,8 @@ de:
     SUCCESSADD2: '{name} hinzugefügt'
     SUCCESSEDIT: 'Gespeichert %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: '%s hinzufügen'
-    NOITEMSFOUND: 'Keine Elemente gefunden'
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   ComplexTableField_popup.ss:
@@ -387,9 +387,9 @@ de:
     UPDATEDRECORDS: '{count} Datensätze wurden aktualisiert.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Datenbankspalten
-    IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relationen
-    IMPORTSPECTITLE: 'Beschreibung von %s'
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Importieren
@@ -419,8 +419,8 @@ de:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   RelationComplexTableField.ss:
     ADD: Hinzufügen
-    CSVEXPORT: 'Als CSV exportieren'
-    NOTFOUND: 'Keine Elemente gefunden'
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'
@@ -466,20 +466,20 @@ de:
     ISREQUIRED: 'In %s wird ''%s'' benötigt'
   TableField.ss:
     ADD: 'Eine neue Zeile hinzufügen'
-    ADDITEM: '%s hinzufügen'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Als CSV-Datei exportieren'
     PRINT: drucken
     Print: Drucken
     SELECT: 'Auswählen:'
   TableListField.ss:
-    NOITEMSFOUND: 'Keine Elemente gefunden'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   TableListField_PageControls.ss:
-    DISPLAYING: Zeige
-    OF: von
-    TO: bis
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
     VIEWFIRST: 'Ersten anzeigen'
     VIEWLAST: 'Letzten anzeigen'
     VIEWNEXT: 'Nächsten anzeigen'
@@ -493,17 +493,17 @@ de:
     ATTACHFILE: 'Datei anhängen'
     ATTACHFILES: 'Dateien anhängen'
     AttachFile: 'Dateien anhängen'
-    DELETE: 'Aus Dateien löschen'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Löscht die Datei dauerhaft aus dem Dateisystem'
     DOEDIT: Speichern
     DROPFILE: 'Datei hier ablegen'
     DROPFILES: 'Dateien hier ablegen'
     Dimensions: Dimensionen
-    EDIT: Bearbeiten
+    EDIT: Edit
     EDITINFO: 'Diese Datei bearbeiten'
     FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     FROMCOMPUTER: 'Von Ihrem Computer'
-    FROMCOMPUTERINFO: 'Aus Dateien auswählen'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Von "Dateien"'
     MAXNUMBEROFFILES: 'Maximale Anzahl an {count}  Datei(en) überschritten'
     MAXNUMBEROFFILESSHORT: 'SIe können maximal {count} Datei(en) hochladen'
@@ -511,7 +511,7 @@ de:
     REMOVEERROR: 'Fehler beim Entfernen der Datei'
     REMOVEINFO: 'Entfernt die Datei von hier, löscht Sie aber nicht aus dem Dateisystem.'
     STARTALL: 'Alle starten'
-    STARTALLINFO: 'Alle Uploads starten'
+    STARTALLINFO: 'Start all uploads'
     Saved: Gespeichert
   Versioned:
     has_many_Versions: Versionen

@@ -2,14 +2,14 @@ zh_CN:
   AssetAdmin:
     NEWFOLDER: 新建文件夹
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
+    CREATED: 第一次被上传
+    DIM: 尺寸
+    FILENAME: 文件名
     FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
+    LASTEDIT: 上一次被更改
+    OWNER: 拥有者
+    SIZE: 大小
+    TITLE: 文件名称
     TYPE: 类型
     URL: URL
   AssetUploadField:
@@ -19,7 +19,7 @@ zh_CN:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: 文件
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -53,9 +53,9 @@ zh_CN:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Please enter a username and password.'
-    ERRORNOTADMIN: 'That user is not an administrator.'
-    ERRORNOTREC: 'That username / password isn''t recognised'
+    ENTERINFO: 请输入用户名和密码
+    ERRORNOTADMIN: 此用户没有管理员权限。
+    ERRORNOTREC: 没有找到此用户名/密码
   Boolean:
     0: 'False'
     ANY: Any
@@ -71,10 +71,10 @@ zh_CN:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
+    CHANGEPASSWORDTEXT2: 您现在可以用下列权限信息进行登路：
     EMAIL: Email
-    HELLO: Hi
+    HELLO: 嗨
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -86,16 +86,16 @@ zh_CN:
   ComplexTableField.ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 正序排列
+    SORTDESC: 倒序排列
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: 下一页
+    PREVIOUS: 上一页
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    SHOWONCLICKTITLE: 更改密码
   CreditCardField:
     FIRST: first
     FOURTH: fourth
@@ -104,23 +104,23 @@ zh_CN:
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME: 数据对象
+    SINGULARNAME: 数据对象
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
-    MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    DAY: 天
+    DAYS: 天
+    HOUR: 个小时
+    HOURS: 个小时
+    MIN: 分钟
+    MINS: 分钟
+    MONTH: 个月
+    MONTHS: 个月
+    SEC: 秒
+    SECS: 秒
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: 年
+    YEARS: 年
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -130,7 +130,7 @@ zh_CN:
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: (Choose)
+    CHOOSE: （选择）
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
@@ -146,8 +146,8 @@ zh_CN:
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: 文件
+    SINGULARNAME: 文件
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
@@ -157,7 +157,7 @@ zh_CN:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: 文件
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,16 +167,16 @@ zh_CN:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Hi
+    HELLO: 嗨
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s is required'
+    FIELDISREQUIRED: '%s是必需填写的'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
+    VALIDATIONNOTUNIQUE: 输入值已被他人占用
+    VALIDATIONPASSWORDSDONTMATCH: （密码相互不匹配）
+    VALIDATIONPASSWORDSNOTEMPTY: 密码不能空白
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
@@ -213,18 +213,18 @@ zh_CN:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: 'Group Code'
+    Code: 团队代码
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
+    Locked: 锁定？
     NoRoles: 'No roles found'
-    Parent: 'Parent Group'
+    Parent: 主团队
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    has_many_Permissions: 权限
+    many_many_Members: 成员
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -238,19 +238,19 @@ zh_CN:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Insert link'
-    BUTTONREMOVELINK: 'Remove link'
+    BUTTONINSERTLINK: 插入链接
+    BUTTONREMOVELINK: 删除链接
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    CSSCLASS: 对齐/样式
+    CSSCLASSCENTER: 自居中
+    CSSCLASSLEFT: 左端自动换行
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    CSSCLASSRIGHT: 右端自动换行
     DETAILS: Details
-    EMAIL: 'Email address'
-    FILE: File
-    FOLDER: Folder
+    EMAIL: 电子邮件地址
+    FILE: 文件
+    FOLDER: 文件夹
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -258,22 +258,22 @@ zh_CN:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
+    IMAGEDIMENSIONS: 尺寸
+    IMAGEHEIGHTPX: 高（像素）
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
+    IMAGEWIDTHPX: 宽（像素）
     INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert Link'
+    LINK: 对所选文字插入/编辑链接
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
+    LINKDESCR: 链接描述
+    LINKEMAIL: 电子邮件地址
     LINKEXTERNAL: 其它网站
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link to'
+    LINKFILE: 下载文件
+    LINKINTERNAL: 本站网页
+    LINKOPENNEWWIN: 在新窗口打开链接？
+    LINKTO: 链接到
     PAGE: 页
     URL: （路径）URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -281,17 +281,17 @@ zh_CN:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 图象上传内嵌框架（Iframe）
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Help
+    HELP: 帮助
     PAGETYPE: 网页类型
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PERMAGAIN: 您于CMS的登录已被注销，请在下面输入用户名和密码重新登录。
+    PERMALREADY: 对不起，您无权登录CMS的这一部分。如果您要用另外的帐号，请在下面登录。
+    PERMDEFAULT: 请先选择一种验证方法并输入您的权限信息，以登录CMS。
+    PLEASESAVE: 请先保存：因为该网页还未保存，所以该页无法更新。
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -305,47 +305,47 @@ zh_CN:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Change Password'
+    BUTTONCHANGEPASSWORD: 更改密码
     BUTTONLOGIN: 登录
-    BUTTONLOGINOTHER: 'Log in as someone else'
-    BUTTONLOSTPASSWORD: 'I''ve lost my password'
-    CONFIRMNEWPASSWORD: 'Confirm New Password'
-    CONFIRMPASSWORD: 'Confirm Password'
+    BUTTONLOGINOTHER: 使用其他帐户登录
+    BUTTONLOSTPASSWORD: 忘记密码
+    CONFIRMNEWPASSWORD: 确认新密码
+    CONFIRMPASSWORD: 确认密码
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 电子邮件
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
-    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: 'First Name'
-    INTERFACELANG: 'Interface Language'
+    ERRORNEWPASSWORD: 您输入了一个不同的新密码，请重新输入
+    ERRORPASSWORDNOTMATCH: 您当前的密码不正确，请再次输入
+    ERRORWRONGCRED: 电邮地址或密码似乎不对。请重新输入。
+    FIRSTNAME: 名
+    INTERFACELANG: 界面语言
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'New Password'
-    PASSWORD: Password
-    PLURALNAME: Members
+    NEWPASSWORD: 新密码
+    PASSWORD: 密码
+    PLURALNAME: 成员
     PROFILESAVESUCCESS: 'Successfully saved.'
-    REMEMBERME: 'Remember me next time?'
-    SINGULARNAME: Member
-    SUBJECTPASSWORDCHANGED: 'Your password has been changed'
-    SUBJECTPASSWORDRESET: 'Your password reset link'
-    SURNAME: Surname
-    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
+    REMEMBERME: 记住我的信息？
+    SINGULARNAME: 成员
+    SUBJECTPASSWORDCHANGED: 您的密码已更改
+    SUBJECTPASSWORDRESET: 重设您的密码链接
+    SURNAME: 姓
+    VALIDATIONMEMBEREXISTS: 已经存在用这个电子邮件的会员
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
-    YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: Groups
+    YOUROLDPASSWORD: 您的旧密码
+    belongs_many_many_Groups: 团队
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Locked out until'
+    db_LockedOutUntil: 禁止直至
     db_NumVisit: 'Number of Visits'
     db_Password: Password
-    db_PasswordExpiry: 'Password Expiry Date'
+    db_PasswordExpiry: 密码过期日期
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE: 电邮地址和密码
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     Custom: Custom
@@ -376,7 +376,7 @@ zh_CN:
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Apply Filter'
-    DELETE: Delete
+    DELETE: 删除
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
@@ -416,23 +416,23 @@ zh_CN:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
+    VALIDATION: 请输入有效电话号码
   RelationComplexTableField.ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
+    ALREADYLOGGEDIN: 您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。
+    BUTTONSEND: 给我发送密码重设链接
+    CHANGEPASSWORDBELOW: 您可在下面更改您的密码
+    CHANGEPASSWORDHEADER: 更改您的密码
+    ENTERNEWPASSWORD: 请输入新密码
+    ERRORPASSWORDPERMISSION: 您必需登录以更改您的密码
+    LOGGEDOUT: 您已被撤消登录。如果您想再次登录，在下面输入您的登录信息。
     LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
+    NOTEPAGESECURED: 此页是受安全保护的。输入您的登录信息，我们会将您送达。
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
+    NOTERESETPASSWORD: 输入您的电邮地址，我们会给您发送一个您可重设密码的链接
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -447,7 +447,7 @@ zh_CN:
     MEMBERS: Members
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
+    NEWGROUP: 新建会员组
     PERMISSIONS: Permissions
     ROLES: Roles
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
@@ -459,7 +459,7 @@ zh_CN:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'No Image Uploaded'
+    NOUPLOAD: 没有上传的图像
   SiteTree:
     TABMAIN: 主要部分
   TableField:
@@ -487,8 +487,8 @@ zh_CN:
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: less
-    MORE: more
+    LESS: 隐藏
+    MORE: 更多
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
