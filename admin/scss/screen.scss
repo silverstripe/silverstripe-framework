@@ -19,8 +19,10 @@
  * ------------------------------ */
 @import "compass/reset";
 @import "compass/css3";
-@import "compass/utilities/sprites/sprite-img";
+@import "compass/utilities/color";
 @import "compass/utilities/general";
+@import "compass/utilities/sprites";
+@import "compass/utilities/tables";
 @import "compass/support";
 
 /*$experimental-support-for-svg variable comes from 

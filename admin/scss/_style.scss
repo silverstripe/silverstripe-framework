@@ -10,9 +10,12 @@
  * create new SCSS files for larger components like the CMS menu or tree 
  * (see _tree.scss and _menu.scss).
  */
-@import "compass";
-@import "compass/css3";
-@import "compass/utilities";
+
+//Already included in screen.scss. Reimporting causes errors in latest 
+//version of compass
+//@import "compass";
+//@import "compass/css3";
+//@import "compass/utilities";
 
 /** ----------------------------------------------------
  * Core Styles.
@@ -552,10 +555,12 @@ body.cms {
 
 	display: block;
 	margin: 0 0 15px 0;
-	
 	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
 	@include legacy-pie-clearfix();
-	
+	.cms-tree-view-sidebar &{
+		float: left;
+		margin: 0 2px 15px 0;
+	}
 	.cms-tree-view-modes {
 		float:right;
 		padding-top:$grid-y - 3;
