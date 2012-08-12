@@ -232,7 +232,7 @@ cs:
     ResultDeleted: 'Smazáno %d skupin'
     ResultUpdated: 'Aktualizováno %d skupin'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Nekonečná smyčka se nachází v "{type}" hierarchii. Prosím změňte rodiče pro vyřešení problému'
+    InfiniteLoopNotAllowed: 'Nekonečná smyčka se nachází v "{type}" hierarchii. Prosím změňte rodiče pro vyřešení tohoto problému'
   HtmlEditorField:
     ADDURL: 'Přidat URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozměry'
@@ -350,13 +350,13 @@ cs:
     AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
     Custom: Vlastní
     DATEFORMATBAD: 'Formát datumu není platný'
-    DAYNOLEADING: 'Den měsíce bez nuly'
+    DAYNOLEADING: 'Den měsíce bez úvodní nuly'
     DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
     FOURDIGITYEAR: 'Čtyřčíslí roku'
     FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
-    HOURNOLEADING: 'Hodina bez nuly'
-    MINUTENOLEADING: 'Minuta bez nul'
-    MONTHNOLEADING: 'Číslo měsíce bez nuly'
+    HOURNOLEADING: 'Hodina bez úvodní nuly'
+    MINUTENOLEADING: 'Minuta bez úvodní nuly'
+    MONTHNOLEADING: 'Číslo měsíce bez úvodní nuly'
     Preview: Náhled
     SHORTMONTH: 'Krátký název měsíce (např. Čer)'
     TOGGLEHELP: 'Přepni nápovědu formátování'

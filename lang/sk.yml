@@ -232,7 +232,7 @@ sk:
     ResultDeleted: 'Vymazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed: 'Nekonečná smyčka sa nachádza v "{type}" hierarchii. Prosím zmeňte rodiča pre vyriešenie tohto problému'
   HtmlEditorField:
     ADDURL: 'Pridať URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozmery'
@@ -347,25 +347,25 @@ sk:
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM: 'AM (pred poludním) alebo PM (popoludní)'
     Custom: Vlastné
     DATEFORMATBAD: 'Formát dátumu je neplatný'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
+    DAYNOLEADING: 'Deň mesiaca bez úvodnej nuly'
+    DIGITSDECFRACTIONSECOND: 'Jedna alebo viac číslic zastupujúcich desatinný zlomok sekundy'
+    FOURDIGITYEAR: 'Štvorčíslie roka'
+    FULLNAMEMONTH: 'Celý názov mesiaca (napr. jún)'
+    HOURNOLEADING: 'Hodina bez úvodnej nuly'
+    MINUTENOLEADING: 'Minúta bez úvodnej nuly'
+    MONTHNOLEADING: 'Číslo mesiaca bez úvodnej nuly'
     Preview: Náhľad
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    SHORTMONTH: 'Krátky názov mesiaca (napr. jún)'
     TOGGLEHELP: 'Prepnúť napovedu formátovania'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    TWODIGITDAY: 'Dvojčíslie dňa mesiaca'
+    TWODIGITHOUR: 'Dvojčíslie hodiny (00 až 23)'
+    TWODIGITMINUTE: 'Dvojčíslie minúty (00 až 59)'
+    TWODIGITMONTH: 'Dvojčíslie mesiaca (01=január, atď.)'
+    TWODIGITSECOND: 'Dvojčíslie sekundy (00 až 59)'
+    TWODIGITYEAR: 'Dvojčíslie roka'
   MemberImportForm:
     Help1: 'Importovať členov v <em>CSV formáte</em> (čiarkov oddelené hodnoty). Zobraziť pokročile použitie'
     Help2: 'Pokročile použitiePovolené stĺpceExistujúci uživatelia sú najdený podľa ich unikátnej <em>Code</em> hodnoty, a aktualizovaný novými hodnotami z importovaného súboru.Skupiny môžu byť pridelené cez stĺpec <em>Groups</em>. Skupiny sú identifikované cez ich <em>Code</em> hodnotu, viacero skupín môže byť oddelených pomocou čiarky. Existujúce členstvá v skupinách nie su vymazané.'
@@ -431,10 +431,10 @@ sk:
     LOGGEDOUT: 'Boli ste odhlásený. Ak sa chcete znovu prihlásiť, zadajte svoje prihlasovacie údaje.'
     LOGIN: Prihlásiť
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je prošlý.</p><p>Môžte požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo až <a href="{link2}">sa prihlásite</a>.</p>'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'Odkaz na resetovanie hesla bol odeslaný na ''{email}'''
+    PASSWORDSENTTEXT: 'Ďakujeme! Resetovací odkaz bol odeslaný na ''{email}'', pokiaľ účet existuje pre túto emailovú adresu.'
   SecurityAdmin:
     ACCESS_HELP: 'Povoliť prezeranie, pridávanie a úpravu uživaťeľov, ako aj pridelovanie právomoci pre nich.'
     APPLY_ROLES: 'Aplikovať úlohy skupinám'
