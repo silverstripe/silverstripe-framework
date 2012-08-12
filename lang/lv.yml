@@ -1,5 +1,7 @@
 lv:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -127,6 +129,8 @@ lv:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ lv:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Sveiki
     TEXT1: 'Šeit ir Jūsu'
@@ -173,6 +180,7 @@ lv:
     TEXT3: ' '
   Form:
     FIELDISREQUIRED: '%s ir obligāti aizpildāms.'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Ievadītā vērtība nav unikāla'
     VALIDATIONPASSWORDSDONTMATCH: 'Paroles nesakrīt'
@@ -220,8 +228,10 @@ lv:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Slēgt?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Grupas vecāks'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Kārtošanas secība'
     has_many_Permissions: Atļaujas
     many_many_Members: Dalībnieki
@@ -278,8 +288,14 @@ lv:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Attēls
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Attēla augšupielādes iframe bloks'
   LeftAndMain:
@@ -302,6 +318,8 @@ lv:
   LoginAttempt:
     Email: 'E-pasta adrese'
     IP: 'IP Adrese'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Statuss
   Member:
     ADDGROUP: 'Add group'
@@ -348,6 +366,7 @@ lv:
     TITLE: 'E-pasts un Parole'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +392,11 @@ lv:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -403,16 +424,27 @@ lv:
     IsNullLabel: 'Ir Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrators
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Pilnas administratora tiesības'
     FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'mantots no lomas "%s" grupā "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
   PhoneNumberField:

@@ -1,5 +1,7 @@
 nl:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nieuwe Map'
   AssetTableField:
     CREATED: 'Eerste upload'
@@ -127,6 +129,8 @@ nl:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ nl:
     TITLE: 'Afbeelding uploaden'
   Filesystem:
     SYNCRESULTS: 'Synchroniseren compleet: {createdcount} bestanden aangemaakt, {deletedcount} bestanden verwijderd.'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hallo
     TEXT1: 'Hier is uw'
@@ -173,6 +180,7 @@ nl:
     TEXT3: voor
   Form:
     FIELDISREQUIRED: '%s is verplicht'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'De ingevoerde waarde is niet uniek'
     VALIDATIONPASSWORDSDONTMATCH: 'Wachtwoorden komen niet overeen'
@@ -220,8 +228,10 @@ nl:
     GroupReminder: 'Als je de bovenliggende groep selecteert, neemt deze groep alle rollen over'
     Locked: 'Gesloten?'
     NoRoles: 'Geen rollen gevonden'
+    PLURALNAME: Groups
     Parent: 'Bovenliggende groep'
     RolesAddEditLink: 'Toevoegen/wijzigingen rollen'
+    SINGULARNAME: Group
     Sort: Sorteer-richting
     has_many_Permissions: Rechten
     many_many_Members: Lid
@@ -278,8 +288,14 @@ nl:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Afbeelding
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Afbeelding uploaden'
   LeftAndMain:
@@ -302,6 +318,8 @@ nl:
   LoginAttempt:
     Email: 'Email adres '
     IP: 'IP Adres'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -348,6 +366,7 @@ nl:
     TITLE: 'Email &amp; Wachtwoord'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Filter toepassen'
     Custom: Aangepast
     DATEFORMATBAD: 'Datum is niet correct opgegeven'
     DAYNOLEADING: 'Dag van de maand zonder voorloop-nul'
@@ -373,9 +392,11 @@ nl:
     ResultDeleted: '%d leden verwijderd'
     ResultNone: 'Geen wijzingen'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Filter toepassen'
     DELETE: Verwijderen
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importeren vanuit CSV'
@@ -403,16 +424,27 @@ nl:
     IsNullLabel: 'is nul'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Beheerder
     CMS_ACCESS_CATEGORY: 'CMS Toegang'
     FULLADMINRIGHTS: 'Volledige admin rechten'
     FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen en toegangsrechten'
   PhoneNumberField:

@@ -1,5 +1,7 @@
 sv:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Ny mapp'
   AssetTableField:
     CREATED: 'Först uppladdad'
@@ -127,6 +129,8 @@ sv:
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Ogiltig förfrågan'
   DropdownField:
@@ -166,6 +170,9 @@ sv:
     TITLE: 'Iframe för uppladdning av bild'
   Filesystem:
     SYNCRESULTS: 'Synk genomförd: {createdcount} objekt skapades, {deletedcount} objekt raderades'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hej
     TEXT1: 'Här är din'
@@ -173,6 +180,7 @@ sv:
     TEXT3: för
   Form:
     FIELDISREQUIRED: '%s är obligatorisk'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Kontrollera att du angav kortnummret {number} rätt'
     VALIDATIONNOTUNIQUE: 'Det angivna värdet är inte unikt'
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
@@ -220,8 +228,10 @@ sv:
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
     Locked: 'Låst?'
     NoRoles: 'Inga roller funna'
+    PLURALNAME: Groups
     Parent: Föräldragrupp
     RolesAddEditLink: 'Hantera roller'
+    SINGULARNAME: Group
     Sort: Sorteringsordning
     has_many_Permissions: Tillstånd
     many_many_Members: Medlemmar
@@ -278,14 +288,20 @@ sv:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
     UpdateMEDIA: 'Uppdatera media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Bild
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe för uppladdning av bild'
   LeftAndMain:
     CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     DELETED: Raderad
-    DropdownBatchActionsDefault: 'Åtgärder'
+    DropdownBatchActionsDefault: Åtgärder
     HELP: Hjälp
     PAGETYPE: Sidtyp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
@@ -302,6 +318,8 @@ sv:
   LoginAttempt:
     Email: E-postadress
     IP: IP-adress
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Lägg till grupp'
@@ -348,6 +366,7 @@ sv:
     TITLE: 'E-post &amp; Lösenord'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) eller PM (Post meridiem)'
+    'APPLY FILTER': 'Använd filter'
     Custom: Anpassad
     DATEFORMATBAD: 'Datumformatet är ogiltigt'
     DAYNOLEADING: 'Dag i månad utan inledande nolla'
@@ -373,9 +392,11 @@ sv:
     ResultDeleted: 'Raderade %d medlemmar'
     ResultNone: 'Inga ändringar'
     ResultUpdated: 'Uppdaterade {count} medlemmar'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Använd filter'
     DELETE: Radera
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importera från CSV'
@@ -403,16 +424,27 @@ sv:
     IsNullLabel: 'Är NULL'
   NumericField:
     VALIDATION: '''{value}'' är inget nummer, bara nummer kan accepteras för det här fältet'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administratör
     CMS_ACCESS_CATEGORY: CMS-tillgång
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
     FromRole: 'ärvde från roll "{title}"'
     FromRoleOnGroup: 'ärvt från roll "%s" i grupp "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och tillgångsinställningar'
   PhoneNumberField:
@@ -470,7 +502,7 @@ sv:
   TableListField:
     CSVEXPORT: 'Exportera till CSV'
     PRINT: 'Skriv ut'
-    Print: Print
+    Print: 'Skriv ut'
     SELECT: 'Välj:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'

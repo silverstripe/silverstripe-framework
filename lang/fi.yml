@@ -1,5 +1,7 @@
 fi:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
@@ -127,6 +129,8 @@ fi:
     VALIDDATEFORMAT2: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
     VALIDDATEMAXDATE: 'Päivämäärän on oltava vanhempi tai sovittava asetettuun maksimiin ({date})'
     VALIDDATEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava vähintään asetettuun minimiin ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
   DropdownField:
@@ -166,6 +170,9 @@ fi:
     TITLE: 'Kuvansiirtoikkuna (iFrame)'
   Filesystem:
     SYNCRESULTS: 'Synkronointi valmis:  {createdcount} kohdetta luotu, {deletedcount} kohdetta poistettu'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hei
     TEXT1: 'Tässä on sinun'
@@ -173,6 +180,7 @@ fi:
     TEXT3: henkilölle
   Form:
     FIELDISREQUIRED: '%s on pakollinen.'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
     VALIDATIONNOTUNIQUE: 'Syötetty arvo ei ole yksilöllinen'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
@@ -220,8 +228,10 @@ fi:
     GroupReminder: 'Valitessasi isäntäryhmän, roolit periytyvät tähän ryhmään'
     Locked: 'Lukittu?'
     NoRoles: 'Rooleja ei löytynyt'
+    PLURALNAME: Groups
     Parent: Yliryhmä
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
+    SINGULARNAME: Group
     Sort: Järjestys
     has_many_Permissions: Luvat
     many_many_Members: Jäsenet
@@ -278,8 +288,14 @@ fi:
     URL: URL-osoite
     URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu liittää mediaa'
     UpdateMEDIA: 'Päivitä media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Kuva
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Kuvansiirto ikkuna (iFrame)'
   LeftAndMain:
@@ -302,6 +318,8 @@ fi:
   LoginAttempt:
     Email: Sähköpostiosoite
     IP: IP-osoite
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Tila
   Member:
     ADDGROUP: 'Lisää ryhmä'
@@ -348,6 +366,7 @@ fi:
     TITLE: 'Sähköposti &amp; Salasana'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
+    'APPLY FILTER': Suodata
     Custom: Muokattu
     DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
     DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
@@ -373,9 +392,11 @@ fi:
     ResultDeleted: 'Poistettu %d jäsentä'
     ResultNone: 'Ei muutoksia'
     ResultUpdated: 'Päivitettiin {count} käyttäjä(ä)'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': Suodata
     DELETE: Poista
     DELETEDRECORDS: 'Poistettiin {count} tietuetta'
     IMPORT: 'Tuo CSV:stä'
@@ -403,16 +424,27 @@ fi:
     IsNullLabel: 'On nolla'
   NumericField:
     VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Järjestelmänvalvoja
     CMS_ACCESS_CATEGORY: CMS-pääsy
     FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
     FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
     FromRole: 'periytyivät roolista "{title}"'
     FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
   PhoneNumberField:

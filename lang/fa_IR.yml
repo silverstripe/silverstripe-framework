@@ -1,5 +1,7 @@
 fa_IR:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'پوشه جديد'
   AssetTableField:
     CREATED: 'First uploaded'
@@ -8,7 +10,7 @@ fa_IR:
     FOLDER: Folder
     LASTEDIT: 'آخرین تغییرات'
     OWNER: دارنده
-    SIZE: 'حجم'
+    SIZE: حجم
     TITLE: عنوان
     TYPE: نوع
     URL: نشانی
@@ -98,9 +100,9 @@ fa_IR:
     SHOWONCLICKTITLE: 'تغيير كلمه عبور'
   CreditCardField:
     FIRST: نخست
-    FOURTH: 'چهارم'
-    SECOND: 'دوم'
-    THIRD: 'سوم'
+    FOURTH: چهارم
+    SECOND: دوم
+    THIRD: سوم
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
@@ -113,7 +115,7 @@ fa_IR:
     HOURS: ساعت
     MIN: دقیقه
     MINS: دقیقه
-    MONTH: 'ماه'
+    MONTH: ماه
     MONTHS: 'ماه ها'
     SEC: ثانیه
     SECS: ثانیه
@@ -123,10 +125,12 @@ fa_IR:
     YEARS: سال
   DateField:
     NOTSET: 'not set'
-    TODAY: 'امروز'
+    TODAY: امروز
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -139,13 +143,13 @@ fa_IR:
   Enum:
     ANY: Any
   File:
-    Content: 'محتوا'
+    Content: محتوا
     Filename: 'نام پرونده'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: 'نام'
+    Name: نام
     PLURALNAME: 'فايل ها'
     SINGULARNAME: فايل
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
@@ -166,6 +170,9 @@ fa_IR:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: درود
     TEXT1: 'Here is your'
@@ -173,6 +180,7 @@ fa_IR:
     TEXT3: برای
   Form:
     FIELDISREQUIRED: '%s نیاز است.'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: 'گذرواژه‌ها همانند هم نیستند'
@@ -220,8 +228,10 @@ fa_IR:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'بسته شده است؟'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'گروه مادر'
     RolesAddEditLink: 'اضافه/ویرایش وظیفه'
+    SINGULARNAME: Group
     Sort: 'تربیت چیدن'
     has_many_Permissions: مجوز‌ها
     many_many_Members: اعضاء
@@ -278,15 +288,21 @@ fa_IR:
     URL: نشانی
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: 'کمک'
+    HELP: کمک
     PAGETYPE: 'نوع صفحه'
     PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
     PERMALREADY: 'من متاسفم، شما نمی توانید به آن قسمت از سیستم مدیریت محتوا دسترسی پیدا کنید. اگر میخواهید به عنوان شخص دیگری وارد شوید از قسمت زیر تلاش کنید'
@@ -302,6 +318,8 @@ fa_IR:
   LoginAttempt:
     Email: 'آدرس های ایمیل'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -320,7 +338,7 @@ fa_IR:
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: 'نام'
+    FIRSTNAME: نام
     INTERFACELANG: 'زبان برنامه'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
@@ -348,6 +366,7 @@ fa_IR:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +392,11 @@ fa_IR:
     ResultDeleted: 'کاربر %d حذف شد'
     ResultNone: 'تغییری ایجاد نشد'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: حذف
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -403,16 +424,27 @@ fa_IR:
     IsNullLabel: 'خالی است'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: 'مدیر کل'
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'مجوز دسترسی ها و وظایف'
   PhoneNumberField:

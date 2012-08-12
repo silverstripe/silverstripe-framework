@@ -1,5 +1,7 @@
 pt:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -127,6 +129,8 @@ pt:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ pt:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Olá
     TEXT1: 'Este é o seu'
@@ -173,6 +180,7 @@ pt:
     TEXT3: para
   Form:
     FIELDISREQUIRED: '%s é de preenchimento obrigatório'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'O valor inserido não é único'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords não coincidem'
@@ -220,8 +228,10 @@ pt:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Fechado?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Grupo pai'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Ordem de ordenação'
     has_many_Permissions: Permissões
     many_many_Members: Membros
@@ -278,8 +288,14 @@ pt:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe de envio de Imagem'
   LeftAndMain:
@@ -302,6 +318,8 @@ pt:
   LoginAttempt:
     Email: 'Endereço de Email'
     IP: 'Endereço IP'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Estado
   Member:
     ADDGROUP: 'Add group'
@@ -348,6 +366,7 @@ pt:
     TITLE: 'Email e Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +392,11 @@ pt:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -403,16 +424,27 @@ pt:
     IsNullLabel: 'é Vazio'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrador
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Direitos de Administrador'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'herdada da regra "%s" no grupo "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Regras e permissões de acesso'
   PhoneNumberField:

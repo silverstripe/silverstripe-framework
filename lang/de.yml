@@ -1,5 +1,7 @@
 de:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Neuer Ordner'
   AssetTableField:
     CREATED: 'Erstmalig hochgeladen'
@@ -127,6 +129,8 @@ de:
     VALIDDATEFORMAT2: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
     VALIDDATEMAXDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({date}) liegen oder gleich sein'
     VALIDDATEMINDATE: 'Ihr Datum muss vor dem erlaubtem Datum ({date}) liegen oder gleich sein'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
@@ -166,6 +170,9 @@ de:
     TITLE: 'Iframe Bilderupload'
   Filesystem:
     SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hallo
     TEXT1: 'Hier ist Ihr'
@@ -173,6 +180,7 @@ de:
     TEXT3: für
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
     VALIDATIONNOTUNIQUE: 'Der eingegebene Wert ist nicht einzigartig'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwörter stimmen nicht überein'
@@ -220,8 +228,10 @@ de:
     GroupReminder: 'Bei Zuweisung einer Übergruppe werden alle ihre Rollen übernommen'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
+    PLURALNAME: Groups
     Parent: Elterngruppe
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
+    SINGULARNAME: Group
     Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
     many_many_Members: Mitglieder
@@ -278,8 +288,14 @@ de:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
     UpdateMEDIA: 'Medienobjekt aktualisieren'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Bild
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
@@ -302,6 +318,8 @@ de:
   LoginAttempt:
     Email: E-Mail-Adresse
     IP: IP-Adresse
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Gruppe hinzufügen'
@@ -348,6 +366,7 @@ de:
     TITLE: 'E-Mail &amp; Passwort'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (vormittag) oder PM (nachmittag)'
+    'APPLY FILTER': 'Filter anwenden'
     Custom: Benutzerdefiniert
     DATEFORMATBAD: 'Ungültiges Datumsformat'
     DAYNOLEADING: 'Tag des Monats ohne führende Null'
@@ -373,9 +392,11 @@ de:
     ResultDeleted: '%d Mitglieder gelöscht'
     ResultNone: 'Keine Änderungen'
     ResultUpdated: '{count} Mitglied(er) wurde(n) aktualisiert'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Filter anwenden'
     DELETE: Löschen
     DELETEDRECORDS: '{count} Datensätze wurden gelöscht.'
     IMPORT: 'CSV Import'
@@ -403,16 +424,27 @@ de:
     IsNullLabel: 'ist NULL'
   NumericField:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
     FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
   PhoneNumberField:

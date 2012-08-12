@@ -1,5 +1,7 @@
 cs:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nová složka'
   AssetTableField:
     CREATED: 'Poprvé nahráno'
@@ -127,6 +129,8 @@ cs:
     VALIDDATEFORMAT2: 'Prosím zadejte platný formát datumu ({format})'
     VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající miximu povoleného datumu ({date})'
     VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Neplatný požadavek'
   DropdownField:
@@ -166,6 +170,9 @@ cs:
     TITLE: 'Rámec pro nahrání obrázku'
   Filesystem:
     SYNCRESULTS: 'Synchronizace kompletní: {createdcount} položek vytvořeno, {deletedcount} položek smazanáno'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Ahoj
     TEXT1: 'Zde je váš'
@@ -173,6 +180,7 @@ cs:
     TEXT3: pro
   Form:
     FIELDISREQUIRED: '%s je požadováno.'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Prosím ujistěte se, že jste zadal/a {number} číslo kreditní karty správně'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota není unikátní'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla se neshodují'
@@ -220,8 +228,10 @@ cs:
     GroupReminder: 'Když vyberete nadřizenou skupinu, tato skupina bude mít všechny její role'
     Locked: 'Zamčený?'
     NoRoles: 'Žádné role'
+    PLURALNAME: Groups
     Parent: 'Rodičovská skupina'
     RolesAddEditLink: 'Přidat/editovat role'
+    SINGULARNAME: Group
     Sort: Řazení
     has_many_Permissions: Oprávnění
     many_many_Members: Členové
@@ -278,8 +288,14 @@ cs:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Aktualizovat média'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Obrázek
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Rámec pro nahrání obrázku'
   LeftAndMain:
@@ -302,6 +318,8 @@ cs:
   LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Stav
   Member:
     ADDGROUP: 'Přidat skupinu'
@@ -348,6 +366,7 @@ cs:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
+    'APPLY FILTER': 'Použít filtr'
     Custom: Vlastní
     DATEFORMATBAD: 'Formát datumu není platný'
     DAYNOLEADING: 'Den měsíce bez úvodní nuly'
@@ -373,9 +392,11 @@ cs:
     ResultDeleted: 'Smazáno %d členů'
     ResultNone: 'Žádné změny'
     ResultUpdated: 'Aktualizováno {count} členů'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Použít filtr'
     DELETE: Smazat
     DELETEDRECORDS: 'Smazáno {count} záznamů.'
     IMPORT: 'Importovat ze souboru CSV'
@@ -403,16 +424,27 @@ cs:
     IsNullLabel: 'Je nulové'
   NumericField:
     VALIDATION: '''{value}'' není číslo, pouze čísla mohou být akceptována pro toto pole'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Přístup CMS'
     FULLADMINRIGHTS: 'Plná administrátorská práva'
     FULLADMINRIGHTS_HELP: 'Znamená, a přepíše všechny ostatní přidělená oprávnění.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'přiděleno "{title}"'
     FromGroup: 'zděděno ze skupiny "{title}"'
     FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a přístupová práva'
   PhoneNumberField:
@@ -470,7 +502,7 @@ cs:
   TableListField:
     CSVEXPORT: 'Exportovat do souboru CSV'
     PRINT: Vytisknout
-    Print: Print
+    Print: Vytisknout
     SELECT: 'Vybrat:'
   TableListField.ss:
     NOITEMSFOUND: 'Žádné položky'

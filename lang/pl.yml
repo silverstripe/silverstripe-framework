@@ -1,5 +1,7 @@
 pl:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
@@ -113,8 +115,8 @@ pl:
     HOURS: godziny
     MIN: min
     MINS: minuty
-    MONTH: 'miesiąc'
-    MONTHS: 'miesiące'
+    MONTH: miesiąc
+    MONTHS: miesiące
     SEC: sekunda
     SECS: sekundy
     TIMEDIFFAGO: '{difference} temu'
@@ -127,6 +129,8 @@ pl:
     VALIDDATEFORMAT2: 'Proszę wprowadź prawidłowy format daty ({format})'
     VALIDDATEMAXDATE: 'Twoja data musi być wcześniejsza lub taka sama, jak maksymalna dozwolona data ({date})'
     VALIDDATEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
   DropdownField:
@@ -166,6 +170,9 @@ pl:
     TITLE: 'Iframe wgrywania zdjęć'
   Filesystem:
     SYNCRESULTS: 'Synchronizacja zakończona: stworzono {createdcount} i usunięto {deletedcount} pozycji'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Cześć
     TEXT1: 'Oto twój'
@@ -173,6 +180,7 @@ pl:
     TEXT3: dla
   Form:
     FIELDISREQUIRED: '%s jest wymagane'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
     VALIDATIONNOTUNIQUE: 'Wprowadzona wartość nie jest unikalna'
     VALIDATIONPASSWORDSDONTMATCH: 'Hasła nie są takie same'
@@ -220,8 +228,10 @@ pl:
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, ta grupa otrzyma wszystkie jej role'
     Locked: 'Zablokowana?'
     NoRoles: 'Nie znaleziono ról'
+    PLURALNAME: Groups
     Parent: 'Grupa nadrzędna'
     RolesAddEditLink: 'Zarządzaj rolami'
+    SINGULARNAME: Group
     Sort: 'Kolejność Sortowania'
     has_many_Permissions: Zezwolenia
     many_many_Members: Członkowie
@@ -278,8 +288,14 @@ pl:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Adres URL ''{url}'' nie mógł zostać przekształcony w zasób medialny'
     UpdateMEDIA: 'Zaktualizuj Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Obraz
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Ładowanie Zdjęć (Iframe)'
   LeftAndMain:
@@ -292,7 +308,7 @@ pl:
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
     PLEASESAVE: 'Proszę Zapisz Stronę: Ta strona nie mogła zostać uaktualniona ponieważ nie została jeszcze zapisana.'
-    PreviewButton: 'Podgląd'
+    PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
@@ -302,6 +318,8 @@ pl:
   LoginAttempt:
     Email: 'Adres E-mail'
     IP: 'Adres IP'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Dodaj grupę'
@@ -348,6 +366,7 @@ pl:
     TITLE: 'E-mail i Hasło'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (przed południem) lub PM (po południu)'
+    'APPLY FILTER': 'Zastosuj filtr'
     Custom: Własny
     DATEFORMATBAD: 'Nieprawidłowy format daty'
     DAYNOLEADING: 'Dzień miesiąca bez wiodącego zera'
@@ -357,7 +376,7 @@ pl:
     HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
-    Preview: 'Podgląd'
+    Preview: Podgląd
     SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
     TOGGLEHELP: 'Przełącz pomoc formatowania'
     TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
@@ -373,9 +392,11 @@ pl:
     ResultDeleted: 'Usunięto %d użytkowników'
     ResultNone: 'Bez zmian'
     ResultUpdated: 'Zaktualizowano członków: {count}'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Zastosuj filtr'
     DELETE: Usuń
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
     IMPORT: 'Import z CSV'
@@ -403,16 +424,27 @@ pl:
     IsNullLabel: 'Jest Pusty'
   NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
     FromRole: 'odziedziczone z roli "{title}"'
     FromRoleOnGroup: 'odziedziczone z roli "%s" w grupie "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
   PhoneNumberField:

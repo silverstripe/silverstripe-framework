@@ -1,5 +1,7 @@
 af:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -127,6 +129,8 @@ af:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ af:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hi
     TEXT1: 'Here is your'
@@ -173,6 +180,7 @@ af:
     TEXT3: for
   Form:
     FIELDISREQUIRED: '%s word benodig.'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The waarde wat ingesleutel is is nie uniek nie'
     VALIDATIONPASSWORDSDONTMATCH: 'Wagwoorde pas nie'
@@ -220,8 +228,10 @@ af:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Gesluit?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Ouer Groep'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: Toestemmings
     many_many_Members: Lidde
@@ -278,8 +288,14 @@ af:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
@@ -302,6 +318,8 @@ af:
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -348,6 +366,7 @@ af:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +392,11 @@ af:
     ResultDeleted: 'Het %d lede verwyder'
     ResultNone: 'Geen veranderinge'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -403,16 +424,27 @@ af:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'IBS Toegang'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Impliseer en oorskryf alle ander toegekende permissies.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'oorgeërf van rol "%s" op groep "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rolle en toegang permissies'
   PhoneNumberField:
@@ -470,7 +502,7 @@ af:
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: Druk
-    Print: Print
+    Print: Druk
     SELECT: 'Select:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'

@@ -1,5 +1,7 @@
 sk:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nový priečinok'
   AssetTableField:
     CREATED: 'Prvýkrát nahrané'
@@ -127,6 +129,8 @@ sk:
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Neplatná požiadavka'
   DropdownField:
@@ -166,6 +170,9 @@ sk:
     TITLE: 'Rámec pre nahranie obrázku'
   Filesystem:
     SYNCRESULTS: 'Synchronizácia kompletná: {createdcount} položky vytvorenéy, {deletedcount} položky smazané'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: 'Dobrý deň'
     TEXT1: 'Tu je váš'
@@ -173,6 +180,7 @@ sk:
     TEXT3: pre
   Form:
     FIELDISREQUIRED: '%s je požadované'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Uistite sa, že ste zadali číslo {number} kreditnej karty správne'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota nie je unikátna'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla sa nezhodujú'
@@ -220,8 +228,10 @@ sk:
     GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky role'
     Locked: 'Zamknuté?'
     NoRoles: 'Nenašli sa role'
+    PLURALNAME: Groups
     Parent: 'Nadradená skupina'
     RolesAddEditLink: 'Pridať/upraviť úlohy'
+    SINGULARNAME: Group
     Sort: 'Poradie zoradenia'
     has_many_Permissions: Právomoci
     many_many_Members: Členovia
@@ -278,8 +288,14 @@ sk:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
     UpdateMEDIA: 'Aktualizovať média'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Obrázok
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Rámec pre nahranie obrázku'
   LeftAndMain:
@@ -302,6 +318,8 @@ sk:
   LoginAttempt:
     Email: 'Emailová adresa'
     IP: 'IP adreasa'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Pridať skupinu'
@@ -348,6 +366,7 @@ sk:
     TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (pred poludním) alebo PM (popoludní)'
+    'APPLY FILTER': 'Použiť filter'
     Custom: Vlastné
     DATEFORMATBAD: 'Formát dátumu je neplatný'
     DAYNOLEADING: 'Deň mesiaca bez úvodnej nuly'
@@ -373,9 +392,11 @@ sk:
     ResultDeleted: 'Zmazaných %d členov'
     ResultNone: 'Žiadne zmeny'
     ResultUpdated: 'Aktualizovaných {count} členov'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Použiť filter'
     DELETE: Vymazať
     DELETEDRECORDS: 'Smazaných {count} záznamov.'
     IMPORT: 'Importovať z CSV'
@@ -403,16 +424,27 @@ sk:
     IsNullLabel: 'Je Null'
   NumericField:
     VALIDATION: '''{value}'' nie je číslo, iba čísla môžu byť akceptované pre toto pole'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Prístup do CMS'
     FULLADMINRIGHTS: 'Plné administrátorské práva'
     FULLADMINRIGHTS_HELP: 'Znamená, a prepíše všetky ostatné pridelené oprávnenia.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
     FromRole: 'zdedené z role "{title}"'
     FromRoleOnGroup: 'zdediť z úlohy "%s" v skupine "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a prístupové práva'
   PhoneNumberField:

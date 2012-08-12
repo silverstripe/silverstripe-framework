@@ -1,5 +1,7 @@
 tr:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: YeniKlasör
   AssetTableField:
     CREATED: 'Yüklenme tarihi'
@@ -127,6 +129,8 @@ tr:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ tr:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Merhaba
     TEXT1: 'Profilinize ait'
@@ -173,6 +180,7 @@ tr:
     TEXT3: için
   Form:
     FIELDISREQUIRED: '%s alanının girilmesi zorunludur'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Girilen değer benzersiz olmalıdır'
     VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
@@ -220,8 +228,10 @@ tr:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Kilitli?'
     NoRoles: 'Rol bulunamadı'
+    PLURALNAME: Groups
     Parent: 'Ana Grup'
     RolesAddEditLink: 'Rolleri yönet'
+    SINGULARNAME: Group
     Sort: Sırala
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
@@ -278,8 +288,14 @@ tr:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Resim göndermek için gerekli IFrame'
   LeftAndMain:
@@ -302,6 +318,8 @@ tr:
   LoginAttempt:
     Email: 'Eposta Adresi'
     IP: 'IP Adresi'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Durum
   Member:
     ADDGROUP: 'Add group'
@@ -348,6 +366,7 @@ tr:
     TITLE: 'E-posta & Şifre'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Tarih formatı yanlış'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +392,11 @@ tr:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Sil
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'CSV''den içer aktar'
@@ -403,16 +424,27 @@ tr:
     IsNullLabel: 'Boş değer'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:

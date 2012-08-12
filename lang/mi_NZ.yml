@@ -1,5 +1,7 @@
 mi_NZ:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: KōpakiHōu
   AssetTableField:
     CREATED: 'Tukuatu tuatahi'
@@ -127,6 +129,8 @@ mi_NZ:
     VALIDDATEFORMAT2: 'Tāurua he hōputu rā tika ({format})'
     VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'
     VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Tono muhu'
   DropdownField:
@@ -166,6 +170,9 @@ mi_NZ:
     TITLE: 'Iframe Tukuatu Atahanga'
   Filesystem:
     SYNCRESULTS: 'Kua oti te tukutahi: e {createdcount} ngā tūemi i hangaia, e {deletedcount} ngā tūemi i mukua'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: 'Kia ora'
     TEXT1: 'Anei tō'
@@ -173,6 +180,7 @@ mi_NZ:
     TEXT3: mā
   Form:
     FIELDISREQUIRED: 'Ka hiahiatia a %s'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
     VALIDATIONNOTUNIQUE: 'Ehara te uara i tāurua i te ahurei'
     VALIDATIONPASSWORDSDONTMATCH: 'Kāore ngā kupuhipa i te ōrite'
@@ -220,8 +228,10 @@ mi_NZ:
     GroupReminder: 'Mēnā ka kōwhiri koe i tētahi rōpū matua, ka whiwhi tēnei rōpū i ōna tūnga katoa'
     Locked: 'Kua raka?'
     NoRoles: 'Kāore i kitea he tūnga'
+    PLURALNAME: Groups
     Parent: 'Rōpū Matua'
     RolesAddEditLink: 'Whakahaere tūnga'
+    SINGULARNAME: Group
     Sort: 'Raupapa Kōmaka'
     has_many_Permissions: 'Ngā Whakaaetanga'
     many_many_Members: 'Ngā Mema'
@@ -278,8 +288,14 @@ mi_NZ:
     URL: PRO
     URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
     UpdateMEDIA: 'Whakahōu Pāpāho'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Atahanga
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe Tukuatu Atahanga'
   LeftAndMain:
@@ -302,6 +318,8 @@ mi_NZ:
   LoginAttempt:
     Email: 'Wāhitau Īmēra'
     IP: 'Wāhitau KI'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Tūnga
   Member:
     ADDGROUP: 'Tāpiri rōpū'
@@ -348,6 +366,7 @@ mi_NZ:
     TITLE: 'Īmērā &amp; Kupuhipa'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem), PM (Post meridiem) rānei'
+    'APPLY FILTER': 'Hoatu Tātari'
     Custom: Ritenga
     DATEFORMATBAD: 'He muhu te hōputu rā'
     DAYNOLEADING: 'Rā o te marama kāore he kore i mua'
@@ -373,9 +392,11 @@ mi_NZ:
     ResultDeleted: 'Kua mukua e %d ngā mema'
     ResultNone: 'Kāore he huringa'
     ResultUpdated: 'I whakahōutia e {count} mhā mema'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Hoatu Tātari'
     DELETE: Muku
     DELETEDRECORDS: 'I mukua e {count} ngā pūkete.'
     IMPORT: 'Kawemai i CSV'
@@ -403,16 +424,27 @@ mi_NZ:
     IsNullLabel: 'He Kore Tēnei'
   NumericField:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Kaiwhakahaere
     CMS_ACCESS_CATEGORY: 'Uru CMS'
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
     FromRole: 'I tukuna iho i te tūnga "{title}"'
     FromRoleOnGroup: 'i tukuna iho i "%s" i te rōpū "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ngā tūnga me ngā whakaaetanga uru'
   PhoneNumberField:

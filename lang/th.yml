@@ -1,5 +1,7 @@
 th:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: สร้างโฟลเดอร์ใหม่
   AssetTableField:
     CREATED: อัพโหลดครั้งแรก
@@ -37,8 +39,8 @@ th:
     COLOREDEXAMPLE: 'blue text'
     EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
-    IMAGE: 'รูปภาพ'
-    IMAGEDESCRIPTION: 'แสดงรูปภาพในหน้าบทความของคุณ'
+    IMAGE: รูปภาพ
+    IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
     ITALIC: 'Italic Text'
     ITALICEXAMPLE: Italics
     LINK: 'Website link'
@@ -127,6 +129,8 @@ th:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ th:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: สวัสดี
     TEXT1: นี่คือ
@@ -173,6 +180,7 @@ th:
     TEXT3: สำหรับ
   Form:
     FIELDISREQUIRED: '%s is required'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: รหัสผ่านไม่ตรงกัน
@@ -220,8 +228,10 @@ th:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'ล็อค?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: กลุ่มหลักต้นทาง
     RolesAddEditLink: เพิ่ม/แก้ไขบทบาท
+    SINGULARNAME: Group
     Sort: จัดลำดับ
     has_many_Permissions: สิทธิ์
     many_many_Members: สมาชิก
@@ -241,7 +251,7 @@ th:
     BUTTONINSERTLINK: แทรกลิงค์
     BUTTONREMOVELINK: ลบลิงค์
     BUTTONUpdate: Update
-    CAPTIONTEXT: 'ข้อความคำอธิบายใต้ภาพ'
+    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
     CSSCLASS: 'การจัดวาง / รูปแบบ'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
@@ -278,8 +288,14 @@ th:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: รูปภาพ
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
@@ -302,6 +318,8 @@ th:
   LoginAttempt:
     Email: ที่อยู่อีเมล
     IP: ไอพีเครื่อง
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: สถานะ
   Member:
     ADDGROUP: 'Add group'
@@ -321,7 +339,7 @@ th:
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: ชื่อจริง
-    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
+    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: รหัสผ่านใหม่
@@ -339,7 +357,7 @@ th:
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
     db_LastVisited: วันที่เยี่ยมชมล่าสุด
-    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
+    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
     db_LockedOutUntil: 'Locked out until'
     db_NumVisit: จำนวนการเข้าชม
     db_Password: รหัสผ่าน
@@ -348,6 +366,7 @@ th:
     TITLE: 'อีเมล &amp; รหัสผ่าน'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +392,11 @@ th:
     ResultDeleted: 'ลบสมาชิกแล้ว %d สมาชิก'
     ResultNone: ยังไม่มีการเปลี่ยนแปลง
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: ลบ
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'นำเข้าจากไฟล์ CSV'
@@ -403,16 +424,27 @@ th:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: ผู้ดูแลระบบ
     CMS_ACCESS_CATEGORY: 'การเข้าถึง CMS'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
@@ -459,7 +491,7 @@ th:
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
-    NOUPLOAD: 'ยังไม่มีรูปภาพที่ถูกอัพโหลด'
+    NOUPLOAD: ยังไม่มีรูปภาพที่ถูกอัพโหลด
   SiteTree:
     TABMAIN: หลัก
   TableField:
