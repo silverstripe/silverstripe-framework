@@ -165,15 +165,20 @@ ss.i18n = {
 		detectLocale: function() {
 			var rawLocale;
 			var detectedLocale;
+
+			// get by container tag
+			rawLocale = jQuery('html').attr('lang');
 		
 			// get by meta
-			var metas = document.getElementsByTagName('meta');
-			for(var i=0; i<metas.length; i++) {
-				if(metas[i].attributes['http-equiv'] && metas[i].attributes['http-equiv'].nodeValue.toLowerCase() == 'content-language') {
-					rawLocale = metas[i].attributes['content'].nodeValue;
+			if(!rawLocale) {
+				var metas = document.getElementsByTagName('meta');
+				for(var i=0; i<metas.length; i++) {
+					if(metas[i].attributes['http-equiv'] && metas[i].attributes['http-equiv'].nodeValue.toLowerCase() == 'content-language') {
+						rawLocale = metas[i].attributes['content'].nodeValue;
+					}
 				}
 			}
-
+			
 			// fallback to default locale
 			if(!rawLocale) rawLocale = this.defaultLocale;
 			
