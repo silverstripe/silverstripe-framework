@@ -7,7 +7,7 @@ ja_JP:
     FILENAME: ファイル名
     FOLDER: フォルダ
     LASTEDIT: 最終更新日
-    OWNER: '所有者'
+    OWNER: 所有者
     SIZE: ファイルサイズ
     TITLE: タイトル
     TYPE: ファイルの種類
@@ -15,15 +15,15 @@ ja_JP:
   AssetUploadField:
     ChooseFiles: ファイルを選択
     DRAGFILESHERE: ここにファイルをドラッグ
-    DROPAREA: 'ドロップ領域'
+    DROPAREA: ドロップ領域
     EDITALL: すべて編集
     EDITANDORGANIZE: 編集と管理
-    EDITINFO: ファイルを編集
+    EDITINFO: 'Edit files'
     FILES: ファイル
-    FROMCOMPUTER: コンピュータからファイルを選択
-    FROMCOMPUTERINFO: コンピュータからアップロード
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: 合計
-    UPLOADINPROGRESS: 'しばらくお待ちください...アップロードは進行中です'
+    UPLOADINPROGRESS: しばらくお待ちください...アップロードは進行中です
     UPLOADOR: もしくは
   BBCodeParser:
     ALIGNEMENT: 整列
@@ -57,12 +57,12 @@ ja_JP:
     ERRORNOTADMIN: 'このユーザーは管理者（アドミニストレーター）ではありません'
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   Boolean:
-    0: 偽
+    0: 'False'
     ANY: 何でも
-    1: 真
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 読み込み中...
-    REQUIREJS: 'CMSを利用するにはJavascriptが有効化されている必要があります。'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: すべてのCMSのセクションへアクセス
@@ -84,10 +84,10 @@ ja_JP:
     SUCCESSADD2: '{name}を追加しました'
     SUCCESSEDIT: '更新日時 %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: '%sを追加'
-    NOITEMSFOUND: '項目が見つかりませんでした'
-    SORTASC: '昇順'
-    SORTDESC: 'ソート（下順）'
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 昇順
+    SORTDESC: ソート（下順）
   ComplexTableField_popup.ss:
     NEXT: 次へ
     PREVIOUS: 前へ
@@ -132,7 +132,7 @@ ja_JP:
   DropdownField:
     CHOOSE: (選択)
   EmailField:
-    VALIDATION: 'メールアドレスを入力してください'
+    VALIDATION: メールアドレスを入力してください
   Email_BounceRecord:
     PLURALNAME: 'Eメール 反応記録'
     SINGULARNAME: 'Eメール 反応記録'
@@ -183,7 +183,7 @@ ja_JP:
   FormField:
     NONE: 何もありません
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: 削除
     Delete: 削除
     UnlinkRelation: リンク解除
   GridField:
@@ -194,7 +194,7 @@ ja_JP:
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
     NewRecord: 新しい%s
-    NoItemsFound: '項目が見つかりませんでした'
+    NoItemsFound: 項目が見つかりませんでした
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
     PlaceHolder: '{type}を探す'
@@ -212,17 +212,17 @@ ja_JP:
     Saved: '保存済み %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'このグループに役割を追加する'
+    AddRole: このグループに役割を追加する
     Code: グループコード
-    DefaultGroupTitleAdministrators: '管理者'
-    DefaultGroupTitleContentAuthors: 'コンテンツの著者'
+    DefaultGroupTitleAdministrators: 管理者
+    DefaultGroupTitleContentAuthors: コンテンツの著者
     Description: 説明文
-    GroupReminder: '元グループを選択された場合、このグループはその役割をすべて受け継ぎます。'
+    GroupReminder: 元グループを選択された場合、このグループはその役割をすべて受け継ぎます。
     Locked: ロックしますか？
     NoRoles: 役割が見つかりませんでした
-    Parent: '元グループ'
+    Parent: 元グループ
     RolesAddEditLink: 役割の管理
-    Sort: '並び順'
+    Sort: 並び順
     has_many_Permissions: 承認
     many_many_Members: メンバー
   GroupImportForm:
@@ -234,11 +234,11 @@ ja_JP:
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'URLを追加'
+    ADDURL: URLを追加
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: アンカー
-    BUTTONINSERT: '追加'
-    BUTTONINSERTLINK: 'リンクを追加'
+    BUTTONINSERT: 追加
+    BUTTONINSERTLINK: リンクを追加
     BUTTONREMOVELINK: リンクを削除
     BUTTONUpdate: 更新
     CAPTIONTEXT: タイトル
@@ -246,7 +246,7 @@ ja_JP:
     CSSCLASSCENTER: 中央はテキストのみ
     CSSCLASSLEFT: '左側にテキストと一緒に処理してください'
     CSSCLASSLEFTALONE: 中央はテキストのみ
-    CSSCLASSRIGHT: '右側にテキストと一緒に処理してください'
+    CSSCLASSRIGHT: 右側にテキストと一緒に処理してください
     DETAILS: 詳細
     EMAIL: メールアドレス
     FILE: ファイル
@@ -254,18 +254,18 @@ ja_JP:
     FROMCMS: CMSから
     FROMCOMPUTER: コンピュータから
     FROMWEB: Webから
-    FindInFolder: 'フォルダ内を探す'
+    FindInFolder: フォルダ内を探す
     IMAGEALT: 代替テキスト(Alt)
     IMAGEALTTEXT: '代替(Alt)テキスト - 画像が表示されなかった場合に表示されます'
-    IMAGEALTTEXTDESC: 'スクリーンリーダー利用者やイメージが表示されなかった場合に表示されます'
+    IMAGEALTTEXTDESC: スクリーンリーダー利用者やイメージが表示されなかった場合に表示されます
     IMAGEDIMENSIONS: サイズ
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'タイトル(ツールチップ)テキスト - 画像に対する追加的情報'
     IMAGETITLETEXT: タイトルテキスト(ツールチップ)
-    IMAGETITLETEXTDESC: '画像に関する追加情報'
+    IMAGETITLETEXTDESC: 画像に関する追加情報
     IMAGEWIDTHPX: Width
-    INSERTMEDIA: 'メディアを追加'
-    LINK: 'ハイライトテキストへのリンクの挿入/削除'
+    INSERTMEDIA: メディアを追加
+    LINK: ハイライトテキストへのリンクの挿入/削除
     LINKANCHOR: このページにアンカーを置く
     LINKDESCR: リンクの説明
     LINKEMAIL: メールアドレス
@@ -288,30 +288,30 @@ ja_JP:
     DropdownBatchActionsDefault: アクション
     HELP: ヘルプ
     PAGETYPE: 'ページの種類:'
-    PERMAGAIN: 'ログアウトしました。再度ログインする場合は下にユーザー名とパスワードを入力してください。'
-    PERMALREADY: '申し訳ございません。ご指定になられたCMSの箇所にはアクセスいただけません。別ユーザーとしてログインをされたい場合は、下記より行えます。'
-    PERMDEFAULT: '認証方法を選択し、CMSにアクセスするために利用する認証情報を入力してください。'
+    PERMAGAIN: ログアウトしました。再度ログインする場合は下にユーザー名とパスワードを入力してください。
+    PERMALREADY: 申し訳ございません。ご指定になられたCMSの箇所にはアクセスいただけません。別ユーザーとしてログインをされたい場合は、下記より行えます。
+    PERMDEFAULT: 認証方法を選択し、CMSにアクセスするために利用する認証情報を入力してください。
     PLEASESAVE: '保存してください: 保存してないため更新できません。'
     PreviewButton: プレビュー
     REORGANISATIONSUCCESSFUL: サイトツリーの再編集に成功しました。
     SAVEDUP: 保存済み
     VersionUnknown: 不明
   LeftAndMain_Menu.ss:
-    Hello: こんにちは！
+    Hello: Hi
     LOGOUT: ログアウト
   LoginAttempt:
     Email: メールアドレス
     IP: IPアドレス
     Status: ステータス
   Member:
-    ADDGROUP: 'グループを追加'
+    ADDGROUP: グループを追加
     BUTTONCHANGEPASSWORD: パスワードの変更
     BUTTONLOGIN: ログイン
     BUTTONLOGINOTHER: 他の誰かとしてログイン
     BUTTONLOSTPASSWORD: パスワードを紛失
     CONFIRMNEWPASSWORD: 新しいパスワードを確認します
     CONFIRMPASSWORD: パスワード（確認のためもう一度）
-    DefaultAdminFirstname: '初期管理者'
+    DefaultAdminFirstname: 初期管理者
     DefaultDateTime: 初期設定
     EMAIL: メールアドレス
     EMPTYNEWPASSWORD: 'パスワードが空です。もう一度入力して下さい。'
@@ -380,13 +380,13 @@ ja_JP:
     DELETEDRECORDS: '{count}レコードを削除しました。'
     IMPORT: CSVからインポート
     IMPORTEDRECORDS: '{count}レコードを取り込みました。'
-    NOCSVFILE: 'インポートするためのCSVファイルを参照してください'
+    NOCSVFILE: インポートするためのCSVファイルを参照してください
     NOIMPORT: インポートするものがありません。
     RESET: リセット
     Title: 'Data Models'
     UPDATEDRECORDS: '{count}レコードを更新しました。'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'データベースカラム'
+    IMPORTSPECFIELDS: データベースカラム
     IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: 関連
     IMPORTSPECTITLE: 'Specification for %s'
@@ -416,11 +416,11 @@ ja_JP:
   Permissions:
     PERMISSIONS_CATEGORY: 役割とアクセス権限
   PhoneNumberField:
-    VALIDATION: '電話番号を入力してください'
+    VALIDATION: 電話番号を入力してください
   RelationComplexTableField.ss:
-    ADD: '追加'
-    CSVEXPORT: CSVへ書き出し
-    NOTFOUND: '項目が見つかりませんでした'
+    ADD: 追加
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
     BUTTONSEND: 'パスワードリセットのリンクを送信してください'
@@ -436,7 +436,7 @@ ja_JP:
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'ユーザを閲覧、追加、編集すること、及び、そのユーザに対して権限や役割を割り当てることを許可'
+    ACCESS_HELP: ユーザを閲覧、追加、編集すること、及び、そのユーザに対して権限や役割を割り当てることを許可
     APPLY_ROLES: 役割をグループへ適用
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
     EDITPERMISSIONS: グループの権限を編集
@@ -465,17 +465,17 @@ ja_JP:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: '新しい行を追加'
-    ADDITEM: '%sを追加'
+    ADD: 新しい行を追加
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: CSVにエクスポート
     PRINT: 印刷
     Print: Print
     SELECT: 選択：
   TableListField.ss:
-    NOITEMSFOUND: '項目が見つかりませんでした'
-    SORTASC: '昇順で並べ替え'
-    SORTDESC: '降順で並べ替え'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 昇順で並べ替え
+    SORTDESC: 降順で並べ替え
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
@@ -494,24 +494,24 @@ ja_JP:
     ATTACHFILES: ファイルを添付
     AttachFile: ファイルを添付
     DELETE: 'Delete from files'
-    DELETEINFO: 'ファイルストレージから永久にこのファイルは削除されました'
+    DELETEINFO: ファイルストレージから永久にこのファイルは削除されました
     DOEDIT: 保存
     DROPFILE: ファイルをドロップ
     DROPFILES: ファイルをドロップ
     Dimensions: Dimensions
-    EDIT: 編集
+    EDIT: Edit
     EDITINFO: このファイルを編集
-    FIELDNOTSET: 'ファイル情報が見つかりませんでした'
+    FIELDNOTSET: ファイル情報が見つかりませんでした
     FROMCOMPUTER: コンピュータから
-    FROMCOMPUTERINFO: ファイルから選択
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: ファイルから
     MAXNUMBEROFFILES: '最大数の{count}ファイルを超えました。'
     MAXNUMBEROFFILESSHORT: '{count}ファイルしかアップロードすることができません'
     REMOVE: 削除
     REMOVEERROR: ファイルの削除におけるエラー
-    REMOVEINFO: 'ここからこのファイルを削除。ただし、ファイルのストレージからこのファイルの削除はしない。'
+    REMOVEINFO: ここからこのファイルを削除。ただし、ファイルのストレージからこのファイルの削除はしない。
     STARTALL: すべて開始
-    STARTALLINFO: すべてのアップロードを開始
+    STARTALLINFO: 'Start all uploads'
     Saved: 保存しました
   Versioned:
     has_many_Versions: バージョン

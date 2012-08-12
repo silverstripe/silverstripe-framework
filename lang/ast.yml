@@ -19,7 +19,7 @@ ast:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Ficheros
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -71,7 +71,7 @@ ast:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
     HELLO: Hi
@@ -492,7 +492,7 @@ ast:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    AttachFile: 'Attach a file'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

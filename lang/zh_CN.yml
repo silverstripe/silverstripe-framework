@@ -19,7 +19,7 @@ zh_CN:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: 文件
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -71,7 +71,7 @@ zh_CN:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: '您已更改了登陆%s的密码'
+    CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
     CHANGEPASSWORDTEXT2: 您现在可以用下列权限信息进行登路：
     EMAIL: Email
     HELLO: 嗨
@@ -157,7 +157,7 @@ zh_CN:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: 文件
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -205,7 +205,7 @@ zh_CN:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: 删除
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -213,7 +213,7 @@ zh_CN:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    Code: '团队代码'
+    Code: 团队代码
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
@@ -281,7 +281,7 @@ zh_CN:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: '图象上传内嵌框架（Iframe）'
+    TITLE: 图象上传内嵌框架（Iframe）
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -376,7 +376,7 @@ zh_CN:
   MemberTableField: null
   ModelAdmin:
     'APPLY FILTER': 'Apply Filter'
-    DELETE: '删除'
+    DELETE: 删除
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
@@ -416,7 +416,7 @@ zh_CN:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: '请输入有效电话号码'
+    VALIDATION: 请输入有效电话号码
   RelationComplexTableField.ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'

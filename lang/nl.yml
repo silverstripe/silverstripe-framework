@@ -19,7 +19,7 @@ nl:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Bewerk en beheer'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Bestanden
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ nl:
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
     ERRORNOTREC: 'De gebruikersnaam en/of wachtwoord wordt niet herkend'
   Boolean:
-    0: Nee
+    0: 'False'
     ANY: Elke
-    1: Ja
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ nl:
     HELLO: Hallo
     PASSWORD: Wachtwoord
   CheckboxField:
-    - Nee
-    - Ja
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Sluit Popup'
     SUCCESSADD2: 'Toegevoegd {name}'
@@ -183,7 +183,7 @@ nl:
   FormField:
     NONE: geen
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Verwijder
     Delete: Verwijder
     UnlinkRelation: Ontkoppelen
   GridField:
@@ -206,7 +206,7 @@ nl:
   GridFieldDetailForm:
     Create: Create
     Delete: Verwijder
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: 'Deleted %s %s'
     Save: Opslaan
     Saved: '%s %s %s Opgeslagen'

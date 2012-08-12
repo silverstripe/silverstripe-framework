@@ -19,7 +19,7 @@ eo:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Dosieroj
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ eo:
     ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
     ERRORNOTREC: 'Kiuj salutnomo / pasvorto ne estas rekonebla'
   Boolean:
-    0: Ne
+    0: 'False'
     ANY: Ajna
-    1: Jes
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -71,14 +71,14 @@ eo:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
-    CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Retpoŝto
-    HELLO: Saluton
+    HELLO: Hi
     PASSWORD: Pasvorto
   CheckboxField:
-    - Ne
-    - Jes
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Fermi Ŝprucfenestron'
     SUCCESSADD2: 'Added {name}'
@@ -86,11 +86,11 @@ eo:
   ComplexTableField.ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Ordigi kreske'
-    SORTDESC: 'Ordigi malkreske'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: Sekva
-    PREVIOUS: Antaŭa
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -167,10 +167,10 @@ eo:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Saluton
-    TEXT1: 'Jen via'
-    TEXT2: 'pasvorta reagorda ligilo'
-    TEXT3: por
+    HELLO: Hi
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '%s estas postulita'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -205,7 +205,7 @@ eo:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Forigi
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -281,7 +281,7 @@ eo:
   ImageField:
     IMAGE: Bildo
   Image_iframe.ss:
-    TITLE: 'Iframe por alŝuti bildon'
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -418,7 +418,7 @@ eo:
   PhoneNumberField:
     VALIDATION: 'Bonvolu enigi validan telefonnumeron'
   RelationComplexTableField.ss:
-    ADD: Enmeti
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -465,7 +465,7 @@ eo:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Enmeti novan vicon'
+    ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Eksporti al CSV'
@@ -492,7 +492,7 @@ eo:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    AttachFile: 'Attach a file'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

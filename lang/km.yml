@@ -19,7 +19,7 @@ km:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: ឯកសារ
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -218,9 +218,9 @@ km:
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'មិនអាចប្រើ'
+    Locked: មិនអាចប្រើ
     NoRoles: 'No roles found'
-    Parent: 'ចំណាត់ក្រុមដើម'
+    Parent: ចំណាត់ក្រុមដើម
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
     has_many_Permissions: ការអនុញ្ញាតិ្ត

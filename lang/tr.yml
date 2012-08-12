@@ -19,7 +19,7 @@ tr:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Dosyalar
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ tr:
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
     ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
   Boolean:
-    0: Yanlış
+    0: 'False'
     ANY: Herhangi
-    1: Doğru
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ tr:
     HELLO: Merhaba
     PASSWORD: Parola
   CheckboxField:
-    - Yanlış
-    - Doğru
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Açılır Pancereyi Kapat'
     SUCCESSADD2: 'Added {name}'
@@ -157,7 +157,7 @@ tr:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: Dosya
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -183,7 +183,7 @@ tr:
   FormField:
     NONE: hiç
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Sil
     Delete: Sil
     UnlinkRelation: Unlink
   GridField:
@@ -205,7 +205,7 @@ tr:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Sil
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save

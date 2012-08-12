@@ -19,7 +19,7 @@ is:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Skrár
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ is:
     ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
     ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
   Boolean:
-    0: Nei
+    0: 'False'
     ANY: Einhver
-    1: Já
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ is:
     HELLO: Hæ
     PASSWORD: Lykilorð
   CheckboxField:
-    - Nei
-    - Já
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Loka glugga'
     SUCCESSADD2: 'Added {name}'

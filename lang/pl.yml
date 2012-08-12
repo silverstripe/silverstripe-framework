@@ -57,9 +57,9 @@ pl:
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
     ERRORNOTREC: 'Nie istnieje taki username/hasło'
   Boolean:
-    0: Nie
+    0: 'False'
     ANY: Jakikolwiek
-    1: Tak
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Wczytywanie...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ pl:
     HELLO: Cześć
     PASSWORD: Hasło
   CheckboxField:
-    - Nie
-    - Tak
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Zamknij Okienko'
     SUCCESSADD2: 'Dodano {name}'

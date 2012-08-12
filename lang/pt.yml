@@ -19,7 +19,7 @@ pt:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Ficheiros
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ pt:
     ERRORNOTADMIN: 'Esse utilizador não é um administrador.'
     ERRORNOTREC: 'Esse nome de utilizador / password não é válido'
   Boolean:
-    0: Não
+    0: 'False'
     ANY: Qualquer
-    1: Sim
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ pt:
     HELLO: Olá
     PASSWORD: Palavra-chave
   CheckboxField:
-    - Não
-    - Sim
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Fechar Janela'
     SUCCESSADD2: 'Added {name}'
