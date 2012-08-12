@@ -925,6 +925,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'ko_KP' => 'ko',
 		'ko_KR' => 'ko',
 		'ko_CN' => 'ko',
+		'mi_NZ' => 'mi_NZ',
 		'nb_NO' => 'nb',
 		'nb_SJ' => 'nb',
 		'nl_AN' => 'nl',
