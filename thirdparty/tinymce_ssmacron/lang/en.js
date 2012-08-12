@@ -1,0 +1,1 @@
+tinyMCE.addI18n('en.ssmacron',{'insertmacron': 'Insert a Macron'});
