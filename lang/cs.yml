@@ -92,9 +92,9 @@ cs:
     NEXT: Další
     PREVIOUS: Předchozí
   ConfirmedPasswordField:
-    ATLEAST: 'Heslo musí být nejméně {min} znaků dlouhé.'
-    BETWEEN: 'Heslo musí být {min} až {max} znaků dlouhé.'
-    MAXIMUM: 'Heslo musí být nanejvýš {max} znaků dlouhé.'
+    ATLEAST: 'Hesla musí být nejméně {min} znaků dlouhé.'
+    BETWEEN: 'Hesla musí být {min} až {max} znaků dlouhé.'
+    MAXIMUM: 'Hesla musí být nanejvýš {max} znaků dlouhé.'
     SHOWONCLICKTITLE: 'Změnit heslo'
   CreditCardField:
     FIRST: první
