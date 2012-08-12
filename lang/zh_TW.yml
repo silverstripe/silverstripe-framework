@@ -72,7 +72,7 @@ zh_TW:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
-    CHANGEPASSWORDTEXT2: '您可以用下列的帳號密碼登入：'
+    CHANGEPASSWORDTEXT2: 您可以用下列的帳號密碼登入：
     EMAIL: Email
     HELLO: 您好
     PASSWORD: Password
@@ -157,7 +157,7 @@ zh_TW:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: 檔案
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -416,7 +416,7 @@ zh_TW:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: '請輸入有效的電話號碼'
+    VALIDATION: 請輸入有效的電話號碼
   RelationComplexTableField.ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'

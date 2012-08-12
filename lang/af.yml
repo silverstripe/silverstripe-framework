@@ -19,7 +19,7 @@ af:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Lêers
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -71,7 +71,7 @@ af:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
     HELLO: Hi
@@ -168,9 +168,9 @@ af:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
     HELLO: Hi
-    TEXT1: 'Hier is u'
-    TEXT2: 'wagwoord herstel skakel'
-    TEXT3: vir
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '%s word benodig.'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -418,7 +418,7 @@ af:
   PhoneNumberField:
     VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
-    ADD: 'Voeg by'
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -465,7 +465,7 @@ af:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Voeg nuwe ry by'
+    ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Export to CSV'
@@ -492,7 +492,7 @@ af:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    AttachFile: 'Attach a file'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

@@ -19,7 +19,7 @@ lv:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Faili
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ lv:
     ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
     ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
   Boolean:
-    0: Nē
+    0: 'False'
     ANY: Jebkurš
-    1: Jā
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ lv:
     HELLO: Sveiki
     PASSWORD: Parole
   CheckboxField:
-    - Nē
-    - Jā
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Aizvērt izlēcošo logu'
     SUCCESSADD2: 'Added {name}'

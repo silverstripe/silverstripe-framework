@@ -19,7 +19,7 @@ th:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: ไฟล์
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ th:
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    0: ไม่ตกลง
+    0: 'False'
     ANY: Any
-    1: ตกลง
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ th:
     HELLO: สวัสดี
     PASSWORD: รหัสผ่าน
   CheckboxField:
-    - ไม่ตกลง
-    - ตกลง
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: ปิดหน้าต่างป๊อปอัพ
     SUCCESSADD2: 'Added {name}'
@@ -205,7 +205,7 @@ th:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: ลบ
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -279,7 +279,7 @@ th:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: 'รูปภาพ'
+    IMAGE: รูปภาพ
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:

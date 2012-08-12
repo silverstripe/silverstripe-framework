@@ -20,8 +20,8 @@ sv:
     EDITANDORGANIZE: 'Redigera och organisera'
     EDITINFO: 'Edit files'
     FILES: Filer
-    FROMCOMPUTER: 'Välj filer från din dator'
-    FROMCOMPUTERINFO: 'Ladda upp från din dator'
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Totalt
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
@@ -57,9 +57,9 @@ sv:
     ERRORNOTADMIN: 'Den användaren är inte administratör'
     ERRORNOTREC: 'Användarnamnet / lösenordet hittas inte'
   Boolean:
-    0: Falskt
+    0: 'False'
     ANY: 'Vilken som helst'
-    1: Sant
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Laddar...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,8 +77,8 @@ sv:
     HELLO: Hej
     PASSWORD: Lösenord
   CheckboxField:
-    - Falskt
-    - Sant
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Stäng popup'
     SUCCESSADD2: 'Lade till {name}'
@@ -297,7 +297,7 @@ sv:
     SAVEDUP: Sparad.
     VersionUnknown: okänd
   LeftAndMain_Menu.ss:
-    Hello: Hej
+    Hello: Hi
     LOGOUT: 'Logga ut'
   LoginAttempt:
     Email: E-postadress
@@ -466,7 +466,7 @@ sv:
     ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
   TableField.ss:
     ADD: 'Lägg till ny rad'
-    ADDITEM: 'Lägg till %s'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Exportera till CSV'
     PRINT: 'Skriv ut'
@@ -478,7 +478,7 @@ sv:
     SORTDESC: 'Sortera i fallande ordning'
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
-    OF: av
+    OF: of
     TO: to
     VIEWFIRST: 'Visa första'
     VIEWLAST: 'Visa sista'

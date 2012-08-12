@@ -10,7 +10,7 @@ mi_NZ:
     OWNER: Kaiūmanga
     SIZE: Nuinga
     TITLE: Taitara
-    TYPE: 'Momo kōnae'
+    TYPE: 'Tūmomo '
     URL: PRO
   AssetUploadField:
     ChooseFiles: 'Kōwhiri kōnae'
@@ -206,7 +206,7 @@ mi_NZ:
   GridFieldDetailForm:
     Create: Hanga
     Delete: Muku
-    DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
+    DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
     Deleted: 'Kua mukua %s %s'
     Save: Tiaki
     Saved: 'I tiakina a %s %s'
@@ -249,7 +249,7 @@ mi_NZ:
     CSSCLASSRIGHT: 'I te taha matau, me te tuhinga e takai huri noa ana'
     DETAILS: 'Ngā Taipitopito'
     EMAIL: 'Wāhitau Īmēra'
-    FILE: Kōnae
+    FILE: 'Ngā kōnae'
     FOLDER: Kōpaki
     FROMCMS: 'Mai i te CMS'
     FROMCOMPUTER: 'Mai i tō rorohiko'

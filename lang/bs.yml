@@ -71,10 +71,10 @@ bs:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
-    CHANGEPASSWORDTEXT2: 'Možete koristiti slijedeće podatke za prijavu:'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
-    HELLO: Pozdrav
+    HELLO: Hi
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -86,11 +86,11 @@ bs:
   ComplexTableField.ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Uzlazno raszvrstavanje'
-    SORTDESC: 'Silazno razvrstavanje'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: Slijedeći
-    PREVIOUS: Prethodni
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -157,7 +157,7 @@ bs:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: Datoteka
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -167,10 +167,10 @@ bs:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Pozdrav
-    TEXT1: 'Ovo je Vaš'
-    TEXT2: 'link za ponovno podešavanje šifre'
-    TEXT3: za
+    HELLO: Hi
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '%s je obavezno'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -281,7 +281,7 @@ bs:
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
-    TITLE: 'Iframe za postavljanje slika'
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -418,7 +418,7 @@ bs:
   PhoneNumberField:
     VALIDATION: 'Molimo, unesite ispravan broj telefona'
   RelationComplexTableField.ss:
-    ADD: Dodaj
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -465,7 +465,7 @@ bs:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Dodaj novi red'
+    ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Izvezi u CSV'
@@ -492,7 +492,7 @@ bs:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    AttachFile: 'Attach a file'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

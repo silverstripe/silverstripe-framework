@@ -57,9 +57,9 @@ fr:
     ERRORNOTADMIN: 'Cet utilisateur n''est pas un administrateur.'
     ERRORNOTREC: 'Cet identifiant / mot de passe n''est pas reconnu'
   Boolean:
-    0: Non
+    0: 'False'
     ANY: Tout
-    1: Oui
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Chargement...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -74,11 +74,11 @@ fr:
     CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
     CHANGEPASSWORDTEXT2: 'Vous pouvez maintenant utiliser les identifiants suivants pour vous connecter&nbsp;:'
     EMAIL: Email
-    HELLO: Salut
+    HELLO: 'Bonjour, '
     PASSWORD: 'Mot de passe'
   CheckboxField:
-    - Non
-    - Oui
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Ferme Popup'
     SUCCESSADD2: '{name} ajouté'
@@ -183,7 +183,7 @@ fr:
   FormField:
     NONE: aucun
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Supprimer
     Delete: Supprimer
     UnlinkRelation: Séparer
   GridField:
@@ -205,7 +205,7 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
   GridFieldDetailForm:
     Create: Créer
-    Delete: Supprimer
+    Delete: Supprime
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '%s %s supprimés'
     Save: Enregistrer
@@ -249,7 +249,7 @@ fr:
     CSSCLASSRIGHT: 'a droite, avec texte à la ligne.'
     DETAILS: Détails
     EMAIL: 'Adresse email'
-    FILE: Fichier
+    FILE: Fichiers
     FOLDER: Dossier
     FROMCMS: 'Depuis le SGC'
     FROMCOMPUTER: 'Depuis votre ordinateur'
