@@ -1143,8 +1143,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		
 		$mainFields->removeByName('Salt');
 		$mainFields->removeByName('NumVisit');
-		$mainFields->removeByName('LastVisited');
-	
+
+		$mainFields->makeFieldReadonly('LastVisited');
+
 		$fields->removeByName('Subscriptions');
 
 		// Groups relation will get us into logical conflicts because
@@ -1214,7 +1215,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			)
 		);
 		$timeFormatField->setValue($this->TimeFormat);
-		
+
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;
