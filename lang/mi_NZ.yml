@@ -1,7 +1,7 @@
 mi_NZ:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ADDFILES: 'Tāpiri Kōnae'
+    EditOrgMenu: 'Whakatika me te Whakaraupapa'
     NEWFOLDER: KōpakiHōu
   AssetTableField:
     CREATED: 'Tukuatu tuatahi'
@@ -130,7 +130,7 @@ mi_NZ:
     VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'
     VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET: 'Kāore i tautuhia'
   Director:
     INVALID_REQUEST: 'Tono muhu'
   DropdownField:
@@ -180,7 +180,7 @@ mi_NZ:
     TEXT3: mā
   Form:
     FIELDISREQUIRED: 'Ka hiahiatia a %s'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Haere
     VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
     VALIDATIONNOTUNIQUE: 'Ehara te uara i tāurua i te ahurei'
     VALIDATIONPASSWORDSDONTMATCH: 'Kāore ngā kupuhipa i te ōrite'
@@ -289,13 +289,13 @@ mi_NZ:
     URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
     UpdateMEDIA: 'Whakahōu Pāpāho'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: 'Ngā Kōnae'
+    SINGULARNAME: Kōnae
   ImageField:
     IMAGE: Atahanga
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: 'Ngā kōnae'
+    SINGULARNAME: Kōnae
   Image_iframe.ss:
     TITLE: 'Iframe Tukuatu Atahanga'
   LeftAndMain:
@@ -425,7 +425,7 @@ mi_NZ:
   NumericField:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
   Pagination:
-    Page: Page
+    Page: Whārangi
     View: View
   Permission:
     AdminGroup: Kaiwhakahaere
@@ -440,7 +440,7 @@ mi_NZ:
     FromRole: 'I tukuna iho i te tūnga "{title}"'
     FromRoleOnGroup: 'i tukuna iho i "%s" i te rōpū "%s"'
   PermissionRole:
-    PLURALNAME: Roles
+    PLURALNAME: 'Ngā Tūnga'
     SINGULARNAME: Role
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
