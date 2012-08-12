@@ -74,7 +74,7 @@ fr:
     CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
     CHANGEPASSWORDTEXT2: 'Vous pouvez maintenant utiliser les identifiants suivants pour vous connecter&nbsp;:'
     EMAIL: Email
-    HELLO: Salut
+    HELLO: 'Bonjour, '
     PASSWORD: 'Mot de passe'
   CheckboxField:
     - 'False'
