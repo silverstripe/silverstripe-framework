@@ -15,7 +15,7 @@ cs:
   AssetUploadField:
     ChooseFiles: 'Vyberte soubory'
     DRAGFILESHERE: 'Táhni soubory sem'
-    DROPAREA: 'Oblast tažení (Drop)'
+    DROPAREA: 'Oblast táhni (Drop)'
     EDITALL: 'Editovat vše'
     EDITANDORGANIZE: 'Editovat & organizovat'
     EDITINFO: 'Editovat soubory'
@@ -407,7 +407,7 @@ cs:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Přístup CMS'
     FULLADMINRIGHTS: 'Plná administrátorská práva'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    FULLADMINRIGHTS_HELP: 'Znamená, a přepíše všechny ostatní přidělená oprávnění.'
   PermissionCheckboxSetField:
     AssignedTo: 'přiděleno "{title}"'
     FromGroup: 'zděděno ze skupiny "{title}"'
