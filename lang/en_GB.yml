@@ -311,6 +311,7 @@ en_GB:
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: Email
@@ -333,6 +334,7 @@ en_GB:
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
