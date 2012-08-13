@@ -22,9 +22,14 @@ ss.i18n = {
 	defaultLocale: 'en_US',
 	
 	lang: {},
+
+	inited: false,
 	
 	init: function() {
+		if(this.inited) return;
+
 		this.currentLocale = this.detectLocale();
+		this.inited = true;
 	},
 	
 	/**
@@ -59,6 +64,8 @@ ss.i18n = {
 	 *
 	 */
 		_t: function (entity, fallbackString, priority, context) {
+			this.init();
+			
 			if (this.lang && this.lang[this.getLocale()] && this.lang[this.getLocale()][entity]) {
 				return this.lang[this.getLocale()][entity];
 			} else if (this.lang && this.lang[this.defaultLocale] && this.lang[this.defaultLocale][entity]) {
