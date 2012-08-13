@@ -124,7 +124,7 @@ sk:
     YEAR: rok
     YEARS: roky
   DateField:
-    NOTSET: nezadané
+    NOTSET: 'nIe je nastavené'
     TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'

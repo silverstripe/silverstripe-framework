@@ -130,7 +130,7 @@ cs:
     VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající miximu povoleného datumu ({date})'
     VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET: Nenastaveno
   Director:
     INVALID_REQUEST: 'Neplatný požadavek'
   DropdownField:
@@ -180,7 +180,7 @@ cs:
     TEXT3: pro
   Form:
     FIELDISREQUIRED: '%s je požadováno.'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Jdi
     VALIDATIONCREDITNUMBER: 'Prosím ujistěte se, že jste zadal/a {number} číslo kreditní karty správně'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota není unikátní'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla se neshodují'
@@ -289,8 +289,8 @@ cs:
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Aktualizovat média'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Soubory
+    SINGULARNAME: Soubor
   ImageField:
     IMAGE: Obrázek
   Image_Cached:
@@ -393,8 +393,8 @@ cs:
     ResultNone: 'Žádné změny'
     ResultUpdated: 'Aktualizováno {count} členů'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Členské hesla'
+    SINGULARNAME: 'Členské heslo'
   MemberTableField: null
   ModelAdmin:
     DELETE: Smazat
@@ -425,8 +425,8 @@ cs:
   NumericField:
     VALIDATION: '''{value}'' není číslo, pouze čísla mohou být akceptována pro toto pole'
   Pagination:
-    Page: Page
-    View: View
+    Page: Stránka
+    View: Zobrazit
   Permission:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Přístup CMS'
@@ -443,8 +443,8 @@ cs:
     PLURALNAME: Role
     SINGULARNAME: Role
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Kódy oprávnění role'
+    SINGULARNAME: 'Kód oprávnění role'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a přístupová práva'
   PhoneNumberField:
