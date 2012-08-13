@@ -1,7 +1,7 @@
 cs:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ADDFILES: 'Přidat soubory'
+    EditOrgMenu: 'Editovat &amp; organizovat'
     NEWFOLDER: 'Nová složka'
   AssetTableField:
     CREATED: 'Poprvé nahráno'
@@ -171,8 +171,8 @@ cs:
   Filesystem:
     SYNCRESULTS: 'Synchronizace kompletní: {createdcount} položek vytvořeno, {deletedcount} položek smazanáno'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Složky
+    SINGULARNAME: Složka
   ForgotPasswordEmail.ss:
     HELLO: Ahoj
     TEXT1: 'Zde je váš'
@@ -228,10 +228,10 @@ cs:
     GroupReminder: 'Když vyberete nadřizenou skupinu, tato skupina bude mít všechny její role'
     Locked: 'Zamčený?'
     NoRoles: 'Žádné role'
-    PLURALNAME: Groups
+    PLURALNAME: Skupiny
     Parent: 'Rodičovská skupina'
     RolesAddEditLink: 'Přidat/editovat role'
-    SINGULARNAME: Group
+    SINGULARNAME: Skupina
     Sort: Řazení
     has_many_Permissions: Oprávnění
     many_many_Members: Členové
@@ -294,8 +294,8 @@ cs:
   ImageField:
     IMAGE: Obrázek
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Soubory
+    SINGULARNAME: Soubor
   Image_iframe.ss:
     TITLE: 'Rámec pro nahrání obrázku'
   LeftAndMain:
@@ -318,8 +318,8 @@ cs:
   LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Pokusy přihlášení'
+    SINGULARNAME: 'Pokus přihlášení'
     Status: Stav
   Member:
     ADDGROUP: 'Přidat skupinu'
@@ -432,15 +432,15 @@ cs:
     CMS_ACCESS_CATEGORY: 'Přístup CMS'
     FULLADMINRIGHTS: 'Plná administrátorská práva'
     FULLADMINRIGHTS_HELP: 'Znamená, a přepíše všechny ostatní přidělená oprávnění.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Oprávnění
+    SINGULARNAME: Oprávnění
   PermissionCheckboxSetField:
     AssignedTo: 'přiděleno "{title}"'
     FromGroup: 'zděděno ze skupiny "{title}"'
     FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
   PermissionRole:
-    PLURALNAME: Roles
+    PLURALNAME: Role
     SINGULARNAME: Role
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
