@@ -925,6 +925,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'ko_KP' => 'ko',
 		'ko_KR' => 'ko',
 		'ko_CN' => 'ko',
+		'mi_NZ' => 'mi_NZ',
 		'nb_NO' => 'nb',
 		'nb_SJ' => 'nb',
 		'nl_AN' => 'nl',
@@ -1995,7 +1996,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 				// and the next invocation of include_by_locale() doesn't cause a new reparse.
 				$adapter->addTranslation(
 					array(
-						'content' => array('_' => '_'),
+						'content' => array($locale => $locale), // Cached by content hash, so needs to be locale dependent
 						'locale' => $locale,
 						'usetranslateadapter' => true
 					)

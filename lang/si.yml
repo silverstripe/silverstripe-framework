@@ -19,7 +19,7 @@ si:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: ලිපි
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -157,7 +157,7 @@ si:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: ලිපිය
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -223,7 +223,7 @@ si:
     Parent: 'මවු කාන්ඩය'
     RolesAddEditLink: 'Manage roles'
     Sort: 'Sort Order'
-    has_many_Permissions: 'අවසර'
+    has_many_Permissions: අවසර
     many_many_Members: සාමාජිකයින්
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'

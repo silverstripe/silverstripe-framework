@@ -20,7 +20,7 @@ fi:
     EDITANDORGANIZE: 'Muokkaa & järjestele'
     EDITINFO: 'Muokkaa tiedostoja'
     FILES: Tiedostot
-    FROMCOMPUTER: 'Valitse tiedostot omalta tietokoneeltasi'
+    FROMCOMPUTER: 'Valitse tiedostoja omalta tietokoneeltasi'
     FROMCOMPUTERINFO: 'Siirrä omalta tietokoneeltasi'
     TOTAL: Yhteensä
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
@@ -57,9 +57,9 @@ fi:
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
-    0: Ei
+    0: Epätosi
     ANY: Yhtään
-    1: Kyllä
+    1: Tosi
   CMSLoadingScreen.ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
@@ -77,15 +77,15 @@ fi:
     HELLO: Hei
     PASSWORD: Salasana
   CheckboxField:
-    - Ei
-    - Kyllä
+    - 'Ei valintaa'
+    - Valittu
   ComplexTableField:
     CLOSEPOPUP: 'Sulje ponnahdusikkuna'
     SUCCESSADD2: 'Lisättiin {name}'
     SUCCESSEDIT: 'Tallennettu %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Lisää %s'
-    NOITEMSFOUND: 'Merkintöjä ei löytynyt'
+    NOITEMSFOUND: 'Kohteita ei löytynyt'
     SORTASC: 'Nouseva järjestys'
     SORTDESC: 'Laskeva järjestys'
   ComplexTableField_popup.ss:
@@ -249,7 +249,7 @@ fi:
     CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
     DETAILS: Tiedot
     EMAIL: Sähköpostiosoite
-    FILE: Tiedosto
+    FILE: Tiedostot
     FOLDER: Kansio
     FROMCMS: CMS-järjestelmästä
     FROMCOMPUTER: 'Omalta tietokoneeltasi'
@@ -419,8 +419,8 @@ fi:
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
   RelationComplexTableField.ss:
     ADD: Lisää
-    CSVEXPORT: 'Vie CSV:nä'
-    NOTFOUND: 'Merkintöjä ei löytynyt'
+    CSVEXPORT: 'Vie CSV-muodossa'
+    NOTFOUND: 'Yhtään kohdetta ei löytynyt'
   Security:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
@@ -473,13 +473,13 @@ fi:
     Print: Tulosta
     SELECT: 'Valitse:'
   TableListField.ss:
-    NOITEMSFOUND: 'Merkintöjä ei löytynyt'
+    NOITEMSFOUND: 'Kohteita ei löytynyt'
     SORTASC: 'Järjestä nousevasti'
     SORTDESC: 'Järjestä laskevasti'
   TableListField_PageControls.ss:
     DISPLAYING: Näytetään
     OF: /
-    TO: listalle
+    TO: -»
     VIEWFIRST: 'Näytä ensimmäinen'
     VIEWLAST: 'Näytä viimeinen'
     VIEWNEXT: 'Näytä seuraava'

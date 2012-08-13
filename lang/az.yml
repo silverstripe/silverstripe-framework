@@ -19,7 +19,7 @@ az:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Fayllar
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -57,9 +57,9 @@ az:
     ERRORNOTADMIN: 'İstifadəçi administrator deyil'
     ERRORNOTREC: 'Belə istifadəçi adı və ya parol tanınmadı'
   Boolean:
-    0: Yox
+    0: 'False'
     ANY: İstənilən
-    1: Bəli
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -71,14 +71,14 @@ az:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
-    CHANGEPASSWORDTEXT2: 'Siz aşağıdakilarla daxil ola bilərsiniz.'
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: E-poçt
-    HELLO: Salam
+    HELLO: Hi
     PASSWORD: Parol
   CheckboxField:
-    - Yox
-    - Bəli
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: Bağla
     SUCCESSADD2: 'Added {name}'
@@ -86,11 +86,11 @@ az:
   ComplexTableField.ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Artma ilə sırala'
-    SORTDESC: 'Azalma ilə sırala'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: Sonrakı
-    PREVIOUS: Əvvəlki
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -167,10 +167,10 @@ az:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
-    HELLO: Salam
-    TEXT1: 'Burada sizin'
-    TEXT2: 'parolu sıfırlma linki'
-    TEXT3: üçün
+    HELLO: Hi
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '%s tələb olunur.'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
@@ -418,7 +418,7 @@ az:
   PhoneNumberField:
     VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
   RelationComplexTableField.ss:
-    ADD: 'Əlavə et'
+    ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -465,7 +465,7 @@ az:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Yeni sətir əlavə et'
+    ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'CSV-yə ixrac et'
@@ -492,7 +492,7 @@ az:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    AttachFile: 'Attach a file'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

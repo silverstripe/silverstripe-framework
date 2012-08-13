@@ -290,6 +290,7 @@ class DatetimeField_Readonly extends DatetimeField {
 	function Field($properties = array()) {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
+		
 		if($valDate && $valTime) {
 			$format = sprintf(
 				$this->getConfig('datetimeorder'), 
@@ -302,9 +303,9 @@ class DatetimeField_Readonly extends DatetimeField {
 				$this->dateField->getLocale()
 			);
 			$val = $valueObj->toString($format);
+			
 		} else {
-			// TODO Localization
-			$val = '<i>(not set)</i>';
+			$val = sprintf('<em>%s</em>', _t('DatetimeField.NOTSET', 'Not set'));
 		}
 		
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";

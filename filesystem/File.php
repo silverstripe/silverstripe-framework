@@ -920,8 +920,9 @@ class File extends DataObject {
 	 */
 	static function set_class_for_file_extension($exts, $class) {
 		if(!is_array($exts)) $exts = array($exts);
+		
 		foreach($exts as $ext) {
-			if(ClassInfo::is_subclass_of($ext, 'File')) {
+			if(is_subclass_of($ext, 'File')) {
 				throw new InvalidArgumentException(
 					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
 				);

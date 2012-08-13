@@ -18,10 +18,10 @@ nb:
     DROPAREA: Droppunkt
     EDITALL: 'Endre alle'
     EDITANDORGANIZE: 'Rediger & organiser'
-    EDITINFO: 'Rediger filer'
+    EDITINFO: 'Edit files'
     FILES: Filer
-    FROMCOMPUTER: 'Velg filer fra din pc'
-    FROMCOMPUTERINFO: 'Last opp fra din pc'
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     UPLOADINPROGRESS: 'Vennligst vent... opplasting pågår'
     UPLOADOR: ELLER
@@ -57,9 +57,9 @@ nb:
     ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
     ERRORNOTREC: 'Det brukernavnet / Passord er ikke gjenkjent'
   Boolean:
-    0: Usant
+    0: 'False'
     ANY: Any
-    1: Sant
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Laster ...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -479,7 +479,7 @@ nb:
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
-    TO: til
+    TO: to
     VIEWFIRST: 'Se første'
     VIEWLAST: 'Se siste'
     VIEWNEXT: 'Se neste'
@@ -493,17 +493,17 @@ nb:
     ATTACHFILE: 'Legg ved fil'
     ATTACHFILES: 'Legg ved filer'
     AttachFile: 'Legg ved fil(er)'
-    DELETE: 'Slett fra filer'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Slett filen permament fra filarkivet'
     DOEDIT: Lagre
     DROPFILE: 'Slipp en fil'
     DROPFILES: 'Slipp filer'
     Dimensions: Dimensjoner
-    EDIT: Rediger
+    EDIT: Edit
     EDITINFO: 'Rediger denne filen'
     FIELDNOTSET: 'Filinformasjon ikke funnet'
     FROMCOMPUTER: 'Fra din pc'
-    FROMCOMPUTERINFO: 'Velg fra filer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Fra filer'
     MAXNUMBEROFFILES: 'Maks antall {count} fil(er) overskredet'
     MAXNUMBEROFFILESSHORT: 'Kan kun laste opp {count} filer'
@@ -511,7 +511,7 @@ nb:
     REMOVEERROR: 'Feil ved fjerning av fil'
     REMOVEINFO: 'Fjern filen herfra, men ikke slett den fra filarkivet'
     STARTALL: 'Start alle'
-    STARTALLINFO: 'Start alle opplastinger'
+    STARTALLINFO: 'Start all uploads'
     Saved: Lagret
   Versioned:
     has_many_Versions: Versjoner
