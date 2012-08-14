@@ -157,8 +157,8 @@ sv:
     Title: Titel
   FileIFrameField:
     ATTACH: 'Bifoga {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED: '{type}er kan bifogas när du sparat posten för första gången'
+    ATTACHONCESAVED2: 'Filer kan bifogas när du sparat posten för första gången'
     DELETE: 'Radera {type}'
     DISALLOWEDFILETYPE: 'Filtypen är inte tillåten för uppladdning'
     FILE: Fil
@@ -289,13 +289,13 @@ sv:
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
     UpdateMEDIA: 'Uppdatera media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Filer
+    SINGULARNAME: Fil
   ImageField:
     IMAGE: Bild
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Filer
+    SINGULARNAME: Fil
   Image_iframe.ss:
     TITLE: 'Iframe för uppladdning av bild'
   LeftAndMain:
@@ -443,8 +443,8 @@ sv:
     PLURALNAME: Roller
     SINGULARNAME: Roll
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: åtkomsträttighetskoder
+    SINGULARNAME: åtkomsträttighetskod
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och tillgångsinställningar'
   PhoneNumberField:
@@ -535,7 +535,7 @@ sv:
     EDITINFO: 'Redigera filen'
     FIELDNOTSET: 'Hittade ingen filinformation'
     FROMCOMPUTER: 'Från din dator'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Välj från filer'
     FROMFILES: 'Från filer'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
     MAXNUMBEROFFILESSHORT: 'Kan bara ladda upp {count} files'
@@ -543,7 +543,7 @@ sv:
     REMOVEERROR: 'Fel när filen skulle tas bort'
     REMOVEINFO: 'Ta bort filen härifrån, men radera den inte från filarkivet'
     STARTALL: 'Starta alla'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Starta all uppladdningar'
     Saved: Sparad
   Versioned:
     has_many_Versions: Versioner
