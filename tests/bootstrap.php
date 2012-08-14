@@ -20,6 +20,7 @@ if (!$_SERVER) $_SERVER = array();
 $frameworkPath = dirname(dirname(__FILE__));
 $frameworkDir = basename($frameworkPath);
 
+$_GET['flush'] = 1;
 $_SERVER['SCRIPT_FILENAME'] = $frameworkPath . DIRECTORY_SEPARATOR . 'cli-script.php';
 $_SERVER['SCRIPT_NAME'] = '.' . DIRECTORY_SEPARATOR . $frameworkDir . DIRECTORY_SEPARATOR . 'cli-script.php'; 
 
