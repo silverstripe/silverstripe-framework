@@ -1,6 +1,8 @@
 BUILD_DIR=$1
-git clone git://github.com/silverstripe/silverstripe-installer.git $BUILD_DIR
+git clone --depth=100 --quiet git://github.com/silverstripe/silverstripe-installer.git $BUILD_DIR
+git clone --depth=100 --quiet git://github.com/silverstripe-labs/silverstripe-sqlite3.git $BUILD_DIR/sqlite3
 cp ./tests/travis/_ss_environment.php $BUILD_DIR
+cp ./tests/travis/_config.php $BUILD_DIR/mysite
 cp -r . $BUILD_DIR/framework
 
 cd $BUILD_DIR
