@@ -4,8 +4,8 @@ ob_start();
 define('SS_ENVIRONMENT_TYPE', 'dev');
 
 /* Database connection */ 
-define('SS_DATABASE_CLASS', 'SQLite3Database');
-define('SS_DATABASE_SERVER', ':memory:'); 
+define('SS_DATABASE_CLASS', 'SQLitePDODatabase');
+define('SS_DATABASE_SERVER', 'localhost'); 
 define('SS_DATABASE_USERNAME', 'root'); 
 define('SS_DATABASE_PASSWORD', '');
 define('SS_DATABASE_CHOOSE_NAME', true);
