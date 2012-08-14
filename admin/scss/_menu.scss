@@ -9,7 +9,9 @@
 
 .cms-logo-header {
 	background-color: darken($color-dark-bg, 10%);
-	position: relative;
+	position: relative !important;
+	top:auto !important;
+	height:auto !important;
 	padding: 0 8px 0 4px;
 	line-height: 24px;
 
@@ -20,6 +22,7 @@
 	span {
 		color: $color-text-light;
 		display: block;
+		padding-left:26px;
 
 		a {
 			color: $color-text-dark-link;
@@ -68,9 +71,7 @@
 
 .cms-login-status {
 	border-top: 1px solid $color-dark-separator;
-	height: 24px;
-	padding: 7px 4px 0 4px;
-	overflow: hidden;
+	padding: 7px 4px;
 	line-height: 16px;
 	font-size: $font-base-size - 1;
 
@@ -98,6 +99,9 @@
 		width: ($grid-x * 24) - 1; /* 8x24 - 1 */
 		overflow-x: hidden;
 		overflow-y: auto;
+		position: relative !important;
+		top:auto !important;
+		left:auto !important;
 	}
 		
 	&.collapsed {
@@ -126,6 +130,17 @@
 				display: none;
 				}
 			}
+		}
+
+		.cms-login-status {
+			height:16px;
+			span {
+				display:none;
+			}
+		}
+
+		.cms-logo {
+			height:24px;
 		}
 
 		&.cms-panel .cms-panel-content {
