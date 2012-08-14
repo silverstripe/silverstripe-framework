@@ -341,7 +341,7 @@ nl:
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface Taal'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw Wachtwoord'
     PASSWORD: Wachtwoord
     PLURALNAME: Leden
@@ -353,7 +353,7 @@ nl:
     SURNAME: Achternaam
     VALIDATIONMEMBEREXISTS: 'Er bestaat reeds een gebruiker met dit emailadres'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Wekom terug, {firstname}'
     YOUROLDPASSWORD: 'Uw oude wachtwoord'
     belongs_many_many_Groups: Groepen
     db_LastVisited: 'Datum van het laatste bezoek'
