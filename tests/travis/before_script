@@ -1,0 +1,7 @@
+BUILD_DIR=$1
+git clone git://github.com/silverstripe/silverstripe-installer.git $BUILD_DIR
+cp ./tests/travis/_ss_environment.php $BUILD_DIR
+cp -r . $BUILD_DIR/framework
+
+cd $BUILD_DIR
+./framework/sake dev/build "flush=1"
