@@ -4,6 +4,7 @@ php:
 
 before_script:
  - ./tests/travis/before_script ~/builds/ss 
+ - cd ~/builds/ss
 
 script: 
- - phpunit
+ - phpunit -c phpunit.xml.dist 
