@@ -53,7 +53,7 @@ tr:
     UNORDEREDDESCRIPTION: 'Sıralanmamış liste'
     UNORDEREDEXAMPLE1: 'sıralanmamış madde 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Geri
   BasicAuth:
     ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
@@ -300,7 +300,7 @@ tr:
     TITLE: 'Resim göndermek için gerekli IFrame'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    DELETED: Silinmiş.
     DropdownBatchActionsDefault: Actions
     HELP: Yardım
     PAGETYPE: 'Sayfa tipi:'
@@ -308,9 +308,9 @@ tr:
     PERMALREADY: 'Üzgünüm ama İYS''nin bu bölümüne erişim hakkınız yok. Başka bir kullanıcı olarak giriş yapmak istiyorsanız aşağıdan bunu yapabilirsiniz'
     PERMDEFAULT: 'İYS erişimi için eposta adresinizi ve parolanızı giriniz.e kolaylık sağlama'
     PLEASESAVE: 'Lütfen Sayfayı Kaydedin: Bu sayfa henüz kaydedilmediği için güncellenemedi.'
-    PreviewButton: Preview
+    PreviewButton: Önizleme
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: Kaydedilmiş.
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -429,7 +429,7 @@ tr:
     View: View
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
+    CMS_ACCESS_CATEGORY: 'CMS Erişimi'
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     PLURALNAME: Permissions
@@ -446,7 +446,7 @@ tr:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
   PhoneNumberField:
     VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
   RelationComplexTableField.ss:
@@ -502,7 +502,7 @@ tr:
   TableListField:
     CSVEXPORT: 'CSV olarak kaydet'
     PRINT: Yazdır
-    Print: Print
+    Print: Yazdır
     SELECT: Seç
   TableListField.ss:
     NOITEMSFOUND: 'No items found'

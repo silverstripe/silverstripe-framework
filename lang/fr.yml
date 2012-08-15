@@ -213,7 +213,7 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
   GridFieldDetailForm:
     Create: Créer
-    Delete: Supprime
+    Delete: Supprimer
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '%s %s supprimés'
     Save: Enregistrer
