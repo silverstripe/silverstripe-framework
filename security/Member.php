@@ -1238,6 +1238,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
 		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
+		$labels['DateFormat'] = _t('Member.DATEFORMAT', 'Date format');
+		$labels['TimeFormat'] = _t('Member.TIMEFORMAT', 'Time format');
 		if($includerelations){
 			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', 'Security Groups this member belongs to');
 		}
