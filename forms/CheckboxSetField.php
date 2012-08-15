@@ -78,7 +78,7 @@ class CheckboxSetField extends OptionsetField {
 				// Source and values are DataObject sets.
 				if($values && is_a($values, 'DataObjectSet')) {
 					foreach($values as $object) {
-						if(is_a($object, 'DataObject')) {
+						if(is_object($object) && $object instanceof DataObject) {
 							$items[] = $object->ID;
 						}
 				   }
@@ -110,7 +110,7 @@ class CheckboxSetField extends OptionsetField {
 		}
 
 		if($source) foreach($source as $index => $item) {
-			if($item instanceof DataObject) {
+			if(is_object($item) && $item instanceof DataObject) {
 				$key = $item->ID;
 				$value = $item->Title;
 			} else {
