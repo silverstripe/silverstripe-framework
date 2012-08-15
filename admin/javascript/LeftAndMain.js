@@ -32,6 +32,22 @@ jQuery.noConflict();
 				setTimeout(function() {applyChosen(el);},500);
 			}
 		};
+
+		/**
+		 * Compare URLs, but normalize trailing slashes in 
+		 * URL to work around routing weirdnesses in SS_HTTPRequest.
+		 * Also normalizes relative URLs by prefixing them with the <base>.
+		 */
+		var isSameUrl = function(url1, url2) {
+			var baseUrl = $('base').attr('href');
+			url1 = $.path.isAbsoluteUrl(url1) ? url1 : $.path.makeUrlAbsolute(url1, baseUrl),
+			url2 = $.path.isAbsoluteUrl(url2) ? url2 : $.path.makeUrlAbsolute(url2, baseUrl);
+			var url1parts = $.path.parseUrl(url1), url2parts = $.path.parseUrl(url2);
+			return (
+				url1parts.pathname.replace(/\/*$/, '') == url2parts.pathname.replace(/\/*$/, '') && 
+				url1parts.search == url2parts.search
+			);
+		};
 		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
@@ -39,10 +55,12 @@ jQuery.noConflict();
 		$(document).ajaxComplete(function(e, xhr, settings) {
 			// Simulates a redirect on an ajax response.
 			if(window.History.enabled) {
-				var url = xhr.getResponseHeader('X-ControllerURL'), opts, requestHeaders = settings.headers;
-				// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
-				var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
-				if(url && !isSame) {
+				var url = xhr.getResponseHeader('X-ControllerURL'), 
+					// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
+					origUrl = History.getPageUrl().replace(/\/$/, ''),
+					opts, requestHeaders = settings.headers;
+
+				if(url !== null && !isSameUrl(origUrl, url)) {
 					opts = {pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']};
 					window.History.pushState(opts, '', url);
 				}
@@ -887,11 +905,9 @@ jQuery.noConflict();
 					ajaxOptions: {
 						// Overwrite ajax loading to use CMS logic instead
 						beforeSend: function(xhr, settings) {
-							var makeAbs = $.path.makeUrlAbsolute,
-								baseUrl = $('base').attr('href'),
-								isSame = (makeAbs(settings.url, baseUrl) == makeAbs(document.location.href));
-								
-							if(!isSame) $('.cms-container').loadPanel(settings.url);
+							if(!isSameUrl(document.location.href, settings.url)) {
+								$('.cms-container').loadPanel(settings.url);
+							}
 							return false;
 						}
 					},
