@@ -17,8 +17,8 @@ de:
     DRAGFILESHERE: 'Dateien hier ablegen'
     DROPAREA: Dateiablage
     EDITALL: 'Alle Bearbeiten'
-    EDITANDORGANIZE: Bearbeiten
-    EDITINFO: 'Edit files'
+    EDITANDORGANIZE: 'Bearbeiten'
+    EDITINFO: 'Dateien bearbeiten'
     FILES: Dateien
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
@@ -221,6 +221,7 @@ de:
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
     Parent: Elterngruppe
+    PLURALNAME: 'Gruppen'
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
     Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
@@ -311,6 +312,7 @@ de:
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
+    DATEFORMAT: 'Datumsformat'
     DefaultAdminFirstname: Standardadmin
     DefaultDateTime: Standard
     EMAIL: E-Mail
@@ -333,6 +335,7 @@ de:
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
+    TIMEFORMAT: 'Zeitformat'
     VALIDATIONMEMBEREXISTS: 'Es gibt bereits ein Mitglied mit dieser E-Mail-Adresse'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
