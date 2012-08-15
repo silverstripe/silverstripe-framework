@@ -127,8 +127,8 @@ sv:
     NOTSET: 'inte angivet'
     TODAY: 'i dag'
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
-    VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
-    VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
+    VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare än eller samma som det senaste godkända datumet ({date})'
+    VALIDDATEMINDATE: 'Angivet datum måste vara senare än eller samma som det tidigaste godkända datumet ({date})'
   DatetimeField:
     NOTSET: 'Ej satt'
   Director:
@@ -429,7 +429,7 @@ sv:
     View: Visa
   Permission:
     AdminGroup: Administratör
-    CMS_ACCESS_CATEGORY: CMS-tillgång
+    CMS_ACCESS_CATEGORY: CMS-åtkomst
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
     PLURALNAME: Rättigheter
@@ -446,7 +446,7 @@ sv:
     PLURALNAME: åtkomsträttighetskoder
     SINGULARNAME: åtkomsträttighetskod
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roller och tillgångsinställningar'
+    PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
   PhoneNumberField:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
   RelationComplexTableField.ss:
