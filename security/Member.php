@@ -899,18 +899,16 @@ class Member extends DataObject {
 	 * @return String SQL
 	 */
 	static function get_title_sql($tableName = 'Member') {
-		// This should be abstracted to SSDatabase concatOperator or similar.
-		$op = (DB::getConn() instanceof MSSQLDatabase) ? " + " : " || ";
-
-		if (self::$title_format) {
-			$columnsWithTablename = array();
-			foreach(self::$title_format['columns'] as $column) {
-				$columnsWithTablename[] = "\"$tableName\".\"$column\"";
-			}
+		$cols = self::$title_format ? self::$title_format['columns'] : array('Surname', 'FirstName');
+		$sep = self::$title_format ? self::$title_format['sep'] : ' ';
+		// TODO This should be abstracted to SSDatabase concatOperator or similar.
+		foreach($cols as $i => $col) $cols[$i] = "\"$tableName\".\"$col\"";
 		
-			return "(".join(" $op '".self::$title_format['sep']."' $op ", $columnsWithTablename).")";
+		if(DB::getConn() instanceof MySQLDatabase) {
+			return sprintf("CONCAT_WS('%s', %s)", $sep, join(',', $cols));
 		} else {
-			return "(\"$tableName\".\"Surname\" $op ' ' $op \"$tableName\".\"FirstName\")";
+			$op = (DB::getConn() instanceof MSSQLDatabase) ? " + " : " || ";
+			return "(".join(" $op '".$sep."' $op ", $cols).")";
 		}
 	}
 
