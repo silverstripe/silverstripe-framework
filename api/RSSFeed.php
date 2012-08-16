@@ -144,6 +144,7 @@ class RSSFeed extends ViewableData {
 	 */
 	function Entries() {
 		$output = new ArrayList();
+
 		if(isset($this->entries)) {
 			foreach($this->entries as $entry) {
 				$output->push(new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
@@ -183,7 +184,10 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Output the feed to the browser
 	 */
-	function outputToBrowser() {
+	public function outputToBrowser() {
+		$prevState = SSViewer::get_source_file_comments();
+		SSViewer::set_source_file_comments(false);
+
 		if(is_int($this->lastModified)) {
 			HTTP::register_modification_timestamp($this->lastModified);
 			header('Last-Modified: ' . gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
@@ -192,26 +196,14 @@ class RSSFeed extends ViewableData {
 			HTTP::register_etag($this->etag);
 		}
 
-		$body = $this->feedContent();
-		HTTP::add_cache_headers();
-		header("Content-type: text/xml");
-		echo $body;
-	}
-	
-	/**
-	 * Return the content of the RSS feed.
-	 * 
-	 * Also temporarily disabled source file comments, and restores
-	 * to previous state once content has been rendered.
-	 * 
-	 * @return string
-	 */
-	function feedContent() {
-		$prevState = SSViewer::get_source_file_comments();
-		SSViewer::set_source_file_comments(false);
-		$content = str_replace('&nbsp;', '&#160;', $this->renderWith($this->getTemplate()));
+		if(!headers_sent()) {
+			HTTP::add_cache_headers();
+			header("Content-type: text/xml");
+		}
+
 		SSViewer::set_source_file_comments($prevState);
-		return $content;
+
+		return $this->renderWith($this->getTemplate());
 	}
 
 	/**
