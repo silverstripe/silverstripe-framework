@@ -561,24 +561,29 @@ class Director implements TemplateGlobalProvider {
 	 * @return boolean
 	 */
 	public static function is_absolute_url($url) {
+		// Strip off the query and fragment parts of the URL before checking
+		if(($queryPosition = strpos($url, '?')) !== false) {
+			$url = substr($url, 0, $queryPosition-1);
+		}
+		if(($hashPosition = strpos($url, '#')) !== false) {
+			$url = substr($url, 0, $hashPosition-1);
+		}
 		$colonPosition = strpos($url, ':');
-	  return (
-	  	// Base check for existence of a host on a compliant URL
-	  	parse_url($url, PHP_URL_HOST)
-	  	// Check for more than one leading slash without a protocol.
+		$slashPosition = strpos($url, '/');
+		return (
+			// Base check for existence of a host on a compliant URL
+			parse_url($url, PHP_URL_HOST)
+			// Check for more than one leading slash without a protocol.
 			// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
 			// and hence a potential security risk. Single leading slashes are not an issue though.
-	  	|| preg_match('/\s*[\/]{2,}/', $url)
-	  	|| (
-	  		// If a colon is found, check if it's part of a valid scheme definition
-		  	// (meaning its not preceded by a slash, hash or questionmark).
-		  	// URLs in query parameters are assumed to be correctly urlencoded based on RFC3986,
-		  	// in which case no colon should be present in the parameters.
-	  		$colonPosition !== FALSE 
-	  		&& !preg_match('![/?#]!', substr($url, 0, $colonPosition))
-	  	)
-	  	
-	  );
+			|| preg_match('/\s*[\/]{2,}/', $url)
+			|| (
+				// If a colon is found, check if it's part of a valid scheme definition
+				// (meaning its not preceded by a slash).
+				$colonPosition !== FALSE 
+				&& ($slashPosition === FALSE || $colonPosition < $slashPosition)
+			)
+		);
 	}
 	
 	/**
