@@ -1,7 +1,7 @@
 fi:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ADDFILES: 'Lisää tiedostoja'
+    EditOrgMenu: 'Muokkaa ja järjestä'
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
@@ -130,7 +130,7 @@ fi:
     VALIDDATEMAXDATE: 'Päivämäärän on oltava vanhempi tai sovittava asetettuun maksimiin ({date})'
     VALIDDATEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava vähintään asetettuun minimiin ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET: 'Ei asetettu'
   Director:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
   DropdownField:
@@ -180,7 +180,7 @@ fi:
     TEXT3: henkilölle
   Form:
     FIELDISREQUIRED: '%s on pakollinen.'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Lähetä
     VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
     VALIDATIONNOTUNIQUE: 'Syötetty arvo ei ole yksilöllinen'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
@@ -289,8 +289,8 @@ fi:
     URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu liittää mediaa'
     UpdateMEDIA: 'Päivitä media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Tiedostot
+    SINGULARNAME: Tiedosto
   ImageField:
     IMAGE: Kuva
   Image_Cached:
@@ -393,8 +393,8 @@ fi:
     ResultNone: 'Ei muutoksia'
     ResultUpdated: 'Päivitettiin {count} käyttäjä(ä)'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Jäsenen salasanat'
+    SINGULARNAME: 'Jäsenen salasana'
   MemberTableField: null
   ModelAdmin:
     DELETE: Poista
@@ -425,8 +425,8 @@ fi:
   NumericField:
     VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
   Pagination:
-    Page: Page
-    View: View
+    Page: Sivu
+    View: Näytä
   Permission:
     AdminGroup: Järjestelmänvalvoja
     CMS_ACCESS_CATEGORY: CMS-pääsy
