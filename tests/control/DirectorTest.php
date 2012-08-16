@@ -98,6 +98,8 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_absolute_url('test.com/testpage'));
 		$this->assertFalse(Director::is_absolute_url('/relative'));
 		$this->assertFalse(Director::is_absolute_url('relative'));
+		$this->assertFalse(Director::is_absolute_url("/relative/?url=http://foo.com"));
+		$this->assertFalse(Director::is_absolute_url("/relative/#http://foo.com"));
 		$this->assertTrue(Director::is_absolute_url("https://test.com/?url=http://foo.com"));
 		$this->assertTrue(Director::is_absolute_url("trickparseurl:http://test.com"));
 		$this->assertTrue(Director::is_absolute_url('//test.com'));
@@ -116,7 +118,8 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_relative_url('ftp://test.com'));
 		$this->assertTrue(Director::is_relative_url('/relative'));
 		$this->assertTrue(Director::is_relative_url('relative'));
-		// $this->assertTrue(Director::is_relative_url('/relative/?url=http://test.com'));
+		$this->assertTrue(Director::is_relative_url('/relative/?url=http://test.com'));
+		$this->assertTrue(Director::is_relative_url('/relative/#=http://test.com'));
 	}
 	
 	public function testMakeRelative() {
