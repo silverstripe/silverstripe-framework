@@ -13,7 +13,7 @@ fi:
     SIZE: Koko
     TITLE: Otsikko
     TYPE: Tyyppi
-    URL: URL
+    URL: URL-osoite
   AssetUploadField:
     ChooseFiles: 'Valitse tiedostot'
     DRAGFILESHERE: 'Raahaa tiedotot tähän'
@@ -171,8 +171,8 @@ fi:
   Filesystem:
     SYNCRESULTS: 'Synkronointi valmis:  {createdcount} kohdetta luotu, {deletedcount} kohdetta poistettu'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Kansiot
+    SINGULARNAME: Kansio
   ForgotPasswordEmail.ss:
     HELLO: Hei
     TEXT1: 'Tässä on sinun'
@@ -228,10 +228,10 @@ fi:
     GroupReminder: 'Valitessasi isäntäryhmän, roolit periytyvät tähän ryhmään'
     Locked: 'Lukittu?'
     NoRoles: 'Rooleja ei löytynyt'
-    PLURALNAME: Groups
+    PLURALNAME: Ryhmät
     Parent: Yliryhmä
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
-    SINGULARNAME: Group
+    SINGULARNAME: Ryhmä
     Sort: Järjestys
     has_many_Permissions: Luvat
     many_many_Members: Jäsenet
@@ -294,8 +294,8 @@ fi:
   ImageField:
     IMAGE: Kuva
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Tiedostot
+    SINGULARNAME: Tiedosto
   Image_iframe.ss:
     TITLE: 'Kuvansiirto ikkuna (iFrame)'
   LeftAndMain:
@@ -318,8 +318,8 @@ fi:
   LoginAttempt:
     Email: Sähköpostiosoite
     IP: IP-osoite
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: Kirjautumisyritykset
+    SINGULARNAME: Kirjautumisyritys
     Status: Tila
   Member:
     ADDGROUP: 'Lisää ryhmä'
@@ -432,16 +432,16 @@ fi:
     CMS_ACCESS_CATEGORY: CMS-pääsy
     FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
     FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Oikeudet
+    SINGULARNAME: Oikeus
   PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
     FromRole: 'periytyivät roolista "{title}"'
     FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
   PermissionRole:
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: Roolit
+    SINGULARNAME: Rooli
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
