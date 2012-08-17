@@ -264,7 +264,7 @@
 			onadd: function() {
 				this._super();
 				
-				var title = this.data('title');
+				var title = decodeURIComponent(this.data('title'));
 				this.find('.treedropdownfield-title').replaceWith(
 					$('<input type="text" class="treedropdownfield-title search" />')
 				);
