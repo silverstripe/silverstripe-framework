@@ -17,14 +17,14 @@ nl:
   AssetUploadField:
     ChooseFiles: 'Selecteer bestanden'
     DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
-    DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
+    DROPAREA: 'Hierheen slepen'
+    EDITALL: 'Alles bewerken'
     EDITANDORGANIZE: 'Bewerk en beheer'
     EDITINFO: 'Edit files'
     FILES: Bestanden
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
+    TOTAL: Totaal
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OF
   BBCodeParser:
@@ -53,7 +53,7 @@ nl:
     UNORDEREDDESCRIPTION: 'Ongesorteerde lijst'
     UNORDEREDEXAMPLE1: 'ongesorteerd item 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Terug
   BasicAuth:
     ENTERINFO: 'Voer een gebruikers naam en wachtwoord in.'
     ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
@@ -66,7 +66,7 @@ nl:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'Toegang tot het ''{title}'' gedeelte'
     ACCESSALLINTERFACES: 'Toegang tot alle CMS onderdelen'
     ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
     SAVE: Bewaar
@@ -126,9 +126,9 @@ nl:
   DateField:
     NOTSET: 'niet ingesteld'
     TODAY: vandaag
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+    VALIDDATEFORMAT2: 'Vul een valide datum in ({format})'
+    VALIDDATEMAXDATE: 'De datum moet eerder of gelijk zijn aan de maximale datum ({date})'
+    VALIDDATEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})'
   DatetimeField:
     NOTSET: 'Not set'
   Director:
@@ -300,7 +300,7 @@ nl:
     TITLE: 'Afbeelding uploaden'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    DELETED: Verwijderd.
     DropdownBatchActionsDefault: Acties
     HELP: Help
     PAGETYPE: 'Pagina type: '
@@ -310,7 +310,7 @@ nl:
     PLEASESAVE: 'Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is bewaard.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: 'Succesvol opgeslagen'
     VersionUnknown: onbekend
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -322,7 +322,7 @@ nl:
     SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Groep toevoegen'
     BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
     BUTTONLOGIN: Inloggen
     BUTTONLOGINOTHER: 'Als iemand anders inloggen'
@@ -340,7 +340,7 @@ nl:
     ERRORWRONGCRED: 'Dat is niet het juiste email adres of wachtwoord. Probeert U het a.u.b. opnieuw.'
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface Taal'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    INVALIDNEWPASSWORD: 'Het wachtwoord {password} is niet geldig'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw Wachtwoord'
     PASSWORD: Wachtwoord
@@ -352,8 +352,8 @@ nl:
     SUBJECTPASSWORDRESET: 'Link om Uw wachtwoord opnieuw aan te maken'
     SURNAME: Achternaam
     VALIDATIONMEMBEREXISTS: 'Er bestaat reeds een gebruiker met dit emailadres'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Wekom terug, {firstname}'
+    ValidationIdentifierFailed: 'Een bestaande gebruiker #{id} kan niet dezelfde unieke velden hebben ({name} = {value}))'
+    WELCOMEBACK: 'Welkom terug {firstname}'
     YOUROLDPASSWORD: 'Uw oude wachtwoord'
     belongs_many_many_Groups: Groepen
     db_LastVisited: 'Datum van het laatste bezoek'
@@ -463,7 +463,7 @@ nl:
     LOGGEDOUT: 'U bent uitgelogd.  Als U weer wilt inloggen kunt U Uw gegevens hier beneden invoeren.'
     LOGIN: 'Meld aan'
     NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer Uw gegevens in en U wordt automatisch doorgestuurd.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>De link om uw wachtwoord te kunnen wijzigen is niet meer geldig.</p><p>U kunt het <a href="{link1}">opnieuw proberen</a>  of uw wachtwoord aanpassen door <a href="{link2}">in te loggen</a>.</p>'
     NOTERESETPASSWORD: 'Voer Uw emailadres in en we zenden U een link waarmee U Uw wachtwoord opnieuw kunt aanmaken'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
@@ -477,7 +477,7 @@ nl:
     IMPORTGROUPS: Groepen
     IMPORTUSERS: 'Importeer gebruikers'
     MEMBERS: Leden
-    MENUTITLE: Security
+    MENUTITLE: Beveiliging
     MemberListCaution: 'Let op: Verwijderen van leden van deze lijst heeft als gevolg dat deze uit alle groepen en de database worden verwijderd'
     NEWGROUP: 'Nieuwe Groep'
     PERMISSIONS: Rechten
@@ -517,7 +517,7 @@ nl:
     VIEWNEXT: 'Bekijk volgende'
     VIEWPREVIOUS: 'Bekijk vorige'
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Vul een valide datum in ({format})'
   ToggleField:
     LESS: minder
     MORE: meer
@@ -530,16 +530,16 @@ nl:
     DOEDIT: Bewaar
     DROPFILE: 'Bestand hiernaar toe slepen'
     DROPFILES: 'Sleep hier je bestanden'
-    Dimensions: Dimensions
+    Dimensions: Afmetingen
     EDIT: Edit
     EDITINFO: 'Bewerk dit bestand'
     FIELDNOTSET: 'Bestandsinformatie niet gevonden'
     FROMCOMPUTER: 'Vanaf computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Bestaande bestanden'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILES: 'Het maximale aantal ({count}) bestanden is overschreven'
+    MAXNUMBEROFFILESSHORT: 'Maximaal {count} bestanden uploaden'
+    REMOVE: Verwijder
     REMOVEERROR: 'Fout bij verwijderen'
     REMOVEINFO: 'Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website.'
     STARTALL: 'Start alles'
