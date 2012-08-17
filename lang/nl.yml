@@ -25,7 +25,7 @@ nl:
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Totaal
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Ogenblikje... bezig met uploaden'
     UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Uitlijning
@@ -309,7 +309,7 @@ nl:
     PERMDEFAULT: 'Geef uw e-mailadres en wachtwoord voor toegang tot het CMS.'
     PLEASESAVE: 'Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is bewaard.'
     PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
     SAVEDUP: 'Succesvol opgeslagen'
     VersionUnknown: onbekend
   LeftAndMain_Menu.ss:
