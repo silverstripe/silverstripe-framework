@@ -761,7 +761,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Array All extensions which can be handled by the different views.
 	 */
 	protected function getAllowedExtensions() {
-		$exts = array('jpg', 'gif', 'png', 'swf');
+		$exts = array('jpg', 'gif', 'png', 'swf','jpeg');
 		$this->extend('updateAllowedExtensions', $exts);
 		return $exts;
 	}
