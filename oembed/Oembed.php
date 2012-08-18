@@ -253,6 +253,7 @@ class Oembed_Result extends ViewableData {
 				$data['provider_url'] = $protocoll.$host;
 				$data['width'] = imagesx($image);
 				$data['height'] = imagesy($image);
+				$data['info'] = _t('UploadField.HOTLINKINFO', 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.');
 			}
 		}
 

@@ -88,6 +88,13 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			padding: 0;
 			overflow: hidden;
 			position: relative;
+			.info {
+				position: relative; 
+				padding: 7px; 
+				overflow: hidden; 
+				background-color: #FFBE66; 
+				border: 1px solid #FF9300;
+			}
 		}
 		.ss-uploadfield-item-preview {
 			position: absolute;

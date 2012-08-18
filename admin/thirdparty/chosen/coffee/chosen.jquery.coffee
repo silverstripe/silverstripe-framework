@@ -60,7 +60,7 @@ class Chosen extends AbstractChosen
     dd_top = if rise then -this.container.find('.chzn-drop').height() else @container.height()
 
     #patch applied: https://github.com/harvesthq/chosen/issues/300
-    dd_width = (@container.width - get_side_border_padding(@dropdown))
+    dd_width = (@container.width() - get_side_border_padding(@dropdown))
     
     @dropdown.css({"width": dd_width  + "px", "top": dd_top + "px"})
 

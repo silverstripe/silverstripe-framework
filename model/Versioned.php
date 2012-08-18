@@ -705,7 +705,7 @@ class Versioned extends DataExtension {
 		$oldMode = self::get_reading_mode();
 		self::reading_stage('Stage');
 		
-		$list = DataObject::get(get_class($this->owner), $filter, $sort, $limit, $join);
+		$list = DataObject::get(get_class($this->owner), $filter, $sort, $join, $limit);
 		if($having) $having = $list->having($having);
 		
 		$query = $list->dataQuery()->query();

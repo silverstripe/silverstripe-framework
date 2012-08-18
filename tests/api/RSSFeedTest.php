@@ -14,7 +14,7 @@ class RSSFeedTest extends SapphireTest {
 		$list->push(new RSSFeedTest_ItemC());
 
 		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
-		$content = $rssFeed->feedContent();
+		$content = $rssFeed->outputToBrowser();
 
 		//Debug::message($content);
 		$this->assertContains('<link>http://www.example.org/item-a/</link>', $content);
@@ -32,7 +32,7 @@ class RSSFeedTest extends SapphireTest {
 
 		// Feed #2 - put Content() into <title> and AltContent() into <description>
 		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description", "Content", "AltContent");
-		$content = $rssFeed->feedContent();
+		$content = $rssFeed->outputToBrowser();
 
 		$this->assertContains('<title>ItemA Content</title>', $content);
 		$this->assertContains('<title>ItemB Content</title>', $content);
@@ -47,13 +47,11 @@ class RSSFeedTest extends SapphireTest {
 		$rssFeed = new RSSFeed(new ArrayList(), "", "", "");
 		$rssFeed->setTemplate('RSSFeedTest');
 
-		$content = $rssFeed->feedContent();
-
+		$content = $rssFeed->outputToBrowser();
 		$this->assertContains('<title>Test Custom Template</title>', $content);
 
 		$rssFeed->setTemplate('RSSFeed');
-		$content = $rssFeed->feedContent();
-		
+		$content = $rssFeed->outputToBrowser();
 		$this->assertNotContains('<title>Test Custom Template</title>', $content);
 	}
 
@@ -69,7 +67,6 @@ class RSSFeedTest extends SapphireTest {
 		Director::setBaseURL(null);
 		$_SERVER['HTTP_HOST'] = self::$original_host;
 	}
-
 }
 
 class RSSFeedTest_ItemA extends ViewableData {
@@ -83,9 +80,11 @@ class RSSFeedTest_ItemA extends ViewableData {
 	function getTitle() {
 		return "ItemA";
 	}
+
 	function getContent() {
 		return "ItemA Content";
 	}
+
 	function getAltContent() {
 		return "ItemA AltContent";
 	}
@@ -101,12 +100,15 @@ class RSSFeedTest_ItemB extends ViewableData {
 	function Title() {
 		return "ItemB";
 	}
+
 	function AbsoluteLink() {
 		return "http://www.example.com/item-b.html";
 	}
+
 	function Content() {
 		return "ItemB Content";
 	}
+
 	function AltContent() {
 		return "ItemB AltContent";
 	}
@@ -114,7 +116,7 @@ class RSSFeedTest_ItemB extends ViewableData {
 
 class RSSFeedTest_ItemC extends ViewableData {
 	// ItemC tests fields - Title has casting, Content doesn't.
-	static $casting = array(
+	public static $casting = array(
 		'Title' => 'Varchar',
 		'AltContent' => 'Text',
 	);
@@ -126,6 +128,7 @@ class RSSFeedTest_ItemC extends ViewableData {
 	function Link() {
 		return "item-c.html";
 	}
+
 	function AbsoluteLink() {
 		return "http://www.example.com/item-c.html";
 	}

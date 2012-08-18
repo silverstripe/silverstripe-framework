@@ -20,16 +20,20 @@ jQuery.noConflict();
 		
 		// apply an select element only when it is ready, ie. when it is rendered into a template
 		// with css applied and got a width value.
-		var applyChosen = function(el){
-			if(el.outerWidth()){
-				el.chosen({
-					'disable_search_threshold' : 20,
-					'allow_single_deselect': true
-				}).addClass("has-chzn");
-				// Copy over title attribute if required
-				if(el.attr('title')) el.siblings('.chzn-container').attr('title', el.attr('title'));
+		var applyChosen = function(el) {
+			if(el.is(':visible')) {
+				el.addClass('has-chzn').chosen({
+					allow_single_deselect: true,
+					disable_search_threshold: 20
+				});
+
+				var title = el.prop('title')
+
+				if(title) {
+					el.siblings('.chzn-container').prop('title', title);
+				}
 			} else {
-				setTimeout(function() {applyChosen(el);},500);
+				setTimeout(function() { applyChosen(el); }, 500);
 			}
 		};
 
@@ -162,8 +166,9 @@ jQuery.noConflict();
 			 *  - {String} url
 			 *  - {String} title New window title
 			 *  - {Object} data Any additional data passed through to History.pushState()
+			 *  - {boolean} forceReload Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
 			 */
-			loadPanel: function(url, title, data) {
+			loadPanel: function(url, title, data, forceReload) {
 				if(!data) data = {};
 				if(!title) title = "";
 
@@ -187,10 +192,23 @@ jQuery.noConflict();
 				if(window.History.enabled) {
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu
-					window.History.pushState(data, title, url);
+					if(forceReload) {
+						// Add a parameter to make sure the page gets reloaded even if the URL is the same.
+						$.extend(data, {__forceReload: Math.random()});
+						window.History.replaceState(data, title, url);
+					} else {
+						window.History.pushState(data, title, url);
+					}
 				} else {
 					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 				}
+			},
+
+			/**
+			 * Nice wrapper for reloading current history state.
+			 */
+			reloadCurrentPanel: function() {
+				this.loadPanel(window.History.getState().url, null, null, true);
 			},
 
 			/**
