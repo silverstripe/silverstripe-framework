@@ -94,12 +94,10 @@ describe('Entwine', function(){
 
 				$('#a,#b').entwine({
 					onadd: function(){
-						console.debug('added', this);
 						added.push(this.attr('id'));
 						sequence.push(this.attr('id'));
 					},
 					onremove: function(){
-						console.debug('added', this);
 						removed.push(this.attr('id'));
 						sequence.push(this.attr('id'));
 					}
