@@ -13,16 +13,7 @@
  * - {@link GridFieldConfig_RecordEditor}
  * - {@link GridFieldConfig_RelationEditor}
  */
-class GridFieldConfig {
-	
-	/**
-	 *
-	 * @return GridFieldConfig 
-	 */
-	public static function create(){
-		return new GridFieldConfig();
-	}
-	
+class GridFieldConfig extends Object {
 	/**
 	 *
 	 * @var ArrayList
@@ -131,16 +122,6 @@ class GridFieldConfig {
  * with sortable and searchable headers.
  */
 class GridFieldConfig_Base extends GridFieldConfig {
-
-	/**
-	 *
-	 * @param int $itemsPerPage - How many items per page should show up per page
-	 * @return GridFieldConfig_Base
-	 */
-	public static function create($itemsPerPage=null){
-		return new GridFieldConfig_Base($itemsPerPage);
-	}
-
 	/**
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
@@ -176,16 +157,6 @@ class GridFieldConfig_RecordViewer extends GridFieldConfig_Base {
  * 
  */
 class GridFieldConfig_RecordEditor extends GridFieldConfig {
-
-	/**
-	 *
-	 * @param int $itemsPerPage - How many items per page should show up
-	 * @return GridFieldConfig_RecordEditor
-	 */
-	public static function create($itemsPerPage=null){
-		return new GridFieldConfig_RecordEditor($itemsPerPage);
-	}
-
 	/**
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
@@ -225,16 +196,6 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
  * </code>
  */
 class GridFieldConfig_RelationEditor extends GridFieldConfig {
-
-	/**
-	 *
-	 * @param int $itemsPerPage - How many items per page should show up
-	 * @return GridFieldConfig_RelationEditor
-	 */
-	public static function create($itemsPerPage=null){
-		return new GridFieldConfig_RelationEditor($itemsPerPage);
-	}
-
 	/**
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
