@@ -36,6 +36,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @var string
 	 */
 	static $menu_title;
+
+	/**
+	 * @var string
+	 */
+	static $menu_icon;
 	
 	/**
 	 * @var int
@@ -432,6 +437,22 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$title) $title = preg_replace('/Admin$/', '', $class);
 		return $title;
 	}
+
+	/**
+	 * Return styling for the menu icon, if a custom icon is set for this class
+	 *
+	 * Example: static $menu-icon = '/path/to/image/';
+	 * @param type $class
+	 * @return string
+	 */
+	static function menu_icon_for_class($class) {
+		$icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
+		if (!empty($icon)) {
+			$class = strtolower($class);
+			return ".icon.icon-16.icon-{$class} { background: url('{$icon}'); } ";
+		}
+		return '';
+	}
 	
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
@@ -486,6 +507,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			// Encode into DO set
 			$menu = new ArrayList();
 			$menuItems = CMSMenu::get_viewable_menu_items();
+
+			// extra styling for custom menu-icons
+			$menuIconStyling = '';
+
 			if($menuItems) {
 				foreach($menuItems as $code => $menuItem) {
 					// alternate permission checks (in addition to LeftAndMain->canView())
@@ -526,6 +551,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					} else {
 						$title = $menuItem->title;
 					}
+
+					// Provide styling for custom $menu-icon. Done here instead of in
+					// CMSMenu::populate_menu(), because the icon is part of
+					// the CMS right pane for the specified class as well...
+					if($menuItem->controller) {
+						$menuIcon = LeftAndMain::menu_icon_for_class($menuItem->controller);
+						if (!empty($menuIcon)) $menuIconStyling .= $menuIcon;
+					}
 					
 					$menu->push(new ArrayData(array(
 						"MenuItem" => $menuItem,
@@ -536,6 +569,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					)));
 				}
 			}
+			if ($menuIconStyling) Requirements::customCSS($menuIconStyling);
 
 			$this->_cache_MainMenu = $menu;
 		}
