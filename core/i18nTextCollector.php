@@ -253,7 +253,6 @@ class i18nTextCollector extends Object {
 	 */
 	function collectFromEntityProviders($filePath) {
 		$entitiesArr = array();
-		
 		$classes = ClassInfo::classes_for_file($filePath);
 		if($classes) foreach($classes as $class) {
 			// Not all classes can be instanciated without mandatory arguments,
@@ -391,6 +390,8 @@ class i18nTextCollector extends Object {
 			$langFile = $langFolder . '/' . $this->defaultLocale . '.php';
 			if($fh = fopen($langFile, "w")) {
 				if($entities) foreach($entities as $fullName => $spec) {
+					if(!$spec) continue;
+					
 					$php .= $this->langArrayCodeForEntitySpec($fullName, $spec);
 				}
 				
