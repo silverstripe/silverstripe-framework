@@ -13,12 +13,23 @@
  * - {@link GridFieldConfig_RecordEditor}
  * - {@link GridFieldConfig_RelationEditor}
  */
-class GridFieldConfig extends Object {
+class GridFieldConfig {
 	/**
 	 *
 	 * @var ArrayList
 	 */
 	protected $components = null;
+	
+	/**
+	 * @param mixed $arguments,... arguments to pass to the constructor
+	 * @return GridFieldConfig
+	 */
+	public static function create() {
+		return call_user_func_array('Object::create', array_merge(
+			array(get_called_class()), 
+			func_get_args()
+		));
+	}
 	
 	/**
 	 * 
