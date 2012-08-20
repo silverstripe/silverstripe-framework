@@ -2,6 +2,11 @@ language: php
 php: 
  - 5.3
 
+env:
+ - TESTDB=SQLITE
+ - TESTDB=MYSQL
+ - TESTDB=PGSQL
+
 before_script:
  - ./tests/travis/before_script ~/builds/ss 
  - cd ~/builds/ss
