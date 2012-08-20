@@ -222,6 +222,9 @@ This is a deliberately simple example, the strength of jQuery.entwine over simpl
 properties, namespacing, as well as its inheritance based on CSS selectors. Please see the [project
 documentation](http://github.com/hafriedlander/jquery.entwine/tree/master) for more complete examples.
 
+When working in the CMS, the CMS includes the jQuery.entwine inspector. Press Ctrl+` to bring down the inspector.
+You can then click on any element in the CMS to see which entwine methods are bound to any particular element.
+
 ## Architecture and Best Practices
 
 ### Keep things simple

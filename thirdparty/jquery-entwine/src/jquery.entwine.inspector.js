@@ -1,30 +1,39 @@
 
-document.write([
-'<style type="text/css">',
-	'#entwine-inspector { position: fixed; z-index: 1000001; left: 0; right: 0; height: 400px; background: white; -webkit-box-shadow: 0 5px 40px 0 black; -moz-box-shadow: 0 5px 40px 0 black; }',
-	'#entwine-inspector li { list-style: none; margin: 2px 0; padding: 2px 0; }',
-	'#entwine-inspector li:hover { background: #eee; }',
-	'#entwine-inspector li.selected { background: #ddd; }',
-
-	'#ei-columns { overflow: hidden; display: -webkit-box; display: -moz-box; width: 100%; height: 380px; }',
-
-	'.ei-column { height: 380px; width: 1px; -webkit-box-flex: 1; -moz-box-flex: 1; }',
-	'#entwine-inspector .ei-column h1 { display: block; margin: 0; padding: 5px 2px; height: 20px; text-align: center; background: #444; color: #eee; font-size: 14px; font-weight: bold; }',
-	'#entwine-inspector .ei-column ul { overflow-y: scroll; height: 350px; }',
-
-	'#ei-options { overflow: hidden; height: 20px; background: #444; color: #eee; }',
-	'#ei-options label { padding-right: 5px; border-right: 1px solid #eee; }',
-
-	'.ei-entwined:hover, .ei-selected { background: rgba(128,0,0,0.2); }',
-	'.ei-hovernode { position: absolute; z-index: 1000000; background: rgba(0,0,0,0.3); border: 1px solid white; outline: 1px solid white; }',
-
-	'#ei-selectors li { color: #aaa; display: none; }',
-	'#ei-selectors li.matching, #entwine-inspector.show-unmatched #ei-selectors li { display: block; }',
-	'#ei-selectors li.matching { color: black; }',
-'</style>'
-].join("\n"));
-
 jQuery(function($){
+	// Create a new style element
+	var styleEl = document.createElement('style');
+	styleEl.setAttribute('type', 'text/css');
+	(document.head || document.getElementsByTagName('head')[0]).appendChild(styleEl);
+
+	var inspectorCSS = [
+		'#entwine-inspector { position: fixed; z-index: 1000001; left: 0; right: 0; height: 400px; background: white; -webkit-box-shadow: 0 5px 40px 0 black; -moz-box-shadow: 0 5px 40px 0 black; }',
+		'#entwine-inspector li { list-style: none; margin: 2px 0; padding: 2px 0; }',
+		'#entwine-inspector li:hover { background: #eee; }',
+		'#entwine-inspector li.selected { background: #ddd; }',
+
+		'#ei-columns { overflow: hidden; display: -webkit-box; display: -moz-box; width: 100%; height: 380px; }',
+
+		'.ei-column { height: 380px; width: 1px; -webkit-box-flex: 1; -moz-box-flex: 1; }',
+		'#entwine-inspector .ei-column h1 { display: block; margin: 0; padding: 5px 2px; height: 20px; text-align: center; background: #444; color: #eee; font-size: 14px; font-weight: bold; }',
+		'#entwine-inspector .ei-column ul { overflow-y: scroll; height: 350px; }',
+
+		'#ei-options { overflow: hidden; height: 20px; background: #444; color: #eee; }',
+		'#ei-options label { padding-right: 5px; border-right: 1px solid #eee; }',
+
+		'.ei-entwined:hover, .ei-selected { background: rgba(128,0,0,0.2); }',
+		'.ei-hovernode { position: absolute; z-index: 1000000; background: rgba(0,0,0,0.3); border: 1px solid white; outline: 1px solid white; }',
+
+		'#ei-selectors li { color: #aaa; display: none; }',
+		'#ei-selectors li.matching, #entwine-inspector.show-unmatched #ei-selectors li { display: block; }',
+		'#ei-selectors li.matching { color: black; }'
+	].join("\n");
+
+	// Set the style element to style up the inspector panel
+	if(styleEl.styleSheet){
+		styleEl.styleSheet.cssText = inspectorCSS;
+	}else{
+		styleEl.appendChild(document.createTextNode(inspectorCSS));
+	}
 
 	var inspectorPanel = $('<div id="entwine-inspector" class="show-unmatched"></div>').appendTo('body');
 	var columnHolder = $('<div id="ei-columns"></div>').appendTo(inspectorPanel);
@@ -79,6 +88,22 @@ jQuery(function($){
 		});
 	};
 
+	var dumpElement = function(el) {
+		var frag = document.createDocumentFragment();
+		var div = document.createElement('div'); frag.appendChild(div);
+
+		var clone = el.cloneNode(false); $(clone).removeClass('ei-entwined').removeAttr('style');
+
+		var i = clone.attributes.length;
+		while (i--) {
+			var attr = clone.attributes.item(i);
+			if (attr.name != 'class' && attr.name != 'id' && attr.value.length > 20) attr.value = attr.value.substr(0, 18)+'..'+attr.value.substr(-2);
+		}
+
+		div.appendChild(clone);
+		return div.innerHTML;
+	};
+
 	var displaydetails = function(e){
 		e.preventDefault(); e.stopPropagation();
 
@@ -99,18 +124,7 @@ jQuery(function($){
 			var target = $(this);
 
 			var li = $('<li></li>');
-			var clone = $(this.cloneNode(false)); clone.removeClass('ei-entwined'); clone.removeAttr('style');
-
-
-			var i = clone[0].attributes.length;
-			while (i--) {
-				var attr = clone[0].attributes.item(i);
-				if (attr.name != 'class' && attr.name != 'id' && attr.value.length > 20) attr.value = attr.value.substr(0, 18)+'..'+attr.value.substr(-2);
-			}
-
-			li.append(clone);
-
-			li.text(li.html()).attr('data-id', ++ctr).data('el', target).prependTo(lists.elements);
+			li.text(dumpElement(this)).attr('data-id', ++ctr).data('el', target).prependTo(lists.elements);
 
 			var namespaces = $('<ul data-element="'+ctr+'"></ul>').appendTo(columns.namespaces);
 
@@ -206,21 +220,21 @@ jQuery(function($){
 
 		$('.ei-selected').removeClass('ei-selected');
 
-		activatelist('#ei-namespaces ul[data-element='+id+']');
+		activatelist('#ei-namespaces ul[data-element="'+id+'"]');
 	});
 
 	$('#ei-namespaces > ul > li').live('click', function(e){
 		var target = $(e.target), namespace = target.attr('data-namespace');
 		target.addClass('selected').siblings().removeClass('selected');
 
-		activatelist('#ei-methods ul[data-namespace='+namespace+']');
+		activatelist('#ei-methods ul[data-namespace="'+namespace+'"]');
 	});
 
 	$('#ei-methods > ul > li').live('click', function(e){
 		var target = $(e.target), method = target.attr('data-method');
 		target.addClass('selected').siblings().removeClass('selected');
 
-		activatelist('#ei-selectors ul[data-method='+method+']');
+		activatelist('#ei-selectors ul[data-method="'+method+'"]');
 	});
 
 });

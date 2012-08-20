@@ -57,5 +57,10 @@ class GroupedDropdownField extends DropdownField {
 
 		return $this->createTag('select', $this->getAttributes(), $options);
 	}
+
+	function Type() {
+		return 'groupeddropdown dropdown';
+	}
+	
 }
 
