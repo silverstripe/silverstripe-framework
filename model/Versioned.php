@@ -145,7 +145,8 @@ class Versioned extends DataExtension {
 			$date = $dataQuery->getQueryParam('Versioned.date');
 			foreach($query->getFrom() as $table => $dummy) {
 				$query->renameTable($table, $table . '_versions');
-				$query->replaceText("\"$table\".\"ID\"", "\"$table\".\"RecordID\"");
+				$query->replaceText("\"{$table}_versions\".\"ID\"", "\"{$table}_versions\".\"RecordID\"");
+				$query->replaceText("`{$table}_versions`.`ID`", "`{$table}_versions`.`RecordID`");
 				
 				// Add all <basetable>_versions columns
 				foreach(self::$db_for_versions_table as $name => $type) {
@@ -154,15 +155,24 @@ class Versioned extends DataExtension {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
 
 				if($table != $baseTable) {
-					$query->addFrom(array($table => " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
+					$query->addWhere("\"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
 				}
 			}
 
 			// Link to the version archived on that date
-			$archiveTable = $this->requireArchiveTempTable($baseTable, $date);
-			$query->addFrom(array($archiveTable => "INNER JOIN \"$archiveTable\"
-				ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" 
-				AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
+			$safeDate = Convert::raw2sql($date);
+			$query->addWhere(
+					"`{$baseTable}_versions`.`Version` IN 
+					(SELECT LatestVersion FROM 
+						(SELECT 
+							`{$baseTable}_versions`.`RecordID`, 
+							MAX(`{$baseTable}_versions`.`Version`) AS LatestVersion
+							FROM `{$baseTable}_versions`
+							WHERE `{$baseTable}_versions`.`LastEdited` <= '$safeDate'
+							GROUP BY `{$baseTable}_versions`.`RecordID`
+						) AS `{$baseTable}_versions_latest`
+						WHERE `{$baseTable}_versions_latest`.`RecordID` = `{$baseTable}_versions`.`RecordID`
+					)");
 			break;
 		
 		// Reading a specific stage (Stage or Live)
@@ -203,10 +213,18 @@ class Versioned extends DataExtension {
 			// Return latest version instances, regardless of whether they are on a particular stage
 			// This provides "show all, including deleted" functonality
 			if($dataQuery->getQueryParam('Versioned.mode') == 'latest_versions') {
-				$archiveTable = self::requireArchiveTempTable($baseTable);
-				$query->addInnerJoin($archiveTable, "\"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
+				$query->addWhere(
+					"`{$alias}_versions`.`Version` IN 
+					(SELECT LatestVersion FROM 
+						(SELECT 
+							`{$alias}_versions`.`RecordID`, 
+							MAX(`{$alias}_versions`.`Version`) AS LatestVersion
+							FROM `{$alias}_versions`
+							GROUP BY `{$alias}_versions`.`RecordID`
+						) AS `{$alias}_versions_latest`
+						WHERE `{$alias}_versions_latest`.`RecordID` = `{$alias}_versions`.`RecordID`
+					)");
 			}
-
 			break;
 		default:
 			throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: " . $dataQuery->getQueryParam('Versioned.mode'));
@@ -232,34 +250,6 @@ class Versioned extends DataExtension {
 
 		// Remove references to them
 		self::$archive_tables = array();
-	}
-	
-	/**
-	 * Create a temporary table mapping each database record to its version on the given date.
-	 * This is used by the versioning system to return database content on that date.
-	 * @param string $baseTable The base table.
-	 * @param string $date The date.  If omitted, then the latest version of each page will be returned.
-	 * @todo Ensure that this is DB abstracted
-	 */
-	protected static function requireArchiveTempTable($baseTable, $date = null) {
-		if(!isset(self::$archive_tables[$baseTable])) {
-			self::$archive_tables[$baseTable] = DB::createTable("_Archive$baseTable", array(
-				"ID" => "INT NOT NULL",
-				"Version" => "INT NOT NULL",
-			), null, array('temporary' => true));
-		}
-		
-		if(!DB::query("SELECT COUNT(*) FROM \"" . self::$archive_tables[$baseTable] . "\"")->value()) {
-			if($date) $dateClause = "WHERE \"LastEdited\" <= '$date'";
-			else $dateClause = "";
-
-			DB::query("INSERT INTO \"" . self::$archive_tables[$baseTable] . "\"
-				SELECT \"RecordID\", max(\"Version\") FROM \"{$baseTable}_versions\"
-				$dateClause
-				GROUP BY \"RecordID\"");
-		}
-		
-		return self::$archive_tables[$baseTable];
 	}
 
 	/**
