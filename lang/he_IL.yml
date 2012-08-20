@@ -1,5 +1,7 @@
 he_IL:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: תיקיהחדשה
   AssetTableField:
     CREATED: 'הועלה לראשונה'
@@ -115,18 +117,20 @@ he_IL:
     MINS: דקות
     MONTH: חודש
     MONTHS: חודשים
-    SEC: 'שניה'
-    SECS: 'שניות'
+    SEC: שניה
+    SECS: שניות
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: 'שנה'
-    YEARS: 'שנים'
+    YEAR: שנה
+    YEARS: שנים
   DateField:
     NOTSET: 'not set'
     TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ he_IL:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: היי
     TEXT1: 'Here is your'
@@ -173,6 +180,7 @@ he_IL:
     TEXT3: for
   Form:
     FIELDISREQUIRED: 'דרוש %s'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'הערך שהוקש אינו יחודי'
     VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
@@ -220,8 +228,10 @@ he_IL:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'נעול?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'קבוצת אב'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: הרשאות
     many_many_Members: 'חברים רשומים'
@@ -242,7 +252,7 @@ he_IL:
     BUTTONREMOVELINK: 'הסר קישור'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'יישור/סגנון'
+    CSSCLASS: יישור/סגנון
     CSSCLASSCENTER: 'ממורכז, ללא טקסט בצדדים.'
     CSSCLASSLEFT: 'לשמאל, עם טקסט מסודר מסביב.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
@@ -278,8 +288,14 @@ he_IL:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'מסגרת העלאת תמונה'
   LeftAndMain:
@@ -302,6 +318,8 @@ he_IL:
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -311,6 +329,7 @@ he_IL:
     BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
     CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
     CONFIRMPASSWORD: 'אשר סיסמא'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 'דואר אלקטרוני'
@@ -333,6 +352,7 @@ he_IL:
     SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
     SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
     SURNAME: 'שם משפחה'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'קיים כבר משתמש עם כתובת דואר זו.'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -348,6 +368,7 @@ he_IL:
     TITLE: 'דואר אלקטרוני וסיסמא'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +394,11 @@ he_IL:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: מחק
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'ייבא מקובץ CSV'
@@ -403,16 +426,27 @@ he_IL:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
@@ -505,6 +539,7 @@ he_IL:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

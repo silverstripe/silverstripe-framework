@@ -1,5 +1,7 @@
 es_MX:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nueva Carpeta'
   AssetTableField:
     CREATED: 'Agregado por primera vez'
@@ -127,6 +129,8 @@ es_MX:
     VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
     VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
     VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
@@ -166,6 +170,9 @@ es_MX:
     TITLE: 'Subidor de imágenes por iFrame'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hey
     TEXT1: 'Estás aquí'
@@ -173,6 +180,7 @@ es_MX:
     TEXT3: para
   Form:
     FIELDISREQUIRED: '%s es obligatorio'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'El valor ingresado no es único'
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraeñas no son iguales'
@@ -220,8 +228,10 @@ es_MX:
     GroupReminder: 'Si eliges el grupo superior, este grupo tomará todos sus roles'
     Locked: '¿Bloqueado?'
     NoRoles: 'No se encontraron roles'
+    PLURALNAME: Groups
     Parent: 'Grupo ascendente'
     RolesAddEditLink: 'Agregar/modificar roles'
+    SINGULARNAME: Group
     Sort: 'Orden de Clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
@@ -278,8 +288,14 @@ es_MX:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Imagen
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Subiendo Imagen Iframe'
   LeftAndMain:
@@ -302,6 +318,8 @@ es_MX:
   LoginAttempt:
     Email: 'Dirección de Correo Electrónico'
     IP: 'Dirección IP'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Estado
   Member:
     ADDGROUP: 'Agregar grupo'
@@ -311,6 +329,7 @@ es_MX:
     BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar contraseña'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrador Predeterminado'
     DefaultDateTime: 'Por defecto'
     EMAIL: 'Correo electrónico'
@@ -333,6 +352,7 @@ es_MX:
     SUBJECTPASSWORDCHANGED: 'Su contraseña se ha cambiado'
     SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
     SURNAME: Apellido
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con el mismo %s'
     ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
     WELCOMEBACK: 'Bienvenido nuevamente, {firstname}'
@@ -348,6 +368,7 @@ es_MX:
     TITLE: 'Correo-e y Contraseña'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (ante meridian) o PM (post meridiano)'
+    'APPLY FILTER': Filtro
     Custom: 'A medida'
     DATEFORMATBAD: 'El formato de fecha es invalido'
     DAYNOLEADING: 'Dia del mes sin cero a la izquierda'
@@ -373,9 +394,11 @@ es_MX:
     ResultDeleted: '%d miembros eliminados'
     ResultNone: 'Sin cambios'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': Filtro
     DELETE: Eliminar
     DELETEDRECORDS: 'Borrados {count} registros'
     IMPORT: 'Importar desde CSV'
@@ -403,16 +426,27 @@ es_MX:
     IsNullLabel: 'Es Nulo'
   NumericField:
     VALIDATION: '''{value}'' no es un número, solo números son aceptados por este campo'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrador
     CMS_ACCESS_CATEGORY: 'Acceder al CMS'
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
     FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'heredado del rol "%s" en el grupo "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
   PhoneNumberField:
@@ -505,6 +539,7 @@ es_MX:
     FROMCOMPUTER: 'Desde tu computador'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Desde archivos'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Máximo número {count} de archivos sobrepasado'
     MAXNUMBEROFFILESSHORT: 'Solo puedes subir {count} archivos'
     REMOVE: Remover
