@@ -329,6 +329,7 @@ zh_TW:
     BUTTONLOSTPASSWORD: 忘記密碼
     CONFIRMNEWPASSWORD: 確認新密碼
     CONFIRMPASSWORD: 確認密碼
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 電子郵件
@@ -351,6 +352,7 @@ zh_TW:
     SUBJECTPASSWORDCHANGED: 密碼更改成功。
     SUBJECTPASSWORDRESET: 密碼重設
     SURNAME: 姓
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 已經有人使用此電子郵件地址
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -537,6 +539,7 @@ zh_TW:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

@@ -329,6 +329,7 @@ tr:
     BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
     CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
     CONFIRMPASSWORD: 'Şifreyi Onayla'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Varsayılan Yönetici'
     DefaultDateTime: varsayılan
     EMAIL: Eposta
@@ -351,6 +352,7 @@ tr:
     SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
     SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
     SURNAME: Soyad
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Bu eposta adresine sahip bir kullanıcı zaten bulunmaktadır'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -537,6 +539,7 @@ tr:
     FROMCOMPUTER: 'Kendi makinenizden'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Kimden dosyaları'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

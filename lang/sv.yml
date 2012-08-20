@@ -329,6 +329,7 @@ sv:
     BUTTONLOSTPASSWORD: 'Jag har glömt mitt lösenord'
     CONFIRMNEWPASSWORD: 'Bekräfta nytt lösenord'
     CONFIRMPASSWORD: 'Bekräfta lösenord'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: standard
     DefaultDateTime: standard
     EMAIL: E-post
@@ -351,6 +352,7 @@ sv:
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
     SUBJECTPASSWORDRESET: 'Din återställningslänk'
     SURNAME: Efternamn
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Det finns redan en medlem med samma %s'
     ValidationIdentifierFailed: 'Kan inte skriva över medlem #{id} med samma identifierare ({name} = {value}))'
     WELCOMEBACK: 'Välkommen tillbaka, {firstname}'
@@ -537,6 +539,7 @@ sv:
     FROMCOMPUTER: 'Från din dator'
     FROMCOMPUTERINFO: 'Välj från filer'
     FROMFILES: 'Från filer'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
     MAXNUMBEROFFILESSHORT: 'Kan bara ladda upp {count} files'
     REMOVE: 'Ta bort'

@@ -329,6 +329,7 @@ pl:
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Domyślny administrator'
     DefaultDateTime: domyślny
     EMAIL: E-mail
@@ -351,6 +352,7 @@ pl:
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'
     SURNAME: Nazwisko
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje'
     ValidationIdentifierFailed: 'Nie można nadpisać istniejącego członka #{id} identycznym identyfikatorem ({name} = {value})'
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
@@ -537,6 +539,7 @@ pl:
     FROMCOMPUTER: 'Z komputera'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Z plików'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
     MAXNUMBEROFFILESSHORT: 'Można wgrać tylko {count} plik(ów/i)'
     REMOVE: Usuń

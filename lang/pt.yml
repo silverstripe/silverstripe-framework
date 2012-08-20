@@ -329,6 +329,7 @@ pt:
     BUTTONLOSTPASSWORD: 'Recuperar Password'
     CONFIRMNEWPASSWORD: 'Confirmar Nova Password'
     CONFIRMPASSWORD: 'Confirmar Password'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrador por Omissão'
     DefaultDateTime: default
     EMAIL: Email
@@ -351,6 +352,7 @@ pt:
     SUBJECTPASSWORDCHANGED: 'A sua password foi alterada'
     SUBJECTPASSWORDRESET: 'Link para recuperar a password'
     SURNAME: Sobrenome
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Já existe um membro com este email'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -537,6 +539,7 @@ pt:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

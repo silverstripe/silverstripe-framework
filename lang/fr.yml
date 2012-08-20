@@ -329,6 +329,7 @@ fr:
     BUTTONLOSTPASSWORD: 'J''ai perdu mon mot de passe'
     CONFIRMNEWPASSWORD: 'Confirmer nouveau mot de passe'
     CONFIRMPASSWORD: 'Confirmer Mot De Passe'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrateur par défaut'
     DefaultDateTime: 'par défaut'
     EMAIL: Email
@@ -351,6 +352,7 @@ fr:
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
     SURNAME: 'Nom de famille'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Il existe déjà un membre avec cet email'
     ValidationIdentifierFailed: 'On ne peut pas réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
     WELCOMEBACK: 'Bienvenue {firstname}'
@@ -537,6 +539,7 @@ fr:
     FROMCOMPUTER: 'Depuis votre ordinateur'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Depuis les fichiers'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Le nombre maximal de {count} fichiers a été dépassé.'
     MAXNUMBEROFFILESSHORT: 'On ne peut pas télécharger plus de {count} fichiers'
     REMOVE: Supprimer

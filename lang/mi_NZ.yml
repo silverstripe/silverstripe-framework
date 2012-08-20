@@ -329,6 +329,7 @@ mi_NZ:
     BUTTONLOSTPASSWORD: 'Kua ngaro i a au taku kupuhipa'
     CONFIRMNEWPASSWORD: 'Whakaū Kupuhipa Hōu'
     CONFIRMPASSWORD: 'Whakaū Kupuhipa'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Kaiwhakahaere Taunoa'
     DefaultDateTime: taunoa
     EMAIL: Īmēra
@@ -351,6 +352,7 @@ mi_NZ:
     SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'
     SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'
     SURNAME: 'Ingoa Whānau'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Tīari kē ana tētahi mema me te %s ōrite'
     ValidationIdentifierFailed: 'Kāore e whakaaetia ki te tuhirua i te mema #{id} ki te pūtautuhi ōrite ({name} = {value}))'
     WELCOMEBACK: 'Nau mai, hoki mai, {firstname}'
@@ -537,6 +539,7 @@ mi_NZ:
     FROMCOMPUTER: 'Mai i tō rorohiko'
     FROMCOMPUTERINFO: 'Tīpako mai i ngā kōnae'
     FROMFILES: 'I ngā kōnae'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Kua hipa te mōrahi o ngā kōnae {count}.'
     MAXNUMBEROFFILESSHORT: 'Ka taea te tukuatu i ngā kōnae {count} anake '
     REMOVE: Tango

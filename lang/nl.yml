@@ -329,6 +329,7 @@ nl:
     BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten...'
     CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
     CONFIRMPASSWORD: 'Bevestig wachtwoord'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Standaard Beheerder'
     DefaultDateTime: Standaard
     EMAIL: Email
@@ -351,6 +352,7 @@ nl:
     SUBJECTPASSWORDCHANGED: 'Uw wachtwoord is veranderd'
     SUBJECTPASSWORDRESET: 'Link om Uw wachtwoord opnieuw aan te maken'
     SURNAME: Achternaam
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Er bestaat reeds een gebruiker met dit emailadres'
     ValidationIdentifierFailed: 'Een bestaande gebruiker #{id} kan niet dezelfde unieke velden hebben ({name} = {value}))'
     WELCOMEBACK: 'Welkom terug {firstname}'
@@ -537,6 +539,7 @@ nl:
     FROMCOMPUTER: 'Vanaf computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Bestaande bestanden'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Het maximale aantal ({count}) bestanden is overschreven'
     MAXNUMBEROFFILESSHORT: 'Maximaal {count} bestanden uploaden'
     REMOVE: Verwijder

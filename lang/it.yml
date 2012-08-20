@@ -329,6 +329,7 @@ it:
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Amministratore Predefinito'
     DefaultDateTime: predefinito
     EMAIL: Email
@@ -351,6 +352,7 @@ it:
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Esiste già un utente con l''e-mail %s'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
     WELCOMEBACK: 'Bentornato, {firstname}'
@@ -537,6 +539,7 @@ it:
     FROMCOMPUTER: 'Dal tuo computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Dal CMS'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Numero massimo di {count} file ecceduto.'
     MAXNUMBEROFFILESSHORT: 'Puoi caricare solo {count} file'
     REMOVE: Rimuovi

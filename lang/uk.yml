@@ -329,6 +329,7 @@ uk:
     BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
     CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
     CONFIRMPASSWORD: 'Підтвердіть пароль'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: типовий
     EMAIL: Е-пошта
@@ -351,6 +352,7 @@ uk:
     SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
     SUBJECTPASSWORDRESET: 'Посилання на відновлення Вашого паролю'
     SURNAME: Прізвище
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Вже існує користувач з таким email'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -537,6 +539,7 @@ uk:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'З файлів'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

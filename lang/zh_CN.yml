@@ -329,6 +329,7 @@ zh_CN:
     BUTTONLOSTPASSWORD: 忘记密码
     CONFIRMNEWPASSWORD: 确认新密码
     CONFIRMPASSWORD: 确认密码
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 电子邮件
@@ -351,6 +352,7 @@ zh_CN:
     SUBJECTPASSWORDCHANGED: 您的密码已更改
     SUBJECTPASSWORDRESET: 重设您的密码链接
     SURNAME: 姓
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 已经存在用这个电子邮件的会员
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -537,6 +539,7 @@ zh_CN:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

@@ -329,6 +329,7 @@ ja_JP:
     BUTTONLOSTPASSWORD: パスワードを紛失
     CONFIRMNEWPASSWORD: 新しいパスワードを確認します
     CONFIRMPASSWORD: パスワード（確認のためもう一度）
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 初期管理者
     DefaultDateTime: 初期設定
     EMAIL: メールアドレス
@@ -351,6 +352,7 @@ ja_JP:
     SUBJECTPASSWORDCHANGED: パスワードが変わりました。
     SUBJECTPASSWORDRESET: パスワード再発行
     SURNAME: 姓
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: '{firstname}さん、おかえりなさい'
@@ -537,6 +539,7 @@ ja_JP:
     FROMCOMPUTER: コンピュータから
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: ファイルから
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: '最大数の{count}ファイルを超えました。'
     MAXNUMBEROFFILESSHORT: '{count}ファイルしかアップロードすることができません'
     REMOVE: 削除

@@ -329,6 +329,7 @@ es_MX:
     BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar contraseña'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrador Predeterminado'
     DefaultDateTime: 'Por defecto'
     EMAIL: 'Correo electrónico'
@@ -351,6 +352,7 @@ es_MX:
     SUBJECTPASSWORDCHANGED: 'Su contraseña se ha cambiado'
     SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
     SURNAME: Apellido
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con el mismo %s'
     ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
     WELCOMEBACK: 'Bienvenido nuevamente, {firstname}'
@@ -537,6 +539,7 @@ es_MX:
     FROMCOMPUTER: 'Desde tu computador'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Desde archivos'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Máximo número {count} de archivos sobrepasado'
     MAXNUMBEROFFILESSHORT: 'Solo puedes subir {count} archivos'
     REMOVE: Remover

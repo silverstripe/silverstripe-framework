@@ -329,6 +329,7 @@ nb:
     BUTTONLOSTPASSWORD: 'Jeg har mistet passordet'
     CONFIRMNEWPASSWORD: 'Bekreft Nytt Passord'
     CONFIRMPASSWORD: 'Bekreft passord'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Standard admin'
     DefaultDateTime: Standard
     EMAIL: Epost
@@ -351,6 +352,7 @@ nb:
     SUBJECTPASSWORDCHANGED: 'Ditt passord har blitt endret'
     SUBJECTPASSWORDRESET: 'Link til passordannulering'
     SURNAME: Etternavn
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Det eksisterer allerede et medlem med denne epost-kontoen.'
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende medlem #{id} med identisk identifikator ({name})={value}))'
     WELCOMEBACK: 'Velkommen tilbake, {firstname}'
@@ -537,6 +539,7 @@ nb:
     FROMCOMPUTER: 'Fra din pc'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Fra filer'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Maks antall {count} fil(er) overskredet'
     MAXNUMBEROFFILESSHORT: 'Kan kun laste opp {count} filer'
     REMOVE: Fjern

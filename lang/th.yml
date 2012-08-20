@@ -329,6 +329,7 @@ th:
     BUTTONLOSTPASSWORD: ฉันลืมรหัสผ่านของฉัน
     CONFIRMNEWPASSWORD: ยืนยันรหัสผ่านใหม่
     CONFIRMPASSWORD: ยืนยันรหัสผ่าน
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: ผู้ดูแลที่กำหนดไว้เริ่มต้น
     DefaultDateTime: ค่าเริ่มต้น
     EMAIL: อีเมล
@@ -351,6 +352,7 @@ th:
     SUBJECTPASSWORDCHANGED: รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว
     SUBJECTPASSWORDRESET: ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ
     SURNAME: นามสกุล
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -537,6 +539,7 @@ th:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

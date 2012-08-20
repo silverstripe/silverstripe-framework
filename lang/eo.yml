@@ -329,6 +329,7 @@ eo:
     BUTTONLOSTPASSWORD: 'Mi perdis mian pasvorton'
     CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
     CONFIRMPASSWORD: 'Konfirmu pasvorton'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Defaŭlta Administranto'
     DefaultDateTime: default
     EMAIL: Retpoŝto
@@ -351,6 +352,7 @@ eo:
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: 'Familia nomo'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -537,6 +539,7 @@ eo:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
