@@ -540,6 +540,7 @@ en:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
@@ -548,6 +549,5 @@ en:
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
-    HOTLINKINFO: Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.
   Versioned:
     has_many_Versions: Versions
