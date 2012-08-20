@@ -984,6 +984,7 @@ class Installer extends InstallRequirements {
 ?>
 <html>
 	<head>
+		<meta charset="utf-8" />
 		<title>Installing SilverStripe...</title>
 		<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/dev/install/css/install.css" />
 		<script src="<?php echo FRAMEWORK_NAME; ?>/thirdparty/jquery/jquery.js"></script>
@@ -1352,7 +1353,8 @@ TEXT;
 			method: 'get',
 			url: 'InstallerTest/testrewrite',
 			complete: function(response) {
-				if(response.responseText == 'OK') {
+				var r = response.responseText.replace(/[^A-Z]?/g,"");
+				if(r === "OK") {
 					$('#ModRewriteResult').html("Friendly URLs set up successfully; I am now redirecting you to your SilverStripe site...")
 					setTimeout(function() {
 						window.location = "$destinationURL";

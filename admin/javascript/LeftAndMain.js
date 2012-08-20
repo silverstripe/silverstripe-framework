@@ -20,17 +20,37 @@ jQuery.noConflict();
 		
 		// apply an select element only when it is ready, ie. when it is rendered into a template
 		// with css applied and got a width value.
-		var applyChosen = function(el){
-			if(el.outerWidth()){
-				el.chosen({
-					'disable_search_threshold' : 20,
-					'allow_single_deselect': true
-				}).addClass("has-chzn");
-				// Copy over title attribute if required
-				if(el.attr('title')) el.siblings('.chzn-container').attr('title', el.attr('title'));
+		var applyChosen = function(el) {
+			if(el.is(':visible')) {
+				el.addClass('has-chzn').chosen({
+					allow_single_deselect: true,
+					disable_search_threshold: 20
+				});
+
+				var title = el.prop('title')
+
+				if(title) {
+					el.siblings('.chzn-container').prop('title', title);
+				}
 			} else {
-				setTimeout(function() {applyChosen(el);},500);
+				setTimeout(function() { applyChosen(el); }, 500);
 			}
+		};
+
+		/**
+		 * Compare URLs, but normalize trailing slashes in 
+		 * URL to work around routing weirdnesses in SS_HTTPRequest.
+		 * Also normalizes relative URLs by prefixing them with the <base>.
+		 */
+		var isSameUrl = function(url1, url2) {
+			var baseUrl = $('base').attr('href');
+			url1 = $.path.isAbsoluteUrl(url1) ? url1 : $.path.makeUrlAbsolute(url1, baseUrl),
+			url2 = $.path.isAbsoluteUrl(url2) ? url2 : $.path.makeUrlAbsolute(url2, baseUrl);
+			var url1parts = $.path.parseUrl(url1), url2parts = $.path.parseUrl(url2);
+			return (
+				url1parts.pathname.replace(/\/*$/, '') == url2parts.pathname.replace(/\/*$/, '') && 
+				url1parts.search == url2parts.search
+			);
 		};
 		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
@@ -39,10 +59,12 @@ jQuery.noConflict();
 		$(document).ajaxComplete(function(e, xhr, settings) {
 			// Simulates a redirect on an ajax response.
 			if(window.History.enabled) {
-				var url = xhr.getResponseHeader('X-ControllerURL'), opts, requestHeaders = settings.headers;
-				// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
-				var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
-				if(url && !isSame) {
+				var url = xhr.getResponseHeader('X-ControllerURL'), 
+					// TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
+					origUrl = History.getPageUrl().replace(/\/$/, ''),
+					opts, requestHeaders = settings.headers;
+
+				if(url !== null && !isSameUrl(origUrl, url)) {
 					opts = {pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']};
 					window.History.pushState(opts, '', url);
 				}
@@ -144,8 +166,9 @@ jQuery.noConflict();
 			 *  - {String} url
 			 *  - {String} title New window title
 			 *  - {Object} data Any additional data passed through to History.pushState()
+			 *  - {boolean} forceReload Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
 			 */
-			loadPanel: function(url, title, data) {
+			loadPanel: function(url, title, data, forceReload) {
 				if(!data) data = {};
 				if(!title) title = "";
 
@@ -169,10 +192,23 @@ jQuery.noConflict();
 				if(window.History.enabled) {
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu
-					window.History.pushState(data, title, url);
+					if(forceReload) {
+						// Add a parameter to make sure the page gets reloaded even if the URL is the same.
+						$.extend(data, {__forceReload: Math.random()});
+						window.History.replaceState(data, title, url);
+					} else {
+						window.History.pushState(data, title, url);
+					}
 				} else {
 					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 				}
+			},
+
+			/**
+			 * Nice wrapper for reloading current history state.
+			 */
+			reloadCurrentPanel: function() {
+				this.loadPanel(window.History.getState().url, null, null, true);
 			},
 
 			/**
@@ -887,11 +923,9 @@ jQuery.noConflict();
 					ajaxOptions: {
 						// Overwrite ajax loading to use CMS logic instead
 						beforeSend: function(xhr, settings) {
-							var makeAbs = $.path.makeUrlAbsolute,
-								baseUrl = $('base').attr('href'),
-								isSame = (makeAbs(settings.url, baseUrl) == makeAbs(document.location.href));
-								
-							if(!isSame) $('.cms-container').loadPanel(settings.url);
+							if(!isSameUrl(document.location.href, settings.url)) {
+								$('.cms-container').loadPanel(settings.url);
+							}
 							return false;
 						}
 					},
