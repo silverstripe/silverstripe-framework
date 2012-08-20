@@ -329,7 +329,7 @@ cs:
     BUTTONLOSTPASSWORD: 'Zapomněl jsem heslo'
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
-    DATEFORMAT: 'Date format'
+    DATEFORMAT: 'Formát datumu'
     DefaultAdminFirstname: 'Implicitní Admin'
     DefaultDateTime: implicitní
     EMAIL: Email
@@ -352,7 +352,7 @@ cs:
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bylo změněno'
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
     SURNAME: Příjmení
-    TIMEFORMAT: 'Time format'
+    TIMEFORMAT: 'Formát času'
     VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejnou %s'
     ValidationIdentifierFailed: 'Nemůžete přepsat existujícího člena #{id} s identickým identifikátorem ({name} = {value}))'
     WELCOMEBACK: 'Vítejte zpět, {firstname}'
@@ -539,7 +539,7 @@ cs:
     FROMCOMPUTER: 'Z vašeho počítače'
     FROMCOMPUTERINFO: 'Vyberte ze souborů'
     FROMFILES: 'Ze souborů'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Info: Tento obrázek bude "hotlinkován". Ujistěte se prosím, že máte oprávnění od původního tvůrce webu, aby se tak stalo.'
     MAXNUMBEROFFILES: 'Maximální počet {count} soubor(ů) překročen.'
     MAXNUMBEROFFILESSHORT: 'Můžete nahrát pouze {count} souborů'
     REMOVE: Odstranit

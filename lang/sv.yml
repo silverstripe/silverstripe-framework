@@ -329,7 +329,7 @@ sv:
     BUTTONLOSTPASSWORD: 'Jag har glömt mitt lösenord'
     CONFIRMNEWPASSWORD: 'Bekräfta nytt lösenord'
     CONFIRMPASSWORD: 'Bekräfta lösenord'
-    DATEFORMAT: 'Date format'
+    DATEFORMAT: Datumformat
     DefaultAdminFirstname: standard
     DefaultDateTime: standard
     EMAIL: E-post
@@ -352,7 +352,7 @@ sv:
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
     SUBJECTPASSWORDRESET: 'Din återställningslänk'
     SURNAME: Efternamn
-    TIMEFORMAT: 'Time format'
+    TIMEFORMAT: Tidsformat
     VALIDATIONMEMBEREXISTS: 'Det finns redan en medlem med samma %s'
     ValidationIdentifierFailed: 'Kan inte skriva över medlem #{id} med samma identifierare ({name} = {value}))'
     WELCOMEBACK: 'Välkommen tillbaka, {firstname}'
