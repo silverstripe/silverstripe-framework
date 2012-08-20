@@ -276,21 +276,18 @@ class VersionedTest extends SapphireTest {
 		$testPage->Content = 'This is the content from 2005';
 		$testPage->ExtraField = '2005';
 		$testPage->write();
-		$testPage->publish('Stage', 'Live');
 		
 		// In 2007 we updated it
 		SS_Datetime::set_mock_now('2007-01-01 00:00:00');
 		$testPage->Content = "It's 2007 already!";
 		$testPage->ExtraField = '2007';
 		$testPage->write();
-		$testPage->publish('Stage', 'Live');
 		
 		// In 2009 we updated it again
 		SS_Datetime::set_mock_now('2009-01-01 00:00:00');
 		$testPage->Content = "I'm enjoying 2009";
 		$testPage->ExtraField = '2009';
 		$testPage->write();
-		$testPage->publish('Stage', 'Live');
 		
 		// End mock, back to the present day:)
 		SS_Datetime::clear_mock_now();
@@ -318,6 +315,45 @@ class VersionedTest extends SapphireTest {
 		$this->assertInstanceOf("VersionedTest_Subclass", $testPageCurrent);
 		$this->assertEquals("2009", $testPageCurrent->ExtraField);
 		$this->assertEquals("I'm enjoying 2009", $testPageCurrent->Content);
+	}
+
+	public function testAllVersions()
+	{
+		// In 2005 this file was created
+		SS_Datetime::set_mock_now('2005-01-01 00:00:00');
+		$testPage = new VersionedTest_Subclass();
+		$testPage->Title = 'Archived page';
+		$testPage->Content = 'This is the content from 2005';
+		$testPage->ExtraField = '2005';
+		$testPage->write();
+		
+		// In 2007 we updated it
+		SS_Datetime::set_mock_now('2007-01-01 00:00:00');
+		$testPage->Content = "It's 2007 already!";
+		$testPage->ExtraField = '2007';
+		$testPage->write();
+		
+		// In 2009 we updated it again
+		SS_Datetime::set_mock_now('2009-01-01 00:00:00');
+		$testPage->Content = "I'm enjoying 2009";
+		$testPage->ExtraField = '2009';
+		$testPage->write();
+		
+		// End mock, back to the present day:)
+		SS_Datetime::clear_mock_now();
+		
+		$versions = Versioned::get_all_versions('VersionedTest_Subclass', $testPage->ID);
+		$content = array();
+		$extraFields = array();
+		foreach($versions as $version)
+		{
+			$content[] = $version->Content;
+			$extraFields[] = $version->ExtraField;
+		}
+		
+		$this->assertEquals($versions->Count(), 3, 'All versions returned');
+		$this->assertEquals($content, array('This is the content from 2005', "It's 2007 already!", "I'm enjoying 2009"), 'Version fields returned');
+		$this->assertEquals($extraFields, array('2005', '2007', '2009'), 'Version fields returned');
 	}
 }
 
