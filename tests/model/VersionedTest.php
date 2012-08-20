@@ -333,6 +333,20 @@ class VersionedTest extends SapphireTest {
 		$testPage->ExtraField = '2007';
 		$testPage->write();
 		
+		// Check both versions are returned
+		$versions = Versioned::get_all_versions('VersionedTest_Subclass', $testPage->ID);
+		$content = array();
+		$extraFields = array();
+		foreach($versions as $version)
+		{
+			$content[] = $version->Content;
+			$extraFields[] = $version->ExtraField;
+		}
+		
+		$this->assertEquals($versions->Count(), 2, 'All versions returned');
+		$this->assertEquals($content, array('This is the content from 2005', "It's 2007 already!"), 'Version fields returned');
+		$this->assertEquals($extraFields, array('2005', '2007'), 'Version fields returned');
+		
 		// In 2009 we updated it again
 		SS_Datetime::set_mock_now('2009-01-01 00:00:00');
 		$testPage->Content = "I'm enjoying 2009";
@@ -351,9 +365,9 @@ class VersionedTest extends SapphireTest {
 			$extraFields[] = $version->ExtraField;
 		}
 		
-		$this->assertEquals($versions->Count(), 3, 'All versions returned');
-		$this->assertEquals($content, array('This is the content from 2005', "It's 2007 already!", "I'm enjoying 2009"), 'Version fields returned');
-		$this->assertEquals($extraFields, array('2005', '2007', '2009'), 'Version fields returned');
+		$this->assertEquals($versions->Count(), 3, 'Additional all versions returned');
+		$this->assertEquals($content, array('This is the content from 2005', "It's 2007 already!", "I'm enjoying 2009"), 'Additional version fields returned');
+		$this->assertEquals($extraFields, array('2005', '2007', '2009'), 'Additional version fields returned');
 	}
 }
 
