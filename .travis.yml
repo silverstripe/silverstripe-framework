@@ -1,6 +1,19 @@
 language: php 
 php: 
  - 5.3
+ - 5.4
+
+env:
+ - TESTDB=SQLITE
+ - TESTDB=MYSQL
+ - TESTDB=PGSQL
+
+matrix:
+  exclude:
+    - php: 5.4
+      env: TESTDB=PGSQL
+    - php: 5.4
+      env: TESTDB=SQLITE
 
 before_script:
  - ./tests/travis/before_script ~/builds/ss 
