@@ -9,9 +9,9 @@ env:
  - TESTDB=PGSQL
 
 exclude:
-  - php 5.4
+  - php: 5.4
     env: TESTDB=PGSQL
-  - php 5.4
+  - php: 5.4
     env: TESTDB=SQLITE
 
 before_script:
