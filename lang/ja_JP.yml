@@ -1,5 +1,7 @@
 ja_JP:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 新しいフォルダ
   AssetTableField:
     CREATED: 初回アップロード日時
@@ -42,7 +44,7 @@ ja_JP:
     ITALIC: テキストを斜体にする
     ITALICEXAMPLE: 斜体
     LINK: ウェブサイトのリンク
-    LINKDESCRIPTION: '別のウェブサイトかURLにリンクしてください'
+    LINKDESCRIPTION: 別のウェブサイトかURLにリンクしてください
     STRUCK: テキストに取り消し線を引く
     STRUCKEXAMPLE: 取り消し線
     UNDERLINE: テキストに下線を引く
@@ -53,8 +55,8 @@ ja_JP:
   BackLink_Button.ss:
     Back: 戻る
   BasicAuth:
-    ENTERINFO: 'ユーザー名とパスワードを入力してください'
-    ERRORNOTADMIN: 'このユーザーは管理者（アドミニストレーター）ではありません'
+    ENTERINFO: ユーザー名とパスワードを入力してください
+    ERRORNOTADMIN: このユーザーは管理者（アドミニストレーター）ではありません
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   Boolean:
     0: 'False'
@@ -77,8 +79,8 @@ ja_JP:
     HELLO: こんにちわ！
     PASSWORD: パスワード
   CheckboxField:
-    - いいえ
-    - はい
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: ポップアップを閉じる
     SUCCESSADD2: '{name}を追加しました'
@@ -127,6 +129,8 @@ ja_JP:
     VALIDDATEFORMAT2: '{{format}}日付フォーマットの正しい日付を入力してください。'
     VALIDDATEMAXDATE: '許可されている最も新しい日付{{date}}より古い日付か同じ日付である必要があります。'
     VALIDDATEMINDATE: '許可されている最も古い日付{{date}}より新しい日付か同じ日付である必要があります'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 不正なリクエスト
   DropdownField:
@@ -139,7 +143,7 @@ ja_JP:
   Enum:
     ANY: 何でも
   File:
-    Content: '内容'
+    Content: 内容
     Filename: ファイル名
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
@@ -166,6 +170,9 @@ ja_JP:
     TITLE: イメージアップロード（Iframe）
   Filesystem:
     SYNCRESULTS: '同期が完了しました: {createdcount}項目が作成され、{deletedcount}項目が削除されました。'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: こんにちわ！
     TEXT1: 'ここ''貴方の'
@@ -173,8 +180,9 @@ ja_JP:
     TEXT3: は
   Form:
     FIELDISREQUIRED: '%s が必要です'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: '入力された値はユニークではありません'
+    VALIDATIONNOTUNIQUE: 入力された値はユニークではありません
     VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
     VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
@@ -220,8 +228,10 @@ ja_JP:
     GroupReminder: 元グループを選択された場合、このグループはその役割をすべて受け継ぎます。
     Locked: ロックしますか？
     NoRoles: 役割が見つかりませんでした
+    PLURALNAME: Groups
     Parent: 元グループ
     RolesAddEditLink: 役割の管理
+    SINGULARNAME: Group
     Sort: 並び順
     has_many_Permissions: 承認
     many_many_Members: メンバー
@@ -244,7 +254,7 @@ ja_JP:
     CAPTIONTEXT: タイトル
     CSSCLASS: '調整 / スタイル'
     CSSCLASSCENTER: 中央はテキストのみ
-    CSSCLASSLEFT: '左側にテキストと一緒に処理してください'
+    CSSCLASSLEFT: 左側にテキストと一緒に処理してください
     CSSCLASSLEFTALONE: 中央はテキストのみ
     CSSCLASSRIGHT: 右側にテキストと一緒に処理してください
     DETAILS: 詳細
@@ -278,8 +288,14 @@ ja_JP:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL''{url}''はメディアリソースとして扱うことができませんでした。'
     UpdateMEDIA: メディアを更新
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: 画像
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: イメージアップロード（Iframe）
   LeftAndMain:
@@ -302,6 +318,8 @@ ja_JP:
   LoginAttempt:
     Email: メールアドレス
     IP: IPアドレス
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: ステータス
   Member:
     ADDGROUP: グループを追加
@@ -311,15 +329,16 @@ ja_JP:
     BUTTONLOSTPASSWORD: パスワードを紛失
     CONFIRMNEWPASSWORD: 新しいパスワードを確認します
     CONFIRMPASSWORD: パスワード（確認のためもう一度）
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 初期管理者
     DefaultDateTime: 初期設定
     EMAIL: メールアドレス
-    EMPTYNEWPASSWORD: 'パスワードが空です。もう一度入力して下さい。'
-    ENTEREMAIL: 'パスワードをリセットするためにメールアドレスを入力してください。'
-    ERRORLOCKEDOUT: 'あなたのアカウントは何度もログインに失敗したため一時的に利用できなくなっています。20分後に試してください。'
-    ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
-    ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
-    ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
+    EMPTYNEWPASSWORD: パスワードが空です。もう一度入力して下さい。
+    ENTEREMAIL: パスワードをリセットするためにメールアドレスを入力してください。
+    ERRORLOCKEDOUT: あなたのアカウントは何度もログインに失敗したため一時的に利用できなくなっています。20分後に試してください。
+    ERRORNEWPASSWORD: 入力されたパスワードが一致しません。再度お試しください
+    ERRORPASSWORDNOTMATCH: 登録されているパスワードと一致しません、もう一度入力し直してください
+    ERRORWRONGCRED: メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください
     FIRSTNAME: 名
     INTERFACELANG: 画面言語
     INVALIDNEWPASSWORD: '次のパスワードは受け付けることができません: {password}'
@@ -333,7 +352,8 @@ ja_JP:
     SUBJECTPASSWORDCHANGED: パスワードが変わりました。
     SUBJECTPASSWORDRESET: パスワード再発行
     SURNAME: 姓
-    VALIDATIONMEMBEREXISTS: '入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。'
+    TIMEFORMAT: 'Time format'
+    VALIDATIONMEMBEREXISTS: 入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: '{firstname}さん、おかえりなさい'
     YOUROLDPASSWORD: 古いパスワード
@@ -341,13 +361,14 @@ ja_JP:
     db_LastVisited: 最終訪問日
     db_Locale: インターフェースの言語地域
     db_LockedOutUntil: DBロックがされています。
-    db_NumVisit: '訪問者数'
+    db_NumVisit: 訪問者数
     db_Password: パスワード
     db_PasswordExpiry: パスワードの有効期限
   MemberAuthenticator:
     TITLE: メールアドレスとパスワード
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': フィルタを適用
     Custom: Custom
     DATEFORMATBAD: 日付フォーマットが不正です
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +394,11 @@ ja_JP:
     ResultDeleted: '%d人のメンバーを削除しました'
     ResultNone: 変更なし
     ResultUpdated: '{count}メンバーを更新しました'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': フィルタを適用
     DELETE: 削除
     DELETEDRECORDS: '{count}レコードを削除しました。'
     IMPORT: CSVからインポート
@@ -403,16 +426,27 @@ ja_JP:
     IsNullLabel: NULLである
   NumericField:
     VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
-    AdminGroup: '管理者'
+    AdminGroup: 管理者
     CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: '完全な管理権'
+    FULLADMINRIGHTS: 完全な管理権
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'グループ"{title}"から継承'
     FromRole: '役割"{title}"から継承'
     FromRoleOnGroup: 'グループ "%s" のロール "%s"から継承'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 役割とアクセス権限
   PhoneNumberField:
@@ -423,16 +457,16 @@ ja_JP:
     NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
-    BUTTONSEND: 'パスワードリセットのリンクを送信してください'
+    BUTTONSEND: パスワードリセットのリンクを送信してください
     CHANGEPASSWORDBELOW: 以下のパスワードを変更できます
     CHANGEPASSWORDHEADER: パスワードを変更しました
-    ENTERNEWPASSWORD: '新しいパスワードを入力してください'
+    ENTERNEWPASSWORD: 新しいパスワードを入力してください
     ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
-    LOGGEDOUT: 'ログアウトしました。再度ログインする場合は証明書キーを入力してください'
+    LOGGEDOUT: ログアウトしました。再度ログインする場合は証明書キーを入力してください
     LOGIN: ログイン
-    NOTEPAGESECURED: 'このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します'
+    NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'メールアドレスを入力してください、パスワードをリセットするURLを送信致します'
+    NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -488,7 +522,7 @@ ja_JP:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   ToggleField:
     LESS: 減少
-    MORE: '増加'
+    MORE: 増加
   UploadField:
     ATTACHFILE: ファイルを添付
     ATTACHFILES: ファイルを添付
@@ -505,6 +539,7 @@ ja_JP:
     FROMCOMPUTER: コンピュータから
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: ファイルから
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: '最大数の{count}ファイルを超えました。'
     MAXNUMBEROFFILESSHORT: '{count}ファイルしかアップロードすることができません'
     REMOVE: 削除

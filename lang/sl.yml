@@ -1,5 +1,7 @@
 sl:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nova mapa'
   AssetTableField:
     CREATED: 'Naloženo na začetku'
@@ -127,6 +129,8 @@ sl:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ sl:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: 'Pozdravljeni,'
     TEXT1: 'Tukaj je vaša'
@@ -173,6 +180,7 @@ sl:
     TEXT3: za
   Form:
     FIELDISREQUIRED: 'Vpišite %s (obvezen podatek).'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Vpisana vrednost ni unikatna'
     VALIDATIONPASSWORDSDONTMATCH: 'Vpisani gesli se ne ujemata'
@@ -220,8 +228,10 @@ sl:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Zaklenjeno za urejanje?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Nadrejena skupina'
     RolesAddEditLink: 'Dodaj in uredi vloge'
+    SINGULARNAME: Group
     Sort: 'Način razvrščanja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
@@ -263,7 +273,7 @@ sl:
     IMAGETITLE: 'Naslov (tooltip)  bo izpisan kot dopolnitev k vsebini slike'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: 'Širina'
+    IMAGEWIDTHPX: Širina
     INSERTMEDIA: 'Insert Media'
     LINK: Povezava
     LINKANCHOR: 'Sidro na tej strani'
@@ -278,8 +288,14 @@ sl:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Slika
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Slika "uploading iframe"'
   LeftAndMain:
@@ -302,6 +318,8 @@ sl:
   LoginAttempt:
     Email: E-naslov
     IP: IP-naslov
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Stanje
   Member:
     ADDGROUP: 'Add group'
@@ -311,6 +329,7 @@ sl:
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
     CONFIRMPASSWORD: 'Potrdi geslo'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Privzeti administrator'
     DefaultDateTime: default
     EMAIL: E-naslov
@@ -333,6 +352,7 @@ sl:
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
     SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'
     SURNAME: Priimek
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Uporabnik s tem %s že obstaja'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -348,6 +368,7 @@ sl:
     TITLE: 'Uporabniški račun'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +394,11 @@ sl:
     ResultDeleted: 'Število izbrisanih uporabnikov: %d'
     ResultNone: 'Ni sprememb'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Izbriši
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Uvozi CSV-datoteko'
@@ -403,16 +426,27 @@ sl:
     IsNullLabel: 'Prazno polje'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostop do CMS-vmesnika'
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Vloge in dovoljenja za dostop'
   PhoneNumberField:
@@ -505,6 +539,7 @@ sl:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

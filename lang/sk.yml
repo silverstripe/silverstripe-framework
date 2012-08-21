@@ -1,5 +1,7 @@
 sk:
   AssetAdmin:
+    ADDFILES: 'Pridať súbory'
+    EditOrgMenu: 'Editovať &amp; organizovať'
     NEWFOLDER: 'Nový priečinok'
   AssetTableField:
     CREATED: 'Prvýkrát nahrané'
@@ -122,11 +124,13 @@ sk:
     YEAR: rok
     YEARS: roky
   DateField:
-    NOTSET: nezadané
+    NOTSET: 'nIe je nastavené'
     TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
+  DatetimeField:
+    NOTSET: 'Nie je nastavené'
   Director:
     INVALID_REQUEST: 'Neplatná požiadavka'
   DropdownField:
@@ -166,6 +170,9 @@ sk:
     TITLE: 'Rámec pre nahranie obrázku'
   Filesystem:
     SYNCRESULTS: 'Synchronizácia kompletná: {createdcount} položky vytvorenéy, {deletedcount} položky smazané'
+  Folder:
+    PLURALNAME: Priečinky
+    SINGULARNAME: Priečinok
   ForgotPasswordEmail.ss:
     HELLO: 'Dobrý deň'
     TEXT1: 'Tu je váš'
@@ -173,6 +180,7 @@ sk:
     TEXT3: pre
   Form:
     FIELDISREQUIRED: '%s je požadované'
+    SubmitBtnLabel: Coď
     VALIDATIONCREDITNUMBER: 'Uistite sa, že ste zadali číslo {number} kreditnej karty správne'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota nie je unikátna'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla sa nezhodujú'
@@ -220,8 +228,10 @@ sk:
     GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky role'
     Locked: 'Zamknuté?'
     NoRoles: 'Nenašli sa role'
+    PLURALNAME: Skupiny
     Parent: 'Nadradená skupina'
     RolesAddEditLink: 'Pridať/upraviť úlohy'
+    SINGULARNAME: Skupina
     Sort: 'Poradie zoradenia'
     has_many_Permissions: Právomoci
     many_many_Members: Členovia
@@ -278,8 +288,14 @@ sk:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
     UpdateMEDIA: 'Aktualizovať média'
+  Image:
+    PLURALNAME: Súbory
+    SINGULARNAME: Súbor
   ImageField:
     IMAGE: Obrázok
+  Image_Cached:
+    PLURALNAME: Súbory
+    SINGULARNAME: Súbor
   Image_iframe.ss:
     TITLE: 'Rámec pre nahranie obrázku'
   LeftAndMain:
@@ -302,6 +318,8 @@ sk:
   LoginAttempt:
     Email: 'Emailová adresa'
     IP: 'IP adreasa'
+    PLURALNAME: 'Pokusy o prihlásenie'
+    SINGULARNAME: 'Pokus o prihlásenie'
     Status: Status
   Member:
     ADDGROUP: 'Pridať skupinu'
@@ -311,6 +329,7 @@ sk:
     BUTTONLOSTPASSWORD: 'Stratil som svoje heslo'
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
+    DATEFORMAT: 'Formát dátumu'
     DefaultAdminFirstname: 'Predvolený administrátor'
     DefaultDateTime: predvolený
     EMAIL: E-mail
@@ -333,6 +352,7 @@ sk:
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bolo zmenené'
     SUBJECTPASSWORDRESET: 'Odkaz na resetovanie hesla'
     SURNAME: Priezvisko
+    TIMEFORMAT: 'Formát času'
     VALIDATIONMEMBEREXISTS: 'Člen s takýmto e-mailom už existuje'
     ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value}))'
     WELCOMEBACK: 'Vitajte späť, {firstname}'
@@ -348,6 +368,7 @@ sk:
     TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (pred poludním) alebo PM (popoludní)'
+    'APPLY FILTER': 'Použiť filter'
     Custom: Vlastné
     DATEFORMATBAD: 'Formát dátumu je neplatný'
     DAYNOLEADING: 'Deň mesiaca bez úvodnej nuly'
@@ -373,9 +394,11 @@ sk:
     ResultDeleted: 'Zmazaných %d členov'
     ResultNone: 'Žiadne zmeny'
     ResultUpdated: 'Aktualizovaných {count} členov'
+  MemberPassword:
+    PLURALNAME: 'Členské heslá'
+    SINGULARNAME: 'Členské heslo'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Použiť filter'
     DELETE: Vymazať
     DELETEDRECORDS: 'Smazaných {count} záznamov.'
     IMPORT: 'Importovať z CSV'
@@ -403,16 +426,27 @@ sk:
     IsNullLabel: 'Je Null'
   NumericField:
     VALIDATION: '''{value}'' nie je číslo, iba čísla môžu byť akceptované pre toto pole'
+  Pagination:
+    Page: Stránka
+    View: Zobraziť
   Permission:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Prístup do CMS'
     FULLADMINRIGHTS: 'Plné administrátorské práva'
     FULLADMINRIGHTS_HELP: 'Znamená, a prepíše všetky ostatné pridelené oprávnenia.'
+    PLURALNAME: Oprávnenia
+    SINGULARNAME: Oprávnenie
   PermissionCheckboxSetField:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
     FromRole: 'zdedené z role "{title}"'
     FromRoleOnGroup: 'zdediť z úlohy "%s" v skupine "%s"'
+  PermissionRole:
+    PLURALNAME: Role
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Kódy oprávnenia rolí'
+    SINGULARNAME: 'Kód oprávnenia role'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a prístupové práva'
   PhoneNumberField:
@@ -505,6 +539,7 @@ sk:
     FROMCOMPUTER: 'Z vášho počítača'
     FROMCOMPUTERINFO: 'Vyberte zo súborov'
     FROMFILES: 'Zo súborov'
+    HOTLINKINFO: 'Info: Tento obrázok bude "hotlinkovaný". Uistete sa prosím, že máte oprávnenie od pôvodneho tvorcu webu, aby sa tak stalo.'
     MAXNUMBEROFFILES: 'Maximálny počet {count} súbor(ov) prekročený.'
     MAXNUMBEROFFILESSHORT: 'Môžte nahrať iba {count} súborov'
     REMOVE: Odstrániť

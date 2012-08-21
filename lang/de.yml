@@ -1,5 +1,7 @@
 de:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Neuer Ordner'
   AssetTableField:
     CREATED: 'Erstmalig hochgeladen'
@@ -18,10 +20,10 @@ de:
     DROPAREA: Dateiablage
     EDITALL: 'Alle Bearbeiten'
     EDITANDORGANIZE: Bearbeiten
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Dateien bearbeiten'
     FILES: Dateien
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
+    FROMCOMPUTERINFO: 'Von ihrem Computer hochladen'
     TOTAL: Gesamt
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: ODER
@@ -57,12 +59,12 @@ de:
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
-    0: 'False'
+    0: Falsch
     ANY: alle
-    1: 'True'
+    1: Wahr
   CMSLoadingScreen.ss:
     LOADING: 'Lade Daten ...'
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
   CMSMain:
     ACCESS: 'Zugang zum Bereich ''{title}'''
     ACCESSALLINTERFACES: 'Zugriff auf alle Bereiche des CMS'
@@ -77,15 +79,15 @@ de:
     HELLO: Hi
     PASSWORD: Passwort
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Falsch
+    - Wahr
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
     SUCCESSADD2: '{name} hinzugefügt'
     SUCCESSEDIT: 'Gespeichert %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
-    NOITEMSFOUND: 'No items found'
+    ADDITEM: '%s hinzufügen'
+    NOITEMSFOUND: 'Keine Elemente gefunden'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   ComplexTableField_popup.ss:
@@ -127,6 +129,8 @@ de:
     VALIDDATEFORMAT2: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
     VALIDDATEMAXDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({date}) liegen oder gleich sein'
     VALIDDATEMINDATE: 'Ihr Datum muss vor dem erlaubtem Datum ({date}) liegen oder gleich sein'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
@@ -145,7 +149,7 @@ de:
     INVALIDEXTENSIONSHORT: 'Dateityp ist nicht erlaubt'
     NOFILESIZE: 'Dateigröße ist 0 bytes'
     NOVALIDUPLOAD: 'Datei ist kein gültiger Upload'
-    Name: Name
+    Name: Dateiname
     PLURALNAME: Dateien
     SINGULARNAME: Datei
     TOOLARGE: 'Die Datei ist zu groß, maximal sind {size} erlaubt'
@@ -166,6 +170,9 @@ de:
     TITLE: 'Iframe Bilderupload'
   Filesystem:
     SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hallo
     TEXT1: 'Hier ist Ihr'
@@ -173,6 +180,7 @@ de:
     TEXT3: für
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
     VALIDATIONNOTUNIQUE: 'Der eingegebene Wert ist nicht einzigartig'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwörter stimmen nicht überein'
@@ -220,8 +228,10 @@ de:
     GroupReminder: 'Bei Zuweisung einer Übergruppe werden alle ihre Rollen übernommen'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
+    PLURALNAME: Groups
     Parent: Elterngruppe
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
+    SINGULARNAME: Group
     Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
     many_many_Members: Mitglieder
@@ -278,8 +288,14 @@ de:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
     UpdateMEDIA: 'Medienobjekt aktualisieren'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Bild
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
@@ -302,6 +318,8 @@ de:
   LoginAttempt:
     Email: E-Mail-Adresse
     IP: IP-Adresse
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Gruppe hinzufügen'
@@ -311,6 +329,7 @@ de:
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: Standardadmin
     DefaultDateTime: Standard
     EMAIL: E-Mail
@@ -333,6 +352,7 @@ de:
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Es gibt bereits ein Mitglied mit dieser E-Mail-Adresse'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
@@ -348,6 +368,7 @@ de:
     TITLE: 'E-Mail &amp; Passwort'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (vormittag) oder PM (nachmittag)'
+    'APPLY FILTER': 'Filter anwenden'
     Custom: Benutzerdefiniert
     DATEFORMATBAD: 'Ungültiges Datumsformat'
     DAYNOLEADING: 'Tag des Monats ohne führende Null'
@@ -373,9 +394,11 @@ de:
     ResultDeleted: '%d Mitglieder gelöscht'
     ResultNone: 'Keine Änderungen'
     ResultUpdated: '{count} Mitglied(er) wurde(n) aktualisiert'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Filter anwenden'
     DELETE: Löschen
     DELETEDRECORDS: '{count} Datensätze wurden gelöscht.'
     IMPORT: 'CSV Import'
@@ -403,24 +426,35 @@ de:
     IsNullLabel: 'ist NULL'
   NumericField:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
     FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
   PhoneNumberField:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   RelationComplexTableField.ss:
     ADD: Hinzufügen
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Als CSV exportieren'
+    NOTFOUND: 'Keine Elemente gefunden.'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'
@@ -466,20 +500,20 @@ de:
     ISREQUIRED: 'In %s wird ''%s'' benötigt'
   TableField.ss:
     ADD: 'Eine neue Zeile hinzufügen'
-    ADDITEM: 'Add %s'
+    ADDITEM: '%s hinzufügen'
   TableListField:
     CSVEXPORT: 'Als CSV-Datei exportieren'
     PRINT: drucken
     Print: Drucken
     SELECT: 'Auswählen:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Keine Elemente gefunden'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+    DISPLAYING: Zeige
+    OF: von
+    TO: bis
     VIEWFIRST: 'Ersten anzeigen'
     VIEWLAST: 'Letzten anzeigen'
     VIEWNEXT: 'Nächsten anzeigen'
@@ -493,25 +527,26 @@ de:
     ATTACHFILE: 'Datei anhängen'
     ATTACHFILES: 'Dateien anhängen'
     AttachFile: 'Dateien anhängen'
-    DELETE: 'Delete from files'
+    DELETE: 'Aus Dateien löschen'
     DELETEINFO: 'Löscht die Datei dauerhaft aus dem Dateisystem'
     DOEDIT: Speichern
     DROPFILE: 'Datei hier ablegen'
     DROPFILES: 'Dateien hier ablegen'
     Dimensions: Dimensionen
-    EDIT: Edit
+    EDIT: Bearbeiten
     EDITINFO: 'Diese Datei bearbeiten'
     FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     FROMCOMPUTER: 'Von Ihrem Computer'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Aus Dateien auswählen'
     FROMFILES: 'Von "Dateien"'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Maximale Anzahl an {count}  Datei(en) überschritten'
     MAXNUMBEROFFILESSHORT: 'SIe können maximal {count} Datei(en) hochladen'
     REMOVE: Entfernen
     REMOVEERROR: 'Fehler beim Entfernen der Datei'
     REMOVEINFO: 'Entfernt die Datei von hier, löscht Sie aber nicht aus dem Dateisystem.'
     STARTALL: 'Alle starten'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Alle Uploads starten'
     Saved: Gespeichert
   Versioned:
     has_many_Versions: Versionen

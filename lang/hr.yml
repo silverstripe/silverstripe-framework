@@ -1,5 +1,7 @@
 hr:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Novi direktorij'
   AssetTableField:
     CREATED: Uploadano
@@ -127,6 +129,8 @@ hr:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ hr:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Pozdrav
     TEXT1: 'Ovdje je vaš'
@@ -173,6 +180,7 @@ hr:
     TEXT3: za
   Form:
     FIELDISREQUIRED: '%s je obavezan'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Unesena vrijednost nije unikatna'
     VALIDATIONPASSWORDSDONTMATCH: 'Lozine se ne slažu'
@@ -220,8 +228,10 @@ hr:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Zaključano?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Roditeljska grupa'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: Dozvole
     many_many_Members: Članovi
@@ -263,7 +273,7 @@ hr:
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: 'Širina'
+    IMAGEWIDTHPX: Širina
     INSERTMEDIA: 'Insert Media'
     LINK: 'Ubaci/editiraj link za označeni tekst'
     LINKANCHOR: 'Anchor on this page'
@@ -278,8 +288,14 @@ hr:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe za upload slike'
   LeftAndMain:
@@ -302,6 +318,8 @@ hr:
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -311,6 +329,7 @@ hr:
     BUTTONLOSTPASSWORD: 'Zaboraljena lozinka'
     CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
     CONFIRMPASSWORD: 'Potvrdi lozinku'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: Email
@@ -333,6 +352,7 @@ hr:
     SUBJECTPASSWORDCHANGED: 'Vaša lozinka je promjenjena'
     SUBJECTPASSWORDRESET: 'Link za reset lozinke'
     SURNAME: Prezime
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Već postoji korisnik sa tim Emailom'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -348,6 +368,7 @@ hr:
     TITLE: 'E-mail &amp; Lozinka'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +394,11 @@ hr:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -403,16 +426,27 @@ hr:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
@@ -505,6 +539,7 @@ hr:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

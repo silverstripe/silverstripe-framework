@@ -1,5 +1,7 @@
 uk:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Нова Тека'
   AssetTableField:
     CREATED: 'Вперше завантажено'
@@ -8,7 +10,7 @@ uk:
     FOLDER: Folder
     LASTEDIT: 'Востаннє змінено'
     OWNER: Власник
-    SIZE: 'Розмір'
+    SIZE: Розмір
     TITLE: Назва
     TYPE: Тип
     URL: URL
@@ -111,8 +113,8 @@ uk:
     DAYS: дні
     HOUR: година
     HOURS: годин
-    MIN: 'хв'
-    MINS: 'хв'
+    MIN: хв
+    MINS: хв
     MONTH: місяць
     MONTHS: місяці
     SEC: сек
@@ -127,6 +129,8 @@ uk:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ uk:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Привіт
     TEXT1: 'Here is your'
@@ -173,6 +180,7 @@ uk:
     TEXT3: for
   Form:
     FIELDISREQUIRED: '%s є необхідним'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Введене значання не унікальне'
     VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
@@ -220,8 +228,10 @@ uk:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Заблокувати?'
     NoRoles: 'Ролі не знайдені'
+    PLURALNAME: Groups
     Parent: 'Батьківська група'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Порядок сортування'
     has_many_Permissions: Права
     many_many_Members: Члени
@@ -258,7 +268,7 @@ uk:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Альтернативний текст (alt) - відображається якщо зображення не відображається'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: 'Розміри'
+    IMAGEDIMENSIONS: Розміри
     IMAGEHEIGHTPX: Висота
     IMAGETITLE: 'Текст заголовку (tooltip) - для додаткової інформації про зображення'
     IMAGETITLETEXT: 'Title text (tooltip)'
@@ -278,8 +288,14 @@ uk:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Зображення
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'АйФрейм завантаження зображення'
   LeftAndMain:
@@ -302,6 +318,8 @@ uk:
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -311,6 +329,7 @@ uk:
     BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
     CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
     CONFIRMPASSWORD: 'Підтвердіть пароль'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: типовий
     EMAIL: Е-пошта
@@ -333,6 +352,7 @@ uk:
     SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
     SUBJECTPASSWORDRESET: 'Посилання на відновлення Вашого паролю'
     SURNAME: Прізвище
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Вже існує користувач з таким email'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -348,6 +368,7 @@ uk:
     TITLE: 'Е-пошта та Пароль'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +394,11 @@ uk:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Імпортувати з CSV'
@@ -403,16 +426,27 @@ uk:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
@@ -449,9 +483,9 @@ uk:
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Нова Група'
     PERMISSIONS: Дозволи
-    ROLES: 'Ролі'
+    ROLES: Ролі
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: 'Ролі'
+    TABROLES: Ролі
     Users: Користувачі
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
@@ -505,6 +539,7 @@ uk:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'З файлів'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
