@@ -1,5 +1,7 @@
 fr:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nouveau dossier'
   AssetTableField:
     CREATED: 'Premier chargement'
@@ -127,6 +129,8 @@ fr:
     VALIDDATEFORMAT2: 'Saisissez la date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle qui a été autorisée ({date})'
     VALIDDATEMINDATE: 'La date doit être plus récente ou égale à celle qui a été autorisée ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Requête non valide'
   DropdownField:
@@ -166,6 +170,9 @@ fr:
     TITLE: 'Iframe de chargement d’images'
   Filesystem:
     SYNCRESULTS: 'Synchronisation terminée&nbsp;: {createdcount} éléments créés, {deletedcount} éléments supprimés '
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Salut
     TEXT1: 'Voici votre'
@@ -173,6 +180,7 @@ fr:
     TEXT3: pour
   Form:
     FIELDISREQUIRED: '%s est requis'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'La valeur entrée n''est pas unique'
     VALIDATIONPASSWORDSDONTMATCH: 'Les mots de passe ne correspondent pas'
@@ -205,7 +213,7 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
   GridFieldDetailForm:
     Create: Créer
-    Delete: Supprime
+    Delete: Supprimer
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '%s %s supprimés'
     Save: Enregistrer
@@ -220,8 +228,10 @@ fr:
     GroupReminder: 'Si vous choisissez un groupe parent, le groupe actuel héritera de tous ses rôles'
     Locked: 'Verrouillé?'
     NoRoles: 'Aucun rôle n’a été trouvé'
+    PLURALNAME: Groups
     Parent: 'Groupe parent'
     RolesAddEditLink: 'Ajouter/éditer les rôles'
+    SINGULARNAME: Group
     Sort: 'Ordre de tri'
     has_many_Permissions: Autorisations
     many_many_Members: Membres
@@ -278,8 +288,14 @@ fr:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Mettre à jour le support audiovisuel'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Fenêtre de chargement d''images'
   LeftAndMain:
@@ -302,6 +318,8 @@ fr:
   LoginAttempt:
     Email: 'Adresse Email'
     IP: 'Adresse IP'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Statut
   Member:
     ADDGROUP: 'Ajouter un groupe'
@@ -311,6 +329,7 @@ fr:
     BUTTONLOSTPASSWORD: 'J''ai perdu mon mot de passe'
     CONFIRMNEWPASSWORD: 'Confirmer nouveau mot de passe'
     CONFIRMPASSWORD: 'Confirmer Mot De Passe'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrateur par défaut'
     DefaultDateTime: 'par défaut'
     EMAIL: Email
@@ -333,6 +352,7 @@ fr:
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
     SURNAME: 'Nom de famille'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Il existe déjà un membre avec cet email'
     ValidationIdentifierFailed: 'On ne peut pas réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
     WELCOMEBACK: 'Bienvenue {firstname}'
@@ -348,6 +368,7 @@ fr:
     TITLE: 'Email &amp; Mot de passe'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
+    'APPLY FILTER': 'Appliquer le filtre'
     Custom: Personnalisé
     DATEFORMATBAD: 'Format de date incorrect'
     DAYNOLEADING: 'Le jour du mois sans zéro initial'
@@ -373,9 +394,11 @@ fr:
     ResultDeleted: '%d membres supprimés'
     ResultNone: 'Aucun changements'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Appliquer le filtre'
     DELETE: Supprime
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importer de CSV'
@@ -403,16 +426,27 @@ fr:
     IsNullLabel: 'Est Null'
   NumericField:
     VALIDATION: '« {value} » n’est pas un chiffre, seule donnée acceptée dans ce champ '
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'Accès au CMS'
     FULLADMINRIGHTS: 'Droits d''administration complets'
     FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
     FromGroup: 'hérité du groupe « {title} »'
     FromRole: 'héritée du rôle « {title} »'
     FromRoleOnGroup: 'hérité du rôle "%s" du groupe "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rôles et autorisations d’accès'
   PhoneNumberField:
@@ -505,6 +539,7 @@ fr:
     FROMCOMPUTER: 'Depuis votre ordinateur'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Depuis les fichiers'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Le nombre maximal de {count} fichiers a été dépassé.'
     MAXNUMBEROFFILESSHORT: 'On ne peut pas télécharger plus de {count} fichiers'
     REMOVE: Supprimer

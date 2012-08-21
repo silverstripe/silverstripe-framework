@@ -1,5 +1,7 @@
 nb:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Ny Mappe'
   AssetTableField:
     CREATED: 'First uploaded'
@@ -127,6 +129,8 @@ nb:
     VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
     VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'
     VALIDDATEMINDATE: 'Din dato må være nyere eller i samsvar med minimum tillatte dato ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Ugyldig forespørsel'
   DropdownField:
@@ -166,6 +170,9 @@ nb:
     TITLE: 'Bildeopplastnings ramme'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hei
     TEXT1: 'Her er din'
@@ -173,6 +180,7 @@ nb:
     TEXT3: for
   Form:
     FIELDISREQUIRED: 'mangler %s'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
     VALIDATIONNOTUNIQUE: 'Den spesifiserte verdien er ikke unik'
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene passer ikke med hverandre'
@@ -220,8 +228,10 @@ nb:
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
     Locked: 'Låst?'
     NoRoles: 'Ingen roller funnet'
+    PLURALNAME: Groups
     Parent: 'Foreldre Gruppe'
     RolesAddEditLink: 'Administrer roller'
+    SINGULARNAME: Group
     Sort: Sorteringsrekkefølge
     has_many_Permissions: Tillatelser
     many_many_Members: Medlemmer
@@ -278,8 +288,14 @@ nb:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Oppdater Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Bilde
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Bildeopplasnings ramme'
   LeftAndMain:
@@ -302,6 +318,8 @@ nb:
   LoginAttempt:
     Email: Epostadresse
     IP: 'IP adresse'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Legg til en gruppe'
@@ -311,6 +329,7 @@ nb:
     BUTTONLOSTPASSWORD: 'Jeg har mistet passordet'
     CONFIRMNEWPASSWORD: 'Bekreft Nytt Passord'
     CONFIRMPASSWORD: 'Bekreft passord'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Standard admin'
     DefaultDateTime: Standard
     EMAIL: Epost
@@ -333,6 +352,7 @@ nb:
     SUBJECTPASSWORDCHANGED: 'Ditt passord har blitt endret'
     SUBJECTPASSWORDRESET: 'Link til passordannulering'
     SURNAME: Etternavn
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Det eksisterer allerede et medlem med denne epost-kontoen.'
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende medlem #{id} med identisk identifikator ({name})={value}))'
     WELCOMEBACK: 'Velkommen tilbake, {firstname}'
@@ -348,6 +368,7 @@ nb:
     TITLE: 'Epost &amp; Passord'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Legg til filter'
     Custom: Custom
     DATEFORMATBAD: 'Datoformat er ugyldig'
     DAYNOLEADING: 'Dag i måneden uten ledende null'
@@ -373,9 +394,11 @@ nb:
     ResultDeleted: 'Slettet %d medlemmer'
     ResultNone: 'Ingen endringer'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Legg til filter'
     DELETE: Slett
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importer fra CSV'
@@ -403,16 +426,27 @@ nb:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: CMS-tilgang
     FULLADMINRIGHTS: 'Fulle administrative rettigheter'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'tilordnet "{title}"'
     FromGroup: 'Arvet fra gruppe "{title}"'
     FromRole: 'arvet fra rolle "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rolle- og tilgangstillatelser'
   PhoneNumberField:
@@ -505,6 +539,7 @@ nb:
     FROMCOMPUTER: 'Fra din pc'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Fra filer'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Maks antall {count} fil(er) overskredet'
     MAXNUMBEROFFILESSHORT: 'Kan kun laste opp {count} filer'
     REMOVE: Fjern

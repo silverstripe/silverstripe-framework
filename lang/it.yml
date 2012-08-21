@@ -1,5 +1,7 @@
 it:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NuovaCartella
   AssetTableField:
     CREATED: 'Inizialmente caricato'
@@ -127,6 +129,8 @@ it:
     VALIDDATEFORMAT2: 'Inserisci un formato di data valido ({format})'
     VALIDDATEMAXDATE: 'La tua data deve essere più vecchia o uguale alla data massima consentita ({date})'
     VALIDDATEMINDATE: 'La tua data deve essere più nuova o uguale alla data minima consentita ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Richiesta non valida'
   DropdownField:
@@ -166,6 +170,9 @@ it:
     TITLE: 'Iframe per il caricamento dell''immagine'
   Filesystem:
     SYNCRESULTS: 'Sincronizzazione completata: {createdcount} elementi creati, {deletedcount} elementi eliminati'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Ciao
     TEXT1: 'Questa è la tua'
@@ -173,6 +180,7 @@ it:
     TEXT3: per
   Form:
     FIELDISREQUIRED: '%s è richiesto'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
     VALIDATIONNOTUNIQUE: 'Il valore inserito non è unico'
     VALIDATIONPASSWORDSDONTMATCH: 'Le password non corrispondono'
@@ -220,8 +228,10 @@ it:
     GroupReminder: 'Se scegli un gruppo padre, questo gruppo erediterà tutti i suoi ruoli.'
     Locked: 'Bloccato?'
     NoRoles: 'Nessun ruolo trovato'
+    PLURALNAME: Groups
     Parent: 'Gruppo padre'
     RolesAddEditLink: 'Gestisci ruoli'
+    SINGULARNAME: Group
     Sort: 'Tipo ordinamento'
     has_many_Permissions: Permessi
     many_many_Members: Membri
@@ -278,8 +288,14 @@ it:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
     UpdateMEDIA: 'Aggiorna Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Immagine
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe per l''inserimento dell''immagine'
   LeftAndMain:
@@ -302,6 +318,8 @@ it:
   LoginAttempt:
     Email: 'Indirizzo e-mail'
     IP: 'Indirizzo IP'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Stato
   Member:
     ADDGROUP: 'Aggiungi gruppo'
@@ -311,6 +329,7 @@ it:
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Amministratore Predefinito'
     DefaultDateTime: predefinito
     EMAIL: Email
@@ -333,6 +352,7 @@ it:
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Esiste già un utente con l''e-mail %s'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
     WELCOMEBACK: 'Bentornato, {firstname}'
@@ -348,6 +368,7 @@ it:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) o PM (Post meridiem)'
+    'APPLY FILTER': 'Applica filtro'
     Custom: Personalizza
     DATEFORMATBAD: 'Il formato della data non è valido'
     DAYNOLEADING: 'Giorno del mese senza zero iniziale'
@@ -373,9 +394,11 @@ it:
     ResultDeleted: 'Eliminati %d utenti'
     ResultNone: 'Nessun cambiamento'
     ResultUpdated: 'Aggiornati {count} utenti'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Applica filtro'
     DELETE: Elimina
     DELETEDRECORDS: 'Eliminati {count} record.'
     IMPORT: 'Importa da CSV'
@@ -403,16 +426,27 @@ it:
     IsNullLabel: 'è nullo.'
   NumericField:
     VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Amministratore
     CMS_ACCESS_CATEGORY: 'Accesso CMS'
     FULLADMINRIGHTS: 'Diritti di amministrazione'
     FULLADMINRIGHTS_HELP: 'Implica e annulla tutti gli altri permessi assegnati.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assegnato a "{title}"'
     FromGroup: 'ereditato dal gruppo "{title}"'
     FromRole: 'ereditato dal ruolo "{title}"'
     FromRoleOnGroup: 'ereditato dal ruolo "%s" nel gruppo "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
   PhoneNumberField:
@@ -505,6 +539,7 @@ it:
     FROMCOMPUTER: 'Dal tuo computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Dal CMS'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Numero massimo di {count} file ecceduto.'
     MAXNUMBEROFFILESSHORT: 'Puoi caricare solo {count} file'
     REMOVE: Rimuovi

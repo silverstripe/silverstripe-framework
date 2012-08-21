@@ -1,5 +1,7 @@
 zh_TW:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 新資料夾
   AssetTableField:
     CREATED: 第一次上傳
@@ -7,7 +9,7 @@ zh_TW:
     FILENAME: 檔案名稱
     FOLDER: Folder
     LASTEDIT: 最後一次更新
-    OWNER: '擁有者'
+    OWNER: 擁有者
     SIZE: 大小
     TITLE: 標題
     TYPE: 類型
@@ -53,8 +55,8 @@ zh_TW:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: '請輸入帳號密碼。'
-    ERRORNOTADMIN: '那個使用者不是管理員。'
+    ENTERINFO: 請輸入帳號密碼。
+    ERRORNOTADMIN: 那個使用者不是管理員。
     ERRORNOTREC: 那組帳號密碼不對。
   Boolean:
     0: 'False'
@@ -127,6 +129,8 @@ zh_TW:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -166,6 +170,9 @@ zh_TW:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: 您好
     TEXT1: 'Here is your'
@@ -173,9 +180,10 @@ zh_TW:
     TEXT3: for
   Form:
     FIELDISREQUIRED: '必須要填 %s'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: '您輸入的數值並不是獨特的。'
-    VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
+    VALIDATIONNOTUNIQUE: 您輸入的數值並不是獨特的。
+    VALIDATIONPASSWORDSDONTMATCH: 密碼不相配
     VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
@@ -220,8 +228,10 @@ zh_TW:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Locked?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: Permissions
     many_many_Members: Members
@@ -238,15 +248,15 @@ zh_TW:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: '插入連結'
+    BUTTONINSERTLINK: 插入連結
     BUTTONREMOVELINK: 移除連結
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 對齊/樣式
     CSSCLASSCENTER: 獨立置中
-    CSSCLASSLEFT: '靠左被字包圍。'
+    CSSCLASSLEFT: 靠左被字包圍。
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: '靠右被字包圍。'
+    CSSCLASSRIGHT: 靠右被字包圍。
     DETAILS: Details
     EMAIL: 電子郵件地址
     FILE: 檔案
@@ -265,7 +275,7 @@ zh_TW:
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: 寬
     INSERTMEDIA: 'Insert Media'
-    LINK: '插入或編輯選取的連結'
+    LINK: 插入或編輯選取的連結
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 連結敘述
     LINKEMAIL: 電子郵件地址
@@ -274,12 +284,18 @@ zh_TW:
     LINKINTERNAL: 此網站
     LINKOPENNEWWIN: 在新視窗打開連結
     LINKTO: 連結至
-    PAGE: '網頁'
+    PAGE: 網頁
     URL: 網址
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 圖片上載iFrame
   LeftAndMain:
@@ -287,11 +303,11 @@ zh_TW:
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: 說明
-    PAGETYPE: '網頁類型：'
-    PERMAGAIN: '您已被登出，請在下面重新登入。'
-    PERMALREADY: '抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。'
-    PERMDEFAULT: '請選擇一個認證方法並登入。'
-    PLEASESAVE: '請儲存：這個網頁沒有被更新因為尚未被儲存。'
+    PAGETYPE: 網頁類型：
+    PERMAGAIN: 您已被登出，請在下面重新登入。
+    PERMALREADY: 抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。
+    PERMDEFAULT: 請選擇一個認證方法並登入。
+    PLEASESAVE: 請儲存：這個網頁沒有被更新因為尚未被儲存。
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -302,22 +318,25 @@ zh_TW:
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 更改密碼
-    BUTTONLOGIN: '登入'
-    BUTTONLOGINOTHER: '用別的帳戶登入'
+    BUTTONLOGIN: 登入
+    BUTTONLOGINOTHER: 用別的帳戶登入
     BUTTONLOSTPASSWORD: 忘記密碼
     CONFIRMNEWPASSWORD: 確認新密碼
     CONFIRMPASSWORD: 確認密碼
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 電子郵件
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: '新密碼不相配，請再試一次。'
+    ERRORNEWPASSWORD: 新密碼不相配，請再試一次。
     ERRORPASSWORDNOTMATCH: 舊密碼不對，請再試一次。
     ERRORWRONGCRED: 密碼或電子郵件地址錯誤。請再是一次。
     FIRSTNAME: 名
@@ -333,6 +352,7 @@ zh_TW:
     SUBJECTPASSWORDCHANGED: 密碼更改成功。
     SUBJECTPASSWORDRESET: 密碼重設
     SURNAME: 姓
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 已經有人使用此電子郵件地址
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -348,6 +368,7 @@ zh_TW:
     TITLE: '電子郵件 &amp; 密碼'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +394,11 @@ zh_TW:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
@@ -403,16 +426,27 @@ zh_TW:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
@@ -422,17 +456,17 @@ zh_TW:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
+    ALREADYLOGGEDIN: 你不能瀏覽此頁。請用別的帳戶登入。
     BUTTONSEND: 寄給我密碼重設網址。
     CHANGEPASSWORDBELOW: 請在下面更改密碼。
     CHANGEPASSWORDHEADER: 更改密碼
-    ENTERNEWPASSWORD: '請輸入新的密碼。'
-    ERRORPASSWORDPERMISSION: '你必須先登入才能改密碼！'
-    LOGGEDOUT: '你已登出。您在下面再登入一次。'
+    ENTERNEWPASSWORD: 請輸入新的密碼。
+    ERRORPASSWORDPERMISSION: 你必須先登入才能改密碼！
+    LOGGEDOUT: 你已登出。您在下面再登入一次。
     LOGIN: 'Log in'
-    NOTEPAGESECURED: '那的網頁是被保護的。請先登入。'
+    NOTEPAGESECURED: 那的網頁是被保護的。請先登入。
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
+    NOTERESETPASSWORD: 請輸入您的電子郵件。我們將寄給你重設密媽的網址。
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -505,6 +539,7 @@ zh_TW:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove

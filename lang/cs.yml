@@ -1,5 +1,7 @@
 cs:
   AssetAdmin:
+    ADDFILES: 'Přidat soubory'
+    EditOrgMenu: 'Editovat &amp; organizovat'
     NEWFOLDER: 'Nová složka'
   AssetTableField:
     CREATED: 'Poprvé nahráno'
@@ -127,6 +129,8 @@ cs:
     VALIDDATEFORMAT2: 'Prosím zadejte platný formát datumu ({format})'
     VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající miximu povoleného datumu ({date})'
     VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
+  DatetimeField:
+    NOTSET: Nenastaveno
   Director:
     INVALID_REQUEST: 'Neplatný požadavek'
   DropdownField:
@@ -166,6 +170,9 @@ cs:
     TITLE: 'Rámec pro nahrání obrázku'
   Filesystem:
     SYNCRESULTS: 'Synchronizace kompletní: {createdcount} položek vytvořeno, {deletedcount} položek smazanáno'
+  Folder:
+    PLURALNAME: Složky
+    SINGULARNAME: Složka
   ForgotPasswordEmail.ss:
     HELLO: Ahoj
     TEXT1: 'Zde je váš'
@@ -173,6 +180,7 @@ cs:
     TEXT3: pro
   Form:
     FIELDISREQUIRED: '%s je požadováno.'
+    SubmitBtnLabel: Jdi
     VALIDATIONCREDITNUMBER: 'Prosím ujistěte se, že jste zadal/a {number} číslo kreditní karty správně'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota není unikátní'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla se neshodují'
@@ -220,8 +228,10 @@ cs:
     GroupReminder: 'Když vyberete nadřizenou skupinu, tato skupina bude mít všechny její role'
     Locked: 'Zamčený?'
     NoRoles: 'Žádné role'
+    PLURALNAME: Skupiny
     Parent: 'Rodičovská skupina'
     RolesAddEditLink: 'Přidat/editovat role'
+    SINGULARNAME: Skupina
     Sort: Řazení
     has_many_Permissions: Oprávnění
     many_many_Members: Členové
@@ -278,8 +288,14 @@ cs:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Aktualizovat média'
+  Image:
+    PLURALNAME: Soubory
+    SINGULARNAME: Soubor
   ImageField:
     IMAGE: Obrázek
+  Image_Cached:
+    PLURALNAME: Soubory
+    SINGULARNAME: Soubor
   Image_iframe.ss:
     TITLE: 'Rámec pro nahrání obrázku'
   LeftAndMain:
@@ -302,6 +318,8 @@ cs:
   LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
+    PLURALNAME: 'Pokusy přihlášení'
+    SINGULARNAME: 'Pokus přihlášení'
     Status: Stav
   Member:
     ADDGROUP: 'Přidat skupinu'
@@ -311,6 +329,7 @@ cs:
     BUTTONLOSTPASSWORD: 'Zapomněl jsem heslo'
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
+    DATEFORMAT: 'Formát datumu'
     DefaultAdminFirstname: 'Implicitní Admin'
     DefaultDateTime: implicitní
     EMAIL: Email
@@ -333,6 +352,7 @@ cs:
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bylo změněno'
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
     SURNAME: Příjmení
+    TIMEFORMAT: 'Formát času'
     VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejnou %s'
     ValidationIdentifierFailed: 'Nemůžete přepsat existujícího člena #{id} s identickým identifikátorem ({name} = {value}))'
     WELCOMEBACK: 'Vítejte zpět, {firstname}'
@@ -348,6 +368,7 @@ cs:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
+    'APPLY FILTER': 'Použít filtr'
     Custom: Vlastní
     DATEFORMATBAD: 'Formát datumu není platný'
     DAYNOLEADING: 'Den měsíce bez úvodní nuly'
@@ -373,9 +394,11 @@ cs:
     ResultDeleted: 'Smazáno %d členů'
     ResultNone: 'Žádné změny'
     ResultUpdated: 'Aktualizováno {count} členů'
+  MemberPassword:
+    PLURALNAME: 'Členské hesla'
+    SINGULARNAME: 'Členské heslo'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Použít filtr'
     DELETE: Smazat
     DELETEDRECORDS: 'Smazáno {count} záznamů.'
     IMPORT: 'Importovat ze souboru CSV'
@@ -403,16 +426,27 @@ cs:
     IsNullLabel: 'Je nulové'
   NumericField:
     VALIDATION: '''{value}'' není číslo, pouze čísla mohou být akceptována pro toto pole'
+  Pagination:
+    Page: Stránka
+    View: Zobrazit
   Permission:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Přístup CMS'
     FULLADMINRIGHTS: 'Plná administrátorská práva'
     FULLADMINRIGHTS_HELP: 'Znamená, a přepíše všechny ostatní přidělená oprávnění.'
+    PLURALNAME: Oprávnění
+    SINGULARNAME: Oprávnění
   PermissionCheckboxSetField:
     AssignedTo: 'přiděleno "{title}"'
     FromGroup: 'zděděno ze skupiny "{title}"'
     FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
+  PermissionRole:
+    PLURALNAME: Role
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Kódy oprávnění role'
+    SINGULARNAME: 'Kód oprávnění role'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a přístupová práva'
   PhoneNumberField:
@@ -470,7 +504,7 @@ cs:
   TableListField:
     CSVEXPORT: 'Exportovat do souboru CSV'
     PRINT: Vytisknout
-    Print: Print
+    Print: Vytisknout
     SELECT: 'Vybrat:'
   TableListField.ss:
     NOITEMSFOUND: 'Žádné položky'
@@ -505,6 +539,7 @@ cs:
     FROMCOMPUTER: 'Z vašeho počítače'
     FROMCOMPUTERINFO: 'Vyberte ze souborů'
     FROMFILES: 'Ze souborů'
+    HOTLINKINFO: 'Info: Tento obrázek bude "hotlinkován". Ujistěte se prosím, že máte oprávnění od původního tvůrce webu, aby se tak stalo.'
     MAXNUMBEROFFILES: 'Maximální počet {count} soubor(ů) překročen.'
     MAXNUMBEROFFILESSHORT: 'Můžete nahrát pouze {count} souborů'
     REMOVE: Odstranit

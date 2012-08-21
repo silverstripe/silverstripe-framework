@@ -384,7 +384,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		
 		$form->sessionMessage($message, 'good');
 
-		return Controller::curr()->redirect($this->Link());
+		if($new_record) {
+			return Controller::curr()->redirect($this->Link());
+		} else {
+			// Return new view, as we can't do a "virtual redirect" via the CMS Ajax
+			// to the same URL (it assumes that its content is already current, and doesn't reload)
+			return $this->edit(Controller::curr()->getRequest());
+		}
 	}
 
 	function doDelete($data, $form) {

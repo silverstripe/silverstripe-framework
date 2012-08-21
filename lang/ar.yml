@@ -1,5 +1,7 @@
 ar:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'مجلد جديد'
   AssetTableField:
     CREATED: 'أول المرفوعات'
@@ -7,8 +9,8 @@ ar:
     FILENAME: 'اسم الملف'
     FOLDER: Folder
     LASTEDIT: 'آخر التعديلات'
-    OWNER: 'المالك'
-    SIZE: 'الحجم'
+    OWNER: المالك
+    SIZE: الحجم
     TITLE: العنوان
     TYPE: النوع
     URL: الرابط
@@ -26,7 +28,7 @@ ar:
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: 'المحاذاة'
+    ALIGNEMENT: المحاذاة
     ALIGNEMENTEXAMPLE: 'محاذاة إلى اليمين'
     BOLD: 'خط عريض'
     BOLDEXAMPLE: عريض
@@ -40,7 +42,7 @@ ar:
     IMAGE: الصورة
     IMAGEDESCRIPTION: 'عرض الصورة في الموضوع'
     ITALIC: 'خط مائل'
-    ITALICEXAMPLE: 'مائل'
+    ITALICEXAMPLE: مائل
     LINK: 'رابط الموقع'
     LINKDESCRIPTION: 'رابط إلى موقع آخر'
     STRUCK: 'خط في المنتصف'
@@ -107,8 +109,8 @@ ar:
     PLURALNAME: 'بيانات كائن'
     SINGULARNAME: 'بيانات كائن'
   Date:
-    DAY: 'اليوم'
-    DAYS: 'الأيام'
+    DAY: اليوم
+    DAYS: الأيام
     HOUR: ساعة
     HOURS: ساعات
     MIN: دقيقة
@@ -123,10 +125,12 @@ ar:
     YEARS: السنوات
   DateField:
     NOTSET: 'غير محدد'
-    TODAY: 'اليوم'
+    TODAY: اليوم
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -139,15 +143,15 @@ ar:
   Enum:
     ANY: أي
   File:
-    Content: 'المحتوى'
+    Content: المحتوى
     Filename: 'اسم الملف'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'حجم الملف 0 بايت'
     NOVALIDUPLOAD: 'نوع الملف غير قابل للرفع'
-    Name: 'الاسم'
-    PLURALNAME: 'الملفات'
-    SINGULARNAME: 'الملف'
+    Name: الاسم
+    PLURALNAME: الملفات
+    SINGULARNAME: الملف
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: العنوان
@@ -157,7 +161,7 @@ ar:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: 'ملف'
+    FILE: ملف
     FROMCOMPUTER: 'من جهازك الشخصي'
     FROMFILESTORE: 'من مكتبة الملفات'
     NOSOURCE: 'الرجاء اختيارمصدر ملف المرفق'
@@ -166,6 +170,9 @@ ar:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hi
     TEXT1: 'Here is your'
@@ -173,12 +180,13 @@ ar:
     TEXT3: for
   Form:
     FIELDISREQUIRED: '%s مطلوب'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'القيمة المدخلة غير فريدة و قابلة للتكرار '
     VALIDATIONPASSWORDSDONTMATCH: 'رقم المرور غير صحيح'
     VALIDATIONPASSWORDSNOTEMPTY: 'أرقام المرور لا يمكن أن تكون فارغة'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: 'المحقق'
+    VALIDATOR: المحقق
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
     NONE: لايوجد
@@ -220,8 +228,10 @@ ar:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'مغلق ؟'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'المجموعة الرئيسة'
     RolesAddEditLink: 'قوانين التعديل/الإضافة'
+    SINGULARNAME: Group
     Sort: ترتيب
     has_many_Permissions: الصلاحيات
     many_many_Members: الأعضاء
@@ -249,8 +259,8 @@ ar:
     CSSCLASSRIGHT: 'إلى اليمين ، مع التفاف النص'
     DETAILS: Details
     EMAIL: 'بريد إلكتروني'
-    FILE: 'ملف'
-    FOLDER: 'المجلد'
+    FILE: ملف
+    FOLDER: المجلد
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
@@ -278,15 +288,21 @@ ar:
     URL: رابط
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: الصورة
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: 'مساعدة'
+    HELP: مساعدة
     PAGETYPE: 'نوع الصفحة:'
     PERMAGAIN: 'تم خروجك من النظام بنجاح. للدخول مرة أخرى أدحل البريد الإلكتروني و الرقم السري بالأسفل'
     PERMALREADY: 'عذراً , لكن لا يمكنك الوصول لهذا القسم من النظام. يتوجب عليك الدخول بصلاحية أخرى'
@@ -302,6 +318,8 @@ ar:
   LoginAttempt:
     Email: 'عنوان البريد الإلكتروني'
     IP: 'عنوان IP'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: الحالة
   Member:
     ADDGROUP: 'Add group'
@@ -311,6 +329,7 @@ ar:
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'المدير الافتراضي'
     DefaultDateTime: default
     EMAIL: 'البريد الإلكتروني'
@@ -333,11 +352,12 @@ ar:
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'
     SURNAME: 'اسم العائلة'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'يوجد عضو مسجل بهذا البريد الإلكتروني من قبل'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'رقم المرور السابق'
-    belongs_many_many_Groups: 'المجموعات'
+    belongs_many_many_Groups: المجموعات
     db_LastVisited: 'تاريخ آخر زيارة'
     db_Locale: 'واجهة الموقع'
     db_LockedOutUntil: 'مغلق حتى تاريخ'
@@ -348,6 +368,7 @@ ar:
     TITLE: 'البريد الإلكتروني &amp; كلمة المرور'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -373,9 +394,11 @@ ar:
     ResultDeleted: 'حذف %d أعضاء'
     ResultNone: 'بدون تغيير'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    'APPLY FILTER': 'Apply Filter'
     DELETE: حذف
     DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'استيراد من CSV'
@@ -397,22 +420,33 @@ ar:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT: 'الكمية'
-    FIELDLABELCURRENCY: 'العملة'
+    FIELDLABELAMOUNT: الكمية
+    FIELDLABELCURRENCY: العملة
   NullableField:
     IsNullLabel: باطل
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: الإدارة
     CMS_ACCESS_CATEGORY: 'الوصل لنظام إدارة المحتوى'
     FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
     FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'توريث من القاعدة "%s"  على المجموعة "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'تصاريح القاعدة والوصول'
   PhoneNumberField:
@@ -470,7 +504,7 @@ ar:
   TableListField:
     CSVEXPORT: 'تصدير إلى CSV'
     PRINT: طباعة
-    Print: Print
+    Print: طباعة
     SELECT: اختيار
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -505,6 +539,7 @@ ar:
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
