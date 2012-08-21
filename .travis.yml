@@ -8,11 +8,12 @@ env:
  - TESTDB=MYSQL
  - TESTDB=PGSQL
 
-exclude:
-  - php: 5.4
-    env: TESTDB=PGSQL
-  - php: 5.4
-    env: TESTDB=SQLITE
+matrix:
+  exclude:
+    - php: 5.4
+      env: TESTDB=PGSQL
+    - php: 5.4
+      env: TESTDB=SQLITE
 
 before_script:
  - ./tests/travis/before_script ~/builds/ss 
