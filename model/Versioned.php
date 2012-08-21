@@ -228,6 +228,7 @@ class Versioned extends DataExtension {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
+			$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
 			
 			// latest_version has one more step
 			// Return latest version instances, regardless of whether they are on a particular stage
