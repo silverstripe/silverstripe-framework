@@ -14,11 +14,12 @@ class GreaterThanFilter extends SearchFilter {
 	 */
 	public function apply(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		return $query->where(sprintf(
-			"%s > '%s'",
-			$this->getDbName(),
-			Convert::raw2sql($this->getDbFormattedValue())
-		));
+		$value = $this->getDbFormattedValue();
+
+		if(is_numeric($value)) $filter = sprintf("%s > %s", $this->getDbName(), Convert::raw2sql($value));
+		else $filter = sprintf("%s > '%s'", $this->getDbName(), Convert::raw2sql($value));
+		
+		return $query->where($filter);
 	}
 	
 	public function isEmpty() {
