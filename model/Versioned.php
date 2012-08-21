@@ -181,8 +181,28 @@ class Versioned extends DataExtension {
 				}
 			}
 			break;
-			
-		
+
+		// Reading a specific stage, but only return items that aren't in any other stage
+		case 'stage_unique':
+			$stage = $dataQuery->getQueryParam('Versioned.stage');
+
+			// Recurse to do the default stage behavior (must be first, we rely on stage renaming happening before below)
+			$dataQuery->setQueryParam('Versioned.mode', 'stage');
+			$this->augmentSQL($query, $dataQuery);
+
+			// Now exclude any ID from any other stage. Note that we double rename to avoid the regular stage rename
+			// renaming all subquery references to be Versioned.stage
+			foreach($this->stages as $excluding) {
+				if ($excluding == $stage) continue;
+
+				$tempName = 'ExclusionarySource_'.$excluding;
+				$excludingTable = $baseTable . ($excluding && $excluding != $this->defaultStage ? "_$excluding" : '');
+
+				$query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT ID FROM "'.$tempName.'")');
+				$query->renameTable($tempName, $excludingTable);
+			}
+			break;
+
 		// Return all version instances	
 		case 'all_versions':
 		case 'latest_versions':
