@@ -127,7 +127,9 @@
 					var id = $('.cms-edit-form :input[name=ID]').val();
 					// TODO Trigger by implementing and inspecting "changed records" metadata 
 					// sent by form submission response (as HTTP response headers)
-					this.updateNodesFromServer([id]);
+					// Ensure a parent-node's children are reloaded from the server and show-up in the tree
+					ids = this.refreshRecordIds([id]);
+					this.updateNodesFromServer(ids);
 				}
 			},
 
@@ -362,7 +364,7 @@
 									self.jstree('select_node', node);
 									// Manually correct state, which checks for children and
 									// removes toggle arrow (should really be done by jstree internally)
-									self.jstree('correct_state', node);	
+									self.jstree('refresh', node);
 								}, 500);
 							} else {
 								includesNewNode = true;
@@ -385,6 +387,27 @@
 						self.setIsUpdatingTree(false);
 					}
 				});				
+			},
+			
+			/*
+			 * Ensures that a node's child-nodes are reloaded from the server to, and show-up in the tree after editing the parent
+			 *
+			 * Parameters:
+			 *  (Mixed) A single numeric node ID or an Array object of node Ids. Usually comes from the current node being edited.
+			 */
+			refreshRecordIds: function(ids) {
+				if(typeof ids !== 'object') {
+					ids = [id];
+				}
+				// Child nodes not auto-updated after saving; Likely due to individual Ids _not_ being passed to updateNodesFromServer()
+				$('#record-'+ids[0]+' ul>li').each(function() {
+					ids.push(this.id.split('-')[1]);
+				});
+				// Duplicate Ids are occasionally seen coming upstream from the server - until this is attended-to, ensure these are unique:
+				ids = $.grep(ids,function(v, k){
+					return $.inArray(v,ids) === k;
+				});	
+				return ids;
 			}
 
 		});

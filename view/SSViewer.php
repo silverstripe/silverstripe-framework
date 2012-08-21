@@ -810,22 +810,16 @@ class SSViewer {
 			$template = $this->chosenTemplates[$key];
 		}
 		
-		if(isset($_GET['debug_profile'])) Profiler::mark("SSViewer::process", " for $template");
 		$cacheFile = TEMP_FOLDER . "/.cache" . str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
-
 		$lastEdited = filemtime($template);
 
 		if(!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited || isset($_GET['flush'])) {
-			if(isset($_GET['debug_profile'])) Profiler::mark("SSViewer::process - compile", " for $template");
-			
 			$content = file_get_contents($template);
 			$content = SSViewer::parseTemplateContent($content, $template);
 			
 			$fh = fopen($cacheFile,'w');
 			fwrite($fh, $content);
 			fclose($fh);
-
-			if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process - compile", " for $template");
 		}
 
 		$underlay = array('I18NNamespace' => basename($template));
@@ -846,8 +840,6 @@ class SSViewer {
 		
 		array_pop(SSViewer::$topLevel);
 
-		if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process", " for $template");
-		
 		// If we have our crazy base tag, then fix # links referencing the current page.
 		if($this->rewriteHashlinks && self::$options['rewriteHashlinks']) {
 			if(strpos($output, '<base') !== false) {
