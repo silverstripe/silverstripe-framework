@@ -2,7 +2,7 @@
 
 ## Introduction ##
 
-Every time you add a new extension of the `api:LeftAndMain` class to the CMS, SilverStripe will automatically
+Every time a new extension of the `api:LeftAndMain` class is added to the CMS, SilverStripe will automatically
 create a new menu-item for it, title and the default 'cogs' icon included.
 But we can easily change that behaviour by using the static `$menu-title` and `$menu-icon` variables to
 provide a custom title and icon.
