@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
@@ -244,8 +244,8 @@
 							<h3 class="sectionHeading">Theme selection <small>Step 4 of 5</small></h3>
 							<p class="helpText">You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
 							<ul id="Themes">
-								<li><input type="radio" name="template" value="simple" id="Simple" <?php if(!isset($_POST['template']) || $_POST['template'] == 'simple') {?>checked="checked"<?php }?>><label for="Simple"><a href="https://github.com/silverstripe-themes/silverstripe-simple">Simple</a> - our default theme ready to use.</label></li>
-								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/sapphire/en/tutorials" target="_blank">tutorial</a>.</label></li>
+								<li><input type="radio" name="template" value="simple" id="Simple" <?php if(!isset($_POST['template']) || $_POST['template'] == 'simple') {?>checked="checked"<?php }?>><label for="Simple"><a href="https://github.com/silverstripe-themes/silverstripe-simple">Simple</a> - our default theme ready to use, or begin the <a href="http://doc.silverstripe.org/sapphire/en/tutorials" target="_blank">tutorial</a>.</label></li>
+								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template</label></li>
 							</ul>
 							<h3 class="sectionHeading" id="install">Confirm Install <small>Step 5 of 5</small></h3>
 							
