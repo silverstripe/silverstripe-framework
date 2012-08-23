@@ -2472,20 +2472,33 @@ class i18n extends Object implements TemplateGlobalProvider {
 			$cache = Zend_Translate::getCache();
 			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		}
-		
-		// Sort modules by inclusion priority, then alphabetically
-		// TODO Should be handled by priority flags within modules
-		$prios = array('sapphire' => 10, 'framework' => 10, 'admin' => 11, 'cms' => 12, project() => 90);
+
+		// Get list of module => path pairs, and then just the names
 		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
-		ksort($modules);
-		uksort(
-			$modules,
-			function($a, $b) use(&$prios) {
-				$prioA = (isset($prios[$a])) ? $prios[$a] : 50;
-				$prioB = (isset($prios[$b])) ? $prios[$b] : 50;
-				return ($prioA > $prioB);
-			}
-		);
+		$moduleNames = array_keys($modules);
+
+		// Remove the "project" module from the list - we'll add it back specially later if needed
+		global $project;
+		if (($idx = array_search($project, $moduleNames)) !== false) array_splice($moduleNames, $idx, 1);
+
+		// Get the order from the config syste,
+		$order = Config::inst()->get('i18n', 'module_priority');
+
+		// Find all modules that don't have their order specified by the config system
+		$unspecified = array_diff($moduleNames, $order);
+
+		// If the placeholder "other_modules" exists in the order array, replace it by the unspecified modules
+		if (($idx = array_search('other_modules', $order)) !== false) array_splice($order, $idx,  1, $unspecified);
+		// Otherwise just jam them on the front
+		else array_splice($order, 0, 0, $unspecified);
+
+		// Put the project module back in at the begining if it wasn't specified by the config system
+		if (!in_array($project, $order)) array_unshift($order, $project);
+
+		$sortedModules = array();
+		foreach ($order as $module) {
+			if (isset($modules[$module])) $sortedModules[$module] = $modules[$module];
+		}
 
 		// Loop in reverse order, meaning the translator with the highest priority goes first
 		$translators = array_reverse(self::get_translators(), true);
@@ -2494,7 +2507,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 				$adapter = $translator->getAdapter();
 
 				// Load translations from modules
-				foreach($modules as $module) {
+				foreach($sortedModules as $module) {
 					$filename = $adapter->getFilenameForLocale($locale);
 					$filepath = "{$module}/lang/" . $filename;
 

@@ -1,0 +1,15 @@
+---
+Name: basei18n
+Before: '/i18n'
+---
+i18n:
+  module_priority:
+    - admin
+    - framework
+    - sapphire
+---
+Name: defaulti18n
+---
+i18n:
+  module_priority:
+    - other_modules
