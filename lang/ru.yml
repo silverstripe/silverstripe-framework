@@ -63,10 +63,10 @@ ru:
     ANY: Any
     1: 'True'
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: 'Идет загрузка...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'Доступ к разделу ''{title}'''
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Сохранить
@@ -94,9 +94,9 @@ ru:
     NEXT: Следующ.
     PREVIOUS: Предыдущ.
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
+    ATLEAST: 'Пароль должен быть не короче {min} символов.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
     SHOWONCLICKTITLE: 'Изменить Пароль'
   CreditCardField:
     FIRST: первая
@@ -119,7 +119,7 @@ ru:
     MONTHS: месяца(ев)
     SEC: сек.
     SECS: сек.
-    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFAGO: '{difference} назад'
     TIMEDIFFIN: 'in {difference}'
     YEAR: год
     YEARS: лет
@@ -132,7 +132,7 @@ ru:
   DatetimeField:
     NOTSET: 'Not set'
   Director:
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Неверный запрос'
   DropdownField:
     CHOOSE: (Выберите)
   EmailField:
@@ -141,7 +141,7 @@ ru:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
-    ANY: Any
+    ANY: Любой
   File:
     Content: Содержание
     Filename: 'Имя файла'
@@ -169,7 +169,7 @@ ru:
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS: 'Синхронизация завершена; создано элементов: {createdcount}, удалено элементов: {deletedcount}'
   Folder:
     PLURALNAME: Folders
     SINGULARNAME: Folder
@@ -195,35 +195,35 @@ ru:
     Delete: Delete
     UnlinkRelation: Unlink
   GridField:
-    Add: 'Add {name}'
+    Add: 'Добавить {name}'
     Filter: Filter
-    FilterBy: 'Filter by '
+    FilterBy: 'Фильтровать по'
     Find: Find
-    LEVELUP: 'Level up'
+    LEVELUP: 'Уровень выше'
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
     NoItemsFound: 'No items found'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find {type}'
+    PlaceHolder: 'Найти {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
-    Create: Create
+    Create: Создать
     Delete: Удалить
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
+    Save: Сохранить
+    Saved: 'Сохранено %s %s'
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Добавить роль для этой группы'
     Code: 'Код группы'
     DefaultGroupTitleAdministrators: Администраторы
-    DefaultGroupTitleContentAuthors: 'Content Authors'
+    DefaultGroupTitleContentAuthors: Авторы
     Description: Описание
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Блокировано?'
@@ -238,13 +238,13 @@ ru:
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
+    ResultCreated: 'Создано {count} групп'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
+    ADDURL: 'Добавить URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Якорь
     BUTTONINSERT: Insert
@@ -264,9 +264,9 @@ ru:
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    FindInFolder: 'Найти в папке'
+    IMAGEALT: 'Альтернативный текст (alt)'
+    IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
@@ -299,7 +299,7 @@ ru:
   Image_iframe.ss:
     TITLE: 'Iframe загрузки изображений'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    CANT_REORGANISE: 'У вас нет права редактировать страницы верхнего уровня. Изменения не были сохранены.'
     DELETED: Удалено.
     DropdownBatchActionsDefault: Actions
     HELP: Помощь
@@ -310,7 +310,7 @@ ru:
     PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
     PreviewButton: Просмотр
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: Сохранено.
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -322,7 +322,7 @@ ru:
     SINGULARNAME: 'Login Attempt'
     Status: Статус
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Добавить группу'
     BUTTONCHANGEPASSWORD: 'Изменить пароль'
     BUTTONLOGIN: Войти
     BUTTONLOGINOTHER: 'Войти под другим именем'
@@ -331,7 +331,7 @@ ru:
     CONFIRMPASSWORD: 'Подтвердить пароль'
     DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
-    DefaultDateTime: default
+    DefaultDateTime: 'по умолчанию'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Поле для нового пароля не может быть пустым; пожалуйста, повторите попытку'
     ENTEREMAIL: 'Введите email, чтобы получить ссылку на сброс пароля.'
@@ -368,7 +368,7 @@ ru:
     TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
+    'APPLY FILTER': 'Применить фильтр'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -390,7 +390,7 @@ ru:
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
+    ResultCreated: 'Создано {count} пользователей'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
@@ -467,20 +467,20 @@ ru:
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTHEADER: 'Ссылка для переустановки пароля выслана на ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
+    APPLY_ROLES_HELP: 'Возможность редактировать роли, присвоенные той или иной группе. Необходимо разрешение на доступ к разделу "Пользователи".'
     EDITPERMISSIONS: 'Задать разрешения и IP адреса для каждой группы'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
+    EDITPERMISSIONS_HELP: 'Возможность редактировать права доступа и IP-адреса определенной группы. Необходимо разрешение на доступ к разделу "Безопасность".'
     GROUPNAME: 'Имя группы'
     IMPORTGROUPS: 'Импортировать группы'
     IMPORTUSERS: 'Импортировать пользователей'
     MEMBERS: Участники
-    MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
+    MENUTITLE: Безопасность
+    MemberListCaution: 'Внимание: при удалении участников из этого списка они будут удалены из всех групп и из базы данных'
     NEWGROUP: 'Новая группа'
     PERMISSIONS: 'Права доступа'
     ROLES: Роли
@@ -504,7 +504,7 @@ ru:
   TableListField:
     CSVEXPORT: 'Экспорт в CSV'
     PRINT: Печать
-    Print: Print
+    Print: Печать
     SELECT: 'Выбрать:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -525,7 +525,7 @@ ru:
     MORE: больше
   UploadField:
     ATTACHFILE: 'Прикрепить файл'
-    ATTACHFILES: 'Attach files'
+    ATTACHFILES: 'Прикрепить файл(ы)'
     AttachFile: 'Прикрепить файл(ы)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
@@ -535,17 +535,17 @@ ru:
     Dimensions: Dimensions
     EDIT: Edit
     EDITINFO: 'Редактировать этот файл'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
+    FIELDNOTSET: 'Информация о файле не найдена'
+    FROMCOMPUTER: 'С компьютера'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILESSHORT: 'Можно загрузить не более {count} файлов'
+    REMOVE: Удалить
     REMOVEERROR: 'Ошибка при удалении файла'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
+    STARTALL: 'Стартовать все'
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
