@@ -371,7 +371,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$this->gridField->getList()->add($this->record);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Controller::curr()->redirectBack();
+			$controller = Controller::curr();
+			$responseNegotiator = new PjaxResponseNegotiator(array(
+				'CurrentForm' => function() use(&$form) {
+					return $form->forTemplate();
+				},
+				'default' => function() use(&$controller) {
+					return $controller->redirectBack();
+				}
+			));
+			if($controller->getRequest()->isAjax()){
+				$controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
+			}
+			return $responseNegotiator->respond($controller->getRequest());
 		}
 
 		// TODO Save this item into the given relationship
