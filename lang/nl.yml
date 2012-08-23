@@ -63,7 +63,7 @@ nl:
     ANY: Elke
     1: 'True'
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: Laden...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Toegang tot het ''{title}'' gedeelte'
@@ -119,7 +119,7 @@ nl:
     MONTHS: maanden
     SEC: seconde
     SECS: seconden
-    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFAGO: '{difference} geleden'
     TIMEDIFFIN: 'in {difference}'
     YEAR: jaar
     YEARS: jaren
@@ -132,7 +132,7 @@ nl:
   DatetimeField:
     NOTSET: 'Not set'
   Director:
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Fout bij verwerken'
   DropdownField:
     CHOOSE: (Kies)
   EmailField:
@@ -195,20 +195,20 @@ nl:
     Delete: Verwijder
     UnlinkRelation: Ontkoppelen
   GridField:
-    Add: 'Add {name}'
-    Filter: Filter
+    Add: '{name} toevoegen'
+    Filter: Filteren
     FilterBy: Filteren
     Find: Zoek
-    LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
+    LEVELUP: 'Niveau hoger'
+    LinkExisting: 'Koppelen aan'
     NewRecord: 'Nieuw %s'
     NoItemsFound: 'Geen items gevonden.'
     PRINTEDAT: 'Geprint om'
     PRINTEDBY: 'Geprint door'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolder: 'Zoek {type}'
+    PlaceHolderWithLabels: 'Zoek {type} op {name}'
     RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    ResetFilter: Herstel
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
   GridFieldDetailForm:
@@ -343,7 +343,7 @@ nl:
     INTERFACELANG: 'Interface Taal'
     INVALIDNEWPASSWORD: 'Het wachtwoord {password} is niet geldig'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
-    NEWPASSWORD: 'Nieuw Wachtwoord'
+    NEWPASSWORD: 'Nieuw wachtwoord'
     PASSWORD: Wachtwoord
     PLURALNAME: Leden
     PROFILESAVESUCCESS: 'Succesvol opgeslagen'
