@@ -863,7 +863,7 @@ class DataObjectTest extends SapphireTest {
 		// Check that the values of those fields are properly read from the database
 		$values = DataObject::get("DataObjectTest_Team", "\"DataObjectTest_Team\".\"ID\" IN 
 			($obj1->ID, $obj2->ID)")->column("SubclassDatabaseField");
-		$this->assertEquals(array('obj1', 'obj2'), $values);
+		$this->assertEquals(array_intersect($values, array('obj1', 'obj2')), $values);
 	}
 	
 	function testClassNameSetForNewObjects() {
