@@ -222,7 +222,7 @@ ru:
   Group:
     AddRole: 'Add a role for this group'
     Code: 'Код группы'
-    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleAdministrators: Администраторы
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Описание
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
@@ -300,7 +300,7 @@ ru:
     TITLE: 'Iframe загрузки изображений'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    DELETED: Удалено.
     DropdownBatchActionsDefault: Actions
     HELP: Помощь
     PAGETYPE: 'Тип страницы:'
@@ -308,7 +308,7 @@ ru:
     PERMALREADY: 'Извините, у вас нет доступа к этому разделу Системы Управления. Если Вы хотите войти под другой учетной записью, сделайте это ниже'
     PERMDEFAULT: 'Введите ваши адрес электр. почты и пароль для доступа к системе.'
     PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
-    PreviewButton: Preview
+    PreviewButton: Просмотр
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
@@ -333,7 +333,7 @@ ru:
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: Email
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    EMPTYNEWPASSWORD: 'Поле для нового пароля не может быть пустым; пожалуйста, повторите попытку'
     ENTEREMAIL: 'Введите email, чтобы получить ссылку на сброс пароля.'
     ERRORLOCKEDOUT: 'Ваша учетная запись временно заблокирована из-за слишком большого количества неудачных попыток авторизации. Пожалуйста, попытайтесь снова через 20 минут.'
     ERRORNEWPASSWORD: 'Вы ввели Ваш новый пароль по-разному, попробуйте снова'
@@ -341,8 +341,8 @@ ru:
     ERRORWRONGCRED: 'Вероятно адрес email или пароль введены неверно. Попробуйте снова.'
     FIRSTNAME: Имя
     INTERFACELANG: 'Язык интерфейса'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Недопустимый пароль: {password}'
+    LOGGEDINAS: 'Вы вошли в систему как {name}.'
     NEWPASSWORD: 'Новый пароль'
     PASSWORD: Пароль
     PLURALNAME: 'Члены группы'
@@ -355,7 +355,7 @@ ru:
     TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Этот адрес email уже зарегистрирован'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Добро пожаловать, {firstname}'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
     belongs_many_many_Groups: Группы
     db_LastVisited: 'Дата последнего видита'
@@ -476,17 +476,17 @@ ru:
     EDITPERMISSIONS: 'Задать разрешения и IP адреса для каждой группы'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Имя группы'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Импортировать группы'
+    IMPORTUSERS: 'Импортировать пользователей'
     MEMBERS: Участники
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Новая группа'
     PERMISSIONS: 'Права доступа'
-    ROLES: Roles
+    ROLES: Роли
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
-    Users: Users
+    TABROLES: Роли
+    Users: Пользователи
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -524,23 +524,23 @@ ru:
     LESS: меньше
     MORE: больше
   UploadField:
-    ATTACHFILE: 'Attach a file'
+    ATTACHFILE: 'Прикрепить файл'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    AttachFile: 'Прикрепить файл(ы)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DOEDIT: Сохранить
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
     EDIT: Edit
-    EDITINFO: 'Edit this file'
+    EDITINFO: 'Редактировать этот файл'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
