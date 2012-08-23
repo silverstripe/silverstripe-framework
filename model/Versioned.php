@@ -208,7 +208,7 @@ class Versioned extends DataExtension {
 				$tempName = 'ExclusionarySource_'.$excluding;
 				$excludingTable = $baseTable . ($excluding && $excluding != $this->defaultStage ? "_$excluding" : '');
 
-				$query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT ID FROM "'.$tempName.'")');
+				$query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT "ID" FROM "'.$tempName.'")');
 				$query->renameTable($tempName, $excludingTable);
 			}
 			break;
