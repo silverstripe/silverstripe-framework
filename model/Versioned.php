@@ -208,7 +208,7 @@ class Versioned extends DataExtension {
 				$tempName = 'ExclusionarySource_'.$excluding;
 				$excludingTable = $baseTable . ($excluding && $excluding != $this->defaultStage ? "_$excluding" : '');
 
-				$query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT ID FROM "'.$tempName.'")');
+				$query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT "ID" FROM "'.$tempName.'")');
 				$query->renameTable($tempName, $excludingTable);
 			}
 			break;
@@ -228,6 +228,7 @@ class Versioned extends DataExtension {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
+			$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
 			
 			// latest_version has one more step
 			// Return latest version instances, regardless of whether they are on a particular stage
@@ -383,7 +384,7 @@ class Versioned extends DataExtension {
 					
 					$versionIndexes = array_merge(
 						array(
-							'RecordID_Version' => array('type' => 'unique', 'value' => 'RecordID,Version'),
+							'RecordID_Version' => array('type' => 'unique', 'value' => '"RecordID","Version"'),
 							'RecordID' => true,
 							'Version' => true,
 						),

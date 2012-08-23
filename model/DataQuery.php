@@ -656,6 +656,7 @@ function max($field) {
 		$fieldExpression = $this->expressionForField($field, $subSelect);
 		$subSelect->setSelect(array());
 		$subSelect->selectField($fieldExpression, $field);
+		$subSelect->setOrderBy(null);
 		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
 
 		return $this;

@@ -246,44 +246,6 @@ use case could be when you want to find all the members that does not exist in a
 	// ... Finding all members that does not belong to $group.
 	$otherMembers = Member::get()->subtract($group->Members());
 
-
-### Relation filters
-
-So far we have only filtered a data list by fields on the object that you're requesting.  For simple cases, this might 
-be okay, but often, a data model is made up of a number of related objects.  For example, in SilverStripe each member 
-can be placed in a number of groups, and each group has a number of permissions.
-
-For this, the SilverStripe ORM supports **Relation Filters**.  Any ORM request can be filtered by fields on a related 
-object by specifying the filter key as `<relation-name>.<field-in-related-object>`.  You can chain relations together 
-as many times as is necessary.
-
-For example, this will return all members assigned to a group that has a permission record with the code "ADMIN". In 
-other words, it will return all administrators.
-
-	:::php
-	$members = Member::get()->filter(array(
-		'Groups.Permissions.Code:ExactMatch' => 'ADMIN',
-	));
-
-Note that we are just joining these tables to filter the records. Even if a member is in more than 1 administrator 
-group, unique members will still be returned by this query.
-
-The other features of filters can be applied to relation filters as well.  This will return all members in groups whose
-names start with 'A' or 'B'.
-
-	:::php
-	$members = Member::get()->filter(array(
-		'Groups.Title:StartsWith' => array('A', 'B'),
-	));
-
-You can even follow a relation back to the original model class!  This will return all members are in at least 1 group 
-that also has a member called Sam.
-
-	:::php
-	$members = Member::get()->filter(array(
-		'Groups.Members.FirstName' => 'Sam'
-	));
-
 ### Raw SQL options for advanced users
 
 Occasionally, the system described above won't let you do exactly what you need to do.  In these situtations, we have 

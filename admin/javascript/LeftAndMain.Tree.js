@@ -285,7 +285,8 @@
 				}
 
 				// Replace inner content
-				node.addClass(origClasses).html(newNode.html());
+				var origChildren = node.children('ul').detach();
+				node.addClass(origClasses).html(newNode.html()).append(origChildren);
 
 				if (nextNode && nextNode.length) {
 					this.jstree('move_node', node, nextNode, 'before');
@@ -354,23 +355,25 @@
 								return;
 							}
 
+							var correctStateFn = function(node) {
+								self.jstree('deselect_all');
+								self.jstree('select_node', node);
+								// Similar to jstree's correct_state, but doesn't remove children
+								var hasChildren = (node.children('ul').length > 0);
+								node.toggleClass('jstree-leaf', !hasChildren);
+								if(!hasChildren) node.removeClass('jstree-closed jstree-open');
+							};
+
 							// Check if node exists, create if necessary
 							if(node.length) {
 								self.updateNode(node, nodeData.html, nodeData);
 								setTimeout(function() {
-									self.jstree('deselect_all');
-									self.jstree('select_node', node);
-									// Manually correct state, which checks for children and
-									// removes toggle arrow (should really be done by jstree internally)
-									self.jstree('correct_state', node);	
+									correctStateFn(node)	;
 								}, 500);
 							} else {
 								includesNewNode = true;
 								self.createNode(nodeData.html, nodeData, function(newNode) {
-									self.jstree('deselect_all');
-									self.jstree('select_node', newNode);
-									// Manually remove toggle node, see above
-									self.jstree('correct_state', newNode);
+									correctStateFn(newNode);
 								});
 							}
 						});
