@@ -575,22 +575,9 @@ class Hierarchy extends DataExtension {
 		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
 
 		// Query the live site
-		$children->dataQuery()->setQueryParam('Versioned.mode', 'stage');
+		$children->dataQuery()->setQueryParam('Versioned.mode', $onlyDeletedFromStage ? 'stage_unique' : 'stage');
 		$children->dataQuery()->setQueryParam('Versioned.stage', 'Live');
-		
-		if($onlyDeletedFromStage) {
-			// Note that this makes a second query, and could be optimised to be a join
-			$stageChildren = DataObject::get($baseClass)
-				->where("\"{$baseClass}\".\"ID\" != $id");
-			$stageChildren->dataQuery()->setQueryParam('Versioned.mode', 'stage');
-			$stageChildren->dataQuery()->setQueryParam('Versioned.stage', '');
-			
-			$ids = $stageChildren->column("ID");
-			if($ids) {
-				$children = $children->where("\"$baseClass\".\"ID\" NOT IN (" . implode(',',$ids) . ")");
-			}
-		}
-		
+
 		return $children;
 	}
 	

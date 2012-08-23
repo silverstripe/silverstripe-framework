@@ -133,7 +133,11 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 			if($actionName == 'deleterecord' && !$item->canDelete()) {
 				throw new ValidationException(_t('GridFieldAction_Delete.DeletePermissionsFailure',"No delete permissions"),0);
 			}
-			$gridField->getList()->remove($item);
+			if($actionName == 'deleterecord') {
+				$item->delete();
+			} else {
+				$gridField->getList()->remove($item);
+			}
 		} 
 	}
 }
