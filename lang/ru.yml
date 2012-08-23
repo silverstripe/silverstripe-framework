@@ -15,18 +15,18 @@ ru:
     TYPE: Тип
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
+    ChooseFiles: 'Выбрать файлы'
+    DRAGFILESHERE: 'Перетащите файлы сюда'
     DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
+    EDITALL: 'Редактировать все'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
     FILES: Файлы
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
+    TOTAL: 'Всего:'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: ИЛИ
   BBCodeParser:
     ALIGNEMENT: Выравнивание
     ALIGNEMENTEXAMPLE: 'Выравнено по правому краю'
@@ -53,7 +53,7 @@ ru:
     UNORDEREDDESCRIPTION: 'Ненумерованный список'
     UNORDEREDEXAMPLE1: 'ненумерованный элемент 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Назад
   BasicAuth:
     ENTERINFO: 'Пожалуйста, введите имя пользователя и пароль.'
     ERRORNOTADMIN: 'Такой пользователь не является администратором.'
@@ -145,8 +145,8 @@ ru:
   File:
     Content: Содержание
     Filename: 'Имя файла'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSION: 'Недопустимое расширение файла (допустимые расширения: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Недопустимое расширение файла'
     NOFILESIZE: 'Размер файла 0 байт.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Название
@@ -220,14 +220,14 @@ ru:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Добавить роль для этой группы'
     Code: 'Код группы'
     DefaultGroupTitleAdministrators: Администраторы
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Описание
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Блокировано?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Ролей не найдено'
     PLURALNAME: Groups
     Parent: 'Родительская группа'
     RolesAddEditLink: 'Добавить/редактировать роли'
@@ -289,8 +289,8 @@ ru:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Файлы
+    SINGULARNAME: Файл
   ImageField:
     IMAGE: Image
   Image_Cached:
@@ -352,7 +352,7 @@ ru:
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
     SURNAME: Фамилия
-    TIMEFORMAT: 'Time format'
+    TIMEFORMAT: 'Формат времени'
     VALIDATIONMEMBEREXISTS: 'Этот адрес email уже зарегистрирован'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Добро пожаловать, {firstname}'
@@ -431,11 +431,11 @@ ru:
     View: View
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
+    CMS_ACCESS_CATEGORY: 'Доступ к CMS'
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    SINGULARNAME: 'Право доступа'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -448,7 +448,7 @@ ru:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    PERMISSIONS_CATEGORY: 'Роли и разрешения доступа'
   PhoneNumberField:
     VALIDATION: 'Пожалуйста, введите верный номер телефона'
   RelationComplexTableField.ss:
@@ -505,7 +505,7 @@ ru:
     CSVEXPORT: 'Экспорт в CSV'
     PRINT: Печать
     Print: Print
-    SELECT: 'Select:'
+    SELECT: 'Выбрать:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
     SORTASC: 'По возрастанию'
@@ -543,7 +543,7 @@ ru:
     MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    REMOVEERROR: 'Ошибка при удалении файла'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
