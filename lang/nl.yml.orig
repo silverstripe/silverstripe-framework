@@ -343,7 +343,11 @@ nl:
     INTERFACELANG: 'Interface Taal'
     INVALIDNEWPASSWORD: 'Het wachtwoord {password} is niet geldig'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
+<<<<<<< HEAD
+    NEWPASSWORD: 'Nieuw Wachtwoord'
+=======
     NEWPASSWORD: 'Nieuw wachtwoord'
+>>>>>>> origin/translation-staging
     PASSWORD: Wachtwoord
     PLURALNAME: Leden
     PROFILESAVESUCCESS: 'Succesvol opgeslagen'

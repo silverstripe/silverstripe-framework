@@ -1,6 +1,10 @@
 de:
   AssetAdmin:
+<<<<<<< HEAD
+    ADDFILES: 'Add files'
+=======
     ADDFILES: 'Dateien hinzufügen'
+>>>>>>> origin/translation-staging
     EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Neuer Ordner'
   AssetTableField:
@@ -130,7 +134,11 @@ de:
     VALIDDATEMAXDATE: 'Ihr Datum muss nach dem erlaubtem Datum ({date}) liegen oder gleich sein'
     VALIDDATEMINDATE: 'Ihr Datum muss vor dem erlaubtem Datum ({date}) liegen oder gleich sein'
   DatetimeField:
+<<<<<<< HEAD
+    NOTSET: 'Not set'
+=======
     NOTSET: 'nicht gesetzt'
+>>>>>>> origin/translation-staging
   Director:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
@@ -180,7 +188,11 @@ de:
     TEXT3: für
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
+<<<<<<< HEAD
+    SubmitBtnLabel: Go
+=======
     SubmitBtnLabel: Los
+>>>>>>> origin/translation-staging
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
     VALIDATIONNOTUNIQUE: 'Der eingegebene Wert ist nicht einzigartig'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwörter stimmen nicht überein'
@@ -290,7 +302,11 @@ de:
     UpdateMEDIA: 'Medienobjekt aktualisieren'
   Image:
     PLURALNAME: Files
+<<<<<<< HEAD
+    SINGULARNAME: File
+=======
     SINGULARNAME: Datei
+>>>>>>> origin/translation-staging
   ImageField:
     IMAGE: Bild
   Image_Cached:
@@ -329,7 +345,11 @@ de:
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
+<<<<<<< HEAD
+    DATEFORMAT: 'Date format'
+=======
     DATEFORMAT: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
+>>>>>>> origin/translation-staging
     DefaultAdminFirstname: Standardadmin
     DefaultDateTime: Standard
     EMAIL: E-Mail
@@ -352,7 +372,11 @@ de:
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
+<<<<<<< HEAD
+    TIMEFORMAT: 'Time format'
+=======
     TIMEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
+>>>>>>> origin/translation-staging
     VALIDATIONMEMBEREXISTS: 'Es gibt bereits ein Mitglied mit dieser E-Mail-Adresse'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
@@ -395,8 +419,13 @@ de:
     ResultNone: 'Keine Änderungen'
     ResultUpdated: '{count} Mitglied(er) wurde(n) aktualisiert'
   MemberPassword:
+<<<<<<< HEAD
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
+=======
     PLURALNAME: Benutzerpasswörter
     SINGULARNAME: Benutzerpasswort
+>>>>>>> origin/translation-staging
   MemberTableField: null
   ModelAdmin:
     DELETE: Löschen
@@ -427,15 +456,25 @@ de:
   NumericField:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
   Pagination:
+<<<<<<< HEAD
+    Page: Page
+    View: View
+=======
     Page: Seite
     View: Anzeige
+>>>>>>> origin/translation-staging
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
+<<<<<<< HEAD
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
+=======
     PLURALNAME: Berechtigungen
     SINGULARNAME: Berechtigung
+>>>>>>> origin/translation-staging
   PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'

@@ -169,7 +169,11 @@ ru:
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
+<<<<<<< HEAD
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+=======
     SYNCRESULTS: 'Синхронизация завершена; создано элементов: {createdcount}, удалено элементов: {deletedcount}'
+>>>>>>> origin/translation-staging
   Folder:
     PLURALNAME: Folders
     SINGULARNAME: Folder
@@ -227,7 +231,11 @@ ru:
     Description: Описание
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Блокировано?'
+<<<<<<< HEAD
+    NoRoles: 'No roles found'
+=======
     NoRoles: 'Ролей не найдено'
+>>>>>>> origin/translation-staging
     PLURALNAME: Groups
     Parent: 'Родительская группа'
     RolesAddEditLink: 'Добавить/редактировать роли'
@@ -289,8 +297,13 @@ ru:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
+<<<<<<< HEAD
+    PLURALNAME: Files
+    SINGULARNAME: File
+=======
     PLURALNAME: Файлы
     SINGULARNAME: Файл
+>>>>>>> origin/translation-staging
   ImageField:
     IMAGE: Image
   Image_Cached:
@@ -352,7 +365,11 @@ ru:
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
     SURNAME: Фамилия
+<<<<<<< HEAD
+    TIMEFORMAT: 'Time format'
+=======
     TIMEFORMAT: 'Формат времени'
+>>>>>>> origin/translation-staging
     VALIDATIONMEMBEREXISTS: 'Этот адрес email уже зарегистрирован'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Добро пожаловать, {firstname}'
@@ -368,7 +385,11 @@ ru:
     TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+<<<<<<< HEAD
+    'APPLY FILTER': 'Apply Filter'
+=======
     'APPLY FILTER': 'Применить фильтр'
+>>>>>>> origin/translation-staging
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -435,7 +456,11 @@ ru:
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     PLURALNAME: Permissions
+<<<<<<< HEAD
+    SINGULARNAME: Permission
+=======
     SINGULARNAME: 'Право доступа'
+>>>>>>> origin/translation-staging
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -538,12 +563,21 @@ ru:
     FIELDNOTSET: 'Информация о файле не найдена'
     FROMCOMPUTER: 'С компьютера'
     FROMCOMPUTERINFO: 'Select from files'
+<<<<<<< HEAD
+    FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
+    REMOVEERROR: 'Error removing file'
+=======
     FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
     MAXNUMBEROFFILESSHORT: 'Можно загрузить не более {count} файлов'
     REMOVE: Удалить
     REMOVEERROR: 'Ошибка при удалении файла'
+>>>>>>> origin/translation-staging
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Стартовать все'
     STARTALLINFO: 'Start all uploads'
