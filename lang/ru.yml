@@ -83,7 +83,7 @@ ru:
     - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Закрыть всплывающее окно'
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: 'Добавлено {name}'
     SUCCESSEDIT: 'Сохранено %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Добавить %s'
@@ -152,7 +152,7 @@ ru:
     Name: Название
     PLURALNAME: Файлы
     SINGULARNAME: Файл
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGE: 'Превышен допустимый размер файла (максимально {size})'
     TOOLARGESHORT: 'Размер файла больше {size}'
     Title: Заголовок
   FileIFrameField:
@@ -191,31 +191,31 @@ ru:
   FormField:
     NONE: 'не выбрано'
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
+    DELETE_DESCRIPTION: Удалить
+    Delete: Удалить
     UnlinkRelation: Unlink
   GridField:
     Add: 'Добавить {name}'
-    Filter: Filter
+    Filter: Фильтр
     FilterBy: 'Фильтровать по'
-    Find: Find
+    Find: Найти
     LEVELUP: 'Уровень выше'
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    NoItemsFound: 'Элементов не найдено'
+    PRINTEDAT: 'Когда распечатано:'
+    PRINTEDBY: 'Кем распечатано:'
     PlaceHolder: 'Найти {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    ResetFilter: Сброс
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Нет прав на удаление'
   GridFieldDetailForm:
     Create: Создать
     Delete: Удалить
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    DeletePermissionsFailure: 'Нет прав на удаление'
+    Deleted: 'Удалено %s %s'
     Save: Сохранить
     Saved: 'Сохранено %s %s'
   GridFieldItemEditView.ss: null
@@ -245,36 +245,36 @@ ru:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Добавить URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ADJUSTDETAILSDIMENSIONS: 'Дополнительные сведения и размеры'
     ANCHORVALUE: Якорь
-    BUTTONINSERT: Insert
+    BUTTONINSERT: Вставить
     BUTTONINSERTLINK: 'Вставить ссылку'
     BUTTONREMOVELINK: 'Удалить ссылку'
-    BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
+    BUTTONUpdate: Обновить
+    CAPTIONTEXT: 'Текст подписи'
     CSSCLASS: Выравнивание/Стиль
     CSSCLASSCENTER: 'По центру без текста по бокам'
     CSSCLASSLEFT: 'Слева с обтеканием текста'
     CSSCLASSLEFTALONE: 'Независимо слева.'
     CSSCLASSRIGHT: 'Справа с обтеканием текста'
-    DETAILS: Details
+    DETAILS: Детали
     EMAIL: 'Адрес email'
     FILE: Файл
     FOLDER: Папка
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
+    FROMCMS: 'Из CMS'
+    FROMCOMPUTER: 'С диска'
+    FROMWEB: 'Из интернета'
     FindInFolder: 'Найти в папке'
     IMAGEALT: 'Альтернативный текст (alt)'
     IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Передается программе чтения экрана или отображается, если изображение недоступно'
     IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGETITLETEXTDESC: 'Для дополнительных сведений об изображении'
     IMAGEWIDTHPX: Ширина
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: 'Вставить медиафайл'
     LINK: Ссылка
     LINKANCHOR: 'Якорь на этой странице'
     LINKDESCR: 'Описание ссылки'
@@ -285,14 +285,14 @@ ru:
     LINKOPENNEWWIN: 'Открыть ссылку в новом окне?'
     LINKTO: 'Ссылка на'
     PAGE: Страница
-    URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    URL: Ссылка
+    URLNOTANOEMBEDRESOURCE: 'Не удалось преобразовать ссылку ''{url}'' в медиа-ресурс.'
+    UpdateMEDIA: 'Обновить медиафайл'
   Image:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
   ImageField:
-    IMAGE: Image
+    IMAGE: Изображение
   Image_Cached:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
@@ -301,7 +301,7 @@ ru:
   LeftAndMain:
     CANT_REORGANISE: 'У вас нет права редактировать страницы верхнего уровня. Изменения не были сохранены.'
     DELETED: Удалено.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Действия
     HELP: Помощь
     PAGETYPE: 'Тип страницы:'
     PERMAGAIN: 'Вы вышли из Системы Управления Сайтом. Если Вы хотите войти снова, введите внизу имя пользователя и пароль.'
@@ -309,9 +309,9 @@ ru:
     PERMDEFAULT: 'Введите ваши адрес электр. почты и пароль для доступа к системе.'
     PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
     PreviewButton: Просмотр
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    REORGANISATIONSUCCESSFUL: 'Древесная структура сайта успешно реорганизована.'
     SAVEDUP: Сохранено.
-    VersionUnknown: unknown
+    VersionUnknown: неизвестно
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: Выход
@@ -367,26 +367,26 @@ ru:
   MemberAuthenticator:
     TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM: 'AM (Ante meridiem) или PM (Post meridiem)'
     'APPLY FILTER': 'Применить фильтр'
     Custom: 'Свой формат'
     DATEFORMATBAD: 'Неверный формат даты'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
+    DAYNOLEADING: 'Число месяца без ведущего нуля'
+    DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
+    FOURDIGITYEAR: 'Год четырьмя цифрами'
+    FULLNAMEMONTH: 'Название месяца полностью (июнь)'
+    HOURNOLEADING: 'Часы без ведущего нуля'
+    MINUTENOLEADING: 'Минуты без ведущего нуля'
+    MONTHNOLEADING: 'Месяц без ведущего нуля'
     Preview: Просмотр
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    SHORTMONTH: 'Сокращенное название месяца (Июн)'
     TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    TWODIGITDAY: 'Число месяца: двумя цифрами'
+    TWODIGITHOUR: 'Часы: двумя цифрами (00 - 23)'
+    TWODIGITMINUTE: 'Минуты: двумя цифрами (00 - 59)'
+    TWODIGITMONTH: 'Месяц двумя цифрами (01=январь и т.д.)'
+    TWODIGITSECOND: 'Секунды: двумя цифрами (00 - 59)'
+    TWODIGITYEAR: 'Год: двумя цифрами'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -409,19 +409,19 @@ ru:
     Title: 'Data Models'
     UPDATEDRECORDS: 'Обновлено {count} записей.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
     IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
+    FILTER: Фильтр
+    IMPORT: Импорт
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
+    IMPORT_TAB_HEADER: Импорт
+    SEARCHLISTINGS: Поиск
   MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT: Сумма
+    FIELDLABELCURRENCY: Валюта
   NullableField:
     IsNullLabel: Недействительно
   NumericField:
@@ -491,7 +491,7 @@ ru:
     BtnImport: 'Импорт из CSV'
     FileFieldLabel: 'Файл CSV <small>(Допустимые расширения: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Редактировать
   SimpleImageField:
     NOUPLOAD: 'Не загружено ни одного изображения'
   SiteTree:
