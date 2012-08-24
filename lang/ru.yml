@@ -16,7 +16,7 @@ ru:
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Выбрать файлы'
-    DRAGFILESHERE: 'Перетащите файлы сюда'
+    DRAGFILESHERE: 'Перетащить файлы сюда'
     DROPAREA: 'Drop Area'
     EDITALL: 'Редактировать все'
     EDITANDORGANIZE: 'Edit & organize'
@@ -25,7 +25,7 @@ ru:
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: 'Всего:'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
   BBCodeParser:
     ALIGNEMENT: Выравнивание
@@ -95,7 +95,7 @@ ru:
     PREVIOUS: Предыдущ.
   ConfirmedPasswordField:
     ATLEAST: 'Пароль должен быть не короче {min} символов.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    BETWEEN: 'Пароль должен иметь длину от {min} до {max} символов.'
     MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
     SHOWONCLICKTITLE: 'Изменить Пароль'
   CreditCardField:
@@ -126,7 +126,7 @@ ru:
   DateField:
     NOTSET: 'не установлено'
     TODAY: сегодня
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
@@ -136,7 +136,7 @@ ru:
   DropdownField:
     CHOOSE: (Выберите)
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION: 'Пожалуйста, задайте адрес email.'
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
@@ -156,18 +156,18 @@ ru:
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Заголовок
   FileIFrameField:
-    ATTACH: 'Attach {type}'
+    ATTACH: 'Прикрепить {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    DELETE: 'Удалить {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: Файл
-    FROMCOMPUTER: 'From your Computer'
+    FROMCOMPUTER: 'С диска'
     FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
+    NOSOURCE: 'Пожалуйста, выберите файл, который нужно прикрепить'
+    REPLACE: 'Заменить {type}'
   FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe загрузки изображений'
   Filesystem:
     SYNCRESULTS: 'Синхронизация завершена; создано элементов: {createdcount}, удалено элементов: {deletedcount}'
   Folder:
@@ -236,10 +236,10 @@ ru:
     has_many_Permissions: 'Права групп пользователей'
     many_many_Members: 'Члены группы'
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Импорт групп в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
     ResultCreated: 'Создано {count} групп'
-    ResultDeleted: 'Deleted %d groups'
+    ResultDeleted: '%d групп удалено'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
@@ -488,8 +488,8 @@ ru:
     TABROLES: Роли
     Users: Пользователи
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport: 'Импорт из CSV'
+    FileFieldLabel: 'Файл CSV <small>(Допустимые расширения: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
@@ -525,18 +525,18 @@ ru:
     MORE: больше
   UploadField:
     ATTACHFILE: 'Прикрепить файл'
-    ATTACHFILES: 'Прикрепить файл(ы)'
+    ATTACHFILES: 'Прикрепить файлы'
     AttachFile: 'Прикрепить файл(ы)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Сохранить
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
-    Dimensions: Dimensions
+    Dimensions: Размеры
     EDIT: Edit
     EDITINFO: 'Редактировать этот файл'
     FIELDNOTSET: 'Информация о файле не найдена'
-    FROMCOMPUTER: 'С компьютера'
+    FROMCOMPUTER: 'С диска'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
