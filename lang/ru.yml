@@ -1,13 +1,13 @@
 ru:
   AssetAdmin:
-    ADDFILES: 'Add files'
+    ADDFILES: 'Добавить файлы'
     EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Новая папка'
   AssetTableField:
     CREATED: 'Первая загрузка'
     DIM: Размеры
     FILENAME: 'Имя файла'
-    FOLDER: Folder
+    FOLDER: Папка
     LASTEDIT: 'Последнее изменение'
     OWNER: Владелец
     SIZE: Размер
@@ -20,10 +20,10 @@ ru:
     DROPAREA: 'Drop Area'
     EDITALL: 'Редактировать все'
     EDITANDORGANIZE: 'Edit & organize'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Редактировать файлы'
     FILES: Файлы
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTER: 'Выбрать файлы с диска вашего компьютера'
+    FROMCOMPUTERINFO: 'Загрузить с диска вашего компьютера'
     TOTAL: 'Всего:'
     UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
@@ -64,7 +64,7 @@ ru:
     1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Идет загрузка...'
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'Для работы с CMS у вас должен быть включен JavaScript.'
   CMSMain:
     ACCESS: 'Доступ к разделу ''{title}'''
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
@@ -86,8 +86,8 @@ ru:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Сохранено %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
-    NOITEMSFOUND: 'No items found'
+    ADDITEM: 'Добавить %s'
+    NOITEMSFOUND: 'Элементов не найдено'
     SORTASC: 'Сортировать по возрастанию'
     SORTDESC: 'Сортировать по убыванию'
   ComplexTableField_popup.ss:
@@ -153,7 +153,7 @@ ru:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGESHORT: 'Размер файла больше {size}'
     Title: Заголовок
   FileIFrameField:
     ATTACH: 'Прикрепить {type}'
@@ -171,8 +171,8 @@ ru:
   Filesystem:
     SYNCRESULTS: 'Синхронизация завершена; создано элементов: {createdcount}, удалено элементов: {deletedcount}'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Папки
+    SINGULARNAME: Папка
   ForgotPasswordEmail.ss:
     HELLO: Здравствуйте
     TEXT1: 'Это ваша'
@@ -228,10 +228,10 @@ ru:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Блокировано?'
     NoRoles: 'Ролей не найдено'
-    PLURALNAME: Groups
+    PLURALNAME: Группы
     Parent: 'Родительская группа'
     RolesAddEditLink: 'Добавить/редактировать роли'
-    SINGULARNAME: Group
+    SINGULARNAME: Группа
     Sort: 'Порядок сортировки'
     has_many_Permissions: 'Права групп пользователей'
     many_many_Members: 'Члены группы'
@@ -294,8 +294,8 @@ ru:
   ImageField:
     IMAGE: Image
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Файлы
+    SINGULARNAME: Файл
   Image_iframe.ss:
     TITLE: 'Iframe загрузки изображений'
   LeftAndMain:
@@ -314,7 +314,7 @@ ru:
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
-    LOGOUT: 'Log out'
+    LOGOUT: Выход
   LoginAttempt:
     Email: Email
     IP: IP-адрес
@@ -329,7 +329,7 @@ ru:
     BUTTONLOSTPASSWORD: 'Я забыл пароль'
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
     CONFIRMPASSWORD: 'Подтвердить пароль'
-    DATEFORMAT: 'Date format'
+    DATEFORMAT: 'Формат даты'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: 'по умолчанию'
     EMAIL: Email
@@ -369,8 +369,8 @@ ru:
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     'APPLY FILTER': 'Применить фильтр'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
+    Custom: 'Свой формат'
+    DATEFORMATBAD: 'Неверный формат даты'
     DAYNOLEADING: 'Day of month without leading zero'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
     FOURDIGITYEAR: 'Four-digit year'
@@ -378,7 +378,7 @@ ru:
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
     MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
+    Preview: Просмотр
     SHORTMONTH: 'Short name of month (e.g. Jun)'
     TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Two-digit day of month'
@@ -395,19 +395,19 @@ ru:
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: Пароли
+    SINGULARNAME: Пароль
   MemberTableField: null
   ModelAdmin:
     DELETE: Удалить
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: 'Удалено {count} записей.'
     IMPORT: 'Импорт из CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: 'Импортировано {count} записей.'
     NOCSVFILE: 'Выберите CSV-файл для импорта'
     NOIMPORT: 'Нечего импортировать'
-    RESET: Reset
+    RESET: Сброс
     Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    UPDATEDRECORDS: 'Обновлено {count} записей.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'
@@ -427,14 +427,14 @@ ru:
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page: Page
-    View: View
+    Page: Страница
+    View: Просмотр
   Permission:
-    AdminGroup: Administrator
+    AdminGroup: Администратор
     CMS_ACCESS_CATEGORY: 'Доступ к CMS'
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
+    PLURALNAME: 'Права доступа'
     SINGULARNAME: 'Право доступа'
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
@@ -442,8 +442,8 @@ ru:
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   PermissionRole:
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: Роли
+    SINGULARNAME: Роль
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
@@ -453,8 +453,8 @@ ru:
     VALIDATION: 'Пожалуйста, введите верный номер телефона'
   RelationComplexTableField.ss:
     ADD: Добавить
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Экспорт в CSV'
+    NOTFOUND: 'Элементов не найдено'
   Security:
     ALREADYLOGGEDIN: 'У Вас нет доступа к этой странице. Если у вас имеется другая учетная запись, имеющая доступ к этой странице, введите ее данные ниже.'
     BUTTONSEND: 'Отправить мне ссылку переустановки пароля'
@@ -471,7 +471,7 @@ ru:
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
+    APPLY_ROLES: 'Применить роли к группам'
     APPLY_ROLES_HELP: 'Возможность редактировать роли, присвоенные той или иной группе. Необходимо разрешение на доступ к разделу "Пользователи".'
     EDITPERMISSIONS: 'Задать разрешения и IP адреса для каждой группы'
     EDITPERMISSIONS_HELP: 'Возможность редактировать права доступа и IP-адреса определенной группы. Необходимо разрешение на доступ к разделу "Безопасность".'
@@ -500,14 +500,14 @@ ru:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
     ADD: 'Добавить новый ряд'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Добавить %s'
   TableListField:
     CSVEXPORT: 'Экспорт в CSV'
     PRINT: Печать
     Print: Печать
     SELECT: 'Выбрать:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Элементов не найдено'
     SORTASC: 'По возрастанию'
     SORTDESC: 'По убыванию'
   TableListField_PageControls.ss:
@@ -527,26 +527,26 @@ ru:
     ATTACHFILE: 'Прикрепить файл'
     ATTACHFILES: 'Прикрепить файлы'
     AttachFile: 'Прикрепить файл(ы)'
-    DELETE: 'Delete from files'
+    DELETE: 'Удалить из файлов'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Сохранить
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Размеры
-    EDIT: Edit
+    EDIT: Редактировать
     EDITINFO: 'Редактировать этот файл'
     FIELDNOTSET: 'Информация о файле не найдена'
     FROMCOMPUTER: 'С диска'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Выбрать из файлов'
     FROMFILES: 'Из файлов'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Внимание: это изображение будет вставлено через хотлинк. Пожалуйста, не забывайте, что на это у вас должно быть разрешение владельца исходного ресурса.'
     MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
     MAXNUMBEROFFILESSHORT: 'Можно загрузить не более {count} файлов'
     REMOVE: Удалить
     REMOVEERROR: 'Ошибка при удалении файла'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Стартовать все'
-    STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    STARTALLINFO: 'Стартовать все загрузки'
+    Saved: Сохранено
   Versioned:
     has_many_Versions: Версии
