@@ -388,7 +388,7 @@ ru:
     TWODIGITSECOND: 'Секунды: двумя цифрами (00 - 59)'
     TWODIGITYEAR: 'Год: двумя цифрами'
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Создано {count} пользователей'
     ResultDeleted: 'Deleted %d members'
@@ -437,7 +437,7 @@ ru:
     PLURALNAME: 'Права доступа'
     SINGULARNAME: 'Право доступа'
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
+    AssignedTo: 'присвоено "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
