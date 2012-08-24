@@ -231,6 +231,25 @@ class ClassInfo {
 
 		return $matchedClasses;
 	}
+
+	private static $method_from_cache = array();
+
+	static function has_method_from($class, $method, $compclass) {
+		if (!isset(self::$method_from_cache[$class])) self::$method_from_cache[$class] = array();
+
+		if (!array_key_exists($method, self::$method_from_cache[$class])) {
+			self::$method_from_cache[$class][$method] = false;
+
+			$classRef = new ReflectionClass($class);
+
+			if ($classRef->hasMethod($method)) {
+				$methodRef = $classRef->getMethod($method);
+				self::$method_from_cache[$class][$method] = $methodRef->getDeclaringClass()->getName();
+			}
+		}
+
+		return self::$method_from_cache[$class][$method] == $compclass;
+	}
 	
 }
 

@@ -46,14 +46,11 @@ abstract class Extension {
 	/**
 	 * Called when this extension is added to a particular class
 	 *
-	 * TODO: This is likely to be replaced by event sytem before 3.0 final, so be aware
-	 * this API is fairly unstable.
-	 *
 	 * @static
 	 * @param $class
 	 */
 	static function add_to_class($class, $extensionClass, $args = null) {
-		Config::add_static_source($class, $extensionClass);
+		// NOP
 	}
 
 	/**
