@@ -1,8 +1,8 @@
-# Howto customize the CMS menu #
+# Howto customize the CMS Menu #
 
 ## Introduction ##
 
-Every time a new extension of the `api:LeftAndMain` class is added to the CMS, SilverStripe will automatically
+Every time you add a new extension of the `api:LeftAndMain` class to the CMS, SilverStripe will automatically
 create a new menu-item for it, title and the default 'cogs' icon included.
 But we can easily change that behaviour by using the static `$menu-title` and `$menu-icon` variables to
 provide a custom title and icon.
@@ -27,35 +27,24 @@ provide the right path.
 		static $menu-icon = 'mysite/images/product-icon.png'; 
 	}
 
-## Translating the title ##
+## Language file: MENUTITLE ##
  
-By default, when creating the title for the menu item, SilverStripe will look for the `MENUTITLE` variable in 
-a module's language file (lang/en.yml):
+By default, when displaying the title for the menu item, SilverStripe will look for the `MENUTITLE` entity in 
+your module's current language file and use that. This is true even for the default language (lang/en.yml):  
 
 	:::yml
 	...
 	ProductAdmin:
 		MENUTITLE: 'My Product Admin'
 
-So you need to make sure it's present. Of course you can add it to an existing languagefile by hand, 
-but if you're using the [i18nTextCollector](../reference/ii8n#collecting-text) to create your languagefile, 
-you need to provide it with the entity to add. For this your ModelAdmin class needs to implement the 
-`i18nEntityProvider` interface like this: 
+Only when no language file is found for the current language, or the MENUITEM entity is not present in them, will 
+$menu_title be used directly. 
 
-	:::php
-	class ProductAdmin extends ModelAdmin implements i18nEntityProvider {
-		
-		...
-		static $menu_title = 'My Product Admin';
-		static $menu-icon = 'mysite/images/product-icon.png';
-		
-		function provideI18nEntities() {
-			$entities = parent::provideI18nEntities();
-			$entities['ProductAdmin.MENUTITLE'] = array(self::$menu_title);		
-			return $entities;
-		}
-	}
-	
+The correct value for MENUTITLE will be created automatically if you use 
+[i18nTextCollector](../reference/ii8n#collecting-text) to create your languagefile. 
+If you're changing the menu title for a module with existing languagefiles, please check the values for 
+MENUTITLE and adapt.
+
 For more information on language and translations,please refer to [i18n](../reference/ii8n).
 	
 ## Other changes ##
@@ -63,4 +52,3 @@ For more information on language and translations,please refer to [i18n](../refe
 Other changes to the appearance of the menu buttons, or any other parts of the CMS for that matter, should 
 preferrably be done using stylesheets. Have a look at [How to extend the CMS interface](extend-cms-interface) for 
 an extensive howto on extending the CMS.
-
