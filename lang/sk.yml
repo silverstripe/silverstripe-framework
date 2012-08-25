@@ -237,7 +237,7 @@ sk:
     many_many_Members: Členovia
   GroupImportForm:
     Help1: 'Importovať jednu alebo viac skupín v CSV formáte (čiarkov oddelené hodnoty). Zobraziť pokročilé použitie'
-    Help2: 'pokročilé použitiePovolené stĺpce: %sExistujúce skupiny sú najdené podla ich unikátnej hodnoty <em>Code</em>, a aktualizované novými hodnotami z importovaného súboru.Hierarchia skupín môže byť vytvorená použitím stĺpca <em>ParentCode</em>.Právomoci môžu byt pridelené pomocou stĺpca <em>PermissionCode</em>. Existujúce právomoci nie su vymazané.'
+    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použitie</h4>\\n<ul>\\n<li>Povolené stĺpce: <em>%s</em></li>\\n<li>Existujúce skupiny sú porovnávané podľa ich unikátnej hodnoty <em>Code</em>, a aktualizované novými hodnotami z importovaného súboru.</li>\\n<li>Hierarchia skupín môže byť vytvorená použitím stĺpca <em>ParentCode</em>.</li>\\n<li>K´dy práv môžu byt pridelené pomocou stĺpca <em>PermissionCode</em>. Existujúce právai nie sú vymazané.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Vytvorených {count} skupín'
     ResultDeleted: 'Vymazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
@@ -389,7 +389,7 @@ sk:
     TWODIGITYEAR: 'Dvojčíslie roka'
   MemberImportForm:
     Help1: 'Importovať členov v <em>CSV formáte</em> (čiarkov oddelené hodnoty). Zobraziť pokročile použitie'
-    Help2: 'Pokročile použitiePovolené stĺpceExistujúci uživatelia sú najdený podľa ich unikátnej <em>Code</em> hodnoty, a aktualizovaný novými hodnotami z importovaného súboru.Skupiny môžu byť pridelené cez stĺpec <em>Groups</em>. Skupiny sú identifikované cez ich <em>Code</em> hodnotu, viacero skupín môže byť oddelených pomocou čiarky. Existujúce členstvá v skupinách nie su vymazané.'
+    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použite</h4>\\n<ul>\\n<li>Povolené stĺpce: <em>%s</em></li>\\n<li>Existujúci použivatelia sú porovnávaní podľa ich unikátnej hodnoty <em>Code</em>y, a aktualizovaní novými hodnotami z importovaného súboru.</li>\\n<li>Skupiny môžu byť pripojené podľa stĺpca <em>Groups</em>. Skupiny sú identifikované ich hodnotou <em>Code</em>, viacero skupín môže byť oddelených pomocou čiarky. Existujúce členstvá v skupinách nie sú vymazané.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Vytvorených {count} členov'
     ResultDeleted: 'Zmazaných %d členov'
     ResultNone: 'Žiadne zmeny'
