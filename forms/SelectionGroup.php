@@ -20,9 +20,10 @@ class SelectionGroup extends CompositeField {
 	 * If you want to a have a title that is different from the value of the key, you can express it
 	 * as "InternalVal//This is the Title"
 	 */
-	function __construct($name, $items) {
+	function __construct($name, $items, $value = null) {
 		$this->name = $name;
-		
+		if($value !== null) $this->setValue($value);
+
 		parent::__construct($items);
 		
 		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
