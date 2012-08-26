@@ -214,8 +214,6 @@ class DirectorTest extends SapphireTest {
 	 * saved in the request 
 	 */
 	function testRouteParams() {
-		Deprecation::notification_version('2.4');
-
 		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
 		
 		$this->assertEquals(
