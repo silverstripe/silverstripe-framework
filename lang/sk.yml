@@ -25,7 +25,7 @@ sk:
     FROMCOMPUTER: 'Vyberte súbory z vášho počítača'
     FROMCOMPUTERINFO: 'Nahrať z vášho počítača'
     TOTAL: Súhrn
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Vyberte súbory pre nahratie...'
     UPLOADINPROGRESS: 'Čakajte prosím… prebieha nahrávanie'
     UPLOADOR: ALEBO
   BBCodeParser:
@@ -144,37 +144,37 @@ sk:
   Enum:
     ANY: Každý
   File:
-    AviType: 'AVI video file'
+    AviType: 'AVI video súbor'
     Content: Obsah
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
+    CssType: 'CSS súbor'
+    DmgType: 'Apple obraz disku'
+    DocType: 'Word dokument'
     Filename: 'Meno súboru'
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    GifType: 'GIF obrázok - vhodné pre diagramy'
+    GzType: 'GZIP komprimačný súbor'
+    HtlType: 'HTML súbor'
+    HtmlType: 'HTML súbor'
     INVALIDEXTENSION: 'Extenzia nie je povolená (platné: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extenzia nie je povolená'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
+    IcoType: 'Icon obrázok'
+    JpgType: 'JPEG obrázok - vhodné pre fotografie'
+    JsType: 'Javascript súbor'
+    Mp3Type: 'MP3 audio súbor'
+    MpgType: 'MPEG video súbor'
     NOFILESIZE: 'Veľkosť súboru je nula bajtov.'
     NOVALIDUPLOAD: 'Subor nie je povolený pre nahratie'
     Name: Meno
     PLURALNAME: Súbory
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PdfType: 'Adobe Acrobat PDF súbor'
+    PngType: 'PNG obrázok - vhodný univerzálny formát'
     SINGULARNAME: Súbor
     TOOLARGE: 'Veľkosť súboru je príliš veľká, maximum {size} je povolené'
     TOOLARGESHORT: 'Veľkosť súboru prekračuje {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'Tiff formát obrázku'
     Title: Názov
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    WavType: 'WAV audo súbor'
+    XlsType: 'Excel tabuľka'
+    ZipType: 'ZIP komprimačný súbor'
   FileIFrameField:
     ATTACH: 'Pripojiť {type}'
     ATTACHONCESAVED: '{type} je možné pripojiť až budete mať najskôr uložený záznam.'
