@@ -121,7 +121,7 @@ ru:
     SEC: сек.
     SECS: сек.
     TIMEDIFFAGO: '{difference} назад'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFIN: 'через {difference}'
     YEAR: год
     YEARS: лет
   DateField:
@@ -177,13 +177,13 @@ ru:
     ZipType: 'Архив ZIP'
   FileIFrameField:
     ATTACH: 'Прикрепить {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED: 'Вы сможете прикрепить {type}s после первого сохранения записи.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Удалить {type}'
     DISALLOWEDFILETYPE: 'Загрузка этого типа файла не допускается'
     FILE: Файл
     FROMCOMPUTER: 'С диска'
-    FROMFILESTORE: 'From the File Store'
+    FROMFILESTORE: 'С сервера'
     NOSOURCE: 'Пожалуйста, выберите файл, который нужно прикрепить'
     REPLACE: 'Заменить {type}'
   FileIFrameField_iframe.ss:
@@ -221,13 +221,13 @@ ru:
     Find: Найти
     LEVELUP: 'Уровень выше'
     LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
+    NewRecord: 'Новый %s'
     NoItemsFound: 'Элементов не найдено'
     PRINTEDAT: 'Когда распечатано:'
     PRINTEDBY: 'Кем распечатано:'
     PlaceHolder: 'Найти {type}'
     PlaceHolderWithLabels: 'Найти {type} по {name}'
-    RelationSearch: 'Relation search'
+    RelationSearch: 'Поиск отношений'
     ResetFilter: Сброс
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Нет прав на удаление'
@@ -350,7 +350,7 @@ ru:
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
     CONFIRMPASSWORD: 'Подтвердить пароль'
     DATEFORMAT: 'Формат даты'
-    DefaultAdminFirstname: 'Default Admin'
+    DefaultAdminFirstname: 'Администратор по умолчанию'
     DefaultDateTime: 'по умолчанию'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Поле для нового пароля не может быть пустым; пожалуйста, повторите попытку'
@@ -431,7 +431,7 @@ ru:
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
     IMPORTSPECLINK: 'Показать спецификацию для %s'
-    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECRELATIONS: Отношения
     IMPORTSPECTITLE: 'Спецификация для %s'
   ModelAdmin_Tools.ss:
     FILTER: Фильтр
@@ -445,7 +445,7 @@ ru:
   NullableField:
     IsNullLabel: Недействительно
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
   Pagination:
     Page: Страница
     View: Просмотр
@@ -548,7 +548,7 @@ ru:
     ATTACHFILES: 'Прикрепить файлы'
     AttachFile: 'Прикрепить файл(ы)'
     DELETE: 'Удалить из файлов'
-    DELETEINFO: 'Permanently delete this file from the file store'
+    DELETEINFO: 'Окончательно удалить этот файл с сервера'
     DOEDIT: Сохранить
     DROPFILE: 'перетащить файл сюда'
     DROPFILES: 'перетащите файлы сюда'
@@ -564,7 +564,7 @@ ru:
     MAXNUMBEROFFILESSHORT: 'Можно загрузить не более {count} файлов'
     REMOVE: Удалить
     REMOVEERROR: 'Ошибка при удалении файла'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    REMOVEINFO: 'Удалить файл отсюда, но не удалять с сервера'
     STARTALL: 'Стартовать все'
     STARTALLINFO: 'Стартовать все загрузки'
     Saved: Сохранено
