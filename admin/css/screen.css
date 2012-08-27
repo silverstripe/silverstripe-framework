@@ -385,7 +385,6 @@ body.cms { overflow: hidden; }
 .cms-content-tools.filter { padding: 0 !important; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
 .cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px 0; overflow: auto; height: 100%; }
-.cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
 .cms-content-tools .cms-panel-content #LastEditedFrom { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .cms-content-tools .cms-panel-content #LastEditedFrom input { width: 160px; }
 .cms-content-tools .cms-panel-content #LastEditedFrom input.hasDatepicker { max-width: 160px; }

@@ -645,9 +645,6 @@ body.cms {
 		padding: $grid-x $grid-x 0;
 		overflow: auto;
 		height:100%;
-		.dropdown select {
-			width:$grid-x * 20;
-		}
 		#LastEditedFrom {
 			@include box-shadow(none);
 			input {
