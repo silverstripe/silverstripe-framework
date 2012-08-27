@@ -25,6 +25,7 @@ ru:
     FROMCOMPUTER: 'Выбрать файлы с диска вашего компьютера'
     FROMCOMPUTERINFO: 'Загрузить с диска вашего компьютера'
     TOTAL: 'Всего:'
+    TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
   BBCodeParser:
@@ -143,18 +144,37 @@ ru:
   Enum:
     ANY: Любой
   File:
+    AviType: 'AVI video file'
     Content: Содержание
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
     Filename: 'Имя файла'
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Недопустимое расширение файла (допустимые расширения: {extensions})'
     INVALIDEXTENSIONSHORT: 'Недопустимое расширение файла'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
     NOFILESIZE: 'Размер файла 0 байт.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Название
     PLURALNAME: Файлы
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Файл
     TOOLARGE: 'Превышен допустимый размер файла (максимально {size})'
     TOOLARGESHORT: 'Размер файла больше {size}'
+    TiffType: 'Tagged image format'
     Title: Заголовок
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Прикрепить {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'

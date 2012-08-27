@@ -25,6 +25,7 @@ cs:
     FROMCOMPUTER: 'Vyberte soubory z vašeho počítače'
     FROMCOMPUTERINFO: 'Nahrát z vašeho počítače'
     TOTAL: Celkem
+    TOUPLOAD: 'Vyberte soubory k nahrání...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: NEBO
   BBCodeParser:
@@ -143,18 +144,37 @@ cs:
   Enum:
     ANY: Jakkýkoli
   File:
+    AviType: 'AVI video soubor'
     Content: Obsah
+    CssType: 'CSS soubor'
+    DmgType: 'Apple obraz disku'
+    DocType: 'Word dokument'
     Filename: 'Jméno souboru'
+    GifType: 'GIF obrázke - vhodné na diagramy'
+    GzType: 'GZIP komprimační soubor'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML soubor'
     INVALIDEXTENSION: 'Extenze není povolena (platné: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extenze není povolena'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio soubor'
+    MpgType: 'MPEG video soubor'
     NOFILESIZE: 'Velikost souboru je 0 bajtů.'
     NOVALIDUPLOAD: 'Soubor není validní pro nahrání'
     Name: Jméno
     PLURALNAME: Soubory
+    PdfType: 'Adobe Acrobat PDF soubor'
+    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Soubor
     TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
     TOOLARGESHORT: 'Velikost souboru překračuje {size}'
+    TiffType: 'Tagged image format'
     Title: Titulek
+    WavType: 'WAV audo soubor'
+    XlsType: 'Excel tabulka'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Připojit {type}'
     ATTACHONCESAVED: '{type} je možné připojit až budete mít nejdříve uložen záznam.'

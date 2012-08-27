@@ -25,6 +25,7 @@ mi_NZ:
     FROMCOMPUTER: 'Kōwhiri kōnae mai i tō rorohiko'
     FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
     TOTAL: Tapeke
+    TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
     UPLOADOR: 'TĒNEI RĀNEI'
   BBCodeParser:
@@ -143,18 +144,37 @@ mi_NZ:
   Enum:
     ANY: 'Ko tētahi'
   File:
+    AviType: 'AVI video file'
     Content: 'Ngā Ihirangi'
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
     Filename: 'Ingoa Kōnae'
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Kāore e whakaaetia te toronga (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Kāore e whakaaetia te toronga'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
     NOFILESIZE: 'He kore ngā paita kei te kōnae'
     NOVALIDUPLOAD: 'Ehara te kōnae i te tukuatu pono'
     Name: Ingoa
     PLURALNAME: 'Ngā Kōnae'
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Kōnae
     TOOLARGE: 'He rahi rawa te rahi kōnae, he {size} te rahi mōrahi ka taea'
     TOOLARGESHORT: 'Ka hipa te {size} i te rahi kōnae'
+    TiffType: 'Tagged image format'
     Title: Taitara
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Āpiti  {type}'
     ATTACHONCESAVED: 'Ka taea te āpiti i ngā {type} ina oti te tiaki tuatahi o te pūkete.'
