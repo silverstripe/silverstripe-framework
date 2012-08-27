@@ -173,12 +173,6 @@ class Config {
 		$this->collectConfigPHPSettings = false;
 	}
 
-	static $extra_static_sources = array();
-
-	static function add_static_source($forclass, $donorclass) {
-		self::$extra_static_sources[$forclass][] = $donorclass;
-	}
-
 	/** @var [Config_ForClass] - The list of Config_ForClass instances, keyed off class */
 	static protected $for_class_instances = array();
 
@@ -371,14 +365,17 @@ class Config {
 
 		// Then look at the static variables
 		$nothing = new stdClass();
-		$classes = array($class);
+
+		$sources = array($class);
 		// Include extensions only if not flagged not to, and some have been set
-		if ((($sourceOptions & self::EXCLUDE_EXTRA_SOURCES) != self::EXCLUDE_EXTRA_SOURCES) && isset(self::$extra_static_sources[$class])) {
-			$classes =  array_merge($classes, self::$extra_static_sources[$class]);
+		if (($sourceOptions & self::EXCLUDE_EXTRA_SOURCES) != self::EXCLUDE_EXTRA_SOURCES) {
+			$extraSources = Object::get_extra_config_sources($class);
+			if ($extraSources) $sources = array_merge($sources, $extraSources);
 		}
 
-		foreach ($classes as $staticSource) {
-			$value = Object::static_lookup($staticSource, $name, $nothing);
+		foreach ($sources as $staticSource) {
+			if (is_array($staticSource)) $value = isset($staticSource[$name]) ? $staticSource[$name] : $nothing;
+			else $value = Object::static_lookup($staticSource, $name, $nothing);
 
 			if ($value !== $nothing) {
 				self::merge_low_into_high($result, $value, $suppress);
