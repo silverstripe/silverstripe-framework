@@ -280,46 +280,55 @@ class SS_ConfigManifest {
 	 * @return string "after", "before" or "undefined"
 	 */
 	protected function relativeOrder($a, $b) {
-		$matchesSomeRule = array();
-		
+		$matches = array();
+
 		// Do the same thing for after and before
-		foreach (array('after'=>'before', 'before'=>'after') as $rulename => $opposite) {
-			$matchesSomeRule[$rulename] = false;
-			
-			// If no rule specified, we don't match it
-			if (isset($a[$rulename])) {
-				
-				foreach ($a[$rulename] as $rule) {
-					$matchesRule = true;
-					
-					foreach(array('module', 'file', 'name') as $part) {
-						$partMatches = true;
-						
-						// If part is *, we match _unless_ the opposite rule has a non-* matcher than also matches $b
-						if ($rule[$part] == '*') {
-							if (isset($a[$opposite])) foreach($a[$opposite] as $oppositeRule) {
-								if ($oppositeRule[$part] == $b[$part]) { $partMatches = false; break; }
-							}
-						}
-						else {
-							$partMatches = ($rule[$part] == $b[$part]);
-						}
-						
-						$matchesRule = $matchesRule && $partMatches;
-						if (!$matchesRule) break;
+		foreach (array('before', 'after') as $rulename) {
+			$matches[$rulename] = array();
+
+			// Figure out for each rule, which part matches
+			if (isset($a[$rulename])) foreach ($a[$rulename] as $rule) {
+				$match = array();
+
+				foreach(array('module', 'file', 'name') as $part) {
+					// If part is *, we match _unless_ the opposite rule has a non-* matcher than also matches $b
+					if ($rule[$part] == '*') {
+						$match[$part] = 'wild';
 					}
-					
-					$matchesSomeRule[$rulename] = $matchesSomeRule[$rulename] || $matchesRule;
+					else {
+						$match[$part] = ($rule[$part] == $b[$part]);
+					}
 				}
+
+				$matches[$rulename][] = $match;
 			}
 		}
-		
-		// Check if it matches both rules - problem if so
-		if ($matchesSomeRule['before'] && $matchesSomeRule['after']) {
+
+		// Figure out the specificness of each match. 1 an actual match, 0 for a wildcard match, remove if no match
+		$matchlevel = array('before' => -1, 'after' => -1);
+
+		foreach (array('before', 'after') as $rulename) {
+			foreach ($matches[$rulename] as $i => $rule) {
+				$level = 0;
+
+				foreach ($rule as $part => $partmatches) {
+					if ($partmatches === false) continue 2;
+					if ($partmatches === true) $level += 1;
+				}
+
+				if ($matchlevel[$rulename] === false || $level > $matchlevel[$rulename]) $matchlevel[$rulename] = $level;
+			}
+		}
+
+		if ($matchlevel['before'] === -1 && $matchlevel['after'] === -1) {
+			return 'undefined';
+		}
+		else if ($matchlevel['before'] === $matchlevel['after']) {
 			user_error('Config fragment requires itself to be both before _and_ after another fragment', E_USER_ERROR);
 		}
-		
-		return $matchesSomeRule['before'] ? 'before' : ($matchesSomeRule['after'] ? 'after' : 'undefined');
+		else {
+			return ($matchlevel['before'] > $matchlevel['after']) ? 'before' : 'after';
+		}
 	}
 
 	/**
