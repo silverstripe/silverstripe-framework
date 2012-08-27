@@ -16,7 +16,7 @@ ru:
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Выбрать файлы'
-    DRAGFILESHERE: 'Перетащить файлы сюда'
+    DRAGFILESHERE: 'Перетащите файлы сюда'
     DROPAREA: Контейнер
     EDITALL: 'Редактировать все'
     EDITANDORGANIZE: 'Edit & organize'
@@ -180,7 +180,7 @@ ru:
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Удалить {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    DISALLOWEDFILETYPE: 'Загрузка этого типа файла не допускается'
     FILE: Файл
     FROMCOMPUTER: 'С диска'
     FROMFILESTORE: 'From the File Store'
@@ -226,7 +226,7 @@ ru:
     PRINTEDAT: 'Когда распечатано:'
     PRINTEDBY: 'Кем распечатано:'
     PlaceHolder: 'Найти {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolderWithLabels: 'Найти {type} по {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Сброс
   GridFieldAction_Delete:
@@ -260,9 +260,9 @@ ru:
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
     ResultCreated: 'Создано {count} групп'
     ResultDeleted: '%d групп удалено'
-    ResultUpdated: 'Updated %d groups'
+    ResultUpdated: 'Обновлено %d групп'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed: 'Обнаружен бесконечный цикл в иерархической структуре "{type}". Для исправления ошибки измените страницу, находящуюся уровнем выше'
   HtmlEditorField:
     ADDURL: 'Добавить URL'
     ADJUSTDETAILSDIMENSIONS: 'Дополнительные сведения и размеры'
@@ -333,13 +333,13 @@ ru:
     SAVEDUP: Сохранено.
     VersionUnknown: неизвестно
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: Здравствуйте
     LOGOUT: Выход
   LoginAttempt:
     Email: Email
     IP: IP-адрес
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Попытки входа в систему'
+    SINGULARNAME: 'Попытка входа в систему'
     Status: Статус
   Member:
     ADDGROUP: 'Добавить группу'
@@ -400,7 +400,7 @@ ru:
     MONTHNOLEADING: 'Месяц без ведущего нуля'
     Preview: Просмотр
     SHORTMONTH: 'Сокращенное название месяца (Июн)'
-    TOGGLEHELP: 'Toggle formatting help'
+    TOGGLEHELP: 'Включить подсказки форматирования'
     TWODIGITDAY: 'Число месяца: двумя цифрами'
     TWODIGITHOUR: 'Часы: двумя цифрами (00 - 23)'
     TWODIGITMINUTE: 'Минуты: двумя цифрами (00 - 59)'
@@ -411,8 +411,8 @@ ru:
     Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Создано {count} участников'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultDeleted: 'Удалено %d участников'
+    ResultNone: 'Изменений нет'
     ResultUpdated: 'Обновлено {count} участников'
   MemberPassword:
     PLURALNAME: Пароли
@@ -426,13 +426,13 @@ ru:
     NOCSVFILE: 'Выберите CSV-файл для импорта'
     NOIMPORT: 'Нечего импортировать'
     RESET: Сброс
-    Title: 'Data Models'
+    Title: 'Модели данных'
     UPDATEDRECORDS: 'Обновлено {count} записей.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Показать спецификацию для %s'
     IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Спецификация для %s'
   ModelAdmin_Tools.ss:
     FILTER: Фильтр
     IMPORT: Импорт
