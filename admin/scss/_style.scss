@@ -645,24 +645,7 @@ body.cms {
 		padding: $grid-x $grid-x 0;
 		overflow: auto;
 		height:100%;
-		#LastEditedFrom {
-			@include box-shadow(none);
-			input {
-				width:$grid-x * 20;
-				&.hasDatepicker {
-					max-width:$grid-x * 20;
-				}
-			}
-		}
-		#LastEditedTo {
-			@include box-shadow(none);
-			input {
-				width:$grid-x * 20;
-				&.hasDatepicker {
-					max-width:$grid-x * 20;
-				}
-			}
-		}
+
 		.Actions .ss-ui-action-constructive {
 			margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
 		}
