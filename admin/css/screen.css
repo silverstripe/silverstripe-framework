@@ -210,8 +210,9 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
 
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
-.fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding: 8px 0 0 8px; }
+.fieldgroup .fieldgroup-field { float: left; display: block; padding: 8px 0 0 8px; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
+.fieldgroup.stacked .fieldgroup-field { float: none; }
 
 .ss-toggle { margin-bottom: 8px; }
 .ss-toggle .ui-accordion-header { font-weight: bold; }
@@ -404,7 +405,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools .field input.text, .cms-content-tools .field select, .cms-content-tools .field textarea { padding: 5px; font-size: 11px; }
 .cms-content-tools .field.checkbox { padding: 0 8px 0; }
 .cms-content-tools .field.checkbox input { margin: 2px 0; }
-.cms-content-tools .fieldgroup .fieldgroup-field { width: auto; padding: 0; }
+.cms-content-tools .fieldgroup .fieldgroup-field { padding: 0; }
 .cms-content-tools .fieldgroup .fieldgroup-field .field { margin: 0; padding: 0; }
 .cms-content-tools table { margin: 8px -4px; }
 .cms-content-tools table thead th { color: #1f1f1f; font-weight: bold; line-height: 16px; font-size: 11px; padding: 4px; }
