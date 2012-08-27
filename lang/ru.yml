@@ -17,7 +17,7 @@ ru:
   AssetUploadField:
     ChooseFiles: 'Выбрать файлы'
     DRAGFILESHERE: 'Перетащить файлы сюда'
-    DROPAREA: 'Drop Area'
+    DROPAREA: Контейнер
     EDITALL: 'Редактировать все'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Редактировать файлы'
@@ -131,7 +131,7 @@ ru:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET: 'Не задано'
   Director:
     INVALID_REQUEST: 'Неверный запрос'
   DropdownField:
@@ -170,7 +170,7 @@ ru:
     SINGULARNAME: Файл
     TOOLARGE: 'Превышен допустимый размер файла (максимально {size})'
     TOOLARGESHORT: 'Размер файла больше {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'Изображение TIFF'
     Title: Заголовок
     WavType: 'Аудиофайл WAV'
     XlsType: 'Таблица Excel'
@@ -290,8 +290,8 @@ ru:
     IMAGEALTTEXTDESC: 'Передается программе чтения экрана или отображается, если изображение недоступно'
     IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLE: 'Текст (всплывающая подсказка) - для дополнительной информации об изображении'
+    IMAGETITLETEXT: 'Текст (всплывающая подсказка)'
     IMAGETITLETEXTDESC: 'Для дополнительных сведений об изображении'
     IMAGEWIDTHPX: Ширина
     INSERTMEDIA: 'Вставить медиафайл'
@@ -410,10 +410,10 @@ ru:
   MemberImportForm:
     Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Создано {count} пользователей'
+    ResultCreated: 'Создано {count} участников'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
-    ResultUpdated: 'Updated {count} members'
+    ResultUpdated: 'Обновлено {count} участников'
   MemberPassword:
     PLURALNAME: Пароли
     SINGULARNAME: Пароль
@@ -458,9 +458,9 @@ ru:
     SINGULARNAME: 'Право доступа'
   PermissionCheckboxSetField:
     AssignedTo: 'присвоено "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+    FromGroup: 'перенято от группы "{title}"'
+    FromRole: 'перенято из роли "{title}"'
+    FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
   PermissionRole:
     PLURALNAME: Роли
     SINGULARNAME: Роль
@@ -468,7 +468,7 @@ ru:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Роли и разрешения доступа'
+    PERMISSIONS_CATEGORY: 'Роли и права доступа'
   PhoneNumberField:
     VALIDATION: 'Пожалуйста, введите верный номер телефона'
   RelationComplexTableField.ss:
@@ -539,7 +539,7 @@ ru:
     VIEWNEXT: Следующий
     VIEWPREVIOUS: Предыдущий
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени ({format})'
   ToggleField:
     LESS: меньше
     MORE: больше
@@ -550,8 +550,8 @@ ru:
     DELETE: 'Удалить из файлов'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Сохранить
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DROPFILE: 'перетащить файл сюда'
+    DROPFILES: 'перетащите файлы сюда'
     Dimensions: Размеры
     EDIT: Редактировать
     EDITINFO: 'Редактировать этот файл'
