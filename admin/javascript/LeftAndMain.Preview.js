@@ -36,8 +36,6 @@
 				// Create layout and controls
 				this.find('iframe').addClass('center');
 				this.find('iframe').bind('load', function() {
-					self._fixIframeLinks();
-
 					// Load edit view for new page, but only if the preview is activated at the moment.
 					// This avoids e.g. force-redirections of the edit view on RedirectorPage instances.
 					if(!self.is('.is-collapsed')) self.loadCurrentPage();
@@ -52,8 +50,6 @@
 				this.find('.cms-preview-overlay-light').hide();
 				$('.cms-preview-toggle-link')[this.canPreview() ? 'show' : 'hide']();
 
-				self._fixIframeLinks();
-		
 				this._super();
 			},
 			loadUrl: function(url) {
@@ -126,21 +122,6 @@
 				// Only load if we're in the "edit page" view
 				var blockedClasses = ['CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
 				return !(contentEl.is('.' + blockedClasses.join(',.')));
-			},
-			
-			_fixIframeLinks: function() {
-				var doc = this.find('iframe')[0].contentDocument;
-				if(!doc) return;
-
-				// Block outside links from going anywhere
-				var links = doc.getElementsByTagName('A');
-				for (var i = 0; i < links.length; i++) {
-					var href = links[i].getAttribute('href');
-					if(!href) continue;
-					
-					// Disable external links
-					if (href.match(/^http:\/\//)) links[i].setAttribute('href', 'javascript:false');
-				}
 			},
 			
 			expand: function(inclMenu) {
