@@ -1,5 +1,7 @@
 eo:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'Unue alŝutita'
@@ -18,9 +20,11 @@ eo:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
-    FILES: Files
+    EDITINFO: 'Edit files'
+    FILES: Dosieroj
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -48,15 +52,19 @@ eo:
     UNORDERED: 'Neordigita listo'
     UNORDEREDDESCRIPTION: 'Neordigita listo'
     UNORDEREDEXAMPLE1: 'neordigita ero 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'bonvolu enigi salutnomon kaj pasvorton.'
     ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
     ERRORNOTREC: 'Kiuj salutnomo / pasvorto ne estas rekonebla'
   Boolean:
+    0: 'False'
     ANY: Ajna
-    0: Ne
-    LOGOUT: 'Log out'
-    1: Jes
+    1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Aliro al ĉiuj interfacoj de CMS'
@@ -64,13 +72,27 @@ eo:
     SAVE: Konservi
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    EMAIL: Retpoŝto
+    HELLO: Hi
+    PASSWORD: Pasvorto
   CheckboxField:
-    - Ne
-    - Jes
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Fermi Ŝprucfenestron'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Konservita %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
+  ComplexTableField_popup.ss:
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -107,8 +129,9 @@ eo:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
-    ADD: Enmeti
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Elekti)
@@ -119,7 +142,6 @@ eo:
     SINGULARNAME: 'Registro de neliverita mesaĝo'
   Enum:
     ANY: Ajna
-    LOADING: Loading...
   File:
     Content: Enhavo
     Filename: Dosiernomo
@@ -144,13 +166,21 @@ eo:
     FROMFILESTORE: 'El la dosiera konservejo'
     NOSOURCE: 'Bonvolu elekti fontan dosieron por alkroĉi'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
+  ForgotPasswordEmail.ss:
+    HELLO: Hi
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '%s estas postulita'
-    TITLE: 'Image Uploading Iframe'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'La enirita valoron ne unika'
     VALIDATIONPASSWORDSDONTMATCH: 'Pasvortoj ne matĉas'
@@ -181,37 +211,28 @@ eo:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Sekva
-    PREVIOUS: Antaŭa
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Forigi
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Saluton
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Jen via'
-    TEXT2: 'pasvorta reagorda ligilo'
-    TEXT3: por
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
-    CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
     Code: 'Grupa Kodo'
     DefaultGroupTitleAdministrators: Administrantoj
     DefaultGroupTitleContentAuthors: Enhavaŭtoroj
     Description: Priskribo
-    EMAIL: Retpoŝto
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Saluton
     Locked: 'Ŝlosita?'
     NoRoles: 'No roles found'
-    PASSWORD: Pasvorto
+    PLURALNAME: Groups
     Parent: 'Patra Grupo'
     RolesAddEditLink: 'Aldoni/redakti rolojn'
+    SINGULARNAME: Group
     Sort: 'Ordiga Ordo'
-    TITLE: 'Iframe por alŝuti bildon'
     has_many_Permissions: Permesoj
     many_many_Members: Membroj
   GroupImportForm:
@@ -267,11 +288,17 @@ eo:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Bildo
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  Image_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    ADD: 'Enmeti novan vicon'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -285,9 +312,14 @@ eo:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: Retadreso
     IP: IP-Adreso
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Stato
   Member:
     ADDGROUP: 'Add group'
@@ -297,6 +329,7 @@ eo:
     BUTTONLOSTPASSWORD: 'Mi perdis mian pasvorton'
     CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
     CONFIRMPASSWORD: 'Konfirmu pasvorton'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Defaŭlta Administranto'
     DefaultDateTime: default
     EMAIL: Retpoŝto
@@ -319,6 +352,7 @@ eo:
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: 'Familia nomo'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -334,6 +368,7 @@ eo:
     TITLE: 'Retpoŝto &amp; Pasvorto'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -359,6 +394,9 @@ eo:
     ResultDeleted: 'Forigis %d membrojn'
     ResultNone: 'Neniu ŝanĝo'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Forigi
@@ -370,6 +408,17 @@ eo:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo
@@ -377,23 +426,35 @@ eo:
     IsNullLabel: 'Estas senvalora'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administranto
     CMS_ACCESS_CATEGORY: CMS-aliro
     FULLADMINRIGHTS: 'Ĉiuj administraj rajtoj'
     FULLADMINRIGHTS_HELP: 'Implicas kaj superregas ĉiujn aliajn agorditajn permesojn.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'heredita de rolo "%s" en grupo "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Bonvolu enigi validan telefonnumeron'
+  RelationComplexTableField.ss:
+    ADD: Add
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas <a href="%s">ensaluti denove</a>.'
     BUTTONSEND: 'Sendu al mi la ligilon reagordi pasvorton'
@@ -431,26 +492,32 @@ eo:
     FileFieldLabel: 'CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
-    VIEWFIRST: 'Vidigi unuan'
-    VIEWLAST: 'Vidigi lastan'
-    VIEWNEXT: 'Vidigi sekvan'
-    VIEWPREVIOUS: 'Vidigi antaŭan'
   SimpleImageField:
     NOUPLOAD: 'Neniu Bildo Alŝutita'
   SiteTree:
     TABMAIN: Ĉefaj
   TableField:
-    ADDITEM: 'Almeti je %s'
     ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'Ordigi kreskante'
-    SORTDESC: 'Ordigi malkreskante'
+  TableField.ss:
+    ADD: 'Add a new row'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Eksporti al CSV'
     PRINT: Presi
     Print: Presi
     SELECT: 'Select:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordigi kreskante'
+    SORTDESC: 'Ordigi malkreskante'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'Vidigi unuan'
+    VIEWLAST: 'Vidigi lastan'
+    VIEWNEXT: 'Vidigi sekvan'
+    VIEWPREVIOUS: 'Vidigi antaŭan'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
@@ -460,21 +527,26 @@ eo:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
     AttachFile: 'Attach a file'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Versioj

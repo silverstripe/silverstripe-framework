@@ -2,7 +2,10 @@
 
 /**
  * Additional interface for {@link SS_List} classes that are sortable.
- * 
+ *
+ * All methods in this interface are immutable - they should return new instances with the sort
+ * applied, rather than applying the sort in place
+ *
  * @see SS_List, SS_Filterable, SS_Limitable
  */
 interface SS_Sortable {
@@ -19,10 +22,10 @@ interface SS_Sortable {
 	 * Sorts this list by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.
 	 *
-	 * @example $list->sort('Name'); // default ASC sorting
-	 * @example $list->sort('Name DESC'); // DESC sorting
-	 * @example $list->sort('Name', 'ASC');
-	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 * @example $list = $list->sort('Name'); // default ASC sorting
+	 * @example $list = $list->sort('Name DESC'); // DESC sorting
+	 * @example $list = $list->sort('Name', 'ASC');
+	 * @example $list = $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
 	 */
 	public function sort();
 	
@@ -30,7 +33,7 @@ interface SS_Sortable {
 	/**
 	 * Reverses the list based on reversing the current sort.
 	 *
-	 * @example $list->reverse();
+	 * @example $list = $list->reverse();
 	 *
 	 * @return array
 	 */

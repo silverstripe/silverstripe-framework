@@ -761,7 +761,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Array All extensions which can be handled by the different views.
 	 */
 	protected function getAllowedExtensions() {
-		$exts = array('jpg', 'gif', 'png', 'swf');
+		$exts = array('jpg', 'gif', 'png', 'swf','jpeg');
 		$this->extend('updateAllowedExtensions', $exts);
 		return $exts;
 	}
@@ -895,6 +895,10 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 
 	public function appCategory() {
 		return 'embed';
+	}
+	
+	public function getInfo() {
+		return $this->oembed->info;
 	}
 }
 

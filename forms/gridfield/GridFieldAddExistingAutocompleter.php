@@ -22,6 +22,11 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	protected $targetFragment;
 
 	/**
+	 * @var SS_List
+	 */
+	protected $searchList;
+
+	/**
 	 * Which columns that should be used for doing a "StartsWith" search.
 	 * If multiple fields are provided, the filtering is performed non-exclusive.
 	 * If no fields are provided, tries to auto-detect a "Title" or "Name" field,
@@ -168,9 +173,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 */
 	public function doSearch($gridField, $request) {
 		$dataClass = $gridField->getList()->dataClass();
-		$allList = DataList::create($dataClass);
-		$filters = array();
-		$stmts = array();
+		$allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
 		
 		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
 		if(!$searchFields) {
@@ -180,6 +183,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		}
 
 		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
+		$stmts = array();
 		foreach($searchFields as $searchField) {
 			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, Convert::raw2sql($request->getVar('gridfield_relationsearch')));
 		}
@@ -207,6 +211,16 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 */
 	public function getResultsFormat() {
 		return $this->resultsFormat;
+	}
+
+	/**
+	 * Sets the base list instance which will be used for the autocomplete
+	 * search.
+	 *
+	 * @param SS_List $list
+	 */
+	public function setSearchList(SS_List $list) {
+		$this->searchList = $list;
 	}
 
 	/**

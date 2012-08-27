@@ -1,5 +1,7 @@
 az:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -18,9 +20,11 @@ az:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
-    FILES: Files
+    EDITINFO: 'Edit files'
+    FILES: Fayllar
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -48,15 +52,19 @@ az:
     UNORDERED: 'Sıralanmamış siyahı'
     UNORDEREDDESCRIPTION: 'Sıralanmamış siyahı'
     UNORDEREDEXAMPLE1: 'nizamlanmamış element 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Zəhmət olmasa istifadəçi adı və ya parolu yazın.'
     ERRORNOTADMIN: 'İstifadəçi administrator deyil'
     ERRORNOTREC: 'Belə istifadəçi adı və ya parol tanınmadı'
   Boolean:
+    0: 'False'
     ANY: İstənilən
-    0: Yox
-    LOGOUT: 'Log out'
-    1: Bəli
+    1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -64,13 +72,27 @@ az:
     SAVE: 'Yadda saxla'
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'You changed your password for'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    EMAIL: E-poçt
+    HELLO: Hi
+    PASSWORD: Parol
   CheckboxField:
-    - Yox
-    - Bəli
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: Bağla
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: '%s %s %s yadda saxlanıldı'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
+  ComplexTableField_popup.ss:
+    NEXT: Next
+    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -107,8 +129,9 @@ az:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
-    ADD: 'Əlavə et'
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Seçin)
@@ -119,7 +142,6 @@ az:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: İxtiyari
-    LOADING: Loading...
   File:
     Content: Məzmun
     Filename: 'Faylın adı'
@@ -144,13 +166,21 @@ az:
     FROMFILESTORE: 'Fayllar siyahısından'
     NOSOURCE: 'Xahiş edirik əlavə etmək üçün source faylı seçin'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
+  ForgotPasswordEmail.ss:
+    HELLO: Hi
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '%s tələb olunur.'
-    TITLE: 'Image Uploading Iframe'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Daxil edilən məlumat unikal deyil'
     VALIDATIONPASSWORDSDONTMATCH: 'Parollar uyğun gəlmir'
@@ -181,37 +211,28 @@ az:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Sonrakı
-    PREVIOUS: Əvvəlki
   GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Salam
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Burada sizin'
-    TEXT2: 'parolu sıfırlma linki'
-    TEXT3: üçün
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
-    CHANGEPASSWORDTEXT2: 'Siz aşağıdakilarla daxil ola bilərsiniz.'
     Code: 'Qrup kodu'
     DefaultGroupTitleAdministrators: Administratorlar
     DefaultGroupTitleContentAuthors: 'Məzmun müəllifləri'
     Description: 'Qısa təsvir'
-    EMAIL: E-poçt
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Salam
     Locked: 'Bloklanıb?'
     NoRoles: 'No roles found'
-    PASSWORD: Parol
+    PLURALNAME: Groups
     Parent: 'Valideyn qrupu'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: Sıralama
-    TITLE: 'Image Uploading Iframe'
     has_many_Permissions: Səlahiyyətlər
     many_many_Members: Üzvlər
   GroupImportForm:
@@ -267,11 +288,17 @@ az:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Şəkil
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  Image_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    ADD: 'Yeni sətir əlavə et'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -285,9 +312,14 @@ az:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: E-poçt
     IP: 'İP ünvan'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -297,6 +329,7 @@ az:
     BUTTONLOSTPASSWORD: 'Parol yaddan çıxıb.'
     CONFIRMNEWPASSWORD: 'Yeni parolun təsdiqi'
     CONFIRMPASSWORD: 'Parolu təsdiqlə'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Əsas admin'
     DefaultDateTime: default
     EMAIL: E-poçt
@@ -319,6 +352,7 @@ az:
     SUBJECTPASSWORDCHANGED: 'Sizin parolunuz dəyişildi'
     SUBJECTPASSWORDRESET: 'Parolu sıfırlama linki'
     SURNAME: Soyad
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: '%s adlı istifadəçi artıq mövcuddur'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -334,6 +368,7 @@ az:
     TITLE: 'E-poçt &amp; Parol'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -359,6 +394,9 @@ az:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Delete
@@ -370,6 +408,17 @@ az:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Miqdar
     FIELDLABELCURRENCY: Valyuta
@@ -377,23 +426,35 @@ az:
     IsNullLabel: Boşdur
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
     FULLADMINRIGHTS_HELP: 'Başqa təyin edilmiş bütün icazələr rədd olunur.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: '"%s" rolundan "%s" qrupunda törəyib'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: İcazələr
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
+  RelationComplexTableField.ss:
+    ADD: Add
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza <a href="%s">daxil olun'
     BUTTONSEND: 'Parolu sıfırlama linkini göndər'
@@ -431,26 +492,32 @@ az:
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
-    VIEWFIRST: 'Birinciyə bax'
-    VIEWLAST: 'Axırıncı baxılmış'
-    VIEWNEXT: Növbəti
-    VIEWPREVIOUS: 'Əvvəlkinə bax'
   SimpleImageField:
     NOUPLOAD: 'Şəkil yüklənməmişdir'
   SiteTree:
     TABMAIN: Əsas
   TableField:
-    ADDITEM: '%s əlavə et'
     ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'Artma sırası ilə sırala'
-    SORTDESC: 'Azalma sırası ilə sırala'
+  TableField.ss:
+    ADD: 'Add a new row'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'CSV-yə ixrac et'
     PRINT: 'Çap et'
     Print: 'Çap et'
     SELECT: 'Seç:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Artma sırası ilə sırala'
+    SORTDESC: 'Azalma sırası ilə sırala'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'Birinciyə bax'
+    VIEWLAST: 'Axırıncı baxılmış'
+    VIEWNEXT: Növbəti
+    VIEWPREVIOUS: 'Əvvəlkinə bax'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
@@ -460,21 +527,26 @@ az:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
     AttachFile: 'Attach a file'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Versiyalar

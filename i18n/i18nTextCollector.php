@@ -75,20 +75,11 @@ class i18nTextCollector extends Object {
 	public function run($restrictToModules = null) {
 		//Debug::message("Collecting text...", false);
 		
-		$modules = array();
+		$modules = scandir($this->basePath);
 		$themeFolders = array();
 		
 		// A master string tables array (one mst per module)
 		$entitiesByModule = array();
-		
-		//Search for and process existent modules, or use the passed one instead
-		if($restrictToModules && count($restrictToModules)) {
-			foreach($restrictToModules as $restrictToModule) {
-				$modules[] = basename($restrictToModule);
-			}
-		} else {
-			$modules = scandir($this->basePath);
-		}
 		
 		foreach($modules as $index => $module){
 			if($module != 'themes') continue;
@@ -143,6 +134,13 @@ class i18nTextCollector extends Object {
 					unset($entitiesByModule[$module][$fullName]);
 				}
 			}			
+		}
+
+		// Restrict modules we update to just the specified ones (if any passed)
+		if($restrictToModules && count($restrictToModules)) {
+			foreach (array_diff(array_keys($entitiesByModule), $restrictToModules) as $module) {
+				unset($entitiesByModule[$module]);
+			}
 		}
 
 		// Write each module language file
@@ -328,15 +326,23 @@ class i18nTextCollector extends Object {
 	/**
 	 * @uses i18nEntityProvider
 	 */
-	function collectFromEntityProviders($filePath) {
+	function collectFromEntityProviders($filePath, $module = null) {
 		$entities = array();
+
+		// HACK Ugly workaround to avoid "Cannot redeclare class PHPUnit_Framework_TestResult" error
+		// when running text collector with PHPUnit 3.4. There really shouldn't be any dependencies
+		// here, but the class reflection enforces autloading of seemingly unrelated classes.
+		// The main problem here is the CMSMenu class, which iterates through test classes,
+		// which in turn trigger autoloading of PHPUnit.
+		$phpunitwrapper = PhpUnitWrapper::inst();
+		$phpunitwrapper->init();
 		
 		$classes = ClassInfo::classes_for_file($filePath);
 		if($classes) foreach($classes as $class) {
 			// Not all classes can be instanciated without mandatory arguments,
 			// so entity collection doesn't work for all SilverStripe classes currently
 			// Requires PHP 5.1+
-			if(class_exists($class, false) && in_array('i18nEntityProvider', class_implements($class))) {
+			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
 				$reflectionClass = new ReflectionClass($class);
 				if($reflectionClass->isAbstract()) continue;
 

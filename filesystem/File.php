@@ -749,27 +749,27 @@ class File extends DataObject {
 	 */
 	function getFileType() {
 		$types = array(
-			'gif' => 'GIF image - good for diagrams',
-			'jpg' => 'JPEG image - good for photos',
-			'jpeg' => 'JPEG image - good for photos',
-			'png' => 'PNG image - good general-purpose format',
-			'ico' => 'Icon image',
-			'tiff' => 'Tagged image format',
-			'doc' => 'Word document',
-			'xls' => 'Excel spreadsheet',
-			'zip' => 'ZIP compressed file',
-			'gz' => 'GZIP compressed file',
-			'dmg' => 'Apple disk image',
-			'pdf' => 'Adobe Acrobat PDF file',
-			'mp3' => 'MP3 audio file',
-			'wav' => 'WAV audo file',
-			'avi' => 'AVI video file',
-			'mpg' => 'MPEG video file',
-			'mpeg' => 'MPEG video file',
-			'js' => 'Javascript file',
-			'css' => 'CSS file',
-			'html' => 'HTML file',
-			'htm' => 'HTML file'
+			'gif' => _t('File.GifType', 'GIF image - good for diagrams'),
+			'jpg' => _t('File.JpgType', 'JPEG image - good for photos'),
+			'jpeg' => _t('File.JpgType', 'JPEG image - good for photos'),
+			'png' => _t('File.PngType', 'PNG image - good general-purpose format'),
+			'ico' => _t('File.IcoType', 'Icon image'),
+			'tiff' => _t('File.TiffType', 'Tagged image format'),
+			'doc' => _t('File.DocType', 'Word document'),
+			'xls' => _t('File.XlsType', 'Excel spreadsheet'),
+			'zip' => _t('File.ZipType', 'ZIP compressed file'),
+			'gz' => _t('File.GzType', 'GZIP compressed file'),
+			'dmg' => _t('File.DmgType', 'Apple disk image'),
+			'pdf' => _t('File.PdfType', 'Adobe Acrobat PDF file'),
+			'mp3' => _t('File.Mp3Type', 'MP3 audio file'),
+			'wav' => _t('File.WavType', 'WAV audo file'),
+			'avi' => _t('File.AviType', 'AVI video file'),
+			'mpg' => _t('File.MpgType', 'MPEG video file'),
+			'mpeg' => _t('File.MpgType', 'MPEG video file'),
+			'js' => _t('File.JsType', 'Javascript file'),
+			'css' => _t('File.CssType', 'CSS file'),
+			'html' => _t('File.HtmlType', 'HTML file'),
+			'htm' => _t('File.HtlType', 'HTML file')
 		);
 		
 		$ext = $this->getExtension();
@@ -920,8 +920,9 @@ class File extends DataObject {
 	 */
 	static function set_class_for_file_extension($exts, $class) {
 		if(!is_array($exts)) $exts = array($exts);
+		
 		foreach($exts as $ext) {
-			if(ClassInfo::is_subclass_of($ext, 'File')) {
+			if(is_subclass_of($ext, 'File')) {
 				throw new InvalidArgumentException(
 					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
 				);

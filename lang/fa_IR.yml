@@ -1,5 +1,7 @@
 fa_IR:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'پوشه جديد'
   AssetTableField:
     CREATED: 'First uploaded'
@@ -18,9 +20,11 @@ fa_IR:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
-    FILES: Files
+    EDITINFO: 'Edit files'
+    FILES: 'فايل ها'
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -48,15 +52,19 @@ fa_IR:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
+    0: 'False'
     ANY: هر
-    0: نه
-    LOGOUT: 'Log out'
-    1: آری
+    1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -64,13 +72,27 @@ fa_IR:
     SAVE: نگاهداری
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    EMAIL: ايميل
+    HELLO: درود
+    PASSWORD: 'كلمه عبور'
   CheckboxField:
-    - نه
-    - آری
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'بستن چنجره'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: '%s %s %s ذخيره شد'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort ascending'
+    SORTDESC: 'Sort descending'
+  ComplexTableField_popup.ss:
+    NEXT: بعدی
+    PREVIOUS: قبلی
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -107,8 +129,9 @@ fa_IR:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
-    ADD: افزودن
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (گزینش)
@@ -119,7 +142,6 @@ fa_IR:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: Loading...
   File:
     Content: محتوا
     Filename: 'نام پرونده'
@@ -139,18 +161,26 @@ fa_IR:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: پرونده
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'لطفا محل یک فایل را جهت پیوست انتخاب کنید'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
+  ForgotPasswordEmail.ss:
+    HELLO: درود
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: برای
   Form:
     FIELDISREQUIRED: '%s نیاز است.'
-    TITLE: 'Image Uploading Iframe'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: 'گذرواژه‌ها همانند هم نیستند'
@@ -181,37 +211,28 @@ fa_IR:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: بعدی
-    PREVIOUS: قبلی
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: حذف
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: درود
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: برای
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     Code: 'كد گروه'
     DefaultGroupTitleAdministrators: 'مدیران کل'
     DefaultGroupTitleContentAuthors: 'نویسندگان مطالب'
     Description: توضحیات
-    EMAIL: ايميل
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: درود
     Locked: 'بسته شده است؟'
     NoRoles: 'No roles found'
-    PASSWORD: 'كلمه عبور'
+    PLURALNAME: Groups
     Parent: 'گروه مادر'
     RolesAddEditLink: 'اضافه/ویرایش وظیفه'
+    SINGULARNAME: Group
     Sort: 'تربیت چیدن'
-    TITLE: 'Image Uploading Iframe'
     has_many_Permissions: مجوز‌ها
     many_many_Members: اعضاء
   GroupImportForm:
@@ -267,11 +288,17 @@ fa_IR:
     URL: نشانی
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  Image_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    ADD: 'افزودن ردیف تازه'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -285,9 +312,14 @@ fa_IR:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'آدرس های ایمیل'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -297,6 +329,7 @@ fa_IR:
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'تکرار رمز عبور جدید'
     CONFIRMPASSWORD: 'تکرار رمز عبور'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'مدیر پیشفرض'
     DefaultDateTime: default
     EMAIL: 'پست الکترونیک'
@@ -319,6 +352,7 @@ fa_IR:
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما دگرگون شد'
     SUBJECTPASSWORDRESET: 'پیوند ازنوسازی گذرواژه شما'
     SURNAME: 'نام خانوادگی'
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -334,6 +368,7 @@ fa_IR:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -359,6 +394,9 @@ fa_IR:
     ResultDeleted: 'کاربر %d حذف شد'
     ResultNone: 'تغییری ایجاد نشد'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: حذف
@@ -370,6 +408,17 @@ fa_IR:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -377,23 +426,35 @@ fa_IR:
     IsNullLabel: 'خالی است'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: 'مدیر کل'
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'مجوز دسترسی ها و وظایف'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'لطفاً شماره تلفن معتبر وارد کنید'
+  RelationComplexTableField.ss:
+    ADD: افزودن
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید <a href="%s">دوباره وارد شوید.</a>.'
     BUTTONSEND: 'Send me the password reset link'
@@ -431,26 +492,32 @@ fa_IR:
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
-    VIEWFIRST: 'مشاهده اولی'
-    VIEWLAST: 'مشاهده آخری'
-    VIEWNEXT: 'مشاهده بعدی'
-    VIEWPREVIOUS: 'مشاهده قبلی'
   SimpleImageField:
     NOUPLOAD: 'No Image Uploaded'
   SiteTree:
     TABMAIN: اصلی
   TableField:
-    ADDITEM: افزودن
     ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'چینش صعودی'
-    SORTDESC: 'چینش نزولی'
+  TableField.ss:
+    ADD: 'افزودن ردیف تازه'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: چاپ
-    Print: چاپ
+    Print: Print
     SELECT: انتخاب
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'چینش صعودی'
+    SORTDESC: 'چینش نزولی'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'مشاهده اولی'
+    VIEWLAST: 'مشاهده آخری'
+    VIEWNEXT: 'مشاهده بعدی'
+    VIEWPREVIOUS: 'مشاهده قبلی'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
@@ -459,22 +526,27 @@ fa_IR:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: 'نسخه ها'

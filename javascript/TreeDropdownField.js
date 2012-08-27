@@ -192,10 +192,14 @@
 						// TODO Hack to avoid ajax load on init, see http://code.google.com/p/jstree/issues/detail?id=911
 						'data': this.getPanel().find('.tree-holder').html(),
 						'ajax': {
-							'url': this.data('urlTree'),
+							'url': function(node) {
+								var url = $.path.parseUrl(self.data('urlTree')).hrefNoSearch;
+								return url + '/' + ($(node).data("id") ? $(node).data("id") : 0);
+							},
 							'data': function(node) {
-								var id = $(node).data("id") ? $(node).data("id") : 0, params = self.getRequestParams();
-								params = $.extend({}, params, {ID: id, ajax: 1});
+								var query = $.query.load(self.data('urlTree')).keys;
+								var params = self.getRequestParams();
+								params = $.extend({}, query, params, {ajax: 1});
 								return params;
 							}
 						}
@@ -260,7 +264,7 @@
 			onadd: function() {
 				this._super();
 				
-				var title = this.data('title');
+				var title = decodeURIComponent(this.data('title'));
 				this.find('.treedropdownfield-title').replaceWith(
 					$('<input type="text" class="treedropdownfield-title search" />')
 				);

@@ -1111,6 +1111,8 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 		)
 	);
 
+	static $default_sort = "Title";
+
 	function MyTitle() {
 		return 'Team ' . $this->Title;
 	}

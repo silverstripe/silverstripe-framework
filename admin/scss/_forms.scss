@@ -236,11 +236,6 @@ form.small .field, .field.small {
 	}
 	
 	/* Date Fields */
-	input.hasDatepicker {
-		width: 50%;
-		max-width: ($grid-x * 12);
-	}
-
 	input.month, input.day, input.year { 
 		width: ($grid-x * 7); 
 	}
@@ -300,11 +295,7 @@ form.small .field, .field.small {
 	}
 
 	.ss-ui-button {
-		margin-top:0px;	
-		&.buttonset {
-			margin: 0 -1px; // hack to avoid double borders
-		}
-		
+		margin-top:0px;
 		font-weight: bold;
 		text-decoration: none;
 		line-height: $grid-y * 2;
@@ -312,14 +303,17 @@ form.small .field, .field.small {
 		border: 1px solid $color-button-generic-border;
 		border-bottom: 1px solid darken($color-button-generic-border, 10%);
 		cursor: pointer;
-		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
 		background-color: $color-button-generic;
+		white-space: nowrap;
+
 		@include background(
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 10%),
 				darken($color-button-generic, 5%)
 			))
 		);
+
+		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
 
 		&.ui-state-hover, &:hover {
 			text-decoration: none;
@@ -418,6 +412,16 @@ form.small .field, .field.small {
 			opacity: 0.8;
 		}
 	}
+
+	.ss-ui-buttonset {
+		.ui-button {
+			margin-left: -1px;
+		}
+	}
+
+	.ss-ui-buttonset {
+		margin-left: 1px;
+	}
 	
 	.ss-ui-loading-icon {
 		background: url(../../images/network-save.gif) no-repeat;
@@ -434,7 +438,6 @@ form.small .field, .field.small {
 	.fieldgroup-field {
 		float: left;
 		display: block;
-		width: $grid-x * 23;
 		padding: $grid-y 0 0 $grid-x;
 
 		&.odd {
@@ -448,6 +451,12 @@ form.small .field, .field.small {
 		.field {
 			border: none;
 			padding-bottom: 0;
+		}
+	}
+
+	&.stacked {
+		.fieldgroup-field {
+			float: none;
 		}
 	}
 }

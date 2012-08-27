@@ -316,7 +316,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$actions,
 			$this->component->getValidator()
 		);
-		$form->loadDataFrom($this->record);
+		if($this->record->ID !== 0) {
+		  $form->loadDataFrom($this->record);
+		}
 
 		// TODO Coupling with CMS
 		$toplevelController = $this->getToplevelController();
@@ -382,7 +384,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		
 		$form->sessionMessage($message, 'good');
 
-		return Controller::curr()->redirect($this->Link());
+		if($new_record) {
+			return Controller::curr()->redirect($this->Link());
+		} else {
+			// Return new view, as we can't do a "virtual redirect" via the CMS Ajax
+			// to the same URL (it assumes that its content is already current, and doesn't reload)
+			return $this->edit(Controller::curr()->getRequest());
+		}
 	}
 
 	function doDelete($data, $form) {
@@ -462,7 +470,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			)));	
 		} else {
 			$items->push(new ArrayData(array(
-				'Title' => sprintf(_t('GridField.NewRecord', 'New %s'), $this->record->singular_name()),
+				'Title' => sprintf(_t('GridField.NewRecord', 'New %s'), $this->record->i18n_singular_name()),
 				'Link' => false
 			)));	
 		}

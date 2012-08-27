@@ -75,14 +75,16 @@ class FulltextSearchable extends DataExtension {
 		parent::__construct();
 	}
 
-	static function add_to_class($class, $extensionClass, $args = null) {
-		Config::inst()->update($class, 'indexes', array('SearchFields' => array(
-			'type' => 'fulltext',
-			'name' => 'SearchFields',
-			'value' => $args[0]
-		)));
-
-		parent::add_to_class($class, $extensionClass, $args);
+	static function get_extra_config($class, $extensionClass, $args) {
+		return array(
+			'indexes' => array(
+				'SearchFields' => array(
+					'type' => 'fulltext',
+					'name' => 'SearchFields',
+					'value' => $args[0]
+				)
+			)
+		);
 	}
 
 	/**

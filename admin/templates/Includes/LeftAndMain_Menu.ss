@@ -8,10 +8,10 @@
 		</div>
 	
 		<div class="cms-login-status">
-			<a href="Security/logout" class="logout-link" title="<% _t('LOGOUT','Log out') %>"><% _t('LOGOUT','Log out') %></a>
+			<a href="Security/logout" class="logout-link" title="<% _t('LeftAndMain_Menu.ss.LOGOUT','Log out') %>"><% _t('LeftAndMain_Menu.ss.LOGOUT','Log out') %></a>
 			<% with CurrentMember %>
 				<span>
-					<% _t('Hello','Hi') %>
+					<% _t('LeftAndMain_Menu.ss.Hello','Hi') %>
 					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link ss-ui-dialog-link" data-popupclass="edit-profile-popup">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
@@ -33,12 +33,12 @@
 					<ul>
 						<li class="first <% if Top.class == 'AssetAdmin' %>current<% end_if %>" id="Menu-AssetAdmin">
 							<a href="admin/assets/">
-								<span class="text">Edit &amp; organize</span>
+								<span class="text"><% _t('AssetAdmin.EditOrgMenu', 'Edit &amp; organize') %></span>
 							</a>
 						</li>
 						<li class="last <% if Top.class == 'CMSFileAddController' %>current<% end_if %>" id="Menu-CMSFileAddController">
 							<a href="admin/assets/add">
-								<span class="text">Add files</span>
+								<span class="text"><% _t('AssetAdmin.ADDFILES', 'Add files') %></span>
 							</a>
 						</li>
 					</ul>

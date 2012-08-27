@@ -599,7 +599,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 
 				selector.empty();
-				selector.append($('<option value="" selected="1">Select an anchor</option>'));
+				selector.append($(
+					'<option value="" selected="1">' +
+					ss.i18n._t('HtmlEditorField.SelectAnchor') +
+					'</option>'
+				));
 				for (var j = 0; j < anchors.length; j++) {
 					selector.append($('<option value="'+anchors[j]+'">'+anchors[j]+'</option>'));
 				}

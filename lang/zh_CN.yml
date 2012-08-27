@@ -1,5 +1,7 @@
 zh_CN:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 新建文件夹
   AssetTableField:
     CREATED: 第一次被上传
@@ -18,9 +20,11 @@ zh_CN:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
-    FILES: Files
+    EDITINFO: 'Edit files'
+    FILES: 文件
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -48,15 +52,19 @@ zh_CN:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 请输入用户名和密码
     ERRORNOTADMIN: 此用户没有管理员权限。
     ERRORNOTREC: 没有找到此用户名/密码
   Boolean:
-    ANY: Any
     0: 'False'
-    LOGOUT: 'Log out'
+    ANY: Any
     1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -64,6 +72,12 @@ zh_CN:
     SAVE: 保存
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
+    CHANGEPASSWORDTEXT2: 您现在可以用下列权限信息进行登路：
+    EMAIL: Email
+    HELLO: 嗨
+    PASSWORD: Password
   CheckboxField:
     - 'False'
     - 'True'
@@ -71,6 +85,14 @@ zh_CN:
     CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 正序排列
+    SORTDESC: 倒序排列
+  ComplexTableField_popup.ss:
+    NEXT: 下一页
+    PREVIOUS: 上一页
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -107,8 +129,9 @@ zh_CN:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
-    ADD: Add
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: （选择）
@@ -119,7 +142,6 @@ zh_CN:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: Loading...
   File:
     Content: Content
     Filename: Filename
@@ -139,18 +161,26 @@ zh_CN:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: 文件
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
+  ForgotPasswordEmail.ss:
+    HELLO: 嗨
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '%s是必需填写的'
-    TITLE: 'Image Uploading Iframe'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 输入值已被他人占用
     VALIDATIONPASSWORDSDONTMATCH: （密码相互不匹配）
@@ -181,37 +211,28 @@ zh_CN:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: 下一页
-    PREVIOUS: 上一页
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: 删除
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: 嗨
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
-    CHANGEPASSWORDTEXT2: 您现在可以用下列权限信息进行登路：
     Code: 团队代码
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
-    EMAIL: Email
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: 嗨
     Locked: 锁定？
     NoRoles: 'No roles found'
-    PASSWORD: Password
+    PLURALNAME: Groups
     Parent: 主团队
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Sort Order'
-    TITLE: 图象上传内嵌框架（Iframe）
     has_many_Permissions: 权限
     many_many_Members: 成员
   GroupImportForm:
@@ -267,11 +288,17 @@ zh_CN:
     URL: （路径）URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  Image_iframe.ss:
+    TITLE: 图象上传内嵌框架（Iframe）
   LeftAndMain:
-    ADD: 'Add a new row'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -285,9 +312,14 @@ zh_CN:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -297,6 +329,7 @@ zh_CN:
     BUTTONLOSTPASSWORD: 忘记密码
     CONFIRMNEWPASSWORD: 确认新密码
     CONFIRMPASSWORD: 确认密码
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: 电子邮件
@@ -319,6 +352,7 @@ zh_CN:
     SUBJECTPASSWORDCHANGED: 您的密码已更改
     SUBJECTPASSWORDRESET: 重设您的密码链接
     SURNAME: 姓
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 已经存在用这个电子邮件的会员
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -334,6 +368,7 @@ zh_CN:
     TITLE: 电邮地址和密码
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -359,6 +394,9 @@ zh_CN:
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: 删除
@@ -370,6 +408,17 @@ zh_CN:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -377,23 +426,35 @@ zh_CN:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 请输入有效电话号码
+  RelationComplexTableField.ss:
+    ADD: Add
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。
     BUTTONSEND: 给我发送密码重设链接
@@ -431,26 +492,32 @@ zh_CN:
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
   SimpleImageField:
     NOUPLOAD: 没有上传的图像
   SiteTree:
     TABMAIN: 主要部分
   TableField:
-    ADDITEM: 新加
     ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+  TableField.ss:
+    ADD: 'Add a new row'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: Print
     Print: Print
     SELECT: 'Select:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'View first'
+    VIEWLAST: 'View last'
+    VIEWNEXT: 'View next'
+    VIEWPREVIOUS: 'View previous'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
@@ -459,22 +526,27 @@ zh_CN:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Versions

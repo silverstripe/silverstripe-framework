@@ -1,6 +1,13 @@
 (function() {
 	var each = tinymce.each;
 
+	// TinyMCE will stop loading if it encounters non-existent external script file
+	// when included through tiny_mce_gzip.php. Only load the external lang package if it is available.
+	var availableLangs = ['en', 'mi_NZ'];
+	if(jQuery.inArray(tinymce.settings.language, availableLangs) != -1) {
+		tinymce.PluginManager.requireLangPack("ssmacron");
+	}
+
 	/**
 	 * Load via: 
 	 * HtmlEditorConfig::get('cms')->enablePlugins(array('ssmacron', '../tinymce_ssmacron'))
@@ -33,7 +40,7 @@
 	
 			// Register buttons
 			ed.addButton('ssmacron', {
-				title : 'Insert a Macron',
+				title : t.editor.translate('insertmacron'),
 				cmd : 'mceInsertMacron',
 				image : url + '/img/macron.png'
 			});

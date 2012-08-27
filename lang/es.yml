@@ -1,5 +1,7 @@
 es:
   AssetAdmin:
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NuevaCarpeta
   AssetTableField:
     CREATED: 'Agregado por primera vez'
@@ -18,9 +20,11 @@ es:
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
-    FILES: Files
+    EDITINFO: 'Edit files'
+    FILES: Archivos
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -48,15 +52,19 @@ es:
     UNORDERED: 'Lista desordenada'
     UNORDEREDDESCRIPTION: 'Lista desordenada'
     UNORDEREDEXAMPLE1: 'elemento 1 desordenado'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Por favor introduzca su nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'Ese usuario no es un administrador.'
     ERRORNOTREC: 'Ese nombre de usuario / contraseña no pudo ser reconocido.'
   Boolean:
-    ANY: Any
     0: 'False'
-    LOGOUT: 'Log out'
+    ANY: Any
     1: 'True'
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Acceder a todas las interfaces del CMS'
@@ -64,6 +72,12 @@ es:
     SAVE: Guardar
   CMSProfileController:
     MENUTITLE: CMSProfileController
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: 'Has cambiado tu contraseña por'
+    CHANGEPASSWORDTEXT2: 'Ahora puede utilizar los siguientes datos de acreditación para iniciar sesión:'
+    EMAIL: 'Correo electrónico'
+    HELLO: Hola
+    PASSWORD: Contraseña
   CheckboxField:
     - 'False'
     - 'True'
@@ -71,6 +85,14 @@ es:
     CLOSEPOPUP: 'Cerrar Popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Guardado %s %s %s'
+  ComplexTableField.ss:
+    ADDITEM: 'Add %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Orden Ascendente'
+    SORTDESC: 'Orden Descendente'
+  ComplexTableField_popup.ss:
+    NEXT: Siguiente
+    PREVIOUS: Anterior
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -107,8 +129,9 @@ es:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  DatetimeField:
+    NOTSET: 'Not set'
   Director:
-    ADD: Añadir
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Elegir)
@@ -119,7 +142,6 @@ es:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
-    LOADING: Loading...
   File:
     Content: Contenido
     Filename: 'Nombre del archivo'
@@ -139,18 +161,26 @@ es:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: Archivo
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
+  FileIFrameField_iframe.ss:
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
+  ForgotPasswordEmail.ss:
+    HELLO: Hola
+    TEXT1: 'Aquí tiene su'
+    TEXT2: 'enlace para restablecer contraseña'
+    TEXT3: para
   Form:
     FIELDISREQUIRED: 'se requiere llenar el campo %s'
-    TITLE: 'Image Uploading Iframe'
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'El valor que se ha introducido no es único'
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraseñas no concuerdan'
@@ -181,37 +211,28 @@ es:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-    NEXT: Siguiente
-    PREVIOUS: Anterior
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Eliminar
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
-    HELLO: Hola
     Save: Save
     Saved: 'Saved %s %s'
-    TEXT1: 'Aquí tiene su'
-    TEXT2: 'enlace para restablecer contraseña'
-    TEXT3: para
+  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
-    CHANGEPASSWORDTEXT1: 'Has cambiado tu contraseña por'
-    CHANGEPASSWORDTEXT2: 'Ahora puede utilizar los siguientes datos de acreditación para iniciar sesión:'
     Code: 'Código de grupo'
     DefaultGroupTitleAdministrators: Administrators
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Descripción
-    EMAIL: 'Correo electrónico'
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    HELLO: Hola
     Locked: '¿Bloqueado?'
     NoRoles: 'No roles found'
-    PASSWORD: Contraseña
+    PLURALNAME: Groups
     Parent: 'Grupo Padre'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Orden de Clasificación'
-    TITLE: 'Iframe para agregar imágenes'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
   GroupImportForm:
@@ -267,11 +288,17 @@ es:
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
+  Image:
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Image
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_Cached:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  Image_iframe.ss:
+    TITLE: 'Iframe para agregar imágenes'
   LeftAndMain:
-    ADD: 'Añadir una nueva línea'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -285,9 +312,14 @@ es:
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
+  LeftAndMain_Menu.ss:
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Correo electrónico'
     IP: 'Dirección IP'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Estado
   Member:
     ADDGROUP: 'Add group'
@@ -297,6 +329,7 @@ es:
     BUTTONLOSTPASSWORD: 'He perdido mi contraseña'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar Contraseña'
+    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: E-mail
@@ -319,6 +352,7 @@ es:
     SUBJECTPASSWORDCHANGED: 'Su contraseña ha sido cambiada'
     SUBJECTPASSWORDRESET: 'Enlace para restaurar su contraseña'
     SURNAME: Apellidos
+    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con este email.'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -334,6 +368,7 @@ es:
     TITLE: 'E-mail &amp; Contraseña'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -359,6 +394,9 @@ es:
     ResultDeleted: 'Se eliminaron %d miembros'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
+  MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Eliminar
@@ -370,6 +408,17 @@ es:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -377,23 +426,35 @@ es:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Pagination:
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Todos los derechos administrativos'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  PermissionRoleCode:
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
     VALIDATION: 'Por favor introduzca un número de teléfono válido'
+  RelationComplexTableField.ss:
+    ADD: Añadir
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'
     BUTTONSEND: 'Envíenme el enlace para restaurar la contraseña'
@@ -431,26 +492,32 @@ es:
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
-    FILTER: Filter
-    IMPORT: Import
-    VIEWFIRST: 'Ver primero'
-    VIEWLAST: 'Ver último'
-    VIEWNEXT: 'Ver siguiente'
-    VIEWPREVIOUS: 'Ver anterior'
   SimpleImageField:
     NOUPLOAD: 'No se han agregado imágenes'
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ADDITEM: 'Agregar %s'
     ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+  TableField.ss:
+    ADD: 'Añadir una nueva línea'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
     PRINT: Imprimir
-    Print: Imprimir
+    Print: Print
     SELECT: 'Select:'
+  TableListField.ss:
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField_PageControls.ss:
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'Ver primero'
+    VIEWLAST: 'Ver último'
+    VIEWNEXT: 'Ver siguiente'
+    VIEWPREVIOUS: 'Ver anterior'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
@@ -459,22 +526,27 @@ es:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
+    EDIT: Edit
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
+    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
+    STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
     has_many_Versions: Versiones

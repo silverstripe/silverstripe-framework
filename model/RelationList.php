@@ -11,6 +11,10 @@ abstract class RelationList extends DataList {
 	
 	/**
 	 * Set the ID of the record that this ManyManyList is linking *from*.
+	 *
+	 * This is the mutatable version of this function, and will be protected only
+	 * from 3.1. Use forForeignID instead
+	 *
 	 * @param $id A single ID, or an array of IDs
 	 */
 	function setForeignID($id) {
@@ -19,7 +23,8 @@ abstract class RelationList extends DataList {
 			$oldFilter = $this->foreignIDFilter();
 			try {
 				$this->dataQuery->removeFilterOn($oldFilter);	
-			} catch(InvalidArgumentException $e) {}
+			}
+			catch(InvalidArgumentException $e) { /* NOP */ }
 		}
 
 		// Turn a 1-element array into a simple value
@@ -32,12 +37,13 @@ abstract class RelationList extends DataList {
 	}
 	
 	/**
-	 * Returns this ManyMany relationship linked to the given foreign ID.
+	 * Returns a copy of this list with the ManyMany relationship linked to the given foreign ID.
 	 * @param $id An ID or an array of IDs.
 	 */
 	function forForeignID($id) {
-		$this->setForeignID($id);
-		return $this;
+		return $this->alterDataQuery_30(function($query, $list) use ($id){
+			$list->setForeignID($id);
+		});
 	}
 	
 	abstract protected function foreignIDFilter();

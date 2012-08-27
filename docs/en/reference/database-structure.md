@@ -112,14 +112,3 @@ The information documented in this page is reflected in a few places in the code
     * augmentDatabase() is responsible for specifying the altered database schema to support versions.
 *  `[api:MySQLDatabase]`: getNextID() is used when creating new objects; it also handles the mechanics of
 updating the database to have the required schema.
-
-
-## Future work
-
-*  We realise that a fixed mapping between the database and object-model isn't appropriate in all cases.  In particular,
-it could be beneficial to set up a SilverStripe data-object as an interface layer to the databases of other
-applications.  This kind of configuration support is on the cards for development once we start looking more seriously
-at providing avenues for clean integration between systems.
-*  Some developers have commented that the the database layer could be used to maintain the relational integrity of this
-database structure.
-*  It could be desirable to implement a non-repeating auto-numbering system.

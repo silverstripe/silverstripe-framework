@@ -127,6 +127,10 @@ in jQuery.entwine, we're trying to reuse library code wherever possible.
 The most prominent example of this is the usage of [jQuery UI](http://jqueryui.com) for
 dialogs and buttons.
 
+The CMS includes the jQuery.entwine inspector. Press Ctrl+` to bring down the inspector.
+You can then click on any element in the CMS to see which entwine methods are bound to
+any particular element.
+
 ## JavaScript and CSS dependencies via Requirements and Ajax
 
 The JavaScript logic powering the CMS is divided into many files,
@@ -333,6 +337,18 @@ This is usually handled by the existing `[api:LeftAndMain]` logic,
 so you don't need to worry about it. The same concept applies for
 'X-Title' (change the window title) and 'X-ControllerURL' (change the URL recorded in browser history).
 Note: You can see any additional HTTP headers through the web developer tools in your browser of choice.
+
+## Tree
+
+The CMS tree for viewing hierarchical structures (mostly pages) is powered
+by the [jstree](http://jstree.com) library. It is configured through
+`sapphire/admin/javascript/LeftAndMain.Tree.js`, as well as some
+HTML5 metadata generated on its container (see the `data-hints` attribute).
+For more information, see the [Howto: Customize the CMS tree](../howto/customize-cms-tree).
+
+Note that a similar tree logic is also used for the 
+form fields to select one or more entries from those hierarchies
+(`[api:TreeDropdownField]` and `[api:TreeMultiselectField]`).
 
 ## Related
 

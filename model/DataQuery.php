@@ -227,7 +227,7 @@ class DataQuery {
 
 		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
 
-		$obj = Injector::inst()->get(ClassInfo::baseDataClass($this->dataClass));
+		$obj = Injector::inst()->get($this->dataClass);
 		$obj->extend('augmentSQL', $query, $this);
 
 		$this->ensureSelectContainsOrderbyColumns($query);
@@ -656,6 +656,7 @@ function max($field) {
 		$fieldExpression = $this->expressionForField($field, $subSelect);
 		$subSelect->setSelect(array());
 		$subSelect->selectField($fieldExpression, $field);
+		$subSelect->setOrderBy(null);
 		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
 
 		return $this;

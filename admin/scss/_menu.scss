@@ -36,6 +36,10 @@
 	vertical-align: middle;
 	font-size: $font-base-size;
 
+	.collapsed &{
+		padding:0;
+	}
+
 	.version {
 		display: none; 
 	} 

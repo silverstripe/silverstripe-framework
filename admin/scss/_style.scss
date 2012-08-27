@@ -170,6 +170,7 @@ body.cms {
 	// Reset to default styles
 	.ss-ui-button {
 		line-height: $grid-x*3;
+
 		.ui-button-text {
 			line-height: 1.4;
 		}
@@ -691,27 +692,7 @@ body.cms {
 		padding: $grid-x $grid-x 0;
 		overflow: auto;
 		height:100%;
-		.dropdown select {
-			width:$grid-x * 20;
-		}
-		#LastEditedFrom {
-			@include box-shadow(none);
-			input {
-				width:$grid-x * 20;
-				&.hasDatepicker {
-					max-width:$grid-x * 20;
-				}
-			}
-		}
-		#LastEditedTo {
-			@include box-shadow(none);
-			input {
-				width:$grid-x * 20;
-				&.hasDatepicker {
-					max-width:$grid-x * 20;
-				}
-			}
-		}
+
 		.Actions .ss-ui-action-constructive {
 			margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
 		}
@@ -784,7 +765,6 @@ body.cms {
 
 	.fieldgroup {
 		.fieldgroup-field {
-			width: auto;
 			padding: 0;
 			
 			.field {
