@@ -217,7 +217,8 @@ class SS_ConfigManifest {
 				foreach (array('before', 'after') as $order) {
 					if (isset($header[$order])) {
 						// First, splice into parts (multiple before or after parts are allowed, comma separated)
-						$orderparts = preg_split('/\s+,\s+/', $header[$order], PREG_SPLIT_NO_EMPTY);
+						if (is_array($header[$order])) $orderparts = $header[$order];
+						else $orderparts = preg_split('/\s*,\s*/', $header[$order], -1, PREG_SPLIT_NO_EMPTY);
 
 						// For each, parse out into module/file#name, and set any missing to "*"
 						$header[$order] = array();
