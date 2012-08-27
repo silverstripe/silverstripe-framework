@@ -138,9 +138,17 @@
 					var href = links[i].getAttribute('href');
 					if(!href) continue;
 					
-					// Disable external links
-					if (href.match(/^http:\/\//)) links[i].setAttribute('href', 'javascript:false');
+					// Open external links in new window to avoid "escaping" the
+					// internal page context in the preview iframe,
+					// which is important to stay in for the CMS logic.
+					if (href.match(/^http:\/\//)) links[i].setAttribute('target', '_blank');
 				}
+
+				// Hide duplicate navigator, as it replicates existing UI in the CMS
+				var navi = doc.getElementById('SilverStripeNavigator');
+				if(navi) navi.style.display = 'none';
+				var naviMsg = doc.getElementById('SilverStripeNavigatorMessage');
+				if(naviMsg) naviMsg.style.display = 'none';
 			},
 			
 			expand: function(inclMenu) {
