@@ -162,16 +162,16 @@ class Versioned extends DataExtension {
 			// Link to the version archived on that date
 			$safeDate = Convert::raw2sql($date);
 			$query->addWhere(
-					"`{$baseTable}_versions`.`Version` IN 
+					"\"{$baseTable}_versions\".\"Version\" IN 
 					(SELECT LatestVersion FROM 
 						(SELECT 
-							`{$baseTable}_versions`.`RecordID`, 
-							MAX(`{$baseTable}_versions`.`Version`) AS LatestVersion
-							FROM `{$baseTable}_versions`
-							WHERE `{$baseTable}_versions`.`LastEdited` <= '$safeDate'
-							GROUP BY `{$baseTable}_versions`.`RecordID`
-						) AS `{$baseTable}_versions_latest`
-						WHERE `{$baseTable}_versions_latest`.`RecordID` = `{$baseTable}_versions`.`RecordID`
+							\"{$baseTable}_versions\".\"RecordID\", 
+							MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
+							FROM \"{$baseTable}_versions\"
+							WHERE \"{$baseTable}_versions\".\"LastEdited\" <= '$safeDate'
+							GROUP BY \"{$baseTable}_versions\".\"RecordID\"
+						) AS \"{$baseTable}_versions_latest\"
+						WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
 					)");
 			break;
 		
@@ -191,8 +191,28 @@ class Versioned extends DataExtension {
 				}
 			}
 			break;
-			
-		
+
+		// Reading a specific stage, but only return items that aren't in any other stage
+		case 'stage_unique':
+			$stage = $dataQuery->getQueryParam('Versioned.stage');
+
+			// Recurse to do the default stage behavior (must be first, we rely on stage renaming happening before below)
+			$dataQuery->setQueryParam('Versioned.mode', 'stage');
+			$this->augmentSQL($query, $dataQuery);
+
+			// Now exclude any ID from any other stage. Note that we double rename to avoid the regular stage rename
+			// renaming all subquery references to be Versioned.stage
+			foreach($this->stages as $excluding) {
+				if ($excluding == $stage) continue;
+
+				$tempName = 'ExclusionarySource_'.$excluding;
+				$excludingTable = $baseTable . ($excluding && $excluding != $this->defaultStage ? "_$excluding" : '');
+
+				$query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT "ID" FROM "'.$tempName.'")');
+				$query->renameTable($tempName, $excludingTable);
+			}
+			break;
+
 		// Return all version instances	
 		case 'all_versions':
 		case 'latest_versions':
@@ -208,21 +228,22 @@ class Versioned extends DataExtension {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
+			$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
 			
 			// latest_version has one more step
 			// Return latest version instances, regardless of whether they are on a particular stage
 			// This provides "show all, including deleted" functonality
 			if($dataQuery->getQueryParam('Versioned.mode') == 'latest_versions') {
 				$query->addWhere(
-					"`{$alias}_versions`.`Version` IN 
+					"\"{$alias}_versions\".\"Version\" IN 
 					(SELECT LatestVersion FROM 
 						(SELECT 
-							`{$alias}_versions`.`RecordID`, 
-							MAX(`{$alias}_versions`.`Version`) AS LatestVersion
-							FROM `{$alias}_versions`
-							GROUP BY `{$alias}_versions`.`RecordID`
-						) AS `{$alias}_versions_latest`
-						WHERE `{$alias}_versions_latest`.`RecordID` = `{$alias}_versions`.`RecordID`
+							\"{$alias}_versions\".\"RecordID\", 
+							MAX(\"{$alias}_versions\".\"Version\") AS LatestVersion
+							FROM \"{$alias}_versions\"
+							GROUP BY \"{$alias}_versions\".\"RecordID\"
+						) AS \"{$alias}_versions_latest\"
+						WHERE \"{$alias}_versions_latest\".\"RecordID\" = \"{$alias}_versions\".\"RecordID\"
 					)");
 			}
 			break;
@@ -363,7 +384,7 @@ class Versioned extends DataExtension {
 					
 					$versionIndexes = array_merge(
 						array(
-							'RecordID_Version' => array('type' => 'unique', 'value' => 'RecordID,Version'),
+							'RecordID_Version' => array('type' => 'unique', 'value' => '"RecordID","Version"'),
 							'RecordID' => true,
 							'Version' => true,
 						),

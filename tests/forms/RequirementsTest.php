@@ -18,8 +18,10 @@ class RequirementsTest extends SapphireTest {
 
 		$backend->javascript('http://www.mydomain.com/test.js');
 		$backend->javascript('https://www.mysecuredomain.com/test.js');
+		$backend->javascript('//scheme-relative.example.com/test.js');
 		$backend->css('http://www.mydomain.com/test.css');
 		$backend->css('https://www.mysecuredomain.com/test.css');
+		$backend->css('//scheme-relative.example.com/test.css');
 		
 		$html = $backend->includeInHTML(false, self::$html_template);
 		
@@ -32,12 +34,20 @@ class RequirementsTest extends SapphireTest {
 			'Load external secure javascript URL'
 		);
 		$this->assertTrue(
+			(strpos($html, '//scheme-relative.example.com/test.js') !== false), 
+			'Load external scheme-relative javascript URL'
+		);
+		$this->assertTrue(
 			(strpos($html, 'http://www.mydomain.com/test.css') !== false), 
 			'Load external CSS URL'
 		);
 		$this->assertTrue(
 			(strpos($html, 'https://www.mysecuredomain.com/test.css') !== false), 
 			'Load external secure CSS URL'
+		);
+		$this->assertTrue(
+			(strpos($html, '//scheme-relative.example.com/test.css') !== false), 
+			'Load scheme-relative CSS URL'
 		);
 	}
 
