@@ -268,7 +268,30 @@ class SS_ConfigManifest {
 			}
 		}
 
-		$this->yamlConfigFragments = $dag->sort();
+		try {
+			$this->yamlConfigFragments = $dag->sort();
+		}
+		catch (SS_DAG_CyclicException $e) {
+
+			if (!Director::isLive() && isset($_REQUEST['debug'])) {
+				$res = '<h1>Remaining config fragment graph</h1>';
+				$res .= '<dl>';
+
+				foreach ($e->dag as $node) {
+					$res .= "<dt>{$node['from']['module']}/{$node['from']['file']}#{$node['from']['name']} marked to come after</dt><dd><ul>";
+					foreach ($node['to'] as $to) {
+						$res .= "<li>{$to['module']}/{$to['file']}#{$to['name']}</li>";
+					}
+					$res .= "</ul></dd>";
+				}
+
+				$res .= '</dl>';
+				echo $res;
+			}
+
+			throw $e;
+		}
+
 	}
 	
 	/**
