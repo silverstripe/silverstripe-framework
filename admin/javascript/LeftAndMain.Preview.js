@@ -172,7 +172,7 @@
 				var self = this, containerEl = this.getLayoutContainer(), contentEl = containerEl.find('.cms-content');
 				this.addClass('east').removeClass('center').addClass('is-collapsed').width(10);
 				// this.css('overflow', 'hidden');
-				contentEl.addClass('center').show();
+				contentEl.addClass('center').show().css('visibility', 'visible');
 				this.find('iframe').hide();
 				this.find('.cms-preview-toggle a').html('&laquo;');
 				this.find('.cms-preview-controls').hide();
