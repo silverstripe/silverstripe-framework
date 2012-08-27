@@ -463,6 +463,7 @@ abstract class Object {
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
+			unset(self::$extension_sources[$subclass]);
 		}
 
 		Config::inst()->update($class, 'extensions', array($extension));
@@ -505,6 +506,7 @@ abstract class Object {
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
+			unset(self::$extension_sources[$subclass]);
 		}
 	}
 	
@@ -531,38 +533,66 @@ abstract class Object {
 	
 	// -----------------------------------------------------------------------------------------------------------------
 
-	private static $_added_extensions = array();
+	private static $extension_sources = array();
+
+	// Don't bother checking some classes that should never be extended
+	private static $unextendable_classes = array('Object', 'ViewableData', 'RequestHandler');
+
+	static public function get_extra_config_sources($class = null) {
+		if($class === null) $class = get_called_class();
+
+		// If this class is unextendable, NOP
+		if(in_array($class, self::$unextendable_classes)) return;
+
+		// If we have a pre-cached version, use that
+		if(array_key_exists($class, self::$extension_sources)) return self::$extension_sources[$class];
+
+		// Variable to hold sources in
+		$sources = null;
+
+		// Get a list of extensions
+		$extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
+
+		if($extensions) {
+			// Build a list of all sources;
+			$sources = array();
+
+			foreach($extensions as $extension) {
+				list($extensionClass, $extensionArgs) = self::parse_class_spec($extension);
+				$sources[] = $extensionClass;
+
+				if(!ClassInfo::has_method_from($extensionClass, 'add_to_class', 'Extension')) {
+					Deprecation::notice('3.1.0', "add_to_class deprecated on $extensionClass. Use get_extra_config instead");
+				}
+
+				call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
+
+				foreach(array_reverse(ClassInfo::ancestry($extensionClass)) as $extensionClassParent) {
+					if (ClassInfo::has_method_from($extensionClassParent, 'get_extra_config', $extensionClassParent)) {
+						$extras = $extensionClassParent::get_extra_config($class, $extensionClass, $extensionArgs);
+						if ($extras) $sources[] = $extras;
+					}
+				}
+			}
+		}
+
+		return self::$extension_sources[$class] = $sources;
+	}
 
 	public function __construct() {
 		$this->class = get_class($this);
 
-		// Don't bother checking some classes that should never be extended
-		static $notExtendable = array('Object', 'ViewableData', 'RequestHandler');
-		
-		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
-			if(in_array($class, $notExtendable)) continue;
-			if($extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED)) {
-				foreach($extensions as $extension) {
-					// Get the extension class for this extension
-					list($extensionClass, $extensionArgs) = self::parse_class_spec($extension);
+		foreach(ClassInfo::ancestry(get_called_class()) as $class) {
+			if(in_array($class, self::$unextendable_classes)) continue;
+			$extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
 
-					// If we haven't told that extension it's attached to this class yet, do that now
-					if (!isset(self::$_added_extensions[$extensionClass][$class])) {
-						// First call the add_to_class method - this will inherit down & is defined on Extension, so if not defined, no worries
-						call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
-
-						// Then register it as having been told about us
-						if (!isset(self::$_added_extensions[$extensionClass])) self::$_added_extensions[$extensionClass] = array($class => true);
-						else self::$_added_extensions[$extensionClass][$class] = true;
-					}
-
-					$instance = self::create_from_string($extension);
-					$instance->setOwner(null, $class);
-					$this->extension_instances[$instance->class] = $instance;
-				}
+			if($extensions) foreach($extensions as $extension) {
+				$instance = self::create_from_string($extension);
+				$instance->setOwner(null, $class);
+				$this->extension_instances[$instance->class] = $instance;
 			}
 		}
-		
+
 		if(!isset(self::$classes_constructed[$this->class])) {
 			$this->defineMethods();
 			self::$classes_constructed[$this->class] = true;

@@ -25,9 +25,10 @@ class Hierarchy extends DataExtension {
 	function augmentWrite(&$manipulation) {
 	}
 
-	static function add_to_class($class, $extensionClass, $args = null) {
-		Config::inst()->update($class, 'has_one', array('Parent' => $class));
-		parent::add_to_class($class, $extensionClass, $args);
+	static function get_extra_config($class, $extension, $args) {
+		return array(
+			'has_one' => array('Parent' => $class)
+		);
 	}
 
 	/**
