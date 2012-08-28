@@ -454,7 +454,7 @@ mi_NZ:
     CMS_ACCESS_CATEGORY: 'Uru CMS'
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
-    PLURALNAME: Permissions
+    PLURALNAME: 'Ngā Whakaaetanga'
     SINGULARNAME: Whakaaetanga
   PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
