@@ -9,8 +9,8 @@ Director:
 Name: coreroutes
 Before: '*'
 After:
-  - framework/routes#rootroutes
-  - cms/routes#modelascontrollerroutes
+  - '#rootroutes'
+  - '#modelascontrollerroutes'
 ---
 Director:
   rules:
@@ -25,9 +25,9 @@ Director:
 Name: adminroutes
 Before: '*'
 After:
-  - framework/routes#rootroutes
-  - framework/routes#coreroutes
-  - cms/routes#modelascontrollerroutes
+  - '#rootroutes'
+  - '#coreroutes'
+  - '#modelascontrollerroutes'
 ---
 Director:
   rules:
