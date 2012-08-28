@@ -134,15 +134,7 @@ class Director implements TemplateGlobalProvider {
 			
 			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 			if ($res !== false) {
-				// ?debug_memory=1 will output the number of bytes of memory used for this request
-				if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
-					Debug::message(sprintf(
-						"Peak memory usage in bytes: %s", 
-						number_format(memory_get_peak_usage(),0)
-					));
-				} else {
-					$response->output();
-				}
+				$response->output();
 			} else {
 				// @TODO Proper response here.
 				throw new SS_HTTPResponse_Exception("Invalid response");
@@ -485,27 +477,41 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Turns an absolute URL or folder into one that's relative to the root of the site.
-	 * This is useful when turning a URL into a filesystem reference, or vice versa.
-	 * 
-	 * @todo Implement checking across http/https protocols
+	 * Turns an absolute URL or folder into one that's relative to the root of 
+	 * the site. This is useful when turning a URL into a filesystem reference, 
+	 * or vice versa.
 	 * 
 	 * @param string $url Accepts both a URL or a filesystem path
-	 * @return string Either a relative URL if the checks succeeded, or the original (possibly absolute) URL.
+	 * @return string Either a relative URL if the checks succeeded, or the 
+	 * original (possibly absolute) URL.
 	 */
-	static function makeRelative($url) {
-		// Allow for the accidental inclusion of a // in the URL
-		$url = preg_replace('#([^:])//#', '\\1/', $url);
-		$url = trim($url);
+	public static function makeRelative($url) {
+		// Allow for the accidental inclusion whitespace and // in the URL
+		$url = trim(preg_replace('#([^:])//#', '\\1/', $url));
+
+		$base1 = self::absoluteBaseURL();
+		$baseDomain = substr($base1, strlen(self::protocol()));
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
-		if(preg_match('/^https?[^:]*:\/\//',$url)) {
-			$base1 = self::absoluteBaseURL();
+		if(preg_match('/^https?[^:]*:\/\//',$url,$matches)) {
+			$urlProtocol = $matches[0];
+			$urlWithoutProtocol = substr($url, strlen($urlProtocol));
+
 			// If we are already looking at baseURL, return '' (substr will return false)
-			if($url == $base1) return '';
-			else if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
-			// Convert http://www.mydomain.com/mysitedir to ''
-			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) return "";
+			if($url == $base1) {
+				return '';
+			}
+			else if(substr($url,0,strlen($base1)) == $base1) {
+				return substr($url,strlen($base1));
+			}
+			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) {
+				// Convert http://www.mydomain.com/mysitedir to ''
+				return "";
+			}
+
+			if(substr($urlWithoutProtocol,0,strlen($baseDomain)) == $baseDomain) {
+				return substr($urlWithoutProtocol,strlen($baseDomain));
+			}
 		}
 		
 		// test for base folder, e.g. /var/www
@@ -514,8 +520,15 @@ class Director implements TemplateGlobalProvider {
 
 		// Test for relative base url, e.g. mywebsite/ if the full URL is http://localhost/mywebsite/
 		$base3 = self::baseURL();
-		if(substr($url,0,strlen($base3)) == $base3) return substr($url,strlen($base3));
-		
+		if(substr($url,0,strlen($base3)) == $base3) {
+			return substr($url,strlen($base3));
+		}
+
+		// Test for relative base url, e.g mywebsite/ if the full url is localhost/myswebsite
+		if(substr($url,0,strlen($baseDomain)) == $baseDomain) {
+			return substr($url, strlen($baseDomain));
+		}
+
 		// Nothing matched, fall back to returning the original URL
 		return $url;
 	}
@@ -548,24 +561,29 @@ class Director implements TemplateGlobalProvider {
 	 * @return boolean
 	 */
 	public static function is_absolute_url($url) {
+		// Strip off the query and fragment parts of the URL before checking
+		if(($queryPosition = strpos($url, '?')) !== false) {
+			$url = substr($url, 0, $queryPosition-1);
+		}
+		if(($hashPosition = strpos($url, '#')) !== false) {
+			$url = substr($url, 0, $hashPosition-1);
+		}
 		$colonPosition = strpos($url, ':');
-	  return (
-	  	// Base check for existence of a host on a compliant URL
-	  	parse_url($url, PHP_URL_HOST)
-	  	// Check for more than one leading slash without a protocol.
+		$slashPosition = strpos($url, '/');
+		return (
+			// Base check for existence of a host on a compliant URL
+			parse_url($url, PHP_URL_HOST)
+			// Check for more than one leading slash without a protocol.
 			// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
 			// and hence a potential security risk. Single leading slashes are not an issue though.
-	  	|| preg_match('/\s*[\/]{2,}/', $url)
-	  	|| (
-	  		// If a colon is found, check if it's part of a valid scheme definition
-		  	// (meaning its not preceded by a slash, hash or questionmark).
-		  	// URLs in query parameters are assumed to be correctly urlencoded based on RFC3986,
-		  	// in which case no colon should be present in the parameters.
-	  		$colonPosition !== FALSE 
-	  		&& !preg_match('![/?#]!', substr($url, 0, $colonPosition))
-	  	)
-	  	
-	  );
+			|| preg_match('/\s*[\/]{2,}/', $url)
+			|| (
+				// If a colon is found, check if it's part of a valid scheme definition
+				// (meaning its not preceded by a slash).
+				$colonPosition !== FALSE 
+				&& ($slashPosition === FALSE || $colonPosition < $slashPosition)
+			)
+		);
 	}
 	
 	/**
@@ -936,8 +954,4 @@ class Director implements TemplateGlobalProvider {
 			'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
 		);
 	}
-
 }
-
-
-
