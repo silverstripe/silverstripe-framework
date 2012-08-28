@@ -753,9 +753,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$next = $prev = null;
 
 			$className = $this->stat('tree_class');
-			$next = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort > '.$record->Sort)->first();
+			$next = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:GreaterThan', $record->Sort)->first();
 			if (!$next) {
-				$prev = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort < '.$record->Sort)->reverse()->first();
+				$prev = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:LessThan', $record->Sort)->reverse()->first();
 			}
 
 			$link = Controller::join_links($recordController->Link("show"), $record->ID);
