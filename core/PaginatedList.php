@@ -52,6 +52,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function setPaginationGetVar($var) {
 		$this->getVar = $var;
+		return $this;
 	}
 
 	/**
@@ -70,6 +71,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function setPageLength($length) {
 		$this->pageLength = $length;
+		return $this;
 	}
 
 	/**
@@ -79,6 +81,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function setCurrentPage($page) {
 		$this->pageStart = ($page - 1) * $this->pageLength;
+		return $this;
 	}
 
 	/**
@@ -106,6 +109,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function setPageStart($start) {
 		$this->pageStart = $start;
+		return $this;
 	}
 
 	/**
@@ -129,6 +133,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function setTotalItems($items) {
 		$this->totalItems = $items;
+		return $this;
 	}
 
 	/**
@@ -143,6 +148,7 @@ class PaginatedList extends SS_ListDecorator {
 			$this->setPageStart($limit['start']);
 			$this->setTotalItems($query->unlimitedRowCount());
 		}
+		return $this;
 	}
 
 	/**
@@ -165,6 +171,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function setLimitItems($limit) {
 		$this->limitItems = (bool) $limit;
+		return $this;
 	}
 
 	/**
@@ -432,6 +439,7 @@ class PaginatedList extends SS_ListDecorator {
 		$this->setPageStart($pageStart);
 		$this->setPageLength($pageLength);
 		$this->setTotalSize($totalSize);
+		return $this;
 	}
 
 }
