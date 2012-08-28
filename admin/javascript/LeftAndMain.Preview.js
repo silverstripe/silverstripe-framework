@@ -67,10 +67,7 @@
 				if(this.is('.is-collapsed')) return;
 
 				// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
-				var url = $('.cms-edit-form')
-					.find(':input[name=PreviewURL],:input[name=StageLink],:input[name=LiveLink]')
-					.filter(function() {return $(this).val() !== '';})
-					.val();
+				var url = $('.cms-edit-form').choosePreviewLink();
 				if(url) {
 					this.loadUrl(url);
 					this.unblock();
@@ -297,11 +294,9 @@
 			onclick: function(e) {
 				e.preventDefault();
 				
-				var preview = $('.cms-preview'), 
-					url = $('.cms-edit-form')
-						.find(':input[name=PreviewURL],:input[name=StageLink],:input[name=LiveLink]')
-						.filter(function() {return $(this).val() !== '';})
-						.val();
+				var preview = $('.cms-preview'),
+					url = $('.cms-edit-form').choosePreviewLink();
+					
 				if(url) {
 						preview.loadUrl(url);
 						preview.unblock();
@@ -309,5 +304,23 @@
 				}
 			}
 		});
+
+		$('.cms-edit-form').entwine({
+			/**
+			 * Choose applicable preview link based on form data,
+			 * in a fixed order of priority: The PreviewURL field is used as an override,
+			 * which falls back to stage or live URLs.
+			 *
+			 * @return String Absolute URL
+			 */
+			choosePreviewLink: function() {
+				var self = this, urls = $.map(['PreviewURL', 'StageLink', 'LiveLink'], function(name) {
+					var val = self.find(':input[name=' + name + ']').val();
+					return val ? val : null;
+				});
+				return urls ? urls[0] : false;
+			}
+		});
+
 	});
 }(jQuery));
