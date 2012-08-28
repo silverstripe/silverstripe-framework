@@ -289,7 +289,7 @@ class SS_ConfigManifest {
 				echo $res;
 			}
 
-			throw $e;
+			user_error('Based on their before & after rules two fragments both need to be before/after each other', E_USER_ERROR);
 		}
 
 	}
