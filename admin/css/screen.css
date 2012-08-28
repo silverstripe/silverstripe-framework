@@ -180,7 +180,6 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .field .chzn-container-single .chzn-single:hover, .field .chzn-container-single .chzn-single:focus, .field .chzn-container-single .chzn-single:active { text-decoration: none; outline: none; }
 .field .chzn-container-single .chzn-single div { width: 24px; }
 .field .chzn-container-single .chzn-single div b { background-position: 4px 0px; }
-.field input.hasDatepicker { width: 50%; max-width: 96px; }
 .field input.month, .field input.day, .field input.year { width: 56px; }
 .field input.time { width: 64px; }
 .field.remove-splitter { border-bottom: none; box-shadow: none; }
@@ -210,8 +209,9 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
 
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
-.fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding: 8px 0 0 8px; }
+.fieldgroup .fieldgroup-field { float: left; display: block; padding: 8px 0 0 8px; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
+.fieldgroup.stacked .fieldgroup-field { float: none; }
 
 .ss-toggle { margin-bottom: 8px; }
 .ss-toggle .ui-accordion-header { font-weight: bold; }
@@ -393,13 +393,6 @@ body.cms { overflow: hidden; }
 .cms-content-tools.filter { padding: 0 !important; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
 .cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px 0; overflow: auto; height: 100%; }
-.cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
-.cms-content-tools .cms-panel-content #LastEditedFrom { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
-.cms-content-tools .cms-panel-content #LastEditedFrom input { width: 160px; }
-.cms-content-tools .cms-panel-content #LastEditedFrom input.hasDatepicker { max-width: 160px; }
-.cms-content-tools .cms-panel-content #LastEditedTo { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
-.cms-content-tools .cms-panel-content #LastEditedTo input { width: 160px; }
-.cms-content-tools .cms-panel-content #LastEditedTo input.hasDatepicker { max-width: 160px; }
 .cms-content-tools .cms-panel-content .Actions .ss-ui-action-constructive { margin-right: 5px; }
 .cms-content-tools .cms-content-header { background-color: #748d9d; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzc0OGQ5ZCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #748d9d)); background-image: -webkit-linear-gradient(#b0bec7, #748d9d); background-image: -moz-linear-gradient(#b0bec7, #748d9d); background-image: -o-linear-gradient(#b0bec7, #748d9d); background-image: linear-gradient(#b0bec7, #748d9d); }
 .cms-content-tools .cms-content-header h2 { text-shadow: #5c7382 -1px -1px 0; width: 176px; color: white; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
@@ -413,7 +406,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools .field input.text, .cms-content-tools .field select, .cms-content-tools .field textarea { padding: 5px; font-size: 11px; }
 .cms-content-tools .field.checkbox { padding: 0 8px 0; }
 .cms-content-tools .field.checkbox input { margin: 2px 0; }
-.cms-content-tools .fieldgroup .fieldgroup-field { width: auto; padding: 0; }
+.cms-content-tools .fieldgroup .fieldgroup-field { padding: 0; }
 .cms-content-tools .fieldgroup .fieldgroup-field .field { margin: 0; padding: 0; }
 .cms-content-tools table { margin: 8px -4px; }
 .cms-content-tools table thead th { color: #1f1f1f; font-weight: bold; line-height: 16px; font-size: 11px; padding: 4px; }

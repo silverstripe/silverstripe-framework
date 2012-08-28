@@ -274,8 +274,6 @@ abstract class Object {
 	 * Get the value of a static property of a class, even in that property is declared protected (but not private), without any inheritance,
 	 * merging or parent lookup if it doesn't exist on the given class.
 	 *
-	 * If using PHP 5.4, we can do this using $foo::$bar syntax. PHP 5.3 uses ReflectionClass to get the static properties instead.
-	 *
 	 * @static
 	 * @param $class - The class to get the static from
 	 * @param $name - The property to get from the class
@@ -283,7 +281,7 @@ abstract class Object {
 	 * @return any - The value of the static property $name on class $class, or $default if that property is not defined
 	 */
 	public static function static_lookup($class, $name, $default = null) {
-		if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION >= 4 && is_subclass_of($class, 'Object')) {
+		if (is_subclass_of($class, 'Object')) {
 			if (isset($class::$$name)) {
 				$parent = get_parent_class($class);
 				if (!$parent || !isset($parent::$$name) || $parent::$$name !== $class::$$name) return $class::$$name;

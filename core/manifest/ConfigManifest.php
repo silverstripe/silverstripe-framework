@@ -223,11 +223,12 @@ class SS_ConfigManifest {
 						// For each, parse out into module/file#name, and set any missing to "*"
 						$header[$order] = array();
 						foreach($orderparts as $part) {
-							preg_match('! (\*|\w+) (?:\/(\*|\w+) (?:\*|\#(\w+))? )? !x', $part, $match);
+							preg_match('! (?P<module>\*|\w+)? (\/ (?P<file>\*|\w+))? (\# (?P<fragment>\*|\w+))? !x', $part, $match);
+
 							$header[$order][] = array(
-								'module' => $match[1],
-								'file' => isset($match[2]) ? $match[2] : '*',
-								'name' => isset($match[3]) ? $match[3] : '*'
+								'module' => isset($match['module']) && $match['module'] ? $match['module'] : '*',
+								'file' => isset($match['file']) && $match['file'] ? $match['file'] : '*',
+								'name' => isset($match['fragment'])  && $match['fragment'] ? $match['fragment'] : '*'
 							);
 						}
 					}
@@ -289,7 +290,7 @@ class SS_ConfigManifest {
 				echo $res;
 			}
 
-			throw $e;
+			user_error('Based on their before & after rules two fragments both need to be before/after each other', E_USER_ERROR);
 		}
 
 	}
