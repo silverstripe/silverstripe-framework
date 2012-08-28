@@ -36,9 +36,6 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
  * After that, it calls {@link Director::direct()}, which is responsible for doing most of the 
  * real work.
  *
- * Finally, main.php will use {@link Profiler} to show a profile if the querystring variable 
- * "debug_profile" is set.
- *
  * CONFIGURING THE WEBSERVER
  *
  * To use SilverStripe, every request that doesn't point directly to a file should be rewritten to
@@ -89,12 +86,6 @@ if (isset($_GET['url'])) {
 // Remove base folders from the URL if webroot is hosted in a subfolder
 if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
 
-if (isset($_GET['debug_profile'])) {
-	Profiler::init();
-	Profiler::mark('all_execution');
-	Profiler::mark('main.php init');
-}
-
 // Connect to database
 require_once('model/DB.php');
 
@@ -114,20 +105,8 @@ if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseC
 	die();
 }
 
-if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
 DB::connect($databaseConfig);
-if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
-
-if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
-
 
 // Direct away - this is the "main" function, that hands control to the appropriate controller
 DataModel::set_inst(new DataModel());
 Director::direct($url, DataModel::inst());
-
-if (isset($_GET['debug_profile'])) {
-	Profiler::unmark('all_execution');
-	if(!Director::isLive()) {
-		Profiler::show(isset($_GET['profile_trace']));
-	}
-}
