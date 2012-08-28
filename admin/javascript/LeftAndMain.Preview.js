@@ -67,7 +67,10 @@
 				if(this.is('.is-collapsed')) return;
 
 				// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
-				var url = $('.cms-edit-form').find(':input[name=PreviewURL],:input[name=StageURLSegment]').val();
+				var url = $('.cms-edit-form')
+					.find(':input[name=PreviewURL],:input[name=StageLink],:input[name=LiveLink]')
+					.filter(function() {return $(this).val() !== '';})
+					.val();
 				if(url) {
 					this.loadUrl(url);
 					this.unblock();
@@ -138,9 +141,17 @@
 					var href = links[i].getAttribute('href');
 					if(!href) continue;
 					
-					// Disable external links
-					if (href.match(/^http:\/\//)) links[i].setAttribute('href', 'javascript:false');
+					// Open external links in new window to avoid "escaping" the
+					// internal page context in the preview iframe,
+					// which is important to stay in for the CMS logic.
+					if (href.match(/^http:\/\//)) links[i].setAttribute('target', '_blank');
 				}
+
+				// Hide duplicate navigator, as it replicates existing UI in the CMS
+				var navi = doc.getElementById('SilverStripeNavigator');
+				if(navi) navi.style.display = 'none';
+				var naviMsg = doc.getElementById('SilverStripeNavigatorMessage');
+				if(naviMsg) naviMsg.style.display = 'none';
 			},
 			
 			expand: function(inclMenu) {
@@ -164,7 +175,7 @@
 				var self = this, containerEl = this.getLayoutContainer(), contentEl = containerEl.find('.cms-content');
 				this.addClass('east').removeClass('center').addClass('is-collapsed').width(10);
 				// this.css('overflow', 'hidden');
-				contentEl.addClass('center').show();
+				contentEl.addClass('center').show().css('visibility', 'visible');
 				this.find('iframe').hide();
 				this.find('.cms-preview-toggle a').html('&laquo;');
 				this.find('.cms-preview-controls').hide();
@@ -286,7 +297,11 @@
 			onclick: function(e) {
 				e.preventDefault();
 				
-				var preview = $('.cms-preview'), url = $('.cms-edit-form').find(':input[name=PreviewURL],:input[name=StageURLSegment]').val();
+				var preview = $('.cms-preview'), 
+					url = $('.cms-edit-form')
+						.find(':input[name=PreviewURL],:input[name=StageLink],:input[name=LiveLink]')
+						.filter(function() {return $(this).val() !== '';})
+						.val();
 				if(url) {
 						preview.loadUrl(url);
 						preview.unblock();
