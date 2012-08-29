@@ -1103,7 +1103,7 @@ class Versioned_Version extends ViewableData {
 		$record['ID'] = $record['RecordID'];
 		$className = $record['ClassName'];
 		
-		$this->object = new $className($record);
+		$this->object = ClassInfo::exists($className) ? new $className($record) : new DataObject($record);
 		$this->failover = $this->object;
 		
 		parent::__construct();

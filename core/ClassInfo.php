@@ -58,8 +58,10 @@ class ClassInfo {
 	 * Returns the manifest of all classes which are present in the database.
 	 * @param string $class Class name to check enum values for ClassName field
 	 */
-	static function getValidSubClasses($class = 'SiteTree') {
-		return DB::getConn()->enumValuesForField($class, 'ClassName');
+	static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
+		$classes = DB::getConn()->enumValuesForField($class, 'ClassName');
+		if (!$includeUnbacked) $classes = array_filter($classes, array('ClassInfo', 'exists'));
+		return $classes;
 	}
 
 	/**
