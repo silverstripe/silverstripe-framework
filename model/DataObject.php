@@ -3135,7 +3135,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array
 	 */
 	public function summaryFields(){
-
 		$fields = $this->stat('summary_fields');
 
 		// if fields were passed in numeric array,
@@ -3158,8 +3157,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!$fields) $fields['ID'] = 'ID';
 
 		// Localize fields (if possible)
-		$labels = $this->fieldLabels(false);
-		$fields = array_intersect_key($labels, $fields);
+		foreach($this->fieldLabels(false) as $name => $label) {
+			if(isset($fields[$name])) $fields[$name] = $label;
+		}
 		
 		return $fields;
 	}
