@@ -97,6 +97,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * See {@link canView()} for more details on permission checks.
 	 */
 	static $required_permission_codes;
+
+	/**
+	 * @var String Namespace for session info, e.g. current record.
+	 * Defaults to the current class name, but can be amended to share a namespace in case
+	 * controllers are logically bundled together, and mainly separated
+	 * to achieve more flexible templating.
+	 */
+	static $session_namespace;
 	
 	/**
 	 * Register additional requirements through the {@link Requirements} class.
@@ -1252,8 +1260,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			return $this->request->requestVar('ID');
 		} elseif (isset($this->urlParams['ID']) && is_numeric($this->urlParams['ID'])) {
 			return $this->urlParams['ID'];
-		} elseif(Session::get("{$this->class}.currentPage")) {
-			return Session::get("{$this->class}.currentPage");
+		} elseif(Session::get($this->sessionNamespace() . ".currentPage")) {
+			return Session::get($this->sessionNamespace() . ".currentPage");
 		} else {
 			return null;
 		}
@@ -1268,7 +1276,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param int $id
 	 */
 	public function setCurrentPageID($id) {
-		Session::set("{$this->class}.currentPage", $id);
+		Session::set($this->sessionNamespace() . ".currentPage", $id);
 	}
 
 	/**
@@ -1291,6 +1299,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return ($record->ID == $this->currentPageID());
 	}
 	
+	/**
+	 * @return String
+	 */
+	protected function sessionNamespace() {
+		$override = $this->stat('session_namespace');
+		return $override ? $override : $this->class;
+	}
+
 	/**
 	 * URL to a previewable record which is shown through this controller.
 	 * The controller might not have any previewable content, in which case 
