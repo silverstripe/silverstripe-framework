@@ -12,6 +12,11 @@ the language and functions which are used in the guides.
 * [PHPUnit Configuration](phpunit-configuration). How to setup your testing environment with PHPUnit
 * [Extend the CMS Interface](extend-cms-interface). 
 * [How to customize CMS Tree](customize-cms-tree).
+* [Cache control](cache-control). Override the default PHP cache-control settings.
+* [Howto customize the CMS menu](customize-cms-menu).
+* [How to create a navigation menu](navigation-menu). Create primary navigation for your website.
+* [Paginating A List](pagination). Add pagination for an SS_List object.
+* [How to make a simple contact form](simple-contact-form).
 
 ## Feedback
 
