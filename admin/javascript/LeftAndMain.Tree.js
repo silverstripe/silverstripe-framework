@@ -86,7 +86,7 @@
 						.bind('move_node.jstree', function(e, data) {
 							if(self.getIsUpdatingTree()) return;
 
-							var movedNode = data.rslt.o, newParentNode = data.rslt.np, oldParentNode = data.inst._get_parent(movedNode);
+							var movedNode = data.rslt.o, newParentNode = data.rslt.np, oldParentNode = data.inst._get_parent(movedNode), newParentID = $(newParentNode).data('id') || 0, nodeID = $(movedNode).data('id');
 							var siblingIDs = $.map($(movedNode).siblings().andSelf(), function(el) {
 								return $(el).data('id');
 							});
@@ -94,9 +94,13 @@
 							$.ajax({
 								'url': self.data('urlSavetreenode'),
 								'data': {
-									ID: $(movedNode).data('id'), 
-									ParentID: $(newParentNode).data('id') || 0,
+									ID: nodeID, 
+									ParentID: newParentID,
 									SiblingIDs: siblingIDs
+								},
+								success: function() {
+									$('.cms-edit-form :input[name=ParentID]').val(newParentID);
+									self.updateNodesFromServer([nodeID]);
 								},
 								statusCode: {
 									403: function() {
