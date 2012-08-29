@@ -201,13 +201,13 @@ ru:
   Form:
     FIELDISREQUIRED: 'Поле %s является обязательным'
     SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
     VALIDATIONNOTUNIQUE: 'Введенное значение не уникально'
     VALIDATIONPASSWORDSDONTMATCH: 'Пароли не совпадают'
     VALIDATIONPASSWORDSNOTEMPTY: 'Пароли не могут быть пустыми'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONSTRONGPASSWORD: 'Пароль должен содержать как минимум одну цифру и один буквенно-цифровой символ.'
     VALIDATOR: Валидатор
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
   FormField:
     NONE: 'не выбрано'
   GridAction:
@@ -485,7 +485,7 @@ ru:
     LOGGEDOUT: 'Вы вышли. Если Вы хотите войти снова, введите ваши учетные данные ниже.'
     LOGIN: Вход
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>Неверная ссылка переустановки пароля или время действия ссылки истекло.</p><p>Вы можете повторно запросить ссылку, щелкнув <a href="{link1}">здесь</a>, или поменять пароль, <a href="{link2}">войдя в систему</a>.</p>'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
     PASSWORDSENTHEADER: 'Ссылка для переустановки пароля выслана на ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
@@ -517,7 +517,7 @@ ru:
   SiteTree:
     TABMAIN: Основное
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED: 'В %s поле ''%s'' является обязательным'
   TableField.ss:
     ADD: 'Добавить новый ряд'
     ADDITEM: 'Добавить %s'
