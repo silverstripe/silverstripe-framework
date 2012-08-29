@@ -126,6 +126,13 @@ class RequestHandlingTest extends FunctionalTest {
 		$response = Director::test("RequestHandlingTest_AllowedController/extendedMethod");
 		$this->assertEquals("extendedMethod", $response->getBody());
 		
+		/* This action has been blocked by an argument to a method */
+		$response = Director::test('RequestHandlingTest_AllowedController/blockMethod');
+		$this->assertEquals(403, $response->getStatusCode());
+
+		/* Whereas this one has been allowed by a method without an argument */
+		$response = Director::test('RequestHandlingTest_AllowedController/allowMethod');
+		$this->assertEquals('allowMethod', $response->getBody());
 	}
 	
 	public function testHTTPException() {
@@ -411,6 +418,8 @@ class RequestHandlingTest_AllowedController extends Controller implements TestOn
 	static $allowed_actions = array(
 		'failoverMethod', // part of the failover object
 		'extendedMethod', // part of the RequestHandlingTest_ControllerExtension object
+		'blockMethod' => '->provideAccess(false)',
+		'allowMethod' => '->provideAccess',
 	);
 
 	static $extensions = array(
@@ -425,6 +434,18 @@ class RequestHandlingTest_AllowedController extends Controller implements TestOn
 	
 	function index($request) {
 		return "This is the controller";
+	}
+
+	function provideAccess($access = true) {
+		return $access;
+	}
+
+	function blockMethod($request) {
+		return 'blockMethod';
+	}
+
+	function allowMethod($request) {
+		return 'allowMethod';
 	}
 }
 
