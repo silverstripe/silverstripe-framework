@@ -233,6 +233,24 @@ class DatabaseAdmin extends Controller {
 			}
 		}
 
+		// check for any orphans of SiteTree
+		$siteTreeOrphans = null;
+		if (singleton('SiteTree')) {
+			$classes = ClassInfo::getValidSubClasses();
+			$siteTreeOrphans = SiteTree::get('SiteTree',"\"ClassName\" NOT IN ('" . implode("','", $classes) . "')");
+		}
+
+		if (isset($siteTreeOrphans) && $siteTreeOrphans->Count()) {
+			foreach ($siteTreeOrphans as $orphan) {
+				$orphan->update(array('ClassName' => 'Page'));
+				$orphan->write();
+			}
+			if(!$quiet) {
+				echo (Director::is_cli()) ? "\n Orphaned pages have been set to Page!\n\n" :"<p>Orphaned pages have been set to Page!</p>";
+			}
+
+		}
+
 		touch(TEMP_FOLDER . '/database-last-generated-' .
 					str_replace(array('\\', '/', ':'), '.', Director::baseFolder()));
 
