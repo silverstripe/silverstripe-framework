@@ -3,6 +3,8 @@
 Any open source product is only as good as the community behind it. You can participate by sharing 
 code, ideas, or simply helping others. No matter what your skill level is, every contribution counts.
 
+What I'm doing here is a test commit on a repo forked from Simon's repository.
+
 See our [high level overview on silverstripe.org](http://silverstripe.org/contributing-to-silverstripe) on how you can help out.
 
 ## Sharing your Opinion
