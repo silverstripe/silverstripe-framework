@@ -18,7 +18,11 @@ class DirectorTest extends SapphireTest {
 		}
 		
 		Config::inst()->update('Director', 'rules', array(
-			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller'
+			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
+			'en-nz/$Action/$ID/$OtherID' => array(
+				'Controller' => 'DirectorTestRequest_Controller',
+				'Locale' => 'en_NZ'
+			)
 		));
 	}
 	
@@ -203,6 +207,25 @@ class DirectorTest extends SapphireTest {
 		);
 
 		Deprecation::restore_settings($originalDeprecation);
+	}
+	
+	/**
+	 * Tests that additional parameters specified in the routing table are 
+	 * saved in the request 
+	 */
+	function testRouteParams() {
+		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
+		
+		$this->assertEquals(
+			$request->params(), 
+			array(
+				'Controller' => 'DirectorTestRequest_Controller',
+				'Action' => 'myaction', 
+				'ID' => 'myid', 
+				'OtherID' => 'myotherid',
+				'Locale' => 'en_NZ'
+			)
+		);
 	}
 
 	function testForceSSLProtectsEntireSite() {

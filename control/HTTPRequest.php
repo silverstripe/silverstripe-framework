@@ -82,6 +82,21 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	protected $latestParams = array();
 	
+	/**
+	 * @var array $routeParams Contains an associative array of all arguments
+	 * explicitly set in the route table for the current request.
+	 * Useful for passing generic arguments via custom routes.
+	 * 
+	 * E.g. The "Locale" parameter would be assigned "en_NZ" below
+	 * 
+	 * Director:
+	 *   rules:
+	 *     'en_NZ/$URLSegment!//$Action/$ID/$OtherID':
+	 *       Controller: 'ModelAsController'
+	 *       Locale: 'en_NZ'
+	 */
+	protected $routeParams = array();
+	
 	protected $unshiftedButParsedParts = 0;
 	
 	/**
@@ -364,7 +379,6 @@ class SS_HTTPRequest implements ArrayAccess {
 			$shiftCount = sizeof($patternParts);
 		}
 
-		$matched = true;
 		$arguments = array();
 		foreach($patternParts as $i => $part) {
 			$part = trim($part);
@@ -447,22 +461,35 @@ class SS_HTTPRequest implements ArrayAccess {
 	function latestParams() {
 		return $this->latestParams;
 	}
+	
 	function latestParam($name) {
-		if(isset($this->latestParams[$name]))
-			return $this->latestParams[$name];
-		else
-			return null;
+		if(isset($this->latestParams[$name])) return $this->latestParams[$name];
+		else return null;
+	}
+	
+	function routeParams() {
+		return $this->routeParams;
+	}
+	
+	function setRouteParams($params) {
+		$this->routeParams = $params;
+	}
+	
+	function params()
+	{
+		return array_merge($this->allParams, $this->routeParams);
 	}
 	
 	/**
 	 * Finds a named URL parameter (denoted by "$"-prefix in $url_handlers)
-	 * from the full URL.
+	 * from the full URL, or a parameter specified in the route table
 	 * 
 	 * @param string $name
 	 * @return string Value of the URL parameter (if found)
 	 */
 	function param($name) {
-		if(isset($this->allParams[$name])) return $this->allParams[$name];
+		$params = $this->params();
+		if(isset($params[$name])) return $params[$name];
 		else return null;
 	}
 	
