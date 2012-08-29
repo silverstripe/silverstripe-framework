@@ -533,7 +533,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Return a new DataList instance with an inner join clause added to this list's query.
 	 *
-	 * @param string $table Table name (unquoted)
+	 * @param string $table Table name (unquoted and as escaped SQL)
 	 * @param string $onClause Escaped SQL statement, e.g. '"Table1"."ID" = "Table2"."ID"'
 	 * @param string $alias - if you want this table to be aliased under another name
 	 * @return DataList 
@@ -547,7 +547,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Return a new DataList instance with a left join clause added to this list's query.
 	 *
-	 * @param string $table Table name (unquoted)
+	 * @param string $table Table name (unquoted and as escaped SQL)
 	 * @param string $onClause Escaped SQL statement, e.g. '"Table1"."ID" = "Table2"."ID"'
 	 * @param string $alias - if you want this table to be aliased under another name
 	 * @return DataList 
