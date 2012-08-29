@@ -7,4 +7,3 @@ cp ./tests/travis/_config.php $BUILD_DIR/mysite
 cp -r . $BUILD_DIR/framework
 
 cd $BUILD_DIR
-./framework/sake dev/build "flush=1"
