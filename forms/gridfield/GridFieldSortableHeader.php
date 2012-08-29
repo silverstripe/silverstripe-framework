@@ -13,6 +13,9 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	 * See {@link setThrowExceptionOnBadDataType()}
 	 */
 	protected $throwExceptionOnBadDataType = true;
+
+	/** @var array */
+	public $fieldSorting = array();
 	
 	/**
 	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
@@ -48,6 +51,24 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			return false;
 		}
 	}
+
+	/**
+	 * Specify sortings with fieldname as the key, and actual fieldname to sort as value.
+	 * Example: array("MyCustomTitle"=>"Title", "MyCustomBooleanField" => "ActualBooleanField")
+	 *
+	 * @param array $casting
+	 */
+	public function setFieldSorting($sorting) {
+		$this->fieldSorting = $sorting;
+		return $this;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getFieldSorting() {
+		return $this->fieldSorting;
+	}
 	
 	/**
 	 * Returns the header row providing titles with sort buttons 
@@ -65,6 +86,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			$currentColumn++;
 			$metadata = $gridField->getColumnMetadata($columnField);
 			$title = $metadata['title'];
+			if(isset($this->fieldSorting[$columnField]) && $this->fieldSorting[$columnField]) $columnField = $this->fieldSorting[$columnField];
 			if($title && $gridField->getList()->canSortBy($columnField)) {
 				$dir = 'asc';
 				if($state->SortColumn == $columnField && $state->SortDirection == 'asc') {
