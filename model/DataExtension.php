@@ -31,34 +31,21 @@ abstract class DataExtension extends Extension {
 		'api_access' => false,
 	);
 
-	static function add_to_class($class, $extensionClass, $args = null) {
-		if(method_exists($class, 'extraDBFields')) {
+	static function get_extra_config($class, $extension, $args) {
+		if(method_exists($extension, 'extraDBFields')) {
 			$extraStaticsMethod = 'extraDBFields';
 		} else {
 			$extraStaticsMethod = 'extraStatics';
 		}
 
-		$statics = Injector::inst()->get($extensionClass, true, $args)->$extraStaticsMethod($class, $extensionClass);
+		$statics = Injector::inst()->get($extension, true, $args)->$extraStaticsMethod();
 
 		if ($statics) {
-			Deprecation::notice('3.1.0', "$extraStaticsMethod deprecated. Just define statics on your extension, or use add_to_class", Deprecation::SCOPE_GLOBAL);
-
-			// TODO: This currently makes extraStatics the MOST IMPORTANT config layer, not the least
-			foreach (self::$extendable_statics as $key => $merge) {
-				if (isset($statics[$key])) {
-					if (!$merge) Config::inst()->remove($class, $key);
-					Config::inst()->update($class, $key, $statics[$key]);
-				}
-			}
-
-			// TODO - remove this
-			DataObject::$cache_has_own_table[$class]       = null;
-			DataObject::$cache_has_own_table_field[$class] = null;
+			Deprecation::notice('3.1.0', "$extraStaticsMethod deprecated. Just define statics on your extension, or use get_extra_config", Deprecation::SCOPE_GLOBAL);
+			return $statics;
 		}
-
-		parent::add_to_class($class, $extensionClass, $args);
 	}
-	
+
 	public static function unload_extra_statics($class, $extension) {
 		throw new Exception('unload_extra_statics gone');
 	}

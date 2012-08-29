@@ -307,6 +307,7 @@
 				if(id) {
 					node = this.getNodeByID(id);
 					if(node.length) {
+						this.jstree('deselect_all');
 						this.jstree('select_node', node);
 					} else {
 						// If form is showing an ID that doesn't exist in the tree,

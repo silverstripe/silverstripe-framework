@@ -171,8 +171,8 @@ mi_NZ:
   Filesystem:
     SYNCRESULTS: 'Kua oti te tukutahi: e {createdcount} ngā tūemi i hangaia, e {deletedcount} ngā tūemi i mukua'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: 'Ngā Kōpaki'
+    SINGULARNAME: Kōpaki
   ForgotPasswordEmail.ss:
     HELLO: 'Kia ora'
     TEXT1: 'Anei tō'
@@ -228,10 +228,10 @@ mi_NZ:
     GroupReminder: 'Mēnā ka kōwhiri koe i tētahi rōpū matua, ka whiwhi tēnei rōpū i ōna tūnga katoa'
     Locked: 'Kua raka?'
     NoRoles: 'Kāore i kitea he tūnga'
-    PLURALNAME: Groups
+    PLURALNAME: 'Ngā Rōpū'
     Parent: 'Rōpū Matua'
     RolesAddEditLink: 'Whakahaere tūnga'
-    SINGULARNAME: Group
+    SINGULARNAME: Rōpū
     Sort: 'Raupapa Kōmaka'
     has_many_Permissions: 'Ngā Whakaaetanga'
     many_many_Members: 'Ngā Mema'
@@ -318,8 +318,8 @@ mi_NZ:
   LoginAttempt:
     Email: 'Wāhitau Īmēra'
     IP: 'Wāhitau KI'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Ngā Whakamātau Takiuru'
+    SINGULARNAME: 'Whakamātau Takiuru'
     Status: Tūnga
   Member:
     ADDGROUP: 'Tāpiri rōpū'
@@ -395,8 +395,8 @@ mi_NZ:
     ResultNone: 'Kāore he huringa'
     ResultUpdated: 'I whakahōutia e {count} mhā mema'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Ngā Kupuhipa Mema'
+    SINGULARNAME: 'Kupuhipa Mema'
   MemberTableField: null
   ModelAdmin:
     DELETE: Muku
@@ -428,14 +428,14 @@ mi_NZ:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
   Pagination:
     Page: Whārangi
-    View: View
+    View: Tiro
   Permission:
     AdminGroup: Kaiwhakahaere
     CMS_ACCESS_CATEGORY: 'Uru CMS'
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
     PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    SINGULARNAME: Whakaaetanga
   PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
@@ -443,7 +443,7 @@ mi_NZ:
     FromRoleOnGroup: 'i tukuna iho i "%s" i te rōpū "%s"'
   PermissionRole:
     PLURALNAME: 'Ngā Tūnga'
-    SINGULARNAME: Role
+    SINGULARNAME: Tūranga
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

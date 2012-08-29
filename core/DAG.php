@@ -4,7 +4,7 @@
  * A Directed Acyclic Graph - used for doing topological sorts on dependencies, such as the before/after conditions
  * in config yaml fragments
  */
-class SS_DAG {
+class SS_DAG implements IteratorAggregate {
 	/** @var array|null - The nodes/vertices in the graph. Should be a numeric sequence of items (no string keys, no gaps). */
 	protected $data;
 
@@ -68,7 +68,68 @@ class SS_DAG {
 			$dag = $withedges;
 		}
 
-		if ($dag) throw new Exception("DAG has cyclic requirements");
+		if ($dag) {
+			$remainder = new SS_DAG($data); $remainder->dag = $dag;
+			throw new SS_DAG_CyclicException("DAG has cyclic requirements", $remainder);
+		}
 		return $sorted;
+	}
+
+	function getIterator() {
+		return new SS_DAG_Iterator($this->data, $this->dag);
+	}
+}
+
+class SS_DAG_CyclicException extends Exception {
+
+	public $dag;
+
+	function __construct($message, $dag) {
+		$this->dag = $dag;
+		parent::__construct($message);
+	}
+
+}
+
+class SS_DAG_Iterator implements Iterator {
+
+	protected $data;
+	protected $dag;
+
+	protected $dagkeys;
+	protected $i;
+
+	function __construct($data, $dag) {
+		$this->data = $data;
+		$this->dag = $dag;
+		$this->rewind();
+	}
+
+	function key() {
+		return $this->i;
+	}
+
+	function current() {
+		$res = array();
+
+		$res['from'] = $this->data[$this->i];
+
+		$res['to'] = array();
+		foreach ($this->dag[$this->i] as $to) $res['to'][] = $this->data[$to];
+
+		return $res;
+	}
+
+	function next() {
+		$this->i = array_shift($this->dagkeys);
+	}
+
+	function rewind() {
+		$this->dagkeys = array_keys($this->dag);
+		$this->next();
+	}
+
+	function valid() {
+		return $this->i !== null;
 	}
 }

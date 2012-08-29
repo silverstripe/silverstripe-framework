@@ -289,6 +289,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
 				),
 				Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
 				Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
@@ -336,9 +337,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 	
 	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
-		$title = $this->Title();
-		
 		$response = parent::handleRequest($request, $model);
+		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
 		
@@ -754,9 +754,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$next = $prev = null;
 
 			$className = $this->stat('tree_class');
-			$next = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort > '.$record->Sort)->first();
+			$next = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:GreaterThan', $record->Sort)->first();
 			if (!$next) {
-				$prev = DataObject::get($className, 'ParentID = '.$record->ParentID.' AND Sort < '.$record->Sort)->reverse()->first();
+				$prev = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:LessThan', $record->Sort)->reverse()->first();
 			}
 
 			$link = Controller::join_links($recordController->Link("show"), $record->ID);
@@ -1342,8 +1342,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return string
 	 */
 	function SectionTitle() {
-		if($title = $this->stat('menu_title')) return $title;
-		
+		$class = get_class($this);
+		$defaultTitle = LeftAndMain::menu_title_for_class($class);
+		if($title = _t("{$class}.MENUTITLE", $defaultTitle)) return $title;
+
 		foreach($this->MainMenu() as $menuItem) {
 			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
 		}

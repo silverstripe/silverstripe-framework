@@ -7,8 +7,10 @@ Director:
     '': 'Controller'
 ---
 Name: coreroutes
-After: cms/routes#modelascontrollerroutes
 Before: '*'
+After:
+  - '#rootroutes'
+  - '#modelascontrollerroutes'
 ---
 Director:
   rules:
@@ -21,7 +23,11 @@ Director:
     'interactive': 'SapphireREPL'
 ---
 Name: adminroutes
-After: framework/routes#coreroutes
+Before: '*'
+After:
+  - '#rootroutes'
+  - '#coreroutes'
+  - '#modelascontrollerroutes'
 ---
 Director:
   rules:

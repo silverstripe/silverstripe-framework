@@ -17,7 +17,7 @@ class MySQLDatabaseTest extends SapphireTest {
 				'MultiEnum3' => 'MultiEnum("A, B, C, D","A, B")',
 			);
 		}
-			
+		$this->markTestSkipped('This test requires the Config API to be immutable');
 		parent::setUp();
 	}
 		
@@ -27,7 +27,6 @@ class MySQLDatabaseTest extends SapphireTest {
 	function testFieldsDontRerequestChanges() {
 		// These are MySQL specific :-S
 		if(DB::getConn() instanceof MySQLDatabase) {
-		
 			$db = DB::getConn();
 			DB::quiet();
 		

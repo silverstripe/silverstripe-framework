@@ -167,12 +167,13 @@ class Director implements TemplateGlobalProvider {
 	 * @param string $body The HTTP body
 	 * @param array $headers HTTP headers with key-value pairs
 	 * @param array $cookies to populate $_COOKIE
+	 * @param HTTP_Request $request The {@see HTTP_Request} object generated as a part of this request
 	 * @return SS_HTTPResponse
 	 * 
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null, $cookies = null) {
+	static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null, $cookies = null, &$request = null) {
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
@@ -217,10 +218,10 @@ class Director implements TemplateGlobalProvider {
 		$_COOKIE = (array) $cookies;
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
-		$req = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
-		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
+		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
+		if($headers) foreach($headers as $k => $v) $request->addHeader($k, $v);
 		// TODO: Pass in the DataModel
-		$result = Director::handleRequest($req, $session, DataModel::inst());
+		$result = Director::handleRequest($request, $session, DataModel::inst());
 		
 		// Restore the superglobals
 		$_REQUEST = $existingRequestVars; 
@@ -257,6 +258,7 @@ class Director implements TemplateGlobalProvider {
 			}
 
 			if(($arguments = $request->match($pattern, true)) !== false) {
+				$request->setRouteParams($controllerOptions);
 				// controllerOptions provide some default arguments
 				$arguments = array_merge($controllerOptions, $arguments);
 
@@ -294,20 +296,20 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * Returns the urlParam with the given name
 	 * 
-	 * @deprecated 3.0 Use SS_HTTPRequest->latestParam()
+	 * @deprecated 3.0 Use SS_HTTPRequest->param()
 	 */
 	static function urlParam($name) {
-		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParam() instead.');
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->param() instead.');
 		if(isset(Director::$urlParams[$name])) return Director::$urlParams[$name];
 	}
 	
 	/**
 	 * Returns an array of urlParams.
 	 * 
-	 * @deprecated 3.0 Use SS_HTTPRequest->latestParams()
+	 * @deprecated 3.0 Use SS_HTTPRequest->params()
 	 */
 	static function urlParams() {
-		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParams() instead.');
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->params() instead.');
 		return Director::$urlParams;
 	}
 
