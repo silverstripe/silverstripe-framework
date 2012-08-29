@@ -143,7 +143,7 @@ abstract class SS_Database {
 	 * Returns true if the given table exists in the database
 	 */
 	abstract function hasTable($tableName);
-	
+
 	/**
 	 * Returns the enum values available on the given field
 	 */
@@ -437,6 +437,18 @@ abstract class SS_Database {
 			$spec_msg=DB::getConn()->convertIndexSpec($spec);
 			$this->alterationMessage("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
 		}
+	}
+
+	/**
+	 * Return true if the table exists and already has a the field specified
+	 * @param string $tableName - The table to check
+	 * @param string $fieldName - The field to check
+	 * @return bool - True if the table exists and the field exists on the table
+	 */
+	function hasField($tableName, $fieldName) {
+		if (!$this->hasTable($tableName)) return false;
+		$fields = $this->fieldList($tableName);
+		return array_key_exists($fieldName, $fields);
 	}
 
 	/**
