@@ -531,8 +531,8 @@ ru:
     SORTASC: 'По возрастанию'
     SORTDESC: 'По убыванию'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
+    DISPLAYING: Отображение
+    OF: из
     TO: to
     VIEWFIRST: Первый
     VIEWLAST: Последний
