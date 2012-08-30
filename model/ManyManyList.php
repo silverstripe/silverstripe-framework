@@ -124,7 +124,7 @@ class ManyManyList extends RelationList {
 				$manipulation[$this->joinTable]['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
 			}
 			
-			$manipulation[$this->joinTable]['where'] = "$this->localKey = $itemID AND $this->foreignKey = $foreignID";
+			$manipulation[$this->joinTable]['where'] = "\"$this->localKey\" = $itemID AND \"$this->foreignKey\" = $foreignID";
 		
 			DB::manipulate($manipulation);
 		}
