@@ -124,82 +124,99 @@ See [CSS](/topics/css) and [Javascript](/topics/javascript) topics for individua
 
 ## Conditional Logic
 
-You can conditionally include markup in the output. That is, test for something that is true or false, and based on that test, control what gets output.
+You can conditionally include markup in the output. That is, test for something 
+that is true or false, and based on that test, control what gets output.
 
 The simplest if block is to check for the presence of a value.
 
 	:::ss
-  <% if $CurrentMember %>
-      <p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
-  <% end_if %>
+	<% if $CurrentMember %>
+		<p>You are logged in as $CurrentMember.FirstName $CurrentMember.Surname.</p>
+	<% end_if %>
 
-The following compares a page property called `MyDinner` with the value in quotes, `kipper`, which is a **literal**. If true, the text inside the if-block is output.
-
-	:::ss
-  <% if $MyDinner="kipper" %>
-      Yummy, kipper for tea.
-  <% end_if %>
-
-Note that inside a tag like this, variables should have a '$' prefix, and literals should have quotes.  SilverStripe 2.4 didn't include the quotes or $ prefix, and while this still works, we recommend the new syntax as it is less ambiguous.
-
-This example shows the use of the `else` option. The markup after `else` is output if the tested condition is *not* true.
+The following compares a page property called `MyDinner` with the value in 
+quotes, `kipper`, which is a **literal**. If true, the text inside the if-block 
+is output.
 
 	:::ss
-  <% if $MyDinner="kipper" %>
-      Yummy, kipper for tea
-  <% else %>
-      I wish I could have kipper :-(
-  <% end_if %>
+	<% if $MyDinner="kipper" %>
+		Yummy, kipper for tea.
+	<% end_if %>
 
-This example shows the user of `else\_if`. There can be any number of `else\_if` clauses. The conditions are tested from first to last, until one of them is true, and the markup for that condition is used. If none of the conditions are true, the markup in the `else` clause is used, if that clause is present.
+Note that inside a tag like this, variables should have a '$' prefix, and 
+literals should have quotes.  SilverStripe 2.4 didn't include the quotes or $ 
+prefix, and while this still works, we recommend the new syntax as it is less 
+ambiguous.
+
+This example shows the use of the `else` option. The markup after `else` is 
+output if the tested condition is *not* true.
 
 	:::ss
-  <% if $MyDinner="quiche" %>
-      Real men don't eat quiche
-  <% else_if $MyDinner=$YourDinner %>
-      We both have good taste
-  <% else %>
-      Can I have some of your chips?
-  <% end_if %>
+	<% if $MyDinner="kipper" %>
+		Yummy, kipper for tea
+	<% else %>
+		I wish I could have kipper :-(
+	<% end_if %>
+
+This example shows the user of `else_if`. There can be any number of `else_if` 
+clauses. The conditions are tested from first to last, until one of them is true, 
+and the markup for that condition is used. If none of the conditions are true, 
+the markup in the `else` clause is used, if that clause is present.
+
+	:::ss
+	<% if $MyDinner="quiche" %>
+		Real men don't eat quiche
+	<% else_if $MyDinner=$YourDinner %>
+		We both have good taste
+	<% else %>
+		Can I have some of your chips?
+	<% end_if %>
 
 This example shows the use of `not` to negate the test.
 
 	:::ss
-  <% if not $DinnerInOven %>
-      I'm going out for dinner tonight.
-  <% end_if %>
+	<% if not $DinnerInOven %>
+		I'm going out for dinner tonight.
+	<% end_if %>
 
-You can combine two or more conditions with `||` ("or"). The markup is used if *either* of the conditions is true.
-
-	:::ss
-  <% if $MyDinner=="kipper" || $MyDinner=="salmon" %>
-      yummy, fish for tea
-  <% end_if %>
-
-You can combine two or more conditions with `&&` ("and"). The markup is used if *both* of the conditions are true.
+You can combine two or more conditions with `||` ("or"). The markup is used if 
+*either* of the conditions is true.
 
 	:::ss
-  <% if $MyDinner=="quiche" && $YourDinner=="kipper" %>
-      Lets swap dinners
-  <% end_if %>
+	<% if $MyDinner=="kipper" || $MyDinner=="salmon" %>
+		yummy, fish for tea
+	<% end_if %>
+
+You can combine two or more conditions with `&&` ("and"). The markup is used if 
+*both* of the conditions are true.
+
+	:::ss
+	<% if $MyDinner=="quiche" && $YourDinner=="kipper" %>
+		Lets swap dinners
+	<% end_if %>
 
 ## Looping Over Lists
 
-The `<% loop %>...<% end_loop %>` tag is used to **iterate** or loop over a collection of items. For example:
+The `<% loop %>...<% end_loop %>` tag is used to **iterate** or loop over a 
+collection of items. For example:
 
 	:::ss
 	<ul>
-	<% loop $Children %>
-	  <li>$Title</li>
-	<% end_loop %>
+		<% loop $Children %>
+			<li>$Title</li>
+		<% end_loop %>
 	</ul>
 
-This loops over the children of a page, and generates an unordered list showing the `Title` property from each one. Note that `$Title` *inside* the loop refers to the `Title` property on each object that is looped over, not the current page. To refer to the current page's `Title` property inside the loop, you can do `$Up.Title`. More about `Up` later.
+This loops over the children of a page, and generates an unordered list showing 
+the `Title` property from each one. Note that `$Title` *inside* the loop refers 
+to the `Title` property on each object that is looped over, not the current page. 
+To refer to the current page's `Title` property inside the loop, you can do 
+`$Up.Title`. More about `Up` later.
 
 ### Position Indicators
 
-Inside the loop scope, there are many variables at your disposal to determine the current position
-in the list and iteration:
+Inside the loop scope, there are many variables at your disposal to determine the 
+current position in the list and iteration:
 
  * `$Even`, `$Odd`: Returns boolean, handy for zebra striping
  * `$EvenOdd`: Returns a string, either 'even' or 'odd'. Useful for CSS classes.
@@ -216,7 +233,9 @@ $Modulus and $MultipleOf can help to build column layouts.
 	$Modulus(value, offset) // returns an int
 	$MultipleOf(factor, offset) // returns a boolean.
 
-The following example demonstrates how you can use $Modulus(4) to generate custom column names based on your loop statement. Note that this works for any control statement (not just children)
+The following example demonstrates how you can use $Modulus(4) to generate 
+custom column names based on your loop statement. Note that this works for any 
+control statement (not just children).
 
 	:::ss
 	<% loop Children %>
@@ -225,9 +244,11 @@ The following example demonstrates how you can use $Modulus(4) to generate custo
 	</div>
 	<% end_loop %>
 
-Will return you column-3, column-2, column-1, column-0, column-3 etc. You can use these as styling hooks to float, position as you need.
+Will return you column-3, column-2, column-1, column-0, column-3 etc. You can 
+use these as styling hooks to float, position as you need.
 
-You can also use $MultipleOf(value, offset) to help build columned layouts. In this case we want to add a <br> after every 3th item
+You can also use $MultipleOf(value, offset) to help build columned layouts. In 
+this case we want to add a <br> after every 3th item.
 
 	:::ss
 	<% loop Children %>
@@ -238,31 +259,110 @@ You can also use $MultipleOf(value, offset) to help build columned layouts. In t
 
 ## Scope
 
-In the `<% loop %>` section, we saw an example of two **scopes**. Outside the `<% loop %>...<% end_loop %>`, we were in the scope of the page. But inside the loop, we were in the scope of an item in the list. The scope determines where the value comes from when you refer to a variable. Typically the outer scope of a page type's layout template is the page that is currently being rendered. The outer scope of an included template is the scope that it was included into.
+In the `<% loop %>` section, we saw an example of two **scopes**. Outside the 
+`<% loop %>...<% end_loop %>`, we were in the scope of the page. But inside the 
+loop, we were in the scope of an item in the list. The scope determines where 
+the value comes from when you refer to a variable. Typically the outer scope of 
+a page type's layout template is the page that is currently being rendered. 
+The outer scope of an included template is the scope that it was included into.
 
-When we are in a scope, we sometimes want to refer to the scope outside the <% loop %> or <% with %>. We can do that easily by using `$Up`.
+### Up
+
+When we are in a scope, we sometimes want to refer to the scope outside the 
+<% loop %> or <% with %>. We can do that easily by using `$Up`. `$Up` takes 
+the scope back to the previous level. Take the following example:
+
+	:::ss
+	$Title
+	--
+	<% loop Children %>
+		$Title
+		$Up.Title
+		--
+		<% loop Children %>
+			$Title
+			$Up.Title
+		<% end_loop %>
+	<% end_loop %>
+
+With a page structure (Blog -> Blog entry -> Child blog entry) the 
+above will produce:
+
+	:::sss
+	Blog
+	--
+	Blog entry
+	Blog
+	--
+	Child blog entry
+	Blog entry
+
+
+### Top
+
+While `$Up` provides us a way to go up 1 scope, `$Top` is a shortcut to jump to 
+the top most scope of the page. Using the previous example but expanded to 
+include `$Top`:
+
+	:::ss
+	$Title
+	--
+	<% loop Children %>
+		$Title
+		$Up.Title
+		$Top.Title
+		--
+		<% loop Children %>
+			$Title
+			$Up.Title
+			$Top.Title
+		<% end_loop %>
+	<% end_loop %>
+
+Will produce
+
+	:::ss
+	Blog
+	--
+	Blog entry
+	Blog
+	Blog
+	--
+	Child blog entry
+	Blog entry	
+	Blog
 
 ### With
 
-The `<% with %>...<% end_with %>` tag lets you introduce a new scope. Consider the following example:
+The `<% with %>...<% end_with %>` tag lets you introduce a new scope. Consider 
+the following example:
 
-    <% with $CurrentMember %>
-        Hello $FirstName, welcome back. Your current balance is $Balance.
-    <% end_with %>
+	:::ss
+	<% with $CurrentMember %>
+		Hello $FirstName, welcome back. Your current balance is $Balance.
+	<% end_with %>
 
-Outside the `<% with %>...<% end_with %>`, we are in the page scope. Inside it, we are in the scope of `$CurrentMember`. We can refer directly to properties and methods of that member. So $FirstName is equivalent to $CurrentMember.FirstName. This keeps the markup clean, and if the scope is a complicated expression we don't have to repeat it on each reference of a property.
 
-`<% with %>` also lets us use a collection as a scope, so we can access properties of the collection itself, instead of iterating over it. For example:
+Outside the `<% with %>...<% end_with %>`, we are in the page scope. Inside it, 
+we are in the scope of `$CurrentMember`. We can refer directly to properties and 
+methods of that member. So $FirstName is equivalent to $CurrentMember.FirstName. 
+This keeps the markup clean, and if the scope is a complicated expression we don't 
+have to repeat it on each reference of a property.
 
-    $Children.Length
+`<% with %>` also lets us use a collection as a scope, so we can access 
+properties of the collection itself, instead of iterating over it. For example:
+
+	:::ss
+	$Children.Length
 
 returns the number of items in the $Children collection.
 
 ## Pagination
 
-Lists can be paginated, and looped over page-by-page.
-For this to work, the list needs to be wrapped in a `[api:PaginatedList]`.
-The process is explained in detail on the ["pagination" howto](/howto/pagination).
+Lists can be paginated, and looped over to generate pagination. For this to 
+work,  the list needs to be wrapped in a `[api:PaginatedList]`. The process is 
+explained in detail on the ["pagination" howto](/howto/pagination).
+
 The list is split up in multiple "pages", each . Note that "page" is this context
 does not necessarily refer to a `Page` class (although it often happens to be one).
 
