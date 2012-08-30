@@ -314,7 +314,6 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return DataList
 	 * @see SS_List::sort()
 	 * @example $list->sort('Name'); // default ASC sorting
-	 * @example $list->sort('Name DESC'); // DESC sorting
 	 * @example $list->sort('Name', 'ASC');
 	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
 	 */
