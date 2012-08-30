@@ -28,6 +28,9 @@
 
 	$('.field.date input.text').live('click', function() {
 		$(this).ssDatepicker();
-		$(this).datepicker('show');
+
+		if($(this).data('datepicker')) {
+			$(this).datepicker('show');
+		}
 	});
 }(jQuery));
