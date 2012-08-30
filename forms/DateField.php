@@ -591,7 +591,7 @@ class DateField_View_JQuery extends Object {
 		  '/l/' => '',
 		  '/YYYY/' => 'yy',
 		  '/yyyy/' => 'yy',
-		  '/[^y]yy[^y]/' => 'y',
+		  '/y{1,3}/' => 'yy',
 		  '/a/' => '',
 		  '/B/' => '',
 		  '/hh/' => '',
