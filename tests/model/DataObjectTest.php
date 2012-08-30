@@ -770,6 +770,18 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Sam', $player->FirstName);
 		$this->assertEquals("Prop", $player->Position);
 		
+		// Sam deserves instead to be on the wing
+		$newTeam->Players()->modify($newPlayer, array("Position" => "Winger"));
+		
+		// Requery and uncache everything
+		$newTeam->flushCache();
+		$newTeam = DataObject::get_by_id('DataObjectTest_Team', $newTeamID);
+		
+		// Check that the modified Position many_many_extraField is extracted.
+		$player = $newTeam->Players()->First();
+		$this->assertEquals('Sam', $player->FirstName);
+		$this->assertEquals("Winger", $player->Position);
+		
 		// Check that ordering a many-many relation by an aggregate column doesn't fail
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
 		$player->Teams("", "count(DISTINCT \"DataObjectTest_Team_Players\".\"DataObjectTest_PlayerID\") DESC");
