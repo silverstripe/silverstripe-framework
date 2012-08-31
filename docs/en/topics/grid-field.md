@@ -1,10 +1,10 @@
 # Gridfield
 
-Gridfield is SilverStripes implementation of datagrids. It's main purpose is to display tabular data
+Gridfield is SilverStripe's implementation of data grids. It's main purpose is to display tabular data
 in a format that is easy to view and modify. It's a can be thought of as a HTML table with some tricks.
 
 It's built in a way that provide developers with an extensible way to display tabular data in a 
-table and minimize the amount of code that needed to be written..
+table and minimize the amount of code that needed to be written.
 
 ## Overview
 
@@ -12,7 +12,13 @@ The `GridField` is a flexible form field for creating tables of data. It was int
 SilverStripe 3.0 and replaced the `ComplexTableField`, `TableListField`, and `TableField` from 
 previous versions of SilverStripe.
 
-At its basic usable form it has a `GridFieldDataColumn` component. Large datasets don't fit to one 
+Each GridField is build from a number of components. Without any components, a GridField has almost no 
+functionality. The components are responsible for formatting data to be readable and also modifying it.
+
+A gridfield with only the `GridFieldDataColumn` component will display a set of read-only columns 
+taken from your data list, without any headers or pagination.
+
+At its basic usable form it has a  component. Large datasets don't fit to one 
 page, so you could add a `GridFieldPaginator` to paginatate the data. Sorting is supported by adding
  a `GridFieldSortableHeader` that enables sorting on fields that can be sorted.
 
