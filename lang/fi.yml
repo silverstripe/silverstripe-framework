@@ -144,37 +144,37 @@ fi:
   Enum:
     ANY: Yhtään
   File:
-    AviType: 'AVI video file'
+    AviType: 'AVI videotiedosto'
     Content: Sisältö
     CssType: 'CSS tiedosto'
     DmgType: 'Apple levykuva'
-    DocType: 'Word document'
+    DocType: 'Word tiedosto'
     Filename: Tiedostonimi
-    GifType: 'GIF image - good for diagrams'
+    GifType: 'GIF kuva - hyvä kaaviolle'
     GzType: 'GZIP pakattu tiedosto'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    HtlType: 'HTML tiedosto'
+    HtmlType: 'HTML tiedosto'
     INVALIDEXTENSION: 'Tiedostopääte ei ole sallittu (sallitut muodot: {extensions})'
     INVALIDEXTENSIONSHORT: 'Tiedostopääte ei ole sallittu'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
+    IcoType: 'Icon kuva'
+    JpgType: 'JPEG kuva - hyvä valokuville'
+    JsType: 'Javascript tiedosto'
     Mp3Type: 'MP3 äänitiedosto'
     MpgType: 'MPEG videotiedosto'
     NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PdfType: 'Adobe Acrobat PDF tiedosto'
+    PngType: 'PNG kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
     TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
     TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'Tiff kuva'
     Title: Otsikko
     WavType: 'WAV äänitiedosto'
     XlsType: 'Excel tiedosto'
-    ZipType: 'ZIP compressed file'
+    ZipType: 'ZIP pakattu tiedosto'
   FileIFrameField:
     ATTACH: 'Liitä {type}'
     ATTACHONCESAVED: '{type} voidaan liittää, kun olet tallentanut tietueen ensimmäistä kertaa.'
@@ -368,7 +368,7 @@ fi:
     PLURALNAME: Jäsenet
     PROFILESAVESUCCESS: 'Tallennettu onnistuneesti.'
     REMEMBERME: 'Muista seuraavalla kerralla?'
-    SINGULARNAME: Jäsen
+    SINGULARNAME: Käyttäjä
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
@@ -411,12 +411,12 @@ fi:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Luotiin {count} käyttäjä(ä)'
-    ResultDeleted: 'Poistettu %d jäsentä'
+    ResultDeleted: 'Poistettu %d käyttäjä(ä)'
     ResultNone: 'Ei muutoksia'
     ResultUpdated: 'Päivitettiin {count} käyttäjä(ä)'
   MemberPassword:
-    PLURALNAME: 'Jäsenen salasanat'
-    SINGULARNAME: 'Jäsenen salasana'
+    PLURALNAME: 'Käyttäjän salasanat'
+    SINGULARNAME: 'Käyttäjän salasana'
   MemberTableField: null
   ModelAdmin:
     DELETE: Poista
@@ -465,8 +465,8 @@ fi:
     PLURALNAME: Roolit
     SINGULARNAME: Rooli
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Käyttöoikeiden roolin koodit'
+    SINGULARNAME: 'Käyttöoikeiden roolin koodi'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
   PhoneNumberField:
@@ -559,7 +559,7 @@ fi:
     FROMCOMPUTER: 'Omalta tietokoneeltasi'
     FROMCOMPUTERINFO: 'Valitse tiedostoista'
     FROMFILES: Tiedostoista
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Info: Kuvalle tulee suora linkki. Varmista sivun omistajalta että sinulla on oikeus linkitä kuva.'
     MAXNUMBEROFFILES: 'Suurin sallittu määrä ({count}) tiedostoja ylitetty.'
     MAXNUMBEROFFILESSHORT: 'Voidaan siirtää vain {count} tiedostoa'
     REMOVE: Poista

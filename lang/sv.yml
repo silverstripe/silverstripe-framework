@@ -515,7 +515,7 @@ sv:
   SimpleImageField:
     NOUPLOAD: 'Ingen bild uppladdad'
   SiteTree:
-    TABMAIN: Huvudsaklig
+    TABMAIN: Allmänt
   TableField:
     ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
   TableField.ss:
