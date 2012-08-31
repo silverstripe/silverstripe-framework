@@ -25,7 +25,7 @@ sv:
     FROMCOMPUTER: 'Välj filer från din dator'
     FROMCOMPUTERINFO: 'Ladda upp från din dator'
     TOTAL: Totalt
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Välj fil att ladda upp...'
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
   BBCodeParser:
@@ -72,7 +72,7 @@ sv:
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'Min profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -105,7 +105,7 @@ sv:
     SECOND: andra
     THIRD: tredje
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL: €
   DataObject:
     PLURALNAME: Dataobjekt
     SINGULARNAME: Dataobjekt
@@ -144,37 +144,37 @@ sv:
   Enum:
     ANY: 'Vilken som helst'
   File:
-    AviType: 'AVI video file'
+    AviType: 'AVI videofil'
     Content: Innehåll
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
+    CssType: 'CSS fil'
+    DmgType: 'Apple skivavbild'
+    DocType: 'Word dokument'
     Filename: Filnamn
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    GifType: 'GIF bild - bra för diagram'
+    GzType: 'GZIP packad fil'
+    HtlType: 'HTML fil'
+    HtmlType: 'HTML fil'
     INVALIDEXTENSION: 'Filändelsen tillåts inte (tillåtna: {extensions})'
     INVALIDEXTENSIONSHORT: 'Filändelsen tillåts inte'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
+    IcoType: 'Icon bild'
+    JpgType: 'JPEG bild - bra för fotografier'
+    JsType: 'Javascript fil'
+    Mp3Type: 'MP3 ljudfil'
+    MpgType: 'MPEG videofil'
     NOFILESIZE: 'Filstorleken är noll bytes'
     NOVALIDUPLOAD: 'Filen är inte giltig för uppladdning'
     Name: Namn
     PLURALNAME: Filer
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PdfType: 'Adobe Acrobat PDF fil'
+    PngType: 'PNG bild - bra allmänt format'
     SINGULARNAME: Fil
     TOOLARGE: 'Filen är för stor, max {size} tillåts'
     TOOLARGESHORT: 'Filstorlek överskriden {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'Tiff bildformat'
     Title: Titel
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    WavType: 'WAV ljudfil'
+    XlsType: 'Excel kalkylblad'
+    ZipType: 'ZIP packad fil'
   FileIFrameField:
     ATTACH: 'Bifoga {type}'
     ATTACHONCESAVED: '{type}er kan bifogas när du sparat posten för första gången'
@@ -415,8 +415,8 @@ sv:
     ResultNone: 'Inga ändringar'
     ResultUpdated: 'Uppdaterade {count} medlemmar'
   MemberPassword:
-    PLURALNAME: Medlemslösenord
-    SINGULARNAME: Medlemslösenord
+    PLURALNAME: 'Användares lösenord'
+    SINGULARNAME: 'Användares lösenord'
   MemberTableField: null
   ModelAdmin:
     DELETE: Radera
@@ -559,7 +559,7 @@ sv:
     FROMCOMPUTER: 'Från din dator'
     FROMCOMPUTERINFO: 'Välj från filer'
     FROMFILES: 'Från filer'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Information: Denna bild kommer att bli länkad till. Var god kontrollera med ägaren till sajten att du har tillåtelse att länka till bilden.'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
     MAXNUMBEROFFILESSHORT: 'Kan bara ladda upp {count} files'
     REMOVE: 'Ta bort'
