@@ -1,7 +1,7 @@
 de:
   AssetAdmin:
     ADDFILES: 'Dateien hinzufügen'
-    EditOrgMenu: 'Edit &amp; organize'
+    EditOrgMenu: 'Bearbeiten und organisieren'
     NEWFOLDER: 'Neuer Ordner'
   AssetTableField:
     CREATED: 'Erstmalig hochgeladen'
@@ -25,7 +25,7 @@ de:
     FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
     FROMCOMPUTERINFO: 'Von ihrem Computer hochladen'
     TOTAL: Gesamt
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Dateien für den Upload wählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: ODER
   BBCodeParser:
@@ -144,14 +144,14 @@ de:
   Enum:
     ANY: alle
   File:
-    AviType: 'AVI video file'
+    AviType: 'AVI Videodatei'
     Content: Inhalt
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
+    CssType: 'CSS Datei'
+    DmgType: 'Apple Disk Image'
     DocType: 'Word document'
     Filename: Dateiname
     GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
+    GzType: 'GZIP komprimierte Datei'
     HtlType: 'HTML file'
     HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Dateityp ist nicht erlaubt (erlaubt sind: {extensions})'
@@ -159,8 +159,8 @@ de:
     IcoType: 'Icon image'
     JpgType: 'JPEG image - good for photos'
     JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
+    Mp3Type: 'MP3 Audiodatei'
+    MpgType: 'MPEG Videodatei'
     NOFILESIZE: 'Dateigröße ist 0 bytes'
     NOVALIDUPLOAD: 'Datei ist kein gültiger Upload'
     Name: Dateiname
@@ -172,8 +172,8 @@ de:
     TOOLARGESHORT: 'Dateigröße übersteigt {size}'
     TiffType: 'Tagged image format'
     Title: Titel
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
+    WavType: 'WAV Audiodatei'
+    XlsType: Exceltabelle
     ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: '{type} anhängen'
@@ -191,8 +191,8 @@ de:
   Filesystem:
     SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Ordner
+    SINGULARNAME: 'In Ordner suchen'
   ForgotPasswordEmail.ss:
     HELLO: Hallo
     TEXT1: 'Hier ist Ihr'
@@ -248,10 +248,10 @@ de:
     GroupReminder: 'Bei Zuweisung einer Übergruppe werden alle ihre Rollen übernommen'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
-    PLURALNAME: Groups
+    PLURALNAME: 'Gruppen importieren'
     Parent: Elterngruppe
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
-    SINGULARNAME: Group
+    SINGULARNAME: 'Gruppen Code'
     Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
     many_many_Members: Mitglieder
@@ -309,13 +309,13 @@ de:
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
     UpdateMEDIA: 'Medienobjekt aktualisieren'
   Image:
-    PLURALNAME: Files
+    PLURALNAME: 'Von "Dateien"'
     SINGULARNAME: Datei
   ImageField:
     IMAGE: Bild
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: 'Von "Dateien"'
+    SINGULARNAME: 'Datei anhängen'
   Image_iframe.ss:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
@@ -333,13 +333,13 @@ de:
     SAVEDUP: Gespeichert.
     VersionUnknown: Unbekannt
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: Hallo
     LOGOUT: Ausloggen
   LoginAttempt:
     Email: E-Mail-Adresse
     IP: IP-Adresse
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: Loginversuche
+    SINGULARNAME: Loginversuch
     Status: Status
   Member:
     ADDGROUP: 'Gruppe hinzufügen'
@@ -430,9 +430,9 @@ de:
     UPDATEDRECORDS: '{count} Datensätze wurden aktualisiert.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Datenbankspalten
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Spezifikation von %s anzeigen'
     IMPORTSPECRELATIONS: Relationen
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Spezifikation von %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Importieren
@@ -462,11 +462,11 @@ de:
     FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   PermissionRole:
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: 'Keine Rollen gefunden'
+    SINGULARNAME: Rolle
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: Berechtigungsrollencodes
+    SINGULARNAME: Berechtigungsrollencode
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
   PhoneNumberField:
@@ -559,7 +559,7 @@ de:
     FROMCOMPUTER: 'Von Ihrem Computer'
     FROMCOMPUTERINFO: 'Aus Dateien auswählen'
     FROMFILES: 'Von "Dateien"'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Info: Dieses Bild wird verknüpft. Bitte vergewissere dich die Erlaubnis des Inhabers der Ursprungsseite zu haben.'
     MAXNUMBEROFFILES: 'Maximale Anzahl an {count}  Datei(en) überschritten'
     MAXNUMBEROFFILESSHORT: 'SIe können maximal {count} Datei(en) hochladen'
     REMOVE: Entfernen
