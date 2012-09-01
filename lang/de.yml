@@ -148,33 +148,33 @@ de:
     Content: Inhalt
     CssType: 'CSS Datei'
     DmgType: 'Apple Disk Image'
-    DocType: 'Word document'
+    DocType: 'Word Dokument'
     Filename: Dateiname
-    GifType: 'GIF image - good for diagrams'
+    GifType: 'GIF Bild - ideal für Diagramme'
     GzType: 'GZIP komprimierte Datei'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    HtlType: 'HTML Datei'
+    HtmlType: 'HTML Datei'
     INVALIDEXTENSION: 'Dateityp ist nicht erlaubt (erlaubt sind: {extensions})'
     INVALIDEXTENSIONSHORT: 'Dateityp ist nicht erlaubt'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
+    IcoType: 'Icon Bild'
+    JpgType: 'JPEG Bild - ideal für Fotos'
+    JsType: 'Javascript Datei'
     Mp3Type: 'MP3 Audiodatei'
     MpgType: 'MPEG Videodatei'
     NOFILESIZE: 'Dateigröße ist 0 bytes'
     NOVALIDUPLOAD: 'Datei ist kein gültiger Upload'
     Name: Dateiname
     PLURALNAME: Dateien
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PdfType: 'Adobe Acrobat PDF Datei'
+    PngType: 'PNG Bild - vielseitig einsetzbar'
     SINGULARNAME: Datei
     TOOLARGE: 'Die Datei ist zu groß, maximal sind {size} erlaubt'
     TOOLARGESHORT: 'Dateigröße übersteigt {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'TIFF Bild - ideal für hohe Auflösungen'
     Title: Titel
     WavType: 'WAV Audiodatei'
     XlsType: Exceltabelle
-    ZipType: 'ZIP compressed file'
+    ZipType: 'ZIP komprimierte Datei'
   FileIFrameField:
     ATTACH: '{type} anhängen'
     ATTACHONCESAVED: '{type}s können angehängt werden, sobald das Dokument zum ersten Mal gespeichert wurde.'
