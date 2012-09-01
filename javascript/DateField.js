@@ -8,7 +8,7 @@
 				$(this).siblings("button").addClass("ui-icon ui-icon-calendar");
 				
 				var holder = $(this).parents('.field.date:first'), 
-					config = $.extend(opts || {}, $(this).data(), {});
+					config = $.extend(opts || {}, $(this).data(), $(this).data('jqueryuiconfig'), {});
 				if(!config.showcalendar) return;
 	
 				if(config.locale && $.datepicker.regional[config.locale]) {
