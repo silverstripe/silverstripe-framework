@@ -159,7 +159,7 @@ class Debug {
 				if($showHeader) echo "Debug (line $caller[line] of $file):\n ";
 				echo $message . "\n";
 			} else {
-				echo "<p style=\"background-color: white; color: black; width: 95%; margin: 0.5em; padding: 0.3em; border: 1px #CCC solid\">\n";
+				echo "<p class=\"message warning\">\n";
 				if($showHeader) echo "<b>Debug (line $caller[line] of $file):</b>\n ";
 				echo Convert::raw2xml($message) . "</p>\n";
 			}

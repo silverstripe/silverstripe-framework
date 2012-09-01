@@ -324,7 +324,7 @@ class TestRunner extends Controller {
 
 		$endTime = microtime(true);
 		if(Director::is_cli()) echo "\n\nTotal time: " . round($endTime-$startTime,3) . " seconds\n";
-		else echo "<p>Total time: " . round($endTime-$startTime,3) . " seconds</p>\n";
+		else echo "<p class=\"total-time\">Total time: " . round($endTime-$startTime,3) . " seconds</p>\n";
 		
 		if(!Director::is_cli()) echo '</div>';
 		
