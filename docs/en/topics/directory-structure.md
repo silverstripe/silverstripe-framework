@@ -51,6 +51,30 @@ Example Forum:
 
 ![](_images/modules_folder.jpg)
 
+### Module documentation
+
+Module developers can bundle developer documentation with their code by producing
+plain text files inside a 'docs' folder located in the module folder. These files
+can be written with the Markdown syntax (See ["Writing Documentation"](/misc/contributing#writing-documentation))
+and include media such as images or videos.
+
+Inside the docs folder, developers should organize the markdown files into each 
+separate language they wish to write documentation for (usually just `en`). Inside 
+each languages' subfolder, developers then have freedom to create whatever structure 
+they wish for organizing the documentation they wish.
+
+Example Forum Documentation:
+
+ | Directory  | Description                                                         | 
+ | ---------  | -----------                                                         | 
+ | `forum/docs` | The docs folder will be picked up by the documentation viewer. | 
+ | `forum/docs/_manifest_exclude` | Empty file to signify that SilverStripe does not need to load classes from this folder |
+ | `forum/docs/en/`       | English documentation  | 
+ | `forum/docs/en/index.md`	| Documentation homepage. Should provide an introduction and links to remaining docs |
+ | `forum/docs/en/installing.md` | |
+ | `forum/docs/en/_images/` | Folder to store any images or media |
+ | `forum/docs/en/sometopic/` | You can organize documentation into nested folders |
+
 
 ## PHP Include Paths
 
