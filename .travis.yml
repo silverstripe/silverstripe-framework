@@ -21,3 +21,8 @@ before_script:
 
 script: 
  - phpunit -c phpunit.xml.dist 
+
+notifications:
+  irc:
+    channels:
+     - "irc.freenode.org#silverstripe"
