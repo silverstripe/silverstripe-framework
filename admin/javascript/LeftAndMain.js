@@ -33,7 +33,11 @@ jQuery.noConflict();
 					el.siblings('.chzn-container').prop('title', title);
 				}
 			} else {
-				setTimeout(function() { applyChosen(el); }, 500);
+				setTimeout(function() {
+					// Make sure it's visible before applying the ui
+					el.show();
+					applyChosen(el); }, 
+				500);
 			}
 		};
 
