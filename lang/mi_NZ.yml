@@ -25,7 +25,7 @@ mi_NZ:
     FROMCOMPUTER: 'Kōwhiri kōnae mai i tō rorohiko'
     FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
     TOTAL: Tapeke
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Kōwhiria ngā kōnae hei tukuatu...'
     UPLOADINPROGRESS: 'Taihoa...he tukuatu kei te haere'
     UPLOADOR: 'TĒNEI RĀNEI'
   BBCodeParser:
@@ -349,7 +349,7 @@ mi_NZ:
     BUTTONLOSTPASSWORD: 'Kua ngaro i a au taku kupuhipa'
     CONFIRMNEWPASSWORD: 'Whakaū Kupuhipa Hōu'
     CONFIRMPASSWORD: 'Whakaū Kupuhipa'
-    DATEFORMAT: 'Date format'
+    DATEFORMAT: 'Hōputu Rā'
     DefaultAdminFirstname: 'Kaiwhakahaere Taunoa'
     DefaultDateTime: taunoa
     EMAIL: Īmēra
@@ -372,7 +372,7 @@ mi_NZ:
     SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'
     SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'
     SURNAME: 'Ingoa Whānau'
-    TIMEFORMAT: 'Time format'
+    TIMEFORMAT: 'Hōputu Wā'
     VALIDATIONMEMBEREXISTS: 'Tīari kē ana tētahi mema me te %s ōrite'
     ValidationIdentifierFailed: 'Kāore e whakaaetia ki te tuhirua i te mema #{id} ki te pūtautuhi ōrite ({name} = {value}))'
     WELCOMEBACK: 'Nau mai, hoki mai, {firstname}'
