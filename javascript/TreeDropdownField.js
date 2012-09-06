@@ -84,7 +84,7 @@
 					.addClass('ui-icon-triangle-1-n');
 				
 				if(tree.is(':empty')) this.loadTree();
-				
+				this.trigger('panelshow');
 			},
 			closePanel: function() {
 				jQuery('body').unbind('click', _clickTestFn);
@@ -100,6 +100,7 @@
 					
 
 				this.getPanel().hide();
+				this.trigger('panelhide');
 			},
 			togglePanel: function() {
 				this[this.getPanel().is(':visible') ? 'closePanel' : 'openPanel']();
