@@ -173,10 +173,66 @@ abstract class SearchFilter extends Object {
 	/**
 	 * Apply filter criteria to a SQL query.
 	 *
-	 * @param SQLQuery $query
-	 * @return SQLQuery
+	 * @param DataQuery $query
+	 * @return DataQuery
 	 */
-	abstract public function apply(DataQuery $query);
+	public function apply(DataQuery $query) {
+		if(is_array($this->value)) {
+			return $this->applyMany($query);
+		} else {
+			return $this->applyOne($query);
+		}
+	}
+
+	/**
+	 * Apply filter criteria to a SQL query with a single value.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	abstract protected function applyOne(DataQuery $query);
+
+	/**
+	 * Apply filter criteria to a SQL query with an array of values.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	protected function applyMany(DataQuery $query) {
+		throw new InvalidArgumentException(get_class($this) . "can't be used to filter by a list of items.");
+	}
+
+	/**
+	 * Exclude filter criteria from a SQL query.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	public function exclude(DataQuery $query) {
+		if(is_array($this->value)) {
+			return $this->excludeMany($query);
+		} else {
+			return $this->excludeOne($query);
+		}
+	}
+
+	/**
+	 * Exclude filter criteria from a SQL query with a single value.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	abstract protected function excludeOne(DataQuery $query);
+
+	/**
+	 * Exclude filter criteria from a SQL query with an array of values.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	protected function excludeMany(DataQuery $query) {
+		throw new InvalidArgumentException(get_class($this) . "can't be used to filter by a list of items.");
+	}
 	
 	/**
 	 * Determines if a field has a value,
