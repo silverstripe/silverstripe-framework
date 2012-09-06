@@ -1491,6 +1491,12 @@ class Member_ProfileForm extends Form {
 		}
 		$SQL_data = Convert::raw2sql($data);
 		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
+
+		if(!$member->canEdit()) {
+			$form->sessionMessage(_t('Member.CANTEDIT', 'You don\'t have permission to do that'), 'bad');
+			return $this->controller->redirectBack();
+		}
+
 		if($SQL_data['Locale'] != $member->Locale) {
 			$form->addErrorMessage("Generic", _t('Member.REFRESHLANG'),"good");
 		}

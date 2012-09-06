@@ -1,0 +1,27 @@
+Permission:
+   admin:
+      Code: ADMIN
+   cmsmain:
+      Code: CMS_ACCESS_LeftAndMain
+   leftandmain:
+      Code: CMS_ACCESS_CMSMain
+Group:
+   admins:
+      Title: Administrators
+      Permissions: =>Permission.admin
+   cmsusers:
+      Title: CMS Users
+      Permissions: =>Permission.cmsmain, =>Permission.leftandmain
+Member:
+   admin:
+      FirstName: Admin
+      Email: admin@user.com
+      Groups: =>Group.admins
+   user1:
+      FirstName: Joe
+      Email: user1@user.com
+      Groups: =>Group.cmsusers
+   user2:
+      FirstName: Steve
+      Email: user2@user.com
+      Groups: =>Group.cmsusers
