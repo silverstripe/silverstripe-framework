@@ -1489,10 +1489,8 @@ class Member_ProfileForm extends Form {
 		if(!isset($data['ID']) || $data['ID'] != Member::currentUserID()) {
 			return $this->controller->redirectBack();
 		}
-		
 		$SQL_data = Convert::raw2sql($data);
 		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
-		
 		if($SQL_data['Locale'] != $member->Locale) {
 			$form->addErrorMessage("Generic", _t('Member.REFRESHLANG'),"good");
 		}
@@ -1596,7 +1594,7 @@ class Member_Validator extends RequiredFields {
 		}
 
 		if($id && is_object($member) && $member->ID != $id) {
-			$uniqueField = $this->form->dataFieldByName($identifierField);
+			$uniqueField = $this->form->Fields()->dataFieldByName($identifierField);
 			$this->validationError(
 				$uniqueField->id(),
 				_t(
