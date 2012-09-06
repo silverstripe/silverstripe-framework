@@ -108,7 +108,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		if(!$this->checkDataType($dataList)) return $dataList;
 		
-		$this->totalItems = $gridField->getList()->count();
+		$this->totalItems = $dataList->count();
 		
 		$state = $gridField->State->GridFieldPaginator;
 		if(!is_int($state->currentPage)) {
