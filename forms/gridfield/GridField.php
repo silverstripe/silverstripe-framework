@@ -192,6 +192,21 @@ class GridField extends FormField {
 	public function getList() {
 		return $this->list;
 	}
+
+	/**
+	 * Get the datasource after applying the {@link GridField_DataManipulator}s to it.
+	 *
+	 * @return SS_List
+	 */
+	public function getManipulatedList() {
+		$list = $this->getList();
+		foreach($this->getComponents() as $item) {
+ 			if($item instanceof GridField_DataManipulator) {
+				$list = $item->getManipulatedData($this, $list);
+			}
+		}
+		return $list;
+	}
 	
 	/**
 	 * Get the current GridState_Data or the GridState
@@ -227,12 +242,7 @@ class GridField extends FormField {
 		$columns = $this->getColumns();
 
 		// Get data
-		$list = $this->getList();
-		foreach($this->getComponents() as $item) {
- 			if($item instanceof GridField_DataManipulator) {
-				$list = $item->getManipulatedData($this, $list);
-			}
-		}
+		$list = $this->getManipulatedList();
 		
 		// Render headers, footers, etc
 		$content = array(
