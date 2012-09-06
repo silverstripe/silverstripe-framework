@@ -392,6 +392,22 @@ class GridFieldTest extends SapphireTest {
 		$this->assertEquals((string)$members[1]->td[0], 'Otto Fischer', 'Second object Name should be Otto Fischer');
 		$this->assertEquals((string)$members[1]->td[1], 'otto.fischer@example.org', 'Second object Email should be otto.fischer@example.org');
 	}
+
+	public function testChainedDataManipulators() {
+		$config = new GridFieldConfig();
+		$data = new ArrayList(array(1, 2, 3, 4, 5, 6));
+		$gridField = new GridField('testfield', 'testfield', $data, $config);
+		$endList = $gridField->getManipulatedList();
+		$this->assertEquals($endList->Count(), 6);
+
+		$config->addComponent(new GridFieldTest_Component2);
+		$endList = $gridField->getManipulatedList();
+		$this->assertEquals($endList->Count(), 12);
+
+		$config->addComponent(new GridFieldPaginator(10));
+		$endList = $gridField->getManipulatedList();
+		$this->assertEquals($endList->Count(), 10);
+	}
 }
 
 class GridFieldTest_Component implements GridField_ColumnProvider, GridField_ActionProvider, TestOnly{
@@ -428,6 +444,14 @@ class GridFieldTest_Component implements GridField_ColumnProvider, GridField_Act
 	}
 
 	
+}
+
+class GridFieldTest_Component2 implements GridField_DataManipulator, TestOnly {
+	function getManipulatedData(GridField $gridField, SS_List $dataList) {
+		$dataList = clone $dataList;
+		$dataList->merge(new ArrayList(array(7, 8, 9, 10, 11, 12)));
+		return $dataList;
+	}
 }
 
 class GridFieldTest_Team extends DataObject implements TestOnly {
