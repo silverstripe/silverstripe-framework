@@ -501,7 +501,7 @@ class DataListTest extends SapphireTest {
 	 */
 	public function testMultipleExclude() {
 		$list = DataObjectTest_TeamComment::get();
-		$list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
+		$list = $list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
 		$this->assertEquals(2, $list->count());
 	}
 
@@ -514,8 +514,16 @@ class DataListTest extends SapphireTest {
 		$list = $list->exclude('Name', 'Bob');
 		
 		$this->assertContains(
-			'WHERE ("Comment" = \'Phil is a unique guy, and comments on team2\') AND ("Name" != \'Bob\')',
+			  'WHERE ("DataObjectTest_TeamComment"."Comment" = '
+			. '\'Phil is a unique guy, and comments on team2\') '
+			. 'AND (("DataObjectTest_TeamComment"."Name" != \'Bob\'))',
 			$list->sql());
+	}
+
+	public function testExcludeWithSearchFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->exclude('Name:LessThan', 'Bob');
+		$this->assertContains('WHERE (("DataObjectTest_TeamComment"."Name" >= \'Bob\'))', $list->sql());
 	}
 	
 	/**

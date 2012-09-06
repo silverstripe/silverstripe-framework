@@ -500,26 +500,36 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
 		}
 
-		$SQL_Statements = array();
-		foreach($whereArguments as $fieldName => $value) {
-			if($fieldName == 'ID') {
-				$fieldName = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
-			} else {
-				$fieldName = '"' . Convert::raw2sql($fieldName) . '"';
+		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
+			$subquery = $query->disjunctiveGroup();
+
+			foreach($whereArguments as $field => $value) {
+				$fieldArgs = explode(':', $field);
+				$field = array_shift($fieldArgs);
+				$filterType = array_shift($fieldArgs);
+				$modifiers = $fieldArgs;
+				$list->excludeFilterContext($field, $filterType, $modifiers, $value, $subquery);
 			}
-
-			if(is_array($value)){
-				$SQL_Statements[] = ($fieldName . ' NOT IN (\''.implode('\',\'', Convert::raw2sql($value)).'\')');
-			} else {
-				$SQL_Statements[] = ($fieldName . ' != \''.Convert::raw2sql($value).'\'');
-			}
-		}
-
-		if(!count($SQL_Statements)) return $this;
-
-		return $this->alterDataQuery_30(function($query) use ($SQL_Statements){
-			$query->whereAny($SQL_Statements);
 		});
+	}
+
+	/**
+	 * Translates the comparisator to the sql query
+	 *
+	 * @param string $field - the fieldname in the db
+	 * @param string $comparisators - example StartsWith, relates to a filtercontext
+	 * @param string $value - the value that the filtercontext will use for matching
+	 * @param DataQuery $dataQuery - The (sub)query to add the exclusion clauses to
+	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
+	 */
+	private function excludeFilterContext($field, $comparisators, $modifiers, $value, $dataQuery) {
+		$t = singleton($this->dataClass())->dbObject($field);
+		$className = "{$comparisators}Filter";
+		if(!class_exists($className)){
+			throw new InvalidArgumentException('There are no '.$comparisators.' comparisator');
+		}
+		$t = new $className($field, $value, $modifiers);
+		$t->exclude($dataQuery);
 	}
 	
 	/**
