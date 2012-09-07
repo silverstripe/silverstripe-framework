@@ -4,14 +4,14 @@ et_EE:
     EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Uus kaust'
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
-    FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
+    CREATED: 'Esmakordselt üles laaditud'
+    DIM: Mõõtmed
+    FILENAME: Failinimi
+    FOLDER: Kaust
+    LASTEDIT: 'Viimage muudetud'
+    OWNER: Omanik
+    SIZE: 'Faili suurus'
+    TITLE: Pealkiri
     TYPE: Tüüp
     URL: Aadress
   AssetUploadField:
@@ -54,7 +54,7 @@ et_EE:
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Tagasi
   BasicAuth:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
@@ -77,7 +77,7 @@ et_EE:
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: E-post
-    HELLO: Hi
+    HELLO: Tere!
     PASSWORD: Parool
   CheckboxField:
     - 'False'
@@ -131,7 +131,7 @@ et_EE:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET: Määramata
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -144,36 +144,36 @@ et_EE:
   Enum:
     ANY: Any
   File:
-    AviType: 'AVI video file'
+    AviType: 'AVI videofail'
     Content: Sisu
     CssType: 'CSS file'
     DmgType: 'Apple disk image'
-    DocType: 'Word document'
+    DocType: 'Wordi dokument'
     Filename: Filename
     GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
+    GzType: 'GZIP tihendatud fail'
     HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    HtmlType: 'HTML fail'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     IcoType: 'Icon image'
     JpgType: 'JPEG image - good for photos'
     JsType: 'Javascript file'
     Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'Filesize is zero bytes.'
+    MpgType: 'MPEG videofail'
+    NOFILESIZE: 'Faili suurus on null baiti'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
-    PLURALNAME: Files
+    PLURALNAME: Failid
     PdfType: 'Adobe Acrobat PDF file'
     PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: File
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     TiffType: 'Tagged image format'
-    Title: Title
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
+    Title: Pealkiri
+    WavType: 'WAV helifail'
+    XlsType: 'Exceli arvutustabel'
     ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Attach {type}'
@@ -242,19 +242,19 @@ et_EE:
   Group:
     AddRole: 'Add a role for this group'
     Code: 'Group Code'
-    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleAdministrators: Administraator
     DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Description
+    Description: Kirjeldus
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
-    NoRoles: 'No roles found'
+    Locked: 'Lukus?'
+    NoRoles: 'Ühtegi rolli ei leitud'
     PLURALNAME: Groups
-    Parent: 'Parent Group'
-    RolesAddEditLink: 'Manage roles'
+    Parent: Vanemgrupp
+    RolesAddEditLink: 'Halda rolle'
     SINGULARNAME: Group
-    Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    Sort: 'Sortimise järjekord'
+    has_many_Permissions: Load
+    many_many_Members: Liikmed
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
@@ -309,8 +309,8 @@ et_EE:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Failid
+    SINGULARNAME: Fail
   ImageField:
     IMAGE: Image
   Image_Cached:
@@ -320,7 +320,7 @@ et_EE:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    DELETED: Kustutatud.
     DropdownBatchActionsDefault: Actions
     HELP: Help
     PAGETYPE: 'Lehekülje tüüp:'
@@ -328,9 +328,9 @@ et_EE:
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
-    PreviewButton: Preview
+    PreviewButton: Eelvaade
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: Salvestatud.
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -342,15 +342,15 @@ et_EE:
     SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Lisa grupp'
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Logi sisse'
     BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
-    DATEFORMAT: 'Date format'
-    DefaultAdminFirstname: 'Default Admin'
+    DATEFORMAT: 'Kuupäeva vorming'
+    DefaultAdminFirstname: Vaikeadministraator
     DefaultDateTime: default
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
@@ -363,7 +363,7 @@ et_EE:
     INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    NEWPASSWORD: 'New Password'
+    NEWPASSWORD: 'Uus salasõna'
     PASSWORD: Password
     PLURALNAME: Members
     PROFILESAVESUCCESS: 'Successfully saved.'
@@ -372,7 +372,7 @@ et_EE:
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
-    TIMEFORMAT: 'Time format'
+    TIMEFORMAT: 'Aja vorming'
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
@@ -419,15 +419,15 @@ et_EE:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Delete
-    DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    DELETE: Kustuta
+    DELETEDRECORDS: '{count} kirjet imporditud.'
+    IMPORT: 'Impordi CSV failist'
+    IMPORTEDRECORDS: '{count} kirjet imporditud.'
     NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    NOIMPORT: 'Pole midagi importida'
+    RESET: Lähtesta
+    Title: Andmemudelid
+    UPDATEDRECORDS: '{count} kirjet uuendatud.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'
@@ -491,22 +491,22 @@ et_EE:
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
+    APPLY_ROLES: 'Lisa grupile rollid'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS: 'Halda gruppide lubasi'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: 'Group name'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
-    MEMBERS: Members
-    MENUTITLE: Security
+    GROUPNAME: 'Grupi nimi'
+    IMPORTGROUPS: 'Impordi gurpid'
+    IMPORTUSERS: 'Impordi kasutajad'
+    MEMBERS: Liikmed
+    MENUTITLE: Turvalisus
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
-    PERMISSIONS: Permissions
-    ROLES: Roles
+    NEWGROUP: 'Uus grupp'
+    PERMISSIONS: Load
+    ROLES: Rollid
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
-    Users: Users
+    Users: Kasutajad
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -525,7 +525,7 @@ et_EE:
     CSVEXPORT: 'Export to CSV'
     PRINT: Print
     Print: Print
-    SELECT: 'Select:'
+    SELECT: 'Vali:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort in ascending order'
@@ -544,29 +544,29 @@ et_EE:
     LESS: less
     MORE: more
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    ATTACHFILE: 'Lisa fail'
+    ATTACHFILES: 'Lisa failid'
+    AttachFile: 'Lisa fail(id)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DOEDIT: Salvesta
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
-    Dimensions: Dimensions
-    EDIT: Edit
-    EDITINFO: 'Edit this file'
+    Dimensions: Mõõtmed
+    EDIT: Redigeeri
+    EDITINFO: 'Redigeeri seda faili'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'From files'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILES: 'Failide maksimaalne kogus {count} ületatud.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    REMOVEERROR: 'Tõrge faili eemaldamisel'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
-    STARTALLINFO: 'Start all uploads'
+    STARTALL: 'Alusta kõigiga'
+    STARTALLINFO: 'Alusta kõiki üleslaadimisi'
     Saved: Saved
   Versioned:
     has_many_Versions: Versions
