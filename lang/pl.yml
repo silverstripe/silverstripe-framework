@@ -1,7 +1,7 @@
 pl:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ADDFILES: 'Dodaj pliki'
+    EditOrgMenu: 'Edytuj i organizuj'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
@@ -20,11 +20,12 @@ pl:
     DROPAREA: 'Obszar upuszczania'
     EDITALL: 'Edytuj wszystkie'
     EDITANDORGANIZE: 'Edytuj i organizuj'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Edytuj pliki'
     FILES: Pliki
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTER: 'Wybierz pliki z komputera'
+    FROMCOMPUTERINFO: 'Załaduj z komputera'
     TOTAL: Razem
+    TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
     UPLOADOR: LUB
   BBCodeParser:
@@ -64,7 +65,7 @@ pl:
     1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Wczytywanie...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'CMS wymaga włączonego JavaScript.'
   CMSMain:
     ACCESS: 'Dostęp do sekcji ''{title}'''
     ACCESSALLINTERFACES: 'Dostęp do wszystkich sekcji CMSa'
@@ -75,7 +76,7 @@ pl:
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT2: 'Teraz możesz używać następujących danych do logowania się:'
-    EMAIL: Email
+    EMAIL: E-mail
     HELLO: Cześć
     PASSWORD: Hasło
   CheckboxField:
@@ -86,8 +87,8 @@ pl:
     SUCCESSADD2: 'Dodano {name}'
     SUCCESSEDIT: 'Zapisano %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
-    NOITEMSFOUND: 'No items found'
+    ADDITEM: 'Dodaj %s'
+    NOITEMSFOUND: 'Nic nie znaleziono'
     SORTASC: 'Sortuj rosnąco'
     SORTDESC: 'Sortuj malejąco'
   ComplexTableField_popup.ss:
@@ -130,7 +131,7 @@ pl:
     VALIDDATEMAXDATE: 'Twoja data musi być wcześniejsza lub taka sama, jak maksymalna dozwolona data ({date})'
     VALIDDATEMINDATE: 'Twoja data musi być późniejsza lub taka sama, jak minimalna dozwolona data ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET: 'Nie ustawiono'
   Director:
     INVALID_REQUEST: 'Nieprawidłowe żądanie'
   DropdownField:
@@ -143,18 +144,37 @@ pl:
   Enum:
     ANY: Jakikolwiek
   File:
+    AviType: 'AVI video file'
     Content: Zawartość
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
     Filename: 'Nazwa pliku'
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Rozszerzenie niedozwolone (dozwolone: {extensions})'
     INVALIDEXTENSIONSHORT: 'Rozszerzenie niedozwolone'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
     PLURALNAME: Pliki
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Plik
     TOOLARGE: 'Plik jest za duży, maksymalnie dozwolone jest {size}'
     TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
+    TiffType: 'Tagged image format'
     Title: Tytuł
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Dołącz {type}'
     ATTACHONCESAVED: 'Element {type} może zostać dołączony dopiero po pierwszym zapisaniu rekordu.'
@@ -171,7 +191,7 @@ pl:
   Filesystem:
     SYNCRESULTS: 'Synchronizacja zakończona: stworzono {createdcount} i usunięto {deletedcount} pozycji'
   Folder:
-    PLURALNAME: Folders
+    PLURALNAME: Foldery
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Cześć
@@ -180,7 +200,7 @@ pl:
     TEXT3: dla
   Form:
     FIELDISREQUIRED: '%s jest wymagane'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
     VALIDATIONNOTUNIQUE: 'Wprowadzona wartość nie jest unikalna'
     VALIDATIONPASSWORDSDONTMATCH: 'Hasła nie są takie same'
@@ -228,10 +248,10 @@ pl:
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, ta grupa otrzyma wszystkie jej role'
     Locked: 'Zablokowana?'
     NoRoles: 'Nie znaleziono ról'
-    PLURALNAME: Groups
+    PLURALNAME: Grupy
     Parent: 'Grupa nadrzędna'
     RolesAddEditLink: 'Zarządzaj rolami'
-    SINGULARNAME: Group
+    SINGULARNAME: Grupa
     Sort: 'Kolejność Sortowania'
     has_many_Permissions: Zezwolenia
     many_many_Members: Członkowie
@@ -289,13 +309,13 @@ pl:
     URLNOTANOEMBEDRESOURCE: 'Adres URL ''{url}'' nie mógł zostać przekształcony w zasób medialny'
     UpdateMEDIA: 'Zaktualizuj Media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Pliki
+    SINGULARNAME: Plik
   ImageField:
     IMAGE: Obraz
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Pliki
+    SINGULARNAME: Plik
   Image_iframe.ss:
     TITLE: 'Ładowanie Zdjęć (Iframe)'
   LeftAndMain:
@@ -313,13 +333,13 @@ pl:
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: Cześć
     LOGOUT: 'Wyloguj się'
   LoginAttempt:
     Email: 'Adres E-mail'
     IP: 'Adres IP'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Próby logowania'
+    SINGULARNAME: 'Próba logowania'
     Status: Status
   Member:
     ADDGROUP: 'Dodaj grupę'
@@ -329,7 +349,7 @@ pl:
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
-    DATEFORMAT: 'Date format'
+    DATEFORMAT: 'Format daty'
     DefaultAdminFirstname: 'Domyślny administrator'
     DefaultDateTime: domyślny
     EMAIL: E-mail
@@ -352,7 +372,7 @@ pl:
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'
     SURNAME: Nazwisko
-    TIMEFORMAT: 'Time format'
+    TIMEFORMAT: 'Format czasu'
     VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje'
     ValidationIdentifierFailed: 'Nie można nadpisać istniejącego członka #{id} identycznym identyfikatorem ({name} = {value})'
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
@@ -395,8 +415,8 @@ pl:
     ResultNone: 'Bez zmian'
     ResultUpdated: 'Zaktualizowano członków: {count}'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Hasła użytkowników'
+    SINGULARNAME: 'Hasło użytkownika'
   MemberTableField: null
   ModelAdmin:
     DELETE: Usuń
@@ -410,14 +430,14 @@ pl:
     UPDATEDRECORDS: 'Zaktualizowano {count} rekordów.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Kolumny bazy danych'
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Pokaż specyfikację %s'
     IMPORTSPECRELATIONS: Relacje
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Specyfikacja %s'
   ModelAdmin_Tools.ss:
     FILTER: Filtr
-    IMPORT: Import
+    IMPORT: Importuj
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
+    IMPORT_TAB_HEADER: Importuj
     SEARCHLISTINGS: Znajdź
   MoneyField:
     FIELDLABELAMOUNT: Ilość
@@ -427,23 +447,23 @@ pl:
   NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
   Pagination:
-    Page: Page
-    View: View
+    Page: Strona
+    View: Pokaż
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Zezwolenia
+    SINGULARNAME: Zezwolenie
   PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
     FromRole: 'odziedziczone z roli "{title}"'
     FromRoleOnGroup: 'odziedziczone z roli "%s" w grupie "%s"'
   PermissionRole:
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: Role
+    SINGULARNAME: Rola
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
@@ -453,8 +473,8 @@ pl:
     VALIDATION: 'Wprowadź poprawny numer telefonu'
   RelationComplexTableField.ss:
     ADD: Dodaj
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Eksportuj do CSV'
+    NOTFOUND: 'Nic nie znaleziono'
   Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'
@@ -500,20 +520,20 @@ pl:
     ISREQUIRED: 'W %s ''%s'' jest wymagany'
   TableField.ss:
     ADD: 'Dodaj nowy rząd'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Dodaj %s'
   TableListField:
     CSVEXPORT: 'Eksportuj do CSV'
     PRINT: Drukuj
-    Print: Print
+    Print: Drukuj
     SELECT: 'Wybierz:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Nic nie znaleziono'
     SORTASC: 'Sortuj w porządku rosnącym'
     SORTDESC: 'Sortuj w porządku malejącym'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+    DISPLAYING: Wyświetlane
+    OF: z
+    TO: do
     VIEWFIRST: 'Zobacz pierwsze'
     VIEWLAST: 'Zobacz ostatnie'
     VIEWNEXT: 'Zobacz następne'
@@ -527,17 +547,17 @@ pl:
     ATTACHFILE: 'Załącz plik'
     ATTACHFILES: 'Załącz pliki'
     AttachFile: 'Załącz plik(i)'
-    DELETE: 'Delete from files'
+    DELETE: 'Usuń z plików'
     DELETEINFO: 'Usuń ten plik z magazynu'
     DOEDIT: Zapisz
     DROPFILE: 'upuść plik'
     DROPFILES: 'upuść pliki'
     Dimensions: Rozmiar
-    EDIT: Edit
+    EDIT: Edytuj
     EDITINFO: 'Edytuj plik'
     FIELDNOTSET: 'Nie znaleziono informacji o pliku'
     FROMCOMPUTER: 'Z komputera'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Wybierz z plików'
     FROMFILES: 'Z plików'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
@@ -546,7 +566,7 @@ pl:
     REMOVEERROR: 'Błąd podczas usuwania pliku'
     REMOVEINFO: 'Usuń pliki z tego miejsca, ale nie usuwaj ich z magazynu'
     STARTALL: 'Rozpocznij wszystko'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Rozpocznij ładowanie wszystkich'
     Saved: Zapisano
   Versioned:
     has_many_Versions: Wersje
