@@ -110,7 +110,7 @@ class SQLQuery {
 	}
 
 	function __get($field) {
-		if(strtolower($field) == 'select') Deprecation::notice('3.0', 'Please use getSlect() instead');
+		if(strtolower($field) == 'select') Deprecation::notice('3.0', 'Please use getSelect() instead');
 		if(strtolower($field) == 'from') Deprecation::notice('3.0', 'Please use getFrom() instead');
 		if(strtolower($field) == 'groupby') Deprecation::notice('3.0', 'Please use getGroupBy() instead');
 		if(strtolower($field) == 'orderby') Deprecation::notice('3.0', 'Please use getOrderBy() instead');

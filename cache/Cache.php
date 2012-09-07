@@ -65,7 +65,7 @@ class SS_Cache {
 	
 	protected static $backends = array();
 	protected static $backend_picks = array();
-	
+
 	protected static $cache_lifetime = array();
 	
 	/**
@@ -76,6 +76,7 @@ class SS_Cache {
 			$cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache';
 			if (!is_dir($cachedir)) mkdir($cachedir);
 			self::$backends['default'] = array('File', array('cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache'));
+			self::$cache_lifetime['default'] = array('lifetime' => 600, 'priority' => 1);
 		}
 	}
 
@@ -109,10 +110,18 @@ class SS_Cache {
 
 		if ($priority >= $current) self::$backend_picks[$for] = array('name' => $name, 'priority' => $priority); 
 	}
-	
+
+	/**
+	 * Return the cache lifetime for a particular named cache.
+	 * @return array
+	 */
+	static function get_cache_lifetime($for) {
+		return (isset(self::$cache_lifetime[$for])) ? self::$cache_lifetime[$for] : false;
+	}
+
 	/**
 	 * Set the cache lifetime for a particular named cache
-	 * 
+	 *
 	 * @param string $for The name of the cache to set this lifetime for (or 'any' for all backends)
 	 * @param integer $lifetime The lifetime of an item of the cache, in seconds, or -1 to disable caching
 	 * @param integer $priority The priority. The highest priority setting is used. Unlike backends, 'any' is not special in terms of priority. 
@@ -169,9 +178,11 @@ class SS_Cache {
 	static function factory($for, $frontend='Output', $frontendOptions=null) {
 		self::init();
 		
-		$backend_name = 'default'; $backend_priority = -1;
-		$cache_lifetime = 600; $lifetime_priority = -1;
-		
+		$backend_name = 'default';
+		$backend_priority = -1;
+		$cache_lifetime = self::$cache_lifetime['default']['lifetime'];
+		$lifetime_priority = -1;
+
 		foreach (array('any', $for) as $name) {
 			if (isset(self::$backend_picks[$name]) && self::$backend_picks[$name]['priority'] > $backend_priority) {
 				$backend_name = self::$backend_picks[$name]['name'];
@@ -182,7 +193,7 @@ class SS_Cache {
 				$cache_lifetime = self::$cache_lifetime[$name]['lifetime'];
 				$lifetime_priority = self::$cache_lifetime[$name]['priority'];
 			}
-		} 
+		}
 		
 		$backend = self::$backends[$backend_name];
 
@@ -190,7 +201,7 @@ class SS_Cache {
 		
 		if ($cache_lifetime >= 0) $basicOptions['lifetime'] = $cache_lifetime;
 		else $basicOptions['caching'] = false;
-		
+
 		$frontendOptions = $frontendOptions ? array_merge($basicOptions, $frontendOptions) : $basicOptions;
 		
 		require_once 'Zend/Cache.php';

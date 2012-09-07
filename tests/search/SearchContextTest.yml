@@ -63,6 +63,6 @@ SearchContextTest_AllFilterTypes:
         Negation: Shouldnt match me
         HiddenValue: Filtered value
         CollectionMatch: ExistingCollectionValue
-        StartsWith: 12345-6789
+        StartsWith: 12345-6789 CamelCase
         EndsWith: abcd-efgh-ijkl
         FulltextField: one two three

@@ -327,9 +327,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// regardless of overloaded CMS controller templates.
 			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
 			$form->setTemplate('LeftAndMain_EditForm');
-			$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+			$form->addExtraClass('cms-content cms-edit-form center');
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
-			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			if($form->Fields()->hasTabset()) {
+				$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+				$form->addExtraClass('ss-tabset');
+			}
 
 			if($toplevelController->hasMethod('Backlink')) {
 				$form->Backlink = $toplevelController->Backlink();
@@ -364,6 +367,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 	function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
+		$controller = Controller::curr();
 
 		try {
 			$form->saveInto($this->record);
@@ -371,7 +375,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$this->gridField->getList()->add($this->record);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Controller::curr()->redirectBack();
+			$responseNegotiator = new PjaxResponseNegotiator(array(
+				'CurrentForm' => function() use(&$form) {
+					return $form->forTemplate();
+				},
+				'default' => function() use(&$controller) {
+					return $controller->redirectBack();
+				}
+			));
+			if($controller->getRequest()->isAjax()){
+				$controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
+			}
+			return $responseNegotiator->respond($controller->getRequest());
 		}
 
 		// TODO Save this item into the given relationship
@@ -386,10 +401,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		if($new_record) {
 			return Controller::curr()->redirect($this->Link());
-		} else {
+		} elseif($this->gridField->getList()->byId($this->record->ID)) {
 			// Return new view, as we can't do a "virtual redirect" via the CMS Ajax
 			// to the same URL (it assumes that its content is already current, and doesn't reload)
 			return $this->edit(Controller::curr()->getRequest());
+		} else {
+			// Changes to the record properties might've excluded the record from
+			// a filtered list, so return back to the main view if it can't be found
+			$noActionURL = $controller->removeAction($data['url']);
+			$controller->getRequest()->addHeader('X-Pjax', 'Content'); 
+			return $controller->redirect($noActionURL, 302); 
 		}
 	}
 
