@@ -152,29 +152,29 @@ th:
     Filename: ชื่อไฟล์
     GifType: 'GIF image - good for diagrams'
     GzType: 'ไฟล์บีบอัดข้อมูล GZIP'
-    HtlType: 'HTML file'
+    HtlType: 'ไฟล์ HTML'
     HtmlType: 'ไฟล์ HTML'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
+    IcoType: รูปไอคอน
     JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
+    JsType: ไฟล์จาวาสคริปต์
     Mp3Type: 'ไฟล์เสียง MP3'
     MpgType: 'ไฟล์วีดีโอ MPEG'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: ชื่อ
     PLURALNAME: ไฟล์
-    PdfType: 'Adobe Acrobat PDF file'
+    PdfType: 'ไฟล์ Adobe Acrobat PDF'
     PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: ไฟล์
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'ไฟล์รูปภาพ TIF'
     Title: ชื่อ
     WavType: 'ไฟล์เสียง WAV'
     XlsType: 'สเปรดชีท Excel'
-    ZipType: 'ZIP compressed file'
+    ZipType: 'ไฟล์บีบอัดข้อมูล ZIP'
   FileIFrameField:
     ATTACH: 'แนบไฟล์ {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
