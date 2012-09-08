@@ -15,19 +15,19 @@ th:
     TYPE: ชนิด
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
+    ChooseFiles: เลือกไฟล์
+    DRAGFILESHERE: ลากไฟล์มาไว้ที่นี่
     DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITALL: แก้ไขทั้งหมด
+    EDITANDORGANIZE: 'แก้ไข & จัดระเบียบ'
     EDITINFO: 'Edit files'
     FILES: ไฟล์
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
+    TOTAL: รวมทั้งหมด
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: หรือ
   BBCodeParser:
     ALIGNEMENT: Alignment
     ALIGNEMENTEXAMPLE: 'right aligned'
@@ -54,7 +54,7 @@ th:
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: ย้อนกลับ
   BasicAuth:
     ENTERINFO: กรุณากรอกชื่อผู้ใช้และรหัสผ่าน
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
@@ -64,10 +64,10 @@ th:
     ANY: Any
     1: 'True'
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: กำลังโหลด...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'เข้าไปในส่วนของ ''{title}'''
     ACCESSALLINTERFACES: 'เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: บันทึก
@@ -127,7 +127,7 @@ th:
   DateField:
     NOTSET: 'not set'
     TODAY: วันนี้
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEFORMAT2: 'กรุณากรอกรูปแบบวันที่ที่ถูกต้อง ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
@@ -226,7 +226,7 @@ th:
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
     PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolderWithLabels: 'ค้นหา {type} โดย {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
@@ -247,7 +247,7 @@ th:
     Description: คำอธิบาย
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'ล็อค?'
-    NoRoles: 'No roles found'
+    NoRoles: ไม่พบบทบาทที่ต้องการ
     PLURALNAME: Groups
     Parent: กลุ่มหลักต้นทาง
     RolesAddEditLink: เพิ่ม/แก้ไขบทบาท
@@ -320,7 +320,7 @@ th:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    DELETED: ลบแล้ว
     DropdownBatchActionsDefault: Actions
     HELP: ช่วยเหลือ
     PAGETYPE: 'ชนิดหน้าเว็บ:'
@@ -328,9 +328,9 @@ th:
     PERMALREADY: 'ขออภัย, คุณไม่สามารถเข้าใช้งานในส่วนนี้ของ CMS ได้ หากคุณต้องการเข้าสู่ระบบในชื่ออื่นได้จากด้านล่าง'
     PERMDEFAULT: 'กรุณาเลือกวิธีการยืนยันตัวบุคคลและกรอกข้อมูลประจำตัวเพื่อเข้าใช้งาน CMS'
     PLEASESAVE: 'กรุณาบันทึกหน้าเว็บ หน้าเว็บนี้ยังไม่สามรถอัพเดทข้อมูลได้ เนื่องจากยังไม่ได้ถูกบันทึกข้อมูล'
-    PreviewButton: Preview
+    PreviewButton: ดูตัวอย่าง
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: บันทึกแล้ว
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -342,7 +342,7 @@ th:
     SINGULARNAME: 'Login Attempt'
     Status: สถานะ
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: เพิ่มกลุ่มใหม่
     BUTTONCHANGEPASSWORD: เปลี่ยนรหัสผ่าน
     BUTTONLOGIN: เข้าสู่ระบบ
     BUTTONLOGINOTHER: 'Log in as someone else'
@@ -468,7 +468,7 @@ th:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    PERMISSIONS_CATEGORY: บทบาทและสิทธิ์การเข้าใช้งาน
   PhoneNumberField:
     VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
@@ -496,17 +496,17 @@ th:
     EDITPERMISSIONS: บริหารการสิทธิ์การเข้าใช้งานสำหรับกลุ่ม
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: ชื่อกลุ่มสมาชิก
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: นำเข้ากลุ่มผู้ใช้งาน
+    IMPORTUSERS: นำเข้าชื่อผู้ใช้งาน
     MEMBERS: สมาชิก
-    MENUTITLE: Security
+    MENUTITLE: ความปลอดภัย
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: สร้างกลุ่มใหม่
-    PERMISSIONS: Permissions
+    PERMISSIONS: สิทธิ์
     ROLES: บทบาท
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: บทบาท
-    Users: Users
+    Users: ผู้ใช้งาน
   SecurityAdmin_MemberImportForm:
     BtnImport: นำเข้า
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -524,7 +524,7 @@ th:
   TableListField:
     CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
     PRINT: สั่งพิมพ์
-    Print: Print
+    Print: สั่งพิมพ์
     SELECT: เลือก
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -544,29 +544,29 @@ th:
     LESS: less
     MORE: เพิ่มเติม
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    ATTACHFILE: แนบไฟล์
+    ATTACHFILES: แนบไฟล์
+    AttachFile: ไฟล์แนบ
     DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
-    Dimensions: Dimensions
+    DELETEINFO: ลบไฟล์นี้จากพื้นที่จัดเก็บไฟล์เป็นการถาวร
+    DOEDIT: บันทึก
+    DROPFILE: ลบไฟล์
+    DROPFILES: วางไฟล์
+    Dimensions: ขนาดสัดส่วน
     EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
+    EDITINFO: แก้ไขไฟล์นี้
+    FIELDNOTSET: ไม่พบข้อมูลเกี่ยวกับไฟล์
+    FROMCOMPUTER: จากเครื่องคอมพิวเตอร์ของคุณ
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: จากไฟล์
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    MAXNUMBEROFFILESSHORT: 'สามารถอัพโหลดได้เพียง{count} ไฟล์'
+    REMOVE: ลบออก
+    REMOVEERROR: เกิดข้อผิดพลาดในการลบไฟล์ออก
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
+    STARTALL: เริ่มทั้งหมด
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: บันทึกแล้ว
   Versioned:
     has_many_Versions: เวอร์ชั่น
