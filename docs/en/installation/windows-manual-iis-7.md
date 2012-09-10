@@ -201,9 +201,11 @@ Now we need to set up folder permissions for PHP. Open the php.ini and find the 
 	upload_tmp_dir="C:\Windows\Temp"
 	session.save_path="C:\Windows\Temp"
 
-You will need to give the IIS permission to write to these folders. This can be done by giving **Modify** permission to **IIS** user and **IIS_IUSRS** group.
+Two other important folders to set the permissions on are `assets` and `silverstripe-cache` (if used) in your web root.
 
-Other important folders to give these permissions to are `assets` and `silverstripe-cache` (if used) in your web root.
+You will need to give **Modify** permission to **IUSR** user. To do it right click the folder and choose **Properties**. Then open the security tab, press **Edit** and add the **IUSR** user to the list by clicking the **Add** button. Afterwards tick **Modify** under **Allow** for that user. Repeat these steps for each folder.
+
+![](_images/iis7-iusr-permissions.jpg)
 
 ## Test PHP installation
 
