@@ -85,6 +85,14 @@ class DataListTest extends SapphireTest {
 		$list->leftJoin('DataObjectTest_Team', '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"', 'Team');
 		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment').' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
 		$this->assertEquals($expected, $list->sql());
+
+		// Test with namespaces (with non-sensical join, but good enough for testing)
+		$list = DataObjectTest_TeamComment::get();
+		$list->leftJoin('DataObjectTest\NamespacedClass', '"DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"');
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment').' END AS "RecordClassName" ' .
+			'FROM "DataObjectTest_TeamComment" ' .
+			'LEFT JOIN "DataObjectTest\NamespacedClass" ON "DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"';
+		$this->assertEquals($expected, $list->sql(), 'Retains backslashes in namespaced classes');
 	}
 	
 	function testToNestedArray() {

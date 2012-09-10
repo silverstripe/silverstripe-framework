@@ -283,7 +283,8 @@ class RequestHandler extends ViewableData {
 						return true;
 					} elseif(substr($test, 0, 2) == '->') {
 						// Case 2: Determined by custom method with "->" prefix
-						return $this->{substr($test, 2)}();
+						list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
+						return call_user_func_array(array($this, $method), $arguments);
 					} else {
 						// Case 3: Value is a permission code to check the current member against
 						return Permission::check($test);

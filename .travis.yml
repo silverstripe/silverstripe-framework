@@ -22,6 +22,11 @@ before_script:
 script: 
  - phpunit -c phpunit.xml.dist 
 
+branches:
+  except:
+    - translation-staging
+    - 2.4
+
 notifications:
   irc:
     channels:

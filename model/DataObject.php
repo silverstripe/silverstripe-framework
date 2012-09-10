@@ -3208,14 +3208,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function defaultSearchFilters() {
 		$filters = array();
+
 		foreach($this->searchableFields() as $name => $spec) {
 			$filterClass = $spec['filter'];
-			// if $filterClass is not set a name of any subclass of SearchFilter than assing 'PartiailMatchFilter' to it
-			if (!is_subclass_of($filterClass, 'SearchFilter')) {
-				$filterClass = 'PartialMatchFilter';
+			
+			if($spec['filter'] instanceof SearchFilter) {
+				$filters[$name] = $spec['filter'];
+			} else {
+				$class = $spec['filter'];
+
+				if(!is_subclass_of($spec['filter'], 'SearchFilter')) {
+					$class = 'PartialMatchFilter';
+				}
+
+				$filters[$name] = new $class($name);
 			}
-			$filters[$name] = new $filterClass($name);
 		}
+
 		return $filters;
 	}
 
