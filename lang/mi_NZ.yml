@@ -232,7 +232,7 @@ mi_NZ:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Whakakore
     Create: Hanga
     Delete: Muku
     DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
@@ -466,7 +466,7 @@ mi_NZ:
     OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: 'Ngā Tūnga'
     SINGULARNAME: Tūranga
-    Title: Title
+    Title: Taitara
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
