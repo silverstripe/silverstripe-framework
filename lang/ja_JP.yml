@@ -25,6 +25,7 @@ ja_JP:
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: 合計
+    TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: しばらくお待ちください...アップロードは進行中です
     UPLOADOR: もしくは
   BBCodeParser:
@@ -143,18 +144,37 @@ ja_JP:
   Enum:
     ANY: 何でも
   File:
+    AviType: 'AVI video file'
     Content: 内容
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
     Filename: ファイル名
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
     NOFILESIZE: ファイルサイズが0バイトです。
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: 名前
     PLURALNAME: ファイル
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: ファイル
     TOOLARGE: 'ファイルサイズが大きすぎます。許可されている最大サイズは{size}です。'
     TOOLARGESHORT: '{size}をファイルサイズは超えました'
+    TiffType: 'Tagged image format'
     Title: タイトル
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'

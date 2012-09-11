@@ -25,6 +25,7 @@ nb:
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
+    TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Vennligst vent... opplasting pågår'
     UPLOADOR: ELLER
   BBCodeParser:
@@ -143,18 +144,37 @@ nb:
   Enum:
     ANY: Any
   File:
+    AviType: 'AVI video file'
     Content: Innhold
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
     Filename: Filnavn
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
     NOFILESIZE: 'Filstørrelsen var 0 bytes.'
     NOVALIDUPLOAD: 'Filen er ikke en gyldig opplasting'
     Name: Navn
     PLURALNAME: Filer
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Fil
     TOOLARGE: 'Filstørrelse for stor, maksimum {size} tillatt '
     TOOLARGESHORT: 'Filstørrelse overstiger {size}'
+    TiffType: 'Tagged image format'
     Title: Tittel
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Legg ved {type}'
     ATTACHONCESAVED: '{type}er kan legges til når du har lagret oppføringen for første gang.'
