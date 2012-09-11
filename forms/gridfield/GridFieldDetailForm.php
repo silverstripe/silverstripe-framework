@@ -302,10 +302,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$curmbs = $this->Breadcrumbs();
 			if($curmbs && $curmbs->count()>=2){
 				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
-				$text = "
-				<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"".$one_level_up->Link."\">
-					Cancel
-				</a>";
+				$text = sprintf(
+					"<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"%s\">%s</a>",
+					$one_level_up->Link,
+					_t('GridFieldDetailForm.CancelBtn', 'Cancel')
+				);
 				$actions->push(new LiteralField('cancelbutton', $text));
 			}
 		}
