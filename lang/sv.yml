@@ -232,6 +232,7 @@ sv:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Skapa
     Delete: Radera
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
@@ -462,8 +463,10 @@ sv:
     FromRole: 'ärvde från roll "{title}"'
     FromRoleOnGroup: 'ärvt från roll "%s" i grupp "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roller
     SINGULARNAME: Roll
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: åtkomsträttighetskoder
     SINGULARNAME: åtkomsträttighetskod

@@ -232,6 +232,7 @@ ru:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Нет прав на удаление'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Создать
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
@@ -462,8 +463,10 @@ ru:
     FromRole: 'перенято из роли "{title}"'
     FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Роли
     SINGULARNAME: Роль
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

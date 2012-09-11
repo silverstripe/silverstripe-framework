@@ -232,6 +232,7 @@ sl:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Create
     Delete: Izbriši
     DeletePermissionsFailure: 'No delete permissions'
@@ -462,8 +463,10 @@ sl:
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

@@ -232,6 +232,7 @@ sk:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Žiadne oprávnenia smazať'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Vytvoriť
     Delete: Vymazať
     DeletePermissionsFailure: 'Žiadne oprávnenia smazať'
@@ -462,8 +463,10 @@ sk:
     FromRole: 'zdedené z role "{title}"'
     FromRoleOnGroup: 'zdediť z úlohy "%s" v skupine "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Role
     SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnenia rolí'
     SINGULARNAME: 'Kód oprávnenia role'
