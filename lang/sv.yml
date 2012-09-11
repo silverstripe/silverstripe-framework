@@ -329,7 +329,7 @@ sv:
     PERMDEFAULT: 'Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet.'
     PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras för att den har inte sparats ännu.'
     PreviewButton: Förhandsgranska
-    REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
+    REORGANISATIONSUCCESSFUL: 'Omorganisering av sidträdet lyckades.'
     SAVEDUP: Sparad.
     VersionUnknown: okänd
   LeftAndMain_Menu.ss:
