@@ -1,5 +1,9 @@
 # Install SilverStripe manually on Windows using IIS 6
 
+<div class="warning" markdown="1">
+	Note: These instructions may not work, as they're no longer maintained.
+</div>
+
 How to prepare Windows Server 2003 for SilverStripe using IIS 6 and FastCGI.
 
 This guide will work for the following operating systems:
