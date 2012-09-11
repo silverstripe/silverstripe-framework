@@ -63,8 +63,22 @@ if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
 	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
 }
 
+// PHP 5.4's built-in webserver uses this
+if (php_sapi_name() == 'cli-server') {
+	$url = $_SERVER['REQUEST_URI'];
+	
+	// Querystring args need to be explicitly parsed
+	if(strpos($url,'?') !== false) {
+		list($url, $query) = explode('?',$url,2);
+		parse_str($query, $_GET);
+		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+	}
+	
+	// Pass back to the webserver for files that exist
+	if(file_exists(BASE_PATH . $url)) return false;
+
 // Apache rewrite rules use this
-if (isset($_GET['url'])) {
+} else if (isset($_GET['url'])) {
 	$url = $_GET['url'];
 	// IIS includes get variables in url
 	$i = strpos($url, '?');
