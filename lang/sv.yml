@@ -25,6 +25,7 @@ sv:
     FROMCOMPUTER: 'Välj filer från din dator'
     FROMCOMPUTERINFO: 'Ladda upp från din dator'
     TOTAL: Totalt
+    TOUPLOAD: 'Välj fil att ladda upp...'
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
   BBCodeParser:
@@ -71,7 +72,7 @@ sv:
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'Min profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -104,7 +105,7 @@ sv:
     SECOND: andra
     THIRD: tredje
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL: €
   DataObject:
     PLURALNAME: Dataobjekt
     SINGULARNAME: Dataobjekt
@@ -143,18 +144,37 @@ sv:
   Enum:
     ANY: 'Vilken som helst'
   File:
+    AviType: 'AVI videofil'
     Content: Innehåll
+    CssType: 'CSS fil'
+    DmgType: 'Apple skivavbild'
+    DocType: 'Word dokument'
     Filename: Filnamn
+    GifType: 'GIF bild - bra för diagram'
+    GzType: 'GZIP packad fil'
+    HtlType: 'HTML fil'
+    HtmlType: 'HTML fil'
     INVALIDEXTENSION: 'Filändelsen tillåts inte (tillåtna: {extensions})'
     INVALIDEXTENSIONSHORT: 'Filändelsen tillåts inte'
+    IcoType: 'Icon bild'
+    JpgType: 'JPEG bild - bra för fotografier'
+    JsType: 'Javascript fil'
+    Mp3Type: 'MP3 ljudfil'
+    MpgType: 'MPEG videofil'
     NOFILESIZE: 'Filstorleken är noll bytes'
     NOVALIDUPLOAD: 'Filen är inte giltig för uppladdning'
     Name: Namn
     PLURALNAME: Filer
+    PdfType: 'Adobe Acrobat PDF fil'
+    PngType: 'PNG bild - bra allmänt format'
     SINGULARNAME: Fil
     TOOLARGE: 'Filen är för stor, max {size} tillåts'
     TOOLARGESHORT: 'Filstorlek överskriden {size}'
+    TiffType: 'Tiff bildformat'
     Title: Titel
+    WavType: 'WAV ljudfil'
+    XlsType: 'Excel kalkylblad'
+    ZipType: 'ZIP packad fil'
   FileIFrameField:
     ATTACH: 'Bifoga {type}'
     ATTACHONCESAVED: '{type}er kan bifogas när du sparat posten för första gången'
@@ -309,7 +329,7 @@ sv:
     PERMDEFAULT: 'Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet.'
     PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras för att den har inte sparats ännu.'
     PreviewButton: Förhandsgranska
-    REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
+    REORGANISATIONSUCCESSFUL: 'Omorganisering av sidträdet lyckades.'
     SAVEDUP: Sparad.
     VersionUnknown: okänd
   LeftAndMain_Menu.ss:
@@ -395,8 +415,8 @@ sv:
     ResultNone: 'Inga ändringar'
     ResultUpdated: 'Uppdaterade {count} medlemmar'
   MemberPassword:
-    PLURALNAME: Medlemslösenord
-    SINGULARNAME: Medlemslösenord
+    PLURALNAME: 'Användares lösenord'
+    SINGULARNAME: 'Användares lösenord'
   MemberTableField: null
   ModelAdmin:
     DELETE: Radera
@@ -495,7 +515,7 @@ sv:
   SimpleImageField:
     NOUPLOAD: 'Ingen bild uppladdad'
   SiteTree:
-    TABMAIN: Huvudsaklig
+    TABMAIN: Allmänt
   TableField:
     ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
   TableField.ss:
@@ -539,7 +559,7 @@ sv:
     FROMCOMPUTER: 'Från din dator'
     FROMCOMPUTERINFO: 'Välj från filer'
     FROMFILES: 'Från filer'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Information: Denna bild kommer att bli länkad till. Var god kontrollera med ägaren till sajten att du har tillåtelse att länka till bilden.'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
     MAXNUMBEROFFILESSHORT: 'Kan bara ladda upp {count} files'
     REMOVE: 'Ta bort'
