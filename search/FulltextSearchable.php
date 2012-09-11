@@ -43,8 +43,8 @@ class FulltextSearchable extends DataExtension {
 	 */
 	static function enable($searchableClasses = array('SiteTree', 'File')) {
 		$defaultColumns = array(
-			'SiteTree' => 'Title,MenuTitle,Content,MetaTitle,MetaDescription,MetaKeywords',
-			'File' => 'Filename,Title,Content'
+			'SiteTree' => '"Title","MenuTitle","Content","MetaTitle","MetaDescription","MetaKeywords"',
+			'File' => '"Filename","Title","Content"'
 		);
 
 		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
@@ -69,7 +69,7 @@ class FulltextSearchable extends DataExtension {
 	 *  that can be searched on. Used for generation of the database index defintions.
 	 */
 	function __construct($searchFields = array()) {
-		if(is_array($searchFields)) $this->searchFields = implode(',', $searchFields);
+		if(is_array($searchFields)) $this->searchFields = '"'.implode('","', $searchFields).'"';
 		else $this->searchFields = $searchFields;
 		
 		parent::__construct();
