@@ -232,6 +232,7 @@ ja_JP:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 削除権限がありません
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: 作成
     Delete: 削除
     DeletePermissionsFailure: 削除権限がありません
@@ -462,8 +463,10 @@ ja_JP:
     FromRole: '役割"{title}"から継承'
     FromRoleOnGroup: 'グループ "%s" のロール "%s"から継承'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

@@ -232,6 +232,7 @@ de:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
   GridFieldDetailForm:
+    CancelBtn: Abbrechen
     Create: Erstellen
     Delete: Löschen
     DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
@@ -462,8 +463,10 @@ de:
     FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Nur Adminstratoren können beitreten'
     PLURALNAME: 'Keine Rollen gefunden'
     SINGULARNAME: Rolle
+    Title: Titel
   PermissionRoleCode:
     PLURALNAME: Berechtigungsrollencodes
     SINGULARNAME: Berechtigungsrollencode
