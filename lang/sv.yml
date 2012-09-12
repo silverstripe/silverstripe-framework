@@ -220,7 +220,7 @@ sv:
     FilterBy: 'Filtrera på'
     Find: Hitta
     LEVELUP: 'Upp en nivå'
-    LinkExisting: 'Länk finns'
+    LinkExisting: 'Länka befintlig'
     NewRecord: 'Ny %s'
     NoItemsFound: 'Inget hittades'
     PRINTEDAT: Utskrivet
