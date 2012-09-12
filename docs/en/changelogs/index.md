@@ -63,7 +63,9 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Alpha/beta/release candidate ##
 
-* [3.0.0-rc2](rc/3.0.0-rc3) - 27 June 2012
+ * [3.0.2-rc2](rc/3.0.2-rc2) - 12 September 2012
+ * [3.0.2-rc1](rc/3.0.2-rc1) - 5 September 2012
+ * [3.0.0-rc2](rc/3.0.0-rc3) - 27 June 2012
  * [3.0.0-rc2](rc/3.0.0-rc2) - 26 June 2012
  * [3.0.0-rc1](rc/3.0.0-rc1) - 18 June 2012
  * [3.0.0-beta3](beta/3.0.0-beta3) - 28 May 2012
