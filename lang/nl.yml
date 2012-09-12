@@ -1,7 +1,7 @@
 nl:
   AssetAdmin:
     ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    EditOrgMenu: 'Bewerk en beheer'
     NEWFOLDER: 'Nieuwe Map'
   AssetTableField:
     CREATED: 'Eerste upload'
