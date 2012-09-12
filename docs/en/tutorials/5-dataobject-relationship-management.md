@@ -127,16 +127,13 @@ All customization to fields for a page type are managed through a method called
 		public function getCMSFields() {
 			// Get the fields from the parent implementation
 			$fields = parent::getCMSFields();	
-
 			// Create a default configuration for the new GridField, allowing record editing
 			$config = GridFieldConfig_RelationEditor::create();
-
 			// Set the names and data for our gridfield columns
 			$config->getComponentByType('GridFieldDataColumns')->setDisplayFields(array(
 				'Name' => 'Name',
 				'Project.Title'=> 'Project' // Retrieve from a has-one relationship
 			));	
-						
 			// Create a gridfield to hold the student relationship    
 			$studentsField = new GridField(
 				'Students', // Field name
@@ -144,10 +141,8 @@ All customization to fields for a page type are managed through a method called
 				$this->Students(), // List of all related students
 				$config
 			);		
-			 
 			// Create a tab named "Students" and add our field to it
 			$fields->addFieldToTab('Root.Students', $studentsField); 
-						
 			return $fields;
 		}
 	}
@@ -232,7 +227,6 @@ to configure it a bit differently.
 		// ...
 		public function getCMSFields() {
 			// ...
-
 			// Same setup, but for mentors
 			$mentorsField = new GridField(
 				'Mentors',
@@ -241,7 +235,6 @@ to configure it a bit differently.
 				GridFieldConfig_RelationEditor::create()
 			);		      
 			$fields->addFieldToTab('Root.Mentors', $mentorsField);
-
 			return $fields;
 		}
 	}
@@ -290,7 +283,6 @@ a named list of object.
 			<h1>$Title</h1>
 			<div class="content">
 				$Content
-				
 				<table>
 					<thead>
 						<tr>
@@ -349,7 +341,6 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 			<h1>$Title</h1>
 			<div class="content">
 				$Content
-
 				<h2>Students</h2>
 				<% if Students %>
 					<ul>
@@ -360,7 +351,6 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 				<% else %>
 					<p>No students found</p>
 				<% end_if %>
-
 				<h2>Mentors</h2>
 				<% if Mentors %>
 					<ul>
@@ -371,7 +361,6 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 				<% else %>
 					<p>No mentors found</p>
 				<% end_if %>
-
 			</div>
 		</article>
 	</div>
