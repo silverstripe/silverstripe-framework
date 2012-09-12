@@ -232,6 +232,7 @@ th:
   GridFieldAction_Delete:
     DeletePermissionsFailure: ไม่มีสิทธิ์ในการลบ
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: สร้าง
     Delete: ลบ
     DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบทิ้งได้
@@ -462,8 +463,10 @@ th:
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: บทบาท
     SINGULARNAME: บทบาท
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

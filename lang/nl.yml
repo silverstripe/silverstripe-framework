@@ -232,6 +232,7 @@ nl:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Create
     Delete: Verwijder
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
@@ -462,8 +463,10 @@ nl:
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

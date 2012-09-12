@@ -232,6 +232,7 @@ fr:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Créer
     Delete: Supprimer
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
@@ -462,8 +463,10 @@ fr:
     FromRole: 'héritée du rôle « {title} »'
     FromRoleOnGroup: 'hérité du rôle "%s" du groupe "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

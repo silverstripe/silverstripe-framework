@@ -232,6 +232,7 @@ fi:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
   GridFieldDetailForm:
+    CancelBtn: Peruuta
     Create: Luo
     Delete: Poista
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
@@ -462,8 +463,10 @@ fi:
     FromRole: 'periytyivät roolista "{title}"'
     FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roolit
     SINGULARNAME: Rooli
+    Title: 'Roolin nimi'
   PermissionRoleCode:
     PLURALNAME: 'Käyttöoikeiden roolin koodit'
     SINGULARNAME: 'Käyttöoikeiden roolin koodi'
