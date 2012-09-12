@@ -302,10 +302,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$curmbs = $this->Breadcrumbs();
 			if($curmbs && $curmbs->count()>=2){
 				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
-				$text = "
-				<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"".$one_level_up->Link."\">
-					Cancel
-				</a>";
+				$text = sprintf(
+					"<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"%s\">%s</a>",
+					$one_level_up->Link,
+					_t('GridFieldDetailForm.CancelBtn', 'Cancel')
+				);
 				$actions->push(new LiteralField('cancelbutton', $text));
 			}
 		}
@@ -327,9 +328,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// regardless of overloaded CMS controller templates.
 			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
 			$form->setTemplate('LeftAndMain_EditForm');
-			$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+			$form->addExtraClass('cms-content cms-edit-form center');
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
-			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			if($form->Fields()->hasTabset()) {
+				$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+				$form->addExtraClass('ss-tabset');
+			}
 
 			if($toplevelController->hasMethod('Backlink')) {
 				$form->Backlink = $toplevelController->Backlink();
@@ -364,6 +368,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 	function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
+		$controller = Controller::curr();
 
 		try {
 			$form->saveInto($this->record);
@@ -371,7 +376,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$this->gridField->getList()->add($this->record);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			$controller = Controller::curr();
 			$responseNegotiator = new PjaxResponseNegotiator(array(
 				'CurrentForm' => function() use(&$form) {
 					return $form->forTemplate();
@@ -398,10 +402,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		if($new_record) {
 			return Controller::curr()->redirect($this->Link());
-		} else {
+		} elseif($this->gridField->getList()->byId($this->record->ID)) {
 			// Return new view, as we can't do a "virtual redirect" via the CMS Ajax
 			// to the same URL (it assumes that its content is already current, and doesn't reload)
 			return $this->edit(Controller::curr()->getRequest());
+		} else {
+			// Changes to the record properties might've excluded the record from
+			// a filtered list, so return back to the main view if it can't be found
+			$noActionURL = $controller->removeAction($data['url']);
+			$controller->getRequest()->addHeader('X-Pjax', 'Content'); 
+			return $controller->redirect($noActionURL, 302); 
 		}
 	}
 

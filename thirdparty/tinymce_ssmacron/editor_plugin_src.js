@@ -40,7 +40,7 @@
 	
 			// Register buttons
 			ed.addButton('ssmacron', {
-				title : t.editor.translate('insertmacron'),
+				title : ed.getLang('tinymce_ssmacron.insertmacron'),
 				cmd : 'mceInsertMacron',
 				image : url + '/img/macron.png'
 			});

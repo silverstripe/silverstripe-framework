@@ -135,6 +135,32 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals(1, $results->Count());
 		$this->assertEquals("Filtered value", $results->First()->HiddenValue);
 	}
+
+	function testStartsWithFilterCaseInsensitive() {
+		$all = singleton("SearchContextTest_AllFilterTypes");
+		$context = $all->getDefaultSearchContext();
+		$params = array(
+			"StartsWith" => "12345-6789 camelcase", // spelled lowercase
+		);
+
+		$results = $context->getResults($params);
+		$this->assertEquals(1, $results->Count());
+		$this->assertEquals("Filtered value", $results->First()->HiddenValue);
+	}
+
+	function testEndsWithFilterCaseInsensitive() {
+		$all = singleton("SearchContextTest_AllFilterTypes");
+		$context = $all->getDefaultSearchContext();
+		$params = array(
+			"EndsWith" => "IJKL", // spelled uppercase
+		);
+
+		$results = $context->getResults($params);
+		$this->assertEquals(1, $results->Count());
+		$this->assertEquals("Filtered value", $results->First()->HiddenValue);
+	}
+
+
 	
 }
 

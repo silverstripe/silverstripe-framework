@@ -138,6 +138,9 @@ class File extends DataObject {
 		),
 		'flash' => array(
 			'swf', 'fla'
+		),
+		'doc' => array(
+			'doc','docx','txt','rtf','xls','xlsx','pages', 'ppt','pptx','pps','csv', 'html','htm','xhtml', 'xml','pdf'
 		)
 	);
 

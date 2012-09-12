@@ -232,6 +232,7 @@ en:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'

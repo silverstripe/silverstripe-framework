@@ -78,7 +78,7 @@ class DebugView extends Object {
 				$pathLinks[] = "<a href=\"$base$pathPart\">$part</a>";
 			}
 		}
-		return implode('&rarr;&nbsp;', $pathLinks);
+		return implode('&nbsp;&rarr;&nbsp;', $pathLinks);
 	}	
 	
 	/**

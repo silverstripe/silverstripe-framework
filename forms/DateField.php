@@ -133,10 +133,12 @@ class DateField extends TextField {
 
 		// Add other jQuery UI specific, namespaced options (only serializable, no callbacks etc.)
 		// TODO Move to DateField_View_jQuery once we have a properly extensible HTML5 attribute system for FormField
+		$jqueryUIConfig = array();
 		foreach($this->getConfig() as $k => $v) {
-			if(preg_match('/^jQueryUI\.(.*)/', $k, $matches)) $config[$matches[1]] = $v;
+			if(preg_match('/^jQueryUI\.(.*)/', $k, $matches)) $jqueryUIConfig[$matches[1]] = $v;
 		}
-		
+		if ($jqueryUIConfig)
+			$config['jqueryuiconfig'] =  Convert::array2json(array_filter($jqueryUIConfig));
 		$config = array_filter($config);
 		foreach($config as $k => $v) $this->setAttribute('data-' . $k, $v);
 		
@@ -591,7 +593,8 @@ class DateField_View_JQuery extends Object {
 		  '/l/' => '',
 		  '/YYYY/' => 'yy',
 		  '/yyyy/' => 'yy',
-		  '/[^y]yy[^y]/' => 'y',
+		  // See http://open.silverstripe.org/ticket/7669
+		  '/y{1,3}/' => 'yy',
 		  '/a/' => '',
 		  '/B/' => '',
 		  '/hh/' => '',

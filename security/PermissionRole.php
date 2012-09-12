@@ -62,4 +62,16 @@ class PermissionRole extends DataObject {
 			$code->delete();
 		}
 	}
+
+	function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
+		$labels['Title'] = _t('PermissionRole.Title', 'Title');
+		$labels['OnlyAdminCanApply'] = _t(
+			'PermissionRole.OnlyAdminCanApply', 
+			'Only admin can apply',
+			'Checkbox to limit which user can apply this role'
+		);
+		
+		return $labels;
+	}
 }

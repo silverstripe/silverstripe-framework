@@ -11,13 +11,15 @@ This applies to Windows Server 2008, Windows Server 2008 R2, Windows Vista, and 
 
 ## [Install using IIS 6.x](windows-manual-iis-6)
 
-*Note: It's recommended you upgrade to Windows Server 2008 R2 which uses IIS 7.5*.
-
 This applies to Windows Server 2003 and Windows Server 2003 R2.
+
+<div class="warning" markdown="1">
+	Note: These instructions may not work, as they're no longer maintained. Please use a version of Windows that supports IIS 7.x
+</div>
 
 ## Additional notes
 
-Microsoft has no URL rewriting module for anything less than IIS 7.x. This will mean your URLs are like yoursite.com/index.php/about-us rather than yoursite.com/about-us.
+Microsoft has no URL rewriting module for any version below IIS 7.x. This will mean your URLs are like yoursite.com/index.php/about-us rather than yoursite.com/about-us.
 However, if you do want friendly URLs you must you must buy or use other URL rewriting software: 
 
  * [IIRF](http://iirf.codeplex.com/) (should work for most cases - see [IIS 6 guide](windows-manual-iis-6) for rewrite rules)

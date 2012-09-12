@@ -217,6 +217,8 @@ For an introduction how to customize the CMS templates, see our [CMS Architectur
 
 ## Related
 
+* [/topics/grid-field](GridField): The UI component powering ModelAdmin
+* [/tutorials/5-dataobject-relationship-management](Tutorial 5: Dataobject Relationship Management)
 *  `[api:SearchContext]`
 * [genericviews Module](http://silverstripe.org/generic-views-module)
 * [Presentation about ModelAdmin at SupperHappyDevHouse Wellington](http://www.slideshare.net/chillu/modeladmin-in-silverstripe-23)
