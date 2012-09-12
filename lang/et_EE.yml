@@ -232,6 +232,7 @@ et_EE:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Puuduvad kustutamis õigused'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Loo
     Delete: Kustuta
     DeletePermissionsFailure: 'Puuduvad kustutamis õigused'
@@ -462,8 +463,10 @@ et_EE:
     FromRole: 'päritud rollilt "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Rollid
     SINGULARNAME: Roll
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

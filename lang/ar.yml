@@ -232,6 +232,7 @@ ar:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Create
     Delete: حذف
     DeletePermissionsFailure: 'No delete permissions'
@@ -462,8 +463,10 @@ ar:
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'توريث من القاعدة "%s"  على المجموعة "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

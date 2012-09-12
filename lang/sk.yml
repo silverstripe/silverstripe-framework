@@ -232,6 +232,7 @@ sk:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Žiadne oprávnenia smazať'
   GridFieldDetailForm:
+    CancelBtn: Zrušiť
     Create: Vytvoriť
     Delete: Vymazať
     DeletePermissionsFailure: 'Žiadne oprávnenia smazať'
@@ -290,7 +291,7 @@ sk:
     IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, keď obrázok nemôže byť zobrazený'
     IMAGEDIMENSIONS: Rozmery
     IMAGEHEIGHTPX: Výška
-    IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
+    IMAGETITLE: 'Text titulku (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Text titulku (tooltip)'
     IMAGETITLETEXTDESC: 'Text titulku (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGEWIDTHPX: Šírka
@@ -462,8 +463,10 @@ sk:
     FromRole: 'zdedené z role "{title}"'
     FromRoleOnGroup: 'zdediť z úlohy "%s" v skupine "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Iba administrátor môže použiť'
     PLURALNAME: Role
     SINGULARNAME: Role
+    Title: Názov
   PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnenia rolí'
     SINGULARNAME: 'Kód oprávnenia role'
