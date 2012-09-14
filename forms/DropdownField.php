@@ -236,7 +236,7 @@ class DropdownField extends FormField {
 	}
 
 	function performReadonlyTransformation() {
-		$field = new LookupField($this->name, $this->title, $this->source);
+		$field = new LookupField($this->name, $this->title, $this->getSource());
 		$field->setValue($this->value);
 		$field->setForm($this->form);
 		$field->setReadonly(true);
