@@ -271,15 +271,11 @@ class Group extends DataObject {
 	 */
 	public function collateFamilyIDs() {
 		$familyIDs = array();
-		$chunkToAdd = array(array("ID" => $this->ID));
+		$chunkToAdd = array($this->ID);
 		
 		while($chunkToAdd) {
-			$idList = array();
-			foreach($chunkToAdd as $item) {
-				$idList[] = $item['ID'];
-				$familyIDs[] = $item['ID'];
-			}
-			$idList = implode(',', $idList);
+			$familyIDs = array_merge($familyIDs,$chunkToAdd);
+			$idList = implode(',', $chunkToAdd);
 			
 			// Get the children of *all* the groups identified in the previous chunk.
 			// This minimises the number of SQL queries necessary			
