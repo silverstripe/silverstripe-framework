@@ -19,7 +19,7 @@ class SS_HTMLValue extends ViewableData {
 	public function __construct($content = null) {
 		$this->document = new DOMDocument('1.0', 'UTF-8');
 		$this->document->scrictErrorChecking = false;
-		
+
 		$this->setContent($content);
 		
 		parent::__construct();
@@ -29,14 +29,19 @@ class SS_HTMLValue extends ViewableData {
 	 * @return string
 	 */
 	public function getContent() {
-		// strip the body tags from the output (which are automatically added by DOMDocument)
-		return preg_replace (
-			array (
-				'/^\s*<body[^>]*>/i',
-				'/<\/body[^>]*>\s*$/i'
-			),
-			null,
-			$this->getDocument()->saveXML($this->getDocument()->documentElement->lastChild)
+		// strip any surrounding tags before the <body> and after the </body> which are automatically added by DOMDocument
+		// note that we can't use the argument to saveHTML() as it's only supported in PHP 5.3.6+, we support 5.3.2 as a minimum
+		// in addition to the above, trim any surrounding newlines from the output
+		return trim(
+			preg_replace(
+				array(
+					'/^<!DOCTYPE.+?>/i',
+					'/(.*)<body>/i',
+					'/<\/body>(.*)/i',
+				),
+				'',
+				$this->getDocument()->saveHTML()
+			)
 		);
 	}
 	
