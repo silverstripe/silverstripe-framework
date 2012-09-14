@@ -232,6 +232,7 @@ cs:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
   GridFieldDetailForm:
+    CancelBtn: Storno
     Create: Vytvořit
     Delete: Smazat
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
@@ -462,8 +463,10 @@ cs:
     FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Pouze administrátor může použít'
     PLURALNAME: Role
     SINGULARNAME: Role
+    Title: Název
   PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnění role'
     SINGULARNAME: 'Kód oprávnění role'

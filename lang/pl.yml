@@ -232,6 +232,7 @@ pl:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Stwórz
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
@@ -462,8 +463,10 @@ pl:
     FromRole: 'odziedziczone z roli "{title}"'
     FromRoleOnGroup: 'odziedziczone z roli "%s" w grupie "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Role
     SINGULARNAME: Rola
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

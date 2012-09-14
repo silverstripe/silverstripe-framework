@@ -232,6 +232,7 @@ zh_CN:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
+    CancelBtn: Cancel
     Create: Create
     Delete: 删除
     DeletePermissionsFailure: 'No delete permissions'
@@ -462,8 +463,10 @@ zh_CN:
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'

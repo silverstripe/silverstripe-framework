@@ -232,6 +232,7 @@ it:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
   GridFieldDetailForm:
+    CancelBtn: Annulla
     Create: Crea
     Delete: Cancella
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
@@ -462,8 +463,10 @@ it:
     FromRole: 'ereditato dal ruolo "{title}"'
     FromRoleOnGroup: 'ereditato dal ruolo "%s" nel gruppo "%s"'
   PermissionRole:
+    OnlyAdminCanApply: 'Solo l''amministratore può applicare'
     PLURALNAME: Ruoli
     SINGULARNAME: Ruolo
+    Title: Titolo
   PermissionRoleCode:
     PLURALNAME: 'Codici Ruoli'
     SINGULARNAME: 'Codice Ruolo'
