@@ -3,7 +3,16 @@
 class DataObjectSchemaGenerationTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'DataObjectSchemaGenerationTest_DO',
+		'DataObjectSchemaGenerationTest_IndexDO'
 	);
+	
+	function setUpOnce() {
+		
+		// enable fulltext option on this table
+		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
+		
+		parent::setUpOnce();
+	}
 
 	/**
 	 * Check that once a schema has been generated, then it doesn't need any more updating
@@ -12,21 +21,14 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$db = DB::getConn();
 		DB::quiet();
 
-
 		// Table will have been initially created by the $extraDataObjects setting
+		
 		// Verify that it doesn't need to be recreated
 		$db->beginSchemaUpdate();
 		$obj = new DataObjectSchemaGenerationTest_DO();
 		$obj->requireTable();
-		$db->endSchemaUpdate();
-		
-		// Test table within this database
-		$db->beginSchemaUpdate();
-		$obj2 = new DataObjectSchemaGenerationTest_DO();
-		$obj2->requireTable();
 		$needsUpdating = $db->doesSchemaNeedUpdating();
 		$db->cancelSchemaUpdate();
-
 		$this->assertFalse($needsUpdating);
 	}
 
@@ -37,25 +39,22 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$db = DB::getConn();
 		DB::quiet();
 
-
 		// Table will have been initially created by the $extraDataObjects setting
-		// Verify that it doesn't need to be recreated
+		
+		// Let's insert a new field here
+		$oldDB = DataObjectSchemaGenerationTest_DO::$db;
+		DataObjectSchemaGenerationTest_DO::$db['SecretField'] = 'Varchar(100)';
+		
+		// Verify that the above extra field triggered a schema update
 		$db->beginSchemaUpdate();
 		$obj = new DataObjectSchemaGenerationTest_DO();
 		$obj->requireTable();
-		$db->endSchemaUpdate();
-		
-		// Let's insert a new field here
-		DataObjectSchemaGenerationTest_DO::$db['SecretField'] = 'Varchar(100)';
-		
-		// Test table within this database
-		$db->beginSchemaUpdate();
-		$obj2 = new DataObjectSchemaGenerationTest_DO();
-		$obj2->requireTable();
 		$needsUpdating = $db->doesSchemaNeedUpdating();
 		$db->cancelSchemaUpdate();
-
 		$this->assertTrue($needsUpdating);
+		
+		// Restore db configuration
+		DataObjectSchemaGenerationTest_DO::$db = $oldDB;
 	}
 	
 	/**
@@ -65,24 +64,30 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$db = DB::getConn();
 		DB::quiet();
 		
-		// enable fulltext option on this table
-		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
-		
 		// Table will have been initially created by the $extraDataObjects setting
+		
 		// Verify that it doesn't need to be recreated
 		$db->beginSchemaUpdate();
 		$obj = new DataObjectSchemaGenerationTest_IndexDO();
 		$obj->requireTable();
-		$db->endSchemaUpdate();
+		$needsUpdating = $db->doesSchemaNeedUpdating();
+		$db->cancelSchemaUpdate();
+		$this->assertFalse($needsUpdating);
 		
-		// Test table within this database
+		// Test with alternate index format, although these indexes are the same
+		$oldIndexes = DataObjectSchemaGenerationTest_IndexDO::$indexes;
+		DataObjectSchemaGenerationTest_IndexDO::$indexes = DataObjectSchemaGenerationTest_IndexDO::$indexes_alt;
+				
+		// Verify that it still doesn't need to be recreated
 		$db->beginSchemaUpdate();
 		$obj2 = new DataObjectSchemaGenerationTest_IndexDO();
 		$obj2->requireTable();
 		$needsUpdating = $db->doesSchemaNeedUpdating();
 		$db->cancelSchemaUpdate();
-
 		$this->assertFalse($needsUpdating);
+		
+		// Restore old index format
+		DataObjectSchemaGenerationTest_IndexDO::$indexes = $oldIndexes;
 	}
 	
 	/**
@@ -92,29 +97,23 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$db = DB::getConn();
 		DB::quiet();
 		
-		// enable fulltext option on this table
-		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
-		
 		// Table will have been initially created by the $extraDataObjects setting
-		// Verify that it doesn't need to be recreated
+		
+		// Update the SearchFields index here
+		$oldIndexes = DataObjectSchemaGenerationTest_IndexDO::$indexes;
+		DataObjectSchemaGenerationTest_IndexDO::$indexes['SearchFields']['value'] = '"Title"';
+		
+		// Verify that the above index change triggered a schema update
 		$db->beginSchemaUpdate();
 		$obj = new DataObjectSchemaGenerationTest_IndexDO();
 		$obj->requireTable();
-		$db->endSchemaUpdate();
-		
-		// Let's insert a new field here
-		DataObjectSchemaGenerationTest_IndexDO::$indexes['SearchFields']['value'] = '"Title"';
-		
-		// Test table within this database
-		$db->beginSchemaUpdate();
-		$obj2 = new DataObjectSchemaGenerationTest_IndexDO();
-		$obj2->requireTable();
 		$needsUpdating = $db->doesSchemaNeedUpdating();
 		$db->cancelSchemaUpdate();
-
 		$this->assertTrue($needsUpdating);
+		
+		// Restore old indexes
+		DataObjectSchemaGenerationTest_IndexDO::$indexes = $oldIndexes;
 	}
-
 }
 
 class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
@@ -132,13 +131,20 @@ class DataObjectSchemaGenerationTest_IndexDO extends DataObjectSchemaGenerationT
 	);
 
 	static $indexes = array(
-		// Space between 'unique' and '("Name")' is critical. @todo - Robustify?
-		'NameIndex' => 'unique ("Title")', 
+		'NameIndex' => 'unique ("Title")',
 		'SearchFields' => array(
 			'type' => 'fulltext',
 			'name' => 'SearchFields',
 			'value' => '"Title","Content"'
 		)
 	);
-
+	
+	static $indexes_alt = array(
+		'NameIndex' => array(
+			'type' => 'unique',
+			'name' => 'NameIndex',
+			'value' => '"Title"'
+		),
+		'SearchFields' => 'fulltext ("Title","Content")'
+	);
 }
