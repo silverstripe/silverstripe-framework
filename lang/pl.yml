@@ -1,7 +1,7 @@
 pl:
   AssetAdmin:
-    ADDFILES: 'Dodaj pliki'
-    EditOrgMenu: 'Edytuj i organizuj'
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
@@ -20,10 +20,10 @@ pl:
     DROPAREA: 'Obszar upuszczania'
     EDITALL: 'Edytuj wszystkie'
     EDITANDORGANIZE: 'Edytuj i organizuj'
-    EDITINFO: 'Edytuj pliki'
+    EDITINFO: 'Edit files'
     FILES: Pliki
     FROMCOMPUTER: 'Wybierz pliki z komputera'
-    FROMCOMPUTERINFO: 'Załaduj z komputera'
+    FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Razem
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
@@ -60,12 +60,12 @@ pl:
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
     ERRORNOTREC: 'Nie istnieje taki username/hasło'
   Boolean:
-    0: 'False'
+    0: Nie
     ANY: Jakikolwiek
-    1: 'True'
+    1: Tak
   CMSLoadingScreen.ss:
     LOADING: Wczytywanie...
-    REQUIREJS: 'CMS wymaga włączonego JavaScript.'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Dostęp do sekcji ''{title}'''
     ACCESSALLINTERFACES: 'Dostęp do wszystkich sekcji CMSa'
@@ -76,19 +76,19 @@ pl:
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT2: 'Teraz możesz używać następujących danych do logowania się:'
-    EMAIL: E-mail
+    EMAIL: Email
     HELLO: Cześć
     PASSWORD: Hasło
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Nie
+    - Tak
   ComplexTableField:
     CLOSEPOPUP: 'Zamknij Okienko'
     SUCCESSADD2: 'Dodano {name}'
     SUCCESSEDIT: 'Zapisano %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Dodaj %s'
-    NOITEMSFOUND: 'Nic nie znaleziono'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sortuj rosnąco'
     SORTDESC: 'Sortuj malejąco'
   ComplexTableField_popup.ss:
@@ -191,7 +191,7 @@ pl:
   Filesystem:
     SYNCRESULTS: 'Synchronizacja zakończona: stworzono {createdcount} i usunięto {deletedcount} pozycji'
   Folder:
-    PLURALNAME: Foldery
+    PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Cześć
@@ -200,7 +200,7 @@ pl:
     TEXT3: dla
   Form:
     FIELDISREQUIRED: '%s jest wymagane'
-    SubmitBtnLabel: Przejdź
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
     VALIDATIONNOTUNIQUE: 'Wprowadzona wartość nie jest unikalna'
     VALIDATIONPASSWORDSDONTMATCH: 'Hasła nie są takie same'
@@ -249,10 +249,10 @@ pl:
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, ta grupa otrzyma wszystkie jej role'
     Locked: 'Zablokowana?'
     NoRoles: 'Nie znaleziono ról'
-    PLURALNAME: Grupy
+    PLURALNAME: Groups
     Parent: 'Grupa nadrzędna'
     RolesAddEditLink: 'Zarządzaj rolami'
-    SINGULARNAME: Grupa
+    SINGULARNAME: Group
     Sort: 'Kolejność Sortowania'
     has_many_Permissions: Zezwolenia
     many_many_Members: Członkowie
@@ -310,13 +310,13 @@ pl:
     URLNOTANOEMBEDRESOURCE: 'Adres URL ''{url}'' nie mógł zostać przekształcony w zasób medialny'
     UpdateMEDIA: 'Zaktualizuj Media'
   Image:
-    PLURALNAME: Pliki
-    SINGULARNAME: Plik
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Obraz
   Image_Cached:
-    PLURALNAME: Pliki
-    SINGULARNAME: Plik
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Ładowanie Zdjęć (Iframe)'
   LeftAndMain:
@@ -334,13 +334,13 @@ pl:
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
   LeftAndMain_Menu.ss:
-    Hello: Cześć
+    Hello: Hi
     LOGOUT: 'Wyloguj się'
   LoginAttempt:
     Email: 'Adres E-mail'
     IP: 'Adres IP'
-    PLURALNAME: 'Próby logowania'
-    SINGULARNAME: 'Próba logowania'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Dodaj grupę'
@@ -416,8 +416,8 @@ pl:
     ResultNone: 'Bez zmian'
     ResultUpdated: 'Zaktualizowano członków: {count}'
   MemberPassword:
-    PLURALNAME: 'Hasła użytkowników'
-    SINGULARNAME: 'Hasło użytkownika'
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Usuń
@@ -431,14 +431,14 @@ pl:
     UPDATEDRECORDS: 'Zaktualizowano {count} rekordów.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Kolumny bazy danych'
-    IMPORTSPECLINK: 'Pokaż specyfikację %s'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relacje
-    IMPORTSPECTITLE: 'Specyfikacja %s'
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filtr
-    IMPORT: Importuj
+    IMPORT: Import
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Importuj
+    IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Znajdź
   MoneyField:
     FIELDLABELAMOUNT: Ilość
@@ -448,15 +448,15 @@ pl:
   NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
   Pagination:
-    Page: Strona
-    View: Pokaż
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
-    PLURALNAME: Zezwolenia
-    SINGULARNAME: Zezwolenie
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
@@ -464,8 +464,8 @@ pl:
     FromRoleOnGroup: 'odziedziczone z roli "%s" w grupie "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Role
-    SINGULARNAME: Rola
+    PLURALNAME: Roles
+    SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
@@ -476,8 +476,8 @@ pl:
     VALIDATION: 'Wprowadź poprawny numer telefonu'
   RelationComplexTableField.ss:
     ADD: Dodaj
-    CSVEXPORT: 'Eksportuj do CSV'
-    NOTFOUND: 'Nic nie znaleziono'
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'
@@ -523,20 +523,20 @@ pl:
     ISREQUIRED: 'W %s ''%s'' jest wymagany'
   TableField.ss:
     ADD: 'Dodaj nowy rząd'
-    ADDITEM: 'Dodaj %s'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Eksportuj do CSV'
     PRINT: Drukuj
-    Print: Drukuj
+    Print: Print
     SELECT: 'Wybierz:'
   TableListField.ss:
-    NOITEMSFOUND: 'Nic nie znaleziono'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sortuj w porządku rosnącym'
     SORTDESC: 'Sortuj w porządku malejącym'
   TableListField_PageControls.ss:
-    DISPLAYING: Wyświetlane
-    OF: z
-    TO: do
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
     VIEWFIRST: 'Zobacz pierwsze'
     VIEWLAST: 'Zobacz ostatnie'
     VIEWNEXT: 'Zobacz następne'
@@ -550,17 +550,17 @@ pl:
     ATTACHFILE: 'Załącz plik'
     ATTACHFILES: 'Załącz pliki'
     AttachFile: 'Załącz plik(i)'
-    DELETE: 'Usuń z plików'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Usuń ten plik z magazynu'
     DOEDIT: Zapisz
     DROPFILE: 'upuść plik'
     DROPFILES: 'upuść pliki'
     Dimensions: Rozmiar
-    EDIT: Edytuj
+    EDIT: Edit
     EDITINFO: 'Edytuj plik'
     FIELDNOTSET: 'Nie znaleziono informacji o pliku'
     FROMCOMPUTER: 'Z komputera'
-    FROMCOMPUTERINFO: 'Wybierz z plików'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Z plików'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
@@ -569,7 +569,7 @@ pl:
     REMOVEERROR: 'Błąd podczas usuwania pliku'
     REMOVEINFO: 'Usuń pliki z tego miejsca, ale nie usuwaj ich z magazynu'
     STARTALL: 'Rozpocznij wszystko'
-    STARTALLINFO: 'Rozpocznij ładowanie wszystkich'
+    STARTALLINFO: 'Start all uploads'
     Saved: Zapisano
   Versioned:
     has_many_Versions: Wersje

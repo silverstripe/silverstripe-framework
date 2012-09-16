@@ -21,7 +21,7 @@ pt:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Ficheiros
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +60,9 @@ pt:
     ERRORNOTADMIN: 'Esse utilizador não é um administrador.'
     ERRORNOTREC: 'Esse nome de utilizador / password não é válido'
   Boolean:
-    0: 'False'
+    0: Não
     ANY: Qualquer
-    1: 'True'
+    1: Sim
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -80,14 +80,14 @@ pt:
     HELLO: Olá
     PASSWORD: Palavra-chave
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Não
+    - Sim
   ComplexTableField:
     CLOSEPOPUP: 'Fechar Janela'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Guardado  %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Adicionar %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Ordenar ascendente'
     SORTDESC: 'Ordenar descendente'

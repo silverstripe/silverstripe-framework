@@ -1,7 +1,7 @@
 de:
   AssetAdmin:
-    ADDFILES: 'Dateien hinzufügen'
-    EditOrgMenu: 'Bearbeiten und organisieren'
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Neuer Ordner'
   AssetTableField:
     CREATED: 'Erstmalig hochgeladen'
@@ -22,8 +22,8 @@ de:
     EDITANDORGANIZE: Bearbeiten
     EDITINFO: 'Dateien bearbeiten'
     FILES: Dateien
-    FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
-    FROMCOMPUTERINFO: 'Von ihrem Computer hochladen'
+    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
     TOTAL: Gesamt
     TOUPLOAD: 'Dateien für den Upload wählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
@@ -60,9 +60,9 @@ de:
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
-    0: Falsch
+    0: Nein
     ANY: alle
-    1: Wahr
+    1: Ja
   CMSLoadingScreen.ss:
     LOADING: 'Lade Daten ...'
     REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
@@ -80,8 +80,8 @@ de:
     HELLO: Hi
     PASSWORD: Passwort
   CheckboxField:
-    - Falsch
-    - Wahr
+    - Nein
+    - Ja
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
     SUCCESSADD2: '{name} hinzugefügt'
@@ -163,7 +163,7 @@ de:
     MpgType: 'MPEG Videodatei'
     NOFILESIZE: 'Dateigröße ist 0 bytes'
     NOVALIDUPLOAD: 'Datei ist kein gültiger Upload'
-    Name: Dateiname
+    Name: Name
     PLURALNAME: Dateien
     PdfType: 'Adobe Acrobat PDF Datei'
     PngType: 'PNG Bild - vielseitig einsetzbar'
@@ -191,8 +191,8 @@ de:
   Filesystem:
     SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
   Folder:
-    PLURALNAME: Ordner
-    SINGULARNAME: 'In Ordner suchen'
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hallo
     TEXT1: 'Hier ist Ihr'
@@ -200,7 +200,7 @@ de:
     TEXT3: für
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
-    SubmitBtnLabel: Los
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
     VALIDATIONNOTUNIQUE: 'Der eingegebene Wert ist nicht einzigartig'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwörter stimmen nicht überein'
@@ -235,7 +235,7 @@ de:
     CancelBtn: Abbrechen
     Create: Erstellen
     Delete: Löschen
-    DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
+    DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
     Deleted: 'Gelöscht %s %s'
     Save: Speichern
     Saved: 'Gespeichert %s %s'
@@ -249,10 +249,10 @@ de:
     GroupReminder: 'Bei Zuweisung einer Übergruppe werden alle ihre Rollen übernommen'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
-    PLURALNAME: 'Gruppen importieren'
+    PLURALNAME: Groups
     Parent: Elterngruppe
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
-    SINGULARNAME: 'Gruppen Code'
+    SINGULARNAME: Group
     Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
     many_many_Members: Mitglieder
@@ -310,13 +310,13 @@ de:
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
     UpdateMEDIA: 'Medienobjekt aktualisieren'
   Image:
-    PLURALNAME: 'Von "Dateien"'
-    SINGULARNAME: Datei
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Bild
   Image_Cached:
-    PLURALNAME: 'Von "Dateien"'
-    SINGULARNAME: 'Datei anhängen'
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
@@ -334,13 +334,13 @@ de:
     SAVEDUP: Gespeichert.
     VersionUnknown: Unbekannt
   LeftAndMain_Menu.ss:
-    Hello: Hallo
+    Hello: Hi
     LOGOUT: Ausloggen
   LoginAttempt:
     Email: E-Mail-Adresse
     IP: IP-Adresse
-    PLURALNAME: Loginversuche
-    SINGULARNAME: Loginversuch
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Gruppe hinzufügen'
@@ -416,8 +416,8 @@ de:
     ResultNone: 'Keine Änderungen'
     ResultUpdated: '{count} Mitglied(er) wurde(n) aktualisiert'
   MemberPassword:
-    PLURALNAME: Benutzerpasswörter
-    SINGULARNAME: Benutzerpasswort
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Löschen
@@ -431,9 +431,9 @@ de:
     UPDATEDRECORDS: '{count} Datensätze wurden aktualisiert.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Datenbankspalten
-    IMPORTSPECLINK: 'Spezifikation von %s anzeigen'
+    IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
     IMPORTSPECRELATIONS: Relationen
-    IMPORTSPECTITLE: 'Spezifikation von %s'
+    IMPORTSPECTITLE: 'Beschreibung von %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Importieren
@@ -448,15 +448,15 @@ de:
   NumericField:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
   Pagination:
-    Page: Seite
-    View: Anzeige
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
-    PLURALNAME: Berechtigungen
-    SINGULARNAME: Berechtigung
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
@@ -464,12 +464,12 @@ de:
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Nur Adminstratoren können beitreten'
-    PLURALNAME: 'Keine Rollen gefunden'
-    SINGULARNAME: Rolle
+    PLURALNAME: Roles
+    SINGULARNAME: Role
     Title: Titel
   PermissionRoleCode:
-    PLURALNAME: Berechtigungsrollencodes
-    SINGULARNAME: Berechtigungsrollencode
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
   PhoneNumberField:
@@ -477,7 +477,7 @@ de:
   RelationComplexTableField.ss:
     ADD: Hinzufügen
     CSVEXPORT: 'Als CSV exportieren'
-    NOTFOUND: 'Keine Elemente gefunden.'
+    NOTFOUND: 'Keine Elemente gefunden'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'

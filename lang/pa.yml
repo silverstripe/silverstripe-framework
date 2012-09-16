@@ -87,7 +87,7 @@ pa:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'ਜੋੜ ੋ '
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'
@@ -181,7 +181,7 @@ pa:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: ਫਾਈਲ
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'

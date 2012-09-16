@@ -21,7 +21,7 @@ ro:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Fisiere
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -87,7 +87,7 @@ ro:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: Adaugă
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sortează ascendent'
     SORTDESC: 'Sortează descendent'
@@ -181,7 +181,7 @@ ro:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: Fisier
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'

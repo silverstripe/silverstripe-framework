@@ -21,7 +21,7 @@ si:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: ලිපි
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -87,7 +87,7 @@ si:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'එකතු කරන්න'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'ආරෝහන පිළිවෙලට'
     SORTDESC: 'ආවරෝහන පිළිවෙලට'
@@ -181,7 +181,7 @@ si:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: ලිපිය
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'

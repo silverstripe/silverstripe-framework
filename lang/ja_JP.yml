@@ -20,10 +20,10 @@ ja_JP:
     DROPAREA: ドロップ領域
     EDITALL: すべて編集
     EDITANDORGANIZE: 編集と管理
-    EDITINFO: 'Edit files'
+    EDITINFO: ファイルを編集
     FILES: ファイル
     FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTERINFO: コンピュータからアップロード
     TOTAL: 合計
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: しばらくお待ちください...アップロードは進行中です
@@ -60,12 +60,12 @@ ja_JP:
     ERRORNOTADMIN: このユーザーは管理者（アドミニストレーター）ではありません
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   Boolean:
-    0: 'False'
+    0: 偽
     ANY: 何でも
-    1: 'True'
+    1: 真
   CMSLoadingScreen.ss:
     LOADING: 読み込み中...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: CMSを利用するにはJavascriptが有効化されている必要があります。
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: すべてのCMSのセクションへアクセス
@@ -80,15 +80,15 @@ ja_JP:
     HELLO: こんにちわ！
     PASSWORD: パスワード
   CheckboxField:
-    - 'False'
-    - 'True'
+    - いいえ
+    - はい
   ComplexTableField:
     CLOSEPOPUP: ポップアップを閉じる
     SUCCESSADD2: '{name}を追加しました'
     SUCCESSEDIT: '更新日時 %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
-    NOITEMSFOUND: 'No items found'
+    ADDITEM: '%sを追加する'
+    NOITEMSFOUND: 項目が見つかりませんでした
     SORTASC: 昇順
     SORTDESC: ソート（下順）
   ComplexTableField_popup.ss:
@@ -211,7 +211,7 @@ ja_JP:
   FormField:
     NONE: 何もありません
   GridAction:
-    DELETE_DESCRIPTION: 削除
+    DELETE_DESCRIPTION: Delete
     Delete: 削除
     UnlinkRelation: リンク解除
   GridField:
@@ -334,7 +334,7 @@ ja_JP:
     SAVEDUP: 保存済み
     VersionUnknown: 不明
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: こんにちは！
     LOGOUT: ログアウト
   LoginAttempt:
     Email: メールアドレス
@@ -476,8 +476,8 @@ ja_JP:
     VALIDATION: 電話番号を入力してください
   RelationComplexTableField.ss:
     ADD: 追加
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: CSVへ書き出し
+    NOTFOUND: 項目が見つかりませんでした
   Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
     BUTTONSEND: パスワードリセットのリンクを送信してください
@@ -523,14 +523,14 @@ ja_JP:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
     ADD: 新しい行を追加
-    ADDITEM: 'Add %s'
+    ADDITEM: '%sを追加'
   TableListField:
     CSVEXPORT: CSVにエクスポート
     PRINT: 印刷
     Print: Print
     SELECT: 選択：
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 項目が見つかりませんでした
     SORTASC: 昇順で並べ替え
     SORTDESC: 降順で並べ替え
   TableListField_PageControls.ss:
@@ -556,11 +556,11 @@ ja_JP:
     DROPFILE: ファイルをドロップ
     DROPFILES: ファイルをドロップ
     Dimensions: Dimensions
-    EDIT: Edit
+    EDIT: 編集
     EDITINFO: このファイルを編集
     FIELDNOTSET: ファイル情報が見つかりませんでした
     FROMCOMPUTER: コンピュータから
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: ファイルから選択
     FROMFILES: ファイルから
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: '最大数の{count}ファイルを超えました。'
@@ -569,7 +569,7 @@ ja_JP:
     REMOVEERROR: ファイルの削除におけるエラー
     REMOVEINFO: ここからこのファイルを削除。ただし、ファイルのストレージからこのファイルの削除はしない。
     STARTALL: すべて開始
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: すべてのアップロードを開始
     Saved: 保存しました
   Versioned:
     has_many_Versions: バージョン

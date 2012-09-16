@@ -21,7 +21,7 @@ ca:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Fitxers
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -74,10 +74,10 @@ ca:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
+    CHANGEPASSWORDTEXT2: 'Podeu usar ara les següents credencials per a entrar:'
     EMAIL: 'Correu electrònic'
-    HELLO: Hi
+    HELLO: Hola
     PASSWORD: Contrasenya
   CheckboxField:
     - 'False'
@@ -87,13 +87,13 @@ ca:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'S''ha desat %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Afegir %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Ordena ascendentment'
+    SORTDESC: 'Ordena descendentment'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Següent
+    PREVIOUS: Anterior
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -181,7 +181,7 @@ ca:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: Fitxer
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -194,10 +194,10 @@ ca:
     PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: Hola
+    TEXT1: 'Aquí teniu el vostre'
+    TEXT2: 'enllaç de reinici de la contrasenya'
+    TEXT3: per
   Form:
     FIELDISREQUIRED: 'Es requereix %s'
     SubmitBtnLabel: Go
@@ -234,7 +234,7 @@ ca:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Suprimeix
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -318,7 +318,7 @@ ca:
     PLURALNAME: Files
     SINGULARNAME: File
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe Carregador d''imatge'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -475,7 +475,7 @@ ca:
   PhoneNumberField:
     VALIDATION: 'Si us plau, introduïu un número de telèfon vàlid'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: Afegeix
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -522,12 +522,12 @@ ca:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'Afegeix una nova fila'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Exporta a CSV'
     PRINT: Imprimeix
-    Print: Imprimeix
+    Print: Print
     SELECT: 'Select:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -549,7 +549,7 @@ ca:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

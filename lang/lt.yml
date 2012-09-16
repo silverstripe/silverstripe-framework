@@ -21,7 +21,7 @@ lt:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Bylos
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +60,9 @@ lt:
     ERRORNOTADMIN: 'Vartotojas nėra administratorius'
     ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
   Boolean:
-    0: 'False'
+    0: Ne
     ANY: 'Bet koks'
-    1: 'True'
+    1: Taip
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -80,14 +80,14 @@ lt:
     HELLO: Sveiki
     PASSWORD: Slaptažodis
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Ne
+    - Taip
   ComplexTableField:
     CLOSEPOPUP: Uždaryti
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Išsaugota %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Pridėti %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Rūšiuoti A-Z'
     SORTDESC: 'Rūšiuoti Z-A'
@@ -181,7 +181,7 @@ lt:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: Byla
+    FILE: Failas
     FROMCOMPUTER: 'Iš jūsų kompiuterio'
     FROMFILESTORE: 'Š failų saugyklos '
     NOSOURCE: 'Please select a source file to attach'

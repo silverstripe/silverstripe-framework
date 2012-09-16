@@ -21,7 +21,7 @@ fa_IR:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: 'فايل ها'
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +60,9 @@ fa_IR:
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    0: 'False'
+    0: نه
     ANY: هر
-    1: 'True'
+    1: آری
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -80,14 +80,14 @@ fa_IR:
     HELLO: درود
     PASSWORD: 'كلمه عبور'
   CheckboxField:
-    - 'False'
-    - 'True'
+    - نه
+    - آری
   ComplexTableField:
     CLOSEPOPUP: 'بستن چنجره'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: '%s %s %s ذخيره شد'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: افزودن
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'
@@ -181,7 +181,7 @@ fa_IR:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: پرونده
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'لطفا محل یک فایل را جهت پیوست انتخاب کنید'
@@ -234,7 +234,7 @@ fa_IR:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: حذف
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save

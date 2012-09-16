@@ -87,7 +87,7 @@ vi_VN:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: Thêm
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'

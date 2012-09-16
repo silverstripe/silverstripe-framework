@@ -21,7 +21,7 @@ id:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: File-file
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -87,7 +87,7 @@ id:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Telah menyimpan %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Tambahkan %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Urut ascending'
     SORTDESC: 'Urut descending'

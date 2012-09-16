@@ -21,7 +21,7 @@ sl:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Datoteke
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +60,9 @@ sl:
     ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
     ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
   Boolean:
-    0: 'False'
+    0: Ne
     ANY: Katerikoli
-    1: 'True'
+    1: Da
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -80,14 +80,14 @@ sl:
     HELLO: 'Pozdravljeni,'
     PASSWORD: Geslo
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Ne
+    - Da
   ComplexTableField:
     CLOSEPOPUP: 'Zapri okno'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Shranjeno: %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Dodaj %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Razvrsti naraščajoče'
     SORTDESC: 'Razvrsti padajoče'
@@ -234,7 +234,7 @@ sl:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Izbriši
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save

@@ -20,10 +20,10 @@ nb:
     DROPAREA: Droppunkt
     EDITALL: 'Endre alle'
     EDITANDORGANIZE: 'Rediger & organiser'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Rediger filer'
     FILES: Filer
     FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTERINFO: 'Last opp fra din pc'
     TOTAL: Total
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Vennligst vent... opplasting pågår'
@@ -60,9 +60,9 @@ nb:
     ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
     ERRORNOTREC: 'Det brukernavnet / Passord er ikke gjenkjent'
   Boolean:
-    0: 'False'
+    0: Usant
     ANY: Any
-    1: 'True'
+    1: Sant
   CMSLoadingScreen.ss:
     LOADING: 'Laster ...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -87,7 +87,7 @@ nb:
     SUCCESSADD2: 'Lagt til {name}'
     SUCCESSEDIT: 'Lagret %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Legg til %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sorter stigende'
     SORTDESC: 'Sorter fallende'
@@ -536,7 +536,7 @@ nb:
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
-    TO: to
+    TO: til
     VIEWFIRST: 'Se første'
     VIEWLAST: 'Se siste'
     VIEWNEXT: 'Se neste'
@@ -550,17 +550,17 @@ nb:
     ATTACHFILE: 'Legg ved fil'
     ATTACHFILES: 'Legg ved filer'
     AttachFile: 'Legg ved fil(er)'
-    DELETE: 'Delete from files'
+    DELETE: 'Slett fra filer'
     DELETEINFO: 'Slett filen permament fra filarkivet'
     DOEDIT: Lagre
     DROPFILE: 'Slipp en fil'
     DROPFILES: 'Slipp filer'
     Dimensions: Dimensjoner
-    EDIT: Edit
+    EDIT: Rediger
     EDITINFO: 'Rediger denne filen'
     FIELDNOTSET: 'Filinformasjon ikke funnet'
     FROMCOMPUTER: 'Fra din pc'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Velg fra filer'
     FROMFILES: 'Fra filer'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Maks antall {count} fil(er) overskredet'
@@ -569,7 +569,7 @@ nb:
     REMOVEERROR: 'Feil ved fjerning av fil'
     REMOVEINFO: 'Fjern filen herfra, men ikke slett den fra filarkivet'
     STARTALL: 'Start alle'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Start alle opplastinger'
     Saved: Lagret
   Versioned:
     has_many_Versions: Versjoner

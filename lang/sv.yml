@@ -1,7 +1,7 @@
 sv:
   AssetAdmin:
-    ADDFILES: 'Lägg till filer'
-    EditOrgMenu: 'Redigera och organisera'
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Ny mapp'
   AssetTableField:
     CREATED: 'Först uppladdad'
@@ -20,7 +20,7 @@ sv:
     DROPAREA: 'Släpp här'
     EDITALL: 'Redigera alla'
     EDITANDORGANIZE: 'Redigera och organisera'
-    EDITINFO: 'Redigera filer'
+    EDITINFO: 'Edit files'
     FILES: Filer
     FROMCOMPUTER: 'Välj filer från din dator'
     FROMCOMPUTERINFO: 'Ladda upp från din dator'
@@ -65,14 +65,14 @@ sv:
     1: Sant
   CMSLoadingScreen.ss:
     LOADING: Laddar...
-    REQUIREJS: 'CMS:et kräver att du har javascript aktiverat.'
+    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Tillgång till sektionen ''{title}'''
     ACCESSALLINTERFACES: 'Tillgång till alla CMS-sektioner'
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
   CMSProfileController:
-    MENUTITLE: 'Min profil'
+    MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -87,8 +87,8 @@ sv:
     SUCCESSADD2: 'Lade till {name}'
     SUCCESSEDIT: 'Sparade %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Lägg till %s'
-    NOITEMSFOUND: 'Inga rader hittades'
+    ADDITEM: 'Lägg till'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sortera stigande'
     SORTDESC: 'Sortera fallande'
   ComplexTableField_popup.ss:
@@ -105,7 +105,7 @@ sv:
     SECOND: andra
     THIRD: tredje
   CurrencyField:
-    CURRENCYSYMBOL: €
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: Dataobjekt
     SINGULARNAME: Dataobjekt
@@ -128,8 +128,8 @@ sv:
     NOTSET: 'inte angivet'
     TODAY: 'i dag'
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
-    VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare än eller samma som det senaste godkända datumet ({date})'
-    VALIDDATEMINDATE: 'Angivet datum måste vara senare än eller samma som det tidigaste godkända datumet ({date})'
+    VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
+    VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
   DatetimeField:
     NOTSET: 'Ej satt'
   Director:
@@ -177,8 +177,8 @@ sv:
     ZipType: 'ZIP packad fil'
   FileIFrameField:
     ATTACH: 'Bifoga {type}'
-    ATTACHONCESAVED: '{type}er kan bifogas när du sparat posten för första gången'
-    ATTACHONCESAVED2: 'Filer kan bifogas när du sparat posten för första gången'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Radera {type}'
     DISALLOWEDFILETYPE: 'Filtypen är inte tillåten för uppladdning'
     FILE: Fil
@@ -191,8 +191,8 @@ sv:
   Filesystem:
     SYNCRESULTS: 'Synk genomförd: {createdcount} objekt skapades, {deletedcount} objekt raderades'
   Folder:
-    PLURALNAME: Mappar
-    SINGULARNAME: Mapp
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hej
     TEXT1: 'Här är din'
@@ -200,13 +200,13 @@ sv:
     TEXT3: för
   Form:
     FIELDISREQUIRED: '%s är obligatorisk'
-    SubmitBtnLabel: Kör
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Kontrollera att du angav kortnummret {number} rätt'
     VALIDATIONNOTUNIQUE: 'Det angivna värdet är inte unikt'
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
     VALIDATIONPASSWORDSNOTEMPTY: 'Lösenordfältet får inte vara tomt'
     VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
-    VALIDATOR: Validering
+    VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
   FormField:
     NONE: ingen
@@ -220,7 +220,7 @@ sv:
     FilterBy: 'Filtrera på'
     Find: Hitta
     LEVELUP: 'Upp en nivå'
-    LinkExisting: 'Länka befintlig'
+    LinkExisting: 'Länk finns'
     NewRecord: 'Ny %s'
     NoItemsFound: 'Inget hittades'
     PRINTEDAT: Utskrivet
@@ -249,10 +249,10 @@ sv:
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
     Locked: 'Låst?'
     NoRoles: 'Inga roller funna'
-    PLURALNAME: Grupper
+    PLURALNAME: Groups
     Parent: Föräldragrupp
     RolesAddEditLink: 'Hantera roller'
-    SINGULARNAME: Grupp
+    SINGULARNAME: Group
     Sort: Sorteringsordning
     has_many_Permissions: Tillstånd
     many_many_Members: Medlemmar
@@ -310,13 +310,13 @@ sv:
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
     UpdateMEDIA: 'Uppdatera media'
   Image:
-    PLURALNAME: Filer
-    SINGULARNAME: Fil
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Bild
   Image_Cached:
-    PLURALNAME: Filer
-    SINGULARNAME: Fil
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe för uppladdning av bild'
   LeftAndMain:
@@ -330,7 +330,7 @@ sv:
     PERMDEFAULT: 'Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet.'
     PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras för att den har inte sparats ännu.'
     PreviewButton: Förhandsgranska
-    REORGANISATIONSUCCESSFUL: 'Omorganisering av sidträdet lyckades.'
+    REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
     SAVEDUP: Sparad.
     VersionUnknown: okänd
   LeftAndMain_Menu.ss:
@@ -339,8 +339,8 @@ sv:
   LoginAttempt:
     Email: E-postadress
     IP: IP-adress
-    PLURALNAME: Inloggningsförsök
-    SINGULARNAME: Inloggningsförsök
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
     ADDGROUP: 'Lägg till grupp'
@@ -416,24 +416,24 @@ sv:
     ResultNone: 'Inga ändringar'
     ResultUpdated: 'Uppdaterade {count} medlemmar'
   MemberPassword:
-    PLURALNAME: 'Användares lösenord'
-    SINGULARNAME: 'Användares lösenord'
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Radera
-    DELETEDRECORDS: 'Raderade {count} poster.'
+    DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Importera från CSV'
-    IMPORTEDRECORDS: 'Importerade {count} poster.'
+    IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Var god och bläddra efter en CSV-fil för import'
     NOIMPORT: 'Inget att importera'
     RESET: Rensa
     Title: Datamodeller
-    UPDATEDRECORDS: 'Uppdaterade {count} poster.'
+    UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Databaskolumner
-    IMPORTSPECLINK: 'Visa specifikation för %s'
+    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relationer
-    IMPORTSPECTITLE: 'Specification för %s'
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: 'Filtrera på'
     IMPORT: Importera
@@ -448,15 +448,15 @@ sv:
   NumericField:
     VALIDATION: '''{value}'' är inget nummer, bara nummer kan accepteras för det här fältet'
   Pagination:
-    Page: Sida
-    View: Visa
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Administratör
     CMS_ACCESS_CATEGORY: CMS-åtkomst
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
-    PLURALNAME: Rättigheter
-    SINGULARNAME: Rättighet
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
@@ -464,20 +464,20 @@ sv:
     FromRoleOnGroup: 'ärvt från roll "%s" i grupp "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Endast administratörer kan tillämpa denna roll'
-    PLURALNAME: Roller
-    SINGULARNAME: Roll
+    PLURALNAME: Roles
+    SINGULARNAME: Role
     Title: Rollnamn
   PermissionRoleCode:
-    PLURALNAME: åtkomsträttighetskoder
-    SINGULARNAME: åtkomsträttighetskod
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
   PhoneNumberField:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
   RelationComplexTableField.ss:
     ADD: 'Lägg till'
-    CSVEXPORT: 'Exportera till CSV'
-    NOTFOUND: 'Inga rader hittades'
+    CSVEXPORT: 'Export to CSV'
+    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
     BUTTONSEND: 'Skicka återställningslänk'
@@ -518,7 +518,7 @@ sv:
   SimpleImageField:
     NOUPLOAD: 'Ingen bild uppladdad'
   SiteTree:
-    TABMAIN: Allmänt
+    TABMAIN: Huvudsaklig
   TableField:
     ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
   TableField.ss:
@@ -530,13 +530,13 @@ sv:
     Print: 'Skriv ut'
     SELECT: 'Välj:'
   TableListField.ss:
-    NOITEMSFOUND: 'Inga rader hittades'
+    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sortera i stigande ordning'
     SORTDESC: 'Sortera i fallande ordning'
   TableListField_PageControls.ss:
-    DISPLAYING: Visar
+    DISPLAYING: Displaying
     OF: av
-    TO: till
+    TO: to
     VIEWFIRST: 'Visa första'
     VIEWLAST: 'Visa sista'
     VIEWNEXT: 'Visa nästa'
@@ -550,17 +550,17 @@ sv:
     ATTACHFILE: 'Bifoga en fil'
     ATTACHFILES: 'Bifoga fil(er)'
     AttachFile: 'Bifoga fil(er)'
-    DELETE: 'Radera från filer'
+    DELETE: 'Delete from files'
     DELETEINFO: 'Ta bort filen permanent från filarkivet'
     DOEDIT: Spara
     DROPFILE: 'Släpp en fil'
     DROPFILES: 'släpp filer'
     Dimensions: Dimensioner
-    EDIT: Redigera
+    EDIT: Edit
     EDITINFO: 'Redigera filen'
     FIELDNOTSET: 'Hittade ingen filinformation'
     FROMCOMPUTER: 'Från din dator'
-    FROMCOMPUTERINFO: 'Välj från filer'
+    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Från filer'
     HOTLINKINFO: 'Information: Denna bild kommer att bli länkad till. Var god kontrollera med ägaren till sajten att du har tillåtelse att länka till bilden.'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
@@ -569,7 +569,7 @@ sv:
     REMOVEERROR: 'Fel när filen skulle tas bort'
     REMOVEINFO: 'Ta bort filen härifrån, men radera den inte från filarkivet'
     STARTALL: 'Starta alla'
-    STARTALLINFO: 'Starta all uppladdningar'
+    STARTALLINFO: 'Start all uploads'
     Saved: Sparad
   Versioned:
     has_many_Versions: Versioner

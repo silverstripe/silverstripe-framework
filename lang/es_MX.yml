@@ -60,9 +60,9 @@ es_MX:
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   Boolean:
-    0: 'False'
+    0: No
     ANY: Cualquiera
-    1: 'True'
+    1: Sí
   CMSLoadingScreen.ss:
     LOADING: Cargando...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -80,14 +80,14 @@ es_MX:
     HELLO: Hey
     PASSWORD: Contraseña
   CheckboxField:
-    - 'False'
-    - 'True'
+    - No
+    - Sí
   ComplexTableField:
     CLOSEPOPUP: 'Cerrar Mensaje Emergente'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Se guardaron %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Agregar %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Orden ascendente'
     SORTDESC: 'Orden descendente'
@@ -211,7 +211,7 @@ es_MX:
   FormField:
     NONE: ninguno
   GridAction:
-    DELETE_DESCRIPTION: Eliminar
+    DELETE_DESCRIPTION: Delete
     Delete: Eliminar
     UnlinkRelation: Desvincular
   GridField:
@@ -234,8 +234,8 @@ es_MX:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Eliminar
-    DeletePermissionsFailure: 'No borrar permisos'
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
     Saved: 'Saved %s %s'

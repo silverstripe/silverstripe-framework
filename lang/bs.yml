@@ -74,10 +74,10 @@ bs:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
+    CHANGEPASSWORDTEXT2: 'Možete koristiti slijedeće podatke za prijavu:'
     EMAIL: Email
-    HELLO: Hi
+    HELLO: Pozdrav
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -87,13 +87,13 @@ bs:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Dodaj %S'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Uzlazno raszvrstavanje'
+    SORTDESC: 'Silazno razvrstavanje'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Slijedeći
+    PREVIOUS: Prethodni
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -181,7 +181,7 @@ bs:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: Datoteka
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -194,10 +194,10 @@ bs:
     PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: Pozdrav
+    TEXT1: 'Ovo je Vaš'
+    TEXT2: 'link za ponovno podešavanje šifre'
+    TEXT3: za
   Form:
     FIELDISREQUIRED: '%s je obavezno'
     SubmitBtnLabel: Go
@@ -318,7 +318,7 @@ bs:
     PLURALNAME: Files
     SINGULARNAME: File
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe za postavljanje slika'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -475,7 +475,7 @@ bs:
   PhoneNumberField:
     VALIDATION: 'Molimo, unesite ispravan broj telefona'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: Dodaj
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -522,12 +522,12 @@ bs:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'Dodaj novi red'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Izvezi u CSV'
     PRINT: Štampaj
-    Print: Štampaj
+    Print: Print
     SELECT: 'Select:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -549,7 +549,7 @@ bs:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

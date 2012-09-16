@@ -1,7 +1,7 @@
 it:
   AssetAdmin:
-    ADDFILES: 'Aggiungi file'
-    EditOrgMenu: 'Modifica & organizza'
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NuovaCartella
   AssetTableField:
     CREATED: 'Inizialmente caricato'
@@ -21,8 +21,8 @@ it:
     EDITALL: 'Modifica tutti'
     EDITANDORGANIZE: 'Modifica & organizza'
     EDITINFO: 'Modifica file'
-    FILES: File
-    FROMCOMPUTER: 'Scegli file dal tuo computer'
+    FILES: Files
+    FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Carica dal tuo conputer'
     TOTAL: Totale
     TOUPLOAD: 'Scegli i file da caricare...'
@@ -60,9 +60,9 @@ it:
     ERRORNOTADMIN: 'Questo utente non è amministratore.'
     ERRORNOTREC: 'Nome utente / password non riconosciuti'
   Boolean:
-    0: Falso
+    0: NO
     ANY: Qualsiasi
-    1: Vero
+    1: SI
   CMSLoadingScreen.ss:
     LOADING: 'Caricamento in corso...'
     REQUIREJS: 'Il CMS richiede JavaScript abilitato.'
@@ -80,14 +80,14 @@ it:
     HELLO: Ciao
     PASSWORD: Password
   CheckboxField:
-    - Falso
-    - Vero
+    - No
+    - Si
   ComplexTableField:
     CLOSEPOPUP: 'Chiudi Finestra'
     SUCCESSADD2: 'Aggiunto {name}'
     SUCCESSEDIT: 'Salvato %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Aggiungi %s'
+    ADDITEM: 'Inserisci %s'
     NOITEMSFOUND: 'Nessun elemento trovato'
     SORTASC: 'Ordina in modo ascendente'
     SORTDESC: 'Ordina in modo discendente'
@@ -105,7 +105,7 @@ it:
     SECOND: secondo
     THIRD: terzo
   CurrencyField:
-    CURRENCYSYMBOL: €
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
@@ -191,8 +191,8 @@ it:
   Filesystem:
     SYNCRESULTS: 'Sincronizzazione completata: {createdcount} elementi creati, {deletedcount} elementi eliminati'
   Folder:
-    PLURALNAME: Cartelle
-    SINGULARNAME: Cartella
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Ciao
     TEXT1: 'Questa è la tua'
@@ -200,7 +200,7 @@ it:
     TEXT3: per
   Form:
     FIELDISREQUIRED: '%s è richiesto'
-    SubmitBtnLabel: Vai
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
     VALIDATIONNOTUNIQUE: 'Il valore inserito non è unico'
     VALIDATIONPASSWORDSDONTMATCH: 'Le password non corrispondono'
@@ -234,7 +234,7 @@ it:
   GridFieldDetailForm:
     CancelBtn: Annulla
     Create: Crea
-    Delete: Cancella
+    Delete: Elimina
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato %s %s'
     Save: Salva
@@ -249,10 +249,10 @@ it:
     GroupReminder: 'Se scegli un gruppo padre, questo gruppo erediterà tutti i suoi ruoli.'
     Locked: 'Bloccato?'
     NoRoles: 'Nessun ruolo trovato'
-    PLURALNAME: Gruppi
+    PLURALNAME: Groups
     Parent: 'Gruppo padre'
     RolesAddEditLink: 'Gestisci ruoli'
-    SINGULARNAME: Gruppo
+    SINGULARNAME: Group
     Sort: 'Tipo ordinamento'
     has_many_Permissions: Permessi
     many_many_Members: Membri
@@ -280,7 +280,7 @@ it:
     CSSCLASSRIGHT: 'Sulla destra, con il testo inserito attorno.'
     DETAILS: Dettagli
     EMAIL: 'Indirizzo email'
-    FILE: Files
+    FILE: File
     FOLDER: Cartella
     FROMCMS: 'Dal CMS'
     FROMCOMPUTER: 'Dal tuo computer'
@@ -339,8 +339,8 @@ it:
   LoginAttempt:
     Email: 'Indirizzo e-mail'
     IP: 'Indirizzo IP'
-    PLURALNAME: 'Tentativi d''accesso'
-    SINGULARNAME: 'Tentativo d''accesso'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
     Status: Stato
   Member:
     ADDGROUP: 'Aggiungi gruppo'
@@ -416,8 +416,8 @@ it:
     ResultNone: 'Nessun cambiamento'
     ResultUpdated: 'Aggiornati {count} utenti'
   MemberPassword:
-    PLURALNAME: 'Password utenti'
-    SINGULARNAME: 'Password utente'
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Elimina
@@ -448,15 +448,15 @@ it:
   NumericField:
     VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
   Pagination:
-    Page: Pagina
-    View: Vedi
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Amministratore
     CMS_ACCESS_CATEGORY: 'Accesso CMS'
     FULLADMINRIGHTS: 'Diritti di amministrazione'
     FULLADMINRIGHTS_HELP: 'Implica e annulla tutti gli altri permessi assegnati.'
-    PLURALNAME: Permessi
-    SINGULARNAME: Permesso
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assegnato a "{title}"'
     FromGroup: 'ereditato dal gruppo "{title}"'
@@ -464,12 +464,12 @@ it:
     FromRoleOnGroup: 'ereditato dal ruolo "%s" nel gruppo "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Solo l''amministratore può applicare'
-    PLURALNAME: Ruoli
-    SINGULARNAME: Ruolo
+    PLURALNAME: Roles
+    SINGULARNAME: Role
     Title: Titolo
   PermissionRoleCode:
-    PLURALNAME: 'Codici Ruoli'
-    SINGULARNAME: 'Codice Ruolo'
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
   PhoneNumberField:

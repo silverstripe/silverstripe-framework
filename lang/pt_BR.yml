@@ -21,7 +21,7 @@ pt_BR:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Arquivos
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -87,7 +87,7 @@ pt_BR:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: '%s %s %s salvo(s)'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Incluir %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Ordenar ascendente'
     SORTDESC: 'Ordenar descendente'
@@ -181,7 +181,7 @@ pt_BR:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: Arquivo
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -234,7 +234,7 @@ pt_BR:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Excluir
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save

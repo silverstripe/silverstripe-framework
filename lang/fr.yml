@@ -22,7 +22,7 @@ fr:
     EDITANDORGANIZE: 'Modifier et organiser'
     EDITINFO: 'Edit files'
     FILES: Fichiers
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Choisissez des fichiers de votre ordinateur'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     TOUPLOAD: 'Choose files to upload...'
@@ -60,9 +60,9 @@ fr:
     ERRORNOTADMIN: 'Cet utilisateur n''est pas un administrateur.'
     ERRORNOTREC: 'Cet identifiant / mot de passe n''est pas reconnu'
   Boolean:
-    0: 'False'
+    0: Non
     ANY: Tout
-    1: 'True'
+    1: Oui
   CMSLoadingScreen.ss:
     LOADING: Chargement...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -77,17 +77,17 @@ fr:
     CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
     CHANGEPASSWORDTEXT2: 'Vous pouvez maintenant utiliser les identifiants suivants pour vous connecter&nbsp;:'
     EMAIL: Email
-    HELLO: 'Bonjour, '
+    HELLO: Salut
     PASSWORD: 'Mot de passe'
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Non
+    - Oui
   ComplexTableField:
     CLOSEPOPUP: 'Ferme Popup'
     SUCCESSADD2: '{name} ajouté'
     SUCCESSEDIT: 'Sauvegardé %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Ajoute %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Tri croissant'
     SORTDESC: 'Tri décroissant'
@@ -211,7 +211,7 @@ fr:
   FormField:
     NONE: aucun
   GridAction:
-    DELETE_DESCRIPTION: Supprimer
+    DELETE_DESCRIPTION: Delete
     Delete: Supprimer
     UnlinkRelation: Séparer
   GridField:
@@ -280,7 +280,7 @@ fr:
     CSSCLASSRIGHT: 'a droite, avec texte à la ligne.'
     DETAILS: Détails
     EMAIL: 'Adresse email'
-    FILE: Fichiers
+    FILE: Fichier
     FOLDER: Dossier
     FROMCMS: 'Depuis le SGC'
     FROMCOMPUTER: 'Depuis votre ordinateur'

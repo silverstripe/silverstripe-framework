@@ -21,7 +21,7 @@ ar:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: الملفات
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +60,9 @@ ar:
     ERRORNOTADMIN: 'هذا المستخدم لا يملك صلاحيات الإدارة'
     ERRORNOTREC: 'اسم المستخدم أو الرقم السري غير صحيح'
   Boolean:
-    0: 'False'
+    0: لا
     ANY: أي
-    1: 'True'
+    1: نعم
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -74,26 +74,26 @@ ar:
   CMSProfileController:
     MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
+    CHANGEPASSWORDTEXT2: 'يمكنك الآن استخدام هذه البيانات للدخول إلى حسابك'
     EMAIL: 'البريد الإلكتروني'
-    HELLO: Hi
+    HELLO: أهلاً
     PASSWORD: 'الرقم السري'
   CheckboxField:
-    - 'False'
-    - 'True'
+    - لا
+    - نعم
   ComplexTableField:
     CLOSEPOPUP: 'إغلاق النافذة'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'حفظ %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: أضف
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'ترتيب تصاعدي'
+    SORTDESC: 'ترتيب تنازلي'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: التالي
+    PREVIOUS: السابق
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -194,10 +194,10 @@ ar:
     PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: أهلاً
+    TEXT1: هنا
+    TEXT2: 'رابط إعادة تعيين كلمة المرور'
+    TEXT3: لـ
   Form:
     FIELDISREQUIRED: '%s مطلوب'
     SubmitBtnLabel: Go
@@ -234,7 +234,7 @@ ar:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: حذف
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -318,7 +318,7 @@ ar:
     PLURALNAME: Files
     SINGULARNAME: File
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'إطار تحميل الصور'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -475,7 +475,7 @@ ar:
   PhoneNumberField:
     VALIDATION: 'فضلاً أدخل رقم هاتف صحيح'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: إضافة
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -522,12 +522,12 @@ ar:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'إضافة صف جديد'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'تصدير إلى CSV'
     PRINT: طباعة
-    Print: طباعة
+    Print: Print
     SELECT: اختيار
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -549,7 +549,7 @@ ar:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
