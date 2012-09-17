@@ -76,7 +76,7 @@ class, and add it to the fieldlist of the form.
 		"SignupForm", // form name
 		new FieldList( // fields
 			TextField::create("FirstName")
-				->setTitle('First name')
+				->setTitle('First name'),
 			TextField::create("Surname")
 				->setTitle('Last name')
 				->setMaxLength(50),

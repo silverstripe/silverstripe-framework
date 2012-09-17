@@ -81,6 +81,10 @@
 
 				// default to first button
 				var button = this.find(':submit:first');
+				if (button.is(':disabled')){
+					e.preventDefault();
+					return;
+				}
 				button.addClass('loading');
 		
 				// collect data and submit the form
