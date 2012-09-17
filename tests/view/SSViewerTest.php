@@ -936,6 +936,8 @@ after')
 	}
 	
 	function testRenderWithSourceFileComments() {
+		$origType = Director::get_environment_type();
+		Director::set_environment_type('dev');
 		SSViewer::set_source_file_comments(true);
 		
 		$view = new SSViewer(array('SSViewerTestCommentsFullSource'));
@@ -965,6 +967,7 @@ after')
 		$this->assertEquals($result, $expected);
 		
 		SSViewer::set_source_file_comments(false);
+		Director::set_environment_type($origType);
 	}
 
 	function testLoopIteratorIterator() {

@@ -19,7 +19,8 @@ class DataListTest extends SapphireTest {
 	);
 	
 	public function testSubtract(){
-		$subtractList = DataObjectTest_TeamComment::get()->filter('ID', 1);
+		$comment1 = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
+		$subtractList = DataObjectTest_TeamComment::get()->filter('ID', $comment1->ID);
 		$fullList = DataObjectTest_TeamComment::get();
 		$newList = $fullList->subtract($subtractList);
 		$this->assertEquals(2, $newList->Count(), 'List should only contain two objects after subtraction');

@@ -173,6 +173,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * @var [string] - class => ClassName field definition cache for self::database_fields
+	 */
+	private static $classname_spec_cache = array();
+
+	/**
 	 * Return the complete map of fields on this object, including "Created", "LastEdited" and "ClassName".
 	 * See {@link custom_database_fields()} for a getter that excludes these "base fields".
 	 *
@@ -181,12 +186,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public static function database_fields($class) {
 		if(get_parent_class($class) == 'DataObject') {
-			$db = DB::getConn();
-			$existing = $db->hasField($class, 'ClassName') ? $db->query("SELECT DISTINCT \"ClassName\" FROM \"$class\"")->column() : array();
+			if(!isset(self::$classname_spec_cache[$class])) {
+				$classNames = ClassInfo::subclassesFor($class);
+
+				$db = DB::getConn();
+				if($db->hasField($class, 'ClassName')) {
+					$existing = $db->query("SELECT DISTINCT \"ClassName\" FROM \"$class\"")->column();
+					$classNames = array_unique(array_merge($existing, $classNames));
+				}
+
+				self::$classname_spec_cache[$class] = "Enum('" . implode(', ', $classNames) . "')";
+			}
 
 			return array_merge (
 				array (
-					'ClassName'  => "Enum('" . implode(', ', array_unique(array_merge($existing, ClassInfo::subclassesFor($class)))) . "')",
+					'ClassName'  => self::$classname_spec_cache[$class],
 					'Created'    => 'SS_Datetime',
 					'LastEdited' => 'SS_Datetime'
 				),
