@@ -28,6 +28,35 @@ class XMLDataFormatterTest extends SapphireTest {
 		);
 	}
 
+	public function testShortcodesInDataObject() {
+		$formatter = new XMLDataFormatter();
+
+		$page1 = new Page();
+		$page1->Title = 'Test page1';
+		$page1->Content = '[sitetree_link,id=-1]';
+		$page1->write();
+
+		$page2 = new Page();
+		$page2->Title = 'Test page 2';
+		$page2->Content = 'This is some test content [sitetree_link,id='.$page1->ID.']';
+		$page2->write();
+
+		$page1->Content = '[bad_code,id=1]';
+		$page1->write();
+
+		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page2));
+		$this->assertContains('This is some test content '.$page1->Link(), $xml->Content);
+
+		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page1));
+		$this->assertEmpty('', $xml->Content);
+
+		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page1));
+		$this->assertContains('[bad_code,id=1]', $xml->Content);
+
+		$page1->delete();
+		$page2->delete();
+	}
+
 }
 class XMLDataFormatterTest_DataObject extends DataObject implements TestOnly {
 
