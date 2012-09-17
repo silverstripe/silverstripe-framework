@@ -13,9 +13,7 @@ This applies to Windows Server 2008, Windows Server 2008 R2, Windows Vista, and 
 
 This applies to Windows Server 2003 and Windows Server 2003 R2.
 
-<div class="warning" markdown="1">
-	Note: These instructions may not work, as they're no longer maintained. Please use a version of Windows that supports IIS 7.x
-</div>
+<div class="warning" markdown="1">Note: These instructions may not work, as they're no longer maintained.</div>
 
 ## Additional notes
 

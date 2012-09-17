@@ -224,7 +224,7 @@ class ListboxField extends DropdownField {
 				// They're silently ignored and overwritten the next time the field is saved.
 				parent::setValue($parts);
 			} else {
-				if(!in_array($val, array_keys($this->source))) {
+				if(!in_array($val, array_keys($this->getSource()))) {
 					throw new InvalidArgumentException(sprintf(
 						'Invalid value "%s" for multiple=false', 
 						Convert::raw2xml($val)

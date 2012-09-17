@@ -12,12 +12,12 @@ class FulltextSearchableTest extends SapphireTest {
 		$this->orig['File_searchable'] = Object::has_extension('File', 'FulltextSearchable');
 		
 		// TODO This shouldn't need all arguments included
-		Object::remove_extension('File', 'FulltextSearchable(\'Filename,Title,Content\')');
+		Object::remove_extension('File', 'FulltextSearchable(\'"Filename","Title","Content"\')');
 	}
 	
 	function tearDown() {
 		// TODO This shouldn't need all arguments included
-		if($this->orig['File_searchable']) Object::add_extension('File', 'FulltextSearchable(\'Filename,Title,Content\')');
+		if($this->orig['File_searchable']) Object::add_extension('File', 'FulltextSearchable(\'"Filename","Title","Content"\')');
 		
 		parent::tearDown();
 	}
@@ -32,7 +32,7 @@ class FulltextSearchableTest extends SapphireTest {
 		$this->assertTrue(Object::has_extension('File', 'FulltextSearchable'));
 
 		// TODO This shouldn't need all arguments included
-		Object::remove_extension('File', 'FulltextSearchable(\'Filename,Title,Content\')');
+		Object::remove_extension('File', 'FulltextSearchable(\'"Filename","Title","Content"\')');
 		
 		$this->assertFalse(Object::has_extension('File', 'FulltextSearchable'));
 	}
