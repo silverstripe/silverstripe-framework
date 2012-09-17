@@ -40,7 +40,7 @@ class TextareaField extends FormField {
 	 * @param $value The current value
 	 */
 	function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments');
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments');
 
 		parent::__construct($name, $title, $value);
 	}
@@ -72,7 +72,7 @@ class TextareaField extends FormField {
 	}
 
 	function Type() {
-		return parent::Type() . ($this->readonly ? ' readonly' : ''); 
+		return parent::Type() . ($this->readonly ? ' readonly' : '');
 	}
 	
 	/**

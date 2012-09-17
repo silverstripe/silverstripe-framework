@@ -46,7 +46,7 @@ class HtmlEditorField extends TextareaField {
 	 * @see TextareaField::__construct()
 	 */
 	public function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
 
 		parent::__construct($name, $title, $value);
 		
