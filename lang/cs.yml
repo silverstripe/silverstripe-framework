@@ -248,7 +248,7 @@ cs:
     Description: Popis
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Zamčený?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Žádné role'
     PLURALNAME: Groups
     Parent: 'Rodičovská skupina'
     RolesAddEditLink: 'Přidat/editovat role'
