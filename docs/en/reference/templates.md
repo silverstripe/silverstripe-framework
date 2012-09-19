@@ -87,6 +87,12 @@ Or when having a `$` sign in front of the variable
 	$$Foo // returns ""
 	${$Foo} // returns "$3"
 
+You can also use a backslash to escape the name of the variable, such as:
+
+	:::ss
+	$Foo // returns "3"
+	\$Foo // returns "$Foo"
+
 ## Includes
 
 Within SilverStripe templates we have the ability to include other templates from the Includes directory using the SS
