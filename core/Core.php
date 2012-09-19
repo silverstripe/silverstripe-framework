@@ -329,6 +329,7 @@ function getTempFolder($base = null) {
 	// failing to use the system path, attempt to create a local silverstripe-cache dir
 	if(!$worked) {
 		$worked = true;
+		$tempPath = $base . '/silverstripe-cache';
 		if(!@file_exists($tempPath)) {
 			$worked = @mkdir($tempPath);
 		}
