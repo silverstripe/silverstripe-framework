@@ -241,7 +241,7 @@ cs:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Přidat roli pro tuto skupinu'
     Code: 'Kód skupiny'
     DefaultGroupTitleAdministrators: Administrátoři
     DefaultGroupTitleContentAuthors: 'Autoři obsahu'
