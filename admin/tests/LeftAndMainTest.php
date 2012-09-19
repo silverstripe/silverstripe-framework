@@ -9,7 +9,7 @@ class LeftAndMainTest extends FunctionalTest {
 	
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		// @todo fix controller stack problems and re-activate
@@ -21,7 +21,7 @@ class LeftAndMainTest extends FunctionalTest {
 	 * Note: This test would typically rely on SiteTree and CMSMain, but is mocked by
 	 * LeftAndMain_Controller and LeftAndMain_Object here to remove this dependency.
 	 */
-	public function testSaveTreeNodeSorting() {	
+	public function testSaveTreeNodeSorting() {
 		$this->loginWithPermission('ADMIN');
 				
 		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0', '"ID"'); // forcing sorting for non-MySQL
@@ -110,7 +110,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 	}
 
-	function testCanView() {
+	public function testCanView() {
 		$adminuser = $this->objFromFixture('Member', 'admin');
 		$securityonlyuser = $this->objFromFixture('Member', 'securityonlyuser');
 		$allcmssectionsuser = $this->objFromFixture('Member', 'allcmssectionsuser');

@@ -12,7 +12,7 @@ class DBFieldTest extends SapphireTest {
 	/**
 	 * Test the nullValue() method on DBField.
 	 */
-	function testNullValue() {
+	public function testNullValue() {
 		/* Float and Double use 0 for "null" value representation */
 		$this->assertEquals(0, singleton('Float')->nullValue());
 		$this->assertEquals(0, singleton('Double')->nullValue());
@@ -21,7 +21,7 @@ class DBFieldTest extends SapphireTest {
 	/**
 	 * Test the prepValueForDB() method on DBField.
 	 */
-	function testPrepValueForDB() {
+	public function testPrepValueForDB() {
 		$db = DB::getConn();
 
 		/* Float behaviour, asserting we have 0 */
@@ -156,7 +156,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals("00:00:00", $time->getValue());
 	}
 	
-	function testExists() {
+	public function testExists() {
 		$varcharField = new Varchar("testfield");
 		$this->assertTrue($varcharField->getNullifyEmpty());
 		$varcharField->setValue('abc');
@@ -194,7 +194,7 @@ class DBFieldTest extends SapphireTest {
 		$this->assertFalse($textField->exists());
 	}
 	
-	function testStringFieldsWithMultibyteData() {
+	public function testStringFieldsWithMultibyteData() {
 		$plainFields = array('Varchar', 'Text');
 		$htmlFields = array('HTMLVarchar', 'HTMLText');
 		$allFields = array_merge($plainFields, $htmlFields);

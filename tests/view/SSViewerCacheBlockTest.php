@@ -3,19 +3,19 @@
 // Not actually a data object, we just want a ViewableData object that's just for us
 class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
 	
-	function Test($arg = null) {
+	public function Test($arg = null) {
 		return $this;
 	}
 	
-	function Foo() {
+	public function Foo() {
 		return 'Bar';
 	}
 
-	function True() {
+	public function True() {
 		return true;
 	}
 
-	function False() {
+	public function False() {
 		return false;
 	}
 }
@@ -41,7 +41,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		return $viewer->process($data);
 	}
 	
-	function testParsing() {
+	public function testParsing() {
 
 		// ** Trivial checks **
 
@@ -89,7 +89,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
 	 * Test that cacheblocks actually cache
 	 */
-	function testBlocksCache() {
+	public function testBlocksCache() {
 		// First, run twice without caching, to prove we get two different values
 		$this->_reset(false);
 				
@@ -106,7 +106,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
 	 * Test that cacheblocks conditionally cache with if
 	 */
-	function testBlocksConditionallyCacheWithIf() {
+	public function testBlocksConditionallyCacheWithIf() {
 		// First, run twice with caching
 		$this->_reset(true);
 
@@ -134,7 +134,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
 	 * Test that cacheblocks conditionally cache with unless
 	 */
-	function testBlocksConditionallyCacheWithUnless() {
+	public function testBlocksConditionallyCacheWithUnless() {
 		// First, run twice with caching
 		$this->_reset(true);
 
@@ -151,7 +151,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
 	 * Test that nested uncached blocks work
 	 */
-	function testNestedUncachedBlocks() {
+	public function testNestedUncachedBlocks() {
 		// First, run twice with caching, to prove we get the same result back normally
 		$this->_reset(true);
 
@@ -168,7 +168,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
 	 * Test that nested blocks with different keys works
 	 */
-	function testNestedBlocks() {
+	public function testNestedBlocks() {
 		$this->_reset(true);
 
 		$template = '<% cached Foo %> $Fooa <% cached Bar %>$Bara<% end_cached %> $Foob <% end_cached %>';
@@ -186,7 +186,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$this->assertEquals($this->_runtemplate($template, array('Foo' => 2, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 1)), ' 9 9 9 ');
 	}
 
-	function testNoErrorMessageForControlWithinCached() {
+	public function testNoErrorMessageForControlWithinCached() {
 		$this->_reset(true);
 		$this->_runtemplate('<% cached %><% control Foo %>$Bar<% end_control %><% end_cached %>');
 	}
@@ -194,12 +194,12 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
      * @expectedException SSTemplateParseException
      */
-	function testErrorMessageForCachedWithinControlWithinCached() {
+	public function testErrorMessageForCachedWithinControlWithinCached() {
 		$this->_reset(true);
 		$this->_runtemplate('<% cached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_cached %>');
 	}
 
-	function testNoErrorMessageForCachedWithinControlWithinUncached() {
+	public function testNoErrorMessageForCachedWithinControlWithinUncached() {
 		$this->_reset(true);
 		$this->_runtemplate('<% uncached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_uncached %>');
 	}
@@ -207,7 +207,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
      * @expectedException SSTemplateParseException
      */
-	function testErrorMessageForCachedWithinIf() {
+	public function testErrorMessageForCachedWithinIf() {
 		$this->_reset(true);
 		$this->_runtemplate('<% cached %><% if Foo %><% cached %>$Bar<% end_cached %><% end_if %><% end_cached %>');
 	}
@@ -215,7 +215,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
      * @expectedException SSTemplateParseException
      */
-	function testErrorMessageForInvalidConditional() {
+	public function testErrorMessageForInvalidConditional() {
 		$this->_reset(true);
 		$this->_runtemplate('<% cached Foo if %>$Bar<% end_cached %>');
 	}

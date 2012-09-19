@@ -111,7 +111,7 @@ defined in the [fifth tutorial](/tutorials/5-dataobject-relationship-management)
 	:::php
 	<?php 
 	class Student extends DataObject {
-		function AbsoluteLink() {
+		public function AbsoluteLink() {
 			// see tutorial 5, students are assigned a project, so the 'link'
 			// to view the student is based on their projects link.
 			return $this->Project()->AbsoluteLink();

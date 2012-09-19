@@ -6,13 +6,13 @@ class ControllerTest extends FunctionalTest {
 
 	protected $autoFollowRedirection = false;
 	
-	function testDefaultAction() {
+	public function testDefaultAction() {
 		/* For a controller with a template, the default action will simple run that template. */
 		$response = $this->get("ControllerTest_Controller/");
 		$this->assertRegExp("/This is the main template. Content is 'default content'/", $response->getBody());
 	}
 	
-	function testMethodActions() {
+	public function testMethodActions() {
 		/* The Action can refer to a method that is called on the object.  If a method returns an array, then it will be 
 		used to customise the template data */
 		$response = $this->get("ControllerTest_Controller/methodaction");
@@ -23,7 +23,7 @@ class ControllerTest extends FunctionalTest {
 		$this->assertRegExp("/stringaction was called./", $response->getBody());
 	}
 	
-	function testTemplateActions() {
+	public function testTemplateActions() {
 		/* If there is no method, it can be used to point to an alternative template. */
 		$response = $this->get("ControllerTest_Controller/templateaction");
 		$this->assertRegExp("/This is the template for templateaction. Content is 'default content'./", $response->getBody());
@@ -34,7 +34,7 @@ class ControllerTest extends FunctionalTest {
 		$this->assertEquals(404, $response->getStatusCode(), 'Undefined actions return a not found response.');
 	}
 	
-	function testAllowedActions() {
+	public function testAllowedActions() {
 		$adminUser = $this->objFromFixture('Member', 'admin');
 		
 		$response = $this->get("ControllerTest_SecuredController/methodaction");
@@ -84,7 +84,7 @@ class ControllerTest extends FunctionalTest {
 	/**
 	 * Test Controller::join_links()
 	 */
-	function testJoinLinks() {
+	public function testJoinLinks() {
 		/* Controller::join_links() will reliably join two URL-segments together so that they will be appropriately parsed by the URL parser */
 		$this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm", "MyForm"));
 		$this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm/", "MyForm"));
@@ -149,7 +149,7 @@ class ControllerTest extends FunctionalTest {
 	}
 	*/
 
-	function testRedirectBackByReferer() {
+	public function testRedirectBackByReferer() {
 		$internalRelativeUrl = '/some-url';
 		$response = $this->get('ControllerTest_Controller/redirectbacktest', null, array('Referer' => $internalRelativeUrl));
 		$this->assertEquals(302, $response->getStatusCode());
@@ -171,7 +171,7 @@ class ControllerTest extends FunctionalTest {
 		);
 	}
 
-	function testRedirectBackByBackUrl() {
+	public function testRedirectBackByBackUrl() {
 		$internalRelativeUrl = '/some-url';
 		$response = $this->get('ControllerTest_Controller/redirectbacktest?BackURL=' . urlencode($internalRelativeUrl));
 		$this->assertEquals(302, $response->getStatusCode());
@@ -200,17 +200,17 @@ class ControllerTest extends FunctionalTest {
 class ControllerTest_Controller extends Controller implements TestOnly {
 	public $Content = "default content";
 	
-	function methodaction() {
+	public function methodaction() {
 		return array(
 			"Content" => "methodaction content"
 		);
 	}
 	
-	function stringaction() {
+	public function stringaction() {
 		return "stringaction was called.";
 	}
 
-	function redirectbacktest() {
+	public function redirectbacktest() {
 		return $this->redirectBack();
 	}
 }
@@ -226,17 +226,17 @@ class ControllerTest_SecuredController extends Controller implements TestOnly {
 	
 	public $Content = "default content";
 	
-	function methodaction() {
+	public function methodaction() {
 		return array(
 			"Content" => "methodaction content"
 		);
 	}
 	
-	function stringaction() {
+	public function stringaction() {
 		return "stringaction was called.";
 	}
 
-	function adminonly() {
+	public function adminonly() {
 		return "You must be an admin!";
 	}
 }
@@ -248,11 +248,11 @@ class ControllerTest_FullSecuredController extends Controller implements TestOnl
 		'unsecuredaction' => true,
 	);
 	
-	function adminonly() {
+	public function adminonly() {
 		return "You must be an admin!";
 	}
 	
-	function unsecuredaction() {
+	public function unsecuredaction() {
 		return "Allowed for everybody";
 	}
 }

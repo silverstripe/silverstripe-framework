@@ -9,7 +9,7 @@
  */
 class DBLocale extends Varchar {
 	
-	function __construct($name, $size = 16) {
+	public function __construct($name, $size = 16) {
 		parent::__construct($name, $size);
 	}
 
@@ -20,14 +20,14 @@ class DBLocale extends Varchar {
 	 *  field's locale value.
 	 * @return String
 	 */
-	function Nice($showNative=false) {
+	public function Nice($showNative=false) {
 		if ($showNative) {
 			return $this->getNativeName();
 		}
 		return $this->getShortName();
 	}
 	
-	function RFC1766() {
+	public function RFC1766() {
 		return i18n::convert_rfc1766($this->value);
 	}
 	
@@ -37,7 +37,7 @@ class DBLocale extends Varchar {
 	 * 
 	 * @return String
 	 */
-	function getShortName() {
+	public function getShortName() {
 		$common_names = i18n::get_common_locales();
 		return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
 	}
@@ -45,7 +45,7 @@ class DBLocale extends Varchar {
 	/**
 	 * @return String
 	 */
-	function getLongName() {
+	public function getLongName() {
 		return i18n::get_locale_name($this->value);
 	}
 
@@ -55,7 +55,7 @@ class DBLocale extends Varchar {
 	 * 
 	 * @return String
 	 */
-	function getNativeName() {
+	public function getNativeName() {
 		$common_names = i18n::get_common_locales(true);
 		return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
 	}

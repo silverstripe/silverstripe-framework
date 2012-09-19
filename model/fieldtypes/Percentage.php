@@ -18,7 +18,7 @@ class Percentage extends Decimal {
 	/**
 	 * Create a new Decimal field.
 	 */
-	function __construct($name = null, $precision = 4) {
+	public function __construct($name = null, $precision = 4) {
 		if(!$precision) $precision = 4;
 	
 		parent::__construct($name, $precision + 1, $precision);
@@ -27,11 +27,11 @@ class Percentage extends Decimal {
 	/**
 	 * Returns the number, expressed as a percentage. For example, “36.30%”
 	 */
-	function Nice() {
+	public function Nice() {
 		return number_format($this->value * 100, $this->decimalSize - 2) . '%';
 	}
 	
-	function saveInto($dataObject) {
+	public function saveInto($dataObject) {
 		parent::saveInto($dataObject);
 		
 		$fieldName = $this->name;

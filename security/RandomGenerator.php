@@ -16,7 +16,7 @@ class RandomGenerator {
 	 * 
 	 * @return string Returns a random series of bytes
 	 */
-	function generateEntropy() {
+	public function generateEntropy() {
 		$isWin = preg_match('/WIN/', PHP_OS);
 		
 		// TODO Fails with "Could not gather sufficient random data" on IIS, temporarily disabled on windows
@@ -66,7 +66,7 @@ class RandomGenerator {
 	 *  If possible, choose a slow algorithm which complicates brute force attacks.
 	 * @return String Returned length will depend on the used $algorithm
 	 */
-	function generateHash($algorithm = 'whirlpool') {
+	public function generateHash($algorithm = 'whirlpool') {
 		return hash($algorithm, $this->generateEntropy());
 	}	
 }

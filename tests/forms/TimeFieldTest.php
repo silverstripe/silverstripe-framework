@@ -5,7 +5,7 @@
  */
 class TimeFieldTest extends SapphireTest {
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->originalLocale = i18n::get_locale();
@@ -14,24 +14,24 @@ class TimeFieldTest extends SapphireTest {
 		TimeField::$default_config['timeformat'] = 'HH:mm:ss';
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 		
 		i18n::set_locale($this->originalLocale);
 		TimeField::$default_config['timeformat'] = $this->origTimeFormat;
 	}
 	
-	function testConstructorWithoutArgs() {
+	public function testConstructorWithoutArgs() {
 		$f = new TimeField('Time');
 		$this->assertEquals($f->dataValue(), null);
 	}
 	
-	function testConstructorWithString() {
+	public function testConstructorWithString() {
 		$f = new TimeField('Time', 'Time', '23:00:00');
 		$this->assertEquals($f->dataValue(), '23:00:00');
 	}
 
-	function testValidate() {
+	public function testValidate() {
 		$f = new TimeField('Time', 'Time', '11pm');
 		$this->assertTrue($f->validate(new RequiredFields()));
 		
@@ -42,7 +42,7 @@ class TimeFieldTest extends SapphireTest {
 		$this->assertFalse($f->validate(new RequiredFields()));
 	}
 
-	function testSetLocale() {
+	public function testSetLocale() {
 		// should get en_NZ by default through setUp()
 		$f = new TimeField('Time', 'Time');
 		$f->setLocale('de_DE');
@@ -51,7 +51,7 @@ class TimeFieldTest extends SapphireTest {
 		$this->assertEquals($f->dataValue(), '23:59:00');
 	}
 	
-	function testSetValueWithUseStrToTime() {
+	public function testSetValueWithUseStrToTime() {
 		$f = new TimeField('Time', 'Time');
 		$f->setValue('11pm');
 		$this->assertEquals($f->dataValue(), '23:00:00', 
@@ -92,7 +92,7 @@ class TimeFieldTest extends SapphireTest {
 		$this->assertEquals($f->dataValue(), '23:59:38');
 	}
 		
-	function testOverrideWithNull() {
+	public function testOverrideWithNull() {
 		$field = new TimeField('Time', 'Time');
 		
 		$field->setValue('11:00pm');

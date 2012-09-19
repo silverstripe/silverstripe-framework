@@ -123,7 +123,7 @@ class FormField extends RequestHandler {
 	 * @param title The field label.
 	 * @param value The value of the field.
 	 */
-	function __construct($name, $title = null, $value = null) {
+	public function __construct($name, $title = null, $value = null) {
 		$this->name = $name;
 		$this->title = ($title === null) ? $name : $title;
 
@@ -135,7 +135,7 @@ class FormField extends RequestHandler {
 	/**
 	 * Return a Link to this field
 	 */
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links($this->form->FormAction(), 'field/' . $this->name, $action);
 	}
 	
@@ -144,7 +144,7 @@ class FormField extends RequestHandler {
 	 * The ID is generated as FormName_FieldName.  All Field functions should ensure
 	 * that this ID is included in the field.
 	 */
-	function ID() { 
+	public function ID() {
 		$name = preg_replace('/(^-)|(-$)/', '', preg_replace('/[^A-Za-z0-9_-]+/', '-', $this->name));
 		if($this->form) return $this->form->FormName() . '_' . $name;
 		else return $name;
@@ -155,7 +155,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function getName() {
+	public function getName() {
 		return $this->name;
 	}
 
@@ -173,7 +173,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function Message() {
+	public function Message() {
 		return $this->message;
 	} 
 	
@@ -185,14 +185,14 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function MessageType() {
+	public function MessageType() {
 		return $this->messageType;
 	} 
 	
 	/**
 	 * Returns the field value - used by templates.
 	 */
-	function Value() {
+	public function Value() {
 		return $this->value;
 	}
 	
@@ -200,7 +200,7 @@ class FormField extends RequestHandler {
 	 * Method to save this form field into the given data object.
 	 * By default, makes use of $this->dataValue()
 	 */
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		if($this->name) {
 			$record->setCastedField($this->name, $this->dataValue());
 		}
@@ -209,18 +209,18 @@ class FormField extends RequestHandler {
 	/**
 	 * Returns the field value suitable for insertion into the data object
 	 */
-	function dataValue() { 
+	public function dataValue() {
 		return $this->value;
 	}
 	
 	/**
 	 * Returns the field label - used by templates.
 	 */
-	function Title() { 
+	public function Title() {
 		return $this->title;
 	}
 	
-	function setTitle($val) { 
+	public function setTitle($val) {
 		$this->title = $val;
 		return $this;
 	}
@@ -231,7 +231,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @return string Contextual label text.
 	 */
-	function RightTitle() {
+	public function RightTitle() {
 		return $this->rightTitle;
 	}
 
@@ -240,16 +240,16 @@ class FormField extends RequestHandler {
 	 *
 	 * @param $val string Text to set on the label.
 	 */
-	function setRightTitle($val) { 
+	public function setRightTitle($val) {
 		$this->rightTitle = $val;
 		return $this;
 	}
 
-	function LeftTitle() {
+	public function LeftTitle() {
 		return $this->leftTitle;
 	}
 
-	function setLeftTitle($val) {
+	public function setLeftTitle($val) {
 		$this->leftTitle = $val;
 		return $this;
 	}
@@ -286,7 +286,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string CSS-classnames
 	 */
-	function extraClass() {
+	public function extraClass() {
 		$classes = array();
 
 		$classes[] = $this->Type();
@@ -310,7 +310,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @param $class String
 	 */
-	function addExtraClass($class) {
+	public function addExtraClass($class) {
 		$this->extraClasses[$class] = $class;
 		return $this;
 	}
@@ -320,7 +320,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @param $class String
 	 */
-	function removeExtraClass($class) {
+	public function removeExtraClass($class) {
 		if(isset($this->extraClasses) && array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
 		return $this;
 	}
@@ -342,7 +342,7 @@ class FormField extends RequestHandler {
 	 * @param string
 	 * @param string
 	 */
-	function setAttribute($name, $value) {
+	public function setAttribute($name, $value) {
 		$this->attributes[$name] = $value;
 		return $this;
 	}
@@ -353,7 +353,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function getAttribute($name) {
+	public function getAttribute($name) {
 		$attrs = $this->getAttributes();
 		return @$attrs[$name];
 	}
@@ -361,7 +361,7 @@ class FormField extends RequestHandler {
 	/**
 	 * @return array
 	 */
-	function getAttributes() {
+	public function getAttributes() {
 		$attrs = array(
 			'type' => 'text',
 			'name' => $this->getName(),
@@ -380,7 +380,7 @@ class FormField extends RequestHandler {
 	 * If at least one argument is passed as a string, all arguments act as excludes by name.
 	 * @return string HTML attributes, ready for insertion into an HTML tag
 	 */
-	function getAttributesHTML($attrs = null) {
+	public function getAttributesHTML($attrs = null) {
 		$exclude = (is_string($attrs)) ? func_get_args() : null;
 
 		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
@@ -405,13 +405,13 @@ class FormField extends RequestHandler {
 	/**
 	 * Returns a version of a title suitable for insertion into an HTML attribute
 	 */
-	function attrTitle() {
+	public function attrTitle() {
 		return Convert::raw2att($this->title);
 	}
 	/**
 	 * Returns a version of a title suitable for insertion into an HTML attribute
 	 */
-	function attrValue() {
+	public function attrValue() {
 		return Convert::raw2att($this->value);
 	}
 	
@@ -419,7 +419,7 @@ class FormField extends RequestHandler {
 	 * Set the field value.
 	 * Returns $this.
 	 */
-	function setValue($value) {
+	public function setValue($value) {
 		$this->value = $value;
 		return $this;
 	}
@@ -427,7 +427,7 @@ class FormField extends RequestHandler {
 	/**
 	 * Set the field name
 	 */
-	function setName($name) {
+	public function setName($name) {
 		$this->name = $name;
 		return $this;
 	}
@@ -437,7 +437,7 @@ class FormField extends RequestHandler {
 	 * This is called whenever you create a new form and put fields inside it, so that you don't
 	 * have to worry about linking the two.
 	 */
-	function setForm($form) {
+	public function setForm($form) {
 		$this->form = $form; 
 		return $this;
 	}
@@ -447,7 +447,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @return Form
 	 */
-	function getForm() {
+	public function getForm() {
 		return $this->form; 
 	}
 	
@@ -467,7 +467,7 @@ class FormField extends RequestHandler {
 	 * Sets the error message to be displayed on the form field
 	 * Set by php validation of the form
 	 */
-	function setError($message, $messageType) {
+	public function setError($message, $messageType) {
 		$this->message = $message; 
 		$this->messageType = $messageType; 
 		
@@ -506,7 +506,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @param string
 	 */
-	function setTemplate($template) {
+	public function setTemplate($template) {
 		$this->template = $template;
 		
 		return $this;
@@ -515,7 +515,7 @@ class FormField extends RequestHandler {
 	/**
 	 * @return string
 	 */
-	function getTemplate() {
+	public function getTemplate() {
 		return $this->template;
 	}
 	
@@ -573,7 +573,7 @@ class FormField extends RequestHandler {
 	 * @param array $properties key value pairs of template variables
 	 * @return string
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
 
 		return $obj->renderWith($this->getTemplates());
@@ -589,7 +589,7 @@ class FormField extends RequestHandler {
 	 * @param array $properties key value pairs of template variables
 	 * @return string
 	 */
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
 
 		return $obj->renderWith($this->getFieldHolderTemplates());
@@ -602,7 +602,7 @@ class FormField extends RequestHandler {
 	*
 	* @return string
     */
-   function SmallFieldHolder($properties = array()) {
+   public function SmallFieldHolder($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
 
 		return $obj->renderWith($this->getSmallFieldHolderTemplates());
@@ -669,7 +669,7 @@ class FormField extends RequestHandler {
 	 * Returns true if this field is a composite field.
 	 * To create composite field types, you should subclass {@link CompositeField}.
 	 */
-	function isComposite() {
+	public function isComposite() {
 		return false;
 	}
 
@@ -681,14 +681,14 @@ class FormField extends RequestHandler {
 	 *
 	 * @see FieldList::collateDataFields()
 	 */
-	function hasData() {
+	public function hasData() {
 		return true;
 	}
 
 	/**
 	 * @return boolean
 	 */
-	function isReadonly() { 
+	public function isReadonly() {
 		return $this->readonly; 
 	}
 
@@ -697,7 +697,7 @@ class FormField extends RequestHandler {
 	 * to actually transform this instance.
 	 * @param $bool boolean Setting "false" has no effect on the field-state.
 	 */
-	function setReadonly($bool) { 
+	public function setReadonly($bool) {
 		$this->readonly = $bool; 
 		return $this;
 	}
@@ -705,7 +705,7 @@ class FormField extends RequestHandler {
 	/**
 	 * @return boolean
 	 */
-	function isDisabled() {
+	public function isDisabled() {
 		return $this->disabled;
 	}
 
@@ -714,7 +714,7 @@ class FormField extends RequestHandler {
 	 * to actually transform this instance.
 	 * @param $bool boolean Setting "false" has no effect on the field-state.
 	 */
-	function setDisabled($bool) {
+	public function setDisabled($bool) {
 		$this->disabled = $bool;
 		return $this;
 	}
@@ -722,7 +722,7 @@ class FormField extends RequestHandler {
 	/**
 	 * Returns a readonly version of this field
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new ReadonlyField($this->name, $this->title, $this->value);
 		$field->addExtraClass($this->extraClass());
 		$field->setForm($this->form);
@@ -736,7 +736,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @return FormField
 	 */
-	function performDisabledTransformation() {
+	public function performDisabledTransformation() {
 		$clone = clone $this;
 		$disabledClassName = $clone->class . '_Disabled';
 		if(ClassInfo::exists($disabledClassName)) {
@@ -747,11 +747,11 @@ class FormField extends RequestHandler {
 		}
 	}
 
-	function transform(FormTransformation $trans) {
+	public function transform(FormTransformation $trans) {
 		return $trans->transform($this);
 	}
 	
-	function hasClass($class){
+	public function hasClass($class){
 		$patten = '/'.strtolower($class).'/i';
 		$subject = strtolower($this->class." ".$this->extraClass());
 		return preg_match($patten, $subject);
@@ -765,7 +765,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function Type() {
+	public function Type() {
 		return strtolower(preg_replace('/Field$/', '', $this->class));	
 	}
 
@@ -777,7 +777,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @todo Transform to static helper method.
 	 */
-	function createTag($tag, $attributes, $content = null) {
+	public function createTag($tag, $attributes, $content = null) {
 		$preparedAttributes = '';
 		foreach($attributes as $k => $v) {
 			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes can sometimes get finicky
@@ -796,14 +796,14 @@ class FormField extends RequestHandler {
 	 * @param Validator
 	 * @return boolean
 	 */
-	function validate($validator) {
+	public function validate($validator) {
 		return true;
 	}
 
 	/**
 	 * @deprecated 3.0 Use setDescription()
 	 */
-	function describe($description) {
+	public function describe($description) {
 		Deprecation::notice('3.0', 'Use setDescription()');
 		$this->setDescription($description);
 		return $this;
@@ -815,7 +815,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string Description
 	 */
-	function setDescription($description) {
+	public function setDescription($description) {
 		$this->description = $description;
 		return $this;
 	}
@@ -823,11 +823,11 @@ class FormField extends RequestHandler {
 	/**
 	 * @return string
 	 */
-	function getDescription() {
+	public function getDescription() {
 		return $this->description;
 	}
 	
-	function debug() {
+	public function debug() {
 		return "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>) = $this->value";
 	}
 	
@@ -835,7 +835,7 @@ class FormField extends RequestHandler {
 	 * This function is used by the template processor.  If you refer to a field as a $ variable, it
 	 * will return the $Field value.
 	 */
-	function forTemplate() {
+	public function forTemplate() {
 		return $this->Field();
 	}
 	
@@ -843,13 +843,13 @@ class FormField extends RequestHandler {
 	 * @uses Validator->fieldIsRequired()
 	 * @return boolean
 	 */
-	function Required() {
+	public function Required() {
 		if($this->form && ($validator = $this->form->Validator)) {
 			return $validator->fieldIsRequired($this->name);
 		}
 	}
 
-	function setContainerFieldSet($list) {
+	public function setContainerFieldSet($list) {
 		Deprecation::notice('3.0', 'Use setContainerFieldList() instead.');
 		return $this->setContainerFieldList($list);
 	}
@@ -860,17 +860,17 @@ class FormField extends RequestHandler {
 	 * @param FieldList $list
 	 * @return FieldList
 	 */
-	function setContainerFieldList($list) {
+	public function setContainerFieldList($list) {
 		$this->containerFieldList = $list;
 		return $this;
 	}
 
-	function rootFieldSet() {
+	public function rootFieldSet() {
 		Deprecation::notice('3.0', 'Use rootFieldList() instead.');
 		return $this->rootFieldList();
 	}
 
-	function rootFieldList() {
+	public function rootFieldList() {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else user_error("rootFieldList() called on $this->class object without a containerFieldList", E_USER_ERROR);
 	}

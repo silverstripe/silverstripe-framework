@@ -32,7 +32,7 @@ class PjaxResponseNegotiator {
 	 * @param SS_HTTPResponse An existing response to reuse (optional)
 	 * @param Array $callbacks
 	 */
-	function __construct($callbacks = array(), $response = null) {
+	public function __construct($callbacks = array(), $response = null) {
 		$this->callbacks = $callbacks; 
 		$this->response = $response;
 	}

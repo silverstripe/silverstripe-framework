@@ -9,7 +9,7 @@
  */
 class NullHTTPRequest extends SS_HTTPRequest {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct(null, null);
 	}
 	

@@ -1,7 +1,7 @@
 <?php
 
 class CSVParserTest extends SapphireTest {
-	function testParsingWithHeaders() {
+	public function testParsingWithHeaders() {
 		/* By default, a CSV file will be interpreted as having headers */
 		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');
 		
@@ -26,7 +26,7 @@ class CSVParserTest extends SapphireTest {
 		$this->assertEquals(array('1', '0', '1', '1'), $registered);
 	}
 
-	function testParsingWithHeadersAndColumnMap() {
+	public function testParsingWithHeadersAndColumnMap() {
 		/* By default, a CSV file will be interpreted as having headers */
 		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');
 		
@@ -56,7 +56,7 @@ class CSVParserTest extends SapphireTest {
 		$this->assertEquals(array('1', '0', '1', '1'), $registered);
 	}
 
-	function testParsingWithExplicitHeaderRow() {
+	public function testParsingWithExplicitHeaderRow() {
 		/* If your CSV file doesn't have a header row */
 		$csv = new CSVParser($this->getCurrentRelativePath() .'/CsvBulkLoaderTest_PlayersWithHeader.csv');
 		

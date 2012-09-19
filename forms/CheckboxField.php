@@ -7,20 +7,20 @@
  */
 class CheckboxField extends FormField {
 
-	function setValue($value) {
+	public function setValue($value) {
 		$this->value = ($value) ? 1 : 0;
 		return $this;
 	}
 
-	function dataValue() {
+	public function dataValue() {
 		return ($this->value) ? 1 : NULL;
 	}
 
-	function Value() {
+	public function Value() {
 		return ($this->value) ? 1 : 0;
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		$attrs = parent::getAttributes();
 		$attrs['value'] = 1;
 		return array_merge(
@@ -35,13 +35,13 @@ class CheckboxField extends FormField {
 	/**
 	 * Returns a readonly version of this field
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
 		return $field;	
 	}
 	
-	function performDisabledTransformation() {
+	public function performDisabledTransformation() {
 		$clone = clone $this;
 		$clone->setDisabled(true);
 		return $clone;
@@ -57,11 +57,11 @@ class CheckboxField extends FormField {
  */
 class CheckboxField_Readonly extends ReadonlyField {
 
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		return clone $this;
 	}
 
-	function Value() {
+	public function Value() {
 		return Convert::raw2xml($this->value ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No'));
 	}
 

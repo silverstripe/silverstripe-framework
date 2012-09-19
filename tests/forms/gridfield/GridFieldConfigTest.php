@@ -6,7 +6,7 @@
 
 class GridFieldConfigTest extends SapphireTest {
 
-	function testGetComponents() {
+	public function testGetComponents() {
 		$config = GridFieldConfig::create();
 		$this->assertInstanceOf('ArrayList', $config->getComponents());
 		$this->assertEquals($config->getComponents()->Count(), 0);
@@ -22,7 +22,7 @@ class GridFieldConfigTest extends SapphireTest {
 		);
 	}
 
-	function testGetComponentsByType() {
+	public function testGetComponentsByType() {
 		$config = GridFieldConfig::create()
 			->addComponent($c1 = new GridFieldConfigTest_MyComponent())
 			->addComponent($c2 = new GridFieldConfigTest_MyOtherComponent())
@@ -46,7 +46,7 @@ class GridFieldConfigTest extends SapphireTest {
 		);
 	}	
 
-	function testGetComponentByType() {
+	public function testGetComponentByType() {
 		$config = GridFieldConfig::create()
 			->addComponent($c1 = new GridFieldConfigTest_MyComponent())
 			->addComponent($c2 = new GridFieldConfigTest_MyOtherComponent())
@@ -116,9 +116,9 @@ class GridFieldConfigTest extends SapphireTest {
 }
 
 class GridFieldConfigTest_MyComponent implements GridField_URLHandler, TestOnly {
-	function getURLHandlers($gridField) {return array();}
+	public function getURLHandlers($gridField) {return array();}
 }
 
 class GridFieldConfigTest_MyOtherComponent implements GridField_URLHandler, TestOnly {
-	function getURLHandlers($gridField) {return array();}
+	public function getURLHandlers($gridField) {return array();}
 }

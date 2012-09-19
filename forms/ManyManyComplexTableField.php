@@ -41,7 +41,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 	
 	public $itemClass = 'ManyManyComplexTableField_Item';
 		
-	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
 		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor', Deprecation::SCOPE_CLASS);
 
@@ -75,7 +75,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 		$this->joinField = 'Checked';
 	}
 		
-	function getQuery() {
+	public function getQuery() {
 		$query = parent::getQuery();
 		$query->selectField("CASE WHEN \"{$this->manyManyParentClass}ID\" IS NULL THEN '0' ELSE '1' END", "Checked");
 		$query->groupby[] = "\"{$this->manyManyParentClass}ID\""; // necessary for Postgres
@@ -83,7 +83,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 		return $query;
 	}
 		
-	function getParentIdName($parentClass, $childClass) {
+	public function getParentIdName($parentClass, $childClass) {
 		return $this->getParentIdNameRelation($parentClass, $childClass, 'many_many');
 	}
 }
@@ -95,7 +95,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
  */
 class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	
-	function MarkingCheckbox() {
+	public function MarkingCheckbox() {
 		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->IsReadOnly)

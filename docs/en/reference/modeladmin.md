@@ -97,7 +97,7 @@ For example, we might want to exclude all products without prices in our sample 
 	:::php
 	class MyAdmin extends ModelAdmin {
 		// ...
-		function getList() {
+		public function getList() {
 			$list = parent::getList();
 			// Always limit by model class, in case you're managing multiple
 			if($this->modelClass == 'Product') {
@@ -113,14 +113,14 @@ For example, we might want to have a checkbox which limits search results to exp
 	:::php
 	class MyAdmin extends ModelAdmin {
 		// ...
-		function getSearchContext() {
+		public function getSearchContext() {
 			$context = parent::getSearchContext();
 			if($this->modelClass == 'Product') {
 				$context->getFields()->push(new CheckboxField('q[ExpensiveOnly]', 'Only expensive stuff'));
 			}
 			return $context;
 		}
-		function getList() {
+		public function getList() {
 			$list = parent::getList();
 			$params = $this->request->requestVar('q'); // use this to access search parameters
 			if($this->modelClass == 'Product' && isset($params['ExpensiveOnly']) && $params['ExpensiveOnly']) {
@@ -172,7 +172,7 @@ To customize the exported columns, create a new method called `getExportFields` 
 	:::php
 	class MyAdmin extends ModelAdmin {
 		// ...
-		function getExportFields() {
+		public function getExportFields() {
 			return array(
 				'Name' => 'Name',
 				'ProductCode' => 'Product Code',
@@ -192,7 +192,7 @@ also another tool at your disposal: The `[api:Extension]` API.
 	:::php
 	class MyAdminExtension extends Extension {
 		// ...
-		function updateEditForm(&$form) {
+		public function updateEditForm(&$form) {
 			$form->Fields()->push(/* ... */)
 		}
 	}

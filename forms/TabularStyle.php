@@ -12,7 +12,7 @@ class TabularStyle extends ViewableData {
 	 * Represent the given form in a tabular style
 	 * @param form The form to decorate.
 	 */
-	function __construct($form) {
+	public function __construct($form) {
 		$this->form = $form;
 		$this->failover = $form;
 		parent::__construct();
@@ -21,11 +21,11 @@ class TabularStyle extends ViewableData {
 	/**
 	 * Return a representation of this form as a table row
 	 */
-	function AsTableRow() {
+	public function AsTableRow() {
 		return "<tr class=\"addrow\">{$this->CellFields()}<td class=\"actions\">{$this->CellActions()}</td></tr>";
 	}
 	
-	function CellFields() {
+	public function CellFields() {
 		$result = "";
 		$hiddenFields = '';
 		foreach($this->form->Fields() as $field) {
@@ -42,7 +42,7 @@ class TabularStyle extends ViewableData {
 		return $result;
 	}
 
-	function CellActions() {
+	public function CellActions() {
 		$actions = "";
 		foreach($this->form->Actions() as $action) {
 			$actions .= $action->Field();
@@ -55,13 +55,13 @@ class TabularStyle extends ViewableData {
 	/**
 	 * This is the 'wrapper' aspect of the code
 	 */
-	function __call($func, $args) {
+	public function __call($func, $args) {
 		return call_user_func_array(array(&$this->form, $func), $args);
 	}
-	function __get($field) {
+	public function __get($field) {
 		return $this->form->$field;
 	}
-	function __set($field, $val) {
+	public function __set($field, $val) {
 		$this->form->$field = $val;
 	}
 }

@@ -200,7 +200,7 @@ class UploadField extends FileField {
 	/**
 	 * @param SS_List $items
 	 */
-	public function setItems(SS_List $items) { 
+	public function setItems(SS_List $items) {
 		$this->items = $items; 
 		return $this;
 	}
@@ -658,7 +658,7 @@ class UploadField_ItemHandler extends RequestHandler {
 	/**
 	 * @return File
 	 */
-	function getItem() {
+	public function getItem() {
 		return DataObject::get_by_id('File', $this->itemID);
 	}
 
@@ -873,14 +873,14 @@ class UploadField_SelectHandler extends RequestHandler {
 		'' => 'index',
 	);
 
-	function __construct($parent, $folderName = null) {
+	public function __construct($parent, $folderName = null) {
 		$this->parent = $parent;
 		$this->folderName = $folderName;
 
 		parent::__construct();
 	}
 
-	function index() {
+	public function index() {
 		// Requires a separate JS file, because we can't reach into the iframe with entwine.
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/UploadField_select.js');
 		return $this->renderWith('CMSDialog');
@@ -899,7 +899,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 *
 	 * @return Form
 	 */
-	function Form() {
+	public function Form() {
 		// Find out the requested folder ID.
 		$folderID = $this->parent->getRequest()->requestVar('ParentID');
 		if (!isset($folderID)) {
@@ -963,7 +963,7 @@ class UploadField_SelectHandler extends RequestHandler {
 		return $selectComposite;
 	}
 
-	function doAttach($data, $form) {
+	public function doAttach($data, $form) {
 		// TODO Only implemented via JS for now
 	}
 

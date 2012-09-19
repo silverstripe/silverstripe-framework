@@ -93,7 +93,7 @@ class Folder extends File {
 	/**
 	 * Syncronise the file database with the actual content of the assets folder
 	 */
-	function syncChildren() {
+	public function syncChildren() {
 		$parentID = (int)$this->ID; // parentID = 0 on the singleton, used as the 'root node';
 		$added = 0;
 		$deleted = 0;
@@ -195,7 +195,7 @@ class Folder extends File {
 	 * It does this without actually using the object model, as this starts messing
 	 * with all the data.  Rather, it does a direct database insert.
 	 */
-	function constructChild($name) {
+	public function constructChild($name) {
 		// Determine the class name - File, Folder or Image
 		$baseDir = $this->FullPath;
 		if(is_dir($baseDir . $name)) {
@@ -224,7 +224,7 @@ class Folder extends File {
 	 * File names are filtered through {@link FileNameFilter}, see class documentation
 	 * on how to influence this behaviour.
 	 */
-	function addUploadToFolder($tmpFile) {
+	public function addUploadToFolder($tmpFile) {
 		if(!is_array($tmpFile)) {
 			user_error("Folder::addUploadToFolder() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		}
@@ -285,18 +285,18 @@ class Folder extends File {
 		}
 	}
 	
-	function validate() {
+	public function validate() {
 		return new ValidationResult(true);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
 	// Data Model Definition
 
-	function getRelativePath() {
+	public function getRelativePath() {
 		return parent::getRelativePath() . "/";
 	}
 		
-	function onBeforeDelete() {
+	public function onBeforeDelete() {
 		if($this->ID && ($children = $this->AllChildren())) {
 			foreach($children as $child) {
 				if(!$this->Filename || !$this->Name || !file_exists($this->getFullPath())) {
@@ -321,17 +321,17 @@ class Folder extends File {
 	/** Override setting the Title of Folders to that Name, Filename and Title are always in sync.
 	 * Note that this is not appropriate for files, because someone might want to create a human-readable name
 	 * of a file that is different from its name on disk. But folders should always match their name on disk. */
-	function setTitle($title) {
+	public function setTitle($title) {
 		$this->setField('Title',$title);
 		parent::setName($title); //set the name and filename to match the title
 	}
 
-	function setName($name) {
+	public function setName($name) {
 		$this->setField('Title',$name);
 		parent::setName($name);
 	}
 
-	function setFilename($filename) {
+	public function setFilename($filename) {
 		$this->setField('Title',pathinfo($filename, PATHINFO_BASENAME));
 		parent::setFilename($filename);
 	}
@@ -341,14 +341,14 @@ class Folder extends File {
 	 * 
 	 * @return Null
 	 */
-	function getSize() {
+	public function getSize() {
 		return null;
 	}
 	
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
 	 */
-	function deleteDatabaseOnly() {
+	public function deleteDatabaseOnly() {
 		if($children = $this->myChildren()) {
 			foreach($children as $child) $child->deleteDatabaseOnly();
 		}
@@ -410,7 +410,7 @@ class Folder extends File {
 	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
 	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
-	function getCMSFields() {
+	public function getCMSFields() {
 		// Hide field on root level, which can't be renamed
 		if(!$this->ID || $this->ID === "root") {
 			$titleField = new HiddenField("Name");	
@@ -430,14 +430,14 @@ class Folder extends File {
 	/**
 	 * Get the children of this folder that are also folders.
 	 */
-	function ChildFolders() {
+	public function ChildFolders() {
 		return DataObject::get("Folder", "\"ParentID\" = " . (int)$this->ID);
 	}
 	
 	/**
 	 * @return String
 	 */
-	function CMSTreeClasses() {
+	public function CMSTreeClasses() {
 		$classes = sprintf('class-%s', $this->class);
 
 		if(!$this->canDelete())
@@ -454,7 +454,7 @@ class Folder extends File {
 	/**
 	 * @return string
 	 */
-	function getTreeTitle() {
+	public function getTreeTitle() {
 		return $treeTitle = sprintf(
 			"<span class=\"jstree-foldericon\"></span><span class=\"item\">%s</span>",
 			Convert::raw2xml(str_replace(array("\n","\r"),"",$this->Title))

@@ -54,7 +54,7 @@ class DatetimeField extends FormField {
 	 */
 	protected $config;
 		
-	function __construct($name, $title = null, $value = ""){
+	public function __construct($name, $title = null, $value = ""){
 		$this->config = self::$default_config;
 		
 		$this->dateField = DateField::create($name . '[date]', false);
@@ -64,7 +64,7 @@ class DatetimeField extends FormField {
 		parent::__construct($name, $title, $value);
 	}
 		
-	function setForm($form) {
+	public function setForm($form) {
 		parent::setForm($form);
 		
 		$this->dateField->setForm($form);
@@ -74,7 +74,7 @@ class DatetimeField extends FormField {
 		return $this;
 	}
 	
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		$config = array(
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
@@ -84,7 +84,7 @@ class DatetimeField extends FormField {
 		return parent::FieldHolder($properties);
 	}
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
 		
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
@@ -109,7 +109,7 @@ class DatetimeField extends FormField {
 	 *  keys can contain localized strings. If the 'dmyfields' option is used for {@link DateField},
 	 *  the 'date' value may contain array notation was well (see {@link DateField->setValue()}).
 	 */
-	function setValue($val) {
+	public function setValue($val) {
 		// If timezones are enabled, assume user data needs to be reverted to server timezone
 		if($this->getConfig('usertimezone')) {
 			// Accept user input on timezone, but only when timezone support is enabled
@@ -178,7 +178,7 @@ class DatetimeField extends FormField {
 		return $this;
 	}
 	
-	function Value() {
+	public function Value() {
 		$valDate = $this->dateField->Value();
 		$valTime = $this->timeField->Value();
 		if(!$valTime) $valTime = '00:00:00';
@@ -186,7 +186,7 @@ class DatetimeField extends FormField {
 		return sprintf($this->getConfig('datetimeorder'), $valDate, $valTime);
 	}
 
-	function setDisabled($bool) {
+	public function setDisabled($bool) {
 		parent::setDisabled($bool);
 		$this->dateField->setDisabled($bool);
 		$this->timeField->setDisabled($bool);
@@ -194,7 +194,7 @@ class DatetimeField extends FormField {
 		return $this;
 	}
 
-	function setReadonly($bool) {
+	public function setReadonly($bool) {
 		parent::setReadonly($bool);
 		$this->dateField->setReadonly($bool);
 		$this->timeField->setReadonly($bool);
@@ -205,31 +205,31 @@ class DatetimeField extends FormField {
 	/**
 	 * @return DateField
 	 */
-	function getDateField() {
+	public function getDateField() {
 		return $this->dateField;
 	}
 	
 	/**
 	 * @return TimeField
 	 */
-	function getTimeField() {
+	public function getTimeField() {
 		return $this->timeField;
 	}
 	
 	/**
 	 * @return FormField
 	 */
-	function getTimezoneField() {
+	public function getTimezoneField() {
 		return $this->timezoneField;
 	}
 	
-	function setLocale($locale) {
+	public function setLocale($locale) {
 		$this->dateField->setLocale($locale);
 		$this->timeField->setLocale($locale);
 		return $this;
 	}
 	
-	function getLocale() {
+	public function getLocale() {
 		return $this->dateField->getLocale();
 	}
 	
@@ -240,7 +240,7 @@ class DatetimeField extends FormField {
 	 * @param string $name
 	 * @param mixed $val
 	 */
-	function setConfig($name, $val) {
+	public function setConfig($name, $val) {
 		$this->config[$name] = $val;
 		
 		if($name == 'usertimezone') {
@@ -258,18 +258,18 @@ class DatetimeField extends FormField {
 	 * @param String $name Optional, returns the whole configuration array if empty
 	 * @return mixed
 	 */
-	function getConfig($name = null) {
+	public function getConfig($name = null) {
 		return $name ? $this->config[$name] : $this->config;
 	}
 	
-	function validate($validator) {
+	public function validate($validator) {
 		$dateValid = $this->dateField->validate($validator);
 		$timeValid = $this->timeField->validate($validator);
 
 		return ($dateValid && $timeValid);
 	}
 	
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new DatetimeField_Readonly($this->name, $this->title, $this->dataValue());
 		$field->setForm($this->form);
 		
@@ -287,7 +287,7 @@ class DatetimeField_Readonly extends DatetimeField {
 	
 	protected $readonly = true;
 		
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
 		
@@ -311,7 +311,7 @@ class DatetimeField_Readonly extends DatetimeField {
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
 	
-	function validate($validator) {
+	public function validate($validator) {
 		return true;	
 	}
 }

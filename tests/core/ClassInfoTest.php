@@ -11,7 +11,7 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertTrue(ClassInfo::exists('stdClass'));
 	}
 
-	function testSubclassesFor() {
+	public function testSubclassesFor() {
 		$this->assertEquals(
 			ClassInfo::subclassesFor('ClassInfoTest_BaseClass'),
 			array(
@@ -23,7 +23,7 @@ class ClassInfoTest extends SapphireTest {
 		);
 	}
 	
-	function testClassesForFolder() {
+	public function testClassesForFolder() {
 		//$baseFolder = Director::baseFolder() . '/' . FRAMEWORK_DIR . '/tests/_ClassInfoTest';
 		//$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 		

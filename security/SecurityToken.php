@@ -53,7 +53,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * @param $name
 	 */
-	function __construct($name = null) {
+	public function __construct($name = null) {
 		$this->name = ($name) ? $name : self::get_default_name();
 		parent::__construct();
 	}
@@ -63,7 +63,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return SecurityToken
 	 */
-	static function inst() {
+	public static function inst() {
 		if(!self::$inst) self::$inst = new SecurityToken();
 
 		return self::$inst;
@@ -73,7 +73,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * Globally disable the token (override with {@link NullSecurityToken})
 	 * implementation. Note: Does not apply for 
 	 */
-	static function disable() {
+	public static function disable() {
 		self::$enabled = false;
 		self::$inst = new NullSecurityToken();
 	}
@@ -81,7 +81,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * Globally enable tokens that have been previously disabled through {@link disable}.
 	 */
-	static function enable() {
+	public static function enable() {
 		self::$enabled = true;
 		self::$inst = new SecurityToken();
 	}
@@ -89,14 +89,14 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * @return boolean
 	 */
-	static function is_enabled() {
+	public static function is_enabled() {
 		return self::$enabled;
 	}
 	
 	/**
 	 * @return String
 	 */
-	static function get_default_name() {
+	public static function get_default_name() {
 		return self::$default_name;
 	}
 
@@ -104,7 +104,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * Returns the value of an the global SecurityToken in the current session
 	 * @return int
 	 */
-	static function getSecurityID() {
+	public static function getSecurityID() {
 		$token = SecurityToken::inst();
 		return $token->getValue();
 	}
@@ -112,7 +112,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * @return String
 	 */
-	function setName($name) {
+	public function setName($name) {
 		$val = $this->getValue();
 		$this->name = $name;
 		$this->setValue($val);
@@ -121,14 +121,14 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * @return String
 	 */
-	function getName() {
+	public function getName() {
 		return $this->name;
 	}
 	
 	/**
 	 * @return String
 	 */
-	function getValue() {
+	public function getValue() {
 		$value = Session::get($this->getName());
 
 		// only regenerate if the token isn't already set in the session
@@ -143,7 +143,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * @param String $val
 	 */
-	function setValue($val) {
+	public function setValue($val) {
 		Session::set($this->getName(), $val);
 	}
 	
@@ -166,7 +166,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * @param String $compare
 	 * @return Boolean
 	 */
-	function check($compare) {
+	public function check($compare) {
 		return ($compare && $this->getValue() && $compare == $this->getValue());
 	}
 	
@@ -176,7 +176,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * @param SS_HTTPRequest $request
 	 * @return Boolean
 	 */
-	function checkRequest($request) {
+	public function checkRequest($request) {
 		return $this->check($request->requestVar($this->getName()));
 	}
 	
@@ -188,7 +188,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * @param FieldList $fieldset
 	 * @return HiddenField|false
 	 */
-	function updateFieldSet(&$fieldset) {
+	public function updateFieldSet(&$fieldset) {
 		if(!$fieldset->fieldByName($this->getName())) {
 			$field = new HiddenField($this->getName(), null, $this->getValue());
 			$fieldset->push($field);
@@ -202,7 +202,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * @param String $url
 	 * @return String
 	 */
-	function addToUrl($url) {
+	public function addToUrl($url) {
 		return Controller::join_links($url, sprintf('?%s=%s', $this->getName(), $this->getValue()));
 	}
 	
@@ -216,7 +216,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return boolean
 	 */
-	function isEnabled() {
+	public function isEnabled() {
 		return !($this instanceof NullSecurityToken);
 	}
 	
@@ -248,7 +248,7 @@ class NullSecurityToken extends SecurityToken {
 	 * @param String
 	 * @return boolean
 	 */
-	function check($compare) {
+	public function check($compare) {
 		return true;
 	}
 	
@@ -256,7 +256,7 @@ class NullSecurityToken extends SecurityToken {
 	 * @param SS_HTTPRequest $request
 	 * @return Boolean
 	 */
-	function checkRequest($request) {
+	public function checkRequest($request) {
 		return true;
 	}
 	
@@ -264,7 +264,7 @@ class NullSecurityToken extends SecurityToken {
 	 * @param FieldList $fieldset
 	 * @return false
 	 */
-	function updateFieldSet(&$fieldset) {
+	public function updateFieldSet(&$fieldset) {
 		// Remove, in case it was added beforehand
 		$fieldset->removeByName($this->getName());
 		
@@ -275,28 +275,28 @@ class NullSecurityToken extends SecurityToken {
 	 * @param String $url
 	 * @return String
 	 */
-	function addToUrl($url) {
+	public function addToUrl($url) {
 		return $url;
 	}
 	
 	/**
 	 * @return String
 	 */
-	function getValue() {
+	public function getValue() {
 		return null;
 	}
 	
 	/**
 	 * @param String $val
 	 */
-	function setValue($val) {
+	public function setValue($val) {
 		// no-op
 	}
 	
 	/**
 	 * @return String
 	 */
-	function generate() {
+	public function generate() {
 		return null;
 	}	
 }

@@ -12,11 +12,11 @@ class TokenisedRegularExpression {
 	 */
 	protected $expression;
 	
-	function __construct($expression) {
+	public function __construct($expression) {
 		$this->expression = $expression;
 	}
 	
-	function findAll($tokens) {
+	public function findAll($tokens) {
 		$tokenTypes = array();
 		foreach($tokens as $i => $token) {
 			if(is_array($token)) {
@@ -40,7 +40,7 @@ class TokenisedRegularExpression {
 		return $allMatches;
 	}
 	
-	function matchFrom($tokenPos, $expressionPos, &$tokens, &$matches) {
+	public function matchFrom($tokenPos, $expressionPos, &$tokens, &$matches) {
 		$expressionRule = $this->expression[$expressionPos];
 		$expectation = is_array($expressionRule) ? $expressionRule[0] : $expressionRule;
 		if(!is_array($expressionRule)) $expressionRule = array();

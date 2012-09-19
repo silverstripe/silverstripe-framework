@@ -12,6 +12,6 @@ interface PermissionProvider {
 	 *   'VIEW_SITE' => 'View the site',
 	 * );
 	 */
-	function providePermissions();	
+	public function providePermissions();
 }
 

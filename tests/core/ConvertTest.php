@@ -9,7 +9,7 @@ class ConvertTest extends SapphireTest {
 	/**
 	 * Tests {@link Convert::raw2att()}
 	 */
-	function testRaw2Att() {
+	public function testRaw2Att() {
 		$val1 = '<input type="text">';
 		$this->assertEquals('&lt;input type=&quot;text&quot;&gt;', Convert::raw2att($val1), 'Special characters are escaped');
 		
@@ -20,7 +20,7 @@ class ConvertTest extends SapphireTest {
 	/**
 	 * Tests {@link Convert::raw2htmlatt()}
 	 */
-	function testRaw2HtmlAtt() {
+	public function testRaw2HtmlAtt() {
 		$val1 = '<input type="text">';
 		$this->assertEquals('&lt;input type=&quot;text&quot;&gt;', Convert::raw2htmlatt($val1), 'Special characters are escaped');
 		
@@ -28,7 +28,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('This is some normal text.', Convert::raw2htmlatt($val2), 'Normal text is not escaped');
 	}
 	
-	function testHtml2raw() {
+	public function testHtml2raw() {
 		$val1 = 'This has a <strong>strong tag</strong>.'; 
 		$this->assertEquals('This has a *strong tag*.', Convert::xml2raw($val1), 'Strong tags are replaced with asterisks');
 		
@@ -56,7 +56,7 @@ class ConvertTest extends SapphireTest {
 	/**
 	 * Tests {@link Convert::raw2xml()}
 	 */
-	function testRaw2Xml() {
+	public function testRaw2Xml() {
 		$val1 = '<input type="text">';
 		$this->assertEquals('&lt;input type=&quot;text&quot;&gt;', Convert::raw2xml($val1), 'Special characters are escaped');
 		
@@ -67,7 +67,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals("This is test\nNow on a new line.", Convert::raw2xml($val3), 'Newlines are retained. They should not be replaced with <br /> as it is not XML valid');
 	}
 	
-	function testRaw2HtmlName() {
+	public function testRaw2HtmlName() {
 		$val1 = 'test test 123';
 		$this->assertEquals('testtest123', Convert::raw2htmlname($val1));
 	}
@@ -75,7 +75,7 @@ class ConvertTest extends SapphireTest {
 	/**
 	 * Tests {@link Convert::xml2raw()}
 	 */
-	function testXml2Raw() {
+	public function testXml2Raw() {
 		$val1 = '&lt;input type=&quot;text&quot;&gt;';
 		$this->assertEquals('<input type="text">', Convert::xml2raw($val1), 'Special characters are escaped');
 		
@@ -83,7 +83,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('This is some normal text.', Convert::xml2raw($val2), 'Normal text is not escaped');
 	}
 
-	function testArray2JSON() {
+	public function testArray2JSON() {
 		$val = array(
 			'Joe' => 'Bloggs',
 			'Tom' => 'Jones',
@@ -95,7 +95,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}', $encoded, 'Array is encoded in JSON');
 	}
 
-	function testJSON2Array() {
+	public function testJSON2Array() {
 		$val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
 		$decoded = Convert::json2array($val);
 		$this->assertEquals(3, count($decoded), '3 items in the decoded array');
@@ -104,7 +104,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertContains('Structure', $decoded['My']['Complicated']);
 	}
 
-	function testJSON2Obj() {
+	public function testJSON2Obj() {
 		$val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
 		$obj = Convert::json2obj($val);
 		$this->assertEquals('Bloggs', $obj->Joe);
@@ -115,7 +115,7 @@ class ConvertTest extends SapphireTest {
 	/**
 	 * @todo test toASCII()
 	 */
-	function testRaw2URL() {
+	public function testRaw2URL() {
 		$orig = URLSegmentFilter::$default_allow_multibyte;
 		URLSegmentFilter::$default_allow_multibyte = false;
 		$this->assertEquals('foo', Convert::raw2url('foo'));

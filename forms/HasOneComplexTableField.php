@@ -39,15 +39,15 @@ class HasOneComplexTableField extends HasManyComplexTableField {
 	
 	public $isOneToOne = false;
 	
-	function getParentIdName($parentClass, $childClass) {
+	public function getParentIdName($parentClass, $childClass) {
 		return $this->getParentIdNameRelation($parentClass, $childClass, 'has_one');
 	}
 			
-	function getControllerJoinID() {
+	public function getControllerJoinID() {
 		return $this->controller->{$this->joinField};
 	}
 	
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		$fieldName = $this->name;
 		$fieldNameID = $fieldName . 'ID';
 		
@@ -60,15 +60,15 @@ class HasOneComplexTableField extends HasManyComplexTableField {
 		$record->write();
 	}
 	
-	function setOneToOne() {
+	public function setOneToOne() {
 		$this->isOneToOne = true;
 	}
 	
-	function isChildSet($childID) {
+	public function isChildSet($childID) {
 		return DataObject::get($this->controllerClass(), '"' . $this->joinField . "\" = '$childID'");
 	}
 	
-	function ExtraData() {
+	public function ExtraData() {
 		$val = $this->getControllerJoinID() ? $this->getControllerJoinID() : '';
 		$inputId = $this->id() . '_' . $this->htmlListEndName;
 		return <<<HTML
@@ -84,7 +84,7 @@ HTML;
  */
 class HasOneComplexTableField_Item extends ComplexTableField_Item {
 	
-	function MarkingCheckbox() {
+	public function MarkingCheckbox() {
 		$name = $this->parent->getName() . '[]';
 		
 		$isOneToOne = $this->parent->isOneToOne;

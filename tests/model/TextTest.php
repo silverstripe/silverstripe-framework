@@ -8,7 +8,7 @@ class TextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->LimitCharacters()}
 	 */
-	function testLimitCharacters() {
+	public function testLimitCharacters() {
 		$cases = array(
 			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
 			'<p>This is some text in a paragraph.</p>' => '<p>This is some text...'
@@ -24,7 +24,7 @@ class TextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->LimitWordCount()}
 	 */
-	function testLimitWordCount() {
+	public function testLimitWordCount() {
 		$cases = array(
 			/* Standard words limited, ellipsis added if truncated */
 			'The little brown fox jumped over the lazy cow.' => 'The little brown...',
@@ -51,7 +51,7 @@ class TextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->LimitWordCountXML()}
 	 */
-	function testLimitWordCountXML() {
+	public function testLimitWordCountXML() {
 		$cases = array(
 			'<p>Stuff & stuff</p>' => 'Stuff &amp;...',
 			"Stuff\nBlah Blah Blah" => "Stuff\nBlah Blah...",
@@ -69,7 +69,7 @@ class TextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->LimitSentences()}
 	 */
-	function testLimitSentences() {
+	public function testLimitSentences() {
 		$cases = array(
 			'' => '',
 			'First sentence.' => 'First sentence.',
@@ -90,7 +90,7 @@ class TextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->BigSummary()}
 	 */
-	function testBigSummary() {
+	public function testBigSummary() {
 		$cases = array(
 			'This text has multiple sentences. Big Summary uses this to split sentences up.' => 'This text has multiple...',
 			'This text does not have multiple sentences' => 'This text does not...',
@@ -104,7 +104,7 @@ class TextTest extends SapphireTest {
 		}
 	}
 	
-	function testContextSummary() {
+	public function testContextSummary() {
 		$testString1 = '<p>This is some text. It is a test</p>';
 		$testKeywords1 = 'test';
 		

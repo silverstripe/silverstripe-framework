@@ -266,7 +266,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		return $crumbs;
 	}
 
-	function providePermissions() {
+	public function providePermissions() {
 		$title = _t("SecurityAdmin.MENUTITLE", LeftAndMain::menu_title_for_class($this->class));
 		return array(
 			"CMS_ACCESS_SecurityAdmin" => array(
@@ -298,7 +298,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * 
 	 * @param $codes String|Array
 	 */
-	static function add_hidden_permission($codes){
+	public static function add_hidden_permission($codes){
 		if(is_string($codes)) $codes = array($codes);
 		self::$hidden_permissions = array_merge(self::$hidden_permissions, $codes);
 	}
@@ -306,7 +306,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * @param $codes String|Array
 	 */
-	static function remove_hidden_permission($codes){
+	public static function remove_hidden_permission($codes){
 		if(is_string($codes)) $codes = array($codes);
 		self::$hidden_permissions = array_diff(self::$hidden_permissions, $codes);
 	}
@@ -314,14 +314,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * @return Array
 	 */
-	static function get_hidden_permissions(){
+	public static function get_hidden_permissions(){
 		return self::$hidden_permissions;
 	}
 	
 	/**
 	 * Clear all permissions previously hidden with {@link add_hidden_permission}
 	 */
-	static function clear_hidden_permissions(){
+	public static function clear_hidden_permissions(){
 		self::$hidden_permissions = array();
 	}
 }

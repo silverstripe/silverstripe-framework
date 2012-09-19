@@ -100,7 +100,7 @@ class SSHTMLBBCodeParser_Filter_Extended extends SSHTMLBBCodeParser_Filter
 
     );
 
-	function _preparse() {
+	public function _preparse() {
         $this->_preparsed = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $this->_text);
 	$this->_preparsed = preg_replace("/(\[php\])\s*/", '$1', $this->_preparsed);
 	$this->_preparsed = preg_replace("/\s*(\[\/php\])\s/", '$1', $this->_preparsed);

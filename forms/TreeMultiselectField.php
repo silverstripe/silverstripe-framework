@@ -11,7 +11,7 @@
  * 
  * <b>Customizing Save Behaviour</b>
  * 
- * Before the data is saved, you can modify the ID list sent to the {@link ComponentSet} by specifying a function on the {@link DataObject} called "onChange[fieldname](&items)". This will be passed by reference the IDlist (an array of ID's) from the Treefield to be saved to the component set. 
+ * Before the data is saved, you can modify the ID list sent to the {@link ComponentSet} by specifying a function on the {@link DataObject} called "onChange[fieldname](&items)". This will be passed by reference the IDlist (an array of ID's) from the Treefield to be saved to the component set.
  * Returning false on this method will prevent treemultiselect from saving to the {@link ComponentSet} of the given {@link DataObject}
  * 
  * <code>
@@ -36,7 +36,7 @@
  * @subpackage fields-relational
  */
 class TreeMultiselectField extends TreeDropdownField {
-	function __construct($name, $title = null, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {
+	public function __construct($name, $title = null, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {
 		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
 		$this->value = 'unchanged';
 	}
@@ -44,7 +44,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	/**
 	 * Return this field's linked items
 	 */
-	function getItems() {
+	public function getItems() {
 		// If the value has been set, use that
 		if($this->value != 'unchanged' && is_array($this->sourceObject)) {
 			$items = array();
@@ -78,7 +78,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * We overwrite the field attribute to add our hidden fields, as this 
 	 * formfield can contain multiple values.
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
 		
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
@@ -133,7 +133,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * Calls function $record->onChange($items) before saving to the assummed 
 	 * Component set.
 	 */
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		// Detect whether this field has actually been updated
 		if($this->value !== 'unchanged') {
 			$items = array();
@@ -162,7 +162,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	/**
 	 * Changes this field to the readonly field.
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
 		$field->addExtraClass($this->extraClass());
 		$field->setForm($this->form);
@@ -179,7 +179,7 @@ class TreeMultiselectField_Readonly extends TreeMultiselectField {
 	
 	protected $readonly = true;
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$titleArray = $itemIDs = array();
 		$titleList = $itemIDsList = "";
 		if($items = $this->getItems()) {

@@ -388,7 +388,7 @@ PHP:
 
 	:::php
 	class MyController {
-	  function autocomplete($request) {
+	  public function autocomplete($request) {
 	    $results = Page::get()->filter("Title", $request->getVar('title'));
 	    if(!$results) return new HTTPResponse("Not found", 404);
 	    

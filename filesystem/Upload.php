@@ -95,7 +95,7 @@ class Upload extends Controller {
 	 * @param $folderPath string Folder path relative to /assets
 	 * @return Boolean|string Either success or error-message.
 	 */
-	function load($tmpFile, $folderPath = false) {
+	public function load($tmpFile, $folderPath = false) {
 		$this->clearErrors();
 		
 		if(!$folderPath) $folderPath = self::$uploads_folder;

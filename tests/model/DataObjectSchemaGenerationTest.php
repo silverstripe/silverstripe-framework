@@ -6,7 +6,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		'DataObjectSchemaGenerationTest_IndexDO'
 	);
 	
-	function setUpOnce() {
+	public function setUpOnce() {
 		
 		// enable fulltext option on this table
 		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
@@ -17,7 +17,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	/**
 	 * Check that once a schema has been generated, then it doesn't need any more updating
 	 */
-	function testFieldsDontRerequestChanges() {
+	public function testFieldsDontRerequestChanges() {
 		$db = DB::getConn();
 		DB::quiet();
 
@@ -35,7 +35,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	/**
 	 * Check that updates to a class fields are reflected in the database
 	 */
-	function testFieldsRequestChanges() {
+	public function testFieldsRequestChanges() {
 		$db = DB::getConn();
 		DB::quiet();
 
@@ -60,7 +60,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	/**
 	 * Check that indexes on a newly generated class do not subsequently request modification 
 	 */
-	function testIndexesDontRerequestChanges() {
+	public function testIndexesDontRerequestChanges() {
 		$db = DB::getConn();
 		DB::quiet();
 		
@@ -93,7 +93,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	/**
 	 * Check that updates to a dataobject's indexes are reflected in DDL
 	 */
-	function testIndexesRerequestChanges() {
+	public function testIndexesRerequestChanges() {
 		$db = DB::getConn();
 		DB::quiet();
 		

@@ -108,7 +108,7 @@ class HTMLText extends Text {
 	 * 
 	 * @see framework/core/model/fieldtypes/Text#FirstSentence()
 	 */
-	function FirstSentence() {
+	public function FirstSentence() {
 		/* Use summary's html processing logic to get the first paragraph */
 		$paragraph = $this->Summary(-1);
 		

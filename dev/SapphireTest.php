@@ -144,7 +144,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	protected $model;
 	
-	function setUp() {
+	public function setUp() {
 		// We cannot run the tests on this abstract class.
 		if(get_class($this) == "SapphireTest") $this->skipTest = true;
 		
@@ -266,7 +266,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * e.g. dynamically adding an extension. See {@link tearDownOnce()}
 	 * for tearing down the state again.
 	 */
-	function setUpOnce() {
+	public function setUpOnce() {
 		// Remove any illegal extensions that are present
 		foreach($this->illegalExtensions as $class => $extensions) {
 			foreach($extensions as $extension) {
@@ -308,7 +308,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * tearDown method that's called once per test class rather once per test method.
 	 */
-	function tearDownOnce() {
+	public function tearDownOnce() {
 		// If we have made changes to the extensions present, then migrate the database schema.
 		if($this->extensionsToReapply || $this->extensionsToRemove) {
 			// Remove extensions added for testing
@@ -420,7 +420,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *
 	 * @param $fixtureFile The location of the .yml fixture file, relative to the site base dir
 	 */
-	function loadFixture($fixtureFile) {
+	public function loadFixture($fixtureFile) {
 		$parser = new Spyc();
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$fixtureFile);
 		
@@ -433,7 +433,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Clear all fixtures which were previously loaded through
 	 * {@link loadFixture()}.
 	 */
-	function clearFixtures() {
+	public function clearFixtures() {
 		$this->fixtures = array();
 	}
 	
@@ -458,7 +458,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		return $path;
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		// Preserve memory settings
 		ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);
 
@@ -503,7 +503,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Clear the log of emails sent
 	 */
-	function clearEmails() {
+	public function clearEmails() {
 		return $this->mailer->clearEmails();
 	}
 
@@ -516,7 +516,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $content
 	 * @return An array containing the keys: 'type','to','from','subject','content', 'plainContent','attachedFiles','customHeaders','htmlContent',inlineImages'
 	 */
-	function findEmail($to, $from = null, $subject = null, $content = null) {
+	public function findEmail($to, $from = null, $subject = null, $content = null) {
 		return $this->mailer->findEmail($to, $from, $subject, $content);
 	}
 	
@@ -529,7 +529,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $content
 	 * @return An array containing the keys: 'type','to','from','subject','content', 'plainContent','attachedFiles','customHeaders','htmlContent',inlineImages'
 	 */
-	function assertEmailSent($to, $from = null, $subject = null, $content = null) {
+	public function assertEmailSent($to, $from = null, $subject = null, $content = null) {
 		// To do - this needs to be turned into a "real" PHPUnit ass
 		if(!$this->findEmail($to, $from, $subject, $content)) {
 			
@@ -568,7 +568,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *         array('Email' => 'i...@example.com'), 
 	 *      ), $members); 
 	 */
-	function assertDOSContains($matches, $dataObjectSet) {
+	public function assertDOSContains($matches, $dataObjectSet) {
 		$extracted = array();
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
 		
@@ -612,7 +612,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *        array('FirstName' => 'Ingo', 'Surname' => 'Schommer'), 
 	 *      ), $members); 
 	 */
-	function assertDOSEquals($matches, $dataObjectSet) {
+	public function assertDOSEquals($matches, $dataObjectSet) {
 		if(!$dataObjectSet) return false;
 		
 		$extracted = array();
@@ -661,7 +661,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Check that every entry in $members has a Status of 'Active':
 	 *     $this->assertDOSAllMatch(array('Status' => 'Active'), $members); 
 	 */
-	function assertDOSAllMatch($match, $dataObjectSet) {
+	public function assertDOSAllMatch($match, $dataObjectSet) {
 		$extracted = array();
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
 
@@ -697,13 +697,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Returns true if we are currently using a temporary database
 	 */
-	static function using_temp_db() {
+	public static function using_temp_db() {
 		$dbConn = DB::getConn();
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 		return $dbConn && (substr($dbConn->currentDatabase(), 0, strlen($prefix) + 5) == strtolower(sprintf('%stmpdb', $prefix)));
 	}
 	
-	static function kill_temp_db() {
+	public static function kill_temp_db() {
 		// Delete our temporary database
 		if(self::using_temp_db()) {
 			$dbConn = DB::getConn();
@@ -725,7 +725,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Remove all content from the temporary database.
 	 */
-	static function empty_temp_db() {
+	public static function empty_temp_db() {
 		if(self::using_temp_db()) {
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->clearAllData();
@@ -739,7 +739,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 	
-	static function create_temp_db() {
+	public static function create_temp_db() {
 		// Disable PHPUnit error handling
 		restore_error_handler();
 
@@ -766,7 +766,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		return $dbname;
 	}
 	
-	static function delete_all_temp_dbs() {
+	public static function delete_all_temp_dbs() {
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 		foreach(DB::getConn()->allDatabaseNames() as $dbName) {
 			if(preg_match(sprintf('/^%stmpdb[0-9]+$/', $prefix), $dbName)) {
@@ -785,7 +785,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Reset the testing database's schema.
 	 * @param $includeExtraDataObjects If true, the extraDataObjects tables will also be included
 	 */
-	function resetDBSchema($includeExtraDataObjects = false) {
+	public function resetDBSchema($includeExtraDataObjects = false) {
 		if(self::using_temp_db()) {
 			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
 			Injector::inst()->unregisterAllObjects();
@@ -824,7 +824,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Create a member and group with the given permission code, and log in with it.
 	 * Returns the member ID.
 	 */
-	function logInWithPermission($permCode = "ADMIN") {
+	public function logInWithPermission($permCode = "ADMIN") {
 		if(!isset($this->cache_generatedMembers[$permCode])) {
 			$group = Injector::inst()->create('Group');
 			$group->Title = "$permCode group";

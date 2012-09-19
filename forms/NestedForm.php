@@ -13,13 +13,13 @@ class NestedForm extends ViewableData {
 	 * Represent the given form in a tabular style
 	 * @param form The form to decorate.
 	 */
-	function __construct(Form $form) {
+	public function __construct(Form $form) {
 		$this->form = $form;
 		$this->failover = $form;
 		parent::__construct();
 	}
 	
-	function Actions() {
+	public function Actions() {
 		$actions = $this->form->Actions();
 		foreach($actions as $action) {
 			$action->setFullAction('action_' . $action->actionName() 

@@ -6,7 +6,7 @@
  */
 class CurrencyFieldTest extends SapphireTest {
 
-	function testValidate() {
+	public function testValidate() {
 		$f = new CurrencyField('TestField');
 		
 		$f->setValue('123.45');
@@ -46,7 +46,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 	}
 	
-	function testSetValue() {
+	public function testSetValue() {
 		$f = new CurrencyField('TestField');
 		
 		$f->setValue('123.45');
@@ -86,7 +86,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 	}
 	
-	function testDataValue() {
+	public function testDataValue() {
 		$f = new CurrencyField('TestField');
 		
 		$f->setValue('$123.45');

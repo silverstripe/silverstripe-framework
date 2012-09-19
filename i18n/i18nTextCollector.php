@@ -46,7 +46,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * @param $locale
 	 */
-	function __construct($locale = null) {
+	public function __construct($locale = null) {
 		$this->defaultLocale = ($locale) ? $locale : i18n::get_lang_from_locale(i18n::default_locale());
 		$this->basePath = Director::baseFolder();
 		$this->baseSavePath = Director::baseFolder();
@@ -157,7 +157,7 @@ class i18nTextCollector extends Object {
 	 * @return array $entities An array of entities found in the files that comprise the module
 	 * @todo Why the type juggling for $this->collectFromBlah()? They always return arrays.
 	 */
-	protected function processModule($module) {	
+	protected function processModule($module) {
 		$entities = array();
 
 		// Search for calls in code files if these exists
@@ -326,7 +326,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * @uses i18nEntityProvider
 	 */
-	function collectFromEntityProviders($filePath, $module = null) {
+	public function collectFromEntityProviders($filePath, $module = null) {
 		$entities = array();
 
 		// HACK Ugly workaround to avoid "Cannot redeclare class PHPUnit_Framework_TestResult" error
@@ -438,7 +438,7 @@ interface i18nTextCollector_Writer {
 	 * Usually the webroot set through {@link Director::baseFolder()}. Can be overwritten for testing or export purposes.
 	 * @return Boolean success
 	 */
-	function write($entities, $locale, $path);
+	public function write($entities, $locale, $path);
 }
 
 /**
@@ -573,23 +573,23 @@ class i18nTextCollector_Parser extends SSTemplateParser {
 	static $entities = array();
 	static $currentEntity = array();
 
-	function Translate__construct(&$res) {
+	public function Translate__construct(&$res) {
 		self::$currentEntity = array(null,null,null); //start with empty array
 	}
 
-	function Translate_Entity(&$res, $sub) {
+	public function Translate_Entity(&$res, $sub) {
 		self::$currentEntity[0] = $sub['text']; //entity
 	}
 
-	function Translate_Default(&$res, $sub) {
+	public function Translate_Default(&$res, $sub) {
 		self::$currentEntity[1] = $sub['String']['text']; //value
 	}
 
-	function Translate_Context(&$res, $sub) {
+	public function Translate_Context(&$res, $sub) {
 		self::$currentEntity[2] = $sub['String']['text']; //comment
 	}
 
-	function Translate__finalise(&$res) {
+	public function Translate__finalise(&$res) {
 		// set the entity name and the value (default), as well as the context (comment)
 		// priority is no longer used, so that is blank
 		self::$entities[self::$currentEntity[0]] = array(self::$currentEntity[1],null,self::$currentEntity[2]);
@@ -598,7 +598,7 @@ class i18nTextCollector_Parser extends SSTemplateParser {
 	/**
 	 * Parses a template and returns any translatable entities
 	 */
-	static function GetTranslatables($template) {
+	public static function GetTranslatables($template) {
 		self::$entities = array();
 
 		// Run the parser and throw away the result

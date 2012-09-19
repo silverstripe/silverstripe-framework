@@ -9,12 +9,12 @@
  */
 class ObjectTest extends SapphireTest {
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		Injector::inst()->unregisterAllObjects();
 	}
 	
-	function testHasmethodBehaviour() {
+	public function testHasmethodBehaviour() {
 		$obj = new ObjectTest_ExtendTest();
 
 		$this->assertTrue($obj->hasMethod('extendableMethod'), "Extension method found in original spelling");
@@ -52,7 +52,7 @@ class ObjectTest extends SapphireTest {
 		
 	}
 	
-	function testSingletonCreation() {
+	public function testSingletonCreation() {
 		$myObject = singleton('ObjectTest_MyObject');
 		$this->assertEquals($myObject->class, 'ObjectTest_MyObject', 'singletons are creating a correct class instance');
 		$this->assertEquals(get_class($myObject), 'ObjectTest_MyObject', 'singletons are creating a correct class instance');
@@ -66,7 +66,7 @@ class ObjectTest extends SapphireTest {
 		$this->assertTrue($myFirstObject === $mySecondObject, 'singletons are using the same object on subsequent calls');
 	}
 	
-	function testStaticGetterMethod() {
+	public function testStaticGetterMethod() {
 		$obj = singleton('ObjectTest_MyObject');
 		$this->assertEquals(
 			ObjectTest_MyObject::$mystaticProperty,
@@ -75,7 +75,7 @@ class ObjectTest extends SapphireTest {
 		);
 	}
 	
-	function testStaticInheritanceGetters() {
+	public function testStaticInheritanceGetters() {
 		$obj = singleton('ObjectTest_MyObject');
 		$subObj = singleton('ObjectTest_MyObject');
 		$this->assertEquals(
@@ -85,7 +85,7 @@ class ObjectTest extends SapphireTest {
 		);
 	}
 	
-	function testStaticSettingOnSingletons() {
+	public function testStaticSettingOnSingletons() {
 		$singleton1 = singleton('ObjectTest_MyObject');
 		$singleton2 = singleton('ObjectTest_MyObject');
 		$singleton1->set_stat('mystaticProperty', 'changed');
@@ -96,7 +96,7 @@ class ObjectTest extends SapphireTest {
 		);
 	}
 	
-	function testStaticSettingOnInstances() {
+	public function testStaticSettingOnInstances() {
 		$instance1 = new ObjectTest_MyObject();
 		$instance2 = new ObjectTest_MyObject();
 		$instance1->set_stat('mystaticProperty', 'changed');
@@ -356,22 +356,22 @@ class ObjectTest extends SapphireTest {
  */
 
 class ObjectTest_T1A extends Object {
-	function testMethod() {
+	public function testMethod() {
 		return true;
 	}
-	function otherMethod() {
+	public function otherMethod() {
 		return true;
 	}
 }
 
 class ObjectTest_T1B extends Object {
-	function someMethod() {
+	public function someMethod() {
 		return true;
 	}
 }
 
 class ObjectTest_T1C extends Object {
-	function t1cMethod() {
+	public function t1cMethod() {
 		return true;
 	}
 }
@@ -380,7 +380,7 @@ class ObjectTest_T2 extends Object {
 	protected $failover;
 	protected $failoverArr = array();
 	
-	function __construct() {
+	public function __construct() {
 		$this->failover = new ObjectTest_T1A();
 		$this->failoverArr[0] = new ObjectTest_T1B();
 		$this->failoverArr[1] = new ObjectTest_T1C();
@@ -388,7 +388,7 @@ class ObjectTest_T2 extends Object {
 		parent::__construct();
 	}
 
-	function defineMethods() {
+	public function defineMethods() {
 		$this->addWrapperMethod('Wrapping', 'wrappedMethod');
 		
 		$this->addMethodsFrom('failover');
@@ -398,11 +398,11 @@ class ObjectTest_T2 extends Object {
 		$this->createMethod('testCreateMethod', 'return "created";');
 	}
 	
-	function wrappedMethod($val) {
+	public function wrappedMethod($val) {
 		return $val;		
 	}
 	
-	function normalMethod() {
+	public function normalMethod() {
 		return true;
 	}
 	

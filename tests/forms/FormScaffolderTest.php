@@ -18,7 +18,7 @@ class FormScaffolderTest extends SapphireTest {
 	);
 	
 	
-	function testGetCMSFieldsSingleton() {
+	public function testGetCMSFieldsSingleton() {
 		$article = new FormScaffolderTest_Article;
 		$fields = $article->getCMSFields();
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
@@ -31,7 +31,7 @@ class FormScaffolderTest extends SapphireTest {
 		$this->assertNull($fields->dataFieldByName('Tags'), 'getCMSFields() doesnt include many_many fields if no ID is present');
 	}
 	
-	function testGetCMSFieldsInstance() {
+	public function testGetCMSFieldsInstance() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
 		$fields = $article1->getCMSFields();
@@ -42,7 +42,7 @@ class FormScaffolderTest extends SapphireTest {
 		$this->assertNotNull($fields->dataFieldByName('Tags'), 'getCMSFields() includes many_many fields if ID is present on instances');
 	}
 	
-	function testUpdateCMSFields() {
+	public function testUpdateCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 		
 		$fields = $article1->getCMSFields();
@@ -55,7 +55,7 @@ class FormScaffolderTest extends SapphireTest {
 		);
 	}
 	
-	function testRestrictCMSFields() {
+	public function testRestrictCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
 		$fields = $article1->scaffoldFormFields(array(
@@ -68,7 +68,7 @@ class FormScaffolderTest extends SapphireTest {
 		$this->assertNull($fields->dataFieldByName('Content'), 'getCMSFields() doesnt include fields left out in a "restrictFields" definition');
 	}
 	
-	function testFieldClassesOnGetCMSFields() {
+	public function testFieldClassesOnGetCMSFields() {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
 		$fields = $article1->scaffoldFormFields(array(
@@ -87,7 +87,7 @@ class FormScaffolderTest extends SapphireTest {
 		);
 	}
 	
-	function testGetFormFields() {
+	public function testGetFormFields() {
 		$fields = singleton('FormScaffolderTest_Article')->getFrontEndFields();
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom(singleton('FormScaffolderTest_Article'));
@@ -130,7 +130,7 @@ class FormScaffolderTest_ArticleExtension extends DataExtension implements TestO
 		'ExtendedField' => 'Varchar'
 	);
 
-	function updateCMSFields(FieldList $fields) {
+	public function updateCMSFields(FieldList $fields) {
 		$fields->addFieldToTab('Root.Main',
 			new TextField('AddedExtensionField')
 		);

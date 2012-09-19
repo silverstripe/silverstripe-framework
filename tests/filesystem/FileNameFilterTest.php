@@ -5,7 +5,7 @@
  */
 class FileNameFilterTest extends SapphireTest {
 	
-	function testFilter() {
+	public function testFilter() {
 		$name = 'Brötchen  für allë-mit_Unterstrich!.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(false);
@@ -15,7 +15,7 @@ class FileNameFilterTest extends SapphireTest {
 		);
 	}
 	
-	function testFilterWithTransliterator() {
+	public function testFilterWithTransliterator() {
 		$name = 'Brötchen  für allë-mit_Unterstrich!.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(new SS_Transliterator());
@@ -25,7 +25,7 @@ class FileNameFilterTest extends SapphireTest {
 		);
 	}
 	
-	function testFilterWithCustomRules() {
+	public function testFilterWithCustomRules() {
 		$name = 'Kuchen ist besser.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(false);
@@ -36,7 +36,7 @@ class FileNameFilterTest extends SapphireTest {
 		);
 	}
 	
-	function testFilterWithEmptyString() {
+	public function testFilterWithEmptyString() {
 		$name = 'ö ö ö.jpg';
 		$filter = new FileNameFilter();
 		$filter->setTransliterator(new SS_Transliterator());

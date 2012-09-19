@@ -11,7 +11,7 @@ class SS_DAG implements IteratorAggregate {
 	/** @var array - The edges in the graph, in $to_idx => [$from_idx1, $from_idx2, ...] format */
 	protected $dag;
 
-	function __construct($data = null) {
+	public function __construct($data = null) {
 		$data = $data ? array_values($data) : array();
 
 		$this->data = $data;
@@ -22,7 +22,7 @@ class SS_DAG implements IteratorAggregate {
 	 * Add another node/vertex
 	 * @param $item anything - The item to add to the graph
 	 */
-	function additem($item) {
+	public function additem($item) {
 		$this->data[] = $item;
 		$this->dag[] = array();
 	}
@@ -34,7 +34,7 @@ class SS_DAG implements IteratorAggregate {
 	 *
 	 * When passing actual nodes (as opposed to indexes), uses array_search with strict = true to find
 	 */
-	function addedge($from, $to) {
+	public function addedge($from, $to) {
 		$i = is_numeric($from) ? $from : array_search($from, $this->data, true);
 		$j = is_numeric($to) ? $to : array_search($to, $this->data, true);
 
@@ -50,7 +50,7 @@ class SS_DAG implements IteratorAggregate {
 	 * @return array - The nodes
 	 * @throws Exception - If the graph is cyclic (and so can't be sorted)
 	 */
-	function sort() {
+	public function sort() {
 		$data = $this->data; $dag = $this->dag; $sorted = array();
 
 		while (true) {
@@ -75,7 +75,7 @@ class SS_DAG implements IteratorAggregate {
 		return $sorted;
 	}
 
-	function getIterator() {
+	public function getIterator() {
 		return new SS_DAG_Iterator($this->data, $this->dag);
 	}
 }
@@ -84,7 +84,7 @@ class SS_DAG_CyclicException extends Exception {
 
 	public $dag;
 
-	function __construct($message, $dag) {
+	public function __construct($message, $dag) {
 		$this->dag = $dag;
 		parent::__construct($message);
 	}
@@ -99,17 +99,17 @@ class SS_DAG_Iterator implements Iterator {
 	protected $dagkeys;
 	protected $i;
 
-	function __construct($data, $dag) {
+	public function __construct($data, $dag) {
 		$this->data = $data;
 		$this->dag = $dag;
 		$this->rewind();
 	}
 
-	function key() {
+	public function key() {
 		return $this->i;
 	}
 
-	function current() {
+	public function current() {
 		$res = array();
 
 		$res['from'] = $this->data[$this->i];
@@ -120,16 +120,16 @@ class SS_DAG_Iterator implements Iterator {
 		return $res;
 	}
 
-	function next() {
+	public function next() {
 		$this->i = array_shift($this->dagkeys);
 	}
 
-	function rewind() {
+	public function rewind() {
 		$this->dagkeys = array_keys($this->dag);
 		$this->next();
 	}
 
-	function valid() {
+	public function valid() {
 		return $this->i !== null;
 	}
 }

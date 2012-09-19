@@ -35,7 +35,7 @@ class SapphireREPL extends Controller {
 		throw new Exception(sprintf("%s:%d\r\n%s", $errfile, $errline, $errstr));
 	}
 
-	function index() {
+	public function index() {
 		if(!Director::is_cli()) return "The SilverStripe Interactive Command-line doesn't work in a web browser.  Use 'sake interactive' from the command-line to run.";
 
 

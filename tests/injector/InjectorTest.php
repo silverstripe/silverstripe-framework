@@ -595,7 +595,7 @@ class SSObjectCreator extends InjectionCreator {
 	 * Parses a class-spec, such as "Versioned('Stage','Live')", as passed to create_from_string().
 	 * Returns a 2-elemnent array, with classname and arguments
 	 */
-	static function parse_class_spec($classSpec) {
+	public static function parse_class_spec($classSpec) {
 		$tokens = token_get_all("<?php $classSpec");
 		$class = null;
 		$args = array();

@@ -20,13 +20,13 @@ abstract class CMSBatchAction extends Object {
 	/**
 	 * The the text to show in the dropdown for this action
 	 */
-	abstract function getActionTitle();
+	abstract public function getActionTitle();
 	
 	/**
 	 * Run this action for the given set of pages.
 	 * Return a set of status-updated JavaScript to return to the CMS.
 	 */
-	abstract function run(SS_List $objs);
+	abstract public function run(SS_List $objs);
 
 	/**
 	 * Helper method for responding to a back action request
@@ -111,7 +111,7 @@ abstract class CMSBatchAction extends Object {
 	 * @param $checkStagePages Set to true if you want to check stage pages
 	 * @param $checkLivePages Set to true if you want to check live pages (e.g, for deleted-from-draft)
 	 */
-	function applicablePagesHelper($ids, $methodName, $checkStagePages = true, $checkLivePages = true) {
+	public function applicablePagesHelper($ids, $methodName, $checkStagePages = true, $checkLivePages = true) {
 		if(!is_array($ids)) user_error("Bad \$ids passed to applicablePagesHelper()", E_USER_WARNING);
 		if(!is_string($methodName)) user_error("Bad \$methodName passed to applicablePagesHelper()", E_USER_WARNING);
 		
@@ -159,14 +159,14 @@ abstract class CMSBatchAction extends Object {
 
 	
 	// if your batchaction has parameters, return a FieldList here
-	function getParameterFields() {
+	public function getParameterFields() {
 		return false;
 	}
 	
 	/**
 	 * If you wish to restrict the batch action to some users, overload this function.
 	 */
-	function canView() {
+	public function canView() {
 		return true;
 	}
 }
