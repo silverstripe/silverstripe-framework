@@ -133,7 +133,7 @@ sk:
   DatetimeField:
     NOTSET: 'Nie je nastavené'
   Director:
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Neplatná požiadavka'
   DropdownField:
     CHOOSE: '(Vyberte si)'
   EmailField:
@@ -154,8 +154,8 @@ sk:
     GzType: 'GZIP komprimačný súbor'
     HtlType: 'HTML súbor'
     HtmlType: 'HTML súbor'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSION: 'Extenzia nie je povolená (platné: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extenzia nie je povolená'
     IcoType: 'Icon obrázok'
     JpgType: 'JPEG obrázok - vhodné pre fotografie'
     JsType: 'Javascript súbor'
@@ -168,8 +168,8 @@ sk:
     PdfType: 'Adobe Acrobat PDF súbor'
     PngType: 'PNG obrázok - vhodný univerzálny formát'
     SINGULARNAME: Súbor
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGE: 'Veľkosť súboru je príliš veľká, maximum {size} je povolené'
+    TOOLARGESHORT: 'Veľkosť súboru prekračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Názov
     WavType: 'WAV audo súbor'
@@ -226,7 +226,7 @@ sk:
     PRINTEDAT: 'Vytlačené v'
     PRINTEDBY: Vytlačené
     PlaceHolder: 'Vyhľadať {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     RelationSearch: 'Vzťah hľadania'
     ResetFilter: Reset
   GridFieldAction_Delete:
@@ -263,7 +263,7 @@ sk:
     ResultDeleted: 'Vymazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed: 'Nekonečná smyčka sa nachádza v {type} hierarchii. Prosím zmeňte rodiča pre vyriešenie tohto problému'
   HtmlEditorField:
     ADDURL: 'Pridať URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozmery'
@@ -288,12 +288,12 @@ sk:
     FindInFolder: 'Vyhľadať v priečinku'
     IMAGEALT: 'Atlernatívny text (alt)'
     IMAGEALTTEXT: 'Atlernatívni text (alt) - vypísaní pokiaľ nemože byť zobrazení obrázok'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, keď obrázok nemôže byť zobrazený'
     IMAGEDIMENSIONS: Rozmery
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Text titulky (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
     IMAGEWIDTHPX: Šírka
     INSERTMEDIA: 'Vložiť média'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
@@ -307,7 +307,7 @@ sk:
     LINKTO: 'Odkázať na'
     PAGE: Stránku
     URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
     UpdateMEDIA: 'Aktualizovať média'
   Image:
     PLURALNAME: Súbory
@@ -320,7 +320,7 @@ sk:
   Image_iframe.ss:
     TITLE: 'Rámec pre nahranie obrázku'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
     DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
@@ -330,7 +330,7 @@ sk:
     PERMDEFAULT: 'Vyberte si prosím metódu autentifikácie a zadajte svoje prístupové údaje k CMS.'
     PLEASESAVE: 'Prosím uložte stránku: Táto stránka nemôže byť aktualizovaná, lebo ešte nebola uložená.'
     PreviewButton: Náhľad
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
     VersionUnknown: neznáme
   LeftAndMain_Menu.ss:
@@ -430,9 +430,9 @@ sk:
     Title: 'Dátové modely'
     UPDATEDRECORDS: 'Aktualizovaných {count} záznamov.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECFIELDS: 'Stĺpce databázy'
     IMPORTSPECLINK: 'Zobraziť špecifikáciu pre %s'
-    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECRELATIONS: Relácie
     IMPORTSPECTITLE: 'Špecifikácia pre %s'
   ModelAdmin_Tools.ss:
     FILTER: Filtrovať
@@ -446,7 +446,7 @@ sk:
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}'' nie je číslo, iba čísla môžu byť akceptované pre toto pole'
   Pagination:
     Page: Stránka
     View: Zobraziť
@@ -488,10 +488,10 @@ sk:
     LOGGEDOUT: 'Boli ste odhlásený. Ak sa chcete znovu prihlásiť, zadajte svoje prihlasovacie údaje.'
     LOGIN: Prihlásiť
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je prošlý.</p><p>Môžte požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo až <a href="{link2}">sa prihlásite</a>.</p>'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'Odkaz na resetovanie hesla bol odoslaný na ''{email}'''
+    PASSWORDSENTTEXT: 'Ďakujeme! Resetovací odkaz bol odoslaný na ''''{email}'''', pokiaľ účet existuje pre túto emailovú adresu.'
   SecurityAdmin:
     ACCESS_HELP: 'Povoliť prezeranie, pridávanie a úpravu uživaťeľov, ako aj pridelovanie právomoci pre nich.'
     APPLY_ROLES: 'Aplikovať úlohy skupinám'
@@ -563,7 +563,7 @@ sk:
     FROMCOMPUTERINFO: 'Vyberte zo súborov'
     FROMFILES: 'Zo súborov'
     HOTLINKINFO: 'Info: Tento obrázok bude "hotlinkovaný". Uistete sa prosím, že máte oprávnenie od pôvodneho tvorcu webu, aby sa tak stalo.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILES: 'Maximálny počet {count} súbor(ov) prekročený.'
     MAXNUMBEROFFILESSHORT: 'Môžte nahrať iba {count} súborov'
     REMOVE: Odstrániť
     REMOVEERROR: 'Chyba odstránenia súboru'
