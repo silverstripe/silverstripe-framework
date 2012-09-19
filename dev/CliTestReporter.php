@@ -73,13 +73,13 @@ class CliTestReporter extends SapphireTestReporter {
 		$colCount++;
 		if($colCount % 80 == 0) echo " - $colCount\n";
 
-		parent::endTest($test, $time);
 		$this->writeTest($this->currentTest);
+		parent::endTest($test, $time);
 	}
 	
 	
 	protected function writeTest($test) {
-		if ($test['status'] != 1) {
+		if ($test['status'] != TEST_SUCCESS) {
 			$filteredTrace = array();
 			$ignoredClasses = array('TestRunner');
 			foreach($test['trace'] as $item) {
