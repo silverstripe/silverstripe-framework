@@ -15,19 +15,19 @@ cs:
     TYPE: Typ
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    ChooseFiles: 'Vyberte soubory'
+    DRAGFILESHERE: 'Táhni soubory sem'
+    DROPAREA: 'Oblast upustění'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Editovat & organizovat'
     EDITINFO: 'Edit files'
     FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Vyberte soubory z vašeho počítače'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     TOUPLOAD: 'Vyberte soubory k nahrání...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: NEBO
   BBCodeParser:
     ALIGNEMENT: Zarovnání
     ALIGNEMENTEXAMPLE: 'zarovnat vpravo'
@@ -216,19 +216,19 @@ cs:
     UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
-    Filter: Filter
+    Filter: Filtr
     FilterBy: 'Filter by '
     Find: Find
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    NewRecord: 'Nový %s'
+    NoItemsFound: 'Žádné položky'
+    PRINTEDAT: 'Vytištěno v'
+    PRINTEDBY: Vytištěno
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    RelationSearch: 'Vztah hledání'
+    ResetFilter: Resetovat
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
@@ -246,7 +246,7 @@ cs:
     DefaultGroupTitleAdministrators: Administrátoři
     DefaultGroupTitleContentAuthors: 'Autoři obsahu'
     Description: Popis
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Když vyberete nadřizenou skupinu, tato skupina bude mít všechny její role'
     Locked: 'Zamčený?'
     NoRoles: 'Žádné role'
     PLURALNAME: Groups
@@ -352,7 +352,7 @@ cs:
     CONFIRMPASSWORD: 'Potvrďte heslo'
     DATEFORMAT: 'Formát datumu'
     DefaultAdminFirstname: 'Implicitní Admin'
-    DefaultDateTime: default
+    DefaultDateTime: výchozí
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Nové heslo nesmí být prázdné, zkuste to znovu'
     ENTEREMAIL: 'Zadejte e-mailovou adresu pro získání odkazu na restart hesla.'
@@ -460,16 +460,16 @@ cs:
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Pouze administrátor může použít'
-    PLURALNAME: Roles
+    PLURALNAME: Role
     SINGULARNAME: Role
     Title: Název
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Kódy role oprávnění'
+    SINGULARNAME: 'Kód role oprávnění'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a přístupová práva'
   PhoneNumberField:
@@ -499,8 +499,8 @@ cs:
     EDITPERMISSIONS: 'Upravit oprávnění pro skupiny'
     EDITPERMISSIONS_HELP: 'Možnost editovat oprávnění a IP adresy pro skupinu. Vyžaduje oprávnění  pro "Přístup do sekce ''Bezpečnost''".'
     GROUPNAME: 'Jméno skupiny'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Importovat skupiny'
+    IMPORTUSERS: 'Importovat uživaté'
     MEMBERS: Členové
     MENUTITLE: Security
     MemberListCaution: 'Varování: Odstranění členů z tohoto seznamu způsobí, že členové budou odtraněni ze všech skupin a databáze'
@@ -509,7 +509,7 @@ cs:
     ROLES: Role
     ROLESDESCRIPTION: 'Tato sekce umožňuje přidat role této skupině. Role jsou logické seskupení oprávnění, které mohou být změněné v záložce Role'
     TABROLES: Role
-    Users: Users
+    Users: Uživatelé
   SecurityAdmin_MemberImportForm:
     BtnImport: Import
     FileFieldLabel: 'Soubor CSV <small>(Povoleny přípony: *.csv)</small>'
@@ -547,29 +547,29 @@ cs:
     LESS: méně
     MORE: více
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    ATTACHFILE: 'Připojit soubor'
+    ATTACHFILES: 'Připojit soubory'
+    AttachFile: 'Připojit soubor(y)'
     DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DELETEINFO: 'Trvale odstranit tento soubor z ůložiště souborů'
+    DOEDIT: Uložit
+    DROPFILE: 'pusť soubor'
+    DROPFILES: 'pusť soubory'
     Dimensions: Dimensions
     EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
+    EDITINFO: 'Editovat tento soubor'
+    FIELDNOTSET: 'Žádná informace o souboru'
+    FROMCOMPUTER: 'Z vašeho počítače'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'Ze souborů'
     HOTLINKINFO: 'Info: Tento obrázek bude "hotlinkován". Ujistěte se prosím, že máte oprávnění od původního tvůrce webu, aby se tak stalo.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
+    REMOVEERROR: 'Chyba odstranění souboru'
+    REMOVEINFO: 'Odtranit tento soubor odsud, ale nesmazat ho z ůložiště souborů'
+    STARTALL: 'Začni vše'
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: Uloženo
   Versioned:
     has_many_Versions: Verze
