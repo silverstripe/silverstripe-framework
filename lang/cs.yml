@@ -7,7 +7,7 @@ cs:
     CREATED: 'Poprvé nahráno'
     DIM: Rozměry
     FILENAME: 'Název souboru'
-    FOLDER: Folder
+    FOLDER: Složka
     LASTEDIT: 'Naposledy změněno'
     OWNER: Vlastník
     SIZE: Velikost
@@ -18,15 +18,15 @@ cs:
     ChooseFiles: 'Vyberte soubory'
     DRAGFILESHERE: 'Táhni soubory sem'
     DROPAREA: 'Oblast upustění'
-    EDITALL: 'Edit all'
+    EDITALL: 'Editovat vše'
     EDITANDORGANIZE: 'Editovat & organizovat'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Soubory
     FROMCOMPUTER: 'Vyberte soubory z vašeho počítače'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
+    TOTAL: Celkem
     TOUPLOAD: 'Vyberte soubory k nahrání...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Prosím čekejte... probíhá nahrávání'
     UPLOADOR: NEBO
   BBCodeParser:
     ALIGNEMENT: Zarovnání
@@ -64,7 +64,7 @@ cs:
     ANY: Jakkýkoliv
     1: Ano
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: Nahrávání...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Přístup k ''{title}'' sekci'
@@ -84,7 +84,7 @@ cs:
     - Ano
   ComplexTableField:
     CLOSEPOPUP: Zavřít
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: 'Přidáno {name}'
     SUCCESSEDIT: 'Uloženo %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Přidat %s'
@@ -120,8 +120,8 @@ cs:
     MONTHS: měsíce
     SEC: sekunda
     SECS: sekundy
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFAGO: '{difference} před'
+    TIMEDIFFIN: 'v {difference}'
     YEAR: rok
     YEARS: roky
   DateField:
@@ -133,7 +133,7 @@ cs:
   DatetimeField:
     NOTSET: Nenastaveno
   Director:
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Neplatný požadavek'
   DropdownField:
     CHOOSE: (Vyberte)
   EmailField:
@@ -180,16 +180,16 @@ cs:
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    DISALLOWEDFILETYPE: 'Tento typ souboru není povoleno náhrát'
     FILE: Soubor
     FROMCOMPUTER: 'Z tvého počítače'
     FROMFILESTORE: 'Ze souborového úložiště'
     NOSOURCE: 'Vyberte zdrojový soubor k připojení, prosím'
     REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Rámec pro nahrání obrázku'
   Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS: 'Synchronizace kompletní: {createdcount} položek vytvořeno, {deletedcount} položek smazanáno'
   Folder:
     PLURALNAME: Folders
     SINGULARNAME: Folder
@@ -212,33 +212,33 @@ cs:
     NONE: žádný
   GridAction:
     DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    Delete: Smazat
+    UnlinkRelation: Odpojit
   GridField:
-    Add: 'Add {name}'
+    Add: 'Přidat {name}'
     Filter: Filtr
-    FilterBy: 'Filter by '
-    Find: Find
-    LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
+    FilterBy: 'Filtrovat podle'
+    Find: Hledat
+    LEVELUP: 'O úroveň výše'
+    LinkExisting: 'Odkaz existující'
     NewRecord: 'Nový %s'
     NoItemsFound: 'Žádné položky'
     PRINTEDAT: 'Vytištěno v'
     PRINTEDBY: Vytištěno
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolder: 'Hledat {type}'
+    PlaceHolderWithLabels: 'Hledat {type} podle {name}'
     RelationSearch: 'Vztah hledání'
     ResetFilter: Resetovat
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Žádná oprávnění mazat'
   GridFieldDetailForm:
     CancelBtn: Storno
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
+    Create: Vytvořit
+    Delete: Smazat
+    DeletePermissionsFailure: 'Žádná oprávnění mazat'
+    Deleted: 'Smazáno %s %s'
+    Save: Uložit
+    Saved: 'Uloženo %s %s'
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Přidat roli pro tuto skupinu'
@@ -265,35 +265,35 @@ cs:
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ADDURL: 'Přidat URL'
+    ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozměry'
     ANCHORVALUE: 'Záložka (kotva)'
-    BUTTONINSERT: Insert
+    BUTTONINSERT: Vložit
     BUTTONINSERTLINK: 'Vložit odkaz'
     BUTTONREMOVELINK: 'Odstranit odkaz'
-    BUTTONUpdate: Update
+    BUTTONUpdate: Aktualizovat
     CAPTIONTEXT: 'Text popisku'
     CSSCLASS: 'Zarovnání / styl'
     CSSCLASSCENTER: 'Na střed, samotné.'
     CSSCLASSLEFT: 'Vlevo, s obtékajícím textem.'
     CSSCLASSLEFTALONE: 'Na levo, samostatně.'
     CSSCLASSRIGHT: 'Vpravo, s obtékajícím textem.'
-    DETAILS: Details
+    DETAILS: Detaily
     EMAIL: 'Emailovou adresu'
     FILE: Soubor
     FOLDER: Složka
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
+    FROMCMS: 'Z CMS'
+    FROMCOMPUTER: 'Z tvého počítače'
+    FROMWEB: 'Z webu'
+    FindInFolder: 'Hledat ve složce'
+    IMAGEALT: 'Alternativní text (alt)'
     IMAGEALTTEXT: 'Alternativní text (alt) - bude ukázán, když obrázek nemúže být zobrazen'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Zobrazeno na obrazovce, když obrázek nemůže být zobrazen'
     IMAGEDIMENSIONS: Rozměry
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
     IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGETITLETEXTDESC: 'Pro další informace o obrázku'
     IMAGEWIDTHPX: Šířka
     INSERTMEDIA: 'Insert Media'
     LINK: 'Vložit nebo upravit odkaz'
@@ -307,7 +307,7 @@ cs:
     LINKTO: 'Odkázat na'
     PAGE: Stránku
     URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Update Media'
   Image:
     PLURALNAME: Files
@@ -322,7 +322,7 @@ cs:
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Smazáno.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Akcie
     HELP: Nápověda
     PAGETYPE: 'Typ stránky:'
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
@@ -332,7 +332,7 @@ cs:
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Uloženo.
-    VersionUnknown: unknown
+    VersionUnknown: neznáme
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -343,7 +343,7 @@ cs:
     SINGULARNAME: 'Login Attempt'
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Přidat skupinu'
     BUTTONCHANGEPASSWORD: 'Změnit heslo'
     BUTTONLOGIN: 'Přihlásit se'
     BUTTONLOGINOTHER: 'Přihlásit se jako někdo jiný'
@@ -362,8 +362,8 @@ cs:
     ERRORWRONGCRED: 'Toto nevypadá jako správná emailová adresa nebo heslo. Prosím zkuste to znovu.'
     FIRSTNAME: 'Křestní jméno'
     INTERFACELANG: 'Jazyk rozhraní'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Nemohli jsme připustit, že heslo: {password}'
+    LOGGEDINAS: 'Jste přihlášen/a jako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo
     PLURALNAME: Členové
@@ -375,8 +375,8 @@ cs:
     SURNAME: Příjmení
     TIMEFORMAT: 'Formát času'
     VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejnou %s'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    ValidationIdentifierFailed: 'Nemůžete přepsat existujícího člena #{id} s identickým identifikátorem ({name} = {value}))'
+    WELCOMEBACK: 'Vítejte zpět, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
     db_LastVisited: 'Datum poslední návštěvy'
@@ -388,26 +388,26 @@ cs:
   MemberAuthenticator:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
+    'APPLY FILTER': 'Použít filtr'
+    Custom: Uživatelské
+    DATEFORMATBAD: 'Formát datumu je neplatný'
+    DAYNOLEADING: 'Den měsíce bez úvodní nuly'
+    DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
+    FOURDIGITYEAR: 'Čtyřčíslí roku'
+    FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
+    HOURNOLEADING: 'Hodina bez úvodní nuly'
+    MINUTENOLEADING: 'Minuta bez úvodní nuly'
+    MONTHNOLEADING: 'Číslo měsíce bez úvodní nuly'
+    Preview: Náhled
+    SHORTMONTH: 'Krátký název měsíce (např. Čer)'
+    TOGGLEHELP: 'Přepni nápovědu formátování'
+    TWODIGITDAY: 'Dvojčíslí dne měsíce'
+    TWODIGITHOUR: 'Dvojčíslí hodiny (00 až 23)'
+    TWODIGITMINUTE: 'Dvojčíslí minuty (00 až 59)'
+    TWODIGITMONTH: 'Dvojčíslí měsíce (01=Leden, atď.)'
+    TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
+    TWODIGITYEAR: 'Dvojčíslí roku'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -426,7 +426,7 @@ cs:
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Prosím, vyhledejte soubor CSV pro import'
     NOIMPORT: 'Nic k importu'
-    RESET: Reset
+    RESET: Resetovat
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
@@ -435,18 +435,18 @@ cs:
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
+    FILTER: Filtrovat
+    IMPORT: Importovat
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
+    IMPORT_TAB_HEADER: Importovat
+    SEARCHLISTINGS: Hledat
   MoneyField:
     FIELDLABELAMOUNT: Částka
     FIELDLABELCURRENCY: Měna
   NullableField:
     IsNullLabel: 'Je nulové'
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}'' není číslo, pouze čísla mohou být akceptována pro toto pole'
   Pagination:
     Page: Page
     View: View
@@ -454,12 +454,12 @@ cs:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Přístup CMS'
     FULLADMINRIGHTS: 'Plná administrátorská práva'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    FULLADMINRIGHTS_HELP: 'Znamená, a přepíše všechna ostatní přidělená oprávnění.'
     PLURALNAME: Permissions
     SINGULARNAME: Permission
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
+    AssignedTo: 'přiděleno k "{title}"'
+    FromGroup: 'zdědeno ze skupiny "{title}"'
     FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
   PermissionRole:
@@ -502,7 +502,7 @@ cs:
     IMPORTGROUPS: 'Importovat skupiny'
     IMPORTUSERS: 'Importovat uživaté'
     MEMBERS: Členové
-    MENUTITLE: Security
+    MENUTITLE: Bezbečnost
     MemberListCaution: 'Varování: Odstranění členů z tohoto seznamu způsobí, že členové budou odtraněni ze všech skupin a databáze'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Práva
@@ -514,7 +514,7 @@ cs:
     BtnImport: Import
     FileFieldLabel: 'Soubor CSV <small>(Povoleny přípony: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Editovat
   SimpleImageField:
     NOUPLOAD: 'Nebyl nahrán žádný obrázek'
   SiteTree:
@@ -542,7 +542,7 @@ cs:
     VIEWNEXT: 'Zobrazit další'
     VIEWPREVIOUS: 'Zobrazit předchozí'
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Prosím zadejte platný formát času ({format})'
   ToggleField:
     LESS: méně
     MORE: více
@@ -555,7 +555,7 @@ cs:
     DOEDIT: Uložit
     DROPFILE: 'pusť soubor'
     DROPFILES: 'pusť soubory'
-    Dimensions: Dimensions
+    Dimensions: Rozměry
     EDIT: Edit
     EDITINFO: 'Editovat tento soubor'
     FIELDNOTSET: 'Žádná informace o souboru'
@@ -564,8 +564,8 @@ cs:
     FROMFILES: 'Ze souborů'
     HOTLINKINFO: 'Info: Tento obrázek bude "hotlinkován". Ujistěte se prosím, že máte oprávnění od původního tvůrce webu, aby se tak stalo.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILESSHORT: 'Můžete nahrát pouze {count} souborů'
+    REMOVE: Odstranit
     REMOVEERROR: 'Chyba odstranění souboru'
     REMOVEINFO: 'Odtranit tento soubor odsud, ale nesmazat ho z ůložiště souborů'
     STARTALL: 'Začni vše'
