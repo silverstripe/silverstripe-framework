@@ -241,17 +241,17 @@ sk:
     Saved: 'Uložené %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Pridať novú úlohu pre túto skupinu'
+    AddRole: 'Pridať úlohu pre túto skupinu'
     Code: 'Kód skupiny'
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Autori obsahu'
     Description: Popis
-    GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky role'
+    GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky úlohy'
     Locked: 'Zamknuté?'
-    NoRoles: 'Nenašli sa role'
+    NoRoles: 'Nenašli sa úlohy'
     PLURALNAME: Skupiny
     Parent: 'Nadradená skupina'
-    RolesAddEditLink: 'Pridať/upraviť úlohy'
+    RolesAddEditLink: 'Spravovať úlohy'
     SINGULARNAME: Skupina
     Sort: 'Poradie zoradenia'
     has_many_Permissions: Právomoci
@@ -460,18 +460,18 @@ sk:
   PermissionCheckboxSetField:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
-    FromRole: 'zdedené z role "{title}"'
+    FromRole: 'zdedené z úlohy "{title}"'
     FromRoleOnGroup: 'zdediť z úlohy "%s" v skupine "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Iba administrátor môže použiť'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: Úlohy
+    SINGULARNAME: Úloha
     Title: Názov
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Kódy právomocí úloh'
+    SINGULARNAME: 'Kód právomocí úloh'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Role a prístupové práva'
+    PERMISSIONS_CATEGORY: 'Úlohy a prístupové práva'
   PhoneNumberField:
     VALIDATION: 'Prosím zadajte platné telefónne číslo'
   RelationComplexTableField.ss:
