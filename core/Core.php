@@ -304,37 +304,33 @@ function getSysTempDir() {
 /**
  * Returns the temporary folder that silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up
- * 
+ *
  * @param $base The base path to use as the basis for the temp folder name.  Defaults to BASE_PATH,
  * which is usually fine; however, the $base argument can be used to help test.
  */
 function getTempFolder($base = null) {
 	if(!$base) $base = BASE_PATH;
-
-	if($base) {
-		$cachefolder = "silverstripe-cache" . str_replace(array(' ', "/", ":", "\\"), "-", $base);
-	} else {
-		$cachefolder = "silverstripe-cache";
-	}
-
-	$ssTmp = BASE_PATH . "/silverstripe-cache";
-	if(@file_exists($ssTmp)) {
-		return $ssTmp;
-	}
-
-	$sysTmp = sys_get_temp_dir();
+	$tempPath = '';
 	$worked = true;
-	$ssTmp = "$sysTmp/$cachefolder";
 
-	if(!@file_exists($ssTmp)) {
-		$worked = @mkdir($ssTmp);
+	// first, try finding a silverstripe-cache dir built off the base path
+	$tempPath = $base . '/silverstripe-cache';
+	if(@file_exists($tempPath)) {
+		return $tempPath;
 	}
 
+	// failing the above, try finding a namespaced silverstripe-cache dir in the system temp
+	$cacheFolder = '/silverstripe-cache' . str_replace(array(' ', '/', ':', '\\'), '-', $base);
+	$tempPath = sys_get_temp_dir() . $cacheFolder;
+	if(!@file_exists($tempPath)) {
+		$worked = @mkdir($tempPath);
+	}
+
+	// failing to use the system path, attempt to create a local silverstripe-cache dir
 	if(!$worked) {
-		$ssTmp = BASE_PATH . "/silverstripe-cache";
 		$worked = true;
-		if(!@file_exists($ssTmp)) {
-			$worked = @mkdir($ssTmp);
+		if(!@file_exists($tempPath)) {
+			$worked = @mkdir($tempPath);
 		}
 	}
 
@@ -346,7 +342,7 @@ function getTempFolder($base = null) {
 		);
 	}
 
-	return $ssTmp;
+	return $tempPath;
 }
 
 /**
