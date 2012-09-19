@@ -9,12 +9,17 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
+$frameworkPath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+$basePath = rtrim(dirname($frameworkPath), DIRECTORY_SEPARATOR);
+
+require_once $frameworkPath . '/core/TempPath.php';
+
 // Handle incoming request if it's a script call
 if (TinyMCE_Compressor::getParam("js")) {
 	// Default settings
 	$tinyMCECompressor = new TinyMCE_Compressor(array(
 		// CUSTOM SilverStripe
-		'cache_dir' => sys_get_temp_dir()
+		'cache_dir' => getTempFolder($basePath)
 		// CUSTOM END
 	));
 
