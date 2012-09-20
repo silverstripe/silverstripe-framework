@@ -948,7 +948,7 @@ class Requirements_Backend {
 		if((Director::isDev() && !$runningTest && !isset($_REQUEST['combine'])) || !$this->combined_files_enabled) {
 			return;
 		}
-		
+
 		// Make a map of files that could be potentially combined
 		$combinerCheck = array();
 		foreach($this->combine_files as $combinedFile => $sourceItems) {
@@ -997,16 +997,17 @@ class Requirements_Backend {
 			if(!file_exists(dirname($combinedFilePath))) {
 				Filesystem::makeFolder(dirname($combinedFilePath));
 			}
-			
-			// If the file isn't writebale, don't even bother trying to make the combined file
+
+			// If the file isn't writeable, don't even bother trying to make the combined file and return (falls back to uncombined)
 			// Complex test because is_writable fails if the file doesn't exist yet.
-			if((file_exists($combinedFilePath) && !is_writable($combinedFilePath)) ||
-				(!file_exists($combinedFilePath) && !is_writable(dirname($combinedFilePath)))) {
+			if((file_exists($combinedFilePath) && !is_writable($combinedFilePath))
+				|| (!file_exists($combinedFilePath) && !is_writable(dirname($combinedFilePath)))
+			) {
 				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'", E_USER_WARNING);
-				continue;
+				return false;
 			}
 
-			 // Determine if we need to build the combined include
+			// Determine if we need to build the combined include
 			if(file_exists($combinedFilePath) && !isset($_GET['flush'])) {
 				// file exists, check modification date of every contained file
 				$srcLastMod = 0;
