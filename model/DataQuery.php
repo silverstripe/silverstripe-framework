@@ -5,6 +5,9 @@
  * Acts as a wrapper over {@link SQLQuery} and performs all of the query generation.
  * Used extensively by {@link DataList}.
  *
+ * Unlike DataList, modifiers on DataQuery modify the object rather than returning a clone.
+ * DataList is immutable, DataQuery is mutable.
+ *
  * @subpackage model
  * @package framework
  */
@@ -329,7 +332,7 @@ class DataQuery {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-public function max($field) {
+	public function max($field) {
 	    return $this->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)));
 	}
 
@@ -417,12 +420,31 @@ public function max($field) {
 	 */
 	public function having($having) {
 		if($having) {
-			$clone = $this;
-			$clone->query->addHaving($having);
-			return $clone;
-		} else {
-			return $this;
+			$this->query->addHaving($having);
 		}
+		return $this;
+	}
+
+	/**
+	 * Create a disjunctive subgroup.
+	 *
+	 * That is a subgroup joined by OR
+	 *
+	 * @return DataQuery_SubGroup
+	 */
+	public function disjunctiveGroup() {
+		return new DataQuery_SubGroup($this, 'OR');
+	}
+
+	/**
+	 * Create a conjunctive subgroup
+	 *
+	 * That is a subgroup joined by AND
+	 *
+	 * @return DataQuery_SubGroup
+	 */
+	public function conjunctiveGroup() {
+		return new DataQuery_SubGroup($this, 'AND');
 	}
 
 	/**
@@ -441,12 +463,9 @@ public function max($field) {
 	 */
 	public function where($filter) {
 		if($filter) {
-			$clone = $this;
-			$clone->query->addWhere($filter);
-			return $clone;
-		} else {
-			return $this;
+			$this->query->addWhere($filter);
 		}
+		return $this;
 	}
 
 	/**
@@ -460,12 +479,9 @@ public function max($field) {
 	 */
 	public function whereAny($filter) {
 		if($filter) {
-			$clone = $this;
-			$clone->query->addWhereAny($filter);
-			return $clone;
-		} else {
-			return $this;
+			$this->query->addWhereAny($filter);
 		}
+		return $this;
 	}
 	
 	/**
@@ -479,14 +495,13 @@ public function max($field) {
 	 * @return DataQuery
 	 */
 	public function sort($sort = null, $direction = null, $clear = true) {
-		$clone = $this;
 		if($clear) {
-			$clone->query->setOrderBy($sort, $direction);
+			$this->query->setOrderBy($sort, $direction);
 		} else {
-			$clone->query->addOrderBy($sort, $direction);
+			$this->query->addOrderBy($sort, $direction);
 		}
 			
-		return $clone;
+		return $this;
 	}
 	
 	/**
@@ -495,10 +510,8 @@ public function max($field) {
 	 * @return DataQuery
 	 */
 	public function reverseSort() {
-		$clone = $this;
-		
-		$clone->query->reverseOrderBy();
-		return $clone;
+		$this->query->reverseOrderBy();
+		return $this;
 	}
 	
 	/**
@@ -508,9 +521,8 @@ public function max($field) {
 	 * @param int $offset
 	 */
 	public function limit($limit, $offset = 0) {
-		$clone = $this;
-		$clone->query->setLimit($limit, $offset);
-		return $clone;
+		$this->query->setLimit($limit, $offset);
+		return $this;
 	}
 
 	/**
@@ -520,18 +532,15 @@ public function max($field) {
 	public function join($join) {
 		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		if($join) {
-			$clone = $this;
-			$clone->query->addFrom($join);
+			$this->query->addFrom($join);
 			// TODO: This needs to be resolved for all databases
 
 			if(DB::getConn() instanceof MySQLDatabase) {
-				$from = $clone->query->getFrom();
-				$clone->query->setGroupBy(reset($from) . ".\"ID\"");
+				$from = $this->query->getFrom();
+				$this->query->setGroupBy(reset($from) . ".\"ID\"");
 			}
-			return $clone;
-		} else {
-			return $this;
 		}
+		return $this;
 	}
 	
 	/**
@@ -543,12 +552,9 @@ public function max($field) {
 	 */
 	public function innerJoin($table, $onClause, $alias = null) {
 		if($table) {
-			$clone = $this;
-			$clone->query->addInnerJoin($table, $onClause, $alias);
-			return $clone;
-		} else {
-			return $this;
+			$this->query->addInnerJoin($table, $onClause, $alias);
 		}
+		return $this;
 	}
 
 	/**
@@ -560,12 +566,9 @@ public function max($field) {
 	 */
 	public function leftJoin($table, $onClause, $alias = null) {
 		if($table) {
-			$clone = $this;
-			$clone->query->addLeftJoin($table, $onClause, $alias);
-			return $clone;
-		} else {
-			return $this;
+			$this->query->addLeftJoin($table, $onClause, $alias);
 		}
+		return $this;
 	}
 
 	/**
@@ -696,7 +699,7 @@ public function max($field) {
 	
 	/**
 	 * @param  String $field Select statement identifier, either the unquoted column name,
-	 * the full composite SQL statement, or the alias set through {@link SQLQquery->selectField()}.
+	 * the full composite SQL statement, or the alias set through {@link SQLQuery->selectField()}.
 	 * @param  SQLQuery $query
 	 * @return String
 	 */
@@ -744,5 +747,71 @@ public function max($field) {
 		if(isset($this->queryParams[$key])) return $this->queryParams[$key];
 		else return null;
 	}
-	
+}
+
+/**
+ * Represents a subgroup inside a WHERE clause in a {@link DataQuery}
+ *
+ * Stores the clauses for the subgroup inside a specific {@link SQLQuery} object.
+ * All non-where methods call their DataQuery versions, which uses the base
+ * query object.
+ */
+class DataQuery_SubGroup extends DataQuery {
+	protected $whereQuery;
+
+	public function __construct(DataQuery $base, $connective) {
+		$this->dataClass = $base->dataClass;
+		$this->query = $base->query;
+		$this->whereQuery = new SQLQuery;
+		$this->whereQuery->setConnective($connective);
+
+		$base->where($this);
+	}
+
+	/**
+	 * Set the WHERE clause of this query.
+	 * There are two different ways of doing this:
+	 *
+	 * <code>
+	 *  // the entire predicate as a single string
+	 *  $query->where("Column = 'Value'");
+	 *
+	 *  // multiple predicates as an array
+	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
+	 * </code>
+	 *
+	 * @param string|array $where Predicate(s) to set, as escaped SQL statements.
+	 */
+	public function where($filter) {
+		if($filter) {
+			$this->whereQuery->addWhere($filter);
+		}
+		return $this;
+	}
+
+	/**
+	 * Set a WHERE with OR.
+	 * 
+	 * @example $dataQuery->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+	 * @see where()
+	 *
+	 * @param array $filter Escaped SQL statement.
+	 * @return DataQuery
+	 */
+	public function whereAny($filter) {
+		if($filter) {
+			$this->whereQuery->addWhereAny($filter);
+		}
+		return $this;
+	}
+
+	public function __toString() {
+		if(!$this->whereQuery->getWhere()) {
+			// We always need to have something so we don't end up with something like '... AND () AND ...'
+			return '1=1';
+		}
+		$sql = DB::getConn()->sqlWhereToString($this->whereQuery->getWhere(), $this->whereQuery->getConnective());
+		$sql = preg_replace('[^\s*WHERE\s*]', '', $sql);
+		return $sql;
+	}
 }
