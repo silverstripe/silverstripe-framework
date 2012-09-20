@@ -30,7 +30,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	
 	public function testNullSaving() {
 		$obj = new HtmlEditorFieldTest_Object();
-		$editor   = new HtmlEditorField('Content');
+		$editor = new HtmlEditorField('Content');
 		
 		$editor->setValue(null);
 		$editor->saveInto($obj);
@@ -39,29 +39,31 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	
 	public function testImageInsertion() {
 		$obj = new HtmlEditorFieldTest_Object();
-		$editor   = new HtmlEditorField('Content');
+		$editor = new HtmlEditorField('Content');
 		
 		$editor->setValue('<img src="assets/example.jpg" />');
 		$editor->saveInto($obj);
-		
-		$xml = new SimpleXMLElement($obj->Content);
-		$this->assertNotNull($xml['alt'], 'Alt tags are added by default.');
-		$this->assertNotNull($xml['title'], 'Title tags are added by default.');
-		
+
+		$parser = new CSSContentParser($obj->Content);
+		$xml = $parser->getByXpath('//img');
+		$this->assertEquals('', $xml[0]['alt'], 'Alt tags are added by default.');
+		$this->assertEquals('', $xml[0]['title'], 'Title tags are added by default.');
+
 		$editor->setValue('<img src="assets/example.jpg" alt="foo" title="bar" />');
 		$editor->saveInto($obj);
-		
-		$xml = new SimpleXMLElement($obj->Content);
-		$this->assertNotNull('foo', $xml['alt'], 'Alt tags are preserved.');
-		$this->assertNotNull('bar', $xml['title'], 'Title tags are preserved.');
+
+		$parser = new CSSContentParser($obj->Content);
+		$xml = $parser->getByXpath('//img');
+		$this->assertEquals('foo', $xml[0]['alt'], 'Alt tags are preserved.');
+		$this->assertEquals('bar', $xml[0]['title'], 'Title tags are preserved.');
 	}
 	
 	public function testMultiLineSaving() {
 		$obj = $this->objFromFixture('HtmlEditorFieldTest_Object', 'home');
 		$editor   = new HtmlEditorField('Content');
-		$editor->setValue("<p>First Paragraph</p><p>Second Paragraph</p>");
+		$editor->setValue('<p>First Paragraph</p><p>Second Paragraph</p>');
 		$editor->saveInto($obj);
-		$this->assertEquals("<p>First Paragraph</p><p>Second Paragraph</p>", $obj->Content);
+		$this->assertEquals('<p>First Paragraph</p><p>Second Paragraph</p>', $obj->Content);
 	}
 	
 	public function testSavingLinksWithoutHref() {
@@ -72,7 +74,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$editor->saveInto($obj);
 		
 		$this->assertEquals (
-			'<p><a name="example-anchor"/></p>', $obj->Content, 'Saving a link without a href attribute works'
+			'<p><a name="example-anchor"></a></p>', $obj->Content, 'Saving a link without a href attribute works'
 		);
 	}
 
