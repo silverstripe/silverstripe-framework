@@ -88,6 +88,40 @@ class ManyManyListTest extends SapphireTest {
 			$newPlayer->Teams()->sort('Title')->column('ID')
 		);
 	}
+
+	public function testAddingExistingDoesntRemoveExtraFields() {
+		$player = new DataObjectTest_Player();
+		$player->write();
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+
+		$team1->Players()->add($player, array('Position' => 'Captain'));
+		$this->assertEquals(
+			array('Position' => 'Captain'),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Writes extrafields'
+		);
+		
+		$team1->Players()->add($player);
+		$this->assertEquals(
+			array('Position' => 'Captain'),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Retains extrafields on subsequent adds with NULL fields'
+		);
+		
+		$team1->Players()->add($player, array('Position' => 'Defense'));
+		$this->assertEquals(
+			array('Position' => 'Defense'),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Updates extrafields on subsequent adds with fields'
+		);
+		
+		$team1->Players()->add($player, array('Position' => null));
+		$this->assertEquals(
+			array('Position' => null),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Allows clearing of extrafields on subsequent adds'
+		);
+	}
 	
 	public function testSubtractOnAManyManyList() {
 		$allList = ManyManyList::create('DataObjectTest_Player', 'DataObjectTest_Team_Players','DataObjectTest_PlayerID', 'DataObjectTest_TeamID');

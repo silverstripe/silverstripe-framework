@@ -75,17 +75,29 @@ class ManyManyList extends RelationList {
 		if(!$this->foreignID) {
 			throw new Exception("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
 		}
-		
-		// Delete old entries, to prevent duplication
-		$this->removeById($itemID);
 
-		// Insert new entry/entries
+		if($filter = $this->foreignIDFilter()) {
+			$query = new SQLQuery("*", array("\"$this->joinTable\""));
+			$query->setWhere($filter);
+			$hasExisting = ($query->count() > 0);
+		} else {
+			$hasExisting = false;	
+		}
+
+		// Insert or update
 		foreach((array)$this->foreignID as $foreignID) {
 			$manipulation = array();
-			$manipulation[$this->joinTable]['command'] = 'insert';
+			if($hasExisting) {
+				$manipulation[$this->joinTable]['command'] = 'update';	
+				$manipulation[$this->joinTable]['where'] = "\"$this->joinTable\".\"$this->foreignKey\" = " . 
+					"'" . Convert::raw2sql($foreignID) . "'" .
+					" AND \"$this->localKey\" = {$itemID}";
+			} else {
+				$manipulation[$this->joinTable]['command'] = 'insert';	
+			}
 
 			if($extraFields) foreach($extraFields as $k => $v) {
-				$manipulation[$this->joinTable]['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+				$manipulation[$this->joinTable]['fields'][$k] = (is_null($v)) ? 'NULL' : "'" . Convert::raw2sql($v) . "'";
 			}
 
 			$manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
@@ -145,29 +157,27 @@ class ManyManyList extends RelationList {
 	 * @todo Add tests for this / refactor it / something
 	 *	
 	 * @param string $componentName The name of the component
-	 * @param int $childID The ID of the child for the relationship
+	 * @param int $itemID The ID of the child for the relationship
 	 * @return array Map of fieldName => fieldValue
 	 */
-	function getExtraData($componentName, $childID) {
-		$ownerObj = $this->ownerObj;
-		$parentField = $this->ownerClass . 'ID';
-		$childField = ($this->childClass == $this->ownerClass) ? 'ChildID' : ($this->childClass . 'ID');
+	function getExtraData($componentName, $itemID) {
 		$result = array();
 
-		if(!isset($componentName)) {
-			user_error('ComponentSet::getExtraData() passed a NULL component name', E_USER_ERROR);
-		}
-		
-		if(!is_numeric($childID)) {
+		if(!is_numeric($itemID)) {
 			user_error('ComponentSet::getExtraData() passed a non-numeric child ID', E_USER_ERROR);
 		}
 
 		// @todo Optimize into a single query instead of one per extra field
 		if($this->extraFields) {
 			foreach($this->extraFields as $fieldName => $dbFieldSpec) {
-				$query = DB::query("SELECT \"$fieldName\" FROM \"$this->tableName\" WHERE \"$parentField\" = {$this->ownerObj->ID} AND \"$childField\" = {$childID}");
-				$value = $query->value();
-				$result[$fieldName] = $value;
+				$query = new SQLQuery($fieldName, array("\"$this->joinTable\""));
+				if($filter = $this->foreignIDFilter()) {
+					$query->setWhere($filter);
+				} else {
+					user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
+				}
+				$query->addWhere("\"$this->localKey\" = {$itemID}");
+				$result[$fieldName] = $query->execute()->value();
 			}
 		}
 		
