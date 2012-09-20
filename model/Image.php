@@ -73,7 +73,7 @@ class Image extends File {
 		parent::defineMethods();
 	}
 
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
 		$urlLink = "<div class='field readonly'>";
@@ -106,7 +106,7 @@ class Image extends File {
 	 * 
 	 * @return string
 	 */
-	function getTag() {
+	public function getTag() {
 		if(file_exists(Director::baseFolder() . '/' . $this->Filename)) {
 			$url = $this->getURL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
@@ -124,7 +124,7 @@ class Image extends File {
 	 * 
 	 * @return string
 	 */
-	function forTemplate() {
+	public function forTemplate() {
 		return $this->getTag();
 	}
 
@@ -132,7 +132,7 @@ class Image extends File {
 	 * File names are filtered through {@link FileNameFilter}, see class documentation
 	 * on how to influence this behaviour.
 	 */
-	function loadUploadedImage($tmpFile) {
+	public function loadUploadedImage($tmpFile) {
 		if(!is_array($tmpFile)) {
 			user_error("Image::loadUploadedImage() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		}
@@ -226,7 +226,7 @@ class Image extends File {
 	 * Resize this image for the CMS. Use in templates with $CMSThumbnail.
 	 * @return GD
 	 */
-	function generateCMSThumbnail(GD $gd) {
+	public function generateCMSThumbnail(GD $gd) {
 		return $gd->paddedResize($this->stat('cms_thumbnail_width'),$this->stat('cms_thumbnail_height'));
 	}
 	
@@ -234,7 +234,7 @@ class Image extends File {
 	 * Resize this image for preview in the Asset section. Use in templates with $AssetLibraryPreview.
 	 * @return GD
 	 */
-	function generateAssetLibraryPreview(GD $gd) {
+	public function generateAssetLibraryPreview(GD $gd) {
 		return $gd->paddedResize($this->stat('asset_preview_width'),$this->stat('asset_preview_height'));
 	}
 	
@@ -242,7 +242,7 @@ class Image extends File {
 	 * Resize this image for thumbnail in the Asset section. Use in templates with $AssetLibraryThumbnail.
 	 * @return GD
 	 */
-	function generateAssetLibraryThumbnail(GD $gd) {
+	public function generateAssetLibraryThumbnail(GD $gd) {
 		return $gd->paddedResize($this->stat('asset_thumbnail_width'),$this->stat('asset_thumbnail_height'));
 	}
 	
@@ -250,11 +250,11 @@ class Image extends File {
 	 * Resize this image for use as a thumbnail in a strip. Use in templates with $StripThumbnail.
 	 * @return GD
 	 */
-	function generateStripThumbnail(GD $gd) {
+	public function generateStripThumbnail(GD $gd) {
 		return $gd->croppedResize($this->stat('strip_thumbnail_width'),$this->stat('strip_thumbnail_height'));
 	}
 	
-	function generatePaddedImage(GD $gd, $width, $height) {
+	public function generatePaddedImage(GD $gd, $width, $height) {
 		return $gd->paddedResize($width, $height);
 	}
 
@@ -267,7 +267,7 @@ class Image extends File {
 	 * @param string $arg2 A second argument to pass to the generate function.
 	 * @return Image_Cached
 	 */
-	function getFormattedImage($format, $arg1 = null, $arg2 = null) {
+	public function getFormattedImage($format, $arg1 = null, $arg2 = null) {
 		if($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
 			$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
 
@@ -289,7 +289,7 @@ class Image extends File {
 	 * @param string $arg2 The second argument passed to the generate function.
 	 * @return string
 	 */
-	function cacheFilename($format, $arg1 = null, $arg2 = null) {
+	public function cacheFilename($format, $arg1 = null, $arg2 = null) {
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 		
 		$format = $format.$arg1.$arg2;
@@ -305,7 +305,7 @@ class Image extends File {
 	 * @param string $arg1 Argument to pass to the generate method.
 	 * @param string $arg2 A second argument to pass to the generate method.
 	 */
-	function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
+	public function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
 		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
 	
 		$gd = new GD(Director::baseFolder()."/" . $this->Filename);
@@ -320,7 +320,7 @@ class Image extends File {
 				}
 	
 			} else {
-				user_error("Image::generateFormattedImage - Image $format function not found.",E_USER_WARNING);
+				user_error("Image::generateFormattedImage - Image $format public function not found.",E_USER_WARNING);
 			}
 		}
 	}
@@ -329,7 +329,7 @@ class Image extends File {
 	 * Generate a resized copy of this image with the given width & height.
 	 * Use in templates with $ResizedImage.
 	 */
-	function generateResizedImage($gd, $width, $height) {
+	public function generateResizedImage($gd, $width, $height) {
 		if(is_numeric($gd) || !$gd){
 			user_error("Image::generateFormattedImage - generateResizedImage is being called by legacy code or gd is not set.",E_USER_WARNING);
 		}else{
@@ -341,7 +341,7 @@ class Image extends File {
 	 * Generate a resized copy of this image with the given width & height, cropping to maintain aspect ratio.
 	 * Use in templates with $CroppedImage
 	 */
-	function generateCroppedImage($gd, $width, $height) {
+	public function generateCroppedImage($gd, $width, $height) {
 		return $gd->croppedResize($width, $height);
 	}
 	
@@ -401,7 +401,7 @@ class Image extends File {
 	 * if it is 0 return the height, if it is 1 return the width.
 	 * @return string|int
 	 */
-	function getDimensions($dim = "string") {
+	public function getDimensions($dim = "string") {
 		if($this->getField('Filename')) {
 
 			$imagefile = Director::baseFolder() . '/' . $this->getField('Filename');
@@ -418,7 +418,7 @@ class Image extends File {
 	 * Get the width of this image.
 	 * @return int
 	 */
-	function getWidth() {
+	public function getWidth() {
 		return $this->getDimensions(0);
 	}
 	
@@ -426,7 +426,7 @@ class Image extends File {
 	 * Get the height of this image.
 	 * @return int
 	 */
-	function getHeight() {
+	public function getHeight() {
 		return $this->getDimensions(1);
 	}
 	
@@ -434,7 +434,7 @@ class Image extends File {
 	 * Get the orientation of this image.
 	 * @return ORIENTATION_SQUARE | ORIENTATION_PORTRAIT | ORIENTATION_LANDSCAPE
 	 */
-	function getOrientation() {
+	public function getOrientation() {
 		$width = $this->getWidth();
 		$height = $this->getHeight();
 		if($width > $height) {
@@ -446,7 +446,7 @@ class Image extends File {
 		}
 	}
 	
-	protected function onBeforeDelete() { 
+	protected function onBeforeDelete() {
 		parent::onBeforeDelete(); 
 
 		$this->deleteFormattedImages();

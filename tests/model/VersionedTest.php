@@ -12,7 +12,7 @@ class VersionedTest extends SapphireTest {
 		"VersionedTest_DataObject" => array('Versioned')
 	);
 
-	function testDeletingOrphanedVersions() {
+	public function testDeletingOrphanedVersions() {
 		$obj = new VersionedTest_Subclass();
 		$obj->ExtraField = 'Foo'; // ensure that child version table gets written
 		$obj->write();
@@ -51,7 +51,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals($count, $count2);
 	}
 	
-	function testForceChangeUpdatesVersion() {
+	public function testForceChangeUpdatesVersion() {
 		$obj = new VersionedTest_DataObject();
 		$obj->Name = "test";
 		$obj->write();
@@ -69,7 +69,7 @@ class VersionedTest extends SapphireTest {
 	/**
 	 * Test Versioned::get_including_deleted()
 	 */
-	function testGetIncludingDeleted() {
+	public function testGetIncludingDeleted() {
 		// Delete a page
 		$this->objFromFixture('VersionedTest_DataObject', 'page3')->delete();
 	
@@ -91,7 +91,7 @@ class VersionedTest extends SapphireTest {
 		
 	}
 	
-	function testVersionedFieldsAdded() {
+	public function testVersionedFieldsAdded() {
 		$obj = new VersionedTest_DataObject();
 		// Check that the Version column is added as a full-fledged column
 		$this->assertInstanceOf('Int', $obj->dbObject('Version'));
@@ -101,7 +101,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertInstanceOf('Int', $obj2->dbObject('Version'));
 	}
 
-	function testPublishCreateNewVersion() {
+	public function testPublishCreateNewVersion() {
 		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$page1->Content = 'orig';
 		$page1->write();
@@ -116,7 +116,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($oldVersion < $page1->Version, 'publish() with $createNewVersion=TRUE');
 	}
 	
-	function testRollbackTo() {
+	public function testRollbackTo() {
 		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$page1->Content = 'orig';
 		$page1->write();
@@ -135,7 +135,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
 	}
 	
-	function testDeleteFromStage() {
+	public function testDeleteFromStage() {
 		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$pageID = $page1->ID;
 		
@@ -161,7 +161,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "VersionedTest_DataObject_Live" WHERE "ID" = '.$pageID)->value());
 	}
 
-	function testWritingNewToStage() {
+	public function testWritingNewToStage() {
 		$origStage = Versioned::current_stage();
 		
 		Versioned::reading_stage("Stage");
@@ -185,7 +185,7 @@ class VersionedTest extends SapphireTest {
 	 * Writing new Page to live first creates a row in VersionedTest_DataObject table (to get the new ID), then "changes
 	 * it's mind" in Versioned and writes VersionedTest_DataObject_Live. It does not remove the VersionedTest_DataObject record though.
 	 */ 
-	function testWritingNewToLive() {
+	public function testWritingNewToLive() {
 		$origStage = Versioned::current_stage();
 		
 		Versioned::reading_stage("Live");

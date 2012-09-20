@@ -81,7 +81,7 @@ class Requirements {
 	 * See {@link Requirements_Backend::javascript()} for more info
 	 * 
 	 */
-	static function javascript($file) {		
+	public static function javascript($file) {
 		self::backend()->javascript($file);
 	}
 	
@@ -92,7 +92,7 @@ class Requirements {
 	 * @param script The script content
 	 * @param uniquenessID Use this to ensure that pieces of code only get added once.
 	 */
-	static function customScript($script, $uniquenessID = null) {
+	public static function customScript($script, $uniquenessID = null) {
 		self::backend()->customScript($script, $uniquenessID);
 	}
 
@@ -104,7 +104,7 @@ class Requirements {
 	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
 	 * @param int $uniquenessID Group CSS by a unique ID as to avoid duplicate custom CSS in header
 	 */
-	static function customCSS($script, $uniquenessID = null) {
+	public static function customCSS($script, $uniquenessID = null) {
 		self::backend()->customCSS($script, $uniquenessID);
 	}
 	
@@ -115,7 +115,7 @@ class Requirements {
 	 * @param string $html
 	 * @param string $uniquenessID
 	 */
-	static function insertHeadTags($html, $uniquenessID = null) {
+	public static function insertHeadTags($html, $uniquenessID = null) {
 		self::backend()->insertHeadTags($html, $uniquenessID);
 	}
 	
@@ -126,7 +126,7 @@ class Requirements {
 	 * @param file The template file to load.
 	 * @param vars The array of variables to load.  These variables are loaded via string search & replace.
 	 */
-	static function javascriptTemplate($file, $vars, $uniquenessID = null) {
+	public static function javascriptTemplate($file, $vars, $uniquenessID = null) {
 		self::backend()->javascriptTemplate($file, $vars, $uniquenessID);
 	}
 	
@@ -138,7 +138,7 @@ class Requirements {
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 * @see http://www.w3.org/TR/REC-CSS2/media.html
 	 */
-	static function css($file, $media = null) {
+	public static function css($file, $media = null) {
 		self::backend()->css($file, $media);
 	}
 	
@@ -169,7 +169,7 @@ class Requirements {
 	 * 
 	 * @param $file String
 	 */
-	static function clear($fileOrID = null) {
+	public static function clear($fileOrID = null) {
 		self::backend()->clear($fileOrID);
 	}
 
@@ -179,7 +179,7 @@ class Requirements {
 	 *
 	 * @param unknown_type $fileOrID
 	 */
-	static function block($fileOrID) {
+	public static function block($fileOrID) {
 		self::backend()->block($fileOrID);
 	}
 
@@ -189,7 +189,7 @@ class Requirements {
 	 * 
 	 * @param string $fileOrID
 	 */
-	static function unblock($fileOrID) {
+	public static function unblock($fileOrID) {
 		self::backend()->unblock($fileOrID);
 	}
 
@@ -197,7 +197,7 @@ class Requirements {
 	 * Removes all items from the blocking-list.
 	 * See {@link Requirements_Backend::unblock_all()}
 	 */
-	static function unblock_all() {
+	public static function unblock_all() {
 		self::backend()->unblock_all();
 	}
 	
@@ -205,7 +205,7 @@ class Requirements {
 	 * Restore requirements cleared by call to Requirements::clear
 	 * See {@link Requirements_Backend::restore()}
 	 */
-	static function restore() {
+	public static function restore() {
 		self::backend()->restore();
 	}
 	
@@ -218,11 +218,11 @@ class Requirements {
 	 * @param string $content HTML content that has already been parsed from the $templateFilePath through {@link SSViewer}.
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
-	static function includeInHTML($templateFile, $content) {
+	public static function includeInHTML($templateFile, $content) {
 		return self::backend()->includeInHTML($templateFile, $content);
 	}
 	
-	static function include_in_response(SS_HTTPResponse $response) {
+	public static function include_in_response(SS_HTTPResponse $response) {
 		return self::backend()->include_in_response($response);
 	}
 	
@@ -246,7 +246,7 @@ class Requirements {
 	 * @param string $combinedFileName
 	 * @param array $files
 	 */
-	static function combine_files($combinedFileName, $files) {
+	public static function combine_files($combinedFileName, $files) {
 		self::backend()->combine_files($combinedFileName, $files);
 	}
 	
@@ -256,7 +256,7 @@ class Requirements {
 	 * 
 	 * @return array
 	 */
-	static function get_combine_files() {
+	public static function get_combine_files() {
 		return self::backend()->get_combine_files();
 	}
 	
@@ -266,7 +266,7 @@ class Requirements {
 	 * 
 	 * @param string $combinedFileName If left blank, all combined files are deleted.
 	 */
-	static function delete_combined_files($combinedFileName = null) {
+	public static function delete_combined_files($combinedFileName = null) {
 		return self::backend()->delete_combined_files($combinedFileName);
 	}
 	
@@ -274,14 +274,14 @@ class Requirements {
 	/**
 	 * Re-sets the combined files definition. See {@link Requirements_Backend::clear_combined_files()}
 	 */
-	static function clear_combined_files() {
+	public static function clear_combined_files() {
 		self::backend()->clear_combined_files();
 	}
 		
 	/**
 	 * See {@link combine_files()}.
  	 */
-	static function process_combined_files() {
+	public static function process_combined_files() {
 		return self::backend()->process_combined_files();
 	}
 
@@ -291,7 +291,7 @@ class Requirements {
 	 *
 	 * @return array
 	 */
-	static function get_custom_scripts() {
+	public static function get_custom_scripts() {
 		return self::backend()->get_custom_scripts();
 	}
 	
@@ -302,11 +302,11 @@ class Requirements {
 	 * @see Requirements_Backend::set_write_js_to_body()
 	 * @param boolean
 	 */
-	static function set_write_js_to_body($var) {
+	public static function set_write_js_to_body($var) {
 		self::backend()->set_write_js_to_body($var);
 	}
 	
-	static function debug() {
+	public static function debug() {
 		return self::backend()->debug();
 	}
 
@@ -427,25 +427,25 @@ class Requirements_Backend {
 	 */
 	public $write_js_to_body = true;
 
-	function set_combined_files_enabled($enable) {
+	public function set_combined_files_enabled($enable) {
 		$this->combined_files_enabled = (bool) $enable;
 	}
 	
-	function get_combined_files_enabled() {
+	public function get_combined_files_enabled() {
 		return $this->combined_files_enabled;
 	}
 
 	/**
 	 * @param String $folder
 	 */
-	function setCombinedFilesFolder($folder) {
+	public function setCombinedFilesFolder($folder) {
 		$this->combinedFilesFolder = $folder;
 	}
 	
 	/**
 	 * @return String Folder relative to the webroot
 	 */
-	function getCombinedFilesFolder() {
+	public function getCombinedFilesFolder() {
 		return ($this->combinedFilesFolder) ? $this->combinedFilesFolder : ASSETS_DIR . '/_combinedfiles';
 	}
 	
@@ -455,7 +455,7 @@ class Requirements_Backend {
 	 * 
 	 * @param bool
 	 */
-	function set_suffix_requirements($var) {
+	public function set_suffix_requirements($var) {
 		$this->suffix_requirements = $var;
 	}
 	
@@ -464,7 +464,7 @@ class Requirements_Backend {
 	 * 
 	 * @return bool
 	 */
-	function get_suffix_requirements() {
+	public function get_suffix_requirements() {
 		return $this->suffix_requirements;
 	}
 	
@@ -514,7 +514,7 @@ class Requirements_Backend {
 	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
 	 * @param int $uniquenessID Group CSS by a unique ID as to avoid duplicate custom CSS in header
 	 */
-	function customCSS($script, $uniquenessID = null) {
+	public function customCSS($script, $uniquenessID = null) {
 		if($uniquenessID) $this->customCSS[$uniquenessID] = $script;
 		else $this->customCSS[] = $script;
 	}
@@ -525,7 +525,7 @@ class Requirements_Backend {
 	 * @param string $html
 	 * @param string $uniquenessID
 	 */
-	function insertHeadTags($html, $uniquenessID = null) {
+	public function insertHeadTags($html, $uniquenessID = null) {
 		if($uniquenessID) $this->customHeadTags[$uniquenessID] = $html;
 		else $this->customHeadTags[] = $html;
 	}
@@ -535,7 +535,7 @@ class Requirements_Backend {
 	 * @param file The template file to load.
 	 * @param vars The array of variables to load.  These variables are loaded via string search & replace.
 	 */
-	function javascriptTemplate($file, $vars, $uniquenessID = null) {
+	public function javascriptTemplate($file, $vars, $uniquenessID = null) {
 		$script = file_get_contents(Director::getAbsFile($file));
 		$search = array();
 		$replace = array();
@@ -556,13 +556,13 @@ class Requirements_Backend {
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 * @see http://www.w3.org/TR/REC-CSS2/media.html
 	 */
-	function css($file, $media = null) {
+	public function css($file, $media = null) {
 		$this->css[$file] = array(
 			"media" => $media
 		);
 	}
 	
-	function get_css() {
+	public function get_css() {
 		return array_diff_key($this->css, $this->blocked);
 	}
 	
@@ -575,7 +575,7 @@ class Requirements_Backend {
 	 * 
 	 * @param string $fileOrID
 	 */
-	function block($fileOrID) {
+	public function block($fileOrID) {
 		$this->blocked[$fileOrID] = $fileOrID;
 	}
 	
@@ -585,7 +585,7 @@ class Requirements_Backend {
 	 * 
 	 * @param $file String
 	 */
-	function clear($fileOrID = null) {
+	public function clear($fileOrID = null) {
 		if($fileOrID) {
 			foreach(array('javascript','css', 'customScript', 'customCSS', 'customHeadTags') as $type) {
 				if(isset($this->{$type}[$fileOrID])) {
@@ -613,20 +613,20 @@ class Requirements_Backend {
 	 * CAUTION: Does not "re-add" any previously blocked elements.
 	 * @param string $fileOrID
 	 */
-	function unblock($fileOrID) {
+	public function unblock($fileOrID) {
 		if(isset($this->blocked[$fileOrID])) unset($this->blocked[$fileOrID]);
 	}
 	/**
 	 * Removes all items from the blocking-list.
 	 */
-	function unblock_all() {
+	public function unblock_all() {
 		$this->blocked = array();
 	}
 	
 	/**
 	 * Restore requirements cleared by call to Requirements::clear
 	 */
-	function restore() {
+	public function restore() {
 		$this->javascript = $this->disabled['javascript'];
 		$this->css = $this->disabled['css'];
 		$this->customScript = $this->disabled['customScript'];
@@ -645,7 +645,7 @@ class Requirements_Backend {
 	 * @param string $content HTML content that has already been parsed from the $templateFilePath through {@link SSViewer}.
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
-	function includeInHTML($templateFile, $content) {
+	public function includeInHTML($templateFile, $content) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
 		if((strpos($content, '</head>') !== false || strpos($content, '</head ') !== false) && ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)) {
@@ -719,7 +719,7 @@ class Requirements_Backend {
 	/**
 	 * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the HTTP response
 	 */
-	function include_in_response(SS_HTTPResponse $response) {
+	public function include_in_response(SS_HTTPResponse $response) {
 		$this->process_combined_files(); 
 		$jsRequirements = array();
 		$cssRequirements = array();
@@ -857,7 +857,7 @@ class Requirements_Backend {
 	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()} by default)
 	 * @param array $files Array of filenames relative to the webroot
 	 */
-	function combine_files($combinedFileName, $files) { 	
+	public function combine_files($combinedFileName, $files) {
 		// duplicate check
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
@@ -911,7 +911,7 @@ class Requirements_Backend {
 	 * Returns all combined files.
 	 * @return array
 	 */
-	function get_combine_files() {
+	public function get_combine_files() {
 		return $this->combine_files;
 	}
 	
@@ -920,7 +920,7 @@ class Requirements_Backend {
 	 * 
 	 * @param string $combinedFileName If left blank, all combined files are deleted.
 	 */
-	function delete_combined_files($combinedFileName = null) {
+	public function delete_combined_files($combinedFileName = null) {
 		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : $this->combine_files;
 		$combinedFolder = ($this->getCombinedFilesFolder()) ? (Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
 		foreach($combinedFiles as $combinedFile => $sourceItems) {
@@ -931,7 +931,7 @@ class Requirements_Backend {
 		}
 	}
 	
-	function clear_combined_files() {
+	public function clear_combined_files() {
 		$this->combine_files = array();
 	}
 
@@ -939,7 +939,7 @@ class Requirements_Backend {
 	 * See {@link combine_files()}
 	 *
 	 */
-	function process_combined_files() {
+	public function process_combined_files() {
 		// The class_exists call prevents us from loading SapphireTest.php (slow) just to know that
 		// SapphireTest isn't running :-)
 		if(class_exists('SapphireTest', false)) $runningTest = SapphireTest::is_running_test();
@@ -1059,7 +1059,7 @@ class Requirements_Backend {
 		$this->css = $newCSSRequirements;
   }
   
-  function get_custom_scripts() {
+  public function get_custom_scripts() {
 		$requirements = "";
 		
 		if($this->customScript) {
@@ -1090,7 +1090,7 @@ class Requirements_Backend {
 		}
 	}
 	
-	function debug() {
+	public function debug() {
 		Debug::show($this->javascript);
 		Debug::show($this->css);
 		Debug::show($this->customCSS);

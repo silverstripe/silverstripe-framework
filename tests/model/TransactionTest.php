@@ -9,7 +9,7 @@ class TransactionTest extends SapphireTest {
 		'TransactionTest_Object'
 	);
 
-	function testCreateWithTransaction() {
+	public function testCreateWithTransaction() {
 
 		if(DB::getConn()->supportsTransactions()==true){
 			DB::getConn()->transactionStart();

@@ -17,7 +17,7 @@
  * <code>
  * class ExampleForm_Controller extends Page_Controller {
  * 
- * 	public function Form() {
+ * 	function Form() {
  * 		$fields = new FieldList(
  * 			new TextField('MyName'),
  * 			new FileField('MyFile')
@@ -101,7 +101,7 @@ class FileField extends FormField {
 	 * @param string $title The field label.
 	 * @param int $value The value of the field.
 	 */
-	function __construct($name, $title = null, $value = null) {
+	public function __construct($name, $title = null, $value = null) {
 		if(count(func_get_args()) > 3) {
 			Deprecation::notice(
 				'3.0', 
@@ -123,7 +123,7 @@ class FileField extends FormField {
 		return parent::Field($properties);
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array('type' => 'file')

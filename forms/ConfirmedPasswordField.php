@@ -67,7 +67,7 @@ class ConfirmedPasswordField extends FormField {
 	 * @param boolean $showOnClick
 	 * @param string $titleConfirmField Alternate title (not localizeable)
 	 */
-	function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false, $titleConfirmField = null) {
+	public function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false, $titleConfirmField = null) {
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->children = new FieldList(
 			new PasswordField(
@@ -93,7 +93,7 @@ class ConfirmedPasswordField extends FormField {
 		$this->setValue($value);
 	}
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ConfirmedPasswordField.js');
 		Requirements::css(FRAMEWORK_DIR . '/css/ConfirmedPasswordField.css');
@@ -136,7 +136,7 @@ class ConfirmedPasswordField extends FormField {
 	 * For example, set this to false (the default) when creating a user account,
 	 * and true 
 	 */
-	function setCanBeEmpty($value) {
+	public function setCanBeEmpty($value) {
 		$this->canBeEmpty = (bool)$value;
 		return $this;
 	}
@@ -160,7 +160,7 @@ class ConfirmedPasswordField extends FormField {
 		return $this->showOnClickTitle;
 	}
 	
-	function setRightTitle($title) {
+	public function setRightTitle($title) {
 		foreach($this->children as $field) {
 			$field->setRightTitle($title);
 		}
@@ -170,7 +170,7 @@ class ConfirmedPasswordField extends FormField {
 	/**
 	 * @param array: 2 entrie array with the customised title for each of the 2 children.
 	 */
-	function setChildrenTitles($titles) {
+	public function setChildrenTitles($titles) {
 		if(is_array($titles)&&count($titles)==2){
 			foreach($this->children as $field) {
 				if(isset($titles[0])){
@@ -185,7 +185,7 @@ class ConfirmedPasswordField extends FormField {
 	/**
 	 * Value is sometimes an array, and sometimes a single value, so we need to handle both cases
 	 */
-	function setValue($value) {
+	public function setValue($value) {
 		if(is_array($value)) {
 			if($value['_Password'] || (!$value['_Password'] && !$this->canBeEmpty)) {
 				$this->value = $value['_Password'];
@@ -211,12 +211,12 @@ class ConfirmedPasswordField extends FormField {
 	 * 
 	 * @return bool
 	 */
-	function isSaveable() {
+	public function isSaveable() {
 		$isVisible = $this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]');
 		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
 	}
 	
-	function validate($validator) {
+	public function validate($validator) {
 		$name = $this->name;
 		
 		// if field isn't visible, don't validate
@@ -297,7 +297,7 @@ class ConfirmedPasswordField extends FormField {
 	 * @param DataObject $record
 	 * @return bool
 	 */
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		if(!$this->isSaveable()) return false;
 		
 		if(!($this->canBeEmpty && !$this->value)) {
@@ -308,7 +308,7 @@ class ConfirmedPasswordField extends FormField {
 	/**
 	 * Makes a pretty readonly field with some stars in it
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$stars = '*****';
 
 		$field = new ReadonlyField($this->name, $this->title ? $this->title : _t('Member.PASSWORD'), $stars);

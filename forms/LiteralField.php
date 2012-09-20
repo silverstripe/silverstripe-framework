@@ -21,13 +21,13 @@ class LiteralField extends DatalessField {
 	 */
 	protected $content;
 	
-	function __construct($name, $content) {
+	public function __construct($name, $content) {
 		$this->content = $content;
 		
 		parent::__construct($name);
 	}
 	
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		if(is_object($this->content)) {
 			$obj = $this->content;
 			if($properties)
@@ -38,7 +38,7 @@ class LiteralField extends DatalessField {
 		}
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		return $this->FieldHolder($properties);
 	}
 
@@ -47,7 +47,7 @@ class LiteralField extends DatalessField {
 	 *
 	 * @param string $content
 	 */
-	function setContent($content) {
+	public function setContent($content) {
 		$this->content = $content;
 		return $this;
 	}
@@ -55,19 +55,19 @@ class LiteralField extends DatalessField {
 	/**
 	 * @return string
 	 */
-	function getContent() {
+	public function getContent() {
 		return $this->content;
 	}
 	
 	/**
 	 * Synonym of {@link setContent()} so that LiteralField is more compatible with other field types.
 	 */
-	function setValue($value) {
+	public function setValue($value) {
 		$this->setContent($value);
 		return $this;
 	}
 
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->setReadonly(true);
 		return $clone;

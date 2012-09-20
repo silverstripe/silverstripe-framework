@@ -38,7 +38,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	protected $itemEditFormCallback;
 
-	function getURLHandlers($gridField) {
+	public function getURLHandlers($gridField) {
 		return array(
 			'item/$ID' => 'handleItem',
 			'autocomplete' => 'handleAutocomplete',
@@ -85,7 +85,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 * @param String
 	 */
-	function setTemplate($template) {
+	public function setTemplate($template) {
 		$this->template = $template;
 		return $this;
 	}
@@ -93,14 +93,14 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 * @return String
 	 */
-	function getTemplate() {
+	public function getTemplate() {
 		return $this->template;
 	}
 
 	/**
 	 * @param String
 	 */
-	function setName($name) {
+	public function setName($name) {
 		$this->name = $name;
 		return $this;
 	}
@@ -108,7 +108,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 * @return String
 	 */
-	function getName() {
+	public function getName() {
 		return $this->name;
 	}
 
@@ -249,7 +249,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 	}
 
-	function edit($request) {
+	public function edit($request) {
 		$controller = $this->getToplevelController();
 		$form = $this->ItemEditForm($this->gridField, $request);
 
@@ -279,7 +279,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * 
 	 * @return Form 
 	 */
-	function ItemEditForm() {
+	public function ItemEditForm() {
 		if (empty($this->record)) {
 			$controller = Controller::curr();
 			$noActionURL = $controller->removeAction($_REQUEST['url']);
@@ -366,7 +366,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		return $c;
 	}
 
-	function doSave($data, $form) {
+	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
 		$controller = Controller::curr();
 
@@ -415,7 +415,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 	}
 
-	function doDelete($data, $form) {
+	public function doDelete($data, $form) {
 		try {
 			$toDelete = $this->record;
 			if (!$toDelete->canDelete()) {
@@ -447,7 +447,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	/**
 	 * @param String
 	 */
-	function setTemplate($template) {
+	public function setTemplate($template) {
 		$this->template = $template;
 		return $this;
 	}
@@ -455,21 +455,21 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	/**
 	 * @return String
 	 */
-	function getTemplate() {
+	public function getTemplate() {
 		return $this->template;
 	}
 
 	/**
 	 * @return Controller
 	 */
-	function getController() {
+	public function getController() {
 		return $this->popupController;
 	}
 
 	/**
 	 * @return GridField
 	 */
-	function getGridField() {
+	public function getGridField() {
 		return $this->gridField;
 	}
 
@@ -481,7 +481,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * @param boolean $unlinked 
 	 * @return ArrayData
 	 */
-	function Breadcrumbs($unlinked = false) {
+	public function Breadcrumbs($unlinked = false) {
 		if(!$this->popupController->hasMethod('Breadcrumbs')) return;
 
 		$items = $this->popupController->Breadcrumbs($unlinked);

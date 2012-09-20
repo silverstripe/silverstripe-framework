@@ -6,7 +6,7 @@
  * @subpackage transformations
  */
 class PrintableTransformation extends ReadonlyTransformation {
-	function transformTabSet($field) {
+	public function transformTabSet($field) {
 		$transformedField = new PrintableTransformation_TabSet($field->Tabs()->transform($this));
 		$transformedField->Title = $field->Title();
 		$transformedField->TabSet = $field->TabSet;
@@ -20,12 +20,12 @@ class PrintableTransformation extends ReadonlyTransformation {
  * @subpackage transformations
  */
 class PrintableTransformation_TabSet extends TabSet {
-	function __construct($tabs) {
+	public function __construct($tabs) {
 		$this->children = $tabs;
 		CompositeField::__construct($tabs);
 	}
 	
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		// This gives us support for sub-tabs.
 		$tag = ($this->tabSet) ? "h2>" : "h1>";
 		

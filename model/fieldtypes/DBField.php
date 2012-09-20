@@ -17,7 +17,7 @@
  * 
  * <code>
  * class Blob extends DBField {                                                                                                   
- * 	function requireField() {                                                                                                         
+ * 	function requireField() {
  * 		DB::requireField($this->tableName, $this->name, "blob");
  *  }
  * }
@@ -57,14 +57,14 @@ abstract class DBField extends ViewableData {
 	 */
 	protected $defaultVal;
 	
-	function __construct($name = null) {
+	public function __construct($name = null) {
 		$this->name = $name;
 		
 		parent::__construct();
 	}
 	
 
-	static function create() {
+	public static function create() {
 		Deprecation::notice('3.0', 'DBField::create() is deprecated as it clashes with Object::create(). Use DBField::create_field() instead.');
 
 		return call_user_func_array(array('DBField', 'create_field'), func_get_args());
@@ -74,7 +74,7 @@ abstract class DBField extends ViewableData {
 	 * Create a DBField object that's not bound to any particular field.
 	 * Useful for accessing the classes behaviour for other parts of your code.
 	 */
-	static function create_field($className, $value, $name = null, $object = null) {
+	public static function create_field($className, $value, $name = null, $object = null) {
 		$dbField = Object::create($className, $name, $object);
 		$dbField->setValue($value, null, false);
 		return $dbField;
@@ -85,7 +85,7 @@ abstract class DBField extends ViewableData {
 	 * The name should never be altered, but it if was never given a name in the first place you can set a name.
 	 * If you try an alter the name a warning will be thrown. 
 	 */
-	function setName($name) {
+	public function setName($name) {
 		if($this->name) {
 			user_error("DBField::setName() shouldn't be called once a DBField already has a name.  It's partially immutable - it shouldn't be altered after it's given a value.", E_USER_WARNING);
 		}
@@ -96,7 +96,7 @@ abstract class DBField extends ViewableData {
 	 * Returns the name of this field.
 	 * @return string
 	 */
-	function getName() {
+	public function getName() {
 		return $this->name;
 	}
 	
@@ -104,7 +104,7 @@ abstract class DBField extends ViewableData {
 	 * Returns the value of this field.
 	 * @return mixed
 	 */
-	function getValue() {
+	public function getValue() {
 		return $this->value;
 	}
 	
@@ -116,7 +116,7 @@ abstract class DBField extends ViewableData {
 	 * @param mixed $value
 	 * @param array $record
 	 */
-	function setValue($value, $record = null) {
+	public function setValue($value, $record = null) {
 		$this->value = $value;
 	}
 	
@@ -140,7 +140,7 @@ abstract class DBField extends ViewableData {
 	 * @param $value mixed The value to check
 	 * @return string The encoded value
 	 */
-	function prepValueForDB($value) {
+	public function prepValueForDB($value) {
 		if($value === null || $value === "" || $value === false) {
 			return "null";
 		} else {
@@ -160,7 +160,7 @@ abstract class DBField extends ViewableData {
 	 * 
 	 * @param array $manipulation
 	 */
-	function writeToManipulation(&$manipulation) {
+	public function writeToManipulation(&$manipulation) {
 		$manipulation['fields'][$this->name] = $this->exists() ? $this->prepValueForDB($this->value) : $this->nullValue();
 	}
 	
@@ -175,11 +175,11 @@ abstract class DBField extends ViewableData {
 	 *
 	 * @param SS_Query $query
 	 */
-	function addToQuery(&$query) {
+	public function addToQuery(&$query) {
 		
 	}
 	
-	function setTable($tableName) {
+	public function setTable($tableName) {
 		$this->tableName = $tableName;
 	}
 	
@@ -190,35 +190,35 @@ abstract class DBField extends ViewableData {
 		return $this->XML();
 	}
 
-	function HTMLATT() {
+	public function HTMLATT() {
 		return Convert::raw2htmlatt($this->value);
 	}
 		
-	function URLATT() {
+	public function URLATT() {
 		return urlencode($this->value);
 	}
 
-	function RAWURLATT() {
+	public function RAWURLATT() {
 		return rawurlencode($this->value);
 	}
 
-	function ATT() {
+	public function ATT() {
 		return Convert::raw2att($this->value);
 	}
 	
-	function RAW() {
+	public function RAW() {
 		return $this->value;
 	}
 	
-	function JS() {
+	public function JS() {
 		return Convert::raw2js($this->value);
 	}
 	
-	function HTML(){
+	public function HTML(){
 		return Convert::raw2xml($this->value);
 	}
 	
-	function XML(){
+	public function XML(){
 		return Convert::raw2xml($this->value);
 	}
 	
@@ -226,14 +226,14 @@ abstract class DBField extends ViewableData {
 	 * Returns the value to be set in the database to blank this field.
 	 * Usually it's a choice between null, 0, and ''
 	 */
-	function nullValue() {
+	public function nullValue() {
 		return "null";
 	}
 
 	/**
 	 * Saves this field to the given data object.
 	 */
-	function saveInto($dataObject) {
+	public function saveInto($dataObject) {
 		$fieldName = $this->name;
 		if($fieldName) {
 			$dataObject->$fieldName = $this->value;
@@ -287,9 +287,9 @@ abstract class DBField extends ViewableData {
 	/**
 	 * Add the field to the underlying database.
 	 */
-	abstract function requireField();
+	abstract public function requireField();
 	
-	function debug() {
+	public function debug() {
 		return <<<DBG
 <ul>
 	<li><b>Name:</b>{$this->name}</li>

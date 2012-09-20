@@ -105,7 +105,7 @@ class RSSFeed extends ViewableData {
 	 * @param string $etag The ETag is an unique identifier that is changed
 	 *                         every time the representation does
 	 */
-	function __construct(SS_List $entries, $link, $title,
+	public function __construct(SS_List $entries, $link, $title,
 											 $description = null, $titleField = "Title",
 											 $descriptionField = "Content", $authorField = null,
 											 $lastModified = null, $etag = null) {
@@ -130,7 +130,7 @@ class RSSFeed extends ViewableData {
 	 * @param string $url URL of the feed
 	 * @param string $title Title to show
 	 */
-	static function linkToFeed($url, $title = null) {
+	public static function linkToFeed($url, $title = null) {
 		$title = Convert::raw2xml($title);
 		Requirements::insertHeadTags(
 			'<link rel="alternate" type="application/rss+xml" title="' . $title .
@@ -142,7 +142,7 @@ class RSSFeed extends ViewableData {
 	 *
 	 * @return SS_List Returns the {@link RSSFeed_Entry} objects.
 	 */
-	function Entries() {
+	public function Entries() {
 		$output = new ArrayList();
 
 		if(isset($this->entries)) {
@@ -158,7 +158,7 @@ class RSSFeed extends ViewableData {
 	 *
 	 * @return string Returns the title of the feed.
 	 */
-	function Title() {
+	public function Title() {
 		return $this->title;
 	}
 
@@ -168,7 +168,7 @@ class RSSFeed extends ViewableData {
 	 * @param string $action
 	 * @return string Returns the URL of the feed.
 	 */
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links(Director::absoluteURL($this->link), $action);
 	}
 
@@ -177,7 +177,7 @@ class RSSFeed extends ViewableData {
 	 *
 	 * @return string Returns the description of the feed.
 	 */
-	function Description() {
+	public function Description() {
 		return $this->description;
 	}
 
@@ -267,7 +267,7 @@ class RSSFeed_Entry extends ViewableData {
 	/**
 	 * Create a new RSSFeed entry.
 	 */
-	function __construct($entry, $titleField, $descriptionField,
+	public function __construct($entry, $titleField, $descriptionField,
 											 $authorField) {
 		$this->failover = $entry;
 		$this->titleField = $titleField;
@@ -282,7 +282,7 @@ class RSSFeed_Entry extends ViewableData {
 	 *
 	 * @return string Returns the description of the entry.
 	 */
-	function Title() {
+	public function Title() {
 		return $this->rssField($this->titleField, 'Varchar');
 	}
 
@@ -291,7 +291,7 @@ class RSSFeed_Entry extends ViewableData {
 	 *
 	 * @return string Returns the description of the entry.
 	 */
-	function Description() {
+	public function Description() {
 		return $this->rssField($this->descriptionField, 'Text');
 	}
 
@@ -300,7 +300,7 @@ class RSSFeed_Entry extends ViewableData {
 	 *
 	 * @return string Returns the author of the entry.
 	 */
-	function Author() {
+	public function Author() {
 		if($this->authorField) return $this->failover->obj($this->authorField);
 	}
 
@@ -308,7 +308,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * Return the named field as an obj() call from $this->failover.
 	 * Default to the given class if there's no casting information.
 	 */
-	function rssField($fieldName, $defaultClass = 'Varchar') {
+	public function rssField($fieldName, $defaultClass = 'Varchar') {
 		if($fieldName) {
 			if($this->failover->castingHelper($fieldName)) {
 				$value = $this->failover->$fieldName;
@@ -328,7 +328,7 @@ class RSSFeed_Entry extends ViewableData {
 	 *
 	 * @return string Returns the URL of this entry
 	 */
-	function AbsoluteLink() {
+	public function AbsoluteLink() {
 		if($this->failover->hasMethod('AbsoluteLink')) return $this->failover->AbsoluteLink();
 		else if($this->failover->hasMethod('Link')) return Director::absoluteURL($this->failover->Link());
 		else user_error($this->failover->class . " object has neither an AbsoluteLink nor a Link method.  Can't put a link in the RSS feed", E_USER_WARNING);

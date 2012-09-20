@@ -2,7 +2,7 @@
 
 class ArrayDataTest extends SapphireTest {
 
-	function testViewabledataItemsInsideArraydataArePreserved() {
+	public function testViewabledataItemsInsideArraydataArePreserved() {
 		/* ViewableData objects will be preserved, but other objects will be converted */
 		$arrayData = new ArrayData(array(
 			"A" => new Varchar("A"),
@@ -12,7 +12,7 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals("ArrayData", get_class($arrayData->B));
 	}
       
-	function testWrappingANonEmptyObjectWorks() {
+	public function testWrappingANonEmptyObjectWorks() {
 		$object = new ArrayDataTest_NonEmptyObject();
 		$this->assertTrue(is_object($object));
 
@@ -23,7 +23,7 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertFalse($arrayData->hasField('c'));
 	}
 
-	function testWrappingAnAssociativeArrayWorks() {
+	public function testWrappingAnAssociativeArrayWorks() {
 		$array = array("A" => "Alpha", "B" => "Beta");
 		$this->assertTrue(ArrayLib::is_associative($array));
 
@@ -34,7 +34,7 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals("Beta", $arrayData->getField("B"));
 	}
 
-	function testRefusesToWrapAnIndexedArray() {
+	public function testRefusesToWrapAnIndexedArray() {
 		$array = array(0 => "One", 1 => "Two");
 		$this->assertFalse(ArrayLib::is_associative($array));
 
@@ -47,7 +47,7 @@ class ArrayDataTest extends SapphireTest {
 		// $arrayData = new ArrayData($array);
 	}
 
-	function testSetField() {
+	public function testSetField() {
 		$arrayData = new ArrayData(array());
 		
 		$arrayData->setField('d', 'Delta');
@@ -56,7 +56,7 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals('Delta', $arrayData->getField('d'));
 	}
 	
-	function testGetArray() {
+	public function testGetArray() {
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
 
@@ -73,7 +73,7 @@ class ArrayDataTest extends SapphireTest {
 		Deprecation::restore_settings($originalDeprecation);
 	}
 
-	function testArrayToObject() {
+	public function testArrayToObject() {
 		$arr = array("test1" => "result1","test2"=>"result2");
 		$obj = ArrayData::array_to_object($arr);
 		$objExpected = new stdClass();

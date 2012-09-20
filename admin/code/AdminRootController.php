@@ -66,7 +66,7 @@ class AdminRootController extends Controller {
 		}
 	}
 
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		// If this is the final portion of the request (i.e. the URL is just /admin), direct to the default panel
 		if ($request->allParsed()) {
 			$base = $this->config()->url_base;

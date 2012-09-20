@@ -13,7 +13,7 @@ class EmailFieldTest extends SapphireTest {
 	 *   - "." is valid in the local part as long as its not first or last char
 	 * @return void
 	 */
-	function testEmailAddressSyntax() {
+	public function testEmailAddressSyntax() {
 		$this->internalCheck("blah@blah.com", "Valid, simple", true);
 		$this->internalCheck("mr.o'connor+on-toast@blah.com", "Valid, special chars", true);
 		$this->internalCheck("", "Empty email", true);
@@ -23,7 +23,7 @@ class EmailFieldTest extends SapphireTest {
 		$this->internalCheck("domain.but.no.user", "Invalid, no user part", false);
 	}
 
-	function internalCheck($email, $checkText, $expectSuccess) {
+	public function internalCheck($email, $checkText, $expectSuccess) {
 		$field = new EmailField("MyEmail");
 		$field->setValue($email);
 
@@ -39,13 +39,13 @@ class EmailFieldTest extends SapphireTest {
 }
 
 class EmailFieldTest_Validator extends Validator {
-	function validationError($fieldName, $message, $messageType='') {
+	public function validationError($fieldName, $message, $messageType='') {
 		throw new Exception($message);
 	}
 
-	function javascript() {
+	public function javascript() {
 	}
 
-	function php($data) {
+	public function php($data) {
 	}
 }

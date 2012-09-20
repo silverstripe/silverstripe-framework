@@ -32,7 +32,7 @@ interface i18nEntityProvider {
 	 * 	return $entities;
 	 * }
 	 * 
-	 * static function my_static_array() {
+	 * public static function my_static_array() {
 	 * 	$t_my_static_array = array();
 	 * 	foreach(self::$my_static_array as $k => $v) {
 	 * 		$t_my_static_array[$k] = _t("MyTestClass.my_static_array_{$key}", $v);
@@ -65,5 +65,5 @@ interface i18nEntityProvider {
 	 * entity name as the key, and a numerical array of pseudo-arguments
 	 * for _t() as a value.
 	 */
-	function provideI18nEntities();
+	public function provideI18nEntities();
 }

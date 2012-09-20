@@ -60,7 +60,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		return array('filter', 'reset');
 	}
 
-	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
 		$state = $gridField->State->GridFieldFilterHeader;

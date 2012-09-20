@@ -867,7 +867,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		return singleton($this->dataClass)->$relationName()->forForeignID($ids);
 	}
 
-	function dbObject($fieldName) {
+	public function dbObject($fieldName) {
 		return singleton($this->dataClass)->dbObject($fieldName);
 	}
 

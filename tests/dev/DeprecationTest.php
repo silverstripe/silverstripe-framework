@@ -14,16 +14,16 @@ class DeprecationTest extends SapphireTest {
 
 	static $originalVersionInfo;
 
-	function setUp() {
+	public function setUp() {
 		self::$originalVersionInfo = Deprecation::dump_settings();
 		Deprecation::$notice_level = E_USER_NOTICE;
 	}
 
-	function tearDown() {
+	public function tearDown() {
 		Deprecation::restore_settings(self::$originalVersionInfo);
 	}
 
-	function testLesserVersionTriggersNoNotice() {
+	public function testLesserVersionTriggersNoNotice() {
 		Deprecation::notification_version('1.0.0');
 		Deprecation::notice('2.0', 'Deprecation test failed');
 	}
@@ -31,12 +31,12 @@ class DeprecationTest extends SapphireTest {
 	/**
      * @expectedException PHPUnit_Framework_Error
 	 */
-	function testEqualVersionTriggersNotice() {
+	public function testEqualVersionTriggersNotice() {
 		Deprecation::notification_version('2.0.0');
 		Deprecation::notice('2.0.0', 'Deprecation test passed');
 	}
 
-	function testBetaVersionDoesntTriggerNoticeWhenDeprecationDoesntSpecifyReleasenum() {
+	public function testBetaVersionDoesntTriggerNoticeWhenDeprecationDoesntSpecifyReleasenum() {
 		Deprecation::notification_version('2.0.0-beta1');
 		Deprecation::notice('2.0', 'Deprecation test failed');
 		Deprecation::notice('2.0.0', 'Deprecation test failed');
@@ -45,12 +45,12 @@ class DeprecationTest extends SapphireTest {
 	/**
     * @expectedException PHPUnit_Framework_Error
 	 */
-	function testGreaterVersionTriggersNotice() {
+	public function testGreaterVersionTriggersNotice() {
 		Deprecation::notification_version('3.0.0');
 		Deprecation::notice('2.0', 'Deprecation test passed');
 	}
 
-	function testNonMatchingModuleNotifcationVersionDoesntAffectNotice() {
+	public function testNonMatchingModuleNotifcationVersionDoesntAffectNotice() {
 		Deprecation::notification_version('1.0.0');
 		global $project;
 		Deprecation::notification_version('3.0.0', $project);
@@ -60,13 +60,13 @@ class DeprecationTest extends SapphireTest {
 	/**
     * @expectedException PHPUnit_Framework_Error
 	 */
-	function testMatchingModuleNotifcationVersionAffectsNotice() {
+	public function testMatchingModuleNotifcationVersionAffectsNotice() {
 		Deprecation::notification_version('1.0.0');
 		Deprecation::notification_version('3.0.0', FRAMEWORK_DIR);
 		$this->callThatOriginatesFromFramework();
 	}
 
-	function testMethodNameCalculation() {
+	public function testMethodNameCalculation() {
 		$this->assertEquals(DeprecationTest_Deprecation::get_method(), 'DeprecationTest->testMethodNameCalculation');
 	}
 
@@ -74,7 +74,7 @@ class DeprecationTest extends SapphireTest {
 	 * @expectedException PHPUnit_Framework_Error
 	 * @expectedExceptionMessage DeprecationTest->testScopeMethod is deprecated. Method scope
 	 */
-	function testScopeMethod() {
+	public function testScopeMethod() {
 		Deprecation::notification_version('2.0.0');
 		Deprecation::notice('2.0.0', 'Method scope', Deprecation::SCOPE_METHOD);
 	}
@@ -83,7 +83,7 @@ class DeprecationTest extends SapphireTest {
 	 * @expectedException PHPUnit_Framework_Error
 	 * @expectedExceptionMessage DeprecationTest is deprecated. Class scope
 	 */
-	function testScopeClass() {
+	public function testScopeClass() {
 		Deprecation::notification_version('2.0.0');
 		Deprecation::notice('2.0.0', 'Class scope', Deprecation::SCOPE_CLASS);
 	}
@@ -92,7 +92,7 @@ class DeprecationTest extends SapphireTest {
 	 * @expectedException PHPUnit_Framework_Error
 	 * @expectedExceptionMessage Global scope
 	 */
-	function testScopeGlobal() {
+	public function testScopeGlobal() {
 		Deprecation::notification_version('2.0.0');
 		Deprecation::notice('2.0.0', 'Global scope', Deprecation::SCOPE_GLOBAL);
 	}

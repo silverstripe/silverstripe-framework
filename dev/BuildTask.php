@@ -34,7 +34,7 @@ abstract class BuildTask extends Object {
  	 * Implement this method in the task subclass to
 	 * execute via the TaskRunner
 	 */
-	abstract function run($request);
+	abstract public function run($request);
 	
 	public function isEnabled() {
 		return $this->enabled;

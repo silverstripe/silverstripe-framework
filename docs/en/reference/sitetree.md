@@ -50,10 +50,10 @@ Permission control:
 
 	:::php
 	class MyPage extends Page {
-		function canPublish($member = null) {
+		public function canPublish($member = null) {
 			// return boolean from custom logic
 		}
-		function canDeleteFromLive($member = null) {
+		public function canDeleteFromLive($member = null) {
 			// return boolean from custom logic
 		}
 	}

@@ -9,20 +9,20 @@ class ModelAdminTest extends FunctionalTest {
 		'ModelAdminTest_Player'
 	);
 	
-	function testModelAdminOpens() {
+	public function testModelAdminOpens() {
 		$this->autoFollowRedirection = false;
 		$this->logInAs('admin');
 		$this->assertTrue((bool)Permission::check("ADMIN"));
 		$this->assertEquals(200, $this->get('ModelAdminTest_Admin')->getStatusCode());
 	}
 
-	function testExportFieldsDefaultIsSummaryFields() {
+	public function testExportFieldsDefaultIsSummaryFields() {
 		$admin = new ModelAdminTest_Admin();
 		$admin->modelClass = 'ModelAdminTest_Contact';
 		$this->assertEquals($admin->getExportFields(), singleton('ModelAdminTest_Contact')->summaryFields());
 	}
 
-	function testExportFieldsOverloadedMethod() {
+	public function testExportFieldsOverloadedMethod() {
 		$admin = new ModelAdminTest_PlayerAdmin();
 		$admin->modelClass = 'ModelAdminTest_Player';
 		$this->assertEquals($admin->getExportFields(), array(

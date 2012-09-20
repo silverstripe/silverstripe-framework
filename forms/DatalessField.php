@@ -14,12 +14,12 @@ class DatalessField extends FormField {
 	protected $allowHTML;
 	
 	/**
-	 * Function that returns whether this field contains data.
+	 * function that returns whether this field contains data.
 	 * Always returns false. 
 	 */
-	function hasData() { return false; }
+	public function hasData() { return false; }
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -32,7 +32,7 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in the form.
 	 * For dataless fields, this defaults to $Field.
 	 */
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
 	}
 
@@ -40,14 +40,14 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in a field group.
 	 * For dataless fields, this defaults to $Field.
 	 */
-	function SmallFieldHolder($properties = array()) {
+	public function SmallFieldHolder($properties = array()) {
 		return $this->Field($properties);
 	}
 
 	/**
 	 * Returns a readonly version of this field
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->setReadonly(true);
 		return $clone;
@@ -56,7 +56,7 @@ class DatalessField extends FormField {
 	/**
 	 * @param bool $bool
 	 */
-	function setAllowHTML($bool) {
+	public function setAllowHTML($bool) {
 		$this->allowHTML = $bool;
 		return $this;
 	}
@@ -64,11 +64,11 @@ class DatalessField extends FormField {
 	/**
 	 * @return bool
 	 */
-	function getAllowHTML() {
+	public function getAllowHTML() {
 		return $this->allowHTML;
 	}
 
-	function Type() {
+	public function Type() {
 		return 'readonly';
 	}
 

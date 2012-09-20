@@ -19,13 +19,13 @@ class MoneyTest extends SapphireTest {
 		'MoneyTest_DataObject',
 	);
 	
-	function testMoneyFieldsReturnedAsObjects() {
+	public function testMoneyFieldsReturnedAsObjects() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
 		$this->assertInstanceOf('Money', $obj->MyMoney);
 	}
 
 	
-	function testLoadFromFixture() {
+	public function testLoadFromFixture() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
 		
 		$this->assertInstanceOf('Money', $obj->MyMoney);
@@ -33,7 +33,7 @@ class MoneyTest extends SapphireTest {
 		$this->assertEquals($obj->MyMoney->getAmount(), 1.23);
 	}
 	
-	function testDataObjectChangedFields() {
+	public function testDataObjectChangedFields() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
 		
 		// Without changes
@@ -49,7 +49,7 @@ class MoneyTest extends SapphireTest {
 		$this->assertEquals(2, $changed['MyMoney']['level'], 'Correct change level');
 	}
 	
-	function testCanOverwriteSettersWithNull() {
+	public function testCanOverwriteSettersWithNull() {
 		$obj = new MoneyTest_DataObject();
 
 		$m1 = new Money();
@@ -74,7 +74,7 @@ class MoneyTest extends SapphireTest {
      * Write a Money object to the database, then re-read it to ensure it
      * is re-read properly.
      */
-    function testGettingWrittenDataObject() {
+    public function testGettingWrittenDataObject() {
 	    $local = i18n::get_locale();
 		i18n::set_locale('en_US');  //make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
 
@@ -173,7 +173,7 @@ class MoneyTest extends SapphireTest {
 		}
 	}
 
-	function testSetValueAsArray() {
+	public function testSetValueAsArray() {
 		$m = new Money();
 		$m->setValue(array(
 			'Currency' => 'EUR',
@@ -189,7 +189,7 @@ class MoneyTest extends SapphireTest {
 		);
 	}
 	
-	function testSetValueAsMoney() {
+	public function testSetValueAsMoney() {
 		$m1 = new Money();
 		$m1->setValue(array(
 			'Currency' => 'EUR',
@@ -207,7 +207,7 @@ class MoneyTest extends SapphireTest {
 		);
 	}
 	
-	function testExists() {
+	public function testExists() {
 		$m1 = new Money();
 		$this->assertFalse($m1->exists());
 		
@@ -226,7 +226,7 @@ class MoneyTest extends SapphireTest {
 		$this->assertTrue($m3->exists());
 	}
 
-	function testLoadIntoDataObject() {
+	public function testLoadIntoDataObject() {
 		$obj = new MoneyTest_DataObject();
 		
 		$this->assertInstanceOf('Money', $obj->obj('MyMoney'));
@@ -242,7 +242,7 @@ class MoneyTest extends SapphireTest {
 		$this->assertEquals($obj->MyMoney->getAmount(), 1.23);
 	}
 	
-	function testWriteToDataObject() {
+	public function testWriteToDataObject() {
 		$obj = new MoneyTest_DataObject();
 		$m = new Money();
 		$m->setValue(array(

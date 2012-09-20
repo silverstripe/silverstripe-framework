@@ -71,7 +71,7 @@ class CSVParser extends Object implements Iterator {
 	 * @param $delimiter The character for seperating columns
 	 * @param $enclosure The character for quoting or enclosing columns
 	 */
-	function __construct($filename, $delimiter = ",", $enclosure = '"') {
+	public function __construct($filename, $delimiter = ",", $enclosure = '"') {
 		$filename = Director::getAbsFile($filename);
 		$this->filename = $filename;
 		$this->delimiter = $delimiter;
@@ -90,7 +90,7 @@ class CSVParser extends Object implements Iterator {
 	 * ));
 	 * </code>
 	 */
-	function mapColumns($columnMap) {
+	public function mapColumns($columnMap) {
 		if($columnMap) {
 			$lowerColumnMap = array();
 			foreach($columnMap as $k => $v) {
@@ -104,7 +104,7 @@ class CSVParser extends Object implements Iterator {
 	 * If your CSV file doesn't have a header row, then you can call this function to provide one.
 	 * If you call this function, then the first row of the CSV will be included in the data returned.
 	 */
-	function provideHeaderRow($headerRow) {
+	public function provideHeaderRow($headerRow) {
 		$this->providedHeaderRow = $headerRow;
 	}
 
@@ -188,7 +188,7 @@ class CSVParser extends Object implements Iterator {
 	/**
 	 * @ignore
 	 */
-	function __destruct() {
+	public function __destruct() {
 		$this->closeFile();
 	}
 
@@ -197,7 +197,7 @@ class CSVParser extends Object implements Iterator {
 	/**
 	 * @ignore 
 	 */
-	function rewind() {
+	public function rewind() {
 		$this->closeFile();
 		$this->fetchCSVRow();
 	}
@@ -205,21 +205,21 @@ class CSVParser extends Object implements Iterator {
 	/**
 	 * @ignore 
 	 */
-	function current() {
+	public function current() {
 		return $this->currentRow;
 	}
 	
 	/**
 	 * @ignore 
 	 */
-	function key() {
+	public function key() {
 		return $this->rowNum;
 	}
 	
 	/**
 	 * @ignore 
 	 */
-	function next() {
+	public function next() {
 		$this->fetchCSVRow();
 		return $this->currentRow;
 	}
@@ -227,7 +227,7 @@ class CSVParser extends Object implements Iterator {
 	/**
 	 * @ignore 
 	 */
-	function valid() {
+	public function valid() {
 		return $this->currentRow ? true : false;
 	}
 	

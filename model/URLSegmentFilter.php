@@ -55,7 +55,7 @@ class URLSegmentFilter extends Object {
 	 * @param String URL path (without domain or query parameters), in utf8 encoding
 	 * @return String A filtered path compatible with RFC 3986
 	 */
-	function filter($name) {
+	public function filter($name) {
 		if(!$this->getAllowMultibyte()) {
 			// Only transliterate when no multibyte support is requested
 			$transliterator = $this->getTransliterator();
@@ -82,14 +82,14 @@ class URLSegmentFilter extends Object {
 	/**
 	 * @param Array Map of find/replace used for preg_replace().
 	 */
-	function setReplacements($r) {
+	public function setReplacements($r) {
 		$this->replacements = $r;
 	}
 	
 	/**
 	 * @return Array
 	 */
-	function getReplacements() {
+	public function getReplacements() {
 		return ($this->replacements) ? $this->replacements : self::$default_replacements;
 	}
 		
@@ -101,7 +101,7 @@ class URLSegmentFilter extends Object {
 	/**
 	 * @return SS_Transliterator|NULL
 	 */
-	function getTransliterator() {
+	public function getTransliterator() {
 		if($this->transliterator === null && self::$default_use_transliterator) {
 			$this->transliterator = SS_Transliterator::create();
 		} 
@@ -111,7 +111,7 @@ class URLSegmentFilter extends Object {
 	/**
 	 * @param SS_Transliterator|FALSE
 	 */
-	function setTransliterator($t) {
+	public function setTransliterator($t) {
 		$this->transliterator = $t;
 	}
 	
@@ -123,14 +123,14 @@ class URLSegmentFilter extends Object {
 	/**
 	 * @param boolean
 	 */
-	function setAllowMultibyte($bool) {
+	public function setAllowMultibyte($bool) {
 		$this->allowMultibyte = $bool;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	function getAllowMultibyte() {
+	public function getAllowMultibyte() {
 		return ($this->allowMultibyte !== null) ? $this->allowMultibyte : self::$default_allow_multibyte;
 	}
 }

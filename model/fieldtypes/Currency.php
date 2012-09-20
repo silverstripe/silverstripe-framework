@@ -18,14 +18,14 @@
 class Currency extends Decimal {
 	protected static $currencySymbol = '$';
 	
-	function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
+	public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
 		parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
 	}
 	
 	/**
 	 * Returns the number as a currency, eg “$1,000.00”.
 	 */
-	function Nice() {
+	public function Nice() {
 		// return "<span title=\"$this->value\">$" . number_format($this->value, 2) . '</span>';
 		$val = self::$currencySymbol . number_format(abs($this->value), 2);
 		if($this->value < 0) return "($val)";
@@ -35,13 +35,13 @@ class Currency extends Decimal {
 	/**
 	 * Returns the number as a whole-number currency, eg “$1,000”.
 	 */
-	function Whole() {
+	public function Whole() {
 		$val = self::$currencySymbol . number_format(abs($this->value), 0);
 		if($this->value < 0) return "($val)";
 		else return $val;
 	}
 	
-	function setValue($value, $record = null) {
+	public function setValue($value, $record = null) {
 		$matches = null;
 		if(is_numeric($value)) {
 			$this->value = $value;
@@ -54,7 +54,7 @@ class Currency extends Decimal {
 		}
 	}
 	
-	static function setCurrencySymbol($value) {
+	public static function setCurrencySymbol($value) {
 		self::$currencySymbol = $value;
 	}
 }

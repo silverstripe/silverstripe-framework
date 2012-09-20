@@ -5,7 +5,7 @@
  */
 class BacktraceTest extends SapphireTest {
 	
-	function testFullFuncNameWithArgsAndCustomCharLimit() {
+	public function testFullFuncNameWithArgsAndCustomCharLimit() {
 		$func = array(
 			'class' => 'MyClass',
 			'type' => '->',
@@ -23,7 +23,7 @@ class BacktraceTest extends SapphireTest {
 		);
 	}
 	
-	function testIgnoredFunctionArgs() {
+	public function testIgnoredFunctionArgs() {
 		$orig = SS_Backtrace::$ignore_function_args;
 		
 		$bt = array(

@@ -14,7 +14,7 @@
  * @subpackage transformations
  */
 class FormTransformation extends Object {
-	function transform(FormField $field) {
+	public function transform(FormField $field) {
 		// Look for a performXXTransformation() method on the field itself.
 		// performReadonlyTransformation() is a pretty commonly applied method.
 		// Otherwise, look for a transformXXXField() method on this object.

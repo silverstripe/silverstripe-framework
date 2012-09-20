@@ -403,7 +403,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $codes array|string Either a single permission code, or an array of permission codes
 	 * @return SS_List The matching group objects
 	 */
-	static function get_groups_by_permission($codes) {
+	public static function get_groups_by_permission($codes) {
 		if(!is_array($codes)) $codes = array($codes);
 		
 		$SQLa_codes = Convert::raw2sql($codes);
@@ -510,7 +510,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * Sort permissions based on their sort value, or name
 	 *
 	 */
-	static function sort_permissions($a, $b) {
+	public static function sort_permissions($a, $b) {
 		if ($a['sort'] == $b['sort']) {
 			// Same sort value, do alpha instead
 			return strcmp($a['name'], $b['name']);
@@ -526,7 +526,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
-	static function add_to_hidden_permissions($code){
+	public static function add_to_hidden_permissions($code){
 		self::$hidden_permissions[] = $code;
 	}
 	
@@ -536,7 +536,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
-	static function remove_from_hidden_permissions($code){
+	public static function remove_from_hidden_permissions($code){
 		self::$hidden_permissions = array_diff(self::$hidden_permissions, array($code));
 	}
 
@@ -549,7 +549,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param array $permArray A (possibly nested) array of permissions to
 	 *                         declare for the system.
 	 */
-	static function declare_permissions($permArray) {
+	public static function declare_permissions($permArray) {
 		if(is_array(self::$declared_permissions)) {
 			self::$declared_permissions =
 				array_merge_recursive(self::$declared_permissions, $permArray);

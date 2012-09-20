@@ -13,7 +13,7 @@ class MemberImportForm extends Form {
 	 */
 	protected $group;
 	
-	function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
+	public function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
 		if(!$fields) {
 			$helpHtml = _t(
 				'MemberImportForm.Help1', 
@@ -64,7 +64,7 @@ class MemberImportForm extends Form {
 		$this->addExtraClass('import-form');
 	}
 	
-	function doImport($data, $form) {
+	public function doImport($data, $form) {
 		$loader = new MemberCsvBulkLoader();
 		
 		// optionally set group relation
@@ -97,14 +97,14 @@ class MemberImportForm extends Form {
 	/**
 	 * @param $group Group
 	 */
-	function setGroup($group) {
+	public function setGroup($group) {
 		$this->group = $group;
 	}
 	
 	/**
 	 * @return Group
 	 */
-	function getGroup($group) {
+	public function getGroup($group) {
 		return $this->group;
 	}
 }

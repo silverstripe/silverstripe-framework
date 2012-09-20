@@ -5,7 +5,7 @@
  */
 class SQLFormatterTest extends SapphireTest {
 	
-	function testNewlineHanding() {
+	public function testNewlineHanding() {
 		$formatter = new SQLFormatter();
 		
 		$sqlBefore = <<<SQL

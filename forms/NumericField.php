@@ -7,12 +7,12 @@
  */
 class NumericField extends TextField{
 
-	function Type() {
+	public function Type() {
 		return 'numeric text';
 	}
 
 	/** PHP Validation **/
-	function validate($validator){
+	public function validate($validator){
 		if($this->value && !is_numeric(trim($this->value))){
  			$validator->validationError(
  				$this->name,
@@ -28,7 +28,7 @@ class NumericField extends TextField{
 		}
 	}
 	
-	function dataValue() {
+	public function dataValue() {
 		return (is_numeric($this->value)) ? $this->value : 0;
 	}
 }

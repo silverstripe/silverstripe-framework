@@ -9,7 +9,7 @@ class MySQLDatabaseTest extends SapphireTest {
 		'MySQLDatabaseTest_DO',
 	);
 	
-	function setUp() {
+	public function setUp() {
 		if(DB::getConn() instanceof MySQLDatabase) {
 			MySQLDatabaseTest_DO::$db = array(
 				'MultiEnum1' => 'MultiEnum("A, B, C, D","")',
@@ -24,7 +24,7 @@ class MySQLDatabaseTest extends SapphireTest {
 	/**
 	 * Check that once a schema has been generated, then it doesn't need any more updating
 	 */
-	function testFieldsDontRerequestChanges() {
+	public function testFieldsDontRerequestChanges() {
 		// These are MySQL specific :-S
 		if(DB::getConn() instanceof MySQLDatabase) {
 			$db = DB::getConn();

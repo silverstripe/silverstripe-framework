@@ -36,7 +36,7 @@ class CliDebugView extends DebugView {
 	 * Write a fragment of the a source file
 	 * @param $lines An array of file lines; the keys should be the original line numbers
 	 */
-	function writeSourceFragment($lines, $errline) {
+	public function writeSourceFragment($lines, $errline) {
 		echo "Source\n======\n";
 		foreach($lines as $offset => $line) {
 			echo ($offset == $errline) ? "* " : "  ";
@@ -49,7 +49,7 @@ class CliDebugView extends DebugView {
 	/**
 	 * Write a backtrace
 	 */
-	function writeTrace($trace = null) {
+	public function writeTrace($trace = null) {
 		echo "Trace\n=====\n";
 		echo SS_Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
 	}

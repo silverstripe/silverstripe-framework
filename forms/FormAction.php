@@ -36,13 +36,13 @@ class FormAction extends FormField {
 	 * @param title The label on the button
 	 * @param form The parent form, auto-set when the field is placed inside a form 
 	 */
-	function __construct($action, $title = "", $form = null) {
+	public function __construct($action, $title = "", $form = null) {
 		$this->action = "action_$action";
 		
 		parent::__construct($this->action, $title, null, $form);
 	}
 
-	function actionName() {
+	public function actionName() {
 		return substr($this->name, 7);
 	}
 	
@@ -50,12 +50,12 @@ class FormAction extends FormField {
 	 * Set the full action name, including action_
 	 * This provides an opportunity to replace it with something else
 	 */
-	function setFullAction($fullAction) {
+	public function setFullAction($fullAction) {
 		$this->action = $fullAction;
 		return $this;
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$properties = array_merge(
 			$properties,
 			array(
@@ -68,7 +68,7 @@ class FormAction extends FormField {
 		return parent::Field($properties);
 	}
 	
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
 	}
 
@@ -76,7 +76,7 @@ class FormAction extends FormField {
 		return 'action';
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		$type = (isset($this->attributes['src'])) ? 'image' : 'submit';
 		$type = ($this->useButtonTag) ? null : $type;
 		
@@ -94,7 +94,7 @@ class FormAction extends FormField {
 	/**
 	 * Add content inside a button field.
 	 */
-	function setButtonContent($content) {
+	public function setButtonContent($content) {
 		$this->buttonContent = (string) $content;
 		return $this;
 	}
@@ -102,7 +102,7 @@ class FormAction extends FormField {
 	/**
 	 * @return String
 	 */
-	function getButtonContent() {
+	public function getButtonContent() {
 		return $this->buttonContent;
 	}
 
@@ -121,7 +121,7 @@ class FormAction extends FormField {
 		return $this->useButtonTag;
 	}
 
-	function extraClass() {
+	public function extraClass() {
 		return 'action ' . parent::extraClass();
 	}
 
@@ -129,7 +129,7 @@ class FormAction extends FormField {
 	 * Does not transform to readonly by purpose.
 	 * Globally disabled buttons would break the CMS.
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->setReadonly(true);
 		return $clone;

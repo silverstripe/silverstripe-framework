@@ -54,12 +54,12 @@ class JSTestRunner extends Controller {
 	 *
 	 * @param string $reporter
 	 */
-	static function set_reporter($reporter) {
+	public static function set_reporter($reporter) {
 		if (is_string($reporter)) $reporter = new $reporter;
 		self::$default_reporter = $reporter;
 	}
 	
-	function init() {
+	public function init() {
 		parent::init();
 		
 		if(Director::is_cli()) {
@@ -77,14 +77,14 @@ class JSTestRunner extends Controller {
 	/**
 	 * Run all test classes
 	 */
-	function all() {
+	public function all() {
 		$this->runTests(array_keys($this->getAllTestFiles()));
 	}
 	
 	/**
 	 * Browse all enabled test cases in the environment
 	 */
-	function browse() {
+	public function browse() {
 		self::$default_reporter->writeHeader();
 		echo '<div class="info">';
 		echo '<h1>Available Tests</h1>';
@@ -103,7 +103,7 @@ class JSTestRunner extends Controller {
 	/**
 	 * Run only a single test class
 	 */
-	function only($request) {
+	public function only($request) {
 		$test = $request->param('TestCase');
 		
 		if ($test == 'all') {
@@ -118,7 +118,7 @@ class JSTestRunner extends Controller {
 		}
 	}
 
-	function runTests($tests) {
+	public function runTests($tests) {
 		$this->setUp();
 
 		self::$default_reporter->writeHeader("SilverStripe JavaScript Test Runner");
@@ -136,10 +136,10 @@ class JSTestRunner extends Controller {
 		$this->tearDown();
 	}
 	
-	function setUp() {
+	public function setUp() {
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 	}
 	
 	protected function getAllTestFiles() {

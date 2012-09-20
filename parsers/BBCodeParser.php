@@ -35,34 +35,34 @@ class BBCodeParser extends TextParser {
 	 */
 	protected static $smilies_location = null;
 	
-	static function smilies_location() {
+	public static function smilies_location() {
 		if(!BBCodeParser::$smilies_location) {
 			return FRAMEWORK_DIR . '/images/smilies';
 		}
 		return BBCodeParser::$smilies_location;
 	}
-	static function set_icon_folder($path) {
+	public static function set_icon_folder($path) {
 		BBCodeParser::$smilies_location = $path;
 	} 
 	
-	static function autolinkUrls() {
+	public static function autolinkUrls() {
 		return (self::$autolinkUrls != null) ? true : false;
 	}
 	
-	static function disable_autolink_urls($autolink = false) {
+	public static function disable_autolink_urls($autolink = false) {
 		BBCodeParser::$autolinkUrls = $autolink;
 	}
 	
-	static function smiliesAllowed() {
+	public static function smiliesAllowed() {
 		return (self::$allowSimilies != null) ? true : false;
 	}
 	
-	static function enable_smilies() {
+	public static function enable_smilies() {
 		BBCodeParser::$allowSimilies = true;
 	}
 	
 	
-	static function usable_tags() {
+	public static function usable_tags() {
 		return new ArrayList(
 			array(
 				new ArrayData(array(
@@ -128,7 +128,7 @@ class BBCodeParser extends TextParser {
 		);
 	}
 	
-	function useable_tagsHTML(){
+	public function useable_tagsHTML(){
 		$useabletags = "<ul class='bbcodeExamples'>";
 		foreach($this->usable_tags()->toArray() as $tag){
 			$useabletags = $useabletags."<li><span>".$tag->Example."</span></li>";
@@ -142,7 +142,7 @@ class BBCodeParser extends TextParser {
 	 *
 	 * @return Text
 	 */
-	function parse() {
+	public function parse() {
 		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
 
 		$p = new SSHTMLBBCodeParser();

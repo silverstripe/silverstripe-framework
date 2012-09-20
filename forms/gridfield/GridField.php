@@ -88,7 +88,7 @@ class GridField extends FormField {
 		$this->addExtraClass('ss-gridfield');
 	}
 
-	function index($request) {
+	public function index($request) {
 		return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
 	}
 	
@@ -626,7 +626,7 @@ class GridField extends FormField {
 	 * 
 	 * @todo There is too much code copied from RequestHandler here.
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		if($this->brokenOnConstruct) {
 			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
 		}

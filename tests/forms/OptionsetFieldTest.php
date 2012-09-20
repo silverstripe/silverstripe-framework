@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class OptionsetFieldTest extends SapphireTest {
-	function testSetDisabledItems() {
+	public function testSetDisabledItems() {
 		$f = new OptionsetField(
 			'Test', 
 			false, 
