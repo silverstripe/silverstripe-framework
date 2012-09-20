@@ -16,7 +16,7 @@ class HasManyList extends RelationList {
 	 * @param $relationFilters A map of key => value filters that define which records
 	 * in the $dataClass table actually belong to this relationship.
 	 */
-	function __construct($dataClass, $foreignKey) {
+	public function __construct($dataClass, $foreignKey) {
 		parent::__construct($dataClass);
 		$this->foreignKey = $foreignKey;
 	}
@@ -37,7 +37,7 @@ class HasManyList extends RelationList {
 	 * It does so by setting the relationFilters.
 	 * @param $item The DataObject to be added, or its ID 
 	 */
-	function add($item) {
+	public function add($item) {
 		if(is_numeric($item)) $item = DataObject::get_by_id($this->dataClass, $item);
 		else if(!($item instanceof $this->dataClass)) user_error("HasManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
 
@@ -62,7 +62,7 @@ class HasManyList extends RelationList {
 	 * Doesn't actually remove the item, it just clears the foreign key value.
 	 * @param $itemID The ID of the item to be removed
 	 */
-	function removeByID($itemID) {
+	public function removeByID($itemID) {
         $item = $this->byID($itemID);
         return $this->remove($item);
     }
@@ -73,7 +73,7 @@ class HasManyList extends RelationList {
 	 * @param $item The DataObject to be removed
 	 * @todo Maybe we should delete the object instead? 
 	 */
-	function remove($item) {
+	public function remove($item) {
         if(!($item instanceof $this->dataClass)) throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
 
 		$fk = $this->foreignKey;

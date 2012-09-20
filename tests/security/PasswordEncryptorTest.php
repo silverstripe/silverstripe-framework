@@ -18,7 +18,7 @@ class PasswordEncryptorTest extends SapphireTest {
 		PasswordEncryptor_Blowfish::set_cost(10);
 	}
 
-	function testCreateForCode() {
+	public function testCreateForCode() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
 		$e = PasswordEncryptor::create_for_algorithm('test');
 		$this->assertInstanceOf('PasswordEncryptorTest_TestEncryptor', $e );
@@ -27,11 +27,11 @@ class PasswordEncryptorTest extends SapphireTest {
 	/**
 	 * @expectedException PasswordEncryptor_NotFoundException
 	 */
-	function testCreateForCodeNotFound() {
+	public function testCreateForCodeNotFound() {
 		PasswordEncryptor::create_for_algorithm('unknown');
 	}
 	
-	function testRegister() {
+	public function testRegister() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
 		$encryptors = PasswordEncryptor::get_encryptors();
 		$this->assertContains('test', array_keys($encryptors));
@@ -39,19 +39,19 @@ class PasswordEncryptorTest extends SapphireTest {
 		$this->assertContains('PasswordEncryptorTest_TestEncryptor', key($encryptor));
 	}
 	
-	function testUnregister() {
+	public function testUnregister() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
 		Config::inst()->remove('PasswordEncryptor', 'encryptors', 'test');
 		$this->assertNotContains('test', array_keys(PasswordEncryptor::get_encryptors()));
 	}
 	
-	function testEncryptorPHPHashWithArguments() {
+	public function testEncryptorPHPHashWithArguments() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_md5'=>array('PasswordEncryptor_PHPHash'=>'md5')));
 		$e = PasswordEncryptor::create_for_algorithm('test_md5');
 		$this->assertEquals('md5', $e->getAlgorithm());
 	}
 	
-	function testEncryptorPHPHash() {
+	public function testEncryptorPHPHash() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1');
 		$password = 'mypassword';
@@ -62,7 +62,7 @@ class PasswordEncryptorTest extends SapphireTest {
 		);
 	}
 
-	function testEncryptorBlowfish() {
+	public function testEncryptorBlowfish() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_blowfish'=>array('PasswordEncryptor_Blowfish'=>'')));
 		$e = PasswordEncryptor::create_for_algorithm('test_blowfish');
 		
@@ -106,7 +106,7 @@ class PasswordEncryptorTest extends SapphireTest {
 		//Don't actually test this one. It takes too long. 31 takes too long to process
 	}
 	
-	function testEncryptorPHPHashCheck() {
+	public function testEncryptorPHPHashCheck() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1');
 		$this->assertTrue($e->check(sha1('mypassword'), 'mypassword'));
@@ -119,7 +119,7 @@ class PasswordEncryptorTest extends SapphireTest {
 	 * Handy command for reproducing via CLI on different architectures:
 	 * 	php -r "echo(base_convert(sha1('mypassword'), 16, 36));"
 	 */
-	function testEncryptorLegacyPHPHashCheck() {
+	public function testEncryptorLegacyPHPHashCheck() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1legacy'=>array('PasswordEncryptor_LegacyPHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1legacy');
 		// precomputed hashes for 'mypassword' from different architectures
@@ -133,11 +133,11 @@ class PasswordEncryptorTest extends SapphireTest {
 }
 
 class PasswordEncryptorTest_TestEncryptor extends PasswordEncryptor implements TestOnly {
-	function encrypt($password, $salt = null, $member = null) {
+	public function encrypt($password, $salt = null, $member = null) {
 		return 'password';
 	}
 	
-	function salt($password, $member = null) {
+	public function salt($password, $member = null) {
 		return 'salt';
 	}
 }

@@ -8,7 +8,7 @@ class TableFieldTest extends SapphireTest {
 		'TableFieldTest_HasManyRelation',
 	);
 
-	function testAdd() {
+	public function testAdd() {
 		$group = $this->objFromFixture('Group','group1_no_perms');
 		
 		$tableField = new TableField(
@@ -84,7 +84,7 @@ class TableFieldTest extends SapphireTest {
 
 	}
 	
-	function testEdit() {
+	public function testEdit() {
 		$group = $this->objFromFixture('Group','group2_existing_perms');
 		$perm1 = $this->objFromFixture('Permission', 'perm1');
 		$perm2 = $this->objFromFixture('Permission', 'perm2');
@@ -133,7 +133,7 @@ class TableFieldTest extends SapphireTest {
 		), $permissions->toArray());
 	}
 	
-	function testDelete() {
+	public function testDelete() {
 		$group = $this->objFromFixture('Group','group2_existing_perms');
 		$perm1 = $this->objFromFixture('Permission', 'perm1');
 		$perm2 = $this->objFromFixture('Permission', 'perm2');
@@ -169,7 +169,7 @@ class TableFieldTest extends SapphireTest {
 	/**
 	 * Relation auto-setting is now the only option
 	 */
-	function testAutoRelationSettingOn() {
+	public function testAutoRelationSettingOn() {
 		$o = new TableFieldTest_Object();
 		$o->write();
 
@@ -198,7 +198,7 @@ class TableFieldTest extends SapphireTest {
 		$this->assertEquals(2, $o->HasManyRelations()->Count());
 	}
 
-	function testHasItemsWhenSetAsArray() {
+	public function testHasItemsWhenSetAsArray() {
 		$tf = new TableField(
 			'TestTableField',
 			'TableFieldTest_HasManyRelation',
@@ -242,7 +242,7 @@ class TableFieldTest extends SapphireTest {
  * Stub controller
  */
 class TableFieldTest_Controller extends Controller implements TestOnly {
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links('TableFieldTest/', $action);
 	}
 }

@@ -15,7 +15,7 @@ abstract class CliController extends Controller {
 		'index'
 	);
 
-	function init() {
+	public function init() {
 		parent::init();
 		// Unless called from the command line, all CliControllers need ADMIN privileges
 		if(!Director::is_cli() && !Permission::check("ADMIN")) {
@@ -23,7 +23,7 @@ abstract class CliController extends Controller {
 		}
 	}
 
-	function index() {
+	public function index() {
 		foreach(ClassInfo::subclassesFor($this->class) as $subclass) {
 			echo $subclass . "\n";
 			$task = new $subclass();
@@ -35,6 +35,6 @@ abstract class CliController extends Controller {
 	/**
 	 * Overload this method to contain the task logic.
 	 */
-	function process() {}
+	public function process() {}
 
 }

@@ -11,7 +11,7 @@ class NullableFieldTests extends SapphireTest {
 	/**
 	 * Test that the NullableField works when it wraps a TextField containing actual content
 	 */
-	function testWithContent() {
+	public function testWithContent() {
 		$a = new NullableField(new TextField("Field1", "Field 1", "abc"));
 		$this->assertEquals("Field1", $a->getName());
 		$this->assertEquals("Field 1", $a->Title());
@@ -32,7 +32,7 @@ class NullableFieldTests extends SapphireTest {
 	/**
 	 * Test that the NullableField works when it wraps a TextField containing an empty string
 	 */
-	function testWithEmpty() {
+	public function testWithEmpty() {
 		$a = new NullableField(new TextField("Field1", "Field 1", ""));
 		$this->assertEquals("Field1", $a->getName());
 		$this->assertEquals("Field 1", $a->Title());
@@ -53,7 +53,7 @@ class NullableFieldTests extends SapphireTest {
 	/**
 	 * Test that the NullableField works when it wraps a TextField containing a null string
 	 */
-	function testWithNull() {
+	public function testWithNull() {
 		$a = new NullableField(new TextField("Field1", "Field 1", null));
 		$this->assertEquals("Field1", $a->getName());
 		$this->assertEquals("Field 1", $a->Title());
@@ -76,7 +76,7 @@ class NullableFieldTests extends SapphireTest {
 	/**
 	 * Test NullableField::setValue works when passed simple values
 	 */
-	function testSetValueSimple() {
+	public function testSetValueSimple() {
 		$a = new NullableField(new TextField("Field1", "Field 1"));
 		$a->setValue("abc");
 		$this->assertSame("abc", $a->dataValue());
@@ -106,7 +106,7 @@ class NullableFieldTests extends SapphireTest {
 	 * Test NullableField::setValue works when passed an array values,
 	 * which happens when the form submits.
 	 */
-	function testSetValueArray() {
+	public function testSetValueArray() {
 		$a = new NullableField(new TextField("Field1", "Field 1"));
 		$a->setValue("abc", array("Field1_IsNull"=>false));
 		$this->assertSame("abc", $a->dataValue());

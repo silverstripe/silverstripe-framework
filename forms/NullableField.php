@@ -37,7 +37,7 @@ class NullableField extends FormField {
 	 * @param $valueField
 	 * @return NullableField
 	 */
-	function __construct(FormField $valueField, $isNullLabel = null) {
+	public function __construct(FormField $valueField, $isNullLabel = null) {
 		$this->valueField = $valueField;
 		$this->isNullLabel = $isNullLabel;
 		if ( is_null($this->isNullLabel) ) {
@@ -52,14 +52,14 @@ class NullableField extends FormField {
 	 * Get the label used for the Is Null checkbox.
 	 * @return string
 	 */
-	function getIsNullLabel() {
+	public function getIsNullLabel() {
 		return $this->isNullLabel;
 	}
 	/**
 	 * Set the label used for the Is Null checkbox.
 	 * @param $isNulLabel string
 	 */
-	function setIsNullLabel(string $isNulLabel){
+	public function setIsNullLabel(string $isNulLabel){
 		$this->isNullLabel = $isNulLabel;
 		return $this;
 	}
@@ -68,7 +68,7 @@ class NullableField extends FormField {
 	 * Get the id used for the Is Null check box.
 	 * @return string
 	 */
-	function getIsNullId() {
+	public function getIsNullId() {
 		return $this->getName() . "_IsNull";
 	}
 
@@ -76,7 +76,7 @@ class NullableField extends FormField {
 	 * (non-PHPdoc)
 	 * @see framework/forms/FormField#Field()
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		if ( $this->isReadonly()) {
 			$nullableCheckbox = new CheckboxField_Readonly($this->getIsNullId());
 		} else {
@@ -90,7 +90,7 @@ class NullableField extends FormField {
 	/**
 	 * Value is sometimes an array, and sometimes a single value, so we need to handle both cases
 	 */
-	function setValue($value, $data = null) {
+	public function setValue($value, $data = null) {
 		if ( is_array($data) && array_key_exists($this->getIsNullId(), $data) && $data[$this->getIsNullId()] ) {
 			$value = null;
 		}
@@ -104,7 +104,7 @@ class NullableField extends FormField {
 	 * (non-PHPdoc)
 	 * @see forms/FormField#setName($name)
 	 */
-	function setName($name) {
+	public function setName($name) {
 		// We need to pass through the name change to the underlying value field.
 		$this->valueField->setName($name);
 		parent::setName($name);
@@ -116,7 +116,7 @@ class NullableField extends FormField {
 	 * (non-PHPdoc)
 	 * @see framework/forms/FormField#debug()
 	 */
-	function debug() {
+	public function debug() {
 		$result = "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>) = ";
 		$result .= (is_null($this->value)) ? "<<null>>" : $this->value;
 		return result;

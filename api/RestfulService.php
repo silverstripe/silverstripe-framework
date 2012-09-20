@@ -27,7 +27,7 @@ class RestfulService extends ViewableData {
 	 * @param string $password The proxy auth password
 	 * @param boolean $socks Set true to use socks5 proxy instead of http
 	 */
-	static function set_default_proxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
+	public static function set_default_proxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
 		self::$default_proxy = array(
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
@@ -41,7 +41,7 @@ class RestfulService extends ViewableData {
  	* @param string $base Base URL of the web service eg: api.example.com 
  	* @param int $expiry Set the cache expiry interva. Defaults to 1 hour (3600 seconds)
  	*/
-	function __construct($base, $expiry=3600){
+	public function __construct($base, $expiry=3600){
 		$this->baseURL = $base;
 		$this->cache_expire = $expiry;
 		$this->proxy = self::$default_proxy;
@@ -52,7 +52,7 @@ class RestfulService extends ViewableData {
  	* Sets the Query string parameters to send a request.
  	* @param array $params An array passed with necessary parameters. 
  	*/
-	function setQueryString($params=NULL){
+	public function setQueryString($params=NULL){
 		$this->queryString = http_build_query($params,'','&');
 	}
 
@@ -65,7 +65,7 @@ class RestfulService extends ViewableData {
 	 * @param string $password The proxy auth password
 	 * @param boolean $socks Set true to use socks5 proxy instead of http
 	 */
-	 function setProxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
+	 public function setProxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
 		$this->proxy = array(
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
@@ -77,7 +77,7 @@ class RestfulService extends ViewableData {
 	/**
 	 * Set basic authentication
 	 */
-	function basicAuth($username, $password) {
+	public function basicAuth($username, $password) {
 		$this->authUsername = $username;
 		$this->authPassword = $password;
 	}
@@ -85,7 +85,7 @@ class RestfulService extends ViewableData {
 	/**
 	 * Set a custom HTTP header
 	 */
-	function httpHeader($header) {
+	public function httpHeader($header) {
 		$this->customHeaders[] = $header;
 	}
 	
@@ -227,7 +227,7 @@ class RestfulService extends ViewableData {
 	 * Returns a full request url
 	 * @param string 
 	 */ 
-	function getAbsoluteRequestURL($subURL) {
+	public function getAbsoluteRequestURL($subURL) {
 		$url = $this->baseURL . $subURL; // Url for the request
 		if($this->queryString) {
 			if(strpos($url, '?') !== false) {
@@ -355,7 +355,7 @@ class RestfulService extends ViewableData {
  	* @param string $element The element we need to extract the node value.
  	*/
 	
-	function getValue($xml, $collection=NULL, $element=NULL){
+	public function getValue($xml, $collection=NULL, $element=NULL){
 		$xml = new SimpleXMLElement($xml);
 		
 		if($collection)
@@ -372,7 +372,7 @@ class RestfulService extends ViewableData {
  	* @param string $xml source xml to parse, this could be the original response received.
  	* @param string $node Node to search for
  	*/
-	function searchValue($xml, $node=NULL){
+	public function searchValue($xml, $node=NULL){
 		$xml = new SimpleXMLElement($xml);
 		$childElements = $xml->xpath($node);
 		
@@ -385,7 +385,7 @@ class RestfulService extends ViewableData {
  	* @param string $xml the source xml to parse, this could be the original response received.
  	* @param string $node Node to search for
  	*/
-	function searchAttributes($xml, $node=NULL){
+	public function searchAttributes($xml, $node=NULL){
 		$xml = new SimpleXMLElement($xml);
 		$output = new ArrayList();
 	
@@ -418,13 +418,13 @@ class RestfulService_Response extends SS_HTTPResponse {
 	 */
 	protected $cachedBody = false;  
 	
-	function __construct($body, $statusCode = 200, $headers = null) {
+	public function __construct($body, $statusCode = 200, $headers = null) {
 		$this->setbody($body);
 		$this->setStatusCode($statusCode);
 		$this->headers = $headers;
 	}
 	
-	function simpleXML() {
+	public function simpleXML() {
 		if(!$this->simpleXML) {
 			try {
 				$this->simpleXML = new SimpleXMLElement($this->body);
@@ -439,28 +439,28 @@ class RestfulService_Response extends SS_HTTPResponse {
 	/**
 	 * @return string
 	 */
-	function getCachedBody() {
+	public function getCachedBody() {
 		return $this->cachedBody;
 	}
 	
 	/**
 	 * @param string
 	 */
-	function setCachedBody($content) {
+	public function setCachedBody($content) {
 		$this->cachedBody = $content; 
 	}
 	
 	/**
 	 * Return an array of xpath matches
 	 */
-	function xpath($xpath) {
+	public function xpath($xpath) {
 		return $this->simpleXML()->xpath($xpath);
 	}
 	
 	/**
 	 * Return the first xpath match
 	 */
-	function xpath_one($xpath) {
+	public function xpath_one($xpath) {
 		$items = $this->xpath($xpath);
 		return $items[0];
 	}

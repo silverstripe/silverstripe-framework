@@ -5,7 +5,7 @@
  */
 class URLSegmentFilterTest extends SapphireTest {
 	
-	function testReplacesCommonEnglishSymbols() {
+	public function testReplacesCommonEnglishSymbols() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(false);
 		$this->assertEquals(
@@ -14,7 +14,7 @@ class URLSegmentFilterTest extends SapphireTest {
 		);
 	}
 	
-	function testTransliteratesNonAsciiUrls() {
+	public function testTransliteratesNonAsciiUrls() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(false);
 		$this->assertEquals(
@@ -23,7 +23,7 @@ class URLSegmentFilterTest extends SapphireTest {
 		);
 	}
 	
-	function testRetainsNonAsciiUrlsWithAllowMultiByteOption() {
+	public function testRetainsNonAsciiUrlsWithAllowMultiByteOption() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(true);
 		$this->assertEquals(
@@ -32,7 +32,7 @@ class URLSegmentFilterTest extends SapphireTest {
 		);
 	}
 
-	function testReplacements() {
+	public function testReplacements() {
 		$f = new URLSegmentFilter();
 		$this->assertEquals(
 			'tim-and-struppi', 

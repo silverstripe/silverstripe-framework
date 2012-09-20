@@ -10,7 +10,7 @@
  * @subpackage security
  */
 abstract class LoginForm extends Form {
-	function __construct($controller, $name, $fields, $actions) {
+	public function __construct($controller, $name, $fields, $actions) {
 		parent::__construct($controller, $name, $fields, $actions);
 		
 		$this->disableSecurityToken();	

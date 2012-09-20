@@ -10,7 +10,7 @@ class FolderTest extends SapphireTest {
 	
 	static $fixture_file = 'FileTest.yml'; 
 	
-	function testCreateFromNameAndParentIDSetsFilename() {
+	public function testCreateFromNameAndParentIDSetsFilename() {
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
 		$newFolder = new Folder();
 		$newFolder->Name = 'CreateFromNameAndParentID';
@@ -20,7 +20,7 @@ class FolderTest extends SapphireTest {
 		$this->assertEquals($folder1->Filename . 'CreateFromNameAndParentID/', $newFolder->Filename);
 	}
 	
-	function testAllChildrenIncludesFolders() {
+	public function testAllChildrenIncludesFolders() {
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
 		$subfolder1 = $this->objFromFixture('Folder', 'folder1-subfolder1');
 		$file1 = $this->objFromFixture('File', 'file1-folder1');
@@ -31,7 +31,7 @@ class FolderTest extends SapphireTest {
 		$this->assertContains($file1->ID, $children->column('ID'));
 	}
 		
-	function testFindOrMake() {
+	public function testFindOrMake() {
 		$path = '/FolderTest/testFindOrMake/';
 		$folder = Folder::find_or_make($path);
 		$this->assertEquals(ASSETS_DIR . $path,$folder->getRelativePath(),
@@ -59,7 +59,7 @@ class FolderTest extends SapphireTest {
 	/**
 	 * @see FileTest->testSetNameChangesFilesystemOnWrite()
 	 */
-	function testSetNameChangesFilesystemOnWrite() {
+	public function testSetNameChangesFilesystemOnWrite() {
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
 		$subfolder1 = $this->objFromFixture('Folder', 'folder1-subfolder1');
 		$file1 = $this->objFromFixture('File', 'file1-folder1');
@@ -101,7 +101,7 @@ class FolderTest extends SapphireTest {
 	/**
 	 * @see FileTest->testSetParentIDChangesFilesystemOnWrite()
 	 */
-	function testSetParentIDChangesFilesystemOnWrite() {
+	public function testSetParentIDChangesFilesystemOnWrite() {
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
 		$folder2 = $this->objFromFixture('Folder', 'folder2');
 		$oldPathFolder1 = $folder1->getFullPath();
@@ -124,7 +124,7 @@ class FolderTest extends SapphireTest {
 	/**
 	 * Tests for the bug #5994 - Moving folder after executing Folder::findOrMake will not set the Filenames properly
 	 */
-	function testFindOrMakeFolderThenMove() {
+	public function testFindOrMakeFolderThenMove() {
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
 		Folder::find_or_make($folder1->Filename);
 		$folder2 = $this->objFromFixture('Folder', 'folder2');
@@ -142,7 +142,7 @@ class FolderTest extends SapphireTest {
 	/**
 	 * Tests for the bug #5994 - if you don't execute get_by_id prior to the rename or move, it will fail.
 	 */
-	function testRenameFolderAndCheckTheFile() {
+	public function testRenameFolderAndCheckTheFile() {
 		// ID is prefixed in case Folder is subclassed by project/other module.
 		$folder1 = DataObject::get_one('Folder', '"File"."ID"='.$this->idFromFixture('Folder', 'folder1'));
 		
@@ -158,7 +158,7 @@ class FolderTest extends SapphireTest {
 	/**
 	 * @see FileTest->testLinkAndRelativeLink()
 	 */
-	function testLinkAndRelativeLink() {
+	public function testLinkAndRelativeLink() {
 		$folder = $this->objFromFixture('Folder', 'folder1');
 		$this->assertEquals(ASSETS_DIR . '/FileTest-folder1/', $folder->RelativeLink());
 		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/FileTest-folder1/', $folder->Link());
@@ -167,7 +167,7 @@ class FolderTest extends SapphireTest {
 	/**
 	 * @see FileTest->testGetRelativePath()
 	 */
-	function testGetRelativePath() {
+	public function testGetRelativePath() {
 		$rootfolder = $this->objFromFixture('Folder', 'folder1');
 		$this->assertEquals('assets/FileTest-folder1/', $rootfolder->getRelativePath(), 'Folder in assets/');
 	}
@@ -175,12 +175,12 @@ class FolderTest extends SapphireTest {
 	/**
 	 * @see FileTest->testGetFullPath()
 	 */
-	function testGetFullPath() {
+	public function testGetFullPath() {
 		$rootfolder = $this->objFromFixture('Folder', 'folder1');
 		$this->assertEquals(ASSETS_PATH . '/FileTest-folder1/', $rootfolder->getFullPath(), 'File in assets/ folder');
 	}
 		
-	function testDeleteAlsoRemovesFilesystem() {
+	public function testDeleteAlsoRemovesFilesystem() {
 		$path = '/FolderTest/DeleteAlsoRemovesFilesystemAndChildren'; 
 		$folder = Folder::find_or_make($path);
 		$this->assertFileExists(ASSETS_PATH . $path);
@@ -190,7 +190,7 @@ class FolderTest extends SapphireTest {
 		$this->assertFileNotExists(ASSETS_PATH . $path);
 	}
 	
-	function testDeleteAlsoRemovesSubfoldersInDatabaseAndFilesystem() {
+	public function testDeleteAlsoRemovesSubfoldersInDatabaseAndFilesystem() {
 		$path = '/FolderTest/DeleteAlsoRemovesSubfoldersInDatabaseAndFilesystem'; 
 		$subfolderPath = $path . '/subfolder';
 		$folder = Folder::find_or_make($path);
@@ -204,7 +204,7 @@ class FolderTest extends SapphireTest {
 		$this->assertFalse(DataObject::get_by_id('Folder', $subfolderID), 'Subfolder removed from database');
 	}
 	
-	function testDeleteAlsoRemovesContainedFilesInDatabaseAndFilesystem() {
+	public function testDeleteAlsoRemovesContainedFilesInDatabaseAndFilesystem() {
 		$path = '/FolderTest/DeleteAlsoRemovesContainedFilesInDatabaseAndFilesystem'; 
 		$folder = Folder::find_or_make($path);
 		
@@ -225,7 +225,7 @@ class FolderTest extends SapphireTest {
 	/**
 	 * @see FileTest->testDeleteDatabaseOnly()
 	 */
-	function testDeleteDatabaseOnly() {
+	public function testDeleteDatabaseOnly() {
 		$subfolder = $this->objFromFixture('Folder', 'subfolder');
 		$subfolderID = $subfolder->ID;
 		$subfolderFile = $this->objFromFixture('File', 'subfolderfile');
@@ -242,7 +242,7 @@ class FolderTest extends SapphireTest {
 		$this->assertFalse(DataObject::get_by_id('File', $subfolderFileID));
 	}
 		
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
@@ -264,7 +264,7 @@ class FolderTest extends SapphireTest {
 		}
 	} 
 	
-	function tearDown() {
+	public function tearDown() {
 		$testPath = ASSETS_PATH . '/FolderTest';
 		if(file_exists($testPath)) Filesystem::removeFolder($testPath);
 		

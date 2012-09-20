@@ -24,7 +24,7 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		'SearchFilterApplyRelationTest_ManyManyGrantChild',
 	);	
 	
-	function testApplyRelationHasOne(){
+	public function testApplyRelationHasOne(){
 		
 		$all = singleton("SearchFilterApplyRelationTest_DO");
 		$context = $all->getDefaultSearchContext();
@@ -39,7 +39,7 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		$this->assertEquals(2, $results->count());
 	}
 	
-	function testApplyRelationHasMany(){
+	public function testApplyRelationHasMany(){
 		$do1 = $this->objFromFixture('SearchFilterApplyRelationTest_DO', 'do1');
 		$do2 = $this->objFromFixture('SearchFilterApplyRelationTest_DO', 'do2');
 		
@@ -76,7 +76,7 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		$this->assertEquals(0, $results->count());
 	}
 	
-	function testApplyRelationManyMany(){
+	public function testApplyRelationManyMany(){
 		$all = singleton("SearchFilterApplyRelationTest_DO");
 		$context = $all->getDefaultSearchContext();
 			

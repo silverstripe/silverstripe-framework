@@ -16,7 +16,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	/**
 	 * Test plain import with column auto-detection
 	 */
-	function testLoad() {
+	public function testLoad() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv';
 		$file = fopen($filepath, 'r');
@@ -41,7 +41,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	/** 
 	 * Test plain import with clear_table_before_import  
 	 	 */ 
-	function testDeleteExistingRecords() { 
+	public function testDeleteExistingRecords() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player'); 
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv'; 
 		$loader->deleteExistingRecords = true;
@@ -57,7 +57,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	/**
 	 * Test import with manual column mapping
 	 */
-	function testLoadWithColumnMap() {
+	public function testLoadWithColumnMap() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_Players.csv';
 		$file = fopen($filepath, 'r');
@@ -93,7 +93,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	/**
 	 * Test import with manual column mapping and custom column names
 	 */
-	function testLoadWithCustomHeaderAndRelation() {
+	public function testLoadWithCustomHeaderAndRelation() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
 		$file = fopen($filepath, 'r');
@@ -142,7 +142,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	 * 
 	 * @todo Test duplicateCheck callbacks
 	 */
-	function testLoadWithIdentifiers() {
+	public function testLoadWithIdentifiers() {
 		// first load
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithId.csv';
@@ -166,7 +166,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($player->Biography, 'He\'s a good guy', 'Test retaining of previous information on duplicate when overwriting with blank field');
 	}
 	
-	function testLoadWithCustomImportMethods() {
+	public function testLoadWithCustomImportMethods() {
 		$loader = new CsvBulkLoaderTest_CustomLoader('CsvBulkLoaderTest_Player');
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv';
 		$loader->columnMap = array(
@@ -193,7 +193,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 }
 
 class CsvBulkLoaderTest_CustomLoader extends CsvBulkLoader implements TestOnly {
-	function importFirstName(&$obj, $val, $record) {
+	public function importFirstName(&$obj, $val, $record) {
 		$obj->FirstName = "Customized {$val}";
 	}
 }

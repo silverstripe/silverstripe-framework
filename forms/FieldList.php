@@ -624,7 +624,7 @@ class FieldList extends ArrayList {
 	/**
 	 * Default template rendering of a FieldList will concatenate all FieldHolder values.
 	 */
-	function forTemplate() {
+	public function forTemplate() {
 		$output = "";
 		foreach($this as $field) {
 			$output .= $field->FieldHolder();

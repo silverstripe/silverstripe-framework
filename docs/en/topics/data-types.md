@@ -48,7 +48,7 @@ Through a `$casting` array, arbitrary properties and getters can be casted:
 		static $casting = array(
 			'MyDate' => 'Date'
 		);
-		function getMyDate() {
+		public function getMyDate() {
 			return '1982-01-01';
 		}
 	}

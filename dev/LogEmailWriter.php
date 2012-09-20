@@ -25,7 +25,7 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		$this->customSmtpServer = $customSmtpServer;
 	}
 	
-	static function factory($emailAddress, $customSmtpServer = false) {
+	public static function factory($emailAddress, $customSmtpServer = false) {
 		return new SS_LogEmailWriter($emailAddress, $customSmtpServer);
 	}
 

@@ -6,7 +6,7 @@
 
 class PasswordValidatorTest extends SapphireTest {
 	
-	function testValidate() {
+	public function testValidate() {
 		$v = new PasswordValidator();
 		$r = $v->validate('', new Member());
 		$this->assertTrue($r->valid(), 'Empty password is valid by default');
@@ -15,7 +15,7 @@ class PasswordValidatorTest extends SapphireTest {
 		$this->assertTrue($r->valid(), 'Non-Empty password is valid by default');
 	}
 	
-	function testValidateMinLength() {
+	public function testValidateMinLength() {
 		$v = new PasswordValidator();
 		
 		$v->minLength(4);
@@ -27,7 +27,7 @@ class PasswordValidatorTest extends SapphireTest {
 		$this->assertTrue($r->valid(), 'Password long enough');
 	}
 	
-	function testValidateMinScore() {
+	public function testValidateMinScore() {
 		$v = new PasswordValidator();
 		$v->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
 		
@@ -38,7 +38,7 @@ class PasswordValidatorTest extends SapphireTest {
 		$this->assertTrue($r->valid(), 'Passing enough tests');
 	}
 	
-	function testHistoricalPasswordCount() {
+	public function testHistoricalPasswordCount() {
 		// TODO
 	}
 }

@@ -7,7 +7,7 @@
 class RequestHandlingTest extends FunctionalTest {
 	static $fixture_file = null;
 	
-	// function testRequestHandlerChainingLatestParams() {
+	// public function testRequestHandlerChainingLatestParams() {
 	// 	$c = new RequestHandlingTest_Controller();
 	// 	$c->init();
 	// 	$response = $c->handleRequest(new SS_HTTPRequest('GET', 'testGoodBase1/TestForm/fields/MyField'));
@@ -20,16 +20,16 @@ class RequestHandlingTest extends FunctionalTest {
 	// 	);
 	// }
 	
-	function testConstructedWithNullRequest() {
+	public function testConstructedWithNullRequest() {
 		$r = new RequestHandler();
 		$this->assertInstanceOf('NullHTTPRequest', $r->getRequest());
 	}
 	
-	function testRequestHandlerChainingAllParams() {
+	public function testRequestHandlerChainingAllParams() {
 		// TODO
 	}
 	
-	function testMethodCallingOnController() {
+	public function testMethodCallingOnController() {
 		/* Calling a controller works just like it always has */
 		$response = Director::test("testGoodBase1");
 		$this->assertEquals("This is the controller", $response->getBody());
@@ -43,7 +43,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("\$this->urlParams can be used, for backward compatibility: 3, 4", $response->getBody());
 	}
 		
-	function testPostRequests() {
+	public function testPostRequests() {
 		/* The HTTP Request handler can trigger special behaviour for GET and POST. */
 		$response = Director::test("testGoodBase1/TestForm", array("MyField" => 3), null, "POST");
 		$this->assertEquals("Form posted", $response->getBody());
@@ -52,7 +52,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("Get request on form", $response->getBody());
 	}
 
-	function testRequestHandlerChaining() {
+	public function testRequestHandlerChaining() {
 		/* Request handlers can be chained, from Director to Controller to Form to FormField.  Here, we can make a get
 		request on a FormField. */
 		$response = Director::test("testGoodBase1/TestForm/fields/MyField");
@@ -63,7 +63,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("MyField posted, update to 5", $response->getBody());
 	}
 		
-	function testBadBase() {
+	public function testBadBase() {
 		/* Without a double-slash indicator in the URL, the entire URL is popped off the stack.  The controller's default
 		action handlers have been designed for this to an extend: simple actions can still be called.  This is the set-up
 		of URL rules written before this new request handler. */
@@ -79,7 +79,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertNotEquals("MyField requested", $response->getBody());
 	}
 	
-	function testBaseWithExtension() {
+	public function testBaseWithExtension() {
 		/* Rules with an extension always default to the index() action */
 		$response = Director::test("testBaseWithExtension/virtualfile.xml");
 		$this->assertEquals("This is the controller", $response->getBody());
@@ -89,13 +89,13 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("This is the virtualfile method", $response->getBody());
 	}
 	
-	function testNestedBase() {
+	public function testNestedBase() {
 		/* Nested base should leave out the two parts and correctly map arguments */
 		$response = Director::test("testParentBase/testChildBase/method/1/2");
 		$this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
 	}
 	
-	function testInheritedUrlHandlers() {
+	public function testInheritedUrlHandlers() {
 		/* $url_handlers can be defined on any class, and */
 		$response = Director::test("testGoodBase1/TestForm/fields/SubclassedField/something");
 		$this->assertEquals("customSomething", $response->getBody());
@@ -105,7 +105,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("SubclassedField requested", $response->getBody());
 	}
 	
-	function testDisallowedExtendedActions() {
+	public function testDisallowedExtendedActions() {
 		/* Actions on magic methods are only accessible if explicitly allowed on the controller. */
 		$response = Director::test("testGoodBase1/extendedMethod");
 		$this->assertEquals(404, $response->getStatusCode());
@@ -144,12 +144,12 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals('This page does not exist.', $response->getBody());
 	}
 	
-	function testMethodsOnParentClassesOfRequestHandlerDeclined() {
+	public function testMethodsOnParentClassesOfRequestHandlerDeclined() {
 		$response = Director::test('testGoodBase1/getIterator');
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 	
-	function testFormActionsCanBypassAllowedActions() {
+	public function testFormActionsCanBypassAllowedActions() {
 		SecurityToken::enable();		
 		
 		$response = $this->get('RequestHandlingTest_FormActionController');
@@ -221,7 +221,7 @@ class RequestHandlingTest extends FunctionalTest {
 		SecurityToken::disable();
 	}
 	
-	function testAllowedActionsEnforcedOnForm() {
+	public function testAllowedActionsEnforcedOnForm() {
 		$data = array('action_allowedformaction' => 1);
 		$response = $this->post('RequestHandlingTest_ControllerFormWithAllowedActions/Form', $data);
 		$this->assertEquals(200, $response->getStatusCode());
@@ -234,7 +234,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertContains('not allowed on form', $response->getBody());
 	}
 	
-	function testActionHandlingOnField() {
+	public function testActionHandlingOnField() {
 		$data = array('action_actionOnField' => 1);
 		$response = $this->post('RequestHandlingFieldTest_Controller/TestForm', $data);
 		$this->assertEquals(200, $response->getStatusCode());
@@ -287,28 +287,28 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 		'RequestHandlingTest_AllowedControllerExtension',
 	);
 	
-	function __construct() {
+	public function __construct() {
 		$this->failover = new RequestHandlingTest_ControllerFailover();
 		parent::__construct();
 	}
 	
-	function index($request) {
+	public function index($request) {
 		return "This is the controller";
 	}
 
-	function method($request) {
+	public function method($request) {
 		return "This is a method on the controller: " . $request->param('ID') . ', ' . $request->param('OtherID');
 	}
 
-	function legacymethod($request) {
+	public function legacymethod($request) {
 		return "\$this->urlParams can be used, for backward compatibility: " . $this->urlParams['ID'] . ', ' . $this->urlParams['OtherID'];
 	}
 	
-	function virtualfile($request) {
+	public function virtualfile($request) {
 		return "This is the virtualfile method";
 	}
 	
-	function TestForm() {
+	public function TestForm() {
 		return new RequestHandlingTest_Form($this, "TestForm", new FieldList(
 			new RequestHandlingTest_FormField("MyField"),
 			new RequestHandlingTest_SubclassedFormField("SubclassedField")
@@ -345,19 +345,19 @@ class RequestHandlingTest_FormActionController extends Controller {
 		//'formaction', // left out, implicitly allowed through form action
 	);
 	
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links('RequestHandlingTest_FormActionController', $action);
 	}
 	
-	function controlleraction($request) {
+	public function controlleraction($request) {
 		return 'controlleraction';
 	}
 	
-	function disallowedcontrollermethod() {
+	public function disallowedcontrollermethod() {
 		return 'disallowedcontrollermethod';
 	}
 	
-	function Form() {
+	public function Form() {
 		return new Form(
 			$this, 
 			"Form", 
@@ -376,11 +376,11 @@ class RequestHandlingTest_FormActionController extends Controller {
 	 * @param $form Made optional to simulate error behaviour in "live" environment
 	 *  (missing arguments don't throw a fatal error there)
 	 */
-	function formaction($data, $form = null) {
+	public function formaction($data, $form = null) {
 		return 'formaction';
 	}
 	
-	function formactionInAllowedActions($data, $form = null) {
+	public function formactionInAllowedActions($data, $form = null) {
 		return 'formactionInAllowedActions';
 	}
 
@@ -394,7 +394,7 @@ class RequestHandlingTest_FormActionController extends Controller {
  * Simple extension for the test controller
  */
 class RequestHandlingTest_ControllerExtension extends Extension {
-	function extendedMethod() {
+	public function extendedMethod() {
 		return "extendedMethod";
 	}
 }
@@ -418,12 +418,12 @@ class RequestHandlingTest_AllowedController extends Controller implements TestOn
 		'RequestHandlingTest_AllowedControllerExtension',
 	);
 	
-	function __construct() {
+	public function __construct() {
 		$this->failover = new RequestHandlingTest_ControllerFailover();
 		parent::__construct();
 	}
 	
-	function index($request) {
+	public function index($request) {
 		return "This is the controller";
 	}
 }
@@ -436,13 +436,13 @@ class RequestHandlingTest_AllowedControllerExtension extends Extension {
 		'otherExtendedMethod'
 	);
 	
-	function otherExtendedMethod() {
+	public function otherExtendedMethod() {
 		return "otherExtendedMethod";
 	}
 }
 
 class RequestHandlingTest_ControllerFailover extends ViewableData {
-	function failoverMethod() {
+	public function failoverMethod() {
 		return "failoverMethod";
 	}
 }
@@ -464,22 +464,22 @@ class RequestHandlingTest_Form extends Form {
 		'handleget',
 	);
 	
-	function handleField($request) {
+	public function handleField($request) {
 		return $this->Fields()->dataFieldByName($request->param('FieldName'));
 	}
 	
-	function handleSubmission($request) {
+	public function handleSubmission($request) {
 		return "Form posted";
 	}
 
-	function handleGet($request) {
+	public function handleGet($request) {
 		return "Get request on form";
 	}
 }
 
 class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller implements TestOnly {
 	
-	function Form() {
+	public function Form() {
 		return new RequestHandlingTest_FormWithAllowedActions(
 			$this,
 			'Form',
@@ -499,11 +499,11 @@ class RequestHandlingTest_FormWithAllowedActions extends Form {
 		'httpSubmission' => 1, // TODO This should be an exception on the parent class
 	);
 	
-	function allowedformaction() {
+	public function allowedformaction() {
 		return 'allowedformaction';
 	}
 	
-	function disallowedformaction() {
+	public function disallowedformaction() {
 		return 'disallowedformaction';
 	}
 }
@@ -526,15 +526,15 @@ class RequestHandlingTest_FormField extends FormField {
 		'handleInPLACEEDIT',
 	);
 	
-	function test() {
+	public function test() {
 		return "Test method on $this->name";
 	}
 	
-	function handleField() {
+	public function handleField() {
 		return "$this->name requested";
 	}
 	
-	function handleInPlaceEdit($request) {
+	public function handleInPlaceEdit($request) {
 		return "$this->name posted, update to " . $request->postVar($this->name);
 	}
 }
@@ -551,7 +551,7 @@ class RequestHandlingTest_SubclassedFormField extends RequestHandlingTest_FormFi
 	);
 	
 
-	function customSomething() {
+	public function customSomething() {
 		return "customSomething";
 	}
 }
@@ -562,7 +562,7 @@ class RequestHandlingTest_SubclassedFormField extends RequestHandlingTest_FormFi
  */
 class RequestHandlingFieldTest_Controller extends Controller implements TestOnly {
 	
-	function TestForm() {
+	public function TestForm() {
 		return new Form($this, "TestForm", new FieldList(
 			new RequestHandlingTest_HandlingField("MyField")
 		), new FieldList(
@@ -580,7 +580,7 @@ class RequestHandlingTest_HandlingField extends FormField {
 		'actionOnField'
 	);
 	
-	function actionOnField() {
+	public function actionOnField() {
 		return "Test method on $this->name";
 	}
 }

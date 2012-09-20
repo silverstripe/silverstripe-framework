@@ -31,14 +31,14 @@ class FileIFrameField extends FileField {
 	 * 
 	 * @param boolean
 	 */
-	function setCanUploadNewFile($can) {
+	public function setCanUploadNewFile($can) {
 		$this->canUploadNewFile = $can;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	function getCanUploadNewFile() {
+	public function getCanUploadNewFile() {
 		return $this->canUploadNewFile;
 	}
 	

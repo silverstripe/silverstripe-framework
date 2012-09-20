@@ -8,7 +8,7 @@ class ConfigManifestTest_ConfigManifestAccess extends SS_ConfigManifest {
 
 class ConfigManifestTest extends SapphireTest {
 
-	function testRelativeOrder() {
+	public function testRelativeOrder() {
 		$accessor = new ConfigManifestTest_ConfigManifestAccess(BASE_PATH, true, false);
 
 		// A fragment with a fully wildcard before rule

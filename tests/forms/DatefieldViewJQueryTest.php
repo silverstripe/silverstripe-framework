@@ -5,7 +5,7 @@
  */
 class DateFieldViewJQueryTest extends SapphireTest {
 	
-	function testConvert() {
+	public function testConvert() {
 		$this->assertEquals(
 			'M d, yy',
 			DateField_View_JQuery::convert_iso_to_jquery_format('MMM d, yyyy')

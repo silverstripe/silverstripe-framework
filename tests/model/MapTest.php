@@ -16,14 +16,14 @@ class SS_MapTest extends SapphireTest {
 		'DataObjectTest_TeamComment'
 	);
 	
-	function testArrayAccess() {
+	public function testArrayAccess() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$this->assertEquals('This is a team comment by Joe', $map['Joe']);
 		$this->assertNull($map['DoesntExist']);
 	}
 
-	function testIteration() {
+	public function testIteration() {
 		$list = DataObjectTest_TeamComment::get()->sort('ID');
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$text = "";
@@ -35,13 +35,13 @@ class SS_MapTest extends SapphireTest {
 			. "Phil: Phil is a unique guy, and comments on team2\n", $text);
 	}
 	
-	function testDefaultConfigIsIDAndTitle() {
+	public function testDefaultConfigIsIDAndTitle() {
 		$list = DataObjectTest_Team::get();
 		$map = new SS_Map($list);
 		$this->assertEquals('Team 1', $map[$this->idFromFixture('DataObjectTest_Team', 'team1')]);
 	}
 	
-	function testSetKeyFieldAndValueField() {
+	public function testSetKeyFieldAndValueField() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list);
 		$map->setKeyField('Name');
@@ -49,7 +49,7 @@ class SS_MapTest extends SapphireTest {
 		$this->assertEquals('This is a team comment by Joe', $map['Joe']);
 	}
 	
-	function testToArray() {
+	public function testToArray() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$this->assertEquals(array("Joe" => "This is a team comment by Joe",
@@ -57,7 +57,7 @@ class SS_MapTest extends SapphireTest {
 			"Phil" => "Phil is a unique guy, and comments on team2"), $map->toArray());
 	}
 
-	function testKeys() {
+	public function testKeys() {
 		$list = DataObjectTest_TeamComment::get()->sort('Name');
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$this->assertEquals(array(
@@ -67,7 +67,7 @@ class SS_MapTest extends SapphireTest {
 		), $map->keys());
 	}
 
-	function testMethodAsValueField() {
+	public function testMethodAsValueField() {
 		$list = DataObjectTest_Team::get()->sort('Title');
 		$map = new SS_Map($list, 'ID', 'MyTitle');
 		$this->assertEquals(array(
@@ -80,7 +80,7 @@ class SS_MapTest extends SapphireTest {
 		), $map->values());
 	}
 
-	function testValues() {
+	public function testValues() {
 		$list = DataObjectTest_TeamComment::get()->sort('Name');
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$this->assertEquals(array(
@@ -90,7 +90,7 @@ class SS_MapTest extends SapphireTest {
 		), $map->values());
 	}
 
-	function testUnshift() {
+	public function testUnshift() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list, 'Name', 'Comment');
 

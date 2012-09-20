@@ -49,7 +49,7 @@ class TimeField extends TextField {
 	 */
 	protected $valueObj = null;
 		
-	function __construct($name, $title = null, $value = ""){
+	public function __construct($name, $title = null, $value = ""){
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
@@ -63,7 +63,7 @@ class TimeField extends TextField {
 		parent::__construct($name,$title,$value);
 	}
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$config = array(
 			'timeformat' => $this->getConfig('timeformat')
 		);
@@ -72,7 +72,7 @@ class TimeField extends TextField {
 		return parent::Field($properties);
 	}
 	
-	function Type() {
+	public function Type() {
 		return 'time text';
 	}
 
@@ -81,7 +81,7 @@ class TimeField extends TextField {
 	 * 
 	 * @param String|Array $val
 	 */
-	function setValue($val) {
+	public function setValue($val) {
 		// Fuzzy matching through strtotime() to support a wider range of times,
 		// e.g. 11am. This means that validate() might not fire.
 		// Note: Time formats are assumed to be less ambiguous than dates across locales.
@@ -123,7 +123,7 @@ class TimeField extends TextField {
 	/**
 	 * @return String ISO 8601 date, suitable for insertion into database
 	 */
-	function dataValue() {
+	public function dataValue() {
 		if($this->valueObj) {
 			return $this->valueObj->toString($this->getConfig('datavalueformat'));
 		} else {
@@ -134,7 +134,7 @@ class TimeField extends TextField {
 	/**
 	 * @return Boolean
 	 */
-	function validate($validator) {
+	public function validate($validator) {
 		$valid = true;
 		
 		// Don't validate empty fields
@@ -158,14 +158,14 @@ class TimeField extends TextField {
 	/**
 	 * @return string
 	 */
-	function getLocale() {
+	public function getLocale() {
 		return $this->locale;
 	}
 	
 	/**
 	 * @param String $locale
 	 */
-	function setLocale($locale) {
+	public function setLocale($locale) {
 		$this->locale = $locale;
 		return $this;
 	}
@@ -174,7 +174,7 @@ class TimeField extends TextField {
 	 * @param string $name
 	 * @param mixed $val
 	 */
-	function setConfig($name, $val) {		
+	public function setConfig($name, $val) {
 		$this->config[$name] = $val;
 		return $this;
 	}
@@ -183,14 +183,14 @@ class TimeField extends TextField {
 	 * @param String $name Optional, returns the whole configuration array if empty
 	 * @return mixed|array
 	 */
-	function getConfig($name = null) {
+	public function getConfig($name = null) {
 		return $name ? $this->config[$name] : $this->config;
 	}
 		
 	/**
 	 * Creates a new readonly field specified below
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		return new TimeField_Readonly($this->name, $this->title, $this->dataValue(), $this->getConfig('timeformat'));
 	}
 	
@@ -206,7 +206,7 @@ class TimeField_Readonly extends TimeField {
 	
 	protected $readonly = true;
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		if($this->valueObj) {
 			$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('timeformat')));
 		} else {
@@ -217,7 +217,7 @@ class TimeField_Readonly extends TimeField {
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
 	
-	function validate($validator) {
+	public function validate($validator) {
 		return true;	
 	}
 }

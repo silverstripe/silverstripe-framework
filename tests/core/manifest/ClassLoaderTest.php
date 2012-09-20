@@ -10,7 +10,7 @@ class ClassLoaderTest extends SapphireTest {
 	protected $base;
 	protected $manifest;
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->baseManifest1 = dirname(__FILE__) . '/fixtures/classmanifest';
@@ -19,7 +19,7 @@ class ClassLoaderTest extends SapphireTest {
 		$this->testManifest2 = new SS_ClassManifest($this->baseManifest2, false, true, false);
 	}
 
-	function testExclusive() {
+	public function testExclusive() {
 		$loader = new SS_ClassLoader();
 		
 		$loader->pushManifest($this->testManifest1);
@@ -36,7 +36,7 @@ class ClassLoaderTest extends SapphireTest {
 		$this->assertTrue((bool)$loader->getItemPath('OtherClassA'));
 	}
 
-	function testGetItemPath() {
+	public function testGetItemPath() {
 		$ds = DIRECTORY_SEPARATOR;
 		$loader = new SS_ClassLoader();
 		

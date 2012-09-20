@@ -5,7 +5,7 @@
  */
 class NullHTTPRequestTest extends SapphireTest {
 
-	function testAllHttpVerbsAreFalse() {
+	public function testAllHttpVerbsAreFalse() {
 		$r = new NullHTTPRequest();
 		$this->assertFalse($r->isGET());
 		$this->assertFalse($r->isPOST());
@@ -14,7 +14,7 @@ class NullHTTPRequestTest extends SapphireTest {
 		$this->assertFalse($r->isHEAD());
 	}
 	
-	function testGetURL() {
+	public function testGetURL() {
 		$r = new NullHTTPRequest();
 		$this->assertEquals('', $r->getURL());
 	}

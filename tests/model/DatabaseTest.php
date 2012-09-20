@@ -11,7 +11,7 @@ class DatabaseTest extends SapphireTest {
 
 	protected $usesDatabase = true;
 
-	function testDontRequireField() {
+	public function testDontRequireField() {
 		$conn = DB::getConn();
 		$this->assertArrayHasKey(
 			'MyField',
@@ -29,7 +29,7 @@ class DatabaseTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 
-	function testRenameField() {
+	public function testRenameField() {
 		$conn = DB::getConn();
 
 		$conn->clearCachedFieldlist();
@@ -50,7 +50,7 @@ class DatabaseTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 
-	function testMySQLCreateTableOptions() {
+	public function testMySQLCreateTableOptions() {
 		if(DB::getConn() instanceof MySQLDatabase) {
 			$ret = DB::query(sprintf(
 				'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
@@ -62,7 +62,7 @@ class DatabaseTest extends SapphireTest {
 		}
 	}
 
-	function testSchemaUpdateChecking() {
+	public function testSchemaUpdateChecking() {
 		$db = DB::getConn();
 
 		// Initially, no schema changes necessary
@@ -78,12 +78,12 @@ class DatabaseTest extends SapphireTest {
 		$this->assertFalse($db->doesSchemaNeedUpdating());
 	}
 
-	function testHasTable() {
+	public function testHasTable() {
 		$this->assertTrue(DB::getConn()->hasTable('DatabaseTest_MyObject'));
 		$this->assertFalse(DB::getConn()->hasTable('asdfasdfasdf'));
 	}
 	
-	function testGetAndReleaseLock() {
+	public function testGetAndReleaseLock() {
 		$db = DB::getConn();
 		
 		if(!$db->supportsLocks()) {
@@ -105,7 +105,7 @@ class DatabaseTest extends SapphireTest {
 		$db->releaseLock('DatabaseTest');
 	}
 	
-	function testCanLock() {
+	public function testCanLock() {
 		$db = DB::getConn();
 		
 		if(!$db->supportsLocks()) {

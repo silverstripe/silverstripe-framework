@@ -37,7 +37,7 @@ class ToggleField extends ReadonlyField {
 	 * @param title The field title
 	 * @param value The current value
 	 */
-	function __construct($name, $title = "", $value = "") {
+	public function __construct($name, $title = "", $value = "") {
 		$this->labelMore = _t('ToggleField.MORE', 'more');
 		$this->labelLess = _t('ToggleField.LESS', 'less');
 		
@@ -46,7 +46,7 @@ class ToggleField extends ReadonlyField {
 		parent::__construct($name, $title, $value);
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$content = '';
 		
 		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/prototype/prototype.js");
@@ -92,7 +92,7 @@ HTML;
 		($bool) ? $this->addExtraClass('startClosed') : $this->removeExtraClass('startClosed');
 	}
 	
-	function Type() {
+	public function Type() {
 		return "toggleField";
 	}
 }

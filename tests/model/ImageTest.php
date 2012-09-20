@@ -8,7 +8,7 @@ class ImageTest extends SapphireTest {
 	
 	static $fixture_file = 'ImageTest.yml';
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
@@ -35,7 +35,7 @@ class ImageTest extends SapphireTest {
 		}
 	}
 	
-	function testGetTagWithTitle() {
+	public function testGetTagWithTitle() {
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
 		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test_image.png" alt="This is a image Title" />';
 		$actual = $image->getTag();
@@ -43,7 +43,7 @@ class ImageTest extends SapphireTest {
 		$this->assertEquals($expected, $actual);
 	}
 	
-	function testGetTagWithoutTitle() {
+	public function testGetTagWithoutTitle() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test_image.png" alt="test_image" />';
 		$actual = $image->getTag();
@@ -51,7 +51,7 @@ class ImageTest extends SapphireTest {
 		$this->assertEquals($expected, $actual);
 	}
 	
-	function testGetTagWithoutTitleContainingDots() {
+	public function testGetTagWithoutTitleContainingDots() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
 		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test.image.with.dots.png" alt="test.image.with.dots" />';
 		$actual = $image->getTag();
@@ -59,7 +59,7 @@ class ImageTest extends SapphireTest {
 		$this->assertEquals($expected, $actual);
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		/* Remove the test files that we've created */
 		$fileIDs = $this->allFixtureIDs('Image');
 		foreach($fileIDs as $fileID) {
@@ -77,7 +77,7 @@ class ImageTest extends SapphireTest {
 		parent::tearDown();
 	}
 	
-	function testMultipleGenerateManipulationCalls() {
+	public function testMultipleGenerateManipulationCalls() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		
 		$imageFirst = $image->SetWidth(200);
@@ -94,7 +94,7 @@ class ImageTest extends SapphireTest {
 		$this->assertEquals($expected, $actual);
 	}
 	
-	function testGeneratedImageDeletion() {
+	public function testGeneratedImageDeletion() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
 		$image_generated = $image->SetWidth(200);
 		$p = $image_generated->getFullPath();

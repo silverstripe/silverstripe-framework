@@ -10,7 +10,7 @@
  */
 class CreditCardField extends TextField {
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$parts = $this->value;
 		if(!is_array($parts)) $parts = explode("\n", chunk_split($parts,4,"\n"));
 		$parts = array_pad($parts, 4, "");
@@ -35,12 +35,12 @@ class CreditCardField extends TextField {
 		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
 	}
 	
-	function dataValue() {
+	public function dataValue() {
 		if(is_array($this->value)) return implode("", $this->value);
 		else return $this->value;
 	}
 	
-	function validate($validator){
+	public function validate($validator){
 		// If the field is empty then don't return an invalidation message
 		if(!trim(implode("", $this->value))) return true;
 		

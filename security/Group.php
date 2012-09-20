@@ -34,13 +34,13 @@ class Group extends DataObject {
 		"Hierarchy",
 	);
 	
-	function populateDefaults() {
+	public function populateDefaults() {
 		parent::populateDefaults();
 		
 		if(!$this->Title) $this->Title = _t('SecurityAdmin.NEWGROUP',"New Group");
 	}
 	
-	function getAllChildren() {
+	public function getAllChildren() {
 		$doSet = new ArrayList();
 
 		if ($children = DataObject::get('Group', '"ParentID" = '.$this->ID)) {
@@ -195,7 +195,7 @@ class Group extends DataObject {
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
 	 * 
 	 */
-	function fieldLabels($includerelations = true) {
+	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['Title'] = _t('SecurityAdmin.GROUPNAME', 'Group name');
 		$labels['Description'] = _t('Group.Description', 'Description');
@@ -301,7 +301,7 @@ class Group extends DataObject {
 	 * This isn't a decendant of SiteTree, but needs this in case
 	 * the group is "reorganised";
 	 */
-	function cmsCleanup_parentChanged() {
+	public function cmsCleanup_parentChanged() {
 	}
 	
 	/**
@@ -314,7 +314,7 @@ class Group extends DataObject {
 	/**
 	 * @deprecated 3.0 Use getTreeTitle()
 	 */
-	function TreeTitle() {
+	public function TreeTitle() {
 		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
 		return $this->getTreeTitle();
 	}
@@ -333,7 +333,7 @@ class Group extends DataObject {
 		$this->setField("Code", Convert::raw2url($val));
 	}
 	
-	function onBeforeWrite() {
+	public function onBeforeWrite() {
 		parent::onBeforeWrite();
 		
 		// Only set code property when the group has a custom title, and no code exists.
@@ -344,7 +344,7 @@ class Group extends DataObject {
 		}
 	}
 
-	function onBeforeDelete() {
+	public function onBeforeDelete() {
 		parent::onBeforeDelete();
 
 		// if deleting this group, delete it's children as well
@@ -422,7 +422,7 @@ class Group extends DataObject {
 	 * Returns all of the children for the CMS Tree.
 	 * Filters to only those groups that the current user can edit
 	 */
-	function AllChildrenIncludingDeleted() {
+	public function AllChildrenIncludingDeleted() {
 		$extInstance = $this->getExtensionInstance('Hierarchy');
 		$extInstance->setOwner($this);
 		$children = $extInstance->AllChildrenIncludingDeleted();

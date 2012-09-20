@@ -6,7 +6,7 @@
 class GroupCsvBulkLoaderTest extends SapphireTest {
 	static $fixture_file = 'GroupCsvBulkLoaderTest.yml';
 	
-	function testNewImport() {
+	public function testNewImport() {
 		$loader = new GroupCsvBulkLoader();
 		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest.csv');
 		$created = $results->Created()->toArray();
@@ -17,7 +17,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($created[1]->ParentID, $created[0]->ID);
 	}
 	
-	function testOverwriteExistingImport() {
+	public function testOverwriteExistingImport() {
 		$existinggroup = new Group();
 		$existinggroup->Title = 'Old Group Title';
 		$existinggroup->Code = 'newgroup1';
@@ -36,7 +36,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($updated[0]->Title, 'New Group 1');
 	}
 	
-	function testImportPermissions() {
+	public function testImportPermissions() {
 		$loader = new GroupCsvBulkLoader();
 		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest_withExisting.csv');
 		

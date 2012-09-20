@@ -42,7 +42,7 @@ class ArrayLib {
 	 * @param array $arr
 	 * @return array
 	 */
-	static function invert($arr) {
+	public static function invert($arr) {
 		if(!$arr) return false;
 		$result = array();
 		
@@ -61,14 +61,14 @@ class ArrayLib {
 	 * @param $arr array
 	 * @return array
 	 */
-	static function valuekey($arr) {
+	public static function valuekey($arr) {
 		return array_combine($arr, $arr);
 	}
 	
 	/**
 	 * @todo Improve documentation
 	 */
-	static function array_values_recursive($arr) {
+	public static function array_values_recursive($arr) {
 	   $lst = array();
 	   foreach(array_keys($arr) as $k){
 	     $v = $arr[$k];
@@ -90,7 +90,7 @@ class ArrayLib {
 	 * @param $keys array
 	 * @return array
 	 */
-	static function filter_keys($arr, $keys)
+	public static function filter_keys($arr, $keys)
 	{
 		foreach ($arr as $key => $v) {
 			if (!in_array($key, $keys)) {
@@ -108,7 +108,7 @@ class ArrayLib {
 	 * @param array $arr
 	 * @return boolean
 	 */
-	static function is_associative($arr) {
+	public static function is_associative($arr) {
 		if(is_array($arr) && ! empty($arr)) {
 	        for($iterator = count($arr) - 1; $iterator; $iterator--) {
 	            if (!array_key_exists($iterator, $arr)) return true;
@@ -128,7 +128,7 @@ class ArrayLib {
 	 * @param boolean $strict
 	 * @return boolean
 	 */
-	static function in_array_recursive($needle, $haystack, $strict = false) {
+	public static function in_array_recursive($needle, $haystack, $strict = false) {
 		if(!is_array($haystack)) return false; // Not an array, we've gone as far as we can down this branch
 		
 		if(in_array($needle, $haystack, $strict)) return true; // Is it in this level of the array?
@@ -151,7 +151,7 @@ class ArrayLib {
 	 * @param array $array, ...
 	 * @return array
 	 */
-	static function array_merge_recursive($array) {
+	public static function array_merge_recursive($array) {
 		$arrays = func_get_args();
 		$merged = array();
 		if(count($arrays) == 1) {

@@ -5,7 +5,7 @@
  */
 class DateFieldTest extends SapphireTest {
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->originalLocale = i18n::get_locale();
@@ -14,14 +14,14 @@ class DateFieldTest extends SapphireTest {
 		DateField::$default_config['dateformat'] = 'dd/MM/yyyy';
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 		
 		i18n::set_locale($this->originalLocale);
 		DateField::$default_config['dateformat'] = $this->origDateFormat;
 	}
 	
-	function testValidateMinDate() {
+	public function testValidateMinDate() {
 		$f = new DateField('Date');
 		$f->setConfig('min', '2009-03-31');
 		$f->setValue('2010-03-31');
@@ -38,7 +38,7 @@ class DateFieldTest extends SapphireTest {
 		$this->assertTrue($f->validate(new RequiredFields()), 'Date matching min date');
 	}
 	
-	function testValidateMinDateStrtotime() {
+	public function testValidateMinDateStrtotime() {
 		$f = new DateField('Date');
 		$f->setConfig('min', '-7 days');
 		$f->setValue(strftime('%Y-%m-%d', strtotime('-8 days')));
@@ -50,7 +50,7 @@ class DateFieldTest extends SapphireTest {
 		$this->assertTrue($f->validate(new RequiredFields()), 'Date matching min date, with strtotime');
 	}
 	
-	function testValidateMaxDateStrtotime() {
+	public function testValidateMaxDateStrtotime() {
 		$f = new DateField('Date');
 		$f->setConfig('max', '7 days');
 		$f->setValue(strftime('%Y-%m-%d', strtotime('8 days')));
@@ -62,7 +62,7 @@ class DateFieldTest extends SapphireTest {
 		$this->assertTrue($f->validate(new RequiredFields()), 'Date matching max date, with strtotime');
 	}
 	
-	function testValidateMaxDate() {
+	public function testValidateMaxDate() {
 		$f = new DateField('Date');
 		$f->setConfig('max', '2009-03-31');
 		$f->setValue('1999-03-31');
@@ -79,36 +79,36 @@ class DateFieldTest extends SapphireTest {
 		$this->assertTrue($f->validate(new RequiredFields()), 'Date matching max date');
 	}
 	
-	function testConstructorWithoutArgs() {
+	public function testConstructorWithoutArgs() {
 		$f = new DateField('Date');
 		$this->assertEquals($f->dataValue(), null);
 	}
 	
-	function testConstructorWithDateString() {
+	public function testConstructorWithDateString() {
 		$f = new DateField('Date', 'Date', '29/03/2003');
 		$this->assertEquals($f->dataValue(), '2003-03-29');
 	}
 	
-	function testSetValueWithDateString() {
+	public function testSetValueWithDateString() {
 		$f = new DateField('Date', 'Date');
 		$f->setValue('29/03/2003');
 		$this->assertEquals($f->dataValue(), '2003-03-29');
 	}
 	
-	function testSetValueWithDateArray() {
+	public function testSetValueWithDateArray() {
 		$f = new DateField('Date', 'Date');
 		$f->setConfig('dmyfields', true);
 		$f->setValue(array('day' => 29, 'month' => 03, 'year' => 2003));
 		$this->assertEquals($f->dataValue(), '2003-03-29');
 	}
 	
-	function testConstructorWithIsoDate() {
+	public function testConstructorWithIsoDate() {
 		// used by Form->loadDataFrom()
 		$f = new DateField('Date', 'Date', '2003-03-29');
 		$this->assertEquals($f->dataValue(), '2003-03-29');
 	}
 	
-	function testValidateDMY() {
+	public function testValidateDMY() {
 		$f = new DateField('Date', 'Date', '29/03/2003');
 		$this->assertTrue($f->validate(new RequiredFields()));
 		
@@ -116,7 +116,7 @@ class DateFieldTest extends SapphireTest {
 		$this->assertFalse($f->validate(new RequiredFields()));
 	}
 	
-	function testValidateArray() {
+	public function testValidateArray() {
 		$f = new DateField('Date', 'Date');
 		$f->setConfig('dmyfields', true);
 		$f->setValue(array('day' => 29, 'month' => 03, 'year' => 2003));
@@ -136,7 +136,7 @@ class DateFieldTest extends SapphireTest {
 		// $this->assertFalse($f->validate(new RequiredFields()));
 	}
 
-	function testValidateEmptyArrayValuesSetsNullForValueObject() {
+	public function testValidateEmptyArrayValuesSetsNullForValueObject() {
 		$f = new DateField('Date', 'Date');
 		$f->setConfig('dmyfields', true);
 
@@ -147,20 +147,20 @@ class DateFieldTest extends SapphireTest {
 		$this->assertNull($f->dataValue());
 	}
 
-	function testValidateArrayValue() {
+	public function testValidateArrayValue() {
 		$f = new DateField('Date', 'Date');
 		$this->assertTrue($f->validateArrayValue(array('day' => 29, 'month' => 03, 'year' => 2003)));
 		$this->assertFalse($f->validateArrayValue(array('month' => 03, 'year' => 2003)));
 		$this->assertFalse($f->validateArrayValue(array('day' => 99, 'month' => 99, 'year' => 2003)));
 	}
 		
-	function testFormatEnNz() {
+	public function testFormatEnNz() {
 		/* We get YYYY-MM-DD format as the data value for DD/MM/YYYY input value */
 		$f = new DateField('Date', 'Date', '29/03/2003');
 		$this->assertEquals($f->dataValue(), '2003-03-29');
 	}
 	
-	function testSetLocale() {
+	public function testSetLocale() {
 		// should get en_NZ by default through setUp()
 		$f = new DateField('Date', 'Date', '29/03/2003');
 		$f->setLocale('de_DE');
@@ -171,7 +171,7 @@ class DateFieldTest extends SapphireTest {
 	/**
 	 * Note: This is mostly tested for legacy reasons
 	 */
-	function testMDYFormat() {
+	public function testMDYFormat() {
 		$dateField = new DateField('Date', 'Date');
 		$dateField->setConfig('dateformat', 'd/M/Y');
 		$dateField->setValue('31/03/2003');

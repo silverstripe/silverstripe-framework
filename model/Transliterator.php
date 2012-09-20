@@ -23,7 +23,7 @@ class SS_Transliterator extends Object {
 	/**
 	 * Convert the given utf8 string to a safe ASCII source
 	 */
-	function toASCII($source) {
+	public function toASCII($source) {
 		if(function_exists('iconv') && self::$use_iconv) return $this->useIconv($source);
 		else return $this->useStrTr($source);
 	}

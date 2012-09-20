@@ -130,14 +130,14 @@ class CompositeField extends FormField {
 		return $this->legend;
 	}
 
-	function extraClasses() {
+	public function extraClasses() {
 		$classes = array('field', 'CompositeField', parent::extraClasses());
 		if($this->columnCount) $classes[] = 'multicolumn';
 		
 		return implode(' ', $classes);
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -177,7 +177,7 @@ class CompositeField extends FormField {
 		}
 	}
 
-	function setForm($form) {
+	public function setForm($form) {
 		foreach($this->children as $f) 
 			if(is_object($f)) $f->setForm($form);
 			
@@ -186,20 +186,20 @@ class CompositeField extends FormField {
 		return $this;
 	}
 	
-	function setColumnCount($columnCount) {
+	public function setColumnCount($columnCount) {
 		$this->columnCount = $columnCount;
 		return $this;
 	}
 	
-	function getColumnCount() {
+	public function getColumnCount() {
 		return $this->columnCount;
 	}
 	
-	function isComposite() { 
+	public function isComposite() {
 		return true; 
 	}
 
-	function hasData() { 
+	public function hasData() {
 		return false; 
 	}
 
@@ -248,7 +248,7 @@ class CompositeField extends FormField {
 		return $this->children->replaceField($fieldName, $newField);
 	}
 
-	function rootFieldList() {
+	public function rootFieldList() {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else return $this->children;
 	}
@@ -293,7 +293,7 @@ class CompositeField extends FormField {
 		return $clone;
 	}
 
-	function IsReadonly() {
+	public function IsReadonly() {
 		return $this->readonly;
 	}
 	
@@ -304,7 +304,7 @@ class CompositeField extends FormField {
 	 * @param string|FormField
 	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
 	 */
-	function fieldPosition($field) {
+	public function fieldPosition($field) {
 		if(is_string($field)) $field = $this->fieldByName($field);
 		if(!$field) return false;
 		
@@ -322,7 +322,7 @@ class CompositeField extends FormField {
 	 * 
 	 * @param string|FormField
 	 */
-	function makeFieldReadonly($field) {
+	public function makeFieldReadonly($field) {
 		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 		
 		// Iterate on items, looking for the applicable field
@@ -345,7 +345,7 @@ class CompositeField extends FormField {
 		return false;
 	}
 
-	function debug() {
+	public function debug() {
 		$result = "$this->class ($this->name) <ul>";
 		foreach($this->children as $child) {
 			$result .= "<li>" . Debug::text($child) . "&nbsp;</li>";
@@ -354,7 +354,7 @@ class CompositeField extends FormField {
 		return $result;
 	}
 
-	function validate($validator) {
+	public function validate($validator) {
 		$valid = true;
 		foreach($this->children as $idx => $child){
 			$valid = ($child && $child->validate($validator) && $valid);

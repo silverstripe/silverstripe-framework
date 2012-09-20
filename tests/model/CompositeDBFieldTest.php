@@ -10,7 +10,7 @@ class CompositeDBFieldTest extends SapphireTest {
 		'SubclassedDBFieldObject',
 	);
 
-	function testHasDatabaseFieldOnDataObject() {
+	public function testHasDatabaseFieldOnDataObject() {
 		$obj = singleton('CompositeDBFieldTest_DataObject');
 		
 		$this->assertTrue($obj->hasDatabaseField('MyMoneyAmount'));
@@ -21,7 +21,7 @@ class CompositeDBFieldTest extends SapphireTest {
 	/**
 	 * Test DataObject::composite_fields() and DataObject::is_composite_field()
 	 */
-	function testCompositeFieldMetaDataFunctions() {
+	public function testCompositeFieldMetaDataFunctions() {
 		$this->assertEquals('Money', DataObject::is_composite_field('CompositeDBFieldTest_DataObject', 'MyMoney'));
 		$this->assertNull(DataObject::is_composite_field('CompositeDBFieldTest_DataObject', 'Title'));
 		$this->assertEquals(array('MyMoney' => 'Money'), 

@@ -14,7 +14,7 @@ class SearchContextTest extends SapphireTest {
 		'SearchContextTest_AllFilterTypes',
 	);
 
-	function testResultSetFilterReturnsExpectedCount() {
+	public function testResultSetFilterReturnsExpectedCount() {
 		$person = singleton('SearchContextTest_Person');
 		$context = $person->getDefaultSearchContext();
 		$results = $context->getResults(array('Name'=>''));
@@ -27,7 +27,7 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals(1, $results->Count());
 	}
 	
-	function testSummaryIncludesDefaultFieldsIfNotDefined() {
+	public function testSummaryIncludesDefaultFieldsIfNotDefined() {
 		$person = singleton('SearchContextTest_Person');
 		$this->assertContains('Name', $person->summaryFields());
 		
@@ -35,12 +35,12 @@ class SearchContextTest extends SapphireTest {
 		$this->assertContains('Title', $book->summaryFields());
 	}
 	
-	function testAccessDefinedSummaryFields() {
+	public function testAccessDefinedSummaryFields() {
 		$company = singleton('SearchContextTest_Company');
 		$this->assertContains('Industry', $company->summaryFields());
 	}
 	
-	function testPartialMatchUsedByDefaultWhenNotExplicitlySet() {
+	public function testPartialMatchUsedByDefaultWhenNotExplicitlySet() {
 		 $person = singleton('SearchContextTest_Person');
 		 $context = $person->getDefaultSearchContext();
 		 
@@ -54,7 +54,7 @@ class SearchContextTest extends SapphireTest {
 		 );
 	}
 	
-	function testDefaultFiltersDefinedWhenNotSetInDataObject() {
+	public function testDefaultFiltersDefinedWhenNotSetInDataObject() {
 		$book = singleton('SearchContextTest_Book');
 		$context = $book->getDefaultSearchContext();
 		
@@ -66,7 +66,7 @@ class SearchContextTest extends SapphireTest {
 		 );	 
 	}
 	
-	function testUserDefinedFiltersAppearInSearchContext() {
+	public function testUserDefinedFiltersAppearInSearchContext() {
 		$company = singleton('SearchContextTest_Company');
 		$context = $company->getDefaultSearchContext();
 				 
@@ -80,7 +80,7 @@ class SearchContextTest extends SapphireTest {
 		);
 	}
 	
-	function testUserDefinedFieldsAppearInSearchContext() {
+	public function testUserDefinedFieldsAppearInSearchContext() {
 		$company = singleton('SearchContextTest_Company');
 		$context = $company->getDefaultSearchContext();
 		$fields = $context->getFields();
@@ -94,7 +94,7 @@ class SearchContextTest extends SapphireTest {
 		);
 	}
 	
-	function testRelationshipObjectsLinkedInSearch() {
+	public function testRelationshipObjectsLinkedInSearch() {
 		$action3 = $this->objFromFixture('SearchContextTest_Action', 'action3');
 		
 		$project = singleton('SearchContextTest_Project');
@@ -118,7 +118,7 @@ class SearchContextTest extends SapphireTest {
 		);
 	}
 	
-	function testCanGenerateQueryUsingAllFilterTypes() {
+	public function testCanGenerateQueryUsingAllFilterTypes() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
 		$params = array(
@@ -136,7 +136,7 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals("Filtered value", $results->First()->HiddenValue);
 	}
 
-	function testStartsWithFilterCaseInsensitive() {
+	public function testStartsWithFilterCaseInsensitive() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
 		$params = array(
@@ -148,7 +148,7 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals("Filtered value", $results->First()->HiddenValue);
 	}
 
-	function testEndsWithFilterCaseInsensitive() {
+	public function testEndsWithFilterCaseInsensitive() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
 		$params = array(

@@ -472,7 +472,7 @@ class MySQLDatabase extends SS_Database {
 	/**
 	 * MySQL does not need any transformations done on the index that's created, so we can just return it as-is
 	 */
-	function getDbSqlDefinition($tableName, $indexName, $indexSpec){
+	public function getDbSqlDefinition($tableName, $indexName, $indexSpec){
 		return $indexName;
 	}
 
@@ -558,7 +558,7 @@ class MySQLDatabase extends SS_Database {
 		return $this->dbConn->affected_rows;
 	}
 
-	function databaseError($msg, $errorLevel = E_USER_ERROR) {
+	public function databaseError($msg, $errorLevel = E_USER_ERROR) {
 		// try to extract and format query
 		if(preg_match('/Couldn\'t run query: ([^\|]*)\|\s*(.*)/', $msg, $matches)) {
 			$formatter = new SQLFormatter();
@@ -751,14 +751,14 @@ class MySQLDatabase extends SS_Database {
 	 *
 	 * @return string
 	 */
-	function IdColumn(){
+	public function IdColumn(){
 		return 'int(11) not null auto_increment';
 	}
 
 	/**
 	 * Returns the SQL command to get all the tables in this database
 	 */
-	function allTablesSQL(){
+	public function allTablesSQL(){
 		return "SHOW TABLES;";
 	}
 
@@ -893,14 +893,14 @@ class MySQLDatabase extends SS_Database {
 	/**
 	 * MySQL uses NOW() to return the current date/time.
 	 */
-	function now(){
+	public function now(){
 		return 'NOW()';
 	}
 
 	/*
 	 * Returns the database-specific version of the random() function
 	 */
-	function random(){
+	public function random(){
 		return 'RAND()';
 	}
 
@@ -909,7 +909,7 @@ class MySQLDatabase extends SS_Database {
 	 * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
 	 * So this is a DB-specific list of equivilents.
 	 */
-	function dbDataType($type){
+	public function dbDataType($type){
 		$values=Array(
 			'unsigned integer'=>'UNSIGNED'
 		);
@@ -922,7 +922,7 @@ class MySQLDatabase extends SS_Database {
 	/*
 	 * This will return text which has been escaped in a database-friendly manner.
 	 */
-	function addslashes($value){
+	public function addslashes($value){
 		return $this->dbConn->real_escape_string($value);
 	}
 
@@ -930,7 +930,7 @@ class MySQLDatabase extends SS_Database {
 	 * This changes the index name depending on database requirements.
 	 * MySQL doesn't need any changes.
 	 */
-	function modifyIndex($index){
+	public function modifyIndex($index){
 		return $index;
 	}
 
@@ -940,7 +940,7 @@ class MySQLDatabase extends SS_Database {
 	 * @param $keywords string The search query
 	 * @param $booleanSearch A MySQL-specific flag to switch to boolean search
 	 */
-	function fullTextSearchSQL($fields, $keywords, $booleanSearch = false) {
+	public function fullTextSearchSQL($fields, $keywords, $booleanSearch = false) {
 		$boolean = $booleanSearch ? "IN BOOLEAN MODE" : "";
 		$fieldNames = '"' . implode('", "', $fields) . '"';
 
@@ -1017,7 +1017,7 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 * Function to return an SQL datetime expression that can be used with MySQL
+	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime in a certain format
 	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @param string $format to be used, supported specifiers:
@@ -1030,7 +1030,7 @@ class MySQLDatabase extends SS_Database {
 	 * %U = unix timestamp, can only be used on it's own
 	 * @return string SQL datetime expression to query for a formatted datetime
 	 */
-	function formattedDatetimeClause($date, $format) {
+	public function formattedDatetimeClause($date, $format) {
 
 		preg_match_all('/%(.)/', $format, $matches);
 		foreach($matches[1] as $match) if(array_search($match, array('Y','m','d','H','i','s','U')) === false) user_error('formattedDatetimeClause(): unsupported format character %' . $match, E_USER_WARNING);
@@ -1048,7 +1048,7 @@ class MySQLDatabase extends SS_Database {
 	}
 	
 	/**
-	 * Function to return an SQL datetime expression that can be used with MySQL
+	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime addition
 	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes, +1 YEAR
@@ -1062,7 +1062,7 @@ class MySQLDatabase extends SS_Database {
 	 * This includes the singular forms as well
 	 * @return string SQL datetime expression to query for a datetime (YYYY-MM-DD hh:mm:ss) which is the result of the addition
 	 */
-	function datetimeIntervalClause($date, $interval) {
+	public function datetimeIntervalClause($date, $interval) {
 
 		$interval = preg_replace('/(year|month|day|hour|minute|second)s/i', '$1', $interval);
 
@@ -1076,13 +1076,13 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 * Function to return an SQL datetime expression that can be used with MySQL
+	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime substraction
 	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
 	 */
-	function datetimeDifferenceClause($date1, $date2) {
+	public function datetimeDifferenceClause($date1, $date2) {
 
 		if(preg_match('/^now$/i', $date1)) {
 			$date1 = "NOW()";
@@ -1099,16 +1099,16 @@ class MySQLDatabase extends SS_Database {
 		return "UNIX_TIMESTAMP($date1) - UNIX_TIMESTAMP($date2)";
 	}
 	
-	function supportsLocks() {
+	public function supportsLocks() {
 		return true;
 	}
 	
-	function canLock($name) {
+	public function canLock($name) {
 		$id = $this->getLockIdentifier($name);
 		return (bool)DB::query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
 	}
 	
-	function getLock($name, $timeout = 5) {
+	public function getLock($name, $timeout = 5) {
 		$id = $this->getLockIdentifier($name);
 		
 		// MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
@@ -1117,7 +1117,7 @@ class MySQLDatabase extends SS_Database {
 		return (bool)DB::query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
 	}
 	
-	function releaseLock($name) {
+	public function releaseLock($name) {
 		$id = $this->getLockIdentifier($name);
 		return (bool)DB::query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
 	}

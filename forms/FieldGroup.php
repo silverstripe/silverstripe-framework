@@ -48,7 +48,7 @@ class FieldGroup extends CompositeField {
 	
 	protected $zebra;
 	
-	function __construct($arg1 = null, $arg2 = null) {
+	public function __construct($arg1 = null, $arg2 = null) {
 		if(is_array($arg1) || is_a($arg1, 'FieldSet')) {
 			$fields = $arg1;
 		
@@ -69,7 +69,7 @@ class FieldGroup extends CompositeField {
 	 * In some cases the FieldGroup doesn't have a title, but we still want 
 	 * the ID / name to be set. This code, generates the ID from the nested children
 	 */
-	function Name(){
+	public function Name(){
 		if(!$this->title) {
 			$fs = $this->FieldList();
 			$compositeTitle = '';
@@ -90,7 +90,7 @@ class FieldGroup extends CompositeField {
 	 *
 	 * @param string $zebra one of odd or even.
 	 */
-  	function setZebra($zebra) {
+  	public function setZebra($zebra) {
 	    if($zebra == 'odd' || $zebra == 'even') $this->zebra = $zebra;
 	    else user_error("setZebra passed '$zebra'.  It should be passed 'odd' or 'even'", E_USER_WARNING);
 	    return $this;
@@ -99,14 +99,14 @@ class FieldGroup extends CompositeField {
 	/**
 	 * @return string
 	 */
-	function getZebra() {
+	public function getZebra() {
 		return $this->zebra;
 	}
 	
 	/**
 	 * @return string
 	 */
-	function Message() {
+	public function Message() {
 		$fs = $this->FieldList();
 		
 		foreach($fs as $subfield) {
@@ -119,7 +119,7 @@ class FieldGroup extends CompositeField {
 	/**
 	 * @return string
 	 */
-	function MessageType() {
+	public function MessageType() {
 		$fs = $this->FieldList();
 		
 		foreach($fs as $subfield) {
@@ -129,7 +129,7 @@ class FieldGroup extends CompositeField {
 		return (isset($MessageType)) ? implode(".  ", $MessageType) : "";
 	}
 	
-	function php($data) {
+	public function php($data) {
 		return;
 	}	
 }

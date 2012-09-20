@@ -14,7 +14,7 @@ class DataModel {
 	/**
 	 * Get the global DataModel.
 	 */
-	static function inst() {
+	public static function inst() {
 		if(!self::$inst) self::$inst = new self;
 		return self::$inst;
 	}
@@ -22,7 +22,7 @@ class DataModel {
 	/**
 	 * Set the global DataModel, used when data is requested from static methods.
 	 */
-	static function set_inst(DataModel $inst) {
+	public static function set_inst(DataModel $inst) {
 		self::$inst = $inst;
 	}
 	
@@ -30,7 +30,7 @@ class DataModel {
 
 	protected $customDataLists = array();
 	
-	function __get($class) {
+	public function __get($class) {
 		if(isset($this->customDataLists[$class])) {
 			return clone $this->customDataLists[$class];
 		} else {
@@ -40,7 +40,7 @@ class DataModel {
 		}
 	}
 	
-	function __set($class, $item) {
+	public function __set($class, $item) {
 		$item = clone $item;
 		$item->setDataModel($this);
 		$this->customDataLists[$class] = $item;

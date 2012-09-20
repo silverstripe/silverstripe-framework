@@ -85,7 +85,7 @@ class Security extends Controller {
 	/**
 	 * Get location of word list file
 	 */
-	static function get_word_list() {
+	public static function get_word_list() {
 		return Security::$wordlist;
 	}
 	
@@ -116,7 +116,7 @@ class Security extends Controller {
 	 * 
 	 * @param string $wordListFile Location of word list file
 	 */
-	static function set_word_list($wordListFile) {
+	public static function set_word_list($wordListFile) {
 		Security::$wordlist = $wordListFile;
 	}
 	
@@ -125,7 +125,7 @@ class Security extends Controller {
 	 *
 	 * @param string|array $messageSet
 	 */
-	static function set_default_message_set($messageSet) {
+	public static function set_default_message_set($messageSet) {
 		self::$default_message_set = $messageSet;
 	}
 
@@ -157,7 +157,7 @@ class Security extends Controller {
 	 * The alreadyLoggedIn value can contain a '%s' placeholder that will be replaced with a link
 	 * to log in.
 	 */
-	static function permissionFailure($controller = null, $messageSet = null) {
+	public static function permissionFailure($controller = null, $messageSet = null) {
 		self::set_ignore_disallowed_actions(true);
 		
 		if(!$controller) $controller = Controller::curr();
@@ -413,7 +413,7 @@ class Security extends Controller {
 		return $customisedController->renderWith(array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 	
-	function basicauthlogin() {
+	public function basicauthlogin() {
 		$member = BasicAuth::requireLogin("SilverStripe login", 'ADMIN');
 		$member->LogIn();
 	}
@@ -613,7 +613,7 @@ class Security extends Controller {
 	 * 
 	 * @return Member 
 	 */
-	static function findAnAdministrator() {
+	public static function findAnAdministrator() {
 		// coupling to subsites module
 		$origSubsite = null;
 		if(is_callable('Subsite::changeSubsite')) {
@@ -765,7 +765,7 @@ class Security extends Controller {
 	 * @see encrypt_passwords()
 	 * @see set_password_encryption_algorithm()
 	 */
-	static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
+	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
 		if(
 			// if the password is empty, don't encrypt
 			strlen(trim($password)) == 0  

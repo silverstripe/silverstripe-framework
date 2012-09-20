@@ -68,7 +68,7 @@ class SearchContext extends Object {
 	 *						{@link DataObject::scaffoldSearchFields()} if left blank.
 	 * @param array $filters Optional. Derived from modelclass if left blank
 	 */	
-	function __construct($modelClass, $fields = null, $filters = null) {
+	public function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
 		$this->fields = ($fields) ? $fields : new FieldList();
 		$this->filters = ($filters) ? $filters : array();
@@ -179,7 +179,7 @@ class SearchContext extends Object {
 	 * @param unknown_type $value
 	 * @return boolean
 	 */
-	function clearEmptySearchFields($value) {
+	public function clearEmptySearchFields($value) {
 		return ($value != '');
 	}
 		

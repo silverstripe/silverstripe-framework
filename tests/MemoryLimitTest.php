@@ -6,7 +6,7 @@
 
 class MemoryLimitTest extends SapphireTest {
 	
-	function testIncreaseMemoryLimitTo() {
+	public function testIncreaseMemoryLimitTo() {
 		if(!$this->canChangeMemory()) return;
 		
 		ini_set('memory_limit', '64M');
@@ -39,7 +39,7 @@ class MemoryLimitTest extends SapphireTest {
 		$this->assertEquals(-1, ini_get('memory_limit'));
 	}
 
-	function testIncreaseTimeLimitTo() {
+	public function testIncreaseTimeLimitTo() {
 		if(!$this->canChangeMemory()) return;
 		
 		set_time_limit(6000);
@@ -67,7 +67,7 @@ class MemoryLimitTest extends SapphireTest {
 	
 	private $origMemLimit, $origTimeLimit;
 	
-	function setUp() {
+	public function setUp() {
 		$this->origMemLimit = ini_get('memory_limit');
 		$this->origTimeLimit = ini_get('max_execution_time');
 		$this->origMemLimitMax = get_increase_memory_limit_max();
@@ -75,7 +75,7 @@ class MemoryLimitTest extends SapphireTest {
 		set_increase_memory_limit_max(-1);
 		set_increase_time_limit_max(-1);
 	}
-	function tearDown() {
+	public function tearDown() {
 		ini_set('memory_limit', $this->origMemLimit);
 		set_time_limit($this->origTimeLimit);
 		set_increase_memory_limit_max($this->origMemLimitMax);

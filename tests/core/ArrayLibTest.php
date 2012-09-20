@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class ArrayLibTest extends SapphireTest {
-	function testInvert() {
+	public function testInvert() {
 		$arr = array(
 			'row1' => array(
 				'col1' =>'val1',
@@ -31,7 +31,7 @@ class ArrayLibTest extends SapphireTest {
 		);
 	}
 
-	function testValuekey() {
+	public function testValuekey() {
 		$this->assertEquals(
 			ArrayLib::valuekey(
 				array(
@@ -46,7 +46,7 @@ class ArrayLibTest extends SapphireTest {
 		);
 	}
 	
-	function testArrayMergeRecursive() {
+	public function testArrayMergeRecursive() {
 		$first = array(
 			'first' => 'a',
 			'second' => 'b',

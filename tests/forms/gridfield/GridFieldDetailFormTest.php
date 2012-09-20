@@ -9,7 +9,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		'GridFieldDetailFormTest_Category',
 	);
 
-	function testAddForm() {
+	public function testAddForm() {
 		$this->logInWithPermission('ADMIN');
 		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
@@ -67,7 +67,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertEquals('Doe', (string) $surname[0]);
 	}
 
-	function testEditForm() {
+	public function testEditForm() {
 		$this->logInWithPermission('ADMIN');
 		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
@@ -106,7 +106,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
 	}
 
-	function testNestedEditForm() {
+	public function testNestedEditForm() {
 		$this->logInWithPermission('ADMIN');
 
 		$group = $this->objFromFixture('GridFieldDetailFormTest_PeopleGroup', 'group');
@@ -147,14 +147,14 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		// Fourth level form would be a Category detail view
 	}
 
-	function testCustomItemRequestClass() {
+	public function testCustomItemRequestClass() {
 		$component = new GridFieldDetailForm();
 		$this->assertEquals('GridFieldDetailForm_ItemRequest', $component->getItemRequestClass());
 		$component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
 		$this->assertEquals('GridFieldDetailFormTest_ItemRequest', $component->getItemRequestClass());
 	}
 
-	function testItemEditFormCallback() {
+	public function testItemEditFormCallback() {
 		$category = new GridFieldDetailFormTest_Category();
 		$component = new GridFieldDetailForm();
 		$component->setItemEditFormCallback(function($form, $component) {
@@ -190,7 +190,7 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 
 	static $default_sort = 'FirstName';
 
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('Categories',
@@ -214,7 +214,7 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 
 	static $default_sort = 'Name';
 
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('People',
@@ -238,7 +238,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 
 	static $default_sort = 'Name';
 
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('People',
@@ -254,7 +254,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
-	function Form() {
+	public function Form() {
 		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
@@ -274,7 +274,7 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
-	function Form() {
+	public function Form() {
 		$field = new GridField('testfield', 'testfield', GridFieldDetailFormTest_PeopleGroup::get()->sort('Name'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());

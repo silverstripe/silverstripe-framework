@@ -5,7 +5,7 @@ class i18nTestModule extends DataObject implements TestOnly {
 		'MyField' => 'Varchar', 
 	);
 	
-	function myMethod() {
+	public function myMethod() {
 		_t(
 			'i18nTestModule.ENTITY', 
 			'Entity with "Double Quotes"', 
@@ -14,7 +14,7 @@ class i18nTestModule extends DataObject implements TestOnly {
 	}
 }
 class i18nTestModule_Addition extends Object {
-	function myAdditionalMethod() {
+	public function myAdditionalMethod() {
 		_t('i18nTestModule.ADDITION','Addition');
 	}
 }
