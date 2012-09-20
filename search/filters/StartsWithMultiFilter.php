@@ -13,9 +13,9 @@
  * @subpackage search
  */
 class StartsWithMultiFilter extends SearchFilter {
-	function __construct($fullName, $value = false) {
+	function __construct($fullName, $value = false, array $modifiers = array()) {
 		Deprecation::notice('3.1', 'Use StartsWithFilter instead.');
-		parent::__construct($fullName, $value);
+		parent::__construct($fullName, $value, $modifiers);
 	}
 	
 	public function apply(DataQuery $query) {
@@ -24,7 +24,7 @@ class StartsWithMultiFilter extends SearchFilter {
 		} else {
 			$values = $this->getValue();
 		}
-		$filter = new StartsWithFilter($this->getFullName(), $values);
+		$filter = new StartsWithFilter($this->getFullName(), $values, $this->getModifiers());
 		return $filter->apply($query);
 	}
 
@@ -38,7 +38,7 @@ class StartsWithMultiFilter extends SearchFilter {
 		} else {
 			$values = $this->getValue();
 		}
-		$filter = new StartsWithFilter($this->getFullName(), $values);
+		$filter = new StartsWithFilter($this->getFullName(), $values, $this->getModifiers());
 		return $filter->exclude($query);
 	}
 

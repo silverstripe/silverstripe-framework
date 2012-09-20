@@ -17,6 +17,28 @@
  * @subpackage search
  */
 class EndsWithFilter extends SearchFilter {
+	protected function comparison($exclude = false) {
+		$modifiers = $this->getModifiers();
+		if(($extras = array_diff($modifiers, array('not', 'nocase', 'case'))) != array()) {
+			throw new InvalidArgumentException(
+				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
+		}
+		if(DB::getConn() instanceof PostgreSQLDatabase) {
+			if(in_array('case', $modifiers)) {
+				$comparison = 'LIKE';
+			} else {
+				$comparison = 'ILIKE';
+			}
+		} elseif(in_array('case', $modifiers)) {
+			$comparison = 'LIKE BINARY';
+		} else {
+			$comparison = 'LIKE';
+		}
+		if($exclude) {
+			$comparison = 'NOT ' . $comparison;
+		}
+		return $comparison;
+	}
 	
 	/**
 	 * Applies a match on the trailing characters of a field value.
@@ -28,7 +50,7 @@ class EndsWithFilter extends SearchFilter {
 		return $query->where(sprintf(
 			"%s %s '%%%s'",
 			$this->getDbName(),
-			(DB::getConn() instanceof PostgreSQLDatabase) ? 'ILIKE' : 'LIKE',
+			$this->comparison(false),
 			Convert::raw2sql($this->getValue())
 		));
 	}
@@ -46,7 +68,7 @@ class EndsWithFilter extends SearchFilter {
 			$connectives[] = sprintf(
 				"%s %s '%%%s'",
 				$this->getDbName(),
-				(DB::getConn() instanceof PostgreSQLDatabase) ? 'ILIKE' : 'LIKE',
+				$this->comparison(false),
 				Convert::raw2sql($value)
 			);
 		}
@@ -64,7 +86,7 @@ class EndsWithFilter extends SearchFilter {
 		return $query->where(sprintf(
 			"%s NOT %s '%%%s'",
 			$this->getDbName(),
-			(DB::getConn() instanceof PostgreSQLDatabase) ? 'ILIKE' : 'LIKE',
+			$this->comparison(true),
 			Convert::raw2sql($this->getValue())
 		));
 	}
@@ -82,7 +104,7 @@ class EndsWithFilter extends SearchFilter {
 			$connectives[] = sprintf(
 				"%s NOT %s '%%%s'",
 				$this->getDbName(),
-				(DB::getConn() instanceof PostgreSQLDatabase) ? 'ILIKE' : 'LIKE',
+				$this->comparison(true),
 				Convert::raw2sql($value)
 			);
 		}

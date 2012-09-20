@@ -442,8 +442,19 @@ class DataListTest extends SapphireTest {
 		$list = $list->filter(array(
 			'Name'=>array('Bob','Phil'),
 			'TeamID'=>array($this->idFromFixture('DataObjectTest_Team', 'team1'))));
-		$this->assertEquals(1, $list->count(), 'There should be one comments');
+		$this->assertEquals(1, $list->count(), 'There should be one comment');
 		$this->assertEquals('Bob', $list->first()->Name, 'Only comment should be from Bob');
+	}
+
+	public function testFilterWithModifiers() {
+		$list = DataObjectTest_TeamComment::get();
+		$nocaseList = $list->filter('Name:nocase', 'bob');
+		$this->assertEquals(1, $nocaseList->count(), 'There should be one comment');
+		$caseList = $list->filter('Name:case', 'bob');
+		$this->assertEquals(0, $caseList->count(), 'There should be no comments');
+		$gtList = $list->filter('TeamID:GreaterThan:not',
+			$this->idFromFixture('DataObjectTest_Team', 'team1'));
+		$this->assertEquals(2, $gtList->count());
 	}
 
 	public function testFilterAndExcludeById() {

@@ -12,14 +12,14 @@
  * @subpackage search
  */
 class SubstringFilter extends PartialMatchFilter {
-	public function __construct($fullName, $value = false) {
+	public function __construct($fullName, $value = false, array $modifiers = array()) {
 		Deprecation::notice('3.0', 'PartialMatchFilter instead.');
-		parent::__construct($fullName, $value);
+		parent::__construct($fullName, $value, $modifiers);
 	}
 
 	public function apply(DataQuery $query) {
 		$values = $this->getValue();
-		$filter = new PartialMatchFilter($this->getFullName(), $values);
+		$filter = new PartialMatchFilter($this->getFullName(), $values, $this->getModifiers());
 		return $filter->apply($query);
 	}
 
@@ -29,7 +29,7 @@ class SubstringFilter extends PartialMatchFilter {
 
 	public function exclude(DataQuery $query) {
 		$values = $this->getValue();
-		$filter = new PartialMatchFilter($this->getFullName(), $values);
+		$filter = new PartialMatchFilter($this->getFullName(), $values, $this->getModifiers());
 		return $filter->exclude($query);
 	}
 

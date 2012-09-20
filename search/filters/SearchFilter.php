@@ -31,6 +31,11 @@ abstract class SearchFilter extends Object {
 	protected $value;
 	
 	/**
+	 * @var array
+	 */
+	protected $modifiers;
+
+	/**
 	 * @var string Name of a has-one, has-many or many-many relation (not the classname).
 	 * Set in the constructor as part of the name in dot-notation, and used in 
 	 * {@link applyRelation()}.
@@ -43,12 +48,14 @@ abstract class SearchFilter extends Object {
 	 *  the necessary tables (e.g. "Comments.Name" to join the "Comments" has-many relationship and
 	 *  search the "Name" column when applying this filter to a SiteTree class).
 	 * @param mixed $value
+	 * @param array $modifiers
 	 */
-	public function __construct($fullName, $value = false) {
+	public function __construct($fullName, $value = false, array $modifiers = array()) {
 		$this->fullName = $fullName;
 		// sets $this->name and $this->relation
 		$this->addRelation($fullName);
 		$this->value = $value;
+		$this->modifiers = array_map('strtolower', $modifiers);
 	}
 	
 	/**
@@ -94,6 +101,24 @@ abstract class SearchFilter extends Object {
 	 */
 	public function getValue() {
 		return $this->value;
+	}
+
+	/**
+	 * Set the current modifiers to apply to the filter
+	 *
+	 * @param array $modifiers
+	 */
+	public function setModifiers(array $modifiers) {
+		$this->modifiers = array_map('strtolower', $modifiers);
+	}
+
+	/**
+	 * Accessor for the current modifiers to apply to the filter.
+	 *
+	 * @return array
+	 */
+	public function getModifiers() {
+		return $this->modifiers;
 	}
 	
 	/**
@@ -177,6 +202,10 @@ abstract class SearchFilter extends Object {
 	 * @return DataQuery
 	 */
 	public function apply(DataQuery $query) {
+		if(($key = array_search('not', $this->modifiers)) !== false) {
+			unset($this->modifiers[$key]);
+			return $this->exclude($query);
+		}
 		if(is_array($this->value)) {
 			return $this->applyMany($query);
 		} else {
@@ -209,6 +238,10 @@ abstract class SearchFilter extends Object {
 	 * @return DataQuery
 	 */
 	public function exclude(DataQuery $query) {
+		if(($key = array_search('not', $this->modifiers)) !== false) {
+			unset($this->modifiers[$key]);
+			return $this->apply($query);
+		}
 		if(is_array($this->value)) {
 			return $this->excludeMany($query);
 		} else {

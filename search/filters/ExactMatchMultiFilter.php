@@ -13,9 +13,9 @@
  * @subpackage search
  */
 class ExactMatchMultiFilter extends SearchFilter {
-	function __construct($fullName, $value = false) {
+	function __construct($fullName, $value = false, array $modifiers = array()) {
 		Deprecation::notice('3.1', 'Use ExactMatchFilter instead.');
-		parent::__construct($fullName, $value);
+		parent::__construct($fullName, $value, $modifiers);
 	}
 	
 	public function apply(DataQuery $query) {
@@ -24,7 +24,7 @@ class ExactMatchMultiFilter extends SearchFilter {
 		} else {
 			$values = $this->getValue();
 		}
-		$filter = new ExactMatchFilter($this->getFullName(), $values);
+		$filter = new ExactMatchFilter($this->getFullName(), $values, $this->getModifiers());
 		return $filter->apply($query);
 	}
 
@@ -38,7 +38,7 @@ class ExactMatchMultiFilter extends SearchFilter {
 		} else {
 			$values = $this->getValue();
 		}
-		$filter = new ExactMatchFilter($this->getFullName(), $values);
+		$filter = new ExactMatchFilter($this->getFullName(), $values, $this->getModifiers());
 		return $filter->exclude($query);
 	}
 
