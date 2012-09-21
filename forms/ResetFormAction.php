@@ -7,14 +7,14 @@
  */
 class ResetFormAction extends FormAction {
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array('type' => 'reset')
 		);
 	}
 
-	function Type() {
+	public function Type() {
 		return 'resetformaction';
 	}
 

@@ -12,7 +12,7 @@ class RequirementsTest extends SapphireTest {
 	
 	static $old_requirements = null;
 	
-	function testExternalUrls() {
+	public function testExternalUrls() {
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 
@@ -96,7 +96,7 @@ class RequirementsTest extends SapphireTest {
 			);
 		}
 
-	function testCombinedJavascript() {
+	public function testCombinedJavascript() {
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 		$backend->setCombinedFilesFolder('assets');
@@ -154,7 +154,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
 	
-	function testBlockedCombinedJavascript() {
+	public function testBlockedCombinedJavascript() {
 		$basePath = $this->getCurrentRelativePath();
 		
 		$backend = new Requirements_Backend;
@@ -205,7 +205,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
 	
-	function testArgsInUrls() {
+	public function testArgsInUrls() {
 		$basePath = $this->getCurrentRelativePath();
 		
 		$backend = new Requirements_Backend;
@@ -224,7 +224,7 @@ class RequirementsTest extends SapphireTest {
 		$this->assertTrue((bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&test=1&test=2&test=3/', $html), 'css has correct path'); 
 	}
 	
-	function testRequirementsBackend() {
+	public function testRequirementsBackend() {
 		$basePath = $this->getCurrentRelativePath();
 		
 		$backend = new Requirements_Backend();
@@ -249,7 +249,7 @@ class RequirementsTest extends SapphireTest {
 		$this->assertTrue(count($backend->get_css()) == 0, "There should be nothing in required css after file has been blocked.");
 	}
 
-	function testConditionalTemplateRequire() {
+	public function testConditionalTemplateRequire() {
 		$basePath = $this->getCurrentRelativePath();
 		// we're asserting "framework", so set the relative path accordingly in case FRAMEWORK_DIR was changed to something else
 		$basePath = 'framework' . substr($basePath, strlen(FRAMEWORK_DIR));
@@ -277,7 +277,7 @@ class RequirementsTest extends SapphireTest {
 		Requirements::set_backend($holder);
 	}
 
-	function testJsWriteToBody() {
+	public function testJsWriteToBody() {
 		$backend = new Requirements_Backend();
 		$backend->javascript('http://www.mydomain.com/test.js');
 
@@ -297,7 +297,7 @@ class RequirementsTest extends SapphireTest {
 }
 
 class RequirementsTest_Backend extends Requirements_Backend implements TestOnly {
-	function assertFileIncluded($type, $files) {
+	public function assertFileIncluded($type, $files) {
 		$type = strtolower($type);
 		switch (strtolower($type)) {
 			case 'css':
@@ -334,7 +334,7 @@ class RequirementsTest_Backend extends Requirements_Backend implements TestOnly 
 		}
 	}
   	
-	function assertFileNotIncluded($type, $files) {
+	public function assertFileNotIncluded($type, $files) {
 		$type = strtolower($type);
 		switch ($type) {
 			case 'css':

@@ -176,11 +176,31 @@ define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
 define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 
+///////////////////////////////////////////////////////////////////////////////
+// INCLUDES
+
+if(defined('CUSTOM_INCLUDE_PATH')) {
+	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
+		. get_include_path();
+} else {
+	$includePath = FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
+		. get_include_path();
+}
+
+set_include_path($includePath);
+
 /**
  * Define the temporary folder if it wasn't defined yet
  */
+require_once 'core/TempPath.php';
+
 if(!defined('TEMP_FOLDER')) {
-	define('TEMP_FOLDER', getTempFolder());
+	define('TEMP_FOLDER', getTempFolder(BASE_PATH));
 }
 
 /**
@@ -211,24 +231,6 @@ mb_regex_encoding('UTF-8');
  * Enable better garbage collection
  */
 gc_enable();
-
-///////////////////////////////////////////////////////////////////////////////
-// INCLUDES
-
-if(defined('CUSTOM_INCLUDE_PATH')) {
-	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
-} else {
-	$includePath = FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
-}
-
-set_include_path($includePath);
 
 // Include the files needed the initial manifest building, as well as any files
 // that are needed for the boostrap process on every request.
@@ -299,54 +301,6 @@ Debug::loadErrorHandlers();
 function getSysTempDir() {
 	Deprecation::notice(3.0, 'Please use PHP function get_sys_temp_dir() instead.');
 	return sys_get_temp_dir();
-}
-
-/**
- * Returns the temporary folder that silverstripe should use for its cache files
- * This is loaded into the TEMP_FOLDER define on start up
- * 
- * @param $base The base path to use as the basis for the temp folder name.  Defaults to BASE_PATH,
- * which is usually fine; however, the $base argument can be used to help test.
- */
-function getTempFolder($base = null) {
-	if(!$base) $base = BASE_PATH;
-
-	if($base) {
-		$cachefolder = "silverstripe-cache" . str_replace(array(' ', "/", ":", "\\"), "-", $base);
-	} else {
-		$cachefolder = "silverstripe-cache";
-	}
-
-	$ssTmp = BASE_PATH . "/silverstripe-cache";
-	if(@file_exists($ssTmp)) {
-		return $ssTmp;
-	}
-
-	$sysTmp = sys_get_temp_dir();
-	$worked = true;
-	$ssTmp = "$sysTmp/$cachefolder";
-
-	if(!@file_exists($ssTmp)) {
-		$worked = @mkdir($ssTmp);
-	}
-
-	if(!$worked) {
-		$ssTmp = BASE_PATH . "/silverstripe-cache";
-		$worked = true;
-		if(!@file_exists($ssTmp)) {
-			$worked = @mkdir($ssTmp);
-		}
-	}
-
-	if(!$worked) {
-		throw new Exception(
-			'Permission problem gaining access to a temp folder. ' .
-			'Please create a folder named silverstripe-cache in the base folder ' .
-			'of the installation and ensure it has the correct permissions'
-		);
-	}
-
-	return $ssTmp;
 }
 
 /**

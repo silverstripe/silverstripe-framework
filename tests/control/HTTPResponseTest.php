@@ -5,7 +5,7 @@
  */
 class HTTPResponseTest extends SapphireTest {
 	
-	function testStatusDescriptionStripsNewlines() {
+	public function testStatusDescriptionStripsNewlines() {
 		$r = new SS_HTTPResponse('my body', 200, "my description \nwith newlines \rand carriage returns");
 		$this->assertEquals(
 			"my description with newlines and carriage returns",
@@ -13,7 +13,7 @@ class HTTPResponseTest extends SapphireTest {
 		);
 	}
 	
-	function testContentLengthHeader() {
+	public function testContentLengthHeader() {
 		$r = new SS_HTTPResponse('123ü');
 		$this->assertNotNull($r->getHeader('Content-Length'), 'Content-length header is added');
 		$this->assertEquals(

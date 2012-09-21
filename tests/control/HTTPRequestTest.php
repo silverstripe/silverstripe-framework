@@ -3,7 +3,7 @@
 class HTTPRequestTest extends SapphireTest {
 	static $fixture_file = null;
 	
-	function testMatch() {
+	public function testMatch() {
 		$request = new SS_HTTPRequest("GET", "admin/crm/add");
 		
 		/* When a rule matches, but has no variables, array("_matched" => true) is returned. */
@@ -231,7 +231,7 @@ class HTTPRequestTest extends SapphireTest {
 		);
 	}
 
-	function testIsAjax() {
+	public function testIsAjax() {
 		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 0));
 		$this->assertFalse($req->isAjax());
 

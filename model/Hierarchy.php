@@ -16,16 +16,16 @@ class Hierarchy extends DataExtension {
 	 */
 	protected $_cache_numChildren;
 	
-	function augmentSQL(SQLQuery &$query) {
+	public function augmentSQL(SQLQuery &$query) {
 	}
 
-	function augmentDatabase() {
+	public function augmentDatabase() {
 	}
 	
-	function augmentWrite(&$manipulation) {
+	public function augmentWrite(&$manipulation) {
 	}
 
-	static function get_extra_config($class, $extension, $args) {
+	public static function get_extra_config($class, $extension, $args) {
 		return array(
 			'has_one' => array('Parent' => $class)
 		);
@@ -34,7 +34,7 @@ class Hierarchy extends DataExtension {
 	/**
 	 * Validate the owner object - check for existence of infinite loops.
 	 */
-	function validate(ValidationResult $validationResult) {
+	public function validate(ValidationResult $validationResult) {
 		if (!$this->owner->ID) return; // The object is new, won't be looping.
 		if (!$this->owner->ParentID) return; // The object has no parent, won't be looping.
 		if (!$this->owner->isChanged('ParentID')) return; // The parent has not changed, skip the check for performance reasons.
@@ -682,7 +682,7 @@ class Hierarchy extends DataExtension {
 		return null;
 	}
 	
-	function flushCache() {
+	public function flushCache() {
 		$this->_cache_children = null;
 		$this->_cache_numChildren = null;
 		self::$marked = array();

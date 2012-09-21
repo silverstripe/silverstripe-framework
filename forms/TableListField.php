@@ -235,7 +235,7 @@ class TableListField extends FormField {
 	 * @param $sourceSort string
 	 * @param $sourceJoin string
 	 */
-	function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null, 
+	public function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null,
 		$sourceSort = null, $sourceJoin = null) {
 		if(FRAMEWORK_DIR != 'sapphire' && !SapphireTest::is_running_test()) {
 			user_error('TableListField requires FRAMEWORK_DIR to be sapphire.', E_USER_WARNING);
@@ -261,7 +261,7 @@ class TableListField extends FormField {
 		parent::__construct($name);
 	}
 	
-	function index() {
+	public function index() {
 		return $this->FieldHolder();
 	}
 
@@ -270,18 +270,18 @@ class TableListField extends FormField {
 		'$Action' => '$Action',
 	);
 
-	function sourceClass() {
+	public function sourceClass() {
 	    $list = $this->getDataList();
 	    if(method_exists($list, 'dataClass')) return $list->dataClass();
 	    // Failover for SS_List
 	    else return get_class($list->First());
 	}
 	
-	function handleItem($request) {
+	public function handleItem($request) {
 		return new TableListField_ItemRequest($this, $request->param('ID'));
 	}
 	
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/behaviour/behaviour.js');
@@ -307,7 +307,7 @@ JS
 		return $obj->renderWith($this->template);
 	}
 	
-	function Headings() {
+	public function Headings() {
 		$headings = array();
 		foreach($this->fieldList as $fieldName => $fieldTitle) {
 			$isSorted = (isset($_REQUEST['ctf'][$this->getName()]['sort']) && $fieldName == $_REQUEST['ctf'][$this->getName()]['sort']);
@@ -349,7 +349,7 @@ JS
 		return new ArrayList($headings);
 	}
 	
-	function disableSorting($to = true) {
+	public function disableSorting($to = true) {
 		$this->disableSorting = $to;
 	}
 
@@ -361,7 +361,7 @@ JS
 	 * @param string $fieldName
 	 * @return bool
 	 */	
-	function isFieldSortable($fieldName) {
+	public function isFieldSortable($fieldName) {
 		if($this->disableSorting) return false;
 		$list = $this->getDataList();
 		if(method_exists($list,'canSortBy')) return $list->canSortBy($fieldName);
@@ -374,7 +374,7 @@ JS
 	 * 
 	 * @return SS_List
 	 */
-	function Actions() {
+	public function Actions() {
 		$allowedActions = new ArrayList();
 		foreach($this->actions as $actionName => $actionSettings) {
 			if($this->Can($actionName)) {
@@ -392,17 +392,17 @@ JS
 	 * 
 	 * @param $query DataList
 	 */
-	function setCustomQuery(DataList $dataList) {
+	public function setCustomQuery(DataList $dataList) {
 		$this->dataList = $dataList;
 		return $this;
 	}
 
-	function setCustomCsvQuery(DataList $dataList) {
+	public function setCustomCsvQuery(DataList $dataList) {
 		$this->customCsvQuery = $query;
 		return $this;
 	}
 	
-	function setCustomSourceItems(SS_List $items) {
+	public function setCustomSourceItems(SS_List $items) {
 		user_error('TableList::setCustomSourceItems() deprecated, just pass the items into the constructor', E_USER_WARNING);
 
 		// The type-hinting above doesn't seem to work consistently
@@ -418,7 +418,7 @@ JS
 	/**
 	 * Get items, with sort & limit applied
 	 */
-	function sourceItems() {
+	public function sourceItems() {
 		// get items (this may actually be a SS_List)
 		$items = clone $this->getDataList();
 
@@ -448,7 +448,7 @@ JS
 	/**
 	 * Return a SS_List of TableListField_Item objects, suitable for display in the template.
 	 */
-	function Items() {
+	public function Items() {
 		$fieldItems = new ArrayList();
 		if($items = $this->sourceItems()) foreach($items as $item) {
 			if($item) $fieldItems->push(new $this->itemClass($item, $this));
@@ -459,7 +459,7 @@ JS
 	/**
 	 * Returns the DataList for this field.
 	 */
-	function getDataList() {
+	public function getDataList() {
 		// If we weren't passed in a DataList to begin with, try and get the datalist from the form
 		if($this->form && $this->getDataListFromForm) {
 		    $this->getDataListFromForm = false;
@@ -476,7 +476,7 @@ JS
 		return $this->dataList;
 	}
 
-	function getCsvDataList() {
+	public function getCsvDataList() {
 		if($this->customCsvQuery) return $this->customCsvQuery;
 		else return $this->getDataList();
 	}
@@ -484,7 +484,7 @@ JS
 	/**
 	 * @deprecated Use getDataList() instead.
 	 */
-	function getQuery() {
+	public function getQuery() {
 		Deprecation::notice('3.0', 'Use getDataList() instead.');
 	    $list = $this->getDataList();
 	    if(method_exists($list,'dataQuery')) {
@@ -495,7 +495,7 @@ JS
 	/**
 	 * @deprecated Use getCsvDataList() instead.
 	 */
-	function getCsvQuery() {
+	public function getCsvQuery() {
 		Deprecation::notice('3.0', 'Use getCsvDataList() instead.');
 	    $list = $this->getCsvDataList();
 	    if(method_exists($list,'dataQuery')) {
@@ -503,14 +503,14 @@ JS
         }
 	}
 		
-	function FieldList() {
+	public function FieldList() {
 		return $this->fieldList;
 	}
 	
 	/**
 	 * Configure this table to load content into a subform via ajax
 	 */
-	function setClick_AjaxLoad($urlBase, $formID) {
+	public function setClick_AjaxLoad($urlBase, $formID) {
 		$this->clickAction = "this.ajaxRequest('" . addslashes($urlBase) . "', '" . addslashes($formID) . "')";
 		return $this;
 	}
@@ -518,12 +518,12 @@ JS
 	/**
 	 * Configure this table to open a popup window
 	 */
-	function setClick_PopupLoad($urlBase) {
+	public function setClick_PopupLoad($urlBase) {
 		$this->clickAction = "var w = window.open(baseHref() + '$urlBase' + this.id.replace(/.*-(\d*)$/,'$1'), 'popup'); w.focus();";
 		return $this;
 	}
 	
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->setShowPagination(false);
 		
@@ -544,7 +544,7 @@ JS
 	/**
 	 * @return String
 	 */
-	function delete($request) {
+	public function delete($request) {
 		// Protect against CSRF on destructive action
 		$token = $this->getForm()->getSecurityToken();
 		if(!$token->checkRequest($request)) return $this->httpError('400');
@@ -583,21 +583,21 @@ JS
 	 * Simple Format: array("MyFieldName"=>"sum")
 	 * With Casting: array("MyFieldname"=>array("sum","Currency->Nice"))
 	 */
-	function addSummary($summaryTitle, $summaryFieldList) {
+	public function addSummary($summaryTitle, $summaryFieldList) {
 		$this->summaryTitle = $summaryTitle;
 		$this->summaryFieldList = $summaryFieldList;
 	}
 	
-	function removeSummary() {
+	public function removeSummary() {
 		$this->summaryTitle = null;
 		$this->summaryFields = null;
 	}
 	
-	function HasSummary() {
+	public function HasSummary() {
 		return (isset($this->summaryFieldList));
 	}
 	
-	function SummaryTitle() {
+	public function SummaryTitle() {
 		return $this->summaryTitle;
 	}
 	
@@ -605,7 +605,7 @@ JS
 	 * @param SS_List $items Only used to pass grouped sourceItems for creating
 	 * partial summaries.
 	 */
-	function SummaryFields($items = null) {
+	public function SummaryFields($items = null) {
 		if(!isset($this->summaryFieldList)) {
 			return false;
 		}
@@ -649,11 +649,11 @@ JS
 		return new ArrayList($summaryFields);
 	}
 	
-	function HasGroupedItems() {
+	public function HasGroupedItems() {
 		return ($this->groupByField);	
 	}
 	
-	function GroupedItems() {
+	public function GroupedItems() {
 		if(!$this->groupByField) {
 			return false; 
 		}
@@ -679,11 +679,11 @@ JS
 		return $groupedArrItems;
 	}
 	
-	function colFunction_sum($values) {
+	public function colFunction_sum($values) {
 		return array_sum($values);
 	}
 
-	function colFunction_avg($values) {
+	public function colFunction_avg($values) {
 		return array_sum($values)/count($values);
 	}
 	
@@ -701,7 +701,7 @@ JS
 	 * 
 	 * @return boolean
 	 */
-	function Can($mode) {
+	public function Can($mode) {
 		if($mode == 'add' && $this->isReadonly()) {
 			return false;
 		} else if($mode == 'delete' && $this->isReadonly()) {
@@ -714,7 +714,7 @@ JS
 		
 	}
 	
-	function setPermissions($arr) {
+	public function setPermissions($arr) {
 		$this->permissions = $arr;
 		return $this;
 	}
@@ -722,7 +722,7 @@ JS
 	/**
 	 * @return array
 	 */
-	function getPermissions() {
+	public function getPermissions() {
 		return $this->permissions;
 	}
 
@@ -731,7 +731,7 @@ JS
 	 *           Pagination
 	 * #################################
 	 */
-	function setShowPagination($bool) {
+	public function setShowPagination($bool) {
 		$this->showPagination = (bool)$bool;
 		return $this;
 	}
@@ -739,23 +739,23 @@ JS
 	/**
 	 * @return boolean
 	 */
-	function ShowPagination() {
+	public function ShowPagination() {
 		if($this->showPagination && !empty($this->summaryFieldList)) {
 			user_error("You can't combine pagination and summaries - please disable one of them.", E_USER_ERROR);
 		}
 		return $this->showPagination;
 	}
 	
-	function setPageSize($pageSize) {
+	public function setPageSize($pageSize) {
 	 	$this->pageSize = $pageSize;
 	 	return $this;
 	}
 	 
-	 function PageSize() {
+	 public function PageSize() {
 		return $this->pageSize;
 	}
 	 
-	function ListStart() {
+	public function ListStart() {
 		return $_REQUEST['ctf'][$this->getName()]['start'];
 	}
 	
@@ -763,7 +763,7 @@ JS
 	 * @param array
 	 * @deprecated Put the query string onto your form's link instead :-)
 	 */
-	function setExtraLinkParams($params){
+	public function setExtraLinkParams($params){
 		Deprecation::notice('2.4', 'Put the query string onto your FormAction instead().');
 		$this->extraLinkParams = $params;
 		return $this;
@@ -772,11 +772,11 @@ JS
 	/**
 	 * @return array
 	 */
-	function getExtraLinkParams(){
+	public function getExtraLinkParams(){
 		return $this->extraLinkParams;
 	}
 	
-	function FirstLink() {
+	public function FirstLink() {
 		$start = 0;
 		
 		if(!isset($_REQUEST['ctf'][$this->getName()]['start']) || !is_numeric($_REQUEST['ctf'][$this->getName()]['start']) || $_REQUEST['ctf'][$this->getName()]['start'] == 0) {
@@ -798,7 +798,7 @@ JS
 		return $link;
 	}
 	
-	function PrevLink() {
+	public function PrevLink() {
 		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 
 		if($currentStart == 0) {
@@ -824,7 +824,7 @@ JS
 	}
 	
 
-	function NextLink() {
+	public function NextLink() {
 		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 		$start = ($currentStart + $this->pageSize < $this->TotalCount()) ? $currentStart + $this->pageSize : $this->TotalCount() % $this->pageSize > 0;
 		if($currentStart >= $start-1) {
@@ -846,7 +846,7 @@ JS
 		return $link;
 	}
 	
-	function LastLink() {
+	public function LastLink() {
 		$pageSize = ($this->TotalCount() % $this->pageSize > 0) ? $this->TotalCount() % $this->pageSize : $this->pageSize;
 		$start = $this->TotalCount() - $pageSize;
 		// Check if there is only one page, or if we are on last page
@@ -870,12 +870,12 @@ JS
 		return $link;
 	}
 	
-	function FirstItem() {
+	public function FirstItem() {
 		if ($this->TotalCount() < 1) return 0;
 		return isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] + 1 : 1;
 	}
 	
-	function LastItem() {
+	public function LastItem() {
 		if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
 			return $_REQUEST['ctf'][$this->getName()]['start'] + min($this->pageSize, $this->TotalCount() - $_REQUEST['ctf'][$this->getName()]['start']);
 		} else {
@@ -891,7 +891,7 @@ JS
 	/**
 	 * Return the total number of items in the source DataList
 	 */
-	function TotalCount() {
+	public function TotalCount() {
 	    if($this->_cache_TotalCount === null) {
 	        $this->_cache_TotalCount = $this->getDataList()->Count();
 	    }
@@ -913,7 +913,7 @@ JS
 	  * 
 	  * @return String URL-parameters
 	  */
-	function filterString() {
+	public function filterString() {
 		
 	}
 	
@@ -924,7 +924,7 @@ JS
 	 *           CSV Export
 	 * #################################
 	 */
-	 function setFieldListCsv($fields) {
+	 public function setFieldListCsv($fields) {
 	 	$this->fieldListCsv = $fields;
 	 	return $this;
 	 }
@@ -932,7 +932,7 @@ JS
 	/**
 	 * Set the CSV separator character.  Defaults to ,
 	 */
-	function setCsvSeparator($csvSeparator) {
+	public function setCsvSeparator($csvSeparator) {
 		$this->csvSeparator = $csvSeparator;
 		return $this;
 	}
@@ -940,14 +940,14 @@ JS
 	/**
 	 * Get the CSV separator character.  Defaults to ,
 	 */
-	function getCsvSeparator() {
+	public function getCsvSeparator() {
 		return $this->csvSeparator;
 	}
 	
 	/**
 	 * Remove the header row from the CSV export
 	 */
-	function removeCsvHeader() {
+	public function removeCsvHeader() {
 		$this->csvHasHeader = false;
 		return $this;
 	}
@@ -960,7 +960,7 @@ JS
 	 * 
 	 * @todo Make relation-syntax available (at the moment you'll have to use custom sql) 
 	 */
-	function export() {
+	public function export() {
 		$now = date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
 
@@ -979,7 +979,7 @@ JS
 		}
 	}
 	
-	function generateExportFileData(&$numColumns, &$numRows) {
+	public function generateExportFileData(&$numColumns, &$numRows) {
 		$separator = $this->csvSeparator;
 		$csvColumns = ($this->fieldListCsv) ? $this->fieldListCsv : $this->fieldList;
 		$fileData = '';
@@ -1045,14 +1045,14 @@ JS
 	/**
 	 * We need to instanciate this button manually as a normal button has no means of adding inline onclick-behaviour.
 	 */
-	function ExportLink() {
+	public function ExportLink() {
 		$exportLink = Controller::join_links($this->Link(), 'export');
 		
 		if($this->extraLinkParams) $exportLink .= "?" . http_build_query($this->extraLinkParams);
 		return $exportLink;
 	}
 
-	function printall() {
+	public function printall() {
 		Requirements::clear();
 		if(defined('CMS_DIR')) {
 			Requirements::css(CMS_DIR . '/css/typography.css');
@@ -1074,7 +1074,7 @@ JS
 		return $result;
 	}
 
-	function PrintLink() {
+	public function PrintLink() {
 		$link = Controller::join_links($this->Link(), 'printall');
 		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
 			$link = HTTP::setGetVar("ctf[{$this->getName()}][sort]",Convert::raw2xml($_REQUEST['ctf'][$this->getName()]['sort']), $link);
@@ -1087,7 +1087,7 @@ JS
 	 *           Utilty
 	 * #################################
 	 */
-	function Utility() {
+	public function Utility() {
 		$links = new ArrayList();
 		if($this->can('export')) {
 			$links->push(new ArrayData(array(
@@ -1105,17 +1105,17 @@ JS
 		
 	}
 	
-	function setFieldCasting($casting) {
+	public function setFieldCasting($casting) {
 		$this->fieldCasting = $casting;
 		return $this;
 	}
 
-	function setFieldFormatting($formatting) {
+	public function setFieldFormatting($formatting) {
 		$this->fieldFormatting = $formatting;
 		return $this;
 	}
 	
-	function setCSVFieldFormatting($formatting) {
+	public function setCSVFieldFormatting($formatting) {
 		$this->csvFieldFormatting = $formatting;
 		return $this;
 	}
@@ -1123,7 +1123,7 @@ JS
 	/**
 	 * Edit the field list
 	 */
-	function setFieldList($fieldList) {
+	public function setFieldList($fieldList) {
 		$this->fieldList = $fieldList;
 		return $this;
 	}
@@ -1131,11 +1131,11 @@ JS
 	/**
 	 * @return String
 	 */
-	function Name() {
+	public function Name() {
 		return $this->name;
 	}
 	
-	function Title() {
+	public function Title() {
 	  // adding translating functionality
 	  // this is a bit complicated, because this parameter is passed to this class
 	  // and should come here translated already
@@ -1145,24 +1145,24 @@ JS
 		return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 	
-	function NameSingular() {
+	public function NameSingular() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
 	  return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 
-	function NamePlural() {
+	public function NamePlural() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
 		return $this->sourceClass() ? singleton($this->sourceClass())->plural_name() : $this->getName();
 	} 
 	
-	function setTemplate($template) {
+	public function setTemplate($template) {
 		$this->template = $template;
 		return $this;
 	}
 	
-	function CurrentLink() {
+	public function CurrentLink() {
 		$link = $this->Link();
 		
 		if(isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
@@ -1181,7 +1181,7 @@ JS
 	 * @param String $action
 	 * @return String
 	 */
-	function Link($action = null) {
+	public function Link($action = null) {
 		$form = $this->getForm();
  		if($form) {
 			$token = $form->getSecurityToken();
@@ -1197,7 +1197,7 @@ JS
 		}
 	}
 	
-	function BaseLink() {
+	public function BaseLink() {
 		user_error("TableListField::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link();
 	}
@@ -1229,7 +1229,7 @@ JS
 	 * @param $value
 	 * 
 	 */
-	function getCastedValue($value, $castingDefinition) {
+	public function getCastedValue($value, $castingDefinition) {
 		if(is_array($castingDefinition)) {
 			$castingParams = $castingDefinition;
 			array_shift($castingParams);
@@ -1252,7 +1252,7 @@ JS
 		return $value;
 	}	 
 	 
-	function setHighlightConditions($conditions) {
+	public function setHighlightConditions($conditions) {
 		$this->highlightConditions = $conditions;
 		return $this;
 	}
@@ -1267,7 +1267,7 @@ JS
 	 *  For any other key, the JavaScript automatically checks all checkboxes contained in
 	 *  <td> elements with a matching classname.
 	 */
-	function addSelectOptions($options){
+	public function addSelectOptions($options){
 		foreach($options as $k => $title)
 		$this->selectOptions[$k] = $title;
 	}
@@ -1277,7 +1277,7 @@ JS
 	 * 
 	 * @param $optionsNames array
 	 */
-	function removeSelectOptions($names){
+	public function removeSelectOptions($names){
 		foreach($names as $name){
 			unset($this->selectOptions[trim($name)]);
 		}
@@ -1292,7 +1292,7 @@ JS
 	 * 
 	 * @return SS_List of ArrayData objects
 	 */
-	function SelectOptions(){
+	public function SelectOptions(){
 		if(!$this->selectOptions) return;
 		
 		$selectOptionsSet = new ArrayList();
@@ -1325,21 +1325,21 @@ class TableListField_Item extends ViewableData {
 	 */
 	protected $parent;
 	
-	function __construct($item, $parent) {
+	public function __construct($item, $parent) {
 		$this->failover = $this->item = $item;
 		$this->parent = $parent;
 		parent::__construct();
 	}
 	
-	function ID() {
+	public function ID() {
 		return $this->item->ID;
 	}
 	
-	function Parent() {
+	public function Parent() {
 		return $this->parent;
 	}
 	
-	function Fields($xmlSafe = true) {
+	public function Fields($xmlSafe = true) {
 		$list = $this->parent->FieldList();
 		foreach($list as $fieldName => $fieldTitle) {
 			$value = "";
@@ -1395,7 +1395,7 @@ class TableListField_Item extends ViewableData {
 		return new ArrayList($fields);
 	}
 	
-	function Markable() {
+	public function Markable() {
 		return $this->parent->Markable;
 	}
 	
@@ -1407,7 +1407,7 @@ class TableListField_Item extends ViewableData {
 	 * @param string $mode See {@link TableListField::$permissions} array.
 	 * @return boolean
 	 */
-	function Can($mode) {
+	public function Can($mode) {
 		$canMethod = "can" . ucfirst($mode);
 		if(!$this->parent->Can($mode)) {
 			// check global settings for the field instance
@@ -1421,7 +1421,7 @@ class TableListField_Item extends ViewableData {
 		}
 	}
 	
-	function Link($action = null) {
+	public function Link($action = null) {
 		$form = $this->parent->getForm();
  		if($form) {
 			$token = $form->getSecurityToken();
@@ -1444,7 +1444,7 @@ class TableListField_Item extends ViewableData {
 	 * 
 	 * @return SS_List
 	 */
-	function Actions() {
+	public function Actions() {
 		$allowedActions = new ArrayList();
 		foreach($this->parent->actions as $actionName => $actionSettings) {
 			if($this->parent->Can($actionName)) {
@@ -1464,16 +1464,16 @@ class TableListField_Item extends ViewableData {
 		return $allowedActions;
 	}
    
-	function BaseLink() {
+	public function BaseLink() {
 		user_error("TableListField_Item::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link();
 	}
 
-	function DeleteLink() {
+	public function DeleteLink() {
 		return Controller::join_links($this->Link(), "delete");
 	}
 	
-	function MarkingCheckbox() {
+	public function MarkingCheckbox() {
 		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->isReadonly())
@@ -1488,7 +1488,7 @@ class TableListField_Item extends ViewableData {
 	 * 
 	 * @return string Value for a 'class' HTML attribute.
 	 */
-	function SelectOptionClasses(){
+	public function SelectOptionClasses(){
 		$tagArray = array('markingcheckbox');
 		$options = $this->parent->SelectOptions();
 		if($options && $options->exists()){
@@ -1503,7 +1503,7 @@ class TableListField_Item extends ViewableData {
 		return implode(" ",$tagArray);
 	}
 	
-	function HighlightClasses() {
+	public function HighlightClasses() {
 		$classes = array();
 		foreach($this->parent->highlightConditions as $condition) {
 			$rule = str_replace("\$","\$this->item->", $condition['rule']);
@@ -1524,7 +1524,7 @@ class TableListField_Item extends ViewableData {
 	/**
 	 * Legacy: Please use permissions instead
 	 */
-	function isReadonly() {
+	public function isReadonly() {
 		return $this->parent->Can('delete');
 	}
 }
@@ -1543,18 +1543,18 @@ class TableListField_ItemRequest extends RequestHandler {
 		'' => 'index',
 	);
 	
-	function Link() {
+	public function Link() {
 		return Controller::join_links($this->ctf->Link(), 'item/' . $this->itemID);
 	}
 	
-	function __construct($ctf, $itemID) {
+	public function __construct($ctf, $itemID) {
 		$this->ctf = $ctf;
 		$this->itemID = $itemID;
 		
 		parent::__construct();
 	}
 
-	function delete($request) {
+	public function delete($request) {
 		// Protect against CSRF on destructive action
 		$token = $this->ctf->getForm()->getSecurityToken();
 		if(!$token->checkRequest($request)) return $this->httpError('400');
@@ -1571,7 +1571,7 @@ class TableListField_ItemRequest extends RequestHandler {
 	/**
 	 * Return the data object being manipulated
 	 */
-	function dataObj() {
+	public function dataObj() {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
  			// we have to use the basedataclass, otherwise we might exclude other subclasses 
@@ -1583,7 +1583,7 @@ class TableListField_ItemRequest extends RequestHandler {
 	/**
 	 * @return TableListField
 	 */
-	function getParentController() {
+	public function getParentController() {
 		return $this->ctf;
 	}
 }

@@ -80,7 +80,7 @@ class SSHTMLBBCodeParser_Filter_Lists extends SSHTMLBBCodeParser_Filter
     * @see      $_text
     * @author   Stijn de Reede <sjr@gmx.co.uk>, Seth Price <seth@pricepages.org>
     */
-    function _preparse()
+    public function _preparse()
     {
         $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser','_options');
         $o = $options['open'];

@@ -44,7 +44,7 @@ class SS_LogFileWriter extends Zend_Log_Writer_Abstract {
 		$this->extraHeaders = $extraHeaders;
 	}
 	
-	static function factory($path, $messageType = 3, $extraHeaders = '') {
+	public static function factory($path, $messageType = 3, $extraHeaders = '') {
 		return new SS_LogFileWriter($path, $messageType, $extraHeaders);
 	}
 

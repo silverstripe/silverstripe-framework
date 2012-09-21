@@ -8,7 +8,7 @@ class RestfulServiceTest extends SapphireTest {
 	
 	protected $member_unique_identifier_field = ''; 
 	
-	function setUp() { 
+	public function setUp() {
 		// backup the project unique identifier field
 		$this->member_unique_identifier_field = Member::get_unique_identifier_field();
 
@@ -17,7 +17,7 @@ class RestfulServiceTest extends SapphireTest {
 		parent::setUp(); 
 	} 
 
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown(); 
 
 		// set old member::get_unique_identifier_field value 
@@ -26,7 +26,7 @@ class RestfulServiceTest extends SapphireTest {
 		}
 	} 
 
-	function testSpecialCharacters() {
+	public function testSpecialCharacters() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
 		$params = array(
@@ -42,7 +42,7 @@ class RestfulServiceTest extends SapphireTest {
 		}
 	}
 	
-	function testGetDataWithSetQueryString() {
+	public function testGetDataWithSetQueryString() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
 		$params = array(
@@ -57,7 +57,7 @@ class RestfulServiceTest extends SapphireTest {
 		}
 	}
 	
-	function testGetDataWithUrlParameters() {
+	public function testGetDataWithUrlParameters() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
 		$params = array(
@@ -72,7 +72,7 @@ class RestfulServiceTest extends SapphireTest {
 		}
 	}
 	
-	function testPostData() {
+	public function testPostData() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
 		$params = array(
 			'test1a' => 'val1a',
@@ -85,14 +85,14 @@ class RestfulServiceTest extends SapphireTest {
 		}
 	}
 
-	function testPutData() {
+	public function testPutData() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
 		$data = 'testPutData';
 		$responseBody = $service->request('RestfulServiceTest_Controller/', 'PUT', $data)->getBody();
 		$this->assertContains("<body>$data</body>", $responseBody);
 	}
 	
-	function testConnectionDoesntCacheWithDifferentUrl() {
+	public function testConnectionDoesntCacheWithDifferentUrl() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
 		
@@ -116,13 +116,13 @@ class RestfulServiceTest extends SapphireTest {
 	/**
 	 * @expectedException PHPUnit_Framework_Error 
 	 */
-	function testIncorrectData() {
+	public function testIncorrectData() {
 		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
 		$test1 = $connection->request('RestfulServiceTest_Controller/invalid');
 		$test1->xpath("\\fail");
 	}
 	
-	function testHttpErrorWithoutCache() {
+	public function testHttpErrorWithoutCache() {
 		$connection = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
 		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache');
 
@@ -132,7 +132,7 @@ class RestfulServiceTest extends SapphireTest {
 		
 	}
 	
-	function testHttpErrorWithCache() {
+	public function testHttpErrorWithCache() {
 		$subUrl = 'RestfulServiceTest_Controller/httpErrorWithCache';
 		$connection = new RestfulServiceTest_MockErrorService(Director::absoluteBaseURL(), 0);
 		$this->createFakeCachedResponse($connection, $subUrl); 

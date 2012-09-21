@@ -11,14 +11,14 @@
  * @subpackage tests
  */
 class SS_DatetimeTest extends SapphireTest {
-	function testNowWithSystemDate() {
+	public function testNowWithSystemDate() {
 		$systemDatetime = DBField::create_field('SS_Datetime', date('Y-m-d H:i:s'));
 		$nowDatetime = SS_Datetime::now();
 		
 		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
 	
-	function testNowWithMockDate() {
+	public function testNowWithMockDate() {
 		// Test setting
 		$mockDate = '2001-12-31 22:10:59';
 		SS_Datetime::set_mock_now($mockDate);
@@ -34,7 +34,7 @@ class SS_DatetimeTest extends SapphireTest {
 		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
 
-	function testSetNullAndZeroValues() {
+	public function testSetNullAndZeroValues() {
 		$date = DBField::create_field('SS_Datetime', '');
 		$this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
 
@@ -51,7 +51,7 @@ class SS_DatetimeTest extends SapphireTest {
 		$this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'Numeric zero is UNIX epoch time');
 	}
 	
-	function testExtendedDateTimes() {
+	public function testExtendedDateTimes() {
 		$date = DBField::create_field('SS_Datetime', '1500-10-10 15:32:24');
 		$this->assertEquals('10 Oct 1500 15 32 24', $date->Format('d M Y H i s'));
 		
@@ -59,32 +59,32 @@ class SS_DatetimeTest extends SapphireTest {
 		$this->assertEquals('10 Oct 3000 15 32 24', $date->Format('d M Y H i s'));
 	}
 	
-	function testNice() {
+	public function testNice() {
 		$date = DBField::create_field('SS_Datetime', '2001-12-31 22:10:59');
 		$this->assertEquals('31/12/2001 10:10pm', $date->Nice());
 	}
 	
-	function testNice24() {
+	public function testNice24() {
 		$date = DBField::create_field('SS_Datetime', '2001-12-31 22:10:59');
 		$this->assertEquals('31/12/2001 22:10', $date->Nice24());
 	}
 	
-	function testDate() {
+	public function testDate() {
 		$date = DBField::create_field('SS_Datetime', '2001-12-31 22:10:59');
 		$this->assertEquals('31/12/2001', $date->Date());
 	}
 	
-	function testTime() {
+	public function testTime() {
 		$date = DBField::create_field('SS_Datetime', '2001-12-31 22:10:59');
 		$this->assertEquals('10:10pm', $date->Time());
 	}
 	
-	function testTime24() {
+	public function testTime24() {
 		$date = DBField::create_field('SS_Datetime', '2001-12-31 22:10:59');
 		$this->assertEquals('22:10', $date->Time24());
 	}
 	
-	function testURLDateTime(){
+	public function testURLDateTime(){
 		$date = DBField::create_field('SS_Datetime', '2001-12-31 22:10:59');
 		$this->assertEquals('2001-12-31%2022:10:59', $date->URLDateTime());
 	}

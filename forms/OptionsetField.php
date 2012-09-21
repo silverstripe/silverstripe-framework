@@ -57,7 +57,7 @@ class OptionsetField extends DropdownField {
 	 */
 	protected $disabledItems = array();
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$source = $this->getSource();
 		$odd = 0;
 		$options = array();
@@ -90,7 +90,7 @@ class OptionsetField extends DropdownField {
 		);
 	}
 
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		// Source and values are DataObject sets.
 		$items = $this->getSource();
 		$field = new LookupField($this->name, $this->title ? $this->title : '', $items, $this->value);
@@ -106,7 +106,7 @@ class OptionsetField extends DropdownField {
 	 * 
 	 * @param array $items Collection of array keys, as defined in the $source array
 	 */
-	function setDisabledItems($items) {
+	public function setDisabledItems($items) {
 		$this->disabledItems = $items;
 		return $this;
 	}
@@ -114,11 +114,11 @@ class OptionsetField extends DropdownField {
 	/**
 	 * @return Array
 	 */
-	function getDisabledItems() {
+	public function getDisabledItems() {
 		return $this->disabledItems;
 	}
 	
-	function ExtraOptions() {
+	public function ExtraOptions() {
 		return new ArrayList();
 	}
 

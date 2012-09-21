@@ -8,7 +8,7 @@ class HTMLTextTest extends SapphireTest {
 	/**
 	 * Test {@link HTMLText->LimitCharacters()}
 	 */
-	function testLimitCharacters() {
+	public function testLimitCharacters() {
 		$cases = array(
 			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
 			'<p>This is some text in a paragraph.</p>' => 'This is some text in...',
@@ -22,7 +22,7 @@ class HTMLTextTest extends SapphireTest {
 		}
 	}
 	
-	function testSummaryBasics() {
+	public function testSummaryBasics() {
 		$cases = array(
 			'<h1>Should not take header</h1><p>Should take paragraph</p>' => 'Should take paragraph',
 			'<p>Should strip <b>tags, but leave</b> text</p>' => 'Should strip tags, but leave text',
@@ -40,7 +40,7 @@ class HTMLTextTest extends SapphireTest {
 		}
 	}
 
-	function testSummaryLimits() {
+	public function testSummaryLimits() {
 		$cases = array(
 			'<p>A long paragraph should be cut off if limit is set</p>' => 'A long paragraph should be...',
 			'<p>No matter <i>how many <b>tags</b></i> are in it</p>' => 'No matter how many tags...',
@@ -55,7 +55,7 @@ class HTMLTextTest extends SapphireTest {
 		}
 	}
 
-	function testSummaryEndings() {
+	public function testSummaryEndings() {
 		$cases = array(
 			'...', ' -> more', ''
 		);
@@ -70,7 +70,7 @@ class HTMLTextTest extends SapphireTest {
 		}
 	}
 
-	function testSummaryFlexTooBigShouldNotCauseError() {
+	public function testSummaryFlexTooBigShouldNotCauseError() {
 		$orig = '<p>Cut it off, cut it off</p>';
 		$match = 'Cut it off, cut';
 		
@@ -79,7 +79,7 @@ class HTMLTextTest extends SapphireTest {
 		$this->assertEquals($match, $textObj->Summary(4, 10, ''));
 	}
 	
-	function testSummaryInvalidHTML() {
+	public function testSummaryInvalidHTML() {
 		$cases = array(
 			'It\'s got a <p<> tag, but<p junk true>This doesn\'t <a id="boo">make</b class="wa"> < ><any< sense</p>' => 'This doesn\'t make any',
 			'This doesn\'t <a style="much horray= true>even</b> < ><have< a <i>p tag' => 'This doesn\'t even have'
@@ -92,7 +92,7 @@ class HTMLTextTest extends SapphireTest {
 		}
 	}
 
-	function testFirstSentence() {
+	public function testFirstSentence() {
 		$many = str_repeat('many ', 100);
 		$cases = array(
 			'<h1>should ignore</h1><p>First sentence. Second sentence.</p>' => 'First sentence.',

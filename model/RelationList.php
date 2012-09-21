@@ -17,7 +17,7 @@ abstract class RelationList extends DataList {
 	 *
 	 * @param $id A single ID, or an array of IDs
 	 */
-	function setForeignID($id) {
+	public function setForeignID($id) {
 		// If already filtered on foreign ID, remove that first
 		if($this->foreignID !== null) {
 			$oldFilter = $this->foreignIDFilter();
@@ -40,7 +40,7 @@ abstract class RelationList extends DataList {
 	 * Returns a copy of this list with the ManyMany relationship linked to the given foreign ID.
 	 * @param $id An ID or an array of IDs.
 	 */
-	function forForeignID($id) {
+	public function forForeignID($id) {
 		return $this->alterDataQuery_30(function($query, $list) use ($id){
 			$list->setForeignID($id);
 		});

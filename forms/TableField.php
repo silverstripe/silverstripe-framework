@@ -93,7 +93,7 @@ class TableField extends TableListField {
 	 * @param $sourceSort string
 	 * @param $sourceJoin string
 	 */
-	function __construct($name, $sourceClass, $fieldList = null, $fieldTypes, $filterField = null, 
+	public function __construct($name, $sourceClass, $fieldList = null, $fieldTypes, $filterField = null,
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {
 		
 		$this->fieldTypes = $fieldTypes;
@@ -114,7 +114,7 @@ class TableField extends TableListField {
 	 * 
 	 * @return SS_List
 	 */
-	function Headings() {
+	public function Headings() {
 		$i=0;
 		foreach($this->fieldList as $fieldName => $fieldTitle) {
 			$extraClass = "col".$i;
@@ -133,7 +133,7 @@ class TableField extends TableListField {
 	 * 
 	 * @return int
 	 */
-	function ItemCount() {
+	public function ItemCount() {
 		return count($this->fieldList);
 	}
 		
@@ -145,7 +145,7 @@ class TableField extends TableListField {
 	 * 
 	 * @return SS_List Collection of {@link TableField_Item}
 	 */
-	function Items() {
+	public function Items() {
 		// holds TableField_Item instances
 		$items = new ArrayList();
 
@@ -224,14 +224,14 @@ class TableField extends TableListField {
 	/**
 	 * @return array
 	 */
-	function FieldList() {
+	public function FieldList() {
 		return $this->fieldList;
 	}
 	
 	/** 
 	 * Saves the Dataobjects contained in the field
 	 */
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		// CMS sometimes tries to set the value to one.
 		if(is_array($this->value)){
 			$newFields = array();
@@ -276,7 +276,7 @@ class TableField extends TableListField {
 	 * 
 	 * @return FieldList
 	 */
-	function FieldSetForRow() {
+	public function FieldSetForRow() {
 		$fieldset = new FieldList();
 		if($this->fieldTypes){
 			foreach($this->fieldTypes as $key => $fieldType) {
@@ -302,14 +302,14 @@ class TableField extends TableListField {
 		return $fieldset;
 	}
 	
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->permissions = array('show');
 		$clone->setReadonly(true);
 		return $clone;
 	}
 
-	function performDisabledTransformation() {
+	public function performDisabledTransformation() {
 		$clone = clone $this;
 		$clone->setPermissions(array('show'));
 		$clone->setDisabled(true);
@@ -343,7 +343,7 @@ class TableField extends TableListField {
 	 *  If set to FALSE, it will always create new object (default: TRUE)
 	 * @return array Array of saved object IDs in the key, and the status ("Updated") in the value
 	 */
-	function saveData($dataObjects, $existingValues = true) {
+	public function saveData($dataObjects, $existingValues = true) {
 		if(!$dataObjects) return false;
 
 		$savedObjIds = array();
@@ -422,7 +422,7 @@ class TableField extends TableListField {
 	 * @param int $recordID
 	 * @return array Collection of maps suitable to construct DataObjects
 	 */
-	function sortData($data, $recordID = null) {
+	public function sortData($data, $recordID = null) {
 		if(!$data) return false;
 		
 		$sortedData = array();
@@ -448,7 +448,7 @@ class TableField extends TableListField {
 	/**
 	 * @param $extraData array
 	 */
-	function setExtraData($extraData) {
+	public function setExtraData($extraData) {
 		$this->extraData = $extraData;
 		return $this;
 	}
@@ -456,14 +456,14 @@ class TableField extends TableListField {
 	/**
 	 * @return array
 	 */
-	function getExtraData() {
+	public function getExtraData() {
 		return $this->extraData;
 	}
 	
 	/**
 	 * Sets the template to be rendered with
 	 */
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/behaviour/behaviour.js');
@@ -476,12 +476,12 @@ class TableField extends TableListField {
 		return $obj->renderWith($this->template);
 	}
 		
-	function setTransformationConditions($conditions) {
+	public function setTransformationConditions($conditions) {
 		$this->transformationConditions = $conditions;
 		return $this;
 	}
 	
-	function php($data) {
+	public function php($data) {
 		$valid = true;
 		
 		if($data['methodName'] != 'delete') {
@@ -498,7 +498,7 @@ class TableField extends TableListField {
 		}
 	}
 	
-	function validate($validator) {
+	public function validate($validator) {
 		$errorMessage = '';
 		$valid = true;
 		
@@ -542,7 +542,7 @@ class TableField extends TableListField {
 		return $valid;
 	}
 	
-	function setRequiredFields($fields) {
+	public function setRequiredFields($fields) {
 		$this->requiredFields = $fields;
 		return $this;
 	}
@@ -576,7 +576,7 @@ class TableField_Item extends TableListField_Item {
 	 * @param $fieldTypes array An array of name => fieldtype for use when creating a new field
 	 * @param $parent TableListField The parent table for quick reference of names, and id's for storing values.
 	 */
-	function __construct($item = null, $parent, $form, $fieldTypes, $isAddRow = false) {
+	public function __construct($item = null, $parent, $form, $fieldTypes, $isAddRow = false) {
 		$this->data = $form;
 		$this->fieldTypes = $fieldTypes;
 		$this->isAddRow = $isAddRow;
@@ -591,7 +591,7 @@ class TableField_Item extends TableListField_Item {
 	 *
 	 * @return FieldList
 	 */
-	function createFields() {
+	public function createFields() {
 		// Existing record
 		if($this->item && $this->data) {
 			$form = $this->data;
@@ -687,11 +687,11 @@ class TableField_Item extends TableListField_Item {
 		return new FieldList($this->fields);
 	}
 	
-	function Fields($xmlSafe = true) {
+	public function Fields($xmlSafe = true) {
 		return $this->fields;
 	}
 	
-	function ExtraData() {
+	public function ExtraData() {
 		$content = ""; 
 		$id = ($this->item->ID) ? $this->item->ID : "new";
 		if($this->parent->getExtraData()) {
@@ -712,7 +712,7 @@ class TableField_Item extends TableListField_Item {
 	 * 
 	 * @return boolean
 	 */
-	function IsAddRow(){
+	public function IsAddRow(){
 		return $this->isAddRow;
 	}
 	

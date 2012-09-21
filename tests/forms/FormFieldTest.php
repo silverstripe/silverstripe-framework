@@ -5,7 +5,7 @@
  */
 class FormFieldTest extends SapphireTest {
 
-	function testAttributes() {
+	public function testAttributes() {
 		$field = new FormField('MyField');
 		$field->setAttribute('foo', 'bar');
 		$this->assertEquals('bar', $field->getAttribute('foo'));
@@ -14,7 +14,7 @@ class FormFieldTest extends SapphireTest {
 		$this->assertEquals('bar', $attrs['foo']);
 	}
 
-	function testAttributesHTML() {
+	public function testAttributesHTML() {
 		$field = new FormField('MyField');
 
 		$field->setAttribute('foo', 'bar');
@@ -49,7 +49,7 @@ class FormFieldTest extends SapphireTest {
 		$this->assertContains('three="3"', $field->getAttributesHTML('one', 'two'));
 	}
 	
-	function testEveryFieldTransformsReadonlyAsClone() {
+	public function testEveryFieldTransformsReadonlyAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {
 			$reflectionClass = new ReflectionClass($fieldClass);
@@ -82,7 +82,7 @@ class FormFieldTest extends SapphireTest {
 		}
 	}
 	
-	function testEveryFieldTransformsDisabledAsClone() {
+	public function testEveryFieldTransformsDisabledAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {
 			$reflectionClass = new ReflectionClass($fieldClass);

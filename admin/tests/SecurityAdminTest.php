@@ -10,7 +10,7 @@ class SecurityAdminTest extends FunctionalTest {
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 
 	// TODO Fix export feature (moved from MemberTableField to GridFieldExportButton)
-	// function testGroupExport() {
+	// public function testGroupExport() {
 	// 	$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
 		
 	// 	/* First, open the applicable group */
@@ -28,7 +28,7 @@ class SecurityAdminTest extends FunctionalTest {
 	// }
 
 	// TODO Fix export feature (moved from MemberTableField to GridFieldExportButton)
-	// function testEmptyGroupExport() {
+	// public function testEmptyGroupExport() {
 	// 	$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
 		
 	// 	/* First, open the applicable group */
@@ -45,7 +45,7 @@ class SecurityAdminTest extends FunctionalTest {
 	// 	$this->assertEquals($lines[1], '', "Empty export only has no content row");
 	// }
 	
-	function testAddHiddenPermission() {
+	public function testAddHiddenPermission() {
 		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
 		$this->assertContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
 		
@@ -53,7 +53,7 @@ class SecurityAdminTest extends FunctionalTest {
 		SecurityAdmin::clear_hidden_permissions();
 	}
 	
-	function testRemoveHiddenPermission() {
+	public function testRemoveHiddenPermission() {
 		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
 		$this->assertContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
 		SecurityAdmin::remove_hidden_permission('CMS_ACCESS_ReportAdmin');
@@ -63,14 +63,14 @@ class SecurityAdminTest extends FunctionalTest {
 		SecurityAdmin::clear_hidden_permissions();
 	}
 	
-	function testClearHiddenPermission() {
+	public function testClearHiddenPermission() {
 		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
 		$this->assertContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
 		SecurityAdmin::clear_hidden_permissions('CMS_ACCESS_ReportAdmin');
 		$this->assertNotContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
 	}
 	
-	function testPermissionFieldRespectsHiddenPermissions() {
+	public function testPermissionFieldRespectsHiddenPermissions() {
 		$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
 		
 		$group = $this->objFromFixture('Group', 'admin');

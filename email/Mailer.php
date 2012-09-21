@@ -18,7 +18,7 @@ class Mailer extends Object {
 	 * @param array $customheaders
 	 * @return bool
 	 */
-	function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
+	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
 		return plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders);
 	}
 	
@@ -27,7 +27,7 @@ class Mailer extends Object {
 	 * 
 	 * @return bool
 	 */
-	function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
+	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
 		return htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles, $customheaders, $plainContent, $inlineImages);
 	}
 }
@@ -358,7 +358,7 @@ function processHeaders($headers, $body = false) {
  *   );
  * 
  */
-function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {	
+function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
 	if(!$file) {
 		user_error("encodeFileForEmail: not passed a filename and/or data", E_USER_WARNING);
 		return;
@@ -404,7 +404,7 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 	return $headers . $file['contents'];
 }
 
-function QuotedPrintable_encode($quotprint) {		
+function QuotedPrintable_encode($quotprint) {
 		$quotprint = (string) str_replace('\r\n',chr(13).chr(10),$quotprint);
 		$quotprint = (string) str_replace('\n',  chr(13).chr(10),$quotprint);
 		$quotprint = (string) preg_replace("~([\x01-\x1F\x3D\x7F-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $quotprint);

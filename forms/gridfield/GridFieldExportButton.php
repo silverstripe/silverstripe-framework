@@ -64,7 +64,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		return array('export');
 	}
 
-	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if($actionName == 'export') {
 			return $this->handleExport($gridField);
 		}
@@ -73,7 +73,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	/**
 	 * it is also a URL
 	 */
-	function getURLHandlers($gridField) {
+	public function getURLHandlers($gridField) {
 		return array(
 			'export' => 'handleExport',
 		);
@@ -97,7 +97,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * @param GridField $gridField
 	 * @return array
 	 */
-	function generateExportFileData($gridField) {
+	public function generateExportFileData($gridField) {
 		$separator = $this->csvSeparator;
 		$csvColumns = ($this->exportColumns) ? $this->exportColumns : singleton($gridField->getModelClass())->summaryFields();
 		$fileData = '';
@@ -156,14 +156,14 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	/**
 	 * @return array
 	 */
-	function getExportColumns() {
+	public function getExportColumns() {
 		return $this->exportColumns;
 	}
 
 	/**
 	 * @param array
 	 */
-	function setExportColumns($cols) {
+	public function setExportColumns($cols) {
 		$this->exportColumns = $cols;
 		return $this;
 	}
@@ -171,14 +171,14 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	/**
 	 * @return string
 	 */
-	function getCsvSeparator() {
+	public function getCsvSeparator() {
 		return $this->csvSeparator;
 	}
 
 	/**
 	 * @param string
 	 */
-	function setCsvSeparator($separator) {
+	public function setCsvSeparator($separator) {
 		$this->csvSeparator = $separator;
 		return $this;
 	}
@@ -186,14 +186,14 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	/**
 	 * @return boolean
 	 */
-	function getCsvHasHeader() {
+	public function getCsvHasHeader() {
 		return $this->csvHasHeader;
 	}
 
 	/**
 	 * @param boolean
 	 */
-	function setCsvHasHeader($bool) {
+	public function setCsvHasHeader($bool) {
 		$this->csvHasHeader = $bool;
 		return $this;
 	}

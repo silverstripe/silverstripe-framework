@@ -63,14 +63,14 @@ class AggregateTest extends SapphireTest {
 	
 	protected $originalDeprecation;
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		// This test tests code that was deprecated after 2.4
 		$this->originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
 	}
 
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 		Deprecation::restore_settings($this->originalDeprecation);
 	}
@@ -78,7 +78,7 @@ class AggregateTest extends SapphireTest {
 	/**
 	 * Test basic aggregation on a passed type
 	 */
-	function testTypeSpecifiedAggregate() {
+	public function testTypeSpecifiedAggregate() {
 		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
 
 		// Template style access
@@ -95,7 +95,7 @@ class AggregateTest extends SapphireTest {
 	 * Test basic aggregation on a given dataobject
 	 * @return unknown_type
 	 */
-	function testAutoTypeAggregate() {
+	public function testAutoTypeAggregate() {
 		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
 		$fab = $this->objFromFixture('AggregateTest_Fab', 'fab1');
 
@@ -113,7 +113,7 @@ class AggregateTest extends SapphireTest {
 	 * Test base-level field access - was failing due to use of custom_database_fields, not just database_fields
 	 * @return unknown_type
 	 */
-	function testBaseFieldAggregate() {
+	public function testBaseFieldAggregate() {
 		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
 
 		$this->assertEquals(
@@ -131,7 +131,7 @@ class AggregateTest extends SapphireTest {
 	/**
 	 * Test aggregation takes place on the passed type & it's children only
 	 */
-	function testChildAggregate() {
+	public function testChildAggregate() {
 		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
 	
 		// For base classes, aggregate is calculcated on it and all children classes
@@ -147,7 +147,7 @@ class AggregateTest extends SapphireTest {
 	/**
 	 * Test aggregates are cached properly
 	 */
-	function testCache() {
+	public function testCache() {
 		
 	}
 	/* */
@@ -155,7 +155,7 @@ class AggregateTest extends SapphireTest {
 	/**
 	 * Test cache is correctly flushed on write
 	 */
-	function testCacheFlushing() {
+	public function testCacheFlushing() {
 		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
 		$fab = $this->objFromFixture('AggregateTest_Fab', 'fab1');
 
@@ -191,7 +191,7 @@ class AggregateTest extends SapphireTest {
 	/**
 	 * Test basic relationship aggregation
 	 */
-	function testRelationshipAggregate() {
+	public function testRelationshipAggregate() {
 		$bar1 = $this->objFromFixture('AggregateTest_Bar', 'bar1');
 		$this->assertEquals($bar1->RelationshipAggregate('Foos')->Max('Foo'), 8);
 

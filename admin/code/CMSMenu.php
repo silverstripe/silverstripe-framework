@@ -278,14 +278,14 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	/**
 	 * IteratorAggregate Interface Method.  Iterates over the menu items.
 	 */
-	function getIterator() {
+	public function getIterator() {
 		return new ArrayIterator(self::get_menu_items());
 	}
 
 	/**
 	 * Provide menu titles to the i18n entity provider
 	 */
-	function provideI18nEntities() {
+	public function provideI18nEntities() {
 		$cmsClasses = self::get_cms_classes();
 		$entities = array();
 		foreach($cmsClasses as $cmsClass) {

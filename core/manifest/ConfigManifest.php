@@ -26,7 +26,7 @@ class SS_ConfigManifest {
 	public $modules = array();
 
 	/** Adds a path as a module */
-	function addModule($path) {
+	public function addModule($path) {
 		$module = basename($path);
 		if (isset($this->modules[$module]) && $this->modules[$module] != $path) {
 			user_error("Module ".$module." in two places - ".$path." and ".$this->modules[$module]);
@@ -35,7 +35,7 @@ class SS_ConfigManifest {
 	}
 
 	/** Returns true if the passed module exists */
-	function moduleExists($module) {
+	public function moduleExists($module) {
 		return array_key_exists($module, $this->modules);
 	}
 
@@ -363,7 +363,7 @@ class SS_ConfigManifest {
 	 * these are invariant over requests and only need checking on manifest rebuild. So we can prefilter these before
 	 * saving yamlConfigFragments to speed up the process of checking the per-request variant/
 	 */
-	function prefilterYamlFragments() {
+	public function prefilterYamlFragments() {
 		$matchingFragments = array();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
@@ -383,7 +383,7 @@ class SS_ConfigManifest {
 	 * @return bool - True if the rules are met, false if not. (Note that depending on whether we were passed an only or an except rule,
 	 * which values means accept or reject a fragment 
 	 */
-	function matchesPrefilterVariantRules($rules) {
+	public function matchesPrefilterVariantRules($rules) {
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
@@ -405,7 +405,7 @@ class SS_ConfigManifest {
 	/**
 	 * Builds the variant key spec - the list of values that need to be build to give a key that uniquely identifies this variant.
 	 */
-	function buildVariantKeySpec() {
+	public function buildVariantKeySpec() {
 		$this->variantKeySpec = array();
 
 		foreach ($this->yamlConfigFragments as $fragment) {
@@ -417,7 +417,7 @@ class SS_ConfigManifest {
 	/**
 	 * Adds any variables referenced in the passed rules to the $this->variantKeySpec array
 	 */
-	function addVariantKeySpecRules($rules) {
+	public function addVariantKeySpecRules($rules) {
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
@@ -452,7 +452,7 @@ class SS_ConfigManifest {
 	 * Calculates which yaml config fragments are applicable in this variant, and merge those all together into
 	 * the $this->yamlConfig propperty
 	 */
-	function buildYamlConfigVariant($cache = true) {
+	public function buildYamlConfigVariant($cache = true) {
 		$this->yamlConfig = array();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
@@ -470,7 +470,7 @@ class SS_ConfigManifest {
 	/**
  	 * Returns false if the non-prefilterable parts of the rule aren't met, and true if they are
  	 */
-	function matchesVariantRules($rules) {
+	public function matchesVariantRules($rules) {
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
@@ -517,7 +517,7 @@ class SS_ConfigManifest {
 	 * @param  $fragment
 	 * @return void
 	 */
-	function mergeInYamlFragment(&$into, $fragment) {
+	public function mergeInYamlFragment(&$into, $fragment) {
 		foreach ($fragment as $k => $v) {
 			Config::merge_high_into_low($into[$k], $v);
 		}

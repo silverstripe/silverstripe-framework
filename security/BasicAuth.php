@@ -43,7 +43,7 @@ class BasicAuth {
 	 *  session log-in if those credentials are disabled.
 	 * @return Member $member 
 	 */
-	static function requireLogin($realm, $permissionCode = null, $tryUsingSessionLogin = true) {
+	public static function requireLogin($realm, $permissionCode = null, $tryUsingSessionLogin = true) {
 		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		if(!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) return true;
 		
@@ -108,7 +108,7 @@ class BasicAuth {
 	 *  Defaults to "ADMIN". Set to NULL to just require a valid login, regardless
 	 *  of the permission codes a user has.
 	 */
-	static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null) {
+	public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null) {
 		self::$entire_site_protected = $protect;
 		self::$entire_site_protected_code = $code;
 		if($message) self::$entire_site_protected_message = $message;
@@ -121,7 +121,7 @@ class BasicAuth {
 	 * If you want to enabled protection (rather than enforcing it),
 	 * please use {@link protect_entire_site()}.
 	 */
-	static function protect_site_if_necessary() {
+	public static function protect_site_if_necessary() {
 		if(self::$entire_site_protected) {
 			self::requireLogin(self::$entire_site_protected_message, self::$entire_site_protected_code, false);
 		}

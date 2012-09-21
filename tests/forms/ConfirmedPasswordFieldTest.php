@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class ConfirmedPasswordFieldTest extends SapphireTest {
-	function testSetValue() {
+	public function testSetValue() {
 		$field = new ConfirmedPasswordField('Test', 'Testing', 'valueA');
 		$this->assertEquals('valueA', $field->Value());
 		$this->assertEquals('valueA', $field->children->fieldByName($field->getName() . '[_Password]')->Value());
@@ -15,7 +15,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		$this->assertEquals('valueB', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
 	}
 
-	function testSetShowOnClick() {
+	public function testSetShowOnClick() {
 		//hide by default and display show/hide toggle button
 		$field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, true);
 		$fieldHTML = $field->Field();

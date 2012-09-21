@@ -8,7 +8,7 @@ class LookupFieldTest extends SapphireTest {
 	
 	static $fixture_file = 'LookupFieldTest.yml';
 
-	function testNullValueWithNumericArraySource() {
+	public function testNullValueWithNumericArraySource() {
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue(null);
@@ -18,7 +18,7 @@ class LookupFieldTest extends SapphireTest {
 		);
 	}
 
-	function testStringValueWithNumericArraySource() {
+	public function testStringValueWithNumericArraySource() {
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue(1);
@@ -28,7 +28,7 @@ class LookupFieldTest extends SapphireTest {
 		);
 	}
 	
-	function testUnknownStringValueWithNumericArraySource() {
+	public function testUnknownStringValueWithNumericArraySource() {
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue('<ins>w00t</ins>');
@@ -39,7 +39,7 @@ class LookupFieldTest extends SapphireTest {
 		);
 	}
 
-	function testArrayValueWithAssociativeArraySource() {
+	public function testArrayValueWithAssociativeArraySource() {
 		// Array values (= multiple selections) might be set e.g. from ListboxField
 		$source = array('one' => 'one val', 'two' => 'two val', 'three' => 'three val');
 		$f = new LookupField('test', 'test', $source);
@@ -50,7 +50,7 @@ class LookupFieldTest extends SapphireTest {
 		);
 	}
 	
-	function testArrayValueWithNumericArraySource() {
+	public function testArrayValueWithNumericArraySource() {
 		// Array values (= multiple selections) might be set e.g. from ListboxField
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);
@@ -61,7 +61,7 @@ class LookupFieldTest extends SapphireTest {
 		);
 	}
 	
-	function testArrayValueWithSqlMapSource() {
+	public function testArrayValueWithSqlMapSource() {
 		$member1 = $this->objFromFixture('Member', 'member1');
 		$member2 = $this->objFromFixture('Member', 'member2');
 		$member3 = $this->objFromFixture('Member', 'member3');

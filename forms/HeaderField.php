@@ -14,7 +14,7 @@ class HeaderField extends DatalessField {
 	 */
 	protected $headingLevel = 2;
 	
-	function __construct($name, $title = null, $headingLevel = 2) {
+	public function __construct($name, $title = null, $headingLevel = 2) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
@@ -40,7 +40,7 @@ class HeaderField extends DatalessField {
 		$this->headingLevel = $level;
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			array(
 				'id' => $this->ID(),
@@ -50,7 +50,7 @@ class HeaderField extends DatalessField {
 		);
 	}
 
-	function Type() {
+	public function Type() {
 		return null;
 	}
 

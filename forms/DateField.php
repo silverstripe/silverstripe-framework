@@ -89,7 +89,7 @@ class DateField extends TextField {
 	 */
 	protected $valueObj = null;
 	
-	function __construct($name, $title = null, $value = null) {
+	public function __construct($name, $title = null, $value = null) {
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
@@ -112,7 +112,7 @@ class DateField extends TextField {
 		parent::__construct($name, $title, $value);
 	}
 
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		// TODO Replace with properly extensible view helper system 
 		$d = DateField_View_JQuery::create($this); 
 		$d->onBeforeRender(); 
@@ -130,7 +130,7 @@ class DateField extends TextField {
 		return $html;
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$config = array(
 			'showcalendar' => $this->getConfig('showcalendar'),
 			'isoDateformat' => $this->getConfig('dateformat'),
@@ -193,7 +193,7 @@ class DateField extends TextField {
 		return $html;
 	}
 
-	function Type() {
+	public function Type() {
 		return 'date text';
 	}
 		
@@ -202,7 +202,7 @@ class DateField extends TextField {
 	 * 
 	 * @param String|Array $val 
 	 */
-	function setValue($val) {
+	public function setValue($val) {
 		if(empty($val)) {
 			$this->value = null;
 			$this->valueObj = null;
@@ -259,7 +259,7 @@ class DateField extends TextField {
 	/**
 	 * @return String ISO 8601 date, suitable for insertion into database
 	 */
-	function dataValue() {
+	public function dataValue() {
 		if($this->valueObj) {
 			return $this->valueObj->toString($this->getConfig('datavalueformat'));
 		} else {
@@ -267,7 +267,7 @@ class DateField extends TextField {
 		}
 	}
 	
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new DateField_Disabled($this->name, $this->title, $this->dataValue());
 		$field->setForm($this->form);
 		$field->readonly = true;
@@ -282,7 +282,7 @@ class DateField extends TextField {
 	 * @param Array $val
 	 * @return boolean
 	 */
-	function validateArrayValue($val) {
+	public function validateArrayValue($val) {
 		if(!is_array($val)) return false;
 		
 		// Validate against Zend_Date,
@@ -302,7 +302,7 @@ class DateField extends TextField {
 	 * @param mixed $v
 	 * @return boolean
 	 */
-	static function set_default_config($k, $v) {
+	public static function set_default_config($k, $v) {
 	  if (array_key_exists($k,self::$default_config)) {
 		self::$default_config[$k]=$v;
 		return true;
@@ -313,7 +313,7 @@ class DateField extends TextField {
 	/**
 	 * @return Boolean
 	 */
-	function validate($validator) {
+	public function validate($validator) {
 		$valid = true;
 		
 		// Don't validate empty fields
@@ -386,7 +386,7 @@ class DateField extends TextField {
 	/**
 	 * @return string
 	 */
-	function getLocale() {
+	public function getLocale() {
 		return $this->locale;
 	}
 	
@@ -395,7 +395,7 @@ class DateField extends TextField {
 	 * 
 	 * @param String $locale
 	 */
-	function setLocale($locale) {
+	public function setLocale($locale) {
 		$this->locale = $locale;
 		return $this;
 	}
@@ -404,7 +404,7 @@ class DateField extends TextField {
 	 * @param string $name
 	 * @param mixed $val
 	 */
-	function setConfig($name, $val) {
+	public function setConfig($name, $val) {
 		switch($name) {
 			case 'min':
 				$format = $this->getConfig('datavalueformat');
@@ -428,7 +428,7 @@ class DateField extends TextField {
 	 * @param String $name Optional, returns the whole configuration array if empty
 	 * @return mixed|array
 	 */
-	function getConfig($name = null) {
+	public function getConfig($name = null) {
 		return $name ? $this->config[$name] : $this->config;
 	}
 }
@@ -443,7 +443,7 @@ class DateField_Disabled extends DateField {
 	
 	protected $disabled = true;
 		
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		if($this->valueObj) {
 			if($this->valueObj->isToday()) {
 				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat')) . ' ('._t('DateField.TODAY','today').')');
@@ -459,11 +459,11 @@ class DateField_Disabled extends DateField {
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
 	
-	function Type() { 
+	public function Type() {
 		return "date_disabled readonly";
 	}
 	
-	function validate($validator) {
+	public function validate($validator) {
 		return true;	
 	}
 }
@@ -500,25 +500,25 @@ class DateField_View_JQuery extends Object {
 	/**
 	 * @param DateField $field
 	 */
-	function __construct($field) {
+	public function __construct($field) {
 		$this->field = $field;
 	}
 	
 	/**
 	 * @return DateField
 	 */
-	function getField() {
+	public function getField() {
 		return $this->field;
 	}
 	
-	function onBeforeRender() {
+	public function onBeforeRender() {
 	}
 	
 	/**
 	 * @param String $html
 	 * @return 
 	 */
-	function onAfterRender($html) {
+	public function onAfterRender($html) {
 		if($this->getField()->getConfig('showcalendar')) {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
@@ -573,7 +573,7 @@ class DateField_View_JQuery extends Object {
 	 * @param String $format
 	 * @return String
 	 */
-	static function convert_iso_to_jquery_format($format) {
+	public static function convert_iso_to_jquery_format($format) {
 		$convert = array(
 			'/([^d])d([^d])/' => '$1d$2',
 		  '/^d([^d])/' => 'd$1',

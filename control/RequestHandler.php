@@ -125,7 +125,7 @@ class RequestHandler extends ViewableData {
 	 * @uses SS_HTTPRequest->match()
 	 * @return SS_HTTPResponse|RequestHandler|string|array
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
 	
@@ -267,7 +267,7 @@ class RequestHandler extends ViewableData {
 	 * Check that the given action is allowed to be called from a URL.
 	 * It will interrogate {@link self::$allowed_actions} to determine this.
 	 */
-	function checkAccessAction($action) {
+	public function checkAccessAction($action) {
 		$actionOrigCasing = $action;
 		$action            = strtolower($action);
 		$allowedActions    = $this->allowedActions();
@@ -343,7 +343,7 @@ class RequestHandler extends ViewableData {
 	/**
 	 * @deprecated 3.0 Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())
 	 */
-	function isAjax() {
+	public function isAjax() {
 		Deprecation::notice('3.0', 'Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())');
 		return $this->request->isAjax();
 	}
@@ -356,7 +356,7 @@ class RequestHandler extends ViewableData {
 	 *
 	 * @return SS_HTTPRequest|NullHTTPRequest
 	 */
-	function getRequest() {
+	public function getRequest() {
 		return $this->request;
 	}
 	
@@ -366,7 +366,7 @@ class RequestHandler extends ViewableData {
 	 * 
 	 * @param SS_HTTPRequest
 	 */
-	function setRequest($request) {
+	public function setRequest($request) {
 		$this->request = $request;
 	}
 }

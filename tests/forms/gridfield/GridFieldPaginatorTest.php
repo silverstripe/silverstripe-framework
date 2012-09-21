@@ -23,14 +23,14 @@ class GridFieldPaginatorTest extends FunctionalTest {
 		$this->form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
 	}
 	
-	function testThereIsPaginatorWhenMoreThanOnePage() {
+	public function testThereIsPaginatorWhenMoreThanOnePage() {
 		$fieldHolder = $this->gridField->FieldHolder();
 		$content = new CSSContentParser($fieldHolder);
 		// Check that there is paginator render into the footer
 		$this->assertEquals(1, count($content->getBySelector('.datagrid-pagination')));
 	}
 	
-	function testThereIsNoPaginatorWhenOnlyOnePage() {
+	public function testThereIsNoPaginatorWhenOnlyOnePage() {
 		// We set the itemsPerPage to an reasonably big number so as to avoid test broke from small changes on the fixture YML file 
 		$total = $this->list->count();
 		$this->gridField->getConfig()->getComponentByType("GridFieldPaginator")->setItemsPerPage($total);

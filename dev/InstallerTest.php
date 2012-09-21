@@ -10,7 +10,7 @@ class InstallerTest extends Controller {
 		'testrewrite'
 	);
 
-	function testrewrite() {
+	public function testrewrite() {
 		echo "OK";
 	}
 }

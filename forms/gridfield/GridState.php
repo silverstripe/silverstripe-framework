@@ -105,28 +105,28 @@ class GridState extends HiddenField {
 class GridState_Data {
 	protected $data;
 	
-	function __construct($data = array()) {
+	public function __construct($data = array()) {
 		$this->data = $data;
 	}
 	
-	function __get($name) {
+	public function __get($name) {
 		if(!isset($this->data[$name])) $this->data[$name] = new GridState_Data;
 		if(is_array($this->data[$name])) $this->data[$name] = new GridState_Data($this->data[$name]);
 		return $this->data[$name];
 	}
-	function __set($name, $value) {
+	public function __set($name, $value) {
 		$this->data[$name] = $value;
 	}
-	function __isset($name) {
+	public function __isset($name) {
 		return isset($this->data[$name]);
 	}
 
-	function __toString() {
+	public function __toString() {
 		if(!$this->data) return "";
 		else return json_encode($this->toArray());
 	}
 
-	function toArray() {
+	public function toArray() {
 		$output = array();
 		foreach($this->data as $k => $v) {
 			$output[$k] = (is_object($v) && method_exists($v, 'toArray')) ? $v->toArray() : $v;

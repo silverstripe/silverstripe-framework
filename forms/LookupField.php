@@ -12,7 +12,7 @@ class LookupField extends DropdownField {
 	/**
 	 * Returns a readonly span containing the correct value.
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$source = $this->getSource();
 		
 		
@@ -51,19 +51,19 @@ class LookupField extends DropdownField {
 			"\" value=\"" . $inputValue . "\" />";
 	}
 	
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		return $clone;
 	}
 
-	function Type() { 
+	public function Type() {
 		return "lookup readonly";
 	}
 	
 	/**
 	 * Override parent behaviour by not merging arrays.
 	 */
-	function getSource() {
+	public function getSource() {
 		return $this->source;
 	}
 }

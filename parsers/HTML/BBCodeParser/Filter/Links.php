@@ -84,7 +84,7 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
      * @author   Stijn de Reede <sjr@gmx.co.uk>
      * @author   Seth Price <seth@pricepages.org>
      */
-    function _preparse()
+    public function _preparse()
     {
         $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser', '_options');
         $o = $options['open'];
@@ -112,7 +112,7 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
      * @author  Seth Price <seth@pricepages.org>
      * @author  Lorenzo Alberton <l.alberton@quipo.it>
      */
-    function smarterPPLinkExpand($matches)
+    public function smarterPPLinkExpand($matches)
     {
         $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser','_options');
         $o = $options['open'];
@@ -173,7 +173,7 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
      * @access  private
      * @author  Seth Price <seth@pricepages.org>
      */
-    function smarterPPLink($matches)
+    public function smarterPPLink($matches)
     {
         $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser','_options');
         $o = $options['open'];

@@ -145,7 +145,7 @@ class DebugView extends Object {
 	 * Write a fragment of the a source file
 	 * @param $lines An array of file lines; the keys should be the original line numbers
 	 */
-	function writeSourceFragment($lines, $errline) {
+	public function writeSourceFragment($lines, $errline) {
 		echo '<div class="trace"><h3>Source</h3>';
 		echo '<pre>';
 		foreach($lines as $offset => $line) {
@@ -162,7 +162,7 @@ class DebugView extends Object {
 	/**
 	 * Write a backtrace
 	 */
-	function writeTrace($trace) {
+	public function writeTrace($trace) {
 		echo '<h3>Trace</h3>';
 		echo SS_Backtrace::get_rendered_backtrace($trace);
 		echo '</div>';
@@ -171,7 +171,7 @@ class DebugView extends Object {
 	/**
 	 * @param string $text
 	 */
-	function writeParagraph($text) {
+	public function writeParagraph($text) {
 		echo '<p class="info">' . $text . '</p>';
 	}
 }

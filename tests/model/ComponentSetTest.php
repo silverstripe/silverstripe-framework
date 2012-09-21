@@ -12,7 +12,7 @@ class ComponentSetTest extends SapphireTest {
 		'ComponentSetTest_Team'
 	);
 	
-	function testSetByIDListManyMany() {
+	public function testSetByIDListManyMany() {
 		$team1 = $this->objFromFixture('ComponentSetTest_Team', 'team1');
 		$player1_team1 = $this->objFromFixture('ComponentSetTest_Player', 'player1_team1');
 		$player2 = $this->objFromFixture('ComponentSetTest_Player', 'player2');

@@ -88,7 +88,7 @@ class SS_Cache {
 	 * @param array $options The Zend_Cache backend options (see http://framework.zend.com/manual/en/zend.cache.html)
 	 * @return none
 	 */
-	static function add_backend($name, $type, $options=array()) {
+	public static function add_backend($name, $type, $options=array()) {
 		self::init();
 		self::$backends[$name] = array($type, $options);
 	}
@@ -102,7 +102,7 @@ class SS_Cache {
 	 *                          A backend picked for a specific cache name will always be used instead of 'any' if it exists, no matter the priority.
 	 * @return none
 	 */
-	static function pick_backend($name, $for, $priority=1) {
+	public static function pick_backend($name, $for, $priority=1) {
 		self::init();
 
 		$current = -1;
@@ -115,7 +115,7 @@ class SS_Cache {
 	 * Return the cache lifetime for a particular named cache.
 	 * @return array
 	 */
-	static function get_cache_lifetime($for) {
+	public static function get_cache_lifetime($for) {
 		return (isset(self::$cache_lifetime[$for])) ? self::$cache_lifetime[$for] : false;
 	}
 
@@ -126,7 +126,7 @@ class SS_Cache {
 	 * @param integer $lifetime The lifetime of an item of the cache, in seconds, or -1 to disable caching
 	 * @param integer $priority The priority. The highest priority setting is used. Unlike backends, 'any' is not special in terms of priority. 
 	 */
-	static function set_cache_lifetime($for, $lifetime=600, $priority=1) {
+	public static function set_cache_lifetime($for, $lifetime=600, $priority=1) {
 		self::init();
 		
 		$current = -1;
@@ -175,7 +175,7 @@ class SS_Cache {
 	 * See the Zend_Cache documentation at http://framework.zend.com/manual/en/zend.cache.html for more
 	 * 
 	 */
-	static function factory($for, $frontend='Output', $frontendOptions=null) {
+	public static function factory($for, $frontend='Output', $frontendOptions=null) {
 		self::init();
 		
 		$backend_name = 'default';

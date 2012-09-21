@@ -8,7 +8,7 @@ class DataObjectDuplicationTest extends SapphireTest {
 		'DataObjectDuplicateTestClass3'
 	);
 
-	function testDuplicateManyManyClasses() {
+	public function testDuplicateManyManyClasses() {
 		//create new test classes below
 		$one = new DataObjectDuplicateTestClass1();
 		$two = new DataObjectDuplicateTestClass2();

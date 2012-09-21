@@ -28,7 +28,7 @@ class DevelopmentAdmin extends Controller {
         'viewcode' 
  	);
 	
-	function init() {
+	public function init() {
 		parent::init();
 		
 		// Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
@@ -73,7 +73,7 @@ class DevelopmentAdmin extends Controller {
 		
 	}
 	
-	function index() {
+	public function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
 			"buildcache" => "Rebuild the static cache, if you're using StaticPublisher",
@@ -116,19 +116,19 @@ class DevelopmentAdmin extends Controller {
 		}
 	}
 	
-	function tests($request) {
+	public function tests($request) {
 		return TestRunner::create();
 	}
 	
-	function jstests($request) {
+	public function jstests($request) {
 		return JSTestRunner::create();
 	}
 	
-	function tasks() {
+	public function tasks() {
 		return TaskRunner::create();
 	}
 	
-	function build($request) {
+	public function build($request) {
 		if(Director::is_cli()) {
 			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
@@ -152,7 +152,7 @@ class DevelopmentAdmin extends Controller {
 	 * Should match the $url_handlers rule:
 	 *		'build/defaults' => 'buildDefaults',
 	 */
-	function buildDefaults() {
+	public function buildDefaults() {
 		$da = DatabaseAdmin::create();
 
 		if (!Director::is_cli()) {
@@ -170,7 +170,7 @@ class DevelopmentAdmin extends Controller {
 		}
 	}
 
-	function reset() {
+	public function reset() {
 		$link = BASE_URL.'/dev/tests/startsession';
 		
 		return "<p>The dev/reset feature has been removed.  If you are trying to test your site " .
@@ -180,7 +180,7 @@ class DevelopmentAdmin extends Controller {
 
 	}
 	
-	function errors() {
+	public function errors() {
 		$this->redirect("Debug_");
 	}
 }

@@ -5,7 +5,7 @@
  */
 class CompositeFieldTest extends SapphireTest {
 	
-	function testFieldPosition() {
+	public function testFieldPosition() {
 		$compositeOuter = new CompositeField(
 			new TextField('A'),
 			new TextField('B'),
@@ -29,7 +29,7 @@ class CompositeFieldTest extends SapphireTest {
 		$this->assertEquals(2, $compositeOuter->fieldPosition('B'));
 	}
 	
-	function testTag() {
+	public function testTag() {
 		$div = new CompositeField(
 			new TextField('A'),
 			new TextField('B')
@@ -44,7 +44,7 @@ class CompositeFieldTest extends SapphireTest {
 		$this->assertStringEndsWith('/fieldset>', trim($fieldset->FieldHolder()));		
 	}
 
-	function testLegend() {
+	public function testLegend() {
 		$composite = new CompositeField(
 			new TextField('A'),
 			new TextField('B')

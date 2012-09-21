@@ -10,7 +10,7 @@ class BasicAuthTest extends FunctionalTest {
 
 	static $fixture_file = 'BasicAuthTest.yml';
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 
 		// Fixtures assume Email is the field used to identify the log in identity
@@ -18,14 +18,14 @@ class BasicAuthTest extends FunctionalTest {
 		Member::set_unique_identifier_field('Email');
 	}
 
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 		
 		BasicAuth::protect_entire_site(false);
 		Member::set_unique_identifier_field(self::$original_unique_identifier_field);
 	}
 
-	function testBasicAuthEnabledWithoutLogin() {
+	public function testBasicAuthEnabledWithoutLogin() {
 		$origUser = @$_SERVER['PHP_AUTH_USER'];
 		$origPw = @$_SERVER['PHP_AUTH_PW'];
 		
@@ -39,7 +39,7 @@ class BasicAuthTest extends FunctionalTest {
 		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
 	
-	function testBasicAuthDoesntCallActionOrFurtherInitOnAuthFailure() {
+	public function testBasicAuthDoesntCallActionOrFurtherInitOnAuthFailure() {
 		$origUser = @$_SERVER['PHP_AUTH_USER'];
 		$origPw = @$_SERVER['PHP_AUTH_PW'];
 		
@@ -59,7 +59,7 @@ class BasicAuthTest extends FunctionalTest {
 		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
 
-	function testBasicAuthEnabledWithPermission() {
+	public function testBasicAuthEnabledWithPermission() {
 		$origUser = @$_SERVER['PHP_AUTH_USER'];
 		$origPw = @$_SERVER['PHP_AUTH_PW'];
 		
@@ -82,7 +82,7 @@ class BasicAuthTest extends FunctionalTest {
 		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
 	
-	function testBasicAuthEnabledWithoutPermission() {
+	public function testBasicAuthEnabledWithoutPermission() {
 		$origUser = @$_SERVER['PHP_AUTH_USER'];
 		$origPw = @$_SERVER['PHP_AUTH_PW'];
 		
@@ -115,7 +115,7 @@ class BasicAuthTest_ControllerSecuredWithPermission extends Controller implement
 
 	protected $template = 'BlankPage';
 	
-	function init() {
+	public function init() {
 		self::$post_init_called = false;
 		self::$index_called = false;
 		
@@ -125,7 +125,7 @@ class BasicAuthTest_ControllerSecuredWithPermission extends Controller implement
 		self::$post_init_called = true;
 	}
 	
-	function index() {
+	public function index() {
 		self::$index_called = true;
 	}
 
@@ -137,7 +137,7 @@ class BasicAuthTest_ControllerSecuredWithoutPermission extends Controller implem
 
 	protected $template = 'BlankPage';
 
-	function init() {
+	public function init() {
 		BasicAuth::protect_entire_site(true, null);
 		parent::init();
 	}

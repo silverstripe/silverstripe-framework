@@ -6,7 +6,7 @@
 
 class LabelFieldTest extends SapphireTest {
 
-	function testFieldHasNoNameAttribute() {
+	public function testFieldHasNoNameAttribute() {
 		$field = new LabelField('MyName', 'MyTitle');
 		$this->assertEquals($field->Field(), '<label id="MyName" class="readonly">MyTitle</label>');
 	}

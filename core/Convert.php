@@ -28,7 +28,7 @@ class Convert {
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
 	 */
-	static function raw2att($val) {
+	public static function raw2att($val) {
 		return self::raw2xml($val);
 	}
 
@@ -38,7 +38,7 @@ class Convert {
 	 * @param string|array $val String to escape, or array of strings
 	 * @return array|string
 	 */
-	static function raw2htmlatt($val) {
+	public static function raw2htmlatt($val) {
 		return self::raw2att($val);
 	}
 
@@ -53,7 +53,7 @@ class Convert {
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
 	 */
-	static function raw2htmlname($val) {
+	public static function raw2htmlname($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2htmlname($v);
 			return $val;
@@ -69,7 +69,7 @@ class Convert {
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
 	 */
-	static function raw2xml($val) {
+	public static function raw2xml($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2xml($v);
 			return $val;
@@ -84,7 +84,7 @@ class Convert {
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
 	 */
-	static function raw2js($val) {
+	public static function raw2js($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2js($v);
 			return $val;
@@ -99,7 +99,7 @@ class Convert {
 	 * @param mixed $val Value to be encoded
 	 * @return string JSON encoded string
 	 */
-	static function raw2json($val) {
+	public static function raw2json($val) {
 		return json_encode($val);
 	}
 
@@ -110,11 +110,11 @@ class Convert {
 	 * @param array $val Array to convert
 	 * @return string JSON encoded string
 	 */
-	static function array2json($val) {
+	public static function array2json($val) {
 		return self::raw2json($val);
 	}
 
-	static function raw2sql($val) {
+	public static function raw2sql($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2sql($v);
 			return $val;
@@ -128,7 +128,7 @@ class Convert {
 	 * @uses html2raw()
 	 * @todo Currently &#xxx; entries are stripped; they should be converted
 	 */
-	static function xml2raw($val) {
+	public static function xml2raw($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::xml2raw($v);
 			return $val;
@@ -145,7 +145,7 @@ class Convert {
 	 * @param string $val
 	 * @return object|boolean
 	 */
-	static function json2obj($val) {
+	public static function json2obj($val) {
 		return json_decode($val);
 	}
 
@@ -156,7 +156,7 @@ class Convert {
 	 * @param string $val JSON string to convert
 	 * @return array|boolean
 	 */
-	static function json2array($val) {
+	public static function json2array($val) {
 		return json_decode($val, true);
 	}
 	
@@ -168,7 +168,7 @@ class Convert {
 	 *
 	 * @return array
 	 */
-	static function xml2array($val) {
+	public static function xml2array($val) {
 		$xml = new SimpleXMLElement($val);
 		return self::recursiveXMLToArray($xml);
 	}
@@ -208,7 +208,7 @@ class Convert {
 	 * @param string The string to linkify
 	 * @return A link to the URL if string is a URL
 	 */
-	static function linkIfMatch($string) {
+	public static function linkIfMatch($string) {
 		if( preg_match( '/^[a-z+]+\:\/\/[a-zA-Z0-9$-_.+?&=!*\'()%]+$/', $string ) )
 			return "<a style=\"white-space: nowrap\" href=\"$string\">$string</a>";
 		else
@@ -222,7 +222,7 @@ class Convert {
 	 * @param $preserveLinks boolean
 	 * @param $wordwrap array 
 	 */
-	static function html2raw($data, $preserveLinks = false, $wordWrap = 60, $config = null) {
+	public static function html2raw($data, $preserveLinks = false, $wordWrap = 60, $config = null) {
 		$defaultConfig = array(
 			'PreserveLinks' => false,
 			'ReplaceBoldAsterisk' => true,
@@ -297,7 +297,7 @@ class Convert {
 	 * @return string
 	 * @see http://www.ietf.org/rfc/rfc1738.txt
 	 */
-	static function raw2mailto($data) {
+	public static function raw2mailto($data) {
 		return str_ireplace(
 			array("\n",'?','=',' ','(',')','&','@','"','\'',';'),
 			array('%0A','%3F','%3D','%20','%28','%29','%26','%40','%22','%27','%3B'),

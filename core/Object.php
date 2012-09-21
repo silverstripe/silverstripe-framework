@@ -130,7 +130,7 @@ abstract class Object {
 	 * Arguments are always strings, although this is a quirk of the current implementation rather
 	 * than something that can be relied upon.
 	 */
-	static function create_from_string($classSpec, $firstArg = null) {
+	public static function create_from_string($classSpec, $firstArg = null) {
 		if(!isset(self::$_cache_inst_args[$classSpec.$firstArg])) {
 			// an $extension value can contain parameters as a string,
 			// e.g. "Versioned('Stage','Live')"
@@ -155,7 +155,7 @@ abstract class Object {
 	 * Parses a class-spec, such as "Versioned('Stage','Live')", as passed to create_from_string().
 	 * Returns a 2-elemnent array, with classname and arguments
 	 */
-	static function parse_class_spec($classSpec) {
+	public static function parse_class_spec($classSpec) {
 		$tokens = token_get_all("<?php $classSpec");
 		$class = null;
 		$args = array();
@@ -394,7 +394,7 @@ abstract class Object {
 	 * Documentation from http://php.net/array_merge_recursive:
 	 * If the input arrays have the same string keys, then the values for these keys are merged together 
 	 * into an array, and this is done recursively, so that if one of the values is an array itself, 
-	 * the function will merge it with a corresponding entry in another array too. 
+	 * the function will merge it with a corresponding entry in another array too.
 	 * If, however, the arrays have the same numeric key, the later value will not overwrite the original value, 
 	 * but will be appended. 
 	 *

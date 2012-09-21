@@ -43,7 +43,7 @@
  * The values in the comments are the values stored from the previous example.
  * 
  * <code>
- * function bar() {
+ * public function bar() {
  * 	$value = Session::get('MyValue'); // $value = 6
  * 	$var   = Session::get('MyVar'); // $var = 1 
  * 	$array = Session::get('MyArrayOfValues'); // $array = array(1,2,3)
@@ -107,7 +107,7 @@ class Session {
 	 *
 	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
 	 */
-	function __construct($data) {
+	public function __construct($data) {
 		if($data instanceof Session) $data = $data->inst_getAll();
 
 		$this->data = $data;

@@ -4,17 +4,17 @@
  * @subpackage tests
  */
 class DBLocaleTest extends SapphireTest {
-	function testNice() {
+	public function testNice() {
 		$l = DBField::create_field('DBLocale', 'de_DE');
 		$this->assertEquals($l->Nice(), 'German');
 	}
 	
-	function testNiceNative() {
+	public function testNiceNative() {
 		$l = DBField::create_field('DBLocale', 'de_DE');
 		$this->assertEquals($l->Nice(true), 'Deutsch');
 	}
 	
-	function testNativeName() {
+	public function testNativeName() {
 		$l = DBField::create_field('DBLocale', 'de_DE');
 		$this->assertEquals($l->getNativeName(), 'Deutsch');
 	}

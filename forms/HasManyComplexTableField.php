@@ -48,7 +48,7 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	protected $relationAutoSetting = false;
 	
-	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 
 		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor', Deprecation::SCOPE_CLASS);
@@ -64,7 +64,7 @@ class HasManyComplexTableField extends ComplexTableField {
 		
 	}
 	
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		$ret = parent::FieldHolder($properties);
 		
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
@@ -78,16 +78,16 @@ class HasManyComplexTableField extends ComplexTableField {
 	/**
 	 * Try to determine the DataObject that this field is built on top of
 	 */
-	function controllerClass() {
+	public function controllerClass() {
 		if($this->controller instanceof DataObject) return $this->controller->class;
 		elseif($this->controller instanceof Controller) return $this->controller->data()->class;
 	}
 		
-	function getControllerID() {
+	public function getControllerID() {
 		return $this->controller->ID;
 	}
 	
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		$fieldName = $this->name;
 		$saveDest = $record->$fieldName();
 		
@@ -104,19 +104,19 @@ class HasManyComplexTableField extends ComplexTableField {
 		$saveDest->setByIDList($items);
 	}
 	
-	function setAddTitle($addTitle) {
+	public function setAddTitle($addTitle) {
 		if(is_string($addTitle))
 			$this->addTitle = $addTitle;
 	}
 	
-	function Title() {
+	public function Title() {
 		return $this->addTitle ? $this->addTitle : parent::Title();
 	}
 	
 	/**
 	 * Get the IDs of the selected items, in a has_many or many_many relation
 	 */
-	function selectedItemIDs() {
+	public function selectedItemIDs() {
 		$fieldName = $this->name;
 		$selectedItems = $this->form->getRecord()->$fieldName();
 		$itemIDs = array();
@@ -124,7 +124,7 @@ class HasManyComplexTableField extends ComplexTableField {
 		return $itemIDs;
 	}
 	
-	function ExtraData() {
+	public function ExtraData() {
 		$items = array();
 		
 		$list = implode(',', $this->selectedItemIDs());
@@ -142,7 +142,7 @@ HTML;
  */
 class HasManyComplexTableField_Item extends ComplexTableField_Item {
 	
-	function MarkingCheckbox() {
+	public function MarkingCheckbox() {
 		$name = $this->parent->getName() . '[]';
 		
 		if(!$this->parent->joinField) {

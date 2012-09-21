@@ -12,7 +12,7 @@
  * @subpackage search
  */
 class SubstringFilter extends PartialMatchFilter {
-	function __construct($fullName, $value = false) {
+	public function __construct($fullName, $value = false) {
 		Deprecation::notice('3.0', 'PartialMatchFilter instead.');
 		SearchFilter::__construct($fullName, $value);
 	}

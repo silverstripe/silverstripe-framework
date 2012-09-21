@@ -132,7 +132,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		return array('sortasc', 'sortdesc');
 	}
 	
-	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
 		$state = $gridField->State->GridFieldSortableHeader;

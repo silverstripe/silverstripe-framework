@@ -38,7 +38,7 @@ class PermissionCheckboxSetField extends FormField {
 	 *  Caution: saveInto() can only be used with a single record, all inherited permissions will be marked readonly.
 	 *  Setting multiple groups only makes sense in a readonly context. (Optional)
 	 */
-	function __construct($name, $title, $managedClass, $filterField, $records = null) {
+	public function __construct($name, $title, $managedClass, $filterField, $records = null) {
 		$this->filterField = $filterField;
 		$this->managedClass = $managedClass;
 
@@ -59,18 +59,18 @@ class PermissionCheckboxSetField extends FormField {
 	/**
 	 * @param Array $codes
 	 */
-	function setHiddenPermissions($codes) {
+	public function setHiddenPermissions($codes) {
 		$this->hiddenPermissions = $codes;
 	}
 	
 	/**
 	 * @return Array
 	 */
-	function getHiddenPermissions() {
+	public function getHiddenPermissions() {
 		return $this->hiddenPermissions;
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
@@ -205,7 +205,7 @@ class PermissionCheckboxSetField extends FormField {
 	 *
 	 * @param DataObject $record
 	 */
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
 
@@ -234,7 +234,7 @@ class PermissionCheckboxSetField extends FormField {
 	/**
 	 * @return PermissionCheckboxSetField_Readonly
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$readonly = new PermissionCheckboxSetField_Readonly(
 			$this->name,
 			$this->title,
@@ -251,7 +251,7 @@ class PermissionCheckboxSetField extends FormField {
 	 * 
 	 * @return array
 	 */
-	function getAssignedPermissionCodes() {
+	public function getAssignedPermissionCodes() {
 		if(!$this->records) return false;
 		
 		// TODO
@@ -271,7 +271,7 @@ class PermissionCheckboxSetField_Readonly extends PermissionCheckboxSetField {
 
 	protected $readonly = true;
 	
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		return false;
 	}
 }

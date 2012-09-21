@@ -22,7 +22,7 @@ abstract class StringField extends DBField {
 	 * @param $name string The name of the field
 	 * @param $options array An array of options e.g. array('nullifyEmpty'=>false).  See {@link StringField::setOptions()} for information on the available options
 	 */
-	function __construct($name = null, $options = array()) {
+	public function __construct($name = null, $options = array()) {
 		// Workaround: The singleton pattern calls this constructor with true/1 as the second parameter, so we must ignore it
 		if(is_array($options)){
 			$this->setOptions($options);
@@ -41,7 +41,7 @@ abstract class StringField extends DBField {
 	 *   </li></ul>
 	 * @return unknown_type
 	 */
-	function setOptions(array $options = array()) {
+	public function setOptions(array $options = array()) {
 		if(array_key_exists("nullifyEmpty", $options)) {
 			$this->nullifyEmpty = $options["nullifyEmpty"] ? true : false;
 		}
@@ -51,14 +51,14 @@ abstract class StringField extends DBField {
 	 * Set whether this field stores empty strings rather than converting them to null
 	 * @param $value boolean True if empty strings are to be converted to null
 	 */
-	function setNullifyEmpty($value) {
+	public function setNullifyEmpty($value) {
 		$this->nullifyEmpty = ($value ? true : false);
 	}
 	/**
 	 * Get whether this field stores empty strings rather than converting them to null
 	 * @return bool True if empty strings are to be converted to null
 	 */
-	function getNullifyEmpty() {
+	public function getNullifyEmpty() {
 		return $this->nullifyEmpty;
 	}
 
@@ -66,7 +66,7 @@ abstract class StringField extends DBField {
 	 * (non-PHPdoc)
 	 * @see core/model/fieldtypes/DBField#exists()
 	 */
-	function exists() {
+	public function exists() {
 		return ($this->value || $this->value == '0') || ( !$this->nullifyEmpty && $this->value === '');
 	}
 
@@ -74,7 +74,7 @@ abstract class StringField extends DBField {
 	 * (non-PHPdoc)
 	 * @see core/model/fieldtypes/DBField#prepValueForDB($value)
 	 */
-	function prepValueForDB($value) {
+	public function prepValueForDB($value) {
 		if(!$this->nullifyEmpty && $value === '') {
 			return DB::getConn()->prepStringForDB($value);
 		} else {
@@ -91,7 +91,7 @@ abstract class StringField extends DBField {
 	 * @param string $add Ellipsis to add to the end of truncated string
 	 * @return string
 	 */
-	function LimitCharacters($limit = 20, $add = '...') {
+	public function LimitCharacters($limit = 20, $add = '...') {
 		$value = trim($this->value);
 		if($this->stat('escape_type') == 'xml') {
 			$value = strip_tags($value);
@@ -109,7 +109,7 @@ abstract class StringField extends DBField {
 	 * Converts the current value for this Enum DBField to lowercase.
 	 * @return string
 	 */
-	function LowerCase() {
+	public function LowerCase() {
 		return mb_strtolower($this->value);
 	}
 		
@@ -117,7 +117,7 @@ abstract class StringField extends DBField {
 	 * Return another DBField object with this value in lowercase.
 	 * @deprecated 3.0 Use LowerCase() instead.
 	 */
-	function Lower() {
+	public function Lower() {
 		Deprecation::notice('3.0', 'Use LowerCase() instead.');
 		return $this->LowerCase();
 	}
@@ -126,7 +126,7 @@ abstract class StringField extends DBField {
 	 * Converts the current value for this Enum DBField to uppercase.
 	 * @return string 
 	 */ 
-	function UpperCase() {
+	public function UpperCase() {
 		return mb_strtoupper($this->value);
 	}
 
@@ -134,7 +134,7 @@ abstract class StringField extends DBField {
 	 * Return another DBField object with this value in uppercase.
 	 * @deprecated 3.0 Use UpperCase() instead.
 	 */
-	function Upper() {
+	public function Upper() {
 		Deprecation::notice('3.0', 'Use UpperCase() instead.');
 		return $this->UpperCase();
 	}

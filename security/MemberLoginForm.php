@@ -32,7 +32,7 @@ class MemberLoginForm extends LoginForm {
 	 *                               so, only a logout button will be rendered
 	 * @param string $authenticatorClassName Name of the authenticator class that this form uses.
 	 */
-	function __construct($controller, $name, $fields = null, $actions = null,
+	public function __construct($controller, $name, $fields = null, $actions = null,
 											 $checkCurrentUser = true) {
 
 		// This is now set on the class directly to make it easier to create subclasses
@@ -250,7 +250,7 @@ JS
 	 *
 	 * @param array $data Submitted data
 	 */
-	function forgotPassword($data) {
+	public function forgotPassword($data) {
 		$SQL_data = Convert::raw2sql($data);
 		$SQL_email = $SQL_data['Email'];
 		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");

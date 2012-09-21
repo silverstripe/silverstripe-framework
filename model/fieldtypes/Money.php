@@ -63,24 +63,24 @@ class Money extends DBField implements CompositeDBField {
 		"Amount" => 'Decimal(19,4)'
 	);
 	
-	function __construct($name = null) {
+	public function __construct($name = null) {
 		$this->currencyLib = new Zend_Currency(null, i18n::default_locale());
 		
 		parent::__construct($name);
 	}
 	
-	function compositeDatabaseFields() {
+	public function compositeDatabaseFields() {
 		return self::$composite_db;
 	}
 
-	function requireField() {
+	public function requireField() {
 		$fields = $this->compositeDatabaseFields();
 		if($fields) foreach($fields as $name => $type){
 			DB::requireField($this->tableName, $this->name.$name, $type);
 		}
 	}
 
-	function writeToManipulation(&$manipulation) {
+	public function writeToManipulation(&$manipulation) {
 		if($this->getCurrency()) {
 			$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
 		} else {
@@ -94,13 +94,13 @@ class Money extends DBField implements CompositeDBField {
 		}
 	}
 	
-	function addToQuery(&$query) {
+	public function addToQuery(&$query) {
 		parent::addToQuery($query);
 		$query->selectField(sprintf('"%sAmount"', $this->name));
 		$query->selectField(sprintf('"%sCurrency"', $this->name));
 	}
 
-	function setValue($value, $record = null, $markChanged = true) {
+	public function setValue($value, $record = null, $markChanged = true) {
 		// @todo Allow resetting value to NULL through Money $value field
 		if ($value instanceof Money && $value->exists()) {
 			$this->setCurrency($value->getCurrency(), $markChanged);
@@ -133,7 +133,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	function Nice($options = array()) {
+	public function Nice($options = array()) {
 		$amount = $this->getAmount();
 		if(!isset($options['display'])) $options['display'] = Zend_Currency::USE_SYMBOL;
 		if(!isset($options['currency'])) $options['currency'] = $this->getCurrency();
@@ -144,7 +144,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	function NiceWithShortname($options = array()){
+	public function NiceWithShortname($options = array()){
 		$options['display'] = Zend_Currency::USE_SHORTNAME;
 		return $this->Nice($options);
 	}
@@ -152,7 +152,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	function NiceWithName($options = array()){
+	public function NiceWithName($options = array()){
 		$options['display'] = Zend_Currency::USE_NAME;
 		return $this->Nice($options);
 	}
@@ -160,14 +160,14 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	function getCurrency() {
+	public function getCurrency() {
 		return $this->currency;
 	}
 	
 	/**
 	 * @param string
 	 */
-	function setCurrency($currency, $markChanged = true) {
+	public function setCurrency($currency, $markChanged = true) {
 		$this->currency = $currency;
 		if($markChanged) $this->isChanged = true;
 	}
@@ -177,14 +177,14 @@ class Money extends DBField implements CompositeDBField {
 	 * 
 	 * @return float
 	 */
-	function getAmount() {
+	public function getAmount() {
 		return $this->amount;
 	}
 	
 	/**
 	 * @param float $amount
 	 */
-	function setAmount($amount, $markChanged = true) {
+	public function setAmount($amount, $markChanged = true) {
 		$this->amount = (float)$amount;
 		if($markChanged) $this->isChanged = true;
 	}
@@ -192,25 +192,25 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return boolean
 	 */
-	function exists() {
+	public function exists() {
 		return ($this->getCurrency() && is_numeric($this->getAmount()));
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	function hasAmount() {
+	public function hasAmount() {
 		return (int)$this->getAmount() != '0';
 	}
 	
-	function isChanged() {
+	public function isChanged() {
 		return $this->isChanged;
 	}
 		
 	/**
 	 * @param string $locale
 	 */
-	function setLocale($locale) {
+	public function setLocale($locale) {
 		$this->locale = $locale;
 		$this->currencyLib->setLocale($locale);
 	}
@@ -218,14 +218,14 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	function getLocale() {
+	public function getLocale() {
 		return ($this->locale) ? $this->locale : i18n::get_locale();
 	}
 	
 	/**
 	 * @return string
 	 */
-	function getSymbol($currency = null, $locale = null) {
+	public function getSymbol($currency = null, $locale = null) {
 		
 		if($locale === null) $locale = $this->getLocale();
 		if($currency === null) $currency = $this->getCurrency();
@@ -236,7 +236,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	function getShortName($currency = null, $locale = null) {
+	public function getShortName($currency = null, $locale = null) {
 		if($locale === null) $locale = $this->getLocale();
 		if($currency === null) $currency = $this->getCurrency();
 		
@@ -246,7 +246,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return string
 	 */
-	function getName($currency = null, $locale = null) {
+	public function getName($currency = null, $locale = null) {
 		if($locale === null) $locale = $this->getLocale();
 		if($currency === null) $currency = $this->getCurrency();
 		
@@ -256,14 +256,14 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @param array $arr
 	 */
-	function setAllowedCurrencies($arr) {
+	public function setAllowedCurrencies($arr) {
 		$this->allowedCurrencies = $arr;
 	}
 	
 	/**
 	 * @return array
 	 */
-	function getAllowedCurrencies() {
+	public function getAllowedCurrencies() {
 		return $this->allowedCurrencies;
 	}
 	
@@ -290,7 +290,7 @@ class Money extends DBField implements CompositeDBField {
 	 * this returns the amount value of the field,
 	 * rather than a {@link Nice()} formatting.
 	 */
-	function __toString() {
+	public function __toString() {
 		return (string)$this->getAmount();
 	}
 }
