@@ -84,6 +84,15 @@ form.nostyle {
 		font-style: italic;
 		margin: $grid-y/2 0 0 $grid-x*23;
 	}
+	&.help {
+		label.right {
+			clear: both;
+			color: lighten($color-text, 20%);
+			display: block;
+			font-style: italic;
+			margin: $grid-y/2 0 0 $grid-x*23;
+		}
+	}
 	
 	input.text,
 	textarea,
@@ -92,7 +101,9 @@ form.nostyle {
 		width: 100%;
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
-
+		&.help {
+			margin:0; //overrides help class adding left margin to the textarea input.
+		}
 		.help {
 			max-width: $grid-x * 64;
 		}
