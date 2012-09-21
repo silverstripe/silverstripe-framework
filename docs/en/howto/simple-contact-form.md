@@ -9,7 +9,7 @@ Let's start by defining a new `ContactPage` page type:
 	class ContactPage extends Page {
 	}
 	class ContactPage_Controller extends Page_Controller {
-		function Form() { 
+		public function Form() { 
 			$fields = new FieldList( 
 				new TextField('Name'), 
 				new EmailField('Email'), 
@@ -60,10 +60,10 @@ Now that we have a contact form, we need some way of collecting the data submitt
 
 	:::php
 	class ContactPage_Controller extends Page_Controller {
-		function Form() {
+		public function Form() {
 			// ...
 		}
-		function submit($data, $form) { 
+		public function submit($data, $form) { 
 			$email = new Email(); 
 			 
 			$email->setTo('siteowner@mysite.com'); 
@@ -104,7 +104,7 @@ All forms have some basic validation built in – email fields will only let the
 
 The framework comes with a predefined validator called `[api:RequiredFields]`, which performs the common task of making sure particular fields are filled out. Below is the code to add validation to a contact form:
 
-	function Form() { 
+	public function Form() { 
 		// ...
 		$validator = new RequiredFields('Name', 'Message');
 		return new Form($this, 'Form', $fields, $actions, $validator); 

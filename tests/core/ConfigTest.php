@@ -54,7 +54,7 @@ class ConfigStaticTest_Combined3 extends ConfigStaticTest_Combined2 {
 
 class ConfigTest extends SapphireTest {
 
-	function testUpdateStatic() {
+	public function testUpdateStatic() {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First', 'first', Config::FIRST_SET), array('test_1'));
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Second', 'first', Config::FIRST_SET), array('test_2'));
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'first', Config::FIRST_SET), array('test_3'));
@@ -76,7 +76,7 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'second', Config::FIRST_SET), array('test_3_2'));
 	}
 
-	function testUninheritedStatic() {
+	public function testUninheritedStatic() {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First',  'third', Config::UNINHERITED), 'test_1');
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Fourth', 'third', Config::UNINHERITED), null);
 
@@ -98,14 +98,14 @@ class ConfigTest extends SapphireTest {
 		$this->assertContains('test_4b', Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
 	}
 
-	function testCombinedStatic() {
+	public function testCombinedStatic() {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Combined3', 'first'), array('test_3', 'test_2', 'test_1'));
 
 		// test that null values are ignored, but values on either side are still merged
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Combined3', 'second'), array('test_3', 'test_1'));
 	}
 
-	function testMerges() {
+	public function testMerges() {
 		$result = array('A' => 1, 'B' => 2, 'C' => 3);
 		Config::merge_array_low_into_high($result, array('C' => 4, 'D' => 5));
 		$this->assertEquals($result, array('A' => 1, 'B' => 2, 'C' => 3, 'D' => 5));
@@ -131,7 +131,7 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals($result, array('A' => 1, 'B' => 2, 'C' => array('Foo' => 1, 'Bar' => 3, 'Baz' => 4), 'D' => 3));
 	}
 
-	function testStaticLookup() {
+	public function testStaticLookup() {
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFoo', 'foo'), 1);
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFoo', 'bar'), null);
 
@@ -145,7 +145,7 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'bar'), null);
 	}
 
-	function testFragmentOrder() {
+	public function testFragmentOrder() {
 		// $manifest = new SS_ConfigManifest(BASE_PATH, false, true);
 	}
 	

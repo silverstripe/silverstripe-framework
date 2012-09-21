@@ -49,12 +49,12 @@ class DbDatetimeTest extends FunctionalTest {
 		return $offset;
 	}
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		$this->adapter = DB::getConn();
 	}
 
-	function testCorrectNow() {
+	public function testCorrectNow() {
 		$offset = $this->checkPreconditions();
 
 		$clause = $this->adapter->formattedDatetimeClause('now', '%U');
@@ -63,7 +63,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->assertTrue($result>0);
 	}
 
-	function testDbDatetimeFormat() {
+	public function testDbDatetimeFormat() {
 		$offset = $this->checkPreconditions();
 
 		$clause = $this->adapter->formattedDatetimeClause('1973-10-14 10:30:00', '%H:%i, %d/%m/%Y');
@@ -79,7 +79,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created), 'fixture ->Created as timestamp', $offset);
 	}
 	
-	function testDbDatetimeInterval() {
+	public function testDbDatetimeInterval() {
 		$offset = $this->checkPreconditions();
 
 		$clause = $this->adapter->datetimeIntervalClause('1973-10-14 10:30:00', '+18 Years');
@@ -100,7 +100,7 @@ class DbDatetimeTest extends FunctionalTest {
 		$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created) - 900), '15 Minutes before creating fixture', $offset);
 	}
 	
-	function testDbDatetimeDifference() {
+	public function testDbDatetimeDifference() {
 		$offset = $this->checkPreconditions();
 
 		$clause = $this->adapter->datetimeDifferenceClause('1974-10-14 10:30:00', '1973-10-14 10:30:00');

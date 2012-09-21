@@ -95,7 +95,7 @@ class YamlFixture extends Object {
 	/**
 	 * @param String Absolute file path, or relative path to {@link Director::baseFolder()}
 	 */
-	function __construct($fixture) {
+	public function __construct($fixture) {
 		if(false !== strpos($fixture, "\n")) {
 			$this->fixtureString = $fixture;
 		} else {
@@ -114,14 +114,14 @@ class YamlFixture extends Object {
 	/**
 	 * @return String Absolute file path
 	 */
-	function getFixtureFile() {
+	public function getFixtureFile() {
 		return $this->fixtureFile;
 	}
 
 	/**
 	 * @return String Fixture string
 	 */
-	function getFixtureString() {
+	public function getFixtureString() {
 		return $this->fixtureString;
 	}
 	

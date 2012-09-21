@@ -447,7 +447,7 @@ class GridFieldTest_Component implements GridField_ColumnProvider, GridField_Act
 }
 
 class GridFieldTest_Component2 implements GridField_DataManipulator, TestOnly {
-	function getManipulatedData(GridField $gridField, SS_List $dataList) {
+	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		$dataList = clone $dataList;
 		$dataList->merge(new ArrayList(array(7, 8, 9, 10, 11, 12)));
 		return $dataList;
@@ -473,11 +473,11 @@ class GridFieldTest_Player extends DataObject implements TestOnly {
 }
 
 class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
-	function __construct($fragments) {
+	public function __construct($fragments) {
 		$this->fragments = $fragments;
 	}
 	
-	function getHTMLFragments($gridField) {
+	public function getHTMLFragments($gridField) {
 		return $this->fragments;
 	}
 }

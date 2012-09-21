@@ -5,7 +5,7 @@
  */
 class MemberDatetimeOptionsetField extends OptionsetField {
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$options = '';
 		$odd = 0;
 		$source = $this->getSource();
@@ -59,7 +59,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	/**
 	 * @todo Put this text into a template?
 	 */
-	function getFormattingHelpText() {
+	public function getFormattingHelpText() {
 		$output = '<ul>';
 		$output .= '<li>YYYY = ' . _t('MemberDatetimeOptionsetField.FOURDIGITYEAR', 'Four-digit year', 40, 'Help text describing what "YYYY" means in ISO date formatting') . '</li>';
 		$output .= '<li>YY = ' . _t('MemberDatetimeOptionsetField.TWODIGITYEAR', 'Two-digit year', 40, 'Help text describing what "YY" means in ISO date formatting') . '</li>';
@@ -80,7 +80,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		return $output;
 	}
 
-	function setValue($value) {
+	public function setValue($value) {
 		if($value == '__custom__') {
 			$value = isset($_REQUEST[$this->name . '_custom']) ? $_REQUEST[$this->name . '_custom'] : null;
 		}
@@ -89,7 +89,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		}
 	}
 
-	function validate($validator) {
+	public function validate($validator) {
 		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
 		if(!$value) return true; // no custom value, don't validate
 

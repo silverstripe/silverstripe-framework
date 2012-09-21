@@ -1052,7 +1052,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return boolean
 	 */
-	 function validate(){
+	 public function validate(){
 		if($this->validator){
 			$errors = $this->validator->validate();
 
@@ -1436,7 +1436,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	public function extraClass() {		
+	public function extraClass() {
 		return implode(array_unique($this->extraClasses), ' ');
 	}
 	

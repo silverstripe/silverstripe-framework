@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class EncryptAllPasswordsTaskTest extends SapphireTest {
-	function testRun() {
+	public function testRun() {
 		$m = new Member();
 		$m->Password = 'plain';
 		$m->PasswordEncryption = 'none';

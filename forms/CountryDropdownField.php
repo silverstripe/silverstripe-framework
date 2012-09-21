@@ -30,7 +30,7 @@ class CountryDropdownField extends DropdownField {
 		return i18n::get_locale();
 	}
 
-	function __construct($name, $title = null, $source = null, $value = "", $form=null) {
+	public function __construct($name, $title = null, $source = null, $value = "", $form=null) {
 		if(!is_array($source)) {
 			// Get a list of countries from Zend
 			$source = Zend_Locale::getTranslationList('territory', $this->locale(), 2);
@@ -53,7 +53,7 @@ class CountryDropdownField extends DropdownField {
 		parent::__construct($name, ($title===null) ? $name : $title, $source, $value, $form);
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$source = $this->getSource();
 
 		if (!$this->value || !isset($source[$this->value])) {

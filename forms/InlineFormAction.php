@@ -18,16 +18,16 @@ class InlineFormAction extends FormField {
 	 * @param title The label on the button
 	 * @param extraClass A CSS class to apply to the button in addition to 'action'
 	 */
-	function __construct($action, $title = "", $extraClass = '') {
+	public function __construct($action, $title = "", $extraClass = '') {
 		$this->extraClass = ' '.$extraClass;
 		parent::__construct($action, $title, null, null);
 	}
 	
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		return new InlineFormAction_ReadOnly( $this->name, $this->title );
 	}
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		if($this->includeDefaultJS) {
 			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',array('ID'=>$this->id()));
 		}
@@ -35,7 +35,7 @@ class InlineFormAction extends FormField {
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" class=\"action{$this->extraClass}\" />";
 	}	
 	
-	function Title() { 
+	public function Title() {
 		return false; 
 	}
 	
@@ -45,7 +45,7 @@ class InlineFormAction extends FormField {
 	 * 
 	 * @param $bool boolean
 	 */
-	function includeDefaultJS($bool) {
+	public function includeDefaultJS($bool) {
 		$this->includeDefaultJS = (bool)$bool;
 	}
 }
@@ -59,11 +59,11 @@ class InlineFormAction_ReadOnly extends FormField {
 	
 	protected $readonly = true;
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" disabled=\"disabled\" class=\"action disabled$this->extraClass\" />";
 	}	
 	
-	function Title() { 
+	public function Title() {
 		return false; 
 	}
 }

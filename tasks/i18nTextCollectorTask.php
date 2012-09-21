@@ -12,7 +12,7 @@ class i18nTextCollectorTask extends BuildTask {
 		stored in each module.
 	";
 	
-	function init() {
+	public function init() {
 		parent::init();
 		
 		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));

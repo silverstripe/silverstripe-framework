@@ -6,7 +6,7 @@
 class PermissionCheckboxSetFieldTest extends SapphireTest {
 	static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
 	
-	function testHiddenPermissions() {
+	public function testHiddenPermissions() {
 		$f = new PermissionCheckboxSetField(
 			'Permissions',
 			'Permissions',
@@ -24,7 +24,7 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$this->assertNotContains('NON-ADMIN', $f->Field());
 	}
 	
-	function testSaveInto() {
+	public function testSaveInto() {
 		$group = $this->objFromFixture('Group', 'group');  // tested group
 		$untouchable = $this->objFromFixture('Group', 'untouchable');  // group that should not change
 		

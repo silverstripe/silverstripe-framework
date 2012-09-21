@@ -71,7 +71,7 @@ class SSHTMLBBCodeParser_Filter_EmailLinks extends SSHTMLBBCodeParser_Filter
     * @see      $_text
     * @author   Stijn de Reede  <sjr@gmx.co.uk>
     */
-    function _preparse()
+    public function _preparse()
     {
         $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser','_options');
         $o = $options['open'];

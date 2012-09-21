@@ -46,7 +46,7 @@ class HtmlEditorField extends TextareaField {
 	 * @see TextareaField::__construct()
 	 */
 	public function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
 
 		parent::__construct($name, $title, $value);
 		
@@ -56,7 +56,7 @@ class HtmlEditorField extends TextareaField {
 	/**
 	 * @return string
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		// mark up broken links
 		$value  = new SS_HTMLValue($this->value);
 		
@@ -85,7 +85,7 @@ class HtmlEditorField extends TextareaField {
 		);
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -220,11 +220,11 @@ class HtmlEditorField extends TextareaField {
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField_Readonly extends ReadonlyField {
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
 		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">" . ( $this->value && $this->value != '<p></p>' ? $this->value : '<i>(not set)</i>' ) . "</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
-	function Type() {
+	public function Type() {
 		return 'htmleditorfield readonly';
 	}
 }
@@ -251,7 +251,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 	protected $controller, $name;
 	
-	function __construct($controller, $name) {
+	public function __construct($controller, $name) {
 		parent::__construct();
 
 		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/jquery/jquery.js");
@@ -279,7 +279,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 *  
 	 * @return callback
 	 */	
-	function siteTreeSearchCallback($sourceObject, $labelField, $search) {
+	public function siteTreeSearchCallback($sourceObject, $labelField, $search) {
 		return DataObject::get($sourceObject, "\"MenuTitle\" LIKE '%$search%' OR \"Title\" LIKE '%$search%'");
 	}
 	
@@ -289,7 +289,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 *  
 	 * @return Form
 	 */
-	function LinkForm() {
+	public function LinkForm() {
 		$siteTree = new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'ID', 'MenuTitle', true);
 		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
 		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
@@ -361,7 +361,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 *  
 	 * @return Form
 	 */
-	function MediaForm() {
+	public function MediaForm() {
 		// TODO Handle through GridState within field - currently this state set too late to be useful here (during request handling)
 		$parentID = $this->controller->getRequest()->requestVar('ParentID');
 
@@ -787,7 +787,7 @@ class HtmlEditorField_File extends ViewableData {
 	 * @param String
 	 * @param File 
 	 */
-	function __construct($url, $file = null) {
+	public function __construct($url, $file = null) {
 		$this->url = $url;
 		$this->file = $file;
 		$this->failover = $file;
@@ -798,22 +798,22 @@ class HtmlEditorField_File extends ViewableData {
 	/**
 	 * @return File Might not be set (for remote files)
 	 */
-	function getFile() {
+	public function getFile() {
 		return $this->file;
 	}
 
-	function getURL() {
+	public function getURL() {
 		return $this->url;
 	}
 
-	function getName() {
+	public function getName() {
 		return ($this->file) ? $this->file->Name : preg_replace('/\?.*/', '', basename($this->url));
 	}
 
 	/**
 	 * @return String HTML
 	 */
-	function getPreview() {
+	public function getPreview() {
 		$preview = $this->extend('getPreview');
 		if($preview) return $preview;
 
@@ -826,11 +826,11 @@ class HtmlEditorField_File extends ViewableData {
 		}
 	}
 
-	function getExtension() {
+	public function getExtension() {
 		return strtolower(($this->file) ? $this->file->Extension : pathinfo($this->Name, PATHINFO_EXTENSION));
 	}
 
-	function appCategory() {
+	public function appCategory() {
 		if($this->file) {
 			return $this->file->appCategory();
 		} else {
@@ -908,7 +908,7 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 
 	protected $height;
 
-	function __construct($url, $file = null) {
+	public function __construct($url, $file = null) {
 		parent::__construct($url, $file);
 
 		// Get dimensions for remote file
@@ -919,15 +919,15 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 		}
 	}
 
-	function getWidth() {
+	public function getWidth() {
 		return ($this->file) ? $this->file->Width : $this->width;
 	}
 
-	function getHeight() {
+	public function getHeight() {
 		return ($this->file) ? $this->file->Height : $this->height;
 	}
 
-	function getPreview() {
+	public function getPreview() {
 		return ($this->file) ? $this->file->CMSThumbnail() : sprintf('<img src="%s" />', $this->url);
 	}
 

@@ -1,7 +1,7 @@
 <?php
 
 class SSViewerTest extends SapphireTest {
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		SSViewer::set_source_file_comments(false);
 	}
@@ -11,7 +11,7 @@ class SSViewerTest extends SapphireTest {
 	 * of user defined themes via {@link SiteConfig} and default theme
 	 * when no user themes are defined.
 	 */
-	function testCurrentTheme() {
+	public function testCurrentTheme() {
 		//TODO: SiteConfig moved to CMS 
 		SSViewer::set_theme('mytheme');
 		$this->assertEquals('mytheme', SSViewer::current_theme(), 'Current theme is the default - user has not defined one');
@@ -20,7 +20,7 @@ class SSViewerTest extends SapphireTest {
 	/**
 	 * Test that a template without a <head> tag still renders.
 	 */
-	function testTemplateWithoutHeadRenders() {
+	public function testTemplateWithoutHeadRenders() {
 		$data = new ArrayData(array(
 			'Var' => 'var value'
 		));
@@ -33,13 +33,13 @@ class SSViewerTest extends SapphireTest {
 	/**
 	 * Small helper to render templates from strings
 	 */
-	function render($templateString, $data = null) {
+	public function render($templateString, $data = null) {
 		$t = SSViewer::fromString($templateString);
 		if(!$data) $data = new SSViewerTestFixture();
 		return $t->process($data);
 	}
 	
-	function testRequirements() {
+	public function testRequirements() {
 		$requirements = $this->getMock("Requirements_Backend", array("javascript", "css"));
 		$jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 		$cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
@@ -55,7 +55,7 @@ class SSViewerTest extends SapphireTest {
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
 
-	function testComments() {
+	public function testComments() {
 		$output = $this->render(<<<SS
 This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>This is the final content
 SS
@@ -64,14 +64,14 @@ SS
 		$this->assertEquals("This is my templateThis is some contentThis is the final content", preg_replace("/\n?<!--.*-->\n?/U",'',$output));
 	}
 	
-	function testBasicText() {
+	public function testBasicText() {
 		$this->assertEquals('"', $this->render('"'), 'Double-quotes are left alone');
 		$this->assertEquals("'", $this->render("'"), 'Single-quotes are left alone');
 		$this->assertEquals('A', $this->render('\\A'), 'Escaped characters are unescaped');
 		$this->assertEquals('\\A', $this->render('\\\\A'), 'Escaped back-slashed are correctly unescaped');
 	}
 	
-	function testBasicInjection() {
+	public function testBasicInjection() {
 		$this->assertEquals('[out:Test]', $this->render('$Test'), 'Basic stand-alone injection');
 		$this->assertEquals('[out:Test]', $this->render('{$Test}'), 'Basic stand-alone wrapped injection');
 		$this->assertEquals('A[out:Test]!', $this->render('A$Test!'), 'Basic surrounded injection');
@@ -86,20 +86,20 @@ SS
 	}
 
 
-	function testGlobalVariableCalls() {
+	public function testGlobalVariableCalls() {
 		$this->assertEquals('automatic', $this->render('$SSViewerTest_GlobalAutomatic'));
 		$this->assertEquals('reference', $this->render('$SSViewerTest_GlobalReferencedByString'));
 		$this->assertEquals('reference', $this->render('$SSViewerTest_GlobalReferencedInArray'));
 	}
 
-	function testGlobalVariableCallsWithArguments() {
+	public function testGlobalVariableCallsWithArguments() {
 		$this->assertEquals('zz', $this->render('$SSViewerTest_GlobalThatTakesArguments'));
 		$this->assertEquals('zFooz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo")'));
 		$this->assertEquals('zFoo:Bar:Bazz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo", "Bar", "Baz")'));
 		$this->assertEquals('zreferencez', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalReferencedByString)'));
 	}
 
-	function testGlobalVariablesAreEscaped() {
+	public function testGlobalVariablesAreEscaped() {
 		$this->assertEquals('<div></div>', $this->render('$SSViewerTest_GlobalHTMLFragment'));
 		$this->assertEquals('&lt;div&gt;&lt;/div&gt;', $this->render('$SSViewerTest_GlobalHTMLEscaped'));
 
@@ -107,7 +107,7 @@ SS
 		$this->assertEquals('z&lt;div&gt;&lt;/div&gt;z', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLEscaped)'));
 	}
 
-	function testCoreGlobalVariableCalls() {
+	public function testCoreGlobalVariableCalls() {
 		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$absoluteBaseURL}'), 'Director::absoluteBaseURL can be called from within template');
 		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$AbsoluteBaseURL}'), 'Upper-case %AbsoluteBaseURL can be called from within template');
 
@@ -131,14 +131,14 @@ SS
 		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
 	}
 
-	function testLocalFunctionsTakePriorityOverGlobals() {
+	public function testLocalFunctionsTakePriorityOverGlobals() {
 		$data = new ArrayData(array(
 			'Page' => new SSViewerTest_Object()
 		));
 
 		//call method with lots of arguments
 		$result = $this->render('<% with Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_with %>',$data);
-		$this->assertEquals("abcdefghijk",$result, "Function can accept up to 11 arguments");
+		$this->assertEquals("abcdefghijk",$result, "public function can accept up to 11 arguments");
 
 		//call method that does not exist
 		$result = $this->render('<% with Page %><% if IDoNotExist %>hello<% end_if %><% end_with %>',$data);
@@ -150,10 +150,10 @@ SS
 
 		//call method with same name as a global method (local call should take priority)
 		$result = $this->render('<% with Page %>$absoluteBaseURL<% end_with %>',$data);
-		$this->assertEquals("testLocalFunctionPriorityCalled",$result, "Local Object's function called. Did not return the actual baseURL of the current site");
+		$this->assertEquals("testLocalFunctionPriorityCalled",$result, "Local Object's public function called. Did not return the actual baseURL of the current site");
 	}
 
-	function testCurrentScopeLoopWith() {
+	public function testCurrentScopeLoopWith() {
 		// Data to run the loop tests on - one sequence of three items, each with a subitem
 		$data = new ArrayData(array(
 			'Foo' => new ArrayList(array(
@@ -190,7 +190,7 @@ SS
 		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in current scope works");
 	}
 	
-	function testObjectDotArguments() {
+	public function testObjectDotArguments() {
 		$this->assertEquals(
 			'[out:TestObject.methodWithOneArgument(one)]
 				[out:TestObject.methodWithTwoArguments(one,two)]
@@ -211,7 +211,7 @@ SS
 		);
 	}
 
-	function testEscapedArguments() {
+	public function testEscapedArguments() {
 		$this->assertEquals(
 			'[out:Foo(Arg1,Arg2).Bar.Val].Suffix
 				[out:Foo(Arg1,Arg2).Val]_Suffix
@@ -234,7 +234,7 @@ SS
 		);
 	}
 	
-	function testControlWhitespace() {
+	public function testControlWhitespace() {
 		$this->assertEquals(
 			'before[out:SingleItem.Test]after
 				beforeTestafter',
@@ -279,7 +279,7 @@ after')
 		);
 	}
 
-	function testControls() {
+	public function testControls() {
 		// Single item controls
 		$this->assertEquals(
 			'a[out:Foo.Bar.Item]b
@@ -312,7 +312,7 @@ after')
 
 	}
 
-	function testIfBlocks() {
+	public function testIfBlocks() {
 		// Basic test
 		$this->assertEquals('AC',
 			$this->render('A<% if NotSet %>B$NotSet<% end_if %>C'));
@@ -405,7 +405,7 @@ after')
 			$this->render('A<% if NotSet %><% else %>B<% end_if %>C'));
 	}
 
-	function testBaseTagGeneration() {
+	public function testBaseTagGeneration() {
 		// XHTML wil have a closed base tag
 		$tmpl1 = '<?xml version="1.0" encoding="UTF-8"?>
 			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -443,7 +443,7 @@ after')
 		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}
 
-	function testIncludeWithArguments() {
+	public function testIncludeWithArguments() {
 		$this->assertEquals(
 			$this->render('<% include SSViewerTestIncludeWithArguments %>'),
 			'<p>[out:Arg1]</p><p>[out:Arg2]</p>'
@@ -476,7 +476,7 @@ after')
 	}
 
 	
-	function testRecursiveInclude() {
+	public function testRecursiveInclude() {
 		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
 
 		$data = new ArrayData(array(
@@ -501,7 +501,7 @@ after')
 		$this->assertEquals('A A1 A1 i A1 ii A2 A3', $rationalisedResult);
 	}
 	
-	function assertEqualIgnoringWhitespace($a, $b) {
+	public function assertEqualIgnoringWhitespace($a, $b) {
 		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
 	}
 
@@ -509,7 +509,7 @@ after')
 	 * See {@link ViewableDataTest} for more extensive casting tests,
 	 * this test just ensures that basic casting is correctly applied during template parsing.
 	 */
-	function testCastingHelpers() {
+	public function testCastingHelpers() {
 		$vd = new SSViewerTest_ViewableData();
 		$vd->TextValue = '<b>html</b>';
 		$vd->HTMLValue = '<b>html</b>';
@@ -564,7 +564,7 @@ after')
 		);
 	}
 	
-	function testSSViewerBasicIteratorSupport() {
+	public function testSSViewerBasicIteratorSupport() {
 		$data = new ArrayData(array(
 			'Set' => new ArrayList(array(
 				new SSViewerTest_Object("1"),
@@ -668,7 +668,7 @@ after')
 	/**
 	 * Test $Up works when the scope $Up refers to was entered with a "with" block
 	 */
-	function testUpInWith() {
+	public function testUpInWith() {
 
 		// Data to run the loop tests on - three levels deep
 		$data = new ArrayData(array(
@@ -719,7 +719,7 @@ after')
 	/**
 	 * Test $Up works when the scope $Up refers to was entered with a "loop" block
 	 */
-	function testUpInLoop(){
+	public function testUpInLoop(){
 		
 		// Data to run the loop tests on - one sequence of three items, each with a subitem
 		$data = new ArrayData(array(
@@ -795,7 +795,7 @@ after')
 	/**
 	 * Test that nested loops restore the loop variables correctly when pushing and popping states
 	 */
-	function testNestedLoops(){
+	public function testNestedLoops(){
 		
 		// Data to run the loop tests on - one sequence of three items, one with child elements
 		// (of a different size to the main sequence)
@@ -837,7 +837,7 @@ after')
 	/**
 	 * @covers SSViewer::get_themes()
 	 */
-	function testThemeRetrieval() {
+	public function testThemeRetrieval() {
 		$ds = DIRECTORY_SEPARATOR;
 		$testThemeBaseDir = TEMP_FOLDER . $ds . 'test-themes';
 
@@ -865,7 +865,7 @@ after')
 		Filesystem::removeFolder($testThemeBaseDir);
 	}
 	
-	function testRewriteHashlinks() {
+	public function testRewriteHashlinks() {
 		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
 		SSViewer::setOption('rewriteHashlinks', true);
 		
@@ -901,7 +901,7 @@ after')
 		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
 	}
 	
-	function testRewriteHashlinksInPhpMode() {
+	public function testRewriteHashlinksInPhpMode() {
 		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
 		SSViewer::setOption('rewriteHashlinks', 'php');
 		
@@ -935,7 +935,7 @@ after')
 		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
 	}
 	
-	function testRenderWithSourceFileComments() {
+	public function testRenderWithSourceFileComments() {
 		$origType = Director::get_environment_type();
 		Director::set_environment_type('dev');
 		SSViewer::set_source_file_comments(true);
@@ -970,7 +970,7 @@ after')
 		Director::set_environment_type($origType);
 	}
 
-	function testLoopIteratorIterator() {
+	public function testLoopIteratorIterator() {
 		$list = new PaginatedList(new ArrayList());
 		$viewer = new SSViewer_FromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
 		$result = $viewer->process(new ArrayData(array('List' => $list)));
@@ -984,7 +984,7 @@ after')
 class SSViewerTestFixture extends ViewableData {
 	protected $name;
 
-	function __construct($name = null) {
+	public function __construct($name = null) {
 		$this->name = $name;
 		parent::__construct();
 	}
@@ -995,7 +995,7 @@ class SSViewerTestFixture extends ViewableData {
 		if($arguments) return $childName . '(' . implode(',', $arguments) . ')';
 		else return $childName;
 	}
-	function obj($fieldName, $arguments=null, $forceReturnedObject=true, $cache=false, $cacheName=null) {
+	public function obj($fieldName, $arguments=null, $forceReturnedObject=true, $cache=false, $cacheName=null) {
 		$childName = $this->argedName($fieldName, $arguments);
 
 		// Special field name Loop### to create a list
@@ -1013,7 +1013,7 @@ class SSViewerTestFixture extends ViewableData {
 	}
 	
 
-	function XML_val($fieldName, $arguments = null, $cache = false) {
+	public function XML_val($fieldName, $arguments = null, $cache = false) {
 		if(preg_match('/NotSet/i', $fieldName)) {
 			return '';
 		} else if(preg_match('/Raw/i', $fieldName)) {
@@ -1023,7 +1023,7 @@ class SSViewerTestFixture extends ViewableData {
 		}
 	}
 
-	function hasValue($fieldName, $arguments = null, $cache = true) {
+	public function hasValue($fieldName, $arguments = null, $cache = true) {
 		return (bool)$this->XML_val($fieldName, $arguments);
 	}
 }
@@ -1035,11 +1035,11 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 		'HTMLValue' => 'HTMLText'
 	);
 
-	function methodWithOneArgument($arg1) {
+	public function methodWithOneArgument($arg1) {
 		return "arg1:{$arg1}";
 	}
 	
-	function methodWithTwoArguments($arg1, $arg2) {
+	public function methodWithTwoArguments($arg1, $arg2) {
 		return "arg1:{$arg1},arg2:{$arg2}";
 	}
 }
@@ -1053,20 +1053,20 @@ class SSViewerTest_Object extends DataObject {
 
 	public $number = null;
 
-	function __construct($number = null) {
+	public function __construct($number = null) {
 		parent::__construct();
 		$this->number = $number;
 	}
 
-	function Number() {
+	public function Number() {
 		return $this->number;
 	}
 
-	function absoluteBaseURL() {
+	public function absoluteBaseURL() {
 		return "testLocalFunctionPriorityCalled";
 	}
 
-	function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
+	public function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
 		return $a. $b. $c. $d. $e. $f. $g. $h. $i. $j. $k;
 	}
 }
@@ -1087,19 +1087,19 @@ class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 		);
 	}
 
-	static function get_html() {
+	public static function get_html() {
 		return '<div></div>';
 	}
 
-	static function SSViewerTest_GlobalAutomatic() {
+	public static function SSViewerTest_GlobalAutomatic() {
 		return 'automatic';
 	}
 
-	static function get_reference() {
+	public static function get_reference() {
 		return 'reference';
 	}
 
-	static function get_argmix() {
+	public static function get_argmix() {
 		$args = func_get_args();
 		return 'z' . implode(':', $args) . 'z';
 	}

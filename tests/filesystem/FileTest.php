@@ -50,7 +50,7 @@ class FileTest extends SapphireTest {
 		}
 	}
 
-	function testCreateWithFilenameWithSubfolder() {
+	public function testCreateWithFilenameWithSubfolder() {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
 		// Creating the folder is necessary to avoid having "Filename" overwritten by setName()/setRelativePath(),
 		// because the parent folders don't exist in the database
@@ -78,13 +78,13 @@ class FileTest extends SapphireTest {
 		// $this->assertEquals('assets', $file->Parent()->Parent()->Name);
 	}
 		
-	function testGetExtension() {
+	public function testGetExtension() {
 		$this->assertEquals('', File::get_file_extension('myfile'), 'No extension');
 		$this->assertEquals('txt', File::get_file_extension('myfile.txt'), 'Simple extension');
 		$this->assertEquals('gz', File::get_file_extension('myfile.tar.gz'), 'Double-barrelled extension only returns last bit');
 	}
 	
-	function testValidateExtension() {
+	public function testValidateExtension() {
 		Session::set('loggedInAs', null);
 		
 		$origExts = File::$allowed_extensions;
@@ -111,7 +111,7 @@ class FileTest extends SapphireTest {
 		File::$allowed_extensions = $origExts;
 	}
 	
-	function testSetNameChangesFilesystemOnWrite() {
+	public function testSetNameChangesFilesystemOnWrite() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$oldPath = $file->getFullPath();
 	
@@ -128,7 +128,7 @@ class FileTest extends SapphireTest {
 		$this->assertFileExists($file->getFullPath(), 'New path is created after write()');
 	}
 	
-	function testSetParentIDChangesFilesystemOnWrite() {
+	public function testSetParentIDChangesFilesystemOnWrite() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$subfolder = $this->objFromFixture('Folder', 'subfolder');
 		$oldPath = $file->getFullPath();
@@ -151,7 +151,7 @@ class FileTest extends SapphireTest {
 	/**
 	 * @see http://open.silverstripe.org/ticket/5693
 	 */
-	function testSetNameWithInvalidExtensionDoesntChangeFilesystem() {
+	public function testSetNameWithInvalidExtensionDoesntChangeFilesystem() {
 		$origExts = File::$allowed_extensions;
 		File::$allowed_extensions = array('txt');
 		
@@ -170,13 +170,13 @@ class FileTest extends SapphireTest {
 		File::$allowed_extensions = $origExts;
 	}
 	
-	function testLinkAndRelativeLink() {
+	public function testLinkAndRelativeLink() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(ASSETS_DIR . '/FileTest.txt', $file->RelativeLink());
 		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/FileTest.txt', $file->Link());
 	}
 	
-	function testGetRelativePath() {
+	public function testGetRelativePath() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals('assets/FileTest.txt', $rootfile->getRelativePath(), 'File in assets/ folder');
 		
@@ -187,22 +187,22 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('assets/FileTest-subfolder/FileTestSubfolder2.txt', $subfolderfilesetfromname->getRelativePath(), 'File in subfolder within assets/ folder, with Filename generated through setName()');
 	}
 	
-	function testGetFullPath() {
+	public function testGetFullPath() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(ASSETS_PATH . '/FileTest.txt', $rootfile->getFullPath(), 'File in assets/ folder');
 	}
 	
-	function testGetURL() {
+	public function testGetURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(Director::baseURL() . $rootfile->getFilename(), $rootfile->getURL());
 	}
 	
-	function testGetAbsoluteURL() {
+	public function testGetAbsoluteURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(Director::absoluteBaseURL() . $rootfile->getFilename(), $rootfile->getAbsoluteURL());
 	}
 	
-	function testNameAndTitleGeneration() {
+	public function testNameAndTitleGeneration() {
 		/* If objects are loaded into the system with just a Filename, then Name is generated but Title isn't */
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals('FileTest.txt', $file->Name);
@@ -214,7 +214,7 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('FileTest', $file->Title);
 	}
 
-	function testSizeAndAbsoluteSizeParameters() {
+	public function testSizeAndAbsoluteSizeParameters() {
 		$file = $this->objFromFixture('File', 'asdf');
 		
 		/* AbsoluteSize will give the integer number */
@@ -223,7 +223,7 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('977 KB', $file->Size);
 	}
 	
-	function testFileType() {
+	public function testFileType() {
 		$file = $this->objFromFixture('File', 'gif');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 	
@@ -238,7 +238,7 @@ class FileTest extends SapphireTest {
 	/**
 	 * Test the File::format_size() method
 	 */
-	function testFormatSize() {
+	public function testFormatSize() {
 		$this->assertEquals("1000 bytes", File::format_size(1000));
 		$this->assertEquals("1023 bytes", File::format_size(1023));
 		$this->assertEquals("1 KB", File::format_size(1025));
@@ -253,7 +253,7 @@ class FileTest extends SapphireTest {
 		$this->assertEquals("93132.3 GB", File::format_size(100000000000000));
 	}
 	
-	function testDeleteDatabaseOnly() {
+	public function testDeleteDatabaseOnly() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$fileID = $file->ID;
 		$filePath = $file->getFullPath();
@@ -266,7 +266,7 @@ class FileTest extends SapphireTest {
 		$this->assertFalse(DataObject::get_by_id('File', $fileID));
 	}
 
-	function testRenameFolder() {
+	public function testRenameFolder() {
 		$newTitle = "FileTest-folder-renamed";
 
 		//rename a folder's title
@@ -301,7 +301,7 @@ class FileTest extends SapphireTest {
 	}
 
 	
-	function testGetClassForFileExtension() {
+	public function testGetClassForFileExtension() {
 		$orig = File::$class_for_file_extension;
 		File::$class_for_file_extension['*'] = 'MyGenericFileClass';
 		File::$class_for_file_extension['foo'] = 'MyFooFileClass';
@@ -325,7 +325,7 @@ class FileTest extends SapphireTest {
 		File::$class_for_file_extension = $orig;
 	}
 	
-	function testFolderConstructChild() {
+	public function testFolderConstructChild() {
 		$orig = File::$class_for_file_extension;
 		File::$class_for_file_extension['gif'] = 'FileTest_MyCustomFile';
 		
@@ -337,7 +337,7 @@ class FileTest extends SapphireTest {
 		File::$class_for_file_extension = $orig;
 	}
 
-	function testSetsOwnerOnFirstWrite() {
+	public function testSetsOwnerOnFirstWrite() {
 		Session::set('loggedInAs', null);
 		$member1 = new Member();
 		$member1->write();
@@ -361,7 +361,7 @@ class FileTest extends SapphireTest {
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
@@ -393,7 +393,7 @@ class FileTest extends SapphireTest {
 		}
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 
 		/* Remove the test files that we've created */

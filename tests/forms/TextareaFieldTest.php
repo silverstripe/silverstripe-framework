@@ -5,7 +5,7 @@ class TextareaFieldTest extends SapphireTest {
 	/**
 	 * Quick smoke test to ensure that text is being encoded properly.
 	 */
-	function testTextEncoding() {
+	public function testTextEncoding() {
 		$inputText = "These are some unicodes: äöü";
 		$field = new TextareaField("Test", "Test");
 		$field->setValue($inputText);
@@ -15,7 +15,7 @@ class TextareaFieldTest extends SapphireTest {
 	/**
 	 * Quick smoke test to ensure that text with unicodes is being displayed properly in readonly fields.
 	 */
-	function testReadonlyDisplayUnicodes() {
+	public function testReadonlyDisplayUnicodes() {
 		$inputText = "These are some unicodes: äöü";
 		$field = new TextareaField("Test", "Test");
 		$field->setValue($inputText);
@@ -26,7 +26,7 @@ class TextareaFieldTest extends SapphireTest {
 	/**
 	 * Quick smoke test to ensure that text with special html chars is being displayed properly in readonly fields.
 	 */
-	function testReadonlyDisplaySepcialHTML() {
+	public function testReadonlyDisplaySepcialHTML() {
 		$inputText = "These are some special <html> chars including 'single' & \"double\" quotations";
 		$field = new TextareaField("Test", "Test");
 		$field = $field->performReadonlyTransformation();

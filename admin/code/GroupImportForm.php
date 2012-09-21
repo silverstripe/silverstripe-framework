@@ -13,7 +13,7 @@ class GroupImportForm extends Form {
 	 */
 	protected $group;
 	
-	function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
+	public function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
 		if(!$fields) {
 			$helpHtml = _t(
 				'GroupImportForm.Help1', 
@@ -62,7 +62,7 @@ class GroupImportForm extends Form {
 		$this->addExtraClass('import-form');
 	}
 	
-	function doImport($data, $form) {
+	public function doImport($data, $form) {
 		$loader = new GroupCsvBulkLoader();
 		
 		// load file

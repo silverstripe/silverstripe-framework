@@ -15,19 +15,19 @@
  * class Article extends DataObject implements PermissionProvider {
  * 	static $api_access = true;
  * 	
- * 	public function canView($member = false) {
+ * 	function canView($member = false) {
  * 		return Permission::check('ARTICLE_VIEW');
  * 	}
- * 	public function canEdit($member = false) {
+ * 	function canEdit($member = false) {
  * 		return Permission::check('ARTICLE_EDIT');
  * 	}
- * 	public function canDelete() {
+ * 	function canDelete() {
  * 		return Permission::check('ARTICLE_DELETE');
  * 	}
- * 	public function canCreate() {
+ * 	function canCreate() {
  * 		return Permission::check('ARTICLE_CREATE');
  * 	}
- * 	public function providePermissions() {
+ * 	function providePermissions() {
  * 		return array(
  * 			'ARTICLE_VIEW' => 'Read an article object',
  * 			'ARTICLE_EDIT' => 'Edit an article object',
@@ -43,11 +43,11 @@
  * class Article extends DataObject {
  * 	static $api_access = true;
  * 	
- * 	public function canView($member = false) {
+ * 	function canView($member = false) {
  * 		if(!$member) $member = Member::currentUser();
  *		return $member->inGroup('Subscribers');
  * 	}
- * 	public function canEdit($member = false) {
+ * 	function canEdit($member = false) {
  * 		if(!$member) $member = Member::currentUser();
  *		return $member->inGroup('Editors');
  * 	}
@@ -159,7 +159,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Returns when validation on DataObjects is enabled.
 	 * @return bool
 	 */
-	static function get_validation_enabled() {
+	public static function get_validation_enabled() {
 		return self::$validation_enabled;
 	}
 	
@@ -168,7 +168,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param $enable bool
 	 * @see DataObject::validate()
 	 */
-	static function set_validation_enabled($enable) {
+	public static function set_validation_enabled($enable) {
 		self::$validation_enabled = (bool) $enable;
 	}
 
@@ -252,7 +252,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Returns the field class if the given db field on the class is a composite field.
 	 * Will check all applicable ancestor classes and aggregate results.
 	 */
-	static function is_composite_field($class, $name, $aggregated = true) {
+	public static function is_composite_field($class, $name, $aggregated = true) {
 		if(!isset(DataObject::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
 		
 		if(isset(DataObject::$_cache_composite_fields[$class][$name])) {
@@ -267,7 +267,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Returns a list of all the composite if the given db field on the class is a composite field.
 	 * Will check all applicable ancestor classes and aggregate results.
 	 */
-	static function composite_fields($class, $aggregated = true) {
+	public static function composite_fields($class, $aggregated = true) {
 		if(!isset(DataObject::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
 		
 		$compositeFields = DataObject::$_cache_composite_fields[$class];
@@ -311,7 +311,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.  Singletons
 	 * don't have their defaults set.
 	 */
-	function __construct($record = null, $isSingleton = false, $model = null) {
+	public function __construct($record = null, $isSingleton = false, $model = null) {
 
 		parent::__construct();
 
@@ -379,7 +379,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Set the DataModel
 	 */
-	function setDataModel(DataModel $model) {
+	public function setDataModel(DataModel $model) {
 		$this->model = $model;
 	}
 
@@ -387,7 +387,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Destroy all of this objects dependant objects and local caches.
 	 * You'll need to call this to get the memory of an object that has components or extensions freed.
 	 */
-	function destroy() {
+	public function destroy() {
 		//$this->destroyed = true;
 		gc_collect_cycles();
 		$this->flushCache(false);
@@ -400,7 +400,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param $doWrite Perform a write() operation before returning the object.  If this is true, it will create the duplicate in the database.
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
 	 */
-	function duplicate($doWrite = true) {
+	public function duplicate($doWrite = true) {
 		$className = $this->class;
 		$clone = new $className( $this->toMap(), false, $this->model );
 		$clone->ID = 0;
@@ -461,12 +461,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 	}
 
-	function getObsoleteClassName() {
+	public function getObsoleteClassName() {
 		$className = $this->getField("ClassName");
 		if (!ClassInfo::exists($className)) return $className;
 	}
 
-	function getClassName() {
+	public function getClassName() {
 		$className = $this->getField("ClassName");
 		if (!ClassInfo::exists($className)) return get_class($this);
 		return $className;
@@ -481,7 +481,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $className The new ClassName attribute (a subclass of {@link DataObject})
 	 */
-	function setClassName($className) {
+	public function setClassName($className) {
 		$className = trim($className);
 		if(!$className || !is_subclass_of($className, 'DataObject')) return;
 
@@ -505,7 +505,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return DataObject The new instance of the new class, The exact type will be of the class name provided.
 	 */
-	function newClassInstance($newClassName) {
+	public function newClassInstance($newClassName) {
 		$originalClass = $this->ClassName;
 		$newInstance = new $newClassName(array_merge(
 			$this->record,
@@ -528,7 +528,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Adds methods from the extensions.
 	 * Called by Object::__construct() once per class.
 	 */
-	function defineMethods() {
+	public function defineMethods() {
 		parent::defineMethods();
 
 		// Define the extra db fields - this is only necessary for extensions added in the
@@ -609,7 +609,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return string User friendly singular name of this DataObject
 	 */
-	function singular_name() {
+	public function singular_name() {
 		if(!$name = $this->stat('singular_name')) {
 			$name = ucwords(trim(strtolower(preg_replace('/_?([A-Z])/', ' $1', $this->class))));
 		}
@@ -628,7 +628,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return string User friendly translated singular name of this DataObject
 	 */
-	function i18n_singular_name() {
+	public function i18n_singular_name() {
 		return _t($this->class.'.SINGULARNAME', $this->singular_name());
 	}
 
@@ -639,7 +639,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return string User friendly plural name of this DataObject
 	 */
-	function plural_name() {
+	public function plural_name() {
 		if($name = $this->stat('plural_name')) {
 			return $name;
 		} else {
@@ -661,7 +661,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return string User friendly translated plural name of this DataObject
 	 */
-	function i18n_plural_name()
+	public function i18n_plural_name()
 	{
 		$name = $this->plural_name();
 		return _t($this->class.'.PLURALNAME', $name);
@@ -677,7 +677,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Overload this method to have a more specialized implementation,
 	 * e.g. for an Address record this could be:
 	 * <code>
-	 * public function getTitle() {
+	 * function getTitle() {
 	 *   return "{$this->StreetNumber} {$this->StreetName} {$this->City}";
 	 * }
 	 * </code>
@@ -1359,7 +1359,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			
 		// get filter
 		$combinedFilter = "\"$joinField\" = '$id'";
-		if($filter) $combinedFilter .= " AND {$filter}";
+		if(!empty($filter)) $combinedFilter .= " AND ({$filter})";
 			
 		return singleton($componentClass)->extendedSQL($combinedFilter, $sort, $limit, $join);
 	}
@@ -1756,7 +1756,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * @return array or false
 	 */
-	function database_extensions($class){
+	public function database_extensions($class){
 		$extensions = Config::inst()->get($class, 'database_extensions', Config::UNINHERITED);
 		
 		if($extensions)
@@ -1884,7 +1884,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * klass MyCustomClass extends DataObject {
 	 * 	static $db = array('CustomProperty'=>'Boolean');
 	 *
-	 * 	public function getCMSFields() {
+	 * 	function getCMSFields() {
 	 * 		$fields = parent::getCMSFields();
 	 * 		$fields->addFieldToTab('Root.Content',new CheckboxField('CustomProperty'));
 	 *		return $fields;
@@ -2128,7 +2128,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param int $changeLevel See {@link getChangedFields()}
 	 * @return boolean
 	 */
-	function isChanged($fieldName = null, $changeLevel = 1) {
+	public function isChanged($fieldName = null, $changeLevel = 1) {
 		$changed = $this->getChangedFields(false, $changeLevel);
 		if(!isset($fieldName)) {
 			return !empty($changed);
@@ -2145,7 +2145,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $fieldName Name of the field
 	 * @param mixed $val New field value
 	 */
-	function setField($fieldName, $val) {
+	public function setField($fieldName, $val) {
 		// Situation 1: Passing an DBField
 		if($val instanceof DBField) {
 			$val->Name = $fieldName;
@@ -2329,7 +2329,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return boolean True if the the member is allowed to do the given action
 	 */
-	function can($perm, $member = null) {
+	public function can($perm, $member = null) {
 		if(!isset($member)) {
 			$member = Member::currentUser();
 		}
@@ -2727,7 +2727,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return mixed The new objects in an object of type $containerClass
 	 */
-	function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
+	public function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
 		Deprecation::notice('3.0', 'Use DataList instead.');
 
 		foreach($records as $record) {
@@ -2822,7 +2822,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Flush the get_one global cache and destroy associated objects.
 	 */
-	static function flush_and_destroy_cache() {
+	public static function flush_and_destroy_cache() {
 		if(DataObject::$_cache_get_one) foreach(DataObject::$_cache_get_one as $class => $items) {
 			if(is_array($items)) foreach($items as $item) {
 				if($item) $item->destroy();
@@ -2834,7 +2834,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Reset all global caches associated with DataObject.
 	 */
-	static function reset() {
+	public static function reset() {
 		DataObject::$cache_has_own_table = array();
 		DataObject::$cache_has_own_table_field = array();
 		DataObject::$_cache_get_one = array();
@@ -3257,10 +3257,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Temporarily disable subclass access in data object qeur
 	 */
-	static function disable_subclass_access() {
+	public static function disable_subclass_access() {
 		self::$subclass_access = false;
 	}
-	static function enable_subclass_access() {
+	public static function enable_subclass_access() {
 		self::$subclass_access = true;
 	}
 	
@@ -3506,7 +3506,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param bool $cache
  	 * @return boolean
  	 */
- 	function hasValue($field, $arguments = null, $cache = true) {
+ 	public function hasValue($field, $arguments = null, $cache = true) {
  		$obj = $this->dbObject($field);
  		if($obj) {
  			return $obj->exists();

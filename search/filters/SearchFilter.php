@@ -44,7 +44,7 @@ abstract class SearchFilter extends Object {
 	 *  search the "Name" column when applying this filter to a SiteTree class).
 	 * @param mixed $value
 	 */
-	function __construct($fullName, $value = false) {
+	public function __construct($fullName, $value = false) {
 		$this->fullName = $fullName;
 		// sets $this->name and $this->relation
 		$this->addRelation($fullName);
@@ -134,7 +134,7 @@ abstract class SearchFilter extends Object {
 	 * 
 	 * @return string
 	 */
-	function getDbName() {
+	public function getDbName() {
 		// Special handler for "NULL" relations
 		if($this->name == "NULL") return $this->name;
 		
@@ -155,7 +155,7 @@ abstract class SearchFilter extends Object {
 	 *
 	 * @return string
 	 */
-	function getDbFormattedValue() {
+	public function getDbFormattedValue() {
 		// SRM: This code finds the table where the field named $this->name lives
 		// Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
 		$candidateClass = $this->model;

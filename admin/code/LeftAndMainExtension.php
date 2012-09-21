@@ -7,13 +7,13 @@
  */
 abstract class LeftAndMainExtension extends Extension {
 
-	function init() {
+	public function init() {
 	}
 	
-	function accessedCMS() {
+	public function accessedCMS() {
 	}
 	
-	function augmentNewSiteTreeItem(&$item) {
+	public function augmentNewSiteTreeItem(&$item) {
 	}
 
 }

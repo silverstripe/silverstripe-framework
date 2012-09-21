@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class TokenisedRegularExpressionTest extends SapphireTest {
-	function getTokens() {
+	public function getTokens() {
 		return token_get_all(<<<PHP
 <?php
 
@@ -52,7 +52,7 @@ PHP
 );
 	}
 	
-	function getNamespaceTokens() {
+	public function getNamespaceTokens() {
 		return token_get_all(<<<PHP
 <?php
 
@@ -91,7 +91,7 @@ PHP
 );
 	}
 	
-	function testClassDefParser() {
+	public function testClassDefParser() {
 		$parser = SS_ClassManifest::get_class_parser();
 		
 		$tokens = $this->getTokens();
@@ -121,7 +121,7 @@ PHP
 		$this->assertContains('InterfaceB', $classes['ClassF']['interfaces']);
 	}
 	
-	function testNamesapcedClassDefParser() {
+	public function testNamesapcedClassDefParser() {
 		$parser = SS_ClassManifest::get_namespaced_class_parser();
 		
 		$tokens = $this->getNamespaceTokens();
@@ -148,7 +148,7 @@ PHP
 		$this->assertEquals(array('\\', 'InterfaceF'), $classes['ClassF']['interfaces']);
 	}
 	
-	function testInterfaceDefParser() {
+	public function testInterfaceDefParser() {
 		$parser = SS_ClassManifest::get_interface_parser();
 		
 		$tokens = $this->getTokens();
@@ -163,7 +163,7 @@ PHP
 		$this->assertArrayHasKey('InterfaceD', $interfaces);
 	}
 	
-	function testNamespaceDefParser() {
+	public function testNamespaceDefParser() {
 		$parser = SS_ClassManifest::get_namespace_parser();
 		
 		$namespacedTokens = $this->getNamespaceTokens();

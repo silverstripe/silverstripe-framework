@@ -38,7 +38,7 @@ class LoginAttempt extends DataObject {
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
 	 * 
 	 */
-	function fieldLabels($includerelations = true) {
+	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['Email'] = _t('LoginAttempt.Email', 'Email Address');
 		$labels['Status'] = _t('LoginAttempt.Status', 'Status');

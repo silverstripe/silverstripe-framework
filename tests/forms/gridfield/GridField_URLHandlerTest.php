@@ -4,24 +4,24 @@
  * Test the API for creating GridField_URLHandler compeonnts
  */
 class GridField_URLHandlerTest extends FunctionalTest {
-	function testFormSubmission() {
+	public function testFormSubmission() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");
 		$formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar') );
 		$this->assertEquals("Submitted foo bar to component", $formResult->getBody());
 	}
 
-	function testNestedRequestHandlerFormSubmission() {
+	public function testNestedRequestHandlerFormSubmission() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/item/3/showform");
 		$formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar') );
 		$this->assertEquals("Submitted foo bar to item #3", $formResult->getBody());
 	}
 
-	function testURL() {
+	public function testURL() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/testpage");
 		$this->assertEquals("Test page for component", $result->getBody());
 	}
 
-	function testNestedRequestHandlerURL() {
+	public function testNestedRequestHandlerURL() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/item/5/testpage");
 		$this->assertEquals("Test page for item #5", $result->getBody());
 	}
@@ -30,10 +30,10 @@ class GridField_URLHandlerTest extends FunctionalTest {
 }
 
 class GridField_URLHandlerTest_Controller extends Controller implements TestOnly {
-	function Link() {
+	public function Link() {
 		return get_class($this) ."/";
 	}
-	function Form() {
+	public function Form() {
 		$gridConfig = GridFieldConfig::create();
 		$gridConfig->addComponent(new GridField_URLHandlerTest_Component());
 		
@@ -53,7 +53,7 @@ class GridField_URLHandlerTest_Controller extends Controller implements TestOnly
 class GridField_URLHandlerTest_Component extends RequestHandler implements GridField_URLHandler {
 	protected $gridField;
 	
-	function getURLHandlers($gridField) {
+	public function getURLHandlers($gridField) {
 		return array(
 			'showform' => 'showform',
 			'testpage' => 'testpage',
@@ -62,22 +62,22 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 		);
 	}
 	
-	function handleItem($gridField, $request) {
+	public function handleItem($gridField, $request) {
 		$id = $request->param("ID");
 		return new GridField_URLHandlerTest_Component_ItemRequest(
 				$gridField, $id,
 				Controller::join_links($gridField->Link(), 'item/' . $id));
 	}
 	
-	function Link() {
+	public function Link() {
 		return $this->gridField->Link();
 	}
 	
-	function showform($gridField, $request) {
+	public function showform($gridField, $request) {
 		return "<head>" .  SSViewer::get_base_tag("") . "</head>" . $this->Form($gridField, $request)->forTemplate();
 	}
 	
-	function Form($gridField, $request) {
+	public function Form($gridField, $request) {
 		$this->gridField = $gridField;
 		return new Form($this, 'Form', new FieldList(
 			new TextField("Test")
@@ -86,11 +86,11 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 		));
 	}
 
-	function doAction($data, $form) {
+	public function doAction($data, $form) {
 		return "Submitted " . $data['Test'] . " to component";
 	}
 
-	function testpage($gridField, $request) {
+	public function testpage($gridField, $request) {
 		return "Test page for component";
 	}
 }
@@ -100,22 +100,22 @@ class GridField_URLHandlerTest_Component_ItemRequest extends RequestHandler {
 	protected $link;
 	protected $id;
 	
-	function __construct($gridField, $id, $link) {
+	public function __construct($gridField, $id, $link) {
 		$this->gridField = $gridField;
 		$this->id = $id;
 		$this->link = $link;
 		parent::__construct();
 	}
 	
-	function Link() {
+	public function Link() {
 		return $this->link;
 	}
 	
-	function showform() {
+	public function showform() {
 		return "<head>" .  SSViewer::get_base_tag("") . "</head>" . $this->Form()->forTemplate();
 	}
 
-	function Form() {
+	public function Form() {
 		return new Form($this, 'Form', new FieldList(
 			new TextField("Test")
 		), new FieldList(
@@ -123,11 +123,11 @@ class GridField_URLHandlerTest_Component_ItemRequest extends RequestHandler {
 		));
 	}
 	
-	function doAction($data, $form) {
+	public function doAction($data, $form) {
 		return "Submitted " . $data['Test'] . " to item #" . $this->id;
 	}
 
-	function testpage() {
+	public function testpage() {
 		return "Test page for item #" . $this->id;
 	}
 }

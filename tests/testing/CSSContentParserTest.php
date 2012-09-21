@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class CSSContentParserTest extends SapphireTest {
-	function testSelector2xpath() {
+	public function testSelector2xpath() {
 		$parser = new CSSContentParser("<html><head><title>test</title></head><body><p>test</p></body></html>");
 
 		$this->assertEquals("//div[@id='UserProfile']//label", $parser->selector2xpath("div#UserProfile label"));
@@ -14,7 +14,7 @@ class CSSContentParserTest extends SapphireTest {
 			$parser->selector2xpath("#UserProfile div.test .other div#Item"));
 	}
 
-	function testGetBySelector() {
+	public function testGetBySelector() {
 		$parser = new CSSContentParser(<<<HTML
 <html>
 	<head>

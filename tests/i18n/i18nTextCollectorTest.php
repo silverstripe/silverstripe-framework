@@ -20,7 +20,7 @@ class i18nTextCollectorTest extends SapphireTest {
 	
 	protected $manifest;
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
@@ -38,12 +38,12 @@ class i18nTextCollectorTest extends SapphireTest {
 		SS_TemplateLoader::instance()->pushManifest($manifest);
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
 		parent::tearDown();
 	}
 
-	function testConcatenationInEntityValues() {
+	public function testConcatenationInEntityValues() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
@@ -70,7 +70,7 @@ PHP;
 		);
 	}
 
-	function testCollectFromNewTemplateSyntaxUsingParserSubclass() {
+	public function testCollectFromNewTemplateSyntaxUsingParserSubclass() {
 			$c = new i18nTextCollector();
 
 			$html = <<<SS
@@ -98,7 +98,7 @@ SS;
 		);
 	}
 
-	function testCollectFromTemplateSimple() {
+	public function testCollectFromTemplateSimple() {
 		$c = new i18nTextCollector();
 
 		$html = <<<SS
@@ -132,7 +132,7 @@ SS;
 		);
 	}
 
-	function testCollectFromTemplateAdvanced() {
+	public function testCollectFromTemplateAdvanced() {
 		$c = new i18nTextCollector();
 
 		$html = <<<SS
@@ -179,7 +179,7 @@ SS;
 	}
 
 
-	function testCollectFromCodeSimple() {
+	public function testCollectFromCodeSimple() {
 		$c = new i18nTextCollector();
 			
 		$php = <<<PHP
@@ -203,7 +203,7 @@ PHP;
 		);
 	}
 	
-	function testCollectFromCodeAdvanced() {
+	public function testCollectFromCodeAdvanced() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
@@ -277,7 +277,7 @@ PHP;
 	}
 	
 	
-	function testNewlinesInEntityValues() {
+	public function testNewlinesInEntityValues() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
@@ -314,7 +314,7 @@ PHP;
 	/**
 	 * Test extracting entities from the new _t method signature
 	 */
-	function testCollectFromCodeNewSignature() {
+	public function testCollectFromCodeNewSignature() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
@@ -343,7 +343,7 @@ PHP;
 	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
 	 * into single-quoted strings, so needs to be escaped already.
 	 */
-	function testPhpWriterLangArrayCodeForEntity() {
+	public function testPhpWriterLangArrayCodeForEntity() {
 		$c = new i18nTextCollector_Writer_Php();
 		
 		$this->assertEquals(
@@ -390,7 +390,7 @@ PHP;
 	/**
 	 * @todo Should be in a separate test suite, but don't want to duplicate setup logic
 	 */
-	function testYamlWriter() {
+	public function testYamlWriter() {
 		$writer = new i18nTextCollector_Writer_RailsYaml();
 		$entities = array(
 			'Level1.Level2.EntityName' => array('Text', 'Context'),
@@ -407,7 +407,7 @@ YAML;
 		$this->assertEquals($yaml, $writer->getYaml($entities, 'de'));
 	}
 	
-	function testCollectFromIncludedTemplates() {
+	public function testCollectFromIncludedTemplates() {
 		$c = new i18nTextCollector();
 		
 		$templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
@@ -458,7 +458,7 @@ YAML;
 		);
 	}
 	
-	function testCollectFromThemesTemplates() {
+	public function testCollectFromThemesTemplates() {
 		$c = new i18nTextCollector();
 		
 		$theme = SSViewer::current_theme();
@@ -517,7 +517,7 @@ YAML;
 		SSViewer::set_theme($theme);
 	}
 	
-	function testCollectFromFilesystemAndWriteMasterTables() {
+	public function testCollectFromFilesystemAndWriteMasterTables() {
 		$defaultlocal = i18n::default_locale();
 		$local = i18n::get_locale();
 		i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
@@ -643,7 +643,7 @@ YAML;
 +		i18n::set_default_locale($defaultlocal);
 	}
 	
-	function testCollectFromEntityProvidersInCustomObject() {
+	public function testCollectFromEntityProvidersInCustomObject() {
 		$c = new i18nTextCollector();
 
 		$filePath = $this->getCurrentAbsolutePath() . '/i18nTextCollectorTestMyObject.php';

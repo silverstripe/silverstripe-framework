@@ -2,73 +2,163 @@
 
 ## Introduction
 
-Generating RSS/Atom-feeds is just a matter of rendering a `[api:DataObject]` and the Page Comment Interface. 
-Handled through the `[api:RSSFeed]` class.
+Generating RSS/Atom-feeds is a matter of rendering a `[api:SS_List]` through 
+the `[api:RSSFeed]` class.
 
-`[api:RSSFeed]` doesn't limit you to generating "article-based" feeds, it is just as easy to create a feed of your current
-staff-members. The only logical limitation here is that every item in the RSS-feed should be accessible through a URL on
-your website, so its advisable to just create feeds from subclasses of `[api:SiteTree]`.
+The `[api:RSSFeed]` class doesn't limit you to generating article based feeds, 
+it is just as easy to create a feed of your current staff members, comments or 
+any other custom `[api:DataObject]` subclasses you have defined. The only 
+logical limitation here is that every item in the RSS-feed should be accessible 
+through a URL on your website, so its advisable to just create feeds from sub 
+classes of `[api:SiteTree]`. 
+
+If you wish to generate an RSS feed for `[api:DataObject]` instances, ensure they 
+define an AbsoluteLink() method.
 
 ## Usage
 
-### Showing latest Blog posts
+	:::php
+	RSSFeed::linkToFeed($link, $title)
 
-*  The first part will add an appropriate link tag for autodetecting RSS feeds
-*  The second part sets up /this-page/rss to return the RSS feed.  This one returns the children of the current page.
+This line should go in your `[api:Controller]` subclass in the action you want 
+to include the HTML link. 
 
 	:::php
+	$feed = new RSSFeed(
+		$list, 
+		$link, 
+		$title, 
+		$description, 
+		$titleField, 
+		$descriptionField, 
+		$authorField
+	);
+
+Creates a new `[api:RSSFeed]` instance to be returned. The arguments notify 
+SilverStripe what values to include in the feed.
+
+## Examples
+
+### Showing latest blog posts
+
+	:::php
+	class Page_Controller extends ContentController {
 		public function init() {
-			RSSFeed::linkToFeed($this->Link() . "rss", "RSS feed of this blog");
+			// linkToFeed will add an appropriate HTML link tag to the website 
+			// <head> tag to notify web browsers that an RSS feed is available 
+			// for this page. You can include as many feeds on the page as you 
+			// wish as long as each as a different link. For example: 
+			// ('blog/rss', 'staff/rss').
+			// 
+			// In this example $this->Link("rss") refers to the *rss* function
+			// we define below.
+			RSSFeed::linkToFeed($this->Link("rss"), "RSS feed of this blog");
 			parent::init();
 		}
-		
 		public function rss() {
-			$rss = new RSSFeed($this->Children(), $this->Link(), "My feed", "This is an example feed.", "Title", "Content", "Author");
-			$rss->outputToBrowser();
+			// Creates a new RSS Feed list
+			$rss = new RSSFeed(
+				$list = $this->getBlogPosts(), // an SS_List containing your feed items
+				$link = $this->Link("rss"), // a HTTP link to this feed
+				$title = "My feed", // title for this feed, displayed in RSS readers
+				$description = "This is an example feed." // description
+			);
+			// Outputs the RSS feed to the user.
+			return $rss->outputToBrowser();
 		}
+		public function getBlogPosts() {
+			return BlogPage::get()->limit(10);
+		}
+	}
 
+### Showing the 10 most recently updated pages
 
-### Example of showing the 10 most recently updated pages
-
-
-You can use `[api:RSSFeed]` to easily create a feed showing your latest Page updates. Just change mysite/code/Page.php to
-something like this:
+You can use `[api:RSSFeed]` to easily create a feed showing your latest Page 
+updates. Update mysite/code/Page.php to something like this:
 
 	:::php
 	<?php
-	class Page extends SiteTree {
-		static $db = array(
-		);
-		static $has_one = array(
-	   );
-	}
-	
+	class Page extends SiteTree {}	
 	class Page_Controller extends ContentController {
 		
 		public function init() {
-			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");
+			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");	
 			parent::init();
 		}
 		
 		public function rss() {
-			$rss = new RSSFeed($this->LatestUpdates(), $this->Link(), "10 Most Recently Updated Pages", "Shows a list of the 10 most recently updated pages.", "Title", "Content", "Author");
-			$rss->outputToBrowser();
+			$rss = new RSSFeed($this->LatestUpdates(), $this->Link(), "10 Most Recently Updated Pages", "Shows a list of the 10 most recently updated pages.");
+			return $rss->outputToBrowser();
 		}
-	
+		
 		public function LatestUpdates() {
-			// 10 is the number of pages
 			return Page::get()->sort("LastEdited", "DESC")->limit(10);
 		} 
 	}
-	
-	?>
 
-## Viewing Comment RSS Feeds
+### Rendering DataObjects in a RSSFeed
 
-You can view RSS feeds for comments for a certain page or for all comments on your site by visiting
-http://www.yoursite.com/PageComment/rss . That produces a RSS Feed of the most recent comments to all of your site. You
-can also do http://www.yoursite.com/PageComment/rss?pageid=46 where pageid is the id of the page you want to follow
+DataObjects can be rendered in the feed as well, however, since they aren't explicitly 
+`[api:SiteTree]` subclasses we need to include a function `AbsoluteLink` to allow the
+RSS feed to link through to the item. 
 
+If the items are all displayed on a single page you may simply hard code the link to
+point to a particular page.
+
+Take an example, we want to create an RSS feed of all the Students, a DataObject we 
+defined in the [fifth tutorial](/tutorials/5-dataobject-relationship-management).
+
+	:::php
+	<?php 
+	class Student extends DataObject {
+		public function AbsoluteLink() {
+			// see tutorial 5, students are assigned a project, so the 'link'
+			// to view the student is based on their projects link.
+			return $this->Project()->AbsoluteLink();
+		}
+	}
+
+Then update the Page_Controller class in mysite/code/Page.php to include an RSSFeed
+for all the students as we've seen before.
+
+	:::php
+	class Page_Controller extends ContentController {
+		public function init() {
+			RSSFeed::linkToFeed($this->Link("students"), "Students feed");
+			parent::init();
+		}		
+		public function students() {
+			$rss = new RSSFeed(
+				$list = $this->getStudents(),
+				$link = $this->Link("students"), 
+				$title = "Students feed" 
+			);
+			return $rss->outputToBrowser();
+		}
+		public function getStudents() {
+			return Student::get()->sort("Created", "DESC")->limit(10);
+		}
+	}
+
+### Customizing the RSS Feed template
+
+The default template used is framework/templates/RSSFeed.ss and includes 
+displaying titles and links to the content. If you have a particular need
+for customizing the XML produced (say for additional meta data) use `setTemplate`.
+
+Taking that last example, we would rewrite the students function to include a
+unique template (write your own XML in themes/yourtheme/templates/Students.ss)
+
+	:::php
+	public function students() {
+		$rss = new RSSFeed(
+			$list = $this->getStudents(),
+			$link = $this->Link("students"), 
+			$title = "Students feed" 
+		);
+		$rss->setTemplate('Students.ss');
+		return $rss->outputToBrowser();
+	}
 
 ## External Sources
 
@@ -81,4 +171,5 @@ accessing feeds from external sources.
 *  [blog module](http://silverstripe.org/blog-module)
 
 ## API Documentation
-`[api:RSSFeed]`
+
+* `[api:RSSFeed]`

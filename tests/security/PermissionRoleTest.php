@@ -6,7 +6,7 @@
 class PermissionRoleTest extends FunctionalTest {
 	static $fixture_file = 'PermissionRoleTest.yml';
 	
-	function testDelete() {
+	public function testDelete() {
 		$role = $this->objFromFixture('PermissionRole', 'role');
 		
 		$role->delete();

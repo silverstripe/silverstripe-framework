@@ -17,7 +17,7 @@ class ImageFormAction extends FormAction {
 	 * @param hoverImage The image to display on hover
 	 * @param form The parent form, auto-set when the field is placed inside a form 
 	 */
-	function __construct($action, $title = "", $image = "", $hoverImage = null, $className = null, $form = null) {
+	public function __construct($action, $title = "", $image = "", $hoverImage = null, $className = null, $form = null) {
 		Deprecation::notice('3.0', "Use FormAction with setAttribute('src', 'myimage.png') and custom JavaScript to achieve hover effect", Deprecation::SCOPE_CLASS);
 
 		$this->image = $image;
@@ -26,7 +26,7 @@ class ImageFormAction extends FormAction {
 		parent::__construct($action, $title, $form);
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ImageFormAction.js');
 		

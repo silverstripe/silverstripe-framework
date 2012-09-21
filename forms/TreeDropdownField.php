@@ -196,7 +196,7 @@ class TreeDropdownField extends FormField {
 		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
 
-	function extraClass() {
+	public function extraClass() {
 		return implode(' ', array(parent::extraClass(), ($this->showSearch ? "searchable" : null)));
 	}
 	
@@ -268,13 +268,13 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * Marking function for the tree, which combines different filters sensibly. If a filter function has been set,
+	 * Marking public function for the tree, which combines different filters sensibly. If a filter function has been set,
 	 * that will be called. If the source is a folder, automatically filter folder. And if search text is set, filter on that
 	 * too. Return true if all applicable conditions are true, false otherwise.
 	 * @param $node
 	 * @return unknown_type
 	 */
-	function filterMarking($node) {
+	public function filterMarking($node) {
 		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
 		if ($this->sourceObject == "Folder" && $node->ClassName != 'Folder') return false;
 		if ($this->search != "") {
@@ -332,7 +332,7 @@ class TreeDropdownField extends FormField {
 	/**
 	 * Changes this field to the readonly field.
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		return new TreeDropdownField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
 	}
 }
@@ -344,7 +344,7 @@ class TreeDropdownField extends FormField {
 class TreeDropdownField_Readonly extends TreeDropdownField {
 	protected $readonly = true;
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$fieldName = $this->labelField;
 		if($this->value) {
 			$keyObj = $this->objectForKey($this->value);

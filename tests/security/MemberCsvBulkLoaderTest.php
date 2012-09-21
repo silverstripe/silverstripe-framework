@@ -6,7 +6,7 @@
 class MemberCsvBulkLoaderTest extends SapphireTest {
 	static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
 	
-	function testNewImport() {
+	public function testNewImport() {
 		$loader = new MemberCsvBulkLoader();
 		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest.csv');
 		$created = $results->Created()->toArray();
@@ -15,7 +15,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($created[1]->Email, 'author2@test.com');
 	}
 	
-	function testOverwriteExistingImport() {
+	public function testOverwriteExistingImport() {
 		$author1 = new Member();
 		$author1->FirstName = 'author1_first_old';
 		$author1->Email = 'author1@test.com';
@@ -32,7 +32,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($updated[0]->FirstName, 'author1_first');
 	}
 	
-	function testAddToPredefinedGroups() {
+	public function testAddToPredefinedGroups() {
 		$existinggroup = $this->objFromFixture('Group', 'existinggroup');
 		
 		$loader = new MemberCsvBulkLoader();
@@ -45,7 +45,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($created[1]->Groups()->column('ID'), array($existinggroup->ID));
 	}
 	
-	function testAddToCsvColumnGroupsByCode() {
+	public function testAddToCsvColumnGroupsByCode() {
 		$existinggroup = $this->objFromFixture('Group', 'existinggroup');
 		
 		$loader = new MemberCsvBulkLoader();
@@ -59,7 +59,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($created[1]->Groups()->column('ID'), array($existinggroup->ID, $newgroup->ID));
 	}
 	
-	function testCleartextPasswordsAreHashedWithDefaultAlgo() {
+	public function testCleartextPasswordsAreHashedWithDefaultAlgo() {
 		$loader = new MemberCsvBulkLoader();
 		
 		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest_cleartextpws.csv');

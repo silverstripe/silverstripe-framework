@@ -9,7 +9,7 @@ class DirectorTest extends SapphireTest {
 
 	protected static $originalRequestURI;
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 
 		// Hold the original request URI once so it doesn't get overwritten
@@ -26,7 +26,7 @@ class DirectorTest extends SapphireTest {
 		));
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		// TODO Remove director rule, currently API doesnt allow this
 		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
@@ -184,7 +184,7 @@ class DirectorTest extends SapphireTest {
 		}
 	}
 	
-	function testURLParam() {
+	public function testURLParam() {
 		// 2.4 only
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
@@ -198,7 +198,7 @@ class DirectorTest extends SapphireTest {
 		Deprecation::restore_settings($originalDeprecation);
 	}
 	
-	function testURLParams() {
+	public function testURLParams() {
 		// 2.4 only
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
@@ -222,7 +222,7 @@ class DirectorTest extends SapphireTest {
 	 * Tests that additional parameters specified in the routing table are 
 	 * saved in the request 
 	 */
-	function testRouteParams() {
+	public function testRouteParams() {
 		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
 		
 		$this->assertEquals(
@@ -237,7 +237,7 @@ class DirectorTest extends SapphireTest {
 		);
 	}
 
-	function testForceSSLProtectsEntireSite() {
+	public function testForceSSLProtectsEntireSite() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
 		$output = Director::forceSSL();
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
@@ -247,19 +247,19 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
-	function testForceSSLOnTopLevelPagePattern() {
+	public function testForceSSLOnTopLevelPagePattern() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
 		$output = Director::forceSSL(array('/^admin/'));
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
-	function testForceSSLOnSubPagesPattern() {
+	public function testForceSSLOnSubPagesPattern() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'Security/login';
 		$output = Director::forceSSL(array('/^Security/'));
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
-	function testForceSSLWithPatternDoesNotMatchOtherPages() {
+	public function testForceSSLWithPatternDoesNotMatchOtherPages() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'normal-page';
 		$output = Director::forceSSL(array('/^admin/'));
 		$this->assertFalse($output);

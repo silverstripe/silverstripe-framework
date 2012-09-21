@@ -9,13 +9,13 @@
  * @subpackage testing
  */
 class SapphireTestSuite extends PHPUnit_Framework_TestSuite {
-	function setUp() {
+	public function setUp() {
 		foreach($this->groups as $group) {
 			if($group[0] instanceof SapphireTest) $group[0]->setUpOnce();
 		}
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		foreach($this->groups as $group) {
 			if($group[0] instanceof SapphireTest) $group[0]->tearDownOnce();
 		}

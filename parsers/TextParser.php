@@ -33,14 +33,14 @@ abstract class TextParser extends Object {
 	 * 
 	 * @param string $content The contents of the dbfield
 	 */
-	function __construct($content = "") {
+	public function __construct($content = "") {
 		$this->content = $content;
 	}
 	
 	/**
 	 * Convenience method, shouldn't really be used, but it's here if you want it
 	 */
-	function setContent($content = "") {
+	public function setContent($content = "") {
 		$this->content = $content;
 	}
 	
@@ -48,5 +48,5 @@ abstract class TextParser extends Object {
 	 * Define your own parse method to parse $this->content appropriately.
 	 * See the class doc-block for more implementation details.
 	 */
-	abstract function parse();
+	abstract public function parse();
 }

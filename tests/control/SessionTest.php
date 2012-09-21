@@ -9,20 +9,20 @@
 
 class SessionTest extends SapphireTest {
 	
-	function testGetSetBasics() {
+	public function testGetSetBasics() {
 		Session::set('Test', 'Test');
 		
 		$this->assertEquals(Session::get('Test'), 'Test');
 	}
 	
-	function testClearElement() {
+	public function testClearElement() {
 		Session::set('Test', 'Test');
 		Session::clear('Test');
 		
 		$this->assertEquals(Session::get('Test'), '');
 	}
 	
-	function testClearAllElements() {
+	public function testClearAllElements() {
 		Session::set('Test', 'Test');
 		Session::set('Test-1', 'Test-1');
 		
@@ -34,7 +34,7 @@ class SessionTest extends SapphireTest {
 		$this->assertEquals(Session::get('Test-1'), '');
 	}
 	
-	function testGetAllElements() {
+	public function testGetAllElements() {
 		Session::clear_all(); // Remove all session that might've been set by the test harness
 		
 		Session::set('Test', 'Test');
@@ -45,7 +45,7 @@ class SessionTest extends SapphireTest {
 		$this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
 	}
 
-	function testSettingExistingDoesntClear() {
+	public function testSettingExistingDoesntClear() {
 		$s = new Session(array('something' => array('does' => 'exist')));
 
 		$s->inst_set('something.does', 'exist');
@@ -55,7 +55,7 @@ class SessionTest extends SapphireTest {
 	/**
 	 * Check that changedData isn't populated with junk when clearing non-existent entries.
 	 */
-	function testClearElementThatDoesntExist() {
+	public function testClearElementThatDoesntExist() {
 		$s = new Session(array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.doesnt.exist');
@@ -69,14 +69,14 @@ class SessionTest extends SapphireTest {
 	/**
 	 * Check that changedData is populated with clearing data.
 	 */
-	function testClearElementThatDoesExist() {
+	public function testClearElementThatDoesExist() {
 		$s = new Session(array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.does');
 		$this->assertEquals(array('something' => array('does' => null)), $s->inst_changedData());
 	}
 
-	function testNonStandardPath(){
+	public function testNonStandardPath(){
 		Session::set_session_store_path(realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
 		Session::start();
 

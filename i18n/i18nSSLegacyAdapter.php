@@ -19,7 +19,7 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 		parent::__construct($options);
 	}
 	
-	protected function _loadTranslationData($data, $locale, array $options = array()) {   
+	protected function _loadTranslationData($data, $locale, array $options = array()) {
 		$options = array_merge($this->_options, $options);
 
 		if ($options['clear']  ||  !isset($this->_translate[$locale])) {
@@ -59,7 +59,7 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 		return "i18nSSLegacy";
 	}
 	
-	function getFilenameForLocale($locale) {
+	public function getFilenameForLocale($locale) {
 		return "{$locale}.php";
 	}
 	

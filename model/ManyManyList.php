@@ -31,7 +31,7 @@ class ManyManyList extends RelationList {
 	 * 
 	 * @example new ManyManyList('Group','Group_Members', 'GroupID', 'MemberID');
 	 */
-	function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
+	public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
 		parent::__construct($dataClass);
 		$this->joinTable = $joinTable;
 		$this->localKey = $localKey;
@@ -66,7 +66,7 @@ class ManyManyList extends RelationList {
 	 * Does so by adding an entry to the joinTable.
 	 * @param $extraFields A map of additional columns to insert into the joinTable
 	 */
-	function add($item, $extraFields = null) {
+	public function add($item, $extraFields = null) {
 		if(is_numeric($item)) $itemID = $item;
 		else if($item instanceof $this->dataClass) $itemID = $item->ID;
 		else throw new InvalidArgumentException("ManyManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
@@ -100,7 +100,7 @@ class ManyManyList extends RelationList {
 	 * Note that for a ManyManyList, the item is never actually deleted, only the join table is affected
 	 * @param $itemID The ID of the item to remove.
 	 */
-	function remove($item) {
+	public function remove($item) {
         if(!($item instanceof $this->dataClass)) throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
         
         return $this->removeByID($item->ID);
@@ -111,7 +111,7 @@ class ManyManyList extends RelationList {
 	 * Note that for a ManyManyList, the item is never actually deleted, only the join table is affected
 	 * @param $itemID The item it
 	 */
-	function removeByID($itemID) {
+	public function removeByID($itemID) {
 	    if(!is_numeric($itemID)) throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
 
 		$query = new SQLQuery("*", array("\"$this->joinTable\""));
@@ -130,7 +130,7 @@ class ManyManyList extends RelationList {
     /**
      * Remove all items from this many-many join.  To remove a subset of items, filter it first.
      */
-    function removeAll() {
+    public function removeAll() {
 		$query = $this->dataQuery()->query();
 		$query->setDelete(true);
 		$query->setSelect(array('*'));
@@ -148,7 +148,7 @@ class ManyManyList extends RelationList {
 	 * @param int $childID The ID of the child for the relationship
 	 * @return array Map of fieldName => fieldValue
 	 */
-	function getExtraData($componentName, $childID) {
+	public function getExtraData($componentName, $childID) {
 		$ownerObj = $this->ownerObj;
 		$parentField = $this->ownerClass . 'ID';
 		$childField = ($this->childClass == $this->ownerClass) ? 'ChildID' : ($this->childClass . 'ID');

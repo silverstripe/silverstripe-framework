@@ -141,7 +141,7 @@ class Config {
 	 * Empty construction, otherwise calling singleton('Config') (not the right way to get the current active config
 	 * instance, but people might) gives an error
 	 */
-	function __construct() {
+	public function __construct() {
 	}
 
 	/** @var [array] - Array of arrays. Each member is an nested array keyed as $class => $name => $value,
@@ -203,7 +203,7 @@ class Config {
 	 * @param $dest array - The existing high priority associative array
 	 * @param $src array - The low priority associative array to merge in
 	 */
-	static function merge_array_low_into_high(&$dest, $src) {
+	public static function merge_array_low_into_high(&$dest, $src) {
 		foreach ($src as $k => $v) {
 			if (!$v) {
 				continue;
@@ -238,13 +238,13 @@ class Config {
 	 * @param $dest array - The existing low priority associative array
 	 * @param $src array - The high priority array to merge in
 	 */
-	static function merge_array_high_into_low(&$dest, $src) {
+	public static function merge_array_high_into_low(&$dest, $src) {
 		$res = $src;
 		self::merge_array_low_into_high($res, $dest);
 		$dest = $res;
 	}
 
-	static function merge_high_into_low(&$result, $value) {
+	public static function merge_high_into_low(&$result, $value) {
 		if (!$value) return;
 		$newType = self::get_value_type($value);
 
@@ -260,7 +260,7 @@ class Config {
 		}
 	}
 
-	static function merge_low_into_high(&$result, $value, $suppress) {
+	public static function merge_low_into_high(&$result, $value, $suppress) {
 		$newType = self::get_value_type($value);
 
 		if ($suppress) {
@@ -285,7 +285,7 @@ class Config {
 		}
 	}
 
-	static function check_value_contained_in_suppress_array($v, $suppresses) {
+	public static function check_value_contained_in_suppress_array($v, $suppresses) {
 		foreach ($suppresses as $suppress) {
 			list($sk, $sv) = $suppress;
 			if ($sv === self::anything() || $v == $sv) return true;
@@ -337,7 +337,7 @@ class Config {
 	 * @param null $suppress array - Internal use when called by child classes. Array of mask pairs to filter value by
 	 * @return array|scalar - The value of the config item, or null if no value set. Could be an associative array, sequential array or scalar depending on value (see class docblock)
 	 */
-	function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
+	public function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
 		// If result is already not something to merge into, just return it
 		if ($result !== null && !is_array($result)) return $result;
 
@@ -412,7 +412,7 @@ class Config {
 	 *
 	 * You will get an error if you try and override array values with non-array values or vice-versa
 	 */
-	function update($class, $name, $val) {
+	public function update($class, $name, $val) {
 		if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
 
 		if (!isset($this->overrides[0][$class][$name])) $this->overrides[0][$class][$name] = $val;
@@ -448,7 +448,7 @@ class Config {
 	 *
 	 * Matching is always by "==", not by "==="
 	 */
-	function remove($class, $name) {
+	public function remove($class, $name) {
 		$argc = func_num_args();
 		$key = $argc > 2 ? func_get_arg(2) : self::anything();
 		$value = $argc > 3 ? func_get_arg(3) : self::anything();
@@ -477,23 +477,23 @@ class Config {
 class Config_ForClass {
 	protected $class;
 
-	function __construct($class) {
+	public function __construct($class) {
 		$this->class = $class;
 	}
 
-	function __get($name) {
+	public function __get($name) {
 		return Config::inst()->get($this->class, $name);
 	}
 
-	function __set($name, $val) {
+	public function __set($name, $val) {
 		return Config::inst()->update($this->class, $name, $val);
 	}
 
-	function get($name, $sourceOptions = 0) {
+	public function get($name, $sourceOptions = 0) {
 		return Config::inst()->get($this->class, $name, $sourceOptions);
 	}
 
-	function forClass($class) {
+	public function forClass($class) {
 		return Config::inst()->forClass($class);
 	}
 }

@@ -6,7 +6,7 @@
 class UploadTest extends SapphireTest {
 	static $fixture_file = 'UploadTest.yml';
 
-	function testUpload() {
+	public function testUpload() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload.txt';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -60,7 +60,7 @@ class UploadTest extends SapphireTest {
 		rmdir(Director::baseFolder() . '/assets/' . $customFolder);
 	}
 	
-	function testAllowedFilesize() {
+	public function testAllowedFilesize() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload.txt';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -89,7 +89,7 @@ class UploadTest extends SapphireTest {
 		$this->assertFalse($result, 'Load failed because size was too big');
 	}
 
-	function testAllowedSizeOnFileWithNoExtension() {
+	public function testAllowedSizeOnFileWithNoExtension() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -118,7 +118,7 @@ class UploadTest extends SapphireTest {
 		$this->assertFalse($result, 'Load failed because size was too big');
 	}
 
-	function testUploadDoesNotAllowUnknownExtension() {
+	public function testUploadDoesNotAllowUnknownExtension() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload.php';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -147,7 +147,7 @@ class UploadTest extends SapphireTest {
 		$this->assertFalse($result, 'Load failed because extension was not accepted');
 	}
 	
-	function testUploadAcceptsAllowedExtension() {
+	public function testUploadAcceptsAllowedExtension() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload.txt';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -180,7 +180,7 @@ class UploadTest extends SapphireTest {
 		$file->delete();
 	}
 	
-	function testUploadDeniesNoExtensionFilesIfNoEmptyStringSetForValidatorExtensions() {
+	public function testUploadDeniesNoExtensionFilesIfNoEmptyStringSetForValidatorExtensions() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -213,7 +213,7 @@ class UploadTest extends SapphireTest {
 	// Delete files in the default uploads directory that match the name pattern.
 	// @param String $namePattern	A regular expression applied to files in the directory. If the name matches
 	// the pattern, it is deleted. Directories, . and .. are excluded.
-	function deleteTestUploadFiles($namePattern) {
+	public function deleteTestUploadFiles($namePattern) {
 		$tmpFolder = ASSETS_PATH . "/" . Upload::$uploads_folder;
 		$files = scandir($tmpFolder);
 		foreach ($files as $f) {
@@ -222,7 +222,7 @@ class UploadTest extends SapphireTest {
 		}
 	}
 
-	function testUploadTarGzFileTwiceAppendsNumber() {
+	public function testUploadTarGzFileTwiceAppendsNumber() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload.tar.gz';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -266,7 +266,7 @@ class UploadTest extends SapphireTest {
 		$file2->delete();
 	}
 	
-	function testUploadFileWithNoExtensionTwiceAppendsNumber() {
+	public function testUploadFileWithNoExtensionTwiceAppendsNumber() {
 		// create tmp file
 		$tmpFileName = 'UploadTest-testUpload';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;

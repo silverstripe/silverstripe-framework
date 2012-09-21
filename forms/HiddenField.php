@@ -7,21 +7,21 @@
  */
 class HiddenField extends FormField {
 
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
 	}
 
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->setReadonly(true);
 		return $clone;
 	}
 
-	function IsHidden() {
+	public function IsHidden() {
 		return true;
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array('type' => 'hidden')

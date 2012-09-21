@@ -25,7 +25,7 @@ class i18nTest extends SapphireTest {
 	);
 
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
@@ -55,7 +55,7 @@ class i18nTest extends SapphireTest {
 		i18n::include_by_locale('en');
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
 		i18n::set_locale($this->originalLocale);
 		Director::setBaseFolder(null);
@@ -65,7 +65,7 @@ class i18nTest extends SapphireTest {
 		parent::tearDown();
 	}
 	
-	function testDateFormatFromLocale() {
+	public function testDateFormatFromLocale() {
 		i18n::set_locale('en_US');
 		$this->assertEquals('MMM d, y', i18n::get_date_format());
 		i18n::set_locale('en_NZ');
@@ -73,7 +73,7 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale('en_US');
 	}
 	
-	function testTimeFormatFromLocale() {
+	public function testTimeFormatFromLocale() {
 		i18n::set_locale('en_US');
 		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
 		i18n::set_locale('de_DE');
@@ -81,28 +81,28 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale('en_US');
 	}
 	
-	function testDateFormatCustom() {
+	public function testDateFormatCustom() {
 		i18n::set_locale('en_US');
 		$this->assertEquals('MMM d, y', i18n::get_date_format());
 		i18n::set_date_format('d/MM/yyyy');
 		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
 	}
 	
-	function testTimeFormatCustom() {
+	public function testTimeFormatCustom() {
 		i18n::set_locale('en_US');
 		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
 		i18n::set_time_format('HH:mm:ss');
 		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
 	}
 	
-	function testGetExistingTranslations() {
+	public function testGetExistingTranslations() {
 		$translations = i18n::get_existing_translations();
 		$this->assertTrue(isset($translations['en_US']), 'Checking for en_US translation');
 		$this->assertEquals($translations['en_US'], 'English (United States)');
 		$this->assertTrue(isset($translations['de_DE']), 'Checking for de_DE translation');
 	}
 	
-	function testDataObjectFieldLabels() {
+	public function testDataObjectFieldLabels() {
 		$oldLocale = i18n::get_locale();
 		i18n::set_locale('de_DE');
 		$obj = new i18nTest_DataObject();
@@ -130,7 +130,7 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale($oldLocale);
 	}
 	
-	function testProvideI18nEntities() {
+	public function testProvideI18nEntities() {
 		$oldLocale = i18n::get_locale();
 		i18n::set_locale('en_US');
 		
@@ -165,7 +165,7 @@ class i18nTest extends SapphireTest {
 		);
 	}
 	
-	function testTemplateTranslation() {
+	public function testTemplateTranslation() {
 		$oldLocale = i18n::get_locale();
 
 		i18n::set_locale('en_US');
@@ -243,7 +243,7 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale($oldLocale);
 	}
 
-	function testNewTMethodSignature() {
+	public function testNewTMethodSignature() {
 		global $lang;
 		$oldLocale = i18n::get_locale();
 
@@ -312,7 +312,7 @@ class i18nTest extends SapphireTest {
 	/**
 	 * See @i18nTestModule.ss for the template that is being used for this test
 	 * */
-	function testNewTemplateTranslation() {
+	public function testNewTemplateTranslation() {
 		global $lang;
 		$oldLocale = i18n::get_locale();
 
@@ -348,13 +348,13 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale($oldLocale);
 	}
 	
-	function testGetLocaleFromLang() {
+	public function testGetLocaleFromLang() {
 		$this->assertEquals('en_US', i18n::get_locale_from_lang('en'));
 		$this->assertEquals('de_DE', i18n::get_locale_from_lang('de_DE'));
 		$this->assertEquals('xy_XY', i18n::get_locale_from_lang('xy'));
 	}
 	
-	function testValidateLocale() {
+	public function testValidateLocale() {
 		$this->assertTrue(i18n::validate_locale('en_US'), 'Known locale in underscore format is valid');
 		$this->assertTrue(i18n::validate_locale('en-US'), 'Known locale in dash format is valid');
 		$this->assertFalse(i18n::validate_locale('en'), 'Short lang format is not valid');
@@ -362,7 +362,7 @@ class i18nTest extends SapphireTest {
 		$this->assertFalse(i18n::validate_locale(''), 'Empty string is not valid');
 	}
 	
-	function testTranslate() {
+	public function testTranslate() {
 		$oldLocale = i18n::get_locale();
 		
 		i18n::get_translator('core')->getAdapter()->addTranslation(array(
@@ -405,7 +405,7 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale($oldLocale);
 	}
 	
-	function testIncludeByLocale() {
+	public function testIncludeByLocale() {
 		// Looping through modules, so we can test the translation autoloading
 		// Load non-exclusive to retain core class autoloading
 		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
@@ -432,7 +432,7 @@ class i18nTest extends SapphireTest {
 		SS_ClassLoader::instance()->popManifest();
 	}
 
-	function testIncludeByLocaleWithoutFallbackLanguage() {
+	public function testIncludeByLocaleWithoutFallbackLanguage() {
 		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
 		SS_ClassLoader::instance()->pushManifest($classManifest);
 		
@@ -456,7 +456,7 @@ class i18nTest extends SapphireTest {
 		SS_ClassLoader::instance()->popManifest();
 	}
 	
-	function testRegisterTranslator() {
+	public function testRegisterTranslator() {
 		$translator = new Zend_Translate(array(
 			'adapter' => 'i18nTest_CustomTranslatorAdapter',
 			'disableNotices' => true,
@@ -473,7 +473,7 @@ class i18nTest extends SapphireTest {
 		$this->assertArrayNotHasKey('custom', $translators[10]);
 	}
 	
-	function testMultipleTranslators() {
+	public function testMultipleTranslators() {
 		// Looping through modules, so we can test the translation autoloading
 		// Load non-exclusive to retain core class autoloading
 		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
@@ -576,7 +576,7 @@ class i18nTest_DataObject extends DataObject implements TestOnly {
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
 	 * 
 	 */
-	function fieldLabels($includerelations = true) {
+	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['MyProperty'] = _t('i18nTest_DataObject.MyProperty', 'My Property');
 		
@@ -588,11 +588,11 @@ class i18nTest_DataObject extends DataObject implements TestOnly {
 class i18nTest_Object extends Object implements TestOnly, i18nEntityProvider {
 	static $my_translatable_property = "Untranslated";
 	
-	static function my_translatable_property() {
+	public static function my_translatable_property() {
 		return _t("i18nTest_Object.my_translatable_property", self::$my_translatable_property);
 	}
 	
-	function provideI18nEntities() {
+	public function provideI18nEntities() {
 		return array(
 			"i18nTest_Object.my_translatable_property" => array(
 				self::$my_translatable_property
@@ -611,11 +611,11 @@ class i18nTest_CustomTranslatorAdapter extends Zend_Translate_Adapter implements
 		);
 	}
 	
-	function toString() {
+	public function toString() {
 		return 'i18nTest_CustomTranslatorAdapter';
 	}
 	
-	function getFilenameForLocale($locale) {
+	public function getFilenameForLocale($locale) {
 		return false; // not file based
 	}
 }
@@ -629,11 +629,11 @@ class i18nTest_OtherCustomTranslatorAdapter extends Zend_Translate_Adapter imple
 		);
 	}
 	
-	function toString() {
+	public function toString() {
 		return 'i18nTest_OtherCustomTranslatorAdapter';
 	}
 	
-	function getFilenameForLocale($locale) {
+	public function getFilenameForLocale($locale) {
 		return false; // not file based
 	}
 }

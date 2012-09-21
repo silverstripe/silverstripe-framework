@@ -10,7 +10,7 @@ class MoneyFieldTest extends SapphireTest {
 		'MoneyFieldTest_CustomSetter_Object',
 	);
 
-	function testSaveInto() {
+	public function testSaveInto() {
 		$o = new MoneyFieldTest_Object();
 		
 		$m = new Money();
@@ -23,7 +23,7 @@ class MoneyFieldTest extends SapphireTest {
 		$this->assertEquals($o->MyMoney->getCurrency(), 'EUR');
 	}
 	
-	function testSetValueAsMoney() {
+	public function testSetValueAsMoney() {
 		$o = new MoneyFieldTest_Object();
 		
 		$f = new MoneyField('MyMoney', 'MyMoney');
@@ -38,7 +38,7 @@ class MoneyFieldTest extends SapphireTest {
 		$this->assertEquals($o->MyMoney->getCurrency(), 'EUR');
 	}
 	
-	function testSetValueAsArray() {
+	public function testSetValueAsArray() {
 		$o = new MoneyFieldTest_Object();
 		
 		$f = new MoneyField('MyMoney', 'MyMoney');
@@ -55,7 +55,7 @@ class MoneyFieldTest extends SapphireTest {
 	 * Saving values for CustomMoney shall go through the setCustomMoney_Test
 	 * setter method and double the value. 
 	 */
-	function testSetValueViaSetter() {
+	public function testSetValueViaSetter() {
 		$o = new MoneyFieldTest_CustomSetter_Object();
 		
 		$f = new MoneyField('CustomMoney', 'Test Money Field');
@@ -82,11 +82,11 @@ class MoneyFieldTest_CustomSetter_Object extends DataObject implements TestOnly 
 		'MyMoney' => 'Money', 
 	);
 	
-	function getCustomMoney() {
+	public function getCustomMoney() {
 		return $this->MyMoney->getValue();
 	}
 	
-	function setCustomMoney($value) {
+	public function setCustomMoney($value) {
 		
 		$newAmount = $value->getAmount() * 2;
 		$this->MyMoney->setAmount($newAmount);

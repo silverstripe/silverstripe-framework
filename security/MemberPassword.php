@@ -25,7 +25,7 @@ class MemberPassword extends DataObject {
 	 * Log a password change from the given member.
 	 * Call MemberPassword::log($this) from within Member whenever the password is changed.
 	 */
-	static function log($member) {
+	public static function log($member) {
 		$record = new MemberPassword();
 		$record->MemberID = $member->ID;
 		$record->Password = $member->Password;
@@ -41,7 +41,7 @@ class MemberPassword extends DataObject {
 	 * @param String $password Cleartext password
 	 * @return Boolean
 	 */	
-	function checkPassword($password) {
+	public function checkPassword($password) {
 		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
 		return $e->check($this->Password, $password, $this->Salt, $this->Member());
 	}

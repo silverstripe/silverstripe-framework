@@ -5,7 +5,7 @@
  */
 class SecurityTokenTest extends SapphireTest {
 	
-	function testIsEnabled() {
+	public function testIsEnabled() {
 		$inst1 = SecurityToken::inst();
 		$this->assertTrue($inst1->isEnabled());
 		
@@ -16,7 +16,7 @@ class SecurityTokenTest extends SapphireTest {
 		SecurityToken::enable();
 	}
 
-	function testEnableAndDisable() {
+	public function testEnableAndDisable() {
 		$inst = SecurityToken::inst();
 		$this->assertFalse($inst->check('randomvalue'));
 
@@ -29,7 +29,7 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertFalse($inst->check('randomvalue'));
 	}
 	
-	function testIsEnabledStatic() {
+	public function testIsEnabledStatic() {
 		$this->assertTrue(SecurityToken::is_enabled());
 
 		SecurityToken::disable();
@@ -39,18 +39,18 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertTrue(SecurityToken::is_enabled());
 	}
 
-	function testInst() {
+	public function testInst() {
 		$inst1 = SecurityToken::inst();
 		$this->assertInstanceOf('SecurityToken', $inst1);
 	}
 	
-	function testInstReturnsSingleton() {
+	public function testInstReturnsSingleton() {
 		$inst1 = SecurityToken::inst();
 		$inst2 = SecurityToken::inst();
 		$this->assertEquals($inst1, $inst2);
 	}
 
-	function testCheck() {
+	public function testCheck() {
 		$t = new SecurityToken();
 
 		$t->setValue(null);
@@ -66,7 +66,7 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertTrue($t->check('mytoken'), 'Valid token returns true');
 	}
 
-	function testReset() {
+	public function testReset() {
 		$t = new SecurityToken();
 		$initialValue = $t->getValue();
 		$t->reset(); 
@@ -74,7 +74,7 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertNotEquals($t->getValue(), $initialValue);
 	}
 	
-	function testCheckRequest() {
+	public function testCheckRequest() {
 		$t = new SecurityToken();
 		$n = $t->getName();
 
@@ -95,7 +95,7 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertTrue($t->checkRequest($r), 'Valid token returns true');
 	}
 	
-	function testAddToUrl() {
+	public function testAddToUrl() {
 		$t = new SecurityToken();
 
 		$url = 'http://absolute.tld/action/';
@@ -113,7 +113,7 @@ class SecurityTokenTest extends SapphireTest {
 		);
 	}
 	
-	function testUpdateFieldSet() {
+	public function testUpdateFieldSet() {
 		$fs = new FieldList();
 		$t = new SecurityToken();		
 		$t->updateFieldSet($fs);
@@ -124,7 +124,7 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertEquals($f->Value(), $t->getValue(), 'Value matches');
 	}
 	
-	function testUpdateFieldSetDoesntAddTwice() {
+	public function testUpdateFieldSetDoesntAddTwice() {
 		$fs = new FieldList();
 		$t = new SecurityToken();		
 		$t->updateFieldSet($fs); // first
@@ -135,7 +135,7 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertEquals(1, $fs->Count());
 	}
 	
-	function testUnnamedTokensCarrySameValue() {
+	public function testUnnamedTokensCarrySameValue() {
 		$t1 = new SecurityToken();
 		$t2 = new SecurityToken();
 		
@@ -143,7 +143,7 @@ class SecurityTokenTest extends SapphireTest {
 		$this->assertEquals($t1->getValue(), $t2->getValue());
 	}
 	
-	function testNamedTokensCarryDifferentValues() {
+	public function testNamedTokensCarryDifferentValues() {
 		$t1 = new SecurityToken('one');
 		$t2 = new SecurityToken('two');
 		

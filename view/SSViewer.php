@@ -37,27 +37,27 @@ class SSViewer_Scope {
 	private $localIndex;
 
 
-	function __construct($item){
+	public function __construct($item){
 		$this->item = $item;
 		$this->localIndex=0;
 		$this->itemStack[] = array($this->item, null, 0, null, null, 0);
 	}
 	
-	function getItem(){
+	public function getItem(){
 		return $this->itemIterator ? $this->itemIterator->current() : $this->item;
 	}
 	
-	function resetLocalScope(){
+	public function resetLocalScope(){
 		list($this->item, $this->itemIterator, $this->itemIteratorTotal, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
 		array_splice($this->itemStack, $this->localIndex+1);
 	}
 
-	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
 		return $on->obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
 
-	function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		switch ($name) {
 			case 'Up':
 				if ($this->upIndex === null) user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
@@ -81,7 +81,7 @@ class SSViewer_Scope {
 		return $this;
 	}
 	
-	function pushScope(){
+	public function pushScope(){
 		$newLocalIndex = count($this->itemStack)-1;
 		
 		$this->popIndex = $this->itemStack[$newLocalIndex][3] = $this->localIndex;
@@ -94,14 +94,14 @@ class SSViewer_Scope {
 		return $this;
 	}
 
-	function popScope(){
+	public function popScope(){
 		$this->localIndex = $this->popIndex;
 		$this->resetLocalScope();
 		
 		return $this;
 	}
 	
-	function next(){
+	public function next(){
 		if (!$this->item) return false;
 		
 		if (!$this->itemIterator) {
@@ -123,7 +123,7 @@ class SSViewer_Scope {
 		return $this->itemIterator->key();
 	}
 	
-	function __call($name, $arguments) {
+	public function __call($name, $arguments) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
 		$retval = call_user_func_array(array($on, $name), $arguments);
 		
@@ -306,7 +306,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	/** @var array|null Underlay variables. Concede precedence to overlay variables or anything from the current scope */
 	protected $underlay;
 
-	function __construct($item, $overlay = null, $underlay = null){
+	public function __construct($item, $overlay = null, $underlay = null){
 		parent::__construct($item);
 
 		// Build up global property providers array only once per request
@@ -357,7 +357,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		}
 	}
 
-	function getInjectedValue($property, $params, $cast = true) {
+	public function getInjectedValue($property, $params, $cast = true) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
 
 		// Find the source of the value
@@ -423,17 +423,17 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 	}
 
-	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		$result = $this->getInjectedValue($name, (array)$arguments);
 		if($result) return $result['obj'];
 		else return parent::getObj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
 
-	function __call($name, $arguments) {
+	public function __call($name, $arguments) {
 		//extract the method name and parameters
-		$property = $arguments[0];  //the name of the function being called
+		$property = $arguments[0];  //the name of the public function being called
 
-		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1]; //the function parameters in an array
+		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1]; //the public function parameters in an array
 		else $params = array();
 
 		$hasInjected = $res = null;
@@ -500,14 +500,14 @@ class SSViewer {
 	 *
 	 * @param boolean $val
 	 */
-	static function set_source_file_comments($val) {
+	public static function set_source_file_comments($val) {
 		self::$source_file_comments = $val;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	static function get_source_file_comments() {
+	public static function get_source_file_comments() {
 		return self::$source_file_comments;
 	}
 	
@@ -537,14 +537,14 @@ class SSViewer {
 	 * 
 	 * @return SSViewer
 	 */
-	static function fromString($content) {
+	public static function fromString($content) {
 		return new SSViewer_FromString($content);
 	}
 	
 	/**
 	 * @param string $theme The "base theme" name (without underscores). 
 	 */
-	static function set_theme($theme) {
+	public static function set_theme($theme) {
 		self::$current_theme = $theme;
 		//Static publishing needs to have a theme set, otherwise it defaults to the content controller theme
 		if(!is_null($theme))
@@ -554,7 +554,7 @@ class SSViewer {
 	/**
 	 * @return string 
 	 */
-	static function current_theme() {
+	public static function current_theme() {
 		return self::$current_theme;
 	}
 	
@@ -563,7 +563,7 @@ class SSViewer {
 	 *
 	 * @return String
 	 */
-	static function get_theme_folder() {
+	public static function get_theme_folder() {
 		return self::current_theme() ? THEMES_DIR . "/" . self::current_theme() : project();
 	}
 
@@ -594,7 +594,7 @@ class SSViewer {
 	/**
 	 * @return string
 	 */
-	static function current_custom_theme(){
+	public static function current_custom_theme(){
 		return self::$current_custom_theme;
 	}
 	
@@ -664,7 +664,7 @@ class SSViewer {
  	 * @param String
  	 * @return Mixed
 	 */
-	static function getOption($optionName) {
+	public static function getOption($optionName) {
 		return SSViewer::$options[$optionName];
 	}
 	
@@ -717,7 +717,7 @@ class SSViewer {
 	 *
 	 * Can only be called once per request (there may be multiple SSViewer instances).
 	 */
-	static function flush_template_cache() {
+	public static function flush_template_cache() {
 		if (!self::$flushed) {
 			$dir = dir(TEMP_FOLDER);
 			while (false !== ($file = $dir->read())) {
@@ -859,12 +859,12 @@ class SSViewer {
 	 * Execute the given template, passing it the given data.
 	 * Used by the <% include %> template tag to process templates.
 	 */
-	static function execute_template($template, $data, $arguments = null) {
+	public static function execute_template($template, $data, $arguments = null) {
 		$v = new SSViewer($template);
 		return $v->process($data, $arguments);
 	}
 
-	static function parseTemplateContent($content, $template="") {			
+	public static function parseTemplateContent($content, $template="") {
 		return SSTemplateParser::compileString($content, $template, Director::isDev() && self::$source_file_comments);
 	}
 
@@ -891,7 +891,7 @@ class SSViewer {
 	 * @param $contentGeneratedSoFar The content of the template generated so far; it should contain
 	 * the DOCTYPE declaration.
 	 */
-	static function get_base_tag($contentGeneratedSoFar) {
+	public static function get_base_tag($contentGeneratedSoFar) {
 		$base = Director::absoluteBaseURL();
 		
 		// Is the document XHTML?

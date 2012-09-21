@@ -75,7 +75,7 @@ class TestRunner extends Controller {
 	 *
 	 * @param string $reporter
 	 */
-	static function set_reporter($reporter) {
+	public static function set_reporter($reporter) {
 		if (is_string($reporter)) $reporter = new $reporter;
 		self::$default_reporter = $reporter;
 	}
@@ -97,7 +97,7 @@ class TestRunner extends Controller {
 		));
 	}
 
-	function init() {
+	public function init() {
 		parent::init();
 		
 		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
@@ -126,7 +126,7 @@ class TestRunner extends Controller {
 	 * Run test classes that should be run with every commit.
 	 * Currently excludes PhpSyntaxTest
 	 */
-	function all($request, $coverage = false) {
+	public function all($request, $coverage = false) {
 		self::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
@@ -146,7 +146,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run test classes that should be run before build - i.e., everything possible.
 	 */
-	function build() {
+	public function build() {
 		self::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
@@ -162,7 +162,7 @@ class TestRunner extends Controller {
 	/**
 	 * Browse all enabled test cases in the environment
 	 */
-	function browse() {
+	public function browse() {
 		self::use_test_manifest();
 		self::$default_reporter->writeHeader();
 		self::$default_reporter->writeInfo('Available Tests', false);
@@ -194,7 +194,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run a coverage test across all modules
 	 */
-	function coverageAll($request) {
+	public function coverageAll($request) {
 		self::use_test_manifest();
 		$this->all($request, true);
 	}
@@ -202,7 +202,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run only a single coverage test class or a comma-separated list of tests
 	 */
-	function coverageOnly($request) {
+	public function coverageOnly($request) {
 		$this->only($request, true);
 	}
 	
@@ -210,18 +210,18 @@ class TestRunner extends Controller {
 	 * Run coverage tests for one or more "modules".
 	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
-	function coverageModule($request) {
+	public function coverageModule($request) {
 		$this->module($request, true);
 	}
 	
-	function cleanupdb() {
+	public function cleanupdb() {
 		SapphireTest::delete_all_temp_dbs();
 	}
 		
 	/**
 	 * Run only a single test class or a comma-separated list of tests
 	 */
-	function only($request, $coverage = false) {
+	public function only($request, $coverage = false) {
 		self::use_test_manifest();
 		if($request->param('TestCase') == 'all') {
 			$this->all();
@@ -241,7 +241,7 @@ class TestRunner extends Controller {
 	 * Run tests for one or more "modules".
 	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
-	function module($request, $coverage = false) {
+	public function module($request, $coverage = false) {
 		self::use_test_manifest();
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
@@ -268,7 +268,7 @@ class TestRunner extends Controller {
 	 * @param array $classList
 	 * @param boolean $coverage
 	 */
-	function runTests($classList, $coverage = false) {
+	public function runTests($classList, $coverage = false) {
 		$startTime = microtime(true);
 
 		// disable xdebug, as it messes up test execution
@@ -348,7 +348,7 @@ class TestRunner extends Controller {
 	 * name, and is used for more advanced use cases like interacting with test databases
 	 * directly during functional tests.
 	 */
-	function startsession() {
+	public function startsession() {
 		if(!Director::isLive()) {
 			if(SapphireTest::using_temp_db()) {
 				$endLink = Director::baseURL() . "dev/tests/endsession";
@@ -426,7 +426,7 @@ HTML;
 	 * See {@link startsession()} for a different approach which actually creates
 	 * the DB and loads a fixture file instead.
 	 */
-	function setdb() {
+	public function setdb() {
 		if(Director::isLive()) {
 			return $this->permissionFailure("dev/tests/setdb can only be used on dev and test sites");
 		}
@@ -453,7 +453,7 @@ HTML;
 			</ul>";
 	}
 	
-	function emptydb() {
+	public function emptydb() {
 		if(SapphireTest::using_temp_db()) {
 			SapphireTest::empty_temp_db();
 
@@ -471,7 +471,7 @@ HTML;
 		}
 	}
 	
-	function endsession() {
+	public function endsession() {
 		SapphireTest::kill_temp_db();
 		DB::set_alternative_database_name(null);
 
@@ -482,7 +482,7 @@ HTML;
 			</ul>";
 	}
 
-	function sessionloadyml() {
+	public function sessionloadyml() {
 		// Load incremental YAML fixtures
 		// TODO: We will probably have to filter out the admin member here,
 		// as it is supplied by Bare.yml
@@ -525,12 +525,12 @@ HTML;
 		return "<p>Loaded fixture '$fixtureFile' into session</p>";
 	}
 
-	function setUp() {
+	public function setUp() {
 		// The first DB test will sort out the DB, we don't have to
 		SSViewer::flush_template_cache();
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		SapphireTest::kill_temp_db();
 		DB::set_alternative_database_name(null);
 	}

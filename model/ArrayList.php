@@ -26,7 +26,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Return the class of items in this list, by looking at the first item inside it.
 	 */
-	function dataClass() {
+	public function dataClass() {
 		if(count($this->items) > 0) return get_class($this->items[0]);
 	}
 

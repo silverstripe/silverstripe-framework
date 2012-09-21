@@ -72,7 +72,7 @@ class Email extends ViewableData {
 	 * 
 	 * @param Mailer $mailer
 	 */
-	static function set_mailer(Mailer $mailer) {
+	public static function set_mailer(Mailer $mailer) {
 		self::$mailer = $mailer;
 	}
 	
@@ -81,7 +81,7 @@ class Email extends ViewableData {
 	 * 
 	 * @return Mailer
 	 */
-	static function mailer() {
+	public static function mailer() {
 		if(!self::$mailer) self::$mailer = new Mailer();
 		return self::$mailer;
 	}
@@ -202,19 +202,19 @@ class Email extends ViewableData {
 		return $this->bcc;
 	}
 	
-	public function setSubject($val) { 
+	public function setSubject($val) {
 		$this->subject = $val; 
 	}
 	
-	public function setBody($val) { 
+	public function setBody($val) {
 		$this->body = $val; 
 	}
 	
-	public function setTo($val) { 
+	public function setTo($val) {
 		$this->to = $val; 
 	}
 	
-	public function setFrom($val) { 
+	public function setFrom($val) {
 		$this->from = $val; 
 	}
 	
@@ -230,7 +230,7 @@ class Email extends ViewableData {
 	 * Set the "Reply-To" header with an email address.
 	 * @param string $email The email address of the "Reply-To" header
 	 */
-	public function replyTo($email) { 
+	public function replyTo($email) {
 		$this->addCustomHeader('Reply-To', $email); 
 	}
 	
@@ -313,7 +313,7 @@ class Email extends ViewableData {
 	 * Populate this email template with values.
 	 * This may be called many times.
 	 */
-	function populateTemplate($data) {
+	public function populateTemplate($data) {
 		if($this->template_data) {
 			$this->template_data = $this->template_data->customise($data);	
 		} else {
@@ -359,7 +359,7 @@ class Email extends ViewableData {
 	/**
 	 * @desc Validates the email address. Returns true of false
 	 */
-	static function validEmailAddress($address) {
+	public static function validEmailAddress($address) {
         if (function_exists('filter_var')) {
             return filter_var($address, FILTER_VALIDATE_EMAIL);
         } else {
@@ -377,7 +377,7 @@ class Email extends ViewableData {
 	 * @return bool Success of the sending operation from an MTA perspective. 
 	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
 	 */
-	function sendPlain($messageID = null) {
+	public function sendPlain($messageID = null) {
 		Requirements::clear();
 		
 		$this->parseVariables(true);
@@ -625,12 +625,12 @@ class Email_BounceHandler extends Controller {
 		'index'
 	);
 	
-	function init() {
+	public function init() {
 		BasicAuth::protect_entire_site(false);
 		parent::init();
 	}
 	
-	function index() {
+	public function index() {
 		$subclasses = ClassInfo::subclassesFor( $this->class );
 		unset($subclasses[$this->class]);
 		
@@ -765,7 +765,7 @@ class Email_BounceRecord extends DataObject {
 	* a record of Email_BounceRecord can't be created manually. Instead, it should be	
 	* created though system. 
 	*/ 
-	public function canCreate($member = null) { 
+	public function canCreate($member = null) {
 		return false; 
 	}
 }

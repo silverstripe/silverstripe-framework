@@ -122,7 +122,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		return parent::Link($action);
 	}
 
-	function getEditForm($id = null, $fields = null) {
+	public function getEditForm($id = null, $fields = null) {
 		$list = $this->getList();
 		$exportButton = new GridFieldExportButton('before');
 		$exportButton->setExportColumns($this->getExportFields());
@@ -261,7 +261,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	/**
 	 * @return array Map of class name to an array of 'title' (see {@link $managed_models})
 	 */
-	function getManagedModels() {
+	public function getManagedModels() {
 		$models = $this->stat('managed_models');
 		if(is_string($models)) {
 			$models = array($models);
@@ -294,7 +294,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 *
 	 * @return array Map of model class names to importer instances
 	 */
-	 function getModelImporters() {
+	 public function getModelImporters() {
 		$importerClasses = $this->stat('model_importers');
 
 		// fallback to all defined models if not explicitly defined
@@ -384,7 +384,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @param Form $form
 	 * @param SS_HTTPRequest $request
 	 */
-	function import($data, $form, $request) {
+	public function import($data, $form, $request) {
 		if(!$this->showImportForm || (is_array($this->showImportForm) && !in_array($this->modelClass,$this->showImportForm))) {
 			return false;
 		}
@@ -444,14 +444,14 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * overwrite the static page_length of the admin panel, 
 	 * should be called in the project _config file.
 	 */
-	static function set_page_length($length){
+	public static function set_page_length($length){
 		self::$page_length = $length;
 	}
 	
 	/**
 	 * Return the static page_length of the admin, default as 30
 	 */
-	static function get_page_length(){
+	public static function get_page_length(){
 		return self::$page_length;
 	} 
 	
