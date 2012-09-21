@@ -1,7 +1,7 @@
 pl:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ADDFILES: 'Dodaj pliki'
+    EditOrgMenu: 'Edytuj i organizuj'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
@@ -20,12 +20,12 @@ pl:
     DROPAREA: 'Obszar upuszczania'
     EDITALL: 'Edytuj wszystkie'
     EDITANDORGANIZE: 'Edytuj i organizuj'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Edytuj pliki'
     FILES: Pliki
     FROMCOMPUTER: 'Wybierz pliki z komputera'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTERINFO: 'Załaduj z twojego komputera'
     TOTAL: Razem
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Wybierz pliki do załadowania...'
     UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
     UPLOADOR: LUB
   BBCodeParser:
@@ -65,7 +65,7 @@ pl:
     1: Tak
   CMSLoadingScreen.ss:
     LOADING: Wczytywanie...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'CMS wymaga włączonej obsługi JavaScript.'
   CMSMain:
     ACCESS: 'Dostęp do sekcji ''{title}'''
     ACCESSALLINTERFACES: 'Dostęp do wszystkich sekcji CMSa'
@@ -88,7 +88,7 @@ pl:
     SUCCESSEDIT: 'Zapisano %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Dodaj %s'
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Nie znaleziono żadnych elementów'
     SORTASC: 'Sortuj rosnąco'
     SORTDESC: 'Sortuj malejąco'
   ComplexTableField_popup.ss:
@@ -146,35 +146,35 @@ pl:
   File:
     AviType: 'AVI video file'
     Content: Zawartość
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
+    CssType: 'Plik CSS'
+    DmgType: 'Obraz dysku Apple'
+    DocType: 'Dokument Worda'
     Filename: 'Nazwa pliku'
-    GifType: 'GIF image - good for diagrams'
+    GifType: 'Obrazek GIF, dobry do diagramów'
     GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    HtlType: 'Plik HTML'
+    HtmlType: 'Plik HTML'
     INVALIDEXTENSION: 'Rozszerzenie niedozwolone (dozwolone: {extensions})'
     INVALIDEXTENSIONSHORT: 'Rozszerzenie niedozwolone'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
+    IcoType: Ikona
+    JpgType: 'Obrazek JPEG, dobry do zdjęć'
+    JsType: 'Plik JavaScript'
+    Mp3Type: 'Plik MP3'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
     PLURALNAME: Pliki
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PdfType: 'Plik Adobe Acrobat PDF'
+    PngType: 'Plik PNG, dobry do zastosowania w większości przypadków'
     SINGULARNAME: Plik
     TOOLARGE: 'Plik jest za duży, maksymalnie dozwolone jest {size}'
     TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'Plik TIFF'
     Title: Tytuł
     WavType: 'WAV audo file'
     XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    ZipType: 'Plik ZIP, skompresowany'
   FileIFrameField:
     ATTACH: 'Dołącz {type}'
     ATTACHONCESAVED: 'Element {type} może zostać dołączony dopiero po pierwszym zapisaniu rekordu.'
@@ -191,7 +191,7 @@ pl:
   Filesystem:
     SYNCRESULTS: 'Synchronizacja zakończona: stworzono {createdcount} i usunięto {deletedcount} pozycji'
   Folder:
-    PLURALNAME: Folders
+    PLURALNAME: Foldery
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Cześć
@@ -200,7 +200,7 @@ pl:
     TEXT3: dla
   Form:
     FIELDISREQUIRED: '%s jest wymagane'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
     VALIDATIONNOTUNIQUE: 'Wprowadzona wartość nie jest unikalna'
     VALIDATIONPASSWORDSDONTMATCH: 'Hasła nie są takie same'
@@ -232,7 +232,7 @@ pl:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Anuluj
     Create: Stwórz
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
@@ -246,13 +246,13 @@ pl:
     DefaultGroupTitleAdministrators: Administratorzy
     DefaultGroupTitleContentAuthors: 'Autor treści'
     Description: Opis
-    GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, ta grupa otrzyma wszystkie jej role'
+    GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, obecna grupa otrzyma wszystkie jej role'
     Locked: 'Zablokowana?'
     NoRoles: 'Nie znaleziono ról'
-    PLURALNAME: Groups
+    PLURALNAME: Grupy
     Parent: 'Grupa nadrzędna'
     RolesAddEditLink: 'Zarządzaj rolami'
-    SINGULARNAME: Group
+    SINGULARNAME: Grupa
     Sort: 'Kolejność Sortowania'
     has_many_Permissions: Zezwolenia
     many_many_Members: Członkowie
@@ -310,13 +310,13 @@ pl:
     URLNOTANOEMBEDRESOURCE: 'Adres URL ''{url}'' nie mógł zostać przekształcony w zasób medialny'
     UpdateMEDIA: 'Zaktualizuj Media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Pliki
+    SINGULARNAME: Plik
   ImageField:
     IMAGE: Obraz
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Pliki
+    SINGULARNAME: Plik
   Image_iframe.ss:
     TITLE: 'Ładowanie Zdjęć (Iframe)'
   LeftAndMain:
@@ -328,19 +328,19 @@ pl:
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
-    PLEASESAVE: 'Proszę Zapisz Stronę: Ta strona nie mogła zostać uaktualniona ponieważ nie została jeszcze zapisana.'
+    PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: Witaj
     LOGOUT: 'Wyloguj się'
   LoginAttempt:
     Email: 'Adres E-mail'
     IP: 'Adres IP'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Próby logowania'
+    SINGULARNAME: 'Próba logowania'
     Status: Status
   Member:
     ADDGROUP: 'Dodaj grupę'
@@ -416,8 +416,8 @@ pl:
     ResultNone: 'Bez zmian'
     ResultUpdated: 'Zaktualizowano członków: {count}'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Hasła użytkownika'
+    SINGULARNAME: 'Hasło użytkownika'
   MemberTableField: null
   ModelAdmin:
     DELETE: Usuń
@@ -431,9 +431,9 @@ pl:
     UPDATEDRECORDS: 'Zaktualizowano {count} rekordów.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Kolumny bazy danych'
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Pokaż specyfikację %s'
     IMPORTSPECRELATIONS: Relacje
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Specyfikacja %s'
   ModelAdmin_Tools.ss:
     FILTER: Filtr
     IMPORT: Import
@@ -448,36 +448,36 @@ pl:
   NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
   Pagination:
-    Page: Page
-    View: View
+    Page: Strona
+    View: Widok
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Uprawnienia
+    SINGULARNAME: Uprawnienie
   PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
     FromRole: 'odziedziczone z roli "{title}"'
     FromRoleOnGroup: 'odziedziczone z roli "%s" w grupie "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
+    OnlyAdminCanApply: 'Tylko administrator może to zastosować'
+    PLURALNAME: Role
+    SINGULARNAME: Rola
+    Title: Tytuł
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Kod roli uprawnień'
+    SINGULARNAME: 'Kod roli uprawnienia'
   Permissions:
     PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
   PhoneNumberField:
     VALIDATION: 'Wprowadź poprawny numer telefonu'
   RelationComplexTableField.ss:
     ADD: Dodaj
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Eksportuj do CSV'
+    NOTFOUND: 'Nie znaleziono żadnych elementów'
   Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'
@@ -523,20 +523,20 @@ pl:
     ISREQUIRED: 'W %s ''%s'' jest wymagany'
   TableField.ss:
     ADD: 'Dodaj nowy rząd'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Dodaj %s'
   TableListField:
     CSVEXPORT: 'Eksportuj do CSV'
     PRINT: Drukuj
-    Print: Print
+    Print: Drukuj
     SELECT: 'Wybierz:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Nie znaleziono żadnych elementów'
     SORTASC: 'Sortuj w porządku rosnącym'
     SORTDESC: 'Sortuj w porządku malejącym'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+    DISPLAYING: Wyświetlane
+    OF: z
+    TO: do
     VIEWFIRST: 'Zobacz pierwsze'
     VIEWLAST: 'Zobacz ostatnie'
     VIEWNEXT: 'Zobacz następne'
@@ -550,26 +550,26 @@ pl:
     ATTACHFILE: 'Załącz plik'
     ATTACHFILES: 'Załącz pliki'
     AttachFile: 'Załącz plik(i)'
-    DELETE: 'Delete from files'
+    DELETE: 'Usuń z plików'
     DELETEINFO: 'Usuń ten plik z magazynu'
     DOEDIT: Zapisz
     DROPFILE: 'upuść plik'
     DROPFILES: 'upuść pliki'
     Dimensions: Rozmiar
-    EDIT: Edit
+    EDIT: Edytuj
     EDITINFO: 'Edytuj plik'
     FIELDNOTSET: 'Nie znaleziono informacji o pliku'
     FROMCOMPUTER: 'Z komputera'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Wybierz z plików'
     FROMFILES: 'Z plików'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Informacja: Ten obrazek pochodzi z zewnętrznego serwisu. Upewnij się, że jego twórca pozwala korzystać z niego.'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
     MAXNUMBEROFFILESSHORT: 'Można wgrać tylko {count} plik(ów/i)'
     REMOVE: Usuń
     REMOVEERROR: 'Błąd podczas usuwania pliku'
     REMOVEINFO: 'Usuń pliki z tego miejsca, ale nie usuwaj ich z magazynu'
     STARTALL: 'Rozpocznij wszystko'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Rozpocznij ładowanie wszystkich'
     Saved: Zapisano
   Versioned:
     has_many_Versions: Wersje
