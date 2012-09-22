@@ -96,6 +96,41 @@ class ManyManyList extends RelationList {
 	}
 
 	/**
+	 * Modify an item in this many_many relationship
+	 * Does so by updating an entry in the joinTable.
+	 * @param $extraFields A map of additional columns to insert into the joinTable
+	 */
+	function modify($item, $extraFields = null) {
+		if(is_numeric($item)) $itemID = $item;
+		else if($item instanceof $this->dataClass) $itemID = $item->ID;
+		else throw new InvalidArgumentException("ManyManyList::modify() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+		
+		// Validate foreignID
+		if(!$this->foreignID) {
+			throw new Exception("ManyManyList::modify() can't be called until a foreign ID is set", E_USER_WARNING);
+		}
+		
+		// Check relation already exists
+		if(!$this->find($this->localKey, $itemID)){
+			throw new Exception("ManyManyList::modify() can't be called unless the relation is already set", E_USER_WARNING);
+		}
+
+		// Modify entry/entries
+		foreach((array)$this->foreignID as $foreignID) {
+			$manipulation = array();
+			$manipulation[$this->joinTable]['command'] = 'update';
+
+			if($extraFields) foreach($extraFields as $k => $v) {
+				$manipulation[$this->joinTable]['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+			}
+			
+			$manipulation[$this->joinTable]['where'] = "\"$this->localKey\" = $itemID AND \"$this->foreignKey\" = $foreignID";
+		
+			DB::manipulate($manipulation);
+		}
+	}
+	
+	/**
 	 * Remove the given item from this list.
 	 * Note that for a ManyManyList, the item is never actually deleted, only the join table is affected
 	 * @param $itemID The ID of the item to remove.
