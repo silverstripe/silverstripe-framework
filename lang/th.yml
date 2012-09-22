@@ -65,7 +65,7 @@ th:
     1: ตกลง
   CMSLoadingScreen.ss:
     LOADING: กำลังโหลด...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'CMS ตัวนี้จำเป็นต้องมีการเปิดใช้งานจาวาสคริปต์'
   CMSMain:
     ACCESS: 'เข้าไปในส่วนของ ''{title}'''
     ACCESSALLINTERFACES: 'เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด'
@@ -96,7 +96,7 @@ th:
     PREVIOUS: ก่อนหน้า
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
   CreditCardField:
@@ -150,14 +150,14 @@ th:
     DmgType: 'Apple disk image'
     DocType: 'เอกสาร Word'
     Filename: ชื่อไฟล์
-    GifType: 'GIF image - good for diagrams'
+    GifType: 'รูปภาพ GIF - ดีสำหรับแผนผังหรือไดอะแกรม'
     GzType: 'ไฟล์บีบอัดข้อมูล GZIP'
     HtlType: 'ไฟล์ HTML'
     HtmlType: 'ไฟล์ HTML'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSIONSHORT: ส่วนเสริมไม่ได้รับอนุญาตให้ใช้งาน
     IcoType: รูปไอคอน
-    JpgType: 'JPEG image - good for photos'
+    JpgType: 'รูปภาพ JPEG - ดีสำหรับภาพถ่าย'
     JsType: ไฟล์จาวาสคริปต์
     Mp3Type: 'ไฟล์เสียง MP3'
     MpgType: 'ไฟล์วีดีโอ MPEG'
@@ -166,10 +166,10 @@ th:
     Name: ชื่อ
     PLURALNAME: ไฟล์
     PdfType: 'ไฟล์ Adobe Acrobat PDF'
-    PngType: 'PNG image - good general-purpose format'
+    PngType: 'รูปภาพ PNG - ดีสำหรับรูปแบบที่มีเป้าหมายสำหรับใช้งานทั่วไป'
     SINGULARNAME: ไฟล์
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGESHORT: 'ขนาดไฟล์เกินจำนวนที่จำกัดไว้ {size}'
     TiffType: 'ไฟล์รูปภาพ TIF'
     Title: ชื่อ
     WavType: 'ไฟล์เสียง WAV'
@@ -179,7 +179,7 @@ th:
     ATTACH: 'แนบ {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    DELETE: 'ลบ {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: ไฟล์
     FROMCOMPUTER: จากเครื่องคอมพิวเตอร์ของคุณ
@@ -207,11 +207,11 @@ th:
     VALIDATIONPASSWORDSNOTEMPTY: รหัสผ่านไม่สามารถเว้นว่างได้
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: กรุณากรอกสกุลเงินที่ถูกต้อง
   FormField:
     NONE: ไม่มี
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: ลบ
     Delete: ลบ
     UnlinkRelation: ยกเลิกการลิงก์
   GridField:
@@ -259,7 +259,7 @@ th:
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
+    ResultCreated: 'สร้างกลุ่มแล้ว {count} กลุ่ม'
     ResultDeleted: 'ลบกลุ่มแล้ว %d กลุ่ม'
     ResultUpdated: 'อัพเดทแล้ว %d กลุ่ม'
   Hierarchy:
@@ -339,8 +339,8 @@ th:
   LoginAttempt:
     Email: ที่อยู่อีเมล
     IP: ไอพีเครื่อง
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: จำนวนครั้งการเข้าสู่ระบบ
+    SINGULARNAME: จำนวนครั้งการเข้าสู่ระบบ
     Status: สถานะ
   Member:
     ADDGROUP: เพิ่มกลุ่ม
@@ -358,7 +358,7 @@ th:
     ENTEREMAIL: กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
-    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
+    ERRORPASSWORDNOTMATCH: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: ชื่อจริง
     INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
@@ -368,7 +368,7 @@ th:
     PASSWORD: รหัสผ่าน
     PLURALNAME: สมาชิก
     PROFILESAVESUCCESS: บันทึกเรียบร้อยแล้ว
-    REMEMBERME: 'Remember me next time?'
+    REMEMBERME: 'จำรหัสผ่านไว้สำหรับครั้งต่อไป?'
     SINGULARNAME: สมาชิก
     SUBJECTPASSWORDCHANGED: รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว
     SUBJECTPASSWORDRESET: ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ
@@ -421,14 +421,14 @@ th:
   MemberTableField: null
   ModelAdmin:
     DELETE: ลบ
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: 'ลบแล้ว {count} รายการ'
     IMPORT: 'นำเข้าจากไฟล์ CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: 'นำเข้าแล้ว {count} รายการ'
     NOCSVFILE: 'กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล'
     NOIMPORT: ไม่มีข้อมูลให้นำเข้า
     RESET: รีเซ็ต
     Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    UPDATEDRECORDS: 'อัพเดทแล้ว {count} รายการ'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'
