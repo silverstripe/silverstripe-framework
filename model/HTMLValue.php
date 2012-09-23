@@ -40,7 +40,7 @@ class SS_HTMLValue extends ViewableData {
 					'/<\/body>(.*)/i',
 				),
 				'',
-				$this->getDocument()->saveHTML()
+				urldecode($this->getDocument()->saveHTML())
 			)
 		);
 	}
