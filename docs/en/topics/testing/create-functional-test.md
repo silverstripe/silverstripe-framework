@@ -7,7 +7,7 @@ Functional tests test your controllers.  The core of these are the same as unit 
 *  Create methods that start with "test" to create your tests.
 *  Assertions are used to work out if a test passed or failed.
 
-The code of the tests is a little different.  Instead of examining the behaviour of objects, we example the results of
+The code of the tests is a little different.  Instead of examining the behaviour of objects, we examine the results of
 URLs.  Here is an example from the subsites module:
 
 	:::php
