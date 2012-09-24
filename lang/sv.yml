@@ -446,7 +446,7 @@ sv:
   NullableField:
     IsNullLabel: 'Är NULL'
   NumericField:
-    VALIDATION: '''{value}'' är inget nummer, bara nummer kan accepteras för det här fältet'
+    VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
   Pagination:
     Page: Page
     View: View
