@@ -54,7 +54,7 @@ class TaskRunner extends Controller {
 		} else {
 			echo "SILVERSTRIPE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
 			foreach($tasks as $task) {
-				echo " * $task: sake dev/tasks/" . $task['class'] . "\n";
+				echo " * $task[title]: sake dev/tasks/" . $task['class'] . "\n";
 			}
 		}
 	}
