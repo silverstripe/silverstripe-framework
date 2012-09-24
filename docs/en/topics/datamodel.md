@@ -248,9 +248,12 @@ use case could be when you want to find all the members that does not exist in a
 
 ### Raw SQL options for advanced users
 
-Occasionally, the system described above won't let you do exactly what you need to do.  In these situtations, we have 
+Occasionally, the system described above won't let you do exactly what you need to do.  In these situations, we have 
 methods that manipulate the SQL query at a lower level.  When using these, please ensure that all table & field names 
 are escaped with double quotes, otherwise some DB back-ends (e.g. PostgreSQL) won't work.
+
+Under the hood, query generation is handled by the `[api:DataQuery]` class. This class does provide more direct
+access to certain SQL features that `DataList` abstracts away from you.
 
 In general, we advise against using these methods unless it's absolutely necessary.  If the ORM doesn't do quite what 
 you need it to, you may also consider extending the ORM with new data types or filter modifiers (that documentation 
