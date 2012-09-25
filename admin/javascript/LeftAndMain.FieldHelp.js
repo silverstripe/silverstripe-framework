@@ -6,15 +6,17 @@
 		 */
 		$(".cms form .field .middleColumn > [title]").entwine({
 			onmatch: function() {
+				
 				var title = this.prop("title");
+				var field = this.closest(".field");
 
-				if(title && title.length) {
+				if(title && title.length && field.has('.help').length == 0) {
 					var span = $("<span></span>", {
 						"class": "help",
 						"text":  title
 					});
 
-					this.closest(".field").append(span);
+					field.append(span);
 					this.removeProp("title");
 				}
 
