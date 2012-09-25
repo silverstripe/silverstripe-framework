@@ -113,12 +113,27 @@ class DateField extends TextField {
 	}
 
 	public function FieldHolder($properties = array()) {
-		// TODO Replace with properly extensible view helper system 
-		$d = DateField_View_JQuery::create($this); 
-		$d->onBeforeRender(); 
+		$usesCalendar = $this->getConfig('showcalendar');
+		if ($usesCalendar) {
+			// TODO Replace with properly extensible view helper system 
+			$d = DateField_View_JQuery::create($this); 
+			if(!$d->RegionalSettingsExist()) {
+				$dateformat = $this->getConfig('dateformat');
+
+				// if no localefile is present, the jQuery DatePicker 
+				// month- and daynames will default to English, so the date
+				// will not pass Zend validatiobn. We provide a fallback  
+				if (preg_match('/(MMM+)|(EEE+)/', $dateformat)) {
+					$this->setConfig('dateformat', $this->getConfig('datavalueformat'));
+				}
+			} 
+			$d->onBeforeRender();
+		}
 		$html = parent::FieldHolder(); 
-		$html = $d->onAfterRender($html); 
-		
+
+		if(!empty($d)) {
+			$html = $d->onAfterRender($html); 
+		}	
 		return $html;
 	}
 
@@ -199,9 +214,6 @@ class DateField extends TextField {
 			$this->value = null;
 			$this->valueObj = null;
 		} else {
-			// Quick fix for overzealous Zend validation, its case sensitive on month names (see #5990)
-			if(is_string($val)) $val = ucwords(strtolower($val));
-			
 			if($this->getConfig('dmyfields')) {
 				// Setting in correct locale
 				if(is_array($val) && $this->validateArrayValue($val)) {
@@ -480,6 +492,11 @@ class DateField_View_JQuery extends Object {
 	
 	protected $field;
 	
+	/*
+	 * the current jQuery UI DatePicker locale file
+	 */
+	protected $jqueryLocaleFile = '';	
+	
 	/**
 	 * @var array Maps values from {@link i18n::$all_locales()} to 
 	 * localizations existing in jQuery UI.
@@ -488,7 +505,7 @@ class DateField_View_JQuery extends Object {
 		'en_GB' => 'en-GB',
 		'en_US' => 'en', 
 		'en_NZ' => 'en-GB', 
-		'fr_CH' => 'fr-CH',
+		'fr_CH' => 'fr',
 		'pt_BR' => 'pt-BR',
 		'sr_SR' => 'sr-SR',
 		'zh_CN' => 'zh-CN',
@@ -509,7 +526,24 @@ class DateField_View_JQuery extends Object {
 	public function getField() {
 		return $this->field;
 	}
-	
+
+	/**
+	 * Check if jQuery UI locale settings exists for the current locale
+	 * @return boolean
+	 */
+	function RegionalSettingsExist() {
+		$lang = $this->getLang();
+		$localeFile = THIRDPARTY_DIR . "/jquery-ui/datepicker/i18n/jquery.ui.datepicker-{$lang}.js";
+		if (file_exists(Director::baseFolder() . '/' .$localeFile)){
+			$this->jqueryLocaleFile = $localeFile;
+			return true;
+		} else { 
+			// file goes before internal en_US settings,
+			// but both will validate  
+			return ($lang == 'en')? true : false; 
+		}
+	}	
+
 	public function onBeforeRender() {
 	}
 	
@@ -524,16 +558,9 @@ class DateField_View_JQuery extends Object {
 			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
 			// Include language files (if required)
-			$lang = $this->getLang();
-			if($lang != 'en') {
-				// TODO Check for existence of locale to avoid unnecessary 404s from the CDN
-				Requirements::javascript(
-					sprintf(
-						THIRDPARTY_DIR . '/jquery-ui/minified/i18n/jquery.ui.datepicker-%s.min.js',
-						// can be a mix between names (e.g. 'de') and combined locales (e.g. 'zh-TW')
-						$lang
-					));
-			}
+			if ($this->jqueryLocaleFile){
+				Requirements::javascript($this->jqueryLocaleFile);
+ 			}
 			
 			Requirements::javascript(FRAMEWORK_DIR . "/javascript/DateField.js");
 		}
@@ -578,12 +605,12 @@ class DateField_View_JQuery extends Object {
 		  '/^d([^d])/' => 'd$1',
 		  '/([^d])d$/' => '$1d',
 		  '/dd/' => 'dd',
-		  '/EEEE/' => 'DD',
-		  '/EEE/' => 'D',
 		  '/SS/' => '',
 		  '/eee/' => 'd',
 		  '/e/' => 'N',
 		  '/D/' => '',
+		  '/EEEE/' => 'DD',
+		  '/EEE/' => 'D', 
 		  '/w/' => '',
 			// make single "M" lowercase
 		  '/([^M])M([^M])/' => '$1m$2',
