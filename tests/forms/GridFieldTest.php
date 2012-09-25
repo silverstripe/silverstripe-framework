@@ -33,6 +33,7 @@ class GridFieldTest extends SapphireTest {
 			$sort = new GridFieldSortableHeader(),
 			$filter = new GridFieldFilterHeader(),
 			new GridFieldDataColumns(),
+			new GridFieldPageCount('toolbar-header-right'),
 			$pagination = new GridFieldPaginator(),
 			new GridState_Component(),
 		));
