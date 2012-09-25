@@ -125,7 +125,7 @@ class FormField extends RequestHandler {
 	 */
 	public function __construct($name, $title = null, $value = null) {
 		$this->name = $name;
-		$this->title = ($title === null) ? $name : $title;
+		$this->title = ($title === null) ? $this->name_to_label($name) : $title;
 
 		if($value !== NULL) $this->setValue($value);
 
