@@ -294,7 +294,7 @@ the scope back to the previous level. Take the following example:
 With a page structure (Blog -> Blog entry -> Child blog entry) the 
 above will produce:
 
-	:::sss
+	:::ss
 	Blog
 	--
 	Blog entry
