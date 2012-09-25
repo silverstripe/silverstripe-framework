@@ -103,6 +103,8 @@ if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url 
 // Connect to database
 require_once('model/DB.php');
 
+global $databaseConfig;
+
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
 	if(!file_exists(BASE_PATH . '/install.php')) {
