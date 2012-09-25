@@ -241,14 +241,14 @@ ru:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Добавить роль для этой группы'
     Code: 'Код группы'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
+    DefaultGroupTitleAdministrators: Администраторы
+    DefaultGroupTitleContentAuthors: 'Авторы содержимого'
     Description: Описание
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Блокировано?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Ролей не найдено'
     PLURALNAME: Groups
     Parent: 'Родительская группа'
     RolesAddEditLink: 'Добавить/редактировать роли'
@@ -392,7 +392,7 @@ ru:
     'APPLY FILTER': 'Apply Filter'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
+    DAYNOLEADING: 'Число месяца без ведущего нуля'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
     FOURDIGITYEAR: 'Four-digit year'
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
@@ -500,13 +500,13 @@ ru:
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Имя группы'
     IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTUSERS: 'Импорт пользователей'
     MEMBERS: Участники
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Новая группа'
     PERMISSIONS: 'Права доступа'
-    ROLES: Roles
+    ROLES: Роли
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
     Users: Users
