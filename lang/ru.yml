@@ -180,14 +180,14 @@ ru:
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
+    DISALLOWEDFILETYPE: 'Загрузка этого типа файла не допускается'
+    FILE: Файл
+    FROMCOMPUTER: 'С диска'
+    FROMFILESTORE: 'С сервера'
+    NOSOURCE: 'Пожалуйста, выберите файл, который нужно прикрепить'
     REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe загрузки изображений'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
@@ -212,25 +212,25 @@ ru:
     NONE: 'не выбрано'
   GridAction:
     DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    Delete: Удалить
+    UnlinkRelation: 'Отменить связь'
   GridField:
     Add: 'Add {name}'
-    Filter: Filter
+    Filter: Фильтр
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Найти
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    NoItemsFound: 'Элементов не найдено'
+    PRINTEDAT: 'Когда распечатано:'
+    PRINTEDBY: 'Кем распечатано:'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    RelationSearch: 'Поиск отношений'
+    ResetFilter: Сброс
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Нет прав на удаление'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -257,41 +257,41 @@ ru:
     has_many_Permissions: 'Права групп пользователей'
     many_many_Members: 'Члены группы'
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Импорт одной или нескольких групп в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    ResultDeleted: 'Удалено %d групп'
+    ResultUpdated: 'Обновлено %d групп'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Якорь
-    BUTTONINSERT: Insert
+    BUTTONINSERT: Вставить
     BUTTONINSERTLINK: 'Вставить ссылку'
     BUTTONREMOVELINK: 'Удалить ссылку'
     BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
+    CAPTIONTEXT: 'Текст подписи'
     CSSCLASS: Выравнивание/Стиль
     CSSCLASSCENTER: 'По центру без текста по бокам'
     CSSCLASSLEFT: 'Слева с обтеканием текста'
     CSSCLASSLEFTALONE: 'Независимо слева.'
     CSSCLASSRIGHT: 'Справа с обтеканием текста'
-    DETAILS: Details
+    DETAILS: Детали
     EMAIL: 'Адрес email'
     FILE: Файл
     FOLDER: Папка
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
+    FROMCMS: 'Из CMS'
+    FROMCOMPUTER: 'С диска'
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLE: 'Текст (всплывающая подсказка) - для дополнительной информации об изображении'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Ширина
@@ -313,7 +313,7 @@ ru:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Image
+    IMAGE: Изображение
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -322,7 +322,7 @@ ru:
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Удалено.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Действия
     HELP: Помощь
     PAGETYPE: 'Тип страницы:'
     PERMAGAIN: 'Вы вышли из Системы Управления Сайтом. Если Вы хотите войти снова, введите внизу имя пользователя и пароль.'
@@ -332,7 +332,7 @@ ru:
     PreviewButton: Просмотр
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Сохранено.
-    VersionUnknown: unknown
+    VersionUnknown: неизвестно
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -351,7 +351,7 @@ ru:
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
     CONFIRMPASSWORD: 'Подтвердить пароль'
     DATEFORMAT: 'Формат даты'
-    DefaultAdminFirstname: 'Default Admin'
+    DefaultAdminFirstname: 'Администратор по умолчанию '
     DefaultDateTime: 'по умолч.'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Поле нового пароля не может быть пустым; пожалуйста, повторите попытку'
@@ -388,32 +388,32 @@ ru:
   MemberAuthenticator:
     TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
+    AMORPM: 'AM (Ante meridiem) или PM (Post meridiem)'
+    'APPLY FILTER': 'Применить фильтр'
+    Custom: Пользовательский
+    DATEFORMATBAD: 'Неверный формат даты'
     DAYNOLEADING: 'Число месяца без ведущего нуля'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
+    FOURDIGITYEAR: 'Год четырьмя цифрами'
+    FULLNAMEMONTH: 'Название месяца полностью (июнь)'
+    HOURNOLEADING: 'Часы без ведущего нуля'
+    MINUTENOLEADING: 'Минуты без ведущего нуля'
+    MONTHNOLEADING: 'Месяц без ведущего нуля'
+    Preview: Просмотр
+    SHORTMONTH: 'Сокращенное название месяца (Июн)'
+    TOGGLEHELP: 'Включить подсказки форматирования'
+    TWODIGITDAY: 'Число месяца: двумя цифрами'
+    TWODIGITHOUR: 'Часы: двумя цифрами (00 - 23)'
+    TWODIGITMINUTE: 'Минуты: двумя цифрами (00 - 59)'
+    TWODIGITMONTH: 'Месяц двумя цифрами (01=январь и т.д.)'
+    TWODIGITSECOND: 'Секунды: двумя цифрами (00 - 59)'
+    TWODIGITYEAR: 'Год: двумя цифрами'
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultDeleted: 'Удалено %d участников'
+    ResultNone: 'Изменений нет'
     ResultUpdated: 'Updated {count} members'
   MemberPassword:
     PLURALNAME: 'Member Passwords'
@@ -441,8 +441,8 @@ ru:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT: Сумма
+    FIELDLABELCURRENCY: Валюта
   NullableField:
     IsNullLabel: Недействительно
   NumericField:
@@ -451,7 +451,7 @@ ru:
     Page: Page
     View: View
   Permission:
-    AdminGroup: Administrator
+    AdminGroup: Администратор
     CMS_ACCESS_CATEGORY: 'Доступ к CMS'
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
@@ -461,7 +461,7 @@ ru:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+    FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
@@ -493,7 +493,7 @@ ru:
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+    ACCESS_HELP: 'Возможность просматривать, добавлять и редактировать пользователей, а также присваивать им определенные роли и права доступа.'
     APPLY_ROLES: 'Присвоить роли группам'
     APPLY_ROLES_HELP: 'Возможность редактировать роли, присвоенные той или иной группе. Необходимо разрешение на доступ к разделу "Пользователи". '
     EDITPERMISSIONS: 'Задать разрешения и IP адреса для каждой группы'
@@ -511,8 +511,8 @@ ru:
     TABROLES: Роли
     Users: Пользователи
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport: 'Импорт из CSV'
+    FileFieldLabel: 'Файл CSV <small>(Допустимые расширения: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
@@ -551,15 +551,15 @@ ru:
     ATTACHFILES: 'Прикрепить файлы'
     AttachFile: 'Прикрепить файл(ы)'
     DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
+    DELETEINFO: 'Окончательно удалить этот файл с сервера'
     DOEDIT: Сохранить
     DROPFILE: 'drop a file'
-    DROPFILES: 'перетащите файлы сюда'
+    DROPFILES: 'перетащить файлы'
     Dimensions: Dimensions
     EDIT: Edit
     EDITINFO: 'Редактировать этот файл'
     FIELDNOTSET: 'Информация о файле не найдена'
-    FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTER: 'С диска'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Внимание: это изображение будет вставлено через хотлинк. Пожалуйста, не забывайте, что на это у вас должно быть разрешение владельца исходного ресурса.'
@@ -567,7 +567,7 @@ ru:
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Ошибка при удалении файла'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    REMOVEINFO: 'Удалить файл отсюда, но не удалять с сервера'
     STARTALL: 'Стартовать все'
     STARTALLINFO: 'Start all uploads'
     Saved: Сохранено
