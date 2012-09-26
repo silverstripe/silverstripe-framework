@@ -38,7 +38,8 @@ class RequestHandlingTest extends FunctionalTest {
 		$response = Director::test("testGoodBase1/method/1/2");
 		$this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
 
-		/* In addition, these values are availalbe in $controller->urlParams.  This is mainly for backward compatability. */
+		/* In addition, these values are availalbe in $controller->urlParams.  This is mainly for backward
+		 * compatability. */
 		$response = Director::test("testGoodBase1/legacymethod/3/4");
 		$this->assertEquals("\$this->urlParams can be used, for backward compatibility: 3, 4", $response->getBody());
 	}
@@ -64,9 +65,9 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 		
 	public function testBadBase() {
-		/* Without a double-slash indicator in the URL, the entire URL is popped off the stack.  The controller's default
-		action handlers have been designed for this to an extend: simple actions can still be called.  This is the set-up
-		of URL rules written before this new request handler. */
+		/* Without a double-slash indicator in the URL, the entire URL is popped off the stack.  The controller's
+		 * default action handlers have been designed for this to an extend: simple actions can still be called.
+		 * This is the set-up of URL rules written before this new request handler. */
 		$response = Director::test("testBadBase/method/1/2");
 		$this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
 
@@ -74,7 +75,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("Form posted", $response->getBody());
 		
 		/* It won't, however, let you chain requests to access methods on forms, or form fields.  In order to do that,
-		you need to have a // marker in your URL parsing rule */
+		 * you need to have a // marker in your URL parsing rule */
 		$response = Director::test("testBadBase/TestForm/fields/MyField");
 		$this->assertNotEquals("MyField requested", $response->getBody());
 	}
@@ -181,7 +182,8 @@ class RequestHandlingTest extends FunctionalTest {
 		$data = array('action_disallowedcontrollermethod' => 1, 'SecurityID' => $securityId);
 		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
 		$this->assertEquals(403, $response->getStatusCode(), 
-			'Should fail: Invocation through POST form handler, controller action instead of form action, not contained in $allowed_actions, with CSRF token'
+			'Should fail: Invocation through POST form handler, controller action instead of form action,'
+			.' not contained in $allowed_actions, with CSRF token'
 		);
 		
 		$data = array('action_formaction' => 1, 'SecurityID' => $securityId);
@@ -194,7 +196,8 @@ class RequestHandlingTest extends FunctionalTest {
 		$data = array('action_controlleraction' => 1, 'SecurityID' => $securityId);
 		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
 		$this->assertEquals(200, $response->getStatusCode(), 
-			'Should pass: Invocation through POST form handler, controller action instead of form action, contained in $allowed_actions, with CSRF token'
+			'Should pass: Invocation through POST form handler, controller action instead of form action, contained in'
+				. ' $allowed_actions, with CSRF token'
 		);
 		
 		$data = array('action_formactionInAllowedActions' => 1);
@@ -316,7 +319,8 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 
 	public function legacymethod($request) {
-		return "\$this->urlParams can be used, for backward compatibility: " . $this->urlParams['ID'] . ', ' . $this->urlParams['OtherID'];
+		return "\$this->urlParams can be used, for backward compatibility: " . $this->urlParams['ID'] . ', '
+			. $this->urlParams['OtherID'];
 	}
 	
 	public function virtualfile($request) {

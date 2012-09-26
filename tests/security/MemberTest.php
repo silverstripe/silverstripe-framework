@@ -138,7 +138,8 @@ class MemberTest extends FunctionalTest {
 		$member->Password = "test3";
 		$member->write();
 	
-		$passwords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")->getIterator();
+		$passwords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")
+			->getIterator();
 		$this->assertNotNull($passwords);
 		$passwords->rewind();
 		$this->assertTrue($passwords->current()->checkPassword('test3'), "Password test3 not found in MemberRecord");
@@ -151,7 +152,8 @@ class MemberTest extends FunctionalTest {
 	
 		$passwords->next();
 		$this->assertInstanceOf('DataObject', $passwords->current());
-		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'), "Password 1nitialPassword not found in MemberRecord");
+		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'),
+			"Password 1nitialPassword not found in MemberRecord");
 	}
 	
 	/**
@@ -165,7 +167,8 @@ class MemberTest extends FunctionalTest {
 		$valid = $member->changePassword('32asDF##$$%%');
 		$this->assertTrue($valid->valid());
 		/*
-		$this->assertEmailSent("sam@silverstripe.com", null, "/changed password/", '/sam@silverstripe\.com.*32asDF##\$\$%%/');
+		$this->assertEmailSent("sam@silverstripe.com", null, "/changed password/",
+		'/sam@silverstripe\.com.*32asDF##\$\$%%/');
 		*/
 	}
 	
@@ -583,8 +586,10 @@ class MemberTest extends FunctionalTest {
 		$admin = $this->objFromFixture('Member', 'admin');
 		$otherAdmin = $this->objFromFixture('Member', 'other-admin');
 		
-		$this->assertTrue(in_array($admin->getTitle(), $members), $admin->getTitle().' should be in the returned list.');
-		$this->assertTrue(in_array($otherAdmin->getTitle(), $members), $otherAdmin->getTitle().' should be in the returned list.');
+		$this->assertTrue(in_array($admin->getTitle(), $members),
+			$admin->getTitle().' should be in the returned list.');
+		$this->assertTrue(in_array($otherAdmin->getTitle(), $members),
+			$otherAdmin->getTitle().' should be in the returned list.');
 		$this->assertEquals(2, count($members), 'There should be 2 members from the admin group');
 	}
 

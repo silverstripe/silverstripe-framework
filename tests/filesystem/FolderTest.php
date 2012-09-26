@@ -70,11 +70,14 @@ class FolderTest extends SapphireTest {
 		// Before write()
 		$folder1->Name = 'FileTest-folder1-renamed';
 		$this->assertFileExists($oldPathFolder1, 'Old path is still present');
-		$this->assertFileNotExists($folder1->getFullPath(), 'New path is updated in memory, not written before write() is called');
+		$this->assertFileNotExists($folder1->getFullPath(),
+			'New path is updated in memory, not written before write() is called');
 		$this->assertFileExists($oldPathFile1, 'Old file is still present');
 		// TODO setters currently can't update in-memory
-		// $this->assertFileNotExists($file1->getFullPath(), 'New path on contained files is updated in memory, not written before write() is called');
-		// $this->assertFileNotExists($subfolder1->getFullPath(), 'New path on subfolders is updated in memory, not written before write() is called');
+		// $this->assertFileNotExists($file1->getFullPath(),
+		// 'New path on contained files is updated in memory, not written before write() is called');
+		// $this->assertFileNotExists($subfolder1->getFullPath(),
+		// 'New path on subfolders is updated in memory, not written before write() is called');
 	
 		$folder1->write();
 		
@@ -111,7 +114,8 @@ class FolderTest extends SapphireTest {
 	
 		// Before write()
 		$this->assertFileExists($oldPathFolder1, 'Old path is still present');
-		$this->assertFileNotExists($folder1->getFullPath(), 'New path is updated in memory, not written before write() is called');
+		$this->assertFileNotExists($folder1->getFullPath(),
+			'New path is updated in memory, not written before write() is called');
 	
 		$folder1->write();
 		
@@ -136,7 +140,8 @@ class FolderTest extends SapphireTest {
 		// Check if the file in the folder moved along
 		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
 		$this->assertFileExists($file1->getFullPath());
-		$this->assertEquals($file1->Filename, 'assets/FileTest-folder2/FileTest-folder1/File1.txt', 'The file DataObject has updated path');
+		$this->assertEquals($file1->Filename, 'assets/FileTest-folder2/FileTest-folder1/File1.txt',
+			'The file DataObject has updated path');
 	}
 
 	/**
@@ -152,7 +157,8 @@ class FolderTest extends SapphireTest {
 		// Check if the file in the folder moved along
 		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
 		$this->assertFileExists($file1->getFullPath());
-		$this->assertEquals($file1->Filename, 'assets/FileTest-folder1-changed/File1.txt', 'The file DataObject path uses renamed folder');
+		$this->assertEquals($file1->Filename, 'assets/FileTest-folder1-changed/File1.txt',
+			'The file DataObject path uses renamed folder');
 	}
 	
 	/**
@@ -280,7 +286,9 @@ class FolderTest extends SapphireTest {
 		foreach($folderIDs as $folderID) {
 			$folder = DataObject::get_by_id('Folder', $folderID);
 			// Might have been removed during test
-			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
+				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			}
 		}
 		
 		parent::tearDown();

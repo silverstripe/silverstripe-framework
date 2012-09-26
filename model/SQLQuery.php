@@ -99,7 +99,9 @@ class SQLQuery {
 	 * @param array $having An array of HAVING clauses.
 	 * @param array|string $limit A LIMIT clause or array with limit and offset keys
 	 */
-	public function __construct($select = "*", $from = array(), $where = array(), $orderby = array(), $groupby = array(), $having = array(), $limit = array()) {
+	public function __construct($select = "*", $from = array(), $where = array(), $orderby = array(),
+			$groupby = array(), $having = array(), $limit = array()) {
+
 		$this->setSelect($select);
 		$this->setFrom($from);
 		$this->setWhere($where);
@@ -126,8 +128,12 @@ class SQLQuery {
 	public function __set($field, $value) {
 		if(strtolower($field) == 'select') Deprecation::notice('3.0', 'Please use setSelect() or addSelect() instead');
 		if(strtolower($field) == 'from') Deprecation::notice('3.0', 'Please use setFrom() or addFrom() instead');
-		if(strtolower($field) == 'groupby') Deprecation::notice('3.0', 'Please use setGroupBy() or addGroupBy() instead');
-		if(strtolower($field) == 'orderby') Deprecation::notice('3.0', 'Please use setOrderBy() or addOrderBy() instead');
+		if(strtolower($field) == 'groupby') {
+			Deprecation::notice('3.0', 'Please use setGroupBy() or addGroupBy() instead');
+		}
+		if(strtolower($field) == 'orderby') {
+			Deprecation::notice('3.0', 'Please use setOrderBy() or addOrderBy() instead');
+		}
 		if(strtolower($field) == 'having') Deprecation::notice('3.0', 'Please use setHaving() or addHaving() instead');
 		if(strtolower($field) == 'limit') Deprecation::notice('3.0', 'Please use setLimit() instead');
 		if(strtolower($field) == 'delete') Deprecation::notice('3.0', 'Please use setDelete() instead');
@@ -348,9 +354,13 @@ class SQLQuery {
 		$tables = array();
 		
 		foreach($this->from as $key => $tableClause) {
-			if(is_array($tableClause)) $table = '"'.$tableClause['table'].'"';
-			else if(is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) $table = $matches[1];
-			else $table = $tableClause;
+			if(is_array($tableClause)) {
+				$table = '"'.$tableClause['table'].'"';
+			} else if(is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) {
+				$table = $matches[1];
+			} else {
+				$table = $tableClause;
+			}
 
 			// Handle string replacements
 			if($this->replacementsOld) $table = str_replace($this->replacementsOld, $this->replacementsNew, $table);
@@ -713,7 +723,8 @@ class SQLQuery {
 
 		$args = func_get_args();
 		if(isset($args[1])) {
-			Deprecation::notice('3.0', 'Multiple arguments to where is deprecated. Pleas use where("Column = Something") syntax instead');
+			Deprecation::notice('3.0',
+				'Multiple arguments to where is deprecated. Pleas use where("Column = Something") syntax instead');
 		}
 
 		return $this->addWhere($where);
@@ -848,7 +859,8 @@ class SQLQuery {
 
 	/**
 	 * Return an itemised select list as a map, where keys are the aliases, and values are the column sources.
-	 * Aliases will always be provided (if the alias is implicit, the alias value will be inferred), and won't be quoted.
+	 * Aliases will always be provided (if the alias is implicit, the alias value will be inferred), and won't be
+	 * quoted.
 	 * E.g., 'Title' => '"SiteTree"."Title"'.
 	 */
 	public function getSelect() {
@@ -861,20 +873,23 @@ class SQLQuery {
 	 * @return string
 	 */
 	public function sql() {
-		// TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new syntax
+		// TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new
+		// syntax
 		$origFrom = $this->from;
 
 		// Build from clauses
 		foreach($this->from as $alias => $join) {
 			// $join can be something like this array structure
-			// array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1", "Status = 'approved'"))
+			// array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1", 
+			// "Status = 'approved'"))
 			if(is_array($join)) {
 				if(is_string($join['filter'])) $filter = $join['filter'];
 				else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
 				else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 
 				$aliasClause = ($alias != $join['table']) ? " AS \"" . Convert::raw2sql($alias) . "\"" : "";
-				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"" . $join['table'] . "\"$aliasClause ON $filter";
+				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"" . $join['table']
+					. "\"$aliasClause ON $filter";
 			}
 		}
 

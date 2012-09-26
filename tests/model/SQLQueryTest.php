@@ -61,11 +61,14 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->setSelect(array("Name","Meta"))->setFrom("MyTable");
 		$query->setWhere("Name = 'Name'")->addWhere("Meta = 'Test'")->addWhere("Beta != 'Gamma'");
-		$this->assertEquals("SELECT Name, Meta FROM MyTable WHERE (Name = 'Name') AND (Meta = 'Test') AND (Beta != 'Gamma')", $query->sql());
+		$this->assertEquals(
+			"SELECT Name, Meta FROM MyTable WHERE (Name = 'Name') AND (Meta = 'Test') AND (Beta != 'Gamma')",
+			$query->sql());
 	}
 	
 	public function testSelectWithLimitClause() {
-		if(!(DB::getConn() instanceof MySQLDatabase || DB::getConn() instanceof SQLite3Database || DB::getConn() instanceof PostgreSQLDatabase)) {
+		if(!(DB::getConn() instanceof MySQLDatabase || DB::getConn() instanceof SQLite3Database 
+				|| DB::getConn() instanceof PostgreSQLDatabase)) {
 			$this->markTestIncomplete();
 		}
 
@@ -115,18 +118,24 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->setFrom("MyTable");
 		$query->setOrderBy('implode("MyName","Color")');
-		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', $query->sql());
+		$this->assertEquals(
+			'SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', 
+			$query->sql());
 		
 		$query = new SQLQuery();
 		$query->setFrom("MyTable");
 		$query->setOrderBy('implode("MyName","Color") DESC');
-		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" DESC', $query->sql());
+		$this->assertEquals(
+			'SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" DESC',
+			$query->sql());
 		
 		$query = new SQLQuery();
 		$query->setFrom("MyTable");
 		$query->setOrderBy('RAND()');
 		
-		$this->assertEquals('SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', $query->sql());
+		$this->assertEquals(
+			'SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC',
+			$query->sql());
 	}
 
 	/**
@@ -181,7 +190,9 @@ class SQLQueryTest extends SapphireTest {
 		$query->setOrderBy('implode("MyName","Color") DESC');
 		$query->reverseOrderBy();
 		
-		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC',$query->sql());
+		$this->assertEquals(
+			'SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC',
+			$query->sql());
 	}
 
 	public function testFiltersOnID() {

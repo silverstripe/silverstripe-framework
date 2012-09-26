@@ -38,7 +38,12 @@ class Text extends StringField {
  	 * @see DBField::requireField()
  	 */
 	public function requireField() {
-		$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci', 'arrayValue'=>$this->arrayValue);
+		$parts=Array(
+			'datatype'=>'mediumtext',
+			'character set'=>'utf8',
+			'collate'=>'utf8_general_ci',
+			'arrayValue'=>$this->arrayValue
+		);
 		$values=Array('type'=>'text', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values, $this->default);
 	}
@@ -269,7 +274,8 @@ class Text extends StringField {
 	 * 
 	 * @return string
 	 */
-	public function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true, $prefix = "... ", $suffix = "...") {
+	public function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true,
+			$prefix = "... ", $suffix = "...") {
 
 		if(!$string) $string = $_REQUEST['Search'];	// Use the default "Search" request variable (from SearchForm)
 
@@ -284,7 +290,8 @@ class Text extends StringField {
 
 		if($position > 0) {
 			// We don't want to start mid-word
-			$position = max((int) strrpos(substr($text, 0, $position), ' '), (int) strrpos(substr($text, 0, $position), "\n"));
+			$position = max((int) strrpos(substr($text, 0, $position), ' '),
+				(int) strrpos(substr($text, 0, $position), "\n"));
 		}
 
 		$summary = substr($text, $position, $characters);
@@ -296,7 +303,8 @@ class Text extends StringField {
 			
 				foreach($stringPieces as $stringPiece) {
 					if(strlen($stringPiece) > 2) {
-						$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+						$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>",
+							$summary);
 					}
 				}
 			}
@@ -322,7 +330,8 @@ class Text extends StringField {
 		} else {
 			// Fallback to using raw2xml and show a warning
 			// TODO Don't kill script execution, we can continue without losing complete control of the app
-			user_error("Couldn't find an appropriate TextParser sub-class to create (Looked for '$parser'). Make sure it sub-classes TextParser and that you've done ?flush=1.", E_USER_WARNING);
+			user_error("Couldn't find an appropriate TextParser sub-class to create (Looked for '$parser')."
+				. "Make sure it sub-classes TextParser and that you've done ?flush=1.", E_USER_WARNING);
 			return Convert::raw2xml($this->value);
 		}
 	}

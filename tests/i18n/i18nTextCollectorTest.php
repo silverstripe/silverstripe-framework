@@ -76,9 +76,9 @@ PHP;
 			$html = <<<SS
 			<% _t('Test.SINGLEQUOTE','Single Quote'); %>
 <%t i18nTestModule.NEWMETHODSIG "New _t method signature test" %>
-<%t i18nTestModule.INJECTIONS_0 "Hello {name} {greeting}. But it is late, {goodbye}" name="Mark" greeting="welcome" goodbye="bye" %>
-<%t i18nTestModule.INJECTIONS_1 "Hello {name} {greeting}. But it is late, {goodbye}" name="Paul" greeting="good you are here" goodbye="see you" %>
-<%t i18nTestModule.INJECTIONS_2 "Hello {name} {greeting}. But it is late, {goodbye}" is "New context (this should be ignored)" name="Steffen" greeting="willkommen" goodbye="wiedersehen" %>
+<%t i18nTestModule.INJECTIONS_0 "Hello {name} {greeting}, and {goodbye}" name="Mark" greeting="welcome" goodbye="bye" %>
+<%t i18nTestModule.INJECTIONS_1 "Hello {name} {greeting}, and {goodbye}" name="Paul" greeting="welcome" goodbye="cya" %>
+<%t i18nTestModule.INJECTIONS_2 "Hello {name} {greeting}" is "context (ignored)" name="Steffen" greeting="Wilkommen" %>
 <%t i18nTestModule.INJECTIONS_3 name="Cat" greeting='meow' goodbye="meow" %>
 <%t i18nTestModule.INJECTIONS_4 name=\$absoluteBaseURL greeting=\$get_locale goodbye="global calls" %>
 SS;
@@ -89,9 +89,9 @@ SS;
 			array(
 				'Test.SINGLEQUOTE' => array('Single Quote'),
 				'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test",null,null),
-				'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
-				'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
-				'i18nTestModule.INJECTIONS_2' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, "New context (this should be ignored)"),
+				'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}, and {goodbye}", null, null),
+				'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}, and {goodbye}", null, null),
+				'i18nTestModule.INJECTIONS_2' => array("Hello {name} {greeting}", null, "context (ignored)"),
 				'i18nTestModule.INJECTIONS_3' => array(null, null, null),
 				'i18nTestModule.INJECTIONS_4' => array(null, null, null),
 			)
@@ -319,9 +319,13 @@ PHP;
 
 		$php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
-_t('i18nTestModule.INJECTIONS1','_DOES_NOT_EXIST', "Hello {name} {greeting}. But it is late, {goodbye}", array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
-_t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}", array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
-_t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}", "New context (this should be ignored)", array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
+_t('i18nTestModule.INJECTIONS1','_DOES_NOT_EXIST', "Hello {name} {greeting}. But it is late, {goodbye}",
+	array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
+_t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}",
+	array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+_t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}",
+		"New context (this should be ignored)",
+		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
 _t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
 PHP;
 
@@ -329,9 +333,11 @@ PHP;
 
 		$expectedArray = (array(
 			'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test"),
-			'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST", "Hello {name} {greeting}. But it is late, {goodbye}"),
+			'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST",
+				"Hello {name} {greeting}. But it is late, {goodbye}"),
 			'i18nTestModule.INJECTIONS2' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
-			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}", "New context (this should be ignored)"),
+			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}",
+				"New context (this should be ignored)"),
 		));
 
 		ksort($expectedArray);
@@ -353,7 +359,8 @@ PHP;
 		
 		$this->assertEquals(
 			// single quotes should be properly escaped by the parser already
-			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES', array("Value with 'Escaped Single Quotes'"), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES',
+				array("Value with 'Escaped Single Quotes'"), 'en_US'),
 			"\$lang['en_US']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
 		);
 		
@@ -370,7 +377,8 @@ PHP;
 
 PHP;
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
+				array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
 			$php
 		);
 		
@@ -382,7 +390,8 @@ PHP;
 
 PHP;
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array('Value with "Double Quotes"','Comment with "Double Quotes"'), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
+				array('Value with "Double Quotes"','Comment with "Double Quotes"'), 'en_US'),
 			$php
 		);
 	}
@@ -623,7 +632,8 @@ YAML;
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] = 'Theme1 My include replacement no namespace: %s';",
+			"\$lang['en']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] ="
+				. " 'Theme1 My include replacement no namespace: %s';",
 			$theme1LangFileContent
 		);
 		
@@ -640,7 +650,7 @@ YAML;
 		);
 
 		i18n::set_locale($local);  //set the locale to the US locale expected in the asserts
-+		i18n::set_default_locale($defaultlocal);
+		i18n::set_default_locale($defaultlocal);
 	}
 	
 	public function testCollectFromEntityProvidersInCustomObject() {

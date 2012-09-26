@@ -8,7 +8,8 @@ class ListboxFieldTest extends SapphireTest {
 
 	static $fixture_file = 'ListboxFieldTest.yml';
 	
-	protected $extraDataObjects = array('ListboxFieldTest_DataObject', 'ListboxFieldTest_Article', 'ListboxFieldTest_Tag');
+	protected $extraDataObjects = array('ListboxFieldTest_DataObject', 'ListboxFieldTest_Article',
+		'ListboxFieldTest_Tag');
 
 	public function testFieldWithManyManyRelationship() {
 		$articleWithTags = $this->objFromFixture('ListboxFieldTest_Article', 'articlewithtags');

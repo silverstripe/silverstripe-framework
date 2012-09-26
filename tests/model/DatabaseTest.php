@@ -90,18 +90,22 @@ class DatabaseTest extends SapphireTest {
 			return $this->markTestSkipped('Tested database doesn\'t support application locks');
 		}
 
-		$this->assertTrue($db->getLock('DatabaseTest'), 'Can aquire lock');
+		$this->assertTrue($db->getLock('DatabaseTest'),
+			'Can aquire lock');
 		// $this->assertFalse($db->getLock('DatabaseTest'), 'Can\'t repeatedly aquire the same lock');
-		$this->assertTrue($db->getLock('DatabaseTest'), 'The same lock can be aquired multiple times in the same connection');
+		$this->assertTrue($db->getLock('DatabaseTest'),
+			'The same lock can be aquired multiple times in the same connection');
 
-		$this->assertTrue($db->getLock('DatabaseTestOtherLock'), 'Can aquire different lock');
+		$this->assertTrue($db->getLock('DatabaseTestOtherLock'),
+			'Can aquire different lock');
 		$db->releaseLock('DatabaseTestOtherLock');
 		
 		// Release potentially stacked locks from previous getLock() invocations
 		$db->releaseLock('DatabaseTest');
 		$db->releaseLock('DatabaseTest');
 		
-		$this->assertTrue($db->getLock('DatabaseTest'), 'Can aquire lock after releasing it');
+		$this->assertTrue($db->getLock('DatabaseTest'),
+			'Can aquire lock after releasing it');
 		$db->releaseLock('DatabaseTest');
 	}
 	

@@ -77,7 +77,8 @@ class TextTest extends SapphireTest {
 			'<p>First sentence.</p>' => 'First sentence.',
 			'<p>First sentence. Second sentence. Third sentence</p>' => 'First sentence. Second sentence.',
 			'<p>First sentence. <em>Second sentence</em>. Third sentence</p>' => 'First sentence. Second sentence.',
-			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>' => 'First sentence. Second sentence.'
+			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>'
+				=> 'First sentence. Second sentence.'
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
@@ -92,7 +93,8 @@ class TextTest extends SapphireTest {
 	 */
 	public function testBigSummary() {
 		$cases = array(
-			'This text has multiple sentences. Big Summary uses this to split sentences up.' => 'This text has multiple...',
+			'This text has multiple sentences. Big Summary uses this to split sentences up.'
+				=> 'This text has multiple...',
 			'This text does not have multiple sentences' => 'This text does not...',
 			'Very short' => 'Very short',
 			'' => ''
@@ -125,7 +127,8 @@ class TextTest extends SapphireTest {
 		$textObj->setValue($testString2);
 		
 		$this->assertEquals(
-			'This is <span class="highlight">some</span> <span class="highlight">test</span> text. <span class="highlight">test</span> <span class="highlight">test</span> what if you have...',
+			'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
+				. ' <span class="highlight">test</span> <span class="highlight">test</span> what if you have...',
 			$textObj->ContextSummary(50, $testKeywords2)
 		);
 		

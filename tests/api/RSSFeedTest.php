@@ -31,7 +31,8 @@ class RSSFeedTest extends SapphireTest {
 
 
 		// Feed #2 - put Content() into <title> and AltContent() into <description>
-		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description", "Content", "AltContent");
+		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description",
+			"Content", "AltContent");
 		$content = $rssFeed->outputToBrowser();
 
 		$this->assertContains('<title>ItemA Content</title>', $content);

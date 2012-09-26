@@ -20,7 +20,8 @@ class DbDatetimeTest extends FunctionalTest {
 		$time1 = is_numeric($date1) ? $date1 : strtotime($date1);
 		$time2 = is_numeric($date2) ? $date2 : strtotime($date2);
 		
-		$this->assertTrue(abs($time1-$time2)<$allowedDifference, $comment . " (times differ by " . abs($time1-$time2) . " seconds)");
+		$this->assertTrue(abs($time1-$time2)<$allowedDifference,
+			$comment . " (times differ by " . abs($time1-$time2) . " seconds)");
 	}
 	
 	private function getDbNow() {
@@ -39,7 +40,8 @@ class DbDatetimeTest extends FunctionalTest {
 		$threshold = 5; // seconds
 
 		if($offset > 5) {
-			$this->markTestSkipped('The time of the database is out of sync with the webserver by ' . abs($offset) . ' seconds.');
+			$this->markTestSkipped('The time of the database is out of sync with the webserver by '
+				. abs($offset) . ' seconds.');
 		}
 
 		if(method_exists($this->adapter, 'supportsTimezoneOverride') && !$this->adapter->supportsTimezoneOverride()) {
@@ -68,7 +70,8 @@ class DbDatetimeTest extends FunctionalTest {
 
 		$clause = $this->adapter->formattedDatetimeClause('1973-10-14 10:30:00', '%H:%i, %d/%m/%Y');
 		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, date('H:i, d/m/Y', strtotime('1973-10-14 10:30:00')), 'nice literal time', $offset);
+		$this->matchesRoughly($result, date('H:i, d/m/Y', strtotime('1973-10-14 10:30:00')), 'nice literal time',
+			$offset);
 
 		$clause = $this->adapter->formattedDatetimeClause('now', '%d');
 		$result = DB::query('SELECT ' . $clause)->value();
@@ -76,7 +79,8 @@ class DbDatetimeTest extends FunctionalTest {
 
 		$clause = $this->adapter->formattedDatetimeClause('"Created"', '%U') . ' AS test FROM "DbDateTimeTest_Team"';
 		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created), 'fixture ->Created as timestamp', $offset);
+		$this->matchesRoughly($result, strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created),
+			'fixture ->Created as timestamp', $offset);
 	}
 	
 	public function testDbDatetimeInterval() {
@@ -88,7 +92,8 @@ class DbDatetimeTest extends FunctionalTest {
 
 		$clause = $this->adapter->datetimeIntervalClause('now', '+1 Day');
 		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime('+1 Day', $this->getDbNow())), 'tomorrow', $offset);
+		$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime('+1 Day', $this->getDbNow())), 'tomorrow',
+			$offset);
 
 		$query = new SQLQuery();
 		$query->setSelect(array());
@@ -97,7 +102,9 @@ class DbDatetimeTest extends FunctionalTest {
 			->setLimit(1);
 
 		$result = $query->execute()->value();
-		$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created) - 900), '15 Minutes before creating fixture', $offset);
+		$this->matchesRoughly($result,
+				date('Y-m-d H:i:s', strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created) - 900),
+				'15 Minutes before creating fixture', $offset);
 	}
 	
 	public function testDbDatetimeDifference() {
@@ -111,7 +118,8 @@ class DbDatetimeTest extends FunctionalTest {
 		$result = DB::query('SELECT ' . $clause)->value();
 		$this->matchesRoughly($result, -15, '15 seconds ago - now', $offset);
 
-		$clause = $this->adapter->datetimeDifferenceClause('now', $this->adapter->datetimeIntervalClause('now', '+45 Minutes'));
+		$clause = $this->adapter->datetimeDifferenceClause('now',
+			$this->adapter->datetimeIntervalClause('now', '+45 Minutes'));
 		$result = DB::query('SELECT ' . $clause)->value();
 		$this->matchesRoughly($result, -45 * 60, 'now - 45 minutes ahead', $offset);
 
@@ -124,7 +132,8 @@ class DbDatetimeTest extends FunctionalTest {
 		$result = $query->execute()->value();
 		$lastedited = Dataobject::get_one('DbDateTimeTest_Team')->LastEdited;
 		$created = Dataobject::get_one('DbDateTimeTest_Team')->Created;
-		$this->matchesRoughly($result, strtotime($lastedited) - strtotime($created), 'age of HomePage record in seconds since unix epoc', $offset);
+		$this->matchesRoughly($result, strtotime($lastedited) - strtotime($created),
+			'age of HomePage record in seconds since unix epoc', $offset);
 	}
 	
 }

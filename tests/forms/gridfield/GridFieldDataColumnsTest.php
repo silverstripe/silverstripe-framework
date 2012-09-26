@@ -55,6 +55,7 @@ class GridFieldDataColumnsTest extends SapphireTest {
 		$columns = $obj->getConfig()->getComponentByType('GridFieldDataColumns');
 		$this->assertEquals(array(), $columns->getFieldFormatting());
 		$columns->setFieldFormatting(array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'));
-		$this->assertEquals(array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'), $columns->getFieldFormatting());
+		$this->assertEquals(array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'),
+			$columns->getFieldFormatting());
 	}
 }
