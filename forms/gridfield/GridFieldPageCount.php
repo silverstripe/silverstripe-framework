@@ -3,21 +3,17 @@
  * GridFieldPage displays a simple current page count summary.
  * E.g. "View 1 - 15 of 32"
  * 
+ * Depends on GridFieldPaginator being added to the same gridfield
+ * 
  * @package framework
  * @subpackage fields-relational
  */
-class GridFieldPageCount implements GridField_HTMLProvider, GridField_DataManipulator {
+class GridFieldPageCount implements GridField_HTMLProvider {
 
 	/**
 	 * @var string placement indicator for this control
 	 */
 	protected $targetFragment;
-	
-	/**
-	 *
-	 * @var int
-	 */
-	protected $itemsPerPage = 15;
 
 	/**
 	 * Which template to use for rendering
@@ -27,51 +23,31 @@ class GridFieldPageCount implements GridField_HTMLProvider, GridField_DataManipu
 	protected $itemClass = 'GridFieldPageCount';
 
 	/**
-	 * @param Int
-	 */
-	public function setItemsPerPage($num) {
-		$this->itemsPerPage = $num;
-		return $this;
-	}
-
-	/**
-	 * @return Int
-	 */
-	public function getItemsPerPage() {
-		return $this->itemsPerPage;
-	}
-
-	/**
 	 * @param string $targetFrament The fragment indicating the placement of this page count
-	 * @param integer $itemsPerPage - How many items should be displayed per page
 	 */
-	public function __construct($targetFragment = 'before', $itemsPerPage = null) {
-		if($itemsPerPage) {
-			$this->itemsPerPage = $itemsPerPage;
-		}
-		
+	public function __construct($targetFragment = 'before') {
 		$this->targetFragment = $targetFragment;
 	}
-
-	protected $totalItems = 0;
-
+	
 	/**
-	 *
+	 * Retrieves/Sets up the state object used to store and retrieve information
+	 * about the current paging details of this GridField
 	 * @param GridField $gridField
-	 * @param SS_List $dataList
-	 * @return SS_List 
+	 * @return GridState_Data 
 	 */
-	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
-		
-		$this->totalItems = $dataList->count();
-		
+	protected function getGridPagerState(GridField $gridField) {
 		$state = $gridField->State->GridFieldPaginator;
-		if(!is_int($state->currentPage)) {
-			$state->currentPage = 1;
-		}
-
-		// Don't actually limit this list; Leave this up to the GridFieldPaginator
-		return $dataList;
+		
+		// Force the state to the initial page if none is set
+		if(empty($state->currentPage)) $state->currentPage = 1;
+		
+		// Set total items to default, if not passed from GridFieldPaginator
+		if(empty($state->totalItems)) $state->totalItems = 0;
+		
+		// Set items per page to default, if not passed from GridFieldPaginator
+		if(empty($state->itemsPerPage)) $state->itemsPerPage = 15;
+		
+		return $state;
 	}
 
 	/**
@@ -81,28 +57,25 @@ class GridFieldPageCount implements GridField_HTMLProvider, GridField_DataManipu
 	 */
 	public function getHTMLFragments($gridField) {
 		
-		$state = $gridField->State->GridFieldPaginator;
-		if(!is_int($state->currentPage)) {
-			$state->currentPage = 1;
-		}
+		$state = $this->getGridPagerState($gridField);
 
 		// Figure out which page and record range we're on
-		$totalRows = $this->totalItems;
+		$totalRows = $state->totalItems;
 		if(!$totalRows) return array();
 
-		$totalPages = (int)ceil($totalRows/$this->itemsPerPage);
+		$totalPages = (int)ceil($totalRows/$state->itemsPerPage);
 		if($totalPages == 0) {
 			$totalPages = 1;
 		}
 		
 		// First record
-		$firstShownRecord = ($state->currentPage - 1) * $this->itemsPerPage + 1;
+		$firstShownRecord = ($state->currentPage - 1) * $state->itemsPerPage + 1;
 		if($firstShownRecord > $totalRows) {
 			$firstShownRecord = $totalRows;
 		}
 		
 		// Last record
-		$lastShownRecord = $state->currentPage * $this->itemsPerPage;
+		$lastShownRecord = $state->currentPage * $state->itemsPerPage;
 		if($lastShownRecord > $totalRows) {
 			$lastShownRecord = $totalRows;
 		}
