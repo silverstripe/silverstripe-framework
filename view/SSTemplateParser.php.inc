@@ -329,7 +329,7 @@ class SSTemplateParser extends Parser {
 	 
 	# if and else_if blocks allow basic comparisons between arguments
 	 
-	ComparisonOperator: "==" | "!=" | "="
+	ComparisonOperator: "==" | "!=" | "=" | "<" | "<=" | ">" | ">="
 
 	Comparison: Argument < ComparisonOperator > Argument
 	*/
