@@ -1,6 +1,6 @@
 ru:
   AssetAdmin:
-    ADDFILES: 'Add files'
+    ADDFILES: 'Добавить файлы'
     EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Новая папка'
   AssetTableField:
@@ -20,10 +20,10 @@ ru:
     DROPAREA: Контейнер
     EDITALL: 'Редактировать все'
     EDITANDORGANIZE: 'Edit & organize'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Редактировать файлы'
     FILES: Файлы
     FROMCOMPUTER: 'Выберите файлы с диска вашего компьютера'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTERINFO: 'Загрузить с диска вашего компьютера'
     TOTAL: Всего
     TOUPLOAD: 'Выберите файлы для загрузки...'
     UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
@@ -65,7 +65,7 @@ ru:
     1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Идет загрузка...'
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'Для работы с CMS у вас должен быть включен JavaScript.'
   CMSMain:
     ACCESS: 'Доступ к разделу ''{title}'''
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
@@ -88,7 +88,7 @@ ru:
     SUCCESSEDIT: 'Сохранено %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Добавить %s'
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Элементов не найдено'
     SORTASC: 'Сортировать по возрастанию'
     SORTDESC: 'Сортировать по убыванию'
   ComplexTableField_popup.ss:
@@ -191,8 +191,8 @@ ru:
   Filesystem:
     SYNCRESULTS: 'Синхронизация завершена: {createdcount} элементов создано, {deletedcount} элементов удалено'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Папки
+    SINGULARNAME: Папка
   ForgotPasswordEmail.ss:
     HELLO: Здравствуйте
     TEXT1: 'Это ваша'
@@ -200,7 +200,7 @@ ru:
     TEXT3: для
   Form:
     FIELDISREQUIRED: 'Поле %s является обязательным'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Выбрать
     VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
     VALIDATIONNOTUNIQUE: 'Введенное значение не уникально'
     VALIDATIONPASSWORDSDONTMATCH: 'Пароли не совпадают'
@@ -232,7 +232,7 @@ ru:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Нет прав на удаление'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Отмена
     Create: Создать
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
@@ -249,10 +249,10 @@ ru:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Блокировано?'
     NoRoles: 'Ролей не найдено'
-    PLURALNAME: Groups
+    PLURALNAME: Группы
     Parent: 'Родительская группа'
     RolesAddEditLink: 'Добавить/редактировать роли'
-    SINGULARNAME: Group
+    SINGULARNAME: Группа
     Sort: 'Порядок сортировки'
     has_many_Permissions: 'Права групп пользователей'
     many_many_Members: 'Члены группы'
@@ -310,13 +310,13 @@ ru:
     URLNOTANOEMBEDRESOURCE: 'Не удалось преобразовать ссылку ''{url}'' в медиа-ресурс.'
     UpdateMEDIA: 'Обновить медиафайл'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Файлы
+    SINGULARNAME: Файл
   ImageField:
     IMAGE: Изображение
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Файлы
+    SINGULARNAME: Файл
   Image_iframe.ss:
     TITLE: 'Iframe загрузки изображений'
   LeftAndMain:
@@ -334,13 +334,13 @@ ru:
     SAVEDUP: Сохранено.
     VersionUnknown: неизвестно
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: Здравствуйте
     LOGOUT: Выход
   LoginAttempt:
     Email: Email
     IP: IP-адрес
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Попытки входа в систему'
+    SINGULARNAME: 'Попытка входа в систему'
     Status: Статус
   Member:
     ADDGROUP: 'Добавить группу'
@@ -416,8 +416,8 @@ ru:
     ResultNone: 'Изменений нет'
     ResultUpdated: 'Обновлено {count} участников'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: Пароли
+    SINGULARNAME: Пароль
   MemberTableField: null
   ModelAdmin:
     DELETE: Удалить
@@ -428,12 +428,12 @@ ru:
     NOIMPORT: 'Нечего импортировать'
     RESET: Сброс
     Title: 'Модели данных'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    UPDATEDRECORDS: 'Обновлено {count} записей.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Показать спецификацию для %s'
     IMPORTSPECRELATIONS: Отношения
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Спецификация для %s'
   ModelAdmin_Tools.ss:
     FILTER: Фильтр
     IMPORT: Импорт
@@ -448,15 +448,15 @@ ru:
   NumericField:
     VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
   Pagination:
-    Page: Page
-    View: View
+    Page: Страница
+    View: Просмотр
   Permission:
     AdminGroup: Администратор
     CMS_ACCESS_CATEGORY: 'Доступ к CMS'
     FULLADMINRIGHTS: 'Все права администратора'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: 'Права доступа'
+    SINGULARNAME: 'Право доступа'
   PermissionCheckboxSetField:
     AssignedTo: 'присвоено "{title}"'
     FromGroup: 'перенято от группы "{title}"'
@@ -464,20 +464,20 @@ ru:
     FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
+    PLURALNAME: Роли
+    SINGULARNAME: Роль
+    Title: Название
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Коды ролей доступа'
+    SINGULARNAME: 'Код роли доступа'
   Permissions:
     PERMISSIONS_CATEGORY: 'Роли и права доступа'
   PhoneNumberField:
     VALIDATION: 'Пожалуйста, введите верный номер телефона'
   RelationComplexTableField.ss:
     ADD: Добавить
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Экспорт в CSV'
+    NOTFOUND: 'Элементов не найдено'
   Security:
     ALREADYLOGGEDIN: 'У Вас нет доступа к этой странице. Если у вас имеется другая учетная запись, имеющая доступ к этой странице, введите ее данные ниже.'
     BUTTONSEND: 'Отправить мне ссылку переустановки пароля'
@@ -507,7 +507,7 @@ ru:
     NEWGROUP: 'Новая группа'
     PERMISSIONS: 'Права доступа'
     ROLES: Роли
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
+    ROLESDESCRIPTION: 'Роли представляют собой сочетания различных прав доступа, которые могут быть присвоены группам.<br />При необходимости они наследуются от групп более высокого уровня.'
     TABROLES: Роли
     Users: Пользователи
   SecurityAdmin_MemberImportForm:
@@ -523,20 +523,20 @@ ru:
     ISREQUIRED: 'В %s поле ''%s'' является обязательным'
   TableField.ss:
     ADD: 'Добавить новый ряд'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Добавить %s'
   TableListField:
     CSVEXPORT: 'Экспорт в CSV'
     PRINT: Печать
-    Print: Print
+    Print: Печать
     SELECT: 'Выбрать:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Элементов не найдено'
     SORTASC: 'По возрастанию'
     SORTDESC: 'По убыванию'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+    DISPLAYING: Отображение
+    OF: из
+    TO: по
     VIEWFIRST: Первый
     VIEWLAST: Последний
     VIEWNEXT: Следующий
@@ -550,17 +550,17 @@ ru:
     ATTACHFILE: 'Прикрепить файл'
     ATTACHFILES: 'Прикрепить файлы'
     AttachFile: 'Прикрепить файл(ы)'
-    DELETE: 'Delete from files'
+    DELETE: 'Удалить из файлов'
     DELETEINFO: 'Окончательно удалить этот файл с сервера'
     DOEDIT: Сохранить
     DROPFILE: 'drop a file'
     DROPFILES: 'перетащить файлы'
     Dimensions: Размеры
-    EDIT: Edit
+    EDIT: Редактировать
     EDITINFO: 'Редактировать этот файл'
     FIELDNOTSET: 'Информация о файле не найдена'
     FROMCOMPUTER: 'С диска'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Выбрать из файлов'
     FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Внимание: это изображение будет вставлено через хотлинк. Пожалуйста, не забывайте, что на это у вас должно быть разрешение владельца исходного ресурса.'
     MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
@@ -569,7 +569,7 @@ ru:
     REMOVEERROR: 'Ошибка при удалении файла'
     REMOVEINFO: 'Удалить файл отсюда, но не удалять с сервера'
     STARTALL: 'Стартовать все'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Стартовать все загрузки'
     Saved: Сохранено
   Versioned:
     has_many_Versions: Версии
