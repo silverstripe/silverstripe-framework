@@ -15,19 +15,19 @@ ru:
     TYPE: Тип
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    ChooseFiles: 'Выберите файлы'
+    DRAGFILESHERE: 'Перетащите файлы сюда'
+    DROPAREA: Контейнер
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
     FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Выберите файлы с диска вашего компьютера'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     TOUPLOAD: 'Выберите файлы для загрузки...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: ИЛИ
   BBCodeParser:
     ALIGNEMENT: Выравнивание
     ALIGNEMENTEXAMPLE: 'Выравнено по правому краю'
@@ -142,7 +142,7 @@ ru:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
-    ANY: Any
+    ANY: Любой
   File:
     AviType: 'Видеофайл AVI'
     Content: Содержание
@@ -352,9 +352,9 @@ ru:
     CONFIRMPASSWORD: 'Подтвердить пароль'
     DATEFORMAT: 'Формат даты'
     DefaultAdminFirstname: 'Default Admin'
-    DefaultDateTime: default
+    DefaultDateTime: 'по умолч.'
     EMAIL: Email
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    EMPTYNEWPASSWORD: 'Поле нового пароля не может быть пустым; пожалуйста, повторите попытку'
     ENTEREMAIL: 'Введите email, чтобы получить ссылку на сброс пароля.'
     ERRORLOCKEDOUT: 'Ваша учетная запись временно заблокирована из-за слишком большого количества неудачных попыток авторизации. Пожалуйста, попытайтесь снова через 20 минут.'
     ERRORNEWPASSWORD: 'Вы ввели Ваш новый пароль по-разному, попробуйте снова'
@@ -494,22 +494,22 @@ ru:
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
+    APPLY_ROLES: 'Присвоить роли группам'
+    APPLY_ROLES_HELP: 'Возможность редактировать роли, присвоенные той или иной группе. Необходимо разрешение на доступ к разделу "Пользователи". '
     EDITPERMISSIONS: 'Задать разрешения и IP адреса для каждой группы'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
+    EDITPERMISSIONS_HELP: 'Возможность редактировать права доступа и IP-адреса определенной группы. Необходимо разрешение на доступ к разделу "Безопасность". '
     GROUPNAME: 'Имя группы'
-    IMPORTGROUPS: 'Import groups'
+    IMPORTGROUPS: 'Импортировать группы'
     IMPORTUSERS: 'Импорт пользователей'
     MEMBERS: Участники
     MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
+    MemberListCaution: 'Внимание: при удалении участников из этого списка они будут удалены из всех групп и из базы данных '
     NEWGROUP: 'Новая группа'
     PERMISSIONS: 'Права доступа'
     ROLES: Роли
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
-    Users: Users
+    TABROLES: Роли
+    Users: Пользователи
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -547,29 +547,29 @@ ru:
     LESS: меньше
     MORE: больше
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    ATTACHFILE: 'Прикрепить файл'
+    ATTACHFILES: 'Прикрепить файлы'
+    AttachFile: 'Прикрепить файл(ы)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DOEDIT: Сохранить
     DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DROPFILES: 'перетащите файлы сюда'
     Dimensions: Dimensions
     EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
+    EDITINFO: 'Редактировать этот файл'
+    FIELDNOTSET: 'Информация о файле не найдена'
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Внимание: это изображение будет вставлено через хотлинк. Пожалуйста, не забывайте, что на это у вас должно быть разрешение владельца исходного ресурса.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    REMOVEERROR: 'Ошибка при удалении файла'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
+    STARTALL: 'Стартовать все'
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: Сохранено
   Versioned:
     has_many_Versions: Версии

@@ -42,11 +42,11 @@ th:
     EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
     IMAGE: รูปภาพ
     IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
-    ITALIC: 'Italic Text'
+    ITALIC: ข้อความตัวเอียง
     ITALICEXAMPLE: ตัวเอียง
     LINK: ลิงก์เว็บไซต์
     LINKDESCRIPTION: 'ลิงก์ไปที่เว็บไซต์อื่นๆ หรือ URL อื่นๆ'
-    STRUCK: 'Struck-out Text'
+    STRUCK: ข้อความแบบขีดเส้นใต้
     STRUCKEXAMPLE: Struck-out
     UNDERLINE: 'Underlined Text'
     UNDERLINEEXAMPLE: ยังไม่ได้กำหนด
@@ -246,7 +246,7 @@ th:
     DefaultGroupTitleAdministrators: ผู้ดูและระบบ
     DefaultGroupTitleContentAuthors: ผู้แต่งเนื้อหา
     Description: คำอธิบาย
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'หากคุณเลือกกลุ่มแม่, กลุ่มดังกล่าวนี้จะถึงบทบาททั้งหมดของกลุ่มแม่มา'
     Locked: 'ล็อค?'
     NoRoles: ไม่พบบทบาทที่ต้องการ
     PLURALNAME: กลุ่ม
@@ -318,7 +318,7 @@ th:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'หน้าต่าง iframe สำหรับอัพโหลดรูปภาพ'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: ลบแล้ว
