@@ -419,7 +419,8 @@ class FormTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 	
 	public function Link($action = null) {
-		return Controller::join_links('FormTest_Controller', $this->request->latestParam('Action'), $this->request->latestParam('ID'), $action);
+		return Controller::join_links('FormTest_Controller', $this->request->latestParam('Action'),
+			$this->request->latestParam('ID'), $action);
 	}
 	
 	public function Form() {
@@ -480,7 +481,8 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 	protected $template = 'BlankPage';
 	
 	public function Link($action = null) {
-		return Controller::join_links('FormTest_ControllerWithSecurityToken', $this->request->latestParam('Action'), $this->request->latestParam('ID'), $action);
+		return Controller::join_links('FormTest_ControllerWithSecurityToken', $this->request->latestParam('Action'),
+			$this->request->latestParam('ID'), $action);
 	}
 	
 	public function Form() {

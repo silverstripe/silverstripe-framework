@@ -62,7 +62,8 @@
  *															// but has a lower priority, it is NOT overridden
  *			'class'			=> 'ClassName',					// the name of the PHP class
  *			'src'			=> '/path/to/file'				// the location of the class
- *			'type'			=> 'singleton|prototype'		// if you want prototype object generation, set it as the type
+ *			'type'			=> 'singleton|prototype'		// if you want prototype object generation, set it as the
+ *			                                                // type
  *															// By default, singleton is assumed
  *
  *			'construct'		=> array(						// properties to set at construction

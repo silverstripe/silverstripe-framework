@@ -33,7 +33,8 @@ abstract class LoginForm extends Form {
 	
 	public function getAuthenticator() {
 		if(!class_exists($this->authenticator_class) || !is_subclass_of($this->authenticator_class, 'Authenticator')) {
-			user_error("The form uses an invalid authenticator class! '{$this->authenticator_class}' is not a subclass of 'Authenticator'", E_USER_ERROR);
+			user_error("The form uses an invalid authenticator class! '{$this->authenticator_class}'"
+				. " is not a subclass of 'Authenticator'", E_USER_ERROR);
 			return;
 		}
 		

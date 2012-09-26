@@ -126,7 +126,8 @@ class TabSet extends CompositeField {
 					if($child->isComposite()) {
 						return $child->fieldByName($remainder);
 					} else {
-						user_error("Trying to get field '$remainder' from non-composite field $child->class.$name", E_USER_WARNING);
+						user_error("Trying to get field '$remainder' from non-composite field $child->class.$name",
+							E_USER_WARNING);
 						return null;
 					}
 				} else {

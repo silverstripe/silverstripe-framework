@@ -361,7 +361,8 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John', 'ID' => 2)
 		));
 		$list->filter(array('Name'=>'Steve', 'ID'=>2));
-		$this->assertEquals(array((object)array('Name'=>'Steve', 'ID'=>2)), $list->toArray(), 'List should only contain object Steve');
+		$this->assertEquals(array((object)array('Name'=>'Steve', 'ID'=>2)), $list->toArray(),
+			'List should only contain object Steve');
 	}
 	
 	/**

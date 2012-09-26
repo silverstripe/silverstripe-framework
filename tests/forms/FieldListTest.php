@@ -200,7 +200,8 @@ class FieldListTest extends SapphireTest {
 		/* The field "A" gets added to the FieldList we just created created */
 		$FieldList->addFieldToTab('Root.Other', $newA = new TextField('A', 'New Title'));
 		
-		/* The field named "A" has been removed from the Main tab to make way for our new field named "A" in Other tab. */
+		/* The field named "A" has been removed from the Main tab to make way for our new field named "A" in
+		 * Other tab. */
 		$this->assertEquals(1, $main->Fields()->Count());
 		$this->assertEquals(3, $other->Fields()->Count());
 	}
@@ -473,8 +474,8 @@ class FieldListTest extends SapphireTest {
 			)
 		);
 
-		/* If you have a tab with the same name as the field, then technically it's a duplicate. However, it's allowed because
-		tab isn't a data field.  Only duplicate data fields are problematic */
+		/* If you have a tab with the same name as the field, then technically it's a duplicate. However, it's 
+		 * allowed because tab isn't a data field.  Only duplicate data fields are problematic */
 		$FieldList->addFieldToTab("Root.MyName", $myName = new TextField("MyName"));
 		$this->assertNotNull($FieldList->fieldByName('Root')->fieldByName('MyName'));
 		$this->assertSame($myName, $FieldList->fieldByName('Root')->fieldByName('MyName')->Fields()->First());

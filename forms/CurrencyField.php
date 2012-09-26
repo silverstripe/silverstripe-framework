@@ -46,8 +46,11 @@ class CurrencyField extends TextField {
 	}
 
 	public function validate($validator) {
-		if(!empty ($this->value) && !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
-			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency"), "validation", false);
+		if(!empty ($this->value)
+				&& !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
+
+			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency"),
+				"validation", false);
 			return false;
 		}
 		return true;
@@ -72,7 +75,8 @@ class CurrencyField_Readonly extends ReadonlyField{
 			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span>"
+			. "<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 	
 	/**
@@ -104,7 +108,8 @@ class CurrencyField_Disabled extends CurrencyField{
 			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<input class=\"text\" type=\"text\" disabled=\"disabled\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<input class=\"text\" type=\"text\" disabled=\"disabled\""
+			. " name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 }
 

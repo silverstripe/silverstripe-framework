@@ -47,7 +47,8 @@ class PermissionCheckboxSetField extends FormField {
 		} elseif($records instanceof Group) {
 			$this->records = new ArrayList(array($records));
 		} elseif($records) {
-			throw new InvalidArgumentException('$record should be either a Group record, or a SS_List of Group records');
+			throw new InvalidArgumentException(
+				'$record should be either a Group record, or a SS_List of Group records');
 		}
 		
 		// Get all available codes in the system as a categorized nested array
@@ -140,7 +141,9 @@ class PermissionCheckboxSetField extends FormField {
 						}
 						if ($parent->Permissions()->Count()) {
 							foreach($parent->Permissions() as $permission) {
-								if (!isset($inheritedCodes[$permission->Code])) $inheritedCodes[$permission->Code] = array();
+								if (!isset($inheritedCodes[$permission->Code])) {
+									$inheritedCodes[$permission->Code] = array();
+								}
 								$inheritedCodes[$permission->Code][] = 
 								_t(
 									'PermissionCheckboxSetField.FromGroup',
@@ -172,11 +175,16 @@ class PermissionCheckboxSetField extends FormField {
 					$extraClass .= ' val' . str_replace(' ', '', $code);
 					$itemID = $this->id() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code);
 					$checked = $disabled = $inheritMessage = '';
-					$checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code])) ? ' checked="checked"' : '';
-					$title = $permission['help'] ? 'title="' . htmlentities($permission['help'], ENT_COMPAT, 'UTF-8') . '" ' : '';
+					$checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code])) 
+						? ' checked="checked"' 
+						: '';
+					$title = $permission['help'] 
+						? 'title="' . htmlentities($permission['help'], ENT_COMPAT, 'UTF-8') . '" ' 
+						: '';
 					
 					if (isset($inheritedCodes[$code])) {
-						// disable inherited codes, as any saving logic would be too complicate to express in this interface
+						// disable inherited codes, as any saving logic would be too complicate to express in this
+						// interface
 						$disabled = ' disabled="true"';
 						$inheritMessage = ' (' . join(', ', $inheritedCodes[$code]) . ')';
 					} elseif($this->records && $this->records->Count() > 1 && isset($uninheritedCodes[$code])) {
@@ -192,15 +200,19 @@ class PermissionCheckboxSetField extends FormField {
 
 					// If the field is readonly, add a span that will replace the disabled checkbox input
 					if($this->readonly) {
-						$options .= "<li class=\"$extraClass\">" .
-							"<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\" value=\"$code\"$checked class=\"checkbox\" />" .
-							"<label {$title}for=\"$itemID\"><span class=\"ui-button-icon-primary ui-icon btn-icon-accept\"></span>$value$inheritMessage</label>" .
-							"</li>\n";
+						$options .= "<li class=\"$extraClass\">"
+							. "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
+							. " value=\"$code\"$checked class=\"checkbox\" />"
+							. "<label {$title}for=\"$itemID\">"
+							. "<span class=\"ui-button-icon-primary ui-icon btn-icon-accept\"></span>"
+							. "$value$inheritMessage</label>"
+							. "</li>\n";
 					} else {
-						$options .= "<li class=\"$extraClass\">" .
-							"<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\" value=\"$code\"$checked class=\"checkbox\" />" .
-							"<label {$title}for=\"$itemID\">$value$inheritMessage</label>" .
-							"</li>\n";
+						$options .= "<li class=\"$extraClass\">"
+							. "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
+							. " value=\"$code\"$checked class=\"checkbox\" />"
+							. "<label {$title}for=\"$itemID\">$value$inheritMessage</label>"
+							. "</li>\n";
 					}
 				}
 			}
@@ -210,7 +222,8 @@ class PermissionCheckboxSetField extends FormField {
 				"<li class=\"help\">" .
 				_t(
 					'Permissions.UserPermissionsIntro',
-					'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+					'Assigning groups to this user will adjust the permissions they have.'
+					. ' See the groups section for details of permissions on individual groups.'
 				) .
 				"</li>" .
 				$options .

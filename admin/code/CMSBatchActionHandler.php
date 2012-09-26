@@ -85,7 +85,9 @@ class CMSBatchActionHandler extends RequestHandler {
 		foreach($ids as $k => $v) if(!is_numeric($v)) unset($ids[$k]);
 		
 		if($ids) {
-			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) Translatable::disable_locale_filter();
+			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) {
+				Translatable::disable_locale_filter();
+			}
 			
 			$pages = DataObject::get(
 				$this->recordClass, 
@@ -96,7 +98,9 @@ class CMSBatchActionHandler extends RequestHandler {
 				)
 			);
 			
-			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) Translatable::enable_locale_filter();
+			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) {
+				Translatable::enable_locale_filter();
+			}
 			
 			if(Object::has_extension($this->recordClass, 'Versioned')) {
 				// If we didn't query all the pages, then find the rest on the live site

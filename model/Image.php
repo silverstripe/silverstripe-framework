@@ -113,7 +113,9 @@ class Image extends File {
 			if($this->Title) {
 				$title = Convert::raw2att($this->Title);
 			} else {
-				if(preg_match("/([^\/]*)\.[a-zA-Z0-9]{1,6}$/", $title, $matches)) $title = Convert::raw2att($matches[1]);
+				if(preg_match("/([^\/]*)\.[a-zA-Z0-9]{1,6}$/", $title, $matches)) {
+					$title = Convert::raw2att($matches[1]);
+				}
 			}
 			return "<img src=\"$url\" alt=\"$title\" />";
 		}
@@ -134,7 +136,8 @@ class Image extends File {
 	 */
 	public function loadUploadedImage($tmpFile) {
 		if(!is_array($tmpFile)) {
-			user_error("Image::loadUploadedImage() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
+			user_error("Image::loadUploadedImage() Not passed an array.  Most likely, the form hasn't got the right"
+				. "enctype", E_USER_ERROR);
 		}
 		
 		if(!$tmpFile['size']) {
@@ -183,7 +186,9 @@ class Image extends File {
 	}
 	
 	public function SetSize($width, $height) {
-		return (($this->getWidth() == $width) &&  ($this->getHeight() == $height)) ? $this : $this->getFormattedImage('SetSize', $width, $height);
+		return (($this->getWidth() == $width) &&  ($this->getHeight() == $height)) 
+			? $this 
+			: $this->getFormattedImage('SetSize', $width, $height);
 	}
 	
 	public function SetRatioSize($width, $height) {
@@ -331,7 +336,8 @@ class Image extends File {
 	 */
 	public function generateResizedImage($gd, $width, $height) {
 		if(is_numeric($gd) || !$gd){
-			user_error("Image::generateFormattedImage - generateResizedImage is being called by legacy code or gd is not set.",E_USER_WARNING);
+			user_error("Image::generateFormattedImage - generateResizedImage is being called by legacy code"
+				. " or gd is not set.",E_USER_WARNING);
 		}else{
 			return $gd->resize($width, $height);
 		}
@@ -466,8 +472,8 @@ class Image_Cached extends Image {
 	/**
 	 * Create a new cached image.
 	 * @param string $filename The filename of the image.
-	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.  Singletons
-	 * don't have their defaults set.
+	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.
+	 *                             Singletons don't have their defaults set.
 	 */
 	public function __construct($filename = null, $isSingleton = false) {
 		parent::__construct(array(), $isSingleton);

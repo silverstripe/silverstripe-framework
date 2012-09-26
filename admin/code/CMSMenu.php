@@ -77,7 +77,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * @param string $code A unique identifier (used to create a CSS ID and its key in {@link $menu_items})
 	 * @param string $menuTitle The link's title in the CMS menu
 	 * @param string $url The url of the link
-	 * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further left.
+	 * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further
+	 *                          left.
 	 * @return boolean The result of the operation.
 	 */
 	public static function add_link($code, $menuTitle, $url, $priority = -1) {

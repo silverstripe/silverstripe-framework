@@ -41,7 +41,8 @@ class HTTP {
 	 */
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
-		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) : ( (preg_match("/^[A-Za-z]+:/", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
+		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) :'
+			. ' ( (preg_match("/^[A-Za-z]+:/", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
 	}
 
 	/*
@@ -252,8 +253,8 @@ class HTTP {
 	/**
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
 	 *
-	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is deprecated; in these
-	 * cases, the headers are output directly.
+	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
+	 *                            deprecated; in these cases, the headers are output directly.
 	 */
 	public static function add_cache_headers($body = null) {
 		// Validate argument
@@ -266,16 +267,21 @@ class HTTP {
 		// below.
 		if(Director::isDev()) return;
 		
-		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in us trying.
+		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
+		// us trying.
 		if(headers_sent() && !$body) return;
 		
 		// Popuplate $responseHeaders with all the headers that we want to build 
 		$responseHeaders = array();
 		if(function_exists('apache_request_headers')) {
 			$requestHeaders = apache_request_headers();
-			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With'] == 'XMLHttpRequest') self::$cache_age = 0;
+			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With']=='XMLHttpRequest') {
+				self::$cache_age = 0;
+			}
 			// bdc: now we must check for DUMB IE6:
-			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with'] == 'XMLHttpRequest') self::$cache_age = 0;
+			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with']=='XMLHttpRequest') {
+				self::$cache_age = 0;
+			}
 		}
 
 		if(self::$cache_age > 0) {

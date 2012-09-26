@@ -29,9 +29,9 @@ class SS_HTMLValue extends ViewableData {
 	 * @return string
 	 */
 	public function getContent() {
-		// strip any surrounding tags before the <body> and after the </body> which are automatically added by DOMDocument
-		// note that we can't use the argument to saveHTML() as it's only supported in PHP 5.3.6+, we support 5.3.2 as a minimum
-		// in addition to the above, trim any surrounding newlines from the output
+		// strip any surrounding tags before the <body> and after the </body> which are automatically added by
+		// DOMDocument.  Note that we can't use the argument to saveHTML() as it's only supported in PHP 5.3.6+,
+		// we support 5.3.2 as a minimum in addition to the above, trim any surrounding newlines from the output
 		return trim(
 			preg_replace(
 				array(

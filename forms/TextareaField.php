@@ -40,7 +40,9 @@ class TextareaField extends FormField {
 	 * @param $value The current value
 	 */
 	public function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments');
+		if(count(func_get_args()) > 3) {
+			Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments');
+		}
 
 		parent::__construct($name, $title, $value);
 	}

@@ -173,7 +173,8 @@ class TableListField extends FormField {
 	
 	/**
 	 * @var array Definitions for highlighting table-rows with a specific class. You can use all column-names
-	 * in the result of a query. Use in combination with {@setCustomQuery} to select custom properties and joined objects.
+	 * in the result of a query. Use in combination with {@setCustomQuery} to select custom properties and joined
+	 * objects.
 	 *  
 	 * Example:
 	 * array(
@@ -310,7 +311,9 @@ JS
 	public function Headings() {
 		$headings = array();
 		foreach($this->fieldList as $fieldName => $fieldTitle) {
-			$isSorted = (isset($_REQUEST['ctf'][$this->getName()]['sort']) && $fieldName == $_REQUEST['ctf'][$this->getName()]['sort']);
+			$isSorted = (isset($_REQUEST['ctf'][$this->getName()]['sort']) 
+				&& $fieldName == $_REQUEST['ctf'][$this->getName()]['sort']);
+
 			// we can't allow sorting with partial summaries (groupByField)
 			$isSortable = ($this->form && $this->isFieldSortable($fieldName) && !$this->groupByField);
 
@@ -320,17 +323,28 @@ JS
 				$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][sort]", $fieldName, $sortLink,'&');
 	
 				// Apply sort direction to the current sort field
-				if(!empty($_REQUEST['ctf'][$this->getName()]['sort']) && ($_REQUEST['ctf'][$this->getName()]['sort'] == $fieldName)) {
-					$dir = isset($_REQUEST['ctf'][$this->getName()]['dir']) ? $_REQUEST['ctf'][$this->getName()]['dir'] : null;
+				if(!empty($_REQUEST['ctf'][$this->getName()]['sort'])
+						&& ($_REQUEST['ctf'][$this->getName()]['sort'] == $fieldName)) {
+
+					if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+						$dir =  $_REQUEST['ctf'][$this->getName()]['dir'];
+					} else {
+						$dir = null;
+					}
+
 					$dir = trim(strtolower($dir));
 					$newDir = ($dir == 'desc') ? null : 'desc';
-					$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][dir]", Convert::raw2xml($newDir), $sortLink,'&');
+					$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][dir]", Convert::raw2xml($newDir),
+						$sortLink,'&');
 				}
 
-				if(isset($_REQUEST['ctf'][$this->getName()]['search']) && is_array($_REQUEST['ctf'][$this->getName()]['search'])) {
+				if(isset($_REQUEST['ctf'][$this->getName()]['search'])
+						&& is_array($_REQUEST['ctf'][$this->getName()]['search'])) {
+
 					foreach($_REQUEST['ctf'][$this->getName()]['search'] as $parameter => $value) {
 						$XML_search = Convert::raw2xml($value);
-						$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][search][$parameter]", $XML_search, $sortLink,'&');
+						$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][search][$parameter]", $XML_search,
+							$sortLink,'&');
 					}
 				}
 			} else {
@@ -339,11 +353,15 @@ JS
 			
 			$headings[] = new ArrayData(array(
 				"Name" => $fieldName, 
-				"Title" => ($this->sourceClass()) ? singleton($this->sourceClass())->fieldLabel($fieldTitle) : $fieldTitle,
+				"Title" => ($this->sourceClass()) 
+					? singleton($this->sourceClass())->fieldLabel($fieldTitle)
+					: $fieldTitle,
 				"IsSortable" => $isSortable,
 				"SortLink" => $sortLink,
 				"SortBy" => $isSorted,
-				"SortDirection" => (isset($_REQUEST['ctf'][$this->getName()]['dir'])) ? $_REQUEST['ctf'][$this->getName()]['dir'] : null 
+				"SortDirection" => (isset($_REQUEST['ctf'][$this->getName()]['dir']))
+					? $_REQUEST['ctf'][$this->getName()]['dir'] 
+					: null 
 			));
 		}
 		return new ArrayList($headings);
@@ -403,7 +421,8 @@ JS
 	}
 	
 	public function setCustomSourceItems(SS_List $items) {
-		user_error('TableList::setCustomSourceItems() deprecated, just pass the items into the constructor', E_USER_WARNING);
+		user_error('TableList::setCustomSourceItems() deprecated, just pass the items into the constructor',
+			E_USER_WARNING);
 
 		// The type-hinting above doesn't seem to work consistently
 		if($items instanceof SS_List) {
@@ -433,8 +452,14 @@ JS
 		// To disable pagination, set $this->showPagination to false.
 		if($this->showPagination && $this->pageSize) {
 		    $SQL_limit = (int)$this->pageSize;
-		    if(isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
-			    $SQL_start = (isset($_REQUEST['ctf'][$this->getName()]['start'])) ? intval($_REQUEST['ctf'][$this->getName()]['start']) : "0";
+		    if(isset($_REQUEST['ctf'][$this->getName()]['start'])
+		    		&& is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
+
+			    if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
+					$SQL_start = intval($_REQUEST['ctf'][$this->getName()]['start']);
+				} else {
+					$SQL_start = "0";
+				}
 		    } else {
 			    $SQL_start = 0;
 		    }
@@ -519,7 +544,8 @@ JS
 	 * Configure this table to open a popup window
 	 */
 	public function setClick_PopupLoad($urlBase) {
-		$this->clickAction = "var w = window.open(baseHref() + '$urlBase' + this.id.replace(/.*-(\d*)$/,'$1'), 'popup'); w.focus();";
+		$this->clickAction = "var w = window.open(baseHref()+'$urlBase'+this.id.replace(/.*-(\d*)$/,'$1'), 'popup');"
+			. " w.focus();";
 		return $this;
 	}
 	
@@ -779,7 +805,10 @@ JS
 	public function FirstLink() {
 		$start = 0;
 		
-		if(!isset($_REQUEST['ctf'][$this->getName()]['start']) || !is_numeric($_REQUEST['ctf'][$this->getName()]['start']) || $_REQUEST['ctf'][$this->getName()]['start'] == 0) {
+		if(!isset($_REQUEST['ctf'][$this->getName()]['start'])
+				|| !is_numeric($_REQUEST['ctf'][$this->getName()]['start']) 
+				|| $_REQUEST['ctf'][$this->getName()]['start'] == 0) {
+
 			return null;
 		}
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
@@ -799,13 +828,21 @@ JS
 	}
 	
 	public function PrevLink() {
-		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
+		if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
+			$currentStart = $_REQUEST['ctf'][$this->getName()]['start'];
+		} else {
+			$currentStart = 0;
+		}
 
 		if($currentStart == 0) {
 			return null;
 		}
 		
-		$start = ($_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize;
+		if($_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize < 0) {
+			$start = 0;
+		} else {
+			$start = $_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize;
+		}
 		
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
 		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
@@ -825,8 +862,12 @@ JS
 	
 
 	public function NextLink() {
-		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
-		$start = ($currentStart + $this->pageSize < $this->TotalCount()) ? $currentStart + $this->pageSize : $this->TotalCount() % $this->pageSize > 0;
+		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start'])
+			? $_REQUEST['ctf'][$this->getName()]['start'] 
+			: 0;
+		$start = ($currentStart + $this->pageSize < $this->TotalCount())
+			? $currentStart + $this->pageSize
+			: $this->TotalCount() % $this->pageSize > 0;
 		if($currentStart >= $start-1) {
 			return null;
 		}
@@ -847,10 +888,14 @@ JS
 	}
 	
 	public function LastLink() {
-		$pageSize = ($this->TotalCount() % $this->pageSize > 0) ? $this->TotalCount() % $this->pageSize : $this->pageSize;
+		$pageSize = ($this->TotalCount() % $this->pageSize > 0)
+			? $this->TotalCount() % $this->pageSize
+			: $this->pageSize;
 		$start = $this->TotalCount() - $pageSize;
 		// Check if there is only one page, or if we are on last page
-		if($this->TotalCount() <= $pageSize || (isset($_REQUEST['ctf'][$this->getName()]['start']) &&  $_REQUEST['ctf'][$this->getName()]['start'] >= $start)) {
+		if($this->TotalCount() <= $pageSize || (isset($_REQUEST['ctf'][$this->getName()]['start'])
+				&& $_REQUEST['ctf'][$this->getName()]['start'] >= $start)) {
+
 			return null;
 		}
 		
@@ -872,12 +917,15 @@ JS
 	
 	public function FirstItem() {
 		if ($this->TotalCount() < 1) return 0;
-		return isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] + 1 : 1;
+		return isset($_REQUEST['ctf'][$this->getName()]['start'])
+			? $_REQUEST['ctf'][$this->getName()]['start'] + 1
+			: 1;
 	}
 	
 	public function LastItem() {
 		if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
-			return $_REQUEST['ctf'][$this->getName()]['start'] + min($this->pageSize, $this->TotalCount() - $_REQUEST['ctf'][$this->getName()]['start']);
+			$pageStep = min($this->pageSize, $this->TotalCount() - $_REQUEST['ctf'][$this->getName()]['start']);
+			return $_REQUEST['ctf'][$this->getName()]['start'] + $pageStep;
 		} else {
 			return min($this->pageSize, $this->TotalCount());
 		}
@@ -1077,7 +1125,8 @@ JS
 	public function PrintLink() {
 		$link = Controller::join_links($this->Link(), 'printall');
 		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
-			$link = HTTP::setGetVar("ctf[{$this->getName()}][sort]",Convert::raw2xml($_REQUEST['ctf'][$this->getName()]['sort']), $link);
+			$link = HTTP::setGetVar("ctf[{$this->getName()}][sort]",
+				Convert::raw2xml($_REQUEST['ctf'][$this->getName()]['sort']), $link);
 		}
 		return $link;
 	}
@@ -1165,8 +1214,12 @@ JS
 	public function CurrentLink() {
 		$link = $this->Link();
 		
-		if(isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
-			$start = ($_REQUEST['ctf'][$this->getName()]['start'] < 0)  ? 0 : $_REQUEST['ctf'][$this->getName()]['start'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['start'])
+				&& is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
+
+			$start = ($_REQUEST['ctf'][$this->getName()]['start'] < 0)
+				? 0
+				: $_REQUEST['ctf'][$this->getName()]['start'];
 			$link = Controller::join_links($link, "?ctf[{$this->getName()}][start]={$start}");
 		}
 
@@ -1204,7 +1257,9 @@ JS
 	
 	/**
 	 * Helper method to determine permissions for a scaffolded
-	 * TableListField (or subclasses) - currently used in {@link ModelAdmin} and {@link DataObject->scaffoldFormFields()}.
+	 * TableListField (or subclasses) - currently used in {@link ModelAdmin} and
+	 * {@link DataObject->scaffoldFormFields()}.
+	 * 
 	 * Returns true for each permission that doesn't have an explicit getter.
 	 * 
 	 * @todo Temporary method, implement directly in FormField subclasses with object-level permissions.
@@ -1346,7 +1401,9 @@ class TableListField_Item extends ViewableData {
 
 			// This supports simple FieldName syntax
 			if(strpos($fieldName,'.') === false) {
-				$value = ($this->item->XML_val($fieldName) && $xmlSafe) ? $this->item->XML_val($fieldName) : $this->item->RAW_val($fieldName);
+				$value = ($this->item->XML_val($fieldName) && $xmlSafe)
+					? $this->item->XML_val($fieldName)
+					: $this->item->RAW_val($fieldName);
 			// This support the syntax fieldName = Relation.RelatedField
 			} else {					
 				$fieldNameParts = explode('.', $fieldName)	;
@@ -1477,14 +1534,15 @@ class TableListField_Item extends ViewableData {
 		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->isReadonly())
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\" />";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\""
+				. " disabled=\"disabled\" />";
 		else
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" />";
 	}
 	
 	/**
-	 * According to {@link TableListField->selectOptions}, each record will check if the options' key on the object is true,
-	 * if it is true, add the key as a class to the record
+	 * According to {@link TableListField->selectOptions}, each record will check if the options' key on the object is
+	 * true, if it is true, add the key as a class to the record
 	 * 
 	 * @return string Value for a 'class' HTML attribute.
 	 */

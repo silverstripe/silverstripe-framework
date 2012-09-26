@@ -52,7 +52,8 @@ class SelectionGroup extends CompositeField {
 			
 			$itemID = $this->ID() . '_' . (++$count);
 			$extra = array(
-				"RadioButton" => "<input class=\"selector\" type=\"radio\" id=\"$itemID\" name=\"$this->name\" value=\"$key\"$checked />",
+				"RadioButton" => "<input class=\"selector\" type=\"radio\" id=\"$itemID\" name=\"$this->name\""
+					. " value=\"$key\"$checked />",
 				"RadioLabel" => "<label for=\"$itemID\">$title</label>",
 				"Selected" => $firstSelected,
 			);

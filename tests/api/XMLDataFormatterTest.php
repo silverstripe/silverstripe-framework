@@ -32,11 +32,13 @@ class XMLDataFormatterTest extends SapphireTest {
 		$this->assertEquals('Test Company', (string) $xml->Company);
 		$this->assertEquals($obj->ID, (int) $xml->ID);
 		$this->assertEquals(
-			'<Content><![CDATA[<a href="http://mysite.com">mysite.com</a> is a link in this HTML content. <![CDATA[this is some nested CDATA]]]]><![CDATA[>]]></Content>',
+			'<Content><![CDATA[<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.'
+				. ' <![CDATA[this is some nested CDATA]]]]><![CDATA[>]]></Content>',
 			$xml->Content->asXML()
 		);
 		$this->assertEquals(
-			'<a href="http://mysite.com">mysite.com</a> is a link in this HTML content. <![CDATA[this is some nested CDATA]]>',
+			'<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.'
+				. ' <![CDATA[this is some nested CDATA]]>',
 			(string) $xml->Content
 		);
 	}

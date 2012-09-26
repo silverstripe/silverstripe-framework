@@ -132,9 +132,11 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', null);
 		
 		// Test internal absolute redirect
-		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', Director::absoluteBaseURL() . 'testpage');
+		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword',
+			Director::absoluteBaseURL() . 'testpage');
 		// for some reason the redirect happens to a relative URL
-		$this->assertRegExp('/^' . preg_quote(Director::absoluteBaseURL(), '/') . 'testpage/', $response->getHeader('Location'),
+		$this->assertRegExp('/^' . preg_quote(Director::absoluteBaseURL(), '/') . 'testpage/',
+			$response->getHeader('Location'),
 			"Internal absolute BackURLs work when passed through to login form"
 		);
 		// Log the user out
@@ -142,15 +144,17 @@ class SecurityTest extends FunctionalTest {
 		
 		// Test external redirect
 		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'http://myspoofedhost.com');
-		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', (string)$response->getHeader('Location'),
+		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/',
+			(string)$response->getHeader('Location'),
 			"Redirection to external links in login form BackURL gets prevented as a measure against spoofing attacks"
 		);
 
 		// Test external redirection on ChangePasswordForm
 		$this->get('Security/changepassword?BackURL=http://myspoofedhost.com');
 		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
-		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', (string)$changedResponse->getHeader('Location'),
-			"Redirection to external links in change password form BackURL gets prevented as a measure against spoofing attacks"
+		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/',
+			(string)$changedResponse->getHeader('Location'),
+			"Redirection to external links in change password form BackURL gets prevented to stop spoofing attacks"
 		);
 				
 		// Log the user out
@@ -177,7 +181,8 @@ class SecurityTest extends FunctionalTest {
 		$expiredResponse = $this->doTestLoginForm('expired@silverstripe.com' , '1nitialPassword');
 		$this->assertEquals(302, $expiredResponse->getStatusCode());
 		$this->assertEquals(Director::baseURL() . 'Security/changepassword', $expiredResponse->getHeader('Location'));
-		$this->assertEquals($this->idFromFixture('Member', 'expiredpassword'), $this->session()->inst_get('loggedInAs'));
+		$this->assertEquals($this->idFromFixture('Member', 'expiredpassword'), 
+			$this->session()->inst_get('loggedInAs'));
 
 		// Make sure it redirects correctly after the password has been changed
 		$this->mainSession->followRedirection();
@@ -313,7 +318,8 @@ class SecurityTest extends FunctionalTest {
 		$this->assertNull($member1->LockedOutUntil);
 		$this->assertNull($member2->LockedOutUntil);
 		
-		// BUT, DOING AN ADDITIONAL LOG-IN WITH EITHER OF THEM WILL LOCK OUT, SINCE THAT IS THE 3RD FAILURE IN THIS SESSION
+		// BUT, DOING AN ADDITIONAL LOG-IN WITH EITHER OF THEM WILL LOCK OUT, SINCE THAT IS THE 3RD FAILURE IN
+		// THIS SESSION
 
 		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
 		$member1 = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));

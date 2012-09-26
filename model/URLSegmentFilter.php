@@ -66,7 +66,9 @@ class URLSegmentFilter extends Object {
 		$replacements = $this->getReplacements();
 		
 		// Unset automated removal of non-ASCII characters, and don't try to transliterate
-		if($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9+.-]+/u'])) unset($replacements['/[^A-Za-z0-9+.-]+/u']);
+		if($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9+.-]+/u'])) {
+			unset($replacements['/[^A-Za-z0-9+.-]+/u']);
+		}
 		
 		foreach($replacements as $regex => $replace) {
 			$name = preg_replace($regex, $replace, $name);

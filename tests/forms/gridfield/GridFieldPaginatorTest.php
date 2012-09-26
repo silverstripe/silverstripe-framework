@@ -31,7 +31,8 @@ class GridFieldPaginatorTest extends FunctionalTest {
 	}
 	
 	public function testThereIsNoPaginatorWhenOnlyOnePage() {
-		// We set the itemsPerPage to an reasonably big number so as to avoid test broke from small changes on the fixture YML file 
+		// We set the itemsPerPage to an reasonably big number so as to avoid test broke from small changes
+		// on the fixture YML file 
 		$total = $this->list->count();
 		$this->gridField->getConfig()->getComponentByType("GridFieldPaginator")->setItemsPerPage($total);
 		$fieldHolder = $this->gridField->FieldHolder();

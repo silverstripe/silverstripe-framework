@@ -410,7 +410,8 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 		$SQL_codes = join("','", $SQLa_codes);
 		
 		// Via Roles are groups that have the permission via a role
-		return DataObject::get('Group')->where("\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')")
+		return DataObject::get('Group')
+			->where("\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')")
 			->leftJoin('Permission', "\"Permission\".\"GroupID\" = \"Group\".\"ID\"")
 			->leftJoin('Group_Roles', "\"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"")
 			->leftJoin('PermissionRole', "\"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"")
@@ -453,8 +454,10 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 				foreach($someCodes as $k => $v) {
 					if (is_array($v)) {
 						// There must be a category and name key.
-						if (!isset($v['category'])) user_error("The permission $k must have a category key", E_USER_WARNING);
-						if (!isset($v['name'])) user_error("The permission $k must have a name key", E_USER_WARNING);
+						if (!isset($v['category'])) user_error("The permission $k must have a category key",
+							E_USER_WARNING);
+						if (!isset($v['name'])) user_error("The permission $k must have a name key",
+							E_USER_WARNING);
 						
 						if (!isset($allCodes[$v['category']])) $allCodes[$v['category']] = array();
 						
@@ -600,8 +603,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $list List of permissions in the structure. The result will be
 	 *              written to this array.
 	 */
-	protected static function traverse_declared_permissions($declared,
-																													&$list) {
+	protected static function traverse_declared_permissions($declared, &$list) {
 		if(!is_array($declared))
 			return;
 

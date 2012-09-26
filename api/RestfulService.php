@@ -94,7 +94,9 @@ class RestfulService extends ViewableData {
 	}
 		
 	/**
-	 * Makes a request to the RESTful server, and return a {@link RestfulService_Response} object for parsing of the result.
+	 * Makes a request to the RESTful server, and return a {@link RestfulService_Response} object for parsing of the
+	 * result.
+	 * 
 	 * @todo Better POST, PUT, DELETE, and HEAD support
 	 * @todo Caching of requests - probably only GET and HEAD requestst
 	 * @todo JSON support in RestfulService_Response
@@ -102,7 +104,8 @@ class RestfulService extends ViewableData {
 	 *
 	 * This is a replacement of {@link connect()}.
 	 *
-	 * @return RestfulService_Response - If curl request produces error, the returned response's status code will be 500
+	 * @return RestfulService_Response - If curl request produces error, the returned response's status code will
+	 *                                   be 500
 	 */
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
 		
@@ -116,7 +119,9 @@ class RestfulService extends ViewableData {
 		$cache_path = $cachedir."/xmlresponse_$cache_file";
 		
 		// Check for unexpired cached feed (unless flush is set)
-		if(!isset($_GET['flush']) && @file_exists($cache_path) && @filemtime($cache_path) + $this->cache_expire > time()) {
+		if(!isset($_GET['flush']) && @file_exists($cache_path)
+				&& @filemtime($cache_path) + $this->cache_expire > time()) {
+			
 			$store = file_get_contents($cache_path);
 			$response = unserialize($store);
 			

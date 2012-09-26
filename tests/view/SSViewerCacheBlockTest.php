@@ -69,7 +69,8 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		
 		// Make sure a complicated cacheblock parses
 		$this->_reset();
-		$this->assertEquals($this->_runtemplate('<% cached \'block\', Foo, Test.Test(4).Test(jumping).Foo %>Yay<% end_cached %>'), 'Yay');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached \'block\', Foo, Test.Test(4).Test(jumping).Foo %>Yay<% end_cached %>'), 'Yay');
 
 		// ** Conditional Checks **
 
@@ -83,7 +84,8 @@ class SSViewerCacheBlockTest extends SapphireTest {
 
 		// Make sure a cacheblock with a complex conditional and arguments parses
 		$this->_reset();
-		$this->assertEquals($this->_runtemplate('<% cached Foo, Test.Test(4).Test(jumping).Foo if Test.Test(yank).Foo %>Yay<% end_cached %>'), 'Yay');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached Foo, Test.Test(4).Test(jumping).Foo if Test.Test(yank).Foo %>Yay<% end_cached %>'), 'Yay');
 	}
 
 	/**
@@ -122,13 +124,17 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// Then once cached, once not (and the opposite)
 		$this->_reset(true);
 
-		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 1, 'Cache' => true )), '1');
-		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 2, 'Cache' => false)), '2');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 1, 'Cache' => true )), '1');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 2, 'Cache' => false)), '2');
 
 		$this->_reset(true);
 
-		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 1, 'Cache' => false)), '1');
-		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 2, 'Cache' => true )), '2');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 1, 'Cache' => false)), '1');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 2, 'Cache' => true )), '2');
 	}
 
 	/**
@@ -138,14 +144,18 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// First, run twice with caching
 		$this->_reset(true);
 
-		$this->assertEquals($this->_runtemplate('<% cached unless False %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
-		$this->assertEquals($this->_runtemplate('<% cached unless False %>$Foo<% end_cached %>', array('Foo' => 2)), '1');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached unless False %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached unless False %>$Foo<% end_cached %>', array('Foo' => 2)), '1');
 
 		// Then twice without caching
 		$this->_reset(true);
 
-		$this->assertEquals($this->_runtemplate('<% cached unless True %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
-		$this->assertEquals($this->_runtemplate('<% cached unless True %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached unless True %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached unless True %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
 	}
 
 	/**
@@ -155,14 +165,18 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// First, run twice with caching, to prove we get the same result back normally
 		$this->_reset(true);
 
-		$this->assertEquals($this->_runtemplate('<% cached %> A $Foo B <% end_cached %>', array('Foo' => 1)), ' A 1 B ');
-		$this->assertEquals($this->_runtemplate('<% cached %> A $Foo B <% end_cached %>', array('Foo' => 2)), ' A 1 B ');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached %> A $Foo B <% end_cached %>', array('Foo' => 1)), ' A 1 B ');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached %> A $Foo B <% end_cached %>', array('Foo' => 2)), ' A 1 B ');
 
 		// Then add uncached to the nested block
 		$this->_reset(true);
 
-		$this->assertEquals($this->_runtemplate('<% cached %> A <% uncached %>$Foo<% end_uncached %> B <% end_cached %>', array('Foo' => 1)), ' A 1 B ');
-		$this->assertEquals($this->_runtemplate('<% cached %> A <% uncached %>$Foo<% end_uncached %> B <% end_cached %>', array('Foo' => 2)), ' A 2 B ');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached %> A <% uncached %>$Foo<% end_uncached %> B <% end_cached %>', array('Foo' => 1)), ' A 1 B ');
+		$this->assertEquals($this->_runtemplate(
+			'<% cached %> A <% uncached %>$Foo<% end_uncached %> B <% end_cached %>', array('Foo' => 2)), ' A 2 B ');
 	}
 
 	/**
@@ -174,16 +188,20 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$template = '<% cached Foo %> $Fooa <% cached Bar %>$Bara<% end_cached %> $Foob <% end_cached %>';
 
 		// Do it the first time to load the cache
-		$this->assertEquals($this->_runtemplate($template, array('Foo' => 1, 'Fooa' => 1, 'Foob' => 3, 'Bar' => 1, 'Bara' => 2)), ' 1 2 3 ');
+		$this->assertEquals($this->_runtemplate($template, 
+			array('Foo' => 1, 'Fooa' => 1, 'Foob' => 3, 'Bar' => 1, 'Bara' => 2)), ' 1 2 3 ');
 
 		// Do it again, the input values are ignored as the cache is hit for both elements
-		$this->assertEquals($this->_runtemplate($template, array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 1, 'Bara' => 9)), ' 1 2 3 ');
+		$this->assertEquals($this->_runtemplate($template, 
+			array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 1, 'Bara' => 9)), ' 1 2 3 ');
 
 		// Do it again with a new key for Bar, Bara is picked up, Fooa and Foob are not
-		$this->assertEquals($this->_runtemplate($template, array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 9)), ' 1 9 3 ');
+		$this->assertEquals($this->_runtemplate($template, 
+			array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 9)), ' 1 9 3 ');
 
 		// Do it again with a new key for Foo, Fooa and Foob are picked up, Bara are not
-		$this->assertEquals($this->_runtemplate($template, array('Foo' => 2, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 1)), ' 9 9 9 ');
+		$this->assertEquals($this->_runtemplate($template, 
+			array('Foo' => 2, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 1)), ' 9 9 9 ');
 	}
 
 	public function testNoErrorMessageForControlWithinCached() {
@@ -196,12 +214,14 @@ class SSViewerCacheBlockTest extends SapphireTest {
      */
 	public function testErrorMessageForCachedWithinControlWithinCached() {
 		$this->_reset(true);
-		$this->_runtemplate('<% cached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_cached %>');
+		$this->_runtemplate(
+			'<% cached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_cached %>');
 	}
 
 	public function testNoErrorMessageForCachedWithinControlWithinUncached() {
 		$this->_reset(true);
-		$this->_runtemplate('<% uncached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_uncached %>');
+		$this->_runtemplate(
+			'<% uncached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_uncached %>');
 	}
 
 	/**

@@ -99,7 +99,8 @@ class DatabaseAdmin extends Controller {
 			echo "<p>Done!</p>";
 			$this->redirect($_GET['returnURL']);
 		} else {
-			$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']), !isset($_REQUEST['dont_populate']));
+			$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']),
+				!isset($_REQUEST['dont_populate']));
 		}
 	}
 
@@ -163,8 +164,11 @@ class DatabaseAdmin extends Controller {
 			$dbVersion = $conn->getVersion();
 			$databaseName = (method_exists($conn, 'currentDatabase')) ? $conn->currentDatabase() : "";
 			
-			if(Director::is_cli()) echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);
-			else echo sprintf("<h2>Building database %s using %s %s</h2>", $databaseName, $dbType, $dbVersion);
+			if(Director::is_cli()) {
+				echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);
+			} else {
+				echo sprintf("<h2>Building database %s using %s %s</h2>", $databaseName, $dbType, $dbVersion);
+			}
 		}
 
 		// Set up the initial database
@@ -180,7 +184,8 @@ class DatabaseAdmin extends Controller {
 			$database = $parameters['database'];
 
 			if(!$database) {
-				user_error("No database name given; please give a value for \$databaseConfig['database']", E_USER_ERROR);
+				user_error("No database name given; please give a value for \$databaseConfig['database']",
+					E_USER_ERROR);
 			}
 
 			DB::createDatabase($connect, $username, $password, $database);

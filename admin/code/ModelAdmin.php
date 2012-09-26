@@ -17,7 +17,8 @@
  * @todo ajax result display
  * @todo relation formfield scaffolding (one tab per relation) - relations don't have DBField sublclasses, we do
  * 	we define the scaffold defaults. can be ComplexTableField instances for a start. 
- * @todo has_many/many_many relation autocomplete field (HasManyComplexTableField doesn't work well with larger datasets)
+ * @todo has_many/many_many relation autocomplete field (HasManyComplexTableField doesn't work well with larger
+ *       datasets)
  * 
  * Long term TODOs:
  * @todo Hook into RESTful interface on DataObjects (yet to be developed)
@@ -150,7 +151,8 @@ abstract class ModelAdmin extends LeftAndMain {
 		);
 		$form->addExtraClass('cms-edit-form cms-panel-padded center');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
-		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EditForm'));
+		$editFormAction = Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EditForm');
+		$form->setFormAction($editFormAction);
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 
 		$this->extend('updateEditForm', $form);
@@ -354,7 +356,10 @@ abstract class ModelAdmin extends LeftAndMain {
 		))->renderWith('ModelAdmin_ImportSpec');
 		
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
-		$fields->push(new CheckboxField('EmptyBeforeImport', _t('ModelAdmin.EMPTYBEFOREIMPORT', 'Clear Database before import'), false)); 
+		$fields->push(
+			new CheckboxField('EmptyBeforeImport', _t('ModelAdmin.EMPTYBEFOREIMPORT', 'Clear Database before import'),
+				false)
+		); 
 		
 		$actions = new FieldList(
 			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
@@ -366,7 +371,9 @@ abstract class ModelAdmin extends LeftAndMain {
 			$fields,
 			$actions
 		);
-		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'ImportForm'));
+		$form->setFormAction(
+			Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'ImportForm')
+		);
 
 		$this->extend('updateImportForm', $form);
 
@@ -385,7 +392,9 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @param SS_HTTPRequest $request
 	 */
 	public function import($data, $form, $request) {
-		if(!$this->showImportForm || (is_array($this->showImportForm) && !in_array($this->modelClass,$this->showImportForm))) {
+		if(!$this->showImportForm || (is_array($this->showImportForm) 
+				&& !in_array($this->modelClass,$this->showImportForm))) {
+
 			return false;
 		}
 
@@ -420,7 +429,9 @@ abstract class ModelAdmin extends LeftAndMain {
 			'ModelAdmin.DELETEDRECORDS', "Deleted {count} records.",
 			array('count' => $results->DeletedCount())
 		);
-		if(!$results->CreatedCount() && !$results->UpdatedCount()) $message .= _t('ModelAdmin.NOIMPORT', "Nothing to import");
+		if(!$results->CreatedCount() && !$results->UpdatedCount()) {
+			$message .= _t('ModelAdmin.NOIMPORT', "Nothing to import");
+		}
 
 		$form->sessionMessage($message, 'good');
 		$this->redirectBack();

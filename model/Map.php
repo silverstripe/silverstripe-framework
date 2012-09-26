@@ -199,8 +199,10 @@ class SS_Map_Iterator implements Iterator {
 		} else {
 			if(!isset($this->firstItems[$this->firstItemIdx-1])) $this->items->next();
 
-			if($this->excludedItems) while(($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems, true)) {
-				$this->items->next();
+			if($this->excludedItems) {
+				while(($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems, true)) {
+					$this->items->next();
+				}
 			}
 		}
 	}

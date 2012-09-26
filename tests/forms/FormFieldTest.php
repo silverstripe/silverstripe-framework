@@ -68,16 +68,16 @@ class FormFieldTest extends SapphireTest {
 			$this->assertEquals(
 				$isReadonlyBefore, 
 				$instance->isReadonly(),
-				"FormField class '{$fieldClass} retains its readonly state after calling performReadonlyTransformation()"
+				"FormField class {$fieldClass} retains its readonly state after calling performReadonlyTransformation()"
 			);
 			$this->assertTrue(
 				$readonlyInstance->isReadonly(),
-				"FormField class '{$fieldClass} returns a valid readonly representation as of isReadonly()"
+				"FormField class {$fieldClass} returns a valid readonly representation as of isReadonly()"
 			);
 			$this->assertNotSame(
 				$readonlyInstance,
 				$instance,
-				"FormField class '{$fieldClass} returns a valid cloned readonly representation"
+				"FormField class {$fieldClass} returns a valid cloned readonly representation"
 			);
 		}
 	}
@@ -102,16 +102,16 @@ class FormFieldTest extends SapphireTest {
 			$this->assertEquals(
 				$isDisabledBefore, 
 				$instance->isDisabled(),
-				"FormField class '{$fieldClass} retains its disabled state after calling performDisabledTransformation()"
+				"FormField class {$fieldClass} retains its disabled state after calling performDisabledTransformation()"
 			);
 			$this->assertTrue(
 				$disabledInstance->isDisabled(),
-				"FormField class '{$fieldClass} returns a valid disabled representation as of isDisabled()"
+				"FormField class {$fieldClass} returns a valid disabled representation as of isDisabled()"
 			);
 			$this->assertNotSame(
 				$disabledInstance,
 				$instance,
-				"FormField class '{$fieldClass} returns a valid cloned disabled representation"
+				"FormField class {$fieldClass} returns a valid cloned disabled representation"
 			);
 		}
 	}

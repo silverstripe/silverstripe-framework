@@ -141,13 +141,20 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		if($test instanceof PHPUnit_Framework_TestCase) {
 			$this->endCurrentTest();
 			$this->currentTest = array(
-				'name'        => preg_replace('(\(.*\))', '', $test->toString()), // the name of the test (without the suite name)
-				'timeElapsed' => 0,                // execution time of the test
-				'status'      => TEST_SUCCESS,     // status of the test execution
-				'message'     => '',               // user message of test result
-				'exception'   => NULL,             // original caught exception thrown by test upon failure/error
-				'trace'		  => NULL,			   // Stacktrace used for exception handling
-				'uid'         => md5(microtime())  // a unique ID for this test (used for identification purposes in results)
+				// the name of the test (without the suite name)
+				'name'        => preg_replace('(\(.*\))', '', $test->toString()), 
+				// execution time of the test
+				'timeElapsed' => 0,
+				// status of the test execution
+				'status'      => TEST_SUCCESS,
+				// user message of test result
+				'message'     => '',
+				// original caught exception thrown by test upon failure/error
+				'exception'   => NULL,
+				// Stacktrace used for exception handling
+				'trace'		  => NULL,
+				// a unique ID for this test (used for identification purposes in results)
+				'uid'         => md5(microtime())  
 			);
 			if($this->hasTimer) $this->timer->start();
 		}
@@ -381,7 +388,8 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		}
 		$result = ($failCount || $errorCount) ? 'fail' : 'pass';
 		echo "<div class=\"status $result\">";
-		echo "<h2><span>$testCount</span> tests run: <span>$passCount</span> passes, <span>$failCount</span> failures, and <span>$incompleteCount</span> incomplete with <span>$errorCount</span> errors</h2>";
+		echo "<h2><span>$testCount</span> tests run: <span>$passCount</span> passes, <span>$failCount</span> failures,"
+			. " and <span>$incompleteCount</span> incomplete with <span>$errorCount</span> errors</h2>";
 		echo "</div>";
 		
 	}

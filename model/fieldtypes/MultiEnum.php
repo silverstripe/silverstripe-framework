@@ -32,7 +32,18 @@ class MultiEnum extends Enum {
 
 	public function requireField(){
 
-		$values=array('type'=>'set', 'parts'=>array('enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>Convert::raw2sql($this->default), 'table'=>$this->tableName, 'arrayValue'=>$this->arrayValue));
+		$values=array(
+			'type'=>'set',
+			'parts'=>array(
+				'enums'=>$this->enum,
+				'character set'=>'utf8',
+				'collate'=> 'utf8_general_ci',
+				'default'=>Convert::raw2sql($this->default),
+				'table'=>$this->tableName,
+				'arrayValue'=>$this->arrayValue
+			)
+		);
+
 		DB::requireField($this->tableName, $this->name, $values);
 
 	}
@@ -41,7 +52,9 @@ class MultiEnum extends Enum {
 	/**
 	 * Return a {@link CheckboxSetField} suitable for editing this field 
 	 */
-	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null, $emptyString = null) {
+	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
+			$emptyString = null) {
+		
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
