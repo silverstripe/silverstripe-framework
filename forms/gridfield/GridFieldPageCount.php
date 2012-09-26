@@ -42,11 +42,13 @@ class GridFieldPageCount implements GridField_HTMLProvider, GridField_DataManipu
 	}
 
 	/**
-	 *
-	 * @param int $itemsPerPage - How many items should be displayed per page
+	 * @param string $targetFrament The fragment indicating the placement of this page count
+	 * @param integer $itemsPerPage - How many items should be displayed per page
 	 */
-	public function __construct($itemsPerPage=null, $targetFragment = 'before') {
-		if($itemsPerPage) $this->itemsPerPage = $itemsPerPage;
+	public function __construct($targetFragment = 'before', $itemsPerPage = null) {
+		if($itemsPerPage) {
+			$this->itemsPerPage = $itemsPerPage;
+		}
 		
 		$this->targetFragment = $targetFragment;
 	}
