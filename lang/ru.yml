@@ -7,7 +7,7 @@ ru:
     CREATED: 'Первая загрузка'
     DIM: Размеры
     FILENAME: 'Имя файла'
-    FOLDER: Folder
+    FOLDER: Папка
     LASTEDIT: 'Последнее изменение'
     OWNER: Владелец
     SIZE: Размер
@@ -18,15 +18,15 @@ ru:
     ChooseFiles: 'Выберите файлы'
     DRAGFILESHERE: 'Перетащите файлы сюда'
     DROPAREA: Контейнер
-    EDITALL: 'Edit all'
+    EDITALL: 'Редактировать все'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Файлы
     FROMCOMPUTER: 'Выберите файлы с диска вашего компьютера'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
+    TOTAL: Всего
     TOUPLOAD: 'Выберите файлы для загрузки...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
   BBCodeParser:
     ALIGNEMENT: Выравнивание
@@ -64,7 +64,7 @@ ru:
     ANY: Any
     1: 'True'
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: 'Идет загрузка...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Доступ к разделу ''{title}'''
@@ -120,20 +120,20 @@ ru:
     MONTHS: месяца(ев)
     SEC: сек.
     SECS: сек.
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFAGO: '{difference} назад'
+    TIMEDIFFIN: 'через {difference}'
     YEAR: год
     YEARS: лет
   DateField:
     NOTSET: 'не установлено'
     TODAY: сегодня
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
     NOTSET: 'Не задано'
   Director:
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Неверный запрос'
   DropdownField:
     CHOOSE: (Выберите)
   EmailField:
@@ -189,7 +189,7 @@ ru:
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe загрузки изображений'
   Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS: 'Синхронизация завершена: {createdcount} элементов создано, {deletedcount} элементов удалено'
   Folder:
     PLURALNAME: Folders
     SINGULARNAME: Folder
@@ -215,30 +215,30 @@ ru:
     Delete: Удалить
     UnlinkRelation: 'Отменить связь'
   GridField:
-    Add: 'Add {name}'
+    Add: 'Добавить {name}'
     Filter: Фильтр
-    FilterBy: 'Filter by '
+    FilterBy: 'Фильтр по'
     Find: Найти
-    LEVELUP: 'Level up'
+    LEVELUP: 'Уровень выше'
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
     NoItemsFound: 'Элементов не найдено'
     PRINTEDAT: 'Когда распечатано:'
     PRINTEDBY: 'Кем распечатано:'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolder: 'Найти {type}'
+    PlaceHolderWithLabels: 'Найти {type} по {name}'
     RelationSearch: 'Поиск отношений'
     ResetFilter: Сброс
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Нет прав на удаление'
   GridFieldDetailForm:
     CancelBtn: Cancel
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
+    Create: Создать
+    Delete: Удалить
+    DeletePermissionsFailure: 'Нет прав на удаление'
+    Deleted: 'Удалено %s %s'
+    Save: Сохранить
+    Saved: 'Сохранено %s %s'
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Добавить роль для этой группы'
@@ -343,7 +343,7 @@ ru:
     SINGULARNAME: 'Login Attempt'
     Status: Статус
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Добавить группу'
     BUTTONCHANGEPASSWORD: 'Изменить пароль'
     BUTTONLOGIN: Войти
     BUTTONLOGINOTHER: 'Войти под другим именем'
@@ -362,8 +362,8 @@ ru:
     ERRORWRONGCRED: 'Вероятно адрес email или пароль введены неверно. Попробуйте снова.'
     FIRSTNAME: Имя
     INTERFACELANG: 'Язык интерфейса'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Недопустимый пароль: {password}'
+    LOGGEDINAS: 'Вы вошли в систему как {name}.'
     NEWPASSWORD: 'Новый пароль'
     PASSWORD: Пароль
     PLURALNAME: 'Члены группы'
@@ -376,7 +376,7 @@ ru:
     TIMEFORMAT: 'Формат времени'
     VALIDATIONMEMBEREXISTS: 'Этот адрес email уже зарегистрирован'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Добро пожаловать, {firstname}'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
     belongs_many_many_Groups: Группы
     db_LastVisited: 'Дата последнего видита'
@@ -426,7 +426,7 @@ ru:
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Выберите CSV-файл для импорта'
     NOIMPORT: 'Нечего импортировать'
-    RESET: Reset
+    RESET: Сброс
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
@@ -435,18 +435,18 @@ ru:
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
+    FILTER: Фильтр
+    IMPORT: Импорт
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
+    IMPORT_TAB_HEADER: Импорт
+    SEARCHLISTINGS: Поиск
   MoneyField:
     FIELDLABELAMOUNT: Сумма
     FIELDLABELCURRENCY: Валюта
   NullableField:
     IsNullLabel: Недействительно
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
   Pagination:
     Page: Page
     View: View
@@ -458,9 +458,9 @@ ru:
     PLURALNAME: Permissions
     SINGULARNAME: Permission
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    AssignedTo: 'присвоено "{title}"'
+    FromGroup: 'перенято от группы "{title}"'
+    FromRole: 'перенято из роли "{title}"'
     FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
@@ -502,7 +502,7 @@ ru:
     IMPORTGROUPS: 'Импортировать группы'
     IMPORTUSERS: 'Импорт пользователей'
     MEMBERS: Участники
-    MENUTITLE: Security
+    MENUTITLE: Безопасность
     MemberListCaution: 'Внимание: при удалении участников из этого списка они будут удалены из всех групп и из базы данных '
     NEWGROUP: 'Новая группа'
     PERMISSIONS: 'Права доступа'
@@ -514,7 +514,7 @@ ru:
     BtnImport: 'Импорт из CSV'
     FileFieldLabel: 'Файл CSV <small>(Допустимые расширения: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Редактировать
   SimpleImageField:
     NOUPLOAD: 'Не загружено ни одного изображения'
   SiteTree:
@@ -542,7 +542,7 @@ ru:
     VIEWNEXT: Следующий
     VIEWPREVIOUS: Предыдущий
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
   ToggleField:
     LESS: меньше
     MORE: больше
@@ -555,7 +555,7 @@ ru:
     DOEDIT: Сохранить
     DROPFILE: 'drop a file'
     DROPFILES: 'перетащить файлы'
-    Dimensions: Dimensions
+    Dimensions: Размеры
     EDIT: Edit
     EDITINFO: 'Редактировать этот файл'
     FIELDNOTSET: 'Информация о файле не найдена'
@@ -563,9 +563,9 @@ ru:
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Из файлов'
     HOTLINKINFO: 'Внимание: это изображение будет вставлено через хотлинк. Пожалуйста, не забывайте, что на это у вас должно быть разрешение владельца исходного ресурса.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILES: 'Превышено максимальное количество файлов ({count}).'
+    MAXNUMBEROFFILESSHORT: 'Можно загрузить не более {count} файлов'
+    REMOVE: Удалить
     REMOVEERROR: 'Ошибка при удалении файла'
     REMOVEINFO: 'Удалить файл отсюда, но не удалять с сервера'
     STARTALL: 'Стартовать все'
