@@ -29,7 +29,7 @@ your tmp folder.
 	$image->resize(width,height); // Basic resize, just skews the image
 	$image->resizeRatio(width,height) // Resizes an image with max width and height
 	$image->paddedResize(width,height) // Adds padding after resizing to width or height.
-	$image->croppedResize(width,height) // Crops the image from the centre, to given values.
+	$image->croppedImage(width,height) // Crops the image from the centre, to given values.
 	$image->resizeByHeight(height) // Maximum height the image resizes to, keeps proportion
 	$image->resizeByWidth(width) // Maximum width the image resizes to, keeps proportion 
 	$image->greyscale(r,g,b) // alters image channels ===
@@ -96,6 +96,7 @@ For output of an image tag with the image automatically resized to 80px width, y
 	$Image.SetHeight(80) // returns a image 80px tall, ration kept the same
 	$Image.SetSize(80,80) // returns a 80x80px padded image
 	$Image.SetRatioSize(80,80) // Returns an image scaled proportional, with its greatest diameter scaled to 80px
+	$Image.CroppedImage(80,80) // Returns an 80x80 image cropped from the center.
 	$Image.PaddedImage(80, 80) // Returns an 80x80 image. Unused space is padded white. No crop. No stretching
 	$Image.Width // returns width of image
 	$Image.Height // returns height of image
