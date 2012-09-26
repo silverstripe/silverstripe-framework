@@ -184,20 +184,32 @@ class PermissionCheckboxSetField extends FormField {
 						// show its origin automatically
 						$inheritMessage = ' (' . join(', ', $uninheritedCodes[$code]).')';
 					}
-					
+
 					// If the field is readonly, always mark as "disabled"
 					if($this->readonly) $disabled = ' disabled="true"';
 					
 					$inheritMessage = '<small>' . $inheritMessage . '</small>';
-					$options .= "<li class=\"$extraClass\">" . 
-						"<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\" value=\"$code\"$checked class=\"checkbox\" />" . 
-						"<label {$title}for=\"$itemID\">$value$inheritMessage</label>" . 
-						"</li>\n"; 
+
+					// If the field is readonly, add a span that will replace the disabled checkbox input
+					if($this->readonly) {
+						$options .= "<li class=\"$extraClass\">" .
+							"<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\" value=\"$code\"$checked class=\"checkbox\" />" .
+							"<label {$title}for=\"$itemID\"><span class=\"ui-button-icon-primary ui-icon btn-icon-accept\"></span>$value$inheritMessage</label>" .
+							"</li>\n";
+					} else {
+						$options .= "<li class=\"$extraClass\">" .
+							"<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\" value=\"$code\"$checked class=\"checkbox\" />" .
+							"<label {$title}for=\"$itemID\">$value$inheritMessage</label>" .
+							"</li>\n";
+					}
 				}
 			}
 		}
-		
-		return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n$options</ul>\n"; 
+		if($this->readonly) {
+			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n<li class=\"help\">Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.</li>$options</ul>\n";
+		} else {
+			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n$options</ul>\n";
+		}
 	}
 	
 	/**
