@@ -17,7 +17,7 @@
 .cms .ss-gridfield p button#action_export .ui-button-text { padding-left: 26px; }
 .cms .ss-gridfield .right { float: right; }
 .cms .ss-gridfield .right > * { float: right; margin-left: 5px; font-size: 14.4px; }
-.cms .ss-gridfield .right .pagination-records-number { font-size: 1.0em; padding: 6px 7px 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); font-weight: normal; }
+.cms .ss-gridfield .right .pagination-records-number { font-size: 1.0em; padding: 6px 3px 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); font-weight: normal; }
 .cms .ss-gridfield .left { float: left; }
 .cms .ss-gridfield .left > * { margin-right: 5px; float: left; font-size: 14.4px; }
 .cms .ss-gridfield .grid-levelup { text-indent: -9999em; margin-bottom: 6px; }
