@@ -325,7 +325,7 @@
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$items = $parser->getBySelector('#ManyManyFiles .ss-uploadfield-files .ss-uploadfield-item');
+		$items = $parser->getBySelector('#Form_Form_ManyManyFiles_holder .ss-uploadfield-files .ss-uploadfield-item');
 		$ids = array();
 		foreach($items as $item) $ids[] = (int)$item['data-fileid'];
 		
