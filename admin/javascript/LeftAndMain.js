@@ -945,8 +945,8 @@ jQuery.noConflict();
 			 */
 			rewriteHashlinks: function() {
 				$(this).find('ul a').each(function() {
-					var href = $(this).attr('href').replace(/.*(#.*)/, '$1');
-					if(href) $(this).attr('href', href);
+					var href = $(this).attr('href');
+					if(href) $(this).attr('href', href.replace(/.*(#.*)/, '$1'));
 				});
 			}
 		});
