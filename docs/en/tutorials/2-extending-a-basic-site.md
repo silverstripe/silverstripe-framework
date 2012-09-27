@@ -394,7 +394,7 @@ An RSS feed is something that no news section should be without. SilverStripe ma
 	:::php
 	public function rss() {
 		$rss = new RSSFeed($this->Children(), $this->Link(), "The coolest news around");
-		$rss->outputToBrowser();
+		return $rss->outputToBrowser();
 	}
 
 
