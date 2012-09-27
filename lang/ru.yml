@@ -139,8 +139,8 @@ ru:
   EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
   Email_BounceRecord:
-    PLURALNAME: 'Email Bounce Records'
-    SINGULARNAME: 'Email Bounce Record'
+    PLURALNAME: 'Записи о недоставленных сообщениях'
+    SINGULARNAME: 'Запись о недоставленном сообщении'
   Enum:
     ANY: Любой
   File:
@@ -220,8 +220,8 @@ ru:
     FilterBy: 'Фильтр по'
     Find: Найти
     LEVELUP: 'Уровень выше'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
+    LinkExisting: Связать
+    NewRecord: 'Новый(-ая) %s'
     NoItemsFound: 'Элементов не найдено'
     PRINTEDAT: 'Когда распечатано:'
     PRINTEDBY: 'Кем распечатано:'
