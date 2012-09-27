@@ -146,9 +146,17 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 	
 	public function testHTTPError() {
+		RequestHandlingTest_ControllerExtension::$called_error = false;
+		RequestHandlingTest_ControllerExtension::$called_404_error = false;
+
 		$response = Director::test('RequestHandlingTest_Controller/throwhttperror');
 		$this->assertEquals(404, $response->getStatusCode());
 		$this->assertEquals('This page does not exist.', $response->getBody());
+
+		// Confirm that RequestHandlingTest_ControllerExtension::onBeforeHTTPError() called
+		$this->assertTrue(RequestHandlingTest_ControllerExtension::$called_error);
+		// Confirm that RequestHandlingTest_ControllerExtension::onBeforeHTTPError404() called
+		$this->assertTrue(RequestHandlingTest_ControllerExtension::$called_404_error);
 	}
 	
 	public function testMethodsOnParentClassesOfRequestHandlerDeclined() {
@@ -401,9 +409,27 @@ class RequestHandlingTest_FormActionController extends Controller {
  * Simple extension for the test controller
  */
 class RequestHandlingTest_ControllerExtension extends Extension {
+	public static $called_error = false;
+	public static $called_404_error = false;
+
 	public function extendedMethod() {
 		return "extendedMethod";
 	}
+
+	/**
+	 * Called whenever there is an HTTP error
+	 */
+	public function onBeforeHTTPError() {
+		self::$called_error = true;
+	}
+
+	/**
+	 * Called whenever there is an 404 error
+	 */
+	public function onBeforeHTTPError404() {
+		self::$called_404_error = true;
+	}
+
 }
 
 /**
