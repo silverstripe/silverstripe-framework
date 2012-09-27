@@ -37,13 +37,12 @@ class ClassLoaderTest extends SapphireTest {
 	}
 
 	public function testGetItemPath() {
-		$ds = DIRECTORY_SEPARATOR;
 		$loader = new SS_ClassLoader();
 		
 		$loader->pushManifest($this->testManifest1);
 		$this->assertEquals(
-			$this->baseManifest1 . $ds . 'module' . $ds . 'classes' . $ds . 'ClassA.php',
-			$loader->getItemPath('ClassA')
+			realpath($this->baseManifest1 . '/module/classes/ClassA.php'),
+			realpath($loader->getItemPath('ClassA'))
 		);
 		$this->assertEquals(
 			false,
@@ -64,8 +63,8 @@ class ClassLoaderTest extends SapphireTest {
 			$loader->getItemPath('UnknownClass')
 		);
 		$this->assertEquals(
-			$this->baseManifest2 . $ds . 'module' . $ds . 'classes' . $ds . 'OtherClassA.php',
-			$loader->getItemPath('OtherClassA')
+			realpath($this->baseManifest2 . '/module/classes/OtherClassA.php'),
+			realpath($loader->getItemPath('OtherClassA'))
 		);
 	}
 }
