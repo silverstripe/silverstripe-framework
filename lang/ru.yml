@@ -246,7 +246,7 @@ ru:
     DefaultGroupTitleAdministrators: Администраторы
     DefaultGroupTitleContentAuthors: 'Авторы содержимого'
     Description: Описание
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'При назначении группы верхнего уровня все роли будут переняты из нее'
     Locked: 'Блокировано?'
     NoRoles: 'Ролей не найдено'
     PLURALNAME: Группы
@@ -553,7 +553,7 @@ ru:
     DELETE: 'Удалить из файлов'
     DELETEINFO: 'Окончательно удалить этот файл с сервера'
     DOEDIT: Сохранить
-    DROPFILE: 'drop a file'
+    DROPFILE: 'перетащите файл сюда'
     DROPFILES: 'перетащить файлы'
     Dimensions: Размеры
     EDIT: Редактировать
