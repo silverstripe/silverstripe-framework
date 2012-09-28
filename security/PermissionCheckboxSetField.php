@@ -206,9 +206,19 @@ class PermissionCheckboxSetField extends FormField {
 			}
 		}
 		if($this->readonly) {
-			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n<li class=\"help\">Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.</li>$options</ul>\n";
+			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
+				"<li class=\"help\">" .
+				_t(
+					'Permissions.UserPermissionsIntro',
+					'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+				) .
+				"</li>" .
+				$options .
+				"</ul>\n";
 		} else {
-			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n$options</ul>\n";
+			return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n" .
+				$options . 
+				"</ul>\n";
 		}
 	}
 	
