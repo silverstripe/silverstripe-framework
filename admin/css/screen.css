@@ -649,7 +649,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree a > .jstree-icon { margin-right: 3px; }
 .cms .jstree li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-open > ul { display: block; }
 .cms .jstree li.jstree-closed > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-closed > ul { display: none; }
-.cms .jstree li.disabled a, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled a { color: #aaaaaa; }
+.cms .jstree li.disabled > a, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled > a { color: #aaaaaa; }
 .cms .jstree-rtl a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree-rtl a > .jstree-icon { margin-left: 3px; margin-right: 0; }
 .cms .jstree-rtl li, .TreeDropdownField .treedropdownfield-panel .jstree-rtl li { margin-left: 0; margin-right: 18px; }
 .cms .jstree-rtl > ul > li, .TreeDropdownField .treedropdownfield-panel .jstree-rtl > ul > li { margin-right: 0px; }
