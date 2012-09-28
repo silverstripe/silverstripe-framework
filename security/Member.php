@@ -1128,7 +1128,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'), 
 			i18n::get_existing_translations()
 		));
-		
+
 		$mainFields->removeByName('Bounced');
 		$mainFields->removeByName('RememberLoginToken');
 		$mainFields->removeByName('AutoLoginHash');
@@ -1181,6 +1181,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$fields->addFieldToTab('Root.Permissions', $permissionsField);
 			}
 		}
+
+		$permissionsTab = $fields->fieldByName("Root")->fieldByName('Permissions');
+		if($permissionsTab) $permissionsTab->addExtraClass('readonly');
 		
 		$defaultDateFormat = Zend_Locale_Format::getDateFormat($this->Locale);
 		$dateFormatMap = array(

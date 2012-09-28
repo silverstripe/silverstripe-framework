@@ -933,7 +933,16 @@ jQuery.noConflict();
 							return false;
 						}
 					},
-					selected: (selectedTab.index() != -1) ? selectedTab.index() : 0
+					selected: (selectedTab.index() != -1) ? selectedTab.index() : 0,
+					show: function(e, ui) {
+						// Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
+						var actions = $(this).closest('form').find('.Actions');
+						if($(ui.tab).closest('li').hasClass('readonly')) {
+							actions.fadeOut();
+						} else {
+							actions.show();
+						}
+					}
 				});
 			},
 		
