@@ -75,9 +75,12 @@
 							}
 							
 							if($.inArray(data.func, ['check_node', 'uncheck_node'])) {
-								//Don't allow check and uncheck if parent is disabled
+								// don't allow check and uncheck if parent is disabled
 								var node = $(data.args[0]).parents('li:first');
-								if(node.hasClass('disabled')) {
+								var allowedChildren = node.find('li:not(.disabled)');
+
+								// if there are child nodes that aren't disabled, allow expanding the tree
+								if(node.hasClass('disabled') && allowedChildren == 0) {
 									e.stopImmediatePropagation();
 									return false;
 								}
