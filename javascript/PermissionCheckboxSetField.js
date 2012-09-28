@@ -83,6 +83,20 @@
 				}
 			}
 		});
-		
+
+		$('.ui-tabs-hide').entwine({
+			onmatch: function() {
+				if($(this).find('.permissioncheckboxsetfield_readonly').length){
+					$('.Actions').show();
+				}
+			},
+			onunmatch: function() {
+				if($(this).find('.permissioncheckboxsetfield_readonly').length){
+					$('.Actions').fadeOut(1000);
+				}
+			}
+		});
+
 	});
+
 }(jQuery));
