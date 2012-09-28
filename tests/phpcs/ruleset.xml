@@ -4,6 +4,7 @@
 	
 	<!-- exclude minified CSS generated from SCSS -->
 	<exclude-pattern>admin/css/*</exclude-pattern>
+	<exclude-pattern>*/admin/css/*</exclude-pattern>
 	<!-- exclude thirdparty content -->
 	<exclude-pattern>thirdparty/*</exclude-pattern>
 	<exclude-pattern>*/jquery-changetracker/*</exclude-pattern>

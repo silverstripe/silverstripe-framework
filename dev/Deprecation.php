@@ -76,7 +76,8 @@ class Deprecation {
 	}
 
 	/**
-	 * Given a backtrace, get the module name from the caller two removed (the caller of the method that called #notice)
+	 * Given a backtrace, get the module name from the caller two removed (the caller of the method that called
+	 * #notice)
 	 *
 	 * @static
 	 * @param $backtrace array - a backtrace as returned from debug_backtrace
@@ -139,7 +140,9 @@ class Deprecation {
 
 		if(self::$module_version_overrides) {
 			$module = self::get_calling_module_from_trace($backtrace = debug_backtrace(0));
-			if(isset(self::$module_version_overrides[$module])) $checkVersion = self::$module_version_overrides[$module];
+			if(isset(self::$module_version_overrides[$module])) {
+				$checkVersion = self::$module_version_overrides[$module];
+			}
 		}
 
 		// Check the version against the notice version

@@ -67,7 +67,8 @@ class DebugView extends Object {
 	 */
 	public function Breadcrumbs() {
 		$basePath = str_replace(Director::protocolAndHost(), '', Director::absoluteBaseURL());
-		$relPath = parse_url(substr($_SERVER['REQUEST_URI'], strlen($basePath), strlen($_SERVER['REQUEST_URI'])), PHP_URL_PATH);
+		$relPath = parse_url(substr($_SERVER['REQUEST_URI'], strlen($basePath), strlen($_SERVER['REQUEST_URI'])),
+			PHP_URL_PATH);
 		$parts = explode('/', $relPath);
 		$base = Director::absoluteBaseURL();
 		$pathPart = "";

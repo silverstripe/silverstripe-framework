@@ -124,8 +124,8 @@ class File extends DataObject {
 	 */
 	static $app_categories = array(
 		'audio' => array(
-			"aif" ,"au" ,"mid" ,"midi" ,"mp3" ,"ra" ,"ram" ,"rm","mp3" ,"wav" ,"m4a" ,"snd" ,"aifc" ,"aiff" ,"wma" ,"apl",
-			"avr" ,"cda" ,"mp4" ,"ogg"
+			"aif" ,"au" ,"mid" ,"midi" ,"mp3" ,"ra" ,"ram" ,"rm","mp3" ,"wav" ,"m4a" ,"snd" ,"aifc" ,"aiff" ,"wma",
+			"apl", "avr" ,"cda" ,"mp4" ,"ogg"
 		),
 		'mov' => array(
 			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt"
@@ -333,7 +333,8 @@ class File extends DataObject {
 			$formattedImage = $this->getFormattedImage('SetWidth', Image::$asset_preview_width);
 			$thumbnail = $formattedImage ? $formattedImage->URL : '';
 			$previewField = new LiteralField("ImageFull",
-				"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$this->Name}' />\n"
+				"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" 
+					. rand(1,100000)  . "' alt='{$this->Name}' />\n"
 			);
 		} else {
 			$previewField = new LiteralField("ImageFull", $this->CMSThumbnail());
@@ -526,11 +527,16 @@ class File extends DataObject {
 		if(!file_exists($pathAfterAbs)) {
 			if(!is_a($this, 'Folder')) {
 				// Only throw a fatal error if *both* before and after paths don't exist.
-				if(!file_exists($pathBeforeAbs)) throw new Exception("Cannot move $pathBefore to $pathAfter - $pathBefore doesn't exist");
+				if(!file_exists($pathBeforeAbs)) {
+					throw new Exception("Cannot move $pathBefore to $pathAfter - $pathBefore doesn't exist");
+				}
 				
 				// Check that target directory (not the file itself) exists.
 				// Only check if we're dealing with a file, otherwise the folder will need to be created
-				if(!file_exists(dirname($pathAfterAbs))) throw new Exception("Cannot move $pathBefore to $pathAfter - Directory " . dirname($pathAfter) . " doesn't exist");
+				if(!file_exists(dirname($pathAfterAbs))) {
+					throw new Exception("Cannot move $pathBefore to $pathAfter - Directory " . dirname($pathAfter)
+						. " doesn't exist");
+				}
 			} 
 
 			// Rename file or folder
@@ -589,14 +595,18 @@ class File extends DataObject {
 			$base = pathinfo($name, PATHINFO_BASENAME);
 			$ext = self::get_file_extension($name);
 			$suffix = 1;
-			while(DataObject::get_one("File", "\"Name\" = '" . Convert::raw2sql($name) . "' AND \"ParentID\" = " . (int)$this->ParentID)) {
+			while(DataObject::get_one("File", "\"Name\" = '" . Convert::raw2sql($name) 
+					. "' AND \"ParentID\" = " . (int)$this->ParentID)) {
+
 				$suffix++;
 				$name = "$base-$suffix$ext";
 			}
 		}
 
 		// Update title
-		if(!$this->getField('Title')) $this->__set('Title', str_replace(array('-','_'),' ', preg_replace('/\.[^.]+$/', '', $name)));
+		if(!$this->getField('Title')) {
+			$this->__set('Title', str_replace(array('-','_'),' ', preg_replace('/\.[^.]+$/', '', $name)));
+		}
 		
 		// Update actual field value
 		$this->setField('Name', $name);
@@ -676,7 +686,8 @@ class File extends DataObject {
 	 */
 	public function getRelativePath() {
 		if($this->ParentID) {
-			$p = DataObject::get_by_id('Folder', $this->ParentID, false); // Don't use the cache, the parent has just been changed
+			// Don't use the cache, the parent has just been changed
+			$p = DataObject::get_by_id('Folder', $this->ParentID, false); 
 			if($p && $p->exists()) return $p->getRelativePath() . $this->getField("Name");
 			else return ASSETS_DIR . "/" . $this->getField("Name");
 		} else if($this->getField("Name")) {

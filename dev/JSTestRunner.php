@@ -9,15 +9,15 @@
  * <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  * <html>
  * <head>
- * 	<script src="http://code.jquery.com/jquery-latest.js"></script>
- *  <link rel="stylesheet" href="http://dev.jquery.com/view/trunk/qunit/testsuite.css" type="text/css" media="screen" />
- * 	<script>
+ * <script src="http://code.jquery.com/jquery-latest.js"></script>
+ * <link rel="stylesheet" href="http://dev.jquery.com/view/trunk/qunit/testsuite.css" type="text/css" media="screen" />
+ * <script>
  * 	$(document).ready(function(){
  * 		test("test my feature", function() {
  * 			ok('mytest');
  * 		});
  * 	});
- *   </script>
+ * </script>
  * </head>
  * <body>
  * <script type="text/javascript" src="http://jqueryjs.googlecode.com/svn/trunk/qunit/testrunner.js"></script>
@@ -111,7 +111,8 @@ class JSTestRunner extends Controller {
 		} else {
 			$allTests = $this->getAllTestFiles();
 			if(!array_key_exists($test, $allTests)) {
-				user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
+				user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class",
+					E_USER_ERROR);
 			}
 			
 			$this->runTests(array($test));

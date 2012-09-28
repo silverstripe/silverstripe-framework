@@ -44,8 +44,8 @@ class FunctionalTest extends SapphireTest {
 	
 	/**
 	 * If this is true, then 30x Location headers will be automatically followed.
-	 * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.  However, this will let you inspect
-	 * the intermediary headers
+	 * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.
+	 * However, this will let you inspect the intermediary headers
 	 */
 	protected $autoFollowRedirection = true;
 	
@@ -71,7 +71,8 @@ class FunctionalTest extends SapphireTest {
 			$this->useDraftSite();
 		}
         
-        // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case basis.
+        // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
+        // basis.
         BasicAuth::protect_entire_site(false);
 		
 		SecurityToken::disable();
@@ -91,7 +92,9 @@ class FunctionalTest extends SapphireTest {
 	public function get($url, $session = null, $headers = null, $cookies = null) {
 		$this->cssParser = null;
 		$response = $this->mainSession->get($url, $session, $headers, $cookies);
-		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
 		return $response;
 	}
 
@@ -102,7 +105,9 @@ class FunctionalTest extends SapphireTest {
 	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
 		$this->cssParser = null;
 		$response = $this->mainSession->post($url, $data, $headers, $session, $body, $cookies);
-		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
 		return $response;
 	}
 	
@@ -128,7 +133,9 @@ class FunctionalTest extends SapphireTest {
 	public function submitForm($formID, $button = null, $data = array()) {
 		$this->cssParser = null;
 		$response = $this->mainSession->submitForm($formID, $button, $data);
-		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
 		return $response;
 	}
 	
@@ -186,8 +193,9 @@ class FunctionalTest extends SapphireTest {
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
+		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+		            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+						. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
 				return false;
 			}
@@ -218,8 +226,9 @@ class FunctionalTest extends SapphireTest {
 		
 		if($expectedMatches != $actuals) {
 			throw new PHPUnit_Framework_AssertionFailedError(
-	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-				. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
+	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
+	            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+					. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
 	        );
 			return false;
 		}
@@ -250,8 +259,9 @@ class FunctionalTest extends SapphireTest {
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
+		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+		            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+						. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
 				return false;
 			}
@@ -280,8 +290,9 @@ class FunctionalTest extends SapphireTest {
 		
 		if($expectedMatches != $actuals) {
 			throw new PHPUnit_Framework_AssertionFailedError(
-	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-				. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
+	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
+	            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+					. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
 	        );
 		}
 	}
@@ -300,7 +311,8 @@ class FunctionalTest extends SapphireTest {
 	
 	/**
 	 * Use the draft (stage) site for testing.
-	 * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering your test.
+	 * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
+	 * your test.
 	 *
 	 * @param bool toggle the use of the draft site
 	 */
