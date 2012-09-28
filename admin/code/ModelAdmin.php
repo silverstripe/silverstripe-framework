@@ -354,7 +354,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		))->renderWith('ModelAdmin_ImportSpec');
 		
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
-		$fields->push(new CheckboxField('EmptyBeforeImport', 'Clear Database before import', false)); 
+		$fields->push(new CheckboxField('EmptyBeforeImport', _t('ModelAdmin.EMPTYBEFOREIMPORT', 'Clear Database before import'), false)); 
 		
 		$actions = new FieldList(
 			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
