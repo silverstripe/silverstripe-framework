@@ -9,7 +9,8 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	public function setUpOnce() {
 		
 		// enable fulltext option on this table
-		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
+		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options',
+			array('MySQLDatabase' => 'ENGINE=MyISAM'));
 		
 		parent::setUpOnce();
 	}

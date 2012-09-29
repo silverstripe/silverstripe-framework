@@ -78,12 +78,14 @@ abstract class SS_Database {
 	 *   - 'temporary' - If true, then a temporary table will be created
 	 * @return The table name generated.  This may be different from the table name, for example with temporary tables.
 	 */
-	abstract public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null);
+	abstract public function createTable($table, $fields = null, $indexes = null, $options = null,
+			$advancedOptions = null);
 	
 	/**
 	 * Alter a table's schema.
 	 */
-	abstract public function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions=null, $advancedOptions=null);
+	abstract public function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null,
+			$alteredIndexes = null, $alteredOptions=null, $advancedOptions=null);
 	
 	/**
 	 * Rename a table.
@@ -206,14 +208,16 @@ abstract class SS_Database {
 	public function endSchemaUpdate() {
 		foreach($this->schemaUpdateTransaction as $tableName => $changes) {
 			switch($changes['command']) {
-				case 'create':
-					$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'], $changes['options'], @$changes['advancedOptions']);
-					break;
-				
-				case 'alter':
-					$this->alterTable($tableName, $changes['newFields'], $changes['newIndexes'],
-						$changes['alteredFields'], $changes['alteredIndexes'], $changes['alteredOptions'], @$changes['advancedOptions']);
-					break;
+			case 'create':
+				$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'], $changes['options'],
+					@$changes['advancedOptions']);
+				break;
+			
+			case 'alter':
+				$this->alterTable($tableName, $changes['newFields'], $changes['newIndexes'],
+					$changes['alteredFields'], $changes['alteredIndexes'], $changes['alteredOptions'],
+					@$changes['advancedOptions']);
+				break;
 			}
 		}
 		$this->schemaUpdateTransaction = null;
@@ -240,7 +244,13 @@ abstract class SS_Database {
 	 * @param string $options
 	 */
 	public function transCreateTable($table, $options = null, $advanced_options = null) {
-		$this->schemaUpdateTransaction[$table] = array('command' => 'create', 'newFields' => array(), 'newIndexes' => array(), 'options' => $options, 'advancedOptions' => $advanced_options);
+		$this->schemaUpdateTransaction[$table] = array(
+			'command' => 'create',
+			'newFields' => array(),
+			'newIndexes' => array(),
+			'options' => $options,
+			'advancedOptions' => $advanced_options
+		);
 	}
 	
 	/**
@@ -298,7 +308,8 @@ abstract class SS_Database {
 	 * @param string $indexSchema A list of indexes to create. See {@link requireIndex()}
 	 * @param array $options
 	 */
-	public function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = Array(), $extensions=false) {
+	public function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true,
+			$options = Array(), $extensions=false) {
 		
 		if(!isset($this->tableList[strtolower($table)])) {
 			$this->transCreateTable($table, $options, $extensions);
@@ -423,11 +434,13 @@ abstract class SS_Database {
 		
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
-			$this->alterationMessage("Index $table.$index: created as " . DB::getConn()->convertIndexSpec($spec),"created");
+			$this->alterationMessage("Index $table.$index: created as "
+				. DB::getConn()->convertIndexSpec($spec),"created");
 		} else if($array_spec != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
 			$spec_msg=DB::getConn()->convertIndexSpec($spec);
-			$this->alterationMessage("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
+			$this->alterationMessage("Index $table.$index: changed to $spec_msg"
+				. " <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
 		}
 	}
 
@@ -540,12 +553,14 @@ abstract class SS_Database {
 						$query .= "'{$holder[$i]}')";
 						DB::query($query);
 						$amount = DB::affectedRows();
-						$this->alterationMessage("Changed $amount rows to default value of field $field (Value: $default)");
+						$this->alterationMessage("Changed $amount rows to default value of field $field"
+							. " (Value: $default)");
 					}
 				}
 			}
 			$this->transAlterField($table, $field, $spec_orig);
-			$this->alterationMessage("Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
+			$this->alterationMessage("Field $table.$field: changed to $specValue"
+				. " <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
 		}
 	}
 	
@@ -563,7 +578,8 @@ abstract class SS_Database {
 				$suffix = $suffix ? ($suffix+1) : 2;
 			}
 			$this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
-			$this->alterationMessage("Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix","obsolete");
+			$this->alterationMessage("Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix",
+				"obsolete");
 		}
 	}
 
@@ -619,7 +635,8 @@ abstract class SS_Database {
 
 					default:
 						$sql = null;
-						user_error("SS_Database::manipulate() Can't recognise command '$writeInfo[command]'", E_USER_ERROR);
+						user_error("SS_Database::manipulate() Can't recognise command '$writeInfo[command]'",
+							E_USER_ERROR);
 				}
 			}
 		}
@@ -791,9 +808,14 @@ abstract class SS_Database {
 
 		// Pass limit as array or SQL string value
 		if(is_array($limit)) {
-			if(!array_key_exists('limit', $limit)) throw new InvalidArgumentException('Database::sqlLimitToString(): Wrong format for $limit: ' . var_export($limit, true));
+			if(!array_key_exists('limit', $limit)) {
+				throw new InvalidArgumentException('Database::sqlLimitToString(): Wrong format for $limit: '
+					. var_export($limit, true));
+			}
 
-			if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
+			if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit'])
+					&& is_numeric($limit['limit'])) {
+
 				$combinedLimit = $limit['start'] ? "$limit[limit] OFFSET $limit[start]" : "$limit[limit]";
 			} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
 				$combinedLimit = (int) $limit['limit'];
@@ -848,7 +870,8 @@ abstract class SS_Database {
 	/**
 	 * function to return an SQL datetime expression that can be used with the adapter in use
 	 * used for querying a datetime in a certain format
-	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or
+	 *                     field name, e.g. '"SiteTree"."Created"'
 	 * @param string $format to be used, supported specifiers:
 	 * %Y = Year (four digits)
 	 * %m = Month (01..12)
@@ -864,8 +887,10 @@ abstract class SS_Database {
 	/**
 	 * function to return an SQL datetime expression that can be used with the adapter in use
 	 * used for querying a datetime addition
-	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
-	 * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes, +1 YEAR
+	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name,
+	 *                      e.g. '"SiteTree"."Created"'
+	 * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes,
+	 *                         +1 YEAR
 	 * supported qualifiers:
 	 * - years
 	 * - months
@@ -874,16 +899,20 @@ abstract class SS_Database {
 	 * - minutes
 	 * - seconds
 	 * This includes the singular forms as well
-	 * @return string SQL datetime expression to query for a datetime (YYYY-MM-DD hh:mm:ss) which is the result of the addition
+	 * @return string SQL datetime expression to query for a datetime (YYYY-MM-DD hh:mm:ss) which is the result of
+	 *                the addition
 	 */
 	abstract public function datetimeIntervalClause($date, $interval);
 
 	/**
 	 * function to return an SQL datetime expression that can be used with the adapter in use
 	 * used for querying a datetime substraction
-	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
-	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
-	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
+	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name
+	 *                       e.g. '"SiteTree"."Created"'
+	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime
+	 *                      like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which
+	 *                is the result of the substraction
 	 */
 	abstract public function datetimeDifferenceClause($date1, $date2);
 
@@ -904,7 +933,8 @@ abstract class SS_Database {
 	
 	/*
 	 * Start a prepared transaction
-	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
+	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on
+	 * transaction isolation options
 	 */
 	abstract public function transactionStart($transaction_mode=false, $session_characteristics=false);
 
@@ -982,7 +1012,8 @@ abstract class SS_Database {
 /**
  * Abstract query-result class.
  * Once again, this should be subclassed by an actual database implementation.  It will only
- * ever be constructed by a subclass of SS_Database.  The result of a database query - an iteratable object that's returned by DB::SS_Query
+ * ever be constructed by a subclass of SS_Database.  The result of a database query - an iteratable object
+ * that's returned by DB::SS_Query
  *
  * Primarily, the SS_Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}

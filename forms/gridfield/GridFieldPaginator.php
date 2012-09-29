@@ -62,7 +62,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
-				throw new LogicException(get_class($this) . " expects an SS_Limitable list to be passed to the GridField.");
+				throw new LogicException(
+					get_class($this) . " expects an SS_Limitable list to be passed to the GridField.");
 			}
 			return false;
 		}
@@ -170,14 +171,16 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
 			// Previous page button
 			$previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
-			$previousPage = new GridField_FormAction($gridField, 'pagination_prev', 'Previous', 'paginate', $previousPageNum);
+			$previousPage = new GridField_FormAction($gridField, 'pagination_prev', 'Previous',
+				'paginate', $previousPageNum);
 			$previousPage->addExtraClass('ss-gridfield-previouspage');
 			if($state->currentPage == 1)
 				$previousPage = $previousPage->performDisabledTransformation();
 
 			// Next page button
 			$nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
-			$nextPage = new GridField_FormAction($gridField, 'pagination_next', 'Next', 'paginate', $nextPageNum);
+			$nextPage = new GridField_FormAction($gridField, 'pagination_next', 'Next',
+				'paginate', $nextPageNum);
 			$nextPage->addExtraClass('ss-gridfield-nextpage');
 			if($state->currentPage == $totalPages)
 				$nextPage = $nextPage->performDisabledTransformation();
@@ -204,7 +207,9 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			));
 		}
 		return array(
-			'footer' => $forTemplate->renderWith('GridFieldPaginator_Row', array('Colspan'=>count($gridField->getColumns()))),
+			'footer' => $forTemplate->renderWith('GridFieldPaginator_Row', array(
+				'Colspan'=>count($gridField->getColumns())
+			)),
 		);
 	}
 

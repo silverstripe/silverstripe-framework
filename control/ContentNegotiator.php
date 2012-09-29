@@ -33,16 +33,16 @@ class ContentNegotiator {
 	protected static $enabled = false;
 
 	/**
-	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say, windows-1252, to
-	 * improve interoperability with extended characters being imported from windows excel.
+	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say,
+	 * windows-1252, to improve interoperability with extended characters being imported from windows excel.
 	 */
 	public static function set_encoding($encoding) {
 		self::$encoding = $encoding;
 	}
 
 	/**
-	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes that need to
-	 * specify the character set make use of this function.
+	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes
+	 * that need to specify the character set make use of this function.
 	 */
 	public static function get_encoding() {
 	    return self::$encoding;
@@ -70,7 +70,10 @@ class ContentNegotiator {
 		$contentType = $response->getHeader("Content-Type");
 		
 		// Disable content negotation for other content types
-		if($contentType && substr($contentType, 0,9) != 'text/html' && substr($contentType, 0,21) != 'application/xhtml+xml') return false;
+		if($contentType && substr($contentType, 0,9) != 'text/html' 
+				&& substr($contentType, 0,21) != 'application/xhtml+xml') {
+			return false;
+		}
 
 		if(self::$enabled) return true;
 		else return (substr($response->getBody(),0,5) == '<' . '?xml');
@@ -91,8 +94,8 @@ class ContentNegotiator {
 			$chosenFormat = $_GET['forceFormat'];
 
 		} else {
-			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml.  We put this special case in here so that
-			// designers don't get worried that their templates are HTML4.
+			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml.  We put this special
+			// case in here so that designers don't get worried that their templates are HTML4.
  			if(isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
 				$chosenFormat = "xhtml";
 	
@@ -175,7 +178,9 @@ class ContentNegotiator {
 		
 		// Only replace the doctype in templates with the xml header
 		if($hasXMLHeader) {
-			$content = preg_replace('/<!DOCTYPE[^>]+>/', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', $content);
+			$content = preg_replace('/<!DOCTYPE[^>]+>/',
+				'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+				$content);
 		}
 		$content = preg_replace('/<html xmlns="[^"]+"/','<html ', $content);
 		

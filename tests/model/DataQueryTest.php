@@ -7,22 +7,30 @@ class DataQueryTest extends SapphireTest {
 	public function testJoins() {
 		$dq = new DataQuery('Member');
 		$dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-		$this->assertContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"", $dq->sql());
+		$this->assertContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+			$dq->sql());
 
 		$dq = new DataQuery('Member');
 		$dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-		$this->assertContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"", $dq->sql());
+		$this->assertContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+			$dq->sql());
 	}
 
 	public function testRelationReturn() {
 		$dq = new DataQuery('DataQueryTest_C');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestA'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestAs'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('ManyTestAs'), 'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestA'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestAs'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('ManyTestAs'),
+			'DataQuery::applyRelation should return the name of the related object.');
 
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestB'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestBs'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'), 'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestB'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestBs'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'),
+			'DataQuery::applyRelation should return the name of the related object.');
 	}
 
 	public function testDisjunctiveGroup() {
@@ -33,7 +41,9 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'John\'');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains("WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))", $dq->sql());
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))",
+			$dq->sql());
 	}
 
 	public function testConjunctiveGroup() {
@@ -44,7 +54,9 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'John\'');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains("WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))", $dq->sql());
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))",
+			$dq->sql());
 	}
 
 	public function testNestedGroups() {
@@ -58,7 +70,9 @@ class DataQueryTest extends SapphireTest {
 		$subSubDq->where('DataQueryTest_A.Age = 50');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains("WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR ((DataQueryTest_A.Age = 18) AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))", $dq->sql());
+		$this->assertContains("WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR"
+			. " ((DataQueryTest_A.Age = 18) AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))", 
+			$dq->sql());
 	}
 
 	public function testEmptySubgroup() {

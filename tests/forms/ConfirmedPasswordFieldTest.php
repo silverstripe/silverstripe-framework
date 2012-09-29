@@ -19,13 +19,17 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		//hide by default and display show/hide toggle button
 		$field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, true);
 		$fieldHTML = $field->Field();
-		$this->assertContains("showOnClickContainer",$fieldHTML,"Test class for hiding/showing the form contents is set");
-		$this->assertContains("showOnClick",$fieldHTML,"Test class for hiding/showing the form contents is set");
+		$this->assertContains("showOnClickContainer", $fieldHTML,
+			"Test class for hiding/showing the form contents is set");
+		$this->assertContains("showOnClick", $fieldHTML,
+			"Test class for hiding/showing the form contents is set");
 
 		//show all by default
 		$field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, false);
 		$fieldHTML = $field->Field();
-		$this->assertNotContains("showOnClickContainer",$fieldHTML,"Test class for hiding/showing the form contents is set");
-		$this->assertNotContains("showOnClick",$fieldHTML,"Test class for hiding/showing the form contents is set");
+		$this->assertNotContains("showOnClickContainer", $fieldHTML,
+			"Test class for hiding/showing the form contents is set");
+		$this->assertNotContains("showOnClick", $fieldHTML,
+			"Test class for hiding/showing the form contents is set");
 	}
 }

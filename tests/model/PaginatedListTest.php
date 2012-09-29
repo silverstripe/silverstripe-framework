@@ -97,7 +97,8 @@ class PaginatedListTest extends SapphireTest {
 		$list = new PaginatedList($players);
 		$list->setPageLength(1);
 		$list->getIterator();
-		$this->assertEquals(4, $list->getTotalItems(), 'Getting an iterator should not trim the list to the page length.');
+		$this->assertEquals(4, $list->getTotalItems(),
+			'Getting an iterator should not trim the list to the page length.');
 	}
 
 	public function testPages() {

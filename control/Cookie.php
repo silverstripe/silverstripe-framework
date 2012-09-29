@@ -37,7 +37,9 @@ class Cookie {
 	 * @param boolean $secure See http://php.net/set_session
 	 * @param boolean $httpOnly See http://php.net/set_session
 	 */
-	public static function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false) {
+	public static function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false,
+			$httpOnly = false) {
+
 		return self::get_inst()->inst_set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
 	}
 
@@ -96,14 +98,17 @@ class Cookie {
 	 * @param boolean $secure See http://php.net/set_session
 	 * @param boolean $httpOnly See http://php.net/set_session
 	 */
-	protected function inst_set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false) {
+	protected function inst_set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false,
+			$httpOnly = false) {
+
 		if(!headers_sent($file, $line)) {
 			$expiry = $expiry > 0 ? time()+(86400*$expiry) : $expiry;
 			$path = ($path) ? $path : Director::baseURL();
 			setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
 		} else {
 			if(self::$report_errors) {
-				user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
+				user_error("Cookie '$name' can't be set. The site started outputting content at line $line in $file",
+					E_USER_WARNING);
 			}
 		}
 	}

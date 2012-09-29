@@ -353,7 +353,8 @@ class Security extends Controller {
 		$content = '';
 		$forms = $this->GetLoginForms();
 		if(!count($forms)) {
-			user_error('No login-forms found, please use Authenticator::register_authenticator() to add one', E_USER_ERROR);
+			user_error('No login-forms found, please use Authenticator::register_authenticator() to add one',
+				E_USER_ERROR);
 		}
 		
 		// only display tabs when more than one authenticator is provided
@@ -380,8 +381,12 @@ class Security extends Controller {
 			$content_forms = '';
 
 			foreach($forms as $form) {
-				$content .= "<li><a href=\"#{$form->FormName()}_tab\">{$form->getAuthenticator()->get_name()}</a></li>\n";
-				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">' . $form->forTemplate() . "</div>\n";
+				$content .= "<li><a href=\"#{$form->FormName()}_tab\">"
+					. $form->getAuthenticator()->get_name()
+					. "</a></li>\n";
+
+				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">'
+					. $form->forTemplate() . "</div>\n";
 			}
 
 			$content .= "</ul>\n" . $content_forms . "\n</div>\n</div>\n";
@@ -410,7 +415,9 @@ class Security extends Controller {
 		Session::clear('Security.Message');
 
 		// custom processing
-		return $customisedController->renderWith(array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage'));
+		return $customisedController->renderWith(
+			array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage')
+		);
 	}
 	
 	public function basicauthlogin() {
@@ -447,7 +454,9 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(array('Security_lostpassword', 'Security', $this->stat('template_main'), 'BlankPage'));
+		return $customisedController->renderWith(
+			array('Security_lostpassword', 'Security', $this->stat('template_main'), 'BlankPage')
+		);
 	}
 
 
@@ -495,16 +504,22 @@ class Security extends Controller {
 		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
 		$customisedController = $controller->customise(array(
-			'Title' => _t('Security.PASSWORDSENTHEADER', "Password reset link sent to '{email}'", array('email' => $email)),
+			'Title' => _t('Security.PASSWORDSENTHEADER', "Password reset link sent to '{email}'",
+				array('email' => $email)),
 			'Content' =>
-				"<p>" . 
-				_t('Security.PASSWORDSENTTEXT', "Thank you! A reset link has been sent to '{email}', provided an account exists for this email address.", array('email' => $email)) .
-				"</p>",
+				"<p>"
+				. _t('Security.PASSWORDSENTTEXT', 
+					"Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
+					. " address.", 
+					array('email' => $email))
+				. "</p>",
 			'Email' => $email
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(array('Security_passwordsent', 'Security', $this->stat('template_main'), 'BlankPage'));
+		return $customisedController->renderWith(
+			array('Security_passwordsent', 'Security', $this->stat('template_main'), 'BlankPage')
+		);
 	}
 
 
@@ -563,7 +578,8 @@ class Security extends Controller {
 		} elseif(Member::currentUser()) {
 			// let a logged in user change his password
 			$customisedController = $controller->customise(array(
-				'Content' => '<p>' . _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
+				'Content' => '<p>' 
+					. _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
 				'Form' => $this->ChangePasswordForm()));
 
 		} else {
@@ -574,7 +590,9 @@ class Security extends Controller {
 					array('Content' =>
 						_t(
 							'Security.NOTERESETLINKINVALID',
-							'<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>',
+							'<p>The password reset link is invalid or expired.</p>'
+							. '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+							. ' you <a href="{link2}">logged in</a>.</p>',
 							array('link1' => $this->Link('lostpassword'), 'link2' => $this->link('login'))
 						)
 					)
@@ -588,7 +606,9 @@ class Security extends Controller {
 			}
 		}
 
-		return $customisedController->renderWith(array('Security_changepassword', 'Security', $this->stat('template_main'), 'BlankPage'));
+		return $customisedController->renderWith(
+			array('Security_changepassword', 'Security', $this->stat('template_main'), 'BlankPage')
+		);
 	}
 	
 	/**
@@ -624,8 +644,11 @@ class Security extends Controller {
 		$member = null;
 
 		// find a group with ADMIN permission
-		$adminGroup = DataObject::get('Group')->where("\"Permission\".\"Code\" = 'ADMIN'")
-			->sort("\"Group\".\"ID\"")->innerJoin("Permission", "\"Group\".\"ID\"=\"Permission\".\"GroupID\"")->First();
+		$adminGroup = DataObject::get('Group')
+			->where("\"Permission\".\"Code\" = 'ADMIN'")
+			->sort("\"Group\".\"ID\"")
+			->innerJoin("Permission", "\"Group\".\"ID\"=\"Permission\".\"GroupID\"")
+			->First();
 		
 		if(is_callable('Subsite::changeSubsite')) {
 			Subsite::changeSubsite($origSubsite);

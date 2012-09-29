@@ -38,7 +38,8 @@ class CSVParserTest extends SapphireTest {
 		
 		$firstNames = $birthdays = $biographies = $registered = array();
 		foreach($csv as $record) {
-			/* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be left as-is. */
+			/* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be
+			 * left as-is. */
 			$this->assertEquals(array('__fn','__BG','Birthday','IsRegistered'), array_keys($record));
 			$firstNames[] = $record['__fn'];
 			$biographies[] = $record['__BG'];

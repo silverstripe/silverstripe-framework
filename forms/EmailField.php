@@ -33,7 +33,8 @@ class EmailField extends TextField {
 	public function validate($validator) {
 		$this->value = trim($this->value);
 
-		$pcrePattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$';
+		$pcrePattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*'
+			. '@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$';
 
 		// PHP uses forward slash (/) to delimit start/end of pattern, so it must be escaped
 		$pregSafePattern = str_replace('/', '\\/', $pcrePattern);

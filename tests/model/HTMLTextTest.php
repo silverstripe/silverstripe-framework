@@ -28,9 +28,12 @@ class HTMLTextTest extends SapphireTest {
 			'<p>Should strip <b>tags, but leave</b> text</p>' => 'Should strip tags, but leave text',
 			'<p>Unclosed tags <br>should not phase it</p>' => 'Unclosed tags should not phase it',
 			'<p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
-			'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
-			'  <img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
-			'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>' => 'example text words hello',
+			'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' 
+				=> 'Second paragraph',
+			'  <img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>'
+				=> 'Second paragraph',
+			'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>'
+				=> 'example text words hello',
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
@@ -81,7 +84,8 @@ class HTMLTextTest extends SapphireTest {
 	
 	public function testSummaryInvalidHTML() {
 		$cases = array(
-			'It\'s got a <p<> tag, but<p junk true>This doesn\'t <a id="boo">make</b class="wa"> < ><any< sense</p>' => 'This doesn\'t make any',
+			'It\'s got a <p<> tag, but<p junk true>This doesn\'t <a id="boo">make</b class="wa"> < ><any< sense</p>'
+				=> 'This doesn\'t make any',
 			'This doesn\'t <a style="much horray= true>even</b> < ><have< a <i>p tag' => 'This doesn\'t even have'
 		);
 		
@@ -97,7 +101,8 @@ class HTMLTextTest extends SapphireTest {
 		$cases = array(
 			'<h1>should ignore</h1><p>First sentence. Second sentence.</p>' => 'First sentence.',
 			'<h1>should ignore</h1><p>First Mr. sentence. Second sentence.</p>' => 'First Mr. sentence.',
-			"<h1>should ignore</h1><p>Sentence with {$many}words. Second sentence.</p>" => "Sentence with {$many}words.",
+			"<h1>should ignore</h1><p>Sentence with {$many}words. Second sentence.</p>"
+				=> "Sentence with {$many}words.",
 		);
 		
 		foreach($cases as $orig => $match) {

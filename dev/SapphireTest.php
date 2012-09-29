@@ -3,7 +3,8 @@ require_once 'TestRunner.php';
 
 /**
  * Test case class for the Sapphire framework.
- * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier to work with.
+ * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier
+ * to work with.
  * 
  * @package framework
  * @subpackage testing
@@ -199,7 +200,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Set up fixture
 		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
-			if(substr(DB::getConn()->currentDatabase(), 0, strlen($prefix) + 5) != strtolower(sprintf('%stmpdb', $prefix))) {
+			if(substr(DB::getConn()->currentDatabase(), 0, strlen($prefix) + 5) 
+					!= strtolower(sprintf('%stmpdb', $prefix))) {
+
 				//echo "Re-creating temp database... ";
 				self::create_temp_db();
 				//echo "done.\n";
@@ -223,7 +226,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				foreach($fixtureFiles as $fixtureFilePath) {
 					// Support fixture paths relative to the test class, rather than relative to webroot
 					// String checking is faster than file_exists() calls.
-					$isRelativeToFile = (strpos('/', $fixtureFilePath) === false || preg_match('/^\.\./', $fixtureFilePath));
+					$isRelativeToFile = (strpos('/', $fixtureFilePath) === false 
+						|| preg_match('/^\.\./', $fixtureFilePath));
+
 					if($isRelativeToFile) {
 						$resolvedPath = realpath($pathForClass . '/' . $fixtureFilePath);
 						if($resolvedPath) $fixtureFilePath = $resolvedPath;
@@ -345,7 +350,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function idFromFixture($className, $identifier) {
 		if(!$this->fixtures) {
-			user_error("You've called idFromFixture() but you haven't specified static \$fixture_file.\n", E_USER_WARNING);
+			user_error("You've called idFromFixture() but you haven't specified static \$fixture_file.\n",
+				E_USER_WARNING);
 			return;
 		}
 		
@@ -374,7 +380,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function allFixtureIDs($className) {
 		if(!$this->fixtures) {
-			user_error("You've called allFixtureIDs() but you haven't specified static \$fixture_file.\n", E_USER_WARNING);
+			user_error("You've called allFixtureIDs() but you haven't specified static \$fixture_file.\n",
+				E_USER_WARNING);
 			return;
 		}
 		
@@ -393,7 +400,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function objFromFixture($className, $identifier) {
 		if(!$this->fixtures) {
-			user_error("You've called objFromFixture() but you haven't specified static \$fixture_file.\n", E_USER_WARNING);
+			user_error("You've called objFromFixture() but you haven't specified static \$fixture_file.\n",
+				E_USER_WARNING);
 			return;
 		}
 		
@@ -514,7 +522,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $from
 	 * @param $subject
 	 * @param $content
-	 * @return An array containing the keys: 'type','to','from','subject','content', 'plainContent','attachedFiles','customHeaders','htmlContent',inlineImages'
+	 * @return array Contains keys: 'type', 'to', 'from', 'subject','content', 'plainContent', 'attachedFiles',
+	 *               'customHeaders', 'htmlContent', 'inlineImages'
 	 */
 	public function findEmail($to, $from = null, $subject = null, $content = null) {
 		return $this->mailer->findEmail($to, $from, $subject, $content);
@@ -527,7 +536,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $from
 	 * @param $subject
 	 * @param $content
-	 * @return An array containing the keys: 'type','to','from','subject','content', 'plainContent','attachedFiles','customHeaders','htmlContent',inlineImages'
+	 * @return array Contains the keys: 'type', 'to', 'from', 'subject', 'content', 'plainContent', 'attachedFiles',
+	 *               'customHeaders', 'htmlContent', inlineImages'
 	 */
 	public function assertEmailSent($to, $from = null, $subject = null, $content = null) {
 		// To do - this needs to be turned into a "real" PHPUnit ass
@@ -700,7 +710,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	public static function using_temp_db() {
 		$dbConn = DB::getConn();
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
-		return $dbConn && (substr($dbConn->currentDatabase(), 0, strlen($prefix) + 5) == strtolower(sprintf('%stmpdb', $prefix)));
+		return $dbConn && (substr($dbConn->currentDatabase(), 0, strlen($prefix) + 5) 
+			== strtolower(sprintf('%stmpdb', $prefix)));
 	}
 	
 	public static function kill_temp_db() {
@@ -732,7 +743,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			
 			// Some DataExtensions keep a static cache of information that needs to 
 			// be reset whenever the database is cleaned out
-			foreach(array_merge(ClassInfo::subclassesFor('DataExtension'), ClassInfo::subclassesFor('DataObject')) as $class) {
+			$classes = array_merge(ClassInfo::subclassesFor('DataExtension'), ClassInfo::subclassesFor('DataObject'));
+			foreach($classes as $class) {
 				$toCall = array($class, 'on_db_reset');
 				if(is_callable($toCall)) call_user_func($toCall);
 			}

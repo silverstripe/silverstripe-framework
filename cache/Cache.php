@@ -15,7 +15,8 @@
  * 
  * USING A CACHE
  * 
- * $cache = SS_Cache::factory('foo') ; // foo is any name (try to be specific), and is used to get configuration & storage info
+ * $cache = SS_Cache::factory('foo') ; // foo is any name (try to be specific), and is used to get configuration &
+ * storage info
  * 
  * if (!($result = $cache->load($cachekey))) {
  * 	$result = caluate some how;
@@ -24,8 +25,9 @@
  * 
  * return $result;
  * 
- * Normally there's no need to remove things from the cache - the cache backends clear out entries based on age & maximum 
- * allocated storage. If you include the version of the object in the cache key, even object changes don't need any invalidation
+ * Normally there's no need to remove things from the cache - the cache backends clear out entries based on age &
+ * maximum allocated storage. If you include the version of the object in the cache key, even object changes don't
+ * need any invalidation
  * 
  * DISABLING CACHING IN DEV MOVE
  * 
@@ -38,11 +40,13 @@
  * (in _config.php)
  * 
  * SS_Cache::add_backend('primary_memcached', 'Memcached',
- * 	array('host' => 'localhost', 'port' => 11211, 'persistent' => true, 'weight' => 1, 'timeout' => 5, 'retry_interval' => 15, 'status' => true, 'failure_callback' => '' )
+ * array('host' => 'localhost', 'port' => 11211, 'persistent' => true, 'weight' => 1, 'timeout' => 5,
+ * 	   'retry_interval' => 15, 'status' => true, 'failure_callback' => '' )
  * );
  * 
  * SS_Cache::pick_backend('primary_memcached', 'any', 10);
- * SS_Cache::pick_backend('default', 'aggregate', 20); // Aggregate needs a backend with tag support, which memcached doesn't provide
+ * // Aggregate needs a backend with tag support, which memcached doesn't provide
+ * SS_Cache::pick_backend('default', 'aggregate', 20); 
  * </code>
  * 
  * USING APC AND FILE AS TWO LEVEL STORE
@@ -54,8 +58,9 @@
  * 	'fast_backend' => 'Apc',
  * 	'slow_backend_options' => array('cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache')
  * ));
- * 
- * SS_Cache::pick_backend('two-level', 'any', 10); // No need for special backend for aggregate - TwoLevels with a File slow backend supports tags
+ *
+ * // No need for special backend for aggregate - TwoLevels with a File slow backend supports tags
+ * SS_Cache::pick_backend('two-level', 'any', 10); 
  * 
  * @author hfried
  * @package framework
@@ -75,7 +80,10 @@ class SS_Cache {
 		if (!isset(self::$backends['default'])) {
 			$cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache';
 			if (!is_dir($cachedir)) mkdir($cachedir);
-			self::$backends['default'] = array('File', array('cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache'));
+			self::$backends['default'] = array(
+				'File', 
+				array('cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache')
+			);
 			self::$cache_lifetime['default'] = array('lifetime' => 600, 'priority' => 1);
 		}
 	}
@@ -98,8 +106,9 @@ class SS_Cache {
 	 *  
 	 * @param string $name The name of the backend, as passed as the first argument to add_backend
 	 * @param string $for The name of the cache to pick this backend for (or 'any' for any backend)
-	 * @param integer $priority The priority of this pick - the call with the highest number will be the actual backend picked.
-	 *                          A backend picked for a specific cache name will always be used instead of 'any' if it exists, no matter the priority.
+	 * @param integer $priority The priority of this pick - the call with the highest number will be the actual
+	 *                          backend picked. A backend picked for a specific cache name will always be used instead
+	 *                          of 'any' if it exists, no matter the priority.
 	 * @return none
 	 */
 	public static function pick_backend($name, $for, $priority=1) {
@@ -124,7 +133,8 @@ class SS_Cache {
 	 *
 	 * @param string $for The name of the cache to set this lifetime for (or 'any' for all backends)
 	 * @param integer $lifetime The lifetime of an item of the cache, in seconds, or -1 to disable caching
-	 * @param integer $priority The priority. The highest priority setting is used. Unlike backends, 'any' is not special in terms of priority. 
+	 * @param integer $priority The priority. The highest priority setting is used. Unlike backends, 'any' is not
+	 *                          special in terms of priority. 
 	 */
 	public static function set_cache_lifetime($for, $lifetime=600, $priority=1) {
 		self::init();
@@ -132,7 +142,9 @@ class SS_Cache {
 		$current = -1;
 		if (isset(self::$cache_lifetime[$for])) $current = self::$cache_lifetime[$for]['priority'];
 		
-		if ($priority >= $current) self::$cache_lifetime[$for] = array('lifetime' => $lifetime, 'priority' => $priority); 
+		if ($priority >= $current) {
+			self::$cache_lifetime[$for] = array('lifetime' => $lifetime, 'priority' => $priority); 
+		}
 	}
 	
 	/**

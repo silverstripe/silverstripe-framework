@@ -30,10 +30,15 @@ class EmailFieldTest extends SapphireTest {
 		$val = new EmailFieldTest_Validator();
 		try {
 			$field->validate($val);
-			if (!$expectSuccess) $this->assertTrue(false, $checkText . " (/$email/ passed validation, but not expected to)");
+			if (!$expectSuccess) {
+				$this->assertTrue(false,$checkText . " (/$email/ passed validation, but not expected to)");
+			}
 		} catch (Exception $e) {
 			if ($e instanceof PHPUnit_Framework_AssertionFailedError) throw $e; // re-throw assertion failure
-			else if ($expectSuccess) $this->assertTrue(false, $checkText . ": " . $e->GetMessage() . " (/$email/ did not pass validation, but was expected to)");
+			else if ($expectSuccess) {
+				$this->assertTrue(false,
+					$checkText . ": " . $e->GetMessage() . " (/$email/ did not pass validation, but was expected to)");
+			}
 		}
 	}
 }

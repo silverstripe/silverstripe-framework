@@ -27,7 +27,8 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	
 	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
-			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be saved as NULL in database
+			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
+			// saved as NULL in database
 			$this->value = null;
 			return;
 		}

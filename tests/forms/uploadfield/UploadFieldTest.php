@@ -280,7 +280,8 @@
 			'UploadFieldTest_Controller/Form/field/HasManyFiles/item/' . $fileNotOnRelationship->ID . '/delete',
 			array()
 		);
-		$this->assertEquals(403, $response->getStatusCode(), "Denies deleting files if they're not on the current relationship");
+		$this->assertEquals(403, $response->getStatusCode(),
+			"Denies deleting files if they're not on the current relationship");
 	}
 
 	public function testDeleteFromManyMany() {
@@ -447,9 +448,14 @@
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'), 'Removes all buttons on items');
-		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-dropzone'), 'Removes dropzone');
-		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-addfile .ss-ui-button'), 'Removes all buttons from "add" area');
+		$this->assertFalse((bool)$parser->getBySelector(
+			'#ReadonlyField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'),
+			'Removes all buttons on items');
+		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-dropzone'),
+			'Removes dropzone');
+		$this->assertFalse((bool)$parser->getBySelector(
+			'#ReadonlyField .ss-uploadfield-addfile .ss-ui-button'),
+			'Removes all buttons from "add" area');
 	}
 
 	public function testDisabled() {
@@ -459,9 +465,14 @@
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'), 'Removes all buttons on items');
-		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-dropzone'), 'Removes dropzone');
-		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-addfile .ss-ui-button'), 'Removes all buttons from "add" area');
+		$this->assertFalse(
+			(bool)$parser->getBySelector('#DisabledField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'),
+			'Removes all buttons on items');
+		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-dropzone'),
+			'Removes dropzone');
+		$this->assertFalse(
+			(bool)$parser->getBySelector('#DisabledField .ss-uploadfield-addfile .ss-ui-button'),
+			'Removes all buttons from "add" area');
 		
 	}
 
@@ -540,9 +551,12 @@
 		$this->assertFalse($response->isError());
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertContains($file1->ID, $record->HasManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file2->ID, $record->HasManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file3AlreadyAttached->ID, $record->HasManyFiles()->column('ID'), 'Does not detach existing relations');
+		$this->assertContains($file1->ID, $record->HasManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file2->ID, $record->HasManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file3AlreadyAttached->ID, $record->HasManyFiles()->column('ID'),
+			'Does not detach existing relations');
 	}
 
 	public function testAttachManyMany() {
@@ -560,9 +574,12 @@
 		$this->assertFalse($response->isError());
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertContains($file1->ID, $record->ManyManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file2->ID, $record->ManyManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file5AlreadyAttached->ID, $record->ManyManyFiles()->column('ID'), 'Does not detach existing relations');
+		$this->assertContains($file1->ID, $record->ManyManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file2->ID, $record->ManyManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file5AlreadyAttached->ID, $record->ManyManyFiles()->column('ID'),
+			'Does not detach existing relations');
 	}
 
 	public function testManagesRelation() {
@@ -648,7 +665,9 @@
 		$folderIDs = $this->allFixtureIDs('Folder');
 		foreach($folderIDs as $folderID) {
 			$folder = DataObject::get_by_id('Folder', $folderID);
-			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
+				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			}
 		}
 
 		// Remove left over folders and any files that may exist

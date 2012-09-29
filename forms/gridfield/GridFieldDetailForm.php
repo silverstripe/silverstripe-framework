@@ -223,7 +223,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	public function Link($action = null) {
-		return Controller::join_links($this->gridField->Link('item'), $this->record->ID ? $this->record->ID : 'new', $action);
+		return Controller::join_links($this->gridField->Link('item'),
+			$this->record->ID ? $this->record->ID : 'new', $action);
 	}
 
 	public function view($request) {
@@ -290,22 +291,29 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$actions = new FieldList();
 		if($this->record->ID !== 0) {
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
+				->setUseButtonTag(true)
+				->addExtraClass('ss-ui-action-constructive')
+				->setAttribute('data-icon', 'accept'));
+
 			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
 				->addExtraClass('ss-ui-action-destructive'));
+
 		}else{ // adding new record
 			//Change the Save label to 'Create'
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
-				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'add'));
+				->setUseButtonTag(true)
+				->addExtraClass('ss-ui-action-constructive')
+				->setAttribute('data-icon', 'add'));
 				
 			// Add a Cancel link which is a button-like link and link back to one level up.
 			$curmbs = $this->Breadcrumbs();
 			if($curmbs && $curmbs->count()>=2){
 				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
 				$text = sprintf(
-					"<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"%s\">%s</a>",
-					$one_level_up->Link,
-					_t('GridFieldDetailForm.CancelBtn', 'Cancel')
+					"<a class=\"%s\" href=\"%s\">%s</a>",
+					"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all", // CSS classes
+					$one_level_up->Link, // url
+					_t('GridFieldDetailForm.CancelBtn', 'Cancel') // label
 				);
 				$actions->push(new LiteralField('cancelbutton', $text));
 			}
@@ -419,7 +427,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		try {
 			$toDelete = $this->record;
 			if (!$toDelete->canDelete()) {
-				throw new ValidationException(_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
+				throw new ValidationException(
+					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
 			}
 
 			$toDelete->delete();

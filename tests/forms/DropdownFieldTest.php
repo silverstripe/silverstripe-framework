@@ -89,7 +89,8 @@ class DropdownFieldTest extends SapphireTest {
 		
 		/* There is one selected option, since a dropdown can only possibly have one! */
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
-		$this->assertEquals(count($selectedOptions), 1, 'We only have 1 selected option, since a dropdown can only possibly have one!');
+		$this->assertEquals(count($selectedOptions), 1,
+			'We only have 1 selected option, since a dropdown can only possibly have one!');
 		
 		/* Create a field without a blank value */
 		$field = $this->testDropdownField();
@@ -142,7 +143,8 @@ class DropdownFieldTest extends SapphireTest {
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		
 		/* The selected option is "Cats and Kittens" */
-		$this->assertEquals((string) $selectedOptions[0], 'Cats and Kittens', 'The selected option is "Cats and Kittens"');
+		$this->assertEquals((string) $selectedOptions[0], 'Cats and Kittens',
+			'The selected option is "Cats and Kittens"');
 	}
 	
 	/**

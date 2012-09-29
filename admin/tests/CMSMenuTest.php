@@ -17,9 +17,12 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		$menuItems = CMSMenu::get_menu_items();
 		$menuItem = $menuItems['CMSMenuTest_LeftAndMainController'];
 		$this->assertInstanceOf('CMSMenuItem', $menuItem, 'Controller menu item is of class CMSMenuItem');
-		$this->assertEquals($menuItem->url, singleton('CMSMenuTest_LeftAndMainController')->Link(), 'Controller menu item has the correct link');
-		$this->assertEquals($menuItem->controller, 'CMSMenuTest_LeftAndMainController', 'Controller menu item has the correct controller class');
-		$this->assertEquals($menuItem->priority, singleton('CMSMenuTest_LeftAndMainController')->stat('menu_priority'), 'Controller menu item has the correct priority');				
+		$this->assertEquals($menuItem->url, singleton('CMSMenuTest_LeftAndMainController')->Link(),
+			'Controller menu item has the correct link');
+		$this->assertEquals($menuItem->controller, 'CMSMenuTest_LeftAndMainController',
+			'Controller menu item has the correct controller class');
+		$this->assertEquals($menuItem->priority, singleton('CMSMenuTest_LeftAndMainController')->stat('menu_priority'),
+			'Controller menu item has the correct priority');				
 		CMSMenu::clear_menu();
 		
 		// Add a link to the menu

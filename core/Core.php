@@ -28,8 +28,9 @@
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
  * 
  * @todo This file currently contains a lot of bits and pieces, and its various responsibilities should probably be
- * moved into different subsystems.
- * @todo A lot of this stuff is very order-independent; for example, the require_once calls have to happen after the defines.'
+ *       moved into different subsystems.
+ * @todo A lot of this stuff is very order-independent; for example, the require_once calls have to happen after the
+ *       defines.'
  * This could be decoupled.
  * @package framework
  * @subpackage core
@@ -45,7 +46,12 @@ error_reporting(E_ALL | E_STRICT);
 /**
  * Include _ss_environment.php files
  */
-$envFiles = array('_ss_environment.php', '../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
+$envFiles = array(
+	'_ss_environment.php',
+	'../_ss_environment.php',
+	'../../_ss_environment.php',
+	'../../../_ss_environment.php');
+
 foreach($envFiles as $envFile) {
 	if(@file_exists($envFile)) {
 		define('SS_ENVIRONMENT_FILE', $envFile);
@@ -324,7 +330,8 @@ function getClassFile($className) {
 function singleton($className) {
 	if($className == "Config") user_error("Don't pass Config to singleton()", E_USER_ERROR);
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
-	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
+	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true),
+		E_USER_ERROR);
 	return Injector::inst()->get($className);
 }
 

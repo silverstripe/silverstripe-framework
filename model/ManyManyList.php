@@ -69,7 +69,10 @@ class ManyManyList extends RelationList {
 	public function add($item, $extraFields = null) {
 		if(is_numeric($item)) $itemID = $item;
 		else if($item instanceof $this->dataClass) $itemID = $item->ID;
-		else throw new InvalidArgumentException("ManyManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+		else {
+			throw new InvalidArgumentException("ManyManyList::add() expecting a $this->dataClass object, or ID value",
+				E_USER_ERROR);
+		}
 		
 		// Validate foreignID
 		if(!$this->foreignID) {
@@ -101,7 +104,9 @@ class ManyManyList extends RelationList {
 	 * @param $itemID The ID of the item to remove.
 	 */
 	public function remove($item) {
-        if(!($item instanceof $this->dataClass)) throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
+        if(!($item instanceof $this->dataClass)) {
+        	throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
+        }
         
         return $this->removeByID($item->ID);
 	}
@@ -165,7 +170,8 @@ class ManyManyList extends RelationList {
 		// @todo Optimize into a single query instead of one per extra field
 		if($this->extraFields) {
 			foreach($this->extraFields as $fieldName => $dbFieldSpec) {
-				$query = DB::query("SELECT \"$fieldName\" FROM \"$this->tableName\" WHERE \"$parentField\" = {$this->ownerObj->ID} AND \"$childField\" = {$childID}");
+				$query = DB::query("SELECT \"$fieldName\" FROM \"$this->tableName\" "
+					. "WHERE \"$parentField\" = {$this->ownerObj->ID} AND \"$childField\" = {$childID}");
 				$value = $query->value();
 				$result[$fieldName] = $value;
 			}

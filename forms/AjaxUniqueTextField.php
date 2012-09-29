@@ -14,7 +14,9 @@ class AjaxUniqueTextField extends TextField {
 	
 	protected $restrictedRegex;
 	
-	public function __construct($name, $title, $restrictedField, $restrictedTable, $value = "", $maxLength = null, $validationURL = null, $restrictedRegex = null ){
+	public function __construct($name, $title, $restrictedField, $restrictedTable, $value = "", $maxLength = null,
+			$validationURL = null, $restrictedRegex = null ){
+
 		$this->maxLength = $maxLength;
 		
 		$this->restrictedField = $restrictedField;
@@ -37,7 +39,8 @@ class AjaxUniqueTextField extends TextField {
 		$url = Convert::raw2att( $this->validateURL );
 		
 		if($this->restrictedRegex)
-			$restrict = "<input type=\"hidden\" class=\"hidden\" name=\"{$this->name}Restricted\" id=\"" . $this->id() . "RestrictedRegex\" value=\"{$this->restrictedRegex}\" />";
+			$restrict = "<input type=\"hidden\" class=\"hidden\" name=\"{$this->name}Restricted\" id=\"" . $this->id()
+				. "RestrictedRegex\" value=\"{$this->restrictedRegex}\" />";
 		
 		$attributes = array(
 			'type' => 'text',
@@ -61,7 +64,8 @@ class AjaxUniqueTextField extends TextField {
 		))->value();
 
 		if( $result && ( $result > 0 ) ) {
-			$validator->validationError( $this->name, _t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique") );
+			$validator->validationError($this->name,
+				_t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique"));
 			return false;
 		}
 

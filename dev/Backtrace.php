@@ -90,7 +90,9 @@ class SS_Backtrace {
 			$match = false;
 			if(@$bt[$i]['class']) {
 				foreach(self::$ignore_function_args as $fnSpec) {
-					if(is_array($fnSpec) && $bt[$i]['class'] == $fnSpec[0] && $bt[$i]['function'] == $fnSpec[1]) $match = true;
+					if(is_array($fnSpec) && $bt[$i]['class'] == $fnSpec[0] && $bt[$i]['function'] == $fnSpec[1]) {
+						$match = true;
+					}
 				}
 			} else {
 				if(in_array($bt[$i]['function'], self::$ignore_function_args)) $match = true;
@@ -121,7 +123,8 @@ class SS_Backtrace {
 	}
 	
 	/**
-	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be shown
+	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be
+	 * shown
 	 * 
 	 * @param Object $item
 	 * @param boolean $showArg

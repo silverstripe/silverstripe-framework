@@ -147,7 +147,8 @@ class RSSFeed extends ViewableData {
 
 		if(isset($this->entries)) {
 			foreach($this->entries as $entry) {
-				$output->push(new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
+				$output->push(
+					new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
 			}	
 		}
 		return $output;
@@ -329,8 +330,13 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the URL of this entry
 	 */
 	public function AbsoluteLink() {
-		if($this->failover->hasMethod('AbsoluteLink')) return $this->failover->AbsoluteLink();
-		else if($this->failover->hasMethod('Link')) return Director::absoluteURL($this->failover->Link());
-		else user_error($this->failover->class . " object has neither an AbsoluteLink nor a Link method.  Can't put a link in the RSS feed", E_USER_WARNING);
+		if($this->failover->hasMethod('AbsoluteLink')) {
+			return $this->failover->AbsoluteLink();
+		} else if($this->failover->hasMethod('Link')) {
+			return Director::absoluteURL($this->failover->Link());
+		} else {
+			user_error($this->failover->class . " object has neither an AbsoluteLink nor a Link method."
+				. " Can't put a link in the RSS feed", E_USER_WARNING);
+		}
 	}
 }
