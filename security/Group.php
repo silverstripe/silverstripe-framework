@@ -144,7 +144,8 @@ class Group extends DataObject {
 					"<p>" .  
 					_t(
 						'SecurityAdmin.ROLESDESCRIPTION', 
-						"Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required."
+						"Roles are predefined sets of permissions, and can be assigned to groups.<br />"
+						. "They are inherited from parent groups if required."
 					) . '<br />' . 
 					sprintf(
 						'<a href="%s" class="add-role">%s</a>',
@@ -158,7 +159,9 @@ class Group extends DataObject {
 			);
 			
 			// Add roles (and disable all checkboxes for inherited roles)
-			$allRoles = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
+			$allRoles = Permission::check('ADMIN')
+				? DataObject::get('PermissionRole') 
+				: DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
 			if($this->ID) {
 				$groupRoles = $this->Roles();
 				$inheritedRoles = new ArrayList();
@@ -179,7 +182,9 @@ class Group extends DataObject {
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
 					->setDisabledItems($inheritedRoleIDs);	
-			if(!$allRoles->Count()) $rolesField->setAttribute('data-placeholder', _t('Group.NoRoles', 'No roles found'));
+			if(!$allRoles->Count()) {
+				$rolesField->setAttribute('data-placeholder', _t('Group.NoRoles', 'No roles found'));
+			}
 			$fields->addFieldToTab('Root.Roles', $rolesField);
 		} 
 		
@@ -230,13 +235,16 @@ class Group extends DataObject {
 	 */
 	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
 		if($sort || $join || $limit) {
-			Deprecation::notice('3.0', "The sort, join, and limit arguments are deprcated, use sort(), join() and limit() on the resulting DataList instead.");
+			Deprecation::notice('3.0',
+				"The sort, join, and limit arguments are deprcated, use sort(), join() and limit() on the resulting"
+				. " DataList instead.");
 		}
 
 		// First get direct members as a base result
 		$result = $this->DirectMembers();
 		// Remove the default foreign key filter in prep for re-applying a filter containing all children groups.
-		// Filters are conjunctive in DataQuery by default, so this filter would otherwise overrule any less specific ones.
+		// Filters are conjunctive in DataQuery by default, so this filter would otherwise overrule any less specific
+		// ones.
 		$result->dataQuery()->removeFilterOn('Group_Members');
 		// Now set all children groups as a new foreign key
 		$groups = Group::get()->byIDs($this->collateFamilyIDs());
@@ -308,7 +316,11 @@ class Group extends DataObject {
 	 * Override this so groups are ordered in the CMS
 	 */
 	public function stageChildren() {
-		return DataObject::get('Group', "\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID, '"Sort"');
+		return DataObject::get(
+			'Group',
+			"\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID,
+			'"Sort"'
+		);
 	}
 	
 	/**

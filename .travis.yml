@@ -22,7 +22,7 @@ before_script:
 
 script: 
  - phpunit -c phpunit.xml.dist 
- - phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs -np framework/api framework/cache framework/cli framework/conf framework/core framework/model framework/control framework/view framework/tests framework/css framework/dev framework/email framework/filesystem framework/forms framework/admin
+ - phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs -np framework
 
 branches:
   except:

@@ -87,7 +87,10 @@ class i18nTextCollector extends Object {
 				$themes = scandir($this->basePath."/themes");
 				if(count($themes)){
 					foreach($themes as $theme) {
-						if(is_dir($this->basePath."/themes/".$theme) && substr($theme,0,1) != '.' && is_dir($this->basePath."/themes/".$theme."/templates")){
+						if(is_dir($this->basePath."/themes/".$theme) 
+								&& substr($theme,0,1) != '.' 
+								&& is_dir($this->basePath."/themes/".$theme."/templates")){
+
 							$themeFolders[] = 'themes/'.$theme;
 						}
 					}
@@ -103,7 +106,8 @@ class i18nTextCollector extends Object {
 		$modules = array_merge($modules, $themeFolders);
 
 		foreach($modules as $module) {
-			// Only search for calls in folder with a _config.php file (which means they are modules, including themes folder)  
+			// Only search for calls in folder with a _config.php file (which means they are modules, including
+			// themes folder)  
 			$isValidModuleFolder = (
 				is_dir("$this->basePath/$module") 
 				&& is_file("$this->basePath/$module/_config.php") 
@@ -297,7 +301,10 @@ class i18nTextCollector extends Object {
 			if(!$filePath) $filePath = SSViewer::getTemplateFileByType($includeName, 'main');
 			if($filePath) {
 				$includeContent = file_get_contents($filePath);
-				$entities = array_merge($entities,(array)$this->collectFromTemplate($includeContent, $module, $includeFileName));
+				$entities = array_merge(
+					$entities,
+					(array)$this->collectFromTemplate($includeContent, $module, $includeFileName)
+				);
 			}
 			// @todo Will get massively confused if you include the includer -> infinite loop
 		}
@@ -431,11 +438,12 @@ class i18nTextCollector extends Object {
  */
 interface i18nTextCollector_Writer {
 	/**
-	 * @param Array $entities Map of entity names (incl. namespace) to an numeric array,
-	 * with at least one element, the original string, and an optional second element, the context.
+	 * @param Array $entities Map of entity names (incl. namespace) to an numeric array, with at least one element,
+	 *                        the original string, and an optional second element, the context.
 	 * @param String $locale
 	 * @param String $path The directory base on which the collector should create new lang folders and files.
-	 * Usually the webroot set through {@link Director::baseFolder()}. Can be overwritten for testing or export purposes.
+	 *                     Usually the webroot set through {@link Director::baseFolder()}. Can be overwritten for
+	 *                     testing or export purposes.
 	 * @return Boolean success
 	 */
 	public function write($entities, $locale, $path);
@@ -467,14 +475,16 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 			try{
 				eval($php);
 			} catch(Exception $e) {
-				throw new LogicException('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString());
+				throw new LogicException(
+					'i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString());
 			}
 			
 			fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}");
 			fclose($fh);
 			
 		} else {
-			throw new LogicException("Cannot write language file! Please check permissions of $langFolder/" . $locale . ".php");
+			throw new LogicException("Cannot write language file! Please check permissions of $langFolder/" 
+				. $locale . ".php");
 		}
 
 		return true;
@@ -497,7 +507,11 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 			// namespace might contain dots, so we implode back
 			$namespace = implode('.',$entityParts); 
 		} else {
-			user_error("i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values" . var_export($entitySpec, true), E_USER_WARNING);
+			user_error(
+				"i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values "
+				. var_export($entitySpec, true),
+				E_USER_WARNING
+			);
 			return false;
 		}
 	
@@ -541,7 +555,8 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 
 	public function getYaml($entities, $locale) {
 		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/sfYamlDumper.php';
+		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib'
+			. '/sfYamlDumper.php';
 
 		// Unflatten array
 		$entitiesNested = array();

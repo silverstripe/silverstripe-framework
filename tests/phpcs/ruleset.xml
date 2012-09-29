@@ -2,15 +2,17 @@
 <ruleset name="SilverStripe">
 	<description>CodeSniffer ruleset for SilverStripe coding conventions.</description>
 	
-	<!-- exclude minified CSS generated from SCSS -->
-	<exclude-pattern>admin/css/*</exclude-pattern>
-	<exclude-pattern>*/admin/css/*</exclude-pattern>
+	<!-- exclude SCSS-generated CSS files -->
+	<exclude-pattern>*/css/*</exclude-pattern>
+	<exclude-pattern>css/*</exclude-pattern>
+	
 	<!-- exclude thirdparty content -->
 	<exclude-pattern>thirdparty/*</exclude-pattern>
 	<exclude-pattern>*/jquery-changetracker/*</exclude-pattern>
+	<exclude-pattern>parsers/HTML/BBCodeParser/*</exclude-pattern>
+	
 	<!-- PHP-PEG generated file not intended for human consumption -->
 	<exclude-pattern>*/SSTemplateParser.php$</exclude-pattern>
-	<exclude-pattern>SSTemplateParser.php$</exclude-pattern>
 	
 	<rule ref="Generic.Files.LineEndings.InvalidEOLChar">
 		<severity>8</severity>
