@@ -169,7 +169,11 @@ class CompositeField extends FormField {
 					$name = $field->getName();
 					if($name) {
 						$formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
-						if(isset($list[$name])) user_error("collateDataFields() I noticed that a field called '$name' appears twice in your form: '{$formName}'.  One is a '{$field->class}' and the other is a '{$list[$name]->class}'", E_USER_ERROR);
+						if(isset($list[$name])) {
+							user_error("collateDataFields() I noticed that a field called '$name' appears twice in"
+								 . " your form: '{$formName}'.  One is a '{$field->class}' and the other is a"
+								 . " '{$list[$name]->class}'", E_USER_ERROR);
+						}
 						$list[$name] = $field;
 					}
 				}
@@ -302,7 +306,8 @@ class CompositeField extends FormField {
 	 * the children collection. Doesn't work recursively.
 	 * 
 	 * @param string|FormField
-	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
+	 * @return int Position in children collection (first position starts with 0). Returns FALSE if the field can't
+	 *             be found.
 	 */
 	public function fieldPosition($field) {
 		if(is_string($field)) $field = $this->fieldByName($field);

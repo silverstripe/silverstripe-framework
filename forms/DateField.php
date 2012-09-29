@@ -350,7 +350,8 @@ class DateField extends TextField {
 				$validator->validationError(
 					$this->name, 
 					_t(
-						'DateField.VALIDDATEMINDATE', "Your date has to be newer or matching the minimum allowed date ({date})", 
+						'DateField.VALIDDATEMINDATE',
+						"Your date has to be newer or matching the minimum allowed date ({date})", 
 						array('date' => $minDate->toString($this->getConfig('dateformat')))
 					),
 					"validation", 
@@ -369,8 +370,8 @@ class DateField extends TextField {
 			if(!$this->valueObj->isEarlier($maxDate) && !$this->valueObj->equals($maxDate)) {
 				$validator->validationError(
 					$this->name, 
-					_t(
-						'DateField.VALIDDATEMAXDATE', "Your date has to be older or matching the maximum allowed date ({date})", 
+					_t('DateField.VALIDDATEMAXDATE',
+						"Your date has to be older or matching the maximum allowed date ({date})", 
 						array('date' => $maxDate->toString($this->getConfig('dateformat')))
 					),
 					"validation", 
@@ -409,13 +410,17 @@ class DateField extends TextField {
 			case 'min':
 				$format = $this->getConfig('datavalueformat');
 				if($val && !Zend_Date::isDate($val, $format) && !strtotime($val)) {
-					throw new InvalidArgumentException('Date "%s" is not a valid minimum date format (%s) or strtotime() argument', $val, $format);
+					throw new InvalidArgumentException(
+						sprintf('Date "%s" is not a valid minimum date format (%s) or strtotime() argument',
+						$val, $format));
 				}
 				break;
 			case 'max':
 				$format = $this->getConfig('datavalueformat');
 				if($val && !Zend_Date::isDate($val, $format) && !strtotime($val)) {
-					throw new InvalidArgumentException('Date "%s" is not a valid maximum date format (%s) or strtotime() argument', $val, $format);
+					throw new InvalidArgumentException(
+						sprintf('Date "%s" is not a valid maximum date format (%s) or strtotime() argument',
+						$val, $format));
 				}
 				break;
 		}
@@ -446,11 +451,13 @@ class DateField_Disabled extends DateField {
 	public function Field($properties = array()) {
 		if($this->valueObj) {
 			if($this->valueObj->isToday()) {
-				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat')) . ' ('._t('DateField.TODAY','today').')');
+				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
+					. ' ('._t('DateField.TODAY','today').')');
 			} else {
 				$df = new Date($this->name);
 				$df->setValue($this->dataValue());
-				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat')) . ', ' . $df->Ago());
+				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
+					. ', ' . $df->Ago());
 			}
 		} else {
 			$val = '<i>('._t('DateField.NOTSET', 'not set').')</i>';

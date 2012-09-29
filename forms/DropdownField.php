@@ -110,18 +110,21 @@ class DropdownField extends FormField {
 	 * @param $source An map of the dropdown items
 	 * @param $value The current value
 	 * @param $form The parent form
-	 * @param $emptyString mixed Add an empty selection on to of the {@link $source}-Array 
-	 * 	(can also be boolean, which results in an empty string)
-	 *  Argument is deprecated in 3.1, please use {@link setEmptyString()} and/or {@link setHasEmptyDefault(true)} instead.
+	 * @param $emptyString mixed Add an empty selection on to of the {@link $source}-Array (can also be boolean, which
+	 *                           results in an empty string).  Argument is deprecated in 3.1, please use
+	 *                           {@link setEmptyString()} and/or {@link setHasEmptyDefault(true)} instead.
 	 */
-	public function __construct($name, $title = null, $source = array(), $value = '', $form = null, $emptyString = null) {
+	public function __construct($name, $title=null, $source=array(), $value='', $form=null, $emptyString=null) {
 		$this->setSource($source);
 
 		if($emptyString === true) {
-			Deprecation::notice('3.1', 'Please use setHasEmptyDefault(true) instead of passing a boolean true $emptyString argument', Deprecation::SCOPE_GLOBAL);
+			Deprecation::notice('3.1',
+				'Please use setHasEmptyDefault(true) instead of passing a boolean true $emptyString argument',
+				Deprecation::SCOPE_GLOBAL);
 		}
 		if(is_string($emptyString)) {
-			Deprecation::notice('3.1', 'Please use setEmptyString() instead of passing a string $emptyString argument.', Deprecation::SCOPE_GLOBAL);
+			Deprecation::notice('3.1', 'Please use setEmptyString() instead of passing a string emptyString argument.',
+				Deprecation::SCOPE_GLOBAL);
 		}
 
 		if($emptyString) $this->setHasEmptyDefault(true);

@@ -10,12 +10,14 @@
 class CountryDropdownField extends DropdownField {
 
 	/**
-	 * @var bool - Should we default the dropdown to the region determined from the user's locale?
+	 * Should we default the dropdown to the region determined from the user's locale?
+	 * @var bool
 	 */
 	static $default_to_locale = true;
 
 	/**
-	 * @var string - The region code to default to if default_to_locale is set to false, or we can't determine a region from a locale
+	 * The region code to default to if default_to_locale is set to false, or we can't determine a region from a locale
+	 *  @var string
 	 */
 	static $default_country = 'NZ';
 

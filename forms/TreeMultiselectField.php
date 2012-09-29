@@ -3,16 +3,24 @@
  * This formfield represents many-many joins using a tree selector shown in a dropdown styled element
  * which can be added to any form usually in the CMS.
  * 
- * This form class allows you to represent Many-Many Joins in a handy single field. The field has javascript which generates a AJAX tree of the site structure allowing you to save selected options to a component set on a given {@link DataObject}.
+ * This form class allows you to represent Many-Many Joins in a handy single field. The field has javascript which
+ * generates a AJAX tree of the site structure allowing you to save selected options to a component set on a given
+ * {@link DataObject}.
  * 
  * <b>Saving</b>
  * 
- * This field saves a {@link ComponentSet} object which is present on the {@link DataObject} passed by the form, returned by calling a function with the same name as the field. The Join is updated by running setByIDList on the {@link ComponentSet}
+ * This field saves a {@link ComponentSet} object which is present on the {@link DataObject} passed by the form,
+ * returned by calling a function with the same name as the field. The Join is updated by running setByIDList on the
+ * {@link ComponentSet}
  * 
  * <b>Customizing Save Behaviour</b>
  * 
- * Before the data is saved, you can modify the ID list sent to the {@link ComponentSet} by specifying a function on the {@link DataObject} called "onChange[fieldname](&items)". This will be passed by reference the IDlist (an array of ID's) from the Treefield to be saved to the component set.
- * Returning false on this method will prevent treemultiselect from saving to the {@link ComponentSet} of the given {@link DataObject}
+ * Before the data is saved, you can modify the ID list sent to the {@link ComponentSet} by specifying a function on
+ * the {@link DataObject} called "onChange[fieldname](&items)". This will be passed by reference the IDlist (an array
+ * of ID's) from the Treefield to be saved to the component set.
+ * 
+ * Returning false on this method will prevent treemultiselect from saving to the {@link ComponentSet} of the given
+ * {@link DataObject}
  * 
  * <code>
  * // Called when we try and set the Parents() component set
@@ -36,7 +44,7 @@
  * @subpackage fields-relational
  */
 class TreeMultiselectField extends TreeDropdownField {
-	public function __construct($name, $title = null, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {
+	public function __construct($name, $title=null, $sourceObject="Group", $keyField="ID", $labelField="Title") {
 		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
 		$this->value = 'unchanged';
 	}
@@ -111,7 +119,8 @@ class TreeMultiselectField extends TreeDropdownField {
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
-				'class' => 'TreeDropdownField multiple' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
+				'class' => 'TreeDropdownField multiple' . ($this->extraClass() ? " {$this->extraClass()}" : '')
+					. ($this->showSearch ? " searchable" : ''),
 				'data-url-tree' => $this->form ? $this->Link('tree') : "",
 				'data-title' => $title,
 				'title' => $this->getDescription()
@@ -140,7 +149,10 @@ class TreeMultiselectField extends TreeDropdownField {
 			
 			$fieldName = $this->name;
 			$saveDest = $record->$fieldName();
-			if(!$saveDest) user_error("TreeMultiselectField::saveInto() Field '$fieldName' not found on $record->class.$record->ID", E_USER_ERROR);
+			if(!$saveDest) {
+				user_error("TreeMultiselectField::saveInto() Field '$fieldName' not found on"
+					. " $record->class.$record->ID", E_USER_ERROR);
+			}
 			
 			if($this->value) {
 				$items = preg_split("/ *, */", trim($this->value));
@@ -163,10 +175,13 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * Changes this field to the readonly field.
 	 */
 	public function performReadonlyTransformation() {
-		$field = new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
+		$field = new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject,
+			$this->keyField, $this->labelField);
+
 		$field->addExtraClass($this->extraClass());
 		$field->setForm($this->form);
 		$field->setValue($this->value);
+		
 		return $field;
 	}
 }

@@ -189,7 +189,8 @@ class FileIFrameField extends FileField {
 			try {
 				$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
 			} catch (Exception $e){
-				$form->sessionMessage(_t('FileIFrameField.DISALLOWEDFILETYPE', 'This filetype is not allowed to be uploaded'), 'bad');
+				$form->sessionMessage(_t('FileIFrameField.DISALLOWEDFILETYPE',
+					'This filetype is not allowed to be uploaded'), 'bad');
 				$controller->redirectBack();
 				return;
 			}

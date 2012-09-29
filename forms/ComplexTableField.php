@@ -13,11 +13,13 @@
  *
  * Example-URL for a "DetailForm"-call explained:
  * "/admin/family/?executeForm=EditForm&action_callfieldmethod&fieldName=Individual&childID=7&methodName=edit"
- *  - executeForm			Name of the form on the main rendering page (e.g. "FamilyAdmin")
- *  - action_callfieldmethod	Trigger to call a method of a single field in "EditForm" instead of rendering the whole thing
- *  - fieldName				Name of the targeted formField
- *  - methodName				Method on the formfield (e.g. "ComplexTableField")
- *  - childID				Identifier of the database-record (the targeted table is determined by the $sourceClass parameter)
+ *  - executeForm            Name of the form on the main rendering page (e.g. "FamilyAdmin")
+ *  - action_callfieldmethod Trigger to call a method of a single field in "EditForm" instead of rendering the
+ *                           whole thing
+ *  - fieldName              Name of the targeted formField
+ *  - methodName             Method on the formfield (e.g. "ComplexTableField")
+ *  - childID                Identifier of the database-record (the targeted table is determined by the $sourceClass
+ *                           parameter)
  *  
  * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
  *
@@ -191,7 +193,9 @@ class ComplexTableField extends TableListField {
 	 * @param string $sourceSort
 	 * @param string $sourceJoin
 	 */
-	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null,
+			$sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+
 		$this->detailFormFields = $detailFormFields;
 		$this->controller = $controller;
 		$this->pageSize = 10;
@@ -251,7 +255,13 @@ JS;
 			return null;
 		}
 
-		$pageStart = (isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
+
+		if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
+			$pageStart = $_REQUEST['ctf'][$this->getName()]['start'];
+			if(!is_numeric($pageStart)) $pageStart = 0;
+		} else {
+			$pageStart = 0;
+		}
 
 		$output = new ArrayList();
 		foreach($sourceItems as $pageIndex=>$item) {
@@ -582,16 +592,17 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
  			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			return DataObject::get_by_id(ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
+ 			return DataObject::get_by_id(
+ 				ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
 		}
 		
 	}
 
 	/**
 	 * Renders view, edit and add, depending on the given information.
-	 * The form needs several parameters to function independently of its "parent-form", some derived from the context into a hidden-field,
-	 * some derived from the parent context (which is not accessible here) and delivered by GET:
-	 * ID, Identifier of the currently edited record (only if record is loaded).
+	 * The form needs several parameters to function independently of its "parent-form", some derived from the context
+	 * into a hidden-field, some derived from the parent context (which is not accessible here) and delivered by
+	 * GET:ID, Identifier of the currently edited record (only if record is loaded).
 	 * <parentIDName>, Link back to the correct parent record (e.g. "parentID").
 	 * parentClass, Link back to correct container-class (the parent-record might have many 'has-one'-relationships)
 	 * CAUTION: "ID" in the DetailForm would be the "childID" in the overview table.
@@ -672,7 +683,8 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	public function PopupFirstLink() {
 		$this->ctf->LinkToItem();
 		
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 
@@ -681,7 +693,8 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	}
 
 	public function PopupLastLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
 			return null;
 		}
 		
@@ -690,7 +703,8 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	}
 
 	public function PopupNextLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
 			return null;
 		}
 
@@ -699,7 +713,8 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	}
 
 	public function PopupPrevLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 

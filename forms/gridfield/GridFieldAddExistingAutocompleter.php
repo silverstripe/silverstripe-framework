@@ -7,7 +7,8 @@
  * Often used alongside {@link GridFieldRemoveButton} for detaching existing records from a relatinship.
  * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
+class GridFieldAddExistingAutocompleter
+		implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 	
 	/**
 	 * Which template to use for rendering
@@ -72,18 +73,25 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 
-		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
+		$searchFields = ($this->getSearchFields())
+			? $this->getSearchFields()
+			: $this->scaffoldSearchFields($dataClass);
 		
 		$value = $this->findSingleEntry($gridField, $searchFields, $searchState, $dataClass);
-		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"), $value);
+
+		$searchField = new TextField('gridfield_relationsearch',
+			_t('GridField.RelationSearch', "Relation search"), $value);
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
 		$searchField->addExtraClass('relation-search no-change-track');
 		
-		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
+		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind',
+			_t('GridField.Find', "Find"), 'find', 'find');
 		$findAction->setAttribute('data-icon', 'relationfind');
-		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd', _t('GridField.LinkExisting', "Link Existing"), 'addto', 'addto');
+
+		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd',
+			_t('GridField.LinkExisting', "Link Existing"), 'addto', 'addto');
 		$addAction->setAttribute('data-icon', 'chain--plus');
 
 		// If an object is not found, disable the action
@@ -175,17 +183,20 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		$dataClass = $gridField->getList()->dataClass();
 		$allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
 		
-		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
+		$searchFields = ($this->getSearchFields())
+			? $this->getSearchFields()
+			: $this->scaffoldSearchFields($dataClass);
 		if(!$searchFields) {
 			throw new LogicException(
-				sprintf('GridFieldAddExistingAutocompleter: No searchable fields could be found for class "%s"', $dataClass)
-			);
+				sprintf('GridFieldAddExistingAutocompleter: No searchable fields could be found for class "%s"',
+				$dataClass));
 		}
 
 		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
 		$stmts = array();
 		foreach($searchFields as $searchField) {
-			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, Convert::raw2sql($request->getVar('gridfield_relationsearch')));
+			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField,
+				Convert::raw2sql($request->getVar('gridfield_relationsearch')));
 		}
 		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
 		$results = $results->sort($searchFields[0], 'ASC');
@@ -260,7 +271,9 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 * @return String
 	 */
 	public function getPlaceholderText($dataClass) {
-		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
+		$searchFields = ($this->getSearchFields())
+			? $this->getSearchFields()
+			: $this->scaffoldSearchFields($dataClass);
 
 		if($this->placeholderText) {
 			return $this->placeholderText;

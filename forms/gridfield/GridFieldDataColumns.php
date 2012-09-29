@@ -52,7 +52,8 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 */
 	public function setDisplayFields($fields) {
 		if(!is_array($fields)) {
-			throw new InvalidArgumentException('Arguments passed to GridFieldDataColumns::setDisplayFields() must be an array');
+			throw new InvalidArgumentException('
+				Arguments passed to GridFieldDataColumns::setDisplayFields() must be an array');
 		}
 		$this->displayFields = $fields;
 		return $this;
