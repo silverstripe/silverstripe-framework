@@ -7,16 +7,12 @@ de:
     CREATED: 'Erstmalig hochgeladen'
     DIM: Dimensionen
     FILENAME: Dateiname
-    FOLDER:
-      - null
+    FOLDER: Ordner
     LASTEDIT: 'Letzte Änderung'
-    OWNER:
-      - null
-    SIZE:
-      - null
+    OWNER: Eigentümer
+    SIZE: Größe
     TITLE: Titel
-    TYPE:
-      - null
+    TYPE: Typ
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Dateien auswählen'
@@ -317,8 +313,7 @@ de:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Bild
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -393,45 +388,26 @@ de:
   MemberAuthenticator:
     TITLE: 'E-Mail &amp; Passwort'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (vormittag) oder PM (nachmittag)'
     'APPLY FILTER': 'Filter anwenden'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Benutzerdefiniert
+    DATEFORMATBAD: 'Ungültiges Datumsformat'
+    DAYNOLEADING: 'Tag des Monats ohne führende Null'
+    DIGITSDECFRACTIONSECOND: 'Eine oder mehrere Ziffern, die einen Dezimalbruch einer Sekunde darstellen'
+    FOURDIGITYEAR: 'Vierstellige Jahreszahl'
+    FULLNAMEMONTH: 'Volle Monatsbezeichnung (z.B. Juni)'
+    HOURNOLEADING: 'Stunde ohne führende Null'
+    MINUTENOLEADING: Minute
+    MONTHNOLEADING: 'Monat ohne führende Null'
+    Preview: Vorschau
+    SHORTMONTH: 'Kurzname des Monats (z.B. Jun)'
+    TOGGLEHELP: 'Formatierungshilfe anzeigen'
+    TWODIGITDAY: 'Tag des Monats mit führender Null'
+    TWODIGITHOUR: 'Stunde im 24-Stunden-Format, mit führenden Nullen'
+    TWODIGITMINUTE: 'Minute mit führenden Nullen'
+    TWODIGITMONTH: 'Monat mit führender Null (z.B. 01 = Januar, usw.)'
+    TWODIGITSECOND: Sekunde
+    TWODIGITYEAR: 'Zweistellige Jahreszahl'
   MemberImportForm:
     Help1: '<p>Mitglieder im <em>CSV</em>-Format (kommaseparierte Werte) importieren. <small><a href="#" class="toggle-advanced">Erweiterte Nutzung</a></small></p>'
     Help2: '<div class="advanced"><h4>Advanced usage</h4><ul><li>Gültige Spalten: <em>%s</em></li><li>Vorhandene Mitglieder werden über ihren eindeutigen <em>Code</em> ermittelt und mit den Werten aus der importierten Datei aktualisiert.</li><li>Gruppen können über die Spalte <em>Gruppen</em> zugewiesen werden. Gruppen werden über ihren eindeutigen <em>Code</em> ermittelt, mehrere Gruppen können durch ein Komma getrennt werden. Vorhandene Gruppenzugehörigkeiten werden nicht gelöscht.</li></ul></div>'
@@ -444,24 +420,15 @@ de:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Löschen
+    DELETEDRECORDS: '{count} Datensätze wurden gelöscht.'
+    IMPORT: 'CSV Import'
+    IMPORTEDRECORDS: '{count} Datensätze wurden importiert.'
+    NOCSVFILE: 'Wählen Sie eine CSV-Datei zum Importieren'
+    NOIMPORT: 'Kein Import notwendig.'
+    RESET: Zurücksetzen
+    Title: Datenmodelle
+    UPDATEDRECORDS: '{count} Datensätze wurden aktualisiert.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Datenbankspalten
     IMPORTSPECLINK: 'Beschreibung von %s anzeigen'

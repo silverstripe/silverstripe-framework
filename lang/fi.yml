@@ -7,16 +7,12 @@ fi:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
     DIM: Mitat
     FILENAME: 'Tiedoston nimi'
-    FOLDER:
-      - null
+    FOLDER: Kansio
     LASTEDIT: 'Viimeksi muokattu'
-    OWNER:
-      - null
-    SIZE:
-      - null
+    OWNER: Omistaja
+    SIZE: Koko
     TITLE: Otsikko
-    TYPE:
-      - null
+    TYPE: Tyyppi
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Valitse tiedostot'
@@ -317,8 +313,7 @@ fi:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Kuva
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -393,45 +388,26 @@ fi:
   MemberAuthenticator:
     TITLE: 'Sähköposti &amp; Salasana'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
     'APPLY FILTER': Suodata
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Muokattu
+    DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
+    DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
+    DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
+    FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
+    FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
+    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
+    MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
+    MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
+    Preview: Esikatselu
+    SHORTMONTH: 'Kuukauden lyhyt nimi (esim. kesä)'
+    TOGGLEHELP: 'Vaihda muotoilu apuun'
+    TWODIGITDAY: 'Kaksinumeroinen päivämäärä (01–31)'
+    TWODIGITHOUR: 'Kaksinumeroinen tuntinäyttö (00–23)'
+    TWODIGITMINUTE: 'Kaksinumeroinen minuuttinäyttö (00–59)'
+    TWODIGITMONTH: 'Kaksinumeroinen kuukausi (01=tammikuu, jne.)'
+    TWODIGITSECOND: 'Kaksinumeroinen sekunti (00–59)'
+    TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
@@ -444,24 +420,15 @@ fi:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Poista
+    DELETEDRECORDS: 'Poistettiin {count} tietuetta'
+    IMPORT: 'Tuo CSV:stä'
+    IMPORTEDRECORDS: 'Tuotiin {count} tietuetta'
+    NOCSVFILE: 'Selaa ja tuo CSV-tiedosto'
+    NOIMPORT: 'Ei tuotavia'
+    RESET: Nollaa
+    Title: Datamallit
+    UPDATEDRECORDS: 'Päivitettiin {count} tietuetta'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Tietokannan sarakkeet'
     IMPORTSPECLINK: 'Näytä erittely kohteelle %s'

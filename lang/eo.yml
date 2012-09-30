@@ -7,16 +7,12 @@ eo:
     CREATED: 'Unue alŝutita'
     DIM: Dimensioj
     FILENAME: 'Nomo de dosiero'
-    FOLDER:
-      - null
+    FOLDER: Folder
     LASTEDIT: 'Laste ŝanĝita'
-    OWNER:
-      - null
-    SIZE:
-      - null
+    OWNER: Posedanto
+    SIZE: Grando
     TITLE: Titolo
-    TYPE:
-      - null
+    TYPE: Tipo
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Choose files'
@@ -317,8 +313,7 @@ eo:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Bildo
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -393,45 +388,26 @@ eo:
   MemberAuthenticator:
     TITLE: 'Retpoŝto &amp; Pasvorto'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     'APPLY FILTER': 'Apply Filter'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Gravaj membroj en <em>CSV-formato</em> (perkome disigitaj valoroj ). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
     Help2: '<div class="advanced"><h4>Spertula uzado</h4><ul><li>Permesitaj kolumnoj: <em>%s</em></li><li>Kongruas ekzistantajn membrojn laŭ ilia unika agordo <em>Kodo</em>, kaj aktualigas ilin laŭ eventualaj novaj valoroj el la importita dosiero.</li><li>Povas agordi grupojn laŭ la kolumno <em>Grupoj</em>. Identigas grupojn laŭ ilia agordo <em>Kodo</em>, povas apartigi pluroblan grupon per komoj. Ne vakigas ekzistantajn grupojn.</li></ul></div>'
@@ -444,24 +420,15 @@ eo:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Forigi
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Importi el CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Bonvolu foliumi por CSV-dosiero importota'
+    NOIMPORT: 'Nenio importota'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'

@@ -7,16 +7,12 @@ pl:
     CREATED: 'Po raz pierwszy wgrany'
     DIM: Rozmiar
     FILENAME: 'Nazwa pliku'
-    FOLDER:
-      - null
+    FOLDER: Folder
     LASTEDIT: 'Ostatnio zmieniony'
-    OWNER:
-      - null
-    SIZE:
-      - null
+    OWNER: Właściciel
+    SIZE: 'Rozmiar pliku'
     TITLE: Tytuł
-    TYPE:
-      - null
+    TYPE: 'Typ pliku'
     URL: 'Adres URL'
   AssetUploadField:
     ChooseFiles: 'Wybierz pliki'
@@ -317,8 +313,7 @@ pl:
     PLURALNAME: Pliki
     SINGULARNAME: Plik
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Obraz
   Image_Cached:
     PLURALNAME: Pliki
     SINGULARNAME: Plik
@@ -393,45 +388,26 @@ pl:
   MemberAuthenticator:
     TITLE: 'E-mail i Hasło'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (przed południem) lub PM (po południu)'
     'APPLY FILTER': 'Zastosuj filtr'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Własny
+    DATEFORMATBAD: 'Nieprawidłowy format daty'
+    DAYNOLEADING: 'Dzień miesiąca bez wiodącego zera'
+    DIGITSDECFRACTIONSECOND: 'Jedna lub więcej cyfr reprezentujących ułamek sekundy'
+    FOURDIGITYEAR: 'Czterocyfrowy rok'
+    FULLNAMEMONTH: 'Pełna nazwa miesiąca (np. Czerwiec)'
+    HOURNOLEADING: 'Godzina bez wiodącego zera'
+    MINUTENOLEADING: 'Minuta bez wiodącego zera'
+    MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
+    Preview: Podgląd
+    SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
+    TOGGLEHELP: 'Przełącz pomoc formatowania'
+    TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
+    TWODIGITHOUR: 'Dwucyfrowa godzina (od 00 do 23)'
+    TWODIGITMINUTE: 'Dwucyfrowa minuta (od 00 do 59)'
+    TWODIGITMONTH: 'Dwucyfrowy miesiąc (01=Styczeń, itd.)'
+    TWODIGITSECOND: 'Dwucyfrowa sekunda (od 00 do 59)'
+    TWODIGITYEAR: 'Dwucyfrowy rok'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Zaawansowane użycie</h4>\\n<ul>\\n<li>Dozwolone kolumny: <em>%s</em></li>\\n<li>Istniejący użytkownicy są dopasowani poprzez unikalną właściwość <em>Kod</em> i uaktualniani  nowymi wartościami z zaimportowanego pliku.</li>\\n<li>Grupy mogą być przypisane poprzez kolumnę <em>Grupy</em>. Grupy identyfikowane są poprzez unikalną właściwość  <em>Kod</em>, grupy mogą być oddzielone od siebie przecinkiem. Przypisania użytkowników do grup nie są usuwane.</li>\\n</ul>\\n</div>"
@@ -444,24 +420,15 @@ pl:
     SINGULARNAME: 'Hasło użytkownika'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Usuń
+    DELETEDRECORDS: 'Usunięto rekordów: {count}'
+    IMPORT: 'Import z CSV'
+    IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
+    NOCSVFILE: 'Wybierz plik CSV do zaimportowania'
+    NOIMPORT: 'Nie ma niczego do zaimportowania'
+    RESET: Zresetuj
+    Title: 'Modele danych'
+    UPDATEDRECORDS: 'Zaktualizowano {count} rekordów.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Kolumny bazy danych'
     IMPORTSPECLINK: 'Pokaż specyfikację %s'
