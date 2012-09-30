@@ -28,6 +28,33 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 	public function __construct($targetFragment = 'before') {
 		$this->targetFragment = $targetFragment;
 	}
+	
+	/**
+	 * Flag indicating whether or not this control should throw an error if a
+	 * {@link GridFieldPaginator} is not present on the same {@link GridField}
+	 * 
+	 * @var boolean
+	 */
+	public static $require_paginator = true;
+	
+	/**
+	 * Retrieves an instance of a GridFieldPaginator attached to the same control
+	 * @param GridField $gridField The parent gridfield
+	 * @return GridFieldPaginator The attached GridFieldPaginator, if found.
+	 * @throws LogicException 
+	 */
+	protected function getPaginator($gridField) {
+		$paginator = $gridField->getConfig()->getComponentByType('GridFieldPaginator');
+		
+		if(!$paginator && self::$require_paginator) {
+			throw new LogicException(
+				get_class($this) . " relies on a GridFieldPaginator to be added " .
+				"to the same GridField, but none are present."
+			);
+		}
+		
+		return $paginator;
+	}
 
 	/**
 	 * @param GridField $gridField
@@ -36,7 +63,7 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 	public function getHTMLFragments($gridField) {
 
 		// Retrieve paging parameters from the directing paginator component
-		$paginator = $gridField->getConfig()->getComponentByType('GridFieldPaginator');
+		$paginator = $this->getPaginator($gridField);
 		if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
 			return array(
 				$this->targetFragment => $forTemplate->renderWith($this->itemClass)
