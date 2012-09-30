@@ -20,10 +20,12 @@ abstract class StringField extends DBField {
 	/**
 	 * Construct a string type field with a set of optional parameters
 	 * @param $name string The name of the field
-	 * @param $options array An array of options e.g. array('nullifyEmpty'=>false).  See {@link StringField::setOptions()} for information on the available options
+	 * @param $options array An array of options e.g. array('nullifyEmpty'=>false).  See
+	 *                       {@link StringField::setOptions()} for information on the available options
 	 */
 	public function __construct($name = null, $options = array()) {
-		// Workaround: The singleton pattern calls this constructor with true/1 as the second parameter, so we must ignore it
+		// Workaround: The singleton pattern calls this constructor with true/1 as the second parameter, so we
+		// must ignore it
 		if(is_array($options)){
 			$this->setOptions($options);
 		}
@@ -36,8 +38,8 @@ abstract class StringField extends DBField {
 	 * The options allowed are:
 	 *   <ul><li>"nullifyEmpty"
 	 *       This is a boolean flag.
-	 *       True (the default) means that empty strings are automatically converted to nulls to be stored in the database.
-	 *       Set it to false to ensure that nulls and empty strings are kept intact in the database.
+	 *       True (the default) means that empty strings are automatically converted to nulls to be stored in
+	 *       the database. Set it to false to ensure that nulls and empty strings are kept intact in the database.
 	 *   </li></ul>
 	 * @return unknown_type
 	 */

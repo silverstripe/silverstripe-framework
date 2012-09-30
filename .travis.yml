@@ -15,11 +15,14 @@ matrix:
       env: TESTDB=SQLITE
 
 before_script:
+ - pear install pear/PHP_CodeSniffer
+ - phpenv rehash
  - ./tests/travis/before_script ~/builds/ss 
  - cd ~/builds/ss
 
 script: 
  - phpunit -c phpunit.xml.dist 
+ - phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs -np framework
 
 notifications:
   irc:

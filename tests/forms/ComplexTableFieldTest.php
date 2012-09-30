@@ -77,8 +77,10 @@ class ComplexTableFieldTest extends FunctionalTest {
 
 		$newSponsor = DataObject::get_one('ComplexTableFieldTest_Sponsor', "\"Name\" = 'Jim Beam'");
 		$this->assertNotNull($newSponsor, 'A new ComplexTableFieldTest_Sponsor record was created, Name = "Jim Beam"');
-		$this->assertEquals($newSponsor->TeamID, $team->ID, 'Automatic has-many/has-one relation was set correctly on the sponsor');
-		$this->assertEquals($newSponsor->getComponent('Team')->ID, $team->ID, 'Automatic has-many/has-one relation was set correctly on the sponsor');
+		$this->assertEquals($newSponsor->TeamID, $team->ID,
+				'Automatic has-many/has-one relation was set correctly on the sponsor');
+		$this->assertEquals($newSponsor->getComponent('Team')->ID, $team->ID,
+				'Automatic has-many/has-one relation was set correctly on the sponsor');
 		
 		$team = DataObject::get_by_id('ComplexTableFieldTest_Team', $team->ID);
 		$sponsor = DataObject::get_by_id('ComplexTableFieldTest_Sponsor', $newSponsor->ID);

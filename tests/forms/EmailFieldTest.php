@@ -30,10 +30,15 @@ class EmailFieldTest extends FunctionalTest {
 		$val = new EmailFieldTest_Validator();
 		try {
 			$field->validate($val);
-			if (!$expectSuccess) $this->assertTrue(false, $checkText . " (/$email/ passed validation, but not expected to)");
+			if (!$expectSuccess) {
+				$this->assertTrue(false,$checkText . " (/$email/ passed validation, but not expected to)");
+			}
 		} catch (Exception $e) {
 			if ($e instanceof PHPUnit_Framework_AssertionFailedError) throw $e; // re-throw assertion failure
-			else if ($expectSuccess) $this->assertTrue(false, $checkText . ": " . $e->GetMessage() . " (/$email/ did not pass validation, but was expected to)");
+			else if ($expectSuccess) {
+				$this->assertTrue(false,
+					$checkText . ": " . $e->GetMessage() . " (/$email/ did not pass validation, but was expected to)");
+			}
 		}
 	}
 
@@ -76,7 +81,12 @@ class EmailFieldTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 	
 	function Link($action = null) {
-		return Controller::join_links('EmailFieldTest_Controller', $this->request->latestParam('Action'), $this->request->latestParam('ID'), $action);
+		return Controller::join_links(
+			'EmailFieldTest_Controller',
+			$this->request->latestParam('Action'),
+			$this->request->latestParam('ID'),
+			$action
+		);
 	}
 	
 	function Form() {

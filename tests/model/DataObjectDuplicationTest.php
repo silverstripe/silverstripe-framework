@@ -52,14 +52,21 @@ class DataObjectDuplicationTest extends SapphireTest {
 		$this->assertEquals($text2, $twoCopy->text);
 		$this->assertEquals($text3, $threeCopy->text);
 
-		$this->assertNotEquals($one->twos()->Count(), $oneCopy->twos()->Count(), "Many-to-one relation not copied (has_many)");
-		$this->assertEquals($one->threes()->Count(), $oneCopy->threes()->Count(), "Object has the correct number of relations");
-		$this->assertEquals($three->ones()->Count(), $threeCopy->ones()->Count(), "Object has the correct number of relations");
+		$this->assertNotEquals($one->twos()->Count(), $oneCopy->twos()->Count(),
+			"Many-to-one relation not copied (has_many)");
+		$this->assertEquals($one->threes()->Count(), $oneCopy->threes()->Count(),
+			"Object has the correct number of relations");
+		$this->assertEquals($three->ones()->Count(), $threeCopy->ones()->Count(),
+			"Object has the correct number of relations");
 
-		$this->assertEquals($one->ID, $twoCopy->one()->ID, "Match between relation of copy and the original");
-		$this->assertEquals(0, $oneCopy->twos()->Count(), "Many-to-one relation not copied (has_many)");
-		$this->assertEquals($three->ID, $oneCopy->threes()->First()->ID, "Match between relation of copy and the original");
-		$this->assertEquals($one->ID, $threeCopy->ones()->First()->ID, "Match between relation of copy and the original");
+		$this->assertEquals($one->ID, $twoCopy->one()->ID,
+			"Match between relation of copy and the original");
+		$this->assertEquals(0, $oneCopy->twos()->Count(),
+			"Many-to-one relation not copied (has_many)");
+		$this->assertEquals($three->ID, $oneCopy->threes()->First()->ID,
+			"Match between relation of copy and the original");
+		$this->assertEquals($one->ID, $threeCopy->ones()->First()->ID,
+			"Match between relation of copy and the original");
 	}
 
 }

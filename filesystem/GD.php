@@ -277,8 +277,8 @@ class GD extends Object {
 	}
 	
 	/**
-	 * Resize the image by preserving aspect ratio. By default, it will keep the image inside the maxWidth and maxHeight
-	 * Passing useAsMinimum will make the smaller dimension equal to the maximum corresponding dimension
+	 * Resize the image by preserving aspect ratio. By default, it will keep the image inside the maxWidth
+	 * and maxHeight. Passing useAsMinimum will make the smaller dimension equal to the maximum corresponding dimension
 	 */
 	public function resizeRatio( $maxWidth, $maxHeight, $useAsMinimum = false ) {
 		
@@ -351,7 +351,9 @@ class GD extends Object {
 				$destY = round( ($height - $destHeight) / 2 );
 			}
 			
-			imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
+			imagecopyresampled($newGD, $this->gd,
+				$destX, $destY, 0, 0,
+				$destWidth, $destHeight, $this->width, $this->height);
 		}
 		$output = clone $this;
 		$output->setGD($newGD);
@@ -363,7 +365,8 @@ class GD extends Object {
 	 * $rv = red value, defaults to 38
 	 * $gv = green value, defaults to 36
 	 * $bv = blue value, defaults to 26
-	 * Based (more or less entirely, with changes for readability) on code from http://www.teckis.com/scriptix/thumbnails/teck.html
+	 * Based (more or less entirely, with changes for readability) on code from
+	 * http://www.teckis.com/scriptix/thumbnails/teck.html
 	 */
 	public function greyscale($rv=38, $gv=36, $bv=26) {
 		$width = $this->width;

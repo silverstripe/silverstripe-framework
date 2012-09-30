@@ -17,8 +17,12 @@ class ImageFormAction extends FormAction {
 	 * @param hoverImage The image to display on hover
 	 * @param form The parent form, auto-set when the field is placed inside a form 
 	 */
-	public function __construct($action, $title = "", $image = "", $hoverImage = null, $className = null, $form = null) {
-		Deprecation::notice('3.0', "Use FormAction with setAttribute('src', 'myimage.png') and custom JavaScript to achieve hover effect", Deprecation::SCOPE_CLASS);
+	public function __construct($action, $title = "", $image = "", $hoverImage = null, $className = null,
+			$form = null) {
+
+		Deprecation::notice('3.0',
+			"Use FormAction with setAttribute('src', 'myimage.png') and custom JavaScript to achieve hover effect",
+			Deprecation::SCOPE_CLASS);
 
 		$this->image = $image;
 		$this->hoverImage = $hoverImage;
@@ -33,6 +37,7 @@ class ImageFormAction extends FormAction {
 		$classClause = '';
 		if($this->className) $classClause = $this->className . ' ';
 		if($this->hoverImage) $classClause .= 'rollover ';
-		return "<input class=\"{$classClause}action\" id=\"" . $this->id() . "\" type=\"image\" name=\"{$this->name}\" src=\"{$this->image}\" title=\"{$this->title}\" alt=\"{$this->title}\" />";
+		return "<input class=\"{$classClause}action\" id=\"" . $this->id() . "\" type=\"image\" name=\"{$this->name}\""
+			. " src=\"{$this->image}\" title=\"{$this->title}\" alt=\"{$this->title}\" />";
 	}
 }

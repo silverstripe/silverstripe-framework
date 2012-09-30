@@ -1,6 +1,7 @@
 <?php
 /**
- * NullableField is a field that wraps other fields when you want to allow the user to specify whether the value of the field is null or not.
+ * NullableField is a field that wraps other fields when you want to allow the user to specify whether the value of
+ * the field is null or not.
  * 
  * The classic case is to wrap a TextField so that the user can distinguish between an empty string and a null string.
  * $a = new NullableField(new TextField("Field1", "Field 1", "abc"));
@@ -11,7 +12,9 @@
  * You can retrieve the value of the wrapped field from the NullableField as follows:
  * $field->Value() or $field->dataValue()
  * 
- * You can specify the label to use for the "is null" checkbox.  If you want to use I8N for this label then specify it like this:
+ * You can specify the label to use for the "is null" checkbox.  If you want to use I8N for this label then specify it
+ * like this:
+ * 
  * $field->setIsNullLabel(_T(SOME_MODULE_ISNULL_LABEL, "Is Null");
  * 
  * @author Pete Bacon Darwin
@@ -44,7 +47,8 @@ class NullableField extends FormField {
 			// Set a default label if one is not provided.
 			$this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null');
 		}
-		parent::__construct($valueField->getName(), $valueField->Title(), $valueField->Value(), $valueField->getForm(), $valueField->RightTitle());
+		parent::__construct($valueField->getName(), $valueField->Title(), $valueField->Value(),
+			$valueField->getForm(), $valueField->RightTitle());
 		$this->readonly = $valueField->isReadonly();
 	}
 	
@@ -84,7 +88,8 @@ class NullableField extends FormField {
 		}
 		$nullableCheckbox->setValue(is_null($this->dataValue()));
 
-		return $this->valueField->Field() . ' ' . $nullableCheckbox->Field() . '&nbsp;<span>' . $this->getIsNullLabel().'</span>';
+		return $this->valueField->Field() . ' ' . $nullableCheckbox->Field()
+			. '&nbsp;<span>' . $this->getIsNullLabel().'</span>';
 	}
 
 	/**

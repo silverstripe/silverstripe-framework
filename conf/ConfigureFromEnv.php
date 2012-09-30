@@ -18,20 +18,24 @@
  *  - SS_DATABASE_TIMEZONE: Set the database timezone to something other than the system timezone.
  * 
  * There is one more setting that is intended to be used by people who work on SilverStripe.
- *  - SS_DATABASE_CHOOSE_NAME: Boolean/Int.  If set, then the system will choose a default database name for you if one isn't give
- *    in the $database variable.  The database name will be "SS_" followed by the name of the folder into which you have installed
- *    SilverStripe.  If this is enabled, it means that the phpinstaller will work out of the box without the installer needing to
- *    alter any files.  This helps prevent accidental changes to the environment.
+ *  - SS_DATABASE_CHOOSE_NAME: Boolean/Int.  If set, then the system will choose a default database name for you if
+ *    one isn't give in the $database variable.  The database name will be "SS_" followed by the name of the folder
+ *    into which you have installed SilverStripe.  If this is enabled, it means that the phpinstaller will work out of
+ *    the box without the installer needing to alter any files.  This helps prevent accidental changes to the
+ *    environment.
  * 
- *    If SS_DATABASE_CHOOSE_NAME is an integer greater than one, then an ancestor folder will be used for the database name.  This
- *    is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build.  If it's 2, the parent folder
- *    will be chosen; if it's 3 the grandparent, and so on.
+ *    If SS_DATABASE_CHOOSE_NAME is an integer greater than one, then an ancestor folder will be used for the database
+ *    name.  This is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build.  If
+ *    it's 2, the parent folder will be chosen; if it's 3 the grandparent, and so on.
  * 
  * You can configure the environment with this define:
+ * 
  *  - SS_ENVIRONMENT_TYPE: The environment type: dev, test or live.
  * 
- * You can configure the default admin with these defines
- *  - SS_DEFAULT_ADMIN_USERNAME: The username of the default admin - this is a non-database user with administrative privileges.
+ * You can configure the default admin with these defines:
+ * 
+ *  - SS_DEFAULT_ADMIN_USERNAME: The username of the default admin - this is a non-database user with administrative 
+ *    privileges.
  *  - SS_DEFAULT_ADMIN_PASSWORD: The password of the default admin.
  *  - SS_USE_BASIC_AUTH: Protect the site with basic auth (good for test sites)
  * 
@@ -46,12 +50,17 @@
  * _ss_environment.php handler
  */
 if(defined('SS_ENVIRONMENT_FILE')) {
-	// Only perform valdiation if SS_ENVIRONMENT_FILE is actually set, which is to say, there is an _ss_environment.php file
+	// Only perform valdiation if SS_ENVIRONMENT_FILE is actually set, which is to say, there is an 
+	// _ss_environment.php file
 	foreach(array(
 		'SS_DATABASE_PASSWORD',
 		'SS_DATABASE_USERNAME', 
 		'SS_ENVIRONMENT_TYPE',) as $reqDefine) {
-		if(!defined($reqDefine)) user_error("$reqDefine must be defined in your _ss_environment.php.  See http://doc.silverstripe.org/doku.php?id=environment-management for more infomration", E_USER_ERROR);
+		if(!defined($reqDefine)) {
+			user_error("$reqDefine must be defined in your _ss_environment.php."
+				. "See http://doc.silverstripe.org/framework/en/topics/environment-management for more infomration",
+				E_USER_ERROR);
+		}
 	}
 }
 
@@ -100,7 +109,12 @@ if(defined('SS_SEND_ALL_EMAILS_TO')) {
 }
 
 if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
-	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php, if SS_DEFAULT_ADMIN_USERNAME is defined.  See http://doc.silverstripe.org/doku.php?id=environment-management for more infomration", E_USER_ERROR);
+	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) {
+		user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php,"
+			. "if SS_DEFAULT_ADMIN_USERNAME is defined.  See "
+			. "http://doc.silverstripe.org/framework/en/topics/environment-management for more infomration", 
+			E_USER_ERROR);
+	}
 	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 }
 if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {

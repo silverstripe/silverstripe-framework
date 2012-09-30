@@ -67,7 +67,9 @@ class ConfirmedPasswordField extends FormField {
 	 * @param boolean $showOnClick
 	 * @param string $titleConfirmField Alternate title (not localizeable)
 	 */
-	public function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false, $titleConfirmField = null) {
+	public function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false,
+			$titleConfirmField = null) {
+
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->children = new FieldList(
 			new PasswordField(
@@ -191,7 +193,8 @@ class ConfirmedPasswordField extends FormField {
 				$this->value = $value['_Password'];
 			}
 			if($this->showOnClick && isset($value['_PasswordFieldVisible'])){
-				$this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
+				$this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]')
+					->setValue($value['_PasswordFieldVisible']);
 			}
 		} else {
 			if($value || (!$value && $this->canBeEmpty)) {
@@ -231,14 +234,16 @@ class ConfirmedPasswordField extends FormField {
 		
 		// both password-fields should be the same
 		if($value != $passwordConfirmField->Value()) {
-			$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"), "validation", false);
+			$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"),
+				"validation", false);
 			return false;
 		}
 
 		if(!$this->canBeEmpty) {
 			// both password-fields shouldn't be empty
 			if(!$value || !$passwordConfirmField->Value()) {
-				$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"), "validation", false);
+				$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"),
+					"validation", false);
 				return false;
 			}
 		}
@@ -280,7 +285,8 @@ class ConfirmedPasswordField extends FormField {
 			if(!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/',$value)) {
 				$validator->validationError(
 					'Password', 
-					_t('Form.VALIDATIONSTRONGPASSWORD', "Passwords must have at least one digit and one alphanumeric character"), 
+					_t('Form.VALIDATIONSTRONGPASSWORD',
+						"Passwords must have at least one digit and one alphanumeric character"), 
 					"validation", 
 					false
 				);

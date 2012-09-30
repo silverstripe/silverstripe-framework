@@ -4,7 +4,8 @@
  * 
  * <b>Creating Migration Tasks</b>
  * 
- * To create your own migration task all you need to do is define your own subclass of MigrationTask and define the following functions
+ * To create your own migration task all you need to do is define your own subclass of MigrationTask and define the
+ * following functions
  * 
  * <i>mysite/code/MyMigrationTask.php</i>
  * 

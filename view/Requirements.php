@@ -215,7 +215,8 @@ class Requirements {
 	 * See {@link Requirements_Backend::includeInHTML()} for more information.
 	 * 
 	 * @param string $templateFilePath Absolute path for the *.ss template file
-	 * @param string $content HTML content that has already been parsed from the $templateFilePath through {@link SSViewer}.
+	 * @param string $content HTML content that has already been parsed from the $templateFilePath
+	 * through {@link SSViewer}.
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
 	public static function includeInHTML($templateFile, $content) {
@@ -642,13 +643,15 @@ class Requirements_Backend {
 	 * @todo Calculate $prefix properly
 	 * 
 	 * @param string $templateFilePath Absolute path for the *.ss template file
-	 * @param string $content HTML content that has already been parsed from the $templateFilePath through {@link SSViewer}.
+	 * @param string $content HTML content that has already been parsed from the $templateFilePath
+	 *                        through {@link SSViewer}.
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
 	public function includeInHTML($templateFile, $content) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
-		if((strpos($content, '</head>') !== false || strpos($content, '</head ') !== false) && ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)) {
+		if((strpos($content, '</head>') !== false || strpos($content, '</head ') !== false)
+				&& ($this->css||$this->javascript||$this->customCSS||$this->customScript||$this->customHeadTags)) {
 			$requirements = '';
 			$jsRequirements = '';
 			
@@ -675,7 +678,8 @@ class Requirements_Backend {
 			foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {  					
 				$path = $this->path_for_file($file);
 				if($path) {
-					$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
+					$media = (isset($params['media']) && !empty($params['media'])) 
+						? " media=\"{$params['media']}\"" : "";
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
 				}
 			}
@@ -852,9 +856,11 @@ class Requirements_Backend {
 	 *
 	 * @see http://code.google.com/p/jsmin-php/
 	 * 
-	 * @todo Should we enforce unique inclusion of files, or leave it to the developer? Can auto-detection cause breaks?
+	 * @todo Should we enforce unique inclusion of files, or leave it to the developer? Can auto-detection cause
+	 *       breaks?
 	 * 
-	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()} by default)
+	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()}
+	 *                                 by default)
 	 * @param array $files Array of filenames relative to the webroot
 	 */
 	public function combine_files($combinedFileName, $files) {
@@ -862,7 +868,8 @@ class Requirements_Backend {
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
 			if($duplicates && $combinedFileName != $_combinedFileName) {
-				user_error("Requirements_Backend::combine_files(): Already included files " . implode(',', $duplicates) . " in combined file '{$_combinedFileName}'", E_USER_NOTICE);
+				user_error("Requirements_Backend::combine_files(): Already included files " . implode(',', $duplicates)
+					. " in combined file '{$_combinedFileName}'", E_USER_NOTICE);
 				return false;
 			}
 		}
@@ -870,7 +877,7 @@ class Requirements_Backend {
 			if(is_array($file)) {
 				// Either associative array path=>path type=>type or numeric 0=>path 1=>type
 				// Otherwise, assume path is the first item
-				if (isset($file['type']) && ($file['type'] == 'css' || $file['type'] == 'javascript' || $file['type'] == 'js')) {
+				if (isset($file['type']) && in_array($file['type'], array('css', 'javascript', 'js'))) {
 					switch ($file['type']) {
 						case 'css':
 							$this->css($file['path']);
@@ -880,7 +887,7 @@ class Requirements_Backend {
 							break;
 					}
 					$files[$index] = $file['path'];
-				} elseif (isset($file[1]) && ($file[1] == 'css' || $file[1] == 'javascript' || $file[1] == 'js')) {
+				} elseif (isset($file[1]) && in_array($file[1], array('css', 'javascript', 'js'))) {
 					switch ($file[1]) {
 						case 'css':
 							$this->css($file[0]);
@@ -900,7 +907,8 @@ class Requirements_Backend {
 				} elseif(substr($file, -3) == 'css') {
 					$this->css($file);
 				} else {
-					user_error("Requirements_Backend::combine_files(): Couldn't guess file type for file '$file', please specify by passing using an array instead.", E_USER_NOTICE);
+					user_error("Requirements_Backend::combine_files(): Couldn't guess file type for file '$file', "
+						. "please specify by passing using an array instead.", E_USER_NOTICE);
 				}
 			}
 		}
@@ -922,7 +930,8 @@ class Requirements_Backend {
 	 */
 	public function delete_combined_files($combinedFileName = null) {
 		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : $this->combine_files;
-		$combinedFolder = ($this->getCombinedFilesFolder()) ? (Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
+		$combinedFolder = ($this->getCombinedFilesFolder()) ? 
+			(Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
 		foreach($combinedFiles as $combinedFile => $sourceItems) {
 			$filePath = $combinedFolder . '/' . $combinedFile;
 			if(file_exists($filePath)) {
@@ -954,7 +963,8 @@ class Requirements_Backend {
 		foreach($this->combine_files as $combinedFile => $sourceItems) {
 			foreach($sourceItems as $sourceItem) {
 				if(isset($combinerCheck[$sourceItem]) && $combinerCheck[$sourceItem] != $combinedFile){ 
-					user_error("Requirements_Backend::process_combined_files - file '$sourceItem' appears in two combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
+					user_error("Requirements_Backend::process_combined_files - file '$sourceItem' appears in two " .
+						"combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
 				}
 				$combinerCheck[$sourceItem] = $combinedFile;
 				
@@ -998,12 +1008,13 @@ class Requirements_Backend {
 				Filesystem::makeFolder(dirname($combinedFilePath));
 			}
 
-			// If the file isn't writeable, don't even bother trying to make the combined file and return (falls back to uncombined)
-			// Complex test because is_writable fails if the file doesn't exist yet.
+			// If the file isn't writeable, don't even bother trying to make the combined file and return (falls back
+			//  to uncombined).  Complex test because is_writable fails if the file doesn't exist yet.
 			if((file_exists($combinedFilePath) && !is_writable($combinedFilePath))
 				|| (!file_exists($combinedFilePath) && !is_writable(dirname($combinedFilePath)))
 			) {
-				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'", E_USER_WARNING);
+				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'",
+					E_USER_WARNING);
 				return false;
 			}
 
@@ -1048,7 +1059,8 @@ class Requirements_Backend {
 
 			// Unsuccessful write - just include the regular JS files, rather than the combined one
 			if(!$successfulWrite) {
-				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'", E_USER_WARNING);
+				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'",
+					E_USER_WARNING);
 				continue;
 			}
 		}

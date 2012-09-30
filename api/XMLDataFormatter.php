@@ -79,7 +79,8 @@ class XMLDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 				}
-				$xml .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"" . $obj->$fieldName . "\"></$relName>\n";
+				$xml .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"" . $obj->$fieldName
+					. "\"></$relName>\n";
 			}
 
 			foreach($obj->has_many() as $relName => $relClass) {

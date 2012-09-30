@@ -96,7 +96,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						sprintf('<p class="caution-remove"><strong>%s</strong></p>',
 							_t(
 								'SecurityAdmin.MemberListCaution', 
-								'Caution: Removing members from this list will remove them from all groups and the database'
+								'Caution: Removing members from this list will remove them from all groups and the'
+									. ' database'
 							)
 						)
 					),
@@ -104,7 +105,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 					new LiteralField(
 						'MemberImportFormIframe',
 						sprintf(
-							'<iframe src="%s" id="MemberImportFormIframe" width="100%%" height="250px" border="0"></iframe>',
+							'<iframe src="%s" id="MemberImportFormIframe" width="100%%" height="250px" border="0">'
+							. '</iframe>',
 							$this->Link('memberimport')
 						)
 					)
@@ -115,7 +117,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 					new LiteralField(
 						'GroupImportFormIframe',
 						sprintf(
-							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="250px" border="0"></iframe>',
+							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="250px" border="0">'
+							. '</iframe>',
 							$this->Link('groupimport')
 						)
 					)
@@ -280,13 +283,16 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			'EDIT_PERMISSIONS' => array(
 				'name' => _t('SecurityAdmin.EDITPERMISSIONS', 'Manage permissions for groups'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
-				'help' => _t('SecurityAdmin.EDITPERMISSIONS_HELP', 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to \'Security\' section" permission.'),
+				'help' => _t('SecurityAdmin.EDITPERMISSIONS_HELP',
+					'Ability to edit Permissions and IP Addresses for a group.'
+					. ' Requires the "Access to \'Security\' section" permission.'),
 				'sort' => 0
 			),
 			'APPLY_ROLES' => array(
 				'name' => _t('SecurityAdmin.APPLY_ROLES', 'Apply roles to groups'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
-				'help' => _t('SecurityAdmin.APPLY_ROLES_HELP', 'Ability to edit the roles assigned to a group. Requires the "Access to \'Users\' section" permission.'),
+				'help' => _t('SecurityAdmin.APPLY_ROLES_HELP', 'Ability to edit the roles assigned to a group.'
+					. ' Requires the "Access to \'Users\' section" permission.'),
 				'sort' => 0
 			)
 		);

@@ -139,7 +139,8 @@ class Aggregate_Relationship extends Aggregate {
 	 * 
 	 * @param DataObject $object The object that has_many somethings that we're calculating the aggregate for 
 	 * @param string $relationship The name of the relationship
-	 * @param string $filter (optional) An SQL filter to apply to the relationship rows before calculating the aggregate
+	 * @param string $filter (optional) An SQL filter to apply to the relationship rows before calculating the
+	 *                       aggregate
 	 */
 	public function __construct($object, $relationship, $filter = '') {
 		$this->object = $object;
@@ -148,7 +149,10 @@ class Aggregate_Relationship extends Aggregate {
 		$this->has_many = $object->has_many($relationship);
 		$this->many_many = $object->many_many($relationship);
 
-		if (!$this->has_many && !$this->many_many) user_error("Could not find relationship $relationship on object class {$object->class} in Aggregate Relationship", E_USER_ERROR);
+		if (!$this->has_many && !$this->many_many) {
+			user_error("Could not find relationship $relationship on object class {$object->class} in"
+				. " Aggregate Relationship", E_USER_ERROR);
+		}
 		
 		parent::__construct($this->has_many ? $this->has_many : $this->many_many[1], $filter);
 	}

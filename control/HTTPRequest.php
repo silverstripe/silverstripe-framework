@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method (GET/POST/PUT/DELETE).
- * This is used by {@link RequestHandler} objects to decide what to do.
+ * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
+ * (GET/POST/PUT/DELETE). This is used by {@link RequestHandler} objects to decide what to do.
  * 
  * The intention is that a single SS_HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandler::handleRequest()}.
  * 
- * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for webclients
- *   not supporting PUT and DELETE)
+ * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for
+ *       webclients not supporting PUT and DELETE)
  * 
  * @package framework
  * @subpackage control
@@ -398,7 +398,9 @@ class SS_HTTPRequest implements ArrayAccess {
 				if($varRequired && !isset($this->dirParts[$i])) return false;
 				
 				$arguments[$varName] = isset($this->dirParts[$i]) ? $this->dirParts[$i] : null;
-				if($part == '$Controller' && (!ClassInfo::exists($arguments['Controller']) || !is_subclass_of($arguments['Controller'], 'Controller'))) {
+				if($part == '$Controller' && (!ClassInfo::exists($arguments['Controller'])
+						|| !is_subclass_of($arguments['Controller'], 'Controller'))) {
+					
 					return false;
 				}
 				
@@ -570,7 +572,8 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Returns all mimetypes from the HTTP "Accept" header
 	 * as an array.
 	 * 
-	 * @param boolean $includeQuality Don't strip away optional "quality indicators", e.g. "application/xml;q=0.9" (Default: false)
+	 * @param boolean $includeQuality Don't strip away optional "quality indicators", e.g. "application/xml;q=0.9"
+	 *                                (Default: false)
 	 * @return array
 	 */
 	public function getAcceptMimetypes($includeQuality = false) {

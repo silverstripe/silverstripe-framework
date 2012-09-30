@@ -99,11 +99,14 @@ class Folder extends File {
 		$deleted = 0;
 
 		// First, merge any children that are duplicates
-		$duplicateChildrenNames = DB::query("SELECT \"Name\" FROM \"File\" WHERE \"ParentID\" = $parentID GROUP BY \"Name\" HAVING count(*) > 1")->column();
+		$duplicateChildrenNames = DB::query("SELECT \"Name\" FROM \"File\""
+			. " WHERE \"ParentID\" = $parentID GROUP BY \"Name\" HAVING count(*) > 1")->column();
 		if($duplicateChildrenNames) foreach($duplicateChildrenNames as $childName) {
 			$childName = Convert::raw2sql($childName);
-			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems about deleting files
-			$children = DB::query("SELECT \"ID\" FROM \"File\" WHERE \"Name\" = '$childName' AND \"ParentID\" = $parentID")->column();
+			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems
+			// about deleting files
+			$children = DB::query("SELECT \"ID\" FROM \"File\""
+				. " WHERE \"Name\" = '$childName' AND \"ParentID\" = $parentID")->column();
 			if($children) {
 				$keptChild = array_shift($children);
 				foreach($children as $removedChild) {
@@ -111,7 +114,8 @@ class Folder extends File {
 					DB::query("DELETE FROM \"File\" WHERE \"ID\" = $removedChild");
 				}
 			} else {
-				user_error("Inconsistent database issue: SELECT ID FROM \"File\" WHERE Name = '$childName' AND ParentID = $parentID should have returned data", E_USER_WARNING);
+				user_error("Inconsistent database issue: SELECT ID FROM \"File\" WHERE Name = '$childName'"
+					. " AND ParentID = $parentID should have returned data", E_USER_WARNING);
 			}
 		}
 
@@ -143,7 +147,9 @@ class Folder extends File {
 		if(file_exists($baseDir)) {
 			$actualChildren = scandir($baseDir);
 			foreach($actualChildren as $actualChild) {
-				if($actualChild[0] == '.' || $actualChild[0] == '_' || substr($actualChild,0,6) == 'Thumbs' || $actualChild == 'web.config') {
+				if($actualChild[0] == '.' || $actualChild[0] == '_' || substr($actualChild,0,6) == 'Thumbs'
+						|| $actualChild == 'web.config') {
+
 					continue;
 				}
 
@@ -214,7 +220,8 @@ class Folder extends File {
 		
 		DB::query("INSERT INTO \"File\" 
 			(\"ClassName\", \"ParentID\", \"OwnerID\", \"Name\", \"Filename\", \"Created\", \"LastEdited\", \"Title\")
-			VALUES ('$className', $this->ID, $ownerID, '$name', '$filename', " . DB::getConn()->now() . ',' . DB::getConn()->now() . ", '$name')");
+			VALUES ('$className', $this->ID, $ownerID, '$name', '$filename', " 
+			. DB::getConn()->now() . ',' . DB::getConn()->now() . ", '$name')");
 			
 		return DB::getGeneratedID("File");
 	}
@@ -226,7 +233,8 @@ class Folder extends File {
 	 */
 	public function addUploadToFolder($tmpFile) {
 		if(!is_array($tmpFile)) {
-			user_error("Folder::addUploadToFolder() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
+			user_error("Folder::addUploadToFolder() Not passed an array."
+				. " Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		}
 		if(!isset($tmpFile['size'])) {
 			return;
@@ -279,8 +287,12 @@ class Folder extends File {
 			// Update with the new image
 			return $this->constructChild(basename($file . $ext));
 		} else {
-			if(!file_exists($tmpFile['tmp_name'])) user_error("Folder::addUploadToFolder: '$tmpFile[tmp_name]' doesn't exist", E_USER_ERROR);
-			else user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$base/$file$ext'", E_USER_ERROR);
+			if(!file_exists($tmpFile['tmp_name'])) {
+				user_error("Folder::addUploadToFolder: '$tmpFile[tmp_name]' doesn't exist", E_USER_ERROR);
+			} else {
+				user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$base/$file$ext'",
+					E_USER_ERROR);
+			}
 			return false;
 		}
 	}

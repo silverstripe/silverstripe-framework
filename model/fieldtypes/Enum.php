@@ -48,7 +48,8 @@ class Enum extends StringField {
 				if(in_array($default, $enum)) {
 					$this->default = $default;
 				} else {
-					user_error("Enum::__construct() The default value '$default' does not match any item in the enumeration", E_USER_ERROR);
+					user_error("Enum::__construct() The default value '$default' does not match any item in the"
+						. " enumeration", E_USER_ERROR);
 				}
 				
 			// By default, set the default value to the first item
@@ -87,7 +88,9 @@ class Enum extends StringField {
 	 *
 	 * @return DropdownField
 	 */
-	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null, $emptyString = null) {
+	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
+			$emptyString = null) {
+
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
@@ -123,6 +126,8 @@ class Enum extends StringField {
 	 * @return array
 	 */
 	public function enumValues($hasEmpty = false) {
-		return ($hasEmpty) ? array_merge(array('' => ''), ArrayLib::valuekey($this->enum)) : ArrayLib::valuekey($this->enum);
+		return ($hasEmpty) 
+			? array_merge(array('' => ''), ArrayLib::valuekey($this->enum)) 
+			: ArrayLib::valuekey($this->enum);
 	}
 }

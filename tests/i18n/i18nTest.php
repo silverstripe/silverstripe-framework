@@ -264,19 +264,22 @@ class i18nTest extends SapphireTest {
 			$translated
 		);
 
-		$translated = i18n::_t($entity.'_DOES_NOT_EXIST', $default, array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
+		$translated = i18n::_t($entity.'_DOES_NOT_EXIST', $default,
+			array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
 		$this->assertContains(
 			"Hello Mark welcome. But it is late, bye",
 			$translated, "Testing fallback to the translation default (but using the injection array)"
 		);
 
-		$translated = i18n::_t($entity, $default, array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+		$translated = i18n::_t($entity, $default,
+			array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
 		$this->assertContains(
 			"TRANS Hello Paul good you are here. But it is late, see you",
 			$translated, "Testing entity, default string and injection array"
 		);
 
-		$translated = i18n::_t($entity, $default, "New context (this should be ignored)", array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
+		$translated = i18n::_t($entity, $default, "New context (this should be ignored)",
+			array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
 		$this->assertContains(
 			"TRANS Hello Steffen willkommen. But it is late, wiedersehen",
 			$translated, "Full test of translation, using default, context and injection array"
@@ -342,7 +345,8 @@ class i18nTest extends SapphireTest {
 		//test injected calls
 		$this->assertContains(
 			"TRANS Hello ".Director::absoluteBaseURL()." ".i18n::get_locale().". But it is late, global calls\n",
-			$parsedHtml, "Testing a translation with just entity and injection array, but with global variables injected in"
+			$parsedHtml,
+			"Testing a translation with just entity and injection array, but with global variables injected in"
 		);
 
 		i18n::set_locale($oldLocale);
@@ -601,7 +605,8 @@ class i18nTest_Object extends Object implements TestOnly, i18nEntityProvider {
 	}
 }
 
-class i18nTest_CustomTranslatorAdapter extends Zend_Translate_Adapter implements TestOnly,i18nTranslateAdapterInterface {
+class i18nTest_CustomTranslatorAdapter extends Zend_Translate_Adapter 
+		implements TestOnly,i18nTranslateAdapterInterface {
 	protected function _loadTranslationData($filename, $locale, array $options = array()) {
 		return array(
 			$locale => array(
@@ -620,7 +625,8 @@ class i18nTest_CustomTranslatorAdapter extends Zend_Translate_Adapter implements
 	}
 }
 
-class i18nTest_OtherCustomTranslatorAdapter extends Zend_Translate_Adapter implements TestOnly,i18nTranslateAdapterInterface {
+class i18nTest_OtherCustomTranslatorAdapter extends Zend_Translate_Adapter
+		implements TestOnly,i18nTranslateAdapterInterface {
 	protected function _loadTranslationData($filename, $locale, array $options = array()) {
 		return array(
 			$locale => array(

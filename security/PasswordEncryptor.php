@@ -113,7 +113,8 @@ abstract class PasswordEncryptor {
 	 * @deprecated 3.0 - Use PasswordEncryptor::check() instead.
 	 */
 	public function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
+		Deprecation::notice('3.0.0',
+			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
 		return ($hash1 === $hash2);
 	}
 
@@ -256,9 +257,13 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	 * so we need to test it.
 	 */
 	public function checkAEncryptionLevel() {
-		// Test hashes taken from http://cvsweb.openwall.com/cgi/cvsweb.cgi/~checkout~/Owl/packages/glibc/crypt_blowfish/wrapper.c?rev=1.9.2.1;content-type=text%2Fplain
-		$xOrY = crypt("\xff\xa334\xff\xff\xff\xa3345", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi') == '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi';
-		$yOrA = crypt("\xa3", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq') == '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq';
+		// Test hashes taken from
+		// http://cvsweb.openwall.com/cgi/cvsweb.cgi/~checkout~/Owl/packages/glibc
+		//    /crypt_blowfish/wrapper.c?rev=1.9.2.1;content-type=text%2Fplain
+		$xOrY = crypt("\xff\xa334\xff\xff\xff\xa3345", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi')
+			== '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi';
+		$yOrA = crypt("\xa3", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq')
+			== '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq';
 
 		if($xOrY && $yOrA) {
 			return 'y';
@@ -352,7 +357,8 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 	}
 	
 	public function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
+		Deprecation::notice('3.0.0',
+			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
 
 		// Due to flawed base_convert() floating poing precision, 
 		// only the first 10 characters are consistently useful for comparisons.

@@ -19,7 +19,8 @@ class FileTest extends SapphireTest {
 		$fileEnclosed  = sprintf('[file_link id=%d]Example Content[/file_link]', $testFile->ID);
 
 		$fileShortcodeExpected = $testFile->Link();
-		$fileEnclosedExpected  = sprintf('<a href="%s" class="file" data-type="txt" data-size="977 KB">Example Content</a>', $testFile->Link());
+		$fileEnclosedExpected  = sprintf(
+			'<a href="%s" class="file" data-type="txt" data-size="977 KB">Example Content</a>', $testFile->Link());
 
 		$this->assertEquals($fileShortcodeExpected, $parser->parse($fileShortcode), 'Test that simple linking works.');
 		$this->assertEquals($fileEnclosedExpected, $parser->parse($fileEnclosed), 'Test enclosed content is linked.');
@@ -45,7 +46,8 @@ class FileTest extends SapphireTest {
 				$parser->parse($fileEnclosed)
 			);
 		} else {
-			$this->assertEquals('', $parser->parse($fileShortcode), 'Short code is removed if file record is not present.');
+			$this->assertEquals('', $parser->parse($fileShortcode),
+				'Short code is removed if file record is not present.');
 			$this->assertEquals('', $parser->parse($fileEnclosed));
 		}
 	}
@@ -66,22 +68,28 @@ class FileTest extends SapphireTest {
 		$file->ParentID = $folder->ID;
 		$file->write();
 		
-		$this->assertEquals('CreateWithFilenameHasCorrectPath.txt', $file->Name, '"Name" property is automatically set from "Filename"');
-		$this->assertEquals($testfilePath, $file->Filename, '"Filename" property remains unchanged');
+		$this->assertEquals('CreateWithFilenameHasCorrectPath.txt', $file->Name,
+			'"Name" property is automatically set from "Filename"');
+		$this->assertEquals($testfilePath, $file->Filename,
+			'"Filename" property remains unchanged');
 
 		// TODO This should be auto-detected, see File->updateFilesystem()
 		// $this->assertInstanceOf('Folder', $file->Parent(), 'Parent folder is created in database');
 		// $this->assertFileExists($file->Parent()->getFullPath(), 'Parent folder is created on filesystem');
 		// $this->assertEquals('FileTest', $file->Parent()->Name);
 		// $this->assertInstanceOf('Folder', $file->Parent()->Parent(), 'Grandparent folder is created in database');
-		// $this->assertFileExists($file->Parent()->Parent()->getFullPath(), 'Grandparent folder is created on filesystem');
+		// $this->assertFileExists($file->Parent()->Parent()->getFullPath(), 
+		// 'Grandparent folder is created on filesystem');
 		// $this->assertEquals('assets', $file->Parent()->Parent()->Name);
 	}
 		
 	public function testGetExtension() {
-		$this->assertEquals('', File::get_file_extension('myfile'), 'No extension');
-		$this->assertEquals('txt', File::get_file_extension('myfile.txt'), 'Simple extension');
-		$this->assertEquals('gz', File::get_file_extension('myfile.tar.gz'), 'Double-barrelled extension only returns last bit');
+		$this->assertEquals('', File::get_file_extension('myfile'),
+			'No extension');
+		$this->assertEquals('txt', File::get_file_extension('myfile.txt'),
+			'Simple extension');
+		$this->assertEquals('gz', File::get_file_extension('myfile.tar.gz'),
+			'Double-barrelled extension only returns last bit');
 	}
 	
 	public function testValidateExtension() {
@@ -117,8 +125,10 @@ class FileTest extends SapphireTest {
 	
 		// Before write()
 		$file->Name = 'renamed.txt';
-		$this->assertFileExists($oldPath, 'Old path is still present');
-		$this->assertFileNotExists($file->getFullPath(), 'New path is updated in memory, not written before write() is called');
+		$this->assertFileExists($oldPath,
+			'Old path is still present');
+		$this->assertFileNotExists($file->getFullPath(),
+			'New path is updated in memory, not written before write() is called');
 	
 		$file->write();
 		
@@ -137,15 +147,19 @@ class FileTest extends SapphireTest {
 		$file->ParentID = $subfolder->ID;
 
 		// Before write()
-		$this->assertFileExists($oldPath, 'Old path is still present');
-		$this->assertFileNotExists($file->getFullPath(), 'New path is updated in memory, not written before write() is called');
+		$this->assertFileExists($oldPath,
+			'Old path is still present');
+		$this->assertFileNotExists($file->getFullPath(),
+			'New path is updated in memory, not written before write() is called');
 
 		$file->write();
 		
 		// After write()
 		clearstatcache();
-		$this->assertFileNotExists($oldPath, 'Old path is removed after write()');
-		$this->assertFileExists($file->getFullPath(), 'New path is created after write()');
+		$this->assertFileNotExists($oldPath,
+			'Old path is removed after write()');
+		$this->assertFileExists($file->getFullPath(),
+			'New path is created after write()');
 	}
 	
 	/**
@@ -181,10 +195,13 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('assets/FileTest.txt', $rootfile->getRelativePath(), 'File in assets/ folder');
 		
 		$subfolderfile = $this->objFromFixture('File', 'subfolderfile');
-		$this->assertEquals('assets/FileTest-subfolder/FileTestSubfolder.txt', $subfolderfile->getRelativePath(), 'File in subfolder within assets/ folder, with existing Filename');
+		$this->assertEquals('assets/FileTest-subfolder/FileTestSubfolder.txt', $subfolderfile->getRelativePath(),
+			'File in subfolder within assets/ folder, with existing Filename');
 		
 		$subfolderfilesetfromname = $this->objFromFixture('File', 'subfolderfile-setfromname');
-		$this->assertEquals('assets/FileTest-subfolder/FileTestSubfolder2.txt', $subfolderfilesetfromname->getRelativePath(), 'File in subfolder within assets/ folder, with Filename generated through setName()');
+		$this->assertEquals('assets/FileTest-subfolder/FileTestSubfolder2.txt',
+			$subfolderfilesetfromname->getRelativePath(),
+			'File in subfolder within assets/ folder, with Filename generated through setName()');
 	}
 	
 	public function testGetFullPath() {
@@ -277,7 +294,8 @@ class FileTest extends SapphireTest {
 
 		//get folder again and see if the filename has changed
 		$folder = DataObject::get_by_id('Folder',$folderID);
-		$this->assertEquals($folder->Filename, ASSETS_DIR ."/". $newTitle ."/", "Folder Filename updated after rename of Title");
+		$this->assertEquals($folder->Filename, ASSETS_DIR ."/". $newTitle ."/",
+			"Folder Filename updated after rename of Title");
 
 
 		//rename a folder's name
@@ -287,7 +305,8 @@ class FileTest extends SapphireTest {
 
 		//get folder again and see if the Title has changed
 		$folder = DataObject::get_by_id('Folder',$folderID);
-		$this->assertEquals($folder->Title, $newTitle2, "Folder Title updated after rename of Name");
+		$this->assertEquals($folder->Title, $newTitle2,
+			"Folder Title updated after rename of Name");
 
 
 		//rename a folder's Filename
@@ -297,7 +316,8 @@ class FileTest extends SapphireTest {
 
 		//get folder again and see if the Title has changed
 		$folder = DataObject::get_by_id('Folder',$folderID);
-		$this->assertEquals($folder->Title, $newTitle3, "Folder Title updated after rename of Filename");
+		$this->assertEquals($folder->Title, $newTitle3,
+			"Folder Title updated after rename of Filename");
 	}
 
 	
@@ -407,7 +427,9 @@ class FileTest extends SapphireTest {
 		$folderIDs = $this->allFixtureIDs('Folder');
 		foreach($folderIDs as $folderID) {
 			$folder = DataObject::get_by_id('Folder', $folderID);
-			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
+				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			}
 		}
 
 		// Remove left over folders and any files that may exist
@@ -415,9 +437,15 @@ class FileTest extends SapphireTest {
 		if(file_exists('../assets/FileTest-subfolder')) Filesystem::removeFolder('../assets/FileTest-subfolder');
 		if(file_exists('../assets/FileTest.txt')) unlink('../assets/FileTest.txt');
 
-		if (file_exists("../assets/FileTest-folder-renamed1")) Filesystem::removeFolder("../assets/FileTest-folder-renamed1");
-		if (file_exists("../assets/FileTest-folder-renamed2")) Filesystem::removeFolder("../assets/FileTest-folder-renamed2");
-		if (file_exists("../assets/FileTest-folder-renamed3")) Filesystem::removeFolder("../assets/FileTest-folder-renamed3");
+		if (file_exists("../assets/FileTest-folder-renamed1")) {
+			Filesystem::removeFolder("../assets/FileTest-folder-renamed1");
+		}
+		if (file_exists("../assets/FileTest-folder-renamed2")) {
+			Filesystem::removeFolder("../assets/FileTest-folder-renamed2");
+		}
+		if (file_exists("../assets/FileTest-folder-renamed3")) {
+			Filesystem::removeFolder("../assets/FileTest-folder-renamed3");
+		}
 	}
 
 }
