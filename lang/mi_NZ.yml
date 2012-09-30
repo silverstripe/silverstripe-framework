@@ -7,12 +7,16 @@ mi_NZ:
     CREATED: 'Tukuatu tuatahi'
     DIM: 'Ngā Rahinga'
     FILENAME: 'Ingoa Kōnae'
-    FOLDER: Kōpaki
+    FOLDER:
+      - null
     LASTEDIT: 'Hurihanga tōmuri'
-    OWNER: Kaiūmanga
-    SIZE: Nuinga
+    OWNER:
+      - null
+    SIZE:
+      - null
     TITLE: Taitara
-    TYPE: 'Momo kōnae'
+    TYPE:
+      - null
     URL: PRO
   AssetUploadField:
     ChooseFiles: 'Kōwhiri kōnae'
@@ -313,7 +317,8 @@ mi_NZ:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Atahanga
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -388,26 +393,45 @@ mi_NZ:
   MemberAuthenticator:
     TITLE: 'Īmērā &amp; Kupuhipa'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem), PM (Post meridiem) rānei'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Hoatu Tātari'
-    Custom: Ritenga
-    DATEFORMATBAD: 'He muhu te hōputu rā'
-    DAYNOLEADING: 'Rā o te marama kāore he kore i mua'
-    DIGITSDECFRACTIONSECOND: 'Kotahi neke atu ngā mati e tohu ana i te hautau ā-ira o te hēkona'
-    FOURDIGITYEAR: 'Tau matiwhā'
-    FULLNAMEMONTH: 'Ingoa marama katoa (hei tauira, Pipiri)'
-    HOURNOLEADING: 'Haora, kāore he kore i mua'
-    MINUTENOLEADING: 'Meneti, kāore he kore i mua'
-    MONTHNOLEADING: 'Mati marama kāore he kore i mua'
-    Preview: Arokite
-    SHORTMONTH: 'Ingoa marama poto (hei tauira, Pip)'
-    TOGGLEHELP: 'Takahurihia te āwhina whakahōputu'
-    TWODIGITDAY: 'Rā marama matirua'
-    TWODIGITHOUR: 'Ngā mati haora e rua (00 ki te 23)'
-    TWODIGITMINUTE: 'Ngā mati meneti e rua (00 ki te 59)'
-    TWODIGITMONTH: 'Marama matirua (01=Kohitātea)'
-    TWODIGITSECOND: 'Ngā mati hēkona e rua (00 ki te 59)'
-    TWODIGITYEAR: 'Tau matirua'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Whakamahinga ara atu anō</h4>\\n<ul>\\n<li>Ngā tīwae ka whakaaetia: <em>%s</em></li>\\n<li>Ka whakaritea ngā kaiwhakamahi mā tō rātou āhuatanga<em>Waehere</em> ahurei, ā, ka whakahōutia ki ngā uara hōu mai i te kōnae kua kawea mai.</li>\\n<li>Ka taea te tautapa rōpū mā te tīwae <em>Ngā Rōpū</em>. Ka tautohua ngā rōpū mā tō rātou āhuatanga <em>Waehere</em>, ka taea te whakawehe i ngā rōpū maha ki te piko. Kāore e ūkuia ngā mematanga rōpū o naianei.</li>\\n</ul>\\n</div>"
@@ -420,15 +444,24 @@ mi_NZ:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Muku
-    DELETEDRECORDS: 'I mukua e {count} ngā pūkete.'
-    IMPORT: 'Kawemai i CSV'
-    IMPORTEDRECORDS: 'I kawea mai e {count} ngā pūkete.'
-    NOCSVFILE: 'Pūtirotiro kia kitea he kōnae CSV hei kawemai'
-    NOIMPORT: 'Kāore he mea hei kawemai'
-    RESET: 'Tautuhi Anō'
-    Title: 'Ngā Tauira Raraunga'
-    UPDATEDRECORDS: 'I whakahōutia e {count} ngā pūkete.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
     IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'

@@ -7,12 +7,16 @@ sl:
     CREATED: 'Naloženo na začetku'
     DIM: Dimenzije
     FILENAME: 'Ime datoteke'
-    FOLDER: Folder
+    FOLDER:
+      - null
     LASTEDIT: 'Zadnje naloženo'
-    OWNER: Lastnik
-    SIZE: Velikost
+    OWNER:
+      - null
+    SIZE:
+      - null
     TITLE: Naslov
-    TYPE: Tip
+    TYPE:
+      - null
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Choose files'
@@ -313,7 +317,8 @@ sl:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Slika
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -388,26 +393,45 @@ sl:
   MemberAuthenticator:
     TITLE: 'Uporabniški račun'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Uvoz uporabnikov v <em>formatu CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Prikaži možnosti za napredno urejanje.</a></small></p>'
     Help2: '<div class="advanced"> <h4>Napredno urejanje</ h4><ul><li>Dovoljeni stolpci: <em>%s</ em>.</ li><li>Člani imajo unikatne vrednosti < em>Code</ em>; posodobljeni so z vrednostmi iz uvožene datoteke.</ li><li>Skupine so članom pripisane v stolpcu <em>Groups</ em>. Skupine so definirane z vrednostjo< em>Code</ em>; kadar je navedenih več skupin, so te ločene z vejico. Že dodeljena članstva v skupinah se ne izbrišejo.</ li> </ul></div>'
@@ -420,15 +444,24 @@ sl:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Izbriši
-    DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Uvozi CSV-datoteko'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Poiščite CSV-datoteko za uvoz'
-    NOIMPORT: 'Ne najdem ničesar za uvoz'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'

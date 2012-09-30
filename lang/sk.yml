@@ -7,12 +7,16 @@ sk:
     CREATED: 'Prvýkrát nahrané'
     DIM: Rozmery
     FILENAME: Názov
-    FOLDER: Adresár
+    FOLDER:
+      - null
     LASTEDIT: 'Posledne zmenené'
-    OWNER: Vlastník
-    SIZE: Veľkosť
+    OWNER:
+      - null
+    SIZE:
+      - null
     TITLE: Titulok
-    TYPE: Typ
+    TYPE:
+      - null
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Vyberte súbory'
@@ -313,7 +317,8 @@ sk:
     PLURALNAME: Súbory
     SINGULARNAME: Súbor
   ImageField:
-    IMAGE: Obrázok
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Súbory
     SINGULARNAME: Súbor
@@ -388,26 +393,45 @@ sk:
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (pred poludním) alebo PM (popoludní)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Použiť filter'
-    Custom: Vlastné
-    DATEFORMATBAD: 'Formát dátumu je neplatný'
-    DAYNOLEADING: 'Deň mesiaca bez úvodnej nuly'
-    DIGITSDECFRACTIONSECOND: 'Jedna alebo viac číslic zastupujúcich desatinný zlomok sekundy'
-    FOURDIGITYEAR: 'Štvorčíslie roka'
-    FULLNAMEMONTH: 'Celý názov mesiaca (napr. jún)'
-    HOURNOLEADING: 'Hodina bez úvodnej nuly'
-    MINUTENOLEADING: 'Minúta bez úvodnej nuly'
-    MONTHNOLEADING: 'Číslo mesiaca bez úvodnej nuly'
-    Preview: Náhľad
-    SHORTMONTH: 'Krátky názov mesiaca (napr. jún)'
-    TOGGLEHELP: 'Prepnúť nápovedu formátovania'
-    TWODIGITDAY: 'Dvojčíslie dňa mesiaca'
-    TWODIGITHOUR: 'Dvojčíslie hodiny (00 až 23)'
-    TWODIGITMINUTE: 'Dvojčíslie minúty (00 až 59)'
-    TWODIGITMONTH: 'Dvojčíslie mesiaca (01=január, atď.)'
-    TWODIGITSECOND: 'Dvojčíslie sekundy (00 až 59)'
-    TWODIGITYEAR: 'Dvojčíslie roka'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: 'Importovať členov v <em>CSV formáte</em> (čiarkov oddelené hodnoty). Zobraziť pokročile použitie'
     Help2: 'Pokročile použitiePovolené stĺpceExistujúci uživatelia sú najdený podľa ich unikátnej <em>Code</em> hodnoty, a aktualizovaný novými hodnotami z importovaného súboru.Skupiny môžu byť pridelené cez stĺpec <em>Groups</em>. Skupiny sú identifikované cez ich <em>Code</em> hodnotu, viacero skupín môže byť oddelených pomocou čiarky. Existujúce členstvá v skupinách nie su vymazané.'
@@ -420,15 +444,24 @@ sk:
     SINGULARNAME: 'Heslo člena'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Zmazať
-    DELETEDRECORDS: 'Zmazaných {count} záznamov.'
-    IMPORT: 'Importovať z CSV'
-    IMPORTEDRECORDS: 'Importovaných {count} záznamov.'
-    NOCSVFILE: 'Prosím vyhľadajte CSV súbor pre importovanie'
-    NOIMPORT: 'Nie je čo importovať'
-    RESET: Reset
-    Title: 'Dátové modely'
-    UPDATEDRECORDS: 'Aktualizovaných {count} záznamov.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Stĺpce databázy'
     IMPORTSPECLINK: 'Zobraziť špecifikáciu pre %s'
