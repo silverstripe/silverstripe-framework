@@ -379,7 +379,8 @@ jQuery.noConflict();
 				if(title) document.title = title;
 
 				var newFragments = {}, newContentEls;
-				if(xhr.getResponseHeader('Content-Type') == 'text/json') {
+				// If content type is text/json (ignoring charset and other parameters)
+				if(xhr.getResponseHeader('Content-Type').match(/^text\/json[ \t]*;?/i)) {
 					newFragments = data;
 				} else {
 					// Fall back to replacing the content fragment if HTML is returned
