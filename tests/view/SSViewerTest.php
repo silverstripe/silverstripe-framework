@@ -14,7 +14,8 @@ class SSViewerTest extends SapphireTest {
 	public function testCurrentTheme() {
 		//TODO: SiteConfig moved to CMS 
 		SSViewer::set_theme('mytheme');
-		$this->assertEquals('mytheme', SSViewer::current_theme(), 'Current theme is the default - user has not defined one');
+		$this->assertEquals('mytheme', SSViewer::current_theme(),
+			'Current theme is the default - user has not defined one');
 	}
 	
 	/**
@@ -57,11 +58,12 @@ class SSViewerTest extends SapphireTest {
 
 	public function testComments() {
 		$output = $this->render(<<<SS
-This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>This is the final content
+This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>Final content
 SS
 );
 		
-		$this->assertEquals("This is my templateThis is some contentThis is the final content", preg_replace("/\n?<!--.*-->\n?/U",'',$output));
+		$this->assertEquals("This is my templateThis is some contentFinal content", 
+			preg_replace("/\n?<!--.*-->\n?/U",'',$output));
 	}
 	
 	public function testBasicText() {
@@ -82,7 +84,8 @@ SS
 		$this->assertEquals('A{$ B', $this->render('A{$ B'), 'No injection as {$ not followed by word character');
 		
 		$this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
-		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 'Escapes before injections are correctly unescaped');
+		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 
+			'Escapes before injections are correctly unescaped');
 	}
 
 
@@ -95,40 +98,60 @@ SS
 	public function testGlobalVariableCallsWithArguments() {
 		$this->assertEquals('zz', $this->render('$SSViewerTest_GlobalThatTakesArguments'));
 		$this->assertEquals('zFooz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo")'));
-		$this->assertEquals('zFoo:Bar:Bazz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo", "Bar", "Baz")'));
-		$this->assertEquals('zreferencez', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalReferencedByString)'));
+		$this->assertEquals('zFoo:Bar:Bazz',
+			$this->render('$SSViewerTest_GlobalThatTakesArguments("Foo", "Bar", "Baz")'));
+		$this->assertEquals('zreferencez',
+			$this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalReferencedByString)'));
 	}
 
 	public function testGlobalVariablesAreEscaped() {
 		$this->assertEquals('<div></div>', $this->render('$SSViewerTest_GlobalHTMLFragment'));
 		$this->assertEquals('&lt;div&gt;&lt;/div&gt;', $this->render('$SSViewerTest_GlobalHTMLEscaped'));
 
-		$this->assertEquals('z<div></div>z', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLFragment)'));
-		$this->assertEquals('z&lt;div&gt;&lt;/div&gt;z', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLEscaped)'));
+		$this->assertEquals('z<div></div>z',
+			$this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLFragment)'));
+		$this->assertEquals('z&lt;div&gt;&lt;/div&gt;z',
+			$this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLEscaped)'));
 	}
 
 	public function testCoreGlobalVariableCalls() {
-		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$absoluteBaseURL}'), 'Director::absoluteBaseURL can be called from within template');
-		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$AbsoluteBaseURL}'), 'Upper-case %AbsoluteBaseURL can be called from within template');
+		$this->assertEquals(Director::absoluteBaseURL(),
+			$this->render('{$absoluteBaseURL}'), 'Director::absoluteBaseURL can be called from within template');
+		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$AbsoluteBaseURL}'),
+			'Upper-case %AbsoluteBaseURL can be called from within template');
 
-		$this->assertEquals(Director::is_ajax(), $this->render('{$isAjax}'), 'All variations of is_ajax result in the correct call');
-		$this->assertEquals(Director::is_ajax(), $this->render('{$IsAjax}'), 'All variations of is_ajax result in the correct call');
-		$this->assertEquals(Director::is_ajax(), $this->render('{$is_ajax}'), 'All variations of is_ajax result in the correct call');
-		$this->assertEquals(Director::is_ajax(), $this->render('{$Is_ajax}'), 'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$isAjax}'),
+			'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$IsAjax}'),
+			'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$is_ajax}'),
+			'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$Is_ajax}'),
+			'All variations of is_ajax result in the correct call');
 
-		$this->assertEquals(i18n::get_locale(), $this->render('{$i18nLocale}'), 'i18n template functions result correct result');
-		$this->assertEquals(i18n::get_locale(), $this->render('{$get_locale}'), 'i18n template functions result correct result');
+		$this->assertEquals(i18n::get_locale(), $this->render('{$i18nLocale}'),
+			'i18n template functions result correct result');
+		$this->assertEquals(i18n::get_locale(), $this->render('{$get_locale}'),
+			'i18n template functions result correct result');
 
-		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentMember}'), 'Member template functions result correct result');
-		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentUser}'), 'Member template functions result correct result');
-		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentMember}'), 'Member template functions result correct result');
-		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentUser}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentMember}'),
+			'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentUser}'),
+			'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentMember}'),
+			'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentUser}'),
+			'Member template functions result correct result');
 
-		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$getSecurityID}'), 'SecurityToken template functions result correct result');
-		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$SecurityID}'), 'SecurityToken template functions result correct result');
+		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$getSecurityID}'),
+			'SecurityToken template functions result correct result');
+		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$SecurityID}'),
+			'SecurityToken template functions result correct result');
 
-		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$HasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
-		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
+		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$HasPerm(\'ADMIN\')}'),
+			'Permissions template functions result correct result');
+		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$hasPerm(\'ADMIN\')}'),
+			'Permissions template functions result correct result');
 	}
 
 	public function testLocalFunctionsTakePriorityOverGlobals() {
@@ -137,7 +160,8 @@ SS
 		));
 
 		//call method with lots of arguments
-		$result = $this->render('<% with Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_with %>',$data);
+		$result = $this->render(
+			'<% with Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_with %>',$data);
 		$this->assertEquals("abcdefghijk",$result, "public function can accept up to 11 arguments");
 
 		//call method that does not exist
@@ -150,7 +174,8 @@ SS
 
 		//call method with same name as a global method (local call should take priority)
 		$result = $this->render('<% with Page %>$absoluteBaseURL<% end_with %>',$data);
-		$this->assertEquals("testLocalFunctionPriorityCalled",$result, "Local Object's public function called. Did not return the actual baseURL of the current site");
+		$this->assertEquals("testLocalFunctionPriorityCalled",$result,
+			"Local Object's public function called. Did not return the actual baseURL of the current site");
 	}
 
 	public function testCurrentScopeLoopWith() {
@@ -174,19 +199,23 @@ SS
 			))
 		));
 
-		$result = $this->render('<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
+		$result = $this->render(
+			'<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
 		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop works");
 
-		$result = $this->render('<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
+		$result = $this->render(
+			'<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
 		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop works");
 
 		$result = $this->render('<% with Foo %>$Count<% end_with %>',$data);
 		$this->assertEquals("4",$result, "4 items in the DataObjectSet");
 
-		$result = $this->render('<% with Foo %><% loop Up.Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %><% end_with %>',$data);
+		$result = $this->render('<% with Foo %><% loop Up.Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %>'
+			. '<% end_if %><% end_loop %><% end_with %>',$data);
 		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in with Up.Foo scope works");
 
-		$result = $this->render('<% with Foo %><% loop %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %><% end_with %>',$data);
+		$result = $this->render('<% with Foo %><% loop %>$Number<% if Sub %><% with Sub %>$Name<% end_with %>'
+			. '<% end_if %><% end_loop %><% end_with %>',$data);
 		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in current scope works");
 	}
 	
@@ -408,7 +437,8 @@ after')
 	public function testBaseTagGeneration() {
 		// XHTML wil have a closed base tag
 		$tmpl1 = '<?xml version="1.0" encoding="UTF-8"?>
-			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"'
+				. ' "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 			<html>
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
@@ -421,7 +451,8 @@ after')
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
 			</html>';
-		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/', $this->render($tmpl2));
+		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+			$this->render($tmpl2));
 			
 			
 		$tmpl3 = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -429,14 +460,16 @@ after')
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
 			</html>';
-		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/', $this->render($tmpl3));
+		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+			$this->render($tmpl3));
 
 		// Check that the content negotiator converts to the equally legal formats
 		$negotiator = new ContentNegotiator();
 		
 		$response = new SS_HTTPResponse($this->render($tmpl1));
 		$negotiator->html($response);
-		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/', $response->getBody());
+		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+			$response->getBody());
 
 		$response = new SS_HTTPResponse($this->render($tmpl1));
 		$negotiator->xhtml($response);
@@ -465,12 +498,14 @@ after')
 		);
 
 		$this->assertEquals(
-			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>', new ArrayData(array('B' => 'Bar'))),
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>',
+				new ArrayData(array('B' => 'Bar'))),
 			'<p>A</p><p>Bar</p>'
 		);
 
 		$this->assertEquals(
-			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A" %>', new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))),
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A" %>',
+				new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))),
 			'<p>A</p><p>Bar</p>'
 		);
 	}
@@ -621,12 +656,15 @@ after')
 		$this->assertEquals("23456789",$result,"Middle numbers rendered in order");
 
 		//test MiddleString
-		$result = $this->render('<% loop Set %><% if MiddleString == "middle" %>$Number$MiddleString<% end_if %><% end_loop %>',$data);
-		$this->assertEquals("2middle3middle4middle5middle6middle7middle8middle9middle",$result,"Middle numbers rendered in order");
+		$result = $this->render('<% loop Set %><% if MiddleString == "middle" %>$Number$MiddleString<% end_if %>'
+			. '<% end_loop %>',$data);
+		$this->assertEquals("2middle3middle4middle5middle6middle7middle8middle9middle",$result,
+			"Middle numbers rendered in order");
 
 		//test EvenOdd
 		$result = $this->render('<% loop Set %>$EvenOdd<% end_loop %>',$data);
-		$this->assertEquals("oddevenoddevenoddevenoddevenoddeven",$result,"Even and Odd is returned in sequence numbers rendered in order");
+		$this->assertEquals("oddevenoddevenoddevenoddevenoddeven",$result,
+			"Even and Odd is returned in sequence numbers rendered in order");
 
 		//test Pos
 		$result = $this->render('<% loop Set %>$Pos<% end_loop %>',$data);
@@ -658,7 +696,8 @@ after')
 
 		//test MultipleOf 9 zero-based
 		$result = $this->render('<% loop Set %><% if MultipleOf(9,0) %>$Number<% end_if %><% end_loop %>',$data);
-		$this->assertEquals("110",$result,"Only numbers that are multiples of 9 with zero-based indexing are returned. I.e. the first and last item");
+		$this->assertEquals("110",$result,
+			"Only numbers that are multiples of 9 with zero-based indexing are returned. (The first and last item)");
 
 		//test MultipleOf 11
 		$result = $this->render('<% loop Set %><% if MultipleOf(11) %>$Number<% end_if %><% end_loop %>',$data);
@@ -701,15 +740,18 @@ after')
 		
 		// Using $Up in a with block
 		$this->assertEquals('BazBarQux',
-			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %><% end_with %>', $data));
+			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %>'
+				.'<% end_with %>', $data));
 
 		// Stepping up & back down the scope tree with with blocks
 		$this->assertEquals('BazBarQuxBarBaz',
-			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>{$Name}<% end_with %>{$Name}<% end_with %>', $data));
+			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>'
+				. '{$Name}<% end_with %>{$Name}<% end_with %>', $data));
 
 		// Using $Up.Up, where first $Up points to a previous scope entered using $Up, thereby skipping up to Foo 
 		$this->assertEquals('Foo',
-			$this->render('<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %><% end_with %>', $data));
+			$this->render('<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %>'
+				. '<% end_with %>', $data));
 		
 		// Using $Up.Up, where first $Up points to an Up used in a local scope lookup, should still skip to Foo 
 		$this->assertEquals('Foo',
@@ -827,9 +869,8 @@ after')
 		// items, checked by using "Last"
 		$this->assertEqualIgnoringWhitespace(
 			'1ab23last',
-			$this->render(
-				'<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if Last %>last<% end_if %><% end_loop %>',
-				$data
+			$this->render('<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if Last %>last<% end_if %>'
+				. '<% end_loop %>', $data
 			)
 		);
 	}
@@ -859,7 +900,8 @@ after')
 			'blackcandy_blog' => 'blackcandy_blog',
 			'darkshades' => 'darkshades',
 			'darkshades_blog' => 'darkshades_blog'
-		), SSViewer::get_themes($testThemeBaseDir, true), 'Our test theme directory contains 2 themes and 2 sub-themes');
+		), SSViewer::get_themes($testThemeBaseDir, true),
+			'Our test theme directory contains 2 themes and 2 sub-themes');
 
 		// Remove all the test themes we created
 		Filesystem::removeFolder($testThemeBaseDir);
@@ -956,14 +998,21 @@ after')
 		$data = new ArrayData(array());
 		
 		$result = $view->process($data);
-		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss --><div class=\'typography\'></div><!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
+		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss -->'
+			. '<div class=\'typography\'></div><!-- end template ' . FRAMEWORK_PATH
+			. '/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
 		$this->assertEquals($result, $expected);
 		
 		$view = new SSViewer(array('SSViewerTestCommentsWithInclude'));
 		$data = new ArrayData(array());
 		
 		$result = $view->process($data);
-		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss --><div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss --><!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
+		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss -->'
+			. '<div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template '
+			. FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template '
+			. FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss -->'
+			. '<!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . FRAMEWORK_PATH 
+			. '/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
 		$this->assertEquals($result, $expected);
 		
 		SSViewer::set_source_file_comments(false);

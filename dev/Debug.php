@@ -67,9 +67,12 @@ class Debug {
 			if($showHeader) {
 				$caller = Debug::caller();
 				if(Director::is_ajax() || Director::is_cli())
-					echo "Debug ($caller[class]$caller[type]$caller[function]() in " . basename($caller['file']) . ":$caller[line])\n";
+					echo "Debug ($caller[class]$caller[type]$caller[function]() in " . basename($caller['file'])
+						. ":$caller[line])\n";
 				else 
-					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
+					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
+						. "<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]()"
+						. " \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
 			}
 			
 			echo Debug::text($val);
@@ -88,7 +91,8 @@ class Debug {
 	public static function endshow($val) {
 		if(!Director::isLive()) {
 			$caller = Debug::caller();
-			echo "<hr>\n<h3>Debug \n<span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
+			echo "<hr>\n<h3>Debug \n<span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]()"
+				. " \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
 			echo Debug::text($val);
 			die();
 		}
@@ -141,7 +145,8 @@ class Debug {
 			$val = '(bool) ' . $val;
 		} else {
 			if(!Director::is_cli() && !Director::is_ajax()) {
-				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val, ENT_COMPAT, 'UTF-8') . "</pre>\n";
+				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val, ENT_COMPAT, 'UTF-8')
+					. "</pre>\n";
 			}
 		}
 
@@ -310,13 +315,13 @@ class Debug {
 	 * @uses ErrorPage
 	 *
 	 * @param int $statusCode HTTP Status Code (Default: 500)
-	 * @param string $friendlyErrorMessage User-focused error message. Should not contain code pointers or "tech-speak".
-	 *    Used in the HTTP Header and ajax responses.
+	 * @param string $friendlyErrorMessage User-focused error message. Should not contain code pointers
+	 *                                     or "tech-speak". Used in the HTTP Header and ajax responses.
 	 * @param string $friendlyErrorDetail Detailed user-focused message. Is just used if no {@link ErrorPage} is found
-	 *    for this specific status code.
+	 *                                    for this specific status code.
 	 * @return string HTML error message for non-ajax requests, plaintext for ajax-request.
 	 */
-	public static function friendlyError($statusCode = 500, $friendlyErrorMessage = null, $friendlyErrorDetail = null) {
+	public static function friendlyError($statusCode=500, $friendlyErrorMessage=null, $friendlyErrorDetail=null) {
 		if(!$friendlyErrorMessage) $friendlyErrorMessage = self::$friendly_error_header;
 		if(!$friendlyErrorDetail) $friendlyErrorDetail = self::$friendly_error_detail;
 
@@ -461,8 +466,11 @@ class Debug {
 	 * @param string $errorType "warning" or "error"
 	 * @return boolean
 	 */
-	public static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
-		Deprecation::notice('2.5', 'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
+	public static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext,
+			$errorType = "Error") {
+
+		Deprecation::notice('2.5',
+			'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
 		$priority = ($errorType == 'Error') ? SS_Log::ERR : SS_Log::WARN;
 		$writer = new SS_LogEmailWriter($emailAddress);
 		SS_Log::add_writer($writer, $priority);
@@ -490,7 +498,8 @@ class Debug {
 	 * @deprecated 2.5 See SS_Log on setting up error file logging
 	 */
 	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
-		Deprecation::notice('2.5', 'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
+		Deprecation::notice('2.5',
+			'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
 		$priority = ($errtype == 'Error') ? SS_Log::ERR : SS_Log::WARN;
 		$writer = new SS_LogFileWriter('../' . self::$log_errors_to);
 		SS_Log::add_writer($writer, $priority);
@@ -636,9 +645,10 @@ class Debug {
 		}
 		
 		// This basically does the same as
-		// Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.");
+		// Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.")
 		// We have to do this because of how early this method is called in execution.
-		$_SESSION['Security']['Message']['message'] = "You need to login with developer access to make use of debugging tools.";
+		$_SESSION['Security']['Message']['message']
+			= "You need to login with developer access to make use of debugging tools.";
 		$_SESSION['Security']['Message']['type'] =  'warning';
 		$_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
 		header($_SERVER['SERVER_PROTOCOL'] . " 302 Found");

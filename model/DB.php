@@ -79,7 +79,8 @@ class DB {
 	 * Connect to a database.
 	 * Given the database configuration, this method will create the correct subclass of SS_Database,
 	 * and set it as the global connection.
-	 * @param array $database A map of options. The 'type' is the name of the subclass of SS_Database to use. For the rest of the options, see the specific class.
+	 * @param array $database A map of options. The 'type' is the name of the subclass of SS_Database to use. For the
+	 *                        rest of the options, see the specific class.
 	 */
 	public static function connect($databaseConfig) {
 		// This is used by TestRunner::startsession() to test up a test session using an alt
@@ -242,7 +243,9 @@ class DB {
 	 *     control over the index.
 	 * @param string $options SQL statement to append to the CREATE TABLE call.
 	 */
-	public static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = null, $extensions=null) {
+	public static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true,
+			$options = null, $extensions=null) {
+		
 		return self::getConn()->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options, $extensions);
 	}
 

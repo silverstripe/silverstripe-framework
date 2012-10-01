@@ -232,7 +232,8 @@ class TableListFieldTest extends SapphireTest {
 		$table = $form->Fields()->dataFieldByName('Tester');
 		$this->assertEquals(
 			$table->Link('test'),
-			sprintf('TableListFieldTest_TestController/TestForm/field/Tester/test?SecurityID=%s', $form->Fields()->dataFieldByName('SecurityID')->Value())
+			sprintf('TableListFieldTest_TestController/TestForm/field/Tester/test?SecurityID=%s',
+				$form->Fields()->dataFieldByName('SecurityID')->Value())
 		);
 	}
 

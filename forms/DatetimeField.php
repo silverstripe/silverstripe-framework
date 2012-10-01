@@ -9,7 +9,8 @@
  * # Configuration
  * 
  * The {@link setConfig()} method is only used to configure common properties of this field.
- * To configure the {@link DateField} and {@link TimeField} instances contained within, use their own {@link setConfig()} methods.
+ * To configure the {@link DateField} and {@link TimeField} instances contained within, use their own
+ * {@link setConfig()} methods.
  * 
  * Example:
  * <code>
@@ -141,8 +142,10 @@ class DatetimeField extends FormField {
 				$this->timeField->setValue($val['time']);
 				if($this->dateField->dataValue() && $this->timeField->dataValue()) {
 					$userValueObj = new Zend_Date(null, null, $this->locale);
-					$userValueObj->setDate($this->dateField->dataValue(), $this->dateField->getConfig('datavalueformat'));
-					$userValueObj->setTime($this->timeField->dataValue(), $this->timeField->getConfig('datavalueformat'));
+					$userValueObj->setDate($this->dateField->dataValue(),
+						$this->dateField->getConfig('datavalueformat'));
+					$userValueObj->setTime($this->timeField->dataValue(),
+						$this->timeField->getConfig('datavalueformat'));
 					if($userTz) $userValueObj->setTimezone($dataTz);
 					$this->value = $userValueObj->get($this->getConfig('datavalueformat'), $this->locale);
 					unset($userValueObj);
@@ -169,7 +172,8 @@ class DatetimeField extends FormField {
 				if($this->dateField->getConfig('dmyfields')) {
 					$this->dateField->setValue($valueObj->toArray());
 				} else {
-					$this->dateField->setValue($valueObj->get($this->dateField->getConfig('dateformat'), $this->locale));
+					$this->dateField->setValue(
+						$valueObj->get($this->dateField->getConfig('dateformat'), $this->locale));
 				}
 				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat'), $this->locale));
 			}

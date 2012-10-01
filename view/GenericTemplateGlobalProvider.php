@@ -27,7 +27,8 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider {
 		if(isset(self::$modules[$name])) {
 			return self::$modules[$name];
 		} else {
-			throw new InvalidArgumentException(sprintf('%s is not a supported argument. Possible values: %s', $name, implode(', ', self::$modules)));
+			throw new InvalidArgumentException(sprintf('%s is not a supported argument. Possible values: %s', $name,
+				implode(', ', self::$modules)));
 		}
 	}
 

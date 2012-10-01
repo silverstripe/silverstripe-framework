@@ -646,7 +646,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'sq' => array('Albanian', 'shqip'),
 		'ar' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
 		'eu' => array('Basque', 'euskera'),
-		'be' => array('Belarusian', '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
+		'be' => array('Belarusian',
+			'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
 		'bn' => array('Bengali', '&#2476;&#2494;&#2434;&#2482;&#2494;'),
 		'bg' => array('Bulgarian', '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
 		'ca' => array('Catalan', 'catal&agrave;'),
@@ -738,7 +739,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'sq_AL' => array('Albanian', 'shqip'),
 		'ar_EG' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
 		'eu_ES' => array('Basque', 'euskera'),
-		'be_BY' => array('Belarusian', '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
+		'be_BY' => array('Belarusian',
+			'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
 		'bn_BD' => array('Bengali', '&#2476;&#2494;&#2434;&#2482;&#2494;'),
 		'bg_BG' => array('Bulgarian', '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
 		'ca_ES' => array('Catalan', 'catal&agrave;'),
@@ -1451,15 +1453,20 @@ class i18n extends Object implements TemplateGlobalProvider {
 	);
 	
 	/**
-	 * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale.
+	 * This is the main translator function. Returns the string defined by $class and $entity according to the
+	 * currently set locale.
 	 *
-	 * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where Namespace will be usually
-	 * 						 the class name where this string is used and Entity identifies the string inside the namespace.
-	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
-	 *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
-	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help translators with some more info using this param
-	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding expressions in {curly brackets} in the $string.
-	 *               The injection array can also be used as the their argument to the _t() function
+	 * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where
+	 *                       Namespace will be usually the class name where this string is used and Entity identifies
+	 *                       the string inside the namespace.
+	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are
+	 *                       reusing a string which has already been "declared" (using another call to this function,
+	 *                       with the same class and entity), you can omit it.
+	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help
+	 *                        translators with some more info using this param
+	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding
+	 *                              expressions in {curly brackets} in the $string. The injection array can also be
+	 *                              used as the their argument to the _t() function
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
 	public static function _t($entity, $string = "", $context = "", $injection = "") {
@@ -1772,7 +1779,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 			if(
 				is_dir($moduleDir) 
 				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php")
-				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . self::$default_locale . ".php")
+				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR 
+					. self::$default_locale . ".php")
 			) {
 				$translatableModules[] = $module;
 			}
@@ -1874,7 +1882,9 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * for example in the {@link CMSMain} interface the Member locale
 	 * overrules the global locale value set here.
 	 * 
-	 * @param string $locale Locale to be set. See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales.
+	 * @param string $locale Locale to be set. See
+	 *                       http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list
+	 *                       of possible locales.
 	 */
 	public static function set_locale($locale) {
 		if ($locale) self::$current_locale = $locale;
@@ -1996,7 +2006,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 				// and the next invocation of include_by_locale() doesn't cause a new reparse.
 				$adapter->addTranslation(
 					array(
-						'content' => array($locale => $locale), // Cached by content hash, so needs to be locale dependent
+						// Cached by content hash, so needs to be locale dependent
+						'content' => array($locale => $locale), 
 						'locale' => $locale,
 						'usetranslateadapter' => true
 					)

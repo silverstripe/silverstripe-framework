@@ -90,7 +90,8 @@ class CsvBulkLoader extends BulkLoader {
 			} elseif(strpos($fieldName, '.') !== false) {
 				// we have a relation column with dot notation
 				list($relationName,$columnName) = explode('.', $fieldName);
-				$relationObj = $obj->getComponent($relationName); // always gives us an component (either empty or existing)
+				// always gives us an component (either empty or existing)
+				$relationObj = $obj->getComponent($relationName);
 				$relationObj->write();
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
 				$obj->write();
@@ -152,7 +153,8 @@ class CsvBulkLoader extends BulkLoader {
 				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
 				if(!isset($record[$fieldName])) {
 					return false;
-					//user_error("CsvBulkLoader:processRecord: Couldn't find duplicate identifier '{$fieldName}' in columns", E_USER_ERROR);
+					//user_error("CsvBulkLoader:processRecord: Couldn't find duplicate identifier '{$fieldName}'
+					//in columns", E_USER_ERROR);
 				}
 				$SQL_fieldValue = $record[$fieldName];
 				$existingRecord = DataObject::get_one($this->objectClass, "\"$SQL_fieldName\" = '{$SQL_fieldValue}'");
@@ -163,7 +165,8 @@ class CsvBulkLoader extends BulkLoader {
 				} elseif($SNG_objectClass->hasMethod($duplicateCheck['callback'])) {
 					$existingRecord = $SNG_objectClass->{$duplicateCheck['callback']}($record[$fieldName], $record);
 				} else {
-					user_error("CsvBulkLoader::processRecord(): {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
+					user_error("CsvBulkLoader::processRecord():"
+						. " {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
 				}
 				
 				if($existingRecord) return $existingRecord;

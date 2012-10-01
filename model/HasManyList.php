@@ -38,8 +38,11 @@ class HasManyList extends RelationList {
 	 * @param $item The DataObject to be added, or its ID 
 	 */
 	public function add($item) {
-		if(is_numeric($item)) $item = DataObject::get_by_id($this->dataClass, $item);
-		else if(!($item instanceof $this->dataClass)) user_error("HasManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+		if(is_numeric($item)) {
+			$item = DataObject::get_by_id($this->dataClass, $item);
+		} else if(!($item instanceof $this->dataClass)) {
+			user_error("HasManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+		}
 
 		// Validate foreignID
 		if(!$this->foreignID) {
@@ -74,7 +77,10 @@ class HasManyList extends RelationList {
 	 * @todo Maybe we should delete the object instead? 
 	 */
 	public function remove($item) {
-        if(!($item instanceof $this->dataClass)) throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+        if(!($item instanceof $this->dataClass)) {
+        	throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID",
+        		E_USER_ERROR);
+        }
 
 		$fk = $this->foreignKey;
 		$item->$fk = null;

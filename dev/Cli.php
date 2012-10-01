@@ -20,8 +20,10 @@ class SS_Cli extends Object {
 	
 	/**
 	 * Return text encoded for CLI output, optionally coloured
-	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
-	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
+	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
+	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
 	 * @param string $bold A boolean variable - bold or not.
 	 */
 	public static function text($text, $fgColour = null, $bgColour = null, $bold = false) {
@@ -41,8 +43,10 @@ class SS_Cli extends Object {
 
 	/**
 	 * Send control codes for changing text to the given colour
-	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
-	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
+	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
+	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
 	 * @param string $bold A boolean variable - bold or not.
 	 */
 	public static function start_colour($fgColour = null, $bgColour = null, $bold = false) {

@@ -50,7 +50,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	static $indexes = array(
 		'Email' => true,
-		//'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true) //Removed due to duplicate null values causing MSSQL problems
+		//Removed due to duplicate null values causing MSSQL problems
+		//'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true) 
 	);
 
 	static $notify_password_change = false;
@@ -455,7 +456,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public static function member_from_autologinhash($RAW_hash, $login = false) {
 		$SQL_hash = Convert::raw2sql($RAW_hash);
 
-		$member = DataObject::get_one('Member',"\"AutoLoginHash\"='" . $SQL_hash . "' AND \"AutoLoginExpired\" > " . DB::getConn()->now());
+		$member = DataObject::get_one(
+			'Member',
+			"\"AutoLoginHash\"='" . $SQL_hash . "' AND \"AutoLoginExpired\" > " . DB::getConn()->now()
+		);
 
 		if($login && $member)
 			$member->logIn();
@@ -471,7 +475,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param array $data Additional data to pass to the email (can be used in the template)
 	 */
 	public function sendInfo($type = 'signup', $data = null) {
-		Deprecation::notice('3.0', 'Please use Member_ChangePasswordEmail or Member_ForgotPasswordEmail directly instead');
+		Deprecation::notice('3.0',
+			'Please use Member_ChangePasswordEmail or Member_ForgotPasswordEmail directly instead');
 
 		switch($type) {
 			case "changePassword":
@@ -627,7 +632,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				throw new ValidationException(new ValidationResult(false, _t(
 					'Member.ValidationIdentifierFailed', 
 					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))', 
-					'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address',
+					'Values in brackets show "fieldname = value", usually denoting an existing email address',
 					array(
 						'id' => $existingRecord->ID,
 						'name' => $identifierField,
@@ -1049,7 +1054,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			
 			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
-			$groups = DataObject::get('Group')->innerJoin("Permission", "\"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
+			$groups = DataObject::get('Group')
+				->innerJoin(
+					"Permission",
+					"\"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)"
+				);
 		}
 
 		$groupIDList = array();
@@ -1244,7 +1253,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$labels['DateFormat'] = _t('Member.DATEFORMAT', 'Date format');
 		$labels['TimeFormat'] = _t('Member.TIMEFORMAT', 'Time format');
 		if($includerelations){
-			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', 'Security Groups this member belongs to');
+			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups',
+				'Security Groups this member belongs to');
 		}
 		return $labels;
 	}

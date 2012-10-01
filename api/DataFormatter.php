@@ -1,7 +1,7 @@
 <?php
 /**
- * A DataFormatter object handles transformation of data from SilverStripe model objects to a particular output format, and vice versa.
- * This is most commonly used in developing RESTful APIs.
+ * A DataFormatter object handles transformation of data from SilverStripe model objects to a particular output
+ * format, and vice versa.  This is most commonly used in developing RESTful APIs.
  * 
  * @package framework
  * @subpackage formatters
@@ -247,7 +247,9 @@ abstract class DataFormatter extends Object {
 		if(is_array($this->customFields)) {
 			foreach($this->customFields as $fieldName) {
 				// @todo Possible security risk by making methods accessible - implement field-level security
-				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
+				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) {
+					$dbFields[$fieldName] = $fieldName; 
+				}
 			}
 		} else {
 			// by default, all database fields are selected
@@ -257,7 +259,9 @@ abstract class DataFormatter extends Object {
 		if(is_array($this->customAddFields)) {
 			foreach($this->customAddFields as $fieldName) {
 				// @todo Possible security risk by making methods accessible - implement field-level security
-				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
+				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) {
+					$dbFields[$fieldName] = $fieldName; 
+				}
 			}
 		}
 		

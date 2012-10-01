@@ -119,7 +119,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 				$tag2->ID => $tag2->ID
 			),
 			$field->Value(),
-			'CheckboxSetField properly loads data from a manymany relationship in an object through Form->loadDataFrom()'
+			'CheckboxSetField loads data from a manymany relationship in an object through Form->loadDataFrom()'
 		);
 	}
 }

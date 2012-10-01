@@ -40,9 +40,11 @@ class YamlFixtureTest extends SapphireTest {
 	}
 	
 	public function testSQLInsert() {
-		$object1 = DataObject::get_by_id("YamlFixtureTest_DataObject", $this->idFromFixture("YamlFixtureTest_DataObject", "testobject1"));
+		$object1 = DataObject::get_by_id("YamlFixtureTest_DataObject",
+			$this->idFromFixture("YamlFixtureTest_DataObject", "testobject1"));
 		$this->assertTrue($object1->ManyMany()->Count() == 2, "Should be 2 items in this manymany relationship");
-		$object2 = DataObject::get_by_id("YamlFixtureTest_DataObject", $this->idFromFixture("YamlFixtureTest_DataObject", "testobject2"));
+		$object2 = DataObject::get_by_id("YamlFixtureTest_DataObject",
+			$this->idFromFixture("YamlFixtureTest_DataObject", "testobject2"));
 		$this->assertTrue($object2->ManyMany()->Count() == 2, "Should be 2 items in this manymany relationship");
 	}
 }

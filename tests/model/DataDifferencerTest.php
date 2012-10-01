@@ -40,7 +40,8 @@ class DataDifferencerTest extends SapphireTest {
 		$image1->Filename = FRAMEWORK_DIR . substr($image1->Filename, 9);
 		$image2->Filename = FRAMEWORK_DIR . substr($image2->Filename, 9);
 		$origUpdateFilesystem = File::$update_filesystem;
-		File::$update_filesystem = false; // we don't want the filesystem being updated on write, as we're only dealing with mock files
+		// we don't want the filesystem being updated on write, as we're only dealing with mock files
+		File::$update_filesystem = false;
 		$image1->write();
 		$image2->write();
 		File::$update_filesystem = $origUpdateFilesystem;
@@ -56,7 +57,8 @@ class DataDifferencerTest extends SapphireTest {
 
 		$this->assertContains($image1->Filename, $obj1Diff->getField('Image'));
 		$this->assertContains($image2->Filename, $obj1Diff->getField('Image'));
-		$this->assertContains('<ins>obj2</ins><del>obj1</del>', str_replace(' ','',$obj1Diff->getField('HasOneRelationID')));
+		$this->assertContains('<ins>obj2</ins><del>obj1</del>',
+			str_replace(' ','',$obj1Diff->getField('HasOneRelationID')));
 	}
 }
 

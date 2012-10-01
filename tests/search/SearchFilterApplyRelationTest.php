@@ -129,14 +129,16 @@ class SearchFilterApplyRelationTest_HasOneParent extends DataObject implements T
 	);
 }
 
-class SearchFilterApplyRelationTest_HasOneChild extends SearchFilterApplyRelationTest_HasOneParent implements TestOnly {
+class SearchFilterApplyRelationTest_HasOneChild extends SearchFilterApplyRelationTest_HasOneParent
+		implements TestOnly {
 	// This is to create an seperate Table only.
 	static $db = array(
 		"ChildField" => "Varchar"
 	);
 }
 
-class SearchFilterApplyRelationTest_HasOneGrantChild extends SearchFilterApplyRelationTest_HasOneChild implements TestOnly {
+class SearchFilterApplyRelationTest_HasOneGrantChild extends SearchFilterApplyRelationTest_HasOneChild
+		implements TestOnly {
 	// This is to create an seperate Table only.
 	static $db = array(
 		"GrantChildField" => "Varchar"
@@ -152,7 +154,8 @@ class SearchFilterApplyRelationTest_HasManyParent extends DataObject implements 
 	);
 }
 
-class SearchFilterApplyRelationTest_HasManyChild extends SearchFilterApplyRelationTest_HasManyParent implements TestOnly {
+class SearchFilterApplyRelationTest_HasManyChild extends SearchFilterApplyRelationTest_HasManyParent
+		implements TestOnly {
 	// This is to create an separate Table only.
 	static $db = array(
 		"ChildField" => "Varchar"
@@ -171,14 +174,16 @@ class SearchFilterApplyRelationTest_ManyManyParent extends DataObject implements
 	);
 }
 
-class SearchFilterApplyRelationTest_ManyManyChild extends SearchFilterApplyRelationTest_ManyManyParent implements TestOnly {
+class SearchFilterApplyRelationTest_ManyManyChild extends SearchFilterApplyRelationTest_ManyManyParent
+		implements TestOnly {
 	// This is to create an seperate Table only.
 	static $db = array(
 		"ChildField" => "Varchar"
 	);
 }
 
-class SearchFilterApplyRelationTest_ManyManyGrantChild extends SearchFilterApplyRelationTest_ManyManyChild implements TestOnly {
+class SearchFilterApplyRelationTest_ManyManyGrantChild extends SearchFilterApplyRelationTest_ManyManyChild
+		implements TestOnly {
 	// This is to create an seperate Table only.
 	static $db = array(
 		"GrantChildField" => "Varchar"

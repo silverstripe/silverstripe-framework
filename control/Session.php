@@ -5,21 +5,24 @@
  * The static methods are used to manipulate the currently active controller's session.
  * The instance methods are used to manipulate a particular session.  There can be more than one of these created.
  * 
- * In order to support things like testing, the session is associated with a particular Controller.  In normal usage, this is loaded from
- * and saved to the regular PHP session, but for things like static-page-generation and unit-testing, you can create multiple Controllers,
- * each with their own session.
+ * In order to support things like testing, the session is associated with a particular Controller.  In normal usage,
+ * this is loaded from and saved to the regular PHP session, but for things like static-page-generation and
+ * unit-testing, you can create multiple Controllers, each with their own session.
  * 
- * The instance object is basically just a way of manipulating a set of nested maps, and isn't specific to session data.
+ * The instance object is basically just a way of manipulating a set of nested maps, and isn't specific to session
+ * data.
  * 
  * <b>Saving Data</b>
  * 
- * You can write a value to a users session from your PHP code using the static function {@link Session::set()}. You can add this line in any function or file you wish to save the value.
+ * You can write a value to a users session from your PHP code using the static function {@link Session::set()}. You
+ * can add this line in any function or file you wish to save the value.
  * 
  * <code>
  * 	Session::set('MyValue', 6);
  * </code>
  * 
- * Saves the value of "6" to the MyValue session data. You can also save arrays or serialized objects in session (but note there may be size restrictions as to how much you can save)
+ * Saves the value of "6" to the MyValue session data. You can also save arrays or serialized objects in session (but
+ * note there may be size restrictions as to how much you can save)
  * 
  * <code>
  * 	// save a variable
@@ -59,13 +62,15 @@
  * 
  * <b>Clearing Data</b>
  * 
- * Once you have accessed a value from the Session it doesn't automatically wipe the value from the Session, you have to specifically remove it. To clear a value you can either delete 1 session value by the name that you saved it
+ * Once you have accessed a value from the Session it doesn't automatically wipe the value from the Session, you have
+ * to specifically remove it. To clear a value you can either delete 1 session value by the name that you saved it
  * 
  * <code>
  * Session::clear('MyValue'); // myvalue is no longer 6.
  * </code>
  * 
- * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data including form and page comment information. None of this is vital but clear_all will clear everything.
+ * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
+ * including form and page comment information. None of this is vital but clear_all will clear everything.
  * 
  * <code>
  * 	Session::clear_all();

@@ -126,10 +126,14 @@ class GroupTest extends FunctionalTest {
 		$childGroupID = $this->idFromFixture('Group', 'childgroup');
 		$group->delete();
 
-		$this->assertEquals(0, DataObject::get('Group', "\"ID\" = {$groupID}")->Count(), 'Group is removed');
-		$this->assertEquals(0, DataObject::get('Permission', "\"GroupID\" = {$groupID}")->Count(), 'Permissions removed along with the group');
-		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$groupID}")->Count(), 'Child groups are removed');
-		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$childGroupID}")->Count(), 'Grandchild groups are removed');
+		$this->assertEquals(0, DataObject::get('Group', "\"ID\" = {$groupID}")->Count(),
+			'Group is removed');
+		$this->assertEquals(0, DataObject::get('Permission', "\"GroupID\" = {$groupID}")->Count(),
+			'Permissions removed along with the group');
+		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$groupID}")->Count(),
+			'Child groups are removed');
+		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$childGroupID}")->Count(),
+			'Grandchild groups are removed');
 	}
 
 }

@@ -13,7 +13,8 @@ class AdminRootController extends Controller {
 	/**
 	 * @var string
 	 * @config
-	 * The LeftAndMain child that will be used as the initial panel to display if none is selected (i.e. if you visit /admin)
+	 * The LeftAndMain child that will be used as the initial panel to display if none is selected (i.e. if you
+	 * visit /admin)
 	 */
 	static $default_panel = 'SecurityAdmin';
 

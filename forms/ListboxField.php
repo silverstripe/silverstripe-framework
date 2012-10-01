@@ -135,7 +135,8 @@ class ListboxField extends DropdownField {
 	
 	public function setSource($source) {
 		if($source) {
-			$hasCommas = array_filter(array_keys($source), create_function('$key', 'return strpos($key, ",") !== FALSE;'));
+			$hasCommas = array_filter(array_keys($source),
+				create_function('$key', 'return strpos($key, ",") !== FALSE;'));
 			if($hasCommas) {
 				throw new InvalidArgumentException('No commas allowed in $source keys');
 			}
@@ -182,7 +183,9 @@ class ListboxField extends DropdownField {
 				$idList = (is_array($this->value)) ? array_values($this->value) : array();
 				if(!$record->ID) {
 					$record->write(); // record needs to have an ID in order to set relationships
-					$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
+					$relation = ($fieldname && $record && $record->hasMethod($fieldname))
+						? $record->$fieldname()
+						: null;
 				}
 				$relation->setByIDList($idList);
 			} elseif($fieldname && $record) {

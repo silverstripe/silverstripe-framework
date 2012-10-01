@@ -39,12 +39,15 @@ class CliTestReporter extends SapphireTestReporter {
 			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "black", "red");
 		}
 
-		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"), SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
+		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"),
+			SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
 
 		echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
 		
 		// Use sake dev/tests/all --showslow to show slow tests
-		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args'])) || isset($_GET['showslow'])) {
+		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args']))
+				|| isset($_GET['showslow'])) {
+
 			$avgSpeed = round(array_sum($this->testSpeeds) / count($this->testSpeeds), 3);
 			echo "Slow tests (more than the average $avgSpeed seconds):\n";
 
@@ -83,16 +86,17 @@ class CliTestReporter extends SapphireTestReporter {
 			$filteredTrace = array();
 			$ignoredClasses = array('TestRunner');
 			foreach($test['trace'] as $item) {
-				if(
-					isset($item['file'])
-					&& strpos($item['file'], 'PHPUnit/Framework') === false 
-					&& (!isset($item['class']) || !in_array($item['class'], $ignoredClasses))) {
+				if(isset($item['file'])
+						&& strpos($item['file'], 'PHPUnit/Framework') === false 
+						&& (!isset($item['class']) || !in_array($item['class'], $ignoredClasses))) {
 					
 					$filteredTrace[] = $item;
 				}
 				
-				if(isset($item['class']) && isset($item['function']) && $item['class'] == 'PHPUnit_Framework_TestSuite' 
-					&& $item['function'] == 'run') break;
+				if(isset($item['class']) && isset($item['function']) && $item['class'] == 'PHPUnit_Framework_TestSuite'
+						&& $item['function'] == 'run') {
+					break;
+				}
 				
 			}
 

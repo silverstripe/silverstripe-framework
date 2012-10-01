@@ -5,18 +5,19 @@
  * 
  * <b>Multi-value DBField objects</b>
  * 
- * Sometimes you will want to make DBField classes that don't have a 1-1 match to database fields.  To do this, there are a
- * number of fields for you to overload.
+ * Sometimes you will want to make DBField classes that don't have a 1-1 match to database fields.  To do this, there
+ * are a number of fields for you to overload.
  *  - Overload {@link writeToManipulation} to add the appropriate references to the INSERT or UPDATE command
  *  - Overload {@link addToQuery} to add the appropriate items to a SELECT query's field list
  *  - Add appropriate accessor methods 
  * 
  * <b>Subclass Example</b>
  * 
- * The class is easy to overload with custom types, e.g. the MySQL "BLOB" type (http://dev.mysql.com/doc/refman/5.0/en/blob.html).
+ * The class is easy to overload with custom types, e.g. the MySQL "BLOB" type
+ * (http://dev.mysql.com/doc/refman/5.0/en/blob.html).
  * 
  * <code>
- * class Blob extends DBField {                                                                                                   
+ * class Blob extends DBField {
  * 	function requireField() {
  * 		DB::requireField($this->tableName, $this->name, "blob");
  *  }
@@ -65,7 +66,8 @@ abstract class DBField extends ViewableData {
 	
 
 	public static function create() {
-		Deprecation::notice('3.0', 'DBField::create() is deprecated as it clashes with Object::create(). Use DBField::create_field() instead.');
+		Deprecation::notice('3.0', 'DBField::create() is deprecated as it clashes with Object::create().'
+			. 'Use DBField::create_field() instead.');
 
 		return call_user_func_array(array('DBField', 'create_field'), func_get_args());
 	}
@@ -87,7 +89,8 @@ abstract class DBField extends ViewableData {
 	 */
 	public function setName($name) {
 		if($this->name) {
-			user_error("DBField::setName() shouldn't be called once a DBField already has a name.  It's partially immutable - it shouldn't be altered after it's given a value.", E_USER_WARNING);
+			user_error("DBField::setName() shouldn't be called once a DBField already has a name."
+				. "It's partially immutable - it shouldn't be altered after it's given a value.", E_USER_WARNING);
 		}
 		$this->name = $name;
 	}
@@ -161,7 +164,8 @@ abstract class DBField extends ViewableData {
 	 * @param array $manipulation
 	 */
 	public function writeToManipulation(&$manipulation) {
-		$manipulation['fields'][$this->name] = $this->exists() ? $this->prepValueForDB($this->value) : $this->nullValue();
+		$manipulation['fields'][$this->name] = $this->exists() 
+			? $this->prepValueForDB($this->value) : $this->nullValue();
 	}
 	
 	/**
@@ -274,7 +278,8 @@ abstract class DBField extends ViewableData {
 	 * @todo documentation
 	 * 
 	 * @todo figure out how we pass configuration parameters to
-	 * search filters (note: parameter hack now in place to pass in the required full path - using $this->name won't work)
+	 *       search filters (note: parameter hack now in place to pass in the required full path - using $this->name
+	 *       won't work)
 	 *
 	 * @return SearchFilter
 	 */

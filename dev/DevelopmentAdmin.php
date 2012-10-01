@@ -67,7 +67,7 @@ class DevelopmentAdmin extends Controller {
 			}
 			else {
 				echo 'Warning: You probably want to define $_FILE_TO_URL_MAPPING in '.
-					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.org wiki' . "\n";
+					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.org wiki'."\n";
 			}
 		}
 		
@@ -79,7 +79,8 @@ class DevelopmentAdmin extends Controller {
 			"buildcache" => "Rebuild the static cache, if you're using StaticPublisher",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
-			"tests/startsession" => "Start a test session in your browser (gives you a temporary database with default content)",
+			"tests/startsession" => "Start a test session in your browser"
+				. " (gives you a temporary database with default content)",
 			"tests/endsession" => "Ends a test session",
 			"jstests" => "See a list of JavaScript tests to run",
 			"jstests/all" => "Run all JavaScript tests",
@@ -99,7 +100,8 @@ class DevelopmentAdmin extends Controller {
 			echo '<div class="options"><ul>';
 			$evenOdd = "odd";
 			foreach($actions as $action => $description) {
-				echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b> $description</a></li>\n";
+				echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b>"
+					. " $description</a></li>\n";
 				$evenOdd = ($evenOdd == "odd") ? "even" : "odd";
 			}
 

@@ -41,11 +41,13 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 	
 	public $itemClass = 'ManyManyComplexTableField_Item';
 		
-	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null,
+			$sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
 		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor', Deprecation::SCOPE_CLASS);
 
-		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields,
+			$sourceFilter, $sourceSort, $sourceJoin);
 		
 		$classes = array_reverse(ClassInfo::ancestry($this->controllerClass()));
 		foreach($classes as $class) {
@@ -70,7 +72,9 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 			$sourceField = 'Child';
 		$parentID = $this->controller->ID;
 		
-		$this->sourceJoin .= " LEFT JOIN \"$manyManyTable\" ON (\"$source\".\"ID\" = \"$manyManyTable\".\"{$sourceField}ID\" AND \"{$this->manyManyParentClass}ID\" = '$parentID')";
+		$this->sourceJoin .= " LEFT JOIN \"$manyManyTable\" 
+			ON (\"$source\".\"ID\" = \"$manyManyTable\".\"{$sourceField}ID\"
+			AND \"{$this->manyManyParentClass}ID\" = '$parentID')";
 		
 		$this->joinField = 'Checked';
 	}
@@ -99,9 +103,11 @@ class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->IsReadOnly)
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"
+				disabled=\"disabled\"/>";
 		else if($this->item->{$this->parent->joinField})
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"
+				checked=\"checked\"/>";
 		else
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"/>";
 	}

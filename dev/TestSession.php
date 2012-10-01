@@ -44,7 +44,8 @@ class TestSession {
 	public function get($url, $session = null, $headers = null, $cookies = null) {
 		$headers = (array) $headers;
 		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse = Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
+		$this->lastResponse 
+			= Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
@@ -57,7 +58,8 @@ class TestSession {
 	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
 		$headers = (array) $headers;
 		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse = Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
+		$this->lastResponse
+			= Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
@@ -104,7 +106,8 @@ class TestSession {
 			return $this->post($url, $postVars);
 			
 		} else {
-			user_error("TestSession::submitForm called when there is no form loaded.  Visit the page with the form first", E_USER_WARNING);
+			user_error("TestSession::submitForm called when there is no form loaded."
+				. " Visit the page with the form first", E_USER_WARNING);
 		}
 	}
 	

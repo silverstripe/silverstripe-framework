@@ -40,7 +40,8 @@ class ValidationResult extends Object {
 			if(!is_numeric($code)) {
 				$this->errorList[$code] = $message;
 			} else {
-				user_error("ValidationResult::error() - Don't use a numeric code '$code'.  Use a string.  I'm going to ignore it.", E_USER_WARNING);
+				user_error("ValidationResult::error() - Don't use a numeric code '$code'.  Use a string."
+					. "I'm going to ignore it.", E_USER_WARNING);
 				$this->errorList[$code] = $message;
 			}
 		} else {

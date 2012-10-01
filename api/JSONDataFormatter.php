@@ -74,7 +74,11 @@ class JSONDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 				}
-				$serobj->$relName = ArrayData::array_to_object(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
+				$serobj->$relName = ArrayData::array_to_object(array(
+					"className" => $relClass,
+					"href" => "$href.json",
+					"id" => $obj->$fieldName
+				));
 			}
 
 			foreach($obj->has_many() as $relName => $relClass) {
@@ -89,7 +93,11 @@ class JSONDataFormatter extends DataFormatter {
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$innerParts[] = ArrayData::array_to_object(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
+					$innerParts[] = ArrayData::array_to_object(array(
+						"className" => $relClass,
+						"href" => "$href.json",
+						"id" => $obj->$fieldName
+					));
 				}
 				$serobj->$relName = $innerParts;
 			}
@@ -106,7 +114,11 @@ class JSONDataFormatter extends DataFormatter {
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$innerParts[] = ArrayData::array_to_object(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
+					$innerParts[] = ArrayData::array_to_object(array(
+						"className" => $relClass,
+						"href" => "$href.json",
+						"id" => $obj->$fieldName
+					));
 				}
 				$serobj->$relName = $innerParts;
 			}

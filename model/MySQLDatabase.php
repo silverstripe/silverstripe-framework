@@ -69,7 +69,9 @@ class MySQLDatabase extends SS_Database {
 		$this->active = $this->dbConn->select_db($parameters['database']);
 		$this->database = $parameters['database'];
 
-		if(isset($parameters['timezone'])) $this->query(sprintf("SET SESSION time_zone = '%s'", $parameters['timezone']));
+		if(isset($parameters['timezone'])) {
+			$this->query(sprintf("SET SESSION time_zone = '%s'", $parameters['timezone']));
+		}
 	}
 
 	/**
@@ -108,7 +110,9 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	public function query($sql, $errorLevel = E_USER_ERROR) {
-		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,strpos($sql,' '))), array('insert','update','delete','replace'))) {
+		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,strpos($sql,' '))),
+				array('insert','update','delete','replace'))) {
+
 			Debug::message("Will execute: $sql");
 			return;
 		}
@@ -124,7 +128,9 @@ class MySQLDatabase extends SS_Database {
 			Debug::message("\n$sql\n{$endtime}ms\n", false);
 		}
 
-		if(!$handle && $errorLevel) $this->databaseError("Couldn't run query: $sql | " . $this->dbConn->error, $errorLevel);
+		if(!$handle && $errorLevel) {
+			$this->databaseError("Couldn't run query: $sql | " . $this->dbConn->error, $errorLevel);
+		}
 		return new MySQLQuery($this, $handle);
 	}
 
@@ -244,7 +250,9 @@ class MySQLDatabase extends SS_Database {
 	 * @param $alteredIndexes Updated indexes, a map of index name => index type
 	 * @param $alteredOptions
 	 */
-	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions = null, $advancedOptions = null) {
+	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null,
+			$alteredIndexes = null, $alteredOptions = null, $advancedOptions = null) {
+
 		if($this->isView($tableName)) {
 			DB::alteration_message(
 				sprintf("Table %s not changed as it is a view", $tableName),
@@ -277,7 +285,8 @@ class MySQLDatabase extends SS_Database {
 			}
 			if($skip) {
 				DB::alteration_message(
-					sprintf("Table %s options not changed to %s due to fulltextsearch index", $tableName, $alteredOptions[get_class($this)]),
+					sprintf("Table %s options not changed to %s due to fulltextsearch index",
+					$tableName, $alteredOptions[get_class($this)]),
 					"changed"
 				);
 			} else {
@@ -381,7 +390,8 @@ class MySQLDatabase extends SS_Database {
 			if($field['Collation'] && $field['Collation'] != 'NULL') {
 				// Cache collation info to cut down on database traffic
 				if(!isset(self::$_cache_collation_info[$field['Collation']])) {
-					self::$_cache_collation_info[$field['Collation']] = DB::query("SHOW COLLATION LIKE '$field[Collation]'")->record();
+					self::$_cache_collation_info[$field['Collation']]
+						= DB::query("SHOW COLLATION LIKE '$field[Collation]'")->record();
 				}
 				$collInfo = self::$_cache_collation_info[$field['Collation']];
 				$fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
@@ -405,7 +415,8 @@ class MySQLDatabase extends SS_Database {
 	 *
 	 * @param string $tableName The name of the table.
 	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()} for more details.
+	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()} for more
+	 *                          details.
 	 */
 	public function createIndex($tableName, $indexName, $indexSpec) {
 		$this->query("ALTER TABLE \"$tableName\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
@@ -480,7 +491,8 @@ class MySQLDatabase extends SS_Database {
 	 * Alter an index on a table.
 	 * @param string $tableName The name of the table.
 	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()} for more details.
+	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()}
+	 *                          for more details.
 	 */
 	public function alterIndex($tableName, $indexName, $indexSpec) {
 
@@ -576,8 +588,10 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function boolean($values){
 		//For reference, this is what typically gets passed to this function:
-		//$parts=Array('datatype'=>'tinyint', 'precision'=>1, 'sign'=>'unsigned', 'null'=>'not null', 'default'=>$this->default);
-		//DB::requireField($this->tableName, $this->name, "tinyint(1) unsigned not null default '{$this->defaultVal}'");
+		//$parts=Array('datatype'=>'tinyint', 'precision'=>1, 'sign'=>'unsigned', 'null'=>'not null',
+		//'default'=>$this->default);
+		//DB::requireField($this->tableName, $this->name, "tinyint(1) unsigned not null default
+		//'{$this->defaultVal}'");
 
 		return 'tinyint(1) unsigned not null default ' . (int)$values['default'];
 	}
@@ -632,10 +646,13 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function enum($values){
 		//For reference, this is what typically gets passed to this function:
-		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
-		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
+		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=>
+		// 'utf8_general_ci', 'default'=>$this->default);
+		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
+		// utf8 collate utf8_general_ci default '{$this->default}'");
 
-		return 'enum(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci default \'' . $values['default'] . '\'';
+		return 'enum(\'' . implode('\',\'', $values['enums']) . '\')'
+			. ' character set utf8 collate utf8_general_ci default \'' . $values['default'] . '\'';
 	}
 
 	/**
@@ -646,10 +663,13 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function set($values){
 		//For reference, this is what typically gets passed to this function:
-		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
-		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
+		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=>
+		// 'utf8_general_ci', 'default'=>$this->default);
+		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set 
+		//utf8 collate utf8_general_ci default '{$this->default}'");
 		$default = empty($values['default']) ? '' : " default '$values[default]'";
-		return 'set(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci' . $default;
+		return 'set(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci' 
+			. $default;
 	}
 
 	/**
@@ -733,8 +753,10 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function varchar($values){
 		//For reference, this is what typically gets passed to this function:
-		//$parts=Array('datatype'=>'varchar', 'precision'=>$this->size, 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
-		//DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate utf8_general_ci");
+		//$parts=Array('datatype'=>'varchar', 'precision'=>$this->size, 'character set'=>'utf8', 'collate'=>
+		//'utf8_general_ci');
+		//DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate
+		// utf8_general_ci");
 
 		return 'varchar(' . $values['precision'] . ') character set utf8 collate utf8_general_ci';
 	}
@@ -793,7 +815,9 @@ class MySQLDatabase extends SS_Database {
 	 *
 	 * @param string $keywords Keywords as a string.
 	 */
-	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
+	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC",
+			$extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
+
 		if(!class_exists('SiteTree')) throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
 		if(!class_exists('File')) throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
 		
@@ -825,15 +849,19 @@ class MySQLDatabase extends SS_Database {
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
 			$match['SiteTree'] = "
-				MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)
-				+ MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$htmlEntityKeywords' $boolean)
+				MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)
+				AGAINST ('$keywords' $boolean)
+				+ MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)
+				AGAINST ('$htmlEntityKeywords' $boolean)
 			";
 			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*','+','-'),'',$keywords);
 			$htmlEntityRelevanceKeywords = str_replace(array('*','+','-'),'',$htmlEntityKeywords);
-			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$htmlEntityRelevanceKeywords')";
+			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)"
+				. " AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription,"
+				. " MetaKeywords) AGAINST ('$htmlEntityRelevanceKeywords')";
 			$relevance['File'] = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
 		} else {
 			$relevance['SiteTree'] = $relevance['File'] = 1;
@@ -850,8 +878,20 @@ class MySQLDatabase extends SS_Database {
 
 		// Make column selection lists
 		$select = array(
-			'SiteTree' => array("ClassName","$baseClasses[SiteTree].\"ID\"","ParentID","Title","MenuTitle","URLSegment","Content","LastEdited","Created","Filename" => "_utf8''", "Name" => "_utf8''", "Relevance" => $relevance['SiteTree'], "CanViewType"),
-			'File' => array("ClassName","$baseClasses[File].\"ID\"","ParentID" => "_utf8''","Title","MenuTitle" => "_utf8''","URLSegment" => "_utf8''","Content","LastEdited","Created","Filename","Name", "Relevance" => $relevance['File'], "CanViewType" => "NULL"),
+			'SiteTree' => array(
+				"ClassName", "$baseClasses[SiteTree].\"ID\"", "ParentID",
+				"Title", "MenuTitle", "URLSegment", "Content",
+				"LastEdited", "Created",
+				"Filename" => "_utf8''", "Name" => "_utf8''",
+				"Relevance" => $relevance['SiteTree'], "CanViewType"
+			),
+			'File' => array(
+				"ClassName", "$baseClasses[File].\"ID\"", "ParentID" => "_utf8''",
+				"Title", "MenuTitle" => "_utf8''", "URLSegment" => "_utf8''", "Content",
+				"LastEdited", "Created",
+				"Filename", "Name",
+				"Relevance" => $relevance['File'], "CanViewType" => "NULL"
+			),
 		);
 
 		// Process and combine queries
@@ -947,7 +987,8 @@ class MySQLDatabase extends SS_Database {
 	 	$SQL_keywords = Convert::raw2sql($keywords);
 		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords, ENT_NOQUOTES, 'UTF-8'));
 
-		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames) AGAINST ('$SQL_htmlEntityKeywords' $boolean))";
+		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames)"
+			. " AGAINST ('$SQL_htmlEntityKeywords' $boolean))";
 	}
 
 	/*
@@ -974,7 +1015,8 @@ class MySQLDatabase extends SS_Database {
 
 	/*
 	 * Start a prepared transaction
-	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
+	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction
+	 * isolation options
 	 */
 	public function transactionStart($transaction_mode=false, $session_characteristics=false){
 		// This sets the isolation level for the NEXT transaction, not the current one.
@@ -1019,7 +1061,8 @@ class MySQLDatabase extends SS_Database {
 	/**
 	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime in a certain format
-	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or
+	 * field name, e.g. '"SiteTree"."Created"'
 	 * @param string $format to be used, supported specifiers:
 	 * %Y = Year (four digits)
 	 * %m = Month (01..12)
@@ -1033,7 +1076,9 @@ class MySQLDatabase extends SS_Database {
 	public function formattedDatetimeClause($date, $format) {
 
 		preg_match_all('/%(.)/', $format, $matches);
-		foreach($matches[1] as $match) if(array_search($match, array('Y','m','d','H','i','s','U')) === false) user_error('formattedDatetimeClause(): unsupported format character %' . $match, E_USER_WARNING);
+		foreach($matches[1] as $match) if(array_search($match, array('Y','m','d','H','i','s','U')) === false) {
+			user_error('formattedDatetimeClause(): unsupported format character %' . $match, E_USER_WARNING);
+		}
 
 		if(preg_match('/^now$/i', $date)) {
 			$date = "NOW()";
@@ -1050,8 +1095,10 @@ class MySQLDatabase extends SS_Database {
 	/**
 	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime addition
-	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
-	 * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes, +1 YEAR
+	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name,
+	 * e.g. '"SiteTree"."Created"'
+	 * @param string $interval to be added, use the format [sign][integer] [qualifier],
+	 *                         e.g. -1 Day, +15 minutes, +1 YEAR
 	 * supported qualifiers:
 	 * - years
 	 * - months
@@ -1060,7 +1107,8 @@ class MySQLDatabase extends SS_Database {
 	 * - minutes
 	 * - seconds
 	 * This includes the singular forms as well
-	 * @return string SQL datetime expression to query for a datetime (YYYY-MM-DD hh:mm:ss) which is the result of the addition
+	 * @return string SQL datetime expression to query for a datetime (YYYY-MM-DD hh:mm:ss) which is the result of
+	 *                the addition
 	 */
 	public function datetimeIntervalClause($date, $interval) {
 
@@ -1078,9 +1126,12 @@ class MySQLDatabase extends SS_Database {
 	/**
 	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime substraction
-	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
-	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
-	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
+	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name,
+	 *                       e.g. '"SiteTree"."Created"'
+	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like
+	 *                      '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which
+	 *                is the result of the substraction
 	 */
 	public function datetimeDifferenceClause($date1, $date2) {
 

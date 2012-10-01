@@ -88,7 +88,10 @@ class TaskRunner extends Controller {
 		
 		if($taskClasses) foreach($taskClasses as $class) {
 			if(!singleton($class)->isEnabled()) continue;
-			$desc = (Director::is_cli()) ? Convert::html2raw(singleton($class)->getDescription()) : singleton($class)->getDescription();
+			$desc = (Director::is_cli()) 
+				? Convert::html2raw(singleton($class)->getDescription()) 
+				: singleton($class)->getDescription();
+				
 			$availableTasks[] = array(
 				'class' => $class,
 				'title' => singleton($class)->getTitle(),

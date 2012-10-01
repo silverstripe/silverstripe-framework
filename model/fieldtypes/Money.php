@@ -84,13 +84,15 @@ class Money extends DBField implements CompositeDBField {
 		if($this->getCurrency()) {
 			$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
 		} else {
-			$manipulation['fields'][$this->name.'Currency'] = DBField::create_field('Varchar', $this->getCurrency())->nullValue();
+			$manipulation['fields'][$this->name.'Currency']
+				= DBField::create_field('Varchar', $this->getCurrency())->nullValue();
 		}
 		
 		if($this->getAmount()) {
 			$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
 		} else {
-			$manipulation['fields'][$this->name.'Amount'] = DBField::create_field('Decimal', $this->getAmount())->nullValue();
+			$manipulation['fields'][$this->name.'Amount']
+				= DBField::create_field('Decimal', $this->getAmount())->nullValue();
 		}
 	}
 	
@@ -108,8 +110,11 @@ class Money extends DBField implements CompositeDBField {
 			if($markChanged) $this->isChanged = true;
 		} else if($record && isset($record[$this->name . 'Amount'])) {
 			if($record[$this->name . 'Amount']) {
-				if(!empty($record[$this->name . 'Currency'])) $this->setCurrency($record[$this->name . 'Currency'], $markChanged);
-				else if($currency = (string)$this->config()->get('default_currency')) $this->setCurrency($currency, $markChanged);
+				if(!empty($record[$this->name . 'Currency'])) {
+					$this->setCurrency($record[$this->name . 'Currency'], $markChanged);
+				} else if($currency = (string)$this->config()->get('default_currency')) {
+					$this->setCurrency($currency, $markChanged);
+				}
 				
 				$this->setAmount($record[$this->name . 'Amount'], $markChanged);
 			} else {
@@ -137,7 +142,9 @@ class Money extends DBField implements CompositeDBField {
 		$amount = $this->getAmount();
 		if(!isset($options['display'])) $options['display'] = Zend_Currency::USE_SYMBOL;
 		if(!isset($options['currency'])) $options['currency'] = $this->getCurrency();
-		if(!isset($options['symbol'])) $options['symbol'] = $this->currencyLib->getSymbol($this->getCurrency(), $this->getLocale());
+		if(!isset($options['symbol'])) {
+			$options['symbol'] = $this->currencyLib->getSymbol($this->getCurrency(), $this->getLocale());
+		}
 		return (is_numeric($amount)) ? $this->currencyLib->toCurrency($amount, $options) : '';
 	}
 	
