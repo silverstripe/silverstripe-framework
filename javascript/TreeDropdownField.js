@@ -67,7 +67,8 @@
 					}
 				});
 
-				var top = this.position().top + this.height() + scrollTop;
+				//var top = this.position().top + this.height() + scrollTop;
+				var top = this.position().top + this.height();
 				
 				panel.css('top', top);
 				panel.css('width', this.width());
