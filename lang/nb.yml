@@ -476,7 +476,7 @@ nb:
     VALIDATION: 'Vennligst skriv inn et gyldig tlf nummer'
   RelationComplexTableField.ss:
     ADD: 'Legg til'
-    CSVEXPORT: 'Export to CSV'
+    CSVEXPORT: 'Eksporter til CSV'
     NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
@@ -534,8 +534,8 @@ nb:
     SORTASC: 'Sorter i stigende rekkefølge'
     SORTDESC: 'Sorter i synkende rekkefølge'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
+    DISPLAYING: Viser
+    OF: av
     TO: til
     VIEWFIRST: 'Se første'
     VIEWLAST: 'Se siste'
