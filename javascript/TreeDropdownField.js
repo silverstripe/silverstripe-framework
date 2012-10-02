@@ -54,20 +54,7 @@
 				$('body').bind('click', _clickTestFn);
 				
 				var panel = this.getPanel(), tree = this.find('.tree-holder');
-				
-				// set the panel to the bottom of the field. Takes into account the
-				// mouse scroll position.
-				// @todo - support for opening above content
-				var scrollTop = 0;
-				
-				this.parents().each(function(i, e) {
-					if($(e).scrollTop() > 0) {
-						scrollTop = $(e).scrollTop();
-						return;
-					}
-				});
-
-				var top = this.position().top + this.height() + scrollTop;
+				var top = this.position().top + this.height();
 				
 				panel.css('top', top);
 				panel.css('width', this.width());
