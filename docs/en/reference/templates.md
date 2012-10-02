@@ -21,7 +21,7 @@ Here is a very simple template:
 			<header>
 				<h1>Bob's Chicken Shack</h1>
 			</header>
-
+			
 			<% with $CurrentMember %>
 				<p>Welcome $FirstName $Surname.</p>
 			<% end_with %>

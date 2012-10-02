@@ -193,7 +193,6 @@ the date field will have the date format defined by your locale.
 
 	:::php
 	<?php
-	
 	class ArticlePage extends Page {
 	
 	// .....
@@ -356,12 +355,11 @@ It would be nice to greet page visitors with a summary of the latest news when t
 **mysite/code/HomePage.php**
 
 	:::php
-	...
+	// ...
 	public function LatestNews($num=5) {
 		$holder = ArticleHolder::get()->First();
 		return ($holder) ? ArticlePage::get()->filter('ParentID', $holder->ID)->sort('Date DESC')->limit($num) : false;
 	}
-	...
 
 
 This function simply runs a database query that gets the latest news articles from the database. By default, this is five, but you can change it by passing a number to the function. See the [Data Model](../topics/datamodel) documentation for details. We can reference this function as a page control in our *HomePage* template:
@@ -369,13 +367,12 @@ This function simply runs a database query that gets the latest news articles fr
 **themes/simple/templates/Layout/Homepage.ss**
 
 	:::ss
-	...
-		<div class="content">$Content</div>
+	<!-- ... -->
+	<div class="content">$Content</div>
 	</article>
 	<% loop LatestNews %>
 		<% include ArticleTeaser %>
 	<% end_loop %>
-	...
 
 
 When SilverStripe comes across a variable or page control it doesn't recognize, it first passes control to the controller. If the controller doesn't have a function for the variable or page control, it then passes control to the data object. If it has no matching functions, it then searches its database fields. Failing that it will return nothing.
@@ -444,7 +441,6 @@ Nothing here should be new. The *StaffPage* page type is more interesting though
 
 	:::php
 	<?php
-	
 	class StaffPage extends Page {
 		static $db = array(
 		);
@@ -462,7 +458,6 @@ Nothing here should be new. The *StaffPage* page type is more interesting though
 	}
 	
 	class StaffPage_Controller extends Page_Controller {
-		
 	}
 
 

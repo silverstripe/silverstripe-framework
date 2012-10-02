@@ -276,7 +276,6 @@ For example:
 	:::php
 	// Without an alias
 	$members = Member::get()->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-
 	$members = Member::get()->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "REl");
 	
 Passing a *$join* statement to DataObject::get will filter results further by the JOINs performed against the foreign
