@@ -843,7 +843,8 @@ class SSViewer {
 			$template = $this->chosenTemplates[$key];
 		}
 		
-		$cacheFile = TEMP_FOLDER . "/.cache" . str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
+		$cacheFile = TEMP_FOLDER . "/.cache" 
+			. str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
 		$lastEdited = filemtime($template);
 
 		if(!file_exists($cacheFile) || filemtime($cacheFile) < $lastEdited || isset($_GET['flush'])) {

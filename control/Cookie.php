@@ -98,7 +98,9 @@ class Cookie {
 	 * @param boolean $secure See http://php.net/set_session
 	 * @param boolean $httpOnly See http://php.net/set_session
 	 */
-	protected function inst_set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false) {
+	protected function inst_set($name, $value, $expiry = 90, $path = null, 
+		$domain = null, $secure = false, $httpOnly = false
+	) {
 		if(!headers_sent($file, $line)) {
 			$expiry = $expiry > 0 ? time()+(86400*$expiry) : $expiry;
 			$path = ($path) ? $path : Director::baseURL();
