@@ -64,13 +64,13 @@ Example: Validate postcodes based on the selected country (on the controller).
 		public function submit($data, $form) {
 			// At this point, RequiredFields->validate() will have been called already,
 			// so we can assume that the values exist.
-
+			
 			// German postcodes need to be five digits
 			if($data['Country'] == 'de' && isset($data['Postcode']) && strlen($data['Postcode']) != 5) {
 				$form->addErrorMessage('Postcode', 'Need five digits for German postcodes', 'bad');
 				return $this->redirectBack();
 			}
-
+			
 			// Global validation error (not specific to form field)
 			if($data['Country'] == 'IR' && isset($data['Postcode']) && $data['Postcode']) {
 				$form->sessionMessage("Ireland doesn't have postcodes!", 'bad');
@@ -96,7 +96,7 @@ SilverStripe supports this by allowing to set custom attributes on fields.
 	:::php
 	// Markup contains <input type="text" required />
 	TextField::create('MyText')->setAttribute('required', true);
-
+	
 	// Markup contains <input type="url" pattern="https?://.+" />
 	TextField::create('MyText')
 		->setAttribute('type', 'url')
@@ -111,7 +111,7 @@ These are general purpose attributes, but can be used to hook in your own valida
 	// Validate a specific date format (in PHP)
 	// Markup contains <input type="text" data-dateformat="dd.MM.yyyy" />
 	DateField::create('MyDate')->setConfig('dateformat', 'dd.MM.yyyy');
-
+	
 	// Limit extensions on upload (in PHP)
 	// Markup contains <input type="file" data-allowed-extensions="jpg,jpeg,gif" />
 	$exts = array('jpg', 'jpeg', 'gif');

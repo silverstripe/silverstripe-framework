@@ -116,7 +116,8 @@ class HTTPTest extends SapphireTest {
 		$this->assertEquals('text/html', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.html'));
 		$this->assertEquals('image/jpeg', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.jpg'));
 		$this->assertEquals('image/png', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.png'));
-		$this->assertEquals('image/vnd.adobe.photoshop', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd'));
+		$this->assertEquals('image/vnd.adobe.photoshop',
+			HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd'));
 		$this->assertEquals('audio/x-wav', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.wav'));
 	}
 }

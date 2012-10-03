@@ -15,7 +15,9 @@
 class EncryptAllPasswordsTask extends BuildTask {
 	protected $title = 'Encrypt all passwords tasks';
 	
-	protected $description = 'Convert all plaintext passwords on the Member table to the default encryption/hashing algorithm. Note: This mainly applies to passwords in SilverStripe 2.1 or earlier, passwords in newer versions are hashed by default.';
+	protected $description = 'Convert all plaintext passwords on the Member table to the default encryption/hashing
+		algorithm. Note: This mainly applies to passwords in SilverStripe 2.1 or earlier, passwords in newer versions
+		are hashed by default.';
 	
 	public function init() {
 		parent::init();

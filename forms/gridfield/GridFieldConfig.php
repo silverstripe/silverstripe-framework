@@ -142,6 +142,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 		$this->addComponent($sort = new GridFieldSortableHeader());
 		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());
+		$this->addComponent(new GridFieldPageCount('toolbar-header-right'));
 		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 
 		$sort->setThrowExceptionOnBadDataType(false);
@@ -182,6 +183,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent(new GridFieldEditButton());
 		$this->addComponent(new GridFieldDeleteAction());
+		$this->addComponent(new GridFieldPageCount('toolbar-header-right'));
 		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldDetailForm());
 
@@ -222,6 +224,7 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent(new GridFieldEditButton());
 		$this->addComponent(new GridFieldDeleteAction());
+		$this->addComponent(new GridFieldPageCount('toolbar-header-right'));
 		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldDetailForm());
 

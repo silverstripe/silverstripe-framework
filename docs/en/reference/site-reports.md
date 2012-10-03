@@ -31,13 +31,13 @@ CustomSideReport.php
 	<?php
 	class CustomSideReport_NameOfReport extends SideReport {
 		public function title() {
-	            // the name of our report
+			// the name of our report
 		}
 		public function records() {
-	            // what we want the report to return and what order
+			// what we want the report to return and what order
 		}
 		public function fieldsToShow() {
-	            // which fields on that object do we want to show? Title, Author?
+			// which fields on that object do we want to show? Title, Author?
 		}
 	}
 	?>
@@ -52,23 +52,22 @@ CustomSideReport.php
 	:::php
 	<?php
 	/** 
-	
 	 * This report lists all the pages in the CMS
 	 * of type Page. Sorted by title.
 	 */
 	class CustomSideReport_AllPages extends SideReport {
 		public function title() {
-	        // this is the title of the report
+			// this is the title of the report
 			return "All Pages";
 		}
 		
 		public function records() {
-	        // the data the report returns all the dataobjects of type Page and sorted by title. See datamodel for more info
+			// the data the report returns all the dataobjects of type Page and sorted by title. See datamodel for more info
 			return Page::get()->sort("Title");
 		}
 		
 		public function fieldsToShow() {
-	        // fields you want to display. This will display a list of titles which link to the page in the cms. Handy!
+			// fields you want to display. This will display a list of titles which link to the page in the cms. Handy!
 			return array(
 				"Title" => array("NestedTitle", array("2")),
 			);

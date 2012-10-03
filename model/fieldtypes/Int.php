@@ -25,7 +25,13 @@ class Int extends DBField {
 	}
 
 	public function requireField() {
-		$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>$this->defaultVal, 'arrayValue'=>$this->arrayValue);
+		$parts=Array(
+			'datatype'=>'int',
+			'precision'=>11,
+			'null'=>'not null',
+			'default'=>$this->defaultVal,
+			'arrayValue'=>$this->arrayValue);
+		
 		$values=Array('type'=>'int', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}

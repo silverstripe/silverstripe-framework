@@ -5,10 +5,16 @@
  * in config yaml fragments
  */
 class SS_DAG implements IteratorAggregate {
-	/** @var array|null - The nodes/vertices in the graph. Should be a numeric sequence of items (no string keys, no gaps). */
+	/**
+	 * The nodes/vertices in the graph. Should be a numeric sequence of items (no string keys, no gaps).
+	 * @var array|null
+	 */
 	protected $data;
 
-	/** @var array - The edges in the graph, in $to_idx => [$from_idx1, $from_idx2, ...] format */
+	/**
+	 * The edges in the graph, in $to_idx => [$from_idx1, $from_idx2, ...] format
+	 * @var array
+	 */
 	protected $dag;
 
 	public function __construct($data = null) {
@@ -28,11 +34,13 @@ class SS_DAG implements IteratorAggregate {
 	}
 
 	/**
-	 * Add an edge from one vertex to another
-	 * @param $from integer|any - The index in $data of the node/vertex, or the node/vertex itself, that the edge goes from
-	 * @param $to integer|any - The index in $data of the node/vertex, or the node/vertex itself, that the edge goes to
-	 *
+	 * Add an edge from one vertex to another.
+	 * 
 	 * When passing actual nodes (as opposed to indexes), uses array_search with strict = true to find
+	 * 
+	 * @param $from integer|any The index in $data of the node/vertex, or the node/vertex itself, that the edge
+	 *                          goes from
+	 * @param $to integer|any - The index in $data of the node/vertex, or the node/vertex itself, that the edge goes to
 	 */
 	public function addedge($from, $to) {
 		$i = is_numeric($from) ? $from : array_search($from, $this->data, true);

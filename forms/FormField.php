@@ -321,7 +321,9 @@ class FormField extends RequestHandler {
 	 * @param $class String
 	 */
 	public function removeExtraClass($class) {
-		if(isset($this->extraClasses) && array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
+		if(isset($this->extraClasses) && array_key_exists($class, $this->extraClasses)) {
+			unset($this->extraClasses[$class]);
+		}
 		return $this;
 	}
 
@@ -335,9 +337,9 @@ class FormField extends RequestHandler {
 	 * - 'name': {@link setName}
 	 * 
 	 * CAUTION Doesn't work on most fields which are composed of more than one HTML form field:
-	 * AjaxUniqueTextField, CheckboxSetField, ComplexTableField, CompositeField, ConfirmedPasswordField, CountryDropdownField,
-	 * CreditCardField, CurrencyField, DateField, DatetimeField, FieldGroup, GridField, HtmlEditorField,
-	 * ImageField, ImageFormAction, InlineFormAction, ListBoxField, etc.
+	 * AjaxUniqueTextField, CheckboxSetField, ComplexTableField, CompositeField, ConfirmedPasswordField,
+	 * CountryDropdownField, CreditCardField, CurrencyField, DateField, DatetimeField, FieldGroup, GridField,
+	 * HtmlEditorField, ImageField, ImageFormAction, InlineFormAction, ListBoxField, etc.
 	 * 
 	 * @param string
 	 * @param string
@@ -780,8 +782,11 @@ class FormField extends RequestHandler {
 	public function createTag($tag, $attributes, $content = null) {
 		$preparedAttributes = '';
 		foreach($attributes as $k => $v) {
-			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes can sometimes get finicky
-			if(!empty($v) || $v === '0' || $k == 'value') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
+			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes
+			// can sometimes get finicky
+			if(!empty($v) || $v === '0' || $k == 'value') {
+				$preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
+			}
 		}
 
 		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
@@ -828,7 +833,8 @@ class FormField extends RequestHandler {
 	}
 	
 	public function debug() {
-		return "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>) = $this->value";
+		return "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>)"
+			. " = $this->value";
 	}
 	
 	/**

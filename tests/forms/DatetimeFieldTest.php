@@ -122,10 +122,12 @@ class DatetimeFieldTest extends SapphireTest {
 		// Berlin and Auckland have 12h time difference in northern hemisphere winter
 		$f = new DatetimeField('Datetime', 'Datetime', '2003-12-24 23:59:59');
 		$f->setConfig('usertimezone', 'Pacific/Auckland');
-		$this->assertEquals('25/12/2003 11:59:59', $f->Value(), 'User value is formatted, and in user timezone');
+		$this->assertEquals('25/12/2003 11:59:59', $f->Value(),
+			'User value is formatted, and in user timezone');
 		$this->assertEquals('25/12/2003', $f->getDateField()->Value());
 		$this->assertEquals('11:59:59', $f->getTimeField()->Value());
-		$this->assertEquals('2003-12-24 23:59:59', $f->dataValue(), 'Data value is unformatted, and in server timezone');
+		$this->assertEquals('2003-12-24 23:59:59', $f->dataValue(),
+			'Data value is unformatted, and in server timezone');
 		
 		date_default_timezone_set($oldTz);
 	}

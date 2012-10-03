@@ -19,7 +19,8 @@ class CSVParserTest extends SapphireTest {
 		
 		$this->assertEquals(array(
 			"He's a good guy",
-			"She is awesome.\nSo awesome that she gets multiple rows and \"escaped\" strings in her biography",
+			"She is awesome." . PHP_EOL 
+				. "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
 			"Pretty old, with an escaped comma",
 			"Unicode FTW"), $biographies);
 		$this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
@@ -38,7 +39,8 @@ class CSVParserTest extends SapphireTest {
 		
 		$firstNames = $birthdays = $biographies = $registered = array();
 		foreach($csv as $record) {
-			/* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be left as-is. */
+			/* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be
+			 * left as-is. */
 			$this->assertEquals(array('__fn','__BG','Birthday','IsRegistered'), array_keys($record));
 			$firstNames[] = $record['__fn'];
 			$biographies[] = $record['__BG'];
@@ -49,7 +51,8 @@ class CSVParserTest extends SapphireTest {
 		$this->assertEquals(array('John','Jane','Jamie','Järg'), $firstNames);
 		$this->assertEquals(array(
 			"He's a good guy",
-			"She is awesome.\nSo awesome that she gets multiple rows and \"escaped\" strings in her biography",
+			"She is awesome."
+				. PHP_EOL . "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
 			"Pretty old, with an escaped comma",
 			"Unicode FTW"), $biographies);
 		$this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
@@ -77,7 +80,8 @@ class CSVParserTest extends SapphireTest {
 		$this->assertEquals(array(
 			'Biography',
 			"He's a good guy",
-			"She is awesome.\nSo awesome that she gets multiple rows and \"escaped\" strings in her biography",
+			"She is awesome." . PHP_EOL
+				. "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
 			"Pretty old, with an escaped comma",
 			"Unicode FTW"), $biographies);
 		$this->assertEquals(array("Birthday","31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);

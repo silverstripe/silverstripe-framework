@@ -18,14 +18,19 @@ class ShortcodeParserTest extends SapphireTest {
 	 * Tests that valid short codes that have not been registered are not replaced.
 	 */
 	public function testNotRegisteredShortcode() {
-		$this->assertEquals('[not_shortcode]', $this->parser->parse('[not_shortcode]'));
-		$this->assertEquals('[not_shortcode /]', $this->parser->parse('[not_shortcode /]'));
-		$this->assertEquals('[not_shortcode,foo="bar"]', $this->parser->parse('[not_shortcode,foo="bar"]'));
-		$this->assertEquals('[not_shortcode]a[/not_shortcode]', $this->parser->parse('[not_shortcode]a[/not_shortcode]'));
+		$this->assertEquals('[not_shortcode]',
+			$this->parser->parse('[not_shortcode]'));
+		$this->assertEquals('[not_shortcode /]',
+			$this->parser->parse('[not_shortcode /]'));
+		$this->assertEquals('[not_shortcode,foo="bar"]',
+			$this->parser->parse('[not_shortcode,foo="bar"]'));
+		$this->assertEquals('[not_shortcode]a[/not_shortcode]',
+			$this->parser->parse('[not_shortcode]a[/not_shortcode]'));
 	}
 	
 	public function testSimpleTag() {
-		$tests = array('[test_shortcode]', '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode/]', '[test_shortcode /]');
+		$tests = array('[test_shortcode]', '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode/]',
+			'[test_shortcode /]');
 		
 		foreach($tests as $test) {
 			$this->parser->parse($test);
@@ -78,7 +83,8 @@ class ShortcodeParserTest extends SapphireTest {
 	
 	public function testShortcodeEscaping() {
 		$this->assertEquals('[test_shortcode]', $this->parser->parse('[[test_shortcode]]'));
-		$this->assertEquals('[test_shortcode]content[/test_shortcode]', $this->parser->parse('[[test_shortcode]content[/test_shortcode]]'));
+		$this->assertEquals('[test_shortcode]content[/test_shortcode]',
+			$this->parser->parse('[[test_shortcode]content[/test_shortcode]]'));
 	}
 	
 	public function testUnquotedArguments() {

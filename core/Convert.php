@@ -244,7 +244,8 @@ class Convert {
 		
 		// Expand hyperlinks
 		if(!$preserveLinks && !$config['PreserveLinks']) {
-			$data = preg_replace('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
+			$data = preg_replace('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'",
+				$data);
 			$data = preg_replace('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
 		}
 	

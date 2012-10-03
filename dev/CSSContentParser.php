@@ -51,7 +51,8 @@ class CSSContentParser extends Object {
 		
 		$this->simpleXML = @simplexml_load_string($tidy, 'SimpleXMLElement', LIBXML_NOWARNING);
 		if(!$this->simpleXML) {
-			throw new Exception('CSSContentParser::__construct(): Could not parse content. Please check the PHP extension tidy is installed.');
+			throw new Exception('CSSContentParser::__construct(): Could not parse content.'
+				. ' Please check the PHP extension tidy is installed.');
 		}
 		
 		parent::__construct();

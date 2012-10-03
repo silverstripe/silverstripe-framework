@@ -39,8 +39,10 @@ class DataExtensionTest extends SapphireTest {
 		$object = DataObject::get_one('DataExtensionTest_RelatedObject', "\"ContactID\" = {$contactID}");
 
 		$this->assertNotNull($object, 'Related object not null');
-		$this->assertInstanceOf('DataExtensionTest_Member', $object->Contact(), 'Related contact is a member dataobject');
-		$this->assertInstanceOf('DataExtensionTest_Member', $object->getComponent('Contact'), 'getComponent does the same thing as Contact()');
+		$this->assertInstanceOf('DataExtensionTest_Member', $object->Contact(),
+			'Related contact is a member dataobject');
+		$this->assertInstanceOf('DataExtensionTest_Member', $object->getComponent('Contact'),
+			'getComponent does the same thing as Contact()');
 		
 		$this->assertInstanceOf('DataExtensionTest_RelatedObject', $contact->RelatedObjects()->First());
 		$this->assertEquals("Lorem ipsum dolor", $contact->RelatedObjects()->First()->FieldOne);

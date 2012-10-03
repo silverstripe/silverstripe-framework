@@ -76,7 +76,8 @@ class MoneyTest extends SapphireTest {
      */
     public function testGettingWrittenDataObject() {
 	    $local = i18n::get_locale();
-		i18n::set_locale('en_US');  //make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
+	    //make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
+		i18n::set_locale('en_US'); 
 
 		$obj = new MoneyTest_DataObject();
 		

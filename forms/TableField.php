@@ -22,14 +22,14 @@ class TableField extends TableListField {
 	protected $fieldList;
 	
 	/**
-	 * A "Field = Value" filter can be specified by setting $this->filterField and $this->filterValue.  This has the advantage of auto-populating
-	 * new records
+	 * A "Field = Value" filter can be specified by setting $this->filterField and $this->filterValue.  This has the
+	 * advantage of auto-populating new records
 	 */
 	protected $filterField = null;
 
 	/**
-	 * A "Field = Value" filter can be specified by setting $this->filterField and $this->filterValue.  This has the advantage of auto-populating
-	 * new records
+	 * A "Field = Value" filter can be specified by setting $this->filterField and $this->filterValue.  This has the
+	 * advantage of auto-populating new records
 	 */
 	protected $filterValue = null;
 	
@@ -86,9 +86,12 @@ class TableField extends TableListField {
 	 * @param $name string The fieldname
 	 * @param $sourceClass string The source class of this field
 	 * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
-	 * @param $fieldTypes array An array of field types of fieldname => fieldType (eg. formfield). Do not use for extra data/hiddenfields.
-	 * @param $filterField string The field to filter by.  Give the filter value in $sourceFilter.  The value will automatically be set on new records.
-	 * @param $sourceFilter string If $filterField has a value, then this is the value to filter by.  Otherwise, it is a SQL filter expression.
+	 * @param $fieldTypes array An array of field types of fieldname => fieldType (eg. formfield). Do not use for
+	 *                          extra data/hiddenfields.
+	 * @param $filterField string The field to filter by.  Give the filter value in $sourceFilter.  The value will
+	 *                            automatically be set on new records.
+	 * @param $sourceFilter string If $filterField has a value, then this is the value to filter by.  Otherwise, it is
+	 *                             a SQL filter expression.
 	 * @param $editExisting boolean (Note: Has to stay on this position for legacy reasons)
 	 * @param $sourceSort string
 	 * @param $sourceJoin string
@@ -634,7 +637,8 @@ class TableField_Item extends TableListField_Item {
 					// transformation
 					if(isset($this->parent->transformationConditions[$origFieldName])) {
 						$transformation = $this->parent->transformationConditions[$origFieldName]['transformation'];
-						$rule = str_replace("\$","\$this->item->", $this->parent->transformationConditions[$origFieldName]['rule']);
+						$rule = str_replace("\$","\$this->item->", 
+							$this->parent->transformationConditions[$origFieldName]['rule']);
 						$ruleApplies = null;
 						eval('$ruleApplies = ('.$rule.');');
 						if($ruleApplies) {

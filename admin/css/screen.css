@@ -657,7 +657,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree a > .jstree-icon { margin-right: 3px; }
 .cms .jstree li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-open > ul { display: block; }
 .cms .jstree li.jstree-closed > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-closed > ul { display: none; }
-.cms .jstree li.disabled a, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled a { color: #aaaaaa; }
+.cms .jstree li.disabled > a, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled > a { color: #aaaaaa; }
 .cms .jstree-rtl a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree-rtl a > .jstree-icon { margin-left: 3px; margin-right: 0; }
 .cms .jstree-rtl li, .TreeDropdownField .treedropdownfield-panel .jstree-rtl li { margin-left: 0; margin-right: 18px; }
 .cms .jstree-rtl > ul > li, .TreeDropdownField .treedropdownfield-panel .jstree-rtl > ul > li { margin-right: 0px; }
@@ -859,6 +859,14 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm { overflow: hidden; }
 
 .SecurityAdmin .permissioncheckboxset .optionset li, .SecurityAdmin .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; }
+
+/* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a 
+green tick icon as a background this is created using compass generated classes and hardcoded in the php */
+.permissioncheckboxsetfield_readonly .optionset li.odd, .permissioncheckboxsetfield_readonly .optionset li.even { margin-left: 16px; }
+.permissioncheckboxsetfield_readonly .optionset li.help { width: 384px; }
+.permissioncheckboxsetfield_readonly .optionset li input { display: none; }
+.permissioncheckboxsetfield_readonly .optionset li label { position: relative; }
+.permissioncheckboxsetfield_readonly .optionset li label span { position: absolute; left: -16px; top: -2px; }
 
 .cms .cms-content .SecurityAdmin .cms-content-fields { overflow-y: auto; }
 .cms .cms-content .SecurityAdmin .cms-content-fields .aligned-right-label { margin-left: 184px; padding: 8px 0; }

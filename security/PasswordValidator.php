@@ -61,7 +61,12 @@ class PasswordValidator extends Object {
 		$valid = new ValidationResult();
 		
 		if($this->minLength) {
-			if(strlen($password) < $this->minLength) $valid->error(sprintf("Password is too short, it must be %s or more characters long.", $this->minLength), "TOO_SHORT");
+			if(strlen($password) < $this->minLength) {
+				$valid->error(
+					sprintf("Password is too short, it must be %s or more characters long.", $this->minLength),
+					"TOO_SHORT"
+				);
+			}
 		}
 
 		if($this->minScore) {
@@ -73,15 +78,28 @@ class PasswordValidator extends Object {
 			}
 			
 			if($score < $this->minScore) {
-				$valid->error("You need to increase the strength of your passwords by adding some of the following characters: " . implode(", ", $missedTests), "LOW_CHARACTER_STRENGTH");
+				$valid->error(
+					"You need to increase the strength of your passwords by adding some of the following characters: "
+						. implode(", ", $missedTests),
+					"LOW_CHARACTER_STRENGTH"
+				);
 			}
 		}
 		
 		if($this->historicalPasswordCount) {
-			$previousPasswords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" Desc", "", $this->historicalPasswordCount);
+			$previousPasswords = DataObject::get(
+				"MemberPassword",
+				"\"MemberID\" = $member->ID",
+				"\"Created\" DESC, \"ID\" Desc",
+				"",
+				$this->historicalPasswordCount
+			);
 			if($previousPasswords) foreach($previousPasswords as $previousPasswords) {
 				if($previousPasswords->checkPassword($password)) {
-					$valid->error("You've already used that password in the past, please choose a new password", "PREVIOUS_PASSWORD");
+					$valid->error(
+						"You've already used that password in the past, please choose a new password",
+						"PREVIOUS_PASSWORD"
+					);
 					break;
 				}
 			}

@@ -379,7 +379,8 @@ jQuery.noConflict();
 				if(title) document.title = title;
 
 				var newFragments = {}, newContentEls;
-				if(xhr.getResponseHeader('Content-Type') == 'text/json') {
+				// If content type is text/json (ignoring charset and other parameters)
+				if(xhr.getResponseHeader('Content-Type').match(/^text\/json[ \t]*;?/i)) {
 					newFragments = data;
 				} else {
 					// Fall back to replacing the content fragment if HTML is returned
@@ -933,7 +934,16 @@ jQuery.noConflict();
 							return false;
 						}
 					},
-					selected: (selectedTab.index() != -1) ? selectedTab.index() : 0
+					selected: (selectedTab.index() != -1) ? selectedTab.index() : 0,
+					show: function(e, ui) {
+						// Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
+						var actions = $(this).closest('form').find('.Actions');
+						if($(ui.tab).closest('li').hasClass('readonly')) {
+							actions.fadeOut();
+						} else {
+							actions.show();
+						}
+					}
 				});
 			},
 		

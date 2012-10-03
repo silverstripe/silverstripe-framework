@@ -7,8 +7,8 @@
  * @subpackage fields-relational
  */
 class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
+	
 	/**
-	 *
 	 * @var int
 	 */
 	protected $itemsPerPage = 15;
@@ -62,7 +62,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
-				throw new LogicException(get_class($this) . " expects an SS_Limitable list to be passed to the GridField.");
+				throw new LogicException(
+					get_class($this) . " expects an SS_Limitable list to be passed to the GridField.");
 			}
 			return false;
 		}
@@ -93,11 +94,26 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		if($actionName !== 'paginate') {
 			return;
 		}
-		$state = $gridField->State->GridFieldPaginator;
+		$state = $this->getGridPagerState($gridField);
 		$state->currentPage = (int)$arguments;
 	}
 	
 	protected $totalItems = 0;
+	
+	/**
+	 * Retrieves/Sets up the state object used to store and retrieve information
+	 * about the current paging details of this GridField
+	 * @param GridField $gridField
+	 * @return GridState_Data 
+	 */
+	protected function getGridPagerState(GridField $gridField) {
+		$state = $gridField->State->GridFieldPaginator;
+		
+		// Force the state to the initial page if none is set
+		if(empty($state->currentPage)) $state->currentPage = 1;
+		
+		return $state;
+	}
 
 	/**
 	 *
@@ -106,40 +122,47 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return SS_List 
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
+		
 		if(!$this->checkDataType($dataList)) return $dataList;
 		
-		$this->totalItems = $dataList->count();
+		$state = $this->getGridPagerState($gridField);
 		
-		$state = $gridField->State->GridFieldPaginator;
-		if(!is_int($state->currentPage)) {
-			$state->currentPage = 1;
-		}
+		// Update item count prior to filter. GridFieldPageCount will rely on this value
+		$this->totalItems = $dataList->count();
 
 		if(!($dataList instanceof SS_Limitable)) {
 			return $dataList;
 		}
-		if(!$state->currentPage) {
-			return $dataList->limit((int)$this->itemsPerPage);
-		}
+		
 		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
 		return $dataList->limit((int)$this->itemsPerPage, (int)$startRow);
 	}
-
+	
 	/**
-	 *
-	 * @param GridField $gridField
-	 * @return array
+	 * Determines arguments to be passed to the template for building this field
+	 * @return ArrayData|null If paging is available this will be an ArrayData 
+	 * object of paging details with these parameters:
+	 * <ul>
+	 *	<li>OnlyOnePage:				boolean - Is there only one page?</li>
+	 *  <li>FirstShownRecord:			integer - Number of the first record displayed</li>
+	 *  <li>LastShownRecord:			integer - Number of the last record displayed</li>
+	 *  <li>NumRecords:					integer - Total number of records</li>
+	 *	<li>NumPages:					integer - The number of pages</li>
+	 *	<li>CurrentPageNum (optional):	integer - If OnlyOnePage is false, the number of the current page</li>
+	 *  <li>FirstPage (optional):		GridField_FormAction - Button to go to the first page</li>
+	 *	<li>PreviousPage (optional):	GridField_FormAction - Button to go to the previous page</li>
+	 *	<li>NextPage (optional):		GridField_FormAction - Button to go to the next page</li>
+	 *	<li>LastPage (optional):		GridField_FormAction - Button to go to last page</li>
+	 * </ul>
 	 */
-	public function getHTMLFragments($gridField) {
-		if(!$this->checkDataType($gridField->getList())) return;
+	public function getTemplateParameters(GridField $gridField) {
+		if(!$this->checkDataType($gridField->getList())) return null;
 		
-		$state = $gridField->State->GridFieldPaginator;
-		if(!is_int($state->currentPage))
-			$state->currentPage = 1;
+		$state = $this->getGridPagerState($gridField);
 
 		// Figure out which page and record range we're on
 		$totalRows = $this->totalItems;
-		if(!$totalRows) return array();
+		if(!$totalRows) return null;
 
 		$totalPages = (int)ceil($totalRows/$this->itemsPerPage);
 		if($totalPages == 0)
@@ -155,13 +178,14 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		// to sort out those first page, last page, pre and next pages, etc
 		// we are not render those in to the paginator.
 		if($totalPages === 1){
-			$forTemplate = new ArrayData(array(
+			return new ArrayData(array(
 				'OnlyOnePage' => true,
 				'FirstShownRecord' => $firstShownRecord,
 				'LastShownRecord' => $lastShownRecord,
-				'NumRecords' => $totalRows
+				'NumRecords' => $totalRows,
+				'NumPages' => $totalPages
 			));
-		}else{
+		} else {
 			// First page button
 			$firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
 			$firstPage->addExtraClass('ss-gridfield-firstpage');
@@ -170,14 +194,16 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
 			// Previous page button
 			$previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
-			$previousPage = new GridField_FormAction($gridField, 'pagination_prev', 'Previous', 'paginate', $previousPageNum);
+			$previousPage = new GridField_FormAction($gridField, 'pagination_prev', 'Previous',
+				'paginate', $previousPageNum);
 			$previousPage->addExtraClass('ss-gridfield-previouspage');
 			if($state->currentPage == 1)
 				$previousPage = $previousPage->performDisabledTransformation();
 
 			// Next page button
 			$nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
-			$nextPage = new GridField_FormAction($gridField, 'pagination_next', 'Next', 'paginate', $nextPageNum);
+			$nextPage = new GridField_FormAction($gridField, 'pagination_next', 'Next',
+				'paginate', $nextPageNum);
 			$nextPage->addExtraClass('ss-gridfield-nextpage');
 			if($state->currentPage == $totalPages)
 				$nextPage = $nextPage->performDisabledTransformation();
@@ -188,9 +214,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			if($state->currentPage == $totalPages)
 				$lastPage = $lastPage->performDisabledTransformation();
 
-
 			// Render in template
-			$forTemplate = new ArrayData(array(
+			return new ArrayData(array(
 				'OnlyOnePage' => false,
 				'FirstPage' => $firstPage,
 				'PreviousPage' => $previousPage,
@@ -203,9 +228,22 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 				'NumRecords' => $totalRows
 			));
 		}
-		return array(
-			'footer' => $forTemplate->renderWith('GridFieldPaginator_Row', array('Colspan'=>count($gridField->getColumns()))),
-		);
+	}
+
+	/**
+	 *
+	 * @param GridField $gridField
+	 * @return array
+	 */
+	public function getHTMLFragments($gridField) {
+		
+		$forTemplate = $this->getTemplateParameters($gridField);
+		if($forTemplate) {
+			return array(
+				'footer' => $forTemplate->renderWith($this->itemClass,
+					array('Colspan'=>count($gridField->getColumns())))
+			);
+		}
 	}
 
 	/**

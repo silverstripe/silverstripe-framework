@@ -1,6 +1,6 @@
 <?php
 
-class EmailFieldTest extends SapphireTest {
+class EmailFieldTest extends FunctionalTest {
 
 	/**
 	 * Check the php validator for email addresses. We should be checking against RFC 5322 which defines email address
@@ -30,11 +30,33 @@ class EmailFieldTest extends SapphireTest {
 		$val = new EmailFieldTest_Validator();
 		try {
 			$field->validate($val);
-			if (!$expectSuccess) $this->assertTrue(false, $checkText . " (/$email/ passed validation, but not expected to)");
+			if (!$expectSuccess) {
+				$this->assertTrue(false,$checkText . " (/$email/ passed validation, but not expected to)");
+			}
 		} catch (Exception $e) {
 			if ($e instanceof PHPUnit_Framework_AssertionFailedError) throw $e; // re-throw assertion failure
-			else if ($expectSuccess) $this->assertTrue(false, $checkText . ": " . $e->GetMessage() . " (/$email/ did not pass validation, but was expected to)");
+			else if ($expectSuccess) {
+				$this->assertTrue(false,
+					$checkText . ": " . $e->GetMessage() . " (/$email/ did not pass validation, but was expected to)");
+			}
 		}
+	}
+
+	/**
+	 * Check that input type='email' fields are submitted by SimpleTest
+	 * 
+	 * @see SimpleTagBuilder::_createInputTag()
+	 */
+	function testEmailFieldPopulation() {
+
+		$this->get('EmailFieldTest_Controller');
+		$this->submitForm('Form_Form', null, array(
+			'Email' => 'test@test.com'
+		));
+
+		$this->assertPartialMatchBySelector('p.good',array(
+			'Test save was successful'
+		));
 	}
 }
 
@@ -48,4 +70,53 @@ class EmailFieldTest_Validator extends Validator {
 
 	public function php($data) {
 	}
+}
+
+class EmailFieldTest_Controller extends Controller implements TestOnly {
+
+	static $url_handlers = array(
+		'$Action//$ID/$OtherID' => "handleAction",
+	);
+
+	protected $template = 'BlankPage';
+	
+	function Link($action = null) {
+		return Controller::join_links(
+			'EmailFieldTest_Controller',
+			$this->request->latestParam('Action'),
+			$this->request->latestParam('ID'),
+			$action
+		);
+	}
+	
+	function Form() {
+		$form = new Form(
+			$this,
+			'Form',
+			new FieldList(
+				new EmailField('Email')
+			),
+			new FieldList(
+				new FormAction('doSubmit')
+			),
+			new RequiredFields(
+				'Email'
+			)
+		);
+
+		// Disable CSRF protection for easier form submission handling
+		$form->disableSecurityToken();
+		
+		return $form;
+	}
+	
+	function doSubmit($data, $form, $request) {
+		$form->sessionMessage('Test save was successful', 'good');
+		return $this->redirectBack();
+	}
+
+	function getViewer($action = null) {
+		return new SSViewer('BlankPage');
+	}
+
 }

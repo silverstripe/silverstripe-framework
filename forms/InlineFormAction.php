@@ -29,10 +29,12 @@ class InlineFormAction extends FormField {
 	
 	public function Field($properties = array()) {
 		if($this->includeDefaultJS) {
-			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',array('ID'=>$this->id()));
+			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',
+				array('ID'=>$this->id()));
 		}
 		
-		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" class=\"action{$this->extraClass}\" />";
+		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\""
+			. " class=\"action{$this->extraClass}\" />";
 	}	
 	
 	public function Title() {
@@ -60,7 +62,8 @@ class InlineFormAction_ReadOnly extends FormField {
 	protected $readonly = true;
 	
 	public function Field($properties = array()) {
-		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" disabled=\"disabled\" class=\"action disabled$this->extraClass\" />";
+		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\""
+			. " disabled=\"disabled\" class=\"action disabled$this->extraClass\" />";
 	}	
 	
 	public function Title() {

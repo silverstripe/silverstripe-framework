@@ -76,7 +76,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$member = Member::currentUser();
 			if($member) {
 				if(!headers_sent()) Cookie::set("PastMember", true, 90, null, null, false, true);
-				DB::query("UPDATE \"Member\" SET \"LastVisited\" = " . DB::getConn()->now() . " WHERE \"ID\" = $member->ID", null);
+				DB::query("UPDATE \"Member\" SET \"LastVisited\" = " . DB::getConn()->now()
+					. " WHERE \"ID\" = $member->ID", null);
 			}
 		}
 		
@@ -136,7 +137,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		// Init
 		$this->baseInitCalled = false;	
 		$this->init();
-		if(!$this->baseInitCalled) user_error("init() method on class '$this->class' doesn't call Controller::init().  Make sure that you have parent::init() included.", E_USER_WARNING);
+		if(!$this->baseInitCalled) {
+			user_error("init() method on class '$this->class' doesn't call Controller::init()."
+				. "Make sure that you have parent::init() included.", E_USER_WARNING);
+		}
 
 		$this->extend('onAfterInit');
 		
@@ -148,12 +152,18 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 		$body = parent::handleRequest($request, $model);
 		if($body instanceof SS_HTTPResponse) {
-			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller; returning it without modification.");
+			if(isset($_REQUEST['debug_request'])) {
+				Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller;"
+					. "returning it without modification.");
+			}
 			$this->response = $body;
 			
 		} else {
 			if(is_object($body)) {
-				if(isset($_REQUEST['debug_request'])) Debug::message("Request handler $body->class object to $this->class controller;, rendering with template returned by $body->class::getViewer()");
+				if(isset($_REQUEST['debug_request'])) {
+					Debug::message("Request handler $body->class object to $this->class controller;"
+						. "rendering with template returned by $body->class::getViewer()");
+				}
 			   $body = $body->getViewer($request->latestParam('Action'))->process($body);
 			}
 			
@@ -407,12 +417,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		}
 	}
 
-	//-----------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * Pushes this controller onto the stack of current controllers.
-	 * This means that any redirection, session setting, or other things that rely on Controller::curr() will now write to this
-	 * controller object.
+	 * This means that any redirection, session setting, or other things that rely on Controller::curr() will now
+	 * write to this controller object.
 	 */
 	public function pushCurrent() {
 		array_unshift(self::$controller_stack, $this);
@@ -433,7 +443,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		if($this === self::$controller_stack[0]) {
 			array_shift(self::$controller_stack);
 		} else {
-			user_error("popCurrent called on $this->class controller, but it wasn't at the top of the stack", E_USER_WARNING);
+			user_error("popCurrent called on $this->class controller, but it wasn't at the top of the stack",
+				E_USER_WARNING);
 		}
 	}
 	
@@ -444,12 +455,13 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		if(!$this->response) $this->response = new SS_HTTPResponse();
 		
 		if($this->response->getHeader('Location')) {
-			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_WARNING);
+			user_error("Already directed to " . $this->response->getHeader('Location')
+				. "; now trying to direct to $url", E_USER_WARNING);
 			return;
 		}
 
 		// Attach site-root to relative links, if they have a slash in them
-		if($url == "" || $url[0] == '?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)){
+		if($url=="" || $url[0]=='?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)) {
 			$url = Director::baseURL() . $url;
 		}
 
@@ -491,7 +503,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	
 	/**
 	 * Tests whether a redirection has been requested.
-	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
+	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will
+	 * return null;
 	 */
 	public function redirectedTo() {
 		return $this->response && $this->response->getHeader('Location');

@@ -30,7 +30,8 @@ class Filesystem extends Object {
 	 * Remove a directory and all subdirectories and files.
 	 * 
 	 * @param String $folder Absolute folder path
-	 * @param Boolean $contentsOnly If this is true then the contents of the folder will be removed but not the folder itself
+	 * @param Boolean $contentsOnly If this is true then the contents of the folder will be removed but not the
+	 *                              folder itself
 	 */
 	public static function removeFolder($folder, $contentsOnly = false) {
 

@@ -3,8 +3,9 @@
 /**
  * A PHP version of TinyMCE's configuration, to allow various parameters to be configured on a site or section basis
  * 
- * There can be multiple HtmlEditorConfig's, which should always be created / accessed using HtmlEditorConfig::get. You can then set 
- * the currently active config using set_active. Whichever config is active when HtmlEditorField#Field is called wins.
+ * There can be multiple HtmlEditorConfig's, which should always be created / accessed using HtmlEditorConfig::get.
+ * You can then set the currently active config using set_active. Whichever config is active when
+ * HtmlEditorField#Field is called wins.
  *  
  * @author "Hamish Friedlander" <hamish@silverstripe.com>
  * @package forms
@@ -16,9 +17,12 @@ class HtmlEditorConfig {
 	static $current = null;
 	
 	/**
-	 * Get the HtmlEditorConfig object for the given identifier. This is a correct way to get an HtmlEditorConfig instance - do not call 'new'
+	 * Get the HtmlEditorConfig object for the given identifier. This is a correct way to get an HtmlEditorConfig
+	 * instance - do not call 'new'
+	 * 
 	 * @param $identifier string - the identifier for the config set
-	 * @return HtmlEditorConfig - the configuration object. This will be created if it does not yet exist for that identifier
+	 * @return HtmlEditorConfig - the configuration object. This will be created if it does not yet exist for that
+	 *                            identifier
 	 */
 	public static function get($identifier = 'default') {
 		if (!array_key_exists($identifier, self::$configs)) self::$configs[$identifier] = new HtmlEditorConfig();
@@ -98,8 +102,11 @@ class HtmlEditorConfig {
 	 * Holder list of buttons, organised by line
 	 */
 	protected $buttons = array(
-		1 => array('bold','italic','underline','strikethrough','separator','justifyleft','justifycenter','justifyright','justifyfull','formatselect','separator','bullist','numlist','outdent','indent','blockquote','hr','charmap'),
-		2 => array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','spellchecker','separator','advcode','search','replace','selectall','visualaid','separator','tablecontrols'),
+		1 => array('bold','italic','underline','strikethrough','separator',
+			'justifyleft','justifycenter','justifyright','justifyfull','formatselect','separator',
+			'bullist','numlist','outdent','indent','blockquote','hr','charmap'),
+		2 => array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','spellchecker','separator',
+			'advcode','search','replace','selectall','visualaid','separator','tablecontrols'),
 		3 => array()
 	);
 
@@ -187,7 +194,8 @@ class HtmlEditorConfig {
 	 * Totally re-set the buttons on a given line
 	 * 
 	 * @param integer from 1..3 - The line number to redefine
-	 * @param string  a string or several strings, or a single array of strings - The button names to make this line contain 
+	 * @param string  a string or several strings, or a single array of strings - The button names to make this line
+	 *                contain 
 	 * @return null
 	 */
 	public function setButtonsForLine() {
@@ -205,7 +213,8 @@ class HtmlEditorConfig {
 	/**
 	 * Add buttons to the end of a line
 	 * @param integer from 1..3
-	 * @param string a string, or several strings, or a single array of strings - The button names to add to the end of this line 
+	 * @param string a string, or several strings, or a single array of strings - The button names to add to the end
+	 *               of this line 
 	 * @return null
 	 */
 	public function addButtonsToLine() {
@@ -222,9 +231,11 @@ class HtmlEditorConfig {
 	/**
 	 * Internal function for adding and removing buttons related to another button
 	 * @param $name string - the name of the button to modify
-	 * @param $offset integer - the offset relative to that button to perform an array_splice at - 0 for before $name, 1 for after 
+	 * @param $offset integer - the offset relative to that button to perform an array_splice at - 0 for before $name,
+	 *                          1 for after 
 	 * @param $del integer - the number of buttons to remove at the position given by index(string) + offset
-	 * @param $add mixed - an array or single item to insert at the position given by index(string) + offset, or null for no insertion
+	 * @param $add mixed - an array or single item to insert at the position given by index(string) + offset,
+	 *                     or null for no insertion
 	 * @return boolean - true if $name matched a button, false otherwise
 	 */
 	protected function modifyButtons($name, $offset, $del=0, $add=null) {
@@ -241,7 +252,8 @@ class HtmlEditorConfig {
 	/**
 	 * Insert buttons before the first occurance of another button
 	 * @param string - the name of the button to insert other buttons before
-	 * @param string a string, or several strings, or a single array of strings - the button names to insert before that button 
+	 * @param string a string, or several strings, or a single array of strings - the button names to insert before
+	 *               that button 
 	 * @return boolean - true if insertion occured, false if it did not (because the given button name was not found)
 	 */
 	public function insertButtonsBefore() {
@@ -253,7 +265,8 @@ class HtmlEditorConfig {
 	/**
 	 * Insert buttons after the first occurance of another button
 	 * @param string - the name of the button to insert other buttons after
-	 * @param string a string, or several strings, or a single array of strings - the button names to insert after that button 
+	 * @param string a string, or several strings, or a single array of strings - the button names to insert after
+	 *               that button 
 	 * @return boolean - true if insertion occured, false if it did not (because the given button name was not found)
 	 */
 	public function insertButtonsAfter() {

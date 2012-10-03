@@ -60,7 +60,9 @@ class MoneyField extends FormField {
 			$field = new DropdownField(
 				"{$name}[Currency]", 
 				_t('MoneyField.FIELDLABELCURRENCY', 'Currency'),
-				ArrayLib::is_associative($allowedCurrencies) ? $allowedCurrencies : array_combine($allowedCurrencies,$allowedCurrencies)
+				ArrayLib::is_associative($allowedCurrencies)
+					? $allowedCurrencies
+					: array_combine($allowedCurrencies,$allowedCurrencies)
 			);
 		} else {
 			$field = new TextField(

@@ -108,9 +108,12 @@ class DataQuery {
 		// Error checking
 		if(!$tableClasses) {
 			if(!SS_ClassLoader::instance()->hasManifest()) {
-				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not querying the database in _config.php.", E_USER_ERROR);
+				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not"
+					. " querying the database in _config.php.", E_USER_ERROR);
 			} else {
-				user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for $this->dataClass. Please ensure you run dev/build after creating a new DataObject.", E_USER_ERROR);
+				user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for"
+					. " $this->dataClass. Please ensure you run dev/build after creating a new DataObject.",
+					E_USER_ERROR);
 			}
 		}
 
@@ -226,9 +229,11 @@ class DataQuery {
 		}
 
 		$query->selectField("\"$baseClass\".\"ID\"", "ID");
-		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE ".DB::getConn()->prepStringForDB($baseClass)." END", "RecordClassName");
+		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\""
+			. " ELSE ".DB::getConn()->prepStringForDB($baseClass)." END", "RecordClassName");
 
-		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
+		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses
+		// of DataQuery
 
 		$obj = Injector::inst()->get($this->dataClass);
 		$obj->extend('augmentSQL', $query, $this);
@@ -592,11 +597,12 @@ class DataQuery {
     		if ($component = $model->has_one($rel)) {	
     			if(!$this->query->isJoinedTo($component)) {
     				$foreignKey = $model->getReverseAssociation($component);
-    				$this->query->addLeftJoin($component, "\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
+    				$this->query->addLeftJoin($component,
+    					"\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
 				
     				/**
-    				 * add join clause to the component's ancestry classes so that the search filter could search on its 
-    				 * ancester fields.
+    				 * add join clause to the component's ancestry classes so that the search filter could search on
+    				 * its ancestor fields.
     				 */
     				$ancestry = ClassInfo::ancestry($component, true);
     				if(!empty($ancestry)){
@@ -614,10 +620,11 @@ class DataQuery {
     			if(!$this->query->isJoinedTo($component)) {
     			 	$ancestry = $model->getClassAncestry();
     				$foreignKey = $model->getRemoteJoinField($rel);
-    				$this->query->addLeftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+    				$this->query->addLeftJoin($component,
+    					"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
     				/**
-    				 * add join clause to the component's ancestry classes so that the search filter could search on its 
-    				 * ancestor fields.
+    				 * add join clause to the component's ancestry classes so that the search filter could search on
+    				 * its ancestor fields.
     				 */
     				$ancestry = ClassInfo::ancestry($component, true);
     				if(!empty($ancestry)){
@@ -635,10 +642,13 @@ class DataQuery {
     			list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
     			$parentBaseClass = ClassInfo::baseDataClass($parentClass);
     			$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-    			$this->query->addInnerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-    			$this->query->addLeftJoin($componentBaseClass, "\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+    			$this->query->addInnerJoin($relationTable,
+    				"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
+    			$this->query->addLeftJoin($componentBaseClass,
+    				"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
     			if(ClassInfo::hasTable($componentClass)) {
-    				$this->query->addLeftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+    				$this->query->addLeftJoin($componentClass,
+    					"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
     			}
     			$modelClass = $componentClass;
 

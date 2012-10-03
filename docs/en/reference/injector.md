@@ -61,7 +61,7 @@ The subsequent call returns the SAME object as the first call.
 		// set by the injector on object creation
 		public $permissions;
 		public $textProperty;
-
+		
 		static $dependencies = array(
 			'textProperty'		=> 'a string value',
 			'permissions'		=> '%$PermissionService',
@@ -123,11 +123,11 @@ Assuming a class structure such as
 			$this->database = $d;
 		}
 	}
-
+	
 	class MySQLDatabase {
 		private $username;
 		private $password;
-
+		
 		public function __construct($username, $password) {
 			$this->username = $username;
 			$this->password = $password;
