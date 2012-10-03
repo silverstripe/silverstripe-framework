@@ -248,7 +248,7 @@ pt:
     Description: Descrição
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Fechado?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Não foram encontradas regras'
     PLURALNAME: Groups
     Parent: 'Grupo pai'
     RolesAddEditLink: 'Manage roles'
