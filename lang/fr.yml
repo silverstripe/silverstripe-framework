@@ -258,7 +258,7 @@ fr:
     many_many_Members: Membres
   GroupImportForm:
     Help1: '<p>Importer un ou plusieurs groupe(s) au format <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Montrer l''usage avancé</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Utilisations avancée</h4>\\n<ul>\\n<li>Colonnes autorisées&nbsp;: <em>%s</em></li>\\n<li>Les groupes existants dont la valeur <em>Code</em> concorde seront mis à jour avec les données du fichier importé.</li>\\n<li>Des hiérarchies entre groupes peuvent être créées à l’aide de la colonne <em>ParentCode</em>.</li>\\n<li>Des autorisations peuvent être assignées par la colonne <em>PermissionCode</em>. Les autorisations existantes ne seront pas effacées.</li>\\n</ul>\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: '%d groupes supprimés'
     ResultUpdated: '%d groupes mises à jour'
@@ -410,7 +410,7 @@ fr:
     TWODIGITYEAR: 'L’année sur deux chiffres'
   MemberImportForm:
     Help1: '<p>Importer les membres au format<em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Afficher l''usage avancé.</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Utilisations avancée</h4>\\n<ul>\\n<li>Colonnes autorisées&nbsp;: <em>%s</em></li>\\n<li>Les membres existants dont la valeur <em>Code</em> concorde seront mis à jour avec les données du fichier importé.</li>\\n<li>Des groupes peuvent être assignés par la colonne <em>Groups</em>. Plusieurs groupes, identifiés par leur <em>Code</em>, peuvent être assignés en les séparant par des virgules. Les groupes existants ne seront pas effacés.</li>\\n</ul>\\n</div>\\n"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: '%d membres supprimés'
     ResultNone: 'Aucun changements'
@@ -422,6 +422,7 @@ fr:
   ModelAdmin:
     DELETE: Supprime
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importer de CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Veuillez choisir un fichier CSV à importer'
@@ -472,6 +473,7 @@ fr:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rôles et autorisations d’accès'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Entrer un numéro de téléphone valide'
   RelationComplexTableField.ss:

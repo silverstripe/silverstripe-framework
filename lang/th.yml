@@ -258,7 +258,7 @@ th:
     many_many_Members: สมาชิก
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'สร้างกลุ่มแล้ว {count} กลุ่ม'
     ResultDeleted: 'ลบกลุ่มแล้ว %d กลุ่ม'
     ResultUpdated: 'อัพเดทแล้ว %d กลุ่ม'
@@ -410,7 +410,7 @@ th:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'ลบสมาชิกแล้ว %d สมาชิก'
     ResultNone: ยังไม่มีการเปลี่ยนแปลง
@@ -422,6 +422,7 @@ th:
   ModelAdmin:
     DELETE: ลบ
     DELETEDRECORDS: 'ลบแล้ว {count} รายการ'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'นำเข้าจากไฟล์ CSV'
     IMPORTEDRECORDS: 'นำเข้าแล้ว {count} รายการ'
     NOCSVFILE: 'กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล'
@@ -472,6 +473,7 @@ th:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: บทบาทและสิทธิ์การเข้าใช้งาน
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง
   RelationComplexTableField.ss:

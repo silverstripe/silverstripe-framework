@@ -258,7 +258,7 @@ sv:
     many_many_Members: Medlemmar
   GroupImportForm:
     Help1: '<p>Importera en eller flera grupper i <em>CSV</em>- format (komma-separerade värden). <small><a href="#" class ="toggle-advanced">Visa avancerade val</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Avancerat</h4>\\n<ul>\\n<li>Tillåtna kolumner<em>%s</em></li>\\n<li>Existerande grupper matchas deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupphierarkier kan skapas genom att använda en <em>ParentCode</em>-kolumn.</li>\\n<li>Behörighetskoder kan anges genom en <em>PermissionCode</em>-kolumn. Existerande behörighetskoder raderas inte.</li>\\n</ul>\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Skapade {count} grupper'
     ResultDeleted: 'Raderade %d grupper'
     ResultUpdated: 'Uppdaterade %d grupper'
@@ -410,7 +410,7 @@ sv:
     TWODIGITYEAR: 'Två siffror för år'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small>a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade medlemmar matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande gruppmedlemskap tas inte bort.</li>\\n</ul>\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Skapade {count} medlemmar'
     ResultDeleted: 'Raderade %d medlemmar'
     ResultNone: 'Inga ändringar'
@@ -422,6 +422,7 @@ sv:
   ModelAdmin:
     DELETE: Radera
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importera från CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Var god och bläddra efter en CSV-fil för import'
@@ -472,6 +473,7 @@ sv:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
   RelationComplexTableField.ss:

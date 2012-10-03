@@ -258,7 +258,7 @@ eo:
     many_many_Members: Membroj
   GroupImportForm:
     Help1: '<p>Importi unu aŭ pliaj grupojn en formato <em>CSV</em> (perkome disigitaj valoroj values). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
-    Help2: '<div class="advanced"><h4>Spertula uzado</h4><ul><li>Permesitaj kolumnoj: <em>%s</em></li><li>Ekzistantaj grupoj estas kongrueblaj laŭ ili unika <em>Koda</em> valoro, kaj aktualigeblaj per eventualaj novaj valoroj el la importita dosiero</li><li>Grupaj hierarkioj estas kreeblaj per kolumno <em>PatroKodo</em>.</li><li>Permkodoj estas agordeblaj per kolumno <em>PermisKodo</em>. Ekzistantaj permiskodoj ne vakiĝos.</li></ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Forigis %d grupojn'
     ResultUpdated: 'Aktualigis %d grupojn'
@@ -410,7 +410,7 @@ eo:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Gravaj membroj en <em>CSV-formato</em> (perkome disigitaj valoroj ). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
-    Help2: '<div class="advanced"><h4>Spertula uzado</h4><ul><li>Permesitaj kolumnoj: <em>%s</em></li><li>Kongruas ekzistantajn membrojn laŭ ilia unika agordo <em>Kodo</em>, kaj aktualigas ilin laŭ eventualaj novaj valoroj el la importita dosiero.</li><li>Povas agordi grupojn laŭ la kolumno <em>Grupoj</em>. Identigas grupojn laŭ ilia agordo <em>Kodo</em>, povas apartigi pluroblan grupon per komoj. Ne vakigas ekzistantajn grupojn.</li></ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Forigis %d membrojn'
     ResultNone: 'Neniu ŝanĝo'
@@ -422,6 +422,7 @@ eo:
   ModelAdmin:
     DELETE: Forigi
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importi el CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Bonvolu foliumi por CSV-dosiero importota'
@@ -472,6 +473,7 @@ eo:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Bonvolu enigi validan telefonnumeron'
   RelationComplexTableField.ss:

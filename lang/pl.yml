@@ -258,7 +258,7 @@ pl:
     many_many_Members: Członkowie
   GroupImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n\\n<h4>Zaawansowane użycie</h4>\\n\\n<ul>\\n\\n<li>Dozwolone kolumny: <em>%s</em></li>\\n\\n<li>Istniejące grupy są dopasowywane poprzez ich unikalną wartość <em>Kod</em> i aktualizowane nowymi wartościami z zaimportowanego pliku.</li>\\n\\n<li>Można tworzyć hierarchie Grup za pomocą kolumny <em>KodNadrzędny</em>.</li>\\n\\n<li>Kody uprawnień mogą być przypisywane za pomocą kolumny <em>KodUprawnienia</em>. Istniejące kody uprawnień nie są usuwane.</li>\\n\\n</ul>\\n\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Stworzono grup: {count}'
     ResultDeleted: 'Usunięto grup: %d'
     ResultUpdated: 'Zaktualizowano grup: %d'
@@ -410,7 +410,7 @@ pl:
     TWODIGITYEAR: 'Dwucyfrowy rok'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Zaawansowane użycie</h4>\\n<ul>\\n<li>Dozwolone kolumny: <em>%s</em></li>\\n<li>Istniejący użytkownicy są dopasowani poprzez unikalną właściwość <em>Kod</em> i uaktualniani  nowymi wartościami z zaimportowanego pliku.</li>\\n<li>Grupy mogą być przypisane poprzez kolumnę <em>Grupy</em>. Grupy identyfikowane są poprzez unikalną właściwość  <em>Kod</em>, grupy mogą być oddzielone od siebie przecinkiem. Przypisania użytkowników do grup nie są usuwane.</li>\\n</ul>\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Stworzono członków: {count}'
     ResultDeleted: 'Usunięto %d użytkowników'
     ResultNone: 'Bez zmian'
@@ -422,6 +422,7 @@ pl:
   ModelAdmin:
     DELETE: Usuń
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import z CSV'
     IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
     NOCSVFILE: 'Wybierz plik CSV do zaimportowania'
@@ -472,6 +473,7 @@ pl:
     SINGULARNAME: 'Kod roli uprawnienia'
   Permissions:
     PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Wprowadź poprawny numer telefonu'
   RelationComplexTableField.ss:
