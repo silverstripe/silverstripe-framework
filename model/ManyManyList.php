@@ -176,7 +176,7 @@ class ManyManyList extends RelationList {
 		// @todo Optimize into a single query instead of one per extra field
 		if($this->extraFields) {
 			foreach($this->extraFields as $fieldName => $dbFieldSpec) {
-				$query = new SQLQuery($fieldName, array("\"$this->joinTable\""));
+				$query = new SQLQuery("\"$fieldName\"", array("\"$this->joinTable\""));
 				if($filter = $this->foreignIDFilter()) {
 					$query->setWhere($filter);
 				} else {
