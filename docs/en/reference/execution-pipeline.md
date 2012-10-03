@@ -30,7 +30,6 @@ The basic .htaccess file after installing SilverStripe look like this:
 	RewriteRule .* framework/main.php?url=%1&%{QUERY_STRING} [L]
 	</IfModule>
 	### SILVERSTRIPE END ###
-
 	</file>
 
 The `<Files>` section denies direct access to the template files from anywhere but the server itself.

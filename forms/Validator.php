@@ -75,7 +75,8 @@ abstract class Validator extends Object {
 	 * 
 	 * @param $fieldName name of the field
 	 * @param $message error message to display
-	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output. See {@link getErrors()} for details.
+	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output.
+	 *                              See {@link getErrors()} for details.
 	 */
 	public function validationError($fieldName, $message, $messageType='') {
 		$this->errors[] = array(
@@ -103,10 +104,14 @@ abstract class Validator extends Object {
 	public function requireField($fieldName, $data) {
 		if(is_array($data[$fieldName]) && count($data[$fieldName])) {
 			foreach($data[$fieldName] as $componentkey => $componentVal){
-				if(!strlen($componentVal)) $this->validationError($fieldName, "$fieldName $componentkey is required", "required");
+				if(!strlen($componentVal)) {
+					$this->validationError($fieldName, "$fieldName $componentkey is required", "required");
+				}
 			}
 			
-		}else if(!strlen($data[$fieldName])) $this->validationError($fieldName, "$fieldName is required", "required");
+		} else if(!strlen($data[$fieldName])) {
+			$this->validationError($fieldName, "$fieldName is required", "required");
+		}
 	}
 	
 	/**

@@ -75,7 +75,10 @@ class MemberAuthenticator extends Authenticator {
 			$member->extend('authenticated');
 		} else {
 			// failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
-			$existingMember = DataObject::get_one("Member", "\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user'");
+			$existingMember = DataObject::get_one(
+				"Member",
+				"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user'"
+			);
 			if($existingMember) {
 				$attempt->MemberID = $existingMember->ID;
 				

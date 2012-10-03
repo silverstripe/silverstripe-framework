@@ -44,8 +44,8 @@ class LookupFieldTest extends SapphireTest {
 		$source = array('one' => 'one val', 'two' => 'two val', 'three' => 'three val');
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue(array('one','two'));
-		$this->assertEquals(
-			'<span class="readonly" id="test">one val, two val</span><input type="hidden" name="test" value="one, two" />', 
+		$this->assertEquals('<span class="readonly" id="test">one val, two val</span>'
+			. '<input type="hidden" name="test" value="one, two" />', 
 			$f->Field()
 		);
 	}
@@ -71,7 +71,8 @@ class LookupFieldTest extends SapphireTest {
 		$f->setValue(array($member1->ID, $member2->ID));
 		$this->assertEquals(
 			sprintf(
-				'<span class="readonly" id="test">member1, member2</span><input type="hidden" name="test" value="%s, %s" />', 
+				'<span class="readonly" id="test">member1, member2</span>'
+					. '<input type="hidden" name="test" value="%s, %s" />', 
 				$member1->ID,
 				$member2->ID
 			),

@@ -200,9 +200,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			
 			// if no alternate menu items have matched, return a permission error
 			$messageSet = array(
-				'default' => _t('LeftAndMain.PERMDEFAULT',"Please choose an authentication method and enter your credentials to access the CMS."),
-				'alreadyLoggedIn' => _t('LeftAndMain.PERMALREADY',"I'm sorry, but you can't access that part of the CMS.  If you want to log in as someone else, do so below"),
-				'logInAgain' => _t('LeftAndMain.PERMAGAIN',"You have been logged out of the CMS.  If you would like to log in again, enter a username and password below."),
+				'default' => _t('LeftAndMain.PERMDEFAULT',
+					"Please choose an authentication method and enter your credentials to access the CMS."),
+				'alreadyLoggedIn' => _t('LeftAndMain.PERMALREADY',
+					"I'm sorry, but you can't access that part of the CMS.  If you want to log in as someone else, do"
+					. " so below"),
+				'logInAgain' => _t('LeftAndMain.PERMAGAIN',
+					"You have been logged out of the CMS.  If you would like to log in again, enter a username and"
+					. " password below."),
 			);
 
 			return Security::permissionFailure($this, $messageSet);
@@ -683,7 +688,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *  Children, AllChildrenIncludingDeleted, or AllHistoricalChildren
 	 * @return String Nested unordered list with links to each page
 	 */
-	public function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null, $filterFunction = null, $minNodeCount = 30) {
+	public function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null,
+			$filterFunction = null, $minNodeCount = 30) {
+
 		// Filter criteria
 		$params = $this->request->getVar('q');
 		if(isset($params['FilterClass']) && $filterClass = $params['FilterClass']){
@@ -696,7 +703,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		// Default childrenMethod and numChildrenMethod
-		if(!$childrenMethod) $childrenMethod = ($filter && $filter->getChildrenMethod()) ? $filter->getChildrenMethod() : 'AllChildrenIncludingDeleted';
+		if(!$childrenMethod) $childrenMethod = ($filter && $filter->getChildrenMethod())
+			? $filter->getChildrenMethod() 
+			: 'AllChildrenIncludingDeleted';
+
 		if(!$numChildrenMethod) $numChildrenMethod = 'numChildren';
 		if(!$filterFunction) $filterFunction = ($filter) ? array($filter, 'isPageIncluded') : null;
 
@@ -714,7 +724,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		// NOTE: SiteTree/CMSMain coupling :-(
 		if(class_exists('SiteTree')) {
-			SiteTree::prepopulate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
+			SiteTree::prepopulate_permission_cache('CanEditType', $obj->markedNodeIDs(),
+				'SiteTree::can_edit_multiple');
 		}
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
@@ -789,20 +800,31 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$ids = explode(',', $request->getVar('ids'));
 		foreach($ids as $id) {
 			$record = $this->getRecord($id);
-			$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
+			$recordController = ($this->stat('tree_class') == 'SiteTree') 
+				?  singleton('CMSPageEditController') 
+				: $this;
 
 			// Find the next & previous nodes, for proper positioning (Sort isn't good enough - it's not a raw offset)
 			// TODO: These methods should really be in hierarchy - for a start it assumes Sort exists
 			$next = $prev = null;
 
 			$className = $this->stat('tree_class');
-			$next = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:GreaterThan', $record->Sort)->first();
+			$next = DataObject::get($className)
+				->filter('ParentID', $record->ParentID)
+				->filter('Sort:GreaterThan', $record->Sort)
+				->first();
+
 			if (!$next) {
-				$prev = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:LessThan', $record->Sort)->reverse()->first();
+				$prev = DataObject::get($className)
+					->filter('ParentID', $record->ParentID)
+					->filter('Sort:LessThan', $record->Sort)
+					->reverse()
+					->first();
 			}
 
 			$link = Controller::join_links($recordController->Link("show"), $record->ID);
-			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))->forTemplate() . '</li>';
+			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))
+				->forTemplate() . '</li>';
 
 			$data[$id] = array(
 				'html' => $html, 
@@ -874,7 +896,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if (!Permission::check('SITETREE_REORGANISE') && !Permission::check('ADMIN')) {
 			$this->response->setStatusCode(
 				403,
-				_t('LeftAndMain.CANT_REORGANISE',"You do not have permission to rearange the site tree. Your change was not saved.")
+				_t('LeftAndMain.CANT_REORGANISE',
+					"You do not have permission to rearange the site tree. Your change was not saved.")
 			);
 			return;
 		}
@@ -889,7 +912,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if(($parentID == '0' || $root == 'root') && !SiteConfig::current_site_config()->canCreateTopLevel()){
 				$this->response->setStatusCode(
 					403,
-						_t('LeftAndMain.CANT_REORGANISE',"You do not have permission to alter Top level pages. Your change was not saved.")
+					_t('LeftAndMain.CANT_REORGANISE',
+						"You do not have permission to alter Top level pages. Your change was not saved.")
 					);
 				return;
 			}
@@ -905,8 +929,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$node) {
 			$this->response->setStatusCode(
 				500,
-				_t(
-					'LeftAndMain.PLEASESAVE',
+				_t('LeftAndMain.PLEASESAVE',
 					"Please Save Page: This page could not be upated because it hasn't been saved yet."
 				)
 			);
@@ -933,7 +956,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
+			$this->response->addHeader('X-Status',
+				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 		
 		// Update sorting
@@ -950,11 +974,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					// Nodes that weren't "actually moved" shouldn't be registered as 
 					// having been edited; do a direct SQL update instead
 					++$counter;
-					DB::query(sprintf("UPDATE \"%s\" SET \"Sort\" = %d WHERE \"ID\" = '%d'", $className, $counter, $id));
+					DB::query(sprintf("UPDATE \"%s\" SET \"Sort\" = %d WHERE \"ID\" = '%d'",
+						$className, $counter, $id));
 				}
 			}
 			
-			$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
+			$this->response->addHeader('X-Status',
+				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 
 		return Convert::raw2json($statusUpdates);
@@ -1527,7 +1553,8 @@ class LeftAndMainMarkingFilter {
 		// We need to recurse up the tree, 
 		// finding ParentIDs for each ID until we run out of parents
 		while (!empty($parents)) {
-			$res = DB::query('SELECT "ParentID", "ID" FROM "SiteTree" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
+			$res = DB::query('SELECT "ParentID", "ID" FROM "SiteTree"'
+				. ' WHERE "ID" in ('.implode(',',array_keys($parents)).')');
 			$parents = array();
 
 			foreach($res as $row) {
@@ -1623,12 +1650,11 @@ class LeftAndMain_TreeNode extends ViewableData {
 	 */
 	public function forTemplate() {
 		$obj = $this->obj;
-		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\"" . $this->getClasses() . "\">" .
-			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
-			"<a href=\"" . $this->getLink() . "\" title=\"" .
-			_t('LeftAndMain.PAGETYPE','Page type: ') .
-			"$obj->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle). 
-			"</span></a>";
+		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\""
+			. $this->getClasses() . "\">" . "<ins class=\"jstree-icon\">&nbsp;</ins>"
+			. "<a href=\"" . $this->getLink() . "\" title=\"" . _t('LeftAndMain.PAGETYPE','Page type: ')
+			. "$obj->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
+			. "</span></a>";
 	}
 
 	public function getClasses() {

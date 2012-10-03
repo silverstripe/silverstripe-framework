@@ -34,7 +34,6 @@ Returns the full *Member* Object for the current user, returns *null* if user is
 	}
 
 
-
 ## Subclassing
 
 <div class="warning" markdown="1">

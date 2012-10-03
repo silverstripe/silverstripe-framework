@@ -2,9 +2,12 @@
 /**
  * ComplexTableField designed to edit a has_many join.
  * 
- * This field allows you to show a 1-to-many relation with a group of DataObjects as a (readonly) tabular list. Its most useful when you want to manage the relationship itself thanks the **check boxes** present on each line of the table.
+ * This field allows you to show a 1-to-many relation with a group of DataObjects as a (readonly) tabular list. Its
+ * most useful when you want to manage the relationship itself thanks the **check boxes** present on each line of the
+ * table.
  * 
- * Moreover, you can not do any mistake anymore in the relation by checking a DataObject already linked with another of the parent class.
+ * Moreover, you can not do any mistake anymore in the relation by checking a DataObject already linked with another
+ * of the parent class.
  * 
  * See {@link ComplexTableField} for more documentation on the base-class.
  * 
@@ -23,7 +26,8 @@
  * );
  * </code>
  * 
- * Notice: You still have different ways to customize the popup window as in the parent-class {@link ComplexTableField}.
+ * Notice: You still have different ways to customize the popup window as in the parent-class
+ * {@link ComplexTableField}.
  * 
  * @see http://doc.silverstripe.org/tutorial/5-dataobject-relationship-management
  * 
@@ -38,9 +42,11 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	protected $addTitle;
 	
-	protected $htmlListEndName = 'CheckedList'; // If you change the value, do not forget to change it also in the JS file
+	// If you change the value, do not forget to change it also in the JS file
+	protected $htmlListEndName = 'CheckedList'; 
 	
-	protected $htmlListField = 'selected'; // If you change the value, do not forget to change it also in the JS file
+	// If you change the value, do not forget to change it also in the JS file
+	protected $htmlListField = 'selected';
 	
 	public $template = 'RelationComplexTableField';
 	
@@ -48,8 +54,11 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	protected $relationAutoSetting = false;
 	
-	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
-		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null,
+			$sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+
+		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields,
+			$sourceFilter, $sourceSort, $sourceJoin);
 
 		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor', Deprecation::SCOPE_CLASS);
 		
@@ -57,7 +66,10 @@ class HasManyComplexTableField extends ComplexTableField {
 
 		if($controllerClass = $this->controllerClass()) {
 			$this->joinField = $this->getParentIdName($controllerClass, $this->sourceClass);
-			if(!$this->joinField) user_error("Can't find a has_one relationship from '$this->sourceClass' to '$controllerClass'", E_USER_WARNING);
+			if(!$this->joinField) {
+				user_error("Can't find a has_one relationship from '$this->sourceClass' to '$controllerClass'",
+					E_USER_WARNING);
+			}
 		} else {
 			user_error("Can't figure out the data class of $controller", E_USER_WARNING);
 		}
@@ -91,8 +103,10 @@ class HasManyComplexTableField extends ComplexTableField {
 		$fieldName = $this->name;
 		$saveDest = $record->$fieldName();
 		
-		if(! $saveDest)
-			user_error("HasManyComplexTableField::saveInto() Field '$fieldName' not found on $record->class.$record->ID", E_USER_ERROR);
+		if(!$saveDest) {
+			user_error("HasManyComplexTableField::saveInto() Field $fieldName not found on $record->class.$record->ID"
+				, E_USER_ERROR);
+		}
 		
 		$items = array();
 		
@@ -154,9 +168,11 @@ class HasManyComplexTableField_Item extends ComplexTableField_Item {
 		$parentID = $this->parent->getControllerID();
 		
 		if($this->parent->IsReadOnly || ($joinVal > 0 && $joinVal != $parentID))
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"
+				disabled=\"disabled\"/>";
 		else if($joinVal == $parentID)
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"
+				checked=\"checked\"/>";
 		else
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"/>";
 	}

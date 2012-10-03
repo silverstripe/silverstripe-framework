@@ -1,7 +1,7 @@
 <?php
 /** 
- * DataObjectInterface is an interface that other data systems in your application can implement in order to behave in a manner
- * similar to DataObject.
+ * DataObjectInterface is an interface that other data systems in your application can implement in order to behave in
+ * a manner similar to DataObject.
  *
  * In addition to the methods defined below, the data of the object should be directly accessible as fields.
  * @package framework
@@ -9,8 +9,8 @@
  */
 interface DataObjectInterface {
 	/**
-	 * Create a new data object, not yet in the database.  To load an object into the database, a null object should be constructed,
-	 * its fields set, and the write() method called.
+	 * Create a new data object, not yet in the database.  To load an object into the database, a null object should be
+	 * constructed, its fields set, and the write() method called.
 	 */
 	public function __construct();
 
@@ -35,8 +35,9 @@ interface DataObjectInterface {
 	public function instance_get_one($filter, $sort = "");
 
 	/**
-	 * Write the current object back to the database.  It should know whether this is a new object, in which case this would
-	 * be an insert command, or if this is an existing object queried from the database, in which case thes would be 
+	 * Write the current object back to the database.  It should know whether this is a new object, in which case this
+	 * would be an insert command, or if this is an existing object queried from the database, in which case thes would
+	 * be 
 	 */
 	public function write();
 	

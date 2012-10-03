@@ -31,7 +31,9 @@ class TestMailer extends Mailer {
 	 * Send a multi-part HTML email
 	 * TestMailer will merely record that the email was asked to be sent, without sending anything.
 	 */
-	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customHeaders = false, $plainContent = false, $inlineImages = false) {
+	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customHeaders = false,
+			$plainContent = false, $inlineImages = false) {
+
 		$this->emailsSent[] = array(
 			'type' => 'html',
 			'to' => $to,
@@ -64,7 +66,8 @@ class TestMailer extends Mailer {
 	 * @param $from
 	 * @param $subject
 	 * @param $content
-	 * @return An array containing the keys: 'type','to','from','subject','content', 'plainContent','attachedFiles','customHeaders','htmlContent',inlineImages'
+	 * @return array Contains the keys: 'type', 'to', 'from', 'subject', 'content', 'plainContent', 'attachedFiles',
+	 *               'customHeaders', 'htmlContent', 'inlineImages'
 	 */
 	public function findEmail($to, $from = null, $subject = null, $content = null) {
 		foreach($this->emailsSent as $email) {

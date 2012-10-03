@@ -14,7 +14,14 @@ class Boolean extends DBField {
 	}
 	
 	public function requireField() {
-		$parts=Array('datatype'=>'tinyint', 'precision'=>1, 'sign'=>'unsigned', 'null'=>'not null', 'default'=>$this->defaultVal, 'arrayValue'=>$this->arrayValue);
+		$parts=Array(
+			'datatype'=>'tinyint',
+			'precision'=>1,
+			'sign'=>'unsigned',
+			'null'=>'not null',
+			'default'=>$this->defaultVal,
+			'arrayValue'=>$this->arrayValue
+		);
 		$values=Array('type'=>'boolean', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}

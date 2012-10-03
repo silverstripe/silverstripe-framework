@@ -49,7 +49,7 @@ RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
 	$peopleXML = $service->connect('/people');
 	$people = $service->getValues($peopleXML, 'user');
 	
-	...
+	// ...
 	
 	$taskXML = $service->connect('/tasks');
 	$tasks = $service->getValues($taskXML, 'task');
@@ -117,16 +117,13 @@ If the web service returned an error (for example, API key not available or inad
 could delgate the error handling to it's descendant class. To handle the errors define a function called errorCatch
 
 	:::php
-	        /*
-		This will raise Youtube API specific error messages (if any).
-	
-		*/
+	  // This will raise Youtube API specific error messages (if any).
 		public function errorCatch($response){
 			$err_msg = $response;
-		 if(strpos($err_msg, '<') === false)
-			//user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
-		 	user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
-		 else
+		 	if(strpos($err_msg, '<') === false) {
+		 		user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
+		 	}
+		 	
 		 	return $response;
 		}
 

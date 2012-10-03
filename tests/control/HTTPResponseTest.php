@@ -15,6 +15,7 @@ class HTTPResponseTest extends SapphireTest {
 	
 	public function testContentLengthHeader() {
 		$r = new SS_HTTPResponse('123ü');
+		$r->fixContentLength();
 		$this->assertNotNull($r->getHeader('Content-Length'), 'Content-length header is added');
 		$this->assertEquals(
 			5, 
@@ -23,6 +24,7 @@ class HTTPResponseTest extends SapphireTest {
 		);
 		
 		$r->setBody('1234ü');
+		$r->fixContentLength();
 		$this->assertEquals(
 			6, 
 			$r->getHeader('Content-Length'),

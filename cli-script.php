@@ -3,7 +3,8 @@
 /**
  * File similar to main.php designed for command-line scripts
  * 
- * This file lets you execute SilverStripe requests from the command-line.  The URL is passed as the first argument to the scripts.
+ * This file lets you execute SilverStripe requests from the command-line.  The URL is passed as the first argument to
+ * the scripts.
  * 
  * @package framework
  * @subpackage core
@@ -74,7 +75,8 @@ DB::connect($databaseConfig);
 // Get the request URL from the querystring arguments
 $url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
 if(!$url) {
-	echo 'Please specify an argument to cli-script.php/sake. For more information, visit http://doc.silverstripe.org/doku.php?id=sake';
+	echo 'Please specify an argument to cli-script.php/sake. For more information, visit'
+    . ' http://doc.silverstripe.org/framework/en/topics/commandline';
 	die();
 }
 

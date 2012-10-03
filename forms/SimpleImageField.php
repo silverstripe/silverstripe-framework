@@ -69,9 +69,15 @@
 class SimpleImageField extends FileField {
 
 	public function __construct($name, $title = null, $value = null) {
-		Deprecation::notice('3.0', "SimpleImageField is deprecated. Use UploadField with \$myField->allowedExtensions = array('jpg', 'gif', 'png')", Deprecation::SCOPE_CLASS);
+		Deprecation::notice('3.0', 
+			"SimpleImageField is deprecated. Use UploadField with "
+			. "\$myField->allowedExtensions = array('jpg', 'gif', 'png')",
+			Deprecation::SCOPE_CLASS);
 
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
+		if(count(func_get_args()) > 3) {
+			Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments',
+				Deprecation::SCOPE_GLOBAL);
+		}
 
 		parent::__construct($name, $title, $value);
 

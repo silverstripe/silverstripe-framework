@@ -118,7 +118,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 
-		$groupEditLink = $parser->getByXpath('//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $group->ID . '")]//a');
+		$groupEditLink = $parser->getByXpath('//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "'
+			. $group->ID . '")]//a');
 		$this->assertEquals(
 			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/' . $group->ID . '/edit',
 			(string)$groupEditLink[0]['href']
@@ -128,9 +129,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get((string)$groupEditLink[0]['href']);
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
+		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]' .
+			'//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
 		$this->assertEquals(
-			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People/item/%d/edit', $group->ID, $person->ID),
+			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
+				. '/item/%d/edit', $group->ID, $person->ID),
 			(string)$personEditLink[0]['href']
 		);
 
@@ -138,9 +141,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get((string)$personEditLink[0]['href']);
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
+		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]'
+			. '//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
 		$this->assertEquals(
-			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People/item/%d/ItemEditForm/field/Categories/item/%d/edit', $group->ID, $person->ID, $category->ID),
+			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
+				. '/item/%d/ItemEditForm/field/Categories/item/%d/edit', $group->ID, $person->ID, $category->ID),
 			(string)$categoryEditLink[0]['href']
 		);
 

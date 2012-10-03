@@ -122,7 +122,9 @@ class Versioned extends DataExtension {
 			$dataQuery->setQueryParam('Versioned.mode', 'archive');
 			$dataQuery->setQueryParam('Versioned.date', $parts[1]);
 
-		} else if($parts[0] == 'Stage' && $parts[1] != $this->defaultStage && array_search($parts[1],$this->stages) !== false) {
+		} else if($parts[0] == 'Stage' && $parts[1] != $this->defaultStage 
+				&& array_search($parts[1],$this->stages) !== false) {
+
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$dataQuery->setQueryParam('Versioned.stage', $parts[1]);
 		}
@@ -197,7 +199,8 @@ class Versioned extends DataExtension {
 		case 'stage_unique':
 			$stage = $dataQuery->getQueryParam('Versioned.stage');
 
-			// Recurse to do the default stage behavior (must be first, we rely on stage renaming happening before below)
+			// Recurse to do the default stage behavior (must be first, we rely on stage renaming happening before
+			// below)
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$this->augmentSQL($query, $dataQuery);
 
@@ -219,7 +222,8 @@ class Versioned extends DataExtension {
 		case 'latest_versions':
 			foreach($query->getFrom() as $alias => $join) {
 				if($alias != $baseTable) {
-					$query->setJoinFilter($alias, "\"$alias\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$alias\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
+					$query->setJoinFilter($alias, "\"$alias\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\""
+						. " AND \"$alias\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
 				}
 				$query->renameTable($alias, $alias . '_versions');
 			}
@@ -249,7 +253,8 @@ class Versioned extends DataExtension {
 			}
 			break;
 		default:
-			throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: " . $dataQuery->getQueryParam('Versioned.mode'));
+			throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: "
+				. $dataQuery->getQueryParam('Versioned.mode'));
 		}
 	}
 	
@@ -333,7 +338,8 @@ class Versioned extends DataExtension {
 				// Create tables for other stages			
 				foreach($this->stages as $stage) {
 					// Extra tables for _Live, etc.
-					//Change unique indexes to 'index'.  Versioned tables may run into unique indexing difficulties otherwise.
+					// Change unique indexes to 'index'.  Versioned tables may run into unique indexing difficulties
+					// otherwise.
 					foreach($indexes as $key=>$index){
 						if(is_array($index) && $index['type']=='unique'){
 							$indexes[$key]['type']='index';
@@ -435,7 +441,8 @@ class Versioned extends DataExtension {
 
 								if(is_array($effectedIDs)) {
 									foreach($effectedIDs as $key => $value) {
-										DB::query("DELETE FROM \"{$table}_versions\" WHERE \"{$table}_versions\".\"ID\" = '$value'");
+										DB::query("DELETE FROM \"{$table}_versions\""
+											. " WHERE \"{$table}_versions\".\"ID\" = '$value'");
 									}
 								}
 							}
@@ -490,7 +497,9 @@ class Versioned extends DataExtension {
 				// Add any extra, unchanged fields to the version record.
 				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $id")->record();
 				if($data) foreach($data as $k => $v) {
-					if (!isset($newManipulation['fields'][$k])) $newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+					if (!isset($newManipulation['fields'][$k])) {
+						$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+					}
 				}
 
 				// Set up a new entry in (table)_versions
@@ -501,7 +510,10 @@ class Versioned extends DataExtension {
 				if (isset($version_table[$table])) $nextVersion = $version_table[$table];
 				else unset($nextVersion);
 
-				if($rid && !isset($nextVersion)) $nextVersion = DB::query("SELECT MAX(\"Version\") + 1 FROM \"{$baseDataClass}_versions\" WHERE \"RecordID\" = $rid")->value();
+				if($rid && !isset($nextVersion)) {
+					$nextVersion = DB::query("SELECT MAX(\"Version\") + 1 FROM \"{$baseDataClass}_versions\""
+						. " WHERE \"RecordID\" = $rid")->value();
+				}
 				
 				$newManipulation['fields']['Version'] = $nextVersion ? $nextVersion : 1;
 				
@@ -527,7 +539,9 @@ class Versioned extends DataExtension {
 			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
 			
 			// Grab a version number - it should be the same across all tables.
-			if(isset($manipulation[$table]['fields']['Version'])) $thisVersion = $manipulation[$table]['fields']['Version'];
+			if(isset($manipulation[$table]['fields']['Version'])) {
+				$thisVersion = $manipulation[$table]['fields']['Version'];
+			}
 			
 			// If we're editing Live, then use (table)_Live instead of (table)
 			if(Versioned::current_stage() && Versioned::current_stage() != $this->defaultStage) {
@@ -624,14 +638,17 @@ class Versioned extends DataExtension {
 		
 		$table2 = $table1 . "_$this->liveStage";
 
-		return DB::query("SELECT \"$table1\".\"Version\" = \"$table2\".\"Version\" FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\" WHERE \"$table1\".\"ID\" = ".  $this->owner->ID)->value();
+		return DB::query("SELECT \"$table1\".\"Version\" = \"$table2\".\"Version\" FROM \"$table1\""
+			. " INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\""
+			. " WHERE \"$table1\".\"ID\" = ".  $this->owner->ID)->value();
 	}
 	
 	/**
 	 * Move a database record from one stage to the other.
 	 * @param fromStage Place to copy from.  Can be either a stage name or a version number.
 	 * @param toStage Place to copy to.  Must be a stage name.
-	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version number will be copied over.
+	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version
+	 *                         number will be copied over.
 	 */
 	public function publish($fromStage, $toStage, $createNewVersion = false) {
 		$this->owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
@@ -644,7 +661,7 @@ class Versioned extends DataExtension {
 			$from = Versioned::get_version($baseClass, $this->owner->ID, $fromStage);
 		} else {
 			$this->owner->flushCache();
-			$from = Versioned::get_one_by_stage($baseClass, $fromStage, "\"{$baseClass}\".\"ID\" = {$this->owner->ID}");
+			$from = Versioned::get_one_by_stage($baseClass, $fromStage, "\"{$baseClass}\".\"ID\"={$this->owner->ID}");
 		}
 		
 		$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
@@ -658,7 +675,8 @@ class Versioned extends DataExtension {
 			}
 			
 			// Mark this version as having been published at some stage
-			DB::query("UPDATE \"{$extTable}_versions\" SET \"WasPublished\" = '1', \"PublisherID\" = $publisherID WHERE \"RecordID\" = $from->ID AND \"Version\" = $from->Version");
+			DB::query("UPDATE \"{$extTable}_versions\" SET \"WasPublished\" = '1', \"PublisherID\" = $publisherID"
+				. " WHERE \"RecordID\" = $from->ID AND \"Version\" = $from->Version");
 
 			$oldMode = Versioned::get_reading_mode();
 			Versioned::reading_stage($toStage);
@@ -700,7 +718,9 @@ class Versioned extends DataExtension {
 
 		// We test for equality - if one of the versions doesn't exist, this will be false
 		//TODO: DB Abstraction: if statement here:
-		$stagesAreEqual = DB::query("SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\" THEN 1 ELSE 0 END FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\" AND \"$table1\".\"ID\" = {$this->owner->ID}")->value();
+		$stagesAreEqual = DB::query("SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\""
+			. " THEN 1 ELSE 0 END FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\""
+			. " AND \"$table1\".\"ID\" = {$this->owner->ID}")->value();
 		return !$stagesAreEqual;
 	}
 	
@@ -726,7 +746,10 @@ class Versioned extends DataExtension {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
 				$baseTable = str_replace('"','',$tableJoin);
 			} elseif(is_string($tableJoin) && substr($tableJoin,0,5) != 'INNER') {
-				$query->setFrom(array($table => "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
+				$query->setFrom(array(
+					$table => "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\"=\"{$baseTable}_versions\".\"RecordID\""
+						. " AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\""
+				));
 			}
 			$query->renameTable($table, $table . '_versions');
 		}
@@ -737,7 +760,8 @@ class Versioned extends DataExtension {
 		}
 		
 		$query->addWhere("\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'");
-		$query->setOrderBy(($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
+		$query->setOrderBy(($sort) ? $sort 
+			: "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
 
 		$records = $query->execute();
 		$versions = new ArrayList();
@@ -915,7 +939,9 @@ class Versioned extends DataExtension {
 		// cache value (if required)
 		if($cache) {
 			if(!isset(self::$cache_versionnumber[$baseClass])) self::$cache_versionnumber[$baseClass] = array();
-			if(!isset(self::$cache_versionnumber[$baseClass][$stage])) self::$cache_versionnumber[$baseClass][$stage] = array();
+			if(!isset(self::$cache_versionnumber[$baseClass][$stage])) {
+				self::$cache_versionnumber[$baseClass][$stage] = array();
+			}
 			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
 		}
 		
@@ -930,7 +956,10 @@ class Versioned extends DataExtension {
 		$filter = "";
 		if($idList) {
 			// Validate the ID list
-			foreach($idList as $id) if(!is_numeric($id)) user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id, E_USER_ERROR);
+			foreach($idList as $id) if(!is_numeric($id)) {
+				user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id,
+					E_USER_ERROR);
+			}
 			$filter = "WHERE \"ID\" IN(" .implode(", ", $idList) . ")";
 		}
 		
@@ -955,7 +984,9 @@ class Versioned extends DataExtension {
 	 * @param string $containerClass The container class for the result set (default is DataList)
 	 * @return SS_List
 	 */
-	public static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataList') {
+	public static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '',
+			$containerClass = 'DataList') {
+
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
 		$dq = $result->dataQuery();
 		$dq->setQueryParam('Versioned.mode', 'stage');
@@ -1045,7 +1076,9 @@ class Versioned extends DataExtension {
 	 */
 	public static function get_version($class, $id, $version) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($baseClass)->where("\"$baseClass\".\"RecordID\" = $id")->where("\"$baseClass\".\"Version\" = " . (int)$version);
+		$list = DataList::create($baseClass)
+			->where("\"$baseClass\".\"RecordID\" = $id")
+			->where("\"$baseClass\".\"Version\" = " . (int)$version);
 		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
 		return $list->First();
 	}

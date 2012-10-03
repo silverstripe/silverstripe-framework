@@ -24,11 +24,16 @@ class FormScaffolderTest extends SapphireTest {
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article);
 
-		$this->assertTrue($fields->hasTabSet(), 'getCMSFields() produces a TabSet');
-		$this->assertNotNull($fields->dataFieldByName('Title'), 'getCMSFields() includes db fields');
-		$this->assertNotNull($fields->dataFieldByName('Content'), 'getCMSFields() includes db fields');
-		$this->assertNotNull($fields->dataFieldByName('AuthorID'), 'getCMSFields() includes has_one fields on singletons');
-		$this->assertNull($fields->dataFieldByName('Tags'), 'getCMSFields() doesnt include many_many fields if no ID is present');
+		$this->assertTrue($fields->hasTabSet(),
+			'getCMSFields() produces a TabSet');
+		$this->assertNotNull($fields->dataFieldByName('Title'),
+			'getCMSFields() includes db fields');
+		$this->assertNotNull($fields->dataFieldByName('Content'),
+			'getCMSFields() includes db fields');
+		$this->assertNotNull($fields->dataFieldByName('AuthorID'),
+			'getCMSFields() includes has_one fields on singletons');
+		$this->assertNull($fields->dataFieldByName('Tags'),
+			'getCMSFields() doesnt include many_many fields if no ID is present');
 	}
 	
 	public function testGetCMSFieldsInstance() {
@@ -38,8 +43,10 @@ class FormScaffolderTest extends SapphireTest {
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 
-		$this->assertNotNull($fields->dataFieldByName('AuthorID'), 'getCMSFields() includes has_one fields on instances');
-		$this->assertNotNull($fields->dataFieldByName('Tags'), 'getCMSFields() includes many_many fields if ID is present on instances');
+		$this->assertNotNull($fields->dataFieldByName('AuthorID'),
+			'getCMSFields() includes has_one fields on instances');
+		$this->assertNotNull($fields->dataFieldByName('Tags'),
+			'getCMSFields() includes many_many fields if ID is present on instances');
 	}
 	
 	public function testUpdateCMSFields() {
@@ -64,8 +71,10 @@ class FormScaffolderTest extends SapphireTest {
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 
-		$this->assertNotNull($fields->dataFieldByName('Title'), 'scaffoldCMSFields() includes explitly defined "restrictFields"');
-		$this->assertNull($fields->dataFieldByName('Content'), 'getCMSFields() doesnt include fields left out in a "restrictFields" definition');
+		$this->assertNotNull($fields->dataFieldByName('Title'),
+			'scaffoldCMSFields() includes explitly defined "restrictFields"');
+		$this->assertNull($fields->dataFieldByName('Content'),
+			'getCMSFields() doesnt include fields left out in a "restrictFields" definition');
 	}
 	
 	public function testFieldClassesOnGetCMSFields() {

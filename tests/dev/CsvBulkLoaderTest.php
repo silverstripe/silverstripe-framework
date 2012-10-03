@@ -48,10 +48,13 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results1 = $loader->load($filepath);
 		$this->assertEquals(4, $results1->Count(), 'Test correct count of imported data on first load'); 
 	
-		$results2 = $loader->load($filepath, '512MB', true);    //delete existing data before doing second CSV import 
-		$resultDataObject = DataObject::get('CsvBulkLoaderTest_Player');        //get all instances of the loaded DataObject from the database and count them 
+		//delete existing data before doing second CSV import 
+		$results2 = $loader->load($filepath, '512MB', true);
+		//get all instances of the loaded DataObject from the database and count them
+		$resultDataObject = DataObject::get('CsvBulkLoaderTest_Player');  
 	
-		$this->assertEquals(4, $resultDataObject->Count(), 'Test if existing data is deleted before new data is added'); 
+		$this->assertEquals(4, $resultDataObject->Count(),
+			'Test if existing data is deleted before new data is added'); 
 	 	}
 	
 	/**
@@ -132,7 +135,8 @@ class CsvBulkLoaderTest extends SapphireTest {
 		
 		// Test nested setting of relation properties
 		$contractAmount = DBField::create_field('Currency', $compareRow[5])->RAW();
-		$this->assertEquals($testPlayer->Contract()->Amount, $contractAmount, 'Setting nested values in a relation works');
+		$this->assertEquals($testPlayer->Contract()->Amount, $contractAmount,
+			'Setting nested values in a relation works');
 		
 		fclose($file);
 	}
@@ -154,7 +158,8 @@ class CsvBulkLoaderTest extends SapphireTest {
 
 		$player = $createdPlayers->First();
 		$this->assertEquals($player->FirstName, 'John');
-		$this->assertEquals($player->Biography, 'He\'s a good guy', 'test updating of duplicate imports within the same import works');
+		$this->assertEquals($player->Biography, 'He\'s a good guy',
+			'test updating of duplicate imports within the same import works');
 
 		// load with updated data
 		$filepath = FRAMEWORK_PATH . '/tests/dev/CsvBulkLoaderTest_PlayersWithIdUpdated.csv';
@@ -163,7 +168,8 @@ class CsvBulkLoaderTest extends SapphireTest {
 		// HACK need to update the loaded record from the database
 		$player = DataObject::get_by_id('CsvBulkLoaderTest_Player', $player->ID);
 		$this->assertEquals($player->FirstName, 'JohnUpdated', 'Test updating of existing records works');
-		$this->assertEquals($player->Biography, 'He\'s a good guy', 'Test retaining of previous information on duplicate when overwriting with blank field');
+		$this->assertEquals($player->Biography, 'He\'s a good guy',
+			'Test retaining of previous information on duplicate when overwriting with blank field');
 	}
 	
 	public function testLoadWithCustomImportMethods() {

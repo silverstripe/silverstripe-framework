@@ -160,10 +160,6 @@ class SS_HTTPResponse {
 	 */
 	public function setBody($body) {
 		$this->body = $body;
-		
-		// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
-		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
-		return $this;
 	}
 
 	/**
@@ -240,7 +236,8 @@ class SS_HTTPResponse {
 		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
 			$url = $this->headers['Location'];
 			echo
-			"<p>Redirecting to <a href=\"$url\" title=\"Please click this link if your browser does not redirect you\">$url... (output started on $file, line $line)</a></p>
+			"<p>Redirecting to <a href=\"$url\" title=\"Click this link if your browser does not redirect you\">"
+				. "$url... (output started on $file, line $line)</a></p>
 			<meta http-equiv=\"refresh\" content=\"1; url=$url\" />
 			<script type=\"text/javascript\">setTimeout('window.location.href = \"$url\"', 50);</script>";
 		} else {
@@ -271,6 +268,14 @@ class SS_HTTPResponse {
 	 */
 	public function isFinished() {
 		return in_array($this->statusCode, array(301, 302, 401, 403));
+	}
+
+	/**
+	 * Set content-length in bytes. Should be called right before {@link output()}.
+	 */
+	public function fixContentLength() {
+		// Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
+		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');	
 	}
 	
 }

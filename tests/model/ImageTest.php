@@ -37,7 +37,8 @@ class ImageTest extends SapphireTest {
 	
 	public function testGetTagWithTitle() {
 		$image = $this->objFromFixture('Image', 'imageWithTitle');
-		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test_image.png" alt="This is a image Title" />';
+		$expected = '<img src="' . Director::baseUrl() 
+			. 'assets/ImageTest/test_image.png" alt="This is a image Title" />';
 		$actual = $image->getTag();
 		
 		$this->assertEquals($expected, $actual);
@@ -53,7 +54,8 @@ class ImageTest extends SapphireTest {
 	
 	public function testGetTagWithoutTitleContainingDots() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitleContainingDots');
-		$expected = '<img src="' . Director::baseUrl() . 'assets/ImageTest/test.image.with.dots.png" alt="test.image.with.dots" />';
+		$expected = '<img src="' . Director::baseUrl()
+			. 'assets/ImageTest/test.image.with.dots.png" alt="test.image.with.dots" />';
 		$actual = $image->getTag();
 		
 		$this->assertEquals($expected, $actual);
@@ -71,7 +73,9 @@ class ImageTest extends SapphireTest {
 		$folderIDs = $this->allFixtureIDs('Folder');
 		foreach($folderIDs as $folderID) {
 			$folder = DataObject::get_by_id('Folder', $folderID);
-			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
+				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			}
 		}
 		
 		parent::tearDown();

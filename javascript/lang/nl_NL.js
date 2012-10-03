@@ -10,6 +10,7 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UNIQUEFIELD.ENTERNEWVALUE': 'U zult een nieuwe waarde voor dit veld moeten invoeren',
 		'UNIQUEFIELD.CANNOTLEAVEEMPTY': 'Dit veld mag niet leeg blijven',
 		'RESTRICTEDTEXTFIELD.CHARCANTBEUSED': "Het karakter '%s' mag niet gebruikt worden in dit veld",
-		'UPDATEURL.CONFIRM': 'Wilt u de URL wijzigen naar:\n\n%s/\n\nKlik Ok om de URL te wijzigen, Klik Cancel om het te laten zoals het is:\n\n%s'
+		'UPDATEURL.CONFIRM': 'Wilt u de URL wijzigen naar:\n\n%s/\n\nKlik Ok om de URL te wijzigen, Klik Cancel om het'
+			+ ' te laten zoals het is:\n\n%s'
 	});
 }
