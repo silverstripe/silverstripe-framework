@@ -241,17 +241,17 @@ pt:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Adicionar regra a este grupo'
     Code: 'Grupo de código'
     DefaultGroupTitleAdministrators: Administradores
     DefaultGroupTitleContentAuthors: 'Autores de Conteúdo'
     Description: Descrição
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Se escolher um grupo associado, arrecadará todas as regras deste'
     Locked: 'Fechado?'
     NoRoles: 'Não foram encontradas regras'
     PLURALNAME: Groups
     Parent: 'Grupo pai'
-    RolesAddEditLink: 'Manage roles'
+    RolesAddEditLink: 'Gerir regras'
     SINGULARNAME: Group
     Sort: 'Ordem de ordenação'
     has_many_Permissions: Permissões
@@ -352,7 +352,7 @@ pt:
     CONFIRMPASSWORD: 'Confirmar Password'
     DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrador por Omissão'
-    DefaultDateTime: default
+    DefaultDateTime: 'por omissão'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'A password não pode ser vazia, tente novamente.'
     ENTEREMAIL: 'Por favor introduza um endereço de email para obter uma ligação para o reinício da palavra-chave. '
@@ -466,7 +466,7 @@ pt:
     OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
-    Title: Title
+    Title: Título
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
@@ -500,7 +500,7 @@ pt:
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Nome do Grupo'
     IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTUSERS: 'Importar utilizadores'
     MEMBERS: Membros
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
@@ -508,7 +508,7 @@ pt:
     PERMISSIONS: Permissões
     ROLES: Regras
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
+    TABROLES: Regras
     Users: Users
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
@@ -547,14 +547,14 @@ pt:
     LESS: menos
     MORE: mais
   UploadField:
-    ATTACHFILE: 'Attach a file'
+    ATTACHFILE: 'Adicionar um ficheiro'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    AttachFile: 'Adicionar ficheiro(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DOEDIT: Guardar
+    DROPFILE: 'arrastar um ficheiro'
+    DROPFILES: 'arrastar ficheiros'
     Dimensions: Dimensions
     EDIT: Edit
     EDITINFO: 'Edit this file'
