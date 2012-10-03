@@ -100,7 +100,8 @@ class ManyManyList extends RelationList {
 			}
 
 			if($extraFields) foreach($extraFields as $k => $v) {
-				$manipulation[$this->joinTable]['fields'][$k] = (is_null($v)) ? 'NULL' : "'" . Convert::raw2sql($v) . "'";
+				if(is_null($v)) $manipulation[$this->joinTable]['fields'][$k] = 'NULL';
+				else $manipulation[$this->joinTable]['fields'][$k] =  "'" . Convert::raw2sql($v) . "'";
 			}
 
 			$manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
