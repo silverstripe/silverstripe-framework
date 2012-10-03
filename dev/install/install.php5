@@ -1329,12 +1329,21 @@ TEXT;
 		</security>
 		<rewrite>
 			<rules>
-				<rule name="SilverStripe Clean URLs" stopProcessing="true">
-					<match url="^(.*)$" />
-					<conditions>
-						<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+				<rule name="SilverStripe">
+					<match url=".*" ignoreCase="false" />
+					<conditions logicalGrouping="MatchAll">
+						<add input="{URL}" pattern="^/?(.*)$" ignoreCase="false" />
+						<add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
 					</conditions>
-					<action type="Rewrite" url="$modulePath/main.php?url={R:1}" appendQueryString="true" />
+					<action type="Rewrite" url="$modulePath/main.php/{C:1}" appendQueryString="true" />
+				</rule>
+				<rule name="SilverStripe Clean URLs" stopProcessing="true">
+					<match url="." ignoreCase="false" />
+					<conditions logicalGrouping="MatchAll">
+						<add input="{URL}" pattern="^(.*)/framework/main.php$" ignoreCase="false" />
+						<add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+					</conditions>
+					<action type="Redirect" url="{C:1}/install.php?" appendQueryString="false" redirectType="Found" />
 				</rule>
 			</rules>
 		</rewrite>
