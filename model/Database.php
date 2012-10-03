@@ -559,7 +559,10 @@ abstract class SS_Database {
 				}
 			}
 			$this->transAlterField($table, $field, $spec_orig);
-			$this->alterationMessage("Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
+			$this->alterationMessage(
+				"Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>",
+				"changed"
+			);
 		}
 	}
 	

@@ -41,7 +41,10 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'John\'');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains("WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))", $dq->sql());
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))", 
+			$dq->sql()
+		);
 	}
 
 	public function testConjunctiveGroup() {
@@ -52,7 +55,10 @@ class DataQueryTest extends SapphireTest {
 		$subDq->where('DataQueryTest_A.Name = \'John\'');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains("WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))", $dq->sql());
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))", 
+			$dq->sql()
+		);
 	}
 
 	public function testNestedGroups() {
@@ -66,7 +72,11 @@ class DataQueryTest extends SapphireTest {
 		$subSubDq->where('DataQueryTest_A.Age = 50');
 		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
 
-		$this->assertContains("WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR ((DataQueryTest_A.Age = 18) AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))", $dq->sql());
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR ((DataQueryTest_A.Age = 18) "
+				. "AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))", 
+			$dq->sql()
+		);
 	}
 
 	public function testEmptySubgroup() {

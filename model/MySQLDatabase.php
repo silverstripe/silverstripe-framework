@@ -857,7 +857,9 @@ class MySQLDatabase extends SS_Database {
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*','+','-'),'',$keywords);
 			$htmlEntityRelevanceKeywords = str_replace(array('*','+','-'),'',$htmlEntityKeywords);
-			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
+			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
+				. "AGAINST ('$relevanceKeywords') "
+				. "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
 			$relevance['File'] = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
 		} else {
 			$relevance['SiteTree'] = $relevance['File'] = 1;
