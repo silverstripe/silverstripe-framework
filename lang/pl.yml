@@ -388,34 +388,25 @@ pl:
   MemberAuthenticator:
     TITLE: 'E-mail i Hasło'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (przed południem) lub PM (po południu)'
     'APPLY FILTER': 'Zastosuj filtr'
     Custom: Własny
     DATEFORMATBAD: 'Nieprawidłowy format daty'
     DAYNOLEADING: 'Dzień miesiąca bez wiodącego zera'
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
+    DIGITSDECFRACTIONSECOND: 'Jedna lub więcej cyfr reprezentujących ułamek sekundy'
+    FOURDIGITYEAR: 'Czterocyfrowy rok'
+    FULLNAMEMONTH: 'Pełna nazwa miesiąca (np. Czerwiec)'
+    HOURNOLEADING: 'Godzina bez wiodącego zera'
+    MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
     Preview: Podgląd
-    SHORTMONTH:
-      - null
+    SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
     TOGGLEHELP: 'Przełącz pomoc formatowania'
     TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
     TWODIGITHOUR: 'Dwucyfrowa godzina (od 00 do 23)'
     TWODIGITMINUTE: 'Dwucyfrowa minuta (od 00 do 59)'
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
+    TWODIGITMONTH: 'Dwucyfrowy miesiąc (01=Styczeń, itd.)'
+    TWODIGITSECOND: 'Dwucyfrowa sekunda (od 00 do 59)'
     TWODIGITYEAR: 'Dwucyfrowy rok'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'

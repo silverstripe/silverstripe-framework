@@ -388,34 +388,25 @@ gl_ES:
   MemberAuthenticator:
     TITLE: 'Correo-e e Contrasinal'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
     'APPLY FILTER': 'Aplicar Filtro'
     Custom: Personalizado
     DATEFORMATBAD: 'O formato da data é inválida'
     DAYNOLEADING: 'Día do mes sen ceros a esquerda'
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
+    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
+    FOURDIGITYEAR: 'Catro díxitos ano'
+    FULLNAMEMONTH: 'Nome completo do mes (p.e. Xuño)'
+    HOURNOLEADING: 'Hora sen ceros a esquerda'
+    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
     MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
     Preview: Previsualizar
-    SHORTMONTH:
-      - null
+    SHORTMONTH: 'Nome curto do mes (p.e. Xuñ)'
     TOGGLEHELP: 'Mudar o formato de axuda'
     TWODIGITDAY: 'Dous díxitos día do mes'
     TWODIGITHOUR: 'Dous díxitos para a hora (00 ata 23)'
     TWODIGITMINUTE: 'Dous díxitos minuto (00 ata 59)'
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
+    TWODIGITMONTH: 'Dous díxitos para o mes (01=Xaneiro, etc.)'
+    TWODIGITSECOND: 'Dous díxitos de segundo (00 ata 59)'
     TWODIGITYEAR: 'Dous díxitos ano'
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
