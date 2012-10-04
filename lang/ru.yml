@@ -1,11 +1,8 @@
 ru:
   AssetAdmin:
-    ADDFILES:
-      - null
-    EditOrgMenu:
-      - null
-    NEWFOLDER:
-      - null
+    ADDFILES: 'Добавить файлы'
+    EditOrgMenu: 'Edit &amp; organize'
+    NEWFOLDER: 'Новая папка'
   AssetTableField:
     CREATED:
       - null
@@ -73,27 +70,19 @@ ru:
     ERRORNOTADMIN: 'Такой пользователь не является администратором.'
     ERRORNOTREC: 'Такое имя пользователя или пароль не существует'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: 'False'
+    ANY: Any
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Идет загрузка...'
     REQUIREJS: 'Для работы с CMS у вас должен быть включен JavaScript.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Доступ к разделу ''{title}'''
+    ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Сохранить
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
     CHANGEPASSWORDTEXT2: 'Для того, чтобы войти, используйте сейчас следующие учетные данные:'
@@ -101,48 +90,35 @@ ru:
     HELLO: Здравствуйте
     PASSWORD: Пароль
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - 'False'
+    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Закрыть всплывающее окно'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Сохранено %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Добавить %s'
+    NOITEMSFOUND: 'Элементов не найдено'
+    SORTASC: 'Сортировать по возрастанию'
+    SORTDESC: 'Сортировать по убыванию'
   ComplexTableField_popup.ss:
     NEXT: Следующ.
     PREVIOUS: Предыдущ.
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Пароль должен быть не короче {min} символов.'
+    BETWEEN: 'Пароль должен иметь длину от {min} до {max} символов.'
+    MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
+    SHOWONCLICKTITLE: 'Изменить Пароль'
   CreditCardField:
     FIRST: первая
     FOURTH: четвертая
     SECOND: вторая
     THIRD: третья
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Объекты
+    SINGULARNAME: Объект
   Date:
     DAY: день
     DAYS: дней
@@ -165,44 +141,32 @@ ru:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Не задано'
   Director:
     INVALID_REQUEST: 'Неверный запрос'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Выберите)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: 'Пожалуйста, задайте адрес email.'
   Email_BounceRecord:
     PLURALNAME: 'Записи о недоставленных сообщениях'
     SINGULARNAME: 'Запись о недоставленном сообщении'
   Enum:
     ANY: Любой
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
+    AviType: 'Видеофайл AVI'
+    Content: Содержание
+    CssType: 'Файл CSS'
+    DmgType: 'Образ диска Apple'
     DocType:
       - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
+    Filename: 'Имя файла'
+    GifType: 'Изображение GIF - формат подходит для диаграмм'
+    GzType: 'Архив GZIP'
     HtlType:
       - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
+    HtmlType: 'Файл HTML'
+    INVALIDEXTENSION: 'Недопустимое расширение файла (допустимые расширения: {extensions})'
     INVALIDEXTENSIONSHORT:
       - null
     IcoType:
@@ -211,102 +175,66 @@ ru:
       - null
     JsType:
       - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
+    Mp3Type: 'Аудиофайл MP3'
+    MpgType: 'Видеофайл MPEG'
+    NOFILESIZE: 'Размер файла 0 байт.'
+    NOVALIDUPLOAD: 'File is not a valid upload'
+    Name: Название
+    PLURALNAME: Файлы
     PdfType:
       - null
     PngType:
       - null
-    SINGULARNAME:
-      - null
+    SINGULARNAME: Файл
     TOOLARGE:
       - null
-    TOOLARGESHORT:
-      - null
+    TOOLARGESHORT: 'Размер файла больше {size}'
     TiffType:
       - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
+    Title: Заголовок
+    WavType: 'Аудиофайл WAV'
+    XlsType: 'Таблица Excel'
     ZipType:
       - null
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Прикрепить {type}'
+    ATTACHONCESAVED: 'Вы сможете прикрепить {type}s после первого сохранения записи.'
+    ATTACHONCESAVED2: 'Вы сможете прикрепитьфайлы после первого сохранения записи.'
+    DELETE: 'Удалить {type}'
+    DISALLOWEDFILETYPE: 'Загрузка этого типа файла не допускается'
+    FILE: Файл
+    FROMCOMPUTER: 'С диска'
+    FROMFILESTORE: 'С сервера'
+    NOSOURCE: 'Пожалуйста, выберите файл, который нужно прикрепить'
+    REPLACE: 'Заменить {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe загрузки изображений'
   Filesystem:
     SYNCRESULTS: 'Синхронизация завершена: {createdcount} элементов создано, {deletedcount} элементов удалено'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Папки
+    SINGULARNAME: Папка
   ForgotPasswordEmail.ss:
     HELLO: Здравствуйте
     TEXT1: 'Это ваша'
     TEXT2: 'ссылка переустановки пароля'
     TEXT3: для
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: 'Поле %s является обязательным'
+    SubmitBtnLabel: Выбрать
+    VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
+    VALIDATIONNOTUNIQUE: 'Введенное значение не уникально'
+    VALIDATIONPASSWORDSDONTMATCH: 'Пароли не совпадают'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Пароли не могут быть пустыми'
+    VALIDATIONSTRONGPASSWORD: 'Пароль должен содержать как минимум одну цифру и один буквенно-числовой символ.'
+    VALIDATOR: Валидатор
+    VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
   FormField:
-    NONE:
-      - null
+    NONE: 'не выбрано'
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Удалить
+    Delete: Удалить
+    UnlinkRelation: 'Отменить связь'
   GridField:
     Add: 'Добавить {name}'
     Filter: Фильтр
@@ -323,8 +251,7 @@ ru:
     RelationSearch: 'Поиск отношений'
     ResetFilter: Сброс
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'Нет прав на удаление'
   GridFieldDetailForm:
     CancelBtn: Отмена
     Create: Создать
@@ -351,19 +278,13 @@ ru:
     has_many_Permissions: 'Права групп пользователей'
     many_many_Members: 'Члены группы'
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Импорт одной или нескольких групп в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'Создано {count} групп'
+    ResultDeleted: 'Удалено %d групп'
+    ResultUpdated: 'Обновлено %d групп'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Обнаружен бесконечный цикл в иерархической структуре "{type}". Для исправления ошибки измените страницу, находящуюся уровнем выше'
   HtmlEditorField:
     ADDURL: 'Добавить URL'
     ADJUSTDETAILSDIMENSIONS: 'Дополнительные сведения и размеры'
@@ -410,50 +331,33 @@ ru:
     URLNOTANOEMBEDRESOURCE: 'Не удалось преобразовать ссылку ''{url}'' в медиа-ресурс.'
     UpdateMEDIA: 'Обновить медиафайл'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Файлы
+    SINGULARNAME: Файл
   ImageField:
     IMAGE:
       - null
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Файлы
+    SINGULARNAME: Файл
   Image_iframe.ss:
     TITLE: 'Iframe загрузки изображений'
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
+    CANT_REORGANISE: 'У вас нет права редактировать страницы верхнего уровня. Изменения не были сохранены.'
+    DELETED: Удалено.
+    DropdownBatchActionsDefault: Действия
     HELP: Помощь
-    PAGETYPE:
-      - null
+    PAGETYPE: 'Тип страницы:'
     PERMAGAIN: 'Вы вышли из Системы Управления Сайтом. Если Вы хотите войти снова, введите внизу имя пользователя и пароль.'
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    PERMALREADY: 'Извините, у вас нет доступа к этому разделу Системы Управления. Если Вы хотите войти под другой учетной записью, сделайте это ниже'
+    PERMDEFAULT: 'Введите ваши адрес электр. почты и пароль для доступа к системе.'
+    PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
+    PreviewButton: Просмотр
+    REORGANISATIONSUCCESSFUL: 'Древесная структура сайта успешно реорганизована.'
+    SAVEDUP: Сохранено.
+    VersionUnknown: неизвестно
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Здравствуйте
+    LOGOUT: Выход
   LoginAttempt:
     Email: Email
     IP: IP-адрес
@@ -504,8 +408,7 @@ ru:
     db_Password: Пароль
     db_PasswordExpiry: 'Дата устаревания пароля'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
     AMORPM:
       - null
@@ -554,10 +457,8 @@ ru:
     ResultNone: 'Изменений нет'
     ResultUpdated: 'Обновлено {count} участников'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Пароли
+    SINGULARNAME: Пароль
   MemberTableField: null
   ModelAdmin:
     DELETE:
@@ -581,14 +482,10 @@ ru:
     UPDATEDRECORDS:
       - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
+    IMPORTSPECLINK: 'Показать спецификацию для %s'
+    IMPORTSPECRELATIONS: Отношения
+    IMPORTSPECTITLE: 'Спецификация для %s'
   ModelAdmin_Tools.ss:
     FILTER: Фильтр
     IMPORT: Импорт
@@ -596,32 +493,22 @@ ru:
     IMPORT_TAB_HEADER: Импорт
     SEARCHLISTINGS: Поиск
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: Сумма
+    FIELDLABELCURRENCY: Валюта
   NullableField:
     IsNullLabel: Недействительно
   NumericField:
     VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Страница
+    View: Просмотр
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: Администратор
+    CMS_ACCESS_CATEGORY: 'Доступ к CMS'
+    FULLADMINRIGHTS: 'Все права администратора'
+    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: 'Права доступа'
+    SINGULARNAME: 'Право доступа'
   PermissionCheckboxSetField:
     AssignedTo: 'присвоено "{title}"'
     FromGroup: 'перенято от группы "{title}"'
@@ -633,10 +520,8 @@ ru:
     SINGULARNAME: Роль
     Title: Название
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Коды ролей доступа'
+    SINGULARNAME: 'Код роли доступа'
   Permissions:
     PERMISSIONS_CATEGORY: 'Роли и права доступа'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -647,32 +532,19 @@ ru:
     CSVEXPORT: 'Экспорт в CSV'
     NOTFOUND: 'Элементов не найдено'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'У Вас нет доступа к этой странице. Если у вас имеется другая учетная запись, имеющая доступ к этой странице, введите ее данные ниже.'
+    BUTTONSEND: 'Отправить мне ссылку переустановки пароля'
+    CHANGEPASSWORDBELOW: 'Ниже Вы можете изменить свой пароль.'
+    CHANGEPASSWORDHEADER: 'Измените свой пароль'
+    ENTERNEWPASSWORD: 'Пожалуйста, введите новый пароль.'
+    ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
+    LOGGEDOUT: 'Вы вышли. Если Вы хотите войти снова, введите ваши учетные данные ниже.'
+    LOGIN: Вход
+    NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
+    NOTERESETLINKINVALID: '<p>Неверная ссылка переустановки пароля или время действия ссылки истекло.</p><p>Вы можете повторно запросить ссылку, щелкнув <a href="{link1}">здесь</a>, или поменять пароль, <a href="{link2}">войдя в систему</a>.</p> '
+    NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
+    PASSWORDSENTHEADER: 'Ссылка для переустановки пароля выслана на ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Возможность просматривать, добавлять и редактировать пользователей, а также присваивать им определенные роли и права доступа.'
     APPLY_ROLES: 'Присвоить роли группам'
@@ -692,37 +564,28 @@ ru:
     TABROLES: Роли
     Users: Пользователи
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: 'Импорт из CSV'
+    FileFieldLabel: 'Файл CSV <small>(Допустимые расширения: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Редактировать
   SimpleImageField:
     NOUPLOAD: 'Не загружено ни одного изображения'
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: Основное
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'В %s поле ''%s'' является обязательным'
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 'Добавить новый ряд'
+    ADDITEM: 'Добавить %s'
   TableListField:
     CSVEXPORT: 'Экспорт в CSV'
     PRINT: Печать
     Print: Печать
     SELECT: 'Выбрать:'
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 'Элементов не найдено'
+    SORTASC: 'По возрастанию'
+    SORTDESC: 'По убыванию'
   TableListField_PageControls.ss:
     DISPLAYING: Отображение
     OF: из
@@ -732,8 +595,7 @@ ru:
     VIEWNEXT: Следующий
     VIEWPREVIOUS: Предыдущий
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
   ToggleField:
     LESS: меньше
     MORE: больше
@@ -763,5 +625,4 @@ ru:
     STARTALLINFO: 'Стартовать все загрузки'
     Saved: Сохранено
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: Версии

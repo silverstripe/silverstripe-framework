@@ -1,11 +1,8 @@
 eo:
   AssetAdmin:
-    ADDFILES:
-      - null
-    EditOrgMenu:
-      - null
-    NEWFOLDER:
-      - null
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
+    NEWFOLDER: NewFolder
   AssetTableField:
     CREATED:
       - null
@@ -73,27 +70,19 @@ eo:
     ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
     ERRORNOTREC: 'Kiuj salutnomo / pasvorto ne estas rekonebla'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: Ne
+    ANY: Ajna
+    1: Jes
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Aliro al ĉiuj interfacoj de CMS'
+    ACCESSALLINTERFACESHELP: 'Nuligas pli specifajn alirajn agordojn.'
+    SAVE: Konservi
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
     CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
@@ -101,48 +90,35 @@ eo:
     HELLO: Saluton
     PASSWORD: Pasvorto
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Ne
+    - Jes
   ComplexTableField:
     CLOSEPOPUP: 'Fermi Ŝprucfenestron'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Konservita %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Almeti je %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordigi kreske'
+    SORTDESC: 'Ordigi malkreske'
   ComplexTableField_popup.ss:
     NEXT: Sekva
     PREVIOUS: Antaŭa
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   CreditCardField:
     FIRST: unuan
     FOURTH: kvaran
     SECOND: duan
     THIRD: trian
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Datumaj Objektoj'
+    SINGULARNAME: 'Datuma Objekto'
   Date:
     DAY: tago
     DAYS: tagoj
@@ -165,44 +141,32 @@ eo:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Elekti)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
     PLURALNAME: 'Registroj de neliveritaj mesaĝoj'
     SINGULARNAME: 'Registro de neliverita mesaĝo'
   Enum:
     ANY: Ajna
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
+    AviType: 'AVI video file'
+    Content: Enhavo
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
     DocType:
       - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
+    Filename: Dosiernomo
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
     HtlType:
       - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT:
       - null
     IcoType:
@@ -211,102 +175,66 @@ eo:
       - null
     JsType:
       - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: 'Dosiero havas nul bajtojn'
+    NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
+    Name: Nomo
+    PLURALNAME: Dosieroj
     PdfType:
       - null
     PngType:
       - null
-    SINGULARNAME:
-      - null
+    SINGULARNAME: Dosiero
     TOOLARGE:
       - null
-    TOOLARGESHORT:
-      - null
+    TOOLARGESHORT: 'Filesize exceeds {size}'
     TiffType:
       - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
+    Title: Titolo
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
     ZipType:
       - null
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: Dosiero
+    FROMCOMPUTER: 'El via komputilo'
+    FROMFILESTORE: 'El la dosiera konservejo'
+    NOSOURCE: 'Bonvolu elekti fontan dosieron por alkroĉi'
+    REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Saluton
     TEXT1: 'Jen via'
     TEXT2: 'pasvorta reagorda ligilo'
     TEXT3: por
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s estas postulita'
+    SubmitBtnLabel: Go
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'La enirita valoron ne unika'
+    VALIDATIONPASSWORDSDONTMATCH: 'Pasvortoj ne matĉas'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Pasvortoj ne povas est malplena'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validigilo
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE:
-      - null
+    NONE: neniu
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -323,8 +251,7 @@ eo:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -351,19 +278,13 @@ eo:
     has_many_Permissions: Permesoj
     many_many_Members: Membroj
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Importi unu aŭ pliaj grupojn en formato <em>CSV</em> (perkome disigitaj valoroj values). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Forigis %d grupojn'
+    ResultUpdated: 'Aktualigis %d grupojn'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -410,50 +331,33 @@ eo:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE:
       - null
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe por alŝuti bildon'
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
     HELP: Helpo
-    PAGETYPE:
-      - null
+    PAGETYPE: 'Tipo de paĝo:'
     PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas saluti kiel iu alia, tiel faru sube'
+    PERMDEFAULT: 'Enigi vian retadreson kaj pasvorton por aliri al la CMS.'
+    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: Retadreso
     IP: IP-Adreso
@@ -504,8 +408,7 @@ eo:
     db_Password: Pasvorto
     db_PasswordExpiry: 'Pasvorta Limdato'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'Retpoŝto &amp; Pasvorto'
   MemberDatetimeOptionsetField:
     AMORPM:
       - null
@@ -554,10 +457,8 @@ eo:
     ResultNone: 'Neniu ŝanĝo'
     ResultUpdated: 'Updated {count} members'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE:
@@ -581,14 +482,10 @@ eo:
     UPDATEDRECORDS:
       - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Import
@@ -596,32 +493,22 @@ eo:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: Kvanto
+    FIELDLABELCURRENCY: Kurzo
   NullableField:
     IsNullLabel: 'Estas senvalora'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Page
+    View: View
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: Administranto
+    CMS_ACCESS_CATEGORY: CMS-aliro
+    FULLADMINRIGHTS: 'Ĉiuj administraj rajtoj'
+    FULLADMINRIGHTS_HELP: 'Implicas kaj superregas ĉiujn aliajn agorditajn permesojn.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -633,10 +520,8 @@ eo:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -647,32 +532,19 @@ eo:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas <a href="%s">ensaluti denove</a>.'
+    BUTTONSEND: 'Sendu al mi la ligilon reagordi pasvorton'
+    CHANGEPASSWORDBELOW: 'Vi povas ŝanĝi vian pasvorton malsupre.'
+    CHANGEPASSWORDHEADER: 'Ŝanĝi vian pasvorton'
+    ENTERNEWPASSWORD: 'Bonvolu enigi novan pasvorton.'
+    ERRORPASSWORDPERMISSION: 'Vi devas ensaluti por ŝanĝi vian pasvorton!'
+    LOGGEDOUT: 'Vi elsalutis. Se vi volas ensaluti denove, enigu viajn legitimaĵon sube.'
+    LOGIN: Ensaluti
+    NOTEPAGESECURED: 'Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Permesi vidigi, enmeti kaj redakti uzantojn, aldone al agordi permesojn kaj rolojn al ili.'
     APPLY_ROLES: 'Apliki roloj al grupoj'
@@ -692,37 +564,28 @@ eo:
     TABROLES: Roloj
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: Importi
+    FileFieldLabel: 'CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'Neniu Bildo Alŝutita'
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: Ĉefaj
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 'Enmeti novan vicon'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Eksporti al CSV'
     PRINT: Presi
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordigi kreskante'
+    SORTDESC: 'Ordigi malkreskante'
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
@@ -732,8 +595,7 @@ eo:
     VIEWNEXT: 'Vidigi sekvan'
     VIEWPREVIOUS: 'Vidigi antaŭan'
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: malpli
     MORE: pli
@@ -763,5 +625,4 @@ eo:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: Versioj

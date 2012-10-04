@@ -1,11 +1,8 @@
 pt:
   AssetAdmin:
-    ADDFILES:
-      - null
-    EditOrgMenu:
-      - null
-    NEWFOLDER:
-      - null
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
+    NEWFOLDER: NewFolder
   AssetTableField:
     CREATED:
       - null
@@ -73,27 +70,19 @@ pt:
     ERRORNOTADMIN: 'Esse utilizador não é um administrador.'
     ERRORNOTREC: 'Esse nome de utilizador / password não é válido'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: Não
+    ANY: Qualquer
+    1: Sim
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Guardar
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
     CHANGEPASSWORDTEXT2: 'Pode utilizar agora as seguintes credenciais para se autenticar:'
@@ -101,48 +90,35 @@ pt:
     HELLO: Olá
     PASSWORD: Palavra-chave
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Não
+    - Sim
   ComplexTableField:
     CLOSEPOPUP: 'Fechar Janela'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Guardado  %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Adicionar %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordenar ascendente'
+    SORTDESC: 'Ordenar descendente'
   ComplexTableField_popup.ss:
     NEXT: Próximo
     PREVIOUS: Anterior
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Mudar password'
   CreditCardField:
     FIRST: primeiro
     FOURTH: quarto
     SECOND: segundo
     THIRD: terceiro
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Objectos de Dados'
+    SINGULARNAME: 'Objecto de Dados'
   Date:
     DAY: dia
     DAYS: dias
@@ -165,44 +141,32 @@ pt:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Escolha)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Qualquer
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
+    AviType: 'AVI video file'
+    Content: Conteúdo
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
     DocType:
       - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
+    Filename: 'Nome do ficheiro'
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
     HtlType:
       - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT:
       - null
     IcoType:
@@ -211,102 +175,66 @@ pt:
       - null
     JsType:
       - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: 'O tamanho do ficheiro é de 0 bytes.'
+    NOVALIDUPLOAD: 'O carregamento do ficheiro é válido'
+    Name: Nome
+    PLURALNAME: Ficheiros
     PdfType:
       - null
     PngType:
       - null
-    SINGULARNAME:
-      - null
+    SINGULARNAME: Ficheiro
     TOOLARGE:
       - null
-    TOOLARGESHORT:
-      - null
+    TOOLARGESHORT: 'Filesize exceeds {size}'
     TiffType:
       - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
+    Title: Título
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
     ZipType:
       - null
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: Ficheiro
+    FROMCOMPUTER: 'Do computador'
+    FROMFILESTORE: 'Do Sistema de Ficheiros'
+    NOSOURCE: 'Please select a source file to attach'
+    REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Olá
     TEXT1: 'Este é o seu'
     TEXT2: 'link para alterar password'
     TEXT3: para
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s é de preenchimento obrigatório'
+    SubmitBtnLabel: Go
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'O valor inserido não é único'
+    VALIDATIONPASSWORDSDONTMATCH: 'Passwords não coincidem'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords não podem estar em branco'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validator
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE:
-      - null
+    NONE: nenhum
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -323,8 +251,7 @@ pt:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     CancelBtn: Cancelar
     Create: Create
@@ -351,19 +278,13 @@ pt:
     has_many_Permissions: Permissões
     many_many_Members: Membros
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Deleted %d groups'
+    ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -410,50 +331,33 @@ pt:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE:
       - null
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe de envio de Imagem'
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
     HELP: Help
-    PAGETYPE:
-      - null
+    PAGETYPE: 'Page type: '
     PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Endereço de Email'
     IP: 'Endereço IP'
@@ -504,8 +408,7 @@ pt:
     db_Password: Palavra-chave
     db_PasswordExpiry: 'Data de expiração da password'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'Email e Password'
   MemberDatetimeOptionsetField:
     AMORPM:
       - null
@@ -554,10 +457,8 @@ pt:
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE:
@@ -581,14 +482,10 @@ pt:
     UPDATEDRECORDS:
       - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Import
@@ -596,32 +493,22 @@ pt:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: Amount
+    FIELDLABELCURRENCY: Currency
   NullableField:
     IsNullLabel: 'é Vazio'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Page
+    View: View
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: Administrador
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 'Direitos de Administrador'
+    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -633,10 +520,8 @@ pt:
     SINGULARNAME: Role
     Title: Título
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Regras e permissões de acesso'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -647,32 +532,19 @@ pt:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Não tem acesso a esta página. Se tem outras credenciais que lhe permitem aceder a esta página, pode-se autenticar abaixo.'
+    BUTTONSEND: 'Enviar o link para recuperar a password'
+    CHANGEPASSWORDBELOW: 'Pode modificar a sua password abaixo.'
+    CHANGEPASSWORDHEADER: 'Mudar a password'
+    ENTERNEWPASSWORD: 'Por favor insira uma nova password.'
+    ERRORPASSWORDPERMISSION: 'Tem de estar autenticado para poder alterar a sua password!'
+    LOGGEDOUT: 'Terminou a autenticação.  Se se deseja autenticar novamente insira as suas credenciais abaixo.'
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: 'Esta página é privada. Insira as suas credenciais abaixo para a visualizar.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Insira o seu endereço de email, e será enviado um link que poderá utilizar para recuperar a sua password'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -692,37 +564,28 @@ pt:
     TABROLES: Regras
     Users: Utilizadores
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: 'Import from CSV'
+    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'Nenhuma imagem enviada'
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: Principal
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 'Adicionar nova linha'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Exportar para CSV'
     PRINT: Imprimir
     Print: Print
     SELECT: 'Escolha:'
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Ordenar por ordem crescente'
+    SORTDESC: 'Ordenar por ordem decrescente'
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
@@ -732,8 +595,7 @@ pt:
     VIEWNEXT: 'Ver o próximo'
     VIEWPREVIOUS: 'Ver o anterior'
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: menos
     MORE: mais
@@ -763,5 +625,4 @@ pt:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: Versões

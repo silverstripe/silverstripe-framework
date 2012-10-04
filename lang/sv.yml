@@ -1,11 +1,8 @@
 sv:
   AssetAdmin:
-    ADDFILES:
-      - null
-    EditOrgMenu:
-      - null
-    NEWFOLDER:
-      - null
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
+    NEWFOLDER: 'Ny mapp'
   AssetTableField:
     CREATED:
       - null
@@ -73,27 +70,19 @@ sv:
     ERRORNOTADMIN: 'Den användaren är inte administratör'
     ERRORNOTREC: 'Användarnamnet / lösenordet hittas inte'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: Falskt
+    ANY: 'Vilken som helst'
+    1: Sant
   CMSLoadingScreen.ss:
     LOADING: Laddar...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Tillgång till sektionen ''{title}'''
+    ACCESSALLINTERFACES: 'Tillgång till alla CMS-sektioner'
+    ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
+    SAVE: Spara
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -101,48 +90,35 @@ sv:
     HELLO: Hej
     PASSWORD: Lösenord
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Falskt
+    - Sant
   ComplexTableField:
     CLOSEPOPUP: 'Stäng popup'
     SUCCESSADD2: 'Lade till {name}'
     SUCCESSEDIT: 'Sparade %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Lägg till'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sortera stigande'
+    SORTDESC: 'Sortera fallande'
   ComplexTableField_popup.ss:
     NEXT: Nästa
     PREVIOUS: Föregående
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Lösenord måste vara minst {min} tecken långa.'
+    BETWEEN: 'Lösenord måste vara {min} till {max} tecken långa.'
+    MAXIMUM: 'Lösenord får som längst vara {max} tecken långa.'
+    SHOWONCLICKTITLE: 'Ändra lösenord'
   CreditCardField:
     FIRST: första
     FOURTH: fjärde
     SECOND: andra
     THIRD: tredje
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Dataobjekt
+    SINGULARNAME: Dataobjekt
   Date:
     DAY: dag
     DAYS: dagar
@@ -165,44 +141,32 @@ sv:
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Ej satt'
   Director:
     INVALID_REQUEST: 'Ogiltig förfrågan'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Välj)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: 'Var snäll och ange en epostadress'
   Email_BounceRecord:
     PLURALNAME: 'Studsade e-brev'
     SINGULARNAME: 'Studsade e-brev'
   Enum:
     ANY: 'Vilken som helst'
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
+    AviType: 'AVI videofil'
+    Content: Innehåll
+    CssType: 'CSS fil'
+    DmgType: 'Apple skivavbild'
     DocType:
       - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
+    Filename: Filnamn
+    GifType: 'GIF bild - bra för diagram'
+    GzType: 'GZIP packad fil'
     HtlType:
       - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
+    HtmlType: 'HTML fil'
+    INVALIDEXTENSION: 'Filändelsen tillåts inte (tillåtna: {extensions})'
     INVALIDEXTENSIONSHORT:
       - null
     IcoType:
@@ -211,102 +175,66 @@ sv:
       - null
     JsType:
       - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
+    Mp3Type: 'MP3 ljudfil'
+    MpgType: 'MPEG videofil'
+    NOFILESIZE: 'Filstorleken är noll bytes'
+    NOVALIDUPLOAD: 'Filen är inte giltig för uppladdning'
+    Name: Namn
+    PLURALNAME: Filer
     PdfType:
       - null
     PngType:
       - null
-    SINGULARNAME:
-      - null
+    SINGULARNAME: Fil
     TOOLARGE:
       - null
-    TOOLARGESHORT:
-      - null
+    TOOLARGESHORT: 'Filstorlek överskriden {size}'
     TiffType:
       - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
+    Title: Titel
+    WavType: 'WAV ljudfil'
+    XlsType: 'Excel kalkylblad'
     ZipType:
       - null
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Bifoga {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Radera {type}'
+    DISALLOWEDFILETYPE: 'Filtypen är inte tillåten för uppladdning'
+    FILE: Fil
+    FROMCOMPUTER: 'Från din dator'
+    FROMFILESTORE: 'Från filarkivet'
+    NOSOURCE: 'Välj filen du vill bifoga'
+    REPLACE: 'Ersätt {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe för uppladdning av bild'
   Filesystem:
     SYNCRESULTS: 'Synk genomförd: {createdcount} objekt skapades, {deletedcount} objekt raderades'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Hej
     TEXT1: 'Här är din'
     TEXT2: 'Återställningslänk för lösenord'
     TEXT3: för
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s är obligatorisk'
+    SubmitBtnLabel: Go
+    VALIDATIONCREDITNUMBER: 'Kontrollera att du angav kortnummret {number} rätt'
+    VALIDATIONNOTUNIQUE: 'Det angivna värdet är inte unikt'
+    VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
+    VALIDATIONPASSWORDSNOTEMPTY: 'Lösenordfältet får inte vara tomt'
+    VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
+    VALIDATOR: Validator
+    VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
   FormField:
-    NONE:
-      - null
+    NONE: ingen
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Radera
+    Delete: Radera
+    UnlinkRelation: Avlänka
   GridField:
     Add: 'Lägg till {name}'
     Filter: Filtrera
@@ -323,8 +251,7 @@ sv:
     RelationSearch: Relationssökning
     ResetFilter: Rensa
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'Rättighet för att radera saknas'
   GridFieldDetailForm:
     CancelBtn: Avbryt
     Create: Skapa
@@ -351,19 +278,13 @@ sv:
     has_many_Permissions: Tillstånd
     many_many_Members: Medlemmar
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Importera en eller flera grupper i <em>CSV</em>- format (komma-separerade värden). <small><a href="#" class ="toggle-advanced">Visa avancerade val</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'Skapade {count} grupper'
+    ResultDeleted: 'Raderade %d grupper'
+    ResultUpdated: 'Uppdaterade %d grupper'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Oändlig loop hittades i hierarkin "{type}". Var vänlig ändra föräldern för att lösa detta'
   HtmlEditorField:
     ADDURL: 'Lägg till URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaljer &amp; dimensioner'
@@ -410,50 +331,33 @@ sv:
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
     UpdateMEDIA: 'Uppdatera media'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE:
       - null
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe för uppladdning av bild'
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
+    CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
+    DELETED: Raderad
+    DropdownBatchActionsDefault: Åtgärder
     HELP: Hjälp
-    PAGETYPE:
-      - null
+    PAGETYPE: Sidtyp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    PERMALREADY: 'Tyvärr så har du inte tillträde till den delen av CMSet. Om du vill logga in med en annan användare kan du göra det nedan'
+    PERMDEFAULT: 'Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet.'
+    PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras för att den har inte sparats ännu.'
+    PreviewButton: Förhandsgranska
+    REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
+    SAVEDUP: Sparad.
+    VersionUnknown: okänd
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Hej
+    LOGOUT: 'Logga ut'
   LoginAttempt:
     Email: E-postadress
     IP: IP-adress
@@ -504,8 +408,7 @@ sv:
     db_Password: Lösenord
     db_PasswordExpiry: 'Lösenordet upphör att gälla'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'E-post &amp; Lösenord'
   MemberDatetimeOptionsetField:
     AMORPM:
       - null
@@ -554,10 +457,8 @@ sv:
     ResultNone: 'Inga ändringar'
     ResultUpdated: 'Uppdaterade {count} medlemmar'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE:
@@ -581,14 +482,10 @@ sv:
     UPDATEDRECORDS:
       - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: Databaskolumner
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relationer
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: 'Filtrera på'
     IMPORT: Importera
@@ -596,32 +493,22 @@ sv:
     IMPORT_TAB_HEADER: Importera
     SEARCHLISTINGS: Sök
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: Belopp
+    FIELDLABELCURRENCY: Valuta
   NullableField:
     IsNullLabel: 'Är NULL'
   NumericField:
     VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Page
+    View: View
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: Administratör
+    CMS_ACCESS_CATEGORY: CMS-åtkomst
+    FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
+    FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
@@ -633,10 +520,8 @@ sv:
     SINGULARNAME: Role
     Title: Rollnamn
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -647,32 +532,19 @@ sv:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
+    BUTTONSEND: 'Skicka återställningslänk'
+    CHANGEPASSWORDBELOW: 'Du kan ändra ditt lösenord nedan'
+    CHANGEPASSWORDHEADER: 'Ändra ditt lösenord'
+    ENTERNEWPASSWORD: 'Var god ange ett nytt lösenord.'
+    ERRORPASSWORDPERMISSION: 'Du måste vara inloggad för att kunna ändra ditt lösenord!'
+    LOGGEDOUT: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
+    LOGIN: 'Logga in'
+    NOTEPAGESECURED: 'Den här sidan är låst. Fyll i dina uppgifter nedan så skickar vi dig vidare.'
+    NOTERESETLINKINVALID: '<p>Återställningslänk för lösenord är felaktig eller för gammal.</p><p>Du kan begära en ny <a href="{link1}">här</a> eller ändra ditt lösenord när du <a href="{link2}">loggat in</a>.</p>'
+    NOTERESETPASSWORD: 'Ange din e-postadress så skickar vi en länk med vilken du kan återställa ditt lösenord'
+    PASSWORDSENTHEADER: 'Återställningslänk för lösenord har skickats till ''{email}'''
+    PASSWORDSENTTEXT: 'Tack en återställningslänk har skickats till ''{email}'', förutsatt att ett konto med den addressen finns.'
   SecurityAdmin:
     ACCESS_HELP: 'Tillåt visning, skapande och redigerande av användare, såväl som tilldelning av tillstånd och roller till dessa.'
     APPLY_ROLES: 'Applicera roller till grupper'
@@ -692,37 +564,28 @@ sv:
     TABROLES: Roller
     Users: Användare
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: 'Importera från CSV'
+    FileFieldLabel: 'CSV-fil <small>(Tillåtna filtyper: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Ändra
   SimpleImageField:
     NOUPLOAD: 'Ingen bild uppladdad'
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: Huvudsaklig
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 'Lägg till ny rad'
+    ADDITEM: 'Lägg till %s'
   TableListField:
     CSVEXPORT: 'Exportera till CSV'
     PRINT: 'Skriv ut'
     Print: 'Skriv ut'
     SELECT: 'Välj:'
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sortera i stigande ordning'
+    SORTDESC: 'Sortera i fallande ordning'
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: av
@@ -732,8 +595,7 @@ sv:
     VIEWNEXT: 'Visa nästa'
     VIEWPREVIOUS: 'Visa föregående'
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   ToggleField:
     LESS: mindre
     MORE: mer
@@ -763,5 +625,4 @@ sv:
     STARTALLINFO: 'Start all uploads'
     Saved: Sparad
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: Versioner

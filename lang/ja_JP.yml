@@ -1,11 +1,8 @@
 ja_JP:
   AssetAdmin:
-    ADDFILES:
-      - null
-    EditOrgMenu:
-      - null
-    NEWFOLDER:
-      - null
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
+    NEWFOLDER: 新しいフォルダ
   AssetTableField:
     CREATED:
       - null
@@ -73,27 +70,19 @@ ja_JP:
     ERRORNOTADMIN: このユーザーは管理者（アドミニストレーター）ではありません
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: 偽
+    ANY: 何でも
+    1: 真
   CMSLoadingScreen.ss:
     LOADING: 読み込み中...
     REQUIREJS: CMSを利用するにはJavascriptが有効化されている必要があります。
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: すべてのCMSのセクションへアクセス
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: 保存
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: CMSProfileController
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
     CHANGEPASSWORDTEXT2: '貴方は現在以下の証明書を使ってログインしています:'
@@ -101,48 +90,35 @@ ja_JP:
     HELLO: こんにちわ！
     PASSWORD: パスワード
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - いいえ
+    - はい
   ComplexTableField:
     CLOSEPOPUP: ポップアップを閉じる
     SUCCESSADD2: '{name}を追加しました'
     SUCCESSEDIT: '更新日時 %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: '%sを追加する'
+    NOITEMSFOUND: 項目が見つかりませんでした
+    SORTASC: 昇順
+    SORTDESC: ソート（下順）
   ComplexTableField_popup.ss:
     NEXT: 次へ
     PREVIOUS: 前へ
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: パスワード変更
   CreditCardField:
     FIRST: 一番目
     FOURTH: 四番目
     SECOND: 二番目
     THIRD: 三番目
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: データオブジェクト
+    SINGULARNAME: データオブジェクト
   Date:
     DAY: ' 日'
     DAYS: 日
@@ -165,44 +141,32 @@ ja_JP:
     VALIDDATEMAXDATE: '許可されている最も新しい日付{{date}}より古い日付か同じ日付である必要があります。'
     VALIDDATEMINDATE: '許可されている最も古い日付{{date}}より新しい日付か同じ日付である必要があります'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 不正なリクエスト
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (選択)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: メールアドレスを入力してください
   Email_BounceRecord:
     PLURALNAME: 'Eメール 反応記録'
     SINGULARNAME: 'Eメール 反応記録'
   Enum:
     ANY: 何でも
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
+    AviType: 'AVI video file'
+    Content: 内容
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
     DocType:
       - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
+    Filename: ファイル名
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
     HtlType:
       - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT:
       - null
     IcoType:
@@ -211,102 +175,66 @@ ja_JP:
       - null
     JsType:
       - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: ファイルサイズが0バイトです。
+    NOVALIDUPLOAD: 'File is not a valid upload'
+    Name: 名前
+    PLURALNAME: ファイル
     PdfType:
       - null
     PngType:
       - null
-    SINGULARNAME:
-      - null
+    SINGULARNAME: ファイル
     TOOLARGE:
       - null
-    TOOLARGESHORT:
-      - null
+    TOOLARGESHORT: '{size}をファイルサイズは超えました'
     TiffType:
       - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
+    Title: タイトル
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
     ZipType:
       - null
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: このファイルの種類はアップロードすることを許可されていません
+    FILE: ファイル
+    FROMCOMPUTER: コンピューターから
+    FROMFILESTORE: ファイルストレージから
+    NOSOURCE: 'Please select a source file to attach'
+    REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
     TITLE: イメージアップロード（Iframe）
   Filesystem:
     SYNCRESULTS: '同期が完了しました: {createdcount}項目が作成され、{deletedcount}項目が削除されました。'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: こんにちわ！
     TEXT1: 'ここ''貴方の'
     TEXT2: パスワードリセットのリンク
     TEXT3: は
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s が必要です'
+    SubmitBtnLabel: Go
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 入力された値はユニークではありません
+    VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
+    VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: 検証
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE:
-      - null
+    NONE: 何もありません
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: 削除
+    UnlinkRelation: リンク解除
   GridField:
     Add: '{name}を追加'
     Filter: フィルタ
@@ -323,8 +251,7 @@ ja_JP:
     RelationSearch: 'Relation search'
     ResetFilter: リセット
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 削除権限がありません
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: 作成
@@ -351,19 +278,13 @@ ja_JP:
     has_many_Permissions: 承認
     many_many_Members: メンバー
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p><em>CSV</em>フォーマット(カンマ区切り)から一つ以上のグループを取り込みます。<small><a href="#" class="toggle-advanced">高度な利用法について表示</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: '%dグループを削除しました'
+    ResultUpdated: '%dグループを更新しました'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: URLを追加
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -410,50 +331,33 @@ ja_JP:
     URLNOTANOEMBEDRESOURCE: 'URL''{url}''はメディアリソースとして扱うことができませんでした。'
     UpdateMEDIA: メディアを更新
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE:
       - null
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: イメージアップロード（Iframe）
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
+    CANT_REORGANISE: 最上層のページを変更する権限がありません。あなたの変更は保存されませんでした。
+    DELETED: 削除しました。
+    DropdownBatchActionsDefault: アクション
     HELP: ヘルプ
-    PAGETYPE:
-      - null
+    PAGETYPE: 'ページの種類:'
     PERMAGAIN: ログアウトしました。再度ログインする場合は下にユーザー名とパスワードを入力してください。
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    PERMALREADY: 申し訳ございません。ご指定になられたCMSの箇所にはアクセスいただけません。別ユーザーとしてログインをされたい場合は、下記より行えます。
+    PERMDEFAULT: 認証方法を選択し、CMSにアクセスするために利用する認証情報を入力してください。
+    PLEASESAVE: '保存してください: 保存してないため更新できません。'
+    PreviewButton: プレビュー
+    REORGANISATIONSUCCESSFUL: サイトツリーの再編集に成功しました。
+    SAVEDUP: 保存済み
+    VersionUnknown: 不明
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: こんにちは！
+    LOGOUT: ログアウト
   LoginAttempt:
     Email: メールアドレス
     IP: IPアドレス
@@ -504,8 +408,7 @@ ja_JP:
     db_Password: パスワード
     db_PasswordExpiry: パスワードの有効期限
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: メールアドレスとパスワード
   MemberDatetimeOptionsetField:
     AMORPM:
       - null
@@ -554,10 +457,8 @@ ja_JP:
     ResultNone: 変更なし
     ResultUpdated: '{count}メンバーを更新しました'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE:
@@ -581,14 +482,10 @@ ja_JP:
     UPDATEDRECORDS:
       - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: データベースカラム
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: 関連
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: フィルタ
     IMPORT: 取り込み
@@ -596,32 +493,22 @@ ja_JP:
     IMPORT_TAB_HEADER: 取り込み
     SEARCHLISTINGS: 検索
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: 総計
+    FIELDLABELCURRENCY: 通貨
   NullableField:
     IsNullLabel: NULLである
   NumericField:
     VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Page
+    View: View
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: 管理者
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 完全な管理権
+    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'グループ"{title}"から継承'
@@ -633,10 +520,8 @@ ja_JP:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 役割とアクセス権限
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -647,32 +532,19 @@ ja_JP:
     CSVEXPORT: CSVへ書き出し
     NOTFOUND: 項目が見つかりませんでした
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
+    BUTTONSEND: パスワードリセットのリンクを送信してください
+    CHANGEPASSWORDBELOW: 以下のパスワードを変更できます
+    CHANGEPASSWORDHEADER: パスワードを変更しました
+    ENTERNEWPASSWORD: 新しいパスワードを入力してください
+    ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
+    LOGGEDOUT: ログアウトしました。再度ログインする場合は証明書キーを入力してください
+    LOGIN: ログイン
+    NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: ユーザを閲覧、追加、編集すること、及び、そのユーザに対して権限や役割を割り当てることを許可
     APPLY_ROLES: 役割をグループへ適用
@@ -692,37 +564,28 @@ ja_JP:
     TABROLES: 役割
     Users: ユーザ
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: CSVから取り込み
+    FileFieldLabel: 'CSVファイル <small>(利用可能な拡張子: *.csv)</small>'
   SilverStripeNavigator:
     Edit: 編集
   SimpleImageField:
     NOUPLOAD: 何も画像がアップロードされていません
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: メイン
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 新しい行を追加
+    ADDITEM: '%sを追加'
   TableListField:
     CSVEXPORT: CSVにエクスポート
     PRINT: 印刷
     Print: Print
     SELECT: 選択：
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 項目が見つかりませんでした
+    SORTASC: 昇順で並べ替え
+    SORTDESC: 降順で並べ替え
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
@@ -732,8 +595,7 @@ ja_JP:
     VIEWNEXT: 次を表示
     VIEWPREVIOUS: 前回を表示
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   ToggleField:
     LESS: 減少
     MORE: 増加
@@ -763,5 +625,4 @@ ja_JP:
     STARTALLINFO: すべてのアップロードを開始
     Saved: 保存しました
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: バージョン
