@@ -388,25 +388,34 @@ mi_NZ:
   MemberAuthenticator:
     TITLE: 'Īmērā &amp; Kupuhipa'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem), PM (Post meridiem) rānei'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Hoatu Tātari'
     Custom: Ritenga
     DATEFORMATBAD: 'He muhu te hōputu rā'
     DAYNOLEADING: 'Rā o te marama kāore he kore i mua'
-    DIGITSDECFRACTIONSECOND: 'Kotahi neke atu ngā mati e tohu ana i te hautau ā-ira o te hēkona'
-    FOURDIGITYEAR: 'Tau matiwhā'
-    FULLNAMEMONTH: 'Ingoa marama katoa (hei tauira, Pipiri)'
-    HOURNOLEADING: 'Haora, kāore he kore i mua'
-    MINUTENOLEADING: 'Meneti, kāore he kore i mua'
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
     MONTHNOLEADING: 'Mati marama kāore he kore i mua'
     Preview: Arokite
-    SHORTMONTH: 'Ingoa marama poto (hei tauira, Pip)'
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Takahurihia te āwhina whakahōputu'
     TWODIGITDAY: 'Rā marama matirua'
     TWODIGITHOUR: 'Ngā mati haora e rua (00 ki te 23)'
     TWODIGITMINUTE: 'Ngā mati meneti e rua (00 ki te 59)'
-    TWODIGITMONTH: 'Marama matirua (01=Kohitātea)'
-    TWODIGITSECOND: 'Ngā mati hēkona e rua (00 ki te 59)'
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
     TWODIGITYEAR: 'Tau matirua'
   MemberImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'

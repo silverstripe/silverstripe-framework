@@ -388,25 +388,34 @@ sv:
   MemberAuthenticator:
     TITLE: 'E-post &amp; Lösenord'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) eller PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Använd filter'
     Custom: Anpassad
     DATEFORMATBAD: 'Datumformatet är ogiltigt'
     DAYNOLEADING: 'Dag i månad utan inledande nolla'
-    DIGITSDECFRACTIONSECOND: 'En eller fler delar som representerar en decimaldel av en sekund.'
-    FOURDIGITYEAR: 'Fyrsiffrigt år'
-    FULLNAMEMONTH: 'Helt namn för månad (t ex juni)'
-    HOURNOLEADING: 'Timme utan inledande nolla'
-    MINUTENOLEADING: 'Minut utan inledande nolla'
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
     MONTHNOLEADING: 'Dag i månad utan inledande nolla'
     Preview: Förhandsgranska
-    SHORTMONTH: 'Kortnamn för månad (t ex jun)'
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Växla formatteringshjälp'
     TWODIGITDAY: 'Två siffror för dag i månad'
     TWODIGITHOUR: 'Två siffror för timme (00 till 23)'
     TWODIGITMINUTE: 'Två siffror för minut (00 till 59)'
-    TWODIGITMONTH: 'Tvåsiffrig månad (01 = januari osv)'
-    TWODIGITSECOND: 'Två siffror för sekund (00 till 59)'
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
     TWODIGITYEAR: 'Två siffror för år'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small>a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'

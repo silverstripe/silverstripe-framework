@@ -388,25 +388,34 @@ nb:
   MemberAuthenticator:
     TITLE: 'Epost &amp; Passord'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Legg til filter'
     Custom: Custom
     DATEFORMATBAD: 'Datoformat er ugyldig'
     DAYNOLEADING: 'Dag i måneden uten ledende null'
-    DIGITSDECFRACTIONSECOND: 'Ett eller flere siffer som representerer en desimlbrøkdel av et sekund'
-    FOURDIGITYEAR: 'Firesifret årstall'
-    FULLNAMEMONTH: 'Fullt navn på måned (eks. juni)'
-    HOURNOLEADING: 'Time uten ledende null'
-    MINUTENOLEADING: 'Minutt uten ledende null'
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
     MONTHNOLEADING: 'Månedssiffer uten ledende null'
     Preview: Forhåndsvisning
-    SHORTMONTH: 'Forkortelse av måned (f.eks. jun)'
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Vis/skjul formateringshjelp'
     TWODIGITDAY: 'Tosifret månedstall'
     TWODIGITHOUR: 'Tosifret timetall (00 til 23)'
     TWODIGITMINUTE: 'Tosifret minuttstall (00 til 59)'
-    TWODIGITMONTH: 'Tosifret måned (01=Januar, etc.)'
-    TWODIGITSECOND: 'Tosifret sekundtall (00 til 59)'
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
     TWODIGITYEAR: 'Tosifret årstall'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
