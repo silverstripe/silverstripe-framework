@@ -152,7 +152,7 @@ pt:
     Filename: 'Nome do ficheiro'
     GifType: 'GIF image - good for diagrams'
     GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
+    HtlType: 'Ficheiro HTML'
     HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
@@ -174,7 +174,7 @@ pt:
     Title: Título
     WavType: 'WAV audo file'
     XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    ZipType: 'Ficheiro compactado (ZIP)'
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -232,7 +232,7 @@ pt:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Cancelar
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
@@ -498,20 +498,20 @@ pt:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS: 'Gerir permissões de grupos'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Nome do Grupo'
-    IMPORTGROUPS: 'Import groups'
+    IMPORTGROUPS: 'Importar grupos'
     IMPORTUSERS: 'Importar utilizadores'
     MEMBERS: Membros
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
+    NEWGROUP: 'Novo grupo'
     PERMISSIONS: Permissões
     ROLES: Regras
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Regras
-    Users: Users
+    Users: Utilizadores
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -550,7 +550,7 @@ pt:
     MORE: mais
   UploadField:
     ATTACHFILE: 'Adicionar um ficheiro'
-    ATTACHFILES: 'Attach files'
+    ATTACHFILES: 'Adicionar ficheiros'
     AttachFile: 'Adicionar ficheiro(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
@@ -559,18 +559,18 @@ pt:
     DROPFILES: 'arrastar ficheiros'
     Dimensions: Dimensions
     EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
+    EDITINFO: 'Editar este ficheiro'
+    FIELDNOTSET: 'Informação do ficheiro não encontrada'
+    FROMCOMPUTER: 'Do computador'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'De ficheiros'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    REMOVEERROR: 'Erro ao mover o ficheiro'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
+    STARTALL: 'Iniciar todos'
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
