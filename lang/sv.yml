@@ -393,7 +393,8 @@ sv:
     'APPLY FILTER': 'Använd filter'
     Custom:
       - null
-    DATEFORMATBAD: 'Datumformatet är ogiltigt'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ sv:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Växla formatteringshjälp'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ sv:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Radera
+    DELETE:
+      - null
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importera från CSV'

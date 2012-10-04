@@ -393,7 +393,8 @@ ja_JP:
     'APPLY FILTER': フィルタを適用
     Custom:
       - null
-    DATEFORMATBAD: 日付フォーマットが不正です
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ ja_JP:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: フォーマットに関するヘルプの表示・非表示
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ ja_JP:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: 削除
+    DELETE:
+      - null
     DELETEDRECORDS: '{count}レコードを削除しました。'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: CSVからインポート

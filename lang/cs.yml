@@ -393,7 +393,8 @@ cs:
     'APPLY FILTER': 'Použít filtr'
     Custom:
       - null
-    DATEFORMATBAD: 'Formát datumu je neplatný'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ cs:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Přepni nápovědu formátování'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ cs:
     SINGULARNAME: 'Členské heslo'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Smazat
+    DELETE:
+      - null
     DELETEDRECORDS: 'Smazáno {count} záznamů.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importovat ze souboru CSV'

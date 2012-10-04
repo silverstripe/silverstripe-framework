@@ -393,7 +393,8 @@ et_EE:
     'APPLY FILTER': 'Apply Filter'
     Custom:
       - null
-    DATEFORMATBAD: 'Date format is invalid'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ et_EE:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Toggle formatting help'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ et_EE:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Kustuta
+    DELETE:
+      - null
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Impordi CSV failist'

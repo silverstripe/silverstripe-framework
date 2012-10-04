@@ -393,7 +393,8 @@ tr:
     'APPLY FILTER': 'Apply Filter'
     Custom:
       - null
-    DATEFORMATBAD: 'Tarih formatı yanlış'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ tr:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Toggle formatting help'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ tr:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Sil
+    DELETE:
+      - null
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'CSV''den içer aktar'

@@ -393,7 +393,8 @@ ru:
     'APPLY FILTER': 'Применить фильтр'
     Custom:
       - null
-    DATEFORMATBAD: 'Неверный формат даты'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ ru:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Включить подсказки форматирования'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ ru:
     SINGULARNAME: Пароль
   MemberTableField: null
   ModelAdmin:
-    DELETE: Удалить
+    DELETE:
+      - null
     DELETEDRECORDS: 'Удалено {count} записей.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Импорт из CSV'

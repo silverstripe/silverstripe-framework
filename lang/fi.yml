@@ -393,7 +393,8 @@ fi:
     'APPLY FILTER': Suodata
     Custom:
       - null
-    DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ fi:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Vaihda muotoilu apuun'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ fi:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Poista
+    DELETE:
+      - null
     DELETEDRECORDS: 'Poistettiin {count} tietuetta'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Tuo CSV:stä'

@@ -393,7 +393,8 @@ bg:
     'APPLY FILTER': 'Приложи филтър'
     Custom:
       - null
-    DATEFORMATBAD: 'Невалиден формат на датата'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ bg:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Помощ за форматирането'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ bg:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Изтрий
+    DELETE:
+      - null
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'

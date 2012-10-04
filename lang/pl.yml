@@ -393,7 +393,8 @@ pl:
     'APPLY FILTER': 'Zastosuj filtr'
     Custom:
       - null
-    DATEFORMATBAD: 'Nieprawidłowy format daty'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ pl:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Przełącz pomoc formatowania'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ pl:
     SINGULARNAME: 'Hasło użytkownika'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Usuń
+    DELETE:
+      - null
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import z CSV'

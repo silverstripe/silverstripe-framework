@@ -393,7 +393,8 @@ es_MX:
     'APPLY FILTER': Filtro
     Custom:
       - null
-    DATEFORMATBAD: 'El formato de fecha es invalido'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ es_MX:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Mostrar la ayuda de formato'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ es_MX:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Eliminar
+    DELETE:
+      - null
     DELETEDRECORDS: 'Borrados {count} registros'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importar desde CSV'

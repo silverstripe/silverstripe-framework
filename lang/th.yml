@@ -393,7 +393,8 @@ th:
     'APPLY FILTER': ประยุกต์ใช้ตัวกรองข้อมูล
     Custom:
       - null
-    DATEFORMATBAD: รูปแบบวันที่ไม่ถูกต้อง
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ th:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Toggle formatting help'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ th:
     SINGULARNAME: รหัสผ่านสมาชิก
   MemberTableField: null
   ModelAdmin:
-    DELETE: ลบ
+    DELETE:
+      - null
     DELETEDRECORDS: 'ลบแล้ว {count} รายการ'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'นำเข้าจากไฟล์ CSV'

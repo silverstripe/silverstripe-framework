@@ -393,7 +393,8 @@ hu:
     'APPLY FILTER': 'Apply Filter'
     Custom:
       - null
-    DATEFORMATBAD: 'Date format is invalid'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ hu:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Toggle formatting help'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ hu:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Törlés
+    DELETE:
+      - null
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Betöltés CSV-ből'

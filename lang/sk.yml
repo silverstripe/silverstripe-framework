@@ -393,7 +393,8 @@ sk:
     'APPLY FILTER': 'Použiť filter'
     Custom:
       - null
-    DATEFORMATBAD: 'Formát dátumu je neplatný'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ sk:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Prepnúť nápovedu formátovania'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ sk:
     SINGULARNAME: 'Heslo člena'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Zmazať
+    DELETE:
+      - null
     DELETEDRECORDS: 'Zmazaných {count} záznamov.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importovať z CSV'

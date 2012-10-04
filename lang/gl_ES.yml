@@ -393,7 +393,8 @@ gl_ES:
     'APPLY FILTER': 'Aplicar Filtro'
     Custom:
       - null
-    DATEFORMATBAD: 'O formato da data é inválida'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ gl_ES:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Mudar o formato de axuda'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ gl_ES:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Eliminar
+    DELETE:
+      - null
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importar dende CSV'

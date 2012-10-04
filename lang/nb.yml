@@ -393,7 +393,8 @@ nb:
     'APPLY FILTER': 'Legg til filter'
     Custom:
       - null
-    DATEFORMATBAD: 'Datoformat er ugyldig'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ nb:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Vis/skjul formateringshjelp'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ nb:
     SINGULARNAME: Medlemspassord
   MemberTableField: null
   ModelAdmin:
-    DELETE: Slett
+    DELETE:
+      - null
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importer fra CSV'

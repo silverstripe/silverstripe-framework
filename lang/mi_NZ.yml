@@ -393,7 +393,8 @@ mi_NZ:
     'APPLY FILTER': 'Hoatu Tātari'
     Custom:
       - null
-    DATEFORMATBAD: 'He muhu te hōputu rā'
+    DATEFORMATBAD:
+      - null
     DAYNOLEADING:
       - null
     DIGITSDECFRACTIONSECOND:
@@ -412,7 +413,8 @@ mi_NZ:
       - null
     SHORTMONTH:
       - null
-    TOGGLEHELP: 'Takahurihia te āwhina whakahōputu'
+    TOGGLEHELP:
+      - null
     TWODIGITDAY:
       - null
     TWODIGITHOUR:
@@ -437,7 +439,8 @@ mi_NZ:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Muku
+    DELETE:
+      - null
     DELETEDRECORDS: 'I mukua e {count} ngā pūkete.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Kawemai i CSV'
