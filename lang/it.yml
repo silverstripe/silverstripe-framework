@@ -4,26 +4,16 @@ it:
     EditOrgMenu: 'Modifica & organizza'
     NEWFOLDER: NuovaCartella
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Inizialmente caricato'
+    DIM: Dimensioni
+    FILENAME: 'Nome del file'
+    FOLDER: Cartella
+    LASTEDIT: 'Ultima modifica'
+    OWNER: Proprietario
+    SIZE: Dimensione
+    TITLE: Titolo
+    TYPE: 'Tipo di file'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Scegli file'
     DRAGFILESHERE: 'Trascina file qui'
@@ -180,8 +170,7 @@ it:
     SINGULARNAME: File
     TOOLARGE: 'La dimensione del file è troppo grande, massimo consentito {size}'
     TOOLARGESHORT: 'La dimensione del file eccede {size}'
-    TiffType:
-      - null
+    TiffType: 'Immagine TIFF'
     Title: Titolo
     WavType: 'File audio WAV'
     XlsType: 'Foglio di calcolo Excel'
@@ -324,8 +313,7 @@ it:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Immagine
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -400,45 +388,26 @@ it:
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) o PM (Post meridiem)'
     'APPLY FILTER': 'Applica filtro'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Personalizza
+    DATEFORMATBAD: 'Il formato della data non è valido'
+    DAYNOLEADING: 'Giorno del mese senza zero iniziale'
+    DIGITSDECFRACTIONSECOND: 'Una o più cifre che rappresentano una frazione decimale di secondo'
+    FOURDIGITYEAR: 'Anno a quattro cifre'
+    FULLNAMEMONTH: 'Nome completo del mese (es. Giugno)'
+    HOURNOLEADING: 'Ore senza zero iniziale'
+    MINUTENOLEADING: 'Minuti senza zero iniziale'
+    MONTHNOLEADING: 'Mese senza zero iniziale'
+    Preview: Anteprima
+    SHORTMONTH: 'Nome corto del mese (es. Giu)'
+    TOGGLEHELP: 'Mostra/Nascondi aiuto formattazione'
+    TWODIGITDAY: 'Giorno del mese a due cifre'
+    TWODIGITHOUR: 'Ora a due cifre (00 a 23)'
+    TWODIGITMINUTE: 'Minuti a due cifre (00 a 59)'
+    TWODIGITMONTH: 'Mese a due cifre (01=Gennaio, ecc.)'
+    TWODIGITSECOND: 'Secondi a due cifre (00 a 59)'
+    TWODIGITYEAR: 'Anno a due cifre'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -451,26 +420,16 @@ it:
     SINGULARNAME: 'Password utente'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Elimina
+    DELETEDRECORDS: 'Eliminati {count} record.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    IMPORT: 'Importa da CSV'
+    IMPORTEDRECORDS: 'Importati {count} record.'
+    NOCSVFILE: 'Scegli un file CSV da importare'
+    NOIMPORT: 'Nulla da importare.'
+    RESET: Azzera
+    Title: 'Modelli di dati'
+    UPDATEDRECORDS: 'Aggiornati {count} record.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Colonne database'
     IMPORTSPECLINK: 'Mostra specifiche per %s'
