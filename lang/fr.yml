@@ -67,7 +67,7 @@ fr:
     LOADING: Chargement...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'Accès à la section « {title} »'
     ACCESSALLINTERFACES: 'Accès à toutes les sections du CMS'
     ACCESSALLINTERFACESHELP: 'Prioritaire sur les droits plus spécifiques d''accès.'
     SAVE: Enregistrer
@@ -95,9 +95,9 @@ fr:
     NEXT: Suivant
     PREVIOUS: Précédent
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    ATLEAST: 'Le mot de passe doit comporter au moins {min} caractères.'
+    BETWEEN: 'Le mot de passe doit comporter entre {min} et {max} caractères.'
+    MAXIMUM: 'Le mot de passe ne doit comporter plus de {max} caractères.'
     SHOWONCLICKTITLE: 'Changer le mot de passe'
   CreditCardField:
     FIRST: premier
@@ -137,7 +137,7 @@ fr:
   DropdownField:
     CHOOSE: (Choisir)
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION: 'Saisissez une adresse de courrier électronique'
   Email_BounceRecord:
     PLURALNAME: 'Enregistrements des Emails rejetés'
     SINGULARNAME: 'Enregistrement de Email rejeté'
@@ -176,16 +176,16 @@ fr:
     XlsType: 'Excel spreadsheet'
     ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    ATTACH: 'Attacher {type}'
+    ATTACHONCESAVED: 'Des {type} pourront être attachés après un premier enregistrement.'
+    ATTACHONCESAVED2: 'Des fichiers pourront être attachés après un premier enregistrement.'
+    DELETE: 'Supprimer {type}'
     DISALLOWEDFILETYPE: 'Ce type de fichier n’est pas autorisé'
     FILE: Fichier
     FROMCOMPUTER: 'À partir de votre ordinateur'
     FROMFILESTORE: 'Depuis le magasin de fichier'
     NOSOURCE: 'Choisir un fichier à attacher'
-    REPLACE: 'Replace {type}'
+    REPLACE: 'Remplacer {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe de chargement d’images'
   Filesystem:
@@ -201,17 +201,17 @@ fr:
   Form:
     FIELDISREQUIRED: '%s est requis'
     SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONCREDITNUMBER: 'Vérifiez que vous avez bien saisi votre numéro de carte bleue {number}.'
     VALIDATIONNOTUNIQUE: 'La valeur entrée n''est pas unique'
     VALIDATIONPASSWORDSDONTMATCH: 'Les mots de passe ne correspondent pas'
     VALIDATIONPASSWORDSNOTEMPTY: 'Les mots de passe peuvent être vides'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONSTRONGPASSWORD: 'Le mot de passe doit comporter au moins un chiffre et un caractère alphanumérique'
     VALIDATOR: Validateur
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: 'Saisissez une monnaie valide'
   FormField:
     NONE: aucun
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Supprime
     Delete: Supprimer
     UnlinkRelation: Séparer
   GridField:
@@ -259,19 +259,19 @@ fr:
   GroupImportForm:
     Help1: '<p>Importer un ou plusieurs groupe(s) au format <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Montrer l''usage avancé</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
+    ResultCreated: '{count} groupes créés'
     ResultDeleted: '%d groupes supprimés'
     ResultUpdated: '%d groupes mises à jour'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
+    ADDURL: 'Ajouter URL'
     ADJUSTDETAILSDIMENSIONS: 'Détails &amp; dimensions'
     ANCHORVALUE: Ancre
     BUTTONINSERT: Insérer
     BUTTONINSERTLINK: 'Insérer un lien'
     BUTTONREMOVELINK: 'Supprimer le lien'
-    BUTTONUpdate: Update
+    BUTTONUpdate: 'Mettre à jour'
     CAPTIONTEXT: Légende
     CSSCLASS: 'Alignement / Style'
     CSSCLASSCENTER: Centré
@@ -284,11 +284,11 @@ fr:
     FOLDER: Dossier
     FROMCMS: 'Depuis le SGC'
     FROMCOMPUTER: 'Depuis votre ordinateur'
-    FROMWEB: 'From the web'
+    FROMWEB: 'Du web'
     FindInFolder: 'Trouver dans un dossier'
-    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALT: 'Texte alternatif (alt)'
     IMAGEALTTEXT: 'Texte alternatif (alt) - s''affiche si l''image ne peut être affichée.'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Proposé aux lecteurs d’écran ou si l’image ne peut pas être affichée'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Hauteur
     IMAGETITLE: 'Texte du titre (tooltip) - informations à propos de l''image'
@@ -307,7 +307,7 @@ fr:
     LINKTO: 'Lier à'
     PAGE: Page
     URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    URLNOTANOEMBEDRESOURCE: 'L’URL {url} n’a pas pu être utilisée comme ressource média.'
     UpdateMEDIA: 'Mettre à jour le support audiovisuel'
   Image:
     PLURALNAME: Files
@@ -321,7 +321,7 @@ fr:
     TITLE: 'Fenêtre de chargement d''images'
   LeftAndMain:
     CANT_REORGANISE: 'Vous n’avez pas l’autorisation de modifier les pages de premier niveau. Vos modifications n’ont pas été enregistrées.'
-    DELETED: Deleted.
+    DELETED: Supprimé.
     DropdownBatchActionsDefault: Actions
     HELP: Aide
     PAGETYPE: 'Type de page&nbsp;:'
@@ -329,9 +329,9 @@ fr:
     PERMALREADY: 'Désolé, mais vous ne pouvez pas accéder à cette partie du CMS. Si vous voulez changer d''identité, faites le ci-dessous'
     PERMDEFAULT: 'Saisissez votre adresse de courriel et votre mot de passe pour accéder au CMS.'
     PLEASESAVE: 'Enregistrez la page s’il vous plaît&nbsp;: elle ne pouvait pas être mise à jour car elle n’avait pas encore été sauvegardée.'
-    PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    PreviewButton: Aperçu
+    REORGANISATIONSUCCESSFUL: 'L’arbre du site a été bien réorganisé.'
+    SAVEDUP: Enregistré.
     VersionUnknown: inconnu
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -411,10 +411,10 @@ fr:
   MemberImportForm:
     Help1: '<p>Importer les membres au format<em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Afficher l''usage avancé.</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
+    ResultCreated: '{count} membres créés'
     ResultDeleted: '%d membres supprimés'
     ResultNone: 'Aucun changements'
-    ResultUpdated: 'Updated {count} members'
+    ResultUpdated: '{count} membres mis à jour'
   MemberPassword:
     PLURALNAME: 'Member Passwords'
     SINGULARNAME: 'Member Password'
@@ -490,10 +490,10 @@ fr:
     LOGGEDOUT: 'Vous avez été déconnecté. Si vous voulez vous reconnecter, entrer vos détaisl ci-dessous.'
     LOGIN: Connectez-vous
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrer vos détails ci-dessous et nous vous enverrons directement.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>Le lien de réinitialisation du mot de passe n’est pas valide ou a expiré.</p><p>Vous pouvez en demander un nouveau <a href="{link1}">en suivant ce lien</a> ou changer de mot de passe après <a href="{link2}">connexion</a>.</p>'
     NOTERESETPASSWORD: 'Entrer votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'Lien de réinitialisation de mot de passe envoyé  à « {email} »'
+    PASSWORDSENTTEXT: 'Merci ! Un lien de réinitialisation vient d’être envoyé à « {email} », à condition que cette adresse existe.'
   SecurityAdmin:
     ACCESS_HELP: 'Permet de consulter, d’ajouter et d’éditer les utilisateurs, aussi bien que de leur assigner des autorisations et des rôles.'
     APPLY_ROLES: 'Appliquer des rôles aux groupes'
@@ -522,7 +522,7 @@ fr:
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED: 'Dans %s « %s » est requis'
   TableField.ss:
     ADD: 'Ajouter une nouvelle ligne'
     ADDITEM: 'Add %s'

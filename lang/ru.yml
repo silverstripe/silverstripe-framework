@@ -422,7 +422,7 @@ ru:
   ModelAdmin:
     DELETE: Удалить
     DELETEDRECORDS: 'Удалено {count} записей.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Очистить базу данных перед импортированием'
     IMPORT: 'Импорт из CSV'
     IMPORTEDRECORDS: 'Импортировано {count} записей.'
     NOCSVFILE: 'Выберите CSV-файл для импорта'

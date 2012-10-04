@@ -422,7 +422,7 @@ sk:
   ModelAdmin:
     DELETE: Zmazať
     DELETEDRECORDS: 'Zmazaných {count} záznamov.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Vyčistiť databázu pred importovaním'
     IMPORT: 'Importovať z CSV'
     IMPORTEDRECORDS: 'Importovaných {count} záznamov.'
     NOCSVFILE: 'Prosím vyhľadajte CSV súbor pre importovanie'
@@ -473,7 +473,7 @@ sk:
     SINGULARNAME: 'Kód právomocí úloh'
   Permissions:
     PERMISSIONS_CATEGORY: 'Úlohy a prístupové práva'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+    UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
   PhoneNumberField:
     VALIDATION: 'Prosím zadajte platné telefónne číslo'
   RelationComplexTableField.ss:
