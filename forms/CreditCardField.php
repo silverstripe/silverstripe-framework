@@ -10,17 +10,21 @@
  */
 class CreditCardField extends TextField {
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$parts = $this->value;
 		if(!is_array($parts)) $parts = explode("\n", chunk_split($parts,4,"\n"));
 		$parts = array_pad($parts, 4, "");
 
 		// TODO Mark as disabled/readonly
-		$field = "<span id=\"{$this->name}_Holder\" class=\"creditCardField\">" .
-				"<input autocomplete=\"off\" name=\"{$this->name}[0]\" value=\"$parts[0]\" maxlength=\"4\"" . $this->getTabIndexHTML(0) . " /> - " .
-				"<input autocomplete=\"off\" name=\"{$this->name}[1]\" value=\"$parts[1]\" maxlength=\"4\"" . $this->getTabIndexHTML(1) . " /> - " .
-				"<input autocomplete=\"off\" name=\"{$this->name}[2]\" value=\"$parts[2]\" maxlength=\"4\"" . $this->getTabIndexHTML(2) . " /> - " .
-				"<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\"" . $this->getTabIndexHTML(3) . " /></span>";
+		$field = "<span id=\"{$this->name}_Holder\" class=\"creditCardField\">"
+			. "<input autocomplete=\"off\" name=\"{$this->name}[0]\" value=\"$parts[0]\" maxlength=\"4\""
+			. $this->getTabIndexHTML(0) . " /> - "
+			. "<input autocomplete=\"off\" name=\"{$this->name}[1]\" value=\"$parts[1]\" maxlength=\"4\"" 
+			. $this->getTabIndexHTML(1) . " /> - "
+			. "<input autocomplete=\"off\" name=\"{$this->name}[2]\" value=\"$parts[2]\" maxlength=\"4\"" 
+			. $this->getTabIndexHTML(2) . " /> - "
+			. "<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\"" 
+			. $this->getTabIndexHTML(3) . " /></span>";
 		return $field;
 	}
 
@@ -35,12 +39,12 @@ class CreditCardField extends TextField {
 		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
 	}
 	
-	function dataValue() {
+	public function dataValue() {
 		if(is_array($this->value)) return implode("", $this->value);
 		else return $this->value;
 	}
 	
-	function validate($validator){
+	public function validate($validator){
 		// If the field is empty then don't return an invalidation message
 		if(!trim(implode("", $this->value))) return true;
 		

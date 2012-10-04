@@ -9,15 +9,15 @@
  * <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  * <html>
  * <head>
- * 	<script src="http://code.jquery.com/jquery-latest.js"></script>
- *  <link rel="stylesheet" href="http://dev.jquery.com/view/trunk/qunit/testsuite.css" type="text/css" media="screen" />
- * 	<script>
+ * <script src="http://code.jquery.com/jquery-latest.js"></script>
+ * <link rel="stylesheet" href="http://dev.jquery.com/view/trunk/qunit/testsuite.css" type="text/css" media="screen" />
+ * <script>
  * 	$(document).ready(function(){
  * 		test("test my feature", function() {
  * 			ok('mytest');
  * 		});
  * 	});
- *   </script>
+ * </script>
  * </head>
  * <body>
  * <script type="text/javascript" src="http://jqueryjs.googlecode.com/svn/trunk/qunit/testrunner.js"></script>
@@ -54,12 +54,12 @@ class JSTestRunner extends Controller {
 	 *
 	 * @param string $reporter
 	 */
-	static function set_reporter($reporter) {
+	public static function set_reporter($reporter) {
 		if (is_string($reporter)) $reporter = new $reporter;
 		self::$default_reporter = $reporter;
 	}
 	
-	function init() {
+	public function init() {
 		parent::init();
 		
 		if(Director::is_cli()) {
@@ -77,14 +77,14 @@ class JSTestRunner extends Controller {
 	/**
 	 * Run all test classes
 	 */
-	function all() {
+	public function all() {
 		$this->runTests(array_keys($this->getAllTestFiles()));
 	}
 	
 	/**
 	 * Browse all enabled test cases in the environment
 	 */
-	function browse() {
+	public function browse() {
 		self::$default_reporter->writeHeader();
 		echo '<div class="info">';
 		echo '<h1>Available Tests</h1>';
@@ -103,7 +103,7 @@ class JSTestRunner extends Controller {
 	/**
 	 * Run only a single test class
 	 */
-	function only($request) {
+	public function only($request) {
 		$test = $request->param('TestCase');
 		
 		if ($test == 'all') {
@@ -111,14 +111,15 @@ class JSTestRunner extends Controller {
 		} else {
 			$allTests = $this->getAllTestFiles();
 			if(!array_key_exists($test, $allTests)) {
-				user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
+				user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class",
+					E_USER_ERROR);
 			}
 			
 			$this->runTests(array($test));
 		}
 	}
 
-	function runTests($tests) {
+	public function runTests($tests) {
 		$this->setUp();
 
 		self::$default_reporter->writeHeader("SilverStripe JavaScript Test Runner");
@@ -136,10 +137,10 @@ class JSTestRunner extends Controller {
 		$this->tearDown();
 	}
 	
-	function setUp() {
+	public function setUp() {
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 	}
 	
 	protected function getAllTestFiles() {

@@ -35,8 +35,11 @@ class SapphireREPL extends Controller {
 		throw new Exception(sprintf("%s:%d\r\n%s", $errfile, $errline, $errstr));
 	}
 
-	function index() {
-		if(!Director::is_cli()) return "The SilverStripe Interactive Command-line doesn't work in a web browser.  Use 'sake interactive' from the command-line to run.";
+	public function index() {
+		if(!Director::is_cli()) {
+			return "The SilverStripe Interactive Command-line doesn't work in a web browser."
+				. " Use 'sake interactive' from the command-line to run.";
+		}
 
 
 		/* Try using PHP_Shell if it exists */
@@ -56,7 +59,8 @@ class SapphireREPL extends Controller {
 				if ( $command == 'help' || $command == '?' ) {
 					print "help or ? to exit\n" ;
 					print "quit or \q to exit\n" ;
-					print "install PHP_Shell for a more advanced interface with auto-completion and readline support\n\n" ;
+					print "install PHP_Shell for a more advanced interface with"
+						. " auto-completion and readline support\n\n" ;
 					continue ;
 				}
 
@@ -76,7 +80,9 @@ class SapphireREPL extends Controller {
 				}
 				catch( Exception $__repl_exception ) {
 					echo SS_Cli::start_colour("red");
-					printf( '%s (code: %d) got thrown'.PHP_EOL, get_class($__repl_exception), $__repl_exception->getCode() );
+					printf( '%s (code: %d) got thrown'.PHP_EOL, 
+						get_class($__repl_exception), 
+						$__repl_exception->getCode() );
 					print $__repl_exception;
 					echo "\n";
 				}

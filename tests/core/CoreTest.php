@@ -17,16 +17,19 @@ class CoreTest extends SapphireTest {
 
 	public function testGetTempPathInProject() {
 		if(file_exists($this->tempPath)) {
-			$this->assertEquals(getTempFolder(), $this->tempPath);
+			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath);
 		} else {
 			// A typical Windows location for where sites are stored on IIS
-			$this->assertEquals(getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'), sys_get_temp_dir() . '/silverstripe-cacheC--inetpub-wwwroot-silverstripe-test-project');
+			$this->assertEquals(getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'),
+				sys_get_temp_dir() . '/silverstripe-cacheC--inetpub-wwwroot-silverstripe-test-project');
 
 			// A typical Mac OS X location for where sites are stored
-			$this->assertEquals(getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project'), sys_get_temp_dir() . '/silverstripe-cache-Users-joebloggs-Sites-silverstripe-test-project');
+			$this->assertEquals(getTempFolder('/Users/joebloggs/Sites/silverstripe-test-project'),
+				sys_get_temp_dir() . '/silverstripe-cache-Users-joebloggs-Sites-silverstripe-test-project');
 
 			// A typical Linux location for where sites are stored
-			$this->assertEquals(getTempFolder('/var/www/silverstripe-test-project'), sys_get_temp_dir() . '/silverstripe-cache-var-www-silverstripe-test-project');
+			$this->assertEquals(getTempFolder('/var/www/silverstripe-test-project'),
+				sys_get_temp_dir() . '/silverstripe-cache-var-www-silverstripe-test-project');
 		}
 	}
 

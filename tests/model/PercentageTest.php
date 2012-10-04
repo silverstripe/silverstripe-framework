@@ -5,7 +5,7 @@
  */
 class PercentageTest extends SapphireTest {
 	
-	function testNice() {
+	public function testNice() {
 		/* Test the default Nice() output of Percentage */
 		$cases = array(
 			'0.01' => '1.00%',
@@ -25,7 +25,7 @@ class PercentageTest extends SapphireTest {
 		}
 	}
 
-	function testCustomPrecision() {
+	public function testCustomPrecision() {
 		/* Set a precision that's different from the default with Nice() output */
 		$cases = array(
 			'0.01' => '1%',

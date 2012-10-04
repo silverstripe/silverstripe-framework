@@ -17,7 +17,7 @@ class HTTP {
 	/**
 	 * Turns a local system filename into a URL by comparing it to the script filename
 	 */
-	static function filename2url($filename) {
+	public static function filename2url($filename) {
 		$slashPos = -1;
 		while(($slashPos = strpos($filename, "/", $slashPos+1)) !== false) {
 			if(substr($filename, 0, $slashPos) == substr($_SERVER['SCRIPT_FILENAME'],0,$slashPos)) {
@@ -39,9 +39,10 @@ class HTTP {
 	/**
 	 * Turn all relative URLs in the content to absolute URLs
 	 */
-	static function absoluteURLs($html) {
+	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
-		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) : ( (preg_match("/^[A-Za-z]+:/", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
+		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) :'
+			. ' ( (preg_match("/^[A-Za-z]+:/", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
 	}
 
 	/*
@@ -53,7 +54,7 @@ class HTTP {
 	 *  'myRewriter($URL)'
 	 *  '(substr($URL,0,1)=="/") ? "../" . substr($URL,1) : $URL'
 	 */
-	static function urlRewriter($content, $code) {
+	public static function urlRewriter($content, $code) {
 		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
@@ -145,7 +146,7 @@ class HTTP {
 		return $newUri;
 	}
 
-	static function RAW_setGetVar($varname, $varvalue, $currentURL = null) {
+	public static function RAW_setGetVar($varname, $varvalue, $currentURL = null) {
 		$url = self::setGetVar($varname, $varvalue, $currentURL);
 		return Convert::xml2raw($url);
 	}
@@ -176,11 +177,11 @@ class HTTP {
 		return count($result) ? $result : null;
 	}
 	
-	static function getLinksIn($content) {
+	public static function getLinksIn($content) {
 		return self::findByTagAndAttribute($content, array("a" => "href"));
 	}
 	
-	static function getImagesIn($content) {
+	public static function getImagesIn($content) {
 		return self::findByTagAndAttribute($content, array("img" => "src"));
 	}
 	
@@ -230,32 +231,32 @@ class HTTP {
 	/**
 	 * Set the maximum age of this page in web caches, in seconds
 	 */
-	static function set_cache_age($age) {
+	public static function set_cache_age($age) {
 		self::$cache_age = $age;
 	}
 
-	static function register_modification_date($dateString) {
+	public static function register_modification_date($dateString) {
 		$timestamp = strtotime($dateString);
 		if($timestamp > self::$modification_date)
 			self::$modification_date = $timestamp;
 	}
 
-	static function register_modification_timestamp($timestamp) {
+	public static function register_modification_timestamp($timestamp) {
 		if($timestamp > self::$modification_date)
 			self::$modification_date = $timestamp;
 	}
 
-	static function register_etag($etag) {
+	public static function register_etag($etag) {
 		self::$etag = $etag;
 	}
 
 	/**
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
 	 *
-	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is deprecated; in these
-	 * cases, the headers are output directly.
+	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
+	 *                            deprecated; in these cases, the headers are output directly.
 	 */
-	static function add_cache_headers($body = null) {
+	public static function add_cache_headers($body = null) {
 		// Validate argument
 		if($body && !($body instanceof SS_HTTPResponse)) {
 			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
@@ -266,16 +267,21 @@ class HTTP {
 		// below.
 		if(Director::isDev()) return;
 		
-		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in us trying.
+		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
+		// us trying.
 		if(headers_sent() && !$body) return;
 		
 		// Popuplate $responseHeaders with all the headers that we want to build 
 		$responseHeaders = array();
 		if(function_exists('apache_request_headers')) {
 			$requestHeaders = apache_request_headers();
-			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With'] == 'XMLHttpRequest') self::$cache_age = 0;
+			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With']=='XMLHttpRequest') {
+				self::$cache_age = 0;
+			}
 			// bdc: now we must check for DUMB IE6:
-			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with'] == 'XMLHttpRequest') self::$cache_age = 0;
+			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with']=='XMLHttpRequest') {
+				self::$cache_age = 0;
+			}
 		}
 
 		if(self::$cache_age > 0) {
@@ -323,14 +329,14 @@ class HTTP {
 	 * GMT timezone (a timestamp is always in GMT: the number of seconds
 	 * since January 1 1970 00:00:00 GMT)
 	 */
-	static function gmt_date($timestamp) {
+	public static function gmt_date($timestamp) {
 		return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
 	}
 	
 	/* 
 	 * Return static variable cache_age in second
 	 */
-	static function get_cache_age() {
+	public static function get_cache_age() {
 		return self::$cache_age;
 	}
 

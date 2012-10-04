@@ -9,7 +9,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		'GridFieldDetailFormTest_Category',
 	);
 
-	function testAddForm() {
+	public function testAddForm() {
 		$this->logInWithPermission('ADMIN');
 		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
@@ -67,7 +67,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertEquals('Doe', (string) $surname[0]);
 	}
 
-	function testEditForm() {
+	public function testEditForm() {
 		$this->logInWithPermission('ADMIN');
 		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
@@ -106,7 +106,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
 	}
 
-	function testNestedEditForm() {
+	public function testNestedEditForm() {
 		$this->logInWithPermission('ADMIN');
 
 		$group = $this->objFromFixture('GridFieldDetailFormTest_PeopleGroup', 'group');
@@ -118,7 +118,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 
-		$groupEditLink = $parser->getByXpath('//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $group->ID . '")]//a');
+		$groupEditLink = $parser->getByXpath('//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "'
+			. $group->ID . '")]//a');
 		$this->assertEquals(
 			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/' . $group->ID . '/edit',
 			(string)$groupEditLink[0]['href']
@@ -128,9 +129,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get((string)$groupEditLink[0]['href']);
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
+		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]' .
+			'//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
 		$this->assertEquals(
-			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People/item/%d/edit', $group->ID, $person->ID),
+			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
+				. '/item/%d/edit', $group->ID, $person->ID),
 			(string)$personEditLink[0]['href']
 		);
 
@@ -138,23 +141,25 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get((string)$personEditLink[0]['href']);
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
+		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]'
+			. '//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
 		$this->assertEquals(
-			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People/item/%d/ItemEditForm/field/Categories/item/%d/edit', $group->ID, $person->ID, $category->ID),
+			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
+				. '/item/%d/ItemEditForm/field/Categories/item/%d/edit', $group->ID, $person->ID, $category->ID),
 			(string)$categoryEditLink[0]['href']
 		);
 
 		// Fourth level form would be a Category detail view
 	}
 
-	function testCustomItemRequestClass() {
+	public function testCustomItemRequestClass() {
 		$component = new GridFieldDetailForm();
 		$this->assertEquals('GridFieldDetailForm_ItemRequest', $component->getItemRequestClass());
 		$component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
 		$this->assertEquals('GridFieldDetailFormTest_ItemRequest', $component->getItemRequestClass());
 	}
 
-	function testItemEditFormCallback() {
+	public function testItemEditFormCallback() {
 		$category = new GridFieldDetailFormTest_Category();
 		$component = new GridFieldDetailForm();
 		$component->setItemEditFormCallback(function($form, $component) {
@@ -190,7 +195,7 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 
 	static $default_sort = 'FirstName';
 
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('Categories',
@@ -214,7 +219,7 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 
 	static $default_sort = 'Name';
 
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('People',
@@ -238,7 +243,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 
 	static $default_sort = 'Name';
 
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('People',
@@ -254,7 +259,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
-	function Form() {
+	public function Form() {
 		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
@@ -274,7 +279,7 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
-	function Form() {
+	public function Form() {
 		$field = new GridField('testfield', 'testfield', GridFieldDetailFormTest_PeopleGroup::get()->sort('Name'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());

@@ -10,12 +10,14 @@
 class CountryDropdownField extends DropdownField {
 
 	/**
-	 * @var bool - Should we default the dropdown to the region determined from the user's locale?
+	 * Should we default the dropdown to the region determined from the user's locale?
+	 * @var bool
 	 */
 	static $default_to_locale = true;
 
 	/**
-	 * @var string - The region code to default to if default_to_locale is set to false, or we can't determine a region from a locale
+	 * The region code to default to if default_to_locale is set to false, or we can't determine a region from a locale
+	 *  @var string
 	 */
 	static $default_country = 'NZ';
 
@@ -30,7 +32,7 @@ class CountryDropdownField extends DropdownField {
 		return i18n::get_locale();
 	}
 
-	function __construct($name, $title = null, $source = null, $value = "", $form=null) {
+	public function __construct($name, $title = null, $source = null, $value = "", $form=null) {
 		if(!is_array($source)) {
 			// Get a list of countries from Zend
 			$source = Zend_Locale::getTranslationList('territory', $this->locale(), 2);
@@ -53,7 +55,7 @@ class CountryDropdownField extends DropdownField {
 		parent::__construct($name, ($title===null) ? $name : $title, $source, $value, $form);
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$source = $this->getSource();
 
 		if (!$this->value || !isset($source[$this->value])) {

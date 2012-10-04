@@ -15,7 +15,7 @@ class TextField extends FormField {
 	/**
 	 * Returns an input field, class="text" and type="text" with an optional maxlength
 	 */
-	function __construct($name, $title = null, $value = '', $maxLength = null, $form = null) {
+	public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null) {
 		$this->maxLength = $maxLength;
 		
 		parent::__construct($name, $title, $value, $form);
@@ -24,7 +24,7 @@ class TextField extends FormField {
 	/**
 	 * @param int $length
 	 */
-	function setMaxLength($length) {
+	public function setMaxLength($length) {
 		$this->maxLength = $length;
 		
 		return $this;
@@ -33,11 +33,11 @@ class TextField extends FormField {
 	/**
 	 * @return int
 	 */
-	function getMaxLength() {
+	public function getMaxLength() {
 		return $this->maxLength;
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -47,7 +47,7 @@ class TextField extends FormField {
 		);
 	}
 
-	function InternallyLabelledField() {
+	public function InternallyLabelledField() {
 		if(!$this->value) $this->value = $this->Title();
 		return $this->Field();
 	}

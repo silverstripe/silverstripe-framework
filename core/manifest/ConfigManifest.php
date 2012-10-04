@@ -9,24 +9,40 @@
  */
 class SS_ConfigManifest {
 
-	/** @var array All the values needed to be collected to determine the correct combination of fragements for the current environment. */
+	/** 
+	  * All the values needed to be collected to determine the correct combination of fragements for
+	  * the current environment.
+	  * @var array
+	  */
 	protected $variantKeySpec = array();
 
-	/** @var array All the _config.php files. Need to be included every request & can't be cached. Not variant specific. */
+	/**
+	 * All the _config.php files. Need to be included every request & can't be cached. Not variant specific.
+	 * @var array
+	 */
 	protected $phpConfigSources = array();
 
-	/** @var array All the _config/*.yml fragments pre-parsed and sorted in ascending include order. Not variant specific. */
+	/**
+	 * All the _config/*.yml fragments pre-parsed and sorted in ascending include order. Not variant specific.
+	 * @var array
+	 */
 	protected $yamlConfigFragments = array();
 
-	/** @var array The calculated config from _config/*.yml, sorted, filtered and merged. Variant specific. */
+	/**
+	 * The calculated config from _config/*.yml, sorted, filtered and merged. Variant specific.
+	 * @var array
+	 */
 	public $yamlConfig = array();
 
-	/** @var array A side-effect of collecting the _config fragments is the calculation of all module directories, since the definition
-	 * of a module is "a directory that contains either a _config.php file or a _config directory */
+	/**
+	 * A side-effect of collecting the _config fragments is the calculation of all module directories, since
+	 * the definition of a module is "a directory that contains either a _config.php file or a _config directory
+	 * @var array
+	 */
 	public $modules = array();
 
 	/** Adds a path as a module */
-	function addModule($path) {
+	public function addModule($path) {
 		$module = basename($path);
 		if (isset($this->modules[$module]) && $this->modules[$module] != $path) {
 			user_error("Module ".$module." in two places - ".$path." and ".$this->modules[$module]);
@@ -35,7 +51,7 @@ class SS_ConfigManifest {
 	}
 
 	/** Returns true if the passed module exists */
-	function moduleExists($module) {
+	public function moduleExists($module) {
 		return array_key_exists($module, $this->modules);
 	}
 
@@ -63,7 +79,8 @@ class SS_ConfigManifest {
 			$this->variantKeySpec = $this->cache->load('variant_key_spec');
 			// Try getting the pre-filtered & merged config for this variant
 			if (!($this->yamlConfig = $this->cache->load('yaml_config_'.$this->variantKey()))) {
-				// Otherwise, if we do have the yaml config fragments (and we should since we have a variant key spec) work out the config for this variant
+				// Otherwise, if we do have the yaml config fragments (and we should since we have a variant key spec)
+				// work out the config for this variant
 				if ($this->yamlConfigFragments = $this->cache->load('yaml_config_fragments')) {
 					$this->buildYamlConfigVariant();
 				}
@@ -88,8 +105,9 @@ class SS_ConfigManifest {
 	}
 
 	/**
-	 * Returns the string that uniquely identifies this variant. The variant is the combination of classes, modules, environment,
-	 * environment variables and constants that selects which yaml fragments actually make it into the configuration because of "only"
+	 * Returns the string that uniquely identifies this variant. The variant is the combination of classes, modules,
+	 * environment, environment variables and constants that selects which yaml fragments actually make it into the
+	 * configuration because of "only"
 	 * and "except" rules.
 	 * 
 	 * @return string
@@ -97,7 +115,9 @@ class SS_ConfigManifest {
 	public function variantKey() {
 		$key = $this->variantKeySpec; // Copy to fill in actual values
 
-		if (isset($key['environment'])) $key['environment'] = Director::isDev() ? 'dev' : (Director::isTest() ? 'test' : 'live');
+		if (isset($key['environment'])) {
+			$key['environment'] = Director::isDev() ? 'dev' : (Director::isTest() ? 'test' : 'live');
+		}
 
 		if (isset($key['envvars'])) foreach ($key['envvars'] as $variable => $foo) {
 			$key['envvars'][$variable] = isset($_ENV[$variable]) ? $_ENV[$variable] : null;
@@ -111,9 +131,9 @@ class SS_ConfigManifest {
 	}
 
 	/**
-	 * Completely regenerates the manifest file. Scans through finding all php _config.php and yaml _config/*.ya?ml files,
-	 * parses the yaml files into fragments, sorts them and figures out what values need to be checked to pick the
-	 * correct variant.
+	 * Completely regenerates the manifest file. Scans through finding all php _config.php and yaml _config/*.ya?ml
+	 * files,parses the yaml files into fragments, sorts them and figures out what values need to be checked to pick
+	 * the correct variant.
 	 *
 	 * Does _not_ build the actual variant
 	 *
@@ -177,7 +197,8 @@ class SS_ConfigManifest {
 		$this->addModule(dirname(dirname($pathname)));
 
 		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/sfYamlParser.php';
+		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/'
+			. 'sfYamlParser.php';
 		$parser = new sfYamlParser();
 
 		// The base header
@@ -203,7 +224,9 @@ class SS_ConfigManifest {
 		// Otherwise it's a set of header/document pairs
 		else {
 			// If we got an odd number of parts the config file doesn't have a header for every document
-			if (count($parts) % 2 != 0) user_error("Configuration file $basename does not have an equal number of headers and config blocks");
+			if (count($parts) % 2 != 0) {
+				user_error("Configuration file $basename does not have an equal number of headers and config blocks");
+			}
 
 			// Step through each pair
 			for ($i = 0; $i < count($parts); $i+=2) {
@@ -223,7 +246,8 @@ class SS_ConfigManifest {
 						// For each, parse out into module/file#name, and set any missing to "*"
 						$header[$order] = array();
 						foreach($orderparts as $part) {
-							preg_match('! (?P<module>\*|\w+)? (\/ (?P<file>\*|\w+))? (\# (?P<fragment>\*|\w+))? !x', $part, $match);
+							preg_match('! (?P<module>\*|\w+)? (\/ (?P<file>\*|\w+))? (\# (?P<fragment>\*|\w+))? !x',
+								$part, $match);
 
 							$header[$order][] = array(
 								'module' => isset($match['module']) && $match['module'] ? $match['module'] : '*',
@@ -279,7 +303,8 @@ class SS_ConfigManifest {
 				$res .= '<dl>';
 
 				foreach ($e->dag as $node) {
-					$res .= "<dt>{$node['from']['module']}/{$node['from']['file']}#{$node['from']['name']} marked to come after</dt><dd><ul>";
+					$res .= "<dt>{$node['from']['module']}/{$node['from']['file']}#{$node['from']['name']}"
+						. " marked to come after</dt><dd><ul>";
 					foreach ($node['to'] as $to) {
 						$res .= "<li>{$to['module']}/{$to['file']}#{$to['name']}</li>";
 					}
@@ -290,14 +315,15 @@ class SS_ConfigManifest {
 				echo $res;
 			}
 
-			user_error('Based on their before & after rules two fragments both need to be before/after each other', E_USER_ERROR);
+			user_error('Based on their before & after rules two fragments both need to be before/after each other',
+				E_USER_ERROR);
 		}
 
 	}
 	
 	/**
-	 * Return a string "after", "before" or "undefined" depending on whether the YAML fragment array element passed as $a should
-	 * be positioned after, before, or either compared to the YAML fragment array element passed as $b
+	 * Return a string "after", "before" or "undefined" depending on whether the YAML fragment array element passed
+	 * as $a should be positioned after, before, or either compared to the YAML fragment array element passed as $b
 	 *  
 	 * @param  $a Array - a YAML config fragment as loaded by addYAMLConfigFile
 	 * @param  $b Array - a YAML config fragment as loaded by addYAMLConfigFile
@@ -340,7 +366,9 @@ class SS_ConfigManifest {
 					if ($partmatches === true) $level += 1;
 				}
 
-				if ($matchlevel[$rulename] === false || $level > $matchlevel[$rulename]) $matchlevel[$rulename] = $level;
+				if ($matchlevel[$rulename] === false || $level > $matchlevel[$rulename]) {
+					$matchlevel[$rulename] = $level;
+				}
 			}
 		}
 
@@ -356,14 +384,14 @@ class SS_ConfigManifest {
 	}
 
 	/**
-	 * This function filters the loaded yaml fragments, removing any that can't ever have their "only" and "except" rules
-	 * match
+	 * This function filters the loaded yaml fragments, removing any that can't ever have their "only" and "except"
+	 * rules match.
 	 *
 	 * Some tests in "only" and "except" rules need to be checked per request, but some are manifest based -
 	 * these are invariant over requests and only need checking on manifest rebuild. So we can prefilter these before
 	 * saving yamlConfigFragments to speed up the process of checking the per-request variant/
 	 */
-	function prefilterYamlFragments() {
+	public function prefilterYamlFragments() {
 		$matchingFragments = array();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
@@ -380,10 +408,11 @@ class SS_ConfigManifest {
 	 * Returns false if the prefilterable parts of the rule aren't met, and true if they are
 	 *
 	 * @param  $rules array - A hash of rules as allowed in the only or except portion of a config fragment header
-	 * @return bool - True if the rules are met, false if not. (Note that depending on whether we were passed an only or an except rule,
+	 * @return bool - True if the rules are met, false if not. (Note that depending on whether we were passed an
+	 *                only or an except rule,
 	 * which values means accept or reject a fragment 
 	 */
-	function matchesPrefilterVariantRules($rules) {
+	public function matchesPrefilterVariantRules($rules) {
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
@@ -403,9 +432,10 @@ class SS_ConfigManifest {
 	}
 
 	/**
-	 * Builds the variant key spec - the list of values that need to be build to give a key that uniquely identifies this variant.
+	 * Builds the variant key spec - the list of values that need to be build to give a key that uniquely identifies
+	 * this variant.
 	 */
-	function buildVariantKeySpec() {
+	public function buildVariantKeySpec() {
 		$this->variantKeySpec = array();
 
 		foreach ($this->yamlConfigFragments as $fragment) {
@@ -417,13 +447,13 @@ class SS_ConfigManifest {
 	/**
 	 * Adds any variables referenced in the passed rules to the $this->variantKeySpec array
 	 */
-	function addVariantKeySpecRules($rules) {
+	public function addVariantKeySpecRules($rules) {
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
 				case 'moduleexists':
-					// Classes and modules are a special case - we can pre-filter on config regenerate because we already know
-					// if the class or module exists
+					// Classes and modules are a special case - we can pre-filter on config regenerate because we
+					// already know if the class or module exists
 					break;
 
 				case 'environment':
@@ -452,7 +482,7 @@ class SS_ConfigManifest {
 	 * Calculates which yaml config fragments are applicable in this variant, and merge those all together into
 	 * the $this->yamlConfig propperty
 	 */
-	function buildYamlConfigVariant($cache = true) {
+	public function buildYamlConfigVariant($cache = true) {
 		$this->yamlConfig = array();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
@@ -470,7 +500,7 @@ class SS_ConfigManifest {
 	/**
  	 * Returns false if the non-prefilterable parts of the rule aren't met, and true if they are
  	 */
-	function matchesVariantRules($rules) {
+	public function matchesVariantRules($rules) {
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
@@ -517,7 +547,7 @@ class SS_ConfigManifest {
 	 * @param  $fragment
 	 * @return void
 	 */
-	function mergeInYamlFragment(&$into, $fragment) {
+	public function mergeInYamlFragment(&$into, $fragment) {
 		foreach ($fragment as $k => $v) {
 			Config::merge_high_into_low($into[$k], $v);
 		}

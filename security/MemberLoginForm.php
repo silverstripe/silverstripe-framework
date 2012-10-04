@@ -32,7 +32,7 @@ class MemberLoginForm extends LoginForm {
 	 *                               so, only a logout button will be rendered
 	 * @param string $authenticatorClassName Name of the authenticator class that this form uses.
 	 */
-	function __construct($controller, $name, $fields = null, $actions = null,
+	public function __construct($controller, $name, $fields = null, $actions = null,
 											 $checkCurrentUser = true) {
 
 		// This is now set on the class directly to make it easier to create subclasses
@@ -61,7 +61,8 @@ class MemberLoginForm extends LoginForm {
 				$label=singleton('Member')->fieldLabel(Member::get_unique_identifier_field());
 				$fields = new FieldList(
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
-					//Regardless of what the unique identifer field is (usually 'Email'), it will be held in the 'Email' value, below:
+					// Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
+					// 'Email' value, below:
 					new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
 					new PasswordField("Password", _t('Member.PASSWORD', 'Password'))
 				);
@@ -77,7 +78,8 @@ class MemberLoginForm extends LoginForm {
 					new FormAction('dologin', _t('Member.BUTTONLOGIN', "Log in")),
 					new LiteralField(
 						'forgotPassword',
-						'<p id="ForgotPassword"><a href="Security/lostpassword">' . _t('Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
+						'<p id="ForgotPassword"><a href="Security/lostpassword">'
+						. _t('Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
 					)
 				);
 			}
@@ -250,7 +252,7 @@ JS
 	 *
 	 * @param array $data Submitted data
 	 */
-	function forgotPassword($data) {
+	public function forgotPassword($data) {
 		$SQL_data = Convert::raw2sql($data);
 		$SQL_email = $SQL_data['Email'];
 		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");

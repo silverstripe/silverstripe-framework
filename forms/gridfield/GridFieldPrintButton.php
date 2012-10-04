@@ -60,7 +60,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		return array('print');
 	}
 
-	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if($actionName == 'print') {
 			return $this->handlePrint($gridField);
 		}
@@ -69,7 +69,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	/**
 	 * it is also a URL
 	 */
-	function getURLHandlers($gridField) {
+	public function getURLHandlers($gridField) {
 		return array(
 			'print' => 'handlePrint',
 		);
@@ -90,8 +90,10 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	/**
 	 * Export core.
  	 */
-	function generatePrintData($gridField) {
-		$printColumns = ($this->printColumns) ? $this->printColumns : singleton($gridField->getModelClass())->summaryFields();
+	public function generatePrintData($gridField) {
+		$printColumns = ($this->printColumns)
+			? $this->printColumns
+			: singleton($gridField->getModelClass())->summaryFields();
 		$header = null;
 		if($this->printHasHeader){
 			$header = new ArrayList();
@@ -166,14 +168,14 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	/**
 	 * @return array
 	 */
-	function getPrintColumns() {
+	public function getPrintColumns() {
 		return $this->printColumns;
 	}
 
 	/**
 	 * @param array
 	 */
-	function setPrintColumns($cols) {
+	public function setPrintColumns($cols) {
 		$this->printColumns = $cols;
 		return $this;
 	}
@@ -181,14 +183,14 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	/**
 	 * @return boolean
 	 */
-	function getPrintHasHeader() {
+	public function getPrintHasHeader() {
 		return $this->printHasHeader;
 	}
 
 	/**
 	 * @param boolean
 	 */
-	function setPrintHasHeader($bool) {
+	public function setPrintHasHeader($bool) {
 		$this->printHasHeader = $bool;
 		return $this;
 	}

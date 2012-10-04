@@ -8,7 +8,7 @@ class ConfigManifestTest_ConfigManifestAccess extends SS_ConfigManifest {
 
 class ConfigManifestTest extends SapphireTest {
 
-	function testRelativeOrder() {
+	public function testRelativeOrder() {
 		$accessor = new ConfigManifestTest_ConfigManifestAccess(BASE_PATH, true, false);
 
 		// A fragment with a fully wildcard before rule
@@ -44,13 +44,15 @@ class ConfigManifestTest extends SapphireTest {
 			array('module' => 'qux', 'file' => 'delta', 'name' => '4')
 		), 'before');
 
-		// Wildcard should match any module even if there is an opposing rule, if opposing rule doesn't match, no matter how many opposing rules
+		// Wildcard should match any module even if there is an opposing rule, if opposing rule doesn't match, no
+		// matter how many opposing rules
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterExplicit,
 			array('module' => 'qux', 'file' => 'delta', 'name' => '4')
 		), 'before');
 
-		// Wildcard should match any module even if there is an opposing rule, if opposing rule doesn't match (even if some portions do)
+		// Wildcard should match any module even if there is an opposing rule, if opposing rule doesn't match
+		// (even if some portions do)
 		$this->assertEquals($accessor->relativeOrder(
 			$beforeWildcardedAfterExplicit,
 			array('module' => 'bar', 'file' => 'beta', 'name' => 'nomatchy')

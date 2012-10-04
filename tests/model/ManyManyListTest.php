@@ -12,7 +12,8 @@ class ManyManyListTest extends SapphireTest {
 	);
 	
 	public function testCreateList() {
-		$list = ManyManyList::create('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+		$list = ManyManyList::create('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID',
+			'DataObjectTest_PlayerID');
 		$this->assertEquals(2, $list->count());
 	}
 
@@ -28,9 +29,11 @@ class ManyManyListTest extends SapphireTest {
 		$player1->Teams()->add($team1);
 		$player1->flushCache();
 
-		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID',
+			'DataObjectTest_PlayerID');
 		$compareTeams = $compareTeams->forForeignID($player1->ID);
-		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),"Adding single record as DataObject to many_many");
+		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),
+			"Adding single record as DataObject to many_many");
 	}
 
 	public function testRemovingSingleDataObjectByReference() {
@@ -38,9 +41,11 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$player1->Teams()->remove($team1);
 		$player1->flushCache();
-		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID',
+			'DataObjectTest_PlayerID');
 		$compareTeams = $compareTeams->forForeignID($player1->ID);
-		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),"Removing single record as DataObject from many_many");
+		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),
+			"Removing single record as DataObject from many_many");
 	}
 	
 	public function testAddingSingleDataObjectByID() {
@@ -48,9 +53,11 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$player1->Teams()->add($team1->ID);
 		$player1->flushCache();
-		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID',
+			'DataObjectTest_PlayerID');
 		$compareTeams = $compareTeams->forForeignID($player1->ID);
-		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'), "Adding single record as ID to many_many");
+		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'),
+			"Adding single record as ID to many_many");
 	}
 	
 	public function testRemoveByID() {
@@ -58,9 +65,11 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$player1->Teams()->removeByID($team1->ID);
 		$player1->flushCache();
-		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+		$compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID',
+			'DataObjectTest_PlayerID');
 		$compareTeams = $compareTeams->forForeignID($player1->ID);
-		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'), "Removing single record as ID from many_many");
+		$this->assertEquals($player1->Teams()->column('ID'), $compareTeams->column('ID'),
+			"Removing single record as ID from many_many");
 	}
 	
 	public function testSetByIdList() {
@@ -81,34 +90,75 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 
-		$playersTeam1Team2 = DataObjectTest_Team::get()->relation('Players')->forForeignID(array($team1->ID, $team2->ID));
+		$playersTeam1Team2 = DataObjectTest_Team::get()->relation('Players')
+			->forForeignID(array($team1->ID, $team2->ID));
 		$playersTeam1Team2->add($newPlayer);
 		$this->assertEquals(
 			array($team1->ID, $team2->ID),
 			$newPlayer->Teams()->sort('Title')->column('ID')
 		);
 	}
+
+	public function testAddingExistingDoesntRemoveExtraFields() {
+		$player = new DataObjectTest_Player();
+		$player->write();
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+
+		$team1->Players()->add($player, array('Position' => 'Captain'));
+		$this->assertEquals(
+			array('Position' => 'Captain'),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Writes extrafields'
+		);
+		
+		$team1->Players()->add($player);
+		$this->assertEquals(
+			array('Position' => 'Captain'),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Retains extrafields on subsequent adds with NULL fields'
+		);
+		
+		$team1->Players()->add($player, array('Position' => 'Defense'));
+		$this->assertEquals(
+			array('Position' => 'Defense'),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Updates extrafields on subsequent adds with fields'
+		);
+		
+		$team1->Players()->add($player, array('Position' => null));
+		$this->assertEquals(
+			array('Position' => null),
+			$team1->Players()->getExtraData('Teams', $player->ID),
+			'Allows clearing of extrafields on subsequent adds'
+		);
+	}
 	
 	public function testSubtractOnAManyManyList() {
-		$allList = ManyManyList::create('DataObjectTest_Player', 'DataObjectTest_Team_Players','DataObjectTest_PlayerID', 'DataObjectTest_TeamID');
-		$this->assertEquals(3, $allList->count(), 'Precondition; we have all 3 players connected to a team in the list');
+		$allList = ManyManyList::create('DataObjectTest_Player', 'DataObjectTest_Team_Players',
+			'DataObjectTest_PlayerID', 'DataObjectTest_TeamID');
+		$this->assertEquals(3, $allList->count(),
+			'Precondition; we have all 3 players connected to a team in the list');
 
 		$teamOneID = $this->idFromFixture('DataObjectTest_Team', 'team1');
 		$teamTwoID = $this->idFromFixture('DataObjectTest_Team', 'team2');
 		
 		// Captain 1 belongs to one team; team1
 		$captain1 = $this->objFromFixture('DataObjectTest_Player', 'captain1');
-		$this->assertEquals(array($teamOneID),$captain1->Teams()->column("ID"), 'Precondition; player2 belongs to team1');
+		$this->assertEquals(array($teamOneID),$captain1->Teams()->column("ID"),
+			'Precondition; player2 belongs to team1');
 		
 		// Player 2 belongs to both teams: team1, team2
 		$player2 = $this->objFromFixture('DataObjectTest_Player', 'player2');
-		$this->assertEquals(array($teamOneID,$teamTwoID), $player2->Teams()->sort('Title')->column('ID'), 'Precondition; player2 belongs to team1 and team2');
+		$this->assertEquals(array($teamOneID,$teamTwoID), $player2->Teams()->sort('Title')->column('ID'),
+			'Precondition; player2 belongs to team1 and team2');
 
 		// We want to find the teams for player2 where the captain does not belong to
 		$teamsWithoutTheCaptain = $player2->Teams()->subtract($captain1->Teams());
 		
 		// Assertions
-		$this->assertEquals(1,$teamsWithoutTheCaptain->count(), 'The ManyManyList should onlu contain one team');
-		$this->assertEquals($teamTwoID, $teamsWithoutTheCaptain->first()->ID, 'The ManyManyList contains the wrong team');
+		$this->assertEquals(1,$teamsWithoutTheCaptain->count(),
+			'The ManyManyList should onlu contain one team');
+		$this->assertEquals($teamTwoID, $teamsWithoutTheCaptain->first()->ID,
+			'The ManyManyList contains the wrong team');
 	}
 }

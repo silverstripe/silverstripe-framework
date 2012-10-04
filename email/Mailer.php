@@ -18,7 +18,7 @@ class Mailer extends Object {
 	 * @param array $customheaders
 	 * @return bool
 	 */
-	function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
+	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
 		return plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders);
 	}
 	
@@ -27,8 +27,11 @@ class Mailer extends Object {
 	 * 
 	 * @return bool
 	 */
-	function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
-		return htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles, $customheaders, $plainContent, $inlineImages);
+	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
+			$plainContent = false, $inlineImages = false) {
+
+		return htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles, $customheaders,
+			$plainContent, $inlineImages);
 	}
 }
 
@@ -43,7 +46,9 @@ class Mailer extends Object {
  * 
  * @return bool
  */
-function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
+function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
+		$plainContent = false, $inlineImages = false) {
+
 	if ($customheaders && is_array($customheaders) == false) {
 		echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
 		dieprintr($customheaders);
@@ -69,7 +74,9 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["Content-Type"] = "text/plain; charset=utf-8";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
-	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap(QuotedPrintable_encode($plainContent),75));
+	$plainPart = processHeaders($headers, ($plainEncoding == "base64") 
+		? chunk_split(base64_encode($plainContent),60) 
+		: wordwrap(QuotedPrintable_encode($plainContent),75));
 
 	// Make the HTML part
 	$headers["Content-Type"] = "text/html; charset=utf-8";
@@ -167,7 +174,8 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
  * Send a plain text e-mail
  */
 function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false) {
-	$plainEncoding = false; // Not ensurely where this is supposed to be set, but defined it false for now to remove php notices
+	// Not ensurely where this is supposed to be set, but defined it false for now to remove php notices
+	$plainEncoding = false; 
 
 	if ($customheaders && is_array($customheaders) == false) {
 		echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
@@ -182,7 +190,9 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	$headers["Content-Type"] = "text/plain; charset=utf-8";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
-	$plainContent = ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : QuotedPrintable_encode($plainContent);
+	$plainContent = ($plainEncoding == "base64") 
+		? chunk_split(base64_encode($plainContent),60)
+		: QuotedPrintable_encode($plainContent);
 
 	// Messages with attachments are handled differently
 	if($attachedFiles) {
@@ -256,10 +266,12 @@ function encodeMultipart($parts, $contentType, $headers = false) {
 	$headers["Content-Transfer-Encoding"] = "7bit";
 
 	if($contentType == "multipart/alternative") {
-		//$baseMessage = "This is an encoded HTML message.  There are two parts: a plain text and an HTML message, open whatever suits you better.";
+		// $baseMessage = "This is an encoded HTML message.  There are two parts: a plain text and an HTML message,
+		// open whatever suits you better.";
 		$baseMessage = "\nThis is a multi-part message in MIME format.";
 	} else {
-		//$baseMessage = "This is a message containing attachments.  The e-mail body is contained in the first attachment";
+		// $baseMessage = "This is a message containing attachments.  The e-mail body is contained in the first
+		// attachment";
 		$baseMessage = "\nThis is a multi-part message in MIME format.";
 	}
 
@@ -334,18 +346,20 @@ function processHeaders($headers, $body = false) {
  * 
  * h5. contentLocation
  * 
- * Content Location is one of the two methods allowed for embedding images into an html email. It's also the simplest, and best supported
+ * Content Location is one of the two methods allowed for embedding images into an html email. It's also the simplest,
+ * and best supported.
  * 
  * Assume we have an email with this in the body:
  * 
  *   <img src="http://example.com/image.gif" />
  * 
- * To display the image, an email viewer would have to download the image from the web every time it is displayed. Due to privacy issues, most
- * viewers will not display any images unless the user clicks 'Show images in this email'. Not optimal.
+ * To display the image, an email viewer would have to download the image from the web every time it is displayed. Due
+ * to privacy issues, most viewers will not display any images unless the user clicks 'Show images in this email'. Not
+ * optimal.
  * 
- * However, we can also include a copy of this image as an attached file in the email. By giving it a contentLocation of "http://example.com/image.gif"
- * most email viewers will use this attached copy instead of downloading it. Better, most viewers will show it without a 'Show images in this email'
- * conformation.
+ * However, we can also include a copy of this image as an attached file in the email. By giving it a contentLocation
+ * of "http://example.com/image.gif" most email viewers will use this attached copy instead of downloading it. Better,
+ * most viewers will show it without a 'Show images in this email' conformation.
  * 
  * Here is an example of passing this information through Email.php:
  * 
@@ -358,7 +372,7 @@ function processHeaders($headers, $body = false) {
  *   );
  * 
  */
-function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {	
+function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
 	if(!$file) {
 		user_error("encodeFileForEmail: not passed a filename and/or data", E_USER_WARNING);
 		return;
@@ -404,15 +418,15 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 	return $headers . $file['contents'];
 }
 
-function QuotedPrintable_encode($quotprint) {		
-		$quotprint = (string) str_replace('\r\n',chr(13).chr(10),$quotprint);
-		$quotprint = (string) str_replace('\n',  chr(13).chr(10),$quotprint);
-		$quotprint = (string) preg_replace("~([\x01-\x1F\x3D\x7F-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $quotprint);
-		//$quotprint = (string) str_replace('\=0D=0A',"=0D=0A",$quotprint);
-		$quotprint = (string) str_replace('=0D=0A',"\n",$quotprint);	
-		$quotprint = (string) str_replace('=0A=0D',"\n",$quotprint);	
-		$quotprint = (string) str_replace('=0D',"\n",$quotprint);	
-		$quotprint = (string) str_replace('=0A',"\n",$quotprint);	
+function QuotedPrintable_encode($quotprint) {
+		$quotprint = (string)str_replace('\r\n',chr(13).chr(10),$quotprint);
+		$quotprint = (string)str_replace('\n',  chr(13).chr(10),$quotprint);
+		$quotprint = (string)preg_replace("~([\x01-\x1F\x3D\x7F-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $quotprint);
+		//$quotprint = (string)str_replace('\=0D=0A',"=0D=0A",$quotprint);
+		$quotprint = (string)str_replace('=0D=0A',"\n",$quotprint);	
+		$quotprint = (string)str_replace('=0A=0D',"\n",$quotprint);	
+		$quotprint = (string)str_replace('=0D',"\n",$quotprint);	
+		$quotprint = (string)str_replace('=0A',"\n",$quotprint);	
 		return (string) $quotprint;
 }
 

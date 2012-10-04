@@ -41,10 +41,10 @@ class FulltextSearchable extends DataExtension {
 	 * @param Array $searchableClasses The extension will be applied to all DataObject subclasses
 	 *  listed here. Default: {@link SiteTree} and {@link File}.
 	 */
-	static function enable($searchableClasses = array('SiteTree', 'File')) {
+	public static function enable($searchableClasses = array('SiteTree', 'File')) {
 		$defaultColumns = array(
 			'SiteTree' => '"Title","MenuTitle","Content","MetaTitle","MetaDescription","MetaKeywords"',
-			'File' => '"Filename","Title","Content"'
+			'File' => '"Title","Filename","Content"'
 		);
 
 		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
@@ -55,7 +55,8 @@ class FulltextSearchable extends DataExtension {
 				Config::inst()->update($class, 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
 				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {
-				throw new Exception("FulltextSearchable::enable() I don't know the default search columns for class '$class'");
+				throw new Exception(
+					"FulltextSearchable::enable() I don't know the default search columns for class '$class'");
 			}
 		}
 		self::$searchable_classes = $searchableClasses;
@@ -68,14 +69,14 @@ class FulltextSearchable extends DataExtension {
 	 * @param Array|String $searchFields Comma-separated list (or array) of database column names
 	 *  that can be searched on. Used for generation of the database index defintions.
 	 */
-	function __construct($searchFields = array()) {
+	public function __construct($searchFields = array()) {
 		if(is_array($searchFields)) $this->searchFields = '"'.implode('","', $searchFields).'"';
 		else $this->searchFields = $searchFields;
 		
 		parent::__construct();
 	}
 
-	static function get_extra_config($class, $extensionClass, $args) {
+	public static function get_extra_config($class, $extensionClass, $args) {
 		return array(
 			'indexes' => array(
 				'SearchFields' => array(
@@ -92,7 +93,7 @@ class FulltextSearchable extends DataExtension {
 	 * 
 	 * @return Array
 	 */
-	static function get_searchable_classes() {
+	public static function get_searchable_classes() {
 		return self::$searchable_classes;
 	}
 	

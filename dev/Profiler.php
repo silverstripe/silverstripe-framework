@@ -30,7 +30,7 @@ class Profiler {
     /**
     * Initialise the timer. with the current micro time
     */
-    function Profiler( $output_enabled=false, $trace_enabled=false)
+    public function Profiler( $output_enabled=false, $trace_enabled=false)
     {
         $this->description = array();
         $this->startTime = array();
@@ -50,29 +50,31 @@ class Profiler {
 
     // Public Methods
     
-    static function init() {
+    public static function init() {
     	if(!self::$inst) self::$inst = new Profiler(true,true);
     }
     	
-    static function mark($name, $level2 = "", $desc = "") {
+    public static function mark($name, $level2 = "", $desc = "") {
     	if($level2 && $_GET['debug_profile'] > 1) $name .= " $level2";
     	
     	if(!self::$inst) self::$inst = new Profiler(true,true);
     	
     	self::$inst->startTimer($name, $desc);
     }
-    static function unmark($name, $level2 = "", $desc = "") {
+    public static function unmark($name, $level2 = "", $desc = "") {
     	if($level2 && $_GET['debug_profile'] > 1) $name .= " $level2";
     	
     	if(!self::$inst) self::$inst = new Profiler(true,true);
     	
     	self::$inst->stopTimer($name, $desc);
     }
-    static function show($showTrace = false) {
+    public static function show($showTrace = false) {
     	if(!self::$inst) self::$inst = new Profiler(true,true);
     	
-    	echo "<div style=\"position: absolute; z-index: 100000; top: 20px; left: 20px; background-color: white; padding: 20px; border: 1px #AAA solid; height: 80%; overflow: auto;\">";
-    	echo "<p><a href=\"#\" onclick=\"this.parentNode.parentNode.style.display = 'none'; return false;\">(Click to close)</a></p>";
+    	echo "<div style=\"position: absolute; z-index: 100000; top: 20px; left: 20px; background-color: white;"
+            . " padding: 20px; border: 1px #AAA solid; height: 80%; overflow: auto;\">";
+    	echo "<p><a href=\"#\" onclick=\"this.parentNode.parentNode.style.display = 'none'; return false;\">"
+            . "(Click to close)</a></p>";
     	self::$inst->printTimers();
     	if($showTrace) self::$inst->printTrace();
     	echo "</div>";
@@ -84,7 +86,7 @@ class Profiler {
     *   @param string $name name of the timer
     *   @param string optional $desc description of the timer
     */
-    function startTimer($name, $desc="" ){
+    public function startTimer($name, $desc="" ){
         $this->trace.="start   $name\n";
         $n=array_push( $this->stack, $this->cur_timer );
         $this->__suspendTimer( $this->stack[$n-1] );
@@ -102,7 +104,7 @@ class Profiler {
     *   Restart the timer that was running before this one
     *   @param string $name name of the timer
     */
-    function stopTimer($name){
+    public function stopTimer($name){
         $this->trace.="stop    $name\n";
         $this->endTime[$name] = $this->getMicroTime();
         if (!array_key_exists($name, $this->running))
@@ -117,7 +119,7 @@ class Profiler {
     *   measure the elapsed time of a timer without stoping the timer if
     *   it is still running
     */
-    function elapsedTime($name){
+    public function elapsedTime($name){
         // This shouldn't happen, but it does once.
         if (!array_key_exists($name,$this->startTime))
             return 0;
@@ -134,7 +136,7 @@ class Profiler {
     *   Measure the elapsed time since the profile class was initialised
     *
     */
-    function elapsedOverall(){
+    public function elapsedOverall(){
         $oaTime = $this->getMicroTime() - $this->initTime;
         return($oaTime);
     }//end start_time
@@ -143,7 +145,7 @@ class Profiler {
     *   print out a log of all the timers that were registered
     *
     */
-    function printTimers($enabled=false)
+    public function printTimers($enabled=false)
     {
         if($this->output_enabled||$enabled){
             $TimedTotal = 0;
@@ -189,7 +191,7 @@ class Profiler {
         }
     }
 
-    function printTrace( $enabled=false )
+    public function printTrace( $enabled=false )
     {
         if($this->trace_enabled||$enabled){
             print("<pre>");
@@ -204,7 +206,7 @@ class Profiler {
     * Get the current time as accuratly as possible
     *
     */
-    function getMicroTime(){
+    public function getMicroTime(){
         $tmp=explode(' ', microtime());
         $rt=$tmp[0]+$tmp[1];
         return $rt;
@@ -214,7 +216,7 @@ class Profiler {
     * resume  an individual timer
     *
     */
-    function __resumeTimer($name){
+    public function __resumeTimer($name){
         $this->trace.="resume  $name\n";
         $this->startTime[$name] = $this->getMicroTime();
     }
@@ -223,7 +225,7 @@ class Profiler {
     *   suspend  an individual timer
     *
     */
-    function __suspendTimer($name){
+    public function __suspendTimer($name){
         $this->trace.="suspend $name\n";
         $this->endTime[$name] = $this->getMicroTime();
         if (!array_key_exists($name, $this->running))

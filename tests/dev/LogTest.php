@@ -7,19 +7,19 @@ class SS_LogTest extends SapphireTest {
 
 	protected $testEmailWriter;
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 
 		SS_Log::clear_writers();
 	}
 
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 
 		SS_Log::clear_writers();
 	}
 
-	function testExistingWriter() {
+	public function testExistingWriter() {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		$testFileWriter = new SS_LogFileWriter('../test.log');
 		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
@@ -29,7 +29,7 @@ class SS_LogTest extends SapphireTest {
 		$this->assertEquals(2, count($writers));
 	}
 
-	function testRemoveWriter() {
+	public function testRemoveWriter() {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		$testFileWriter = new SS_LogFileWriter('../test.log');
 		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
@@ -45,7 +45,7 @@ class SS_LogTest extends SapphireTest {
 		$this->assertEquals(0, count($writers));
 	}
 
-	function testEmailWriter() {
+	public function testEmailWriter() {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
 
@@ -64,5 +64,13 @@ class SS_LogTest extends SapphireTest {
 			'Serializes arrays correctly'
 		);
 	}
+	
+	public function testSubclassedLogger() {
+		$this->assertTrue(SS_Log::get_logger() !== SS_LogTest_NewLogger::get_logger());
+	}
 
+}
+
+class SS_LogTest_NewLogger extends SS_Log {
+	protected static $logger;
 }

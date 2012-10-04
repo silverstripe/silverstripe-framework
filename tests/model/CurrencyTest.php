@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class CurrencyTest extends SapphireTest {
-	function testNiceFormatting() {
+	public function testNiceFormatting() {
 		// Test a bunch of different data values and results in Nice() and Whole()
 		$tests = array(
 			// Test basic operation
@@ -25,7 +25,8 @@ class CurrencyTest extends SapphireTest {
 			// Test scientific notation
 			'5.68434188608E-14' => array('$0.00', '$0'),
 			'5.68434188608E7' => array('$56,843,418.86', '$56,843,419'),
-			"Sometimes Es are still bad: 51 dollars, even though they\'re used in scientific notation" => array('$51.00', '$51'),
+			"Sometimes Es are still bad: 51 dollars, even though they\'re used in scientific notation"
+				=> array('$51.00', '$51'),
 			"What about 5.68434188608E7 in the middle of a string" => array('$56,843,418.86', '$56,843,419'),
 		);
 		

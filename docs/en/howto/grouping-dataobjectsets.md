@@ -117,7 +117,7 @@ sorted by month name from January to December. This can be accomplshed by sortin
 	class Page extends SiteTree {
 		
 		// ...
-
+		
 		/**
 		 * Returns all news items, sorted by the month they were posted
 		 * @return GroupedList

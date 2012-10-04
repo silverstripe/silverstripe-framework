@@ -33,6 +33,7 @@ class GridFieldTest extends SapphireTest {
 			$sort = new GridFieldSortableHeader(),
 			$filter = new GridFieldFilterHeader(),
 			new GridFieldDataColumns(),
+			new GridFieldPageCount('toolbar-header-right'),
 			$pagination = new GridFieldPaginator(),
 			new GridState_Component(),
 		));
@@ -298,7 +299,8 @@ class GridFieldTest extends SapphireTest {
 
 		$config = GridFieldConfig::create()->addComponents(
 			new GridFieldTest_HTMLFragments(array(
-				"header" => "<tr><td><div class=\"right\">\$DefineFragment(header-right-actions)</div><div class=\"left\">\$DefineFragment(header-left-actions)</div></td></tr>",
+				"header" => "<tr><td><div class=\"right\">\$DefineFragment(header-right-actions)</div>"
+					. "<div class=\"left\">\$DefineFragment(header-left-actions)</div></td></tr>",
 			)),
 			new GridFieldTest_HTMLFragments(array(
 				"header-left-actions" => "left",
@@ -371,9 +373,12 @@ class GridFieldTest extends SapphireTest {
 	public function testCanViewOnlyOddIDs() {
 		$this->logInWithPermission();
 		$list = new ArrayList(array(
-			new GridFieldTest_Permissions(array("ID" => 1, "Email" => "ongi.schwimmer@example.org", 'Name' => 'Ongi Schwimmer')),
-			new GridFieldTest_Permissions(array("ID" => 2, "Email" => "klaus.lozenge@example.org", 'Name' => 'Klaus Lozenge')),
-			new GridFieldTest_Permissions(array("ID" => 3, "Email" => "otto.fischer@example.org", 'Name' => 'Otto Fischer'))
+			new GridFieldTest_Permissions(array("ID" => 1, "Email" => "ongi.schwimmer@example.org",
+				'Name' => 'Ongi Schwimmer')),
+			new GridFieldTest_Permissions(array("ID" => 2, "Email" => "klaus.lozenge@example.org",
+				'Name' => 'Klaus Lozenge')),
+			new GridFieldTest_Permissions(array("ID" => 3, "Email" => "otto.fischer@example.org",
+				'Name' => 'Otto Fischer'))
 		));
 		
 		$config = new GridFieldConfig();
@@ -386,11 +391,15 @@ class GridFieldTest extends SapphireTest {
 		
 		$this->assertEquals(2, count($members));
 		
-		$this->assertEquals((string)$members[0]->td[0], 'Ongi Schwimmer', 'First object Name should be Ongi Schwimmer');
-		$this->assertEquals((string)$members[0]->td[1], 'ongi.schwimmer@example.org', 'First object Email should be ongi.schwimmer@example.org');
+		$this->assertEquals((string)$members[0]->td[0], 'Ongi Schwimmer',
+			'First object Name should be Ongi Schwimmer');
+		$this->assertEquals((string)$members[0]->td[1], 'ongi.schwimmer@example.org',
+			'First object Email should be ongi.schwimmer@example.org');
 		
-		$this->assertEquals((string)$members[1]->td[0], 'Otto Fischer', 'Second object Name should be Otto Fischer');
-		$this->assertEquals((string)$members[1]->td[1], 'otto.fischer@example.org', 'Second object Email should be otto.fischer@example.org');
+		$this->assertEquals((string)$members[1]->td[0], 'Otto Fischer',
+			'Second object Name should be Otto Fischer');
+		$this->assertEquals((string)$members[1]->td[1], 'otto.fischer@example.org',
+			'Second object Email should be otto.fischer@example.org');
 	}
 
 	public function testChainedDataManipulators() {
@@ -447,7 +456,7 @@ class GridFieldTest_Component implements GridField_ColumnProvider, GridField_Act
 }
 
 class GridFieldTest_Component2 implements GridField_DataManipulator, TestOnly {
-	function getManipulatedData(GridField $gridField, SS_List $dataList) {
+	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		$dataList = clone $dataList;
 		$dataList->merge(new ArrayList(array(7, 8, 9, 10, 11, 12)));
 		return $dataList;
@@ -492,11 +501,11 @@ class GridFieldTest_Cheerleader extends DataObject implements TestOnly {
 }
 
 class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
-	function __construct($fragments) {
+	public function __construct($fragments) {
 		$this->fragments = $fragments;
 	}
 	
-	function getHTMLFragments($gridField) {
+	public function getHTMLFragments($gridField) {
 		return $this->fragments;
 	}
 }

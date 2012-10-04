@@ -49,7 +49,9 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetClassNames() {
 		$this->assertEquals(
-			array('silverstripe\test\classa', 'silverstripe\test\classb', 'silverstripe\test\classc', 'silverstripe\test\classd', 'silverstripe\test\classe', 'silverstripe\test\classf', 'silverstripe\test\classg', 'silverstripe\test\classh'),
+			array('silverstripe\test\classa', 'silverstripe\test\classb', 'silverstripe\test\classc',
+				'silverstripe\test\classd', 'silverstripe\test\classe', 'silverstripe\test\classf',
+				'silverstripe\test\classg', 'silverstripe\test\classh'),
 			$this->manifest->getClassNames());
 	}
 

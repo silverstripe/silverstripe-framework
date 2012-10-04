@@ -28,7 +28,7 @@ class DevelopmentAdmin extends Controller {
         'viewcode' 
  	);
 	
-	function init() {
+	public function init() {
 		parent::init();
 		
 		// Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
@@ -67,19 +67,20 @@ class DevelopmentAdmin extends Controller {
 			}
 			else {
 				echo 'Warning: You probably want to define $_FILE_TO_URL_MAPPING in '.
-					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.org wiki' . "\n";
+					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.org wiki'."\n";
 			}
 		}
 		
 	}
 	
-	function index() {
+	public function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
 			"buildcache" => "Rebuild the static cache, if you're using StaticPublisher",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
-			"tests/startsession" => "Start a test session in your browser (gives you a temporary database with default content)",
+			"tests/startsession" => "Start a test session in your browser"
+				. " (gives you a temporary database with default content)",
 			"tests/endsession" => "Ends a test session",
 			"jstests" => "See a list of JavaScript tests to run",
 			"jstests/all" => "Run all JavaScript tests",
@@ -99,7 +100,8 @@ class DevelopmentAdmin extends Controller {
 			echo '<div class="options"><ul>';
 			$evenOdd = "odd";
 			foreach($actions as $action => $description) {
-				echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b> $description</a></li>\n";
+				echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b>"
+					. " $description</a></li>\n";
 				$evenOdd = ($evenOdd == "odd") ? "even" : "odd";
 			}
 
@@ -116,19 +118,19 @@ class DevelopmentAdmin extends Controller {
 		}
 	}
 	
-	function tests($request) {
+	public function tests($request) {
 		return TestRunner::create();
 	}
 	
-	function jstests($request) {
+	public function jstests($request) {
 		return JSTestRunner::create();
 	}
 	
-	function tasks() {
+	public function tasks() {
 		return TaskRunner::create();
 	}
 	
-	function build($request) {
+	public function build($request) {
 		if(Director::is_cli()) {
 			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
@@ -152,7 +154,7 @@ class DevelopmentAdmin extends Controller {
 	 * Should match the $url_handlers rule:
 	 *		'build/defaults' => 'buildDefaults',
 	 */
-	function buildDefaults() {
+	public function buildDefaults() {
 		$da = DatabaseAdmin::create();
 
 		if (!Director::is_cli()) {
@@ -170,7 +172,7 @@ class DevelopmentAdmin extends Controller {
 		}
 	}
 
-	function reset() {
+	public function reset() {
 		$link = BASE_URL.'/dev/tests/startsession';
 		
 		return "<p>The dev/reset feature has been removed.  If you are trying to test your site " .
@@ -180,7 +182,7 @@ class DevelopmentAdmin extends Controller {
 
 	}
 	
-	function errors() {
+	public function errors() {
 		$this->redirect("Debug_");
 	}
 }

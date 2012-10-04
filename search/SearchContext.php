@@ -68,7 +68,7 @@ class SearchContext extends Object {
 	 *						{@link DataObject::scaffoldSearchFields()} if left blank.
 	 * @param array $filters Optional. Derived from modelclass if left blank
 	 */	
-	function __construct($modelClass, $fields = null, $filters = null) {
+	public function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
 		$this->fields = ($fields) ? $fields : new FieldList();
 		$this->filters = ($filters) ? $filters : array();
@@ -116,15 +116,23 @@ class SearchContext extends Object {
 	 */
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
 		if($existingQuery) {
-			if(!($existingQuery instanceof DataList)) throw new InvalidArgumentException("existingQuery must be DataList");
-			if($existingQuery->dataClass() != $this->modelClass) throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass() . ", $this->modelClass expected.");
+			if(!($existingQuery instanceof DataList)) {
+				throw new InvalidArgumentException("existingQuery must be DataList");
+			}
+			if($existingQuery->dataClass() != $this->modelClass) {
+				throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass() 
+					. ", $this->modelClass expected.");
+			}
 			$query = $existingQuery;
 		} else {
 			$query = DataList::create($this->modelClass);
 		}
 
 		if(is_array($limit)) {
-			$query = $query->limit(isset($limit['limit']) ? $limit['limit'] : null, isset($limit['start']) ? $limit['start'] : null);
+			$query = $query->limit(
+				isset($limit['limit']) ? $limit['limit'] : null, 
+				isset($limit['start']) ? $limit['start'] : null
+			);
 		} else {
 			$query = $query->limit($limit);
 		}
@@ -150,7 +158,9 @@ class SearchContext extends Object {
 			}
 		}
 		
- 		if($this->connective != "AND") throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
+ 		if($this->connective != "AND") {
+ 			throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
+ 		}
 		
 		return $query;
 	}
@@ -179,7 +189,7 @@ class SearchContext extends Object {
 	 * @param unknown_type $value
 	 * @return boolean
 	 */
-	function clearEmptySearchFields($value) {
+	public function clearEmptySearchFields($value) {
 		return ($value != '');
 	}
 		

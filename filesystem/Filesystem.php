@@ -21,7 +21,7 @@ class Filesystem extends Object {
 	 * 
 	 * @param String $folder Absolute folder path
 	 */
-	static function makeFolder($folder) {
+	public static function makeFolder($folder) {
 		if(!file_exists($base = dirname($folder))) self::makeFolder($base);
 		if(!file_exists($folder)) mkdir($folder, Filesystem::$folder_create_mask);
 	}
@@ -30,9 +30,10 @@ class Filesystem extends Object {
 	 * Remove a directory and all subdirectories and files.
 	 * 
 	 * @param String $folder Absolute folder path
-	 * @param Boolean $contentsOnly If this is true then the contents of the folder will be removed but not the folder itself
+	 * @param Boolean $contentsOnly If this is true then the contents of the folder will be removed but not the
+	 *                              folder itself
 	 */
-	static function removeFolder($folder, $contentsOnly = false) {
+	public static function removeFolder($folder, $contentsOnly = false) {
 
 		// remove a file encountered by a recursive call.
 		if(is_file($folder) || is_link($folder)) {
@@ -72,7 +73,7 @@ class Filesystem extends Object {
 	 * @param $extensionList An option array of file extensions to limit the search to
 	 * @return String Same as filemtime() format.
 	 */
-	static function folderModTime($folder, $extensionList = null, $recursiveCall = false) {
+	public static function folderModTime($folder, $extensionList = null, $recursiveCall = false) {
 		//$cacheID = $folder . ',' . implode(',', $extensionList);
 		//if(!$recursiveCall && self::$cache_folderModTime[$cacheID]) return self::$cache_folderModTime[$cacheID];
 		
@@ -107,7 +108,7 @@ class Filesystem extends Object {
 	 * @param String $filename Absolute or relative filename, with or without path.
 	 * @return Boolean
 	 */
-	static function isAbsolute($filename) {
+	public static function isAbsolute($filename) {
 		if($_ENV['OS'] == "Windows_NT" || $_SERVER['WINDIR']) return $filename[1] == ':' && $filename[2] == '/';
 		else return $filename[0] == '/';
 	}
@@ -129,7 +130,7 @@ class Filesystem extends Object {
 	 *        call to {@link SiteTree->write()} on this page.
 	 * @return string Localized status message
 	 */
-	static function sync($folderID = null, $syncLinkTracking = true) {
+	public static function sync($folderID = null, $syncLinkTracking = true) {
 		$folder = DataObject::get_by_id('Folder', (int) $folderID);
 		if(!($folder && $folder->exists())) $folder = singleton('Folder');
 		

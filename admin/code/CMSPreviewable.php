@@ -14,12 +14,12 @@ interface CMSPreviewable {
 	 * @return String Absolute URL to the end-user view for this record.
 	 * Example: http://mysite.com/my-record
 	 */
-	function Link();
+	public function Link();
 	
 	/**
 	 * @return String Absolute URL to the CMS-author view. Should point to a controller subclassing {@link LeftAndMain}.
 	 * Example: http://mysite.com/admin/edit/6
 	 */
-	function CMSEditLink();
+	public function CMSEditLink();
 
 }

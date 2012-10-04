@@ -22,7 +22,7 @@ class ValidationResult extends Object {
 	 * Create a new ValidationResult.
 	 * By default, it is a successful result.	Call $this->error() to record errors.
 	 */
-	function __construct($valid = true, $message = null) {
+	public function __construct($valid = true, $message = null) {
 		$this->isValid = $valid;
 		if($message) $this->errorList[] = $message;
 		parent::__construct();
@@ -33,14 +33,15 @@ class ValidationResult extends Object {
 	 * @param $message The validation error message
 	 * @param $code An optional error code string, that can be accessed with {@link $this->codeList()}.
 	 */
-	function error($message, $code = null) {
+	public function error($message, $code = null) {
 		$this->isValid = false;
 		
 		if($code) {
 			if(!is_numeric($code)) {
 				$this->errorList[$code] = $message;
 			} else {
-				user_error("ValidationResult::error() - Don't use a numeric code '$code'.  Use a string.  I'm going to ignore it.", E_USER_WARNING);
+				user_error("ValidationResult::error() - Don't use a numeric code '$code'.  Use a string."
+					. "I'm going to ignore it.", E_USER_WARNING);
 				$this->errorList[$code] = $message;
 			}
 		} else {
@@ -51,21 +52,21 @@ class ValidationResult extends Object {
 	/**
 	 * Returns true if the result is valid.
 	 */
-	function valid() {
+	public function valid() {
 		return $this->isValid;
 	}
 	
 	/**
 	 * Get an array of errors
 	 */
-	function messageList() {
+	public function messageList() {
 		return $this->errorList;
 	}
 
 	/**
 	 * Get an array of error codes
 	 */
-	function codeList() {
+	public function codeList() {
 		$codeList = array();
 		foreach($this->errorList as $k => $v) if(!is_numeric($k)) $codeList[] = $k;
 		return $codeList;
@@ -74,14 +75,14 @@ class ValidationResult extends Object {
 	/**
 	 * Get the error message as a string.
 	 */
-	function message() {
+	public function message() {
 		return implode("; ", $this->errorList);
 	}
 	
 	/**
 	 * Get a starred list of all messages
 	 */
-	function starredList() {
+	public function starredList() {
 		return " * " . implode("\n * ", $this->errorList);
 	}
 	
@@ -90,7 +91,7 @@ class ValidationResult extends Object {
 	 * It will be valid if both this and the other result are valid.
 	 * This object will be modified to contain the new validation information.
 	 */
-	function combineAnd(ValidationResult $other) {
+	public function combineAnd(ValidationResult $other) {
 		$this->isValid = $this->isValid && $other->valid();
 		$this->errorList = array_merge($this->errorList, $other->messageList());
 	}

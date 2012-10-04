@@ -10,14 +10,17 @@ class PasswordField extends TextField {
 	 * Returns an input field, class="text" and type="text" with an optional
 	 * maxlength
 	 */
-	function __construct($name, $title = null, $value = "") {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setMaxLength() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
+	public function __construct($name, $title = null, $value = "") {
+		if(count(func_get_args()) > 3) {
+			Deprecation::notice('3.0', 'Use setMaxLength() instead of constructor arguments',
+				Deprecation::SCOPE_GLOBAL);
+		}
 
 		parent::__construct($name, $title, $value);
 	}
 
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array('type' => 'password')
@@ -27,7 +30,7 @@ class PasswordField extends TextField {
 	/**
 	 * Makes a pretty readonly field with some stars in it
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$stars = '*****';
 
 		$field = new ReadonlyField($this->name, $this->title ? $this->title : '', $stars);
@@ -36,7 +39,7 @@ class PasswordField extends TextField {
 		return $field;
 	}
 
-	function Type() {
+	public function Type() {
 		return 'text password';
 	}
 }

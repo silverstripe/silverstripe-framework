@@ -1,7 +1,7 @@
 <?php
 /**
  * The content negotiator performs "text/html" or "application/xhtml+xml" switching.
- * It does this through the static function ContentNegotiator::process().
+ * It does this through the public static function ContentNegotiator::process().
  * By default, ContentNegotiator will comply to the Accept headers the clients
  * sends along with the HTTP request, which is most likely "application/xhtml+xml"
  * (see "Order of selection" below).
@@ -33,32 +33,32 @@ class ContentNegotiator {
 	protected static $enabled = false;
 
 	/**
-	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say, windows-1252, to
-	 * improve interoperability with extended characters being imported from windows excel.
+	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say,
+	 * windows-1252, to improve interoperability with extended characters being imported from windows excel.
 	 */
-	static function set_encoding($encoding) {
+	public static function set_encoding($encoding) {
 		self::$encoding = $encoding;
 	}
 
 	/**
-	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes that need to
-	 * specify the character set make use of this function.
+	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes
+	 * that need to specify the character set make use of this function.
 	 */
-	static function get_encoding() {
+	public static function get_encoding() {
 	    return self::$encoding;
 	}
 
 	/**
 	 * Enable content negotiation for all templates, not just those with the xml header.
 	 */
-	static function enable() {
+	public static function enable() {
 		self::$enabled = true;
 	}
 	
 	/*
 	 * Disable content negotiation for all templates, not just those with the xml header.
 	 */
-	static function disable() {
+	public static function disable() {
 		self::$enabled = false;
 	}
 
@@ -66,17 +66,20 @@ class ContentNegotiator {
 	 * Returns true if negotation is enabled for the given response.
 	 * By default, negotiation is only enabled for pages that have the xml header.
 	 */
-	static function enabled_for($response) {
+	public static function enabled_for($response) {
 		$contentType = $response->getHeader("Content-Type");
 		
 		// Disable content negotation for other content types
-		if($contentType && substr($contentType, 0,9) != 'text/html' && substr($contentType, 0,21) != 'application/xhtml+xml') return false;
+		if($contentType && substr($contentType, 0,9) != 'text/html' 
+				&& substr($contentType, 0,21) != 'application/xhtml+xml') {
+			return false;
+		}
 
 		if(self::$enabled) return true;
 		else return (substr($response->getBody(),0,5) == '<' . '?xml');
 	}
 
-	static function process(SS_HTTPResponse $response) {
+	public static function process(SS_HTTPResponse $response) {
 		if(!self::enabled_for($response)) return;
 
 		$mimes = array(
@@ -91,8 +94,8 @@ class ContentNegotiator {
 			$chosenFormat = $_GET['forceFormat'];
 
 		} else {
-			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml.  We put this special case in here so that
-			// designers don't get worried that their templates are HTML4.
+			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml.  We put this special
+			// case in here so that designers don't get worried that their templates are HTML4.
  			if(isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
 				$chosenFormat = "xhtml";
 	
@@ -129,7 +132,7 @@ class ContentNegotiator {
 	 * @return string
 	 * @todo More flexible tag and entity parsing through regular expressions or tag definition lists
 	 */
-	function xhtml(SS_HTTPResponse $response) {
+	public function xhtml(SS_HTTPResponse $response) {
 		$content = $response->getBody();
 		
 		// Only serve "pure" XHTML if the XML header is present
@@ -159,7 +162,7 @@ class ContentNegotiator {
 	 * Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
 	 * Removes "xmlns" attributes and any <?xml> Pragmas.
 	 */
-	function html(SS_HTTPResponse $response) {
+	public function html(SS_HTTPResponse $response) {
 		$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
 		$response->addHeader("Vary", "Accept");
 
@@ -175,7 +178,9 @@ class ContentNegotiator {
 		
 		// Only replace the doctype in templates with the xml header
 		if($hasXMLHeader) {
-			$content = preg_replace('/<!DOCTYPE[^>]+>/', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', $content);
+			$content = preg_replace('/<!DOCTYPE[^>]+>/',
+				'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+				$content);
 		}
 		$content = preg_replace('/<html xmlns="[^"]+"/','<html ', $content);
 		

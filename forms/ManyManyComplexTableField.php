@@ -41,11 +41,13 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 	
 	public $itemClass = 'ManyManyComplexTableField_Item';
 		
-	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null,
+			$sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
 		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor', Deprecation::SCOPE_CLASS);
 
-		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields,
+			$sourceFilter, $sourceSort, $sourceJoin);
 		
 		$classes = array_reverse(ClassInfo::ancestry($this->controllerClass()));
 		foreach($classes as $class) {
@@ -70,12 +72,14 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 			$sourceField = 'Child';
 		$parentID = $this->controller->ID;
 		
-		$this->sourceJoin .= " LEFT JOIN \"$manyManyTable\" ON (\"$source\".\"ID\" = \"$manyManyTable\".\"{$sourceField}ID\" AND \"{$this->manyManyParentClass}ID\" = '$parentID')";
+		$this->sourceJoin .= " LEFT JOIN \"$manyManyTable\" 
+			ON (\"$source\".\"ID\" = \"$manyManyTable\".\"{$sourceField}ID\"
+			AND \"{$this->manyManyParentClass}ID\" = '$parentID')";
 		
 		$this->joinField = 'Checked';
 	}
 		
-	function getQuery() {
+	public function getQuery() {
 		$query = parent::getQuery();
 		$query->selectField("CASE WHEN \"{$this->manyManyParentClass}ID\" IS NULL THEN '0' ELSE '1' END", "Checked");
 		$query->groupby[] = "\"{$this->manyManyParentClass}ID\""; // necessary for Postgres
@@ -83,7 +87,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 		return $query;
 	}
 		
-	function getParentIdName($parentClass, $childClass) {
+	public function getParentIdName($parentClass, $childClass) {
 		return $this->getParentIdNameRelation($parentClass, $childClass, 'many_many');
 	}
 }
@@ -95,13 +99,15 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
  */
 class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	
-	function MarkingCheckbox() {
+	public function MarkingCheckbox() {
 		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->IsReadOnly)
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"
+				disabled=\"disabled\"/>";
 		else if($this->item->{$this->parent->joinField})
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"
+				checked=\"checked\"/>";
 		else
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"/>";
 	}

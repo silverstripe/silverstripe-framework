@@ -18,7 +18,7 @@ class RequiredFields extends Validator {
 	 * Pass each field to be validated as a seperate argument
 	 * to the constructor of this object. (an array of elements are ok)
 	 */
-	function __construct() {
+	public function __construct() {
 		$Required = func_get_args();
 		if( isset($Required[0]) && is_array( $Required[0] ) )
 			$Required = $Required[0];
@@ -41,7 +41,7 @@ class RequiredFields extends Validator {
 	/**
 	 * Debug helper
 	 */
-	function debug() {
+	public function debug() {
 	 if(!is_array($this->required)) return false;
 
 	 $result = "<ul>";
@@ -57,7 +57,7 @@ class RequiredFields extends Validator {
 	* Allows validation of fields via specification of a php function for validation which is executed after
 	* the form is submitted
 	*/
-	function php($data) {
+	public function php($data) {
 		$valid = true;
 
 		$fields = $this->form->Fields();
@@ -85,7 +85,9 @@ class RequiredFields extends Validator {
 				}
 
 				if($formField && $error) {
-					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required'), strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
+					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required'),
+						strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
+
 					if($msg = $formField->getCustomValidationMessage()) {
 						$errorMessage = $msg;
 					}
@@ -105,11 +107,11 @@ class RequiredFields extends Validator {
 	/**
 	 * Add's a single required field to requiredfields stack
 	 */
-	function addRequiredField( $field ) {
+	public function addRequiredField( $field ) {
 		$this->required[] = $field;
 	}
 
-	function removeRequiredField($field) {
+	public function removeRequiredField($field) {
 		for($i=0; $i<count($this->required); $i++) {
 			if($field == $this->required[$i]) {
 				unset($this->required[$i]);
@@ -120,7 +122,7 @@ class RequiredFields extends Validator {
 	/**
 	 * allows you too add more required fields to this object after construction.
 	 */
-	function appendRequiredFields($requiredFields){
+	public function appendRequiredFields($requiredFields){
 		$this->required = array_merge($this->required,$requiredFields->getRequired());
 	}
 
@@ -128,14 +130,14 @@ class RequiredFields extends Validator {
 	 * Returns true if the named field is "required".
 	 * Used by FormField to return a value for FormField::Required(), to do things like show *s on the form template.
 	 */
-	function fieldIsRequired($fieldName) {
+	public function fieldIsRequired($fieldName) {
 		return in_array($fieldName, $this->required);
 	}
 
 	/**
 	 * getter function for append
 	 */
-	function getRequired(){
+	public function getRequired(){
 		return $this->required;
 	}
 }

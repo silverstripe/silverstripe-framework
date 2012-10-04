@@ -11,7 +11,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		'CheckboxSetFieldTest_Tag',
 	);
 	
-	function testSetDefaultItems() {
+	public function testSetDefaultItems() {
 		$f = new CheckboxSetField(
 			'Test', 
 			false, 
@@ -47,7 +47,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);
 	}
 	
-	function testSaveWithNothingSelected() {
+	public function testSaveWithNothingSelected() {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		
 		/* Create a CheckboxSetField with nothing selected */
@@ -65,7 +65,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);	
 	}
 	
-	function testSaveWithArrayValueSet() {
+	public function testSaveWithArrayValueSet() {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
@@ -99,7 +99,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);	
 	}
 	
-	function testLoadDataFromObject() {
+	public function testLoadDataFromObject() {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
@@ -119,7 +119,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 				$tag2->ID => $tag2->ID
 			),
 			$field->Value(),
-			'CheckboxSetField properly loads data from a manymany relationship in an object through Form->loadDataFrom()'
+			'CheckboxSetField loads data from a manymany relationship in an object through Form->loadDataFrom()'
 		);
 	}
 }

@@ -21,7 +21,7 @@
 class CSSContentParser extends Object {
 	protected $simpleXML = null;
 	
-	function __construct($content) {
+	public function __construct($content) {
 		if(extension_loaded('tidy')) {
 			// using the tiny php extension
 			$tidy = new Tidy();
@@ -51,7 +51,8 @@ class CSSContentParser extends Object {
 		
 		$this->simpleXML = @simplexml_load_string($tidy, 'SimpleXMLElement', LIBXML_NOWARNING);
 		if(!$this->simpleXML) {
-			throw new Exception('CSSContentParser::__construct(): Could not parse content. Please check the PHP extension tidy is installed.');
+			throw new Exception('CSSContentParser::__construct(): Could not parse content.'
+				. ' Please check the PHP extension tidy is installed.');
 		}
 		
 		parent::__construct();
@@ -65,7 +66,7 @@ class CSSContentParser extends Object {
 	 * @param String $selector
 	 * @return SimpleXMLElement
 	 */
-	function getBySelector($selector) {
+	public function getBySelector($selector) {
 		$xpath = $this->selector2xpath($selector);
 		return $this->getByXpath($xpath);
 	}
@@ -76,7 +77,7 @@ class CSSContentParser extends Object {
 	 * @param String $xpath SimpleXML compatible XPATH statement
 	 * @return SimpleXMLElement|false
 	 */
-	function getByXpath($xpath) {
+	public function getByXpath($xpath) {
 		return $this->simpleXML->xpath($xpath);
 	}
 		
@@ -87,7 +88,7 @@ class CSSContentParser extends Object {
 	 * @param String $selector See {@link getBySelector()}
 	 * @return String XPath expression
 	 */
-	function selector2xpath($selector) {
+	public function selector2xpath($selector) {
 		$parts = preg_split('/\\s+/', $selector);
 		$xpath = "";
 		foreach($parts as $part) {

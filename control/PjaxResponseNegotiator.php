@@ -32,7 +32,7 @@ class PjaxResponseNegotiator {
 	 * @param SS_HTTPResponse An existing response to reuse (optional)
 	 * @param Array $callbacks
 	 */
-	function __construct($callbacks = array(), $response = null) {
+	public function __construct($callbacks = array(), $response = null) {
 		$this->callbacks = $callbacks; 
 		$this->response = $response;
 	}
@@ -69,7 +69,9 @@ class PjaxResponseNegotiator {
 		} elseif ($fragmentStr = $request->getHeader('X-Pjax')) {
 			$fragments = explode(',', $fragmentStr);
 		} else {
-			if($request->isAjax()) throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
+			if($request->isAjax()) {
+				throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
+			}
 			$response->setBody(call_user_func($callbacks['default']));
 			return $response;
 		}

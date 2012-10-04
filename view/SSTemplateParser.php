@@ -17,9 +17,10 @@ else {
 }
 
 /**
-This is the exception raised when failing to parse a template. Note that we don't currently do any static analysis, so we can't know
-if the template will run, just if it's malformed. It also won't catch mistakes that still look valid.
-*/
+ * This is the exception raised when failing to parse a template. Note that we don't currently do any static analysis,
+ * so we can't know if the template will run, just if it's malformed. It also won't catch mistakes that still look
+ * valid.
+ */
 class SSTemplateParseException extends Exception {
 	
 	function __construct($message, $parser) {
@@ -34,34 +35,36 @@ class SSTemplateParseException extends Exception {
 }
 
 /**
-This is the parser for the SilverStripe template language. It gets called on a string and uses a php-peg parser to match
-that string against the language structure, building up the PHP code to execute that structure as it parses
-
-The $result array that is built up as part of the parsing (see thirdparty/php-peg/README.md for more on how parsers 
-build results) has one special member, 'php', which contains the php equivalent of that part of the template tree.
- 
-Some match rules generate alternate php, or other variations, so check the per-match documentation too.
- 
-Terms used:
-
-Marked: A string or lookup in the template that has been explictly marked as such - lookups by prepending with "$"
-(like $Foo.Bar), strings by wrapping with single or double quotes ('Foo' or "Foo")
- 
-Bare: The opposite of marked. An argument that has to has it's type inferred by usage and 2.4 defaults.
-Example of using a bare argument for a loop block: <% loop Foo %>
- 
-Block: One of two SS template structures. The special characters "<%" and "%>" are used to wrap the opening and
-(required or forbidden depending on which block exactly) closing block marks.
-
-Open Block: An SS template block that doesn't wrap any content or have a closing end tag (in fact, a closing end tag is
-forbidden)
- 
-Closed Block: An SS template block that wraps content, and requires a counterpart <% end_blockname %> tag
-
-Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
-N: eats white space including newlines (using in legacy _t support)
-
-*/
+  * This is the parser for the SilverStripe template language. It gets called on a string and uses a php-peg parser
+  * to match that string against the language structure, building up the PHP code to execute that structure as it
+  * parses
+  * 
+  * The $result array that is built up as part of the parsing (see thirdparty/php-peg/README.md for more on how
+  * parsers build results) has one special member, 'php', which contains the php equivalent of that part of the
+  * template tree.
+  * 
+  * Some match rules generate alternate php, or other variations, so check the per-match documentation too.
+  * 
+  * Terms used:
+  * 
+  * Marked: A string or lookup in the template that has been explictly marked as such - lookups by prepending with
+  * "$" (like $Foo.Bar), strings by wrapping with single or double quotes ('Foo' or "Foo")
+  * 
+  * Bare: The opposite of marked. An argument that has to has it's type inferred by usage and 2.4 defaults.
+  * 
+  * Example of using a bare argument for a loop block: <% loop Foo %>
+  * 
+  * Block: One of two SS template structures. The special characters "<%" and "%>" are used to wrap the opening and
+  * (required or forbidden depending on which block exactly) closing block marks.
+  * 
+  * Open Block: An SS template block that doesn't wrap any content or have a closing end tag (in fact, a closing end
+  * tag is forbidden)
+  * 
+  * Closed Block: An SS template block that wraps content, and requires a counterpart <% end_blockname %> tag
+  * 
+  * Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
+  * N: eats white space including newlines (using in legacy _t support)
+  */
 class SSTemplateParser extends Parser {
 
 	/**
@@ -79,7 +82,8 @@ class SSTemplateParser extends Parser {
 		return $res;
 	}
 	
-	/* Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+ */
+	/* Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
+	OpenBlock | MalformedBlock | Injection | Text)+ */
 	protected $match_Template_typestack = array('Template');
 	function match_Template ($stack = array()) {
 		$matchrule = "Template"; $result = $this->construct($matchrule, $matchrule, null);
@@ -421,13 +425,14 @@ class SSTemplateParser extends Parser {
 
 
 	/** 
-	 * Values are bare words in templates, but strings in PHP. We rely on PHP's type conversion to back-convert strings 
-	 * to numbers when needed.
+	 * Values are bare words in templates, but strings in PHP. We rely on PHP's type conversion to back-convert
+	 * strings to numbers when needed.
 	 */
 	function CallArguments_Argument(&$res, $sub) {
 		if (!empty($res['php'])) $res['php'] .= ', ';
 		
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : str_replace('$$FINAL', 'XML_val', $sub['php']);
+		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : 
+			str_replace('$$FINAL', 'XML_val', $sub['php']);
 	}
 
 	/* Call: Method:Word ( "(" < :CallArguments? > ")" )? */
@@ -1838,7 +1843,8 @@ class SSTemplateParser extends Parser {
 		$res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']);
 	}
 	
-	/* CacheBlockTemplate: (Comment | Translate | If | Require |    OldI18NTag | Include | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+ */
+	/* CacheBlockTemplate: (Comment | Translate | If | Require |    OldI18NTag | Include | ClosedBlock |
+	OpenBlock | MalformedBlock | Injection | Text)+ */
 	protected $match_CacheBlockTemplate_typestack = array('CacheBlockTemplate','Template');
 	function match_CacheBlockTemplate ($stack = array()) {
 		$matchrule = "CacheBlockTemplate"; $result = $this->construct($matchrule, $matchrule, array('TemplateMatcher' => 'CacheRestrictedTemplate'));
@@ -2056,7 +2062,7 @@ class SSTemplateParser extends Parser {
 	/* UncachedBlock: 
 	'<%' < "uncached" < CacheBlockArguments? ( < Conditional:("if"|"unless") > Condition:IfArgument )? > '%>'
 		Template:$TemplateMatcher?
-	'<%' < 'end_' ("uncached"|"cached"|"cacheblock") > '%>' */
+		'<%' < 'end_' ("uncached"|"cached"|"cacheblock") > '%>' */
 	protected $match_UncachedBlock_typestack = array('UncachedBlock');
 	function match_UncachedBlock ($stack = array()) {
 		$matchrule = "UncachedBlock"; $result = $this->construct($matchrule, $matchrule, null);
@@ -2213,7 +2219,8 @@ class SSTemplateParser extends Parser {
 		$res['php'] = $sub['php'];
 	}
 	
-	/* CacheRestrictedTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+ */
+	/* CacheRestrictedTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
+	OpenBlock | MalformedBlock | Injection | Text)+ */
 	protected $match_CacheRestrictedTemplate_typestack = array('CacheRestrictedTemplate','Template');
 	function match_CacheRestrictedTemplate ($stack = array()) {
 		$matchrule = "CacheRestrictedTemplate"; $result = $this->construct($matchrule, $matchrule, null);
@@ -2464,15 +2471,18 @@ class SSTemplateParser extends Parser {
 
 
 	function CacheRestrictedTemplate_CacheBlock(&$res, $sub) { 
-		throw new SSTemplateParseException('You cant have cache blocks nested within with, loop or control blocks that are within cache blocks', $this);
+		throw new SSTemplateParseException('You cant have cache blocks nested within with, loop or control blocks ' .
+			'that are within cache blocks', $this);
 	}
 	
 	function CacheRestrictedTemplate_UncachedBlock(&$res, $sub) { 
-		throw new SSTemplateParseException('You cant have uncache blocks nested within with, loop or control blocks that are within cache blocks', $this);
+		throw new SSTemplateParseException('You cant have uncache blocks nested within with, loop or control blocks ' .
+			'that are within cache blocks', $this);
 	}
 	
 	/* CacheBlock: 
-	'<%' < CacheTag:("cached"|"cacheblock") < (CacheBlockArguments)? ( < Conditional:("if"|"unless") > Condition:IfArgument )? > '%>'
+	'<%' < CacheTag:("cached"|"cacheblock") < (CacheBlockArguments)? ( < Conditional:("if"|"unless") >
+	Condition:IfArgument )? > '%>'
 		(CacheBlock | UncachedBlock | CacheBlockTemplate)*
 	'<%' < 'end_' ("cached"|"uncached"|"cacheblock") > '%>' */
 	protected $match_CacheBlock_typestack = array('CacheBlock');
@@ -2733,8 +2743,10 @@ class SSTemplateParser extends Parser {
 	function CacheBlock_CacheBlockTemplate(&$res, $sub){
 		// Get the block counter
 		$block = ++$res['subblocks'];
-		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template itself
-		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . ".'_$block'";
+		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template
+		// itself
+		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . 
+			".'_$block'";
 		// Get any condition
 		$condition = isset($res['condition']) ? $res['condition'] : '';
 		
@@ -3040,7 +3052,8 @@ class SSTemplateParser extends Parser {
 	}
 
 	function NamedArgument_Value(&$res, $sub) {
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : str_replace('$$FINAL', 'XML_val', $sub['php']);
+		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] 
+			: str_replace('$$FINAL', 'XML_val', $sub['php']);
 	}
 
 	/* Include: "<%" < "include" < Template:Word < (NamedArgument ( < "," < NamedArgument )*)? > "%>" */
@@ -3136,7 +3149,8 @@ class SSTemplateParser extends Parser {
 		$template = $res['template'];
 		$arguments = $res['arguments'];
 
-		$res['php'] = '$val .= SSViewer::execute_template('.$template.', $scope->getItem(), array('.implode(',', $arguments)."));\n";
+		$res['php'] = '$val .= SSViewer::execute_template('.$template.', $scope->getItem(), array(' . 
+			implode(',', $arguments)."));\n";
 
 		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
 			$res['php'] =
@@ -3195,7 +3209,7 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require" | "cached" | "uncached" | "cacheblock" | "include") ] ) */
+	/* NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require" | "cached" | "uncached" | "cacheblock" | "include")]) */
 	protected $match_NotBlockTag_typestack = array('NotBlockTag');
 	function match_NotBlockTag ($stack = array()) {
 		$matchrule = "NotBlockTag"; $result = $this->construct($matchrule, $matchrule, null);
@@ -3349,7 +3363,8 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' Template:$TemplateMatcher? '<%' < 'end_' '$BlockName' > '%>' */
+	/* ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' Template:$TemplateMatcher? 
+	'<%' < 'end_' '$BlockName' > '%>' */
 	protected $match_ClosedBlock_typestack = array('ClosedBlock');
 	function match_ClosedBlock ($stack = array()) {
 		$matchrule = "ClosedBlock"; $result = $this->construct($matchrule, $matchrule, null);
@@ -3480,7 +3495,8 @@ class SSTemplateParser extends Parser {
 		$method = 'ClosedBlock_Handle_'.$blockname;
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
 		else {
-			throw new SSTemplateParseException('Unknown closed block "'.$blockname.'" encountered. Perhaps you are not supposed to close this block, or have mis-spelled it?', $this);
+			throw new SSTemplateParseException('Unknown closed block "'.$blockname.'" encountered. Perhaps you are ' .
+				'not supposed to close this block, or have mis-spelled it?', $this);
 		}
 	}
 
@@ -3489,7 +3505,8 @@ class SSTemplateParser extends Parser {
 	 */
 	function ClosedBlock_Handle_Loop(&$res) {
 		if ($res['ArgumentCount'] > 1) {
-			throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one argument only.', $this);
+			throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one ' .
+				'argument only.', $this);
 		}
 
 		//loop without arguments loops on the current scope
@@ -3500,7 +3517,8 @@ class SSTemplateParser extends Parser {
 			if ($arg['ArgumentMode'] == 'string') {
 				throw new SSTemplateParseException('Control block cant take string as argument.', $this);
 			}
-			$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+			$on = str_replace('$$FINAL', 'obj', 
+				($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
 		}
 
 		return
@@ -3523,7 +3541,8 @@ class SSTemplateParser extends Parser {
 	 */
 	function ClosedBlock_Handle_With(&$res) {
 		if ($res['ArgumentCount'] != 1) {
-			throw new SSTemplateParseException('Either no or too many arguments in with block. Must be one argument only.', $this);
+			throw new SSTemplateParseException('Either no or too many arguments in with block. Must be one ' .
+				'argument only.', $this);
 		}
 		
 		$arg = $res['Arguments'][0];
@@ -3935,7 +3954,8 @@ class SSTemplateParser extends Parser {
 		$res['php'] = '';
 	}
 		
-	/* TopTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock | OpenBlock |  MalformedBlock | MismatchedEndBlock  | Injection | Text)+ */
+	/* TopTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
+	OpenBlock |  MalformedBlock | MismatchedEndBlock  | Injection | Text)+ */
 	protected $match_TopTemplate_typestack = array('TopTemplate','Template');
 	function match_TopTemplate ($stack = array()) {
 		$matchrule = "TopTemplate"; $result = $this->construct($matchrule, $matchrule, array('TemplateMatcher' => 'Template'));

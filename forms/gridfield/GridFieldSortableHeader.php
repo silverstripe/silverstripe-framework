@@ -46,7 +46,8 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
-				throw new LogicException(get_class($this) . " expects an SS_Sortable list to be passed to the GridField.");
+				throw new LogicException(
+					get_class($this) . " expects an SS_Sortable list to be passed to the GridField.");
 			}
 			return false;
 		}
@@ -86,7 +87,9 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			$currentColumn++;
 			$metadata = $gridField->getColumnMetadata($columnField);
 			$title = $metadata['title'];
-			if(isset($this->fieldSorting[$columnField]) && $this->fieldSorting[$columnField]) $columnField = $this->fieldSorting[$columnField];
+			if(isset($this->fieldSorting[$columnField]) && $this->fieldSorting[$columnField]) {
+				$columnField = $this->fieldSorting[$columnField];
+			}
 			if($title && $gridField->getList()->canSortBy($columnField)) {
 				$dir = 'asc';
 				if($state->SortColumn == $columnField && $state->SortDirection == 'asc') {
@@ -107,9 +110,12 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 						$field->addExtraClass('ss-gridfield-sorted-desc');
 				}
 			} else {
-				if($currentColumn == count($columns) && $gridField->getConfig()->getComponentByType('GridFieldFilterHeader')){
-					$field = new LiteralField($columnField, '<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>');				
-				}else{
+				if($currentColumn == count($columns)
+						&& $gridField->getConfig()->getComponentByType('GridFieldFilterHeader')){
+
+					$field = new LiteralField($columnField,
+						'<button name="showFilter" class="ss-gridfield-button-filter trigger"></button>');
+				} else {
 					$field = new LiteralField($columnField, '<span class="non-sortable">' . $title . '</span>');
 				}
 			}
@@ -132,7 +138,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		return array('sortasc', 'sortdesc');
 	}
 	
-	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
 		$state = $gridField->State->GridFieldSortableHeader;

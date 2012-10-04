@@ -37,7 +37,8 @@ class HTMLText extends Text {
 	 * Create a summary of the content. This will be some section of the first paragraph, limited by
 	 * $maxWords. All internal tags are stripped out - the return value is a string
 	 * 
-	 * This is sort of the HTML aware equivilent to Text#Summary, although the logic for summarising is not exactly the same
+	 * This is sort of the HTML aware equivilent to Text#Summary, although the logic for summarising is not exactly
+	 * the same
 	 * 
 	 * @param int $maxWords Maximum number of words to return - may return less, but never more. Pass -1 for no limit
 	 * @param int $flex Number of words to search through when looking for a nice cut point 
@@ -53,11 +54,13 @@ class HTMLText extends Text {
 		if (class_exists('SimpleXMLElement')) {
 			$doc = new DOMDocument();
 			
-			/* Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error */
+			// Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error
 			set_error_handler(create_function('$no, $str', 'throw new Exception("HTML Parse Error: ".$str);'), E_ALL);
 			//  Nonbreaking spaces get converted into weird characters, so strip them
 			$value = str_replace('&nbsp;', ' ', $this->value);
-			try { $res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $value); }
+			try {
+				$res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $value);
+			}
 			catch (Exception $e) { $res = false; }
 			restore_error_handler();
 			
@@ -68,8 +71,8 @@ class HTMLText extends Text {
 			}
 		}
 		
-		/* If that failed, most likely the passed HTML is broken. use a simple regex + a custom more brutal strip_tags. We don't use strip_tags because
-		 * that does very badly on broken HTML*/
+		/* If that failed, most likely the passed HTML is broken. use a simple regex + a custom more brutal strip_tags.
+		 * We don't use strip_tags because that does very badly on broken HTML */
 		if (!$str) {
 			/* See if we can pull a paragraph out*/
 
@@ -81,34 +84,38 @@ class HTMLText extends Text {
 			if (!$str) $str = $this->value;
 			
 			/* Now pull out all the html-alike stuff */
-			$str = preg_replace('{</?[a-zA-Z]+[^<>]*>}', '', $str); /* Take out anything that is obviously a tag */
-			$str = preg_replace('{</|<|>}', '', $str); /* Strip out any left over looking bits. Textual < or > should already be encoded to &lt; or &gt; */
+			/* Take out anything that is obviously a tag */
+			$str = preg_replace('{</?[a-zA-Z]+[^<>]*>}', '', $str); 
+			/* Strip out any left over looking bits. Textual < or > should already be encoded to &lt; or &gt; */
+			$str = preg_replace('{</|<|>}', '', $str); 
 		}
 		
-		/* Now split into words. If we are under the maxWords limit, just return the whole string (re-implode for whitespace normalization) */
+		/* Now split into words. If we are under the maxWords limit, just return the whole string (re-implode for
+		 * whitespace normalization) */
 		$words = preg_split('/\s+/', $str);
 		if ($maxWords == -1 || count($words) <= $maxWords) return implode(' ', $words);
 
-		/* Otherwise work backwards for a looking for a sentence ending (we try to avoid abbreviations, but aren't very good at it) */
+		/* Otherwise work backwards for a looking for a sentence ending (we try to avoid abbreviations, but aren't
+		 * very good at it) */
 		for ($i = $maxWords; $i >= $maxWords - $flex && $i >= 0; $i--) {
 			if (preg_match('/\.$/', $words[$i]) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $words[$i])) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}
 		
-		/* If we didn't find a sentence ending quickly enough, just cut at the maxWords point and add '...' to the end */
+		// If we didn't find a sentence ending quickly enough, just cut at the maxWords point and add '...' to the end
 		return implode(' ', array_slice($words, 0, $maxWords)) . $add;
 	}
 	
 	/**
-	 * Returns the first sentence from the first paragraph. If it can't figure out what the first paragraph is (or there isn't one)
-	 * it returns the same as Summary()
+	 * Returns the first sentence from the first paragraph. If it can't figure out what the first paragraph is (or
+	 * there isn't one), it returns the same as Summary()
 	 * 
 	 * This is the HTML aware equivilent to Text#FirstSentence
 	 * 
 	 * @see framework/core/model/fieldtypes/Text#FirstSentence()
 	 */
-	function FirstSentence() {
+	public function FirstSentence() {
 		/* Use summary's html processing logic to get the first paragraph */
 		$paragraph = $this->Summary(-1);
 		
@@ -120,7 +127,8 @@ class HTMLText extends Text {
 			}
 		}
 		
-		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that Summary will limit the result this time */
+		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that
+		 * Summary will limit the result this time */
 		return $this->Summary();
 	}	
 	

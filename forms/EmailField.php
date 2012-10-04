@@ -8,11 +8,11 @@
  */
 class EmailField extends TextField {
 
-	function Type() {
+	public function Type() {
 		return 'email text';
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -30,10 +30,11 @@ class EmailField extends TextField {
 	 * @param Validator $validator
 	 * @return String
 	 */
-	function validate($validator) {
+	public function validate($validator) {
 		$this->value = trim($this->value);
 
-		$pcrePattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$';
+		$pcrePattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*'
+			. '@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$';
 
 		// PHP uses forward slash (/) to delimit start/end of pattern, so it must be escaped
 		$pregSafePattern = str_replace('/', '\\/', $pcrePattern);

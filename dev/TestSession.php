@@ -22,14 +22,14 @@ class TestSession {
 	 */
 	private $lastUrl;
 
-	function __construct() {
+	public function __construct() {
 		$this->session = new Session(array());
 		$this->controller = new Controller();
 		$this->controller->setSession($this->session);
 		$this->controller->pushCurrent();
 	}
 	
-	function __destruct() {
+	public function __destruct() {
 		// Shift off anything else that's on the stack.  This can happen if something throws
 		// an exception that causes a premature TestSession::__destruct() call
 		while(Controller::has_curr() && Controller::curr() !== $this->controller) Controller::curr()->popCurrent();
@@ -41,10 +41,11 @@ class TestSession {
 	 * Submit a get request
 	 * @uses Director::test()
 	 */
-	function get($url, $session = null, $headers = null, $cookies = null) {
+	public function get($url, $session = null, $headers = null, $cookies = null) {
 		$headers = (array) $headers;
 		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse = Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
+		$this->lastResponse 
+			= Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
@@ -54,10 +55,11 @@ class TestSession {
 	 * Submit a post request
 	 * @uses Director::test()
 	 */
-	function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
+	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
 		$headers = (array) $headers;
 		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse = Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
+		$this->lastResponse
+			= Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
@@ -82,7 +84,7 @@ class TestSession {
 	 * @param Array $data Map of GET/POST data. 
 	 * @return SS_HTTPResponse
 	 */
-	function submitForm($formID, $button = null, $data = array()) {
+	public function submitForm($formID, $button = null, $data = array()) {
 		$page = $this->lastPage();
 		if($page) {
 			$form = $page->getFormById($formID);
@@ -104,14 +106,15 @@ class TestSession {
 			return $this->post($url, $postVars);
 			
 		} else {
-			user_error("TestSession::submitForm called when there is no form loaded.  Visit the page with the form first", E_USER_WARNING);
+			user_error("TestSession::submitForm called when there is no form loaded."
+				. " Visit the page with the form first", E_USER_WARNING);
 		}
 	}
 	
 	/**
 	 * If the last request was a 3xx response, then follow the redirection
 	 */
-	function followRedirection() {
+	public function followRedirection() {
 		if($this->lastResponse->getHeader('Location')) {
 			$url = Director::makeRelative($this->lastResponse->getHeader('Location'));
 			$url = strtok($url, '#');
@@ -122,7 +125,7 @@ class TestSession {
 	/**
 	 * Returns true if the last response was a 3xx redirection
 	 */
-	function wasRedirected() {
+	public function wasRedirected() {
 		$code = $this->lastResponse->getStatusCode();
 		return $code >= 300 && $code < 400;
 	}
@@ -130,19 +133,19 @@ class TestSession {
 	/**
 	 * Get the most recent response, as an SS_HTTPResponse object
 	 */
-	function lastResponse() {
+	public function lastResponse() {
 		return $this->lastResponse;
 	}
 	
 	/**
 	 * Get the most recent response's content
 	 */
-	function lastContent() {
+	public function lastContent() {
 		if(is_string($this->lastResponse)) return $this->lastResponse;
 		else return $this->lastResponse->getBody();
 	}
 	
-	function cssParser() {
+	public function cssParser() {
 		return new CSSContentParser($this->lastContent());
 	}
 
@@ -150,7 +153,7 @@ class TestSession {
 	/**
 	 * Get the last response as a SimplePage object
 	 */
-	function lastPage() {
+	public function lastPage() {
 		require_once("thirdparty/simpletest/http.php");
 		require_once("thirdparty/simpletest/page.php");
 		require_once("thirdparty/simpletest/form.php");
@@ -168,7 +171,7 @@ class TestSession {
 	/**
 	 * Get the current session, as a Session object
 	 */
-	function session() {
+	public function session() {
 		return $this->session;
 	}
 }
@@ -182,35 +185,35 @@ class TestSession {
 class TestSession_STResponseWrapper {
 	private $response;
 
-	function __construct(SS_HTTPResponse $response) {
+	public function __construct(SS_HTTPResponse $response) {
 		$this->response = $response;
 	}
 	
-	function getContent() {
+	public function getContent() {
 		return $this->response->getBody();
 	}
 	
-	function getError() {
+	public function getError() {
 		return "";
 	}
 	
-	function getSent() {
+	public function getSent() {
 		return null;
 	}
 	
-	function getHeaders() {
+	public function getHeaders() {
 		return "";
 	}
 	
-	function getMethod() {
+	public function getMethod() {
 		return "GET";
 	}
 	
-	function getUrl() {
+	public function getUrl() {
 		return "";
 	}
 	
-	function getRequestData() {
+	public function getRequestData() {
 		return null;
 	}
 }

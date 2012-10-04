@@ -19,7 +19,7 @@ class ChangePasswordForm extends Form {
 	 * @param FieldList|FormAction $actions All of the action buttons in the
 	 *                                     form - a {@link FieldList} of
 	 */
-	function __construct($controller, $name, $fields = null, $actions = null) {
+	public function __construct($controller, $name, $fields = null, $actions = null) {
 		if(isset($_REQUEST['BackURL'])) {
 			$backURL = $_REQUEST['BackURL'];
 		} else {
@@ -58,7 +58,7 @@ class ChangePasswordForm extends Form {
 	 *
 	 * @param array $data The user submitted data
 	 */
-	function doChangePassword(array $data) {
+	public function doChangePassword(array $data) {
 		if($member = Member::currentUser()) {
 			// The user was logged in, check the current password
 			if(empty($data['OldPassword']) || !$member->checkPassword($data['OldPassword'])->valid()) {
@@ -111,7 +111,10 @@ class ChangePasswordForm extends Form {
 				}
 				else {
 					// Redirect to default location - the login form saying "You are logged in as..."
-					$redirectURL = HTTP::setGetVar('BackURL', Director::absoluteBaseURL(), $this->controller->Link('login'));
+					$redirectURL = HTTP::setGetVar(
+						'BackURL',
+						Director::absoluteBaseURL(), $this->controller->Link('login')
+					);
 					$this->controller->redirect($redirectURL);
 				}
 			} else {

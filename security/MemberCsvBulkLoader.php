@@ -14,7 +14,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 	 */
 	protected $groups = array();
 	
-	function __construct($objectClass = null) {
+	public function __construct($objectClass = null) {
 		if(!$objectClass) $objectClass = 'Member';
 		
 		parent::__construct($objectClass);
@@ -24,7 +24,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 		'Email' => 'Email',
 	);
 	
-	function processRecord($record, $columnMap, &$results, $preview = false) {
+	public function processRecord($record, $columnMap, &$results, $preview = false) {
 		$objID = parent::processRecord($record, $columnMap, $results, $preview);
 		
 		$_cache_groupByCode = array();
@@ -66,14 +66,14 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 	/**
 	 * @param Array $groups
 	 */
-	function setGroups($groups) {
+	public function setGroups($groups) {
 		$this->groups = $groups;
 	}
 	
 	/**
 	 * @return Array
 	 */
-	function getGroups() {
+	public function getGroups() {
 		return $this->groups;
 	}
 } 

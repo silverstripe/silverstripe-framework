@@ -99,7 +99,9 @@ class SQLQuery {
 	 * @param array $having An array of HAVING clauses.
 	 * @param array|string $limit A LIMIT clause or array with limit and offset keys
 	 */
-	function __construct($select = "*", $from = array(), $where = array(), $orderby = array(), $groupby = array(), $having = array(), $limit = array()) {
+	public function __construct($select = "*", $from = array(), $where = array(), $orderby = array(),
+			$groupby = array(), $having = array(), $limit = array()) {
+
 		$this->setSelect($select);
 		$this->setFrom($from);
 		$this->setWhere($where);
@@ -109,7 +111,7 @@ class SQLQuery {
 		$this->setLimit($limit);
 	}
 
-	function __get($field) {
+	public function __get($field) {
 		if(strtolower($field) == 'select') Deprecation::notice('3.0', 'Please use getSelect() instead');
 		if(strtolower($field) == 'from') Deprecation::notice('3.0', 'Please use getFrom() instead');
 		if(strtolower($field) == 'groupby') Deprecation::notice('3.0', 'Please use getGroupBy() instead');
@@ -123,11 +125,15 @@ class SQLQuery {
 		return $this->$field;
 	}
 
-	function __set($field, $value) {
+	public function __set($field, $value) {
 		if(strtolower($field) == 'select') Deprecation::notice('3.0', 'Please use setSelect() or addSelect() instead');
 		if(strtolower($field) == 'from') Deprecation::notice('3.0', 'Please use setFrom() or addFrom() instead');
-		if(strtolower($field) == 'groupby') Deprecation::notice('3.0', 'Please use setGroupBy() or addGroupBy() instead');
-		if(strtolower($field) == 'orderby') Deprecation::notice('3.0', 'Please use setOrderBy() or addOrderBy() instead');
+		if(strtolower($field) == 'groupby') {
+			Deprecation::notice('3.0', 'Please use setGroupBy() or addGroupBy() instead');
+		}
+		if(strtolower($field) == 'orderby') {
+			Deprecation::notice('3.0', 'Please use setOrderBy() or addOrderBy() instead');
+		}
 		if(strtolower($field) == 'having') Deprecation::notice('3.0', 'Please use setHaving() or addHaving() instead');
 		if(strtolower($field) == 'limit') Deprecation::notice('3.0', 'Please use setLimit() instead');
 		if(strtolower($field) == 'delete') Deprecation::notice('3.0', 'Please use setDelete() instead');
@@ -348,9 +354,13 @@ class SQLQuery {
 		$tables = array();
 		
 		foreach($this->from as $key => $tableClause) {
-			if(is_array($tableClause)) $table = '"'.$tableClause['table'].'"';
-			else if(is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) $table = $matches[1];
-			else $table = $tableClause;
+			if(is_array($tableClause)) {
+				$table = '"'.$tableClause['table'].'"';
+			} else if(is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) {
+				$table = $matches[1];
+			} else {
+				$table = $tableClause;
+			}
 
 			// Handle string replacements
 			if($this->replacementsOld) $table = str_replace($this->replacementsOld, $this->replacementsNew, $table);
@@ -530,15 +540,15 @@ class SQLQuery {
 			user_error('SQLQuery::orderby() incorrect format for $orderby', E_USER_WARNING);
 		}
 
-		// If sort contains a function call, let's move the sort clause into a 
+		// If sort contains a public function call, let's move the sort clause into a
 		// separate selected field.
 		//
-		// Some versions of MySQL choke if you have a group function referenced 
+		// Some versions of MySQL choke if you have a group public function referenced
 		// directly in the ORDER BY
 		if($this->orderby) {
 			$i = 0;
 			foreach($this->orderby as $clause => $dir) {
-				// Function calls and multi-word columns like "CASE WHEN ..."
+				// public function calls and multi-word columns like "CASE WHEN ..."
 				if(strpos($clause, '(') !== false || strpos($clause, " ") !== false ) {
 					// remove the old orderby
 					unset($this->orderby[$clause]);
@@ -713,7 +723,8 @@ class SQLQuery {
 
 		$args = func_get_args();
 		if(isset($args[1])) {
-			Deprecation::notice('3.0', 'Multiple arguments to where is deprecated. Pleas use where("Column = Something") syntax instead');
+			Deprecation::notice('3.0',
+				'Multiple arguments to where is deprecated. Pleas use where("Column = Something") syntax instead');
 		}
 
 		return $this->addWhere($where);
@@ -758,7 +769,7 @@ class SQLQuery {
 	/**
 	 * @param String|array $filters Predicate(s) to set, as escaped SQL statements.
 	 */
-	function setWhereAny($filters) {
+	public function setWhereAny($filters) {
 		if(is_string($filters)) $filters = func_get_args();
 		$clause = implode(" OR ", $filters);
 		return $this->setWhere($clause);
@@ -767,7 +778,7 @@ class SQLQuery {
 	/**
 	 * @param String|array $filters Predicate(s) to set, as escaped SQL statements.
 	 */
-	function addWhereAny($filters) {
+	public function addWhereAny($filters) {
 		if(is_string($filters)) $filters = func_get_args();
 		$clause = implode(" OR ", $filters);
 		return $this->addWhere($clause);
@@ -793,7 +804,7 @@ class SQLQuery {
 	 * @param string $old Name of the old table (unquoted, escaped)
 	 * @param string $new Name of the new table (unquoted, escaped)
 	 */
-	function renameTable($old, $new) {
+	public function renameTable($old, $new) {
 		$this->replaceText("`$old`", "`$new`");
 		$this->replaceText("\"$old\"", "\"$new\"");
 	}
@@ -804,7 +815,7 @@ class SQLQuery {
 	 * @param string $old The old text (escaped)
 	 * @param string $new The new text (escaped)
 	 */
-	function replaceText($old, $new) {
+	public function replaceText($old, $new) {
 		$this->replacementsOld[] = $old;
 		$this->replacementsNew[] = $new;
 	}
@@ -848,7 +859,8 @@ class SQLQuery {
 
 	/**
 	 * Return an itemised select list as a map, where keys are the aliases, and values are the column sources.
-	 * Aliases will always be provided (if the alias is implicit, the alias value will be inferred), and won't be quoted.
+	 * Aliases will always be provided (if the alias is implicit, the alias value will be inferred), and won't be
+	 * quoted.
 	 * E.g., 'Title' => '"SiteTree"."Title"'.
 	 */
 	public function getSelect() {
@@ -860,21 +872,24 @@ class SQLQuery {
 	 * 
 	 * @return string
 	 */
-	function sql() {
-		// TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new syntax
+	public function sql() {
+		// TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new
+		// syntax
 		$origFrom = $this->from;
 
 		// Build from clauses
 		foreach($this->from as $alias => $join) {
 			// $join can be something like this array structure
-			// array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1", "Status = 'approved'"))
+			// array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1", 
+			// "Status = 'approved'"))
 			if(is_array($join)) {
 				if(is_string($join['filter'])) $filter = $join['filter'];
 				else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
 				else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 
 				$aliasClause = ($alias != $join['table']) ? " AS \"" . Convert::raw2sql($alias) . "\"" : "";
-				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"" . Convert::raw2sql($join['table']) . "\"$aliasClause ON $filter";
+				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"" . Convert::raw2sql($join['table'])
+					. "\"$aliasClause ON $filter";
 			}
 		}
 
@@ -899,7 +914,7 @@ class SQLQuery {
 	 * 
 	 * @return string
 	 */
-	function __toString() {
+	public function __toString() {
 	    try {
 		    return $this->sql();
 	    } catch(Exception $e) {
@@ -911,7 +926,7 @@ class SQLQuery {
 	 * Execute this query.
 	 * @return SS_Query
 	 */
-	function execute() {
+	public function execute() {
 		return DB::query($this->sql(), E_USER_ERROR);
 	}
 	
@@ -922,7 +937,7 @@ class SQLQuery {
 	 *
 	 * @return boolean
 	 */
-	function filtersOnID() {
+	public function filtersOnID() {
 		$regexp = '/^(.*\.)?("|`)?ID("|`)?\s?=/';
 		
 		// Sometimes the ID filter will be the 2nd element, if there's a ClasssName filter first.
@@ -939,7 +954,7 @@ class SQLQuery {
 	 *
 	 * @return boolean
 	 */
-	function filtersOnFK() { 
+	public function filtersOnFK() {
 		return (
 			$this->where
 			&& preg_match('/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?=/', $this->where[0])
@@ -952,7 +967,7 @@ class SQLQuery {
 	 * Return the number of rows in this query if the limit were removed.  Useful in paged data sets. 
 	 * @return int 
 	 */ 
-	function unlimitedRowCount($column = null) {
+	public function unlimitedRowCount($column = null) {
 		// we can't clear the select if we're relying on its output by a HAVING clause
 		if(count($this->having)) {
 			$records = $this->execute();
@@ -986,7 +1001,7 @@ class SQLQuery {
 	/**
 	 * Returns true if this query can be sorted by the given field.
 	 */
-	function canSortBy($fieldName) {
+	public function canSortBy($fieldName) {
 		$fieldName = preg_replace('/(\s+?)(A|DE)SC$/', '', $fieldName);
 		
 		return isset($this->select[$fieldName]);
@@ -1001,7 +1016,7 @@ class SQLQuery {
 	 * @param String $column Quoted, escaped column name
 	 * @return int
 	 */
-	function count( $column = null) {
+	public function count( $column = null) {
 		// Choose a default column
 		if($column == null) {
 			if($this->groupby) {
@@ -1035,7 +1050,7 @@ class SQLQuery {
 	 * Return a new SQLQuery that calls the given aggregate functions on this data.
 	 * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them (as an escaped SQL statement)
 	 */
-	function aggregate($column) {
+	public function aggregate($column) {
 		if($this->groupby || $this->limit) {
 			throw new Exception("SQLQuery::aggregate() doesn't work with groupby or limit, yet");
 		}
@@ -1052,7 +1067,7 @@ class SQLQuery {
 	/**
 	 * Returns a query that returns only the first row of this query
 	 */
-	function firstRow() {
+	public function firstRow() {
 		$query = clone $this;
 		$offset = $this->limit ? $this->limit['start'] : 0;
 		$query->setLimit(1, $offset);
@@ -1062,7 +1077,7 @@ class SQLQuery {
 	/**
 	 * Returns a query that returns only the last row of this query
 	 */
-	function lastRow() {
+	public function lastRow() {
 		$query = clone $this;
 		$offset = $this->limit ? $this->limit['start'] : 0;
 		$query->setLimit(1, $this->count() + $offset - 1);

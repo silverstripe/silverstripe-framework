@@ -43,7 +43,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
-				throw new LogicException(get_class($this) . " expects an SS_Filterable list to be passed to the GridField.");
+				throw new LogicException(
+					get_class($this) . " expects an SS_Filterable list to be passed to the GridField.");
 			}
 			return false;
 		}
@@ -60,7 +61,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		return array('filter', 'reset');
 	}
 
-	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if(!$this->checkDataType($gridField->getList())) return;
 
 		$state = $gridField->State->GridFieldFilterHeader;
@@ -123,7 +124,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 				$field->addExtraClass('ss-gridfield-sort');
 				$field->addExtraClass('no-change-track');
 
-				$field->setAttribute('placeholder', _t('GridField.FilterBy', "Filter by ") . _t('GridField.'.$metadata['title'], $metadata['title']));
+				$field->setAttribute('placeholder',
+					_t('GridField.FilterBy', "Filter by ") . _t('GridField.'.$metadata['title'], $metadata['title']));
 
 				$field = new FieldGroup(
 					$field,

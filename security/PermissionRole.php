@@ -33,7 +33,7 @@ class PermissionRole extends DataObject {
 
 	static $plural_name = 'Roles';
 	
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
 		$fields->removeFieldFromTab('Root', 'Codes');
@@ -53,7 +53,7 @@ class PermissionRole extends DataObject {
 		return $fields;
 	}
 	
-	function onAfterDelete() {
+	public function onAfterDelete() {
 		parent::onAfterDelete();
 		
 		// Delete associated permission codes
@@ -63,7 +63,7 @@ class PermissionRole extends DataObject {
 		}
 	}
 
-	function fieldLabels($includerelations = true) {
+	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['Title'] = _t('PermissionRole.Title', 'Title');
 		$labels['OnlyAdminCanApply'] = _t(

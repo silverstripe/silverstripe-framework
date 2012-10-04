@@ -13,11 +13,12 @@ class GroupImportForm extends Form {
 	 */
 	protected $group;
 	
-	function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
+	public function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
 		if(!$fields) {
 			$helpHtml = _t(
 				'GroupImportForm.Help1', 
-				'<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+				'<p>Import one or more groups in <em>CSV</em> format (comma-separated values).'
+				. ' <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
 			);
 			$helpHtml .= _t(
 				'GroupImportForm.Help2', 
@@ -25,9 +26,11 @@ class GroupImportForm extends Form {
 	<h4>Advanced usage</h4>
 	<ul>
 	<li>Allowed columns: <em>%s</em></li>
-	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>
+	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 
+	imported file</li>
 	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>
-	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>
+	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not
+	cleared.</li>
 	</ul>
 </div>');
 			
@@ -48,12 +51,12 @@ class GroupImportForm extends Form {
 			$fileField->getValidator()->setAllowedExtensions(array('csv'));
 		}
 		
-		if(!$actions) $actions = new FieldList(
-			$importAction = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'))
-		);
-
-		$importAction->addExtraClass('ss-ui-button');
-
+		if(!$actions) {
+			$action = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'));
+			$action->addExtraClass('ss-ui-button');
+			$actions = new FieldList($action);
+		}
+	
 		if(!$validator) $validator = new RequiredFields('CsvFile');
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
@@ -62,7 +65,7 @@ class GroupImportForm extends Form {
 		$this->addExtraClass('import-form');
 	}
 	
-	function doImport($data, $form) {
+	public function doImport($data, $form) {
 		$loader = new GroupCsvBulkLoader();
 		
 		// load file

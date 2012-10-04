@@ -11,16 +11,16 @@ class ReadonlyField extends FormField {
 
 	protected $readonly = true;
 
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		return clone $this;
 	}
 
-	function Value() {
+	public function Value() {
 		if($this->value) return $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 		else return '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -30,7 +30,7 @@ class ReadonlyField extends FormField {
 		);
 	}
 
-	function Type() {
+	public function Type() {
 		return 'readonly';
 	}
 }

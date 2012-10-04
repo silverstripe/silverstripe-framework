@@ -6,15 +6,15 @@ class ControllerTest extends FunctionalTest {
 
 	protected $autoFollowRedirection = false;
 	
-	function testDefaultAction() {
+	public function testDefaultAction() {
 		/* For a controller with a template, the default action will simple run that template. */
 		$response = $this->get("ControllerTest_Controller/");
 		$this->assertRegExp("/This is the main template. Content is 'default content'/", $response->getBody());
 	}
 	
-	function testMethodActions() {
-		/* The Action can refer to a method that is called on the object.  If a method returns an array, then it will be 
-		used to customise the template data */
+	public function testMethodActions() {
+		/* The Action can refer to a method that is called on the object.  If a method returns an array, then it
+		 * will be used to customise the template data */
 		$response = $this->get("ControllerTest_Controller/methodaction");
 		$this->assertRegExp("/This is the main template. Content is 'methodaction content'./", $response->getBody());
 		
@@ -23,10 +23,11 @@ class ControllerTest extends FunctionalTest {
 		$this->assertRegExp("/stringaction was called./", $response->getBody());
 	}
 	
-	function testTemplateActions() {
+	public function testTemplateActions() {
 		/* If there is no method, it can be used to point to an alternative template. */
 		$response = $this->get("ControllerTest_Controller/templateaction");
-		$this->assertRegExp("/This is the template for templateaction. Content is 'default content'./", $response->getBody());
+		$this->assertRegExp("/This is the template for templateaction. Content is 'default content'./",
+			$response->getBody());
 	}
 	
 	public function testUndefinedActions() {
@@ -34,7 +35,7 @@ class ControllerTest extends FunctionalTest {
 		$this->assertEquals(404, $response->getStatusCode(), 'Undefined actions return a not found response.');
 	}
 	
-	function testAllowedActions() {
+	public function testAllowedActions() {
 		$adminUser = $this->objFromFixture('Member', 'admin');
 		
 		$response = $this->get("ControllerTest_SecuredController/methodaction");
@@ -84,24 +85,28 @@ class ControllerTest extends FunctionalTest {
 	/**
 	 * Test Controller::join_links()
 	 */
-	function testJoinLinks() {
-		/* Controller::join_links() will reliably join two URL-segments together so that they will be appropriately parsed by the URL parser */
+	public function testJoinLinks() {
+		/* Controller::join_links() will reliably join two URL-segments together so that they will be
+		 * appropriately parsed by the URL parser */
 		$this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm", "MyForm"));
 		$this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm/", "MyForm"));
 
 		/* It will also handle appropriate combination of querystring variables */
 		$this->assertEquals("admin/crm/MyForm?flush=1", Controller::join_links("admin/crm/?flush=1", "MyForm"));
 		$this->assertEquals("admin/crm/MyForm?flush=1", Controller::join_links("admin/crm/", "MyForm?flush=1"));
-		$this->assertEquals("admin/crm/MyForm?field=1&other=1", Controller::join_links("admin/crm/?field=1", "MyForm?other=1"));
+		$this->assertEquals("admin/crm/MyForm?field=1&other=1",
+			Controller::join_links("admin/crm/?field=1", "MyForm?other=1"));
 		
 		/* It can handle arbitrary numbers of components, and will ignore empty ones */
 		$this->assertEquals("admin/crm/MyForm/", Controller::join_links("admin/", "crm", "", "MyForm/"));
-		$this->assertEquals("admin/crm/MyForm/?a=1&b=2", Controller::join_links("admin/?a=1", "crm", "", "MyForm/?b=2"));
+		$this->assertEquals("admin/crm/MyForm/?a=1&b=2",
+			Controller::join_links("admin/?a=1", "crm", "", "MyForm/?b=2"));
 		
 		/* It can also be used to attach additional get variables to a link */
 		$this->assertEquals("admin/crm?flush=1", Controller::join_links("admin/crm", "?flush=1"));
 		$this->assertEquals("admin/crm?existing=1&flush=1", Controller::join_links("admin/crm?existing=1", "?flush=1"));
-		$this->assertEquals("admin/crm/MyForm?a=1&b=2&c=3", Controller::join_links("?a=1", "admin/crm", "?b=2", "MyForm?c=3"));
+		$this->assertEquals("admin/crm/MyForm?a=1&b=2&c=3",
+			Controller::join_links("?a=1", "admin/crm", "?b=2", "MyForm?c=3"));
 		
 		/* Note, however, that it doesn't deal with duplicates very well. */
 		$this->assertEquals("admin/crm?flush=1&flush=1", Controller::join_links("admin/crm?flush=1", "?flush=1"));
@@ -116,7 +121,8 @@ class ControllerTest extends FunctionalTest {
 		$this->assertEquals("my-page?arg=var#subsection", Controller::join_links("my-page#subsection", "?arg=var"));
 
 		/* If there are multiple, it takes the last one */
-		$this->assertEquals("my-page?arg=var#second-section", Controller::join_links("my-page#subsection", "?arg=var", "#second-section"));
+		$this->assertEquals("my-page?arg=var#second-section",
+			Controller::join_links("my-page#subsection", "?arg=var", "#second-section"));
 
 		/* Does type-safe checks for zero value */
 		$this->assertEquals("my-page/0", Controller::join_links("my-page", 0));
@@ -129,7 +135,8 @@ class ControllerTest extends FunctionalTest {
 		$controller = new ControllerTest_HasAction();
 		
 		$this->assertFalse($controller->hasAction('1'), 'Numeric actions do not slip through.');
-		//$this->assertFalse($controller->hasAction('lowercase_permission'), 'Lowercase permission does not slip through.');
+		//$this->assertFalse($controller->hasAction('lowercase_permission'),
+		//'Lowercase permission does not slip through.');
 		$this->assertFalse($controller->hasAction('undefined'), 'undefined actions do not exist');
 		$this->assertTrue($controller->hasAction('allowed_action'), 'allowed actions are recognised');
 		$this->assertTrue($controller->hasAction('template_action'), 'action-specific templates are recognised');
@@ -142,36 +149,40 @@ class ControllerTest extends FunctionalTest {
 		);
 	}
 
-	/* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this code was supposed to test
+	/* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this
+	 * code was supposed to test
 	public function testBaseURL() {
 		Director::setBaseURL('/baseurl/');
 		$this->assertEquals(Controller::BaseURL(), Director::BaseURL());
 	}
 	*/
 
-	function testRedirectBackByReferer() {
+	public function testRedirectBackByReferer() {
 		$internalRelativeUrl = '/some-url';
-		$response = $this->get('ControllerTest_Controller/redirectbacktest', null, array('Referer' => $internalRelativeUrl));
+		$response = $this->get('ControllerTest_Controller/redirectbacktest', null,
+			array('Referer' => $internalRelativeUrl));
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals($internalRelativeUrl, $response->getHeader('Location'),
 			"Redirects on internal relative URLs"
 		);
 
 		$internalAbsoluteUrl = Director::absoluteBaseURL() . '/some-url';
-		$response = $this->get('ControllerTest_Controller/redirectbacktest', null, array('Referer' => $internalAbsoluteUrl));
+		$response = $this->get('ControllerTest_Controller/redirectbacktest', null,
+			array('Referer' => $internalAbsoluteUrl));
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals($internalAbsoluteUrl, $response->getHeader('Location'),
 			"Redirects on internal absolute URLs"
 		);
 
 		$externalAbsoluteUrl = 'http://myhost.com/some-url';
-		$response = $this->get('ControllerTest_Controller/redirectbacktest', null, array('Referer' => $externalAbsoluteUrl));
+		$response = $this->get('ControllerTest_Controller/redirectbacktest', null,
+			array('Referer' => $externalAbsoluteUrl));
 		$this->assertEquals(200, $response->getStatusCode(),
 			"Doesn't redirect on external URLs"
 		);
 	}
 
-	function testRedirectBackByBackUrl() {
+	public function testRedirectBackByBackUrl() {
 		$internalRelativeUrl = '/some-url';
 		$response = $this->get('ControllerTest_Controller/redirectbacktest?BackURL=' . urlencode($internalRelativeUrl));
 		$this->assertEquals(302, $response->getStatusCode());
@@ -200,17 +211,17 @@ class ControllerTest extends FunctionalTest {
 class ControllerTest_Controller extends Controller implements TestOnly {
 	public $Content = "default content";
 	
-	function methodaction() {
+	public function methodaction() {
 		return array(
 			"Content" => "methodaction content"
 		);
 	}
 	
-	function stringaction() {
+	public function stringaction() {
 		return "stringaction was called.";
 	}
 
-	function redirectbacktest() {
+	public function redirectbacktest() {
 		return $this->redirectBack();
 	}
 }
@@ -226,17 +237,17 @@ class ControllerTest_SecuredController extends Controller implements TestOnly {
 	
 	public $Content = "default content";
 	
-	function methodaction() {
+	public function methodaction() {
 		return array(
 			"Content" => "methodaction content"
 		);
 	}
 	
-	function stringaction() {
+	public function stringaction() {
 		return "stringaction was called.";
 	}
 
-	function adminonly() {
+	public function adminonly() {
 		return "You must be an admin!";
 	}
 }
@@ -248,11 +259,11 @@ class ControllerTest_FullSecuredController extends Controller implements TestOnl
 		'unsecuredaction' => true,
 	);
 	
-	function adminonly() {
+	public function adminonly() {
 		return "You must be an admin!";
 	}
 	
-	function unsecuredaction() {
+	public function unsecuredaction() {
 		return "Allowed for everybody";
 	}
 }

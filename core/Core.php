@@ -28,8 +28,9 @@
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
  * 
  * @todo This file currently contains a lot of bits and pieces, and its various responsibilities should probably be
- * moved into different subsystems.
- * @todo A lot of this stuff is very order-independent; for example, the require_once calls have to happen after the defines.'
+ *       moved into different subsystems.
+ * @todo A lot of this stuff is very order-independent; for example, the require_once calls have to happen after the
+ *       defines.'
  * This could be decoupled.
  * @package framework
  * @subpackage core
@@ -45,7 +46,12 @@ error_reporting(E_ALL | E_STRICT);
 /**
  * Include _ss_environment.php files
  */
-$envFiles = array('_ss_environment.php', '../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
+$envFiles = array(
+	'_ss_environment.php',
+	'../_ss_environment.php',
+	'../../_ss_environment.php',
+	'../../../_ss_environment.php');
+
 foreach($envFiles as $envFile) {
 	if(@file_exists($envFile)) {
 		define('SS_ENVIRONMENT_FILE', $envFile);
@@ -176,11 +182,31 @@ define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
 define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 
+///////////////////////////////////////////////////////////////////////////////
+// INCLUDES
+
+if(defined('CUSTOM_INCLUDE_PATH')) {
+	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
+		. get_include_path();
+} else {
+	$includePath = FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
+		. get_include_path();
+}
+
+set_include_path($includePath);
+
 /**
  * Define the temporary folder if it wasn't defined yet
  */
+require_once 'core/TempPath.php';
+
 if(!defined('TEMP_FOLDER')) {
-	define('TEMP_FOLDER', getTempFolder());
+	define('TEMP_FOLDER', getTempFolder(BASE_PATH));
 }
 
 /**
@@ -211,24 +237,6 @@ mb_regex_encoding('UTF-8');
  * Enable better garbage collection
  */
 gc_enable();
-
-///////////////////////////////////////////////////////////////////////////////
-// INCLUDES
-
-if(defined('CUSTOM_INCLUDE_PATH')) {
-	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
-} else {
-	$includePath = FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
-}
-
-set_include_path($includePath);
 
 // Include the files needed the initial manifest building, as well as any files
 // that are needed for the boostrap process on every request.
@@ -302,54 +310,6 @@ function getSysTempDir() {
 }
 
 /**
- * Returns the temporary folder that silverstripe should use for its cache files
- * This is loaded into the TEMP_FOLDER define on start up
- * 
- * @param $base The base path to use as the basis for the temp folder name.  Defaults to BASE_PATH,
- * which is usually fine; however, the $base argument can be used to help test.
- */
-function getTempFolder($base = null) {
-	if(!$base) $base = BASE_PATH;
-
-	if($base) {
-		$cachefolder = "silverstripe-cache" . str_replace(array(' ', "/", ":", "\\"), "-", $base);
-	} else {
-		$cachefolder = "silverstripe-cache";
-	}
-
-	$ssTmp = BASE_PATH . "/silverstripe-cache";
-	if(@file_exists($ssTmp)) {
-		return $ssTmp;
-	}
-
-	$sysTmp = sys_get_temp_dir();
-	$worked = true;
-	$ssTmp = "$sysTmp/$cachefolder";
-
-	if(!@file_exists($ssTmp)) {
-		$worked = @mkdir($ssTmp);
-	}
-
-	if(!$worked) {
-		$ssTmp = BASE_PATH . "/silverstripe-cache";
-		$worked = true;
-		if(!@file_exists($ssTmp)) {
-			$worked = @mkdir($ssTmp);
-		}
-	}
-
-	if(!$worked) {
-		throw new Exception(
-			'Permission problem gaining access to a temp folder. ' .
-			'Please create a folder named silverstripe-cache in the base folder ' .
-			'of the installation and ensure it has the correct permissions'
-		);
-	}
-
-	return $ssTmp;
-}
-
-/**
  * @deprecated 3.0 Please use {@link SS_ClassManifest::getItemPath()}.
  */
 function getClassFile($className) {
@@ -370,7 +330,8 @@ function getClassFile($className) {
 function singleton($className) {
 	if($className == "Config") user_error("Don't pass Config to singleton()", E_USER_ERROR);
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
-	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
+	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true),
+		E_USER_ERROR);
 	return Injector::inst()->get($className);
 }
 

@@ -38,7 +38,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * action will be admin/batchactions/(urlSegment)
 	 * @param $batchActionClass The name of the CMSBatchAction subclass to register
 	 */
-	static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
+	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
 		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
 			self::$batch_actions[$urlSegment] = array(
 				'class' => $batchActionClass,
@@ -54,7 +54,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @param string $urlSegment
 	 * @param string $recordClass
 	 */
-	function __construct($parentController, $urlSegment, $recordClass = null) {
+	public function __construct($parentController, $urlSegment, $recordClass = null) {
 		$this->parentController = $parentController;
 		$this->urlSegment = $urlSegment;
 		if($recordClass) $this->recordClass = $recordClass;
@@ -62,11 +62,11 @@ class CMSBatchActionHandler extends RequestHandler {
 		parent::__construct();
 	}
 	
-	function Link() {
+	public function Link() {
 		return Controller::join_links($this->parentController->Link(), $this->urlSegment);
 	}
 
-	function handleAction($request) {
+	public function handleAction($request) {
 		// This method can't be called without ajax.
 		if(!$request->isAjax()) {
 			$this->parentController->redirectBack();
@@ -85,7 +85,9 @@ class CMSBatchActionHandler extends RequestHandler {
 		foreach($ids as $k => $v) if(!is_numeric($v)) unset($ids[$k]);
 		
 		if($ids) {
-			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) Translatable::disable_locale_filter();
+			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) {
+				Translatable::disable_locale_filter();
+			}
 			
 			$pages = DataObject::get(
 				$this->recordClass, 
@@ -96,7 +98,9 @@ class CMSBatchActionHandler extends RequestHandler {
 				)
 			);
 			
-			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) Translatable::enable_locale_filter();
+			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) {
+				Translatable::enable_locale_filter();
+			}
 			
 			if(Object::has_extension($this->recordClass, 'Versioned')) {
 				// If we didn't query all the pages, then find the rest on the live site
@@ -128,7 +132,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		return $actionHandler->run($pages);
 	} 
 
-	function handleApplicablePages($request) {
+	public function handleApplicablePages($request) {
 		// Find the action handler
 		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		$actionClass = $actions[$request->param('BatchAction')];
@@ -150,7 +154,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		return $response;
 	}
 	
-	function handleConfirmation($request) {
+	public function handleConfirmation($request) {
 		// Find the action handler
 		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		$actionClass = $actions[$request->param('BatchAction')];
@@ -177,7 +181,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 *  - Link
 	 *  - Title
 	 */
-	function batchActionList() {
+	public function batchActionList() {
 		$actions = $this->batchActions();
 		$actionList = new ArrayList();
 		
@@ -202,7 +206,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * 
 	 * @return array See {@link register()} for the returned format.
 	 */
-	function batchActions() {
+	public function batchActions() {
 		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		if($actions) foreach($actions as $action) {
 			if($action['recordClass'] != $this->recordClass) unset($action);

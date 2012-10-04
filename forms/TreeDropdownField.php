@@ -85,7 +85,9 @@ class TreeDropdownField extends FormField {
 	 * @param bool $showSearch enable the ability to search the tree by 
 	 *		entering the text in the input field.
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title', $showSearch = false) {
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title',
+			$showSearch = false) {
+
 		$this->sourceObject = $sourceObject;
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
@@ -148,9 +150,11 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param $method The parameter to ChildrenMethod to use when calling Hierarchy->getChildrenAsUL in {@link Hierarchy}.
-	 * The method specified determined the structure of the returned list. Use "ChildFolders" in place of the default
-	 * to get a drop-down listing with only folders, i.e. not including the child elements  in the currently selected folder.
+	 * @param $method The parameter to ChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
+	 * {@link Hierarchy}. The method specified determined the structure of the returned list. Use "ChildFolders"
+	 * in place of the default to get a drop-down listing with only folders, i.e. not including the child elements in
+	 * the currently selected folder.
+	 * 
 	 * See {@link Hierarchy} for a complete list of possible methods.
 	 */
 	public function setChildrenMethod($method) {
@@ -196,7 +200,7 @@ class TreeDropdownField extends FormField {
 		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
 
-	function extraClass() {
+	public function extraClass() {
 		return implode(' ', array(parent::extraClass(), ($this->showSearch ? "searchable" : null)));
 	}
 	
@@ -221,7 +225,10 @@ class TreeDropdownField extends FormField {
 		$isSubTree = false;
 
 		$this->search = Convert::Raw2SQL($request->requestVar('search'));
-		$ID = (is_numeric($request->latestparam('ID'))) ? (int)$request->latestparam('ID') : (int)$request->requestVar('ID');
+		$ID = (is_numeric($request->latestparam('ID')))
+			? (int)$request->latestparam('ID')
+			: (int)$request->requestVar('ID');
+
 		$forceFullTree = $request->requestVar('forceFullTree')?$request->requestVar('forceFullTree'):false;
 		if($ID && !$forceFullTree) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
@@ -257,8 +264,9 @@ class TreeDropdownField extends FormField {
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
-		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"class-$child->class"' .
-				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
+		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->'
+			. $this->keyField . '\" class=\"class-$child->class"' 
+			. ' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 
 		if($isSubTree) {
 			return substr(trim($obj->getChildrenAsUL('', $eval, null, true, $this->childrenMethod)), 4, -5);
@@ -268,13 +276,13 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * Marking function for the tree, which combines different filters sensibly. If a filter function has been set,
-	 * that will be called. If the source is a folder, automatically filter folder. And if search text is set, filter on that
-	 * too. Return true if all applicable conditions are true, false otherwise.
+	 * Marking public function for the tree, which combines different filters sensibly. If a filter function has been
+	 * set, that will be called. If the source is a folder, automatically filter folder. And if search text is set,
+	 * filter on that too. Return true if all applicable conditions are true, false otherwise.
 	 * @param $node
 	 * @return unknown_type
 	 */
-	function filterMarking($node) {
+	public function filterMarking($node) {
 		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
 		if ($this->sourceObject == "Folder" && $node->ClassName != 'Folder') return false;
 		if ($this->search != "") {
@@ -303,7 +311,8 @@ class TreeDropdownField extends FormField {
 				$this->searchIds[$row->ID] = true;
 			}
 			while (!empty($parents)) {
-				$res = DB::query('SELECT "ParentID", "ID" FROM "' . $this->sourceObject . '" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
+				$res = DB::query('SELECT "ParentID", "ID" FROM "' . $this->sourceObject
+					. '" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
 				$parents = array();
 
 				foreach($res as $row) {
@@ -325,15 +334,16 @@ class TreeDropdownField extends FormField {
 		if($this->keyField == 'ID') {
 			return DataObject::get_by_id($this->sourceObject, $key);
 		} else {
-			return DataObject::get_one($this->sourceObject, "\"{$this->keyField}\" = '" . Convert::raw2sql($key) . "'");
+			return DataObject::get_one($this->sourceObject, "\"{$this->keyField}\" = '".Convert::raw2sql($key)."'");
 		}
 	}
 
 	/**
 	 * Changes this field to the readonly field.
 	 */
-	function performReadonlyTransformation() {
-		return new TreeDropdownField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
+	public function performReadonlyTransformation() {
+		return new TreeDropdownField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField,
+			$this->labelField);
 	}
 }
 
@@ -344,7 +354,7 @@ class TreeDropdownField extends FormField {
 class TreeDropdownField_Readonly extends TreeDropdownField {
 	protected $readonly = true;
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$fieldName = $this->labelField;
 		if($this->value) {
 			$keyObj = $this->objectForKey($this->value);

@@ -4,25 +4,33 @@ class DataQueryTest extends SapphireTest {
 	/**
 	 * Test the leftJoin() and innerJoin method of the DataQuery object
 	 */
-	function testJoins() {
+	public function testJoins() {
 		$dq = new DataQuery('Member');
 		$dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-		$this->assertContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"", $dq->sql());
+		$this->assertContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+			$dq->sql());
 
 		$dq = new DataQuery('Member');
 		$dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-		$this->assertContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"", $dq->sql());
+		$this->assertContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+			$dq->sql());
 	}
 
-	function testRelationReturn() {
+	public function testRelationReturn() {
 		$dq = new DataQuery('DataQueryTest_C');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestA'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestAs'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('ManyTestAs'), 'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestA'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestAs'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('ManyTestAs'),
+			'DataQuery::applyRelation should return the name of the related object.');
 
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestB'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestBs'), 'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'), 'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestB'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestBs'),
+			'DataQuery::applyRelation should return the name of the related object.');
+		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'),
+			'DataQuery::applyRelation should return the name of the related object.');
 	}
 }
 

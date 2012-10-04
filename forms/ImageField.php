@@ -5,13 +5,15 @@
  * 
  * <b>Usage</b>
  * 
- * If you want to upload all assets from this field to a given folder you can define the folder in 2 ways. Either in the constructor or as a method on the field
+ * If you want to upload all assets from this field to a given folder you can define the folder in 2 ways. Either in
+ * the constructor or as a method on the field
  * 
  * <code>
  * $myField = new ImageField("myName", "Upload image below", null, null, null, "myFolder");
  * </code>
  * 
- * Will upload images into the assets/myFolder folder. If that folder does not exist it will create it for you. You can also define it as a method
+ * Will upload images into the assets/myFolder folder. If that folder does not exist it will create it for you. You can
+ * also define it as a method
  * 
  * <code>
  * $myField = new ImageField("myName");
@@ -47,7 +49,8 @@ class ImageField extends FileIFrameField {
 	public function EditFileForm() {
 		Deprecation::notice('3.0', 'Use UploadField', Deprecation::SCOPE_CLASS);
 
-		$filter = create_function('$item', 'return (in_array("Folder", ClassInfo::ancestry($item->ClassName)) || in_array("Image", ClassInfo::ancestry($item->ClassName)));');
+		$filter = create_function('$item', 'return (in_array("Folder", ClassInfo::ancestry($item->ClassName)) ||'
+			. ' in_array("Image", ClassInfo::ancestry($item->ClassName)));');
 		
 		$form = parent::EditFileForm();
 		$form->Fields()->dataFieldByName('ExistingFile')->setFilterFunction($filter);

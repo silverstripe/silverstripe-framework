@@ -95,7 +95,7 @@ class Upload extends Controller {
 	 * @param $folderPath string Folder path relative to /assets
 	 * @return Boolean|string Either success or error-message.
 	 */
-	function load($tmpFile, $folderPath = false) {
+	public function load($tmpFile, $folderPath = false) {
 		$this->clearErrors();
 		
 		if(!$folderPath) $folderPath = self::$uploads_folder;
@@ -106,7 +106,8 @@ class Upload extends Controller {
 		}
 		
 		if(!is_array($tmpFile)) {
-			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
+			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype",
+				E_USER_ERROR);
 		}
 		
 		if(!$tmpFile['size']) {
@@ -152,7 +153,9 @@ class Upload extends Controller {
 			} else {
 				$relativeFilePath .= '_'.$i;
 			}
-			if($oldFilePath == $relativeFilePath && $i > 2) user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
+			if($oldFilePath == $relativeFilePath && $i > 2) {
+				user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
+			}
 		}
 
 		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$relativeFilePath")) {
@@ -470,7 +473,8 @@ class Upload_Validator {
 		if(!isset($pathInfo['extension'])) {
 			return in_array('', $this->allowedExtensions, true);
 		} else {
-			return (!count($this->allowedExtensions) || in_array(strtolower($pathInfo['extension']), $this->allowedExtensions));
+			return (!count($this->allowedExtensions)
+				|| in_array(strtolower($pathInfo['extension']), $this->allowedExtensions));
 		}
 	}	
 	

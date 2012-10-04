@@ -1,7 +1,7 @@
 <?php
 /**
- * A DataFormatter object handles transformation of data from SilverStripe model objects to a particular output format, and vice versa.
- * This is most commonly used in developing RESTful APIs.
+ * A DataFormatter object handles transformation of data from SilverStripe model objects to a particular output
+ * format, and vice versa.  This is most commonly used in developing RESTful APIs.
  * 
  * @package framework
  * @subpackage formatters
@@ -88,7 +88,7 @@ abstract class DataFormatter extends Object {
 	 * @param string $extension
 	 * @return DataFormatter
 	 */
-	static function for_extension($extension) {
+	public static function for_extension($extension) {
 		$classes = ClassInfo::subclassesFor("DataFormatter");
 		array_shift($classes);
 		$sortedClasses = array();
@@ -110,7 +110,7 @@ abstract class DataFormatter extends Object {
 	 * @param array $extensions
 	 * @return DataFormatter
 	 */
-	static function for_extensions($extensions) {
+	public static function for_extensions($extensions) {
 		foreach($extensions as $extension) {
 			if($formatter = self::for_extension($extension)) return $formatter;
 		}
@@ -124,7 +124,7 @@ abstract class DataFormatter extends Object {
 	 * @param string $mimeType
 	 * @return DataFormatter
 	 */
-	static function for_mimetype($mimeType) {
+	public static function for_mimetype($mimeType) {
 		$classes = ClassInfo::subclassesFor("DataFormatter");
 		array_shift($classes);
 		$sortedClasses = array();
@@ -148,7 +148,7 @@ abstract class DataFormatter extends Object {
 	 * @param array $mimetypes
 	 * @return DataFormatter
 	 */
-	static function for_mimetypes($mimetypes) {
+	public static function for_mimetypes($mimetypes) {
 		foreach($mimetypes as $mimetype) {
 			if($formatter = self::for_mimetype($mimetype)) return $formatter;
 		}
@@ -247,7 +247,9 @@ abstract class DataFormatter extends Object {
 		if(is_array($this->customFields)) {
 			foreach($this->customFields as $fieldName) {
 				// @todo Possible security risk by making methods accessible - implement field-level security
-				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
+				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) {
+					$dbFields[$fieldName] = $fieldName; 
+				}
 			}
 		} else {
 			// by default, all database fields are selected
@@ -257,7 +259,9 @@ abstract class DataFormatter extends Object {
 		if(is_array($this->customAddFields)) {
 			foreach($this->customAddFields as $fieldName) {
 				// @todo Possible security risk by making methods accessible - implement field-level security
-				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
+				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) {
+					$dbFields[$fieldName] = $fieldName; 
+				}
 			}
 		}
 		
@@ -274,20 +278,20 @@ abstract class DataFormatter extends Object {
 	/** 
 	 * Return an array of the extensions that this data formatter supports
 	 */
-	abstract function supportedExtensions();
+	abstract public function supportedExtensions();
 	
-	abstract function supportedMimeTypes();
+	abstract public function supportedMimeTypes();
 	
 	
 	/**
 	 * Convert a single data object to this format.  Return a string.
 	 */
-	abstract function convertDataObject(DataObjectInterface $do);
+	abstract public function convertDataObject(DataObjectInterface $do);
 
 	/**
 	 * Convert a data object set to this format.  Return a string.
 	 */
-	abstract function convertDataObjectSet(SS_List $set);
+	abstract public function convertDataObjectSet(SS_List $set);
 	
 	/**
 	 * @param string $strData HTTP Payload as string

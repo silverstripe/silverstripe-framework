@@ -13,7 +13,8 @@ class AdminRootController extends Controller {
 	/**
 	 * @var string
 	 * @config
-	 * The LeftAndMain child that will be used as the initial panel to display if none is selected (i.e. if you visit /admin)
+	 * The LeftAndMain child that will be used as the initial panel to display if none is selected (i.e. if you
+	 * visit /admin)
 	 */
 	static $default_panel = 'SecurityAdmin';
 
@@ -66,7 +67,7 @@ class AdminRootController extends Controller {
 		}
 	}
 
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		// If this is the final portion of the request (i.e. the URL is just /admin), direct to the default panel
 		if ($request->allParsed()) {
 			$base = $this->config()->url_base;

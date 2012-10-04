@@ -25,13 +25,15 @@
 * 		if($this->getStreetName()) {
 * 			$manipulation['fields']["{$this->name}Name"] = $this->prepValueForDB($this->getStreetName());
 * 		} else {
-* 			$manipulation['fields']["{$this->name}Name"] = DBField::create_field('Varchar', $this->getStreetName())->nullValue();
+* 			$manipulation['fields']["{$this->name}Name"] = DBField::create_field('Varchar', $this->getStreetName())
+* 				->nullValue();
 * 		}
 * 		
 * 		if($this->getStreetNumber()) {
 * 			$manipulation['fields']["{$this->name}Number"] = $this->prepValueForDB($this->getStreetNumber());
 * 		} else {
-* 			$manipulation['fields']["{$this->name}Number"] = DBField::create_field('Int', $this->getStreetNumber())->nullValue();
+* 			$manipulation['fields']["{$this->name}Number"] = DBField::create_field('Int', $this->getStreetNumber())
+* 				->nullValue();
 * 		}
 * 	}
 * 	
@@ -121,14 +123,14 @@ interface CompositeDBField {
 	 *  Set to FALSE if you are initializing this field after construction, rather
 	 *  than setting a new value.
 	 */
-	function setValue($value, $record = null, $markChanged = true);
+	public function setValue($value, $record = null, $markChanged = true);
 	
 	/**
 	 * Used in constructing the database schema.
 	 * Add any custom properties defined in {@link $composite_db}.
 	 * Should make one or more calls to {@link DB::requireField()}.
 	 */
-	//abstract function requireField();
+	//abstract public function requireField();
 	
 	/**
 	 * Add the custom internal values to an INSERT or UPDATE
@@ -143,7 +145,7 @@ interface CompositeDBField {
 	 * 
 	 * @param array $manipulation
 	 */
-	function writeToManipulation(&$manipulation);
+	public function writeToManipulation(&$manipulation);
 	
 	/**
 	 * Add all columns which are defined through {@link requireField()}
@@ -153,14 +155,14 @@ interface CompositeDBField {
 	 * 
 	 * @param SQLQuery $query
 	 */
-	function addToQuery(&$query);
+	public function addToQuery(&$query);
 	
 	/**
 	 * Return array in the format of {@link $composite_db}.
 	 * Used by {@link DataObject->hasOwnDatabaseField()}.
 	 * @return array
 	 */
-	function compositeDatabaseFields();
+	public function compositeDatabaseFields();
 	
 	/**
 	 * Determines if the field has been changed since its initialization.
@@ -169,7 +171,7 @@ interface CompositeDBField {
 	 * 
 	 * @return boolean
 	 */
-	function isChanged();
+	public function isChanged();
 	
 	/**
 	 * Determines if any of the properties in this field have a value,
@@ -177,6 +179,6 @@ interface CompositeDBField {
 	 * 
 	 * @return boolean
 	 */
-	function exists();
+	public function exists();
 	
 }

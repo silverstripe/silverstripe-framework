@@ -13,11 +13,12 @@ class MemberImportForm extends Form {
 	 */
 	protected $group;
 	
-	function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
+	public function __construct($controller, $name, $fields = null, $actions = null, $validator = null) {
 		if(!$fields) {
 			$helpHtml = _t(
 				'MemberImportForm.Help1', 
-				'<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+				'<p>Import users in <em>CSV format</em> (comma-separated values).'
+				. ' <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
 			);
 			$helpHtml .= _t(
 				'MemberImportForm.Help2', 
@@ -25,8 +26,10 @@ class MemberImportForm extends Form {
 	<h4>Advanced usage</h4>
 	<ul>
 	<li>Allowed columns: <em>%s</em></li>
-	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>
-	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>
+	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from
+	the imported file.</li>
+	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,
+	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>
 	</ul>
 </div>');
 			
@@ -47,11 +50,11 @@ class MemberImportForm extends Form {
 			$fileField->getValidator()->setAllowedExtensions(array('csv'));
 		}
 		
-		if(!$actions) $actions = new FieldList(
-			$importAction = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'))
-		);
-
-		$importAction->addExtraClass('ss-ui-button');
+		if(!$actions) {
+			$action = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'));
+			$action->addExtraClass('ss-ui-button');
+			$actions = new FieldList($action);
+		}
 
 		if(!$validator) $validator = new RequiredFields('CsvFile');
 		
@@ -64,7 +67,7 @@ class MemberImportForm extends Form {
 		$this->addExtraClass('import-form');
 	}
 	
-	function doImport($data, $form) {
+	public function doImport($data, $form) {
 		$loader = new MemberCsvBulkLoader();
 		
 		// optionally set group relation
@@ -97,14 +100,14 @@ class MemberImportForm extends Form {
 	/**
 	 * @param $group Group
 	 */
-	function setGroup($group) {
+	public function setGroup($group) {
 		$this->group = $group;
 	}
 	
 	/**
 	 * @return Group
 	 */
-	function getGroup($group) {
+	public function getGroup($group) {
 		return $this->group;
 	}
 }

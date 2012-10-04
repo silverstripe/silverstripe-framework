@@ -10,7 +10,7 @@ class ClassLoaderTest extends SapphireTest {
 	protected $base;
 	protected $manifest;
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->baseManifest1 = dirname(__FILE__) . '/fixtures/classmanifest';
@@ -19,7 +19,7 @@ class ClassLoaderTest extends SapphireTest {
 		$this->testManifest2 = new SS_ClassManifest($this->baseManifest2, false, true, false);
 	}
 
-	function testExclusive() {
+	public function testExclusive() {
 		$loader = new SS_ClassLoader();
 		
 		$loader->pushManifest($this->testManifest1);
@@ -36,14 +36,13 @@ class ClassLoaderTest extends SapphireTest {
 		$this->assertTrue((bool)$loader->getItemPath('OtherClassA'));
 	}
 
-	function testGetItemPath() {
-		$ds = DIRECTORY_SEPARATOR;
+	public function testGetItemPath() {
 		$loader = new SS_ClassLoader();
 		
 		$loader->pushManifest($this->testManifest1);
 		$this->assertEquals(
-			$this->baseManifest1 . $ds . 'module' . $ds . 'classes' . $ds . 'ClassA.php',
-			$loader->getItemPath('ClassA')
+			realpath($this->baseManifest1 . '/module/classes/ClassA.php'),
+			realpath($loader->getItemPath('ClassA'))
 		);
 		$this->assertEquals(
 			false,
@@ -64,8 +63,8 @@ class ClassLoaderTest extends SapphireTest {
 			$loader->getItemPath('UnknownClass')
 		);
 		$this->assertEquals(
-			$this->baseManifest2 . $ds . 'module' . $ds . 'classes' . $ds . 'OtherClassA.php',
-			$loader->getItemPath('OtherClassA')
+			realpath($this->baseManifest2 . '/module/classes/OtherClassA.php'),
+			realpath($loader->getItemPath('OtherClassA'))
 		);
 	}
 }

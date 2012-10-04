@@ -9,12 +9,12 @@
  */
 class ObjectTest extends SapphireTest {
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		Injector::inst()->unregisterAllObjects();
 	}
 	
-	function testHasmethodBehaviour() {
+	public function testHasmethodBehaviour() {
 		$obj = new ObjectTest_ExtendTest();
 
 		$this->assertTrue($obj->hasMethod('extendableMethod'), "Extension method found in original spelling");
@@ -52,21 +52,26 @@ class ObjectTest extends SapphireTest {
 		
 	}
 	
-	function testSingletonCreation() {
+	public function testSingletonCreation() {
 		$myObject = singleton('ObjectTest_MyObject');
-		$this->assertEquals($myObject->class, 'ObjectTest_MyObject', 'singletons are creating a correct class instance');
-		$this->assertEquals(get_class($myObject), 'ObjectTest_MyObject', 'singletons are creating a correct class instance');
+		$this->assertEquals($myObject->class, 'ObjectTest_MyObject',
+			'singletons are creating a correct class instance');
+		$this->assertEquals(get_class($myObject), 'ObjectTest_MyObject',
+			'singletons are creating a correct class instance');
 		
 		$mySubObject = singleton('ObjectTest_MySubObject');
-		$this->assertEquals($mySubObject->class, 'ObjectTest_MySubObject', 'singletons are creating a correct subclass instance');
-		$this->assertEquals(get_class($mySubObject), 'ObjectTest_MySubObject', 'singletons are creating a correct subclass instance');
+		$this->assertEquals($mySubObject->class, 'ObjectTest_MySubObject',
+			'singletons are creating a correct subclass instance');
+		$this->assertEquals(get_class($mySubObject), 'ObjectTest_MySubObject',
+			'singletons are creating a correct subclass instance');
 		
 		$myFirstObject = singleton('ObjectTest_MyObject');
 		$mySecondObject = singleton('ObjectTest_MyObject');
-		$this->assertTrue($myFirstObject === $mySecondObject, 'singletons are using the same object on subsequent calls');
+		$this->assertTrue($myFirstObject === $mySecondObject,
+			'singletons are using the same object on subsequent calls');
 	}
 	
-	function testStaticGetterMethod() {
+	public function testStaticGetterMethod() {
 		$obj = singleton('ObjectTest_MyObject');
 		$this->assertEquals(
 			ObjectTest_MyObject::$mystaticProperty,
@@ -75,7 +80,7 @@ class ObjectTest extends SapphireTest {
 		);
 	}
 	
-	function testStaticInheritanceGetters() {
+	public function testStaticInheritanceGetters() {
 		$obj = singleton('ObjectTest_MyObject');
 		$subObj = singleton('ObjectTest_MyObject');
 		$this->assertEquals(
@@ -85,7 +90,7 @@ class ObjectTest extends SapphireTest {
 		);
 	}
 	
-	function testStaticSettingOnSingletons() {
+	public function testStaticSettingOnSingletons() {
 		$singleton1 = singleton('ObjectTest_MyObject');
 		$singleton2 = singleton('ObjectTest_MyObject');
 		$singleton1->set_stat('mystaticProperty', 'changed');
@@ -96,7 +101,7 @@ class ObjectTest extends SapphireTest {
 		);
 	}
 	
-	function testStaticSettingOnInstances() {
+	public function testStaticSettingOnInstances() {
 		$instance1 = new ObjectTest_MyObject();
 		$instance2 = new ObjectTest_MyObject();
 		$instance1->set_stat('mystaticProperty', 'changed');
@@ -196,25 +201,30 @@ class ObjectTest extends SapphireTest {
 		);
 		$this->assertTrue(
 			singleton('ObjectTest_ExtensionTest')->hasExtension('ObjectTest_ExtendTest1'),
-			"Extensions are detected when set on Object::\$extensions on instance hasExtension() without case-sensitivity"
+			"Extensions are detected when set on Object::\$extensions on instance hasExtension() without"
+				. " case-sensitivity"
 		);
 		
 		// ObjectTest_ExtendTest2 is built in via $extensions (with parameters)
 		$this->assertTrue(
 			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest2'),
-			"Extensions are detected with static has_extension() when set on Object::\$extensions with additional parameters"
+			"Extensions are detected with static has_extension() when set on Object::\$extensions with"
+				. " additional parameters"
 		);
 		$this->assertTrue(
 			singleton('ObjectTest_ExtensionTest')->hasExtension('ObjectTest_ExtendTest2'),
-			"Extensions are detected with instance hasExtension() when set on Object::\$extensions with additional parameters"
+			"Extensions are detected with instance hasExtension() when set on Object::\$extensions with"
+				. " additional parameters"
 		);
 		$this->assertFalse(
 			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3'),
-			"Other extensions available in the system are not present unless explicitly added to this object when checking through has_extension()"
+			"Other extensions available in the system are not present unless explicitly added to this object"
+				. " when checking through has_extension()"
 		);
 		$this->assertFalse(
 			singleton('ObjectTest_ExtensionTest')->hasExtension('ObjectTest_ExtendTest3'),
-			"Other extensions available in the system are not present unless explicitly added to this object when checking through instance hasExtension()"
+			"Other extensions available in the system are not present unless explicitly added to this object"
+				. " when checking through instance hasExtension()"
 		);
 		
 		// ObjectTest_ExtendTest3 is added manually
@@ -345,8 +355,10 @@ class ObjectTest extends SapphireTest {
 		);
 		// Nested array
 		$this->assertEquals(
-			array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')),
-			Object::parse_class_spec("Enum(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')")
+			array('Enum',array(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')),
+				'Unsubmitted')),
+			Object::parse_class_spec(
+				"Enum(array('Accepted', 'Pending', 'Declined', array('UnsubmittedA','UnsubmittedB')), 'Unsubmitted')")
 		);
 	}
 }
@@ -356,22 +368,22 @@ class ObjectTest extends SapphireTest {
  */
 
 class ObjectTest_T1A extends Object {
-	function testMethod() {
+	public function testMethod() {
 		return true;
 	}
-	function otherMethod() {
+	public function otherMethod() {
 		return true;
 	}
 }
 
 class ObjectTest_T1B extends Object {
-	function someMethod() {
+	public function someMethod() {
 		return true;
 	}
 }
 
 class ObjectTest_T1C extends Object {
-	function t1cMethod() {
+	public function t1cMethod() {
 		return true;
 	}
 }
@@ -380,7 +392,7 @@ class ObjectTest_T2 extends Object {
 	protected $failover;
 	protected $failoverArr = array();
 	
-	function __construct() {
+	public function __construct() {
 		$this->failover = new ObjectTest_T1A();
 		$this->failoverArr[0] = new ObjectTest_T1B();
 		$this->failoverArr[1] = new ObjectTest_T1C();
@@ -388,7 +400,7 @@ class ObjectTest_T2 extends Object {
 		parent::__construct();
 	}
 
-	function defineMethods() {
+	public function defineMethods() {
 		$this->addWrapperMethod('Wrapping', 'wrappedMethod');
 		
 		$this->addMethodsFrom('failover');
@@ -398,11 +410,11 @@ class ObjectTest_T2 extends Object {
 		$this->createMethod('testCreateMethod', 'return "created";');
 	}
 	
-	function wrappedMethod($val) {
+	public function wrappedMethod($val) {
 		return $val;		
 	}
 	
-	function normalMethod() {
+	public function normalMethod() {
 		return true;
 	}
 	

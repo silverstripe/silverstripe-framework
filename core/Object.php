@@ -130,7 +130,7 @@ abstract class Object {
 	 * Arguments are always strings, although this is a quirk of the current implementation rather
 	 * than something that can be relied upon.
 	 */
-	static function create_from_string($classSpec, $firstArg = null) {
+	public static function create_from_string($classSpec, $firstArg = null) {
 		if(!isset(self::$_cache_inst_args[$classSpec.$firstArg])) {
 			// an $extension value can contain parameters as a string,
 			// e.g. "Versioned('Stage','Live')"
@@ -155,7 +155,7 @@ abstract class Object {
 	 * Parses a class-spec, such as "Versioned('Stage','Live')", as passed to create_from_string().
 	 * Returns a 2-elemnent array, with classname and arguments
 	 */
-	static function parse_class_spec($classSpec) {
+	public static function parse_class_spec($classSpec) {
 		$tokens = token_get_all("<?php $classSpec");
 		$class = null;
 		$args = array();
@@ -176,9 +176,14 @@ abstract class Object {
 				case T_CONSTANT_ENCAPSED_STRING:
 					$argString = $token[1];
 					switch($argString[0]) {
-						case '"': $argString = stripcslashes(substr($argString,1,-1)); break;
-						case "'": $argString = str_replace(array("\\\\", "\\'"),array("\\", "'"), substr($argString,1,-1)); break;
-						default: throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
+					case '"':
+						$argString = stripcslashes(substr($argString,1,-1));
+						break;
+					case "'":
+						$argString = str_replace(array("\\\\", "\\'"),array("\\", "'"), substr($argString,1,-1));
+						break;
+					default:
+						throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
 					}
 					$bucket[] = $argString;
 					break;
@@ -271,14 +276,15 @@ abstract class Object {
 	}
 
 	/**
-	 * Get the value of a static property of a class, even in that property is declared protected (but not private), without any inheritance,
-	 * merging or parent lookup if it doesn't exist on the given class.
+	 * Get the value of a static property of a class, even in that property is declared protected (but not private),
+	 * without any inheritance, merging or parent lookup if it doesn't exist on the given class.
 	 *
 	 * @static
 	 * @param $class - The class to get the static from
 	 * @param $name - The property to get from the class
 	 * @param null $default - The value to return if property doesn't exist on class
-	 * @return any - The value of the static property $name on class $class, or $default if that property is not defined
+	 * @return any - The value of the static property $name on class $class, or $default if that property is not
+	 *               defined
 	 */
 	public static function static_lookup($class, $name, $default = null) {
 		if (is_subclass_of($class, 'Object')) {
@@ -288,7 +294,8 @@ abstract class Object {
 			}
 			return $default;
 		} else {
-			// TODO: This gets set once, then not updated, so any changes to statics after this is called the first time for any class won't be exposed
+			// TODO: This gets set once, then not updated, so any changes to statics after this is called the first
+			// time for any class won't be exposed
 			static $static_properties = array();
 
 			if (!isset($static_properties[$class])) {
@@ -307,7 +314,9 @@ abstract class Object {
 					$static_properties[$parent] = $reflection->getStaticProperties();
 				}
 
-				if (!isset($static_properties[$parent][$name]) || $static_properties[$parent][$name] !== $value) return $value;
+				if (!isset($static_properties[$parent][$name]) || $static_properties[$parent][$name] !== $value) {
+					return $value;
+				}
 			}
 		}
 
@@ -321,8 +330,8 @@ abstract class Object {
 	 * up the extra static var chain until it reaches the top, or it reaches a replacement static.
 	 *
 	 * If any extra values are discovered, they are then merged with the default PHP static values, or in some cases
-	 * completely replace the default PHP static when you set $replace = true, and do not define extra data on any child
-	 * classes
+	 * completely replace the default PHP static when you set $replace = true, and do not define extra data on any
+	 * child classes
 	 *
 	 * @param string $class
 	 * @param string $name the property name
@@ -394,7 +403,7 @@ abstract class Object {
 	 * Documentation from http://php.net/array_merge_recursive:
 	 * If the input arrays have the same string keys, then the values for these keys are merged together 
 	 * into an array, and this is done recursively, so that if one of the values is an array itself, 
-	 * the function will merge it with a corresponding entry in another array too. 
+	 * the function will merge it with a corresponding entry in another array too.
 	 * If, however, the arrays have the same numeric key, the later value will not overwrite the original value, 
 	 * but will be appended. 
 	 *
@@ -447,11 +456,13 @@ abstract class Object {
 		}
 		$extensionClass = $matches[1];
 		if(!class_exists($extensionClass)) {
-			user_error(sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass), E_USER_ERROR);
+			user_error(sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass),
+				E_USER_ERROR);
 		}
 		
 		if(!is_subclass_of($extensionClass, 'Extension')) {
-			user_error(sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension', $extensionClass), E_USER_ERROR);
+			user_error(sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension',
+				$extensionClass), E_USER_ERROR);
 		}
 		
 		// unset some caches
@@ -529,7 +540,7 @@ abstract class Object {
 		}
 	}
 	
-	// -----------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
 
 	private static $extension_sources = array();
 
@@ -560,7 +571,8 @@ abstract class Object {
 				$sources[] = $extensionClass;
 
 				if(!ClassInfo::has_method_from($extensionClass, 'add_to_class', 'Extension')) {
-					Deprecation::notice('3.1.0', "add_to_class deprecated on $extensionClass. Use get_extra_config instead");
+					Deprecation::notice('3.1.0', 
+						"add_to_class deprecated on $extensionClass. Use get_extra_config instead");
 				}
 
 				call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
@@ -582,7 +594,8 @@ abstract class Object {
 
 		foreach(ClassInfo::ancestry(get_called_class()) as $class) {
 			if(in_array($class, self::$unextendable_classes)) continue;
-			$extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
+			$extensions = Config::inst()->get($class, 'extensions',
+				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
 
 			if($extensions) foreach($extensions as $extension) {
 				$instance = self::create_from_string($extension);
@@ -638,8 +651,8 @@ abstract class Object {
 						);
 					} else {
 						throw new Exception (
-							"Object->__call(): $this->class cannot pass control to $config[property]($config[index])." .
-							' Perhaps this object was mistakenly destroyed?'
+							"Object->__call(): $this->class cannot pass control to $config[property]($config[index])."
+								. ' Perhaps this object was mistakenly destroyed?'
 						);
 					}
 				
@@ -652,7 +665,8 @@ abstract class Object {
 				
 				default :
 					throw new Exception (
-						"Object->__call(): extra method $method is invalid on $this->class:" . var_export($config, true)
+						"Object->__call(): extra method $method is invalid on $this->class:"
+							. var_export($config, true)
 					);
 			}
 		} else {
@@ -662,7 +676,7 @@ abstract class Object {
 		}
 	}
 	
-	// -----------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * Return TRUE if a method exists on this object
@@ -780,7 +794,8 @@ abstract class Object {
 	 *
 	 * @param string $method the method name
 	 * @param string $code the PHP code - arguments will be in an array called $args, while you can access this object
-	 *        by using $obj. Note that you cannot call protected methods, as the method is actually an external function
+	 *        by using $obj. Note that you cannot call protected methods, as the method is actually an external
+	 *        function
 	 */
 	protected function createMethod($method, $code) {
 		self::$extra_methods[$this->class][strtolower($method)] = array (
@@ -788,7 +803,7 @@ abstract class Object {
 		);
 	}
 	
-	// -----------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * @see Object::get_static()
@@ -818,7 +833,7 @@ abstract class Object {
 		Deprecation::notice('2.4', 'Use a custom static on your object instead.');
 	}
 	
-	// -----------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * Return true if this object "exists" i.e. has a sensible value
@@ -856,7 +871,7 @@ abstract class Object {
 		return $this->class;
 	}
 	
-	// -----------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * Calls a method if available on both this object and all applied {@link Extensions}, and then attempts to merge
@@ -945,7 +960,7 @@ abstract class Object {
 		return $this->extension_instances;
 	}
 	
-	// -----------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * Cache the results of an instance method in this object to a file, or if it is already cache return the cached

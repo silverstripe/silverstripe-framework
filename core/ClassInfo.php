@@ -11,14 +11,14 @@ class ClassInfo {
 	/**
 	 * Wrapper for classes getter.
 	 */
-	static function allClasses() {
+	public static function allClasses() {
 		return SS_ClassLoader::instance()->getManifest()->getClasses();
 	}
 
 	/**
 	 * @todo Improve documentation
 	 */
-	static function exists($class) {
+	public static function exists($class) {
 		return SS_ClassLoader::instance()->classExists($class);
 	}
 
@@ -35,7 +35,7 @@ class ClassInfo {
 	/**
 	 * @todo Move this to SS_Database or DB
 	 */
-	static function hasTable($class) {
+	public static function hasTable($class) {
 		if(DB::isActive()) {
 			// Cache the list of all table names to reduce on DB traffic
 			if(empty(self::$_cache_all_tables)) {
@@ -49,7 +49,7 @@ class ClassInfo {
 		}
 	}
 	
-	static function reset_db_cache() {
+	public static function reset_db_cache() {
 		self::$_cache_all_tables = null;
 		self::$_cache_ancestry = array();
 	}
@@ -58,7 +58,7 @@ class ClassInfo {
 	 * Returns the manifest of all classes which are present in the database.
 	 * @param string $class Class name to check enum values for ClassName field
 	 */
-	static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
+	public static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
 		$classes = DB::getConn()->enumValuesForField($class, 'ClassName');
 		if (!$includeUnbacked) $classes = array_filter($classes, array('ClassInfo', 'exists'));
 		return $classes;
@@ -172,14 +172,14 @@ class ClassInfo {
 	 * @return array A self-keyed array of class names. Note that this is only available with Silverstripe
 	 * classes and not built-in PHP classes.
 	 */
-	static function implementorsOf($interfaceName) {
+	public static function implementorsOf($interfaceName) {
 		return SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName);
 	}
 
 	/**
 	 * Returns true if the given class implements the given interface
 	 */
-	static function classImplements($className, $interfaceName) {
+	public static function classImplements($className, $interfaceName) {
 		return in_array($className, SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName));
 	}
 
@@ -201,7 +201,7 @@ class ClassInfo {
 	 * @param string $filePath Path to a PHP file (absolute or relative to webroot)
 	 * @return array
 	 */
-	static function classes_for_file($filePath) {
+	public static function classes_for_file($filePath) {
 		$absFilePath    = Director::getAbsFile($filePath);
 		$matchedClasses = array();
 		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
@@ -222,7 +222,7 @@ class ClassInfo {
 	 * @param string $folderPath Relative or absolute folder path
 	 * @return array Array of class names
 	 */
-	static function classes_for_folder($folderPath) {
+	public static function classes_for_folder($folderPath) {
 		$absFolderPath  = Director::getAbsFile($folderPath);
 		$matchedClasses = array();
 		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
@@ -236,7 +236,7 @@ class ClassInfo {
 
 	private static $method_from_cache = array();
 
-	static function has_method_from($class, $method, $compclass) {
+	public static function has_method_from($class, $method, $compclass) {
 		if (!isset(self::$method_from_cache[$class])) self::$method_from_cache[$class] = array();
 
 		if (!array_key_exists($method, self::$method_from_cache[$class])) {

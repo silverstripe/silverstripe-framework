@@ -9,7 +9,7 @@ class DirectorTest extends SapphireTest {
 
 	protected static $originalRequestURI;
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 
 		// Hold the original request URI once so it doesn't get overwritten
@@ -26,7 +26,7 @@ class DirectorTest extends SapphireTest {
 		));
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		// TODO Remove director rule, currently API doesnt allow this
 		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
@@ -60,7 +60,8 @@ class DirectorTest extends SapphireTest {
 		Director::setBaseURL('/relativebase/');
 		$this->assertEquals('/relativebase/', Director::baseURL());
 		$this->assertEquals(Director::protocolAndHost() . '/relativebase/', Director::absoluteBaseURL());
-		$this->assertEquals(Director::protocolAndHost() . '/relativebase/subfolder/test', Director::absoluteURL('subfolder/test'));
+		$this->assertEquals(Director::protocolAndHost() . '/relativebase/subfolder/test',
+			Director::absoluteURL('subfolder/test'));
 
 		// absolute base URLs - you should end them in a /
 		Director::setBaseURL('http://www.example.org/');
@@ -72,7 +73,8 @@ class DirectorTest extends SapphireTest {
 		Director::setBaseURL(false);
 		$this->assertEquals(BASE_URL.'/', Director::baseURL());
 		$this->assertEquals(Director::protocolAndHost().BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
-		$this->assertEquals(Director::protocolAndHost().BASE_URL . '/subfolder/test', Director::absoluteURL('subfolder/test'));
+		$this->assertEquals(Director::protocolAndHost().BASE_URL . '/subfolder/test',
+			Director::absoluteURL('subfolder/test'));
 	}
 	
 	/**
@@ -155,18 +157,23 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
-		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'), null, null, null, null, array('somekey' => 'sometestcookievalue'));
+		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'),
+			null, null, null, null, array('somekey' => 'sometestcookievalue'));
 
-		$this->assertEquals('getvalue', $_GET['somekey'], '$_GET reset to original value after Director::test()');
-		$this->assertEquals('postvalue', $_POST['somekey'], '$_POST reset to original value after Director::test()');
-		$this->assertEquals('cookievalue', $_COOKIE['somekey'], '$_COOKIE reset to original value after Director::test()');
+		$this->assertEquals('getvalue', $_GET['somekey'],
+			'$_GET reset to original value after Director::test()');
+		$this->assertEquals('postvalue', $_POST['somekey'],
+			'$_POST reset to original value after Director::test()');
+		$this->assertEquals('cookievalue', $_COOKIE['somekey'],
+			'$_COOKIE reset to original value after Director::test()');
 	}
 	
 	public function testTestRequestCarriesGlobals() {
 		$fixture = array('somekey' => 'sometestvalue');
 		foreach(array('get', 'post') as $method) {
 			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
-				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method)) . '?' . http_build_query($fixture);
+				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method))
+					. '?' . http_build_query($fixture);
 				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
 
 				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
@@ -175,7 +182,7 @@ class DirectorTest extends SapphireTest {
 		}
 	}
 	
-	function testURLParam() {
+	public function testURLParam() {
 		// 2.4 only
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
@@ -189,7 +196,7 @@ class DirectorTest extends SapphireTest {
 		Deprecation::restore_settings($originalDeprecation);
 	}
 	
-	function testURLParams() {
+	public function testURLParams() {
 		// 2.4 only
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
@@ -213,7 +220,7 @@ class DirectorTest extends SapphireTest {
 	 * Tests that additional parameters specified in the routing table are 
 	 * saved in the request 
 	 */
-	function testRouteParams() {
+	public function testRouteParams() {
 		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
 		
 		$this->assertEquals(
@@ -228,7 +235,7 @@ class DirectorTest extends SapphireTest {
 		);
 	}
 
-	function testForceSSLProtectsEntireSite() {
+	public function testForceSSLProtectsEntireSite() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
 		$output = Director::forceSSL();
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
@@ -238,19 +245,19 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
-	function testForceSSLOnTopLevelPagePattern() {
+	public function testForceSSLOnTopLevelPagePattern() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
 		$output = Director::forceSSL(array('/^admin/'));
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
-	function testForceSSLOnSubPagesPattern() {
+	public function testForceSSLOnSubPagesPattern() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'Security/login';
 		$output = Director::forceSSL(array('/^Security/'));
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}
 
-	function testForceSSLWithPatternDoesNotMatchOtherPages() {
+	public function testForceSSLWithPatternDoesNotMatchOtherPages() {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'normal-page';
 		$output = Director::forceSSL(array('/^admin/'));
 		$this->assertFalse($output);

@@ -22,7 +22,7 @@
 $experimental-support-for-svg: true; 
 
 
-$gf_colour_gradient_dark: darken($color-base, 8%);
+$gf_colour_gradient_dark: darken($color-base, 8%); 
 $gf_colour_header_border: $gf_colour_gradient_dark;
 $gf_colour_subheader: saturate(lighten($color-base, 15%),5%);
 $gf_colour_border: rgba(0,0,0,.1);
@@ -75,6 +75,15 @@ $gf_grid_x:	16px;
 				float: right;
 				margin-left:5px;			
 				font-size: $gf_grid_y*1.2;
+			}
+
+			.pagination-records-number
+			{
+				font-size: 1.0em;
+				padding: 6px 3px 6px 0;
+				color: $color-text-light;
+				@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+				font-weight: normal;
 			}
 		}
 		.left { 
@@ -327,7 +336,7 @@ $gf_grid_x:	16px;
 				padding: 5px;
 				border-right: 1px solid $gf_colour_border;
 				
-				div {
+				div { 
 					&.fieldgroup,&.fieldgroup-field {
 						width: 100%;
 						position:relative;
@@ -338,7 +347,6 @@ $gf_grid_x:	16px;
 						&.filter-buttons{
 							min-width:0;
 							div{
-								@extend .col-buttons;
 								width:auto;
 								display:inline;
 							}

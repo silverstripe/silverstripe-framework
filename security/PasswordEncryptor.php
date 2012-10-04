@@ -21,7 +21,7 @@ abstract class PasswordEncryptor {
 	/**
 	 * @return Array Map of encryptor code to the used class.
 	 */
-	static function get_encryptors() {
+	public static function get_encryptors() {
 		return Config::inst()->get('PasswordEncryptor', 'encryptors');
 	}
 	
@@ -35,7 +35,7 @@ abstract class PasswordEncryptor {
 	 * 	{@link Member->PasswordEncryption} property.
 	 * @param String $class Classname of a {@link PasswordEncryptor} subclass
 	 */
-	static function register($code, $class) {
+	public static function register($code, $class) {
 		Deprecation::notice('3.0', 'Use the Config system to register Password encryptors');
 		self::$encryptors[$code] = $class;
 	}
@@ -43,7 +43,7 @@ abstract class PasswordEncryptor {
 	/**
 	 * @param String $code Unique lookup.
 	 */
-	static function unregister($code) {
+	public static function unregister($code) {
 		Deprecation::notice('3.0', 'Use the Config system to unregister Password encryptors');
 		if(isset(self::$encryptors[$code])) unset(self::$encryptors[$code]);
 	}
@@ -53,7 +53,7 @@ abstract class PasswordEncryptor {
 	 * @return PasswordEncryptor
 	 * @throws PasswordEncryptor_NotFoundException
 	 */
-	static function create_for_algorithm($algorithm) {
+	public static function create_for_algorithm($algorithm) {
 		$encryptors = self::get_encryptors();
 		if(!isset($encryptors[$algorithm])) {
 			throw new PasswordEncryptor_NotFoundException(
@@ -86,7 +86,7 @@ abstract class PasswordEncryptor {
 	 * @param Member $member (Optional)
 	 * @return String Maximum of 512 characters.
 	 */
-	abstract function encrypt($password, $salt = null, $member = null);
+	abstract public function encrypt($password, $salt = null, $member = null);
 	
 	/**
 	 * Return a string value stored in the {@link Member->Salt} property.
@@ -97,7 +97,7 @@ abstract class PasswordEncryptor {
 	 * @param Member $member (Optional)
 	 * @return String Maximum of 50 characters
 	 */
-	function salt($password, $member = null) {
+	public function salt($password, $member = null) {
 		$generator = new RandomGenerator();
 		return substr($generator->generateHash('sha1'), 0, 50);
 	}
@@ -112,8 +112,9 @@ abstract class PasswordEncryptor {
 	 *
 	 * @deprecated 3.0 - Use PasswordEncryptor::check() instead.
 	 */
-	function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
+	public function compare($hash1, $hash2) {
+		Deprecation::notice('3.0.0',
+			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
 		return ($hash1 === $hash2);
 	}
 
@@ -123,7 +124,7 @@ abstract class PasswordEncryptor {
 	 * with flawed algorithms - see {@link PasswordEncryptor_LegacyPHPHash} and
 	 * {@link PasswordEncryptor_Blowfish}
 	 */
-	function check($hash, $password, $salt = null, $member = null) {
+	public function check($hash, $password, $salt = null, $member = null) {
 		return $hash === $this->encrypt($password, $salt, $member);
 	}
 }
@@ -171,7 +172,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 		return self::$cost;
 	}
 
-	function encrypt($password, $salt = null, $member = null) {
+	public function encrypt($password, $salt = null, $member = null) {
 		// See: http://nz.php.net/security/crypt_blowfish.php
 		// There are three version of the algorithm - y, a and x, in order
 		// of decreasing security. Attempt to use the strongest version.
@@ -192,7 +193,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 		return $encryptedPassword;
 	}
 
-	function encryptX($password, $salt) {
+	public function encryptX($password, $salt) {
 		$methodAndSalt = '$2x$' . $salt;
 		$encryptedPassword = crypt($password, $methodAndSalt);
 
@@ -214,7 +215,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 		return false;
 	}
 
-	function encryptY($password, $salt) {
+	public function encryptY($password, $salt) {
 		$methodAndSalt = '$2y$' . $salt;
 		$encryptedPassword = crypt($password, $methodAndSalt);
 
@@ -236,7 +237,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 		return false;
 	}
 
-	function encryptA($password, $salt) {
+	public function encryptA($password, $salt) {
 		if($this->checkAEncryptionLevel() == 'a') {
 			$methodAndSalt = '$2a$' . $salt;
 			$encryptedPassword = crypt($password, $methodAndSalt);
@@ -255,10 +256,14 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	 * version, depending on the version of PHP and the operating system,
 	 * so we need to test it.
 	 */
-	function checkAEncryptionLevel() {
-		// Test hashes taken from http://cvsweb.openwall.com/cgi/cvsweb.cgi/~checkout~/Owl/packages/glibc/crypt_blowfish/wrapper.c?rev=1.9.2.1;content-type=text%2Fplain
-		$xOrY = crypt("\xff\xa334\xff\xff\xff\xa3345", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi') == '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi';
-		$yOrA = crypt("\xa3", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq') == '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq';
+	public function checkAEncryptionLevel() {
+		// Test hashes taken from
+		// http://cvsweb.openwall.com/cgi/cvsweb.cgi/~checkout~/Owl/packages/glibc
+		//    /crypt_blowfish/wrapper.c?rev=1.9.2.1;content-type=text%2Fplain
+		$xOrY = crypt("\xff\xa334\xff\xff\xff\xa3345", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi')
+			== '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi';
+		$yOrA = crypt("\xa3", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq')
+			== '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq';
 
 		if($xOrY && $yOrA) {
 			return 'y';
@@ -274,12 +279,12 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	/**
 	 * self::$cost param is forced to be two digits with leading zeroes for ints 4-9
 	 */
-	function salt($password, $member = null) {
+	public function salt($password, $member = null) {
 		$generator = new RandomGenerator();
 		return sprintf('%02d', self::$cost) . '$' . substr($generator->generateHash('sha1'), 0, 22);
 	}
 
-	function check($hash, $password, $salt = null, $member = null) {
+	public function check($hash, $password, $salt = null, $member = null) {
 		if(strpos($hash, '$2y$') === 0) {
 			return $hash === $this->encryptY($password, $salt);
 		} elseif(strpos($hash, '$2a$') === 0) {
@@ -307,7 +312,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
 	/**
 	 * @param String $algorithm A PHP built-in hashing algorithm as defined by hash_algos()
 	 */
-	function __construct($algorithm) {
+	public function __construct($algorithm) {
 		if(!in_array($algorithm, hash_algos())) {
 			throw new Exception(
 				sprintf('Hash algorithm "%s" not found in hash_algos()', $algorithm)
@@ -320,11 +325,11 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
 	/**
 	 * @return string
 	 */
-	function getAlgorithm() {
+	public function getAlgorithm() {
 		return $this->algorithm;
 	}
 	
-	function encrypt($password, $salt = null, $member = null) {
+	public function encrypt($password, $salt = null, $member = null) {
 		return hash($this->algorithm, $password . $salt);
 	}
 }
@@ -340,7 +345,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
  * @subpackage security
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
-	function encrypt($password, $salt = null, $member = null) {
+	public function encrypt($password, $salt = null, $member = null) {
 		$password = parent::encrypt($password, $salt, $member);
 		
 		// Legacy fix: This shortening logic is producing unpredictable results.
@@ -351,15 +356,16 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 		return substr(base_convert($password, 16, 36), 0, 64);
 	}
 	
-	function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
+	public function compare($hash1, $hash2) {
+		Deprecation::notice('3.0.0',
+			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
 
 		// Due to flawed base_convert() floating poing precision, 
 		// only the first 10 characters are consistently useful for comparisons.
 		return (substr($hash1, 0, 10) === substr($hash2, 0, 10));
 	}
 
-	function check($hash, $password, $salt = null, $member = null) {
+	public function check($hash, $password, $salt = null, $member = null) {
 		// Due to flawed base_convert() floating poing precision, 
 		// only the first 10 characters are consistently useful for comparisons.
 		return (substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10));
@@ -373,13 +379,13 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
  * @subpackage security
  */
 class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
-	function encrypt($password, $salt = null, $member = null) {
+	public function encrypt($password, $salt = null, $member = null) {
 		return DB::query(
 			sprintf("SELECT PASSWORD('%s')", Convert::raw2sql($password))
 		)->value();
 	}
 	
-	function salt($password, $member = null) {
+	public function salt($password, $member = null) {
 		return false;
 	}
 }
@@ -391,13 +397,13 @@ class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
  * @subpackage security
  */
 class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
-	function encrypt($password, $salt = null, $member = null) {
+	public function encrypt($password, $salt = null, $member = null) {
 		return DB::query(
 			sprintf("SELECT OLD_PASSWORD('%s')", Convert::raw2sql($password))
 		)->value();
 	}
 	
-	function salt($password, $member = null) {
+	public function salt($password, $member = null) {
 		return false;
 	}
 }
@@ -411,11 +417,11 @@ class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
  * @subpackage security
  */
 class PasswordEncryptor_None extends PasswordEncryptor {
-	function encrypt($password, $salt = null, $member = null) {
+	public function encrypt($password, $salt = null, $member = null) {
 		return $password;
 	}
 	
-	function salt($password, $member = null) {
+	public function salt($password, $member = null) {
 		return false;
 	}
 }

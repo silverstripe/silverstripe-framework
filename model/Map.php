@@ -17,7 +17,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	 * @param $keyField The field to use as the key of each map entry
 	 * @param $valueField The field to use as the value of each map entry
 	 */
-	function __construct(SS_List $list, $keyField = "ID", $valueField = "Title") {
+	public function __construct(SS_List $list, $keyField = "ID", $valueField = "Title") {
 		$this->list = $list;
 		$this->keyField = $keyField;
 		$this->valueField = $valueField;
@@ -26,21 +26,21 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	/**
 	 * Set the key field for this map
 	 */
-	function setKeyField($keyField) {
+	public function setKeyField($keyField) {
 		$this->keyField = $keyField;
 	}
 
 	/**
 	 * Set the value field for this map
 	 */
-	function setValueField($valueField) {
+	public function setValueField($valueField) {
 		$this->valueField = $valueField;
 	}
 	
 	/**
 	 * Return an array equivalent to this map
 	 */
-	function toArray() {
+	public function toArray() {
 		$array = array();
 		foreach($this as $k => $v) {
 			$array[$k] = $v;
@@ -51,7 +51,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	/**
 	 * Return all the keys of this map
 	 */
-	function keys() {
+	public function keys() {
 		$output = array();
 		foreach($this as $k => $v) {
 			$output[] = $k;
@@ -62,7 +62,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	/**
 	 * Return all the values of this map
 	 */
-	function values() {
+	public function values() {
 		$output = array();
 		foreach($this as $k => $v) {
 			$output[] = $v;
@@ -73,7 +73,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	/**
 	 * Unshift an item onto the start of the map
 	 */
-	function unshift($key, $value) {
+	public function unshift($key, $value) {
 		$oldItems = $this->firstItems;
 		$this->firstItems = array($key => $value);
 		if($oldItems) $this->firstItems = $this->firstItems + $oldItems;
@@ -81,13 +81,13 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 	// ArrayAccess
 	
-	function offsetExists($key) {
+	public function offsetExists($key) {
 		if(isset($this->firstItems[$key])) return true;
 		
 		$record = $this->list->find($this->keyField, $key);
 		return $record != null;
 	}
-	function offsetGet($key) {
+	public function offsetGet($key) {
 		if(isset($this->firstItems[$key])) return $this->firstItems[$key];
 
 		$record = $this->list->find($this->keyField, $key);
@@ -98,12 +98,12 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 			return null;
 		}
 	}
-	function offsetSet($key, $value) {
+	public function offsetSet($key, $value) {
 		if(isset($this->firstItems[$key])) return $this->firstItems[$key] = $value;
 
 		user_error("SS_Map is read-only", E_USER_ERROR);
 	}
-	function offsetUnset($key) {
+	public function offsetUnset($key) {
 		if(isset($this->firstItems[$key])) {
 			unset($this->firstItems[$key]);
 			return;
@@ -114,13 +114,13 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	
 	// IteratorAggreagte
 	
-	function getIterator() {
+	public function getIterator() {
 		return new SS_Map_Iterator($this->list->getIterator(), $this->keyField, $this->valueField, $this->firstItems);
 	}
 
 	// Countable
 	
-	function count() {
+	public function count() {
 		return $this->list->count();
 	}
 }
@@ -144,7 +144,7 @@ class SS_Map_Iterator implements Iterator {
 	 * @param $titleField The field to use for the values
 	 * @param $fistItems An optional map of items to show first
 	 */
-	function __construct(Iterator $items, $keyField, $titleField, $firstItems = null) {
+	public function __construct(Iterator $items, $keyField, $titleField, $firstItems = null) {
 		$this->items = $items;
 		$this->keyField = $keyField;
 		$this->titleField = $titleField;
@@ -199,8 +199,10 @@ class SS_Map_Iterator implements Iterator {
 		} else {
 			if(!isset($this->firstItems[$this->firstItemIdx-1])) $this->items->next();
 
-			if($this->excludedItems) while(($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems, true)) {
-				$this->items->next();
+			if($this->excludedItems) {
+				while(($c = $this->items->current()) && in_array($c->{$this->keyField}, $this->excludedItems, true)) {
+					$this->items->next();
+				}
 			}
 		}
 	}

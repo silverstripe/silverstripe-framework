@@ -15,7 +15,7 @@ class HierarchyTest extends SapphireTest {
 	/**
 	 * Test the Hierarchy prevents infinite loops.
 	 */
-	function testPreventLoop() {
+	public function testPreventLoop() {
 		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
 		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
 
@@ -34,7 +34,7 @@ class HierarchyTest extends SapphireTest {
 	/**
 	 * Test Hierarchy::AllHistoricalChildren().
 	 */
-	function testAllHistoricalChildren() {
+	public function testAllHistoricalChildren() {
 		// Delete some objs
 		$this->objFromFixture('HierarchyTest_Object', 'obj2b')->delete();
 		$this->objFromFixture('HierarchyTest_Object', 'obj3a')->delete();
@@ -72,7 +72,7 @@ class HierarchyTest extends SapphireTest {
 	 * Test that you can call Hierarchy::markExpanded/Unexpanded/Open() on a obj, and that
 	 * calling Hierarchy::isMarked() on a different instance of that object will return true.
 	 */
-	function testItemMarkingIsntRestrictedToSpecificInstance() {
+	public function testItemMarkingIsntRestrictedToSpecificInstance() {
 		// Mark a few objs
 		$this->objFromFixture('HierarchyTest_Object', 'obj2')->markExpanded();
 		$this->objFromFixture('HierarchyTest_Object', 'obj2a')->markExpanded();
@@ -91,7 +91,7 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals(array('Obj 2', 'Obj 2a', 'Obj 2b'), $expanded);
 	}
 	
-	function testNumChildren() {
+	public function testNumChildren() {
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj1')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2')->numChildren(), 2);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3')->numChildren(), 2);
@@ -117,7 +117,7 @@ class HierarchyTest extends SapphireTest {
 		);
 	}
 
-	function testLoadDescendantIDListIntoArray() {
+	public function testLoadDescendantIDListIntoArray() {
 		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
 		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
 		$obj2b = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
@@ -142,7 +142,7 @@ class HierarchyTest extends SapphireTest {
 	 * The "only deleted from stage" argument to liveChildren() should exclude
 	 * any page that has been moved to another location on the stage site
 	 */
-	function testLiveChildrenOnlyDeletedFromStage() {
+	public function testLiveChildrenOnlyDeletedFromStage() {
 		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
 		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
 		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
@@ -169,7 +169,7 @@ class HierarchyTest extends SapphireTest {
 		$this->assertNotContains("Obj 2b", $children);
 	}
 
-	function testBreadcrumbs() {
+	public function testBreadcrumbs() {
 		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
 		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
 		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');

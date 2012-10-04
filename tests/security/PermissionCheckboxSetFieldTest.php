@@ -6,7 +6,7 @@
 class PermissionCheckboxSetFieldTest extends SapphireTest {
 	static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
 	
-	function testHiddenPermissions() {
+	public function testHiddenPermissions() {
 		$f = new PermissionCheckboxSetField(
 			'Permissions',
 			'Permissions',
@@ -24,7 +24,7 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$this->assertNotContains('NON-ADMIN', $f->Field());
 	}
 	
-	function testSaveInto() {
+	public function testSaveInto() {
 		$group = $this->objFromFixture('Group', 'group');  // tested group
 		$untouchable = $this->objFromFixture('Group', 'untouchable');  // group that should not change
 		
@@ -46,7 +46,8 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$this->assertEquals($group->Permissions()->Count(), 0, 'The tested group has no permissions');
 
 		$this->assertEquals($untouchable->Permissions()->Count(), 1, 'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1, 'The other group has ADMIN permission');
+		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+			'The other group has ADMIN permission');
 
 		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount, 'There are no orphaned permissions');
 				
@@ -59,14 +60,20 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$field->saveInto($group);
 		$group->flushCache();
 		$untouchable->flushCache();
-		$this->assertEquals($group->Permissions()->Count(), 2, 'The tested group has two permissions permission');
-		$this->assertEquals($group->Permissions("\"Code\"='ADMIN'")->Count(), 1, 'The tested group has ADMIN permission');
-		$this->assertEquals($group->Permissions("\"Code\"='NON-ADMIN'")->Count(), 1, 'The tested group has CMS_ACCESS_AssetAdmin permission');
+		$this->assertEquals($group->Permissions()->Count(), 2,
+			'The tested group has two permissions permission');
+		$this->assertEquals($group->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+			'The tested group has ADMIN permission');
+		$this->assertEquals($group->Permissions("\"Code\"='NON-ADMIN'")->Count(), 1,
+			'The tested group has CMS_ACCESS_AssetAdmin permission');
 
-		$this->assertEquals($untouchable->Permissions()->Count(), 1, 'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1, 'The other group has ADMIN permission');
+		$this->assertEquals($untouchable->Permissions()->Count(), 1,
+			'The other group has one permission');
+		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+			'The other group has ADMIN permission');
 
-		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount+2, 'There are no orphaned permissions');
+		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount+2,
+			'There are no orphaned permissions');
 		
 		// remove permission
 		$field->setValue(array(
@@ -76,12 +83,17 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$field->saveInto($group);
 		$group->flushCache();
 		$untouchable->flushCache();
-		$this->assertEquals($group->Permissions()->Count(), 1, 'The tested group has 1 permission');
-		$this->assertEquals($group->Permissions("\"Code\"='ADMIN'")->Count(), 1, 'The tested group has ADMIN permission');
+		$this->assertEquals($group->Permissions()->Count(), 1,
+			'The tested group has 1 permission');
+		$this->assertEquals($group->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+			'The tested group has ADMIN permission');
 
-		$this->assertEquals($untouchable->Permissions()->Count(), 1, 'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1, 'The other group has ADMIN permission');
+		$this->assertEquals($untouchable->Permissions()->Count(), 1,
+			'The other group has one permission');
+		$this->assertEquals($untouchable->Permissions("\"Code\"='ADMIN'")->Count(), 1,
+			'The other group has ADMIN permission');
 
-		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount+1, 'There are no orphaned permissions');
+		$this->assertEquals(DataObject::get('Permission')->Count(), $baseCount+1,
+			'There are no orphaned permissions');
 	}
 }

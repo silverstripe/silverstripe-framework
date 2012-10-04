@@ -128,7 +128,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param Member $member
 	 * @return boolean
 	 */
-	function canView($member = null) {
+	public function canView($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
 		// cms menus only for logged-in members
@@ -160,7 +160,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @uses LeftAndMainExtension->accessedCMS()
 	 * @uses CMSMenu
 	 */
-	function init() {
+	public function init() {
 		parent::init();
 
 		SSViewer::setOption('rewriteHashlinks', false);
@@ -200,9 +200,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			
 			// if no alternate menu items have matched, return a permission error
 			$messageSet = array(
-				'default' => _t('LeftAndMain.PERMDEFAULT',"Please choose an authentication method and enter your credentials to access the CMS."),
-				'alreadyLoggedIn' => _t('LeftAndMain.PERMALREADY',"I'm sorry, but you can't access that part of the CMS.  If you want to log in as someone else, do so below"),
-				'logInAgain' => _t('LeftAndMain.PERMAGAIN',"You have been logged out of the CMS.  If you would like to log in again, enter a username and password below."),
+				'default' => _t('LeftAndMain.PERMDEFAULT',
+					"Please choose an authentication method and enter your credentials to access the CMS."),
+				'alreadyLoggedIn' => _t('LeftAndMain.PERMALREADY',
+					"I'm sorry, but you can't access that part of the CMS.  If you want to log in as someone else, do"
+					. " so below"),
+				'logInAgain' => _t('LeftAndMain.PERMAGAIN',
+					"You have been logged out of the CMS.  If you would like to log in again, enter a username and"
+					. " password below."),
 			);
 
 			return Security::permissionFailure($this, $messageSet);
@@ -349,7 +354,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		SSViewer::set_theme(null);
 	}
 	
-	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
 		$response = parent::handleRequest($request, $model);
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
@@ -366,7 +371,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * it means we would request the same redirection URL twice if we want to update the URL as well.
 	 * See LeftAndMain.js for the required jQuery ajaxComplete handlers.
 	 */
-	function redirect($url, $code=302) {
+	public function redirect($url, $code=302) {
 		if($this->request->isAjax()) {
 			$this->response->addHeader('X-ControllerURL', $url);
 			if($this->request->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
@@ -389,7 +394,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 	}
 
-	function index($request) {
+	public function index($request) {
 		return $this->getResponseNegotiator()->respond($request);
 	}
 
@@ -397,7 +402,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * admin/ping can be visited with ajax to keep a session alive.
 	 * This is used in the CMS.
 	 */
-	function ping() {
+	public function ping() {
 		return 1;
 	}
 	
@@ -407,7 +412,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *
 	 * @return boolean
 	 */
-	function ShowSwitchView() {
+	public function ShowSwitchView() {
 		return false;
 	}
 
@@ -440,7 +445,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Implemented static so that we can get this value without instantiating an object.
 	 * Menu title is *not* internationalised.
 	 */
-	static function menu_title_for_class($class) {
+	public static function menu_title_for_class($class) {
 		$title = Config::inst()->get($class, 'menu_title', Config::FIRST_SET);
 		if(!$title) $title = preg_replace('/Admin$/', '', $class);
 		return $title;
@@ -453,7 +458,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param type $class
 	 * @return string
 	 */
-	static function menu_icon_for_class($class) {
+	public static function menu_icon_for_class($class) {
 		$icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
 		if (!empty($icon)) {
 			$class = strtolower($class);
@@ -683,7 +688,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *  Children, AllChildrenIncludingDeleted, or AllHistoricalChildren
 	 * @return String Nested unordered list with links to each page
 	 */
-	function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null, $filterFunction = null, $minNodeCount = 30) {
+	public function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null,
+			$filterFunction = null, $minNodeCount = 30) {
+
 		// Filter criteria
 		$params = $this->request->getVar('q');
 		if(isset($params['FilterClass']) && $filterClass = $params['FilterClass']){
@@ -696,7 +703,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		// Default childrenMethod and numChildrenMethod
-		if(!$childrenMethod) $childrenMethod = ($filter && $filter->getChildrenMethod()) ? $filter->getChildrenMethod() : 'AllChildrenIncludingDeleted';
+		if(!$childrenMethod) $childrenMethod = ($filter && $filter->getChildrenMethod())
+			? $filter->getChildrenMethod() 
+			: 'AllChildrenIncludingDeleted';
+
 		if(!$numChildrenMethod) $numChildrenMethod = 'numChildren';
 		if(!$filterFunction) $filterFunction = ($filter) ? array($filter, 'isPageIncluded') : null;
 
@@ -714,7 +724,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		// NOTE: SiteTree/CMSMain coupling :-(
 		if(class_exists('SiteTree')) {
-			SiteTree::prepopulate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
+			SiteTree::prepopulate_permission_cache('CanEditType', $obj->markedNodeIDs(),
+				'SiteTree::can_edit_multiple');
 		}
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
@@ -789,20 +800,31 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$ids = explode(',', $request->getVar('ids'));
 		foreach($ids as $id) {
 			$record = $this->getRecord($id);
-			$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
+			$recordController = ($this->stat('tree_class') == 'SiteTree') 
+				?  singleton('CMSPageEditController') 
+				: $this;
 
 			// Find the next & previous nodes, for proper positioning (Sort isn't good enough - it's not a raw offset)
 			// TODO: These methods should really be in hierarchy - for a start it assumes Sort exists
 			$next = $prev = null;
 
 			$className = $this->stat('tree_class');
-			$next = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:GreaterThan', $record->Sort)->first();
+			$next = DataObject::get($className)
+				->filter('ParentID', $record->ParentID)
+				->filter('Sort:GreaterThan', $record->Sort)
+				->first();
+
 			if (!$next) {
-				$prev = DataObject::get($className)->filter('ParentID', $record->ParentID)->filter('Sort:LessThan', $record->Sort)->reverse()->first();
+				$prev = DataObject::get($className)
+					->filter('ParentID', $record->ParentID)
+					->filter('Sort:LessThan', $record->Sort)
+					->reverse()
+					->first();
 			}
 
 			$link = Controller::join_links($recordController->Link("show"), $record->ID);
-			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))->forTemplate() . '</li>';
+			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))
+				->forTemplate() . '</li>';
 
 			$data[$id] = array(
 				'html' => $html, 
@@ -874,7 +896,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if (!Permission::check('SITETREE_REORGANISE') && !Permission::check('ADMIN')) {
 			$this->response->setStatusCode(
 				403,
-				_t('LeftAndMain.CANT_REORGANISE',"You do not have permission to rearange the site tree. Your change was not saved.")
+				_t('LeftAndMain.CANT_REORGANISE',
+					"You do not have permission to rearange the site tree. Your change was not saved.")
 			);
 			return;
 		}
@@ -889,7 +912,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if(($parentID == '0' || $root == 'root') && !SiteConfig::current_site_config()->canCreateTopLevel()){
 				$this->response->setStatusCode(
 					403,
-						_t('LeftAndMain.CANT_REORGANISE',"You do not have permission to alter Top level pages. Your change was not saved.")
+					_t('LeftAndMain.CANT_REORGANISE',
+						"You do not have permission to alter Top level pages. Your change was not saved.")
 					);
 				return;
 			}
@@ -905,8 +929,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$node) {
 			$this->response->setStatusCode(
 				500,
-				_t(
-					'LeftAndMain.PLEASESAVE',
+				_t('LeftAndMain.PLEASESAVE',
 					"Please Save Page: This page could not be upated because it hasn't been saved yet."
 				)
 			);
@@ -933,7 +956,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
+			$this->response->addHeader('X-Status',
+				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 		
 		// Update sorting
@@ -950,11 +974,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					// Nodes that weren't "actually moved" shouldn't be registered as 
 					// having been edited; do a direct SQL update instead
 					++$counter;
-					DB::query(sprintf("UPDATE \"%s\" SET \"Sort\" = %d WHERE \"ID\" = '%d'", $className, $counter, $id));
+					DB::query(sprintf("UPDATE \"%s\" SET \"Sort\" = %d WHERE \"ID\" = '%d'",
+						$className, $counter, $id));
 				}
 			}
 			
-			$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
+			$this->response->addHeader('X-Status',
+				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 
 		return Convert::raw2json($statusUpdates);
@@ -983,7 +1009,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @return Form
 	 */
-	function EditForm($request = null) {
+	public function EditForm($request = null) {
 		return $this->getEditForm();
 	}
 
@@ -1103,7 +1129,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * 
 	 * @return Form
 	 */
-	function EmptyForm() {
+	public function EmptyForm() {
 		$form = new Form(
 			$this, 
 			"EditForm", 
@@ -1182,14 +1208,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Batch Actions Handler
 	 */
-	function batchactions() {
+	public function batchactions() {
 		return new CMSBatchActionHandler($this, 'batchactions', $this->stat('tree_class'));
 	}
 	
 	/**
 	 * @return Form
 	 */
-	function BatchActionsForm() {
+	public function BatchActionsForm() {
 		$actions = $this->batchactions()->batchActionList();
 		$actionsMap = array('-1' => _t('LeftAndMain.DropdownBatchActionsDefault', 'Actions'));
 		foreach($actions as $action) $actionsMap[$action->Link] = $action->Title;
@@ -1235,7 +1261,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * 
 	 * @return ArrayData
 	 */
-	function getSilverStripeNavigator() {
+	public function getSilverStripeNavigator() {
 		$page = $this->currentPage();
 		if($page) {
 			$navigator = new SilverStripeNavigator($page);
@@ -1338,7 +1364,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @return array
 	 */
-	function SwitchView() { 
+	public function SwitchView() {
 		if($page = $this->currentPage()) { 
 			$nav = SilverStripeNavigator::get_for_record($page); 
 			return $nav['items']; 
@@ -1348,7 +1374,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @return SiteConfig
 	 */
-	function SiteConfig() {
+	public function SiteConfig() {
 		return (class_exists('SiteConfig')) ? SiteConfig::current_site_config() : null;
 	}
 
@@ -1363,7 +1389,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @param String $name
 	 */
-	static function setApplicationName($name) {
+	public static function setApplicationName($name) {
 		self::$application_name = $name;
 	}
 
@@ -1372,14 +1398,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *
 	 * @return string
 	 */
-	function getApplicationName() {
+	public function getApplicationName() {
 		return self::$application_name;
 	}
 	
 	/**
 	 * @return string
 	 */
-	function Title() {
+	public function Title() {
 		$app = $this->getApplicationName();
 		
 		return ($section = $this->SectionTitle()) ? sprintf('%s - %s', $app, $section) : $app;
@@ -1391,7 +1417,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *
 	 * @return string
 	 */
-	function SectionTitle() {
+	public function SectionTitle() {
 		$class = get_class($this);
 		$defaultTitle = LeftAndMain::menu_title_for_class($class);
 		if($title = _t("{$class}.MENUTITLE", $defaultTitle)) return $title;
@@ -1404,7 +1430,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Return the base directory of the tiny_mce codebase
 	 */
-	function MceRoot() {
+	public function MceRoot() {
 		return MCE_ROOT;
 	}
 	
@@ -1415,22 +1441,22 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * 
 	 * @return String
 	 */
-	function BaseCSSClasses() {
+	public function BaseCSSClasses() {
 		return $this->CSSClasses('Controller');
 	}
 	
-	function IsPreviewExpanded() {
+	public function IsPreviewExpanded() {
 		return ($this->request->getVar('cms-preview-expanded'));
 	}
 
 	/**
 	 * @return String
 	 */
-	function Locale() {
+	public function Locale() {
 		return DBField::create_field('DBLocale', i18n::get_locale());
 	}
 
-	function providePermissions() {
+	public function providePermissions() {
 		$perms = array(
 			"CMS_ACCESS_LeftAndMain" => array(
 				'name' => _t('CMSMain.ACCESSALLINTERFACES', 'Access to all CMS sections'),
@@ -1488,7 +1514,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param $name String The identifier of the file.  For example, css/MyFile.css would have the identifier "MyFile"
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 */
-	static function require_themed_css($name, $media = null) {
+	public static function require_themed_css($name, $media = null) {
 		self::$extra_requirements['themedcss'][] = array($name, $media);
 	}
 	
@@ -1508,7 +1534,7 @@ class LeftAndMainMarkingFilter {
 	/**
 	 * @param array $params Request params (unsanitized)
 	 */
-	function __construct($params = null) {
+	public function __construct($params = null) {
 		$this->ids = array();
 		$this->expanded = array();
 		$parents = array();
@@ -1527,7 +1553,8 @@ class LeftAndMainMarkingFilter {
 		// We need to recurse up the tree, 
 		// finding ParentIDs for each ID until we run out of parents
 		while (!empty($parents)) {
-			$res = DB::query('SELECT "ParentID", "ID" FROM "SiteTree" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
+			$res = DB::query('SELECT "ParentID", "ID" FROM "SiteTree"'
+				. ' WHERE "ID" in ('.implode(',',array_keys($parents)).')');
 			$parents = array();
 
 			foreach($res as $row) {
@@ -1560,7 +1587,7 @@ class LeftAndMainMarkingFilter {
 		);
 	}
 	
-	function mark($node) {
+	public function mark($node) {
 		$id = $node->ID;
 		if(array_key_exists((int) $id, $this->expanded)) $node->markOpened();
 		return array_key_exists((int) $id, $this->ids) ? $this->ids[$id] : false;
@@ -1574,11 +1601,11 @@ class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
 
 	protected $isFinished = false;
 
-	function isFinished() {
+	public function isFinished() {
 		return (parent::isFinished() || $this->isFinished);
 	}
 
-	function setIsFinished($bool) {
+	public function setIsFinished($bool) {
 		$this->isFinished = $bool;
 	}
 
@@ -1607,7 +1634,7 @@ class LeftAndMain_TreeNode extends ViewableData {
 	 */
 	protected $isCurrent;
 
-	function __construct($obj, $link = null, $isCurrent = false) {
+	public function __construct($obj, $link = null, $isCurrent = false) {
 		$this->obj = $obj;
 		$this->link = $link;
 		$this->isCurrent = $isCurrent;
@@ -1621,17 +1648,16 @@ class LeftAndMain_TreeNode extends ViewableData {
 	 * 
 	 * @return String
 	 */
-	function forTemplate() {
+	public function forTemplate() {
 		$obj = $this->obj;
-		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\"" . $this->getClasses() . "\">" .
-			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
-			"<a href=\"" . $this->getLink() . "\" title=\"" .
-			_t('LeftAndMain.PAGETYPE','Page type: ') .
-			"$obj->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle). 
-			"</span></a>";
+		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\""
+			. $this->getClasses() . "\">" . "<ins class=\"jstree-icon\">&nbsp;</ins>"
+			. "<a href=\"" . $this->getLink() . "\" title=\"" . _t('LeftAndMain.PAGETYPE','Page type: ')
+			. "$obj->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
+			. "</span></a>";
 	}
 
-	function getClasses() {
+	public function getClasses() {
 		$classes = $this->obj->CMSTreeClasses();
 		if($this->isCurrent) $classes .= " current";
 		$flags = $this->obj->hasMethod('getStatusFlags') ? $this->obj->getStatusFlags() : false;
@@ -1639,29 +1665,29 @@ class LeftAndMain_TreeNode extends ViewableData {
 		return $classes;
 	}
 
-	function getObj() {
+	public function getObj() {
 		return $this->obj;
 	}
 
-	function setObj($obj) {
+	public function setObj($obj) {
 		$this->obj = $obj;
 		return $this;
 	}
 
-	function getLink() {
+	public function getLink() {
 		return $this->link;
 	}
 
-	function setLink($link) {
+	public function setLink($link) {
 		$this->link = $link;
 		return $this;
 	}
 
-	function getIsCurrent() {
+	public function getIsCurrent() {
 		return $this->isCurrent;
 	}
 
-	function setIsCurrent($bool) {
+	public function setIsCurrent($bool) {
 		$this->isCurrent = $bool;
 		return $this;
 	}

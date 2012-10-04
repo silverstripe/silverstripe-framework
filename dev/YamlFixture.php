@@ -20,8 +20,8 @@ require_once 'thirdparty/spyc/spyc.php';
  * <code>
  * Parent: =>Page.about
  * </code>
- * This will tell the system to set the ParentID database field to the ID of the Page object with the identifier 'about'. 
- * This can be used on any has-one or many-many relationship. 
+ * This will tell the system to set the ParentID database field to the ID of the Page object with the identifier
+ * 'about'. This can be used on any has-one or many-many relationship. 
  * Note that we use the name of the relationship (Parent), and not the name of the database field (ParentID)
  *
  * On many-many relationships, you should specify a comma separated list of values.
@@ -95,14 +95,15 @@ class YamlFixture extends Object {
 	/**
 	 * @param String Absolute file path, or relative path to {@link Director::baseFolder()}
 	 */
-	function __construct($fixture) {
+	public function __construct($fixture) {
 		if(false !== strpos($fixture, "\n")) {
 			$this->fixtureString = $fixture;
 		} else {
 			if(!Director::is_absolute($fixture)) $fixture = Director::baseFolder().'/'. $fixture;
 
 			if(!file_exists($fixture)) {
-				throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixture . '" not found');
+				throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixture
+					. '" not found');
 			}
 
 			$this->fixtureFile = $fixture;
@@ -114,14 +115,14 @@ class YamlFixture extends Object {
 	/**
 	 * @return String Absolute file path
 	 */
-	function getFixtureFile() {
+	public function getFixtureFile() {
 		return $this->fixtureFile;
 	}
 
 	/**
 	 * @return String Fixture string
 	 */
-	function getFixtureString() {
+	public function getFixtureString() {
 		return $this->fixtureString;
 	}
 	
@@ -216,9 +217,13 @@ class YamlFixture extends Object {
 				
 				// The database needs to allow inserting values into the foreign key column (ID in our case)
 				$conn = DB::getConn();
-				if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($dataClass), true);
+				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
+					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($dataClass), true);
+				}
 				$obj->write(false, true);
-				if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($dataClass), false);
+				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
+					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($dataClass), false);
+				}
 			}
 			
 			// Populate the dictionary with the ID

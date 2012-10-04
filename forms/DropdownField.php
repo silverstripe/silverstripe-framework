@@ -110,18 +110,21 @@ class DropdownField extends FormField {
 	 * @param $source An map of the dropdown items
 	 * @param $value The current value
 	 * @param $form The parent form
-	 * @param $emptyString mixed Add an empty selection on to of the {@link $source}-Array 
-	 * 	(can also be boolean, which results in an empty string)
-	 *  Argument is deprecated in 3.1, please use {@link setEmptyString()} and/or {@link setHasEmptyDefault(true)} instead.
+	 * @param $emptyString mixed Add an empty selection on to of the {@link $source}-Array (can also be boolean, which
+	 *                           results in an empty string).  Argument is deprecated in 3.1, please use
+	 *                           {@link setEmptyString()} and/or {@link setHasEmptyDefault(true)} instead.
 	 */
-	function __construct($name, $title = null, $source = array(), $value = '', $form = null, $emptyString = null) {
+	public function __construct($name, $title=null, $source=array(), $value='', $form=null, $emptyString=null) {
 		$this->setSource($source);
 
 		if($emptyString === true) {
-			Deprecation::notice('3.1', 'Please use setHasEmptyDefault(true) instead of passing a boolean true $emptyString argument', Deprecation::SCOPE_GLOBAL);
+			Deprecation::notice('3.1',
+				'Please use setHasEmptyDefault(true) instead of passing a boolean true $emptyString argument',
+				Deprecation::SCOPE_GLOBAL);
 		}
 		if(is_string($emptyString)) {
-			Deprecation::notice('3.1', 'Please use setEmptyString() instead of passing a string $emptyString argument.', Deprecation::SCOPE_GLOBAL);
+			Deprecation::notice('3.1', 'Please use setEmptyString() instead of passing a string emptyString argument.',
+				Deprecation::SCOPE_GLOBAL);
 		}
 
 		if($emptyString) $this->setHasEmptyDefault(true);
@@ -130,7 +133,7 @@ class DropdownField extends FormField {
 		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$source = $this->getSource();
 		$options = array();
 		if($source) {
@@ -165,7 +168,7 @@ class DropdownField extends FormField {
 		return parent::Field($properties);
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array('type' => null, 'value' => null)
@@ -175,7 +178,7 @@ class DropdownField extends FormField {
 	/**
 	 * @return boolean
 	 */
-	function isSelected() {
+	public function isSelected() {
 		return $this->isSelected;
 	}
 
@@ -184,7 +187,7 @@ class DropdownField extends FormField {
 	 * 
 	 * @return array
 	 */
-	function getSource() {
+	public function getSource() {
 		if(is_array($this->source) && $this->getHasEmptyDefault()) {
 			return array('' => $this->emptyString) + (array) $this->source;
 		} else {
@@ -195,7 +198,7 @@ class DropdownField extends FormField {
 	/**
 	 * @param array $source
 	 */
-	function setSource($source) {
+	public function setSource($source) {
 		$this->source = $source;
 		return $this;
 	}
@@ -203,7 +206,7 @@ class DropdownField extends FormField {
 	/**
 	 * @param boolean $bool
 	 */
-	function setHasEmptyDefault($bool) {
+	public function setHasEmptyDefault($bool) {
 		$this->hasEmptyDefault = $bool;
 		return $this;
 	}
@@ -211,7 +214,7 @@ class DropdownField extends FormField {
 	/**
 	 * @return boolean
 	 */
-	function getHasEmptyDefault() {
+	public function getHasEmptyDefault() {
 		return $this->hasEmptyDefault;
 	}
 
@@ -222,7 +225,7 @@ class DropdownField extends FormField {
 	 *
 	 * @param string $str
 	 */
-	function setEmptyString($str) {
+	public function setEmptyString($str) {
 		$this->setHasEmptyDefault(true);
 		$this->emptyString = $str;
 		return $this;
@@ -231,11 +234,11 @@ class DropdownField extends FormField {
 	/**
 	 * @return string
 	 */
-	function getEmptyString() {
+	public function getEmptyString() {
 		return $this->emptyString;
 	}
 
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new LookupField($this->name, $this->title, $this->getSource());
 		$field->setValue($this->value);
 		$field->setForm($this->form);

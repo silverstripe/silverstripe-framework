@@ -25,9 +25,10 @@
  */
 class SS_Datetime extends Date implements TemplateGlobalProvider {
 	
-	function setValue($value, $record = null) {
+	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
-			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be saved as NULL in database
+			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
+			// saved as NULL in database
 			$this->value = null;
 			return;
 		}
@@ -55,33 +56,33 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	/**
 	 * Returns the date in the raw SQL-format, e.g. “2006-01-18 16:32:04”
 	 */
-	function Nice() {
+	public function Nice() {
 		if($this->value) return $this->Format('d/m/Y g:ia');
 	}
 
-	function Nice24() {
+	public function Nice24() {
 		if($this->value) return $this->Format('d/m/Y H:i');
 	}
 
-	function Date() {
+	public function Date() {
 		if($this->value) return $this->Format('d/m/Y');
 	}
 
-	function Time() {
+	public function Time() {
 		if($this->value) return $this->Format('g:ia');
 	}
 
-	function Time24() {
+	public function Time24() {
 		if($this->value) return $this->Format('H:i');
 	}
 
-	function requireField() {
+	public function requireField() {
 		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'SS_Datetime', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
-	function URLDatetime() {
+	public function URLDatetime() {
 		if($this->value) return $this->Format('Y-m-d%20H:i:s');
 	}
 	
@@ -100,7 +101,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	 * 
 	 * @return SS_Datetime
 	 */
-	static function now() {
+	public static function now() {
 		if(self::$mock_now) {
 			return self::$mock_now;
 		} else {
@@ -115,7 +116,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	 * 
 	 * @param SS_Datetime|string $datetime Either in object format, or as a SS_Datetime compatible string.
 	 */
-	static function set_mock_now($datetime) {
+	public static function set_mock_now($datetime) {
 		if($datetime instanceof SS_Datetime) {
 			self::$mock_now = $datetime;
 		} elseif(is_string($datetime)) {
@@ -129,7 +130,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	 * Clear any mocked date, which causes
 	 * {@link Now()} to return the current system date.
 	 */
-	static function clear_mock_now() {
+	public static function clear_mock_now() {
 		self::$mock_now = null;
 	}
 	

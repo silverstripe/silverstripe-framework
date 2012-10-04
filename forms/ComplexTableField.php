@@ -13,11 +13,13 @@
  *
  * Example-URL for a "DetailForm"-call explained:
  * "/admin/family/?executeForm=EditForm&action_callfieldmethod&fieldName=Individual&childID=7&methodName=edit"
- *  - executeForm			Name of the form on the main rendering page (e.g. "FamilyAdmin")
- *  - action_callfieldmethod	Trigger to call a method of a single field in "EditForm" instead of rendering the whole thing
- *  - fieldName				Name of the targeted formField
- *  - methodName				Method on the formfield (e.g. "ComplexTableField")
- *  - childID				Identifier of the database-record (the targeted table is determined by the $sourceClass parameter)
+ *  - executeForm            Name of the form on the main rendering page (e.g. "FamilyAdmin")
+ *  - action_callfieldmethod Trigger to call a method of a single field in "EditForm" instead of rendering the
+ *                           whole thing
+ *  - fieldName              Name of the targeted formField
+ *  - methodName             Method on the formfield (e.g. "ComplexTableField")
+ *  - childID                Identifier of the database-record (the targeted table is determined by the $sourceClass
+ *                           parameter)
  *  
  * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
  *
@@ -150,15 +152,15 @@ class ComplexTableField extends TableListField {
 		'$Action!' => '$Action',
 	);
 
-	function handleItem($request) {
+	public function handleItem($request) {
 		return new ComplexTableField_ItemRequest($this, $request->param('ID'));
 	}
 	
-	function getViewer() {
+	public function getViewer() {
 		return new SSViewer($this->template);
 	}
 
-	function setPopupSize($width, $height) {
+	public function setPopupSize($width, $height) {
 		$width = (int)$width;
 		$height = (int)$height;
 		
@@ -171,11 +173,11 @@ class ComplexTableField extends TableListField {
 		$this->popupHeight = $height;
 	}
 	
-	function PopupWidth() {
+	public function PopupWidth() {
 		return $this->popupWidth;
 	}
 	       
-	function PopupHeight() {
+	public function PopupHeight() {
 		return $this->popupHeight;
 	}
 	
@@ -191,7 +193,9 @@ class ComplexTableField extends TableListField {
 	 * @param string $sourceSort
 	 * @param string $sourceJoin
 	 */
-	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	public function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null,
+			$sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+
 		$this->detailFormFields = $detailFormFields;
 		$this->controller = $controller;
 		$this->pageSize = 10;
@@ -199,14 +203,14 @@ class ComplexTableField extends TableListField {
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 	}
 
-	function isComposite() {
+	public function isComposite() {
 		return false;
 	}
 
 	/**
 	 * @return String
 	 */
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
@@ -244,14 +248,20 @@ JS;
 	/**
 	 * @return SS_List
 	 */
-	function Items() {
+	public function Items() {
 		$sourceItems = $this->sourceItems();
 
 		if(!$sourceItems) {
 			return null;
 		}
 
-		$pageStart = (isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
+
+		if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
+			$pageStart = $_REQUEST['ctf'][$this->getName()]['start'];
+			if(!is_numeric($pageStart)) $pageStart = 0;
+		} else {
+			$pageStart = 0;
+		}
 
 		$output = new ArrayList();
 		foreach($sourceItems as $pageIndex=>$item) {
@@ -266,23 +276,23 @@ JS;
 	 *
 	 * @param $caption String
 	 */
-	function setPopupCaption($caption) {
+	public function setPopupCaption($caption) {
 		$this->popupCaption = Convert::raw2js($caption);
 	}
 
 	/**
 	 * @param $validator Validator
 	 */
-	function setDetailFormValidator( Validator $validator ) {
+	public function setDetailFormValidator( Validator $validator ) {
 		$this->detailFormValidator = $validator;
 	}
     
-    function setAddTitle($addTitle) {
+    public function setAddTitle($addTitle) {
 		if(is_string($addTitle))
 			$this->addTitle = $addTitle;
 	}
     
-    function Title() {
+    public function Title() {
 		return $this->addTitle ? $this->addTitle : parent::Title();
 	}
 
@@ -292,7 +302,7 @@ JS;
 	 *
 	 * @return Int
 	 */
-	function ItemCount() {
+	public function ItemCount() {
 		return count($this->fieldList);
 	}
 
@@ -301,11 +311,11 @@ JS;
 	 *
 	 * @return Boolean
 	 */
-	function IsAddMode() {
+	public function IsAddMode() {
 		return ($this->methodName == "add" || $this->request->param('Action') == 'AddForm');
 	}
 	
-	function sourceID() { 
+	public function sourceID() {
 		$idField = $this->form->Fields()->dataFieldByName('ID'); 
 
 		// disabled as it conflicts with scaffolded formfields, and not strictly necessary
@@ -320,14 +330,14 @@ JS;
 	 
 
 
-	function AddLink() {
+	public function AddLink() {
 		return Controller::join_links($this->Link(), 'add');
 	}
 
 	/**
 	 * @return FieldList
 	 */
-	function createFieldList() {
+	public function createFieldList() {
 		$fieldset = new FieldList();
 		foreach($this->fieldTypes as $key => $fieldType){
 			$fieldset->push(new $fieldType($key));
@@ -335,12 +345,12 @@ JS;
 		return $fieldset;
 	}
 
-	function setController($controller) {
+	public function setController($controller) {
 		$this->controller = $controller;
 		return $this;
 	}
 
-	function setTemplatePopup($template) {
+	public function setTemplatePopup($template) {
 		$this->templatePopup = $template;
 		return $this;
 	}
@@ -357,7 +367,7 @@ JS;
 	 * set the value of the fields to something that $this->detailFormFields doesn't allow, you can do so by overloading
 	 * this method.
 	 */
-	function getCustomFieldsFor($childData) {
+	public function getCustomFieldsFor($childData) {
 		if($this->detailFormFields instanceof FieldList) {
 			return $this->detailFormFields;
 		}
@@ -376,7 +386,7 @@ JS;
 		return $childData->$fieldsMethod();
 	}
 		
-	function getFieldsFor($childData) {
+	public function getFieldsFor($childData) {
 		$detailFields = $this->getCustomFieldsFor($childData);
 
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
@@ -403,7 +413,7 @@ JS;
 		return $detailFields;
 	}
 
-	function getValidatorFor($childData) {
+	public function getValidatorFor($childData) {
 		// if no custom validator is set, and there's on present on the object (e.g. Member), use it
 		if(!isset($this->detailFormValidator) && $childData->hasMethod('getValidator')) {
 			$this->detailFormValidator = $childData->getValidator();
@@ -413,7 +423,7 @@ JS;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	function add() {
+	public function add() {
 		if(!$this->can('add')) return;
 
 		return $this->customise(array(
@@ -421,7 +431,7 @@ JS;
 		))->renderWith($this->templatePopup);
 	}
 
-	function AddForm($childID = null) {
+	public function AddForm($childID = null) {
 		$className = $this->sourceClass();
 		$childData = new $className();
 		
@@ -445,7 +455,7 @@ JS;
 	/**
 	 * @deprecated 3.0
 	 */
-	function setRelationAutoSetting($value) {
+	public function setRelationAutoSetting($value) {
 		Deprecation::notice('3.0', 'Manipulate the DataList instead.');
 		return $this;
 	}
@@ -460,7 +470,7 @@ JS;
 	 *
 	 * @see Form::ReferencedField
 	 */
-	function saveComplexTableField($data, $form, $params) {
+	public function saveComplexTableField($data, $form, $params) {
 		$className = $this->sourceClass();
 		$childData = new $className();
 		$form->saveInto($childData);
@@ -512,11 +522,11 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		'' => 'index',
 	);
 	
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links($this->ctf->Link(), '/item/', $this->itemID, $action);
 	}
 		
-	function index() {
+	public function index() {
 		return $this->show();
 	}
 
@@ -525,7 +535,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 *
 	 * @return String
 	 */
-	function show() {
+	public function show() {
 		if($this->ctf->Can('show') !== true) {
 			return false;
 		}
@@ -538,7 +548,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 * Returns a 1-element data object set that can be used for pagination.
 	 */
 	/* this doesn't actually work :-(
-	function Paginator() { 
+	public function Paginator() {
 		$paginatingSet = new ArrayList(array($this->dataObj()));
 		$start = isset($_REQUEST['ctf']['start']) ? $_REQUEST['ctf']['start'] : 0;
 		$paginatingSet->setPageLimits($start, 1, $this->ctf->TotalCount());
@@ -551,7 +561,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 *
 	 * @return String
 	 */
-	function edit() {
+	public function edit() {
 		if($this->ctf->Can('edit') !== true) {
 			return false;
 		}
@@ -561,7 +571,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		return $this->renderWith($this->ctf->templatePopup);
 	}
 
-	function delete($request) {
+	public function delete($request) {
 		// Protect against CSRF on destructive action
 		$token = $this->ctf->getForm()->getSecurityToken();
 		if(!$token->checkRequest($request)) return $this->httpError(400);
@@ -578,27 +588,28 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	/**
 	 * Return the data object being manipulated
 	 */
-	function dataObj() {
+	public function dataObj() {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
  			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			return DataObject::get_by_id(ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
+ 			return DataObject::get_by_id(
+ 				ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
 		}
 		
 	}
 
 	/**
 	 * Renders view, edit and add, depending on the given information.
-	 * The form needs several parameters to function independently of its "parent-form", some derived from the context into a hidden-field,
-	 * some derived from the parent context (which is not accessible here) and delivered by GET:
-	 * ID, Identifier of the currently edited record (only if record is loaded).
+	 * The form needs several parameters to function independently of its "parent-form", some derived from the context
+	 * into a hidden-field, some derived from the parent context (which is not accessible here) and delivered by
+	 * GET:ID, Identifier of the currently edited record (only if record is loaded).
 	 * <parentIDName>, Link back to the correct parent record (e.g. "parentID").
 	 * parentClass, Link back to correct container-class (the parent-record might have many 'has-one'-relationships)
 	 * CAUTION: "ID" in the DetailForm would be the "childID" in the overview table.
 	 * 
 	 * @param int $childID
 	 */
-	function DetailForm($childID = null) {
+	public function DetailForm($childID = null) {
 		$childData = $this->dataObj();
 
 		$fields = $this->ctf->getFieldsFor($childData);
@@ -632,7 +643,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 *
 	 * @see Form::ReferencedField
 	 */
-	function saveComplexTableField($data, $form, $request) {
+	public function saveComplexTableField($data, $form, $request) {
 		$dataObject = $this->dataObj();
 
 		try {
@@ -665,14 +676,15 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		return Controller::curr()->redirectBack();
 	}
 	
-	function PopupCurrentItem() {
+	public function PopupCurrentItem() {
 		return $_REQUEST['ctf']['start']+1;
 	}
 	
-	function PopupFirstLink() {
+	public function PopupFirstLink() {
 		$this->ctf->LinkToItem();
 		
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 
@@ -680,8 +692,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 
-	function PopupLastLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
+	public function PopupLastLink() {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
 			return null;
 		}
 		
@@ -689,8 +702,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 
-	function PopupNextLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
+	public function PopupNextLink() {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
 			return null;
 		}
 
@@ -698,8 +712,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 
-	function PopupPrevLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+	public function PopupPrevLink() {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start'])
+				|| $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 
@@ -713,7 +728,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
      * @return Object SS_List
      */
 	
-	function Pagination() {
+	public function Pagination() {
 		$this->pageSize = 9;
 		$currentItem  = $this->PopupCurrentItem();
 		$result = new ArrayList();
@@ -735,7 +750,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
         return $result;
 	}
 
-	function ShowPagination() {
+	public function ShowPagination() {
 		return false;
 	}
 
@@ -752,11 +767,11 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 * 
 	 * @param String $str Example: FamilyID (when one Individual has_one Family)
 	 */
-	function setParentIdName($str) {
+	public function setParentIdName($str) {
 	    throw new Exception("setParentIdName is no longer necessary");
 	}
 	
-	function setTemplatePopup($template) {
+	public function setTemplatePopup($template) {
 		$this->templatePopup = $template;
 	}
 
@@ -769,19 +784,19 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
  * @subpackage fields-relational
  */
 class ComplexTableField_Item extends TableListField_Item {
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links($this->parent->Link(), '/item/', $this->item->ID, $action);
 	}
 
-	function EditLink() {
+	public function EditLink() {
 		return Controller::join_links($this->Link(), "edit");
 	}
 
-	function ShowLink() {
+	public function ShowLink() {
 		return Controller::join_links($this->Link(), "show");
 	}
 
-	function DeleteLink() {
+	public function DeleteLink() {
 		return Controller::join_links($this->Link(), "delete");
 	}
 	
@@ -789,7 +804,7 @@ class ComplexTableField_Item extends TableListField_Item {
 	 * @param String $action
 	 * @return boolean
 	 */
-	function IsDefaultAction($action) {
+	public function IsDefaultAction($action) {
 		return ($action == $this->parent->defaultAction);
 	}
 }
@@ -808,7 +823,7 @@ class ComplexTableField_Popup extends Form {
 	
 	protected $dataObject;
 
-	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
+	public function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		
 		
@@ -830,7 +845,7 @@ class ComplexTableField_Popup extends Form {
 		if(!$this->dataObject->canEdit()) $this->makeReadonly();
 	}
 
-	function forTemplate() {
+	public function forTemplate() {
 		$ret = parent::forTemplate();
 		
 		Requirements::css(FRAMEWORK_DIR . '/css/ComplexTableField_popup.css');
@@ -853,14 +868,14 @@ class ComplexTableField_Popup extends Form {
 		return $ret;
 	}
 
-	function getTemplate() {
+	public function getTemplate() {
 		return 'Form';
 	}
 	
 	/**
 	 * @return ComplexTableField_ItemRequest
 	 */
-	function getParentController() {
+	public function getParentController() {
 		return $this->controller;
 	}
 }

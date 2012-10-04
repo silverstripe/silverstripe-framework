@@ -1,6 +1,6 @@
 <?php
 /**
-  An extension that adds additional functionality to a {@link DataObject}.
+ * An extension that adds additional functionality to a {@link DataObject}.
  *
  * @package framework
  * @subpackage model
@@ -31,7 +31,7 @@ abstract class DataExtension extends Extension {
 		'api_access' => false,
 	);
 
-	static function get_extra_config($class, $extension, $args) {
+	public static function get_extra_config($class, $extension, $args) {
 		if(method_exists($extension, 'extraDBFields')) {
 			$extraStaticsMethod = 'extraDBFields';
 		} else {
@@ -41,7 +41,9 @@ abstract class DataExtension extends Extension {
 		$statics = Injector::inst()->get($extension, true, $args)->$extraStaticsMethod($class, $extension);
 
 		if ($statics) {
-			Deprecation::notice('3.1.0', "$extraStaticsMethod deprecated. Just define statics on your extension, or use get_extra_config", Deprecation::SCOPE_GLOBAL);
+			Deprecation::notice('3.1.0',
+				"$extraStaticsMethod deprecated. Just define statics on your extension, or use get_extra_config",
+				Deprecation::SCOPE_GLOBAL);
 			return $statics;
 		}
 	}
@@ -56,7 +58,7 @@ abstract class DataExtension extends Extension {
 	 * @param $validationResult Local validation result
 	 * @throws ValidationException
 	 */
-	function validate(ValidationResult $validationResult) {
+	public function validate(ValidationResult $validationResult) {
 	}
 	
 	/**
@@ -64,7 +66,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param SQLQuery $query Query to augment.
 	 */
-	function augmentSQL(SQLQuery &$query) {
+	public function augmentSQL(SQLQuery &$query) {
 	}
 
 	/**
@@ -73,7 +75,7 @@ abstract class DataExtension extends Extension {
 	 * When duplicating a table's structure, remember to duplicate the create options
 	 * as well. See {@link Versioned->augmentDatabase} for an example.
 	 */
-	function augmentDatabase() {
+	public function augmentDatabase() {
 	}
 	
 	/**
@@ -81,37 +83,37 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param SQLQuery $manipulation Query to augment.
 	 */
-	function augmentWrite(&$manipulation) {
+	public function augmentWrite(&$manipulation) {
 	}
 	
-	function onBeforeWrite() {
+	public function onBeforeWrite() {
 	}
 	
-	function onAfterWrite() {
+	public function onAfterWrite() {
 	}
 	
-	function onBeforeDelete() {
+	public function onBeforeDelete() {
 	}
 	
-	function onAfterDelete() {
+	public function onAfterDelete() {
 	}
 	
-	function requireDefaultRecords() {
+	public function requireDefaultRecords() {
 	}
 
-	function populateDefaults() {
+	public function populateDefaults() {
 	}
 	
-	function can($member) {
+	public function can($member) {
 	}
 	
-	function canEdit($member) {
+	public function canEdit($member) {
 	}
 	
-	function canDelete($member) {
+	public function canDelete($member) {
 	}
 	
-	function canCreate($member) {
+	public function canCreate($member) {
 	}
 
 	/**
@@ -126,7 +128,7 @@ abstract class DataExtension extends Extension {
 	 * @return array Returns a map where the keys are db, has_one, etc, and
 	 *               the values are additional fields/relations to be defined.
 	 */
-	function extraStatics($class = null, $extension = null) {
+	public function extraStatics($class = null, $extension = null) {
 		return array();
 	}
 	
@@ -143,7 +145,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param FieldList $fields FieldList with a contained TabSet
 	 */
-	function updateCMSFields(FieldList $fields) {
+	public function updateCMSFields(FieldList $fields) {
 	}
 	
 	/**
@@ -154,7 +156,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param FieldList $fields FieldList without TabSet nesting
 	 */
-	function updateFrontEndFields(FieldList $fields) {
+	public function updateFrontEndFields(FieldList $fields) {
 	}
 	
 	/**
@@ -163,7 +165,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param FieldList $actions FieldList
 	 */
-	function updateCMSActions(FieldList $actions) {
+	public function updateCMSActions(FieldList $actions) {
 	}
 	
 	/**
@@ -174,7 +176,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param array $fields Array of field names
 	 */
-	function updateSummaryFields(&$fields) {
+	public function updateSummaryFields(&$fields) {
 		$summary_fields = Config::inst()->get($this->class, 'summary_fields');
 		if($summary_fields) {
 			// if summary_fields were passed in numeric array,
@@ -194,7 +196,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param array $labels Array of field labels
 	 */
-	function updateFieldLabels(&$labels) {
+	public function updateFieldLabels(&$labels) {
 		$field_labels = Config::inst()->get($this->class, 'field_labels');
 		if($field_labels) {
 			$labels = array_merge($labels, $field_labels);

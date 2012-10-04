@@ -7,7 +7,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 	
 	protected $usesDatabase = true;
 	
-	function testLegacyPasswordHashMigrationUponLogin() {
+	public function testLegacyPasswordHashMigrationUponLogin() {
 		$member = new Member();
 		
 		$field=Member::get_unique_identifier_field();
@@ -29,8 +29,9 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$this->assertTrue($result->valid());
 	}
 	
-	function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
-		Config::inst()->update('PasswordEncryptor', 'encryptors', array('crc32'=>array('PasswordEncryptor_PHPHash'=>'crc32')));
+	public function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
+		Config::inst()->update('PasswordEncryptor', 'encryptors',
+			array('crc32'=>array('PasswordEncryptor_PHPHash'=>'crc32')));
 		$field=Member::get_unique_identifier_field();
 		
 		$member = new Member();
@@ -51,7 +52,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$this->assertTrue($result->valid());
 	}
 	
-	function testCustomIdentifierField(){
+	public function testCustomIdentifierField(){
 		
 		$origField = Member::get_unique_identifier_field();
 		Member::set_unique_identifier_field('Username');

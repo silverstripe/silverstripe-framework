@@ -13,55 +13,64 @@
  * If the value is an array, each value in the array may also be one of those three types
  *
  * A property can have a value specified in multiple locations, each of which have a hardcoded or explicit priority.
- * We combine all these values together into a "composite" value using rules that depend on the priority order of the locations
- * to give the final value, using these rules:
+ * We combine all these values together into a "composite" value using rules that depend on the priority order of the
+ * locations to give the final value, using these rules:
  *
- * - If the value is an array, each array is added to the _beginning_ of the composite array in ascending priority order.
- *   If a higher priority item has a non-integer key which is the same as a lower priority item, the value of those items
- *   is merged using these same rules, and the result of the merge is located in the same location the higher priority item
- *   would be if there was no key clash. Other than in this key-clash situation, within the particular array, order is preserved.
+ * - If the value is an array, each array is added to the _beginning_ of the composite array in ascending priority
+ *   order. If a higher priority item has a non-integer key which is the same as a lower priority item, the value of
+ *   those items  is merged using these same rules, and the result of the merge is located in the same location the
+ *   higher priority item would be if there was no key clash. Other than in this key-clash situation, within the
+ *   particular array, order is preserved.
  *
  * - If the value is not an array, the highest priority value is used without any attempt to merge
  *
- * It is an error to have mixed types of the same named property in different locations (but an error will not necessarily
- * be raised due to optimisations in the lookup code)
+ * It is an error to have mixed types of the same named property in different locations (but an error will not
+ * necessarily be raised due to optimisations in the lookup code)
  *
- * The exception to this is "false-ish" values - empty arrays, empty strings, etc. When merging a non-false-ish value with a
- * false-ish value, the result will be the non-false-ish value regardless of priority. When merging two false-sh values
- * the result will be the higher priority false-ish value.
+ * The exception to this is "false-ish" values - empty arrays, empty strings, etc. When merging a non-false-ish value
+ * with a false-ish value, the result will be the non-false-ish value regardless of priority. When merging two
+ * false-ish values the result will be the higher priority false-ish value.
  *
  * The locations that configuration values are taken from in highest -> lowest priority order
  *
  * - Any values set via a call to Config#update
  *
- * - The configuration values taken from the YAML files in _config directories (internally sorted in before / after order, where
- *   the item that is latest is highest priority)
+ * - The configuration values taken from the YAML files in _config directories (internally sorted in before / after
+ *   order, where the item that is latest is highest priority)
  *
- * - Any static set on an "additional static source" class (such as an extension) named the same as the name of the property
+ * - Any static set on an "additional static source" class (such as an extension) named the same as the name of the
+ *   property
  *
  * - Any static set on the class named the same as the name of the property
  *
  * - The composite configuration value of the parent class of this class
  *
- * At some of these levels you can also set masks. These remove values from the composite value at their priority point rather than add.
- * They are much simpler. They consist of a list of key / value pairs. When applied against the current composite value
+ * At some of these levels you can also set masks. These remove values from the composite value at their priority
+ * point rather than add. They are much simpler. They consist of a list of key / value pairs. When applied against the
+ * current composite value:
  *
- * - If the composite value is a sequential array, any member of that array that matches any value in the mask is removed
+ * - If the composite value is a sequential array, any member of that array that matches any value in the mask is
+ *   removed
  *
- * - If the composite value is an associative array, any member of that array that matches both the key and value of any pair in the mask is removed
+ * - If the composite value is an associative array, any member of that array that matches both the key and value of
+ *   any pair in the mask is removed
  *
  * - If the composite value is not an array, if that value matches any value in the mask it is removed
- *
- *
  */
 class Config {
 
-	/** @var Object - A marker instance for the "anything" singleton value. Don't access directly, even in-class, always use self::anything() */
+	/**
+	 * [A marker instance for the "anything" singleton value. Don't access directly, even in-class, always use
+	 * self::anything()
+	 * @var Object
+	 */
 	static private $_anything = null;
 
 	/**
-	 * Get a marker class instance that is used to do a "remove anything with this key" by adding $key => Config::anything() to the suppress array
-	 * todo: Does this follow the SS coding conventions? Config::get_anything_marker_instance() is a lot less elegant.
+	 * Get a marker class instance that is used to do a "remove anything with this key" by adding
+	 * $key => Config::anything() to the suppress array
+	 * 
+	 * @todo Does this follow the SS coding conventions? Config::get_anything_marker_instance() is a lot less elegant.
 	 * @return Object
 	 */
 	static public function anything() {
@@ -71,25 +80,41 @@ class Config {
 
 	// -- Source options bitmask --
 
-	/** @const source options bitmask value - merge all parent configuration in as lowest priority */
+	/**
+	 * source options bitmask value - merge all parent configuration in as lowest priority
+	 * @const
+	 */
 	const INHERITED = 0;
-	/** @const source options bitmask value - only get configuration set for this specific class, not any of it's parents */
+	/**
+	 * source options bitmask value - only get configuration set for this specific class, not any of it's parents
+	 * @const
+	 */
 	const UNINHERITED = 1;
-	/** @const source options bitmask value - inherit, but stop on the first class that actually provides a value (event an empty value) */
+	/**
+	 * source options bitmask value - inherit, but stop on the first class that actually provides a value (event an
+	 * empty value)
+	 * @const
+	 */
 	const FIRST_SET = 2;
 	/** @const source options bitmask value - do not use additional statics sources (such as extension) */
 	const EXCLUDE_EXTRA_SOURCES = 4;
 
 	// -- get_value_type response enum --
 
-	/** @const Return flag for get_value_type indicating value is a scalar (or really just not-an-array, at least ATM)*/
+	/**
+	 * Return flag for get_value_type indicating value is a scalar (or really just not-an-array, at least ATM)
+	 * @const
+	 */
 	const ISNT_ARRAY = 1;
-	/** @const Return flag for get_value_type indicating value is an array */
+	/**
+	 * Return flag for get_value_type indicating value is an array
+	 * @const
+	 */
 	const IS_ARRAY = 2;
 
 	/**
-	 * Get whether the value is an array or not. Used to be more complicated, but still nice sugar to have an enum to compare
-	 * and not just a true/false value
+	 * Get whether the value is an array or not. Used to be more complicated, but still nice sugar to have an enum
+	 * to compare and not just a true/false value
 	 * @param $val any - The value
 	 * @return int - One of ISNT_ARRAY or IS_ARRAY
 	 */
@@ -103,7 +128,8 @@ class Config {
 	 * @throws UnexpectedValueException
 	 */
 	static protected function type_mismatch() {
-		throw new UnexpectedValueException('Type mismatch in configuration. All values for a particular property must contain the same type (or no value at all).');
+		throw new UnexpectedValueException('Type mismatch in configuration. All values for a particular property must'
+			. ' contain the same type (or no value at all).');
 	}
 
 	/* @todo If we can, replace next static & static methods with DI once that's in */
@@ -141,7 +167,7 @@ class Config {
 	 * Empty construction, otherwise calling singleton('Config') (not the right way to get the current active config
 	 * instance, but people might) gives an error
 	 */
-	function __construct() {
+	public function __construct() {
 	}
 
 	/** @var [array] - Array of arrays. Each member is an nested array keyed as $class => $name => $value,
@@ -203,7 +229,7 @@ class Config {
 	 * @param $dest array - The existing high priority associative array
 	 * @param $src array - The low priority associative array to merge in
 	 */
-	static function merge_array_low_into_high(&$dest, $src) {
+	public static function merge_array_low_into_high(&$dest, $src) {
 		foreach ($src as $k => $v) {
 			if (!$v) {
 				continue;
@@ -238,13 +264,13 @@ class Config {
 	 * @param $dest array - The existing low priority associative array
 	 * @param $src array - The high priority array to merge in
 	 */
-	static function merge_array_high_into_low(&$dest, $src) {
+	public static function merge_array_high_into_low(&$dest, $src) {
 		$res = $src;
 		self::merge_array_low_into_high($res, $dest);
 		$dest = $res;
 	}
 
-	static function merge_high_into_low(&$result, $value) {
+	public static function merge_high_into_low(&$result, $value) {
 		if (!$value) return;
 		$newType = self::get_value_type($value);
 
@@ -260,7 +286,7 @@ class Config {
 		}
 	}
 
-	static function merge_low_into_high(&$result, $value, $suppress) {
+	public static function merge_low_into_high(&$result, $value, $suppress) {
 		$newType = self::get_value_type($value);
 
 		if ($suppress) {
@@ -285,7 +311,7 @@ class Config {
 		}
 	}
 
-	static function check_value_contained_in_suppress_array($v, $suppresses) {
+	public static function check_value_contained_in_suppress_array($v, $suppresses) {
 		foreach ($suppresses as $suppress) {
 			list($sk, $sv) = $suppress;
 			if ($sv === self::anything() || $v == $sv) return true;
@@ -320,11 +346,14 @@ class Config {
 	 * Get the config value associated for a given class and property
 	 *
 	 * This merges all current sources and overrides together to give final value
-	 * todo: Currently this is done every time. This function is an inner loop function, so we really need to be caching heavily here.
+	 * todo: Currently this is done every time. This function is an inner loop function, so we really need to be
+	 * caching heavily here.
 	 *
 	 * @param $class string - The name of the class to get the value for
 	 * @param $name string - The property to get the value for
-	 * @param int $sourceOptions - Bitmask which can be set to some combintain of Config::UNINHERITED, Config::FIRST_SET, and Config::EXCLUDE_EXTENSIONS.
+	 * @param int $sourceOptions Bitmask which can be set to some combintain of Config::UNINHERITED,
+	 *                           Config::FIRST_SET, and Config::EXCLUDE_EXTENSIONS.
+	 *                           
 	 *   Config::UNINHERITED does not include parent classes when merging configuration fragments
 	 *   Config::FIRST_SET stops inheriting once the first class that sets a value (even an empty value) is encoutered
 	 *   Config::EXCLUDE_EXTRA_SOURCES does not include any additional static sources (such as extensions)
@@ -333,11 +362,14 @@ class Config {
 	 *   Setting both Config::UNINHERITED and Config::FIRST_SET behaves the same as just Config::UNINHERITED
 	 *
 	 * should the parent classes value be merged in as the lowest priority source?
-	 * @param null $result array|scalar - Reference to a variable to put the result in. Also returned, so this can be left as null safely. If you do pass a value, it will be treated as the highest priority value in the result chain
-	 * @param null $suppress array - Internal use when called by child classes. Array of mask pairs to filter value by
-	 * @return array|scalar - The value of the config item, or null if no value set. Could be an associative array, sequential array or scalar depending on value (see class docblock)
+	 * @param $result array|scalar Reference to a variable to put the result in. Also returned, so this can be left
+	 *                             as null safely. If you do pass a value, it will be treated as the highest priority
+	 *                             value in the result chain
+	 * @param $suppress array Internal use when called by child classes. Array of mask pairs to filter value by
+	 * @return array|scalar The value of the config item, or null if no value set. Could be an associative array,
+	 *                      sequential array or scalar depending on value (see class docblock)
 	 */
-	function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
+	public function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
 		// If result is already not something to merge into, just return it
 		if ($result !== null && !is_array($result)) return $result;
 
@@ -351,7 +383,9 @@ class Config {
 			}
 
 			if (isset($this->suppresses[$k][$class][$name])) {
-				$suppress = $suppress ? array_merge($suppress, $this->suppresses[$k][$class][$name]) : $this->suppresses[$k][$class][$name];
+				$suppress = $suppress 
+					? array_merge($suppress, $this->suppresses[$k][$class][$name]) 
+					: $this->suppresses[$k][$class][$name];
 			}
 		}
 
@@ -384,7 +418,8 @@ class Config {
 		}
 
 		// Finally, merge in the values from the parent class
-		if (($sourceOptions & self::UNINHERITED) != self::UNINHERITED && (($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)) {
+		if (($sourceOptions & self::UNINHERITED) != self::UNINHERITED 
+				&& (($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)) {
 			$parent = get_parent_class($class);
 			if ($parent) $this->get($parent, $name, $sourceOptions, $result, $suppress);
 		}
@@ -399,8 +434,8 @@ class Config {
 	/**
 	 * Update a configuration value
 	 *
-	 * Configuration is modify only. The value passed is merged into the existing configuration. If you want to replace the
-	 * current value, you'll need to call remove first.
+	 * Configuration is modify only. The value passed is merged into the existing configuration. If you want to
+	 * replace the current value, you'll need to call remove first.
 	 *
 	 * @param $class string - The class to update a configuration value for
 	 * @param $name string - The configuration property name to update
@@ -412,7 +447,7 @@ class Config {
 	 *
 	 * You will get an error if you try and override array values with non-array values or vice-versa
 	 */
-	function update($class, $name, $val) {
+	public function update($class, $name, $val) {
 		if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
 
 		if (!isset($this->overrides[0][$class][$name])) $this->overrides[0][$class][$name] = $val;
@@ -429,12 +464,13 @@ class Config {
 	 *
 	 * Works like this:
 	 *   - Check the current override array, and remove any values that match the arguments provided
-	 *   - Keeps track of the arguments passed to this method, and in get filters everything _except_ the current override array to
-	 *     exclude any match
+	 *   - Keeps track of the arguments passed to this method, and in get filters everything _except_ the current
+	 *     override array to exclude any match
 	 *
 	 * This way we can re-set anything removed by a call to this function by calling set. Because the current override
-	 * array is only filtered immediately on calling this remove method, that value will then be exposed. However, every
-	 * other source is filtered on request, so no amount of changes to parent's configuration etc can override a remove call.
+	 * array is only filtered immediately on calling this remove method, that value will then be exposed. However,
+	 * every other source is filtered on request, so no amount of changes to parent's configuration etc can override a
+	 * remove call.
 	 *
 	 * @param $class string - The class to remove a configuration value from
 	 * @param $name string - The configuration name
@@ -448,7 +484,7 @@ class Config {
 	 *
 	 * Matching is always by "==", not by "==="
 	 */
-	function remove($class, $name) {
+	public function remove($class, $name) {
 		$argc = func_num_args();
 		$key = $argc > 2 ? func_get_arg(2) : self::anything();
 		$value = $argc > 3 ? func_get_arg(3) : self::anything();
@@ -462,7 +498,9 @@ class Config {
 				$this->overrides[0][$class][$name] = self::filter_array_by_suppress_array($value, array($suppress));
 			}
 			else {
-				if (self::check_value_contained_in_suppress_array($value, array($suppress))) unset($this->overrides[0][$class][$name]);
+				if (self::check_value_contained_in_suppress_array($value, array($suppress))) {
+					unset($this->overrides[0][$class][$name]);
+				}
 			}
 		}
 
@@ -477,23 +515,23 @@ class Config {
 class Config_ForClass {
 	protected $class;
 
-	function __construct($class) {
+	public function __construct($class) {
 		$this->class = $class;
 	}
 
-	function __get($name) {
+	public function __get($name) {
 		return Config::inst()->get($this->class, $name);
 	}
 
-	function __set($name, $val) {
+	public function __set($name, $val) {
 		return Config::inst()->update($this->class, $name, $val);
 	}
 
-	function get($name, $sourceOptions = 0) {
+	public function get($name, $sourceOptions = 0) {
 		return Config::inst()->get($this->class, $name, $sourceOptions);
 	}
 
-	function forClass($class) {
+	public function forClass($class) {
 		return Config::inst()->forClass($class);
 	}
 }

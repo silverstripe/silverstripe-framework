@@ -23,7 +23,7 @@ class SS_Transliterator extends Object {
 	/**
 	 * Convert the given utf8 string to a safe ASCII source
 	 */
-	function toASCII($source) {
+	public function toASCII($source) {
 		if(function_exists('iconv') && self::$use_iconv) return $this->useIconv($source);
 		else return $this->useStrTr($source);
 	}
@@ -42,8 +42,8 @@ class SS_Transliterator extends Object {
 			'ô'=>'o', 'õ'=>'o', 'ö'=>'oe', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ü'=>'ue', 'ý'=>'y', 'ý'=>'y',
 			'þ'=>'b', 'ÿ'=>'y', 'Ŕ'=>'R', 'ŕ'=>'r',
 			'Ā'=>'A', 'ā'=>'a', 'Ē'=>'E', 'ē'=>'e', 'Ī'=>'I', 'ī'=>'i', 'Ō'=>'O', 'ō'=>'o', 'Ū'=>'U', 'ū'=>'u',
-			'œ'=>'oe', 'ß'=>'ss', 'ĳ'=>'ij', 
-			'ą'=>'a','ę'=>'e', 'ė'=>'e', 'į'=>'i','ų'=>'u','ū'=>'u', 'Ą'=>'A','Ę'=>'E', 'Ė'=>'E', 'Į'=>'I','Ų'=>'U','Ū'=>'u'
+			'œ'=>'oe', 'ß'=>'ss', 'ĳ'=>'ij', 'ą'=>'a','ę'=>'e', 'ė'=>'e', 'į'=>'i','ų'=>'u','ū'=>'u', 'Ą'=>'A',
+			'Ę'=>'E', 'Ė'=>'E', 'Į'=>'I','Ų'=>'U','Ū'=>'u'
 		);
 
 		return strtr($source, $table);

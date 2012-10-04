@@ -21,7 +21,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'DataObjectTest_TeamComment'
 	);
 
-	function testQueriedColumnsID() {
+	public function testQueriedColumnsID() {
 		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('ID'));
@@ -35,7 +35,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals($expected, $playerList->sql());
 	}
 
-	function testQueriedColumnsFromBaseTableAndSubTable() {
+	public function testQueriedColumnsFromBaseTableAndSubTable() {
 		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('Title', 'SubclassDatabaseField'));
@@ -43,14 +43,14 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_Team"."Title", ' .
 			'"DataObjectTest_SubTeam"."SubclassDatabaseField", "DataObjectTest_Team"."ID", CASE WHEN ' .
 			'"DataObjectTest_Team"."ClassName" IS NOT NULL THEN "DataObjectTest_Team"."ClassName" ELSE ' .
-			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" LEFT JOIN ' .
-			'"DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
+			$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName" FROM "DataObjectTest_Team" ' .
+			'LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = "DataObjectTest_Team"."ID" WHERE ' .
 			'("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').')) ' .
 			'ORDER BY "DataObjectTest_Team"."Title" ASC';
 		$this->assertEquals($expected, $playerList->sql());
 	}
 
-	function testQueriedColumnsFromBaseTable() {
+	public function testQueriedColumnsFromBaseTable() {
 		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('Title'));
@@ -63,35 +63,39 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals($expected, $playerList->sql());
 	}
 
-	function testQueriedColumnsFromSubTable() {
+	public function testQueriedColumnsFromSubTable() {
 		$db = DB::getConn();
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		$playerList = $playerList->setQueriedColumns(array('SubclassDatabaseField'));
 		$expected = 'SELECT DISTINCT "DataObjectTest_Team"."ClassName", "DataObjectTest_Team"."Created", ' .
 			'"DataObjectTest_Team"."LastEdited", "DataObjectTest_SubTeam"."SubclassDatabaseField", ' .
 			'"DataObjectTest_Team"."ID", CASE WHEN "DataObjectTest_Team"."ClassName" IS NOT NULL THEN ' .
-			'"DataObjectTest_Team"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_Team').' END AS "RecordClassName", "DataObjectTest_Team"."Title" FROM ' .
-			'"DataObjectTest_Team" LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = ' .
-			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN ('.$db->prepStringForDB('DataObjectTest_SubTeam').')) ' . 
+			'"DataObjectTest_Team"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_Team').' END ' .
+			'AS "RecordClassName", "DataObjectTest_Team"."Title" ' .
+			'FROM "DataObjectTest_Team" LEFT JOIN "DataObjectTest_SubTeam" ON "DataObjectTest_SubTeam"."ID" = ' .
+			'"DataObjectTest_Team"."ID" WHERE ("DataObjectTest_Team"."ClassName" IN (' . 
+			$db->prepStringForDB('DataObjectTest_SubTeam').')) ' . 
 			'ORDER BY "DataObjectTest_Team"."Title" ASC';
 		$this->assertEquals($expected, $playerList->sql());
 	}
 
-	function testNoSpecificColumnNamesBaseDataObjectQuery() {
+	public function testNoSpecificColumnNamesBaseDataObjectQuery() {
 		// This queries all columns from base table
 		$playerList = new DataList('DataObjectTest_Team');
 		// Shouldn't be a left join in here.
-		$this->assertEquals(0, preg_match('/SELECT DISTINCT "DataObjectTest_Team"."ID" .* LEFT JOIN .* FROM "DataObjectTest_Team"/', $playerList->sql()));
+		$this->assertEquals(0, 
+			preg_match('/SELECT DISTINCT "DataObjectTest_Team"."ID" .* LEFT JOIN .* FROM "DataObjectTest_Team"/',
+			$playerList->sql()));
 	}
 
-	function testNoSpecificColumnNamesSubclassDataObjectQuery() {
+	public function testNoSpecificColumnNamesSubclassDataObjectQuery() {
 		// This queries all columns from base table and subtable
 		$playerList = new DataList('DataObjectTest_SubTeam');
 		// Should be a left join.
 		$this->assertEquals(1, preg_match('/SELECT DISTINCT .* LEFT JOIN .* /', $playerList->sql()));
 	}
 
-	function testLazyLoadedFieldsHasField() {
+	public function testLazyLoadedFieldsHasField() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
 		$subteam1Lazy = $teams->find('ID', $subteam1->ID);
@@ -101,7 +105,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertTrue($subteam1Lazy->hasField('SubclassDatabaseField'));
 	}
 
-	function testLazyLoadedFieldsGetField() {
+	public function testLazyLoadedFieldsGetField() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
 		$subteam1Lazy = $teams->find('ID', $subteam1->ID);
@@ -112,7 +116,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		);
 	}
 
-	function testLazyLoadedFieldsSetField() {
+	public function testLazyLoadedFieldsSetField() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$subteam1ID = $subteam1->ID;
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
@@ -132,7 +136,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		);
 	}
 
-	function testLazyLoadedFieldsWriteWithUnloadedFields() {
+	public function testLazyLoadedFieldsWriteWithUnloadedFields() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$subteam1ID = $subteam1->ID;
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
@@ -152,7 +156,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		);
 	}
 
-	function testLazyLoadedFieldsWriteNullFields() {
+	public function testLazyLoadedFieldsWriteNullFields() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$subteam1ID = $subteam1->ID;
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
@@ -172,7 +176,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		);
 	}
 
-	function testLazyLoadedFieldsGetChangedFields() {
+	public function testLazyLoadedFieldsGetChangedFields() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
 		$subteam1Lazy = $teams->find('ID', $subteam1->ID);
@@ -189,7 +193,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		);
 	}
 
-	function testLazyLoadedFieldsHasOneRelation() {
+	public function testLazyLoadedFieldsHasOneRelation() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$parentTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
@@ -200,7 +204,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals($parentTeam->ID, $parentTeamLazy->ID);
 	}
 
-	function testLazyLoadedFieldsToMap() {
+	public function testLazyLoadedFieldsToMap() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$parentTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
@@ -210,7 +214,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals('Subclassed 1', $mapLazy['SubclassDatabaseField']);
 	}
 
-	function testLazyLoadedFieldsIsEmpty() {
+	public function testLazyLoadedFieldsIsEmpty() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$parentTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
@@ -222,7 +226,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertFalse($subteam1Lazy->isEmpty());
 	}
 
-	function testLazyLoadedFieldsDuplicate() {
+	public function testLazyLoadedFieldsDuplicate() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$parentTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
@@ -232,7 +236,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals('Subclassed 1', $subteam1LazyDup->SubclassDatabaseField);
 	}
 
-	function testLazyLoadedFieldsGetAllFields() {
+	public function testLazyLoadedFieldsGetAllFields() {
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$parentTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class

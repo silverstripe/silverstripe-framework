@@ -23,10 +23,11 @@ class Varchar extends StringField {
  	 * 
  	 * @param $name string The name of the field
  	 * @param $size int The maximum size of the field, in terms of characters
- 	 * @param $options array Optional parameters, e.g. array("nullifyEmpty"=>false). See {@link StringField::setOptions()} for information on the available options
+ 	 * @param $options array Optional parameters, e.g. array("nullifyEmpty"=>false).
+ 	 *                       See {@link StringField::setOptions()} for information on the available options
  	 * @return unknown_type
  	 */
- 	function __construct($name = null, $size = 50, $options = array()) {
+ 	public function __construct($name = null, $size = 50, $options = array()) {
 		$this->size = $size ? $size : 50;
 		parent::__construct($name, $options);
 	}
@@ -35,7 +36,7 @@ class Varchar extends StringField {
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()
  	 */
-	function requireField() {
+	public function requireField() {
 		$parts = array(
 			'datatype'=>'varchar',
 			'precision'=>$this->size,
@@ -55,14 +56,14 @@ class Varchar extends StringField {
 	/**
 	 * Return the first letter of the string followed by a .
 	 */
-	function Initial() {
+	public function Initial() {
 		if($this->exists()) return $this->value[0] . '.';
 	}
 	
 	/**
 	 * Ensure that the given value is an absolute URL.
 	 */
-	function URL() {
+	public function URL() {
 		if(preg_match('#^[a-zA-Z]+://#', $this->value)) return $this->value;
 		else return "http://" . $this->value;
 	}
@@ -71,7 +72,7 @@ class Varchar extends StringField {
 	 * Return the value of the field in rich text format
 	 * @return string
 	 */
-	function RTF() {
+	public function RTF() {
 		return str_replace("\n", '\par ', $this->value);
 	}
 	

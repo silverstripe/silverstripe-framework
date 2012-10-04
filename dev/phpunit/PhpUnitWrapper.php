@@ -135,7 +135,7 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	 *
 	 * @return PhpUnitWrapper Instance of the php-wrapper class
 	 */
-	static function inst() {
+	public static function inst() {
 		
 		if (self::$phpunit_wrapper == null) {
 			 if (fileExistsInIncludePath("/PHPUnit/Autoload.php")) {
@@ -157,7 +157,7 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	 *
 	 * @return boolean true if PHPUnit has been installed on the environment.
 	 */
-	static function has_php_unit() {
+	public static function has_php_unit() {
 		return (Bool) self::inst()->getVersion();
 	}
 	

@@ -8,7 +8,7 @@ class TableListFieldTest extends SapphireTest {
 		'TableListFieldTest_CsvExport',
 	);
 	
-	function testCanReferenceCustomMethodsAndFieldsOnObject() {
+	public function testCanReferenceCustomMethodsAndFieldsOnObject() {
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
 			"B" => "Col B",
@@ -29,7 +29,7 @@ class TableListFieldTest extends SapphireTest {
 		$this->assertRegExp('/>\s*a2-e</', $result);
 	}
 	
-	function testUnpaginatedSourceItemGeneration() {
+	public function testUnpaginatedSourceItemGeneration() {
 		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
 		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
 		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
@@ -62,7 +62,7 @@ class TableListFieldTest extends SapphireTest {
 		), $itemMap->toArray());
 	}
 	
-	function testFirstPageOfPaginatedSourceItemGeneration() {
+	public function testFirstPageOfPaginatedSourceItemGeneration() {
 		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
 		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
 		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
@@ -95,7 +95,7 @@ class TableListFieldTest extends SapphireTest {
 		), $itemMap->toArray());
 	}
 	
-	function testSecondPageOfPaginatedSourceItemGeneration() {
+	public function testSecondPageOfPaginatedSourceItemGeneration() {
 		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
 		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
 		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
@@ -126,7 +126,7 @@ class TableListFieldTest extends SapphireTest {
 		$this->assertEquals(array($item3->ID => "a3", $item4->ID => "a4"), $itemMap->toArray());
 	}
 	
-	function testSelectOptionsAddRemove() {
+	public function testSelectOptionsAddRemove() {
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
 		));
@@ -139,7 +139,7 @@ class TableListFieldTest extends SapphireTest {
 		$this->assertEquals($table->SelectOptions()->map('Key', 'Value'), array("G"=>"FieldG"));		
 	}
 	
-	function testSelectOptionsRendering() {
+	public function testSelectOptionsRendering() {
 		$obj1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
 		$obj2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
 		$obj3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
@@ -162,7 +162,7 @@ class TableListFieldTest extends SapphireTest {
 	 * Get that visiting the field's URL returns the content of the field.
 	 * This capability is used by ajax
 	 */
-	function testAjaxRefreshing() {
+	public function testAjaxRefreshing() {
 		$controller = new TableListFieldTest_TestController();
 		$table = $controller->TestForm()->Fields()->First();
 
@@ -176,7 +176,7 @@ class TableListFieldTest extends SapphireTest {
         $this->assertRegExp('/<th[^>]*>.*Col E.*<\/th>/si', $ajaxResponse);
 	}
 	
-	function testCsvExport() {
+	public function testCsvExport() {
 		$table = new TableListField("Tester", "TableListFieldTest_CsvExport", array(
 			"A" => "Col A",
 			"B" => "Col B"
@@ -217,7 +217,7 @@ class TableListFieldTest extends SapphireTest {
 		unlink($csvFileName);
 	}
 
-	function testLink() {
+	public function testLink() {
 		// A TableListField must be inside a form for its links to be generated
 		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			new TableListField("Tester", "TableListFieldTest_Obj", array(
@@ -232,11 +232,12 @@ class TableListFieldTest extends SapphireTest {
 		$table = $form->Fields()->dataFieldByName('Tester');
 		$this->assertEquals(
 			$table->Link('test'),
-			sprintf('TableListFieldTest_TestController/TestForm/field/Tester/test?SecurityID=%s', $form->Fields()->dataFieldByName('SecurityID')->Value())
+			sprintf('TableListFieldTest_TestController/TestForm/field/Tester/test?SecurityID=%s',
+				$form->Fields()->dataFieldByName('SecurityID')->Value())
 		);
 	}
 
-	function testPreservedSortOptionsInPaginationLink() {
+	public function testPreservedSortOptionsInPaginationLink() {
 		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
 		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
 		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
@@ -296,7 +297,7 @@ class TableListFieldTest extends SapphireTest {
     /**
      * Check that a SS_List can be passed to TableListField
      */
-	function testDataObjectSet() {
+	public function testDataObjectSet() {
 	    $one = new TableListFieldTest_Obj;
 	    $one->A = "A-one";
 	    $two = new TableListFieldTest_Obj;
@@ -335,11 +336,11 @@ class TableListFieldTest_Obj extends DataObject implements TestOnly {
 	);
 	static $default_sort = "A";
 	
-	function D() {
+	public function D() {
 		return $this->A . '/' . $this->B . '/' . $this->C;
 	}
 	
-	function getE() {
+	public function getE() {
 		return $this->A . '-e';
 	}
 }
@@ -353,10 +354,10 @@ class TableListFieldTest_CsvExport extends DataObject implements TestOnly {
 }
 
 class TableListFieldTest_TestController extends Controller {
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links("TableListFieldTest_TestController/", $action);
 	}
-	function TestForm() {
+	public function TestForm() {
 		$table = new TableListField("Table", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
 			"B" => "Col B",

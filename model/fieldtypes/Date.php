@@ -20,9 +20,10 @@
  */
 class Date extends DBField {
 	
-	function setValue($value, $record = null) {
+	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
-			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be saved as NULL in database
+			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
+			// saved as NULL in database
 			$this->value = null;
 			return;
 		}
@@ -60,42 +61,42 @@ class Date extends DBField {
 	/**
 	 * Returns the date in the format dd/mm/yy 
 	 */	 
-	function Nice() {
+	public function Nice() {
 		if($this->value) return $this->Format('d/m/Y');
 	}
 	
 	/**
 	 * Returns the date in US format: “01/18/2006”
 	 */
-	function NiceUS() {
+	public function NiceUS() {
 		if($this->value) return $this->Format('m/d/Y');
 	}
 	
 	/** 
 	 * Returns the year from the given date
 	 */
-	function Year() {
+	public function Year() {
 		if($this->value) return $this->Format('Y');
 	}
 	
 	/**
 	 * Returns the Full day, of the given date.
 	 */
-	function Day(){
+	public function Day(){
 		if($this->value) return $this->Format('l');
 	}
 	
 	/**
 	 * Returns a full textual representation of a month, such as January.
 	 */
-	function Month() {
+	public function Month() {
 		if($this->value) return $this->Format('F');
 	}
 	
 	/**
 	 * Returns the short version of the month such as Jan
 	 */
-	function ShortMonth() {
+	public function ShortMonth() {
 		if($this->value) return $this->Format('M');
 	}
 
@@ -104,7 +105,7 @@ class Date extends DBField {
 	 * @param boolean $includeOrdinals Include ordinal suffix to day, e.g. "th" or "rd"
 	 * @return string
 	 */
-	function DayOfMonth($includeOrdinal = false) {
+	public function DayOfMonth($includeOrdinal = false) {
 		if($this->value) {
 			$format = 'j';
 			if ($includeOrdinal) $format .= 'S';
@@ -115,14 +116,14 @@ class Date extends DBField {
 	/**
 	 * Returns the date in the format 24 December 2006
 	 */
-	function Long() {
+	public function Long() {
 		if($this->value) return $this->Format('j F Y');
 	}
 	
 	/**
 	 * Returns the date in the format 24 Dec 2006
 	 */
-	function Full() {
+	public function Full() {
 		if($this->value) return $this->Format('j M Y');
 	}
 	
@@ -132,7 +133,7 @@ class Date extends DBField {
 	 * @param string $format Format code string. e.g. "d M Y" (see http://php.net/date)
 	 * @return string The date in the requested format
 	 */
-	function Format($format) {
+	public function Format($format) {
 		if($this->value){
 			$date = new DateTime($this->value);
 			return $date->Format($format);
@@ -145,7 +146,7 @@ class Date extends DBField {
 	 * strftime obeys the current LC_TIME/LC_ALL when printing lexical values
 	 * like day- and month-names
 	 */
-	function FormatI18N($formattingString) {
+	public function FormatI18N($formattingString) {
 		if($this->value) {
 			$fecfrm = strftime($formattingString, strtotime($this->value));
 			return utf8_encode($fecfrm);
@@ -158,7 +159,7 @@ class Date extends DBField {
 	 * @param boolean $includeOrdinals Include ordinal suffix to day, e.g. "th" or "rd"
 	 * @return string
 	 */
-	function RangeString($otherDateObj, $includeOrdinals = false) {
+	public function RangeString($otherDateObj, $includeOrdinals = false) {
 		$d1 = $this->DayOfMonth($includeOrdinals);
 		$d2 = $otherDateObj->DayOfMonth($includeOrdinals);
 		$m1 = $this->ShortMonth();
@@ -171,15 +172,15 @@ class Date extends DBField {
 		else return "$d1 - $d2 $m1 $y1";
 	}
 	
-	function Rfc822() {
+	public function Rfc822() {
 		if($this->value) return date('r', strtotime($this->value));
 	}
 	
-	function Rfc2822() {
+	public function Rfc2822() {
 		if($this->value) return date('Y-m-d H:i:s', strtotime($this->value));
 	}
 	
-	function Rfc3339() {
+	public function Rfc3339() {
 		$timestamp = ($this->value) ? strtotime($this->value) : false;
 		if(!$timestamp) return false;
 		
@@ -198,7 +199,7 @@ class Date extends DBField {
 	/**
 	 * Returns the number of seconds/minutes/hours/days or months since the timestamp
 	 */
-	function Ago() {
+	public function Ago() {
 		if($this->value) {
 			if(strtotime($this->value) == time() || time() > strtotime($this->value)) {
 				return _t(
@@ -218,7 +219,7 @@ class Date extends DBField {
 		}
 	}
 
-	function TimeDiff() {
+	public function TimeDiff() {
 
 		if($this->value) {
 			$ago = abs(time() - strtotime($this->value));
@@ -257,7 +258,7 @@ class Date extends DBField {
 	 * 
 	 * @return string
 	 */
-	function TimeDiffIn($format) {
+	public function TimeDiffIn($format) {
 		if($this->value) {
 			$ago = abs(time() - strtotime($this->value));
 			
@@ -290,7 +291,7 @@ class Date extends DBField {
 		}
 	}
 
-	function requireField() {
+	public function requireField() {
 		$parts=Array('datatype'=>'date', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'date', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
@@ -300,7 +301,7 @@ class Date extends DBField {
 	 * Returns true if date is in the past.
 	 * @return boolean
 	 */
-	function InPast() {
+	public function InPast() {
 		return strtotime($this->value) < time();
 	}
 	
@@ -308,7 +309,7 @@ class Date extends DBField {
 	 * Returns true if date is in the future.
 	 * @return boolean
 	 */
-	function InFuture() {
+	public function InFuture() {
 		return strtotime($this->value) > time();
 	}
 	
@@ -316,35 +317,35 @@ class Date extends DBField {
 	 * Returns true if date is today.
 	 * @return boolean
 	 */
-	function IsToday() {
+	public function IsToday() {
 		return (date('Y-m-d', strtotime($this->value)) == date('Y-m-d', time()));
 	}
 
 	/**
 	 * Returns a date suitable for insertion into a URL and use by the system.
 	 */
-	function URLDate() {
+	public function URLDate() {
 		return date('Y-m-d', strtotime($this->value));
 	}
 	
 	
-	function days_between($fyear, $fmonth, $fday, $tyear, $tmonth, $tday){
+	public function days_between($fyear, $fmonth, $fday, $tyear, $tmonth, $tday){
 	  return abs((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, $tmonth, $tday, $tyear))/(60*60*24));
 	}
 	
-	function day_before($fyear, $fmonth, $fday){
+	public function day_before($fyear, $fmonth, $fday){
 	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-1,$fyear));
 	}
 	
-	function next_day($fyear, $fmonth, $fday){
+	public function next_day($fyear, $fmonth, $fday){
 	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday+1,$fyear));
 	}
 	
-	function weekday($fyear, $fmonth, $fday){ // 0 is a Monday
+	public function weekday($fyear, $fmonth, $fday){ // 0 is a Monday
 	  return (((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, 7, 17, 2006))/(60*60*24))+700000) % 7;
 	}
 	
-	function prior_monday($fyear, $fmonth, $fday){
+	public function prior_monday($fyear, $fmonth, $fday){
 	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-$this->weekday($fyear, $fmonth, $fday),$fyear)); 
 	}
 	
@@ -359,7 +360,7 @@ class Date extends DBField {
 	 * @param $fyear int Determine historical value
 	 * @return string Date in YYYY-MM-DD format
 	 */
-	static function past_date($fmonth, $fday = 1, $fyear = null) {
+	public static function past_date($fmonth, $fday = 1, $fyear = null) {
 		if(!$fyear) $fyear = date('Y');
 		$fday = (int) $fday;
 		$fmonth = (int) $fmonth;

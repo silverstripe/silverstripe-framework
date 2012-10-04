@@ -57,7 +57,7 @@ class FileNameFilter extends Object {
 	 * @param String Filename including extension (not path).
 	 * @return String A filtered filename
 	 */
-	function filter($name) {
+	public function filter($name) {
 		$ext = pathinfo($name, PATHINFO_EXTENSION);
 		
 		$transliterator = $this->getTransliterator();
@@ -79,14 +79,14 @@ class FileNameFilter extends Object {
 	 * 
 	 * @param Array Map of find/replace used for preg_replace().
 	 */
-	function setReplacements($r) {
+	public function setReplacements($r) {
 		$this->replacements = $r;
 	}
 	
 	/**
 	 * @return Array
 	 */
-	function getReplacements() {
+	public function getReplacements() {
 		return ($this->replacements) ? $this->replacements : self::$default_replacements;
 	}
 		
@@ -98,7 +98,7 @@ class FileNameFilter extends Object {
 	/**
 	 * @return SS_Transliterator|NULL
 	 */
-	function getTransliterator() {
+	public function getTransliterator() {
 		if($this->transliterator === null && self::$default_use_transliterator) {
 			$this->transliterator = SS_Transliterator::create();
 		} 
@@ -108,14 +108,14 @@ class FileNameFilter extends Object {
 	/**
 	 * @param SS_Transliterator|FALSE
 	 */
-	function setTransliterator($t) {
+	public function setTransliterator($t) {
 		$this->transliterator = $t;
 	}
 	
 	/**
 	 * @return String File name without extension
 	 */
-	function getDefaultName() {
+	public function getDefaultName() {
 		return (string)uniqid();
 	}
 }

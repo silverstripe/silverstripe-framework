@@ -7,7 +7,7 @@ class RSSFeedTest extends SapphireTest {
 
 	protected static $original_host;
 
-	function testRSSFeed() {
+	public function testRSSFeed() {
 		$list = new ArrayList();
 		$list->push(new RSSFeedTest_ItemA());
 		$list->push(new RSSFeedTest_ItemB());
@@ -31,7 +31,8 @@ class RSSFeedTest extends SapphireTest {
 
 
 		// Feed #2 - put Content() into <title> and AltContent() into <description>
-		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description", "Content", "AltContent");
+		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description",
+			"Content", "AltContent");
 		$content = $rssFeed->outputToBrowser();
 
 		$this->assertContains('<title>ItemA Content</title>', $content);
@@ -77,19 +78,19 @@ class RSSFeedTest_ItemA extends ViewableData {
 		'AltContent' => 'Text',
 	);
 	
-	function getTitle() {
+	public function getTitle() {
 		return "ItemA";
 	}
 
-	function getContent() {
+	public function getContent() {
 		return "ItemA Content";
 	}
 
-	function getAltContent() {
+	public function getAltContent() {
 		return "ItemA AltContent";
 	}
 	
-	function Link($action = null) {
+	public function Link($action = null) {
 		return Controller::join_links("item-a/", $action);
 	}
 }
@@ -97,19 +98,19 @@ class RSSFeedTest_ItemA extends ViewableData {
 class RSSFeedTest_ItemB extends ViewableData {
 	// ItemB tests without $casting
 
-	function Title() {
+	public function Title() {
 		return "ItemB";
 	}
 
-	function AbsoluteLink() {
+	public function AbsoluteLink() {
 		return "http://www.example.com/item-b.html";
 	}
 
-	function Content() {
+	public function Content() {
 		return "ItemB Content";
 	}
 
-	function AltContent() {
+	public function AltContent() {
 		return "ItemB AltContent";
 	}
 }
@@ -125,11 +126,11 @@ class RSSFeedTest_ItemC extends ViewableData {
 	public $Content = "ItemC Content";
 	public $AltContent = "ItemC AltContent";
 
-	function Link() {
+	public function Link() {
 		return "item-c.html";
 	}
 
-	function AbsoluteLink() {
+	public function AbsoluteLink() {
 		return "http://www.example.com/item-c.html";
 	}
 }

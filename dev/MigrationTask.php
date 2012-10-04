@@ -4,7 +4,8 @@
  * 
  * <b>Creating Migration Tasks</b>
  * 
- * To create your own migration task all you need to do is define your own subclass of MigrationTask and define the following functions
+ * To create your own migration task all you need to do is define your own subclass of MigrationTask and define the
+ * following functions
  * 
  * <i>mysite/code/MyMigrationTask.php</i>
  * 
@@ -14,7 +15,7 @@
  * 	protected $title = "My Database Migrations"; // title of the script
  * 	protected $description = "Description"; // description of what it does
  * 	
- * 	function run($request) {
+ * 	public function run($request) {
  * 		if ($request->param('Direction') == 'down') {
  * 			$this->down();
  * 		} else {
@@ -22,11 +23,11 @@
  * 		}
  * 	}
  * 	
- * 	function up() {
+ * 	public function up() {
  * 		// do something when going from old -> new
  * 	}
  * 	
- * 	function down() {
+ * 	public function down() {
  * 		// do something when going from new -> old
  * 	}	
  * }
@@ -53,7 +54,7 @@ class MigrationTask extends BuildTask {
 	
 	protected $description = "Provide atomic database changes (not implemented yet)";
 	
-	function run($request) {
+	public function run($request) {
 		if ($request->param('Direction') == 'down') {
 			$this->down();
 		} else {
@@ -61,9 +62,9 @@ class MigrationTask extends BuildTask {
 		}
 	}
 	
-	function up() {}
+	public function up() {}
 	
-	function down() {}
+	public function down() {}
 	
 }
 

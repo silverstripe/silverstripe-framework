@@ -18,7 +18,7 @@ class MemberTest extends FunctionalTest {
 		)
 	);
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 
 		//Setting the locale has to happen in the constructor (using the setUp and tearDown methods doesn't work)
@@ -28,11 +28,11 @@ class MemberTest extends FunctionalTest {
 		i18n::set_default_locale('en_US');
 	}
 
-	function __destruct() {
+	public function __destruct() {
         i18n::set_default_locale($this->local);
     }
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->orig['Member_unique_identifier_field'] = Member::get_unique_identifier_field();
@@ -40,7 +40,7 @@ class MemberTest extends FunctionalTest {
 		Member::set_password_validator(null);
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		Member::set_unique_identifier_field($this->orig['Member_unique_identifier_field']);
 
 		parent::tearDown();
@@ -49,7 +49,7 @@ class MemberTest extends FunctionalTest {
 	/**
 	 * @expectedException ValidationException
 	 */
-	function testWriteDoesntMergeNewRecordWithExistingMember() {
+	public function testWriteDoesntMergeNewRecordWithExistingMember() {
 		$m1 = new Member();
 		$m1->Email = 'member@test.com';
 		$m1->write();
@@ -62,7 +62,7 @@ class MemberTest extends FunctionalTest {
 	/**
 	 * @expectedException ValidationException
 	 */
-	function testWriteDoesntMergeExistingMemberOnIdentifierChange() {
+	public function testWriteDoesntMergeExistingMemberOnIdentifierChange() {
 		$m1 = new Member();
 		$m1->Email = 'member@test.com';
 		$m1->write();
@@ -75,7 +75,7 @@ class MemberTest extends FunctionalTest {
 		$m2->write();
 	}
 	
-	function testDefaultPasswordEncryptionOnMember() {
+	public function testDefaultPasswordEncryptionOnMember() {
 		$memberWithPassword = new Member();
 		$memberWithPassword->Password = 'mypassword';
 		$memberWithPassword->write();
@@ -93,7 +93,7 @@ class MemberTest extends FunctionalTest {
 		);
 	}
 	
-	function testDefaultPasswordEncryptionDoesntChangeExistingMembers() {
+	public function testDefaultPasswordEncryptionDoesntChangeExistingMembers() {
 		$member = new Member();
 		$member->Password = 'mypassword';
 		$member->PasswordEncryption = 'sha1_v2.4';
@@ -115,7 +115,7 @@ class MemberTest extends FunctionalTest {
 		Security::set_password_encryption_algorithm($origAlgo);
 	}
 	
-	function testSetPassword() {
+	public function testSetPassword() {
 		$member = $this->objFromFixture('Member', 'test');
 		$member->Password = "test1";
 		$member->write();
@@ -126,7 +126,7 @@ class MemberTest extends FunctionalTest {
 	/**
 	 * Test that password changes are logged properly
 	 */
-	function testPasswordChangeLogging() {
+	public function testPasswordChangeLogging() {
 		$member = $this->objFromFixture('Member', 'test');
 		$this->assertNotNull($member);
 		$member->Password = "test1";
@@ -138,7 +138,8 @@ class MemberTest extends FunctionalTest {
 		$member->Password = "test3";
 		$member->write();
 	
-		$passwords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")->getIterator();
+		$passwords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")
+			->getIterator();
 		$this->assertNotNull($passwords);
 		$passwords->rewind();
 		$this->assertTrue($passwords->current()->checkPassword('test3'), "Password test3 not found in MemberRecord");
@@ -151,13 +152,14 @@ class MemberTest extends FunctionalTest {
 	
 		$passwords->next();
 		$this->assertInstanceOf('DataObject', $passwords->current());
-		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'), "Password 1nitialPassword not found in MemberRecord");
+		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'),
+			"Password 1nitialPassword not found in MemberRecord");
 	}
 	
 	/**
 	 * Test that changed passwords will send an email
 	 */
-	function testChangedPasswordEmaling() {
+	public function testChangedPasswordEmaling() {
 		$this->clearEmails();
 	
 		$member = $this->objFromFixture('Member', 'test');
@@ -165,7 +167,8 @@ class MemberTest extends FunctionalTest {
 		$valid = $member->changePassword('32asDF##$$%%');
 		$this->assertTrue($valid->valid());
 		/*
-		$this->assertEmailSent("sam@silverstripe.com", null, "/changed password/", '/sam@silverstripe\.com.*32asDF##\$\$%%/');
+		$this->assertEmailSent("sam@silverstripe.com", null, "/changed password/",
+		'/sam@silverstripe\.com.*32asDF##\$\$%%/');
 		*/
 	}
 	
@@ -175,7 +178,7 @@ class MemberTest extends FunctionalTest {
 	 *  - require at least 3 of lowercase, uppercase, digits and punctuation
 	 *  - at least 7 characters long
 	 */
-	function testValidatePassword() {
+	public function testValidatePassword() {
 		$member = $this->objFromFixture('Member', 'test');
 		$this->assertNotNull($member);
 		
@@ -257,7 +260,7 @@ class MemberTest extends FunctionalTest {
 	/**
 	 * Test that the PasswordExpiry date is set when passwords are changed
 	 */
-	function testPasswordExpirySetting() {
+	public function testPasswordExpirySetting() {
 		Member::set_password_expiry(90);
 		
 		$member = $this->objFromFixture('Member', 'test');
@@ -275,7 +278,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertNull($member->PasswordExpiry);
 	}
 	
-	function testIsPasswordExpired() {
+	public function testIsPasswordExpired() {
 		$member = $this->objFromFixture('Member', 'test');
 		$this->assertNotNull($member);
 		$this->assertFalse($member->isPasswordExpired());
@@ -298,19 +301,19 @@ class MemberTest extends FunctionalTest {
 		
 	}
 	
-	function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
+	public function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
 		$member = $this->objFromFixture('Member', 'noformatmember');
 		$this->assertEquals('MMM d, y', $member->DateFormat);
 		$this->assertEquals('h:mm:ss a', $member->TimeFormat);
 	}
 	
-	function testMemberWithNoDateFormatFallsbackToTheirLocaleDefaultFormat() {
+	public function testMemberWithNoDateFormatFallsbackToTheirLocaleDefaultFormat() {
 		$member = $this->objFromFixture('Member', 'delocalemember');
 		$this->assertEquals('dd.MM.yyyy', $member->DateFormat);
 		$this->assertEquals('HH:mm:ss', $member->TimeFormat);
 	}
 	
-	function testInGroups() {
+	public function testInGroups() {
 		$staffmember = $this->objFromFixture('Member', 'staffmember');
 		$managementmember = $this->objFromFixture('Member', 'managementmember');
 		$accountingmember = $this->objFromFixture('Member', 'accountingmember');
@@ -335,7 +338,7 @@ class MemberTest extends FunctionalTest {
 		);
 	}
 	
-	function testAddToGroupByCode() {
+	public function testAddToGroupByCode() {
 		$grouplessMember = $this->objFromFixture('Member', 'grouplessmember');
 		$memberlessGroup = $this->objFromFixture('Group','memberlessgroup');
 		
@@ -357,7 +360,7 @@ class MemberTest extends FunctionalTest {
 		
 	}
 	
-	function testInGroup() {
+	public function testInGroup() {
 		$staffmember = $this->objFromFixture('Member', 'staffmember');
 		$managementmember = $this->objFromFixture('Member', 'managementmember');
 		$accountingmember = $this->objFromFixture('Member', 'accountingmember');
@@ -499,7 +502,7 @@ class MemberTest extends FunctionalTest {
 	/**
 	 * Tests for {@link Member::getName()} and {@link Member::setName()}
 	 */
-	function testName() {
+	public function testName() {
 		$member = $this->objFromFixture('Member', 'test');
 		$member->setName('Test Some User');
 		$this->assertEquals('Test Some User', $member->getName());
@@ -510,7 +513,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertEquals('Test', $member->getName());
 	}
 	
-	function testMembersWithSecurityAdminAccessCantEditAdminsUnlessTheyreAdminsThemselves() {
+	public function testMembersWithSecurityAdminAccessCantEditAdminsUnlessTheyreAdminsThemselves() {
 		$adminMember = $this->objFromFixture('Member', 'admin');
 		$otherAdminMember = $this->objFromFixture('Member', 'other-admin');
 		$securityAdminMember = $this->objFromFixture('Member', 'test');
@@ -528,7 +531,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertTrue($ceoMember->canEdit($securityAdminMember), 'Security-Admins can edit other members');
 	}
 	
-	function testOnChangeGroups() {
+	public function testOnChangeGroups() {
 		$staffGroup = $this->objFromFixture('Group', 'staffgroup');
 		$adminGroup = $this->objFromFixture('Group', 'admingroup');
 		$staffMember = $this->objFromFixture('Member', 'staffmember');
@@ -568,7 +571,7 @@ class MemberTest extends FunctionalTest {
 	/**
 	 * Test that all members are returned
 	 */
-	function testMap_in_groupsReturnsAll() {
+	public function testMap_in_groupsReturnsAll() {
 		$members = Member::map_in_groups();
 		$this->assertEquals(13, count($members), 'There are 12 members in the mock plus a fake admin');
 	}
@@ -576,15 +579,17 @@ class MemberTest extends FunctionalTest {
 	/**
 	 * Test that only admin members are returned 
 	 */
-	function testMap_in_groupsReturnsAdmins() {
+	public function testMap_in_groupsReturnsAdmins() {
 		$adminID = $this->objFromFixture('Group', 'admingroup')->ID;
 		$members = Member::map_in_groups($adminID);
 		
 		$admin = $this->objFromFixture('Member', 'admin');
 		$otherAdmin = $this->objFromFixture('Member', 'other-admin');
 		
-		$this->assertTrue(in_array($admin->getTitle(), $members), $admin->getTitle().' should be in the returned list.');
-		$this->assertTrue(in_array($otherAdmin->getTitle(), $members), $otherAdmin->getTitle().' should be in the returned list.');
+		$this->assertTrue(in_array($admin->getTitle(), $members),
+			$admin->getTitle().' should be in the returned list.');
+		$this->assertTrue(in_array($otherAdmin->getTitle(), $members),
+			$otherAdmin->getTitle().' should be in the returned list.');
 		$this->assertEquals(2, count($members), 'There should be 2 members from the admin group');
 	}
 
@@ -651,7 +656,7 @@ class MemberTest_EditingAllowedDeletingDeniedExtension extends DataExtension imp
 }
 
 class MemberTest_PasswordValidator extends PasswordValidator {
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$this->minLength(7);
 		$this->checkHistoricalPasswords(6);

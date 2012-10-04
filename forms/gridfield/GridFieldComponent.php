@@ -25,7 +25,7 @@ interface GridField_HTMLProvider extends GridFieldComponent {
 	 *
 	 * @return Array
 	 */
-	function getHTMLFragments($gridField);
+	public function getHTMLFragments($gridField);
 }
 
 /**
@@ -41,7 +41,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * @param GridField $gridField
 	 * @param array - List reference of all column names.
 	 */
-	function augmentColumns($gridField, &$columns);
+	public function augmentColumns($gridField, &$columns);
 
 	/**
 	 * Names of all columns which are affected by this component.
@@ -49,7 +49,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * @param GridField $gridField
 	 * @return array 
 	 */
-	function getColumnsHandled($gridField);
+	public function getColumnsHandled($gridField);
 
 	/**
 	 * HTML for the column, content of the <td> element.
@@ -59,7 +59,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * @param  string $columnName
 	 * @return string - HTML for the column. Return NULL to skip.
 	 */
-	function getColumnContent($gridField, $record, $columnName);
+	public function getColumnContent($gridField, $record, $columnName);
 
 	/**
 	 * Attributes for the element containing the content returned by {@link getColumnContent()}.
@@ -69,7 +69,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * @param  string $columnName
 	 * @return array
 	 */
-	function getColumnAttributes($gridField, $record, $columnName);
+	public function getColumnAttributes($gridField, $record, $columnName);
 
 	/**
 	 * Additional metadata about the column which can be used by other components,
@@ -79,7 +79,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * @param string $columnName
 	 * @return array - Map of arbitrary metadata identifiers to their values.
 	 */
-	function getColumnMetadata($gridField, $columnName);
+	public function getColumnMetadata($gridField, $columnName);
 }
 
 /**
@@ -97,7 +97,7 @@ interface GridField_ActionProvider extends GridFieldComponent {
 	 * @param GridField
 	 * @return Array with action identifier strings. 
 	 */
-	function getActions($gridField);
+	public function getActions($gridField);
 	
 	/**
 	 * Handle an action on the given grid field.
@@ -109,7 +109,7 @@ interface GridField_ActionProvider extends GridFieldComponent {
 	 * @param Array Arguments relevant for this 
 	 * @param Array All form data
 	 */
-	function handleAction(GridField $gridField, $actionName, $arguments, $data);
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data);
 }
 
 /**
@@ -126,7 +126,7 @@ interface GridField_DataManipulator extends GridFieldComponent {
 	 * @param SS_List
 	 * @return DataList
 	 */
-	function getManipulatedData(GridField $gridField, SS_List $dataList);
+	public function getManipulatedData(GridField $gridField, SS_List $dataList);
 }
 
 /**
@@ -140,5 +140,5 @@ interface GridField_URLHandler extends GridFieldComponent {
 	 * Return URLs to be handled by this grid field, in an array the same form as $url_handlers.
 	 * Handler methods will be called on the component, rather than the grid field.
 	 */
-	function getURLHandlers($gridField);
+	public function getURLHandlers($gridField);
 }

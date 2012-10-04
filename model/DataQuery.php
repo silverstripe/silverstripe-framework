@@ -42,7 +42,7 @@ class DataQuery {
 	 *
 	 * @param String The name of the DataObject class that you wish to query
 	 */
-	function __construct($dataClass) {
+	public function __construct($dataClass) {
 		$this->dataClass = $dataClass;
 		$this->initialiseQuery();
 	}
@@ -50,14 +50,14 @@ class DataQuery {
 	/**
 	 * Clone this object
 	 */
-	function __clone() {
+	public function __clone() {
 		$this->query = clone $this->query;
 	}
 	
 	/**
 	 * Return the {@link DataObject} class that is being queried.
 	 */
-	function dataClass() {
+	public function dataClass() {
 		return $this->dataClass;
 	}
 
@@ -65,7 +65,7 @@ class DataQuery {
 	 * Return the {@link SQLQuery} object that represents the current query; note that it will
 	 * be a clone of the object.
 	 */
-	function query() {
+	public function query() {
 		return $this->getFinalisedQuery();
 	}
 	
@@ -73,7 +73,7 @@ class DataQuery {
 	/**
 	 * Remove a filter from the query
 	 */
-	function removeFilterOn($fieldExpression) {
+	public function removeFilterOn($fieldExpression) {
 		$matched = false;
 
 		$where = $this->query->getWhere();
@@ -97,7 +97,7 @@ class DataQuery {
 	/**
 	 * Set up the simplest initial query
 	 */
-	function initialiseQuery() {
+	public function initialiseQuery() {
 		// Get the tables to join to.
 		// Don't get any subclass tables - let lazy loading do that.
 		$tableClasses = ClassInfo::ancestry($this->dataClass, true);
@@ -105,9 +105,12 @@ class DataQuery {
 		// Error checking
 		if(!$tableClasses) {
 			if(!SS_ClassLoader::instance()->hasManifest()) {
-				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not querying the database in _config.php.", E_USER_ERROR);
+				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not"
+					. " querying the database in _config.php.", E_USER_ERROR);
 			} else {
-				user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for $this->dataClass. Please ensure you run dev/build after creating a new DataObject.", E_USER_ERROR);
+				user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for"
+					. " $this->dataClass. Please ensure you run dev/build after creating a new DataObject.",
+					E_USER_ERROR);
 			}
 		}
 
@@ -127,14 +130,14 @@ class DataQuery {
 		$obj->extend('augmentDataQueryCreation', $this->query, $this);
 	}
 
-	function setQueriedColumns($queriedColumns) {
+	public function setQueriedColumns($queriedColumns) {
 		$this->queriedColumns = $queriedColumns;
 	}
 
 	/**
 	 * Ensure that the query is ready to execute.
 	 */
-	function getFinalisedQuery($queriedColumns = null) {
+	public function getFinalisedQuery($queriedColumns = null) {
 		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
 		if($queriedColumns) {
 			$queriedColumns = array_merge($queriedColumns, array('Created', 'LastEdited', 'ClassName'));
@@ -223,9 +226,11 @@ class DataQuery {
 		}
 
 		$query->selectField("\"$baseClass\".\"ID\"", "ID");
-		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE ".DB::getConn()->prepStringForDB($baseClass)." END", "RecordClassName");
+		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\""
+			. " ELSE ".DB::getConn()->prepStringForDB($baseClass)." END", "RecordClassName");
 
-		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
+		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses
+		// of DataQuery
 
 		$obj = Injector::inst()->get($this->dataClass);
 		$obj->extend('augmentSQL', $query, $this);
@@ -247,7 +252,7 @@ class DataQuery {
 
 		if($orderby = $query->getOrderBy()) {
 			foreach($orderby as $k => $dir) {
-				// don't touch functions in the ORDER BY or function calls 
+				// don't touch functions in the ORDER BY or public function calls
 				// selected as fields
 				if(strpos($k, '(') !== false) continue;
 
@@ -304,14 +309,14 @@ class DataQuery {
 	/**
 	 * Execute the query and return the result as {@link Query} object.
 	 */
-	function execute() {
+	public function execute() {
 		return $this->getFinalisedQuery()->execute();
 	}
 
 	/**
 	 * Return this query's SQL
 	 */
-	function sql() {
+	public function sql() {
 		return $this->getFinalisedQuery()->sql();
 	}
 
@@ -319,7 +324,7 @@ class DataQuery {
 	 * Return the number of records in this query.
 	 * Note that this will issue a separate SELECT COUNT() query.
 	 */
-	function count() {
+	public function count() {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		return $this->getFinalisedQuery()->count("DISTINCT \"$baseClass\".\"ID\"");
 	}
@@ -329,7 +334,7 @@ class DataQuery {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-function max($field) {
+public function max($field) {
 	    return $this->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)));
 	}
 
@@ -338,7 +343,7 @@ function max($field) {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function min($field) {
+	public function min($field) {
 	    return $this->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)));
 	}
 	
@@ -347,7 +352,7 @@ function max($field) {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function avg($field) {
+	public function avg($field) {
 	    return $this->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)));
 	}
 
@@ -356,14 +361,14 @@ function max($field) {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function sum($field) {
+	public function sum($field) {
 	    return $this->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)));
 	}
 	
 	/**
 	 * Runs a raw aggregate expression.  Please handle escaping yourself
 	 */
-	function aggregate($expression) {
+	public function aggregate($expression) {
 	    return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
 	}
 
@@ -371,7 +376,7 @@ function max($field) {
 	 * Return the first row that would be returned by this full DataQuery
 	 * Note that this will issue a separate SELECT ... LIMIT 1 query.
 	 */
-	function firstRow() {
+	public function firstRow() {
 		return $this->getFinalisedQuery()->firstRow();
 	}
 
@@ -379,7 +384,7 @@ function max($field) {
 	 * Return the last row that would be returned by this full DataQuery
 	 * Note that this will issue a separate SELECT ... LIMIT query.
 	 */
-	function lastRow() {
+	public function lastRow() {
 		return $this->getFinalisedQuery()->lastRow();
 	}
 
@@ -415,7 +420,7 @@ function max($field) {
 	 * 
 	 * @param String $having Escaped SQL statement
 	 */
-	function having($having) {
+	public function having($having) {
 		if($having) {
 			$clone = $this;
 			$clone->query->addHaving($having);
@@ -439,7 +444,7 @@ function max($field) {
 	 *
 	 * @param string|array $where Predicate(s) to set, as escaped SQL statements.
 	 */
-	function where($filter) {
+	public function where($filter) {
 		if($filter) {
 			$clone = $this;
 			$clone->query->addWhere($filter);
@@ -458,7 +463,7 @@ function max($field) {
 	 * @param array $filter Escaped SQL statement.
 	 * @return DataQuery
 	 */
-	function whereAny($filter) {
+	public function whereAny($filter) {
 		if($filter) {
 			$clone = $this;
 			$clone->query->addWhereAny($filter);
@@ -478,7 +483,7 @@ function max($field) {
 	 * @param Boolean $clear Clear existing values
 	 * @return DataQuery
 	 */
-	function sort($sort = null, $direction = null, $clear = true) {
+	public function sort($sort = null, $direction = null, $clear = true) {
 		$clone = $this;
 		if($clear) {
 			$clone->query->setOrderBy($sort, $direction);
@@ -494,7 +499,7 @@ function max($field) {
 	 *
 	 * @return DataQuery
 	 */
-	function reverseSort() {
+	public function reverseSort() {
 		$clone = $this;
 		
 		$clone->query->reverseOrderBy();
@@ -507,7 +512,7 @@ function max($field) {
 	 * @param int $limit
 	 * @param int $offset
 	 */
-	function limit($limit, $offset = 0) {
+	public function limit($limit, $offset = 0) {
 		$clone = $this;
 		$clone->query->setLimit($limit, $offset);
 		return $clone;
@@ -517,7 +522,7 @@ function max($field) {
 	 * Add a join clause to this query
 	 * @deprecated 3.0 Use innerJoin() or leftJoin() instead.
 	 */
-	function join($join) {
+	public function join($join) {
 		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		if($join) {
 			$clone = $this;
@@ -576,7 +581,7 @@ function max($field) {
 	 * @param String|array $relation The array/dot-syntax relation to follow
 	 * @return The model class of the related item
 	 */
-	function applyRelation($relation) {
+	public function applyRelation($relation) {
 	    // NO-OP
 	    if(!$relation) return $this->dataClass;
 	    
@@ -589,11 +594,12 @@ function max($field) {
     		if ($component = $model->has_one($rel)) {	
     			if(!$this->query->isJoinedTo($component)) {
     				$foreignKey = $model->getReverseAssociation($component);
-    				$this->query->addLeftJoin($component, "\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
+    				$this->query->addLeftJoin($component,
+    					"\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
 				
     				/**
-    				 * add join clause to the component's ancestry classes so that the search filter could search on its 
-    				 * ancester fields.
+    				 * add join clause to the component's ancestry classes so that the search filter could search on
+    				 * its ancestor fields.
     				 */
     				$ancestry = ClassInfo::ancestry($component, true);
     				if(!empty($ancestry)){
@@ -611,10 +617,11 @@ function max($field) {
     			if(!$this->query->isJoinedTo($component)) {
     			 	$ancestry = $model->getClassAncestry();
     				$foreignKey = $model->getRemoteJoinField($rel);
-    				$this->query->addLeftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+    				$this->query->addLeftJoin($component,
+    					"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
     				/**
-    				 * add join clause to the component's ancestry classes so that the search filter could search on its 
-    				 * ancestor fields.
+    				 * add join clause to the component's ancestry classes so that the search filter could search on
+    				 * its ancestor fields.
     				 */
     				$ancestry = ClassInfo::ancestry($component, true);
     				if(!empty($ancestry)){
@@ -632,10 +639,13 @@ function max($field) {
     			list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
     			$parentBaseClass = ClassInfo::baseDataClass($parentClass);
     			$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-    			$this->query->addInnerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-    			$this->query->addLeftJoin($componentBaseClass, "\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+    			$this->query->addInnerJoin($relationTable,
+    				"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
+    			$this->query->addLeftJoin($componentBaseClass,
+    				"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
     			if(ClassInfo::hasTable($componentClass)) {
-    				$this->query->addLeftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+    				$this->query->addLeftJoin($componentClass,
+    					"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
     			}
     			$modelClass = $componentClass;
 
@@ -733,14 +743,14 @@ function max($field) {
 	 * Set an arbitrary query parameter, that can be used by decorators to add additional meta-data to the query.
 	 * It's expected that the $key will be namespaced, e.g, 'Versioned.stage' instead of just 'stage'.
 	 */
-	function setQueryParam($key, $value) {
+	public function setQueryParam($key, $value) {
 		$this->queryParams[$key] = $value;
 	}
 	
 	/**
 	 * Set an arbitrary query parameter, that can be used by decorators to add additional meta-data to the query.
 	 */
-	function getQueryParam($key) {
+	public function getQueryParam($key) {
 		if(isset($this->queryParams[$key])) return $this->queryParams[$key];
 		else return null;
 	}

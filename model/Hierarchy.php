@@ -16,16 +16,16 @@ class Hierarchy extends DataExtension {
 	 */
 	protected $_cache_numChildren;
 	
-	function augmentSQL(SQLQuery &$query) {
+	public function augmentSQL(SQLQuery &$query) {
 	}
 
-	function augmentDatabase() {
+	public function augmentDatabase() {
 	}
 	
-	function augmentWrite(&$manipulation) {
+	public function augmentWrite(&$manipulation) {
 	}
 
-	static function get_extra_config($class, $extension, $args) {
+	public static function get_extra_config($class, $extension, $args) {
 		return array(
 			'has_one' => array('Parent' => $class)
 		);
@@ -34,10 +34,13 @@ class Hierarchy extends DataExtension {
 	/**
 	 * Validate the owner object - check for existence of infinite loops.
 	 */
-	function validate(ValidationResult $validationResult) {
-		if (!$this->owner->ID) return; // The object is new, won't be looping.
-		if (!$this->owner->ParentID) return; // The object has no parent, won't be looping.
-		if (!$this->owner->isChanged('ParentID')) return; // The parent has not changed, skip the check for performance reasons.
+	public function validate(ValidationResult $validationResult) {
+		// The object is new, won't be looping.
+		if (!$this->owner->ID) return; 
+		// The object has no parent, won't be looping.
+		if (!$this->owner->ParentID) return; 
+		// The parent has not changed, skip the check for performance reasons.
+		if (!$this->owner->isChanged('ParentID')) return; 
 
 		// Walk the hierarchy upwards until we reach the top, or until we reach the originating node again.
 		$node = $this->owner;
@@ -69,11 +72,15 @@ class Hierarchy extends DataExtension {
 	 * @param string $extraArg Extra arguments that will be passed on to children, for if they overload this function.
 	 * @param boolean $limitToMarked Display only marked children.
 	 * @param string $childrenMethod The name of the method used to get children from each object
-	 * @param boolean $rootCall Set to true for this first call, and then to false for calls inside the recursion. You should not change this.
+	 * @param boolean $rootCall Set to true for this first call, and then to false for calls inside the recursion. You
+	 *                          should not change this.
 	 * @param int $minNodeCount
 	 * @return string
 	 */
-	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, $limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren", $rootCall = true, $minNodeCount = 30) {
+	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, 
+			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", 
+			$numChildrenMethod = "numChildren", $rootCall = true, $minNodeCount = 30) {
+
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished($numChildrenMethod);
 		}
@@ -97,7 +104,8 @@ class Hierarchy extends DataExtension {
 					$foundAChild = true;
 					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
 					$output .= "\n" . 
-					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, $numChildrenMethod, false, $minNodeCount) . "</li>\n";
+					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
+						$numChildrenMethod, false, $minNodeCount) . "</li>\n";
 				}
 			}
 			
@@ -120,7 +128,9 @@ class Hierarchy extends DataExtension {
 	 * @param int $minNodeCount The minimum amount of nodes to mark.
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($minNodeCount = 30, $context = null, $childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
+	public function markPartialTree($minNodeCount = 30, $context = null,
+			$childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
+
 		if(!is_numeric($minNodeCount)) $minNodeCount = 30;
 
 		$this->markedNodes = array($this->owner->ID => $this->owner);
@@ -191,7 +201,8 @@ class Hierarchy extends DataExtension {
 	 * Mark all children of the given node that match the marking filter.
 	 * @param DataObject $node Parent node.
 	 */
-	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
+	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted",
+			$numChildrenMethod = "numChildren") {
 		if($node->hasMethod($childrenMethod)) {
 			$children = $node->$childrenMethod($context);
 		} else {
@@ -486,7 +497,8 @@ class Hierarchy extends DataExtension {
 			$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
 			
 		} else {
-			user_error("Hierarchy::AllChildren() Couldn't determine base class for '{$this->owner->class}'", E_USER_ERROR);
+			user_error("Hierarchy::AllChildren() Couldn't determine base class for '{$this->owner->class}'",
+				E_USER_ERROR);
 		}
 		
 		return $stageChildren;
@@ -497,7 +509,9 @@ class Hierarchy extends DataExtension {
 	 * from both stage & live.
 	 */
 	public function AllHistoricalChildren() {
-		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
+		if(!$this->owner->hasExtension('Versioned')) {
+			throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
+		}
 		
 		$baseClass=ClassInfo::baseDataClass($this->owner->class);
 		return Versioned::get_including_deleted($baseClass, 
@@ -508,7 +522,9 @@ class Hierarchy extends DataExtension {
 	 * Return the number of children that this page ever had, including pages that were deleted
 	 */
 	public function numHistoricalChildren() {
-		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
+		if(!$this->owner->hasExtension('Versioned')) {
+			throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
+		}
 
 	    return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
 			"\"ParentID\" = " . (int)$this->owner->ID)->count();
@@ -567,12 +583,15 @@ class Hierarchy extends DataExtension {
 	 * @return SS_List
 	 */
 	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
-		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
+		if(!$this->owner->hasExtension('Versioned')) {
+			throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
+		}
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		$id = $this->owner->ID;
 		
-		$children = DataObject::get($baseClass)->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
+		$children = DataObject::get($baseClass)
+			->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
 		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
 
 		// Query the live site
@@ -656,11 +675,14 @@ class Hierarchy extends DataExtension {
 		$nextNode = null;
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		
-		$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
+		$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class),
+			"\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > "
+			. sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
 		
 		// Try all the siblings of this node after the given node
-		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class), "\"ParentID\"={$this->owner->ParentID}" . ( $afterNode ) ? "\"Sort\" > {$afterNode->Sort}" : "" , '\"Sort\" ASC' ) )
-			$searchNodes->merge( $siblings );*/
+		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class), 
+		"\"ParentID\"={$this->owner->ParentID}" . ( $afterNode ) ? "\"Sort\" 
+		> {$afterNode->Sort}" : "" , '\"Sort\" ASC' ) ) $searchNodes->merge( $siblings );*/
 		
 		if($children) {
 			foreach($children as $node) {
@@ -675,14 +697,16 @@ class Hierarchy extends DataExtension {
 		}
 		
 		// if this is not an instance of the root class or has the root id, search the parent
-		if(!(is_numeric($root) && $root == $this->owner->ID || $root == $this->owner->class) && ($parent = $this->owner->Parent())) {
+		if(!(is_numeric($root) && $root == $this->owner->ID || $root == $this->owner->class)
+				&& ($parent = $this->owner->Parent())) {
+			
 			return $parent->naturalNext( $className, $root, $this->owner );
 		}
 		
 		return null;
 	}
 	
-	function flushCache() {
+	public function flushCache() {
 		$this->_cache_children = null;
 		$this->_cache_numChildren = null;
 		self::$marked = array();

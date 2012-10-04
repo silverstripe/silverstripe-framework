@@ -11,7 +11,7 @@ class DatabaseTest extends SapphireTest {
 
 	protected $usesDatabase = true;
 
-	function testDontRequireField() {
+	public function testDontRequireField() {
 		$conn = DB::getConn();
 		$this->assertArrayHasKey(
 			'MyField',
@@ -29,7 +29,7 @@ class DatabaseTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 
-	function testRenameField() {
+	public function testRenameField() {
 		$conn = DB::getConn();
 
 		$conn->clearCachedFieldlist();
@@ -50,7 +50,7 @@ class DatabaseTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 
-	function testMySQLCreateTableOptions() {
+	public function testMySQLCreateTableOptions() {
 		if(DB::getConn() instanceof MySQLDatabase) {
 			$ret = DB::query(sprintf(
 				'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
@@ -62,7 +62,7 @@ class DatabaseTest extends SapphireTest {
 		}
 	}
 
-	function testSchemaUpdateChecking() {
+	public function testSchemaUpdateChecking() {
 		$db = DB::getConn();
 
 		// Initially, no schema changes necessary
@@ -78,34 +78,38 @@ class DatabaseTest extends SapphireTest {
 		$this->assertFalse($db->doesSchemaNeedUpdating());
 	}
 
-	function testHasTable() {
+	public function testHasTable() {
 		$this->assertTrue(DB::getConn()->hasTable('DatabaseTest_MyObject'));
 		$this->assertFalse(DB::getConn()->hasTable('asdfasdfasdf'));
 	}
 	
-	function testGetAndReleaseLock() {
+	public function testGetAndReleaseLock() {
 		$db = DB::getConn();
 		
 		if(!$db->supportsLocks()) {
 			return $this->markTestSkipped('Tested database doesn\'t support application locks');
 		}
 
-		$this->assertTrue($db->getLock('DatabaseTest'), 'Can aquire lock');
+		$this->assertTrue($db->getLock('DatabaseTest'),
+			'Can aquire lock');
 		// $this->assertFalse($db->getLock('DatabaseTest'), 'Can\'t repeatedly aquire the same lock');
-		$this->assertTrue($db->getLock('DatabaseTest'), 'The same lock can be aquired multiple times in the same connection');
+		$this->assertTrue($db->getLock('DatabaseTest'),
+			'The same lock can be aquired multiple times in the same connection');
 
-		$this->assertTrue($db->getLock('DatabaseTestOtherLock'), 'Can aquire different lock');
+		$this->assertTrue($db->getLock('DatabaseTestOtherLock'),
+			'Can aquire different lock');
 		$db->releaseLock('DatabaseTestOtherLock');
 		
 		// Release potentially stacked locks from previous getLock() invocations
 		$db->releaseLock('DatabaseTest');
 		$db->releaseLock('DatabaseTest');
 		
-		$this->assertTrue($db->getLock('DatabaseTest'), 'Can aquire lock after releasing it');
+		$this->assertTrue($db->getLock('DatabaseTest'),
+			'Can aquire lock after releasing it');
 		$db->releaseLock('DatabaseTest');
 	}
 	
-	function testCanLock() {
+	public function testCanLock() {
 		$db = DB::getConn();
 		
 		if(!$db->supportsLocks()) {

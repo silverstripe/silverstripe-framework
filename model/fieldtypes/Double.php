@@ -6,7 +6,7 @@
  */
 class Double extends DBField {
 	
-	function requireField() {
+	public function requireField() {
 	
 		// HACK: MSSQL does not support double so we're usinf float instead
 		// @todo This should go into MSSQLDatabase ideally somehow
@@ -17,7 +17,7 @@ class Double extends DBField {
 		}
 	}
 	
-	function Nice() {
+	public function Nice() {
 		return number_format($this->value, 2);
 	}
 	
@@ -25,7 +25,7 @@ class Double extends DBField {
 	 * Returns the value to be set in the database to blank this field.
 	 * Usually it's a choice between null, 0, and ''
 	 */
-	function nullValue() {
+	public function nullValue() {
 		return 0;
 	}
 
@@ -33,7 +33,7 @@ class Double extends DBField {
 	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
 	 * If necessary, this should include quotes.
 	 */
-	function prepValueForDB($value) {
+	public function prepValueForDB($value) {
 		if($value === true) {
 			return 1;
 		}

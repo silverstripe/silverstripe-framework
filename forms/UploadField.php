@@ -11,7 +11,8 @@
  * - Image thumbnail/file icons even before upload finished
  * - Saving into relations
  * - Edit file
- * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the value of min(upload_max_filesize, post_max_size) from php.ini
+ * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the value of min(upload_max_filesize,
+ * post_max_size) from php.ini
  * 
  * @example <code>
  * $UploadField = new UploadField('myFiles', 'Please upload some images <span>(max. 5 files)</span>');
@@ -65,7 +66,8 @@ class UploadField extends FileField {
 	protected $items;
 
 	/**
-	 * Config for this field used in both, php and javascript (will be merged into the config of the javascript file upload plugin)
+	 * Config for this field used in both, php and javascript (will be merged into the config of the javascript file
+	 * upload plugin)
 	 * @var array
 	 */
 	protected $ufConfig = array(
@@ -74,8 +76,8 @@ class UploadField extends FileField {
 		 */
 		'autoUpload' => true,
 		/**
-		 * php validation of allowedMaxFileNumber only works when a db relation is available, set to null to allow unlimited
-		 * if record has a has_one and allowedMaxFileNumber is null, it will be set to 1
+		 * php validation of allowedMaxFileNumber only works when a db relation is available, set to null to allow
+		 * unlimited if record has a has_one and allowedMaxFileNumber is null, it will be set to 1
 		 * @var int
 		 */
 		'allowedMaxFileNumber' => null,
@@ -122,8 +124,8 @@ class UploadField extends FileField {
 	/**
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
-	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on {@link $record}, 
-	 *                       with the same name as the field name.
+	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on
+	 *                       @link $record}, with the same name as the field name.
 	 * @param Form $form Reference to the container form
 	 */
 	public function __construct($name, $title = null, SS_List $items = null) {
@@ -135,8 +137,11 @@ class UploadField extends FileField {
 
 		if($items) $this->setItems($items);
 
-		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); // filter out '' since this would be a regex problem on JS end
-		$this->getValidator()->setAllowedMaxFileSize(min(File::ini2bytes(ini_get('upload_max_filesize')), File::ini2bytes(ini_get('post_max_size')))); // get the lower max size
+		// filter out '' since this would be a regex problem on JS end
+		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); 
+		// get the lower max size
+		$this->getValidator()->setAllowedMaxFileSize(min(File::ini2bytes(ini_get('upload_max_filesize')),
+			File::ini2bytes(ini_get('post_max_size'))));
 	}
 
 	/**
@@ -182,7 +187,8 @@ class UploadField extends FileField {
 		return $this;
 	}
 	/**
-	 * Get the record to use as "Parent" for uploaded Files (eg a Page with a has_one to File) If none is set, it will use Form->getRecord() or Form->Controller()->data()
+	 * Get the record to use as "Parent" for uploaded Files (eg a Page with a has_one to File) If none is set, it will
+	 * use Form->getRecord() or Form->Controller()->data()
 	 * @return DataObject
 	 */
 	public function getRecord() {
@@ -200,7 +206,7 @@ class UploadField extends FileField {
 	/**
 	 * @param SS_List $items
 	 */
-	public function setItems(SS_List $items) { 
+	public function setItems(SS_List $items) {
 		$this->items = $items; 
 		return $this;
 	}
@@ -216,7 +222,8 @@ class UploadField extends FileField {
 			// Try to auto-detect relationship
 			if ($record && $record->exists()) {
 				if ($record->has_many($name) || $record->many_many($name)) {
-					// Ensure relationship is cast to an array, as we can't alter the items of a DataList/RelationList (see below)
+					// Ensure relationship is cast to an array, as we can't alter the items of a DataList/RelationList
+					// (see below)
 					$this->items = $record->{$name}()->toArray();
 				} elseif($record->has_one($name)) {
 					$item = $record->{$name}();
@@ -225,7 +232,8 @@ class UploadField extends FileField {
 				}
 			}
 			$this->items = new ArrayList($this->items);
-			// hack to provide $UploadFieldThumbnailURL, $hasRelation and $UploadFieldEditLink in template for each file
+			// hack to provide $UploadFieldThumbnailURL, $hasRelation and $UploadFieldEditLink in template for each
+			// file
 			if ($this->items->exists()) {
 				foreach ($this->items as $i=>$file) {
 					$this->items[$i] = $this->customiseFile($file);	
@@ -286,11 +294,14 @@ class UploadField extends FileField {
 	protected function getThumbnailURLForFile(File $file) {
 		if ($file && $file->exists() && file_exists(Director::baseFolder() . '/' . $file->getFilename())) {
 			if ($file->hasMethod('getThumbnail')) {
-				return $file->getThumbnail($this->getConfig('previewMaxWidth'), $this->getConfig('previewMaxHeight'))->getURL();
+				return $file->getThumbnail($this->getConfig('previewMaxWidth'),
+					$this->getConfig('previewMaxHeight'))->getURL();
 			} elseif ($file->hasMethod('getThumbnailURL')) {
-				return $file->getThumbnailURL($this->getConfig('previewMaxWidth'), $this->getConfig('previewMaxHeight'));
+				return $file->getThumbnailURL($this->getConfig('previewMaxWidth'),
+					$this->getConfig('previewMaxHeight'));
 			} elseif ($file->hasMethod('SetRatioSize')) {
-				return $file->SetRatioSize($this->getConfig('previewMaxWidth'), $this->getConfig('previewMaxHeight'))->getURL();
+				return $file->SetRatioSize($this->getConfig('previewMaxWidth'),
+					$this->getConfig('previewMaxHeight'))->getURL();
 			} else {
 				return $file->Icon();
 			}
@@ -658,7 +669,7 @@ class UploadField_ItemHandler extends RequestHandler {
 	/**
 	 * @return File
 	 */
-	function getItem() {
+	public function getItem() {
 		return DataObject::get_by_id('File', $this->itemID);
 	}
 
@@ -713,7 +724,9 @@ class UploadField_ItemHandler extends RequestHandler {
 		$record = $this->parent->getRecord();
 		$id = $this->getItem()->ID;
 		if ($id && $record && $record->exists()) {
-			if (($record->has_many($fieldName) || $record->many_many($fieldName)) && $file = $record->{$fieldName}()->byID($id)) {
+			if (($record->has_many($fieldName) || $record->many_many($fieldName))
+					&& $file = $record->{$fieldName}()->byID($id)) {
+
 				$record->{$fieldName}()->remove($file);
 				$response->setStatusCode(200);
 			} elseif($record->has_one($fieldName) && $record->{$fieldName . 'ID'} == $id) {
@@ -873,14 +886,14 @@ class UploadField_SelectHandler extends RequestHandler {
 		'' => 'index',
 	);
 
-	function __construct($parent, $folderName = null) {
+	public function __construct($parent, $folderName = null) {
 		$this->parent = $parent;
 		$this->folderName = $folderName;
 
 		parent::__construct();
 	}
 
-	function index() {
+	public function index() {
 		// Requires a separate JS file, because we can't reach into the iframe with entwine.
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/UploadField_select.js');
 		return $this->renderWith('CMSDialog');
@@ -899,7 +912,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 *
 	 * @return Form
 	 */
-	function Form() {
+	public function Form() {
 		// Find out the requested folder ID.
 		$folderID = $this->parent->getRequest()->requestVar('ParentID');
 		if (!isset($folderID)) {
@@ -963,7 +976,7 @@ class UploadField_SelectHandler extends RequestHandler {
 		return $selectComposite;
 	}
 
-	function doAttach($data, $form) {
+	public function doAttach($data, $form) {
 		// TODO Only implemented via JS for now
 	}
 

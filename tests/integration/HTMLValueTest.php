@@ -9,8 +9,8 @@ class SS_HTMLValueTest extends SapphireTest {
 		$value   = new SS_HTMLValue();
 		$invalid = array (
 			'<p>Enclosed Value</p></p>'                              => '<p>Enclosed Value</p>',
-			'<p><div class="example"></div></p>'                     => '<p/><div class="example"/>',
-			'<html><html><body><falsetag "attribute=""attribute""">' => '<falsetag/>',
+			'<p><div class="example"></div></p>'                     => '<p></p><div class="example"></div>',
+			'<html><html><body><falsetag "attribute=""attribute""">' => '<falsetag></falsetag>',
 			'<body<body<body>/bodu>/body>'                           => '/bodu&gt;/body&gt;'
 		);
 		
@@ -22,7 +22,7 @@ class SS_HTMLValueTest extends SapphireTest {
 	
 	public function testInvalidHTMLTagNames() {
 		$value   = new SS_HTMLValue();
-		$invalid = array (
+		$invalid = array(
 			'<p><div><a href="test-link"></p></div>',
 			'<html><div><a href="test-link"></a></a></html_>',
 			'""\'\'\'"""\'""<<<>/</<htmlbody><a href="test-link"<<>'
@@ -40,11 +40,9 @@ class SS_HTMLValueTest extends SapphireTest {
 	
 	public function testMixedNewlines() {
 		$value = new SS_HTMLValue();
-		$eol = "\n";
-		$platformEOL = PHP_EOL; // native EOL for platform. Windows is \r\n (CR-LF). UNIX is LF
-		$value->setContent("<p>paragraph</p>{$platformEOL}<ul><li>1</li>\r\n</ul>");
+		$value->setContent("<p>paragraph</p>\n<ul><li>1</li>\r\n</ul>");
 		$this->assertEquals(
-			"<p>paragraph</p>{$eol}<ul><li>1</li>{$eol}</ul>", 
+			"<p>paragraph</p>\n<ul><li>1</li>\n</ul>",
 			$value->getContent(),
 			'Newlines get converted'
 		);

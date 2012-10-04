@@ -646,7 +646,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'sq' => array('Albanian', 'shqip'),
 		'ar' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
 		'eu' => array('Basque', 'euskera'),
-		'be' => array('Belarusian', '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
+		'be' => array('Belarusian',
+			'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
 		'bn' => array('Bengali', '&#2476;&#2494;&#2434;&#2482;&#2494;'),
 		'bg' => array('Bulgarian', '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
 		'ca' => array('Catalan', 'catal&agrave;'),
@@ -738,7 +739,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'sq_AL' => array('Albanian', 'shqip'),
 		'ar_EG' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
 		'eu_ES' => array('Basque', 'euskera'),
-		'be_BY' => array('Belarusian', '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
+		'be_BY' => array('Belarusian',
+			'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
 		'bn_BD' => array('Bengali', '&#2476;&#2494;&#2434;&#2482;&#2494;'),
 		'bg_BG' => array('Bulgarian', '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
 		'ca_ES' => array('Catalan', 'catal&agrave;'),
@@ -1451,18 +1453,23 @@ class i18n extends Object implements TemplateGlobalProvider {
 	);
 	
 	/**
-	 * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale.
+	 * This is the main translator function. Returns the string defined by $class and $entity according to the
+	 * currently set locale.
 	 *
-	 * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where Namespace will be usually
-	 * 						 the class name where this string is used and Entity identifies the string inside the namespace.
-	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
-	 *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
-	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help translators with some more info using this param
-	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding expressions in {curly brackets} in the $string.
-	 *               The injection array can also be used as the their argument to the _t() function
+	 * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where
+	 *                       Namespace will be usually the class name where this string is used and Entity identifies
+	 *                       the string inside the namespace.
+	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are
+	 *                       reusing a string which has already been "declared" (using another call to this function,
+	 *                       with the same class and entity), you can omit it.
+	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help
+	 *                        translators with some more info using this param
+	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding
+	 *                              expressions in {curly brackets} in the $string. The injection array can also be
+	 *                              used as the their argument to the _t() function
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
-	static function _t($entity, $string = "", $context = "", $injection = "") {
+	public static function _t($entity, $string = "", $context = "", $injection = "") {
 		if(is_numeric($context) && in_array($context, array(PR_LOW, PR_MEDIUM, PR_HIGH))) {
 			Deprecation::notice(
 				'3.0',
@@ -1563,7 +1570,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	/**
 	 * @return array Array of priority keys to instances of Zend_Translate, mapped by name.
 	 */
-	static function get_translators() {
+	public static function get_translators() {
 		if(!Zend_Translate::getCache()) {
 			Zend_Translate::setCache(
 				SS_Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true))
@@ -1591,7 +1598,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param String
 	 * @return Zend_Translate
 	 */
-	static function get_translator($name) {
+	public static function get_translator($name) {
 		foreach(self::get_translators() as $priority => $translators) {
 			if(isset($translators[$name])) return $translators[$name];
 		}
@@ -1603,7 +1610,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param String If left blank will override the default translator.
 	 * @param Int
 	 */
-	static function register_translator($translator, $name, $priority = 10) {
+	public static function register_translator($translator, $name, $priority = 10) {
 		if (!is_int($priority)) throw new InvalidArgumentException("register_translator expects an int priority");
 
 		// Ensure it's not there. If it is, we're replacing it. It may exist in a different priority.
@@ -1623,7 +1630,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	/**
 	 * @param String
 	 */
-	static function unregister_translator($name) {
+	public static function unregister_translator($name) {
 		foreach (self::get_translators() as $priority => $translators) {
 			if (isset($translators[$name])) unset(self::$translators[$priority][$name]);
 		}
@@ -1635,7 +1642,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param boolean $native Use native names for languages instead of English ones
 	 * @return list of languages in the form 'code' => 'name'
 	 */
-	static function get_common_languages($native = false) {
+	public static function get_common_languages($native = false) {
 		$languages = array();
 		foreach (self::$common_languages as $code => $name) {
 			$languages[$code] = ($native ? $name[1] : $name[0]);
@@ -1649,7 +1656,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param boolean $native Use native names for locale instead of English ones
 	 * @return list of languages in the form 'code' => 'name'
 	 */
-	static function get_common_locales($native = false) {
+	public static function get_common_locales($native = false) {
 		$languages = array();
 		foreach (self::$common_locales as $code => $name) {
 			$languages[$code] = ($native ? $name[1] : $name[0]);
@@ -1662,7 +1669,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 *
 	 * @return list of languages in the form 'code' => 'name'
 	 */
-	static function get_locale_list() {
+	public static function get_locale_list() {
 		return self::$all_locales;
 	}
 	
@@ -1673,7 +1680,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return array
 	 */
-	static function get_existing_translations() {
+	public static function get_existing_translations() {
 		$locales = array();
 		
 		// TODO Inspect themes
@@ -1709,7 +1716,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param boolean $native If true, the native name will be returned
 	 * @return Name of the language
 	 */
-	static function get_language_name($code, $native = false) {
+	public static function get_language_name($code, $native = false) {
 		$langs = self::$common_languages;
 		if($native) {
 			return (isset($langs[$code][1])) ? $langs[$code][1] : false;
@@ -1726,7 +1733,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param mixed $code locale code
 	 * @return Name of the locale
 	 */
-	static function get_locale_name($code) {
+	public static function get_locale_name($code) {
 		$langs = self::get_locale_list();
 		return isset($langs[$code]) ? $langs[$code] : false;
 	}
@@ -1737,7 +1744,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param mixed $name Name of the language
 	 * @return Language code (if the name is not found, it'll return the passed name)
 	 */
-	static function get_language_code($name) {
+	public static function get_language_code($name) {
 		$code = array_search($name,self::get_common_languages());
 		return ($code ? $code : $name);
 	}
@@ -1747,7 +1754,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return Language
 	 */
-	static function get_tinymce_lang() {
+	public static function get_tinymce_lang() {
 		if(isset(self::$tinymce_lang[self::get_locale()])) {
 			return self::$tinymce_lang[self::get_locale()];
 		}
@@ -1762,7 +1769,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return array
 	 */
-	static function get_translatable_modules() {
+	public static function get_translatable_modules() {
 		$translatableModules = array();
 		
 		$baseDir = Director::baseFolder();
@@ -1772,7 +1779,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 			if(
 				is_dir($moduleDir) 
 				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php")
-				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . self::$default_locale . ".php")
+				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR 
+					. self::$default_locale . ".php")
 			) {
 				$translatableModules[] = $module;
 			}
@@ -1787,7 +1795,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param string $locale E.g. "en_US"
 	 * @return string Short language code, e.g. "en"
 	 */
-	static function get_lang_from_locale($locale) {
+	public static function get_lang_from_locale($locale) {
 		return preg_replace('/(_|-).*/', '', $locale);
 	}
 	
@@ -1802,7 +1810,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param string $lang Short language code, e.g. "en"
 	 * @return string Long locale, e.g. "en_US"
 	 */
-	static function get_locale_from_lang($lang) {
+	public static function get_locale_from_lang($lang) {
 		if(preg_match('/\-|_/', $lang)) {
 			return $lang;
 		} else if(isset(self::$likely_subtags[$lang])) {
@@ -1822,7 +1830,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param string $locale
 	 * @return string
 	 */
-	static function convert_rfc1766($locale) {
+	public static function convert_rfc1766($locale) {
 		return str_replace('_','-', $locale);
 	}
 	
@@ -1861,7 +1869,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return boolean
 	 */
-	static function validate_locale($locale) {
+	public static function validate_locale($locale) {
 		// Convert en-US to en_US
 		$locale = str_replace('-', '_', $locale);
 		return (array_key_exists($locale, self::$all_locales));
@@ -1874,9 +1882,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * for example in the {@link CMSMain} interface the Member locale
 	 * overrules the global locale value set here.
 	 * 
-	 * @param string $locale Locale to be set. See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales.
+	 * @param string $locale Locale to be set. See
+	 *                       http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list
+	 *                       of possible locales.
 	 */
-	static function set_locale($locale) {
+	public static function set_locale($locale) {
 		if ($locale) self::$current_locale = $locale;
 	}
 
@@ -1886,7 +1896,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return string Current locale in the system
 	 */
-	static function get_locale() {
+	public static function get_locale() {
 		return (!empty(self::$current_locale)) ? self::$current_locale : self::$default_locale;
 	}
 		
@@ -1902,7 +1912,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @return String
 	 */
-	static function default_locale() {
+	public static function default_locale() {
 		return self::$default_locale;
 	}
 	
@@ -1912,7 +1922,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @param String $locale
 	 */
-	static function set_default_locale($locale) {
+	public static function set_default_locale($locale) {
 		self::$default_locale = $locale;
 	}
 	
@@ -1924,7 +1934,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param string $module Module that contains the locale file
 	 * @param string $locale Locale to be loaded
 	 */
-	static function include_locale_file($module, $locale) {
+	public static function include_locale_file($module, $locale) {
 		Deprecation::notice('3.0', 'Use Zend_Translate instead.');
 		
 		if (file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) include_once($file);
@@ -1936,7 +1946,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param string $locale All resources from any module in locale $locale will be loaded
 	 * @param Boolean $clean Clean old caches?
 	 */
-	static function include_by_locale($locale, $clean = false) {
+	public static function include_by_locale($locale, $clean = false) {
 		if($clean) {
 			$cache = Zend_Translate::getCache();
 			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
@@ -1996,7 +2006,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 				// and the next invocation of include_by_locale() doesn't cause a new reparse.
 				$adapter->addTranslation(
 					array(
-						'content' => array($locale => $locale), // Cached by content hash, so needs to be locale dependent
+						// Cached by content hash, so needs to be locale dependent
+						'content' => array($locale => $locale), 
 						'locale' => $locale,
 						'usetranslateadapter' => true
 					)
@@ -2012,7 +2023,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @param string $class Resources for this class will be included, according to the set locale.
 	 */
-	static function include_by_class($class) {
+	public static function include_by_class($class) {
 		$module = self::get_owner_module($class);
 		
 		$translators = array_reverse(self::get_translators(), true);

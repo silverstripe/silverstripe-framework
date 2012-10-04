@@ -68,17 +68,23 @@
  */
 class SimpleImageField extends FileField {
 
-	function __construct($name, $title = null, $value = null) {
-		Deprecation::notice('3.0', "SimpleImageField is deprecated. Use UploadField with \$myField->allowedExtensions = array('jpg', 'gif', 'png')", Deprecation::SCOPE_CLASS);
+	public function __construct($name, $title = null, $value = null) {
+		Deprecation::notice('3.0', 
+			"SimpleImageField is deprecated. Use UploadField with "
+			. "\$myField->allowedExtensions = array('jpg', 'gif', 'png')",
+			Deprecation::SCOPE_CLASS);
 
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments', Deprecation::SCOPE_GLOBAL);
+		if(count(func_get_args()) > 3) {
+			Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments',
+				Deprecation::SCOPE_GLOBAL);
+		}
 
 		parent::__construct($name, $title, $value);
 
 		$this->getValidator()->setAllowedExtensions(array('jpg','gif','png'));
 	}
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 	    if($this->form) $record = $this->form->getRecord();
 	    $fieldName = $this->name;
 	    if(isset($record)&&$record) {
@@ -122,7 +128,7 @@ class SimpleImageField extends FileField {
 	/**
 	 * Returns a readonly version of this field
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new SimpleImageField_Disabled($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
 		$field->setReadonly(true);
@@ -141,7 +147,7 @@ class SimpleImageField_Disabled extends FormField {
 	
 	protected $readonly = true;
 	
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$record = $this->form->getRecord();
 	    $fieldName = $this->name;
 			

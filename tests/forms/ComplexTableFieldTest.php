@@ -24,14 +24,14 @@ class ComplexTableFieldTest extends FunctionalTest {
 	
 	protected $autoFollowRedirection = false;
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->controller = new ComplexTableFieldTest_Controller();
 		$this->manyManyForm = $this->controller->ManyManyForm();
 	}
 	
-	function testCorrectNumberOfRowsInTable() {
+	public function testCorrectNumberOfRowsInTable() {
 		$field = $this->manyManyForm->Fields()->dataFieldByName('Players');
 		$parser = new CSSContentParser($field->FieldHolder());
 		
@@ -39,7 +39,7 @@ class ComplexTableFieldTest extends FunctionalTest {
 		$this->assertEquals($field->Items()->Count(), 2, 'There are 2 CTF items in the SS_List');
 	}
 	
-	function testAddingManyManyNewPlayer() {
+	public function testAddingManyManyNewPlayer() {
 		$this->logInWithPermission('ADMIN');
 		
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "\"Name\" = 'The Awesome People'");
@@ -60,7 +60,7 @@ class ComplexTableFieldTest extends FunctionalTest {
 		$this->assertEquals($teams->Count(), 1, 'Automatic many-many relation was set correctly on the new player');
 	}
 	
-	function testAddingHasManyData() {
+	public function testAddingHasManyData() {
 		$this->logInWithPermission('ADMIN');
 		
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "\"Name\" = 'The Awesome People'");
@@ -77,8 +77,10 @@ class ComplexTableFieldTest extends FunctionalTest {
 
 		$newSponsor = DataObject::get_one('ComplexTableFieldTest_Sponsor', "\"Name\" = 'Jim Beam'");
 		$this->assertNotNull($newSponsor, 'A new ComplexTableFieldTest_Sponsor record was created, Name = "Jim Beam"');
-		$this->assertEquals($newSponsor->TeamID, $team->ID, 'Automatic has-many/has-one relation was set correctly on the sponsor');
-		$this->assertEquals($newSponsor->getComponent('Team')->ID, $team->ID, 'Automatic has-many/has-one relation was set correctly on the sponsor');
+		$this->assertEquals($newSponsor->TeamID, $team->ID,
+				'Automatic has-many/has-one relation was set correctly on the sponsor');
+		$this->assertEquals($newSponsor->getComponent('Team')->ID, $team->ID,
+				'Automatic has-many/has-one relation was set correctly on the sponsor');
 		
 		$team = DataObject::get_by_id('ComplexTableFieldTest_Team', $team->ID);
 		$sponsor = DataObject::get_by_id('ComplexTableFieldTest_Sponsor', $newSponsor->ID);
@@ -90,11 +92,11 @@ class ComplexTableFieldTest extends FunctionalTest {
 }
 class ComplexTableFieldTest_Controller extends Controller {
 	
-	function Link($action = null) {
+	public function Link($action = null) {
 		return "ComplexTableFieldTest_Controller/$action";
 	}
 	
-	function ManyManyForm() {
+	public function ManyManyForm() {
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "\"Name\" = 'The Awesome People'");
 		
 		$playersField = new ComplexTableField(
@@ -123,7 +125,7 @@ class ComplexTableFieldTest_Controller extends Controller {
 		return $form;
 	}
 	
-	function HasManyForm() {
+	public function HasManyForm() {
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "\"Name\" = 'The Awesome People'");
 		
 		$sponsorsField = new ComplexTableField(

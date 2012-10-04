@@ -31,15 +31,15 @@ class _DiffOp {
     var $orig;
     var $final;
 
-    function reverse() {
+    public function reverse() {
         trigger_error("pure virtual", E_USER_ERROR);
     }
 
-    function norig() {
+    public function norig() {
         return $this->orig ? sizeof($this->orig) : 0;
     }
 
-    function nfinal() {
+    public function nfinal() {
         return $this->final ? sizeof($this->final) : 0;
     }
 }
@@ -52,14 +52,14 @@ class _DiffOp {
 class _DiffOp_Copy extends _DiffOp {
     var $type = 'copy';
 
-    function _DiffOp_Copy ($orig, $final = false) {
+    public function _DiffOp_Copy ($orig, $final = false) {
         if (!is_array($final))
             $final = $orig;
         $this->orig = $orig;
         $this->final = $final;
     }
 
-    function reverse() {
+    public function reverse() {
         return new _DiffOp_Copy($this->final, $this->orig);
     }
 }
@@ -72,12 +72,12 @@ class _DiffOp_Copy extends _DiffOp {
 class _DiffOp_Delete extends _DiffOp {
     var $type = 'delete';
 
-    function _DiffOp_Delete ($lines) {
+    public function _DiffOp_Delete ($lines) {
         $this->orig = $lines;
         $this->final = false;
     }
 
-    function reverse() {
+    public function reverse() {
         return new _DiffOp_Add($this->orig);
     }
 }
@@ -90,12 +90,12 @@ class _DiffOp_Delete extends _DiffOp {
 class _DiffOp_Add extends _DiffOp {
     var $type = 'add';
 
-    function _DiffOp_Add ($lines) {
+    public function _DiffOp_Add ($lines) {
         $this->final = $lines;
         $this->orig = false;
     }
 
-    function reverse() {
+    public function reverse() {
         return new _DiffOp_Delete($this->final);
     }
 }
@@ -108,12 +108,12 @@ class _DiffOp_Add extends _DiffOp {
 class _DiffOp_Change extends _DiffOp {
     var $type = 'change';
 
-    function _DiffOp_Change ($orig, $final) {
+    public function _DiffOp_Change ($orig, $final) {
         $this->orig = $orig;
         $this->final = $final;
     }
 
-    function reverse() {
+    public function reverse() {
         return new _DiffOp_Change($this->final, $this->orig);
     }
 }
@@ -143,7 +143,7 @@ class _DiffOp_Change extends _DiffOp {
  */
 class _DiffEngine
 {
-    function diff ($from_lines, $to_lines) {
+    public function diff ($from_lines, $to_lines) {
         $n_from = sizeof($from_lines);
         $n_to = sizeof($to_lines);
 
@@ -247,7 +247,7 @@ class _DiffEngine
      * match.  The caller must trim matching lines from the beginning and end
      * of the portions it is going to specify.
      */
-    function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks) {
+    public function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks) {
 	$flip = false;
 	
 	if ($xlim - $xoff > $ylim - $yoff) {
@@ -321,7 +321,7 @@ class _DiffEngine
 	return array($this->lcs, $seps);
     }
 
-    function _lcs_pos ($ypos) {
+    public function _lcs_pos ($ypos) {
 	$end = $this->lcs;
 	if ($end == 0 || $ypos > $this->seq[$end]) {
 	    $this->seq[++$this->lcs] = $ypos;
@@ -357,7 +357,7 @@ class _DiffEngine
      * Note that XLIM, YLIM are exclusive bounds.
      * All line numbers are origin-0 and discarded lines are not counted.
      */
-    function _compareseq ($xoff, $xlim, $yoff, $ylim) {
+    public function _compareseq ($xoff, $xlim, $yoff, $ylim) {
 	// Slide down the bottom initial diagonal.
 	while ($xoff < $xlim && $yoff < $ylim
                && $this->xv[$xoff] == $this->yv[$yoff]) {
@@ -414,7 +414,7 @@ class _DiffEngine
      *
      * This is extracted verbatim from analyze.c (GNU diffutils-2.7).
      */
-    function _shift_boundaries ($lines, &$changed, $other_changed) {
+    public function _shift_boundaries ($lines, &$changed, $other_changed) {
 	$i = 0;
 	$j = 0;
 
@@ -541,7 +541,7 @@ class Diff
      *        (Typically these are lines from a file.)
      * @param $to_lines array An array of strings.
      */
-    function Diff($from_lines, $to_lines) {
+    public function Diff($from_lines, $to_lines) {
         $eng = new _DiffEngine;
         $this->edits = $eng->diff($from_lines, $to_lines);
         //$this->_check($from_lines, $to_lines);
@@ -557,7 +557,7 @@ class Diff
      * @return object A Diff object representing the inverse of the
      *                original diff.
      */
-    function reverse () {
+    public function reverse () {
 	$rev = $this;
         $rev->edits = array();
         foreach ($this->edits as $edit) {
@@ -571,7 +571,7 @@ class Diff
      *
      * @return bool True iff two sequences were identical.
      */
-    function isEmpty () {
+    public function isEmpty () {
         foreach ($this->edits as $edit) {
             if ($edit->type != 'copy')
                 return false;
@@ -586,7 +586,7 @@ class Diff
      *
      * @return int The length of the LCS.
      */
-    function lcs () {
+    public function lcs () {
 	$lcs = 0;
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy')
@@ -603,7 +603,7 @@ class Diff
      *
      * @return array The original sequence of strings.
      */
-    function orig() {
+    public function orig() {
         $lines = array();
 
         foreach ($this->edits as $edit) {
@@ -621,7 +621,7 @@ class Diff
      *
      * @return array The sequence of strings.
      */
-    function finaltext() {
+    public function finaltext() {
         $lines = array();
 
         foreach ($this->edits as $edit) {
@@ -636,7 +636,7 @@ class Diff
      *
      * This is here only for debugging purposes.
      */
-    function _check ($from_lines, $to_lines) {
+    public function _check ($from_lines, $to_lines) {
         if (serialize($from_lines) != serialize($this->orig()))
             trigger_error("Reconstructed original doesn't match", E_USER_ERROR);
         if (serialize($to_lines) != serialize($this->finaltext()))
@@ -673,7 +673,7 @@ class Diff
 	 * @param object $cleaner Optional instance of a HTMLCleaner class to
 	 * 	use, overriding self::$html_cleaner_class
 	 */
-	static function cleanHTML($content, $cleaner=null) {
+	public static function cleanHTML($content, $cleaner=null) {
 		if (!$cleaner) {
 			if (class_exists(self::$html_cleaner_class)) {
 				$cleaner = new self::$html_cleaner_class;
@@ -702,7 +702,7 @@ class Diff
 	 * @param Boolean
 	 * @return String
 	 */
-	static function compareHTML($from, $to, $escape = false) {
+	public static function compareHTML($from, $to, $escape = false) {
 		// First split up the content into words and tags
 		$set1 = self::getHTMLChunks($from);
 		$set2 = self::getHTMLChunks($to);
@@ -749,7 +749,8 @@ class Diff
 						if($tagStack[$listName]) $rechunked[$listName][sizeof($rechunked[$listName])-1] .= ' ' . $item;
 						else $rechunked[$listName][] = $item;
 	
-						if($lookForTag && !$tagStack[$listName] && isset($item[0]) && $item[0] == "<" && substr($item,0,2) != "</") { 
+						if($lookForTag && !$tagStack[$listName] && isset($item[0]) && $item[0] == "<" 
+                                && substr($item,0,2) != "</") { 
 							$tagStack[$listName] = 1;
 						} else if($tagStack[$listName]) {
 							if(substr($item,0,2) == "</") $tagStack[$listName]--;
@@ -793,7 +794,7 @@ class Diff
 	/**
 	 * @param string|array If passed as an array, values will be concatenated with a comma.
 	 */
-	static function getHTMLChunks($content) {
+	public static function getHTMLChunks($content) {
 		if($content && !is_string($content) && !is_array($content) && !is_numeric($content)) {
 			throw new InvalidArgumentException('$content parameter needs to be a string or array');
 		}
@@ -852,7 +853,7 @@ extends Diff
      * @param $mapped_to_lines array This array should
      *  have the same number of elements as $to_lines.
      */
-    function MappedDiff($from_lines, $to_lines,
+    public function MappedDiff($from_lines, $to_lines,
                         $mapped_from_lines, $mapped_to_lines) {
 
         assert(sizeof($from_lines) == sizeof($mapped_from_lines));

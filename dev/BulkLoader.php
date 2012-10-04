@@ -123,7 +123,7 @@ abstract class BulkLoader extends ViewableData {
 	 */
 	public $deleteExistingRecords = false;
 	
-	function __construct($objectClass) {
+	public function __construct($objectClass) {
 		$this->objectClass = $objectClass;
 		parent::__construct();
 	}

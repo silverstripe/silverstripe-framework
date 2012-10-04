@@ -15,7 +15,7 @@ class TaskRunner extends Controller {
 		'runTask',
 	);
 	
-	function init() {
+	public function init() {
 		parent::init();
 
 		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
@@ -29,7 +29,7 @@ class TaskRunner extends Controller {
 		if(!$canAccess) return Security::permissionFailure($this);
 	}
 	
-	function index() {
+	public function index() {
 		$tasks = $this->getTasks();
 
 		// Web mode
@@ -59,7 +59,7 @@ class TaskRunner extends Controller {
 		}
 	}
 	
-	function runTask($request) {
+	public function runTask($request) {
 		$taskName = $request->param('TaskName');
 		if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
 			$title = singleton($taskName)->getTitle();
@@ -88,7 +88,10 @@ class TaskRunner extends Controller {
 		
 		if($taskClasses) foreach($taskClasses as $class) {
 			if(!singleton($class)->isEnabled()) continue;
-			$desc = (Director::is_cli()) ? Convert::html2raw(singleton($class)->getDescription()) : singleton($class)->getDescription();
+			$desc = (Director::is_cli()) 
+				? Convert::html2raw(singleton($class)->getDescription()) 
+				: singleton($class)->getDescription();
+				
 			$availableTasks[] = array(
 				'class' => $class,
 				'title' => singleton($class)->getTitle(),

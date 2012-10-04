@@ -14,7 +14,7 @@ class DataExtensionTest extends SapphireTest {
 		'DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
 	);
 	
-	function testOneToManyAssociationWithExtension() {
+	public function testOneToManyAssociationWithExtension() {
 		$contact = new DataExtensionTest_Member();
 		$contact->Website = "http://www.example.com";
 		
@@ -39,8 +39,10 @@ class DataExtensionTest extends SapphireTest {
 		$object = DataObject::get_one('DataExtensionTest_RelatedObject', "\"ContactID\" = {$contactID}");
 
 		$this->assertNotNull($object, 'Related object not null');
-		$this->assertInstanceOf('DataExtensionTest_Member', $object->Contact(), 'Related contact is a member dataobject');
-		$this->assertInstanceOf('DataExtensionTest_Member', $object->getComponent('Contact'), 'getComponent does the same thing as Contact()');
+		$this->assertInstanceOf('DataExtensionTest_Member', $object->Contact(),
+			'Related contact is a member dataobject');
+		$this->assertInstanceOf('DataExtensionTest_Member', $object->getComponent('Contact'),
+			'getComponent does the same thing as Contact()');
 		
 		$this->assertInstanceOf('DataExtensionTest_RelatedObject', $contact->RelatedObjects()->First());
 		$this->assertEquals("Lorem ipsum dolor", $contact->RelatedObjects()->First()->FieldOne);
@@ -48,7 +50,7 @@ class DataExtensionTest extends SapphireTest {
 		$contact->delete();
 	}
 	
-	function testManyManyAssociationWithExtension() {
+	public function testManyManyAssociationWithExtension() {
 		$parent = new DataExtensionTest_MyObject();
 		$parent->Title = 'My Title';
 		$parent->write();
@@ -71,7 +73,7 @@ class DataExtensionTest extends SapphireTest {
 	/**
 	 * Test {@link Object::add_extension()} has loaded DataExtension statics correctly.
 	 */
-	function testAddExtensionLoadsStatics() {
+	public function testAddExtensionLoadsStatics() {
 		// Object::add_extension() will load DOD statics directly, so let's try adding a extension on the fly
 		Object::add_extension('DataExtensionTest_Player', 'DataExtensionTest_PlayerExtension');
 		
@@ -97,11 +99,11 @@ class DataExtensionTest extends SapphireTest {
 	/**
 	 * Test that DataObject::$api_access can be set to true via a extension
 	 */
-	function testApiAccessCanBeExtended() {
+	public function testApiAccessCanBeExtended() {
 		$this->assertTrue(Config::inst()->get('DataExtensionTest_Member', 'api_access', Config::FIRST_SET));
 	}
 	
-	function testPermissionExtension() {
+	public function testPermissionExtension() {
 		// testing behaviour in isolation, too many sideeffects and other checks
 		// in SiteTree->can*() methods to test one single feature reliably with them
 
@@ -126,7 +128,7 @@ class DataExtensionTest extends SapphireTest {
 
 	}
 	
-	function testPopulateDefaults() {
+	public function testPopulateDefaults() {
 		$obj = new DataExtensionTest_Member();
 		$this->assertEquals(
 			$obj->Phone,
@@ -138,13 +140,13 @@ class DataExtensionTest extends SapphireTest {
 	/**
 	 * Test that DataObject::dbObject() works for fields applied by a extension
 	 */
-	function testDbObjectOnExtendedFields() {
+	public function testDbObjectOnExtendedFields() {
 		$member = $this->objFromFixture('DataExtensionTest_Member', 'member1');
 		$this->assertNotNull($member->dbObject('Website'));
 		$this->assertInstanceOf('Varchar', $member->dbObject('Website'));
 	}	
 	
-	function testExtensionCanBeAppliedToDataObject() {
+	public function testExtensionCanBeAppliedToDataObject() {
 		$do = new DataObject();
 		$mo = new DataExtensionTest_MyObject();
 
@@ -232,7 +234,7 @@ class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 		'Title' => 'Varchar', 
 	);
 	
-	function canOne($member = null) {
+	public function canOne($member = null) {
 		// extended access checks
 		$results = $this->extend('canOne', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
@@ -240,7 +242,7 @@ class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 		return false;
 	}
 	
-	function canTwo($member = null) {
+	public function canTwo($member = null) {
 		// extended access checks
 		$results = $this->extend('canTwo', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
@@ -248,7 +250,7 @@ class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 		return true;
 	}
 	
-	function canThree($member = null) {
+	public function canThree($member = null) {
 		// extended access checks
 		$results = $this->extend('canThree', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
@@ -259,30 +261,30 @@ class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 
 class DataExtensionTest_Ext1 extends DataExtension implements TestOnly {
 	
-	function canOne($member = null) {
+	public function canOne($member = null) {
 		return true;
 	}
 	
-	function canTwo($member = null) {
+	public function canTwo($member = null) {
 		return false;
 	}
 	
-	function canThree($member = null) {
+	public function canThree($member = null) {
 	}
 	
 }
 
 class DataExtensionTest_Ext2 extends DataExtension implements TestOnly {
 	
-	function canOne($member = null) {
+	public function canOne($member = null) {
 		return true;
 	}
 	
-	function canTwo($member = null) {
+	public function canTwo($member = null) {
 		return true;
 	}
 	
-	function canThree($member = null) {
+	public function canThree($member = null) {
 	}
 	
 }

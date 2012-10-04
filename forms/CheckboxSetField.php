@@ -2,7 +2,8 @@
 /**
  * Displays a set of checkboxes as a logical group.
  *
- * ASSUMPTION -> IF you pass your source as an array, you pass values as an array too. Likewise objects are handled the same.
+ * ASSUMPTION -> IF you pass your source as an array, you pass values as an array too. Likewise objects are handled
+ * the same.
  * 
  * Example:
  * <code php>
@@ -21,8 +22,11 @@
  * 
  * <b>Saving</b>
  * The checkbox set field will save its data in one of ways:
- *   * If the field name matches a many-many join on the object being edited, that many-many join will be updated to link to the objects selected on the checkboxes.  In this case, the keys of your value map should be the IDs of the database records.
- *   * If the field name matches a database field, a comma-separated list of values will be saved to that field.  The keys can be text or numbers.
+ * - If the field name matches a many-many join on the object being edited, that many-many join will be updated to
+ *   link to the objects selected on the checkboxes.  In this case, the keys of your value map should be the IDs of
+ *   the database records.
+ * - If the field name matches a database field, a comma-separated list of values will be saved to that field.  The
+ *   keys can be text or numbers.
  * 
  * @todo Document the different source data that can be used
  * with this form field - e.g ComponentSet, ArrayList,
@@ -43,7 +47,7 @@ class CheckboxSetField extends OptionsetField {
 	 * @todo Explain different source data that can be used with this field,
 	 * e.g. SQLMap, ArrayList or an array.
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
 
 		$source = $this->source;
@@ -138,7 +142,7 @@ class CheckboxSetField extends OptionsetField {
 	 * 
 	 * @param Array $items Collection of array keys, as defined in the $source array
 	 */
-	function setDefaultItems($items) {
+	public function setDefaultItems($items) {
 		$this->defaultItems = $items;
 		return $this;
 	}
@@ -146,15 +150,16 @@ class CheckboxSetField extends OptionsetField {
 	/**
 	 * @return Array
 	 */
-	function getDefaultItems() {
+	public function getDefaultItems() {
 		return $this->defaultItems;
 	}
 	
 	/**
 	 * Load a value into this CheckboxSetField
 	 */
-	function setValue($value, $obj = null) {
-		// If we're not passed a value directly, we can look for it in a relation method on the object passed as a second arg
+	public function setValue($value, $obj = null) {
+		// If we're not passed a value directly, we can look for it in a relation method on the object passed as a
+		// second arg
 		if(!$value && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
 			$funcName = $this->name;
 			$value = $obj->$funcName()->getIDList();
@@ -173,7 +178,7 @@ class CheckboxSetField extends OptionsetField {
 	 *
 	 * @param DataObject $record The record to save into
 	 */
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
 		if($fieldname && $record && $relation && $relation instanceof RelationList) {
@@ -200,7 +205,7 @@ class CheckboxSetField extends OptionsetField {
 	 * 
 	 * @return string
 	 */
-	function dataValue() {
+	public function dataValue() {
 		if($this->value && is_array($this->value)) {
 			$filtered = array();
 			foreach($this->value as $item) {
@@ -215,7 +220,7 @@ class CheckboxSetField extends OptionsetField {
 		return '';
 	}
 	
-	function performDisabledTransformation() {
+	public function performDisabledTransformation() {
 		$clone = clone $this;
 		$clone->setDisabled(true);
 		
@@ -228,7 +233,7 @@ class CheckboxSetField extends OptionsetField {
 	 * 
 	 * @return ReadonlyField
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$values = '';
 		$data = array();
 		
@@ -279,11 +284,11 @@ class CheckboxSetField extends OptionsetField {
 		return $field;
 	}
 
-	function Type() {
+	public function Type() {
 		return 'optionset checkboxset';
 	}
 	
-	function ExtraOptions() {
+	public function ExtraOptions() {
 		return FormField::ExtraOptions();
 	}
 	

@@ -7,14 +7,19 @@
  */
 class Float extends DBField {
 
-	function __construct($name = null, $defaultVal = 0) {
+	public function __construct($name = null, $defaultVal = 0) {
 		$this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;
 		
 		parent::__construct($name);
 	}
 	
-	function requireField() {
-		$parts=Array('datatype'=>'float', 'null'=>'not null', 'default'=>$this->defaultVal, 'arrayValue'=>$this->arrayValue);
+	public function requireField() {
+		$parts=Array(
+			'datatype'=>'float',
+			'null'=>'not null',
+			'default'=>$this->defaultVal,
+			'arrayValue'=>$this->arrayValue);
+		
 		$values=Array('type'=>'float', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
@@ -24,15 +29,15 @@ class Float extends DBField {
 	 * 
 	 * @uses number_format()
 	 */
-	function Nice() {
+	public function Nice() {
 		return number_format($this->value, 2);
 	}
 	
-	function Round($precision = 3) {
+	public function Round($precision = 3) {
 		return round($this->value, $precision);
 	}
 
-	function NiceRound($precision = 3) {
+	public function NiceRound($precision = 3) {
 		return number_format(round($this->value, $precision), $precision);
 	}
 	
@@ -44,7 +49,7 @@ class Float extends DBField {
 	 * Returns the value to be set in the database to blank this field.
 	 * Usually it's a choice between null, 0, and ''
 	 */
-	function nullValue() {
+	public function nullValue() {
 		return 0;
 	}
 
@@ -52,7 +57,7 @@ class Float extends DBField {
 	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
 	 * If necessary, this should include quotes.
 	 */
-	function prepValueForDB($value) {
+	public function prepValueForDB($value) {
 		if($value === true) {
 			return 1;
 		}

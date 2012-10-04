@@ -68,7 +68,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * 
 	 * @uses BasicAuth::requireLogin()
 	 */
-	function init() {
+	public function init() {
 		if($this->basicAuthEnabled) BasicAuth::protect_site_if_necessary();
 
 		// Directly access the session variable just in case the Group or Member tables don't yet exist
@@ -76,7 +76,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$member = Member::currentUser();
 			if($member) {
 				if(!headers_sent()) Cookie::set("PastMember", true, 90, null, null, false, true);
-				DB::query("UPDATE \"Member\" SET \"LastVisited\" = " . DB::getConn()->now() . " WHERE \"ID\" = $member->ID", null);
+				DB::query("UPDATE \"Member\" SET \"LastVisited\" = " . DB::getConn()->now()
+					. " WHERE \"ID\" = $member->ID", null);
 			}
 		}
 		
@@ -87,7 +88,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	/**
 	 * Returns a link to this controller.  Overload with your own Link rules if they exist.
 	 */
-	function Link() {
+	public function Link() {
 		return get_class($this) .'/';
 	}
 	
@@ -122,7 +123,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
@@ -136,7 +137,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		// Init
 		$this->baseInitCalled = false;	
 		$this->init();
-		if(!$this->baseInitCalled) user_error("init() method on class '$this->class' doesn't call Controller::init().  Make sure that you have parent::init() included.", E_USER_WARNING);
+		if(!$this->baseInitCalled) {
+			user_error("init() method on class '$this->class' doesn't call Controller::init()."
+				. "Make sure that you have parent::init() included.", E_USER_WARNING);
+		}
 
 		$this->extend('onAfterInit');
 		
@@ -148,12 +152,18 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 		$body = parent::handleRequest($request, $model);
 		if($body instanceof SS_HTTPResponse) {
-			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller; returning it without modification.");
+			if(isset($_REQUEST['debug_request'])) {
+				Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller;"
+					. "returning it without modification.");
+			}
 			$this->response = $body;
 			
 		} else {
 			if(is_object($body)) {
-				if(isset($_REQUEST['debug_request'])) Debug::message("Request handler $body->class object to $this->class controller;, rendering with template returned by $body->class::getViewer()");
+				if(isset($_REQUEST['debug_request'])) {
+					Debug::message("Request handler $body->class object to $this->class controller;"
+						. "rendering with template returned by $body->class::getViewer()");
+				}
 			   $body = $body->getViewer($request->latestParam('Action'))->process($body);
 			}
 			
@@ -205,14 +215,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		}
 	}
 
-	function setURLParams($urlParams) {
+	public function setURLParams($urlParams) {
 		$this->urlParams = $urlParams;
 	}
 	
 	/**
 	 * @return array The parameters extracted from the URL by the {@link Director}.
 	 */
-	function getURLParams() {
+	public function getURLParams() {
 		return $this->urlParams;
 	}
 	
@@ -220,7 +230,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Returns the SS_HTTPResponse object that this controller is building up.
 	 * Can be used to set the status code and headers
 	 */
-	function getResponse() {
+	public function getResponse() {
 		return $this->response;
 	}
 	
@@ -230,7 +240,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Return the object that is going to own a form that's being processed, and handle its execution.
 	 * Note that the result needn't be an actual controller object.
 	 */
-	function getFormOwner() {
+	public function getFormOwner() {
 		// Get the appropraite ocntroller: sometimes we want to get a form from another controller
 		if(isset($this->requestParams['formController'])) {
 			$formController = Director::getControllerForURL($this->requestParams['formController']);
@@ -249,14 +259,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * This is the default action handler used if a method doesn't exist.
 	 * It will process the controller object with the template returned by {@link getViewer()}
 	 */
-	function defaultAction($action) {
+	public function defaultAction($action) {
 		return $this->getViewer($action)->process($this);
 	}
 
 	/**
 	 * Returns the action that is being executed on this controller.
 	 */
-	function getAction() {
+	public function getAction() {
 		return $this->action;
 	}
 
@@ -264,7 +274,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Return an SSViewer object to process the data
 	 * @return SSViewer The viewer identified being the default handler for this Controller/Action combination
 	 */
-	function getViewer($action) {
+	public function getViewer($action) {
 		// Hard-coded templates
 		if($this->templates[$action]) {
 			$templates = $this->templates[$action];
@@ -347,7 +357,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * @param array $params Key-value array for custom template variables (Optional)
 	 * @return string Parsed template content 
 	 */
-	function render($params = null) {
+	public function render($params = null) {
 		$template = $this->getViewer($this->getAction());
 	
 		// if the object is already customised (e.g. through Controller->run()), use it
@@ -363,7 +373,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * This must be called before Controller::init().  That is, you must call it in your controller's
 	 * init method before it calls parent::init().
 	 */
-	function disableBasicAuth() {
+	public function disableBasicAuth() {
 		$this->basicAuthEnabled = false;
 	}
 
@@ -394,7 +404,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * in user.
 	 * @return boolean
 	 */
-	function can($perm, $member = null) {
+	public function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
 		if(is_array($perm)) {
 			$perm = array_map(array($this, 'can'), $perm, array_fill(0, count($perm), $member));
@@ -407,14 +417,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		}
 	}
 
-	//-----------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * Pushes this controller onto the stack of current controllers.
-	 * This means that any redirection, session setting, or other things that rely on Controller::curr() will now write to this
-	 * controller object.
+	 * This means that any redirection, session setting, or other things that rely on Controller::curr() will now
+	 * write to this controller object.
 	 */
-	function pushCurrent() {
+	public function pushCurrent() {
 		array_unshift(self::$controller_stack, $this);
 		// Create a new session object
 		if(!$this->session) {
@@ -429,27 +439,29 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	/**
 	 * Pop this controller off the top of the stack.
 	 */
-	function popCurrent() {
+	public function popCurrent() {
 		if($this === self::$controller_stack[0]) {
 			array_shift(self::$controller_stack);
 		} else {
-			user_error("popCurrent called on $this->class controller, but it wasn't at the top of the stack", E_USER_WARNING);
+			user_error("popCurrent called on $this->class controller, but it wasn't at the top of the stack",
+				E_USER_WARNING);
 		}
 	}
 	
 	/**
 	 * Redirect to the given URL.
 	 */
-	function redirect($url, $code=302) {
+	public function redirect($url, $code=302) {
 		if(!$this->response) $this->response = new SS_HTTPResponse();
 		
 		if($this->response->getHeader('Location')) {
-			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_WARNING);
+			user_error("Already directed to " . $this->response->getHeader('Location')
+				. "; now trying to direct to $url", E_USER_WARNING);
 			return;
 		}
 
 		// Attach site-root to relative links, if they have a slash in them
-		if($url == "" || $url[0] == '?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)){
+		if($url=="" || $url[0]=='?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)) {
 			$url = Director::baseURL() . $url;
 		}
 
@@ -464,7 +476,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * URL (see {@link Director::baseURL()}).
 	 * @uses redirect()
 	 */
-	function redirectBack() {
+	public function redirectBack() {
 		$url = null;
 		
 		// In edge-cases, this will be called outside of a handleRequest() context; in that case,
@@ -491,9 +503,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	
 	/**
 	 * Tests whether a redirection has been requested.
-	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
+	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will
+	 * return null;
 	 */
-	function redirectedTo() {
+	public function redirectedTo() {
 		return $this->response && $this->response->getHeader('Location');
 	} 
 	
@@ -501,14 +514,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Get the Session object representing this Controller's session
 	 * @return Session
 	 */
-	function getSession() {
+	public function getSession() {
 		return $this->session;
 	}
 	
 	/**
 	 * Set the Session object.
 	 */
-	function setSession(Session $session) {
+	public function setSession(Session $session) {
 		$this->session = $session;
 	}
 	
@@ -523,7 +536,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * @param String 
 	 * @return String
 	 */
-	static function join_links() {
+	public static function join_links() {
 		$args = func_get_args();
 		$result = "";
 		$querystrings = array();

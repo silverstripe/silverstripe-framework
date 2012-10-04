@@ -1,8 +1,9 @@
 <?php
 
 /**
- * A tokenised regular expression is a parser, similar to a regular expression, that acts on tokens rather than characters.
- * This is a crucial component of the ManifestBuilder.
+ * A tokenised regular expression is a parser, similar to a regular expression, that acts on tokens rather than
+ * characters.  This is a crucial component of the ManifestBuilder.
+ * 
  * @package framework
  * @subpackage core
  */ 
@@ -12,11 +13,11 @@ class TokenisedRegularExpression {
 	 */
 	protected $expression;
 	
-	function __construct($expression) {
+	public function __construct($expression) {
 		$this->expression = $expression;
 	}
 	
-	function findAll($tokens) {
+	public function findAll($tokens) {
 		$tokenTypes = array();
 		foreach($tokens as $i => $token) {
 			if(is_array($token)) {
@@ -28,7 +29,8 @@ class TokenisedRegularExpression {
 			}
 		}
 
-		$startKeys = array_keys($tokenTypes, is_array($this->expression[0]) ? $this->expression[0][0] : $this->expression[0]);
+		$startKeys = array_keys($tokenTypes, is_array($this->expression[0]) 
+			? $this->expression[0][0] : $this->expression[0]);
 		$allMatches = array();
 		
 		foreach($startKeys as $startKey) {
@@ -40,7 +42,7 @@ class TokenisedRegularExpression {
 		return $allMatches;
 	}
 	
-	function matchFrom($tokenPos, $expressionPos, &$tokens, &$matches) {
+	public function matchFrom($tokenPos, $expressionPos, &$tokens, &$matches) {
 		$expressionRule = $this->expression[$expressionPos];
 		$expectation = is_array($expressionRule) ? $expressionRule[0] : $expressionRule;
 		if(!is_array($expressionRule)) $expressionRule = array();
@@ -48,7 +50,9 @@ class TokenisedRegularExpression {
 		if($expectation == $tokens[$tokenPos][0]) {
 			if(isset($expressionRule['save_to'])) {
 				// Append to an array
-				if(substr($expressionRule['save_to'],-2) == '[]') $matches[substr($expressionRule['save_to'],0,-2)][] = $tokens[$tokenPos][1];
+				if(substr($expressionRule['save_to'],-2) == '[]') {
+					$matches[substr($expressionRule['save_to'],0,-2)][] = $tokens[$tokenPos][1];
+				}
 				// Regular variable setting
 				else $matches[$expressionRule['save_to']] = $tokens[$tokenPos][1];
 			}
@@ -62,14 +66,16 @@ class TokenisedRegularExpression {
 				return true;
 
 			// This step is optional
-			} else if(isset($expressionRule['optional']) && $this->matchFrom($tokenPos, $expressionPos+1, $tokens, $matches)) {
+			} else if(isset($expressionRule['optional']) 
+					&& $this->matchFrom($tokenPos, $expressionPos+1, $tokens, $matches)) {
 				return true;
 
 			// Process jumps
 			} else if(isset($expressionRule['can_jump_to'])) {
 				if(is_array($expressionRule['can_jump_to'])) foreach($expressionRule['can_jump_to'] as $canJumpTo) {
 					// can_jump_to & optional both set
-					if(isset($expressionRule['optional']) && $this->matchFrom($tokenPos, $canJumpTo, $tokens, $matches)) {
+					if(isset($expressionRule['optional']) 
+							&& $this->matchFrom($tokenPos, $canJumpTo, $tokens, $matches)) {
 						return true;
 					}
 					// can_jump_to set (optional may or may not be set)
@@ -79,7 +85,8 @@ class TokenisedRegularExpression {
 
 				} else {
 					// can_jump_to & optional both set
-					if(isset($expressionRule['optional']) && $this->matchFrom($tokenPos, $expressionRule['can_jump_to'], $tokens, $matches)) {
+					if(isset($expressionRule['optional'])
+							&& $this->matchFrom($tokenPos, $expressionRule['can_jump_to'], $tokens, $matches)) {
 						return true;
 					}
 					// can_jump_to set (optional may or may not be set)
@@ -90,7 +97,9 @@ class TokenisedRegularExpression {
 			}
 
 		} else if(isset($expressionRule['optional'])) {
-			if(isset($this->expression[$expressionPos+1])) return $this->matchFrom($tokenPos, $expressionPos+1, $tokens, $matches);
+			if(isset($this->expression[$expressionPos+1])) {
+				return $this->matchFrom($tokenPos, $expressionPos+1, $tokens, $matches);
+			}
 			else return true;
 		}
 

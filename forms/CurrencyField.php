@@ -15,7 +15,7 @@ class CurrencyField extends TextField {
 	 * allows the value to be set. removes the first character
 	 * if it is not a number (probably a currency symbol)
 	 */
-	function setValue($val) {
+	public function setValue($val) {
 		if(!$val) $val = 0.00;
 		$this->value = '$' . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
 		return $this;
@@ -24,7 +24,7 @@ class CurrencyField extends TextField {
 	 * Overwrite the datavalue before saving to the db ;-)
 	 * return 0.00 if no value, or value is non-numeric
 	 */
-	function dataValue() {
+	public function dataValue() {
 		if($this->value) {
 			return preg_replace('/[^0-9.\-]/','', $this->value);
 		}else{
@@ -32,22 +32,25 @@ class CurrencyField extends TextField {
 		}
 	}
 
-	function Type() {
+	public function Type() {
 		return 'currency text';
 	}
 
 	/**
 	 * Create a new class for this field
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		$field = new CurrencyField_Readonly($this->name, $this->title, $this->value);
 		$field -> addExtraClass($this->extraClass());
 		return $field;
 	}
 
-	function validate($validator) {
-		if(!empty ($this->value) && !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
-			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency"), "validation", false);
+	public function validate($validator) {
+		if(!empty ($this->value)
+				&& !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
+
+			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency"),
+				"validation", false);
 			return false;
 		}
 		return true;
@@ -64,7 +67,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 	/**
 	 * overloaded to display the correctly formated value for this datatype 
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		if($this->value){
 			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
@@ -72,13 +75,14 @@ class CurrencyField_Readonly extends ReadonlyField{
 			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span>"
+			. "<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 	
 	/**
 	 * This already is a readonly field.
 	 */
-	function performReadonlyTransformation() {
+	public function performReadonlyTransformation() {
 		return clone $this;
 	}
 	
@@ -96,7 +100,7 @@ class CurrencyField_Disabled extends CurrencyField{
 	/**
 	 * overloaded to display the correctly formated value for this datatype 
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		if($this->value){
 			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
@@ -104,7 +108,8 @@ class CurrencyField_Disabled extends CurrencyField{
 			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<input class=\"text\" type=\"text\" disabled=\"disabled\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<input class=\"text\" type=\"text\" disabled=\"disabled\""
+			. " name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 }
 

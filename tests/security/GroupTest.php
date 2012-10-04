@@ -7,7 +7,7 @@ class GroupTest extends FunctionalTest {
 
 	static $fixture_file = 'GroupTest.yml';
 	
-	function testGroupCodeDefaultsToTitle() {
+	public function testGroupCodeDefaultsToTitle() {
 		$g1 = new Group();
 		$g1->Title = "My Title";
 		$g1->write();
@@ -28,7 +28,7 @@ class GroupTest extends FunctionalTest {
 	/**
 	 * Test the Group::map() function
 	 */
-	function testGroupMap() {
+	public function testGroupMap() {
 		// 2.4 only
 		$originalDeprecation = Deprecation::dump_settings();
 		Deprecation::notification_version('2.4');
@@ -49,7 +49,7 @@ class GroupTest extends FunctionalTest {
 		Deprecation::restore_settings($originalDeprecation);
 	}
 	
-	function testMemberGroupRelationForm() {
+	public function testMemberGroupRelationForm() {
 		Session::set('loggedInAs', $this->idFromFixture('GroupTest_Member', 'admin'));
 		
 	      $adminGroup = $this->objFromFixture('Group', 'admingroup');
@@ -94,7 +94,7 @@ class GroupTest extends FunctionalTest {
 
 	   }
 	
-	function testCollateAncestorIDs() {
+	public function testCollateAncestorIDs() {
 		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
 		$childGroup = $this->objFromFixture('Group', 'childgroup');
 		$orphanGroup = new Group();
@@ -126,17 +126,21 @@ class GroupTest extends FunctionalTest {
 		$childGroupID = $this->idFromFixture('Group', 'childgroup');
 		$group->delete();
 
-		$this->assertEquals(0, DataObject::get('Group', "\"ID\" = {$groupID}")->Count(), 'Group is removed');
-		$this->assertEquals(0, DataObject::get('Permission', "\"GroupID\" = {$groupID}")->Count(), 'Permissions removed along with the group');
-		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$groupID}")->Count(), 'Child groups are removed');
-		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$childGroupID}")->Count(), 'Grandchild groups are removed');
+		$this->assertEquals(0, DataObject::get('Group', "\"ID\" = {$groupID}")->Count(),
+			'Group is removed');
+		$this->assertEquals(0, DataObject::get('Permission', "\"GroupID\" = {$groupID}")->Count(),
+			'Permissions removed along with the group');
+		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$groupID}")->Count(),
+			'Child groups are removed');
+		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$childGroupID}")->Count(),
+			'Grandchild groups are removed');
 	}
 
 }
 
 class GroupTest_Member extends Member implements TestOnly {
    
-   function getCMSFields() {
+   public function getCMSFields() {
       $groups = DataObject::get('Group');
       $groupsMap = ($groups) ? $groups->map() : false;
       $fields = new FieldList(
@@ -155,7 +159,7 @@ class GroupTest_Member extends Member implements TestOnly {
 
 class GroupTest_MemberForm extends Form {
    
-   function __construct($controller, $name) {
+   public function __construct($controller, $name) {
       $fields = singleton('GroupTest_Member')->getCMSFields();
       $actions = new FieldList(
          new FormAction('doSave','save')
@@ -164,7 +168,7 @@ class GroupTest_MemberForm extends Form {
       parent::__construct($controller, $name, $fields, $actions);
    }
    
-   function doSave($data, $form) {
+   public function doSave($data, $form) {
       // done in testing methods
    }
    

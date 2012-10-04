@@ -6,7 +6,7 @@
 
 class i18nSSLegacyAdapterTest extends SapphireTest {
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
@@ -39,7 +39,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		i18n::include_by_locale('en');
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
 		SS_ClassLoader::instance()->popManifest();
 		i18n::set_locale($this->originalLocale);
@@ -50,7 +50,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		parent::tearDown();
 	}
 	
-	function testTranslate() {
+	public function testTranslate() {
 		i18n::set_locale('en_US');
 		$this->assertEquals(
 			'Legacy translation',

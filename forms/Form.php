@@ -20,7 +20,8 @@
  * 
  * <h2>Validation</h2>
  * Each form needs some form of {@link Validator} to trigger the {@link FormField->validate()} methods for each field.
- * You can't disable validator for security reasons, because crucial behaviour like extension checks for file uploads depend on it.
+ * You can't disable validator for security reasons, because crucial behaviour like extension checks for file uploads
+ * depend on it.
  * The default validator is an instance of {@link RequiredFields}.
  * If you want to enforce serverside-validation to be ignored for a specific {@link FormField},
  * you need to subclass it.
@@ -149,15 +150,22 @@ class Form extends RequestHandler {
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
 	 * @param String $name The method on the controller that will return this form object.
 	 * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
-	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of {@link FormAction} objects
+	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of
+	 *                           {@link FormAction} objects
 	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
 	public function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
 		parent::__construct();
 		
-		if(!$fields instanceof FieldList) throw new InvalidArgumentException('$fields must be a valid FieldList instance');
-		if(!$actions instanceof FieldList) throw new InvalidArgumentException('$fields must be a valid FieldList instance');
-		if($validator && !$validator instanceof Validator) throw new InvalidArgumentException('$validator must be a Valdidator instance');
+		if(!$fields instanceof FieldList) {
+			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
+		}
+		if(!$actions instanceof FieldList) {
+			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
+		}
+		if($validator && !$validator instanceof Validator) {
+			throw new InvalidArgumentException('$validator must be a Valdidator instance');
+		}
 
 		$fields->setForm($this);
 		$actions->setForm($this);
@@ -178,7 +186,9 @@ class Form extends RequestHandler {
 		
 		// Check if CSRF protection is enabled, either on the parent controller or from the default setting. Note that
 		// method_exists() is used as some controllers (e.g. GroupTest) do not always extend from Object.
-		if(method_exists($controller, 'securityTokenEnabled') || (method_exists($controller, 'hasMethod') && $controller->hasMethod('securityTokenEnabled'))) {
+		if(method_exists($controller, 'securityTokenEnabled') || (method_exists($controller, 'hasMethod')
+				&& $controller->hasMethod('securityTokenEnabled'))) {
+
 			$securityEnabled = $controller->securityTokenEnabled();
 		} else {
 			$securityEnabled = SecurityToken::is_enabled();
@@ -294,7 +304,8 @@ class Form extends RequestHandler {
 				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->name)
 			);
 		}
-		// TODO : Once we switch to a stricter policy regarding allowed_actions (meaning actions must be set explicitly in allowed_actions in order to run)
+		// TODO : Once we switch to a stricter policy regarding allowed_actions (meaning actions must be set
+		// explicitly in allowed_actions in order to run)
 		// Uncomment the following for checking security against running actions on form fields
 		/* else {
 			// Try to find a field that has the action, and allows it
@@ -315,7 +326,8 @@ class Form extends RequestHandler {
 		// Validate the form
 		if(!$this->validate()) {
 			if(Director::is_ajax()) {
-				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through FormResponse)
+				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through
+				// FormResponse)
 				$acceptType = $request->getHeader('Accept');
 				if(strpos($acceptType, 'application/json') !== FALSE) {
 					// Send validation errors back as JSON with a flag at the start
@@ -720,7 +732,8 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	* Set the target of this form to any value - useful for opening the form contents in a new window or refreshing another frame
+	* Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
+	* another frame
 	* 
 	* @param target The value of the target
 	*/
@@ -863,8 +876,8 @@ class Form extends RequestHandler {
 	/**
 	 * Set the form action attribute to a custom URL.
 	 * 
-	 * Note: For "normal" forms, you shouldn't need to use this method.  It is recommended only for situations where you have
-	 * two relatively distinct parts of the system trying to communicate via a form post.
+	 * Note: For "normal" forms, you shouldn't need to use this method.  It is recommended only for situations where
+	 * you have two relatively distinct parts of the system trying to communicate via a form post.
 	 */
 	public function setFormAction($path) {
 		$this->formActionPath = $path;
@@ -1052,7 +1065,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return boolean
 	 */
-	 function validate(){
+	 public function validate(){
 		if($this->validator){
 			$errors = $this->validator->validate();
 
@@ -1124,9 +1137,9 @@ class Form extends RequestHandler {
 				)
 			) {
 				// We don't actually call the method because it might be slow.  
-				// In a later release, relation methods will just return references to the query that should be executed, 
-				// and so we will be able to safely pass the return value of the 
-				// relation method to the first argument of setValue
+				// In a later release, relation methods will just return references to the query that should be
+				// executed, and so we will be able to safely pass the return value of the relation method to the
+				// first argument of setValue
 				$val = $data->__get($name);
 				$hasObjectValue = true;
 			} else if(strpos($name,'[') && is_array($data) && !isset($data[$name])) {
@@ -1289,7 +1302,8 @@ class Form extends RequestHandler {
 		$content = $this->forTemplate();
 		$this->IncludeFormTag = true;
 
-		$content .= "<input type=\"hidden\" name=\"_form_action\" id=\"" . $this->FormName . "_form_action\" value=\"" . $this->FormAction() . "\" />\n";
+		$content .= "<input type=\"hidden\" name=\"_form_action\" id=\"" . $this->FormName . "_form_action\""
+			. " value=\"" . $this->FormAction() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_name\" value=\"" . $this->FormName() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_method\" value=\"" . $this->FormMethod() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->FormEncType() . "\" />\n";
@@ -1336,8 +1350,8 @@ class Form extends RequestHandler {
 
 	/**
 	 * Disable the default button.
-	 * Ordinarily, when a form is processed and no action_XXX button is available, then the first button in the actions list
-	 * will be pressed.  However, if this is "delete", for example, this isn't such a good idea.
+	 * Ordinarily, when a form is processed and no action_XXX button is available, then the first button in the
+	 * actions list will be pressed.  However, if this is "delete", for example, this isn't such a good idea.
 	 */
 	public function disableDefaultAction() {
 		$this->hasDefaultAction = false;
@@ -1436,7 +1450,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	public function extraClass() {		
+	public function extraClass() {
 		return implode(array_unique($this->extraClasses), ' ');
 	}
 	
@@ -1485,13 +1499,14 @@ class Form extends RequestHandler {
 	}
 	
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// TESTING HELPERS
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Test a submission of this form.
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in your unit test.
+	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * your unit test.
 	 */
 	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
@@ -1504,7 +1519,8 @@ class Form extends RequestHandler {
 	
 	/**
 	 * Test an ajax submission of this form.
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in your unit test.
+	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * your unit test.
 	 */
 	public function testAjaxSubmission($action, $data) {
 		$data['ajax'] = 1;

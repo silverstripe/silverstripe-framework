@@ -76,9 +76,13 @@ class FieldList extends ArrayList {
 				$name = $field->getName();
 				if(isset($list[$name])) {
 					$errSuffix = "";
-					if($this->form) $errSuffix = " in your '{$this->form->class}' form called '" . $this->form->Name() . "'";
-					else $errSuffix = '';
-					user_error("collateDataFields() I noticed that a field called '$name' appears twice$errSuffix.", E_USER_ERROR);
+					if($this->form) {
+						$errSuffix = " in your '{$this->form->class}' form called '" . $this->form->Name() . "'";
+					} else {
+						$errSuffix = '';
+					}
+					user_error("collateDataFields() I noticed that a field called '$name' appears twice$errSuffix.",
+						E_USER_ERROR);
 				}
 				$list[$name] = $field;
 			}
@@ -89,8 +93,8 @@ class FieldList extends ArrayList {
 	 * Add an extra field to a tab within this FieldList.
 	 * This is most commonly used when overloading getCMSFields()
 	 * 
-	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
-	 * This function will create any missing tabs.
+	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab
+	 *                        or TabSet.Tab.Subtab. This function will create any missing tabs.
 	 * @param FormField $field The {@link FormField} object to add to the end of that tab.
 	 * @param string $insertBefore The name of the field to insert before.  Optional.
 	 */
@@ -110,7 +114,8 @@ class FieldList extends ArrayList {
 	 * Add a number of extra fields to a tab within this FieldList.
 	 * This is most commonly used when overloading getCMSFields()
 	 * 
-	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
+	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab
+	 *                        or TabSet.Tab.Subtab.
 	 * This function will create any missing tabs.
 	 * @param array $fields An array of {@link FormField} objects.
 	 */
@@ -266,7 +271,8 @@ class FieldList extends ArrayList {
 
 		$parts = explode('.',$tabName);
 		$last_idx = count($parts) - 1;
-		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than add it to TabSet and Tab too.
+		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than
+		// add it to TabSet and Tab too.
 		$currentPointer = $this;
 		foreach($parts as $k => $part) {
 			$parentPointer = $currentPointer;
@@ -285,7 +291,8 @@ class FieldList extends ArrayList {
 				}
 				else {
 					$withName = ($parentPointer->hasMethod('Name')) ? " named '{$parentPointer->getName()}'" : null;
-					user_error("FieldList::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
+					user_error("FieldList::addFieldToTab() Tried to add a tab to object"
+						. " '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
 				}
 			}
 		}
@@ -310,7 +317,8 @@ class FieldList extends ArrayList {
 					if($child->isComposite()) {
 						return $child->fieldByName($remainder);
 					} else {
-						user_error("Trying to get field '$remainder' from non-composite field $child->class.$name", E_USER_WARNING);
+						user_error("Trying to get field '$remainder' from non-composite field $child->class.$name",
+							E_USER_WARNING);
 						return null;
 					}
 				} else {
@@ -551,7 +559,8 @@ class FieldList extends ArrayList {
 	 * the children collection. Doesn't work recursively.
 	 * 
 	 * @param string|FormField
-	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
+	 * @return int Position in children collection (first position starts with 0). Returns FALSE if the field can't
+	 *             be found.
 	 */
 	public function fieldPosition($field) {
 		if(is_object($field)) $field = $field->getName();
@@ -624,7 +633,7 @@ class FieldList extends ArrayList {
 	/**
 	 * Default template rendering of a FieldList will concatenate all FieldHolder values.
 	 */
-	function forTemplate() {
+	public function forTemplate() {
 		$output = "";
 		foreach($this as $field) {
 			$output .= $field->FieldHolder();

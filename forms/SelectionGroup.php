@@ -20,7 +20,7 @@ class SelectionGroup extends CompositeField {
 	 * If you want to a have a title that is different from the value of the key, you can express it
 	 * as "InternalVal//This is the Title"
 	 */
-	function __construct($name, $items) {
+	public function __construct($name, $items) {
 		$this->name = $name;
 		
 		parent::__construct($items);
@@ -28,11 +28,11 @@ class SelectionGroup extends CompositeField {
 		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
 	}
 
-	function FieldSet() {
+	public function FieldSet() {
 		return $this->FieldList();
 	}
 	
-	function FieldList() {
+	public function FieldList() {
 		$items = parent::FieldList()->toArray();
 
 		$count = 0;
@@ -52,7 +52,8 @@ class SelectionGroup extends CompositeField {
 			
 			$itemID = $this->ID() . '_' . (++$count);
 			$extra = array(
-				"RadioButton" => "<input class=\"selector\" type=\"radio\" id=\"$itemID\" name=\"$this->name\" value=\"$key\"$checked />",
+				"RadioButton" => "<input class=\"selector\" type=\"radio\" id=\"$itemID\" name=\"$this->name\""
+					. " value=\"$key\"$checked />",
 				"RadioLabel" => "<label for=\"$itemID\">$title</label>",
 				"Selected" => $firstSelected,
 			);
@@ -65,11 +66,11 @@ class SelectionGroup extends CompositeField {
 		return new ArrayList($newItems);
 	}
 	
-	function hasData() {
+	public function hasData() {
 		return true;
 	}
 	
-	function FieldHolder($properties = array()) {
+	public function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR   . '/javascript/SelectionGroup.js');
 		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');

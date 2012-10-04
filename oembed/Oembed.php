@@ -94,7 +94,11 @@ class Oembed {
 		$body = $body->getBody();
 
 		// Look within the body for an oembed link.
-		if(preg_match_all('#<link[^>]+?(?:href=[\'"](.+?)[\'"][^>]+?)?type=["\']application/json\+oembed["\'](?:[^>]+?href=[\'"](.+?)[\'"])?#', $body, $matches, PREG_SET_ORDER)) {
+		$pcreOmbed = '#<link[^>]+?(?:href=[\'"](.+?)[\'"][^>]+?)'
+			. '?type=["\']application/json\+oembed["\']'
+			. '(?:[^>]+?href=[\'"](.+?)[\'"])?#';
+
+		if(preg_match_all($pcreOmbed, $body, $matches, PREG_SET_ORDER)) {
 			$match = $matches[0];
 			if(!empty($match[1])) {
 				return html_entity_decode($match[1]);
@@ -253,7 +257,9 @@ class Oembed_Result extends ViewableData {
 				$data['provider_url'] = $protocoll.$host;
 				$data['width'] = imagesx($image);
 				$data['height'] = imagesy($image);
-				$data['info'] = _t('UploadField.HOTLINKINFO', 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.');
+				$data['info'] = _t('UploadField.HOTLINKINFO',
+					'Info: This image will be hotlinked. Please ensure you have permissions from the'
+					. ' original site creator to do so.');
 			}
 		}
 
@@ -289,20 +295,20 @@ class Oembed_Result extends ViewableData {
 	public function forTemplate() {
 		$this->loadData();
 		switch($this->Type) {
-			case 'video':
-			case 'rich':
-				if($this->extraClass) {
-					return "<div class='$this->extraClass'>$this->HTML</div>";
-				} else {
-					return $this->HTML;
-				}
-				break;
-			case 'link':
-				return '<a class="' . $this->extraClass . '" href="' . $this->origin . '">' . $this->Title . '</a>';
-				break;
-			case 'photo':
-				return "<img src='$this->URL' width='$this->Width' height='$this->Height' class='$this->extraClass' />";
-				break;
+		case 'video':
+		case 'rich':
+			if($this->extraClass) {
+				return "<div class='$this->extraClass'>$this->HTML</div>";
+			} else {
+				return $this->HTML;
+			}
+			break;
+		case 'link':
+			return '<a class="' . $this->extraClass . '" href="' . $this->origin . '">' . $this->Title . '</a>';
+			break;
+		case 'photo':
+			return "<img src='$this->URL' width='$this->Width' height='$this->Height' class='$this->extraClass' />";
+			break;
 		}
 	}
 	

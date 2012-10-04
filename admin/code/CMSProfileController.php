@@ -16,7 +16,7 @@ class CMSProfileController extends LeftAndMain {
 		return new Member_ProfileForm($this, 'Member_ProfileForm', Member::currentUser());
 	}
 
-	function canView($member = null) {
+	public function canView($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
 		// cms menus only for logged-in members

@@ -4,17 +4,18 @@
  * @subpackage tests
  */
 class CSSContentParserTest extends SapphireTest {
-	function testSelector2xpath() {
+	public function testSelector2xpath() {
 		$parser = new CSSContentParser("<html><head><title>test</title></head><body><p>test</p></body></html>");
 
 		$this->assertEquals("//div[@id='UserProfile']//label", $parser->selector2xpath("div#UserProfile label"));
 		$this->assertEquals("//div", $parser->selector2xpath("div"));
 		$this->assertEquals("//div[contains(@class,'test')]", $parser->selector2xpath("div.test"));
-		$this->assertEquals("//*[@id='UserProfile']//div[contains(@class,'test')]//*[contains(@class,'other')]//div[@id='Item']", 
+		$this->assertEquals(
+			"//*[@id='UserProfile']//div[contains(@class,'test')]//*[contains(@class,'other')]//div[@id='Item']", 
 			$parser->selector2xpath("#UserProfile div.test .other div#Item"));
 	}
 
-	function testGetBySelector() {
+	public function testGetBySelector() {
 		$parser = new CSSContentParser(<<<HTML
 <html>
 	<head>

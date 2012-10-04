@@ -17,7 +17,8 @@ class PhoneNumberField extends FormField {
 	protected $countryCode;
 	protected $ext;
 	
-	public function __construct( $name, $title = null, $value = '', $extension = null, $areaCode = null, $countryCode = null) {
+	public function __construct($name, $title = null, $value = '', $extension = null, $areaCode = null,
+			$countryCode = null) {
 		
 		$this->areaCode = $areaCode;
 		$this->ext = $extension;
@@ -90,7 +91,7 @@ class PhoneNumberField extends FormField {
 	
 	protected function parseValue() {
 		if( !is_array( $this->value ))        
-			preg_match( '/^(?:(?:\+(\d+))?\s*\((\d+)\))?\s*([0-9A-Za-z]*)\s*(?:[#]\s*(\d+))?$/', $this->value, $parts );
+			preg_match( '/^(?:(?:\+(\d+))?\s*\((\d+)\))?\s*([0-9A-Za-z]*)\s*(?:[#]\s*(\d+))?$/', $this->value, $parts);
 		else
 			return array( '', '', $this->value, '' );
             
@@ -126,7 +127,7 @@ class PhoneNumberField extends FormField {
 	/**
 	 * @todo Very basic validation at the moment
 	 */
-	function validate($validator){
+	public function validate($validator){
 		$valid = preg_match(
 			'/^[0-9\+\-\(\)\s\#]*$/',
 			$this->joinPhoneNumber($this->value)

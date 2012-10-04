@@ -15,7 +15,7 @@ class InjectorTest extends SapphireTest {
 	public function testCorrectlyInitialised() {
 		$injector = Injector::inst();
 		$this->assertTrue($injector->getConfigLocator() instanceof SilverStripeServiceConfigurationLocator,
-				'If this fails, it is likely because the injector has been referenced BEFORE being initialised in Core.php');
+			'Failure most likely because the injector has been referenced BEFORE being initialised in Core.php');
 	}
 	
 	public function testBasicInjector() {
@@ -87,7 +87,8 @@ class InjectorTest extends SapphireTest {
 		$this->assertEquals(get_class($myObject->sampleService), 'SampleService');
 
 		// also tests that ID can be the key in the array
-		$config = array('SampleService' => array('src' => TEST_SERVICES . '/AnotherService.php')); // , 'id' => 'SampleService'));
+		$config = array('SampleService' => array('src' => TEST_SERVICES . '/AnotherService.php')); 
+		// , 'id' => 'SampleService'));
 		// load
 		$injector->load($config);
 
@@ -595,7 +596,7 @@ class SSObjectCreator extends InjectionCreator {
 	 * Parses a class-spec, such as "Versioned('Stage','Live')", as passed to create_from_string().
 	 * Returns a 2-elemnent array, with classname and arguments
 	 */
-	static function parse_class_spec($classSpec) {
+	public static function parse_class_spec($classSpec) {
 		$tokens = token_get_all("<?php $classSpec");
 		$class = null;
 		$args = array();
@@ -617,7 +618,9 @@ class SSObjectCreator extends InjectionCreator {
 					$argString = $token[1];
 					switch($argString[0]) {
 						case '"': $argString = stripcslashes(substr($argString,1,-1)); break;
-						case "'": $argString = str_replace(array("\\\\", "\\'"),array("\\", "'"), substr($argString,1,-1)); break;
+						case "'": 
+							$argString = str_replace(array("\\\\", "\\'"),array("\\", "'"), substr($argString,1,-1));
+							break;
 						default: throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
 					}
 					$bucket[] = $argString;

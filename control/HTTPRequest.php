@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method (GET/POST/PUT/DELETE).
- * This is used by {@link RequestHandler} objects to decide what to do.
+ * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
+ * (GET/POST/PUT/DELETE). This is used by {@link RequestHandler} objects to decide what to do.
  * 
  * The intention is that a single SS_HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandler::handleRequest()}.
  * 
- * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for webclients
- *   not supporting PUT and DELETE)
+ * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for
+ *       webclients not supporting PUT and DELETE)
  * 
  * @package framework
  * @subpackage control
@@ -102,7 +102,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	/**
 	 * Construct a SS_HTTPRequest from a URL relative to the site root.
 	 */
-	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
+	public function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		$this->url = $url;
 
@@ -122,38 +122,38 @@ class SS_HTTPRequest implements ArrayAccess {
 		$this->body = $body;
 	}
 	
-	function isGET() {
+	public function isGET() {
 		return $this->httpMethod == 'GET';
 	}
 	
-	function isPOST() {
+	public function isPOST() {
 		return $this->httpMethod == 'POST';
 	}
 	
-	function isPUT() {
+	public function isPUT() {
 		return $this->httpMethod == 'PUT';
 	}
 
-	function isDELETE() {
+	public function isDELETE() {
 		return $this->httpMethod == 'DELETE';
 	}	
 
-	function isHEAD() {
+	public function isHEAD() {
 		return $this->httpMethod == 'HEAD';
 	}	
 	
-	function setBody($body) {
+	public function setBody($body) {
 		$this->body = $body;
 	}
 	
-	function getBody() {
+	public function getBody() {
 		return $this->body;
 	}
 	
-	function getVars() {
+	public function getVars() {
 		return $this->getVars;
 	}
-	function postVars() {
+	public function postVars() {
 		return $this->postVars;
 	}
 	
@@ -164,19 +164,19 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * 
 	 * @return array
 	 */
-	function requestVars() {
+	public function requestVars() {
 		return ArrayLib::array_merge_recursive($this->getVars, $this->postVars);
 	}
 	
-	function getVar($name) {
+	public function getVar($name) {
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
 	}
 	
-	function postVar($name) {
+	public function postVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 	}
 	
-	function requestVar($name) {
+	public function requestVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
 	}
@@ -189,7 +189,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * 
 	 * @return string
 	 */
-	function getExtension() {
+	public function getExtension() {
 		return $this->extension;
 	}
 	
@@ -212,14 +212,14 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @param string $header Example: "Content-Type"
 	 * @param string $value Example: "text/xml" 
 	 */
-	function addHeader($header, $value) {
+	public function addHeader($header, $value) {
 		$this->headers[$header] = $value;
 	}
 	
 	/**
 	 * @return array
 	 */
-	function getHeaders() {
+	public function getHeaders() {
 		return $this->headers;
 	}
 	
@@ -228,7 +228,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 *
 	 * @param string $header
 	 */
-	function getHeader($header) {
+	public function getHeader($header) {
 		return (isset($this->headers[$header])) ? $this->headers[$header] : null;			
 	}
 	
@@ -238,7 +238,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 *
 	 * @param string $header
 	 */
-	function removeHeader($header) {
+	public function removeHeader($header) {
 		if(isset($this->headers[$header])) unset($this->headers[$header]);
 	}
 	
@@ -249,7 +249,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * 
 	 * @return string
 	 */
-	function getURL($includeGetVars = false) {
+	public function getURL($includeGetVars = false) {
 		$url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
 
 		 if ($includeGetVars) { 
@@ -276,7 +276,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * 
 	 * @return boolean
 	 */
-	function isAjax() {
+	public function isAjax() {
 		return (
 			$this->requestVar('ajax') ||
 			$this->getHeader('X-Requested-With') && $this->getHeader('X-Requested-With') == "XMLHttpRequest"
@@ -290,7 +290,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @param unknown_type $offset
 	 * @return boolean
 	 */
-	function offsetExists($offset) {
+	public function offsetExists($offset) {
 		if(isset($this->postVars[$offset])) return true;
 		if(isset($this->getVars[$offset])) return true;
 		return false;
@@ -302,24 +302,24 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @param unknown_type $offset
 	 * @return unknown
 	 */
-	function offsetGet($offset) {
+	public function offsetGet($offset) {
 		return $this->requestVar($offset);
 	}
 	
 	/**
 	 * @ignore
 	 */
-	function offsetSet($offset, $value) {}
+	public function offsetSet($offset, $value) {}
 	
 	/**
 	 * @ignore
 	 */
-	function offsetUnset($offset) {}
+	public function offsetUnset($offset) {}
 	
 	/**
 	 * Construct an SS_HTTPResponse that will deliver a file to the client
 	 */
-	static function send_file($fileData, $fileName, $mimeType = null) {
+	public static function send_file($fileData, $fileName, $mimeType = null) {
 		if(!$mimeType) {
 			$mimeType = HTTP::get_mime_type($fileName);
 		}
@@ -351,7 +351,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * The pattern can optionally start with an HTTP method and a space.  For example, "POST $Controller/$Action".
 	 * This is used to define a rule that only matches on a specific HTTP method.
 	 */
-	function match($pattern, $shiftOnSuccess = false) {
+	public function match($pattern, $shiftOnSuccess = false) {
 		// Check if a specific method is required
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
 			$requiredMethod = $matches[1];
@@ -398,7 +398,9 @@ class SS_HTTPRequest implements ArrayAccess {
 				if($varRequired && !isset($this->dirParts[$i])) return false;
 				
 				$arguments[$varName] = isset($this->dirParts[$i]) ? $this->dirParts[$i] : null;
-				if($part == '$Controller' && (!ClassInfo::exists($arguments['Controller']) || !is_subclass_of($arguments['Controller'], 'Controller'))) {
+				if($part == '$Controller' && (!ClassInfo::exists($arguments['Controller'])
+						|| !is_subclass_of($arguments['Controller'], 'Controller'))) {
+					
 					return false;
 				}
 				
@@ -432,7 +434,7 @@ class SS_HTTPRequest implements ArrayAccess {
 		return $arguments;
 	}
 	
-	function allParams() {
+	public function allParams() {
 		return $this->allParams;
 	}
 	
@@ -458,24 +460,24 @@ class SS_HTTPRequest implements ArrayAccess {
 		return $value;
 	}
 	
-	function latestParams() {
+	public function latestParams() {
 		return $this->latestParams;
 	}
 	
-	function latestParam($name) {
+	public function latestParam($name) {
 		if(isset($this->latestParams[$name])) return $this->latestParams[$name];
 		else return null;
 	}
 	
-	function routeParams() {
+	public function routeParams() {
 		return $this->routeParams;
 	}
 	
-	function setRouteParams($params) {
+	public function setRouteParams($params) {
 		$this->routeParams = $params;
 	}
 	
-	function params()
+	public function params()
 	{
 		return array_merge($this->allParams, $this->routeParams);
 	}
@@ -487,7 +489,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @param string $name
 	 * @return string Value of the URL parameter (if found)
 	 */
-	function param($name) {
+	public function param($name) {
 		$params = $this->params();
 		if(isset($params[$name])) return $params[$name];
 		else return null;
@@ -500,7 +502,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * 
 	 * @return string Partial URL
 	 */
-	function remaining() {
+	public function remaining() {
 		return implode("/", $this->dirParts);
 	}
 	
@@ -508,7 +510,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Returns true if this is a URL that will match without shifting off any of the URL.
 	 * This is used by the request handler to prevent infinite parsing loops.
 	 */
-	function isEmptyPattern($pattern) {
+	public function isEmptyPattern($pattern) {
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
 			$pattern = $matches[2];
 		}
@@ -524,7 +526,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 *
 	 * @return String|Array
 	 */
-	function shift($count = 1) {
+	public function shift($count = 1) {
 		$return = array();
 		
 		if($count == 1) return array_shift($this->dirParts);
@@ -544,7 +546,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Returns true if the URL has been completely parsed.
 	 * This will respect parsed but unshifted directory parts.
 	 */
-	function allParsed() {
+	public function allParsed() {
 		return sizeof($this->dirParts) <= $this->unshiftedButParsedParts;
 	}
 	
@@ -554,7 +556,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 *
 	 * @return string
 	 */
-	function getIP() {
+	public function getIP() {
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 	  		//check ip from share internet
 			return $_SERVER['HTTP_CLIENT_IP'];
@@ -570,10 +572,11 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Returns all mimetypes from the HTTP "Accept" header
 	 * as an array.
 	 * 
-	 * @param boolean $includeQuality Don't strip away optional "quality indicators", e.g. "application/xml;q=0.9" (Default: false)
+	 * @param boolean $includeQuality Don't strip away optional "quality indicators", e.g. "application/xml;q=0.9"
+	 *                                (Default: false)
 	 * @return array
 	 */
-	function getAcceptMimetypes($includeQuality = false) {
+	public function getAcceptMimetypes($includeQuality = false) {
 	   $mimetypes = array();
 	   $mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
 	   foreach($mimetypesWithQuality as $mimetypeWithQuality) {

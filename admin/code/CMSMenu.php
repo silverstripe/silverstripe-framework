@@ -77,7 +77,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * @param string $code A unique identifier (used to create a CSS ID and its key in {@link $menu_items})
 	 * @param string $menuTitle The link's title in the CMS menu
 	 * @param string $url The url of the link
-	 * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further left.
+	 * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further
+	 *                          left.
 	 * @return boolean The result of the operation.
 	 */
 	public static function add_link($code, $menuTitle, $url, $priority = -1) {
@@ -278,14 +279,14 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	/**
 	 * IteratorAggregate Interface Method.  Iterates over the menu items.
 	 */
-	function getIterator() {
+	public function getIterator() {
 		return new ArrayIterator(self::get_menu_items());
 	}
 
 	/**
 	 * Provide menu titles to the i18n entity provider
 	 */
-	function provideI18nEntities() {
+	public function provideI18nEntities() {
 		$cmsClasses = self::get_cms_classes();
 		$entities = array();
 		foreach($cmsClasses as $cmsClass) {

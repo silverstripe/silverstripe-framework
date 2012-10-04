@@ -9,7 +9,7 @@ class DiffTest extends SapphireTest {
 	/**
 	 * @see https://groups.google.com/forum/#!topic/silverstripe-dev/yHcluCvuszo
 	 */
-	function testTableDiff() {
+	public function testTableDiff() {
 		if(!class_exists('DOMDocument')) {
 			$this->markTestSkipped('"DOMDocument" required');
 			return;

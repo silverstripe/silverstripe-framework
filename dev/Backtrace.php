@@ -44,7 +44,7 @@ class SS_Backtrace {
 	 * @param null|array $ignoredFunctions If an array, filter these functions out of the trace
 	 * @return array
 	 */
-	static function filtered_backtrace($ignoredFunctions = null) {
+	public static function filtered_backtrace($ignoredFunctions = null) {
 		return self::filter_backtrace(debug_backtrace(), $ignoredFunctions);
 	}
 	
@@ -56,7 +56,7 @@ class SS_Backtrace {
 	 * @param null|array $ignoredFunctions List of extra functions to filter out
 	 * @return array
 	 */
-	static function filter_backtrace($bt, $ignoredFunctions = null) {
+	public static function filter_backtrace($bt, $ignoredFunctions = null) {
 		$defaultIgnoredFunctions = array(
 			'SS_Log::log',
 			'SS_Backtrace::backtrace',
@@ -90,7 +90,9 @@ class SS_Backtrace {
 			$match = false;
 			if(@$bt[$i]['class']) {
 				foreach(self::$ignore_function_args as $fnSpec) {
-					if(is_array($fnSpec) && $bt[$i]['class'] == $fnSpec[0] && $bt[$i]['function'] == $fnSpec[1]) $match = true;
+					if(is_array($fnSpec) && $bt[$i]['class'] == $fnSpec[0] && $bt[$i]['function'] == $fnSpec[1]) {
+						$match = true;
+					}
 				}
 			} else {
 				if(in_array($bt[$i]['function'], self::$ignore_function_args)) $match = true;
@@ -110,7 +112,7 @@ class SS_Backtrace {
 	 * @param unknown_type $ignoreAjax
 	 * @return unknown
 	 */
-	static function backtrace($returnVal = false, $ignoreAjax = false, $ignoredFunctions = null) {
+	public static function backtrace($returnVal = false, $ignoreAjax = false, $ignoredFunctions = null) {
 		$plainText = Director::is_cli() || (Director::is_ajax() && !$ignoreAjax);
 		$result = self::get_rendered_backtrace(debug_backtrace(), $plainText, $ignoredFunctions);
 		if($returnVal) {
@@ -121,14 +123,15 @@ class SS_Backtrace {
 	}
 	
 	/**
-	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be shown
+	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be
+	 * shown
 	 * 
 	 * @param Object $item
 	 * @param boolean $showArg
 	 * @param Int $argCharLimit
 	 * @return String
 	 */
-	static function full_func_name($item, $showArgs = false, $argCharLimit = 10000) {
+	public static function full_func_name($item, $showArgs = false, $argCharLimit = 10000) {
 		$funcName = '';
 		if(isset($item['class'])) $funcName .= $item['class'];
 		if(isset($item['type'])) $funcName .= $item['type'];
@@ -159,7 +162,7 @@ class SS_Backtrace {
 	 * @param array List of functions that should be ignored. If not set, a default is provided
 	 * @return string The rendered backtrace
 	 */
-	static function get_rendered_backtrace($bt, $plainText = false, $ignoredFunctions = null) {
+	public static function get_rendered_backtrace($bt, $plainText = false, $ignoredFunctions = null) {
 		$bt = self::filter_backtrace($bt, $ignoredFunctions);
 		$result = ($plainText) ? '' : '<ul>';
 		foreach($bt as $item) {

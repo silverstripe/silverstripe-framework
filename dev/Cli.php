@@ -10,7 +10,7 @@ class SS_Cli extends Object {
 	/**
 	 * Returns true if the current STDOUT supports the use of colour control codes.
 	 */
-	static function supports_colour() {
+	public static function supports_colour() {
 		// Special case for buildbot
 		if(isset($_ENV['_']) && strpos($_ENV['_'],'buildbot') !== false) return false;
 
@@ -20,11 +20,13 @@ class SS_Cli extends Object {
 	
 	/**
 	 * Return text encoded for CLI output, optionally coloured
-	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
-	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
+	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
+	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
 	 * @param string $bold A boolean variable - bold or not.
 	 */
-	static function text($text, $fgColour = null, $bgColour = null, $bold = false) {
+	public static function text($text, $fgColour = null, $bgColour = null, $bold = false) {
 		if(!self::supports_colour()) return $text;
 		
 		if($fgColour || $bgColour || $bold) {
@@ -41,11 +43,13 @@ class SS_Cli extends Object {
 
 	/**
 	 * Send control codes for changing text to the given colour
-	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
-	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
+	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
+	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
+	 *                         Null is default.
 	 * @param string $bold A boolean variable - bold or not.
 	 */
-	static function start_colour($fgColour = null, $bgColour = null, $bold = false) {
+	public static function start_colour($fgColour = null, $bgColour = null, $bold = false) {
 		if(!self::supports_colour()) return "";
 		$colours = array(
 			'black' => 0,
@@ -76,7 +80,7 @@ class SS_Cli extends Object {
 	/**
 	 * Send control codes for returning to normal colour
 	 */
-	static function end_colour() {
+	public static function end_colour() {
 		return self::supports_colour() ? "\033[0m" : "";
 	}
 }

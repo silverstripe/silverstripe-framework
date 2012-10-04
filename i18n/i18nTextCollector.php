@@ -46,7 +46,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * @param $locale
 	 */
-	function __construct($locale = null) {
+	public function __construct($locale = null) {
 		$this->defaultLocale = ($locale) ? $locale : i18n::get_lang_from_locale(i18n::default_locale());
 		$this->basePath = Director::baseFolder();
 		$this->baseSavePath = Director::baseFolder();
@@ -87,7 +87,10 @@ class i18nTextCollector extends Object {
 				$themes = scandir($this->basePath."/themes");
 				if(count($themes)){
 					foreach($themes as $theme) {
-						if(is_dir($this->basePath."/themes/".$theme) && substr($theme,0,1) != '.' && is_dir($this->basePath."/themes/".$theme."/templates")){
+						if(is_dir($this->basePath."/themes/".$theme) 
+								&& substr($theme,0,1) != '.' 
+								&& is_dir($this->basePath."/themes/".$theme."/templates")){
+
 							$themeFolders[] = 'themes/'.$theme;
 						}
 					}
@@ -103,7 +106,8 @@ class i18nTextCollector extends Object {
 		$modules = array_merge($modules, $themeFolders);
 
 		foreach($modules as $module) {
-			// Only search for calls in folder with a _config.php file (which means they are modules, including themes folder)  
+			// Only search for calls in folder with a _config.php file (which means they are modules, including
+			// themes folder)  
 			$isValidModuleFolder = (
 				is_dir("$this->basePath/$module") 
 				&& is_file("$this->basePath/$module/_config.php") 
@@ -157,7 +161,7 @@ class i18nTextCollector extends Object {
 	 * @return array $entities An array of entities found in the files that comprise the module
 	 * @todo Why the type juggling for $this->collectFromBlah()? They always return arrays.
 	 */
-	protected function processModule($module) {	
+	protected function processModule($module) {
 		$entities = array();
 
 		// Search for calls in code files if these exists
@@ -297,7 +301,10 @@ class i18nTextCollector extends Object {
 			if(!$filePath) $filePath = SSViewer::getTemplateFileByType($includeName, 'main');
 			if($filePath) {
 				$includeContent = file_get_contents($filePath);
-				$entities = array_merge($entities,(array)$this->collectFromTemplate($includeContent, $module, $includeFileName));
+				$entities = array_merge(
+					$entities,
+					(array)$this->collectFromTemplate($includeContent, $module, $includeFileName)
+				);
 			}
 			// @todo Will get massively confused if you include the includer -> infinite loop
 		}
@@ -326,7 +333,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * @uses i18nEntityProvider
 	 */
-	function collectFromEntityProviders($filePath, $module = null) {
+	public function collectFromEntityProviders($filePath, $module = null) {
 		$entities = array();
 
 		// HACK Ugly workaround to avoid "Cannot redeclare class PHPUnit_Framework_TestResult" error
@@ -431,14 +438,15 @@ class i18nTextCollector extends Object {
  */
 interface i18nTextCollector_Writer {
 	/**
-	 * @param Array $entities Map of entity names (incl. namespace) to an numeric array,
-	 * with at least one element, the original string, and an optional second element, the context.
+	 * @param Array $entities Map of entity names (incl. namespace) to an numeric array, with at least one element,
+	 *                        the original string, and an optional second element, the context.
 	 * @param String $locale
 	 * @param String $path The directory base on which the collector should create new lang folders and files.
-	 * Usually the webroot set through {@link Director::baseFolder()}. Can be overwritten for testing or export purposes.
+	 *                     Usually the webroot set through {@link Director::baseFolder()}. Can be overwritten for
+	 *                     testing or export purposes.
 	 * @return Boolean success
 	 */
-	function write($entities, $locale, $path);
+	public function write($entities, $locale, $path);
 }
 
 /**
@@ -467,14 +475,16 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 			try{
 				eval($php);
 			} catch(Exception $e) {
-				throw new LogicException('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString());
+				throw new LogicException(
+					'i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString());
 			}
 			
 			fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}");
 			fclose($fh);
 			
 		} else {
-			throw new LogicException("Cannot write language file! Please check permissions of $langFolder/" . $locale . ".php");
+			throw new LogicException("Cannot write language file! Please check permissions of $langFolder/" 
+				. $locale . ".php");
 		}
 
 		return true;
@@ -497,7 +507,11 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 			// namespace might contain dots, so we implode back
 			$namespace = implode('.',$entityParts); 
 		} else {
-			user_error("i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values" . var_export($entitySpec, true), E_USER_WARNING);
+			user_error(
+				"i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values "
+				. var_export($entitySpec, true),
+				E_USER_WARNING
+			);
 			return false;
 		}
 	
@@ -541,7 +555,8 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 
 	public function getYaml($entities, $locale) {
 		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/sfYamlDumper.php';
+		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib'
+			. '/sfYamlDumper.php';
 
 		// Unflatten array
 		$entitiesNested = array();
@@ -573,23 +588,23 @@ class i18nTextCollector_Parser extends SSTemplateParser {
 	static $entities = array();
 	static $currentEntity = array();
 
-	function Translate__construct(&$res) {
+	public function Translate__construct(&$res) {
 		self::$currentEntity = array(null,null,null); //start with empty array
 	}
 
-	function Translate_Entity(&$res, $sub) {
+	public function Translate_Entity(&$res, $sub) {
 		self::$currentEntity[0] = $sub['text']; //entity
 	}
 
-	function Translate_Default(&$res, $sub) {
+	public function Translate_Default(&$res, $sub) {
 		self::$currentEntity[1] = $sub['String']['text']; //value
 	}
 
-	function Translate_Context(&$res, $sub) {
+	public function Translate_Context(&$res, $sub) {
 		self::$currentEntity[2] = $sub['String']['text']; //comment
 	}
 
-	function Translate__finalise(&$res) {
+	public function Translate__finalise(&$res) {
 		// set the entity name and the value (default), as well as the context (comment)
 		// priority is no longer used, so that is blank
 		self::$entities[self::$currentEntity[0]] = array(self::$currentEntity[1],null,self::$currentEntity[2]);
@@ -598,7 +613,7 @@ class i18nTextCollector_Parser extends SSTemplateParser {
 	/**
 	 * Parses a template and returns any translatable entities
 	 */
-	static function GetTranslatables($template) {
+	public static function GetTranslatables($template) {
 		self::$entities = array();
 
 		// Run the parser and throw away the result

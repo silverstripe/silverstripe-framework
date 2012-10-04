@@ -26,47 +26,62 @@ class SSViewer_Scope {
 	// And array of item, itemIterator, itemIteratorTotal, pop_index, up_index, current_index
 	private $itemStack = array(); 
 	
-	protected $item; // The current "global" item (the one any lookup starts from)
-	protected $itemIterator; // If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
-	protected $itemIteratorTotal;   //Total number of items in the iterator
+	// The current "global" item (the one any lookup starts from)
+	protected $item; 
+
+	// If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
+	protected $itemIterator; 
+
+	//Total number of items in the iterator
+	protected $itemIteratorTotal;
 	
-	private $popIndex; // A pointer into the item stack for which item should be scope on the next pop call
-	private $upIndex = null; // A pointer into the item stack for which item is "up" from this one
-	private $currentIndex = null; // A pointer into the item stack for which item is this one (or null if not in stack yet)
+	// A pointer into the item stack for which item should be scope on the next pop call
+	private $popIndex;
+
+	// A pointer into the item stack for which item is "up" from this one
+	private $upIndex = null;
+
+	// A pointer into the item stack for which item is this one (or null if not in stack yet)
+	private $currentIndex = null;
 	
 	private $localIndex;
 
 
-	function __construct($item){
+	public function __construct($item){
 		$this->item = $item;
 		$this->localIndex=0;
 		$this->itemStack[] = array($this->item, null, 0, null, null, 0);
 	}
 	
-	function getItem(){
+	public function getItem(){
 		return $this->itemIterator ? $this->itemIterator->current() : $this->item;
 	}
 	
-	function resetLocalScope(){
-		list($this->item, $this->itemIterator, $this->itemIteratorTotal, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
+	public function resetLocalScope(){
+		list($this->item, $this->itemIterator, $this->itemIteratorTotal, $this->popIndex, $this->upIndex,
+			$this->currentIndex) = $this->itemStack[$this->localIndex];
 		array_splice($this->itemStack, $this->localIndex+1);
 	}
 
-	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
 		return $on->obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
 
-	function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		switch ($name) {
 			case 'Up':
-				if ($this->upIndex === null) user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+				if ($this->upIndex === null) {
+					user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+				}
 
-				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
+				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex,
+					$this->currentIndex) = $this->itemStack[$this->upIndex];
 				break;
 			
 			case 'Top':
-				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[0];
+				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex,
+					$this->currentIndex) = $this->itemStack[0];
 				break;
 			
 			default:
@@ -77,11 +92,12 @@ class SSViewer_Scope {
 				break;
 		}
 
-		$this->itemStack[] = array($this->item, $this->itemIterator, $this->itemIteratorTotal, null, $this->upIndex, $this->currentIndex);
+		$this->itemStack[] = array($this->item, $this->itemIterator, $this->itemIteratorTotal, null,
+			$this->upIndex, $this->currentIndex);
 		return $this;
 	}
 	
-	function pushScope(){
+	public function pushScope(){
 		$newLocalIndex = count($this->itemStack)-1;
 		
 		$this->popIndex = $this->itemStack[$newLocalIndex][3] = $this->localIndex;
@@ -94,14 +110,14 @@ class SSViewer_Scope {
 		return $this;
 	}
 
-	function popScope(){
+	public function popScope(){
 		$this->localIndex = $this->popIndex;
 		$this->resetLocalScope();
 		
 		return $this;
 	}
 	
-	function next(){
+	public function next(){
 		if (!$this->item) return false;
 		
 		if (!$this->itemIterator) {
@@ -123,7 +139,7 @@ class SSViewer_Scope {
 		return $this->itemIterator->key();
 	}
 	
-	function __call($name, $arguments) {
+	public function __call($name, $arguments) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
 		$retval = call_user_func_array(array($on, $name), $arguments);
 		
@@ -301,26 +317,36 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	private static $globalProperties = null;
 	private static $iteratorProperties = null;
 
-	/** @var array|null Overlay variables. Take precedence over anything from the current scope */
+	/**
+	 * Overlay variables. Take precedence over anything from the current scope
+	 * @var array|null
+	 */
 	protected $overlay;
-	/** @var array|null Underlay variables. Concede precedence to overlay variables or anything from the current scope */
+
+	/**
+	 * Underlay variables. Concede precedence to overlay variables or anything from the current scope
+	 * @var array|null
+	 */
 	protected $underlay;
 
-	function __construct($item, $overlay = null, $underlay = null){
+	public function __construct($item, $overlay = null, $underlay = null){
 		parent::__construct($item);
 
 		// Build up global property providers array only once per request
 		if (self::$globalProperties === null) {
 			self::$globalProperties = array();
 			// Get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
-			$this->createCallableArray(self::$globalProperties, "TemplateGlobalProvider", "get_template_global_variables");
+			$this->createCallableArray(self::$globalProperties, "TemplateGlobalProvider",
+				"get_template_global_variables");
 		}
 
 		// Build up iterator property providers array only once per request
 		if (self::$iteratorProperties === null) {
 			self::$iteratorProperties = array();
 			// Get all the exposed variables from all classes that implement the TemplateIteratorProvider interface
-			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", "get_template_iterator_variables", true);   //call non-statically
+			// //call non-statically
+			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", 
+				"get_template_iterator_variables", true);
 		}
 
 		$this->overlay = $overlay ? $overlay : array();
@@ -338,7 +364,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			$exposedVariables = call_user_func(array($implementer, $variableMethod));
 
 			foreach($exposedVariables as $varName => $details) {
-				if (!is_array($details)) $details = array('method' => $details, 'casting' => Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET));
+				if (!is_array($details)) $details = array('method' => $details, 
+					'casting' => Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET));
 
 				// If just a value (and not a key => value pair), use it for both key and value
 				if (is_numeric($varName)) $varName = $details['method'];
@@ -357,7 +384,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		}
 	}
 
-	function getInjectedValue($property, $params, $cast = true) {
+	public function getInjectedValue($property, $params, $cast = true) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
 
 		// Find the source of the value
@@ -367,7 +394,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		if (array_key_exists($property, $this->overlay)) {
 			$source = array('value' => $this->overlay[$property]);
 		}
-		// Check if the method to-be-called exists on the target object - if so, don't check any further injection locations
+		// Check if the method to-be-called exists on the target object - if so, don't check any further
+		// injection locations
 		else if (isset($on->$property) || method_exists($on, $property)) {
 			$source = null;
 		}
@@ -379,7 +407,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		else if (array_key_exists($property, self::$iteratorProperties)) {
 			$source = self::$iteratorProperties[$property];
 			if ($this->itemIterator) {
-				// Set the current iterator position and total (the object instance is the first item in the callable array)
+				// Set the current iterator position and total (the object instance is the first item in
+				// the callable array)
 				$source['implementer']->iteratorProperties($this->itemIterator->key(), $this->itemIteratorTotal);
 			} else {
 				// If we don't actually have an iterator at the moment, act like a list of length 1
@@ -397,7 +426,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			// Look up the value - either from a callable, or from a directly provided value
 			if (isset($source['callable'])) $res['value'] = call_user_func_array($source['callable'], $params);
 			elseif (isset($source['value'])) $res['value'] = $source['value'];
-			else throw new InvalidArgumentException("Injected property $property does't have a value or callable value source provided");
+			else throw new InvalidArgumentException("Injected property $property does't have a value or callable " .
+				"value source provided");
 
 			// If we want to provide a casted object, look up what type object to use
 			if ($cast) {
@@ -423,17 +453,18 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 	}
 
-	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		$result = $this->getInjectedValue($name, (array)$arguments);
 		if($result) return $result['obj'];
 		else return parent::getObj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
 
-	function __call($name, $arguments) {
+	public function __call($name, $arguments) {
 		//extract the method name and parameters
-		$property = $arguments[0];  //the name of the function being called
+		$property = $arguments[0];  //the name of the public function being called
 
-		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1]; //the function parameters in an array
+		//the public function parameters in an array
+		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1]; 
 		else $params = array();
 
 		$hasInjected = $res = null;
@@ -500,14 +531,14 @@ class SSViewer {
 	 *
 	 * @param boolean $val
 	 */
-	static function set_source_file_comments($val) {
+	public static function set_source_file_comments($val) {
 		self::$source_file_comments = $val;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	static function get_source_file_comments() {
+	public static function get_source_file_comments() {
 		return self::$source_file_comments;
 	}
 	
@@ -537,14 +568,14 @@ class SSViewer {
 	 * 
 	 * @return SSViewer
 	 */
-	static function fromString($content) {
+	public static function fromString($content) {
 		return new SSViewer_FromString($content);
 	}
 	
 	/**
 	 * @param string $theme The "base theme" name (without underscores). 
 	 */
-	static function set_theme($theme) {
+	public static function set_theme($theme) {
 		self::$current_theme = $theme;
 		//Static publishing needs to have a theme set, otherwise it defaults to the content controller theme
 		if(!is_null($theme))
@@ -554,7 +585,7 @@ class SSViewer {
 	/**
 	 * @return string 
 	 */
-	static function current_theme() {
+	public static function current_theme() {
 		return self::$current_theme;
 	}
 	
@@ -563,7 +594,7 @@ class SSViewer {
 	 *
 	 * @return String
 	 */
-	static function get_theme_folder() {
+	public static function get_theme_folder() {
 		return self::current_theme() ? THEMES_DIR . "/" . self::current_theme() : project();
 	}
 
@@ -594,7 +625,7 @@ class SSViewer {
 	/**
 	 * @return string
 	 */
-	static function current_custom_theme(){
+	public static function current_custom_theme(){
 		return self::$current_custom_theme;
 	}
 	
@@ -613,7 +644,8 @@ class SSViewer {
 				self::flush_template_cache();
 			} else {
 				if(!Security::ignore_disallowed_actions()) {
-					return Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
+					return Security::permissionFailure(null, 'Please log in as an administrator to flush ' .
+						'the template cache.');
 				}
 			}
 		}
@@ -664,7 +696,7 @@ class SSViewer {
  	 * @param String
  	 * @return Mixed
 	 */
-	static function getOption($optionName) {
+	public static function getOption($optionName) {
 		return SSViewer::$options[$optionName];
 	}
 	
@@ -717,7 +749,7 @@ class SSViewer {
 	 *
 	 * Can only be called once per request (there may be multiple SSViewer instances).
 	 */
-	static function flush_template_cache() {
+	public static function flush_template_cache() {
 		if (!self::$flushed) {
 			$dir = dir(TEMP_FOLDER);
 			while (false !== ($file = $dir->read())) {
@@ -797,7 +829,8 @@ class SSViewer {
 		SSViewer::$topLevel[] = $item;
 
 		if ($arguments && $arguments instanceof Zend_Cache_Core) {
-			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, the second argument to process is now an array of variables.');
+			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, ' .
+				'the second argument to process is now an array of variables.');
 			$this->setPartialCacheStore($arguments);
 			$arguments = null;
 		}
@@ -811,7 +844,8 @@ class SSViewer {
 		}
 		
 		if(isset($_GET['debug_profile'])) Profiler::mark("SSViewer::process", " for $template");
-		$cacheFile = TEMP_FOLDER . "/.cache" . str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
+		$cacheFile = TEMP_FOLDER . "/.cache" 
+			. str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
 
 		$lastEdited = filemtime($template);
 
@@ -867,12 +901,12 @@ class SSViewer {
 	 * Execute the given template, passing it the given data.
 	 * Used by the <% include %> template tag to process templates.
 	 */
-	static function execute_template($template, $data, $arguments = null) {
+	public static function execute_template($template, $data, $arguments = null) {
 		$v = new SSViewer($template);
 		return $v->process($data, $arguments);
 	}
 
-	static function parseTemplateContent($content, $template="") {			
+	public static function parseTemplateContent($content, $template="") {
 		return SSTemplateParser::compileString($content, $template, Director::isDev() && self::$source_file_comments);
 	}
 
@@ -899,7 +933,7 @@ class SSViewer {
 	 * @param $contentGeneratedSoFar The content of the template generated so far; it should contain
 	 * the DOCTYPE declaration.
 	 */
-	static function get_base_tag($contentGeneratedSoFar) {
+	public static function get_base_tag($contentGeneratedSoFar) {
 		$base = Director::absoluteBaseURL();
 		
 		// Is the document XHTML?
@@ -925,7 +959,8 @@ class SSViewer_FromString extends SSViewer {
 	
 	public function process($item, $arguments = null) {
 		if ($arguments && $arguments instanceof Zend_Cache_Core) {
-			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, the second argument to process is now an array of variables.');
+			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, ' .
+				'the second argument to process is now an array of variables.');
 			$this->setPartialCacheStore($arguments);
 			$arguments = null;
 		}

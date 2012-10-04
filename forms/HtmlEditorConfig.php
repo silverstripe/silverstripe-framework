@@ -3,8 +3,9 @@
 /**
  * A PHP version of TinyMCE's configuration, to allow various parameters to be configured on a site or section basis
  * 
- * There can be multiple HtmlEditorConfig's, which should always be created / accessed using HtmlEditorConfig::get. You can then set 
- * the currently active config using set_active. Whichever config is active when HtmlEditorField#Field is called wins.
+ * There can be multiple HtmlEditorConfig's, which should always be created / accessed using HtmlEditorConfig::get.
+ * You can then set the currently active config using set_active. Whichever config is active when
+ * HtmlEditorField#Field is called wins.
  *  
  * @author "Hamish Friedlander" <hamish@silverstripe.com>
  * @package forms
@@ -16,11 +17,14 @@ class HtmlEditorConfig {
 	static $current = null;
 	
 	/**
-	 * Get the HtmlEditorConfig object for the given identifier. This is a correct way to get an HtmlEditorConfig instance - do not call 'new'
+	 * Get the HtmlEditorConfig object for the given identifier. This is a correct way to get an HtmlEditorConfig
+	 * instance - do not call 'new'
+	 * 
 	 * @param $identifier string - the identifier for the config set
-	 * @return HtmlEditorConfig - the configuration object. This will be created if it does not yet exist for that identifier
+	 * @return HtmlEditorConfig - the configuration object. This will be created if it does not yet exist for that
+	 *                            identifier
 	 */
-	static function get($identifier = 'default') {
+	public static function get($identifier = 'default') {
 		if (!array_key_exists($identifier, self::$configs)) self::$configs[$identifier] = new HtmlEditorConfig();
 		return self::$configs[$identifier];
 	}
@@ -30,7 +34,7 @@ class HtmlEditorConfig {
 	 * @param $identifier string - the identifier for the config set
 	 * @return null
 	 */
-	static function set_active($identifier = null) {
+	public static function set_active($identifier = null) {
 		self::$current = $identifier;
 	}
 	
@@ -38,7 +42,7 @@ class HtmlEditorConfig {
 	 * Get the currently active configuration object
 	 * @return HtmlEditorConfig - the active configuration object
 	 */
-	static function get_active() {
+	public static function get_active() {
 		$identifier = self::$current ? self::$current : 'default';
 		return self::get($identifier);
 	}
@@ -48,7 +52,7 @@ class HtmlEditorConfig {
 	 * configuration name.
 	 * @return array
 	 */
-	static function get_available_configs_map() {
+	public static function get_available_configs_map() {
 		$configs = array();
 		
 		foreach(self::$configs as $identifier => $config) {
@@ -98,8 +102,11 @@ class HtmlEditorConfig {
 	 * Holder list of buttons, organised by line
 	 */
 	protected $buttons = array(
-		1 => array('bold','italic','underline','strikethrough','separator','justifyleft','justifycenter','justifyright','justifyfull','formatselect','separator','bullist','numlist','outdent','indent','blockquote','hr','charmap'),
-		2 => array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','spellchecker','separator','advcode','search','replace','selectall','visualaid','separator','tablecontrols'),
+		1 => array('bold','italic','underline','strikethrough','separator',
+			'justifyleft','justifycenter','justifyright','justifyfull','formatselect','separator',
+			'bullist','numlist','outdent','indent','blockquote','hr','charmap'),
+		2 => array('undo','redo','separator','cut','copy','paste','pastetext','pasteword','spellchecker','separator',
+			'advcode','search','replace','selectall','visualaid','separator','tablecontrols'),
 		3 => array()
 	);
 
@@ -108,7 +115,7 @@ class HtmlEditorConfig {
 	 * @param $k string - The key of the option to get
 	 * @return mixed - The value of the specified option 
 	 */
-	function getOption($k) {
+	public function getOption($k) {
 		if(isset($this->settings[$k])) return $this->settings[$k];
 	}
 	
@@ -118,7 +125,7 @@ class HtmlEditorConfig {
 	 * @param $v mixed - The value of the option to set
 	 * @return mixed - $v returned for chaining
 	 */
-	function setOption($k,$v) {
+	public function setOption($k,$v) {
 		$this->settings[$k] = $v;
 		return $this;
 	}
@@ -128,7 +135,7 @@ class HtmlEditorConfig {
 	 * @param $a array - The options to set, as keys and values of the array
 	 * @return null
 	 */
-	function setOptions($a) {
+	public function setOptions($a) {
 		foreach ($a as $k=>$v) {
 			$this->settings[$k] = $v;
 		}
@@ -146,7 +153,7 @@ class HtmlEditorConfig {
 	 * @param String [0..] a string, or several strings, or a single array of strings - The plugins to enable
 	 * @return null
 	 */
-	function enablePlugins() {
+	public function enablePlugins() {
 		$plugins = func_get_args();
 		if (is_array(current($plugins))) $plugins = current($plugins);
 		foreach ($plugins as $plugin => $path) {
@@ -164,7 +171,7 @@ class HtmlEditorConfig {
 	 * @param String [0..] a string, or several strings, or a single array of strings - The plugins to disable
 	 * @return null
 	 */
-	function disablePlugins() {
+	public function disablePlugins() {
 		$plugins = func_get_args();
 		if (is_array(current($plugins))) $plugins = current($plugins);
 		
@@ -179,7 +186,7 @@ class HtmlEditorConfig {
 	/**
 	 * @return Array
 	 */
-	function getPlugins() {
+	public function getPlugins() {
 		return $this->plugins;
 	}
 	
@@ -187,10 +194,11 @@ class HtmlEditorConfig {
 	 * Totally re-set the buttons on a given line
 	 * 
 	 * @param integer from 1..3 - The line number to redefine
-	 * @param string  a string or several strings, or a single array of strings - The button names to make this line contain 
+	 * @param string  a string or several strings, or a single array of strings - The button names to make this line
+	 *                contain 
 	 * @return null
 	 */
-	function setButtonsForLine() {
+	public function setButtonsForLine() {
 		if (func_num_args() == 2) {
 			list($line, $buttons) = func_get_args();
 		}
@@ -205,10 +213,11 @@ class HtmlEditorConfig {
 	/**
 	 * Add buttons to the end of a line
 	 * @param integer from 1..3
-	 * @param string a string, or several strings, or a single array of strings - The button names to add to the end of this line 
+	 * @param string a string, or several strings, or a single array of strings - The button names to add to the end
+	 *               of this line 
 	 * @return null
 	 */
-	function addButtonsToLine() {
+	public function addButtonsToLine() {
 		$inserts = func_get_args();
 		$line = array_shift($inserts);
 		if (is_array($inserts[0])) $inserts = $inserts[0];
@@ -222,9 +231,11 @@ class HtmlEditorConfig {
 	/**
 	 * Internal function for adding and removing buttons related to another button
 	 * @param $name string - the name of the button to modify
-	 * @param $offset integer - the offset relative to that button to perform an array_splice at - 0 for before $name, 1 for after 
+	 * @param $offset integer - the offset relative to that button to perform an array_splice at - 0 for before $name,
+	 *                          1 for after 
 	 * @param $del integer - the number of buttons to remove at the position given by index(string) + offset
-	 * @param $add mixed - an array or single item to insert at the position given by index(string) + offset, or null for no insertion
+	 * @param $add mixed - an array or single item to insert at the position given by index(string) + offset,
+	 *                     or null for no insertion
 	 * @return boolean - true if $name matched a button, false otherwise
 	 */
 	protected function modifyButtons($name, $offset, $del=0, $add=null) {
@@ -241,10 +252,11 @@ class HtmlEditorConfig {
 	/**
 	 * Insert buttons before the first occurance of another button
 	 * @param string - the name of the button to insert other buttons before
-	 * @param string a string, or several strings, or a single array of strings - the button names to insert before that button 
+	 * @param string a string, or several strings, or a single array of strings - the button names to insert before
+	 *               that button 
 	 * @return boolean - true if insertion occured, false if it did not (because the given button name was not found)
 	 */
-	function insertButtonsBefore() {
+	public function insertButtonsBefore() {
 		$inserts = func_get_args();
 		$before = array_shift($inserts);
 		return $this->modifyButtons($before, 0, 0, $inserts);
@@ -253,10 +265,11 @@ class HtmlEditorConfig {
 	/**
 	 * Insert buttons after the first occurance of another button
 	 * @param string - the name of the button to insert other buttons after
-	 * @param string a string, or several strings, or a single array of strings - the button names to insert after that button 
+	 * @param string a string, or several strings, or a single array of strings - the button names to insert after
+	 *               that button 
 	 * @return boolean - true if insertion occured, false if it did not (because the given button name was not found)
 	 */
-	function insertButtonsAfter() {
+	public function insertButtonsAfter() {
 		$inserts = func_get_args();
 		$after = array_shift($inserts);
 		return $this->modifyButtons($after, 1, 0, $inserts);
@@ -267,7 +280,7 @@ class HtmlEditorConfig {
 	 * @param string one or more strings - the name of the buttons to remove
 	 * @return null
 	 */
-	function removeButtons() {
+	public function removeButtons() {
 		$removes = func_get_args();
 		foreach ($removes as $button) {
 			$this->modifyButtons($button, 0, 1);
@@ -278,7 +291,7 @@ class HtmlEditorConfig {
 	 * Generate the javascript that will set tinyMCE's configuration to that of the current settings of this object
 	 * @return string - the javascript
 	 */
-	function generateJS() {
+	public function generateJS() {
 		$config = $this->settings;
 		
 		// plugins

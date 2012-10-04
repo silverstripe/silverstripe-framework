@@ -56,7 +56,7 @@ abstract class Validator extends Object {
 	/**
 	 * @param Form $form
 	 */
-	function setForm($form) {
+	public function setForm($form) {
 		$this->form = $form;
 		return $this;
 	}
@@ -64,7 +64,7 @@ abstract class Validator extends Object {
 	/**
 	 * @return array Errors (if any)
 	 */
-	function validate(){
+	public function validate(){
 		$this->errors = null;
 		$this->php($this->form->getData());
 		return $this->errors;
@@ -75,9 +75,10 @@ abstract class Validator extends Object {
 	 * 
 	 * @param $fieldName name of the field
 	 * @param $message error message to display
-	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output. See {@link getErrors()} for details.
+	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output.
+	 *                              See {@link getErrors()} for details.
 	 */
-	function validationError($fieldName, $message, $messageType='') {
+	public function validationError($fieldName, $message, $messageType='') {
 		$this->errors[] = array(
 			'fieldName' => $fieldName,
 			'message' => $message,
@@ -96,17 +97,21 @@ abstract class Validator extends Object {
 	 * 
 	 * @return array
 	 */
-	function getErrors() {
+	public function getErrors() {
 		return $this->errors;
 	}
 	
-	function requireField($fieldName, $data) {
+	public function requireField($fieldName, $data) {
 		if(is_array($data[$fieldName]) && count($data[$fieldName])) {
 			foreach($data[$fieldName] as $componentkey => $componentVal){
-				if(!strlen($componentVal)) $this->validationError($fieldName, "$fieldName $componentkey is required", "required");
+				if(!strlen($componentVal)) {
+					$this->validationError($fieldName, "$fieldName $componentkey is required", "required");
+				}
 			}
 			
-		}else if(!strlen($data[$fieldName])) $this->validationError($fieldName, "$fieldName is required", "required");
+		} else if(!strlen($data[$fieldName])) {
+			$this->validationError($fieldName, "$fieldName is required", "required");
+		}
 	}
 	
 	/**
@@ -114,10 +119,10 @@ abstract class Validator extends Object {
 	 * Used by FormField to return a value for FormField::Required(), to do things like show *s on the form template.
 	 * By default, it always returns false.
 	 */
-	function fieldIsRequired($fieldName) {
+	public function fieldIsRequired($fieldName) {
 		return false;
 	}
 	
-	abstract function php($data);
+	abstract public function php($data);
 }
 

@@ -20,7 +20,7 @@ class i18nTextCollectorTest extends SapphireTest {
 	
 	protected $manifest;
 	
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
@@ -38,12 +38,12 @@ class i18nTextCollectorTest extends SapphireTest {
 		SS_TemplateLoader::instance()->pushManifest($manifest);
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
 		parent::tearDown();
 	}
 
-	function testConcatenationInEntityValues() {
+	public function testConcatenationInEntityValues() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
@@ -70,15 +70,15 @@ PHP;
 		);
 	}
 
-	function testCollectFromNewTemplateSyntaxUsingParserSubclass() {
+	public function testCollectFromNewTemplateSyntaxUsingParserSubclass() {
 			$c = new i18nTextCollector();
 
 			$html = <<<SS
 			<% _t('Test.SINGLEQUOTE','Single Quote'); %>
 <%t i18nTestModule.NEWMETHODSIG "New _t method signature test" %>
-<%t i18nTestModule.INJECTIONS_0 "Hello {name} {greeting}. But it is late, {goodbye}" name="Mark" greeting="welcome" goodbye="bye" %>
-<%t i18nTestModule.INJECTIONS_1 "Hello {name} {greeting}. But it is late, {goodbye}" name="Paul" greeting="good you are here" goodbye="see you" %>
-<%t i18nTestModule.INJECTIONS_2 "Hello {name} {greeting}. But it is late, {goodbye}" is "New context (this should be ignored)" name="Steffen" greeting="willkommen" goodbye="wiedersehen" %>
+<%t i18nTestModule.INJECTIONS_0 "Hello {name} {greeting}, and {goodbye}" name="Mark" greeting="welcome" goodbye="bye" %>
+<%t i18nTestModule.INJECTIONS_1 "Hello {name} {greeting}, and {goodbye}" name="Paul" greeting="welcome" goodbye="cya" %>
+<%t i18nTestModule.INJECTIONS_2 "Hello {name} {greeting}" is "context (ignored)" name="Steffen" greeting="Wilkommen" %>
 <%t i18nTestModule.INJECTIONS_3 name="Cat" greeting='meow' goodbye="meow" %>
 <%t i18nTestModule.INJECTIONS_4 name=\$absoluteBaseURL greeting=\$get_locale goodbye="global calls" %>
 SS;
@@ -89,16 +89,16 @@ SS;
 			array(
 				'Test.SINGLEQUOTE' => array('Single Quote'),
 				'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test",null,null),
-				'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
-				'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
-				'i18nTestModule.INJECTIONS_2' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, "New context (this should be ignored)"),
+				'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}, and {goodbye}", null, null),
+				'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}, and {goodbye}", null, null),
+				'i18nTestModule.INJECTIONS_2' => array("Hello {name} {greeting}", null, "context (ignored)"),
 				'i18nTestModule.INJECTIONS_3' => array(null, null, null),
 				'i18nTestModule.INJECTIONS_4' => array(null, null, null),
 			)
 		);
 	}
 
-	function testCollectFromTemplateSimple() {
+	public function testCollectFromTemplateSimple() {
 		$c = new i18nTextCollector();
 
 		$html = <<<SS
@@ -132,7 +132,7 @@ SS;
 		);
 	}
 
-	function testCollectFromTemplateAdvanced() {
+	public function testCollectFromTemplateAdvanced() {
 		$c = new i18nTextCollector();
 
 		$html = <<<SS
@@ -179,7 +179,7 @@ SS;
 	}
 
 
-	function testCollectFromCodeSimple() {
+	public function testCollectFromCodeSimple() {
 		$c = new i18nTextCollector();
 			
 		$php = <<<PHP
@@ -203,7 +203,7 @@ PHP;
 		);
 	}
 	
-	function testCollectFromCodeAdvanced() {
+	public function testCollectFromCodeAdvanced() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
@@ -277,7 +277,7 @@ PHP;
 	}
 	
 	
-	function testNewlinesInEntityValues() {
+	public function testNewlinesInEntityValues() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
@@ -314,14 +314,18 @@ PHP;
 	/**
 	 * Test extracting entities from the new _t method signature
 	 */
-	function testCollectFromCodeNewSignature() {
+	public function testCollectFromCodeNewSignature() {
 		$c = new i18nTextCollector();
 
 		$php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
-_t('i18nTestModule.INJECTIONS1','_DOES_NOT_EXIST', "Hello {name} {greeting}. But it is late, {goodbye}", array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
-_t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}", array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
-_t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}", "New context (this should be ignored)", array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
+_t('i18nTestModule.INJECTIONS1','_DOES_NOT_EXIST', "Hello {name} {greeting}. But it is late, {goodbye}",
+	array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
+_t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}",
+	array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+_t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}",
+		"New context (this should be ignored)",
+		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
 _t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
 PHP;
 
@@ -329,9 +333,11 @@ PHP;
 
 		$expectedArray = (array(
 			'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test"),
-			'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST", "Hello {name} {greeting}. But it is late, {goodbye}"),
+			'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST",
+				"Hello {name} {greeting}. But it is late, {goodbye}"),
 			'i18nTestModule.INJECTIONS2' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
-			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}", "New context (this should be ignored)"),
+			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}",
+				"New context (this should be ignored)"),
 		));
 
 		ksort($expectedArray);
@@ -343,7 +349,7 @@ PHP;
 	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
 	 * into single-quoted strings, so needs to be escaped already.
 	 */
-	function testPhpWriterLangArrayCodeForEntity() {
+	public function testPhpWriterLangArrayCodeForEntity() {
 		$c = new i18nTextCollector_Writer_Php();
 		
 		$this->assertEquals(
@@ -353,7 +359,8 @@ PHP;
 		
 		$this->assertEquals(
 			// single quotes should be properly escaped by the parser already
-			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES', array("Value with 'Escaped Single Quotes'"), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES',
+				array("Value with 'Escaped Single Quotes'"), 'en_US'),
 			"\$lang['en_US']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
 		);
 		
@@ -370,7 +377,8 @@ PHP;
 
 PHP;
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
+				array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
 			$php
 		);
 		
@@ -382,7 +390,8 @@ PHP;
 
 PHP;
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array('Value with "Double Quotes"','Comment with "Double Quotes"'), 'en_US'),
+			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
+				array('Value with "Double Quotes"','Comment with "Double Quotes"'), 'en_US'),
 			$php
 		);
 	}
@@ -390,7 +399,7 @@ PHP;
 	/**
 	 * @todo Should be in a separate test suite, but don't want to duplicate setup logic
 	 */
-	function testYamlWriter() {
+	public function testYamlWriter() {
 		$writer = new i18nTextCollector_Writer_RailsYaml();
 		$entities = array(
 			'Level1.Level2.EntityName' => array('Text', 'Context'),
@@ -407,7 +416,7 @@ YAML;
 		$this->assertEquals($yaml, $writer->getYaml($entities, 'de'));
 	}
 	
-	function testCollectFromIncludedTemplates() {
+	public function testCollectFromIncludedTemplates() {
 		$c = new i18nTextCollector();
 		
 		$templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
@@ -458,7 +467,7 @@ YAML;
 		);
 	}
 	
-	function testCollectFromThemesTemplates() {
+	public function testCollectFromThemesTemplates() {
 		$c = new i18nTextCollector();
 		
 		$theme = SSViewer::current_theme();
@@ -517,7 +526,7 @@ YAML;
 		SSViewer::set_theme($theme);
 	}
 	
-	function testCollectFromFilesystemAndWriteMasterTables() {
+	public function testCollectFromFilesystemAndWriteMasterTables() {
 		$defaultlocal = i18n::default_locale();
 		$local = i18n::get_locale();
 		i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
@@ -623,7 +632,8 @@ YAML;
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] = 'Theme1 My include replacement no namespace: %s';",
+			"\$lang['en']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] ="
+				. " 'Theme1 My include replacement no namespace: %s';",
 			$theme1LangFileContent
 		);
 		
@@ -640,10 +650,10 @@ YAML;
 		);
 
 		i18n::set_locale($local);  //set the locale to the US locale expected in the asserts
-+		i18n::set_default_locale($defaultlocal);
+		i18n::set_default_locale($defaultlocal);
 	}
 	
-	function testCollectFromEntityProvidersInCustomObject() {
+	public function testCollectFromEntityProvidersInCustomObject() {
 		$c = new i18nTextCollector();
 
 		$filePath = $this->getCurrentAbsolutePath() . '/i18nTextCollectorTestMyObject.php';

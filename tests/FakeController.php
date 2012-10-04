@@ -2,7 +2,7 @@
 // Fake a current controller. Way harder than it should be
 class FakeController extends Controller {
 	
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
@@ -11,7 +11,9 @@ class FakeController extends Controller {
 		$this->pushCurrent();
 
 		$this->request = new SS_HTTPRequest(
-			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
+			(isset($_SERVER['X-HTTP-Method-Override'])) 
+				? $_SERVER['X-HTTP-Method-Override'] 
+				: $_SERVER['REQUEST_METHOD'],
 			'/'
 		);
 

@@ -39,7 +39,7 @@
  */
 class GroupedDropdownField extends DropdownField {
 
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		$options = '';
 		foreach($this->getSource() as $value => $title) {
 			if(is_array($title)) {
@@ -58,7 +58,7 @@ class GroupedDropdownField extends DropdownField {
 		return $this->createTag('select', $this->getAttributes(), $options);
 	}
 
-	function Type() {
+	public function Type() {
 		return 'groupeddropdown dropdown';
 	}
 	

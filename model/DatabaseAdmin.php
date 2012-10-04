@@ -22,7 +22,7 @@ class DatabaseAdmin extends Controller {
 		'import'
 	);
 	
-	function init() {
+	public function init() {
 		parent::init();
 		
 		// We allow access to this controller regardless of live-status or ADMIN permission only
@@ -50,7 +50,7 @@ class DatabaseAdmin extends Controller {
 	 *
 	 * @return array Array of data classes, grouped by their root class
 	 */
-	function groupedDataClasses() {
+	public function groupedDataClasses() {
 		// Get all root data objects
 		$allClasses = get_declared_classes();
 		foreach($allClasses as $class) {
@@ -76,7 +76,7 @@ class DatabaseAdmin extends Controller {
 	/**
 	 * Display a simple HTML menu of database admin helpers.
 	 */
-	function index() {
+	public function index() {
 		echo "<h2>Database Administration Helpers</h2>";
 		echo "<p><a href=\"build\">Add missing database fields (similar to sanity check).</a></p>";
 		echo "<p><a href=\"../images/flush\">Flush <b>all</b> of the generated images.</a></p>";
@@ -86,7 +86,7 @@ class DatabaseAdmin extends Controller {
 	/**
 	 * Updates the database schema, creating tables & fields as necessary.
 	 */
-	function build() {
+	public function build() {
 		// The default time limit of 30 seconds is normally not enough
 		increase_time_limit_to(600);
 
@@ -99,14 +99,15 @@ class DatabaseAdmin extends Controller {
 			echo "<p>Done!</p>";
 			$this->redirect($_GET['returnURL']);
 		} else {
-			$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']), !isset($_REQUEST['dont_populate']));
+			$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']),
+				!isset($_REQUEST['dont_populate']));
 		}
 	}
 
 	/**
 	 * Check if database needs to be built, and build it if it does.
 	 */
-	static function autoBuild() {
+	public static function autoBuild() {
 		$dataClasses = ClassInfo::subclassesFor('DataObject');
 		$lastBuilt = self::lastBuilt();
 		foreach($dataClasses as $class) {
@@ -122,7 +123,7 @@ class DatabaseAdmin extends Controller {
 	 * Build the default data, calling requireDefaultRecords on all
 	 * DataObject classes
 	 */
-	function buildDefaults() {
+	public function buildDefaults() {
 		$dataClasses = ClassInfo::subclassesFor('DataObject');
 		array_shift($dataClasses);
 		foreach($dataClasses as $dataClass){
@@ -137,7 +138,7 @@ class DatabaseAdmin extends Controller {
 	 * @return string Returns the timestamp of the time that the database was
 	 *                last built
 	 */
-	static function lastBuilt() {
+	public static function lastBuilt() {
 		$file = TEMP_FOLDER . '/database-last-generated-' .
 			str_replace(array('\\','/',':'), '.' , Director::baseFolder());
 
@@ -153,7 +154,7 @@ class DatabaseAdmin extends Controller {
 	 * @param boolean $quiet Don't show messages
 	 * @param boolean $populate Populate the database, as well as setting up its schema
 	 */
-	function doBuild($quiet = false, $populate = true, $testMode = false) {
+	public function doBuild($quiet = false, $populate = true, $testMode = false) {
 		if($quiet) {
 			DB::quiet();
 		} else {
@@ -163,8 +164,11 @@ class DatabaseAdmin extends Controller {
 			$dbVersion = $conn->getVersion();
 			$databaseName = (method_exists($conn, 'currentDatabase')) ? $conn->currentDatabase() : "";
 			
-			if(Director::is_cli()) echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);
-			else echo sprintf("<h2>Building database %s using %s %s</h2>", $databaseName, $dbType, $dbVersion);
+			if(Director::is_cli()) {
+				echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);
+			} else {
+				echo sprintf("<h2>Building database %s using %s %s</h2>", $databaseName, $dbType, $dbVersion);
+			}
 		}
 
 		// Set up the initial database
@@ -180,7 +184,8 @@ class DatabaseAdmin extends Controller {
 			$database = $parameters['database'];
 
 			if(!$database) {
-				user_error("No database name given; please give a value for \$databaseConfig['database']", E_USER_ERROR);
+				user_error("No database name given; please give a value for \$databaseConfig['database']",
+					E_USER_ERROR);
 			}
 
 			DB::createDatabase($connect, $username, $password, $database);
@@ -251,7 +256,7 @@ class DatabaseAdmin extends Controller {
 	 * Clear all data out of the database
 	 * @todo Move this code into SS_Database class, for DB abstraction
 	 */
-	function clearAllData() {
+	public function clearAllData() {
 		$tables = DB::getConn()->tableList();
 		foreach($tables as $table) {
 			if(method_exists(DB::getConn(), 'clearTable')) DB::getConn()->clearTable($table);
@@ -263,7 +268,7 @@ class DatabaseAdmin extends Controller {
 	/**
 	 * Method used to check mod_rewrite is working correctly in the installer.
 	 */
-	function testinstall() {
+	public function testinstall() {
 		echo "OK";
 	}
 
@@ -272,7 +277,7 @@ class DatabaseAdmin extends Controller {
 	 * Remove invalid records from tables - that is, records that don't have
 	 * corresponding records in their parent class tables.
 	 */
-	function cleanup() {
+	public function cleanup() {
 		$allClasses = get_declared_classes();
 		foreach($allClasses as $class) {
 			if(get_parent_class($class) == 'DataObject') {

@@ -5,22 +5,27 @@
  * 
  * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
- * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters that it
- * parsed from the URL, and the {@link SS_HTTPRequest} that contains the remainder of the URL to be parsed.
+ * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters
+ * that it parsed from the URL, and the {@link SS_HTTPRequest} that contains the remainder of the URL to be parsed.
  *
  * You can use ?debug_request=1 to view information about the different components and rule matches for a specific URL.
  *
- * In SilverStripe, URL parsing is distributed throughout the object graph.  For example, suppose that we have a search form
- * that contains a {@link TreeMultiSelectField} named "Groups".  We want to use ajax to load segments of this tree as they are needed
- * rather than downloading the tree right at the beginning.  We could use this URL to get the tree segment that appears underneath
+ * In SilverStripe, URL parsing is distributed throughout the object graph.  For example, suppose that we have a
+ * search form that contains a {@link TreeMultiSelectField} named "Groups".  We want to use ajax to load segments of
+ * this tree as they are needed rather than downloading the tree right at the beginning.  We could use this URL to get
+ * the tree segment that appears underneath
+ * 
  * Group #36: "admin/crm/SearchForm/field/Groups/treesegment/36"
  *  - Director will determine that admin/crm is controlled by a new ModelAdmin object, and pass control to that.
  *    Matching Director Rule: "admin/crm" => "ModelAdmin" (defined in mysite/_config.php)
- *  - ModelAdmin will determine that SearchForm is controlled by a Form object returned by $this->SearchForm(), and pass control to that.
+ *  - ModelAdmin will determine that SearchForm is controlled by a Form object returned by $this->SearchForm(), and
+ *    pass control to that.
  *    Matching $url_handlers: "$Action" => "$Action" (defined in RequestHandler class)
- *  - Form will determine that field/Groups is controlled by the Groups field, a TreeMultiselectField, and pass control to that.
+ *  - Form will determine that field/Groups is controlled by the Groups field, a TreeMultiselectField, and pass
+ *    control to that.
  *    Matching $url_handlers: 'field/$FieldName!' => 'handleField' (defined in Form class)
- *  - TreeMultiselectField will determine that treesegment/36 is handled by its treesegment() method.  This method will return an HTML fragment that is output to the screen.
+ *  - TreeMultiselectField will determine that treesegment/36 is handled by its treesegment() method.  This method
+ *    will return an HTML fragment that is output to the screen.
  *    Matching $url_handlers: "$Action/$ID" => "handleItem" (defined in TreeMultiSelectField class)
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
@@ -54,10 +59,11 @@ class RequestHandler extends ViewableData {
 	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
 	 * be called on this RequestHandlingData object.
 	 *
-	 * The keys of this array are parse rules.  See {@link SS_HTTPRequest::match()} for a description of the rules available.
+	 * The keys of this array are parse rules.  See {@link SS_HTTPRequest::match()} for a description of the rules
+	 * available.
 	 * 
-	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then the
-	 * named parameter of the parsed URL wil be used to determine the method name.
+	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
+	 * the named parameter of the parsed URL wil be used to determine the method name.
 	 */
 	static $url_handlers = array(
 		'$Action' => '$Action',
@@ -70,10 +76,14 @@ class RequestHandler extends ViewableData {
 	 *
 	 * <code>
 	 * array(
-	 *		'someaction', // someaction can be accessed by anyone, any time
-	 *		'otheraction' => true, // So can otheraction
-	 *		'restrictedaction' => 'ADMIN', // restrictedaction can only be people with ADMIN privilege
-	 *		'complexaction' '->canComplexAction' // complexaction can only be accessed if $this->canComplexAction() returns true
+	 * 		// someaction can be accessed by anyone, any time
+	 *		'someaction', 
+	 *		// So can otheraction
+	 *		'otheraction' => true, 
+	 *		// restrictedaction can only be people with ADMIN privilege
+	 *		'restrictedaction' => 'ADMIN', 
+	 *		// complexaction can only be accessed if $this->canComplexAction() returns true
+	 *		'complexaction' '->canComplexAction' 
 	 *	);
 	 * </code>
 	 * 
@@ -125,7 +135,7 @@ class RequestHandler extends ViewableData {
 	 * @uses SS_HTTPRequest->match()
 	 * @return SS_HTTPResponse|RequestHandler|string|array
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
 	
@@ -141,13 +151,16 @@ class RequestHandler extends ViewableData {
 			$urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::FIRST_SET);
 
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
-				if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
+				if(isset($_REQUEST['debug_request'])) {
+					Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
+				}
 				if($params = $request->match($rule, true)) {
 					// Backwards compatible setting of url parameters, please use SS_HTTPRequest->latestParam() instead
 					//Director::setUrlParams($request->latestParams());
 				
 					if(isset($_REQUEST['debug_request'])) {
-						Debug::message("Rule '$rule' matched to action '$action' on $this->class.  Latest request params: " . var_export($request->latestParams(), true));
+						Debug::message("Rule '$rule' matched to action '$action' on $this->class."
+							. " Latest request params: " . var_export($request->latestParams(), true));
 					}
 				
 					// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
@@ -155,7 +168,9 @@ class RequestHandler extends ViewableData {
 				
 					if($this->checkAccessAction($action)) {
 						if(!$action) {
-							if(isset($_REQUEST['debug_request'])) Debug::message("Action not set; using default action method name 'index'");
+							if(isset($_REQUEST['debug_request'])) {
+								Debug::message("Action not set; using default action method name 'index'");
+							}
 							$action = "index";
 						} else if(!is_string($action)) {
 							user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
@@ -163,14 +178,15 @@ class RequestHandler extends ViewableData {
 						
 						try {
 							if(!$this->hasMethod($action)) {
-								return $this->httpError(404, "Action '$action' isn't available on class " . get_class($this) . ".");
+								return $this->httpError(404, "Action '$action' isn't available on class "
+									. get_class($this) . ".");
 							}
 							$result = $this->$action($request);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
 						}
 					} else {
-						return $this->httpError(403, "Action '$action' isn't allowed on class " . get_class($this) . ".");
+						return $this->httpError(403, "Action '$action' isn't allowed on class " . get_class($this));
 					}
 				
 					if($result instanceof SS_HTTPResponse && $result->isError()) {
@@ -178,11 +194,13 @@ class RequestHandler extends ViewableData {
 						return $result;
 					}
 				
-					// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to parse.
-					// It might have its own handler. However, we only do this if we haven't just parsed an empty rule ourselves,
-					// to prevent infinite loops. Also prevent further handling of controller actions which return themselves
-					// to avoid infinite loops.
-					if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
+					// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to
+					// parse. It might have its own handler. However, we only do this if we haven't just parsed an
+					// empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
+					// actions which return themselves to avoid infinite loops.
+					if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) 
+							&& $result instanceof RequestHandler) {
+
 						$returnValue = $result->handleRequest($request, $model);
 
 						// Array results can be used to handle 
@@ -256,7 +274,9 @@ class RequestHandler extends ViewableData {
 			if($isKey || $isValue || $isWildcard) return true;
 		}
 
-		if(!is_array($actions) || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
+		if(!is_array($actions) || !$this->config()->get('allowed_actions',
+				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
+
 			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
 		}
 		
@@ -267,7 +287,7 @@ class RequestHandler extends ViewableData {
 	 * Check that the given action is allowed to be called from a URL.
 	 * It will interrogate {@link self::$allowed_actions} to determine this.
 	 */
-	function checkAccessAction($action) {
+	public function checkAccessAction($action) {
 		$actionOrigCasing = $action;
 		$action            = strtolower($action);
 		$allowedActions    = $this->allowedActions();
@@ -300,9 +320,11 @@ class RequestHandler extends ViewableData {
 		// it should be allowed.
 		if($action == 'index' || empty($action)) return true;
 		
-		if($allowedActions === null || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
-			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
-			// we test this by calling the unmagic method_exists. 
+		if($allowedActions === null || !$this->config()->get('allowed_actions',
+				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
+			
+			// If no allowed_actions are provided, then we should only let through actions that aren't handled by
+			// magic methods we test this by calling the unmagic method_exists. 
 			if(method_exists($this, $action)) {
 				// Disallow any methods which aren't defined on RequestHandler or subclasses
 				// (e.g. ViewableData->getSecurityID())
@@ -342,7 +364,7 @@ class RequestHandler extends ViewableData {
 	/**
 	 * @deprecated 3.0 Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())
 	 */
-	function isAjax() {
+	public function isAjax() {
 		Deprecation::notice('3.0', 'Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())');
 		return $this->request->isAjax();
 	}
@@ -355,7 +377,7 @@ class RequestHandler extends ViewableData {
 	 *
 	 * @return SS_HTTPRequest|NullHTTPRequest
 	 */
-	function getRequest() {
+	public function getRequest() {
 		return $this->request;
 	}
 	
@@ -365,7 +387,7 @@ class RequestHandler extends ViewableData {
 	 * 
 	 * @param SS_HTTPRequest
 	 */
-	function setRequest($request) {
+	public function setRequest($request) {
 		$this->request = $request;
 	}
 }

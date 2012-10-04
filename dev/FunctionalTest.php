@@ -7,7 +7,7 @@
  * The example below shows how it works.
  * 
  * <code>
- *   function testMyForm() {
+ *   public function testMyForm() {
  *     // Visit a URL
  *     $this->get("your/url");
  * 
@@ -44,19 +44,19 @@ class FunctionalTest extends SapphireTest {
 	
 	/**
 	 * If this is true, then 30x Location headers will be automatically followed.
-	 * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.  However, this will let you inspect
-	 * the intermediary headers
+	 * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.
+	 * However, this will let you inspect the intermediary headers
 	 */
 	protected $autoFollowRedirection = true;
 	
 	/**
 	 * Returns the {@link Session} object for this test
 	 */
-	function session() {
+	public function session() {
 		return $this->mainSession->session();
 	}
 
-	function setUp() {
+	public function setUp() {
 		// Skip calling FunctionalTest directly.
 		if(get_class($this) == "FunctionalTest") $this->skipTest = true;
 		
@@ -71,13 +71,14 @@ class FunctionalTest extends SapphireTest {
 			$this->useDraftSite();
 		}
         
-        // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case basis.
+        // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
+        // basis.
         BasicAuth::protect_entire_site(false);
 		
 		SecurityToken::disable();
 	}
 
-	function tearDown() {
+	public function tearDown() {
 		SecurityToken::enable();
 		
 		parent::tearDown();
@@ -88,10 +89,12 @@ class FunctionalTest extends SapphireTest {
 	 * Submit a get request
 	 * @uses Director::test()
 	 */
-	function get($url, $session = null, $headers = null, $cookies = null) {
+	public function get($url, $session = null, $headers = null, $cookies = null) {
 		$this->cssParser = null;
 		$response = $this->mainSession->get($url, $session, $headers, $cookies);
-		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
 		return $response;
 	}
 
@@ -99,10 +102,12 @@ class FunctionalTest extends SapphireTest {
 	 * Submit a post request
 	 * @uses Director::test()
 	 */
-	function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
+	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
 		$this->cssParser = null;
 		$response = $this->mainSession->post($url, $data, $headers, $session, $body, $cookies);
-		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
 		return $response;
 	}
 	
@@ -125,17 +130,19 @@ class FunctionalTest extends SapphireTest {
 	 * @param Array $data Map of GET/POST data. 
 	 * @return SS_HTTPResponse
 	 */
-	function submitForm($formID, $button = null, $data = array()) {
+	public function submitForm($formID, $button = null, $data = array()) {
 		$this->cssParser = null;
 		$response = $this->mainSession->submitForm($formID, $button, $data);
-		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
 		return $response;
 	}
 	
 	/**
 	 * Return the most recent content
 	 */
-	function content() {
+	public function content() {
 		return $this->mainSession->lastContent();
 	}
 
@@ -145,7 +152,7 @@ class FunctionalTest extends SapphireTest {
 	 * @param string $attribute Name of attribute to find
 	 * @return SimpleXMLElement object of the attribute
 	 */
-	function findAttribute($object, $attribute) {
+	public function findAttribute($object, $attribute) {
 		$found = false;
 		foreach($object->attributes() as $a => $b) {
 			if($a == $attribute) {
@@ -158,7 +165,7 @@ class FunctionalTest extends SapphireTest {
 	/**
 	 * Return a CSSContentParser for the most recent content.
 	 */
-	function cssParser() {
+	public function cssParser() {
 		if(!$this->cssParser) $this->cssParser = new CSSContentParser($this->mainSession->lastContent());
 		return $this->cssParser;
 	}
@@ -175,7 +182,7 @@ class FunctionalTest extends SapphireTest {
 	 * @throws PHPUnit_Framework_AssertionFailedError
 	 * @return boolean
 	 */
-	function assertPartialMatchBySelector($selector, $expectedMatches) {
+	public function assertPartialMatchBySelector($selector, $expectedMatches) {
 		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
 		
 		$items = $this->cssParser()->getBySelector($selector);
@@ -186,8 +193,9 @@ class FunctionalTest extends SapphireTest {
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
+		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+		            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+						. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
 				return false;
 			}
@@ -208,7 +216,7 @@ class FunctionalTest extends SapphireTest {
 	 * @throws PHPUnit_Framework_AssertionFailedError
 	 * @return boolean
 	 */
-	function assertExactMatchBySelector($selector, $expectedMatches) {
+	public function assertExactMatchBySelector($selector, $expectedMatches) {
 		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
 		
 		$items = $this->cssParser()->getBySelector($selector);
@@ -218,8 +226,9 @@ class FunctionalTest extends SapphireTest {
 		
 		if($expectedMatches != $actuals) {
 			throw new PHPUnit_Framework_AssertionFailedError(
-	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-				. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
+	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
+	            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+					. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
 	        );
 			return false;
 		}
@@ -239,7 +248,7 @@ class FunctionalTest extends SapphireTest {
 	 * @throws PHPUnit_Framework_AssertionFailedError
 	 * @return boolean
 	 */
-	function assertPartialHTMLMatchBySelector($selector, $expectedMatches) {
+	public function assertPartialHTMLMatchBySelector($selector, $expectedMatches) {
 		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
 		
 		$items = $this->cssParser()->getBySelector($selector);
@@ -250,8 +259,9 @@ class FunctionalTest extends SapphireTest {
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
+		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+		            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+						. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
 				return false;
 			}
@@ -272,7 +282,7 @@ class FunctionalTest extends SapphireTest {
 	 * @throws PHPUnit_Framework_AssertionFailedError
 	 * @return boolean
 	 */
-	function assertExactHTMLMatchBySelector($selector, $expectedMatches) {
+	public function assertExactHTMLMatchBySelector($selector, $expectedMatches) {
 		$items = $this->cssParser()->getBySelector($selector);
 
 		$actuals = array();
@@ -280,8 +290,9 @@ class FunctionalTest extends SapphireTest {
 		
 		if($expectedMatches != $actuals) {
 			throw new PHPUnit_Framework_AssertionFailedError(
-	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
-				. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
+	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
+	            	. implode("'\n'", $expectedMatches) . "'\n\n" 
+					. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
 	        );
 		}
 	}
@@ -290,7 +301,7 @@ class FunctionalTest extends SapphireTest {
 	 * Log in as the given member
 	 * @param $member The ID, fixture codename, or Member object of the member that you want to log in
 	 */
-	function logInAs($member) {
+	public function logInAs($member) {
 		if(is_object($member)) $memberID = $member->ID;
 		elseif(is_numeric($member)) $memberID = $member;
 		else $memberID = $this->idFromFixture('Member', $member);
@@ -300,11 +311,12 @@ class FunctionalTest extends SapphireTest {
 	
 	/**
 	 * Use the draft (stage) site for testing.
-	 * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering your test.
+	 * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
+	 * your test.
 	 *
 	 * @param bool toggle the use of the draft site
 	 */
-	function useDraftSite($enabled = true) {
+	public function useDraftSite($enabled = true) {
 		if($enabled) {
 			$this->session()->inst_set('readingMode', 'Stage.Stage');
 			$this->session()->inst_set('unsecuredDraftSite', true);
@@ -319,7 +331,7 @@ class FunctionalTest extends SapphireTest {
 	 * Return a static variable from this class.
 	 * Gets around PHP's lack of late static binding.
 	 */
-	function stat($varName) {
+	public function stat($varName) {
 		$className = get_class($this);
 		return eval("return {$className}::\$$varName;");
 	}

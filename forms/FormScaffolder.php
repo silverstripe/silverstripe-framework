@@ -51,7 +51,7 @@ class FormScaffolder extends Object {
 	 * @param DataObject $obj
 	 * @param array $params
 	 */
-	function __construct($obj) {
+	public function __construct($obj) {
 		$this->obj = $obj;
 		parent::__construct();
 	}
@@ -115,7 +115,9 @@ class FormScaffolder extends Object {
 		// only add relational fields if an ID is present
 		if($this->obj->ID) {
 			// add has_many relation fields
-			if($this->obj->has_many() && ($this->includeRelations === true || isset($this->includeRelations['has_many']))) {
+			if($this->obj->has_many()
+					&& ($this->includeRelations === true || isset($this->includeRelations['has_many']))) {
+
 				foreach($this->obj->has_many() as $relationship => $component) {
 					if($this->tabbed) {
 						$relationTab = $fields->findOrMakeTab(
@@ -123,7 +125,9 @@ class FormScaffolder extends Object {
 							$this->obj->fieldLabel($relationship)
 						);
 					}
-					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'GridField';
+					$fieldClass = (isset($this->fieldClasses[$relationship]))
+						? $this->fieldClasses[$relationship] 
+						: 'GridField';
 					$grid = Object::create($fieldClass, 
 						$relationship,
 						$this->obj->fieldLabel($relationship),
@@ -138,7 +142,9 @@ class FormScaffolder extends Object {
 				}
 			}
 
-			if($this->obj->many_many() && ($this->includeRelations === true || isset($this->includeRelations['many_many']))) {
+			if($this->obj->many_many()
+					&& ($this->includeRelations === true || isset($this->includeRelations['many_many']))) {
+
 				foreach($this->obj->many_many() as $relationship => $component) {
 					if($this->tabbed) {
 						$relationTab = $fields->findOrMakeTab(
@@ -147,7 +153,10 @@ class FormScaffolder extends Object {
 						);
 					}
 
-					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'GridField';
+					$fieldClass = (isset($this->fieldClasses[$relationship]))
+						? $this->fieldClasses[$relationship]
+						: 'GridField';
+						
 					$grid = Object::create($fieldClass, 
 						$relationship,
 						$this->obj->fieldLabel($relationship),

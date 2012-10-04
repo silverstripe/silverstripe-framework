@@ -11,7 +11,7 @@ class CheckboxFieldTest extends SapphireTest {
 		'CheckboxFieldTest_Article',
 	);
 
-	function testFieldValueTrue() {
+	public function testFieldValueTrue() {
 		/* Create the field, and set the value as boolean true */
 		$field = new CheckboxField('IsChecked', 'Checked');
 		$field->setValue(true);
@@ -23,7 +23,7 @@ class CheckboxFieldTest extends SapphireTest {
 		$this->assertEquals($field->Value(), 1, 'Value() returns a 1');
 	}
 	
-	function testFieldValueString() {
+	public function testFieldValueString() {
 		/* Create the field, and set the value as "on" (raw request field value from DOM) */
 		$field = new CheckboxField('IsChecked', 'Checked');
 		$field->setValue('on');
@@ -35,7 +35,7 @@ class CheckboxFieldTest extends SapphireTest {
 		$this->assertEquals($field->Value(), 1, 'Value() returns a 1');
 	}
 	
-	function testFieldValueSettingNull() {
+	public function testFieldValueSettingNull() {
 		/* Create the field, and set the value as NULL */
 		$field = new CheckboxField('IsChecked', 'Checked');
 		$field->setValue(null);
@@ -47,7 +47,7 @@ class CheckboxFieldTest extends SapphireTest {
 		$this->assertEquals($field->Value(), 0, 'Value() returns a 0');
 	}
 	
-	function testFieldValueSettingFalse() {
+	public function testFieldValueSettingFalse() {
 		/* Create the field, and set the value as NULL */
 		$field = new CheckboxField('IsChecked', 'Checked');
 		$field->setValue(false);
@@ -59,7 +59,7 @@ class CheckboxFieldTest extends SapphireTest {
 		$this->assertEquals($field->Value(), 0, 'Value() returns a 0');
 	}
 	
-	function testFieldValueWithoutSettingValue() {
+	public function testFieldValueWithoutSettingValue() {
 		/* Create the field, but don't set any value on it */
 		$field = new CheckboxField('IsChecked', 'Checked');
 		
@@ -70,7 +70,7 @@ class CheckboxFieldTest extends SapphireTest {
 		$this->assertEquals($field->Value(), 0, 'Value() returns a 0');
 	}
 	
-	function testSavingChecked() {
+	public function testSavingChecked() {
 		/* Create a new test data record */
 		$article = new CheckboxFieldTest_Article();
 		
@@ -94,7 +94,7 @@ class CheckboxFieldTest extends SapphireTest {
 		$article->delete();
 	}
 	
-	function testSavingUnchecked() {
+	public function testSavingUnchecked() {
 		/* Create a new test data record */
 		$article = new CheckboxFieldTest_Article();
 		
@@ -118,20 +118,23 @@ class CheckboxFieldTest extends SapphireTest {
 		$article->delete();
 	}
 
-	function testReadonlyCheckboxField() {
+	public function testReadonlyCheckboxField() {
 		// Test 1: a checked checkbox goes to "Yes"
 		$field1 = new CheckboxField('IsChecked', 'Checked');
 		$field1->setValue('on');
-		$this->assertEquals(_t('CheckboxField.YES', 'Yes'), trim(strip_tags($field1->performReadonlyTransformation()->Field())));
+		$this->assertEquals(_t('CheckboxField.YES', 'Yes'),
+			trim(strip_tags($field1->performReadonlyTransformation()->Field())));
 
 		// Test 2: an checkbox with the value set to false to "No"
 		$field2 = new CheckboxField('IsChecked', 'Checked');
 		$field2->setValue(false);
-		$this->assertEquals(_t('CheckboxField.NO', 'No'), trim(strip_tags($field2->performReadonlyTransformation()->Field())));
+		$this->assertEquals(_t('CheckboxField.NO', 'No'),
+			trim(strip_tags($field2->performReadonlyTransformation()->Field())));
 
 		// Test 3: an checkbox with no value ever set goes to "No"
 		$field3 = new CheckboxField('IsChecked', 'Checked');
-		$this->assertEquals(_t('CheckboxField.NO', 'No'), trim(strip_tags($field3->performReadonlyTransformation()->Field())));
+		$this->assertEquals(_t('CheckboxField.NO', 'No'),
+			trim(strip_tags($field3->performReadonlyTransformation()->Field())));
 
 	}
 	

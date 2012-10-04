@@ -39,7 +39,7 @@ abstract class Extension {
 	
 	public $class;
 	
-	function __construct() {
+	public function __construct() {
 		$this->class = get_class($this);
 	}
 
@@ -49,7 +49,7 @@ abstract class Extension {
 	 * @static
 	 * @param $class
 	 */
-	static function add_to_class($class, $extensionClass, $args = null) {
+	public static function add_to_class($class, $extensionClass, $args = null) {
 		// NOP
 	}
 
@@ -61,7 +61,7 @@ abstract class Extension {
 	 * and then a Page object was instantiated, $owner would be a Page object, but $ownerBaseClass
 	 * would be 'SiteTree'.
 	 */
-	function setOwner($owner, $ownerBaseClass = null) {
+	public function setOwner($owner, $ownerBaseClass = null) {
 		if($owner) $this->ownerRefs++;
 		$this->owner = $owner;
 
@@ -69,7 +69,7 @@ abstract class Extension {
 		else if(!$this->ownerBaseClass && $owner) $this->ownerBaseClass = $owner->class;
 	}
 	
-	function clearOwner() {
+	public function clearOwner() {
 		if($this->ownerRefs <= 0) user_error("clearOwner() called more than setOwner()", E_USER_WARNING);
 		$this->ownerRefs--;
 		if($this->ownerRefs == 0) $this->owner = null;

@@ -31,14 +31,14 @@ class FileIFrameField extends FileField {
 	 * 
 	 * @param boolean
 	 */
-	function setCanUploadNewFile($can) {
+	public function setCanUploadNewFile($can) {
 		$this->canUploadNewFile = $can;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	function getCanUploadNewFile() {
+	public function getCanUploadNewFile() {
 		return $this->canUploadNewFile;
 	}
 	
@@ -189,7 +189,8 @@ class FileIFrameField extends FileField {
 			try {
 				$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
 			} catch (Exception $e){
-				$form->sessionMessage(_t('FileIFrameField.DISALLOWEDFILETYPE', 'This filetype is not allowed to be uploaded'), 'bad');
+				$form->sessionMessage(_t('FileIFrameField.DISALLOWEDFILETYPE',
+					'This filetype is not allowed to be uploaded'), 'bad');
 				$controller->redirectBack();
 				return;
 			}

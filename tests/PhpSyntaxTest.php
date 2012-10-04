@@ -10,10 +10,10 @@
 class PhpSyntaxTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
-		$this->markTestSkipped('This needs to be written to include only core SS php files, not test or thirdparty files');
+		$this->markTestSkipped('This needs to be written to include only core php files, not test/thirdparty files');
 	}
 	
-	function testShortTagsOffWillWork() {
+	public function testShortTagsOffWillWork() {
 		// Ignore this test completely if running the test suite on windows
 		// TODO: Make it work on all platforms, by building an alternative to find | grep.
 		$returnCode = 0;
@@ -32,13 +32,15 @@ class PhpSyntaxTest extends SapphireTest {
 				$returnCode = 0;
 				$output = array();
 				exec("php -l -d $settingTest $CLI_file", $output, $returnCode);
-				$hasErrors = ($returnCode != 0 && strpos('No syntax errors detected', implode("\n", $output)) === FALSE);
-				$this->assertFalse($hasErrors, "Syntax error parsing $CLI_file with setting $settingTest:\n" . implode("\n", $output) . " (Returned: {$returnCode})");
+				$hasErrors = ($returnCode != 0 
+					&& strpos('No syntax errors detected', implode("\n", $output)) === FALSE);
+				$this->assertFalse($hasErrors, "Syntax error parsing $CLI_file with setting $settingTest:\n"
+					. implode("\n", $output) . " (Returned: {$returnCode})");
 			}
 		}
 	}
 	
-	function getAllFiles($ext = 'php') {
+	public function getAllFiles($ext = 'php') {
 		// TODO: Unix only
 		$cmd = sprintf(
 			'find %s | grep %s', 

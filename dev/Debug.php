@@ -62,14 +62,17 @@ class Debug {
 	 * Show the contents of val in a debug-friendly way.
 	 * Debug::show() is intended to be equivalent to dprintr()
 	 */
-	static function show($val, $showHeader = true) {
+	public static function show($val, $showHeader = true) {
 		if(!Director::isLive()) {
 			if($showHeader) {
 				$caller = Debug::caller();
 				if(Director::is_ajax() || Director::is_cli())
-					echo "Debug ($caller[class]$caller[type]$caller[function]() in " . basename($caller['file']) . ":$caller[line])\n";
+					echo "Debug ($caller[class]$caller[type]$caller[function]() in " . basename($caller['file'])
+						. ":$caller[line])\n";
 				else 
-					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
+					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
+						. "<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]()"
+						. " \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
 			}
 			
 			echo Debug::text($val);
@@ -85,10 +88,11 @@ class Debug {
 	 *
 	 * @param mixed $val
 	 */
-	static function endshow($val) {
+	public static function endshow($val) {
 		if(!Director::isLive()) {
 			$caller = Debug::caller();
-			echo "<hr>\n<h3>Debug \n<span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
+			echo "<hr>\n<h3>Debug \n<span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]()"
+				. " \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
 			echo Debug::text($val);
 			die();
 		}
@@ -99,7 +103,7 @@ class Debug {
 	 *
 	 * @param mixed $val
 	 */
-	static function dump($val) {
+	public static function dump($val) {
 		echo '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
 		$caller = Debug::caller();
 		echo "<span style=\"font-size: 12px;color:#666;\">" . basename($caller['file']) . ":$caller[line] - </span>\n";
@@ -114,7 +118,7 @@ class Debug {
 	 * @param unknown_type $val
 	 * @return unknown
 	 */
-	static function text($val) {
+	public static function text($val) {
 		if(is_object($val)) {
 			if(method_exists($val, 'hasMethod')) {
 				$hasDebugMethod = $val->hasMethod('debug');
@@ -141,7 +145,8 @@ class Debug {
 			$val = '(bool) ' . $val;
 		} else {
 			if(!Director::is_cli() && !Director::is_ajax()) {
-				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val, ENT_COMPAT, 'UTF-8') . "</pre>\n";
+				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val, ENT_COMPAT, 'UTF-8')
+					. "</pre>\n";
 			}
 		}
 
@@ -151,7 +156,7 @@ class Debug {
 	/**
 	 * Show a debugging message
 	 */
-	static function message($message, $showHeader = true) {
+	public static function message($message, $showHeader = true) {
 		if(!Director::isLive()) {
 			$caller = Debug::caller();
 			$file = basename($caller['file']);
@@ -177,7 +182,7 @@ class Debug {
 	 * @param string $prefix (optional)
 	 * @return void
 	 */
-	static function header($msg, $prefix = null) {
+	public static function header($msg, $prefix = null) {
 		if (Director::isDev() && !headers_sent()) {
 			self::$headerCount++;
 			header('SS-'.self::$headerCount.($prefix?'-'.$prefix:'').': '.$msg);
@@ -189,7 +194,7 @@ class Debug {
 	 *
 	 * @param $message string to output
 	 */
-	static function log($message) {
+	public static function log($message) {
 		$file = dirname(__FILE__).'/../../debug.log';
 		$now = date('r');
 		$oldcontent = (file_exists($file)) ? file_get_contents($file) : '';
@@ -201,12 +206,12 @@ class Debug {
 	 * Load error handlers into environment.
 	 * Caution: The error levels default to E_ALL is the site is in dev-mode (set in main.php).
 	 */
-	static function loadErrorHandlers() {
+	public static function loadErrorHandlers() {
 		set_error_handler('errorHandler', error_reporting());
 		set_exception_handler('exceptionHandler');
 	}
 
-	static function noticeHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+	public static function noticeHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(error_reporting() == 0) return;
 		
 		// Send out the error details to the logger for writing
@@ -235,7 +240,7 @@ class Debug {
 	 * @param unknown_type $errline
 	 * @param unknown_type $errcontext
 	 */
-	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+	public static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(error_reporting() == 0) return;
 		if(self::$send_warnings_to) {
 			self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
@@ -273,7 +278,7 @@ class Debug {
 	 * @param unknown_type $errline
 	 * @param unknown_type $errcontext
 	 */
-	static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+	public static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(self::$send_errors_to) {
 			self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		}
@@ -310,13 +315,13 @@ class Debug {
 	 * @uses ErrorPage
 	 *
 	 * @param int $statusCode HTTP Status Code (Default: 500)
-	 * @param string $friendlyErrorMessage User-focused error message. Should not contain code pointers or "tech-speak".
-	 *    Used in the HTTP Header and ajax responses.
+	 * @param string $friendlyErrorMessage User-focused error message. Should not contain code pointers
+	 *                                     or "tech-speak". Used in the HTTP Header and ajax responses.
 	 * @param string $friendlyErrorDetail Detailed user-focused message. Is just used if no {@link ErrorPage} is found
-	 *    for this specific status code.
+	 *                                    for this specific status code.
 	 * @return string HTML error message for non-ajax requests, plaintext for ajax-request.
 	 */
-	static function friendlyError($statusCode = 500, $friendlyErrorMessage = null, $friendlyErrorDetail = null) {
+	public static function friendlyError($statusCode=500, $friendlyErrorMessage=null, $friendlyErrorDetail=null) {
 		if(!$friendlyErrorMessage) $friendlyErrorMessage = self::$friendly_error_header;
 		if(!$friendlyErrorDetail) $friendlyErrorDetail = self::$friendly_error_detail;
 
@@ -363,7 +368,7 @@ class Debug {
 	/**
 	 * Create an instance of an appropriate DebugView object.
 	 */
-	static function create_debug_view() {
+	public static function create_debug_view() {
 		if(Director::is_cli() || Director::is_ajax()) return new CliDebugView();
 		else return new DebugView();
 	}
@@ -378,7 +383,7 @@ class Debug {
 	 * @param unknown_type $errline
 	 * @param unknown_type $errcontext
 	 */
-	static function showError($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
+	public static function showError($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
 		if(!headers_sent()) {
 			$errText = "$errtype at line $errline of $errfile";
 			$errText = str_replace(array("\n","\r")," ",$errText);
@@ -425,7 +430,7 @@ class Debug {
 	 * @param string $errfile
 	 * @param int $errline
 	 */
-	static function showLines($errfile, $errline) {
+	public static function showLines($errfile, $errline) {
 		$lines = file($errfile);
 		$offset = $errline-10;
 		$lines = array_slice($lines, $offset, 16);
@@ -461,8 +466,11 @@ class Debug {
 	 * @param string $errorType "warning" or "error"
 	 * @return boolean
 	 */
-	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
-		Deprecation::notice('2.5', 'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
+	public static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext,
+			$errorType = "Error") {
+
+		Deprecation::notice('2.5',
+			'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
 		$priority = ($errorType == 'Error') ? SS_Log::ERR : SS_Log::WARN;
 		$writer = new SS_LogEmailWriter($emailAddress);
 		SS_Log::add_writer($writer, $priority);
@@ -490,7 +498,8 @@ class Debug {
 	 * @deprecated 2.5 See SS_Log on setting up error file logging
 	 */
 	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
-		Deprecation::notice('2.5', 'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
+		Deprecation::notice('2.5',
+			'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
 		$priority = ($errtype == 'Error') ? SS_Log::ERR : SS_Log::WARN;
 		$writer = new SS_LogFileWriter('../' . self::$log_errors_to);
 		SS_Log::add_writer($writer, $priority);
@@ -511,7 +520,7 @@ class Debug {
 	 * @param string $server IP-Address or domain
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
-	static function set_custom_smtp_server($server) {
+	public static function set_custom_smtp_server($server) {
 		self::$custom_smtp_server = $server;
 	}
 
@@ -519,7 +528,7 @@ class Debug {
 	 * @return string
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
-	static function get_custom_smtp_server() {
+	public static function get_custom_smtp_server() {
 		return self::$custom_smtp_server;
 	}
 	
@@ -533,7 +542,7 @@ class Debug {
 	 * @param string $emailAddress The email address to send errors to
 	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: false)
 	 */
-	static function send_errors_to($emailAddress, $sendWarnings = false) {
+	public static function send_errors_to($emailAddress, $sendWarnings = false) {
 		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		self::$send_errors_to = $emailAddress;
 		self::$send_warnings_to = $sendWarnings ? $emailAddress : null;
@@ -543,7 +552,7 @@ class Debug {
 	 * @return string
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
-	static function get_send_errors_to() {
+	public static function get_send_errors_to() {
 		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		return self::$send_errors_to;
 	}
@@ -552,7 +561,7 @@ class Debug {
 	 * @param string $emailAddress
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
-	static function send_warnings_to($emailAddress) {
+	public static function send_warnings_to($emailAddress) {
 		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		self::$send_warnings_to = $emailAddress;
 	}
@@ -561,7 +570,7 @@ class Debug {
 	 * @return string
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
-	static function get_send_warnings_to() {
+	public static function get_send_warnings_to() {
 		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		return self::$send_warnings_to;
 	}
@@ -570,12 +579,12 @@ class Debug {
 	 * Call this to enable logging of errors.
 	 * @deprecated 2.5 See SS_Log on setting up error file logging
 	 */
-	static function log_errors_to($logFile = ".sserrors") {
+	public static function log_errors_to($logFile = ".sserrors") {
 		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error file logging.');
 		self::$log_errors_to = $logFile;
 	}
 	
-	static function caller() {
+	public static function caller() {
 		$bt = debug_backtrace();
 		$caller = $bt[2];
 		$caller['line'] = $bt[1]['line'];
@@ -588,7 +597,7 @@ class Debug {
 	/**
 	 * @deprecated 2.5 Please use {@link SS_Backtrace::backtrace()}
 	 */
-	static function backtrace($returnVal = false, $ignoreAjax = false) {
+	public static function backtrace($returnVal = false, $ignoreAjax = false) {
 		Deprecation::notice('2.5', 'Use SS_Backtrace::backtrace instead.');
 		return SS_Backtrace::backtrace($returnVal, $ignoreAjax);
 	}
@@ -596,7 +605,7 @@ class Debug {
 	/**
 	 * @deprecated 2.5 Please use {@link SS_Backtrace::get_rendered_backtrace()}
 	 */
-	static function get_rendered_backtrace($bt, $plainText = false) {
+	public static function get_rendered_backtrace($bt, $plainText = false) {
 		Deprecation::notice('2.5', 'Use SS_Backtrace::get_rendered_backtrace() instead.');
 		return SS_Backtrace::get_rendered_backtrace($bt, $plainText);
 	}
@@ -605,7 +614,7 @@ class Debug {
 	 * Check if the user has permissions to run URL debug tools,
 	 * else redirect them to log in.
 	 */
-	static function require_developer_login() {
+	public static function require_developer_login() {
 		if(Director::isDev())	{
 			return;
 		}
@@ -636,9 +645,10 @@ class Debug {
 		}
 		
 		// This basically does the same as
-		// Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.");
+		// Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.")
 		// We have to do this because of how early this method is called in execution.
-		$_SESSION['Security']['Message']['message'] = "You need to login with developer access to make use of debugging tools.";
+		$_SESSION['Security']['Message']['message']
+			= "You need to login with developer access to make use of debugging tools.";
 		$_SESSION['Security']['Message']['type'] =  'warning';
 		$_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
 		header($_SERVER['SERVER_PROTOCOL'] . " 302 Found");

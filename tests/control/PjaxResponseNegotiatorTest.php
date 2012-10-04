@@ -1,7 +1,7 @@
 <?php
 class PjaxResponseNegotiatorTest extends SapphireTest {
 	
-	function testDefaultCallbacks() {
+	public function testDefaultCallbacks() {
 		$negotiator = new PjaxResponseNegotiator(array(
 			'default' => function() {return 'default response';},
 		));
@@ -10,7 +10,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 		$this->assertEquals('default response', $response->getBody());
 	}
 
-	function testSelectsFragmentByHeader() {
+	public function testSelectsFragmentByHeader() {
 		$negotiator = new PjaxResponseNegotiator(array(
 			'default' => function() {return 'default response';},
 			'myfragment' => function() {return 'myfragment response';},
@@ -21,7 +21,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 		$this->assertEquals('{"myfragment":"myfragment response"}', $response->getBody());
 	}
 
-	function testMultipleFragments() {
+	public function testMultipleFragments() {
 		$negotiator = new PjaxResponseNegotiator(array(
 			'default' => function() {return 'default response';},
 			'myfragment' => function() {return 'myfragment response';},
@@ -38,7 +38,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 		$this->assertEquals('otherfragment response', $json->otherfragment);
 	}
 
-	function testFragmentsOverride() {
+	public function testFragmentsOverride() {
 		$negotiator = new PjaxResponseNegotiator(array(
 			'alpha' => function() {return 'alpha response';},
 			'beta' => function() {return 'beta response';}

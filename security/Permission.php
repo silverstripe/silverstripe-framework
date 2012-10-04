@@ -403,14 +403,15 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $codes array|string Either a single permission code, or an array of permission codes
 	 * @return SS_List The matching group objects
 	 */
-	static function get_groups_by_permission($codes) {
+	public static function get_groups_by_permission($codes) {
 		if(!is_array($codes)) $codes = array($codes);
 		
 		$SQLa_codes = Convert::raw2sql($codes);
 		$SQL_codes = join("','", $SQLa_codes);
 		
 		// Via Roles are groups that have the permission via a role
-		return DataObject::get('Group')->where("\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')")
+		return DataObject::get('Group')
+			->where("\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')")
 			->leftJoin('Permission', "\"Permission\".\"GroupID\" = \"Group\".\"ID\"")
 			->leftJoin('Group_Roles', "\"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"")
 			->leftJoin('PermissionRole', "\"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"")
@@ -453,8 +454,10 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 				foreach($someCodes as $k => $v) {
 					if (is_array($v)) {
 						// There must be a category and name key.
-						if (!isset($v['category'])) user_error("The permission $k must have a category key", E_USER_WARNING);
-						if (!isset($v['name'])) user_error("The permission $k must have a name key", E_USER_WARNING);
+						if (!isset($v['category'])) user_error("The permission $k must have a category key",
+							E_USER_WARNING);
+						if (!isset($v['name'])) user_error("The permission $k must have a name key",
+							E_USER_WARNING);
 						
 						if (!isset($allCodes[$v['category']])) $allCodes[$v['category']] = array();
 						
@@ -510,7 +513,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * Sort permissions based on their sort value, or name
 	 *
 	 */
-	static function sort_permissions($a, $b) {
+	public static function sort_permissions($a, $b) {
 		if ($a['sort'] == $b['sort']) {
 			// Same sort value, do alpha instead
 			return strcmp($a['name'], $b['name']);
@@ -526,7 +529,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
-	static function add_to_hidden_permissions($code){
+	public static function add_to_hidden_permissions($code){
 		self::$hidden_permissions[] = $code;
 	}
 	
@@ -536,7 +539,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
-	static function remove_from_hidden_permissions($code){
+	public static function remove_from_hidden_permissions($code){
 		self::$hidden_permissions = array_diff(self::$hidden_permissions, array($code));
 	}
 
@@ -549,7 +552,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param array $permArray A (possibly nested) array of permissions to
 	 *                         declare for the system.
 	 */
-	static function declare_permissions($permArray) {
+	public static function declare_permissions($permArray) {
 		if(is_array(self::$declared_permissions)) {
 			self::$declared_permissions =
 				array_merge_recursive(self::$declared_permissions, $permArray);
@@ -600,8 +603,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @param $list List of permissions in the structure. The result will be
 	 *              written to this array.
 	 */
-	protected static function traverse_declared_permissions($declared,
-																													&$list) {
+	protected static function traverse_declared_permissions($declared, &$list) {
 		if(!is_array($declared))
 			return;
 

@@ -14,15 +14,16 @@ class HeaderField extends DatalessField {
 	 */
 	protected $headingLevel = 2;
 	
-	function __construct($name, $title = null, $headingLevel = 2) {
+	public function __construct($name, $title = null, $headingLevel = 2) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
 		if(!isset($args[1]) || is_numeric($args[1])) {
 			$title = (isset($args[0])) ? $args[0] : null;
-			// Use "HeaderField(title)" as the default field name for a HeaderField; if it's just set to title then we risk
-			// causing accidental duplicate-field creation.
-			$name = 'HeaderField' . $title; // this means i18nized fields won't be easily accessible through fieldByName()
+			// Use "HeaderField(title)" as the default field name for a HeaderField; if it's just set to title then we
+			// risk causing accidental duplicate-field creation.
+			// this means i18nized fields won't be easily accessible through fieldByName()
+			$name = 'HeaderField' . $title;
 			$headingLevel = (isset($args[1])) ? $args[1] : null;
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
@@ -40,7 +41,7 @@ class HeaderField extends DatalessField {
 		$this->headingLevel = $level;
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			array(
 				'id' => $this->ID(),
@@ -50,7 +51,7 @@ class HeaderField extends DatalessField {
 		);
 	}
 
-	function Type() {
+	public function Type() {
 		return null;
 	}
 

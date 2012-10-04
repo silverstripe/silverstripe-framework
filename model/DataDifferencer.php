@@ -48,7 +48,7 @@ class DataDifferencer extends ViewableData {
 	 * @param DataObject (Optional)
 	 * @param DataObject 
 	 */
-	function __construct($fromRecord, DataObject $toRecord) {
+	public function __construct($fromRecord, DataObject $toRecord) {
 		if(!$toRecord) user_error("DataDifferencer constructed without a toRecord", E_USER_WARNING);
 		$this->fromRecord = $fromRecord;
 		$this->toRecord = $toRecord;
@@ -60,7 +60,7 @@ class DataDifferencer extends ViewableData {
 	 * @param $ignoredFields An array of field names to ignore.  Alternatively, pass the field names as
 	 * separate args.
 	 */
-	function ignoreFields($ignoredFields) {
+	public function ignoreFields($ignoredFields) {
 		if(!is_array($ignoredFields)) $ignoredFields = func_get_args();
 		$this->ignoredFields = array_merge($this->ignoredFields, $ignoredFields);
 	}
@@ -69,7 +69,7 @@ class DataDifferencer extends ViewableData {
 	 * Get a DataObject with altered values replaced with HTML diff strings, incorporating
 	 * <ins> and <del> tags.
 	 */
-	function diffedData() {
+	public function diffedData() {
 		if($this->fromRecord) {
 			$diffed = clone $this->fromRecord;
 			$fields = array_keys($diffed->toMap() + $this->toRecord->toMap());
@@ -141,7 +141,7 @@ class DataDifferencer extends ViewableData {
 	 *  - From: The older version of the field
 	 *  - To: The newer version of the field
 	 */
-	function ChangedFields() {
+	public function ChangedFields() {
 		$changedFields = new ArrayList();
 
 		if($this->fromRecord) {
@@ -190,7 +190,7 @@ class DataDifferencer extends ViewableData {
 	 * Get an array of the names of every fields that has changed.
 	 * This is simpler than {@link ChangedFields()}
 	 */
-	function changedFieldNames() {
+	public function changedFieldNames() {
 		$diffed = clone $this->fromRecord;
 		$fields = array_keys($diffed->toMap());
 		

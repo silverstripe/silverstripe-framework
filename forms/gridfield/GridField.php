@@ -29,13 +29,22 @@ class GridField extends FormField {
 		'gridFieldAlterAction'
 	);
 	
-	/** @var SS_List - the datasource */
+	/**
+	 * The datasource
+	 * @var SS_List
+	 */
 	protected $list = null;
 
-	/** @var string - the classname of the DataObject that the GridField will display. Defaults to the value of $this->list->dataClass */
+	/**
+	 * The classname of the DataObject that the GridField will display. Defaults to the value of $this->list->dataClass
+	 * @var string
+	 */
 	protected $modelClassName = '';
 
-	/** @var GridState - the current state of the GridField */
+	/**
+	 * the current state of the GridField
+	 * @var GridState
+	 */
 	protected $state = null;
 	
 	/**
@@ -88,7 +97,7 @@ class GridField extends FormField {
 		$this->addExtraClass('ss-gridfield');
 	}
 
-	function index($request) {
+	public function index($request) {
 		return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
 	}
 	
@@ -118,7 +127,8 @@ class GridField extends FormField {
 			if($class) return $class;
 		}
 
-		throw new LogicException('GridField doesn\'t have a modelClassName, so it doesn\'t know the columns of this grid.');
+		throw new LogicException('GridField doesn\'t have a modelClassName,'
+			. ' so it doesn\'t know the columns of this grid.');
 	}
 
 	/**
@@ -281,7 +291,8 @@ class GridField extends FormField {
 					$fragmentDefined[$fragmentName] = true;
 					$fragment = isset($content[$fragmentName]) ? $content[$fragmentName] : "";
 
-					// If the fragment still has a fragment definition in it, when we should defer this item until later.
+					// If the fragment still has a fragment definition in it, when we should defer this item until
+					// later.
 					if(preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $fragment, $matches)) {
 						// If we've already deferred this fragment, then we have a circular dependency
 						if(isset($fragmentDeferred[$k]) && $fragmentDeferred[$k] > 5) {
@@ -299,7 +310,8 @@ class GridField extends FormField {
 						}
 						break;
 					} else {
-						$content[$k] = preg_replace('/\$DefineFragment\(' . $fragmentName . '\)/i', $fragment, $content[$k]);
+						$content[$k] = preg_replace('/\$DefineFragment\(' . $fragmentName . '\)/i', $fragment,
+							$content[$k]);
 					}
 				}
 			}
@@ -308,8 +320,10 @@ class GridField extends FormField {
 		// Check for any undefined fragments, and if so throw an exception
 		// While we're at it, trim whitespace off the elements
 		foreach($content as $k => $v) {
-			if(empty($fragmentDefined[$k])) throw new LogicException("GridField HTML fragment '$k' was given content, " .
-				"but not defined.  Perhaps there is a supporting GridField component you need to add?");
+			if(empty($fragmentDefined[$k])) {
+				throw new LogicException("GridField HTML fragment '$k' was given content,"
+				. " but not defined.  Perhaps there is a supporting GridField component you need to add?");
+			}
 		}
 
 		$total = $list->count();
@@ -351,14 +365,23 @@ class GridField extends FormField {
 			$content['body'] = $this->createTag(
 				'tr',
 				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
-				$this->createTag('td', array('colspan' => count($columns)), _t('GridField.NoItemsFound', 'No items found'))
+				$this->createTag(
+					'td',
+					array('colspan' => count($columns)),
+					_t('GridField.NoItemsFound', 'No items found'))
 			);
 		}
 
 		// Turn into the relevant parts of a table
-		$head = $content['header'] ? $this->createTag('thead', array(), $content['header']) : '';
-		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), $content['body']) : '';
-		$foot = $content['footer'] ? $this->createTag('tfoot', array(), $content['footer']) : '';
+		$head = $content['header']
+			? $this->createTag('thead', array(), $content['header'])
+			: '';
+		$body = $content['body']
+			? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), $content['body'])
+			: '';
+		$foot = $content['footer']
+			? $this->createTag('tfoot', array(), $content['footer'])
+			: '';
 
 		$this->addExtraClass('ss-gridfield field');
 		$attrs = array_diff_key(
@@ -483,10 +506,12 @@ class GridField extends FormField {
 			foreach($this->columnDispatch[$column] as $handler) {
 				$column_attrs = $handler->getColumnAttributes($this, $record, $column);
 
-				if(is_array($column_attrs))
+				if(is_array($column_attrs)) {
 					$attrs = array_merge($attrs, $column_attrs);
-				elseif($column_attrs)
-					throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnAttributes()");
+				} elseif($column_attrs) {
+					$methodSignature = get_class($handler) . "::getColumnAttributes()";
+					throw new LogicException("Non-array response from $methodSignature.");
+				}
 			}
 
 			return $attrs;
@@ -515,10 +540,12 @@ class GridField extends FormField {
 			foreach($this->columnDispatch[$column] as $handler) {
 				$column_metadata = $handler->getColumnMetadata($this, $column);
 				
-				if(is_array($column_metadata))
+				if(is_array($column_metadata)) {
 					$metadata = array_merge($metadata, $column_metadata);
-				else
-					throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnMetadata()");
+				} else {
+					$methodSignature = get_class($handler) . "::getColumnMetadata()";
+					throw new LogicException("Non-array response from $methodSignature.");
+				}
 				
 			}
 			
@@ -626,7 +653,7 @@ class GridField extends FormField {
 	 * 
 	 * @todo There is too much code copied from RequestHandler here.
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		if($this->brokenOnConstruct) {
 			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
 		}
@@ -665,7 +692,9 @@ class GridField extends FormField {
 							return $result;
 						}
 
-						if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
+						if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result)
+								&& $result instanceof RequestHandler) {
+
 							$returnValue = $result->handleRequest($request, $model);
 
 							if(is_array($returnValue)) {
@@ -678,9 +707,10 @@ class GridField extends FormField {
 						} else if($request->allParsed()) {
 							return $result;
 
-						// But if we have more content on the URL and we don't know what to do with it, return an error.
+						// But if we have more content on the URL and we don't know what to do with it, return an error
 						} else {
-							return $this->httpError(404, "I can't handle sub-URLs of a " . get_class($result) . " object.");
+							return $this->httpError(404,
+								"I can't handle sub-URLs of a " . get_class($result) . " object.");
 						}
 					}
 				}

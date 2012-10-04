@@ -38,7 +38,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	protected $itemEditFormCallback;
 
-	function getURLHandlers($gridField) {
+	public function getURLHandlers($gridField) {
 		return array(
 			'item/$ID' => 'handleItem',
 			'autocomplete' => 'handleAutocomplete',
@@ -85,7 +85,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 * @param String
 	 */
-	function setTemplate($template) {
+	public function setTemplate($template) {
 		$this->template = $template;
 		return $this;
 	}
@@ -93,14 +93,14 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 * @return String
 	 */
-	function getTemplate() {
+	public function getTemplate() {
 		return $this->template;
 	}
 
 	/**
 	 * @param String
 	 */
-	function setName($name) {
+	public function setName($name) {
 		$this->name = $name;
 		return $this;
 	}
@@ -108,7 +108,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 * @return String
 	 */
-	function getName() {
+	public function getName() {
 		return $this->name;
 	}
 
@@ -223,7 +223,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	public function Link($action = null) {
-		return Controller::join_links($this->gridField->Link('item'), $this->record->ID ? $this->record->ID : 'new', $action);
+		return Controller::join_links($this->gridField->Link('item'),
+			$this->record->ID ? $this->record->ID : 'new', $action);
 	}
 
 	public function view($request) {
@@ -249,7 +250,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 	}
 
-	function edit($request) {
+	public function edit($request) {
 		$controller = $this->getToplevelController();
 		$form = $this->ItemEditForm($this->gridField, $request);
 
@@ -279,7 +280,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * 
 	 * @return Form 
 	 */
-	function ItemEditForm() {
+	public function ItemEditForm() {
 		if (empty($this->record)) {
 			$controller = Controller::curr();
 			$noActionURL = $controller->removeAction($_REQUEST['url']);
@@ -290,22 +291,29 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$actions = new FieldList();
 		if($this->record->ID !== 0) {
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
+				->setUseButtonTag(true)
+				->addExtraClass('ss-ui-action-constructive')
+				->setAttribute('data-icon', 'accept'));
+
 			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
 				->addExtraClass('ss-ui-action-destructive'));
+
 		}else{ // adding new record
 			//Change the Save label to 'Create'
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
-				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'add'));
+				->setUseButtonTag(true)
+				->addExtraClass('ss-ui-action-constructive')
+				->setAttribute('data-icon', 'add'));
 				
 			// Add a Cancel link which is a button-like link and link back to one level up.
 			$curmbs = $this->Breadcrumbs();
 			if($curmbs && $curmbs->count()>=2){
 				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
 				$text = sprintf(
-					"<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"%s\">%s</a>",
-					$one_level_up->Link,
-					_t('GridFieldDetailForm.CancelBtn', 'Cancel')
+					"<a class=\"%s\" href=\"%s\">%s</a>",
+					"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all", // CSS classes
+					$one_level_up->Link, // url
+					_t('GridFieldDetailForm.CancelBtn', 'Cancel') // label
 				);
 				$actions->push(new LiteralField('cancelbutton', $text));
 			}
@@ -332,8 +340,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if($form->Fields()->hasTabset()) {
 				$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-				$form->addExtraClass('ss-tabset');
-			}
+				$form->addExtraClass('ss-tabset cms-tabset');
+		 	}
 
 			if($toplevelController->hasMethod('Backlink')) {
 				$form->Backlink = $toplevelController->Backlink();
@@ -366,7 +374,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		return $c;
 	}
 
-	function doSave($data, $form) {
+	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
 		$controller = Controller::curr();
 
@@ -415,11 +423,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 	}
 
-	function doDelete($data, $form) {
+	public function doDelete($data, $form) {
 		try {
 			$toDelete = $this->record;
 			if (!$toDelete->canDelete()) {
-				throw new ValidationException(_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
+				throw new ValidationException(
+					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
 			}
 
 			$toDelete->delete();
@@ -447,7 +456,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	/**
 	 * @param String
 	 */
-	function setTemplate($template) {
+	public function setTemplate($template) {
 		$this->template = $template;
 		return $this;
 	}
@@ -455,21 +464,21 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	/**
 	 * @return String
 	 */
-	function getTemplate() {
+	public function getTemplate() {
 		return $this->template;
 	}
 
 	/**
 	 * @return Controller
 	 */
-	function getController() {
+	public function getController() {
 		return $this->popupController;
 	}
 
 	/**
 	 * @return GridField
 	 */
-	function getGridField() {
+	public function getGridField() {
 		return $this->gridField;
 	}
 
@@ -481,7 +490,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * @param boolean $unlinked 
 	 * @return ArrayData
 	 */
-	function Breadcrumbs($unlinked = false) {
+	public function Breadcrumbs($unlinked = false) {
 		if(!$this->popupController->hasMethod('Breadcrumbs')) return;
 
 		$items = $this->popupController->Breadcrumbs($unlinked);

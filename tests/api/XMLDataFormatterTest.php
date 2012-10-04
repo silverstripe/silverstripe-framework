@@ -1,7 +1,20 @@
 <?php
 class XMLDataFormatterTest extends SapphireTest {
+	protected $arguments, $contents, $tagName;
 
 	public static $fixture_file = 'XMLDataFormatterTest.yml';
+
+	public function setUp() {
+		ShortcodeParser::get_active()->register('test_shortcode', array($this, 'shortcodeSaver'));
+
+		parent::setUp();
+	}
+
+	public function tearDown() {
+		ShortcodeParser::get_active()->unregister('test_shortcode');
+
+		parent::tearDown();
+	}
 
 	protected $extraDataObjects = array(
 		'XMLDataFormatterTest_DataObject'
@@ -19,13 +32,45 @@ class XMLDataFormatterTest extends SapphireTest {
 		$this->assertEquals('Test Company', (string) $xml->Company);
 		$this->assertEquals($obj->ID, (int) $xml->ID);
 		$this->assertEquals(
-			'<Content><![CDATA[<a href="http://mysite.com">mysite.com</a> is a link in this HTML content. <![CDATA[this is some nested CDATA]]]]><![CDATA[>]]></Content>',
+			'<Content><![CDATA[<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.'
+				. ' <![CDATA[this is some nested CDATA]]]]><![CDATA[>]]></Content>',
 			$xml->Content->asXML()
 		);
 		$this->assertEquals(
-			'<a href="http://mysite.com">mysite.com</a> is a link in this HTML content. <![CDATA[this is some nested CDATA]]>',
+			'<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.'
+				. ' <![CDATA[this is some nested CDATA]]>',
 			(string) $xml->Content
 		);
+	}
+
+	public function testShortcodesInDataObject() {
+		$formatter = new XMLDataFormatter();
+
+		$page = new XMLDataFormatterTest_DataObject();
+		$page->Content = 'This is some test content [test_shortcode]test[/test_shortcode]';
+
+		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page));
+		$this->assertEquals('This is some test content test', $xml->Content);
+
+		$page->Content = '[test_shortcode,id=-1]';
+		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page));
+		$this->assertEmpty('', $xml->Content);
+
+		$page->Content = '[bad_code,id=1]';
+
+		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page));
+		$this->assertContains('[bad_code,id=1]', $xml->Content);
+	}
+
+	/**
+	 * Stores the result of a shortcode parse in object properties for easy testing access.
+	 */
+	public function shortcodeSaver($arguments, $content = null, $parser, $tagName = null) {
+		$this->arguments = $arguments;
+		$this->contents  = $content;
+		$this->tagName   = $tagName;
+		
+		return $content;
 	}
 
 }

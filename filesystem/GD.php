@@ -14,13 +14,13 @@ class GD extends Object {
 	 * Set the default image quality.
 	 * @param quality int A number from 0 to 100, 100 being the best quality.
 	 */
-	static function set_default_quality($quality) {
+	public static function set_default_quality($quality) {
 		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
 			self::$default_quality = (int) $quality;
 		}
 	}
 
-	function __construct($filename = null) {
+	public function __construct($filename = null) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
 
@@ -56,14 +56,14 @@ class GD extends Object {
 	/**
 	 * Set the image quality, used when saving JPEGs.
 	 */
-	function setQuality($quality) {
+	public function setQuality($quality) {
 		$this->quality = $quality;
 	}
 	
 	/**
 	 * Resize an image to cover the given width/height completely, and crop off any overhanging edges.
 	 */
-	function croppedResize($width, $height) {
+	public function croppedResize($width, $height) {
 		if(!$this->gd) return;
 		
 		$width = round($width);
@@ -115,13 +115,13 @@ class GD extends Object {
 	 * Behaves similarly to paddedResize but without the padding.
 	 * @todo This method isn't very efficent
 	 */
-	function fittedResize($width, $height) {
+	public function fittedResize($width, $height) {
 	    $gd = $this->resizeByHeight($height);
 	    if($gd->width > $width) $gd = $gd->resizeByWidth($width);
 	    return $gd;
 	}
 	
-	function hasGD() {
+	public function hasGD() {
 		return $this->gd ? true : false;
 	}
 	
@@ -129,7 +129,7 @@ class GD extends Object {
 	/**
 	 * Resize an image, skewing it as necessary.
 	 */
-	function resize($width, $height) {
+	public function resize($width, $height) {
 		if(!$this->gd) return;
 
 		$width = round($width);
@@ -165,7 +165,7 @@ class GD extends Object {
 	 * @return GD 
 	*/ 
 	
-	function rotate($angle) {
+	public function rotate($angle) {
 		if(!$this->gd) return;
 		
 		if(function_exists("imagerotate")) {
@@ -188,7 +188,7 @@ class GD extends Object {
      * @return GD 
     */ 
 	
-    function rotatePixelByPixel($angle) {
+    public function rotatePixelByPixel($angle) {
         $sourceWidth = imagesx($this->gd);
         $sourceHeight = imagesy($this->gd);
         if ($angle == 180) {
@@ -232,7 +232,7 @@ class GD extends Object {
 	 * @return GD  
 	*/ 
 	
-	function crop($top, $left, $width, $height) {
+	public function crop($top, $left, $width, $height) {
 		$newGD = imagecreatetruecolor($width, $height);
 		imagecopyresampled($newGD, $this->gd, 0, 0, $left, $top, $width, $height, $width, $height);
 		
@@ -246,7 +246,7 @@ class GD extends Object {
 	 *
 	 * @return integer width.
 	*/ 
-	function getWidth() {
+	public function getWidth() {
 		return $this->width;
 	}
 	
@@ -256,14 +256,14 @@ class GD extends Object {
 	 * @return integer height 
 	*/ 
 	
-	function getHeight() {
+	public function getHeight() {
 		return $this->height;
 	}
 	
 	/**
 	 * Resize an image by width. Preserves aspect ratio.
 	 */
-	function resizeByWidth( $width ) {
+	public function resizeByWidth( $width ) {
 		$heightScale = $width / $this->width;
 		return $this->resize( $width, $heightScale * $this->height );
 	}
@@ -271,16 +271,16 @@ class GD extends Object {
 	/**
 	 * Resize an image by height. Preserves aspect ratio
 	 */
-	function resizeByHeight( $height ) {
+	public function resizeByHeight( $height ) {
 		$scale = $height / $this->height;
 		return $this->resize( $scale * $this->width, $height );
 	}
 	
 	/**
-	 * Resize the image by preserving aspect ratio. By default, it will keep the image inside the maxWidth and maxHeight
-	 * Passing useAsMinimum will make the smaller dimension equal to the maximum corresponding dimension
+	 * Resize the image by preserving aspect ratio. By default, it will keep the image inside the maxWidth
+	 * and maxHeight. Passing useAsMinimum will make the smaller dimension equal to the maximum corresponding dimension
 	 */
-	function resizeRatio( $maxWidth, $maxHeight, $useAsMinimum = false ) {
+	public function resizeRatio( $maxWidth, $maxHeight, $useAsMinimum = false ) {
 		
 		$widthRatio = $maxWidth / $this->width;
 		$heightRatio = $maxHeight / $this->height;
@@ -291,7 +291,7 @@ class GD extends Object {
 			return $useAsMinimum ? $this->resizeByWidth( $maxWidth ) : $this->resizeByHeight( $maxHeight );
 	}
 	
-	static function color_web2gd($image, $webColor) {
+	public static function color_web2gd($image, $webColor) {
 		if(substr($webColor,0,1) == "#") $webColor = substr($webColor,1);
 		$r = hexdec(substr($webColor,0,2));
 		$g = hexdec(substr($webColor,2,2));
@@ -308,7 +308,7 @@ class GD extends Object {
      * @param height
      * @param backgroundColour
 	 */
-	function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
 		if(!$this->gd) return;
 
 		$width = round($width);
@@ -351,7 +351,9 @@ class GD extends Object {
 				$destY = round( ($height - $destHeight) / 2 );
 			}
 			
-			imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
+			imagecopyresampled($newGD, $this->gd,
+				$destX, $destY, 0, 0,
+				$destWidth, $destHeight, $this->width, $this->height);
 		}
 		$output = clone $this;
 		$output->setGD($newGD);
@@ -363,9 +365,10 @@ class GD extends Object {
 	 * $rv = red value, defaults to 38
 	 * $gv = green value, defaults to 36
 	 * $bv = blue value, defaults to 26
-	 * Based (more or less entirely, with changes for readability) on code from http://www.teckis.com/scriptix/thumbnails/teck.html
+	 * Based (more or less entirely, with changes for readability) on code from
+	 * http://www.teckis.com/scriptix/thumbnails/teck.html
 	 */
-	function greyscale($rv=38, $gv=36, $bv=26) {
+	public function greyscale($rv=38, $gv=36, $bv=26) {
 		$width = $this->width;
 		$height = $this->height;
 		$newGD = imagecreatetruecolor($this->width, $this->height);
@@ -389,12 +392,12 @@ class GD extends Object {
 		return $output;
 	}
 	
-	function makeDir($dirname) {
+	public function makeDir($dirname) {
 		if(!file_exists(dirname($dirname))) $this->makeDir(dirname($dirname));
 		if(!file_exists($dirname)) mkdir($dirname, Filesystem::$folder_create_mask);
 	}
 	
-	function writeTo($filename) {
+	public function writeTo($filename) {
 		$this->makeDir(dirname($filename));
 		
 		if($filename) {

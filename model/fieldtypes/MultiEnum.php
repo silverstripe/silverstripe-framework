@@ -11,7 +11,7 @@
  * @subpackage model
  */
 class MultiEnum extends Enum {
-	function __construct($name, $enum = NULL, $default = NULL) {
+	public function __construct($name, $enum = NULL, $default = NULL) {
 		// MultiEnum needs to take care of its own defaults
 		parent::__construct($name, $enum, null);
 
@@ -30,9 +30,20 @@ class MultiEnum extends Enum {
 		}
 	}
 
-	function requireField(){
+	public function requireField(){
 
-		$values=array('type'=>'set', 'parts'=>array('enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>Convert::raw2sql($this->default), 'table'=>$this->tableName, 'arrayValue'=>$this->arrayValue));
+		$values=array(
+			'type'=>'set',
+			'parts'=>array(
+				'enums'=>$this->enum,
+				'character set'=>'utf8',
+				'collate'=> 'utf8_general_ci',
+				'default'=>Convert::raw2sql($this->default),
+				'table'=>$this->tableName,
+				'arrayValue'=>$this->arrayValue
+			)
+		);
+
 		DB::requireField($this->tableName, $this->name, $values);
 
 	}
@@ -41,7 +52,9 @@ class MultiEnum extends Enum {
 	/**
 	 * Return a {@link CheckboxSetField} suitable for editing this field 
 	 */
-	function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null, $emptyString = null) {
+	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
+			$emptyString = null) {
+		
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 

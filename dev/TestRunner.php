@@ -62,7 +62,8 @@ class TestRunner extends Controller {
 	 * @var Array Blacklist certain directories for the coverage report.
 	 * Filepaths are relative to the webroot, without leading slash.
 	 * 
-	 * @see http://www.phpunit.de/manual/current/en/appendixes.configuration.html#appendixes.configuration.blacklist-whitelist
+	 * @see http://www.phpunit.de/manual/current/en/appendixes.configuration.html
+	 *      #appendixes.configuration.blacklist-whitelist
 	 */
 	static $coverage_filter_dirs = array(
 		'*/thirdparty',
@@ -75,7 +76,7 @@ class TestRunner extends Controller {
 	 *
 	 * @param string $reporter
 	 */
-	static function set_reporter($reporter) {
+	public static function set_reporter($reporter) {
 		if (is_string($reporter)) $reporter = new $reporter;
 		self::$default_reporter = $reporter;
 	}
@@ -97,7 +98,7 @@ class TestRunner extends Controller {
 		));
 	}
 
-	function init() {
+	public function init() {
 		parent::init();
 		
 		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
@@ -126,7 +127,7 @@ class TestRunner extends Controller {
 	 * Run test classes that should be run with every commit.
 	 * Currently excludes PhpSyntaxTest
 	 */
-	function all($request, $coverage = false) {
+	public function all($request, $coverage = false) {
 		self::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
@@ -146,7 +147,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run test classes that should be run before build - i.e., everything possible.
 	 */
-	function build() {
+	public function build() {
 		self::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
@@ -162,7 +163,7 @@ class TestRunner extends Controller {
 	/**
 	 * Browse all enabled test cases in the environment
 	 */
-	function browse() {
+	public function browse() {
 		self::use_test_manifest();
 		self::$default_reporter->writeHeader();
 		self::$default_reporter->writeInfo('Available Tests', false);
@@ -194,7 +195,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run a coverage test across all modules
 	 */
-	function coverageAll($request) {
+	public function coverageAll($request) {
 		self::use_test_manifest();
 		$this->all($request, true);
 	}
@@ -202,7 +203,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run only a single coverage test class or a comma-separated list of tests
 	 */
-	function coverageOnly($request) {
+	public function coverageOnly($request) {
 		$this->only($request, true);
 	}
 	
@@ -210,18 +211,18 @@ class TestRunner extends Controller {
 	 * Run coverage tests for one or more "modules".
 	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
-	function coverageModule($request) {
+	public function coverageModule($request) {
 		$this->module($request, true);
 	}
 	
-	function cleanupdb() {
+	public function cleanupdb() {
 		SapphireTest::delete_all_temp_dbs();
 	}
 		
 	/**
 	 * Run only a single test class or a comma-separated list of tests
 	 */
-	function only($request, $coverage = false) {
+	public function only($request, $coverage = false) {
 		self::use_test_manifest();
 		if($request->param('TestCase') == 'all') {
 			$this->all();
@@ -229,7 +230,8 @@ class TestRunner extends Controller {
 			$classNames = explode(',', $request->param('TestCase'));
 			foreach($classNames as $className) {
 				if(!class_exists($className) || !is_subclass_of($className, 'SapphireTest')) {
-					user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
+					user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class",
+						E_USER_ERROR);
 				}
 			}
 			
@@ -241,7 +243,7 @@ class TestRunner extends Controller {
 	 * Run tests for one or more "modules".
 	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
-	function module($request, $coverage = false) {
+	public function module($request, $coverage = false) {
 		self::use_test_manifest();
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
@@ -268,7 +270,7 @@ class TestRunner extends Controller {
 	 * @param array $classList
 	 * @param boolean $coverage
 	 */
-	function runTests($classList, $coverage = false) {
+	public function runTests($classList, $coverage = false) {
 		$startTime = microtime(true);
 
 		// disable xdebug, as it messes up test execution
@@ -341,24 +343,26 @@ class TestRunner extends Controller {
 	
 	/**
 	 * Start a test session.
-	 * Usage: visit dev/tests/startsession?fixture=(fixturefile).  A test database will be constructed, and your browser session will be amended
-	 * to use this database.  This can only be run on dev and test sites.
+	 * Usage: visit dev/tests/startsession?fixture=(fixturefile).  A test database will be constructed, and your
+	 * browser session will be amended to use this database.  This can only be run on dev and test sites.
 	 *
 	 * See {@link setdb()} for an alternative approach which just sets a database
 	 * name, and is used for more advanced use cases like interacting with test databases
 	 * directly during functional tests.
 	 */
-	function startsession() {
+	public function startsession() {
 		if(!Director::isLive()) {
 			if(SapphireTest::using_temp_db()) {
 				$endLink = Director::baseURL() . "dev/tests/endsession";
-				return "<p><a id=\"end-session\" href=\"$endLink\">You're in the middle of a test session; click here to end it.</a></p>";
+				return "<p><a id=\"end-session\" href=\"$endLink\">You're in the middle of a test session;"
+					. " click here to end it.</a></p>";
 			
 			} else if(!isset($_GET['fixture'])) {
 				$me = Director::baseURL() . "dev/tests/startsession";
 				return <<<HTML
 <form action="$me">				
-	<p>Enter a fixture file name to start a new test session.  Don't forget to visit dev/tests/endsession when you're done!</p>
+	<p>Enter a fixture file name to start a new test session.  Don't forget to visit dev/tests/endsession when
+	you're done!</p>
 	<p>Fixture file (leave blank to start with default set-up): <input id="fixture-file" name="fixture" /></p>
 	<input type="hidden" name="flush" value="1">
 	<p><input id="start-session" value="Start test session" type="submit" /></p>
@@ -398,12 +402,15 @@ HTML;
 					foreach($dataClasses as $dataClass) singleton($dataClass)->requireDefaultRecords();
 				}
 				
-				return "<p>Started testing session with fixture '$fixtureFile'.  Time to start testing; where would you like to start?</p>
+				return "<p>Started testing session with fixture '$fixtureFile'.
+					Time to start testing; where would you like to start?</p>
 					<ul>
 						<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
-						<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
+						<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site
+							</a></li>
 						<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
-						<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">End your test session</a></li>
+						<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">
+							End your test session</a></li>
 					</ul>";
 			}
 						
@@ -426,7 +433,7 @@ HTML;
 	 * See {@link startsession()} for a different approach which actually creates
 	 * the DB and loads a fixture file instead.
 	 */
-	function setdb() {
+	public function setdb() {
 		if(Director::isLive()) {
 			return $this->permissionFailure("dev/tests/setdb can only be used on dev and test sites");
 		}
@@ -449,40 +456,44 @@ HTML;
 				<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
 				<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
 				<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
-				<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">End your test session</a></li>
+				<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">
+					End your test session</a></li>
 			</ul>";
 	}
 	
-	function emptydb() {
+	public function emptydb() {
 		if(SapphireTest::using_temp_db()) {
 			SapphireTest::empty_temp_db();
 
 			if(isset($_GET['fixture']) && ($fixtureFile = $_GET['fixture'])) {
 				$fixture = new YamlFixture($fixtureFile);
 				$fixture->saveIntoDatabase();
-				return "<p>Re-test the test database with fixture '$fixtureFile'.  Time to start testing; where would you like to start?</p>";
+				return "<p>Re-test the test database with fixture '$fixtureFile'.  Time to start testing; where would"
+					. " you like to start?</p>";
 
 			} else {
 				return "<p>Re-test the test database.  Time to start testing; where would you like to start?</p>";
 			}
 			
 		} else {
-			return "<p>dev/tests/emptydb can only be used with a temporary database. Perhaps you should use dev/tests/startsession first?</p>";
+			return "<p>dev/tests/emptydb can only be used with a temporary database. Perhaps you should use"
+				. " dev/tests/startsession first?</p>";
 		}
 	}
 	
-	function endsession() {
+	public function endsession() {
 		SapphireTest::kill_temp_db();
 		DB::set_alternative_database_name(null);
 
 		return "<p>Test session ended.</p>
 			<ul>
 				<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Return to your site</a></li>
-				<li><a id=\"startsession-link\" href=\"" .Director::baseURL() . "dev/tests/startsession\">Start a new test session</a></li>
+				<li><a id=\"startsession-link\" href=\"" .Director::baseURL() . "dev/tests/startsession\">
+					Start a new test session</a></li>
 			</ul>";
 	}
 
-	function sessionloadyml() {
+	public function sessionloadyml() {
 		// Load incremental YAML fixtures
 		// TODO: We will probably have to filter out the admin member here,
 		// as it is supplied by Bare.yml
@@ -525,12 +536,12 @@ HTML;
 		return "<p>Loaded fixture '$fixtureFile' into session</p>";
 	}
 
-	function setUp() {
+	public function setUp() {
 		// The first DB test will sort out the DB, we don't have to
 		SSViewer::flush_template_cache();
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		SapphireTest::kill_temp_db();
 		DB::set_alternative_database_name(null);
 	}

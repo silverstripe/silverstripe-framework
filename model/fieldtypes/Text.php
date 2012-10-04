@@ -37,8 +37,13 @@ class Text extends StringField {
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()
  	 */
-	function requireField() {
-		$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci', 'arrayValue'=>$this->arrayValue);
+	public function requireField() {
+		$parts=Array(
+			'datatype'=>'mediumtext',
+			'character set'=>'utf8',
+			'collate'=>'utf8_general_ci',
+			'arrayValue'=>$this->arrayValue
+		);
 		$values=Array('type'=>'text', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values, $this->default);
 	}
@@ -52,7 +57,7 @@ class Text extends StringField {
 	 * @param string $add Ellipsis to add to the end of truncated string
 	 * @return string
 	 */
-	function LimitWordCount($numWords = 26, $add = '...') {
+	public function LimitWordCount($numWords = 26, $add = '...') {
 		$this->value = trim(Convert::xml2raw($this->value));
 		$ret = explode(' ', $this->value, $numWords + 1);
 		
@@ -70,7 +75,7 @@ class Text extends StringField {
 	 * Return the value of the field stripped of html tags
 	 * @return string
 	 */
-	function NoHTML() {
+	public function NoHTML() {
 		return strip_tags($this->value);
 	}
 	/**
@@ -79,7 +84,7 @@ class Text extends StringField {
 	 * @deprecated 3.0 Use DBField->XML() instead.
 	 * @return string
 	 */
-	function EscapeXML() {
+	public function EscapeXML() {
 		Deprecation::notice('3.0', 'Use DBField->XML() instead.');
 		return str_replace(array('&','<','>','"'), array('&amp;','&lt;','&gt;','&quot;'), $this->value);
 	}
@@ -88,7 +93,7 @@ class Text extends StringField {
 	 * Return the value of the field with relative links converted to absolute urls.
 	 * @return string
 	 */
-	function AbsoluteLinks() {
+	public function AbsoluteLinks() {
 		return HTTP::absoluteURLs($this->value);
 	}
 	
@@ -101,7 +106,7 @@ class Text extends StringField {
 	 * @param string $add Ellipsis to add to the end of truncated string
 	 * @return string
 	 */
-	function LimitWordCountXML($numWords = 26, $add = '...') {
+	public function LimitWordCountXML($numWords = 26, $add = '...') {
 		$ret = $this->LimitWordCount($numWords, $add);
 		return Convert::raw2xml($ret);
 	}
@@ -110,7 +115,7 @@ class Text extends StringField {
 	 * Limit sentences, can be controlled by passing an integer.
 	 * @param int $sentCount The amount of sentences you want.
 	 */
-	function LimitSentences($sentCount = 2) {
+	public function LimitSentences($sentCount = 2) {
 		if(!is_numeric($sentCount)) user_error("Text::LimitSentence() expects one numeric argument", E_USER_NOTICE);
 		
 		$output = array();
@@ -133,7 +138,7 @@ class Text extends StringField {
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
-	function FirstSentence() {
+	public function FirstSentence() {
 		$data = Convert::xml2raw( $this->value );
 		if( !$data ) return "";
 		
@@ -149,7 +154,7 @@ class Text extends StringField {
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
-	function Summary($maxWords = 50) {
+	public function Summary($maxWords = 50) {
 		// get first sentence?
 		// this needs to be more robust
 		$value = Convert::xml2raw( $this->value /*, true*/ );
@@ -189,7 +194,7 @@ class Text extends StringField {
 	* Performs the same function as the big summary, but doesnt trim new paragraphs off data.
 	* Caution: Not XML/HTML-safe - does not respect closing tags.
 	*/
-	function BigSummary($maxWords = 50, $plain = 1) {
+	public function BigSummary($maxWords = 50, $plain = 1) {
 		$result = "";
 		
 		// get first sentence?
@@ -231,7 +236,7 @@ class Text extends StringField {
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
-	function FirstParagraph($plain = 1) {
+	public function FirstParagraph($plain = 1) {
 		// get first sentence?
 		// this needs to be more robust
 		if($plain && $plain != 'html') {
@@ -269,7 +274,8 @@ class Text extends StringField {
 	 * 
 	 * @return string
 	 */
-	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true, $prefix = "... ", $suffix = "...") {
+	public function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true,
+			$prefix = "... ", $suffix = "...") {
 
 		if(!$string) $string = $_REQUEST['Search'];	// Use the default "Search" request variable (from SearchForm)
 
@@ -284,7 +290,8 @@ class Text extends StringField {
 
 		if($position > 0) {
 			// We don't want to start mid-word
-			$position = max((int) strrpos(substr($text, 0, $position), ' '), (int) strrpos(substr($text, 0, $position), "\n"));
+			$position = max((int) strrpos(substr($text, 0, $position), ' '),
+				(int) strrpos(substr($text, 0, $position), "\n"));
 		}
 
 		$summary = substr($text, $position, $characters);
@@ -296,7 +303,8 @@ class Text extends StringField {
 			
 				foreach($stringPieces as $stringPiece) {
 					if(strlen($stringPiece) > 2) {
-						$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+						$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>",
+							$summary);
 					}
 				}
 			}
@@ -315,14 +323,15 @@ class Text extends StringField {
 	 * @see TextParser for implementation details.
 	 * @return string
 	 */
-	function Parse($parser = "TextParser") {
+	public function Parse($parser = "TextParser") {
 		if($parser == "TextParser" || is_subclass_of($parser, "TextParser")) {
 			$obj = new $parser($this->value);
 			return $obj->parse();
 		} else {
 			// Fallback to using raw2xml and show a warning
 			// TODO Don't kill script execution, we can continue without losing complete control of the app
-			user_error("Couldn't find an appropriate TextParser sub-class to create (Looked for '$parser'). Make sure it sub-classes TextParser and that you've done ?flush=1.", E_USER_WARNING);
+			user_error("Couldn't find an appropriate TextParser sub-class to create (Looked for '$parser')."
+				. "Make sure it sub-classes TextParser and that you've done ?flush=1.", E_USER_WARNING);
 			return Convert::raw2xml($this->value);
 		}
 	}

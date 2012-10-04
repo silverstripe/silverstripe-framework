@@ -14,7 +14,7 @@
 		'File' => array('UploadFieldTest_FileExtension')
 	);
 
-	function testUploadNoRelation() {
+	public function testUploadNoRelation() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -31,7 +31,7 @@
 		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 	}
 
-	function testUploadHasOneRelation() {
+	public function testUploadHasOneRelation() {
 		$this->loginWithPermission('ADMIN');
 
 		// Unset existing has_one relation before re-uploading
@@ -55,7 +55,7 @@
 		$this->assertEquals($record->HasOneFile()->Name, $tmpFileName);
 	}
 
-	function testUploadHasOneRelationWithExtendedFile() {
+	public function testUploadHasOneRelationWithExtendedFile() {
 		$this->loginWithPermission('ADMIN');
 
 		// Unset existing has_one relation before re-uploading
@@ -80,7 +80,7 @@
 		$this->assertEquals($record->HasOneExtendedFile()->Name, $tmpFileName, 'Proper file has been attached');
 	}
 
-	function testUploadHasManyRelation() {
+	public function testUploadHasManyRelation() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -101,7 +101,7 @@
 		$this->assertEquals($record->HasManyFiles()->Last()->Name, $tmpFileName);
 	}
 
-	function testUploadManyManyRelation() {
+	public function testUploadManyManyRelation() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -123,12 +123,12 @@
 		$this->assertEquals($record->ManyManyFiles()->Last()->Name, $tmpFileName);
 	}
 
-	function testAllowedMaxFileNumberWithHasOne() {
+	public function testAllowedMaxFileNumberWithHasOne() {
 		$this->loginWithPermission('ADMIN');
 		
 		// Test each of the three cases - has one with no max filel limit, has one with a limit of
 		// one, has one with a limit of more than one (makes no sense, but should test it anyway).
-		// Each of them should function in the same way - attaching the first file should work, the
+		// Each of them should public function in the same way - attaching the first file should work, the
 		// second should cause an error.
 		foreach (array('HasOneFile', 'HasOneFileMaxOne', 'HasOneFileMaxTwo') as $recordName) {
 			// Unset existing has_one relation before re-uploading
@@ -155,7 +155,7 @@
 		}
 	}
 
-	function testAllowedMaxFileNumberWithHasMany() {
+	public function testAllowedMaxFileNumberWithHasMany() {
 		$this->loginWithPermission('ADMIN');
 		
 		// The 'HasManyFilesMaxTwo' field has a maximum of two files able to be attached to it.
@@ -192,7 +192,7 @@
 		$this->assertNotEquals(0, $body[0]->error);
 	}
 
-	function testRemoveFromHasOne() {
+	public function testRemoveFromHasOne() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file1 = $this->objFromFixture('File', 'file1');
 
@@ -207,7 +207,7 @@
 		$this->assertFileExists($file1->FullPath, 'File is only detached, not deleted from filesystem');
 	}
 
-	function testRemoveFromHasMany() {
+	public function testRemoveFromHasMany() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file2 = $this->objFromFixture('File', 'file2');
 		$file3 = $this->objFromFixture('File', 'file3');
@@ -223,7 +223,7 @@
 		$this->assertFileExists($file3->FullPath, 'File is only detached, not deleted from filesystem');
 	}
 
-	function testRemoveFromManyMany() {
+	public function testRemoveFromManyMany() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$file5 = $this->objFromFixture('File', 'file5');
@@ -241,7 +241,7 @@
 		$this->assertFileExists($file4->FullPath, 'File is only detached, not deleted from filesystem');
 	}
 
-	function testDeleteFromHasOne() {
+	public function testDeleteFromHasOne() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -258,7 +258,7 @@
 		$this->assertFileNotExists($file1->FullPath, 'File is also removed from filesystem');
 	}
 
-	function testDeleteFromHasMany() {
+	public function testDeleteFromHasMany() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -280,10 +280,11 @@
 			'UploadFieldTest_Controller/Form/field/HasManyFiles/item/' . $fileNotOnRelationship->ID . '/delete',
 			array()
 		);
-		$this->assertEquals(403, $response->getStatusCode(), "Denies deleting files if they're not on the current relationship");
+		$this->assertEquals(403, $response->getStatusCode(),
+			"Denies deleting files if they're not on the current relationship");
 	}
 
-	function testDeleteFromManyMany() {
+	public function testDeleteFromManyMany() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -311,7 +312,7 @@
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 
-	function testView() {
+	public function testView() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -336,7 +337,7 @@
 		$this->assertContains($fileNoDelete->ID, $ids, "Views files without delete permissions");
 	}
 
-	function testEdit() {
+	public function testEdit() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -363,7 +364,7 @@
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 
-	function testGetRecord() {
+	public function testGetRecord() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$form = $this->getMockForm();
 
@@ -382,7 +383,7 @@
 		$this->assertEquals($record, $field->getRecord(), 'Returns record when set explicitly');
 	}
 
-	function testSetItems() {
+	public function testSetItems() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$form = $this->getMockForm();
 		$items = new ArrayList(array(
@@ -407,7 +408,7 @@
 		);
 	}
 
-	function testGetItems() {
+	public function testGetItems() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$form = $this->getMockForm();
 
@@ -440,32 +441,42 @@
 		$this->assertContains('File5',$field->getItems()->column('Title'));
 	}
 
-	function testReadonly() {
+	public function testReadonly() {
 		$this->loginWithPermission('ADMIN');
 		
 		$response = $this->get('UploadFieldTest_Controller');
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'), 'Removes all buttons on items');
-		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-dropzone'), 'Removes dropzone');
-		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-addfile .ss-ui-button'), 'Removes all buttons from "add" area');
+		$this->assertFalse((bool)$parser->getBySelector(
+			'#ReadonlyField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'),
+			'Removes all buttons on items');
+		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-dropzone'),
+			'Removes dropzone');
+		$this->assertFalse((bool)$parser->getBySelector(
+			'#ReadonlyField .ss-uploadfield-addfile .ss-ui-button'),
+			'Removes all buttons from "add" area');
 	}
 
-	function testDisabled() {
+	public function testDisabled() {
 		$this->loginWithPermission('ADMIN');
 		
 		$response = $this->get('UploadFieldTest_Controller');
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'), 'Removes all buttons on items');
-		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-dropzone'), 'Removes dropzone');
-		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-addfile .ss-ui-button'), 'Removes all buttons from "add" area');
+		$this->assertFalse(
+			(bool)$parser->getBySelector('#DisabledField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'),
+			'Removes all buttons on items');
+		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-dropzone'),
+			'Removes dropzone');
+		$this->assertFalse(
+			(bool)$parser->getBySelector('#DisabledField .ss-uploadfield-addfile .ss-ui-button'),
+			'Removes all buttons from "add" area');
 		
 	}
 
-	function testIsSaveable() {
+	public function testIsSaveable() {
 		$form = $this->getMockForm();
 
 		$field = new UploadField('MyField');
@@ -487,7 +498,7 @@
 		$this->assertTrue($field->isSaveable(), 'Field with has_one relation saveable with saved record on form');
 	}
 
-	function testSelect() {
+	public function testSelect() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -507,7 +518,7 @@
 		$this->assertNotContains($fileSubfolder->ID, $itemIDs, 'Does not contain file in subfolder');
 	}
 
-	function testAttachHasOne() {
+	public function testAttachHasOne() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -525,7 +536,7 @@
 		$this->assertEquals($file2->ID, $record->HasOneFileID, 'Attaches new relations');
 	}
 
-	function testAttachHasMany() {
+	public function testAttachHasMany() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -540,12 +551,15 @@
 		$this->assertFalse($response->isError());
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertContains($file1->ID, $record->HasManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file2->ID, $record->HasManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file3AlreadyAttached->ID, $record->HasManyFiles()->column('ID'), 'Does not detach existing relations');
+		$this->assertContains($file1->ID, $record->HasManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file2->ID, $record->HasManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file3AlreadyAttached->ID, $record->HasManyFiles()->column('ID'),
+			'Does not detach existing relations');
 	}
 
-	function testAttachManyMany() {
+	public function testAttachManyMany() {
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
@@ -560,12 +574,15 @@
 		$this->assertFalse($response->isError());
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertContains($file1->ID, $record->ManyManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file2->ID, $record->ManyManyFiles()->column('ID'), 'Attaches new relations');
-		$this->assertContains($file5AlreadyAttached->ID, $record->ManyManyFiles()->column('ID'), 'Does not detach existing relations');
+		$this->assertContains($file1->ID, $record->ManyManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file2->ID, $record->ManyManyFiles()->column('ID'),
+			'Attaches new relations');
+		$this->assertContains($file5AlreadyAttached->ID, $record->ManyManyFiles()->column('ID'),
+			'Does not detach existing relations');
 	}
 
-	function testManagesRelation() {
+	public function testManagesRelation() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 
 		$field = new UploadField('ManyManyFiles');
@@ -612,7 +629,7 @@
 		);
 	}
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 		
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
@@ -634,7 +651,7 @@
 		}
 	}
 	
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 
 		/* Remove the test files that we've created */
@@ -648,7 +665,9 @@
 		$folderIDs = $this->allFixtureIDs('Folder');
 		foreach($folderIDs as $folderID) {
 			$folder = DataObject::get_by_id('Folder', $folderID);
-			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
+				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			}
 		}
 
 		// Remove left over folders and any files that may exist
@@ -687,15 +706,15 @@ class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
 		'Record' => 'UploadFieldTest_Record'
 	);
 
-	function canDelete($member = null) {
+	public function canDelete($member = null) {
 		if($this->owner->Name == 'nodelete.txt') return false;
 	}
 
-	function canEdit($member = null) {
+	public function canEdit($member = null) {
 		if($this->owner->Name == 'noedit.txt') return false;
 	}
 
-	function canView($member = null) {
+	public function canView($member = null) {
 		if($this->owner->Name == 'noview.txt') return false;
 	}
 }
@@ -704,7 +723,7 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 
 	protected $template = 'BlankPage';
 
-	function Form() {
+	public function Form() {
 		$record = DataObject::get_one('UploadFieldTest_Record', '"Title" = \'Record 1\'');
 
 		$fieldNoRelation = new UploadField('NoRelationField');
@@ -792,7 +811,7 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		return $form;
 	}
 
-	function submit($data, $form) {
+	public function submit($data, $form) {
 		
 	}
 

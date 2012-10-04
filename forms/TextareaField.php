@@ -39,13 +39,15 @@ class TextareaField extends FormField {
 	 * @param $title Field title
 	 * @param $value The current value
 	 */
-	function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments');
+	public function __construct($name, $title = null, $value = '') {
+		if(count(func_get_args()) > 3) {
+			Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments');
+		}
 
 		parent::__construct($name, $title, $value);
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -64,15 +66,15 @@ class TextareaField extends FormField {
 	 *
 	 * The element shouldn't be both disabled and readonly at the same time.
 	 */
-	function performDisabledTransformation() {
+	public function performDisabledTransformation() {
 		$clone = clone $this;
 		$clone->setDisabled(true);
 		$clone->setReadonly(false);
 		return $clone;
 	}
 
-	function Type() {
-		return parent::Type() . ($this->readonly ? ' readonly' : ''); 
+	public function Type() {
+		return parent::Type() . ($this->readonly ? ' readonly' : '');
 	}
 	
 	/**
@@ -80,7 +82,7 @@ class TextareaField extends FormField {
 	 *
 	 * @param int
 	 */
-	function setRows($rows) {
+	public function setRows($rows) {
 		$this->rows = $rows;
 		return $this;
 	}
@@ -90,12 +92,12 @@ class TextareaField extends FormField {
 	 *
 	 * @return int
 	 */
-	function setColumns($cols) {
+	public function setColumns($cols) {
 		$this->cols = $cols;
 		return $this;
 	}
 
-	function Value() {
+	public function Value() {
 		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
 	}
 }

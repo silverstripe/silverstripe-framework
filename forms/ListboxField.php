@@ -61,7 +61,7 @@ class ListboxField extends DropdownField {
 	 * @param int $size Optional size of the select element
 	 * @param form The parent form
 	 */
-	function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
+	public function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
 		if($size) $this->size = $size;
 		if($multiple) $this->multiple = $multiple;
 		
@@ -71,7 +71,7 @@ class ListboxField extends DropdownField {
 	/**
 	 * Returns a <select> tag containing all the appropriate <option> tags
 	 */
-	function Field($properties = array()) {
+	public function Field($properties = array()) {
 		if($this->multiple) $this->name .= '[]';
 		$options = array();
 		
@@ -105,7 +105,7 @@ class ListboxField extends DropdownField {
 		return $this->customise($properties)->renderWith($this->getTemplates());
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
@@ -119,7 +119,7 @@ class ListboxField extends DropdownField {
 	 * Sets the size of this dropdown in rows.
 	 * @param int $size The height in rows (e.g. 3)
 	 */
-	function setSize($size) {
+	public function setSize($size) {
 		$this->size = $size;
 		return $this;
 	}
@@ -128,14 +128,15 @@ class ListboxField extends DropdownField {
 	 * Sets this field to have a muliple select attribute
 	 * @param boolean $bool
 	 */
-	function setMultiple($bool) {
+	public function setMultiple($bool) {
 		$this->multiple = $bool;
 		return $this;
 	}
 	
-	function setSource($source) {
+	public function setSource($source) {
 		if($source) {
-			$hasCommas = array_filter(array_keys($source), create_function('$key', 'return strpos($key, ",") !== FALSE;'));
+			$hasCommas = array_filter(array_keys($source),
+				create_function('$key', 'return strpos($key, ",") !== FALSE;'));
 			if($hasCommas) {
 				throw new InvalidArgumentException('No commas allowed in $source keys');
 			}
@@ -152,7 +153,7 @@ class ListboxField extends DropdownField {
 	 * 
 	 * @return string
 	 */
-	function dataValue() {
+	public function dataValue() {
 		if($this->value && is_array($this->value) && $this->multiple) {
 			$filtered = array();
 			foreach($this->value as $item) {
@@ -174,7 +175,7 @@ class ListboxField extends DropdownField {
 	 *
 	 * @param DataObject $record The record to save into
 	 */
-	function saveInto(DataObjectInterface $record) {
+	public function saveInto(DataObjectInterface $record) {
 		if($this->multiple) {
 			$fieldname = $this->name;
 			$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
@@ -182,7 +183,9 @@ class ListboxField extends DropdownField {
 				$idList = (is_array($this->value)) ? array_values($this->value) : array();
 				if(!$record->ID) {
 					$record->write(); // record needs to have an ID in order to set relationships
-					$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
+					$relation = ($fieldname && $record && $record->hasMethod($fieldname))
+						? $record->$fieldname()
+						: null;
 				}
 				$relation->setByIDList($idList);
 			} elseif($fieldname && $record) {
@@ -201,7 +204,7 @@ class ListboxField extends DropdownField {
 	/**
 	 * Load a value into this CheckboxSetField
 	 */
-	function setValue($val, $obj = null) {
+	public function setValue($val, $obj = null) {
 		// If we're not passed a value directly, 
 		// we can look for it in a relation method on the object passed as a second arg
 		if(!$val && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
@@ -246,7 +249,7 @@ class ListboxField extends DropdownField {
 	 * 
 	 * @param array $items Collection of array keys, as defined in the $source array
 	 */
-	function setDisabledItems($items) {
+	public function setDisabledItems($items) {
 		$this->disabledItems = $items;
 		return $this;
 	}
@@ -254,7 +257,7 @@ class ListboxField extends DropdownField {
 	/**
 	 * @return Array
 	 */
-	function getDisabledItems() {
+	public function getDisabledItems() {
 		return $this->disabledItems;
 	}
 
@@ -265,7 +268,7 @@ class ListboxField extends DropdownField {
 	 * 
 	 * @param Array $items Collection of array keys, as defined in the $source array
 	 */
-	function setDefaultItems($items) {
+	public function setDefaultItems($items) {
 		$this->defaultItems = $items;
 		return $this;
 	}
@@ -273,7 +276,7 @@ class ListboxField extends DropdownField {
 	/**
 	 * @return Array
 	 */
-	function getDefaultItems() {
+	public function getDefaultItems() {
 		return $this->defaultItems;
 	}
 	

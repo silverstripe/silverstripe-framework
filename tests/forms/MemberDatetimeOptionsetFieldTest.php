@@ -43,37 +43,41 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		return $field;
 	}
 
-	function testDateFormatDefaultCheckedInFormField() {
+	public function testDateFormatDefaultCheckedInFormField() {
 		$field = $this->createDateFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(), new FieldList())); // fake form
+		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MMM_d__y');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 
-	function testTimeFormatDefaultCheckedInFormField() {
+	public function testTimeFormatDefaultCheckedInFormField() {
 		$field = $this->createTimeFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(), new FieldList())); // fake form
+		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlArr = $parser->getBySelector('#Form_Form_TimeFormat_h_mm_ss_a');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 
-	function testDateFormatChosenIsCheckedInFormField() {
+	public function testDateFormatChosenIsCheckedInFormField() {
 		$member = $this->objFromFixture('Member', 'noformatmember');
 		$member->setField('DateFormat', 'MM/dd/yyyy');
 		$field = $this->createDateFormatFieldForMember($member);
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(), new FieldList())); // fake form
+		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MM_dd_yyyy');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 
-	function testDateFormatCustomFormatAppearsInCustomInputInField() {
+	public function testDateFormatCustomFormatAppearsInCustomInputInField() {
 		$member = $this->objFromFixture('Member', 'noformatmember');
 		$member->setField('DateFormat', 'dd MM yy');
 		$field = $this->createDateFormatFieldForMember($member);
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(), new FieldList())); // fake form
+		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlInputArr = $parser->getBySelector('.valCustom input');
 		$xmlPreview = $parser->getBySelector('.preview');
@@ -81,7 +85,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$this->assertEquals('dd MM yy', (string) $xmlInputArr[1]['value']);
 	}
 
-	function testDateFormValid() {
+	public function testDateFormValid() {
 		$field = new MemberDatetimeOptionsetField('DateFormat', 'DateFormat');
 		$this->assertTrue($field->validate(null));
 		$_POST['DateFormat_custom'] = 'dd MM yyyy';
@@ -93,7 +97,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 }
 class MemberDatetimeOptionsetFieldTest_Controller extends Controller {
 
-	function Link() {
+	public function Link() {
 		return 'test';
 	}
 

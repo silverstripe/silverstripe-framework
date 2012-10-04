@@ -1,7 +1,7 @@
 <?php
 
 class OembedTest extends SapphireTest {
-	function testGetOembedFromUrl() {
+	public function testGetOembedFromUrl() {
 		Config::inst()->update('Oembed', 'providers', array(
 			'http://*.silverstripe.com/watch*'=>'http://www.silverstripe.com/oembed/'
 		));
@@ -10,20 +10,27 @@ class OembedTest extends SapphireTest {
 		// Test with valid URL
 		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345');
 		$this->assertTrue($result!=false);
-		$this->assertEquals($result->getOembedURL(), 'http://www.silverstripe.com/oembed/?format=json&url='.urlencode('http://www.silverstripe.com/watch12345'), 'Triggers on matching URL');
+		$this->assertEquals($result->getOembedURL(),
+			'http://www.silverstripe.com/oembed/?format=json&url='.urlencode('http://www.silverstripe.com/watch12345'),
+			'Triggers on matching URL');
 
 		// Test without www.
 		$result = Oembed::get_oembed_from_url('http://silverstripe.com/watch12345');
 		$this->assertTrue($result!=false);
-		$this->assertEquals($result->getOembedURL(), 'http://www.silverstripe.com/oembed/?format=json&url='.urlencode('http://silverstripe.com/watch12345'), 'Triggers on matching URL without www');
+		$this->assertEquals($result->getOembedURL(),
+			'http://www.silverstripe.com/oembed/?format=json&url='.urlencode('http://silverstripe.com/watch12345'),
+			'Triggers on matching URL without www');
 
 		// Test if options make their way to the URL
 		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false, array('foo'=>'bar'));
 		$this->assertTrue($result!=false);
-		$this->assertEquals($result->getOembedURL(), 'http://www.silverstripe.com/oembed/?format=json&url='.urlencode('http://www.silverstripe.com/watch12345').'&foo=bar', 'Includes options');
+		$this->assertEquals($result->getOembedURL(), 'http://www.silverstripe.com/oembed/?format=json&url='
+			. urlencode('http://www.silverstripe.com/watch12345').'&foo=bar', 
+			'Includes options');
 
 		// Test magic.
-		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false, array('height'=>'foo', 'width'=>'bar'));
+		$result = Oembed::get_oembed_from_url('http://www.silverstripe.com/watch12345', false,
+			array('height'=>'foo', 'width'=>'bar'));
 		$this->assertTrue($result!=false);
 		$urlParts = parse_url($result->getOembedURL());
 		parse_str($urlParts['query'], $query);

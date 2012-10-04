@@ -21,7 +21,7 @@ Here is a very simple template:
 			<header>
 				<h1>Bob's Chicken Shack</h1>
 			</header>
-
+			
 			<% with $CurrentMember %>
 				<p>Welcome $FirstName $Surname.</p>
 			<% end_with %>
@@ -86,6 +86,12 @@ Or when having a `$` sign in front of the variable
 	:::ss
 	$$Foo // returns ""
 	${$Foo} // returns "$3"
+
+You can also use a backslash to escape the name of the variable, such as:
+
+	:::ss
+	$Foo // returns "3"
+	\$Foo // returns "$Foo"
 
 ## Includes
 
@@ -288,7 +294,7 @@ the scope back to the previous level. Take the following example:
 With a page structure (Blog -> Blog entry -> Child blog entry) the 
 above will produce:
 
-	:::sss
+	:::ss
 	Blog
 	--
 	Blog entry
