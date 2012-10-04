@@ -388,26 +388,43 @@ bg:
   MemberAuthenticator:
     TITLE: 'email и парола'
   MemberDatetimeOptionsetField:
-    AMORPM: 'АМ (преди обед) или РМ (следобед)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Приложи филтър'
-    Custom: Custom
+    Custom:
+      - null
     DATEFORMATBAD: 'Невалиден формат на датата'
-    DAYNOLEADING: 'Ден от месеца без водеща нула'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Четирицифрена година'
-    FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
-    HOURNOLEADING: 'Час без водеща нула'
-    MINUTENOLEADING: 'Минути без водеща нула'
-    MONTHNOLEADING: 'Месец без водеща нула'
-    Preview: Преглед
-    SHORTMONTH: 'Кратко изписване на месеца (напр. Яну)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Помощ за форматирането'
-    TWODIGITDAY: 'Двуцифрен ден от месеца'
-    TWODIGITHOUR: 'Час с водеща нула (00 до 23)'
-    TWODIGITMINUTE: 'Минути с водеща нула (00 до 59)'
-    TWODIGITMONTH: 'Месец с водеща нула (01=Януари, и т.н.)'
-    TWODIGITSECOND: 'Секунди с водеща нула (00 до 59)'
-    TWODIGITYEAR: 'Двуцифрена година'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'

@@ -388,26 +388,43 @@ fi:
   MemberAuthenticator:
     TITLE: 'Sähköposti &amp; Salasana'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
+    AMORPM:
+      - null
     'APPLY FILTER': Suodata
-    Custom: Muokattu
+    Custom:
+      - null
     DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
-    DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
-    DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
-    FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
-    FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
-    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
-    MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
-    MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
-    Preview: Esikatselu
-    SHORTMONTH: 'Kuukauden lyhyt nimi (esim. kesä)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Vaihda muotoilu apuun'
-    TWODIGITDAY: 'Kaksinumeroinen päivämäärä (01–31)'
-    TWODIGITHOUR: 'Kaksinumeroinen tuntinäyttö (00–23)'
-    TWODIGITMINUTE: 'Kaksinumeroinen minuuttinäyttö (00–59)'
-    TWODIGITMONTH: 'Kaksinumeroinen kuukausi (01=tammikuu, jne.)'
-    TWODIGITSECOND: 'Kaksinumeroinen sekunti (00–59)'
-    TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'

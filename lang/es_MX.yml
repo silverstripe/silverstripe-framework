@@ -388,26 +388,43 @@ es_MX:
   MemberAuthenticator:
     TITLE: 'Correo-e y Contraseña'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (ante meridian) o PM (post meridiano)'
+    AMORPM:
+      - null
     'APPLY FILTER': Filtro
-    Custom: 'A medida'
+    Custom:
+      - null
     DATEFORMATBAD: 'El formato de fecha es invalido'
-    DAYNOLEADING: 'Dia del mes sin cero a la izquierda'
-    DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
-    FOURDIGITYEAR: 'Año de 4 dígitos'
-    FULLNAMEMONTH: 'Nombre completo del mes (ej: Junio)'
-    HOURNOLEADING: 'Hora sin cero a la izquierda'
-    MINUTENOLEADING: 'Minuto sin cero a la izquierda'
-    MONTHNOLEADING: 'Dígito del mes  sin cero'
-    Preview: Previo
-    SHORTMONTH: 'Nombre corto del mes (ej: Jun)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Mostrar la ayuda de formato'
-    TWODIGITDAY: 'Dia del mes de dos dígitos'
-    TWODIGITHOUR: 'Dos dígitos de la hora (00 a 23)'
-    TWODIGITMINUTE: 'Dos dígitos de los minutos (00 a 59)'
-    TWODIGITMONTH: 'Mes de 2 dígitos (01=Enero, etc.)'
-    TWODIGITSECOND: 'Dos dígitos de los segundos (00 a 59)'
-    TWODIGITYEAR: 'Año en 2 dígitos'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: "<p>Importar usurious en <em>format CSV</em> (valores separados por comas). <small><a href=\"#\" class=\"toggle-advanced\">Mostrar uso avanzado</a></small></p>\\n"
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'

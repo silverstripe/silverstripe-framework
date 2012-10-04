@@ -388,26 +388,43 @@ fr:
   MemberAuthenticator:
     TITLE: 'Email &amp; Mot de passe'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Appliquer le filtre'
-    Custom: Personnalisé
+    Custom:
+      - null
     DATEFORMATBAD: 'Format de date incorrect'
-    DAYNOLEADING: 'Le jour du mois sans zéro initial'
-    DIGITSDECFRACTIONSECOND: 'Un ou plusieurs chiffres représentant la fraction décimale d’une seconde'
-    FOURDIGITYEAR: 'L’année sur 4 chiffres'
-    FULLNAMEMONTH: 'Le nom complet du mois (p. ex. janvier)'
-    HOURNOLEADING: 'L’heure sans zéro initial'
-    MINUTENOLEADING: 'La minute sans zéro initial'
-    MONTHNOLEADING: 'Le chiffre du mois sans zéro initial'
-    Preview: Aperçu
-    SHORTMONTH: 'Le nom abrégé du mois (p. ex. : jan.)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Afficher l’aide de mise en forme'
-    TWODIGITDAY: 'Le jour du mois sur deux chiffres'
-    TWODIGITHOUR: 'L’heure sur deux chiffres (de 00 à 23)'
-    TWODIGITMINUTE: 'La minute sur deux chiffres (de 00 à 59)'
-    TWODIGITMONTH: 'Le mois sur deux chiffres (p. ex. 01=janvier)'
-    TWODIGITSECOND: 'La seconde sur deux chiffres (de 00 à 59)'
-    TWODIGITYEAR: 'L’année sur deux chiffres'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Importer les membres au format<em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Afficher l''usage avancé.</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'

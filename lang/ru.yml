@@ -388,26 +388,43 @@ ru:
   MemberAuthenticator:
     TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) или PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Применить фильтр'
-    Custom: Пользовательский
+    Custom:
+      - null
     DATEFORMATBAD: 'Неверный формат даты'
-    DAYNOLEADING: 'Число месяца без ведущего нуля'
-    DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
-    FOURDIGITYEAR: 'Год четырьмя цифрами'
-    FULLNAMEMONTH: 'Название месяца полностью (июнь)'
-    HOURNOLEADING: 'Часы без ведущего нуля'
-    MINUTENOLEADING: 'Минуты без ведущего нуля'
-    MONTHNOLEADING: 'Месяц без ведущего нуля'
-    Preview: Просмотр
-    SHORTMONTH: 'Сокращенное название месяца (Июн)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Включить подсказки форматирования'
-    TWODIGITDAY: 'Число месяца: двумя цифрами'
-    TWODIGITHOUR: 'Часы: двумя цифрами (00 - 23)'
-    TWODIGITMINUTE: 'Минуты: двумя цифрами (00 - 59)'
-    TWODIGITMONTH: 'Месяц двумя цифрами (01=январь и т.д.)'
-    TWODIGITSECOND: 'Секунды: двумя цифрами (00 - 59)'
-    TWODIGITYEAR: 'Год: двумя цифрами'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'

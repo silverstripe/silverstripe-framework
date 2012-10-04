@@ -388,26 +388,43 @@ mi_NZ:
   MemberAuthenticator:
     TITLE: 'Īmērā &amp; Kupuhipa'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem), PM (Post meridiem) rānei'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Hoatu Tātari'
-    Custom: Ritenga
+    Custom:
+      - null
     DATEFORMATBAD: 'He muhu te hōputu rā'
-    DAYNOLEADING: 'Rā o te marama kāore he kore i mua'
-    DIGITSDECFRACTIONSECOND: 'Kotahi neke atu ngā mati e tohu ana i te hautau ā-ira o te hēkona'
-    FOURDIGITYEAR: 'Tau matiwhā'
-    FULLNAMEMONTH: 'Ingoa marama katoa (hei tauira, Pipiri)'
-    HOURNOLEADING: 'Haora, kāore he kore i mua'
-    MINUTENOLEADING: 'Meneti, kāore he kore i mua'
-    MONTHNOLEADING: 'Mati marama kāore he kore i mua'
-    Preview: Arokite
-    SHORTMONTH: 'Ingoa marama poto (hei tauira, Pip)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Takahurihia te āwhina whakahōputu'
-    TWODIGITDAY: 'Rā marama matirua'
-    TWODIGITHOUR: 'Ngā mati haora e rua (00 ki te 23)'
-    TWODIGITMINUTE: 'Ngā mati meneti e rua (00 ki te 59)'
-    TWODIGITMONTH: 'Marama matirua (01=Kohitātea)'
-    TWODIGITSECOND: 'Ngā mati hēkona e rua (00 ki te 59)'
-    TWODIGITYEAR: 'Tau matirua'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'

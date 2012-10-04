@@ -388,26 +388,43 @@ cs:
   MemberAuthenticator:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Použít filtr'
-    Custom: Uživatelské
+    Custom:
+      - null
     DATEFORMATBAD: 'Formát datumu je neplatný'
-    DAYNOLEADING: 'Den měsíce bez úvodní nuly'
-    DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
-    FOURDIGITYEAR: 'Čtyřčíslí roku'
-    FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
-    HOURNOLEADING: 'Hodina bez úvodní nuly'
-    MINUTENOLEADING: 'Minuta bez úvodní nuly'
-    MONTHNOLEADING: 'Číslo měsíce bez úvodní nuly'
-    Preview: Náhled
-    SHORTMONTH: 'Krátký název měsíce (např. Čer)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Přepni nápovědu formátování'
-    TWODIGITDAY: 'Dvojčíslí dne měsíce'
-    TWODIGITHOUR: 'Dvojčíslí hodiny (00 až 23)'
-    TWODIGITMINUTE: 'Dvojčíslí minuty (00 až 59)'
-    TWODIGITMONTH: 'Dvojčíslí měsíce (01=Leden, atď.)'
-    TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
-    TWODIGITYEAR: 'Dvojčíslí roku'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'

@@ -388,26 +388,43 @@ sv:
   MemberAuthenticator:
     TITLE: 'E-post &amp; Lösenord'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) eller PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Använd filter'
-    Custom: Anpassad
+    Custom:
+      - null
     DATEFORMATBAD: 'Datumformatet är ogiltigt'
-    DAYNOLEADING: 'Dag i månad utan inledande nolla'
-    DIGITSDECFRACTIONSECOND: 'En eller fler delar som representerar en decimaldel av en sekund.'
-    FOURDIGITYEAR: 'Fyrsiffrigt år'
-    FULLNAMEMONTH: 'Helt namn för månad (t ex juni)'
-    HOURNOLEADING: 'Timme utan inledande nolla'
-    MINUTENOLEADING: 'Minut utan inledande nolla'
-    MONTHNOLEADING: 'Dag i månad utan inledande nolla'
-    Preview: Förhandsgranska
-    SHORTMONTH: 'Kortnamn för månad (t ex jun)'
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Växla formatteringshjälp'
-    TWODIGITDAY: 'Två siffror för dag i månad'
-    TWODIGITHOUR: 'Två siffror för timme (00 till 23)'
-    TWODIGITMINUTE: 'Två siffror för minut (00 till 59)'
-    TWODIGITMONTH: 'Tvåsiffrig månad (01 = januari osv)'
-    TWODIGITSECOND: 'Två siffror för sekund (00 till 59)'
-    TWODIGITYEAR: 'Två siffror för år'
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small>a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
