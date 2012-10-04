@@ -64,5 +64,13 @@ class SS_LogTest extends SapphireTest {
 			'Serializes arrays correctly'
 		);
 	}
+	
+	public function testSubclassedLogger() {
+		$this->assertTrue(SS_Log::get_logger() !== SS_LogTest_NewLogger::get_logger());
+	}
 
+}
+
+class SS_LogTest_NewLogger extends SS_Log {
+	protected static $logger;
 }
