@@ -4,22 +4,32 @@ ru:
     EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Новая папка'
   AssetTableField:
-    CREATED: 'Первая загрузка'
-    DIM: Размеры
-    FILENAME: 'Имя файла'
-    FOLDER: Папка
-    LASTEDIT: 'Последнее изменение'
-    OWNER: Владелец
-    SIZE: Размер
-    TITLE: Название
-    TYPE: Тип
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Выберите файлы'
     DRAGFILESHERE: 'Перетащите файлы сюда'
     DROPAREA: Контейнер
     EDITALL: 'Редактировать все'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Редактирование и систематизация'
     EDITINFO: 'Редактировать файлы'
     FILES: Файлы
     FROMCOMPUTER: 'Выберите файлы с диска вашего компьютера'
@@ -69,7 +79,7 @@ ru:
   CMSMain:
     ACCESS: 'Доступ к разделу ''{title}'''
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    ACCESSALLINTERFACESHELP: 'Отменяет индивидуальные настройки прав доступа.'
     SAVE: Сохранить
   CMSProfileController:
     MENUTITLE: CMSProfileController
@@ -170,7 +180,8 @@ ru:
     SINGULARNAME: Файл
     TOOLARGE: 'Превышен допустимый размер файла (максимально {size})'
     TOOLARGESHORT: 'Размер файла больше {size}'
-    TiffType: 'Изображение TIFF'
+    TiffType:
+      - null
     Title: Заголовок
     WavType: 'Аудиофайл WAV'
     XlsType: 'Таблица Excel'
@@ -313,7 +324,8 @@ ru:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
   ImageField:
-    IMAGE: Изображение
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
@@ -388,26 +400,45 @@ ru:
   MemberAuthenticator:
     TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) или PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Применить фильтр'
-    Custom: Пользовательский
-    DATEFORMATBAD: 'Неверный формат даты'
-    DAYNOLEADING: 'Число месяца без ведущего нуля'
-    DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
-    FOURDIGITYEAR: 'Год четырьмя цифрами'
-    FULLNAMEMONTH: 'Название месяца полностью (июнь)'
-    HOURNOLEADING: 'Часы без ведущего нуля'
-    MINUTENOLEADING: 'Минуты без ведущего нуля'
-    MONTHNOLEADING: 'Месяц без ведущего нуля'
-    Preview: Просмотр
-    SHORTMONTH: 'Сокращенное название месяца (Июн)'
-    TOGGLEHELP: 'Включить подсказки форматирования'
-    TWODIGITDAY: 'Число месяца: двумя цифрами'
-    TWODIGITHOUR: 'Часы: двумя цифрами (00 - 23)'
-    TWODIGITMINUTE: 'Минуты: двумя цифрами (00 - 59)'
-    TWODIGITMONTH: 'Месяц двумя цифрами (01=январь и т.д.)'
-    TWODIGITSECOND: 'Секунды: двумя цифрами (00 - 59)'
-    TWODIGITYEAR: 'Год: двумя цифрами'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -420,16 +451,26 @@ ru:
     SINGULARNAME: Пароль
   MemberTableField: null
   ModelAdmin:
-    DELETE: Удалить
-    DELETEDRECORDS: 'Удалено {count} записей.'
-    EMPTYBEFOREIMPORT: 'Очистить базу данных перед импортированием'
-    IMPORT: 'Импорт из CSV'
-    IMPORTEDRECORDS: 'Импортировано {count} записей.'
-    NOCSVFILE: 'Выберите CSV-файл для импорта'
-    NOIMPORT: 'Нечего импортировать'
-    RESET: Сброс
-    Title: 'Модели данных'
-    UPDATEDRECORDS: 'Обновлено {count} записей.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Колонки таблицы базы данных'
     IMPORTSPECLINK: 'Показать спецификацию для %s'
