@@ -10,7 +10,7 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 
 	'cleanup_callback' => "sapphiremce_cleanup",
 
-	'use_native_selects' => true, // fancy selects are bug as of SS 2.3.0
+	'use_native_selects' => false,
 	'valid_elements' => "@[id|class|style|title],#a[id|rel|rev|dir|tabindex|accesskey|type|name|href|target|title"
 		. "|class],-strong/-b[class],-em/-i[class],-strike[class],-u[class],#p[id|dir|class|align|style],-ol[class],"
 		. "-ul[class],-li[class],br,img[id|dir|longdesc|usemap|class|src|border|alt=|title|width|height|align],"
