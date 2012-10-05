@@ -92,11 +92,11 @@ TableListField.prototype = {
 		var row = Event.findElement(e,"tr");
 		var self = this;
 		
-		// TODO ajaxErrorHandler and loading-image are dependent on cms, but formfield is in sapphire
+		// TODO ajaxErrorHandler and loading-image are dependent on cms, but formfield is in framework
 		var confirmed = confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE', 'Are you sure you want to delete this record?'));
 		if(confirmed)
 		{
-			img.setAttribute("src",'sapphire/images/network-save.gif'); // TODO doesn't work
+			img.setAttribute("src",'framework/images/network-save.gif'); // TODO doesn't work
 			jQuery.ajax({
 				'url': link.getAttribute("href"),
 				'method': 'post', 
