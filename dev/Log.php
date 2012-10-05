@@ -87,20 +87,20 @@ class SS_Log {
 	 * @return object
 	 */
 	public static function get_logger() {
-		if(!self::$logger) {
+		if(!static::$logger) {
 			// Create default logger
-			self::$logger = new self::$logger_class;
+			static::$logger = new static::$logger_class;
 
 			// Add default context (shouldn't change until the actual log event happens)
-			foreach(self::$log_globals as $globalName => $keys) {
+			foreach(static::$log_globals as $globalName => $keys) {
 				foreach($keys as $key) {
 					$val = @$GLOBALS[$globalName][$key];
-					self::$logger->setEventItem(sprintf('$%s[\'%s\']', $globalName, $key), $val);
+					static::$logger->setEventItem(sprintf('$%s[\'%s\']', $globalName, $key), $val);
 				}
 			}
 
 		}
-		return self::$logger;
+		return static::$logger;
 	}
 
 	/**
@@ -108,14 +108,14 @@ class SS_Log {
 	 * @return array Collection of Zend_Log_Writer_Abstract instances
 	 */
 	public static function get_writers() {
-		return self::get_logger()->getWriters();
+		return static::get_logger()->getWriters();
 	}
 
 	/**
 	 * Remove all writers currently in use.
 	 */
 	public static function clear_writers() {
-		self::get_logger()->clearWriters();
+		static::get_logger()->clearWriters();
 	}
 
 	/**
@@ -123,7 +123,7 @@ class SS_Log {
 	 * @param object $writer Zend_Log_Writer_Abstract instance
 	 */
 	public static function remove_writer($writer) {
-		self::get_logger()->removeWriter($writer);
+		static::get_logger()->removeWriter($writer);
 	}
 
 	/**
@@ -137,7 +137,7 @@ class SS_Log {
 	 */
 	public static function add_writer($writer, $priority = null, $comparison = '=') {
 		if($priority) $writer->addFilter(new Zend_Log_Filter_Priority($priority, $comparison));
-		self::get_logger()->addWriter($writer);
+		static::get_logger()->addWriter($writer);
 	}
 
 	/**
@@ -173,7 +173,7 @@ class SS_Log {
 			);
 		}
 		try {
-			self::get_logger()->log($message, $priority, $extras);
+			static::get_logger()->log($message, $priority, $extras);
 		} catch(Exception $e) {
 			// @todo How do we handle exceptions thrown from Zend_Log?
 			// For example, an exception is thrown if no writers are added
