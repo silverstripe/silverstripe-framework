@@ -205,6 +205,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		$('textarea.htmleditor').entwine({
 
 			Editor: null,
+			PreventRemoval: false,
 
 			/**
 			 * Constructor: onmatch
@@ -212,6 +213,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			onadd: function() {
 				var edClass = this.data('editor') || ss.editorWrappers['default'], ed = edClass();
 				this.setEditor(ed);
+				this.setPreventRemoval(false);
 
 				// Using a global config (generated through HTMLEditorConfig PHP logic).
 				// Depending on browser cache load behaviour, entwine's DOMMaybeChanged
@@ -229,7 +231,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			
 			removeEditor: function() {
 				var ed = this.getEditor();
-				if (ed) {
+				if (ed && !this.getPreventRemoval()) {
 					ed.getInstance().remove();
 					this.setEditor(null);
 
@@ -256,6 +258,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						this.getEditor().save();
 						this.trigger('change'); // TinyMCE assigns value attr directly, which doesn't trigger change event
 					}
+					this.setPreventRemoval(true);
 				}
 			},
 
@@ -290,6 +293,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 					var ed = this.getEditor(), container = (ed && ed.getInstance()) ? ed.getContainer() : null;
 					if(container && container.length) container.remove();
+					this.setPreventRemoval(false);
 					this.removeEditor();
 				}
 			},
