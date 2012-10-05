@@ -32,7 +32,7 @@
 							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
 								<p class="message error">
 									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br>
-									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements">server requirements</a>.
+									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/framework/en/installation/server-requirements">server requirements</a>.
 								</p>
 								<?php if (isset($phpIniLocation)) { ?>  
 									<p>Your php.ini file is located at <?php echo $phpIniLocation; ?></p>
@@ -46,7 +46,7 @@
 								<?php } else if($req->hasWarnings()) { ?>
 									<div class="message warning">
 										<p>There are some issues that we recommend you look at before installing, however, you are still able to install the software.
-										<br>Please see below for details. If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements">server requirements</a>.</p>
+										<br>Please see below for details. If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/framework/en/installation/server-requirements">server requirements</a>.</p>
 									</div>
 								<?php } else if(!$dbReq->hasErrors() && !$adminReq->hasErrors()) { ?>
 									<div class="message goodInstall"><p>You're ready to install! Please confirm the configuration options below. <a href="#install">Install SilverStripe</a></p>
@@ -71,7 +71,7 @@
 							<?php $dbReq->showTable(); ?>
 							
 							<p class="helpText requirementsHelpText">
-								Read more about our <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements" target="_blank">server requirements</a>.
+								Read more about our <a href="http://doc.silverstripe.org/framework/en/installation/server-requirements" target="_blank">server requirements</a>.
 							</p>
 							
 							<div class="action">
@@ -178,7 +178,7 @@
 										<?php if($envFileExists) { ?>
 										<div id="use_environment_field" class="field">
 											<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?>>
-											<label for="use_environment">Use _ss_environment file for configuration (<a href="http://doc.silverstripe.org/sapphire/en/topics/environment-management" target="_blank">?</a>)</label>
+											<label for="use_environment">Use _ss_environment file for configuration (<a href="http://doc.silverstripe.org/framework/en/topics/environment-management" target="_blank">?</a>)</label>
 										</div>
 										<?php } ?>
 										
@@ -244,7 +244,7 @@
 							<h3 class="sectionHeading">Theme selection <small>Step 4 of 5</small></h3>
 							<p class="helpText">You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
 							<ul id="Themes">
-								<li><input type="radio" name="template" value="simple" id="Simple" <?php if(!isset($_POST['template']) || $_POST['template'] == 'simple') {?>checked="checked"<?php }?>><label for="Simple"><a href="https://github.com/silverstripe-themes/silverstripe-simple">Simple</a> - our default theme ready to use, or begin the <a href="http://doc.silverstripe.org/sapphire/en/tutorials" target="_blank">tutorial</a>.</label></li>
+								<li><input type="radio" name="template" value="simple" id="Simple" <?php if(!isset($_POST['template']) || $_POST['template'] == 'simple') {?>checked="checked"<?php }?>><label for="Simple"><a href="https://github.com/silverstripe-themes/silverstripe-simple">Simple</a> - our default theme ready to use, or begin the <a href="http://doc.silverstripe.org/framework/en/tutorials" target="_blank">tutorial</a>.</label></li>
 								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template</label></li>
 							</ul>
 							<h3 class="sectionHeading" id="install">Confirm Install <small>Step 5 of 5</small></h3>
