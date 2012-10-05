@@ -124,7 +124,7 @@
 			canPreview: function() {
 				var contentEl = this.getLayoutContainer().find('.cms-content');
 				// Only load if we're in the "edit page" view
-				var blockedClasses = ['CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
+				var blockedClasses = ['CMSPagesController', 'CMSPageHistoryController'];
 				return !(contentEl.is('.' + blockedClasses.join(',.')));
 			},
 			
