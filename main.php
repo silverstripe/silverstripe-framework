@@ -66,13 +66,6 @@ if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
 	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
 }
 
-// Lighttp maybe sometimes doesnt parse the get variables into $_GET so do it manually? @todo: Need to check still needed - seems like a perf killer & maybe a hole
-if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
-	list($garbage, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-	parse_str($query, $_GET);
-	if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-}
-
 // My name is
 if (isset($_SERVER['SCRIPT_NAME'])) {
 	$name = $_SERVER['SCRIPT_NAME'];

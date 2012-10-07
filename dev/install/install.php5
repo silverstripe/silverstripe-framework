@@ -1256,11 +1256,10 @@ HTML;
 		} elseif (isset($_SERVER['SERVER_SOFTWARE'])) {
 			preg_match("/\bApache\/\b\d+(?:\.\d+)*/i", $_SERVER['SERVER_SOFTWARE'], $matches);
 		}
-		$apacheVersion = (isset($matches[0])) ? $matches[0] : 0;
+		$apacheVersion = (isset($matches[0])) ? str_replace('apache/', '', strtolower($matches[0])) : 0;
 
 		// AcceptPathInfo is only applicable for Apache versions 2.0.30 and later
 		$acceptPath = (version_compare($apacheVersion, '2.0.30') >= 0) ? 'AcceptPathInfo Default' : '';
-
 
 		$base = dirname($_SERVER['SCRIPT_NAME']);
 		if(defined('DIRECTORY_SEPARATOR')) $base = str_replace(DIRECTORY_SEPARATOR, '/', $base);
@@ -1269,6 +1268,34 @@ HTML;
 		if($base != '.') $baseClause = "RewriteBase '$base'\n";
 		else $baseClause = "";
 		$modulePath = FRAMEWORK_NAME;
+
+		// what Apache modules are being used
+		$apacheModules = array();
+		$modAlias = '';
+		$modRewrite = '';
+		if (function_exists('apache_get_modules')) {
+			$apacheModules = apache_get_modules();
+		}
+		if (in_array('mod_alias', $apacheModules)) {
+			$modAlias = 'RedirectMatch 403 /silverstripe-cache(/|$)';
+		}
+
+		if (in_array('mod_rewrite', $apacheModules)) {
+			$modRewrite = <<<TEXT
+SetEnv HTTP_MOD_REWRITE On
+RewriteEngine On
+
+$baseClause
+
+RewriteCond %{REQUEST_URI} ^/?(.*)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule .* $modulePath/main.php/%1 [QSA,L]
+
+# RewriteCond %{REQUEST_URI} ^(.*)$
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
+TEXT;
+		}
 		$rewrite = <<<TEXT
 <Files *.ss>
 	Order deny,allow
@@ -1284,27 +1311,11 @@ HTML;
 ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
-<IfModule mod_alias.c>
-	RedirectMatch 403 /silverstripe-cache(/|$)
-</IfModule>
+$modAlias
 
 $acceptPath
 
-<IfModule mod_rewrite.c>
-	SetEnv HTTP_MOD_REWRITE On
-	RewriteEngine On
-
-	$baseClause
-
-	RewriteCond %{REQUEST_URI} ^/?(.*)$
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* $modulePath/main.php/%1 [QSA,L]
-
-	# If the above doesn't work, comment it out & uncomment this. @todo - detect in installer
-	# RewriteCond %{REQUEST_URI} ^(.*)$
-	# RewriteCond %{REQUEST_FILENAME} !-f
-	# RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
-</IfModule>
+$modRewrite
 TEXT;
 
 		if(file_exists('.htaccess')) {
