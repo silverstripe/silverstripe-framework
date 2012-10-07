@@ -27,7 +27,7 @@ class you want to extend.
 ### Adding a extension to a built-in class
 
 Sometimes you will want to add extension to classes that you didn't make.  For example, you might want to add the
-`[api:ForumRole]` extension to the `[api:Member]` object.
+ForumRole extension to the `[api:Member]` object.
 
 
 	:::php
@@ -38,7 +38,7 @@ For example above we want to override Member with a Custom Member so we would wr
 
 	:::php
 	// add to mysite/_config.php	
-	Object::add_extension('Member', 'CustomMember');</code>
+	Object::add_extension('Member', 'CustomMember');
 
 ##  Implementation
 
