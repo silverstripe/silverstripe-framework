@@ -15,42 +15,42 @@ pt:
     TYPE: 'File type'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    ChooseFiles: 'Escolher ficheiros'
+    DRAGFILESHERE: 'Arrastar os ficheiros para aqui'
+    DROPAREA: 'Área de arraste'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Editar e organizar'
     EDITINFO: 'Edit files'
     FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Escolher ficheiros do seu computador'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: OU
   BBCodeParser:
     ALIGNEMENT: Alinhamento
     ALIGNEMENTEXAMPLE: 'Alinhado à direita'
     BOLD: 'Texto Negrito'
     BOLDEXAMPLE: Negrito
-    CODE: 'Code Block'
-    CODEDESCRIPTION: 'Unformatted code block'
-    CODEEXAMPLE: 'Code block'
+    CODE: 'Bloco de código'
+    CODEDESCRIPTION: 'Bloco de código não formatado'
+    CODEEXAMPLE: 'Bloco de código'
     COLORED: 'Texto colorido'
     COLOREDEXAMPLE: 'Texto azul'
     EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
-    IMAGE: Image
-    IMAGEDESCRIPTION: 'Show an image in your post'
+    EMAILLINKDESCRIPTION: 'Criar link para o endereço de email'
+    IMAGE: Imagem
+    IMAGEDESCRIPTION: 'Apresentar imagem na sua publicação'
     ITALIC: 'Texto Itálico'
     ITALICEXAMPLE: Itálico
     LINK: 'Website link'
-    LINKDESCRIPTION: 'Link to another website or URL'
+    LINKDESCRIPTION: 'Link para outro site ou URL'
     STRUCK: 'Struck-out Text'
     STRUCKEXAMPLE: Struck-out
     UNDERLINE: 'Texto Sublinhado'
     UNDERLINEEXAMPLE: Sublinhado
-    UNORDERED: 'Unordered list'
+    UNORDERED: 'Lista não ordenada'
     UNORDEREDDESCRIPTION: 'Lista não ordenada'
     UNORDEREDEXAMPLE1: 'item não ordenado 1'
   BackLink_Button.ss:
@@ -216,21 +216,21 @@ pt:
     UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
-    Filter: Filter
+    Filter: Filtrar
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Procurar
     LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    LinkExisting: 'Link existente'
+    NewRecord: 'Novo %s'
+    NoItemsFound: 'Não foram encontrados elementos'
+    PRINTEDAT: 'Impresso em'
+    PRINTEDBY: 'Impresso por'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    RelationSearch: 'Pesquisa relacionada'
+    ResetFilter: Redefinir
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Não tem permissões para apagar'
   GridFieldDetailForm:
     CancelBtn: Cancelar
     Create: Create
@@ -267,8 +267,8 @@ pt:
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    ANCHORVALUE: Anchor
-    BUTTONINSERT: Insert
+    ANCHORVALUE: Âncora
+    BUTTONINSERT: Inserir
     BUTTONINSERTLINK: 'Inserir link'
     BUTTONREMOVELINK: 'Remover link'
     BUTTONUpdate: Update
@@ -276,14 +276,14 @@ pt:
     CSSCLASS: 'Alinhamento / estilo'
     CSSCLASSCENTER: 'Centrado sozinho.'
     CSSCLASSLEFT: 'Na esquerda, com texto envolvido.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    CSSCLASSLEFTALONE: 'No lado esquerdo, por si só.'
     CSSCLASSRIGHT: 'Na direita, com texto envolvido.'
-    DETAILS: Details
+    DETAILS: Detalhes
     EMAIL: 'Endereço email'
     FILE: Ficheiro
     FOLDER: Pasta
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
+    FROMCMS: 'A partir do CMS'
+    FROMCOMPUTER: 'Do seu computador'
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
@@ -297,7 +297,7 @@ pt:
     IMAGEWIDTHPX: Largura
     INSERTMEDIA: 'Insert Media'
     LINK: 'Inserir/editar link no texto seleccionado'
-    LINKANCHOR: 'Anchor on this page'
+    LINKANCHOR: 'Âncora nesta página'
     LINKDESCR: 'Descrição do link'
     LINKEMAIL: 'Endereço email'
     LINKEXTERNAL: 'Outro site'
@@ -313,7 +313,7 @@ pt:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Image
+    IMAGE: Imagem
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -322,17 +322,17 @@ pt:
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
-    HELP: Help
-    PAGETYPE: 'Page type: '
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    DropdownBatchActionsDefault: Ações
+    HELP: Ajuda
+    PAGETYPE: 'Tipo de página: '
+    PERMAGAIN: 'Saiu do CMS. Se se deseja autenticar novamente insira as suas credenciais abaixo.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    VersionUnknown: desconhecido
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -389,7 +389,7 @@ pt:
     TITLE: 'Email e Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
+    'APPLY FILTER': 'Aplicar filtros'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -412,8 +412,8 @@ pt:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultDeleted: 'Apagados %d utilizadores'
+    ResultNone: 'Sem alterações'
     ResultUpdated: 'Updated {count} members'
   MemberPassword:
     PLURALNAME: 'Member Passwords'
@@ -442,8 +442,8 @@ pt:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT: Quantidade
+    FIELDLABELCURRENCY: Moeda
   NullableField:
     IsNullLabel: 'é Vazio'
   NumericField:
