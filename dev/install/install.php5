@@ -1249,6 +1249,19 @@ HTML;
 		$start = "### SILVERSTRIPE START ###\n";
 		$end = "\n### SILVERSTRIPE END ###";
 
+		// what version of Apache are we using
+		$matches = array();
+		if (function_exists('apache_get_version')) {
+			preg_match("/\bApache\/\b\d+(?:\.\d+)*/i", apache_get_version(), $matches);
+		} elseif (isset($_SERVER['SERVER_SOFTWARE'])) {
+			preg_match("/\bApache\/\b\d+(?:\.\d+)*/i", $_SERVER['SERVER_SOFTWARE'], $matches);
+		}
+		$apacheVersion = (isset($matches[0])) ? $matches[0] : 0;
+
+		// AcceptPathInfo is only applicable for Apache versions 2.0.30 and later
+		$acceptPath = (version_compare($apacheVersion, '2.0.30') >= 0) ? 'AcceptPathInfo Default' : '';
+
+
 		$base = dirname($_SERVER['SCRIPT_NAME']);
 		if(defined('DIRECTORY_SEPARATOR')) $base = str_replace(DIRECTORY_SEPARATOR, '/', $base);
 		else $base = str_replace("\\", '/', $base);
@@ -1275,7 +1288,7 @@ ErrorDocument 500 /assets/error-500.html
 	RedirectMatch 403 /silverstripe-cache(/|$)
 </IfModule>
 
-AcceptPathInfo Default
+$acceptPath
 
 <IfModule mod_rewrite.c>
 	SetEnv HTTP_MOD_REWRITE On
