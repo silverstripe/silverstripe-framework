@@ -343,14 +343,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 				$form->addExtraClass('ss-tabset cms-tabset');
 		 	}
 
-			if($toplevelController->hasMethod('Backlink')) {
-				$form->Backlink = $toplevelController->Backlink();
-			} elseif($this->popupController->hasMethod('Breadcrumbs')) {
-				$parents = $this->popupController->Breadcrumbs(false)->items;
-				$form->Backlink = array_pop($parents)->Link;
-			} else {
-				$form->Backlink = $toplevelController->Link();
-			}
+			$form->Backlink = $this->getBackLink();
 		}
 
 		$cb = $this->component->getItemEditFormCallback();
@@ -373,6 +366,25 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 		return $c;
 	}
+	
+	protected function getBackLink(){
+		// TODO Coupling with CMS
+		$backlink = '';
+		$toplevelController = $this->getToplevelController();
+		if($toplevelController && $toplevelController instanceof LeftAndMain) {
+			if($toplevelController->hasMethod('Backlink')) {
+				$backlink = $toplevelController->Backlink();
+			} elseif($this->popupController->hasMethod('Breadcrumbs')) {
+				$parents = $this->popupController->Breadcrumbs(false)->items;
+				$backlink = array_pop($parents)->Link;
+			} else {
+				$backlink = $toplevelController->Link();
+			}
+		}
+		return $backlink;
+	}
+
+	
 
 	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
@@ -445,12 +457,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$form->sessionMessage($message, 'good');
 
-		//when an item is deleted, redirect to the revelant admin section without the action parameter
+		//when an item is deleted, redirect to the parent controller
 		$controller = Controller::curr();
-		$noActionURL = $controller->removeAction($data['url']);
 		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
-		return $controller->redirect($noActionURL, 302); //redirect back to admin section
+		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
 	}
 
 	/**
