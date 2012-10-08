@@ -2,18 +2,22 @@
 class CMSProfileController extends LeftAndMain {
 
 	static $url_segment = 'myprofile';
+	static $menu_title = 'Member Profile';
 	static $required_permission_codes = false;
 
-	public function index($request) {
-		$form = $this->Member_ProfileForm();
-		return $this->customise(array(
-			'Content' => ' ',
-			'Form' => $form
-		))->renderWith('CMSDialog');
+	public function getEditForm($id = null, $fields = null) {
+		$form = new Member_ProfileForm($this, 'EditForm', Member::currentUser());;
+		$form->addExtraClass('root-form');
+		$form->addExtraClass('cms-edit-form cms-panel-padded center');
+		$form->setHTMLID('Form_EditForm');
+		$this->extend('updateEditForm', $form);
+		
+		return $form;
 	}
-	
-	public function Member_ProfileForm() {
-		return new Member_ProfileForm($this, 'Member_ProfileForm', Member::currentUser());
+
+	public function dosave($data, $form) {
+		$form->doSave($data, $form);
+		$this->response->addHeader('X-Status', $form->Message());		
 	}
 
 	public function canView($member = null) {

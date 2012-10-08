@@ -12,7 +12,7 @@
 			<% with CurrentMember %>
 				<span>
 					<% _t('LeftAndMain_Menu.ss.Hello','Hi') %>
-					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link ss-ui-dialog-link" data-popupclass="edit-profile-popup">
+					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
 				</span>
