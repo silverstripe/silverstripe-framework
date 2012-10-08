@@ -8,6 +8,12 @@ which creates a copy that you can commit to (see github's [guide to "forking"](h
 
 For other modules, our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations, typically using a version control system like "git" or "[subversion](subversion)". 
 
+<div class="hint" markdown="1">
+Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that change to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
+
+We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
+</div>
+
 ## Step-by-step: From forking to sending the pull request
 
  1. Follow the [Installation for contributions](../../installation/from-source#option-2-installation-for-contributions) instructions, which explain how to fork the core modules and add the correct "upstream" remote.
@@ -122,11 +128,6 @@ Example: Good commit message
 	Added prepValueForDB() which is called on DBField->writeToManipulation() 
 	to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).
 	Added documentation for DBField->writeToManipulation() (related to a4bd42fd).
-	
-<div class="hint" markdown="1">
-Note: By supplying code in patches, tickets and pull requests, 
-you agree that is can be used in distributions and derivative works of SilverStripe CMS and associated modules, under the BSD license.
-</div>
 
 ## The steps in more detail
 
