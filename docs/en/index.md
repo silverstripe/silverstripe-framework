@@ -16,7 +16,7 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 
 ### Level 1: Building your first SilverStripe website
 
- * [Introduction to PHP5 (zend.com)](http://devzone.zend.com/node/view/id/627)
+ * [Introduction to PHP5 (zend.com)](http://devzone.zend.com/6/php-101--php-for-the-absolute-beginner)
  *  [Tutorials](tutorials)
    * [1. Building a basic site](tutorials/1-building-a-basic-site)
    * [2. Extending a basic site](tutorials/2-extending-a-basic-site)
@@ -49,7 +49,6 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 *  [Debugging](topics/debugging)
 *  [Errorhandling](topics/error-handling)
 *  [Testing Guide](topics/testing/): Framework for automated testing like Unittests
-*  [Built-in Page Controls](reference/built-in-page-controls)
 *  [Execution Pipeline](reference/execution-pipeline): Tracking a request from director to template-rendering
 *  [Recipes/Howtos](howto/)
 

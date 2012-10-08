@@ -104,6 +104,7 @@ All forms have some basic validation built in – email fields will only let the
 
 The framework comes with a predefined validator called `[api:RequiredFields]`, which performs the common task of making sure particular fields are filled out. Below is the code to add validation to a contact form:
 
+	:::php
 	public function Form() { 
 		// ...
 		$validator = new RequiredFields('Name', 'Message');

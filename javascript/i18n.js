@@ -4,7 +4,7 @@ if(typeof(ss) == 'undefined') ss = {};
  * Lightweight clientside i18n implementation.
  * Caution: Only available after DOM loaded because we need to detect the language
  * 
- * For non-i18n stub implementation, see sapphire/javascript/i18nx.js
+ * For non-i18n stub implementation, see framework/javascript/i18nx.js
  * 
  * Based on jQuery i18n plugin: 1.0.0  Feb-10-2008
  * 

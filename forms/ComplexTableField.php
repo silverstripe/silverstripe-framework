@@ -129,20 +129,20 @@ class ComplexTableField extends TableListField {
 	public $actions = array(
 		'show' => array(
 			'label' => 'Show',
-			'icon' => 'sapphire/images/show.png',
-			'icon_disabled' => 'sapphire/images/show_disabled.png',
+			'icon' => 'framework/images/show.png',
+			'icon_disabled' => 'framework/images/show_disabled.png',
 			'class' => 'popuplink showlink',
 		),
 		'edit' => array(
 			'label' => 'Edit',
-			'icon' => 'sapphire/images/edit.gif', 
-			'icon_disabled' => 'sapphire/images/edit_disabled.gif',
+			'icon' => 'framework/images/edit.gif', 
+			'icon_disabled' => 'framework/images/edit_disabled.gif',
 			'class' => 'popuplink editlink',
 		),
 		'delete' => array(
 			'label' => 'Delete',
-			'icon' => 'sapphire/images/delete.gif', 
-			'icon_disabled' => 'sapphire/images/delete_disabled.gif',
+			'icon' => 'framework/images/delete.gif', 
+			'icon_disabled' => 'framework/images/delete_disabled.gif',
 			'class' => 'popuplink deletelink',
 		),
 	);

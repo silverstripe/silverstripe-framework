@@ -37,7 +37,7 @@ require_once 'Zend/Date.php';
  * configuration accordingly. Changing the locale through {@link setLocale()} will not update the 
  * `dateformat` configuration automatically.
  * 
- * See http://doc.silverstripe.org/sapphire/en/topics/i18n for more information about localizing form fields.
+ * See http://doc.silverstripe.org/framework/en/topics/i18n for more information about localizing form fields.
  * 
  * # Usage
  * 
