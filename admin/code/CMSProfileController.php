@@ -10,8 +10,6 @@ class CMSProfileController extends LeftAndMain {
 		$form->addExtraClass('root-form');
 		$form->addExtraClass('cms-edit-form cms-panel-padded center');
 		$form->setHTMLID('Form_EditForm');
-		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-
 		$this->extend('updateEditForm', $form);
 		
 		return $form;
