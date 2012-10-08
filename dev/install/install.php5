@@ -1350,7 +1350,7 @@ TEXT;
 		</security>
 		<rewrite>
 			<rules>
-				<rule name="SilverStripe">
+				<rule name="SilverStripe URL Rewrite">
 					<match url=".*" ignoreCase="false" />
 					<conditions logicalGrouping="MatchAll">
 						<add input="{URL}" pattern="^/?(.*)$" ignoreCase="false" />
