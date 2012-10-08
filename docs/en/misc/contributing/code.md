@@ -19,11 +19,9 @@ For other modules, our [module list on silverstripe.org](http://silverstripe.org
 
  1. As time passes, the upstream repository accumulates new commits. Keep your working copy's master branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
 
+        # [make sure all your changes are committed as necessary in branch]
         $ git fetch upstream
-        $ git checkout master
         $ git rebase upstream/master
-        $ git checkout ###-description
-        $ git rebase master
 
  1. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
 
@@ -55,7 +53,7 @@ If you're familiar with it, here's the short version of what you need to know. O
 
   * **A single development branch should represent changes related to a single issue.** If you decide to work on another issue, create another branch.
 
-  * **Squash your commits.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
+  * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
 
 
 
@@ -158,13 +156,19 @@ You should be able to log into your GitHub account, switch to the branch, and se
 
 To keep your development branch up to date, rebase your changes on top of the current state of the upstream master. See the [What is git rebase?](code#what-is-git-rebase) section below to learn more about rebasing.
 
-If you've set up an upstream branch as detailed above, and a development branch called `100-dataobject-get-one`, you'd update `upstream`, update your local master, and rebase your branch from it like so:
+If you've set up an upstream branch as detailed above, and a development branch called `100-dataobject-get-one`, you can update `upstream` and rebase your branch from it like so:
 
+    # [make sure all your changes are committed as necessary in branch]
+	$ git fetch upstream
+	$ git rebase upstream/master
+
+Note that the example doesn't keep your own master branch up to date.  If you wanted to that, you might take the following approach instead:
+
+	# [make sure all your changes are committed as necessary in branch]
 	$ git fetch upstream
 	$ git checkout master
 	$ git rebase upstream/master
 	$ git checkout 100-dataobject-get-one
-	# [make sure all is committed as necessary in branch]
 	$ git rebase master
 
 You may need to resolve conflicts that occur when a file on the development trunk and one of your files have both been changed. Edit each file to resolve the differences, then commit the fixes to your development server repo and test. Each file will need to be "added" before running a "commit." 
@@ -172,23 +176,21 @@ You may need to resolve conflicts that occur when a file on the development trun
 Conflicts are clearly marked in the code files. Make sure to take time in determining what version of the conflict you want to keep and what you want to discard. 
 
 	$ git add <filename>
-	$ git commit 
-
-To push the updates to your GitHub repo, replace 100-dataobject-get-one with your branch name and run:
-
-	$ git push origin 100-dataobject-get-one
+	$ git rebase --continue
 
 ### Squash All Commits Related to a Single Issue into a Single Commit
 
-Once you have rebased your work on top of the latest state of the upstream master, you may have several commits related to the issue you were working on. Once everything is done, squash them into a single commit with a descriptive message (see ["Contributing: Commit Messages"](contributing#commit-messages)).
+Once you have rebased your work on top of the latest state of the upstream master, you may have several commits related to the issue you were working on. Once everything is done, squash them into a single commit with a descriptive message (see ["Contributing: Commit Messages"](code#commit-messages)).
 
 To squash four commits into one, do the following:
 
-	$ git rebase -i HEAD~4
+	$ git rebase -i upstream/master
 
 In the text editor that comes up, replace the words "pick" with "squash" next to the commits you want to squash into the commit before it. Save and close the editor, and git will combine the "squash"'ed commits with the one before it. Git will then give you the opportunity to change your commit message to something like, "BUGFIX Issue #100: Fixed DataObject::get_one() parameter order"
 
-Important: If you've already pushed commits to GitHub, and then squash them locally, you will not be able to push that same branch to GitHub again. Create a new branch--like 100-dataobject-get-one-squashed or 100-dataobject-get-one-rc1 (for "release candidate 1") - and squash your commits there. Once everything is squashed and ready, push the new squashed branch to GitHub and send your pull request to Gina.
+Important: If you've already pushed commits to GitHub, and then squash them locally, you will have to force-push to your GitHub again.  Add the `-f` argument to your git push command:
+
+    $ git push -f origin 100-dataobject-get-one
 
 Helpful hint: You can always edit your last commit message by using:
 
