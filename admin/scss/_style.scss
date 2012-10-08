@@ -1136,6 +1136,17 @@ form.member-profile-form {
 			}
 		}
 	}
+
+	form.member-profile-form {
+		#Root .ui-tabs-nav {
+			display: none;
+		}
+		
+		#Root_Main, #Root_Permissions {
+			border: none;
+		}
+	}
+		
 }
 
 /** --------------------------------------------

@@ -484,6 +484,8 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 .cms .cms-content-fields .field .fieldholder-small { margin-top: 8px; }
 .cms .cms-content-fields .field .fieldholder-small label { padding-top: 8px; width: 64px; float: left; margin-left: -64px; }
 .cms .cms-content-fields .field table .fieldholder-small { margin-top: 0; }
+.cms form.member-profile-form #Root .ui-tabs-nav { display: none; }
+.cms form.member-profile-form #Root_Main, .cms form.member-profile-form #Root_Permissions { border: none; }
 
 /** -------------------------------------------- "Settings" Form -------------------------------------------- */
 #CanViewType .optionset li, #CanEditType .optionset li, #CanCreateTopLevelType .optionset li { float: none; width: auto; white-space: nowrap; }

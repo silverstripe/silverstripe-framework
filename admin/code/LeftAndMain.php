@@ -86,7 +86,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
-		'Member_ProfileForm',
 	);
 
 	/**

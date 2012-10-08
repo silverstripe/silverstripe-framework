@@ -1470,59 +1470,6 @@ class Member_GroupSet extends ManyManyList {
 }
 
 /**
- * Form for editing a member profile.
- * @package framework
- * @subpackage security
- */
-class Member_ProfileForm extends Form {
-	
-	public function __construct($controller, $name, $member) {
-		Requirements::block(FRAMEWORK_DIR . '/admin/css/layout.css');
-		
-		$fields = $member->getCMSFields();
-		$fields->push(new HiddenField('ID','ID',$member->ID));
-
-		$actions = new FieldList(
- 			FormAction::create('dosave',_t('CMSMain.SAVE', 'Save'))
- 				->addExtraClass('ss-ui-button ss-ui-action-constructive')
- 				->setAttribute('data-icon', 'accept')
- 				->setUseButtonTag(true)
-		);
-		
-		$validator = new Member_Validator();
-		
-		parent::__construct($controller, $name, $fields, $actions, $validator);
-		
-		$this->addExtraClass('member-profile-form');
-		$this->loadDataFrom($member);
-	}
-	
-	public function dosave($data, $form) {
-		// don't allow ommitting or changing the ID
-		if(!isset($data['ID']) || $data['ID'] != Member::currentUserID()) {
-			return $this->controller->redirectBack();
-		}
-		
-		$SQL_data = Convert::raw2sql($data);
-		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
-		
-		if($SQL_data['Locale'] != $member->Locale) {
-			$form->addErrorMessage("Generic", _t('Member.REFRESHLANG'),"good");
-		}
-		
-		$form->saveInto($member);
-		$member->write();
-		
-		$message = _t('Member.PROFILESAVESUCCESS', 'Successfully saved.');
-		$form->sessionMessage($message, 'good');
-		
-		$this->controller->redirectBack();
-	}
-}
-
-
-
-/**
  * Class used as template to send an email saying that the password has been
  * changed
  * @package framework
