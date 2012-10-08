@@ -72,7 +72,7 @@ cs:
     ACCESSALLINTERFACESHELP: 'Prepíše více specifické nastavení přístupu.'
     SAVE: Uložit
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'Můj profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vaše heslo bylo změněno pro'
     CHANGEPASSWORDTEXT2: 'Nyní můžete použít následující přihlašovací údaje pro přihlášení:'
