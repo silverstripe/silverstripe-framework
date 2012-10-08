@@ -284,6 +284,7 @@ Built-in headers are:
 	* `X-Controller`: PHP class name matching a menu entry, which is marked active
 	* `X-ControllerURL`: Alternative URL to record in the HTML5 browser history
 	* `X-Status`: Extended status information, used for an information popover.
+	* `X-Reload`: Force a full page reload based on `X-ControllerURL`
 
 ## Special Links
 
