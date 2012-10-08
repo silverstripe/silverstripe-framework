@@ -266,14 +266,15 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				ed.init(config);
 
-				// Avoid flicker (also set in CSS to apply as early as possible)
-				self.css('visibility', '');
-
 				// Create editor instance and render it.
 				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
 				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
 				ed.create(this.attr('id'), config, function() {
-					self.css('visibility', 'visible');
+					// Delayed show because TinyMCE calls hide() via setTimeout on removing an element,
+					// which is called in quick succession with adding a new editor after ajax loading new markup
+					setTimeout(function() {
+						$(ed.getContainer()).show();
+					}, 10);
 				});
 				
 				this._super();
