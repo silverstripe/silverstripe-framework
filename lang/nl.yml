@@ -72,7 +72,7 @@ nl:
     ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
     SAVE: Bewaar
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
     CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
@@ -367,7 +367,6 @@ nl:
     NEWPASSWORD: 'Nieuw Wachtwoord'
     PASSWORD: Wachtwoord
     PLURALNAME: Leden
-    PROFILESAVESUCCESS: 'Succesvol opgeslagen'
     REMEMBERME: 'Wachtwoord onthouden voor de volgende keer?'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'Uw wachtwoord is veranderd'

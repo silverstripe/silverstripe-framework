@@ -72,7 +72,7 @@ km:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: អ្នកបានផ្លាស់ប្តូរពាក្យសំងាត់សំរាប់
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ km:
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
     PLURALNAME: សមាជិក
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: សមាជិក
     SUBJECTPASSWORDCHANGED: ពាក្យសំងាត់របស់អ្នកបានផ្លាស់ប្តូរ

@@ -72,7 +72,7 @@ vi_VN:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Lưu
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Bạn có thể thay đổi mật khẩu tại'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ vi_VN:
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
     PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Thay đổi mật khẩu'

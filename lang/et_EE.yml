@@ -72,7 +72,7 @@ et_EE:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Salvesta
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vahetasid oma parooli lehel'
     CHANGEPASSWORDTEXT2: 'Nüüd võid kasutada sisse logimiseks järgnevaid andmeid:'
@@ -367,7 +367,6 @@ et_EE:
     NEWPASSWORD: 'Uus parool'
     PASSWORD: Parool
     PLURALNAME: Kasutajad
-    PROFILESAVESUCCESS: 'Edukalt salvestatud'
     REMEMBERME: 'Pea mind meeles?'
     SINGULARNAME: Kasutaja
     SUBJECTPASSWORDCHANGED: 'Sinu parool on muudetud'

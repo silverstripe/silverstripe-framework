@@ -72,7 +72,7 @@ lt:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Išsaugoti
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
     CHANGEPASSWORDTEXT2: 'Nuo šiol galite naudoti šiuos prisijungimo duomenis:'
@@ -367,7 +367,6 @@ lt:
     NEWPASSWORD: 'Naujas slaptažodis'
     PASSWORD: Slaptažodis
     PLURALNAME: Nariai
-    PROFILESAVESUCCESS: 'Sėkmingai išsaugota.'
     REMEMBERME: 'Prisiminti jungiantis kitą kartą?'
     SINGULARNAME: Narys
     SUBJECTPASSWORDCHANGED: 'Jūsų slaptažodis pakeistas'

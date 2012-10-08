@@ -72,7 +72,7 @@ zh_CN:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: 保存
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
     CHANGEPASSWORDTEXT2: 您现在可以用下列权限信息进行登路：
@@ -367,7 +367,6 @@ zh_CN:
     NEWPASSWORD: 新密码
     PASSWORD: 密码
     PLURALNAME: 成员
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 记住我的信息？
     SINGULARNAME: 成员
     SUBJECTPASSWORDCHANGED: 您的密码已更改

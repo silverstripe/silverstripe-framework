@@ -72,7 +72,7 @@ pt_BR:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Salvar
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Você alterou sua senha para'
     CHANGEPASSWORDTEXT2: 'Agora, você pode usar as seguintes credenciais para realizar o login:'
@@ -367,7 +367,6 @@ pt_BR:
     NEWPASSWORD: 'Nova Senha'
     PASSWORD: Senha
     PLURALNAME: Membros
-    PROFILESAVESUCCESS: 'Salvo com sucesso.'
     REMEMBERME: 'Lembrar de mim'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Sua senha foi alterada'

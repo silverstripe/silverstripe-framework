@@ -72,7 +72,7 @@ bs:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Snimi
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
     CHANGEPASSWORDTEXT2: 'Možete koristiti slijedeće podatke za prijavu:'
@@ -367,7 +367,6 @@ bs:
     NEWPASSWORD: 'Nova šifra'
     PASSWORD: Šifra
     PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Zapamti me slijedeći put'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'

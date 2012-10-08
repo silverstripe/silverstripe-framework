@@ -72,7 +72,7 @@ he_IL:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: שמור
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
     CHANGEPASSWORDTEXT2: 'כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:'
@@ -367,7 +367,6 @@ he_IL:
     NEWPASSWORD: 'סיסמא חדשה'
     PASSWORD: סיסמא
     PLURALNAME: 'חברים רשומים'
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'זכור אותי בפעם הבאה?'
     SINGULARNAME: 'חבר רשום'
     SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'

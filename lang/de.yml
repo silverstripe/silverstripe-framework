@@ -72,7 +72,7 @@ de:
     ACCESSALLINTERFACESHELP: 'Hebt alle bereichspezifischen Berechtigungen auf.'
     SAVE: Speichern
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort geändert für'
     CHANGEPASSWORDTEXT2: 'Sie können nun folgende Angaben benutzen um sich einzuloggen'
@@ -367,7 +367,6 @@ de:
     NEWPASSWORD: 'Neues Passwort'
     PASSWORD: Passwort
     PLURALNAME: Benutzer
-    PROFILESAVESUCCESS: 'Erfolgreich gespeichert.'
     REMEMBERME: 'Für das nächste Mal merken?'
     SINGULARNAME: Benutzer
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'

@@ -72,7 +72,7 @@ eo:
     ACCESSALLINTERFACESHELP: 'Nuligas pli specifajn alirajn agordojn.'
     SAVE: Konservi
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
     CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
@@ -367,7 +367,6 @@ eo:
     NEWPASSWORD: 'Novan pasvorton'
     PASSWORD: Pasvorto
     PLURALNAME: Membroj
-    PROFILESAVESUCCESS: 'Sukcese konservis.'
     REMEMBERME: 'Memoru min je la sekva fojo?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'

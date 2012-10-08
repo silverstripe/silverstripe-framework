@@ -72,7 +72,7 @@ sv:
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -367,7 +367,6 @@ sv:
     NEWPASSWORD: 'Nytt lösenord'
     PASSWORD: Lösenord
     PLURALNAME: Medlemmar
-    PROFILESAVESUCCESS: 'Lyckades spara.'
     REMEMBERME: 'Kom ihåg mig nästa gång?'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'

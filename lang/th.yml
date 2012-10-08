@@ -72,7 +72,7 @@ th:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: บันทึก
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
     CHANGEPASSWORDTEXT2: 'คุณสามารถใช้ข้อมูลส่วนตัวต่อไปนี้เพื่อเข้าสู่ระบบ:'
@@ -367,7 +367,6 @@ th:
     NEWPASSWORD: รหัสผ่านใหม่
     PASSWORD: รหัสผ่าน
     PLURALNAME: สมาชิก
-    PROFILESAVESUCCESS: บันทึกเรียบร้อยแล้ว
     REMEMBERME: 'จำรหัสผ่านไว้สำหรับครั้งต่อไป?'
     SINGULARNAME: สมาชิก
     SUBJECTPASSWORDCHANGED: รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว

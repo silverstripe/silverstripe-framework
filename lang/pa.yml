@@ -72,7 +72,7 @@ pa:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ pa:
     NEWPASSWORD: 'ਨਵਾਂ Password'
     PASSWORD: Password
     PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'ਮੈਂਨੰੂ ਅਗਲੀ ਵਾਰ ਯਾਦ ਰੱਖਣਾ'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'ਤੁਹਾਡਾ ਪਾਸਵਰਡ ਬਦਲ ਗਆ ਹੈ।         '

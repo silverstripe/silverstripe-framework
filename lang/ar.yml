@@ -72,7 +72,7 @@ ar:
     ACCESSALLINTERFACESHELP: 'ينقض أكثر من توصيف الوصول المحدد'
     SAVE: حفظ
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
     CHANGEPASSWORDTEXT2: 'يمكنك الآن استخدام هذه البيانات للدخول إلى حسابك'
@@ -367,7 +367,6 @@ ar:
     NEWPASSWORD: 'رقم المرور الجديد'
     PASSWORD: 'رقم المرور'
     PLURALNAME: الأعضاء
-    PROFILESAVESUCCESS: 'تم الحفظ بنجاح'
     REMEMBERME: 'تذكرني في المرة القادمة ؟'
     SINGULARNAME: العضو
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'

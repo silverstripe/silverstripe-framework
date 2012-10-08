@@ -72,7 +72,7 @@ az:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: 'Yadda saxla'
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
     CHANGEPASSWORDTEXT2: 'Siz aşağıdakilarla daxil ola bilərsiniz.'
@@ -367,7 +367,6 @@ az:
     NEWPASSWORD: 'Yeni parol'
     PASSWORD: Parol
     PLURALNAME: Üzvlər
-    PROFILESAVESUCCESS: 'Uğurla yadda saxlanıldı.'
     REMEMBERME: 'Yadda saxla?'
     SINGULARNAME: Üzv
     SUBJECTPASSWORDCHANGED: 'Sizin parolunuz dəyişildi'

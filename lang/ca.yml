@@ -72,7 +72,7 @@ ca:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Desa
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
     CHANGEPASSWORDTEXT2: 'Podeu usar ara les següents credencials per a entrar:'
@@ -367,7 +367,6 @@ ca:
     NEWPASSWORD: 'Nova contrasenya'
     PASSWORD: Contrasenya
     PLURALNAME: Membres
-    PROFILESAVESUCCESS: 'S''ha desat amb èxit.'
     REMEMBERME: 'Recorda''m el proper cop'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'

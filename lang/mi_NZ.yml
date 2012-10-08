@@ -72,7 +72,7 @@ mi_NZ:
     ACCESSALLINTERFACESHELP: 'Ka takahi i ngā tautuhinga uru tauwhāiti ake'
     SAVE: Tiaki
   CMSProfileController:
-    MENUTITLE: PūwhakamanaKōtahaCMS
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
     CHANGEPASSWORDTEXT2: 'Ka taea te whakamahi i ēnei taipitopito tuakiri ināianei hei takiuru:'
@@ -367,7 +367,6 @@ mi_NZ:
     NEWPASSWORD: 'Kupuhipa Hōu'
     PASSWORD: Kupuhipa
     PLURALNAME: 'Ngā Mema'
-    PROFILESAVESUCCESS: 'I momoho te tiaki'
     REMEMBERME: 'Ka maumahara mai ā muri atu?'
     SINGULARNAME: Mema
     SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'

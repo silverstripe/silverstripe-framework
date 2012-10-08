@@ -72,7 +72,7 @@ ne:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
     CHANGEPASSWORDTEXT2: 'दिएको विवरण अनुसार भित्र जान सक्नुहुन्छ :'
@@ -367,7 +367,6 @@ ne:
     NEWPASSWORD: 'नयाँ पासओड'
     PASSWORD: पासओड
     PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'अर्को पटक मलाई सम्झनुस् '
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'तपाईंको पासओड परिवतन भएको छ ।'

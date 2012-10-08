@@ -72,7 +72,7 @@ fi:
     ACCESSALLINTERFACESHELP: 'Ohittaa tarkemmat käyttöoikeudet.'
     SAVE: Tallenna
   CMSProfileController:
-    MENUTITLE: 'CMS-profiili kontrolleri'
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
@@ -367,7 +367,6 @@ fi:
     NEWPASSWORD: 'Uusi salasana'
     PASSWORD: Salasana
     PLURALNAME: Jäsenet
-    PROFILESAVESUCCESS: 'Tallennettu onnistuneesti.'
     REMEMBERME: 'Muista seuraavalla kerralla?'
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'

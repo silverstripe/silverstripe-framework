@@ -72,7 +72,7 @@ si:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: 'සේවි කරන්න'
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
     CHANGEPASSWORDTEXT2: 'ප්රවිශ්ට වීමට පහත දත්ත යොදාගන්න'
@@ -367,7 +367,6 @@ si:
     NEWPASSWORD: 'අලුත් මුර පදයක්'
     PASSWORD: 'මුර පදය'
     PLURALNAME: සාමාජිකයින්
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'මතක‌ තබා ගන්න?'
     SINGULARNAME: සාමාජිකයා
     SUBJECTPASSWORDCHANGED: 'මුර පදය අලුත් කරන ලදී'

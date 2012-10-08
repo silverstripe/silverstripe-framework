@@ -72,7 +72,7 @@ it:
     ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
     SAVE: Salva
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT2: 'Ora puoi utilizzare le seguenti credenziali per accedere:'
@@ -367,7 +367,6 @@ it:
     NEWPASSWORD: 'Nuova password'
     PASSWORD: Password
     PLURALNAME: Utenti
-    PROFILESAVESUCCESS: 'Salvato con successo.'
     REMEMBERME: 'Ricordati di me la prossima volta?'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'

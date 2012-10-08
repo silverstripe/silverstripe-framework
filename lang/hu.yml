@@ -72,7 +72,7 @@ hu:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Mentés
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Megváltoztattad a jelszavad erre: '
     CHANGEPASSWORDTEXT2: 'Mostantól a következő adatokat használhatod a bejelentkezéshez:'
@@ -367,7 +367,6 @@ hu:
     NEWPASSWORD: 'Új jelszó'
     PASSWORD: Jelszó
     PLURALNAME: Tagok
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Emlékezzen rám legközelebb'
     SINGULARNAME: Tag
     SUBJECTPASSWORDCHANGED: 'A jelszó megváltozott'

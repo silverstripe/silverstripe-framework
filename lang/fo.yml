@@ -72,7 +72,7 @@ fo:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Goym
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ fo:
     NEWPASSWORD: 'Nýtt loyniorð'
     PASSWORD: Loyniorð
     PLURALNAME: Limir
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Minst til mín?'
     SINGULARNAME: Limur
     SUBJECTPASSWORDCHANGED: 'Títt loyniorð er nú broytt'

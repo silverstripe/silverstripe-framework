@@ -72,7 +72,7 @@ sl:
     ACCESSALLINTERFACESHELP: 'Omogoča bolj specifične nastavitve za možnosti dostop.'
     SAVE: Shrani
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
     CHANGEPASSWORDTEXT2: 'Za prijavo lahko odslej uporabite naslednje podatke:'
@@ -367,7 +367,6 @@ sl:
     NEWPASSWORD: 'Novo geslo'
     PASSWORD: Geslo
     PLURALNAME: Uporabniki
-    PROFILESAVESUCCESS: Shranjeno!
     REMEMBERME: 'Zapomni si me do prihodnjič'
     SINGULARNAME: Uporabnik
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'

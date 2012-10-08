@@ -72,7 +72,7 @@ el:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Αποθήκευση
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ el:
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
     PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'

@@ -72,7 +72,7 @@ uk:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Зберегти
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
@@ -367,7 +367,6 @@ uk:
     NEWPASSWORD: 'Новий пароль'
     PASSWORD: Пароль
     PLURALNAME: Члени
-    PROFILESAVESUCCESS: 'Збереження пройшло успішно.'
     REMEMBERME: 'Пам''ятати мене наступного разу?'
     SINGULARNAME: Член
     SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'

@@ -72,7 +72,7 @@ ja_JP:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: 保存
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
     CHANGEPASSWORDTEXT2: '貴方は現在以下の証明書を使ってログインしています:'
@@ -367,7 +367,6 @@ ja_JP:
     NEWPASSWORD: 新しいパスワード
     PASSWORD: パスワード
     PLURALNAME: メンバー
-    PROFILESAVESUCCESS: 保存しました。
     REMEMBERME: パスワードを記憶？
     SINGULARNAME: メンバー
     SUBJECTPASSWORDCHANGED: パスワードが変わりました。

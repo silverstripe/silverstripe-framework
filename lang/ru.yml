@@ -72,7 +72,7 @@ ru:
     ACCESSALLINTERFACESHELP: 'Отменяет индивидуальные настройки прав доступа.'
     SAVE: Сохранить
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
     CHANGEPASSWORDTEXT2: 'Для того, чтобы войти, используйте сейчас следующие учетные данные:'
@@ -367,7 +367,6 @@ ru:
     NEWPASSWORD: 'Новый пароль'
     PASSWORD: Пароль
     PLURALNAME: 'Члены группы'
-    PROFILESAVESUCCESS: 'Сохранение прошло успешно'
     REMEMBERME: 'Запомнить меня?'
     SINGULARNAME: 'Член группы'
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'

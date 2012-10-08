@@ -72,7 +72,7 @@ sk:
     ACCESSALLINTERFACESHELP: 'Prepisuje viac špecifických  nastavení prístupu.'
     SAVE: Uložiť
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
     CHANGEPASSWORDTEXT2: 'Teraz môžete použiť nasledujúce prihlasovacie údaje na prihlásenie:'
@@ -367,7 +367,6 @@ sk:
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo
     PLURALNAME: Členovia
-    PROFILESAVESUCCESS: 'Úspešne uložné.'
     REMEMBERME: 'Pamätať si ma nabudúce?'
     SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bolo zmenené'

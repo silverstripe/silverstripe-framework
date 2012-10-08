@@ -72,7 +72,7 @@ gl_ES:
     ACCESSALLINTERFACESHELP: 'Anular a configuración de acceso máis específica.'
     SAVE: Gardar
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
     CHANGEPASSWORDTEXT2: 'Podes empregar agora as seguintes credenciais para iniciar sesión:'
@@ -367,7 +367,6 @@ gl_ES:
     NEWPASSWORD: 'Novo Contrasinal'
     PASSWORD: Contrasinal
     PLURALNAME: Membros
-    PROFILESAVESUCCESS: 'Gardado con éxito.'
     REMEMBERME: 'Lembrarme a próxima vez?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'O teu contrasinal mudou'

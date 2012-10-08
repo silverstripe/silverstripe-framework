@@ -72,7 +72,7 @@ es_AR:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Guardar
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
     CHANGEPASSWORDTEXT2: 'Ahora puedes utilizar las siguientes credenciales para ingresar:'
@@ -367,7 +367,6 @@ es_AR:
     NEWPASSWORD: 'Nueva contraseña'
     PASSWORD: Contraseña
     PLURALNAME: Miembros
-    PROFILESAVESUCCESS: 'Guardado con éxito.'
     REMEMBERME: '¿Recordarme la siguiente vez?'
     SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Tu contraseña ha sido cambiada'

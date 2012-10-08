@@ -72,7 +72,7 @@ nb:
     ACCESSALLINTERFACESHELP: 'Overstyrer mer spesifikke adgangsinnstillinger'
     SAVE: Lagre
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
     CHANGEPASSWORDTEXT2: 'Du kan nå bruke følgende informasjon for å logge deg inn:'
@@ -367,7 +367,6 @@ nb:
     NEWPASSWORD: 'Nytt Passord'
     PASSWORD: Passord
     PLURALNAME: Medlemmer
-    PROFILESAVESUCCESS: 'Vellykket lagret.'
     REMEMBERME: 'Husk meg neste gang?'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt passord har blitt endret'

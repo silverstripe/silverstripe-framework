@@ -72,7 +72,7 @@ fa_IR:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: نگاهداری
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ fa_IR:
     NEWPASSWORD: 'گذرواژه تازه'
     PASSWORD: 'رمز عبور'
     PLURALNAME: اعضاء
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: عضو
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما دگرگون شد'

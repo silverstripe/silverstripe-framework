@@ -72,7 +72,7 @@ ast:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ ast:
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
     PLURALNAME: Miembros
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Miembru
     SUBJECTPASSWORDCHANGED: 'Se camudó la to contraseña'

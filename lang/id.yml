@@ -72,7 +72,7 @@ id:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Simpan
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Anda merubah password anda untuk'
     CHANGEPASSWORDTEXT2: 'Anda dapat menggunakan surat kepercayaan berikut untuk masuk:'
@@ -367,7 +367,6 @@ id:
     NEWPASSWORD: 'Password Baru'
     PASSWORD: Password
     PLURALNAME: Anggota-anggota
-    PROFILESAVESUCCESS: 'Telah disimpan dengan sukses.'
     REMEMBERME: 'Ingat saya kali berikutnya?'
     SINGULARNAME: Anggota
     SUBJECTPASSWORDCHANGED: 'Password Anda telah diubah'

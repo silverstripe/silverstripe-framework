@@ -72,7 +72,7 @@ ro:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ ro:
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola
     PLURALNAME: Membri
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Tine-ma minte?'
     SINGULARNAME: Membru
     SUBJECTPASSWORDCHANGED: 'Parola dumneavoastra a fost schimbata'

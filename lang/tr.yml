@@ -72,7 +72,7 @@ tr:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Kaydet
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
     CHANGEPASSWORDTEXT2: 'Sisteme giriş yapabilmek için aşağıdaki kullanıcı bilgilerinizi kullanabilirsiniz:'
@@ -367,7 +367,6 @@ tr:
     NEWPASSWORD: 'Yeni Şifre'
     PASSWORD: Şifre
     PLURALNAME: Üyeler
-    PROFILESAVESUCCESS: 'Başarıyla kaydedildi.'
     REMEMBERME: 'Beni hatırla?'
     SINGULARNAME: Üye
     SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'

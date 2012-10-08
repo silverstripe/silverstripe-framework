@@ -72,7 +72,7 @@ lv:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Saglabāt
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
     CHANGEPASSWORDTEXT2: 'Lai pieslēgtos, izmantojiet sekojošus datus:'
@@ -367,7 +367,6 @@ lv:
     NEWPASSWORD: 'Jaunā parole'
     PASSWORD: Parole
     PLURALNAME: Dalībnieki
-    PROFILESAVESUCCESS: 'Veiksmīgi saglabāts.'
     REMEMBERME: 'Atcerēties mani nākamreiz?'
     SINGULARNAME: Dalībnieks
     SUBJECTPASSWORDCHANGED: 'Jūsu parole tika nomainīta'

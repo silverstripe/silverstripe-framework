@@ -72,7 +72,7 @@ af:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -367,7 +367,6 @@ af:
     NEWPASSWORD: 'Nuwe wagwoord'
     PASSWORD: Password
     PLURALNAME: Lidde
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'U wagwoord het verander.'

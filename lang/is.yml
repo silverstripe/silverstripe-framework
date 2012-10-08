@@ -72,7 +72,7 @@ is:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Vista
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
     CHANGEPASSWORDTEXT2: 'Þú getur núna notað eftirfarandi auðkenni til að innskrá þig:'
@@ -367,7 +367,6 @@ is:
     NEWPASSWORD: 'Nýtt lykilorð'
     PASSWORD: Lykilorð
     PLURALNAME: Félagar
-    PROFILESAVESUCCESS: 'Vistun tókst.'
     REMEMBERME: 'Muna eftir mér í næsta skipti?'
     SINGULARNAME: Félagar
     SUBJECTPASSWORDCHANGED: 'Lykilorði þínu hefur verið breytt'
