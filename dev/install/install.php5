@@ -1291,9 +1291,6 @@ RewriteCond %{REQUEST_URI} ^/?(.*)$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* $modulePath/main.php/%1 [QSA,L]
 
-# RewriteCond %{REQUEST_URI} ^(.*)$
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
 TEXT;
 		}
 		$rewrite = <<<TEXT
