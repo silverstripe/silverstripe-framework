@@ -25,19 +25,16 @@ For other modules, our [module list on silverstripe.org](http://silverstripe.org
         $ git checkout ###-description
         $ git rebase master
 
- 1. When development is complete, rebase one more time, then branch from dev branch to release candidate branch.
-
-        $ git checkout ###-description
-        $ git branch ###-description-rc
-        $ git checkout ###-description-rc
-
- 1. Then [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
+ 1. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
 
         $ git fetch upstream
         $ git rebase -i upstream/master
 
- 1. Push release candidate branch to GitHub (`$ git push origin ###-description-rc`)
- 1. Issue pull request on GitHub (Click Pull Request button) 
+ 1. Push release candidate branch to GitHub 
+
+        $ git push origin ###-description
+
+ 1. Issue pull request on GitHub.  Visit your forked respoistory on GitHub.com and click the "Create Pull Request" button nex tot the new branch.
 
 The core team is then responsible for reviewing patches and deciding if they will make it into core.  If
 there are any problems they will follow up with you, so please ensure they have a way to contact you! 
