@@ -242,7 +242,7 @@ class ObjectTest extends SapphireTest {
 		
 		// @todo At the moment, this does NOT remove the extension due to parameterized naming,
 		//  meaning the extension will remain added in further test cases
-		Object::remove_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3');
+		ObjectTest_ExtensionTest::remove_extension('ObjectTest_ExtendTest3');
 	}
 	
 	public function testRemoveExtension() {
@@ -253,7 +253,7 @@ class ObjectTest extends SapphireTest {
 			"Extension added through \$add_extension() are added correctly"
 		);
 		
-		Object::remove_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2');
+		ObjectTest_ExtensionRemoveTest::remove_extension('ObjectTest_ExtendTest2');
 		$this->assertFalse(
 			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2'),
 			"Extension added through \$add_extension() are detected as removed in has_extension()"
@@ -264,7 +264,7 @@ class ObjectTest extends SapphireTest {
 		);
 
 		// ObjectTest_ExtendTest1 is already present in $extensions
-		Object::remove_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest1');
+		ObjectTest_ExtensionRemoveTest::remove_extension('ObjectTest_ExtendTest1');
 		$this->assertFalse(
 			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest1'),
 			"Extension added through \$extensions are detected as removed in has_extension()"
