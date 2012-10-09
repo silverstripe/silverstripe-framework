@@ -8,6 +8,14 @@ Requires a [`silverstripe-installer`](http://github.com/silverstripe/silverstrip
 See [installation on different platforms](http://doc.silverstripe.org/framework/en/installation/),
 and [installation from source](http://doc.silverstripe.org/framework/en/installation/from-source).
 
+## Development and contribution ##
+
+If you would like to make changes to SilverStripe core product, we have an extensive [guide to contributing code](http://doc.silverstripe.org/framework/en/misc/contributing/code) that we invite you to look at before submitting a pull request.
+
+If you would like to get involved, but don't know what to fix, the [Trac tickets](http://open.silverstripe.org/report/125) are a good place to start.
+
+For other ways to contribute, see the [code contribution guidelines](http://doc.silverstripe.org/framework/en/misc/contributing)
+
 ## Links ##
 
  * [Requirements](http://doc.silverstripe.org/framework/en/installation/server-requirements)
