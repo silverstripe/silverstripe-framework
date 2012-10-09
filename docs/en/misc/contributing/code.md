@@ -72,7 +72,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 ## Check List
 
 *  Adhere to our [coding conventions](coding-conventions)
-*  If your patch is extensive, discuss it first on the [silverstripe forum](http///www.silverstripe.org/forums/) (ideally before doing any serious coding)
+*  If your patch is extensive, discuss it first on the [silverstripe-dev google group](https://groups.google.com/group/silverstripe-dev) (ideally before doing any serious coding)
 *  When working on existing tickets, assign them to you and provide status updates through ticket comments
 *  Check your patches against the latest "trunk" or "master", as well as the latest release. 
 Please not that the latest stable release will often not be sufficient! (of all modules)
