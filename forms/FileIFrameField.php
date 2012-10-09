@@ -69,7 +69,7 @@ class FileIFrameField extends FileField {
 		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
 			$record = $this->form->getRecord();
-			if(class_exists('Translatable') && Object::has_extension('SiteTree', 'Translatable') && $record->Locale){
+			if(class_exists('Translatable') && SiteTree::has_extension('Translatable') && $record->Locale){
 				$iframe = "iframe?locale=".$record->Locale;
 			}else{
 				$iframe = "iframe";

@@ -135,7 +135,8 @@ abstract class CMSBatchAction extends Object {
 			}
 		}
 		
-		if(Object::has_extension($this->managedClass, 'Versioned')) {
+		$managed_class = $this->managedClass;
+		if($managed_class::has_extension('Versioned')) {
 			// Get the pages that only exist on live (deleted from stage)
 			if($checkLivePages && $onlyOnLive) {
 				$SQL_ids = implode(', ', array_keys($onlyOnLive));
