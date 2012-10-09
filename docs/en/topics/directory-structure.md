@@ -55,7 +55,7 @@ Example Forum:
 
 Module developers can bundle developer documentation with their code by producing
 plain text files inside a 'docs' folder located in the module folder. These files
-can be written with the Markdown syntax (See ["Writing Documentation"](/misc/contributing#writing-documentation))
+can be written with the Markdown syntax (See [Contributing Documentation](/misc/contributing/documentation))
 and include media such as images or videos.
 
 Inside the docs folder, developers should organize the markdown files into each 
