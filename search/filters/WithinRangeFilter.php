@@ -25,7 +25,7 @@ class WithinRangeFilter extends SearchFilter {
 		$this->max = $max;
 	}
 	
-	public function apply(DataQuery $query) {
+	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		return $query->where(sprintf(
 			"%s >= '%s' AND %s <= '%s'",
@@ -35,6 +35,15 @@ class WithinRangeFilter extends SearchFilter {
 			Convert::raw2sql($this->max)
 		));
 	}
-	
-}
 
+	protected function excludeOne(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
+		return $query->where(sprintf(
+			"%s < '%s' OR %s > '%s'",
+			$this->getDbName(),
+			Convert::raw2sql($this->min),
+			$this->getDbName(),
+			Convert::raw2sql($this->max)
+		));
+	}	
+}

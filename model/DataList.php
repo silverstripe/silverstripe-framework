@@ -374,38 +374,15 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new instance of the list with an added filter
 	 */
 	public function addFilter($filterArray) {
-		$SQL_Statements = array();
 		foreach($filterArray as $field => $value) {
-			if(is_array($value)) {
-				$customQuery = 'IN (\''.implode('\',\'',Convert::raw2sql($value)).'\')';
-			} else {
-				$customQuery = '= \''.Convert::raw2sql($value).'\'';
-			}
-			
-			if(stristr($field,':')) {
-				$fieldArgs = explode(':',$field);
-				$field = array_shift($fieldArgs);
-				foreach($fieldArgs as $fieldArg){
-					$comparisor = $this->applyFilterContext($field, $fieldArg, $value);
-				}
-			} else {
-				if($field == 'ID') {
-					$field = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
-				} else {
-					$field = '"' . Convert::raw2sql($field) . '"';
-				}
-
-				$SQL_Statements[] = $field . ' ' . $customQuery;
-			}
+			$fieldArgs = explode(':', $field);
+			$field = array_shift($fieldArgs);
+			$filterType = array_shift($fieldArgs);
+			$modifiers = $fieldArgs;
+			$this->applyFilterContext($field, $filterType, $modifiers, $value);
 		}
 
-		if(!count($SQL_Statements)) return $this;
-
-		return $this->alterDataQuery_30(function($query) use ($SQL_Statements){
-			foreach($SQL_Statements as $SQL_Statement){
-				$query->where($SQL_Statement);
-			}
-		});
+		return $this;
 	}
 
 	/**
@@ -459,16 +436,22 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string $field - the fieldname in the db
 	 * @param string $comparisators - example StartsWith, relates to a filtercontext
+	 * @param array $modifiers - Modifiers to pass to the filter, ie not,nocase
 	 * @param string $value - the value that the filtercontext will use for matching
 	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
 	 */
-	private function applyFilterContext($field, $comparisators, $value) {
+	private function applyFilterContext($field, $comparisators, $modifiers, $value) {
 		$t = singleton($this->dataClass())->dbObject($field);
-		$className = "{$comparisators}Filter";
-		if(!class_exists($className)){
-			throw new InvalidArgumentException('There are no '.$comparisators.' comparisator');
+		if($comparisators) {
+			$className = "{$comparisators}Filter";
+		} else {
+			$className = 'ExactMatchFilter';
 		}
-		$t = new $className($field,$value);
+		if(!class_exists($className)){
+			$className = 'ExactMatchFilter';
+			array_unshift($modifiers, $comparisators);
+		}
+		$t = new $className($field, $value, $modifiers);
 		$t->apply($this->dataQuery());
 	}
 	
@@ -500,25 +483,29 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
 		}
 
-		$SQL_Statements = array();
-		foreach($whereArguments as $fieldName => $value) {
-			if($fieldName == 'ID') {
-				$fieldName = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
-			} else {
-				$fieldName = '"' . Convert::raw2sql($fieldName) . '"';
+		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
+			$subquery = $query->disjunctiveGroup();
+
+			foreach($whereArguments as $field => $value) {
+				$fieldArgs = explode(':', $field);
+				$field = array_shift($fieldArgs);
+				$filterType = array_shift($fieldArgs);
+				$modifiers = $fieldArgs;
+
+				// This is here since PHP 5.3 can't call protected/private methods in a closure.
+				$t = singleton($list->dataClass())->dbObject($field);
+				if($filterType) {
+					$className = "{$filterType}Filter";
+				} else {
+					$className = 'ExactMatchFilter';
+				}
+				if(!class_exists($className)){
+					$className = 'ExactMatchFilter';
+					array_unshift($modifiers, $filterType);
+				}
+				$t = new $className($field, $value, $modifiers);
+				$t->exclude($subquery);
 			}
-
-			if(is_array($value)){
-				$SQL_Statements[] = ($fieldName . ' NOT IN (\''.implode('\',\'', Convert::raw2sql($value)).'\')');
-			} else {
-				$SQL_Statements[] = ($fieldName . ' != \''.Convert::raw2sql($value).'\'');
-			}
-		}
-
-		if(!count($SQL_Statements)) return $this;
-
-		return $this->alterDataQuery_30(function($query) use ($SQL_Statements){
-			$query->whereAny($SQL_Statements);
 		});
 	}
 	
