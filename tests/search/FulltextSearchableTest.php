@@ -18,7 +18,7 @@ class FulltextSearchableTest extends SapphireTest {
 	public function tearDown() {
 		// TODO This shouldn't need all arguments included
 		if($this->orig['File_searchable']) {
-			Object::add_extension('File', 'FulltextSearchable(\'"Filename","Title","Content"\')');
+			File::add_extension('FulltextSearchable(\'"Filename","Title","Content"\')');
 		}
 		
 		parent::tearDown();

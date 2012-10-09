@@ -228,7 +228,7 @@ class ObjectTest extends SapphireTest {
 		);
 		
 		// ObjectTest_ExtendTest3 is added manually
-		Object::add_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3("Param")');
+		ObjectTest_ExtensionTest::add_extension('ObjectTest_ExtendTest3("Param")');
 		$this->assertTrue(
 			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3'),
 			"Extensions are detected with static has_extension() when added through add_extension()"
@@ -247,7 +247,7 @@ class ObjectTest extends SapphireTest {
 	
 	public function testRemoveExtension() {
 		// manually add ObjectTest_ExtendTest2
-		Object::add_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2');
+		ObjectTest_ExtensionRemoveTest::add_extension('ObjectTest_ExtendTest2');
 		$this->assertTrue(
 			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2'),
 			"Extension added through \$add_extension() are added correctly"

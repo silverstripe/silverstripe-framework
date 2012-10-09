@@ -450,7 +450,15 @@ abstract class Object {
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
-	public static function add_extension($class, $extension) {
+	public static function add_extension($extension) {
+		$class = get_called_class();
+
+		if(func_num_args() > 1) {
+			Deprecation::notice('3.1.0', "Object::add_extension() deprecated. Call add_extension() on the class");
+			$class = func_get_arg(0);
+			$extension = func_get_arg(1);
+		}
+
 		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
 		}
