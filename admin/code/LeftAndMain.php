@@ -1035,8 +1035,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if(!$fields->dataFieldByName('ClassName')) {
 				$fields->push(new HiddenField('ClassName'));
 			}
+
+			$tree_class = $this->stat('tree_class');
 			if(
-				Object::has_extension($this->stat('tree_class'), 'Hierarchy') 
+				$tree_class::has_extension('Hierarchy') 
 				&& !$fields->dataFieldByName('ParentID')
 			) {
 				$fields->push(new HiddenField('ParentID'));

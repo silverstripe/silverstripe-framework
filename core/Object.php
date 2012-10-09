@@ -422,10 +422,17 @@ abstract class Object {
 	/**
 	 * Return TRUE if a class has a specified extension
 	 *
-	 * @param string $class
 	 * @param string $requiredExtension the class name of the extension to check for.
 	 */
-	public static function has_extension($class, $requiredExtension) {
+	public static function has_extension($requiredExtension) {
+		$class = get_called_class();
+
+		if(func_num_args() > 1) {
+			Deprecation::notice('3.1.0', "Object::has_extension() deprecated. Call has_extension() on the class");
+			$class = func_get_arg(0);
+			$extension = func_get_arg(1);
+		}
+
 		$requiredExtension = strtolower($requiredExtension);
 		$extensions = Config::inst()->get($class, 'extensions');
 

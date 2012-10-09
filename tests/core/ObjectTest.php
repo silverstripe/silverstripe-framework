@@ -192,11 +192,11 @@ class ObjectTest extends SapphireTest {
 	public function testHasAndAddExtension() {
 		// ObjectTest_ExtendTest1 is built in via $extensions
 		$this->assertTrue(
-			Object::has_extension('ObjectTest_ExtensionTest', 'OBJECTTEST_ExtendTest1'),
+			ObjectTest_ExtensionTest::has_extension('OBJECTTEST_ExtendTest1'),
 			"Extensions are detected when set on Object::\$extensions on has_extension() without case-sensitivity"
 		);
 		$this->assertTrue(
-			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest1'),
+			ObjectTest_ExtensionTest::has_extension('ObjectTest_ExtendTest1'),
 			"Extensions are detected when set on Object::\$extensions on has_extension() without case-sensitivity"
 		);
 		$this->assertTrue(
@@ -207,7 +207,7 @@ class ObjectTest extends SapphireTest {
 		
 		// ObjectTest_ExtendTest2 is built in via $extensions (with parameters)
 		$this->assertTrue(
-			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest2'),
+			ObjectTest_ExtensionTest::has_extension('ObjectTest_ExtendTest2'),
 			"Extensions are detected with static has_extension() when set on Object::\$extensions with"
 				. " additional parameters"
 		);
@@ -217,7 +217,7 @@ class ObjectTest extends SapphireTest {
 				. " additional parameters"
 		);
 		$this->assertFalse(
-			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3'),
+			ObjectTest_ExtensionTest::has_extension('ObjectTest_ExtendTest3'),
 			"Other extensions available in the system are not present unless explicitly added to this object"
 				. " when checking through has_extension()"
 		);
@@ -230,7 +230,7 @@ class ObjectTest extends SapphireTest {
 		// ObjectTest_ExtendTest3 is added manually
 		ObjectTest_ExtensionTest::add_extension('ObjectTest_ExtendTest3("Param")');
 		$this->assertTrue(
-			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3'),
+			ObjectTest_ExtensionTest::has_extension('ObjectTest_ExtendTest3'),
 			"Extensions are detected with static has_extension() when added through add_extension()"
 		);
 		// a singleton() wouldn't work as its already initialized
@@ -249,13 +249,13 @@ class ObjectTest extends SapphireTest {
 		// manually add ObjectTest_ExtendTest2
 		ObjectTest_ExtensionRemoveTest::add_extension('ObjectTest_ExtendTest2');
 		$this->assertTrue(
-			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2'),
+			ObjectTest_ExtensionRemoveTest::has_extension('ObjectTest_ExtendTest2'),
 			"Extension added through \$add_extension() are added correctly"
 		);
 		
 		ObjectTest_ExtensionRemoveTest::remove_extension('ObjectTest_ExtendTest2');
 		$this->assertFalse(
-			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2'),
+			ObjectTest_ExtensionRemoveTest::has_extension('ObjectTest_ExtendTest2'),
 			"Extension added through \$add_extension() are detected as removed in has_extension()"
 		);
 		$this->assertFalse(
@@ -266,7 +266,7 @@ class ObjectTest extends SapphireTest {
 		// ObjectTest_ExtendTest1 is already present in $extensions
 		ObjectTest_ExtensionRemoveTest::remove_extension('ObjectTest_ExtendTest1');
 		$this->assertFalse(
-			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest1'),
+			ObjectTest_ExtensionRemoveTest::has_extension('ObjectTest_ExtendTest1'),
 			"Extension added through \$extensions are detected as removed in has_extension()"
 		);
 		$objectTest_ExtensionRemoveTest = new ObjectTest_ExtensionRemoveTest();

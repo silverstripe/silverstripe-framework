@@ -275,7 +275,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Remove any illegal extensions that are present
 		foreach($this->illegalExtensions as $class => $extensions) {
 			foreach($extensions as $extension) {
-				if (Object::has_extension($class, $extension)) {
+				if ($class::has_extension($extension)) {
 					if(!isset($this->extensionsToReapply[$class])) $this->extensionsToReapply[$class] = array();
 					$this->extensionsToReapply[$class][] = $extension;
 					$class::remove_extension($extension);
@@ -288,7 +288,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		foreach($this->requiredExtensions as $class => $extensions) {
 			$this->extensionsToRemove[$class] = array();
 			foreach($extensions as $extension) {
-				if(!Object::has_extension($class, $extension)) {
+				if(!$class::has_extension($extension)) {
 					if(!isset($this->extensionsToRemove[$class])) $this->extensionsToReapply[$class] = array();
 					$this->extensionsToRemove[$class][] = $extension;
 					$class::add_extension($extension);
