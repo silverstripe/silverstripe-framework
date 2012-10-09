@@ -31,14 +31,14 @@ ForumRole extension to the `[api:Member]` object.
 
 
 	:::php
-	Object::add_extension('Class You Want To Override', 'Your Class Name');
+	ClassYouWantToOverride::add_extension('Your Class Name');
 
 
 For example above we want to override Member with a Custom Member so we would write the following
 
 	:::php
 	// add to mysite/_config.php	
-	Object::add_extension('Member', 'CustomMember');
+	Member::add_extension('CustomMember');
 
 ##  Implementation
 

@@ -24,7 +24,7 @@ which map to different database tables.
 
 	:::php
 	// mysite/_config.php
-	Object::add_extension('MyRecord', 'Versioned("Stage","Live")');
+	MyRecord::add_extension('Versioned("Stage","Live")');
 
 Note: The extension is automatically applied to `SiteTree` class.
 
