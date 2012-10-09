@@ -66,12 +66,18 @@ if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
 	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
 }
 
+$scriptPathName = (isset($_SERVER['SCRIPT_FILENAME'])) ? $_SERVER['SCRIPT_FILENAME'] : null;
+$docRoot = (isset($_SERVER['DOCUMENT_ROOT'])) ? $_SERVER['DOCUMENTT_ROOT'] : null;
+if ($docRoot && $scriptPathName) {
+	$scriptName = (strpos($scriptPathName, $docRoot) === 0) ? substr($scriptFilename, strlen($docRoot)) : null;
+}
+
 // My name is
 if (isset($_SERVER['SCRIPT_NAME'])) {
 	$name = $_SERVER['SCRIPT_NAME'];
 }
-else if (isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['DOCUMENT_ROOT']) && strpos($_SERVER['SCRIPT_FILENAME'], $_SERVER['DOCUMENT_ROOT']) === 0) {
-	$name = substr($_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT']));
+else if (isset($scriptName)) {
+	$name = $scriptName;
 }
 else {
 	user_error('Couldn\'t find path to main.php relative to document root');
