@@ -1,6 +1,6 @@
 This website documents high-level features of the [SilverStripe open source platform](http://www.silverstripe.org), aimed
 at developers.  
-Please read our [guide to contributing documentation](misc/contributing#writing-documentation) if you want to help out!
+Please read our [guide to contributing documentation](misc/contributing/documentation) if you want to help out!
 
 ### Overview
 
@@ -54,7 +54,7 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 
 ### Level 4: Contributing to the SilverStripe core
 
-* [Contributing](http://www.silverstripe.org/contributing-to-silverstripe/)
+* [Contributing](misc/contributing)
 * [Coding Conventions](misc/coding-conventions)
 
 <div class="hint" markdown="1">

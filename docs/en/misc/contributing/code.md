@@ -9,7 +9,7 @@ which creates a copy that you can commit to (see github's [guide to "forking"](h
 For other modules, our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations, typically using a version control system like "git" or "[subversion](subversion)". 
 
 <div class="hint" markdown="1">
-Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that change to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
+Note: By supplying code to the SilverStripe core team in patches, tickets and pull requests, you agree to assign copyright of that code to SilverStripe Limited, on the condition that SilverStripe Limited releases that code under the BSD license.
 
 We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
 </div>
@@ -150,8 +150,6 @@ Then, you can push your new branch to GitHub, like this (replace `100-dataobject
 	$ git push origin 100-dataobject-get-one
 
 You should be able to log into your GitHub account, switch to the branch, and see that your changes have been committed. Then click the Pull button to request that your commits get merged into the development master.  
-
-*IMPORTANT*: Before you issue a pull request, make sure it gets accepted by running through the ["Contributing Check List"](contributing#check-list).
 
 ### Rebase Your Development Branch on the Latest Upstream
 

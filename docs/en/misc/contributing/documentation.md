@@ -51,7 +51,7 @@ In order to balance editorial control with effective collaboration, we keep
 documentation alongside the module source code, e.g. in `framework/docs/`,
 or as code comments within PHP code.
 Contributing documentation is the same process as providing any other patch
-(see [Patches and Bugfixes](contributing#submitting-patches-bugfixes-and-enhancements)).
+(see [Contributing code](code)).
 
 ## What to write
 
@@ -144,7 +144,7 @@ on placing HTML blocks inside Markdown.
 Documentation is kept alongside the source code, typically in a module subdirectory like `framework/docs/en/`.
 Each language has its own subfolder, which can duplicate parts or the whole body of documentation.
 German documentation would for example live in `framework/docs/de/`.
-The [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs) module that drives
+The [docsviewer](https://github.com/silverstripe/silverstripe-docsviewer) module that drives
 [doc.silverstripe.org](http://doc.silverstripe.org) automatically resolves these subfolders into a language dropdown.
 
 ## Further reading
