@@ -278,7 +278,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				if (Object::has_extension($class, $extension)) {
 					if(!isset($this->extensionsToReapply[$class])) $this->extensionsToReapply[$class] = array();
 					$this->extensionsToReapply[$class][] = $extension;
-					Object::remove_extension($class, $extension);
+					$class::remove_extension($extension);
 					$isAltered = true;
 				}
 			}
@@ -319,7 +319,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			// Remove extensions added for testing
 			foreach($this->extensionsToRemove as $class => $extensions) {
 				foreach($extensions as $extension) {
-					Object::remove_extension($class, $extension);
+					$class::remove_extension($extension);
 				}
 			}
 

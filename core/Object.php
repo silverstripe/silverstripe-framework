@@ -508,10 +508,17 @@ abstract class Object {
 	 * 
 	 * @todo Add support for removing extensions with parameters
 	 *
-	 * @param string $class
 	 * @param string $extension Classname of an {@link Extension} subclass, without parameters
 	 */
-	public static function remove_extension($class, $extension) {
+	public static function remove_extension($extension) {
+		$class = get_called_class();
+
+		if(func_num_args() > 1) {
+			Deprecation::notice('3.1.0', "Object::remove_extension() deprecated. Call remove_extension() on the class");
+			$class = func_get_arg(0);
+			$extension = func_get_arg(1);
+		}
+
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
 
 		// unset singletons to avoid side-effects
