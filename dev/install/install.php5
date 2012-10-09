@@ -1269,30 +1269,6 @@ HTML;
 		else $baseClause = "";
 		$modulePath = FRAMEWORK_NAME;
 
-		// what Apache modules are being used
-		$apacheModules = array();
-		$modAlias = '';
-		$modRewrite = '';
-		if (function_exists('apache_get_modules')) {
-			$apacheModules = apache_get_modules();
-		}
-		if (in_array('mod_alias', $apacheModules)) {
-			$modAlias = 'RedirectMatch 403 /silverstripe-cache(/|$)';
-		}
-
-		if (in_array('mod_rewrite', $apacheModules)) {
-			$modRewrite = <<<TEXT
-SetEnv HTTP_MOD_REWRITE On
-RewriteEngine On
-
-$baseClause
-
-RewriteCond %{REQUEST_URI} ^/?(.*)$
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule .* $modulePath/main.php/%1 [QSA,L]
-
-TEXT;
-		}
 		$rewrite = <<<TEXT
 <Files *.ss>
 	Order deny,allow
@@ -1308,11 +1284,19 @@ TEXT;
 ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
-$modAlias
+RedirectMatch 403 /silverstripe-cache(/|$)
 
 $acceptPath
+<IfModule mod_rewrite.c>
+	SetEnv HTTP_MOD_REWRITE On
+	RewriteEngine On
 
-$modRewrite
+	$baseClause
+
+	RewriteCond %{REQUEST_URI} ^/?(.*)$
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule .* $modulePath/main.php/%1 [QSA,L]
+</IfModule>
 TEXT;
 
 		if(file_exists('.htaccess')) {
