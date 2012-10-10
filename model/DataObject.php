@@ -2059,7 +2059,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
 		if(!is_numeric($this->record['ID'])) return false;
 
-		$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
+		if (isset($this->record['Version'])){
+			$dataQuery->where("\"$tableClass\".\"RecordID\" = {$this->record['ID']}")->
+				    where("\"$tableClass\".\"Version\" = " . $this->record['Version'])->limit(1);
+			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
+		} else {
+			$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
+		}
 		$columns = array();
 
 		// Add SQL for fields, both simple & multi-value
