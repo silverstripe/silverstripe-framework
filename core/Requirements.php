@@ -757,7 +757,7 @@ class Requirements_Backend {
 	 * @return string|boolean 
 	 */
 	protected function path_for_file($fileOrUrl) {
-		if(preg_match('/^http[s]?/', $fileOrUrl)) {
+		if(preg_match('/^http[s]?/', $fileOrUrl) || preg_match('/^\/\/?/', $fileOrUrl)) {
 			return $fileOrUrl;
 		} elseif(Director::fileExists($fileOrUrl)) {
 			$prefix = Director::absoluteBaseURL();
