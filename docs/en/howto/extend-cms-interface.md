@@ -62,7 +62,7 @@ allows us to build complex layouts with minimal JavaScript configuration.
 ## Include custom CSS in the CMS
 
 In order to show the links in one line, we'll add some CSS, and get it to load with the CMS interface.
-Paste the following content into a new file called `zzz_mysite/css/BookmarkedPages.css`:
+Paste the following content into a new file called `zzz_admin/css/BookmarkedPages.css`:
 
 	:::css
 	.cms-bottom-bar {height: 20px; padding: 5px; background: #C6D7DF;}
@@ -74,7 +74,7 @@ Load the new CSS file into the CMS, by adding the following line to `zzz_admin/_
 
 	:::php
 	<?php
-	LeftAndMain::require_css('zzz_admin/css/CMSBookmarkBar.css');
+	LeftAndMain::require_css('zzz_admin/css/BookmarkedPages.css');
 
 ## Create a "bookmark" flag on pages ##
 
@@ -130,7 +130,7 @@ and replace it with the following:
 	:::ss
 	<ul>
 		<% loop BookmarkedPages %>
-		<li><a href="admin/page/edit/show/$ID">Edit "$Title"</a></li>
+		<li><a href="admin/pages/edit/show/$ID">Edit "$Title"</a></li>
 		<% end_loop %>
 	</ul>
 

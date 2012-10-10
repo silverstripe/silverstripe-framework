@@ -2,7 +2,7 @@ if(typeof(ss) == 'undefined') ss = {};
 
 /**
  * Stub implementation for ss.i18n code.
- * Use instead of sapphire/javascript/i18n.js
+ * Use instead of framework/javascript/i18n.js
  * if you want to use any SilverStripe javascript
  * without internationalization support.
  */

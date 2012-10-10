@@ -1609,7 +1609,7 @@ class Member_Validator extends RequiredFields {
 		}
 
 		if($id && is_object($member) && $member->ID != $id) {
-			$uniqueField = $this->form->dataFieldByName($identifierField);
+			$uniqueField = $this->form->Fields()->dataFieldByName($identifierField);
 			$this->validationError(
 				$uniqueField->id(),
 				_t(

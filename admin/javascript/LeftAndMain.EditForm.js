@@ -205,7 +205,9 @@
 			 * Function: onclick
 			 */
 			onclick: function(e) {
-				this.parents('form').trigger('submit', [this]);
+				if(!this.is(':disabled')) {
+					this.parents('form').trigger('submit', [this]);
+				}
 				e.preventDefault();
 				return false;
 			}

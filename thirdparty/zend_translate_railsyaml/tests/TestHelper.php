@@ -46,7 +46,7 @@ error_reporting(E_ALL | E_STRICT);
  * distribution.
  */
 $ds = DIRECTORY_SEPARATOR;
-$zfRoot        = realpath(dirname(dirname(dirname(__FILE__)))) . $ds . 'sapphire' . $ds . 'thirdparty';
+$zfRoot        = realpath(dirname(dirname(dirname(__FILE__)))) . $ds . 'framework' . $ds . 'thirdparty';
 $zfCoreLibrary = "$zfRoot";
 $zfCoreTests   = "$zfRoot/tests";
 $zfCustomLibrary = realpath(dirname(dirname(__FILE__))) . $ds . 'library';

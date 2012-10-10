@@ -20,9 +20,9 @@ var GB_ONLY_ONE = null;
 // modified 2006-01-06 by Silverstripe Ltd.
 try {
 	var theBaseHref = document.getElementsByTagName("base")[0].href;
-	var GB_IMG_DIR = theBaseHref + "sapphire/thirdparty/greybox/"; 
+	var GB_IMG_DIR = theBaseHref + "framework/thirdparty/greybox/"; 
 } catch(err) {
-	var GB_IMG_DIR = "sapphire/thirdparty/greybox/"; 
+	var GB_IMG_DIR = "framework/thirdparty/greybox/"; 
 }
 
 function GreyBox() {
