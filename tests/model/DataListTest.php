@@ -442,8 +442,19 @@ class DataListTest extends SapphireTest {
 		$list = $list->filter(array(
 			'Name'=>array('Bob','Phil'),
 			'TeamID'=>array($this->idFromFixture('DataObjectTest_Team', 'team1'))));
-		$this->assertEquals(1, $list->count(), 'There should be one comments');
+		$this->assertEquals(1, $list->count(), 'There should be one comment');
 		$this->assertEquals('Bob', $list->first()->Name, 'Only comment should be from Bob');
+	}
+
+	public function testFilterWithModifiers() {
+		$list = DataObjectTest_TeamComment::get();
+		$nocaseList = $list->filter('Name:nocase', 'bob');
+		$this->assertEquals(1, $nocaseList->count(), 'There should be one comment');
+		$caseList = $list->filter('Name:case', 'bob');
+		$this->assertEquals(0, $caseList->count(), 'There should be no comments');
+		$gtList = $list->filter('TeamID:GreaterThan:not',
+			$this->idFromFixture('DataObjectTest_Team', 'team1'));
+		$this->assertEquals(2, $gtList->count());
 	}
 
 	public function testFilterAndExcludeById() {
@@ -501,7 +512,7 @@ class DataListTest extends SapphireTest {
 	 */
 	public function testMultipleExclude() {
 		$list = DataObjectTest_TeamComment::get();
-		$list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
+		$list = $list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
 		$this->assertEquals(2, $list->count());
 	}
 
@@ -514,8 +525,16 @@ class DataListTest extends SapphireTest {
 		$list = $list->exclude('Name', 'Bob');
 		
 		$this->assertContains(
-			'WHERE ("Comment" = \'Phil is a unique guy, and comments on team2\') AND ("Name" != \'Bob\')',
+			  'WHERE ("DataObjectTest_TeamComment"."Comment" = '
+			. '\'Phil is a unique guy, and comments on team2\') '
+			. 'AND (("DataObjectTest_TeamComment"."Name" != \'Bob\'))',
 			$list->sql());
+	}
+
+	public function testExcludeWithSearchFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->exclude('Name:LessThan', 'Bob');
+		$this->assertContains('WHERE (("DataObjectTest_TeamComment"."Name" >= \'Bob\'))', $list->sql());
 	}
 	
 	/**
