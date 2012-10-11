@@ -140,22 +140,27 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*
-	
+	Method: ('{' Prop:Value '}') | Prop:Word
+
 	# Call is a php-style function call, e.g. Method(Argument, ...). Unlike PHP, the brackets are optional if no
 	# arguments are passed
-	 
-	Call: Method:Word ( "(" < :CallArguments? > ")" )?
 
-	# A lookup is a lookup of a value on the current scope object. It's a sequence of calls seperated by "."
-	# characters. This final call in the sequence needs handling specially, as different structures need different 
-	# sorts of values, which require a different final method to be called to get the right return value
-	 
+	Call: :Method ( "(" < :CallArguments? > ")" )?
+
+	# A lookup is a lookup of a value on the current scope object. It's a sequence of calls seperated by "." characters
+	# This final call in the sequence needs handling specially, as different structures need different sorts of values,
+	# which require a different final method to be called to get the right return value
+
 	LookupStep: :Call &"."
 	LastLookupStep: :Call
 
 	Lookup: LookupStep ("." LookupStep)* "." LastLookupStep | LastLookupStep
-	*/
-	
+    */
+
+    function Method_Prop(&$res, $sub) {
+        $res['text'] = $sub['text'];
+    }
+
 	function Lookup__construct(&$res) {
 		$res['php'] = '$scope';
 		$res['LookupSteps'] = array();
