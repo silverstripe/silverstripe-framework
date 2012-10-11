@@ -20,7 +20,7 @@
  * $myField->setFolderName('myFolder');
  * </code>
  *
- * @deprecated 3.0 Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')
+ * @deprecated 3.0 Use UploadField with $myField->getValidator()->setAllowedExtensions(array('jpg', 'gif', 'png'));
  *
  * @package forms
  * @subpackage fields-files
