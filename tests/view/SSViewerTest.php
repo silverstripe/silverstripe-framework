@@ -86,6 +86,9 @@ SS
 		$this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
 		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 
 			'Escapes before injections are correctly unescaped');
+
+        $this->assertEquals('[out:123Test]', $this->render('${123Test}'), 'PHP-style variable escaping for otherwise illegal property names');
+        $this->assertEquals('[out:123Test]', $this->render('{${123Test}}'), 'Can use both bracket styles');
 	}
 
 
