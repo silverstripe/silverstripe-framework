@@ -113,11 +113,10 @@ class DateField extends TextField {
 	}
 
 	public function FieldHolder($properties = array()) {
-		$usesCalendar = $this->getConfig('showcalendar');
-		if ($usesCalendar) {
+		if ($this->getConfig('showcalendar')) {
 			// TODO Replace with properly extensible view helper system 
 			$d = DateField_View_JQuery::create($this); 
-			if(!$d->RegionalSettingsExist()) {
+			if(!$d->regionalSettingsExist()) {
 				$dateformat = $this->getConfig('dateformat');
 
 				// if no localefile is present, the jQuery DatePicker 
@@ -531,7 +530,7 @@ class DateField_View_JQuery extends Object {
 	 * Check if jQuery UI locale settings exists for the current locale
 	 * @return boolean
 	 */
-	function RegionalSettingsExist() {
+	function regionalSettingsExist() {
 		$lang = $this->getLang();
 		$localeFile = THIRDPARTY_DIR . "/jquery-ui/datepicker/i18n/jquery.ui.datepicker-{$lang}.js";
 		if (file_exists(Director::baseFolder() . '/' .$localeFile)){
@@ -540,7 +539,7 @@ class DateField_View_JQuery extends Object {
 		} else { 
 			// file goes before internal en_US settings,
 			// but both will validate  
-			return ($lang == 'en')? true : false; 
+			return ($lang == 'en'); 
 		}
 	}	
 
