@@ -39,6 +39,14 @@ class RequirementsTest extends SapphireTest {
 			(strpos($html, 'https://www.mysecuredomain.com/test.css') !== false), 
 			'Load external secure CSS URL'
 		);
+		$this->assertTrue(
+			(strpos($html, '//www.mysecuredomain.com/test.js') !== false),
+			'Load external protocol-relative javascript URL'
+		);
+		$this->assertTrue(
+			(strpos($html, '//www.mysecuredomain.com/test.css') !== false),
+			'Load external protocol-relative CSS URL'
+		);
 	}
 
 	protected function setupCombinedRequirements($backend) {
