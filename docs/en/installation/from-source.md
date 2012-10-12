@@ -148,7 +148,7 @@ Now you need to add the original repository as `upstream`, so you can keep your 
 	(cd cms && git remote add upstream git://github.com/silverstripe/silverstripe-cms.git && git fetch upstream)
 	(cd themes/simple && git remote add upstream git://github.com/silverstripe-themes/silverstripe-simple.git)
 
-Now that you're set up, please read our ["Collaboration on Git"](../misc/collaboration-on-git) guide,
+Now that you're set up, please read our ["Contributing Code"](../misc/contributing/code) guide,
 as well as our general ["Contributor guidelines"](../misc/contributing).
 Please read ["Module installation"](/topics/modules) to find out how to install additional modules like `blog` or `forum` from source.
 
@@ -271,8 +271,8 @@ See [piston.rubyforge.org](http://piston.rubyforge.org/import.html).
 
 ## Related ##
 
- * [Contributing: Submitting patches](/misc/contributing)
- * [Collaboration on Git](/misc/collaboration-on-git)
+ * [Contributing](/misc/contributing)
+ * [Contributing Code](/misc/contributing/code)
  * [Pro git - free online book](http://progit.org/book/)
  * [Git cheat sheet - github.com](https://github.com/guides/git-cheat-sheet)
  * [Git - SVN Crash Course - git.or.cz](http://git.or.cz/course/svn.html)
