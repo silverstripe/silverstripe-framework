@@ -776,6 +776,12 @@ body.cms {
 	position:  relative;
 	display: block;
 	margin-left: 8px;
+
+	.view-mode-batchactions-wrapper {
+		float: left;
+		margin-top: 5px;
+		margin-right: 10px;
+	}
 	
 	form > * {
 		display: block;
