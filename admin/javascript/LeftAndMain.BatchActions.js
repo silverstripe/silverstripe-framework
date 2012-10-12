@@ -69,11 +69,21 @@
 			 */
 			_updateStateFromViewMode: function() {
 				var viewMode = $('.cms-content-batchactions :input[name=view-mode-batchactions]');
+				var batchactions = $('.cms-content-batchactions');
 				var dropdown = this.find(':input[name=Action]');
 
 				// Batch actions only make sense when multiselect is enabled.
-				if(viewMode.is(':checked')) dropdown.removeAttr('disabled').trigger("liszt:updated");
-				else dropdown.attr('disabled', true).trigger("liszt:updated");
+				if(viewMode.is(':checked')) {
+					dropdown.trigger("liszt:updated");
+					batchactions.removeClass('inactive');
+					
+				}
+				else {
+					dropdown.trigger("liszt:updated");
+					// Used timeout to make sure when it shows up you won't see
+					// the native dropdown
+					setTimeout(function() { batchactions.addClass('inactive'); }, 100);
+				}
 			},
 
 			/**

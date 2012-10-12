@@ -779,9 +779,25 @@ body.cms {
 
 	.view-mode-batchactions-wrapper {
 		float: left;
-		margin-top: 5px;
-		margin-right: 10px;
+		padding: 4px 6px;
+		border: 1px solid #aaa;
+		margin-bottom: 8px;
+		background-image: -webkit-linear-gradient(white, #D9D9D9);
+		border-top-left-radius: 4px;
+		border-bottom-left-radius: 4px;	
+
+		label {
+			display: none;
+		}
 	}
+
+		&.inactive .view-mode-batchactions-wrapper {
+			border-radius: 4px;		
+
+			label {
+				display: inline;
+			}
+		}
 	
 	form > * {
 		display: block;
@@ -790,6 +806,22 @@ body.cms {
 	
 	form.cms-batch-actions {
 		float:  left;
+	}
+
+	&.inactive form {
+		display: none;
+	}
+
+	.chzn-container-single .chzn-single {
+		margin-left: -1px;
+		border-radius: 0;
+		background-image: -webkit-linear-gradient(white, #D9D9D9);
+	}
+
+	.cms-batch-actions .Actions .ss-ui-button {
+		margin-left: -1px;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
 	}
 }
 
