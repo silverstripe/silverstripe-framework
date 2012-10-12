@@ -7,8 +7,7 @@
  * Often used alongside {@link GridFieldDeleteAction} for detaching existing records from a relatinship.
  * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldAddExistingAutocompleter
-		implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
+class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 	
 	/**
 	 * Which template to use for rendering
@@ -194,9 +193,57 @@ class GridFieldAddExistingAutocompleter
 
 		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
 		$stmts = array();
-		foreach($searchFields as $searchField) {
-			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField,
-				Convert::raw2sql($request->getVar('gridfield_relationsearch')));
+		$joinClassNames = array();
+		foreach($searchFields as $index => $searchField) {
+			if (strpos($searchField, '.') !== false) {
+				$originalSearchableField = $searchField;
+				$parts = explode('.', $searchField);
+				$relationName = $parts[0];
+				$searchField = $parts[1];
+				$joinClassName = null;
+				$relationClassName = Object::get_static($dataClass, 'has_many');
+				if (is_array($relationClassName)) {
+					$relationClassName = $relationClassName[$relationName];
+				}
+				if (!is_null($relationClassName)) {
+					foreach (singleton($relationClassName)->getClassAncestry() as $ancestor) {
+						if (DataObject::has_own_table($ancestor)) {
+							$joinClassName = $ancestor;
+							break;
+						}
+					}
+				}
+				if (is_null($joinClassName)) {
+					throw new LogicException(
+						sprintf('GridFieldAddExistingAutocompleter: Searchable field "%s" could not be found for class "%s"', $originalSearchableField, $dataClass)
+					);
+				} else {
+					$joinClassNames[$relationName] = $joinClassName;
+					$searchFields[$index] = $relationClassName . '.' . $searchField;
+					$searchField = $relationClassName . '"."' . $searchField;
+				}
+				$has_one = Object::get_static($relationClassName, 'has_one');
+				foreach ($has_one as $hasOneRelationName => $hasOneRelationClassName) {
+					if ($hasOneRelationClassName == $dataClass) {
+						$targetRelationName = $hasOneRelationName;
+						continue;
+					}
+				}
+			} else {
+				$searchField = $dataClass . '"."' . $searchField;
+			}
+			$stmts[] = sprintf('"%s" LIKE \'%s%%\'', $searchField, Convert::raw2sql($request->getVar('gridfield_relationsearch')));
+		}
+		foreach ($joinClassNames as $relationName => $joinClassName) {
+			$allList->leftJoin(
+				$joinClassName,
+				sprintf(
+					'"%s"."ID" = "%s"."%sID"',
+					$dataClass,
+					$joinClassName,
+					$targetRelationName
+				)
+			);
 		}
 		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
 		$results = $results->sort($searchFields[0], 'ASC');
@@ -250,20 +297,40 @@ class GridFieldAddExistingAutocompleter
 	}
 
 	/**
-	 * Detect searchable 
+	 * Detect searchable fields and searchable relations
+	 * Only has_many relations may be searched.
+	 * Falls back to Title or Name if no earchableFields are defined.
 	 * 
-	 * @param  String
-	 * @return Array
+	 * @param  String the class name
+	 * @return Array|null names of the searchable fields
 	 */
-	protected function scaffoldSearchFields($dataClass) {
+	public function scaffoldSearchFields($dataClass) {
 		$obj = singleton($dataClass);
-		if($obj->hasDatabaseField('Title')) {
-			return array('Title');
-		} else if($obj->hasDatabaseField('Name')) {
-			return array('Name');
-		} else {
-			return null;
-		}
+		$searchableFields = null;
+		if ($obj->searchableFields()) {
+			foreach ($obj->searchableFields() as $name => $specOrName) {
+				//searchableFields() may return a multidimensional array
+				$searchableFieldKey = (is_int($name)) ? $specOrName : $name;
+				if (strpos($searchableFieldKey, ".") !== false) {
+					$parts = explode('.', $searchableFieldKey);
+					$relationName = $parts[0];
+					$has_many = Object::get_static($dataClass, 'has_many');
+					if (is_array($has_many) && array_key_exists($relationName, $has_many)) {
+						$searchableFields[] = $searchableFieldKey;
+					}
+				} else {
+                            $searchableFields[] = $searchableFieldKey;
+                        }
+                    }
+                }
+                if (is_null($searchableFields)) {
+                    if ($obj->hasDatabaseField('Title')) {
+                            $searchableFields = array('Title');
+                    } elseif ($obj->hasDatabaseField('Name')) {
+                            $searchableFields = array('Name');
+                    }
+                }
+                return $searchableFields;
 	}
 
 	/**

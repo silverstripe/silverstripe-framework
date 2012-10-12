@@ -251,6 +251,7 @@ de:
     NoRoles: 'Keine Rollen gefunden'
     PLURALNAME: 'Gruppen importieren'
     Parent: Elterngruppe
+    PLURALNAME: 'Gruppen'
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
     SINGULARNAME: 'Gruppen Code'
     Sort: Sortierreihenfolge

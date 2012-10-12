@@ -139,6 +139,7 @@ Consider replacing it with a more powerful interface in case you have many recor
 Has-many and many-many relationships are usually handled via the `[GridField](/topics/grid-field)` class,
 more specifically the `[api:GridFieldAddExistingAutocompleter]` and `[api:GridFieldRelationDelete]` components.
 They provide a list/detail interface within a single record edited in your ModelAdmin.
+The autocompleter may also spread its search to attributes of a has_many relation if this attribute is defined in DataObject::searchableFields().
 
 ## Permissions
 
