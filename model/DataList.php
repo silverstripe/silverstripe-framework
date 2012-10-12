@@ -386,6 +386,68 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
+	 * Return a copy of this list which does not contain items matching any of these charactaristics.
+	 *
+	 * @example // filter bob from list
+	 *          $list = $list->filterAny('Name', 'bob'); 
+	 *          // SQL: WHERE "Name" = 'bob'
+	 * @example // filter aziz and bob from list
+	 *          $list = $list->filterAny('Name', array('aziz', 'bob'); 
+	 *          // SQL: WHERE ("Name" IN ('aziz','bob'))
+	 * @example // filter by bob or anybody aged 21
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>21)); 
+	 *          // SQL: WHERE ("Name" = 'bob' OR "Age" = '21')
+	 * @example // filter by bob or anybody aged 21 or 43
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43))); 
+	 *          // SQL: WHERE ("Name" = 'bob' OR ("Age" IN ('21', '43'))
+	 * @example // bob age 21 or 43, phil age 21 or 43 would be excluded
+	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+	 *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
+	 *
+	 * @todo extract the sql from this method into a SQLGenerator class
+	 *
+	 * @param string|array See {@link filter()}
+	 * @return DataList
+	 */
+	public function filterAny() {
+		$numberFuncArgs = count(func_get_args());
+		$whereArguments = array();
+
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
+			$whereArguments = func_get_arg(0);
+		} elseif($numberFuncArgs == 2) {
+			$whereArguments[func_get_arg(0)] = func_get_arg(1);
+		} else {
+			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
+		}
+
+		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
+			$subquery = $query->disjunctiveGroup();
+
+			foreach($whereArguments as $field => $value) {
+				$fieldArgs = explode(':', $field);
+				$field = array_shift($fieldArgs);
+				$filterType = array_shift($fieldArgs);
+				$modifiers = $fieldArgs;
+
+				// This is here since PHP 5.3 can't call protected/private methods in a closure.
+				$t = singleton($list->dataClass())->dbObject($field);
+				if($filterType) {
+					$className = "{$filterType}Filter";
+				} else {
+					$className = 'ExactMatchFilter';
+				}
+				if(!class_exists($className)){
+					$className = 'ExactMatchFilter';
+					array_unshift($modifiers, $filterType);
+				}
+				$t = new $className($field, $value, $modifiers);
+				$t->apply($subquery);
+			}
+		});
+	}
+
+	/**
 	 * Filter this DataList by a callback function.
 	 * The function will be passed each record of the DataList in turn, and must return true for the record to be
 	 * included. Returns the filtered list.

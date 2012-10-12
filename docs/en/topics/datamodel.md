@@ -161,12 +161,30 @@ Then there is the most complex task when you want to find Sam and Sig that has e
 		'FirstName' => array('Sam', 'Sig'),
 		'Age' => array(17, 74)
 	));
+	// SQL: WHERE ("FirstName" IN ('Sam', 'Sig) AND "Age" IN ('17', '74))
 
-This would be equivalent to a SQL query of
+In case you want to match multiple criteria non-exclusively (with an "OR" disjunctive),
+use the `filterAny()` method instead:
 
-	:::
-	... WHERE ("FirstName" IN ('Sam', 'Sig) AND "Age" IN ('17', '74));
+	:::php
+	$members = Member::get()->filterAny(array(
+		'FirstName' => 'Sam',
+		'Age' => 17,
+	));
+	// SQL: WHERE ("FirstName" = 'Sam' OR "Age" = '17')
 
+You can also combine both conjunctive ("AND") and disjunctive ("OR") statements.
+
+	:::php
+	$members = Member::get()
+		->filter(array(
+			'LastName' => 'Minnée'
+		))
+		->filterAny(array(
+			'FirstName' => 'Sam',
+			'Age' => 17,
+		));
+	// SQL: WHERE ("LastName" = 'Minnée' AND ("FirstName" = 'Sam' OR "Age" = '17'))
 
 ### Exclude
 
