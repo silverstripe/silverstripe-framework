@@ -160,7 +160,9 @@ class DataListTest extends SapphireTest {
 	
 	public function testFilter() {
 		// coming soon!
-		}
+		//TODO be sure to test all cases in addFilter(), including adding a relation
+		// without a filter (e.g. DataObjectTest_SubTeam.ParentTeam)
+	}
 		
 	public function testWhere() {
 		// We can use raw SQL queries with where.  This is only recommended for advanced uses;
