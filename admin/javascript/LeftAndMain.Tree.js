@@ -454,7 +454,7 @@
 			}
 		});
 		
-		$('.cms-tree-view-modes input.view-mode').entwine({
+		$('.cms-content-batchactions input[name=view-mode-batchactions]').entwine({
 			onmatch: function() {
 				// set active by default
 				this.redraw();
@@ -470,8 +470,8 @@
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 				
 				$('.cms-tree')
-					.toggleClass('draggable', this.val() == 'draggable')
-					.toggleClass('multiple', this.val() == 'multiselect');
+					.toggleClass('draggable', !this.is(':checked'))
+					.toggleClass('multiple', this.is(':checked'));
 			}
 		});
 	});

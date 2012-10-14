@@ -47,15 +47,17 @@
 				this._super();
 			},
 
-			'from .cms-tree-view-modes :input[name=view-mode]': {
+			'from .cms-content-batchactions :input[name=view-mode-batchactions]': {
 				onclick: function(e){
-					var val = $(e.target).val(), dropdown = this.find(':input[name=Action]'), tree = this.getTree();
+					var checkbox = $(e.target), dropdown = this.find(':input[name=Action]'), tree = this.getTree();
 
-					if(val == 'multiselect') {
+					if(checkbox.is(':checked')) {
 						tree.addClass('multiple');
+						tree.removeClass('draggable');
 						this.serializeFromTree();
 					} else {
 						tree.removeClass('multiple');
+						tree.addClass('draggable');
 					}
 
 					this._updateStateFromViewMode();
@@ -66,12 +68,21 @@
 			 * Updates the select box state according to the current view mode.
 			 */
 			_updateStateFromViewMode: function() {
-				var viewMode = $('.cms-tree-view-modes :input[name=view-mode]:checked').val();
+				var viewMode = $('.cms-content-batchactions :input[name=view-mode-batchactions]');
+				var batchactions = $('.cms-content-batchactions');
 				var dropdown = this.find(':input[name=Action]');
 
 				// Batch actions only make sense when multiselect is enabled.
-				if(viewMode == 'multiselect') dropdown.removeAttr('disabled').trigger("liszt:updated");
-				else dropdown.attr('disabled', true).trigger("liszt:updated");
+				if(viewMode.is(':checked')) {
+					dropdown.trigger("liszt:updated");
+					batchactions.removeClass('inactive');
+				}
+				else {
+					dropdown.trigger("liszt:updated");
+					// Used timeout to make sure when it shows up you won't see
+					// the native dropdown
+					setTimeout(function() { batchactions.addClass('inactive'); }, 100);
+				}
 			},
 
 			/**
