@@ -64,14 +64,14 @@
  */
 
 /**
- * @deprecated 3.0 Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')
+ * @deprecated 3.0 Use UploadField with $myField->getValidator()->setAllowedExtensions(array('jpg', 'gif', 'png'));
  */
 class SimpleImageField extends FileField {
 
 	public function __construct($name, $title = null, $value = null) {
 		Deprecation::notice('3.0', 
 			"SimpleImageField is deprecated. Use UploadField with "
-			. "\$myField->allowedExtensions = array('jpg', 'gif', 'png')",
+			. "\$myField->getValidator()->setAllowedExtensions(array('jpg', 'gif', 'png'))",
 			Deprecation::SCOPE_CLASS);
 
 		if(count(func_get_args()) > 3) {

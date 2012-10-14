@@ -45,4 +45,3 @@ interface TemplateIteratorProvider {
 	public function iteratorProperties($pos, $totalItems);
 }
 
-?>
