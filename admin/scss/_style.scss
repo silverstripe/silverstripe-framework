@@ -782,7 +782,7 @@ body.cms {
 		padding: 4px 6px;
 		border: 1px solid #aaa;
 		margin-bottom: 8px;
-		background-image: -webkit-linear-gradient(white, #D9D9D9);
+		@include background-image(linear-gradient(top, #fff, #D9D9D9));
 		border-top-left-radius: 4px;
 		border-bottom-left-radius: 4px;	
 
@@ -815,13 +815,18 @@ body.cms {
 	.chzn-container-single .chzn-single {
 		margin-left: -1px;
 		border-radius: 0;
-		background-image: -webkit-linear-gradient(white, #D9D9D9);
+		@include background-image(linear-gradient(top, #fff, #D9D9D9));
 	}
 
 	.cms-batch-actions .Actions .ss-ui-button {
 		margin-left: -1px;
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
+
+		&.ui-state-disabled {
+			opacity: 1;
+			color: #ccc;
+		}
 	}
 }
 

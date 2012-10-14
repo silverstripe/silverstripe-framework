@@ -76,7 +76,6 @@
 				if(viewMode.is(':checked')) {
 					dropdown.trigger("liszt:updated");
 					batchactions.removeClass('inactive');
-					
 				}
 				else {
 					dropdown.trigger("liszt:updated");
