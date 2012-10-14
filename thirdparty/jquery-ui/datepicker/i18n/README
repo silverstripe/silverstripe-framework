@@ -1,0 +1,25 @@
+AUTHOR: Martine Bloem (http://www.balbuss.com)
+**********************************************
+
+jQuery UI DatePicker localization files for SilverStripe 3.0
+------------------------------------------------------------
+These files are adaptations of the official localization files that can be found here:
+http://jquery-ui.googlecode.com/svn/trunk/ui/i18n/
+
+Day- and monthnames have been changed to match the values Zend Date uses, to make 
+the following dateformats validate:
+
+EEE:  weekday short
+EEEE: weekday
+MMM:  monthname short
+MMMM: monthname
+
+For locales for which no file exists (yet), the DatePicker will revert to a numeric 
+format, that will validate, and after being saved will be displayed in the 
+required format.
+
+To create your own language fiel, download the original file from the URL above, 
+find the Zend Date locale file in framework/Zend/Locale/Data and make sure that
+
+- monthNames, monthNamesShort and dayNames are equivalent to Zend (Gregorian) names 
+- dayNamesShort should be the first 3 characters of dayNames

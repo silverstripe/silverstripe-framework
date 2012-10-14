@@ -326,7 +326,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$this->component->getValidator()
 		);
 		if($this->record->ID !== 0) {
-		  $form->loadDataFrom($this->record);
+			$form->loadDataFrom($this->record);
 		}
 
 		// TODO Coupling with CMS
@@ -341,16 +341,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			if($form->Fields()->hasTabset()) {
 				$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 				$form->addExtraClass('ss-tabset cms-tabset');
-		 	}
-
-			if($toplevelController->hasMethod('Backlink')) {
-				$form->Backlink = $toplevelController->Backlink();
-			} elseif($this->popupController->hasMethod('Breadcrumbs')) {
-				$parents = $this->popupController->Breadcrumbs(false)->items;
-				$form->Backlink = array_pop($parents)->Link;
-			} else {
-				$form->Backlink = $toplevelController->Link();
 			}
+
+			$form->Backlink = $this->getBackLink();
 		}
 
 		$cb = $this->component->getItemEditFormCallback();
@@ -373,6 +366,25 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 		return $c;
 	}
+	
+	protected function getBackLink(){
+		// TODO Coupling with CMS
+		$backlink = '';
+		$toplevelController = $this->getToplevelController();
+		if($toplevelController && $toplevelController instanceof LeftAndMain) {
+			if($toplevelController->hasMethod('Backlink')) {
+				$backlink = $toplevelController->Backlink();
+			} elseif($this->popupController->hasMethod('Breadcrumbs')) {
+				$parents = $this->popupController->Breadcrumbs(false)->items;
+				$backlink = array_pop($parents)->Link;
+			} else {
+				$backlink = $toplevelController->Link();
+			}
+		}
+		return $backlink;
+	}
+
+	
 
 	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
@@ -424,14 +436,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	public function doDelete($data, $form) {
+		$title = $this->record->Title;
 		try {
-			$toDelete = $this->record;
-			if (!$toDelete->canDelete()) {
+			if (!$this->record->canDelete()) {
 				throw new ValidationException(
 					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
 			}
 
-			$toDelete->delete();
+			$this->record->delete();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			return Controller::curr()->redirectBack();
@@ -440,17 +452,22 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$message = sprintf(
 			_t('GridFieldDetailForm.Deleted', 'Deleted %s %s'),
 			$this->record->singular_name(),
-			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
+			htmlspecialchars($title, ENT_QUOTES)
 		);
+		
+		$toplevelController = $this->getToplevelController();
+		if($toplevelController && $toplevelController instanceof LeftAndMain) {
+			$backForm = $toplevelController->getEditForm();
+			$backForm->sessionMessage($message, 'good');
+		} else {
+			$form->sessionMessage($message, 'good');
+		}
 
-		$form->sessionMessage($message, 'good');
-
-		//when an item is deleted, redirect to the revelant admin section without the action parameter
+		//when an item is deleted, redirect to the parent controller
 		$controller = Controller::curr();
-		$noActionURL = $controller->removeAction($data['url']);
 		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
-		return $controller->redirect($noActionURL, 302); //redirect back to admin section
+		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
 	}
 
 	/**

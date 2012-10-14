@@ -312,7 +312,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *                             Singletons don't have their defaults set.
 	 */
 	public function __construct($record = null, $isSingleton = false, $model = null) {
-
 		parent::__construct();
 
 		// Set the fields data.
@@ -366,6 +365,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			HTTP::register_modification_date($record['LastEdited']);
 		}
 
+		// this must be called before populateDefaults(), as field getters on a DataObject
+		// may call getComponent() and others, which rely on $this->model being set.
+		$this->model = $model ? $model : DataModel::inst();
+
 		// Must be called after parent constructor
 		if(!$isSingleton && (!isset($this->record['ID']) || !$this->record['ID'])) {
 			$this->populateDefaults();
@@ -373,8 +376,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// prevent populateDefaults() and setField() from marking overwritten defaults as changed
 		$this->changed = array();
-		
-		$this->model = $model ? $model : DataModel::inst();
 	}
 	
 	/**
@@ -1303,7 +1304,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if($joinID) {
 				$component = $this->model->$class->byID($joinID);
 			}
-			
+
 			if(!isset($component) || !$component) {
 				$component = $this->model->$class->newObject();
 			}
