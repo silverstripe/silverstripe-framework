@@ -65,14 +65,14 @@ class DB {
 	 * Set it to null to revert to the main database.
 	 */
 	public static function set_alternative_database_name($dbname) {
-		$_SESSION["alternativeDatabaseName"] = $dbname;
+		Session::set("alternativeDatabaseName", $dbname);
 	}
 	
 	/**
 	 * Get the name of the database in use
 	 */
 	public static function get_alternative_database_name() {
-		return $_SESSION["alternativeDatabaseName"];	
+		return Session::get("alternativeDatabaseName");	
 	}
 
 	/**
@@ -84,8 +84,8 @@ class DB {
 	 */
 	public static function connect($databaseConfig) {
 		// This is used by TestRunner::startsession() to test up a test session using an alt
-		if(isset($_SESSION) && !empty($_SESSION['alternativeDatabaseName'])) {
-			$databaseConfig['database'] = $_SESSION['alternativeDatabaseName'];
+		if($name = Session::get('alternativeDatabaseName')) {
+			$databaseConfig['database'] = $name;
 		}
 
 		if(!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
