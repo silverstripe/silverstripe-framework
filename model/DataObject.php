@@ -2059,11 +2059,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
 		if(!is_numeric($this->record['ID'])) return false;
 
-		if (isset($this->record['Version'])){
-			$dataQuery->where("\"$tableClass\".\"RecordID\" = {$this->record['ID']}")->
-				    where("\"$tableClass\".\"Version\" = " . $this->record['Version'])->limit(1);
-			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
-		} else {
+		if (!isset($this->record['Version'])){
 			$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
 		}
 		$columns = array();
@@ -2079,6 +2075,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if ($columns) {
 			$query = $dataQuery->query(); // eh?
+			$this->extend('augmentLoadLazyFields', $query, $dataQuery, $this->record);
 			$this->extend('augmentSQL', $query, $dataQuery);
 
 			$dataQuery->setQueriedColumns($columns);
