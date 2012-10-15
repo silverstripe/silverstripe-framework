@@ -51,6 +51,7 @@ Please read our [guide to contributing documentation](misc/contributing/document
 *  [Testing Guide](topics/testing/): Framework for automated testing like Unittests
 *  [Execution Pipeline](reference/execution-pipeline): Tracking a request from director to template-rendering
 *  [Recipes/Howtos](howto/)
+*  [Search engine optimisation](topics/search-engine-optimisation.md): Information on how SilverStripe helps with SEO improvements.
 
 ### Level 4: Contributing to the SilverStripe core
 
