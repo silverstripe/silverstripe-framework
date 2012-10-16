@@ -221,15 +221,6 @@ since 1/1/2011.
 		'LastVisited:GreaterThan' => '2011-01-01'
 	));
 
-If you wish to match against any of a number of columns, you can list several field names, separated by commas. 
-This will return all members whose first name or surname contain the string 'sam'.
-
-	:::php
-	$members = Member::get()->filter(array(
-		'FirstName,Surname:PartialMatch' => 'sam'
-	));
-
-
 ### Subtract
 
 You can subtract entries from a DataList by passing in another DataList to `subtract()`
