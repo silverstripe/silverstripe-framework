@@ -139,5 +139,51 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('foos-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
 		URLSegmentFilter::$default_allow_multibyte = $orig;
 	}
-
+	
+	/**
+	 * Helper function for comparing characters with significant whitespaces
+	 * @param type $expected
+	 * @param type $actual 
+	 */
+	protected function assertEqualsQuoted($expected, $actual) {
+		$message = sprintf(
+			"Expected \"%s\" but given \"%s\"", 
+			addcslashes($expected, "\r\n"), 
+			addcslashes($actual, "\r\n")
+		);
+		$this->assertEquals($expected, $actual, $message);
+	}
+	
+	public function testNL2OS() {
+		
+		foreach(array("\r\n", "\r", "\n") as $nl) {
+			
+			// Base case: no action
+			$this->assertEqualsQuoted(
+				"Base case",
+				Convert::nl2os("Base case", $nl)
+			);
+			
+			// Mixed formats
+			$this->assertEqualsQuoted(
+				"Test{$nl}Text{$nl}Is{$nl}{$nl}Here{$nl}.",
+				Convert::nl2os("Test\rText\r\nIs\n\rHere\r\n.", $nl)
+			);
+			
+			// Test that multiple runs are non-destructive
+			$expected = "Test{$nl}Text{$nl}Is{$nl}{$nl}Here{$nl}.";
+			$this->assertEqualsQuoted(
+				$expected,
+				Convert::nl2os($expected, $nl)
+			);
+			
+			// Check repeated sequence behaves correctly
+			$expected = "{$nl}{$nl}{$nl}{$nl}{$nl}{$nl}{$nl}{$nl}";
+			$input = "\r\r\n\r\r\n\n\n\n\r";
+			$this->assertEqualsQuoted(
+				$expected,
+				Convert::nl2os($input, $nl)
+			);
+		}
+	}
 }
