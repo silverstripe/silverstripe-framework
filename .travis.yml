@@ -26,8 +26,12 @@ script:
 
 branches:
   except:
-    - translation-staging
+    - 2.1
+    - 2.2
+    - 2.3
     - 2.4
+    - post-2.4
+    - translation-staging
 
 notifications:
   irc:
