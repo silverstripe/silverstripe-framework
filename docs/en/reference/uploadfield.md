@@ -90,9 +90,23 @@ the folder doesn't exist, it will be created.
 
 ## Limit the allowed filetypes
 
-	:::php
-	$uploadField->allowedExtensions = array('jpg', 'gif', 'png');
+`AllowedExtensions` is by default `File::$allowed_extensions` but can be overwritten for each UploadField:
 
+	:::php
+	$uploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
+
+
+## Limit the maximum file size
+
+`AllowedMaxFileSize` is by default set to the lower value of the 2 php.ini configurations: `upload_max_filesize` and `post_max_size`
+The value is set as bytes.
+
+NOTE: this only sets the configuration for your UploadField, this does NOT change your server upload settings, so if your server is set to only allow 1 MB and you set the UploadFIeld to 2 MB, uploads will not work.
+
+	:::php
+	$sizeMB = 2; // 2 MB
+	$size = $sizeMB * 1024 * 1024; // 2 MB in bytes
+	$this->getValidator()->setAllowedMaxFileSize($size);
 
 ## Other configuration settings
 
