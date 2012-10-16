@@ -1,7 +1,7 @@
 fi:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ADDFILES: 'Lisää tiedostot'
+    EditOrgMenu: 'Muokkaa &amp; järjestele'
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
@@ -72,7 +72,7 @@ fi:
     ACCESSALLINTERFACESHELP: 'Ohittaa tarkemmat käyttöoikeudet.'
     SAVE: Tallenna
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: Profiilini
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
@@ -191,8 +191,8 @@ fi:
   Filesystem:
     SYNCRESULTS: 'Synkronointi valmis:  {createdcount} kohdetta luotu, {deletedcount} kohdetta poistettu'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Kansiot
+    SINGULARNAME: Kansio
   ForgotPasswordEmail.ss:
     HELLO: Hei
     TEXT1: 'Tässä on sinun'
@@ -200,7 +200,7 @@ fi:
     TEXT3: henkilölle
   Form:
     FIELDISREQUIRED: '%s on pakollinen.'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Siirrä
     VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
     VALIDATIONNOTUNIQUE: 'Syötetty arvo ei ole yksilöllinen'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
@@ -249,16 +249,16 @@ fi:
     GroupReminder: 'Valitessasi isäntäryhmän, roolit periytyvät tähän ryhmään'
     Locked: 'Lukittu?'
     NoRoles: 'Rooleja ei löytynyt'
-    PLURALNAME: Groups
+    PLURALNAME: Ryhmät
     Parent: Yliryhmä
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
-    SINGULARNAME: Group
+    SINGULARNAME: Ryhmä
     Sort: Järjestys
     has_many_Permissions: Luvat
     many_many_Members: Jäsenet
   GroupImportForm:
     Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat ryhmät kohdistetaan niiden uniikin <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmien hierarkiat voidaan luoda <em>ParentCode</em>-palstalla.</li>\\n<li>Oikeustasot voidaan kohdistaa <em>PermissionCode</em>-palstalla. Olemassa olevia oikeustasoja ei poisteta.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Luotiin {count} ryhmä(ä)'
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
@@ -310,13 +310,13 @@ fi:
     URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu liittää mediaa'
     UpdateMEDIA: 'Päivitä media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Tiedostot
+    SINGULARNAME: Tiedosto
   ImageField:
     IMAGE: Kuva
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Tiedostot
+    SINGULARNAME: Tiedosto
   Image_iframe.ss:
     TITLE: 'Kuvansiirto ikkuna (iFrame)'
   LeftAndMain:
@@ -339,8 +339,8 @@ fi:
   LoginAttempt:
     Email: Sähköpostiosoite
     IP: IP-osoite
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: Kirjautumisyritykset
+    SINGULARNAME: Kirjautumisyritys
     Status: Tila
   Member:
     ADDGROUP: 'Lisää ryhmä'
@@ -409,19 +409,19 @@ fi:
     TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Luotiin {count} käyttäjä(ä)'
     ResultDeleted: 'Poistettu %d jäsentä'
     ResultNone: 'Ei muutoksia'
     ResultUpdated: 'Päivitettiin {count} käyttäjä(ä)'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Käyttäjän salasanat'
+    SINGULARNAME: 'Käyttäjän salasana'
   MemberTableField: null
   ModelAdmin:
     DELETE: Poista
     DELETEDRECORDS: 'Poistettiin {count} tietuetta'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Tyhjennä tietokanta ennen tuonti'
     IMPORT: 'Tuo CSV:stä'
     IMPORTEDRECORDS: 'Tuotiin {count} tietuetta'
     NOCSVFILE: 'Selaa ja tuo CSV-tiedosto'
@@ -448,28 +448,28 @@ fi:
   NumericField:
     VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
   Pagination:
-    Page: Page
-    View: View
+    Page: Sivu
+    View: Näytä
   Permission:
     AdminGroup: Järjestelmänvalvoja
     CMS_ACCESS_CATEGORY: CMS-pääsy
     FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
     FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Oikeudet
+    SINGULARNAME: Oikeus
   PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
     FromRole: 'periytyivät roolista "{title}"'
     FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    OnlyAdminCanApply: 'Vain järjestelmänvalvoja on oikeudet aseta'
+    PLURALNAME: Roolit
+    SINGULARNAME: Rooli
     Title: 'Roolin nimi'
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Käyttöoikeiden roolin koodit'
+    SINGULARNAME: 'Käyttöoikeiden roolin koodi'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
