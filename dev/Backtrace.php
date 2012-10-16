@@ -130,7 +130,9 @@ class SS_Backtrace {
 		if($showArgs && isset($item['args'])) {
 			$args = array();
 			foreach($item['args'] as $arg) {
-				if(!is_object($arg) || method_exists($arg, '__toString')) {
+				if(is_array($arg)) {
+					$args[] = 'Array';
+				} elseif(!is_object($arg) || method_exists($arg, '__toString')) {
 					$args[] = (string) $arg;
 				} else {
 					$args[] = get_class($arg);
