@@ -1,32 +1,19 @@
 is:
   AssetAdmin:
-    ADDFILES:
-      - null
-    EditOrgMenu:
-      - null
-    NEWFOLDER:
-      - null
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
+    NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'First uploaded'
+    DIM: Dimensions
+    FILENAME: Filename
+    FOLDER: Folder
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
+    TYPE: 'File type'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -42,85 +29,50 @@ is:
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT:
-      - null
-    ALIGNEMENTEXAMPLE:
-      - null
-    BOLD:
-      - null
-    BOLDEXAMPLE:
-      - null
-    CODE:
-      - null
-    CODEDESCRIPTION:
-      - null
-    CODEEXAMPLE:
-      - null
-    COLORED:
-      - null
-    COLOREDEXAMPLE:
-      - null
-    EMAILLINK:
-      - null
-    EMAILLINKDESCRIPTION:
-      - null
-    IMAGE:
-      - null
-    IMAGEDESCRIPTION:
-      - null
-    ITALIC:
-      - null
-    ITALICEXAMPLE:
-      - null
-    LINK:
-      - null
-    LINKDESCRIPTION:
-      - null
-    STRUCK:
-      - null
-    STRUCKEXAMPLE:
-      - null
-    UNDERLINE:
-      - null
-    UNDERLINEEXAMPLE:
-      - null
-    UNORDERED:
-      - null
-    UNORDEREDDESCRIPTION:
-      - null
-    UNORDEREDEXAMPLE1:
-      - null
+    ALIGNEMENT: Textastilling
+    ALIGNEMENTEXAMPLE: 'hægri jafnað'
+    BOLD: 'Feitletraður texti'
+    BOLDEXAMPLE: Feitletrað
+    CODE: 'Kóða blokk'
+    CODEDESCRIPTION: 'Ósniðin kóða blokk'
+    CODEEXAMPLE: 'Kóða blokk'
+    COLORED: 'Litaður texti'
+    COLOREDEXAMPLE: 'blár texti'
+    EMAILLINK: 'Tölvupóst hlekkur'
+    EMAILLINKDESCRIPTION: 'Búa til hlekk fyrir tölvupóstfang'
+    IMAGE: Mynd
+    IMAGEDESCRIPTION: 'Sýna mynd í póstinum'
+    ITALIC: 'Skáletraður texti'
+    ITALICEXAMPLE: Skáletrun
+    LINK: 'Heimasíðu hlekkur'
+    LINKDESCRIPTION: 'Tengja við aðra heimasíðu eða slóð'
+    STRUCK: 'Struck-out Text'
+    STRUCKEXAMPLE: Struck-out
+    UNDERLINE: 'Undirstrikaður texti'
+    UNDERLINEEXAMPLE: Undirstrikað
+    UNORDERED: 'Óraðaður listi'
+    UNORDEREDDESCRIPTION: 'Óraðaður listi'
+    UNORDEREDEXAMPLE1: 'Óraðaður hlutur 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO:
-      - null
-    ERRORNOTADMIN:
-      - null
-    ERRORNOTREC:
-      - null
+    ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
+    ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
+    ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: Nei
+    ANY: Einhver
+    1: Já
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Vista
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
     CHANGEPASSWORDTEXT2: 'Þú getur núna notað eftirfarandi auðkenni til að innskrá þig:'
@@ -128,77 +80,50 @@ is:
     HELLO: Hæ
     PASSWORD: Lykilorð
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Nei
+    - Já
   ComplexTableField:
-    CLOSEPOPUP:
-      - null
-    SUCCESSADD2:
-      - null
-    SUCCESSEDIT:
-      - null
+    CLOSEPOPUP: 'Loka glugga'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Vitað %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Bæta við %s.'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Raða í hækkandi röð'
+    SORTDESC: 'Raða í lækkandi röð'
   ComplexTableField_popup.ss:
-    NEXT:
-      - null
-    PREVIOUS:
-      - null
+    NEXT: Næsta
+    PREVIOUS: Fyrri
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Breyta lykliorði'
   CreditCardField:
     FIRST: fyrsta
     FOURTH: fjórða
     SECOND: annað
     THIRD: þriðja
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: kr
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Gagna hlutir'
+    SINGULARNAME: 'Gagna hlutir'
   Date:
-    DAY:
-      - null
-    DAYS:
-      - null
+    DAY: dagur
+    DAYS: dagar
     HOUR: klukkustund
-    HOURS:
-      - null
+    HOURS: klukkustundir
     MIN: mín
     MINS: mín
-    MONTH:
-      - null
+    MONTH: mánuð
     MONTHS: mánuði
-    SEC:
-      - null
-    SECS:
-      - null
+    SEC: sek
+    SECS: sek
     TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN:
-      - null
-    YEAR:
-      - null
-    YEARS:
-      - null
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: ár
+    YEARS: ár
   DateField:
     NOTSET: 'ekki valið'
     TODAY: 'í dag'
@@ -206,154 +131,89 @@ is:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Veldu)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Einhver
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    TiffType:
-      - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    AviType: 'AVI video file'
+    Content: Efni
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
+    Filename: Skráarnafn
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: 'Skrárstærðin eru núll bæti.'
+    NOVALIDUPLOAD: 'Það er ekki hægt að sækja þessa skrá'
+    Name: Nafn
+    PLURALNAME: Skrár
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
+    SINGULARNAME: Skrá
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TiffType: 'Tagged image format'
+    Title: Titill
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: Skrá
+    FROMCOMPUTER: 'Frá tölvunni þinni'
+    FROMFILESTORE: 'Frá skrárgeymslu'
+    NOSOURCE: 'Please select a source file to attach'
+    REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
-    TITLE:
-      - null
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    SYNCRESULTS:
-      - null
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO:
-      - null
-    TEXT1:
-      - null
-    TEXT2:
-      - null
-    TEXT3:
-      - null
+    HELLO: Hæ
+    TEXT1: 'Hérna er þitt'
+    TEXT2: 'endursetja lykilorð'
+    TEXT3: fyrir
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s er krafist'
+    SubmitBtnLabel: Go
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'Gildið sem þú slóst inn er ekki einkvæmt'
+    VALIDATIONPASSWORDSDONTMATCH: 'Lykilorðin stemma ekki'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Lykilorðin mega ekki vera tóm'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Staðfesta
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE:
-      - null
+    NONE: ekkert
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -370,216 +230,118 @@ is:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
-    CancelBtn:
-      - null
-    Create:
-      - null
-    Delete:
-      - null
-    DeletePermissionsFailure:
-      - null
-    Deleted:
-      - null
-    Save:
-      - null
-    Saved:
-      - null
+    CancelBtn: Cancel
+    Create: Create
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    Save: Save
+    Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole:
-      - null
-    Code:
-      - null
-    DefaultGroupTitleAdministrators:
-      - null
-    DefaultGroupTitleContentAuthors:
-      - null
-    Description:
-      - null
-    GroupReminder:
-      - null
-    Locked:
-      - null
-    NoRoles:
-      - null
-    PLURALNAME:
-      - null
-    Parent:
-      - null
-    RolesAddEditLink:
-      - null
-    SINGULARNAME:
-      - null
-    Sort:
-      - null
-    has_many_Permissions:
-      - null
-    many_many_Members:
-      - null
+    AddRole: 'Add a role for this group'
+    Code: 'Hóp kóði'
+    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleContentAuthors: 'Content Authors'
+    Description: Lýsing
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    Locked: 'Læst?'
+    NoRoles: 'No roles found'
+    PLURALNAME: Groups
+    Parent: 'Yfir hópur'
+    RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
+    Sort: Röðun
+    has_many_Permissions: Leyfi
+    many_many_Members: Félagar
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Deleted %d groups'
+    ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL:
-      - null
-    ADJUSTDETAILSDIMENSIONS:
-      - null
-    ANCHORVALUE:
-      - null
-    BUTTONINSERT:
-      - null
-    BUTTONINSERTLINK:
-      - null
-    BUTTONREMOVELINK:
-      - null
-    BUTTONUpdate:
-      - null
-    CAPTIONTEXT:
-      - null
-    CSSCLASS:
-      - null
-    CSSCLASSCENTER:
-      - null
-    CSSCLASSLEFT:
-      - null
-    CSSCLASSLEFTALONE:
-      - null
-    CSSCLASSRIGHT:
-      - null
-    DETAILS:
-      - null
-    EMAIL:
-      - null
-    FILE:
-      - null
-    FOLDER:
-      - null
-    FROMCMS:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMWEB:
-      - null
-    FindInFolder:
-      - null
-    IMAGEALT:
-      - null
-    IMAGEALTTEXT:
-      - null
-    IMAGEALTTEXTDESC:
-      - null
-    IMAGEDIMENSIONS:
-      - null
-    IMAGEHEIGHTPX:
-      - null
-    IMAGETITLE:
-      - null
-    IMAGETITLETEXT:
-      - null
-    IMAGETITLETEXTDESC:
-      - null
-    IMAGEWIDTHPX:
-      - null
-    INSERTMEDIA:
-      - null
-    LINK:
-      - null
-    LINKANCHOR:
-      - null
-    LINKDESCR:
-      - null
-    LINKEMAIL:
-      - null
-    LINKEXTERNAL:
-      - null
-    LINKFILE:
-      - null
-    LINKINTERNAL:
-      - null
-    LINKOPENNEWWIN:
-      - null
-    LINKTO:
-      - null
-    PAGE:
-      - null
-    URL:
-      - null
-    URLNOTANOEMBEDRESOURCE:
-      - null
-    UpdateMEDIA:
-      - null
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Markstikla
+    BUTTONINSERT: Insert
+    BUTTONINSERTLINK: 'Bæta við hlekk'
+    BUTTONREMOVELINK: 'Fjarlægja hlekk'
+    BUTTONUpdate: Update
+    CAPTIONTEXT: 'Caption text'
+    CSSCLASS: 'Textastilling / stíll'
+    CSSCLASSCENTER: 'Miðjað, eitt og sér'
+    CSSCLASSLEFT: 'Til vinstri, með textann umhverfis'
+    CSSCLASSLEFTALONE: 'Til vinstri, eitt og sér '
+    CSSCLASSRIGHT: 'Til hægri, með textann umhverfis'
+    DETAILS: Details
+    EMAIL: Tölvupóstfang
+    FILE: Skrá
+    FOLDER: Mappa
+    FROMCMS: 'From the CMS'
+    FROMCOMPUTER: 'From your computer'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: Stærð
+    IMAGEHEIGHTPX: Hæð
+    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: Breidd
+    INSERTMEDIA: 'Insert Media'
+    LINK: Hlekkur
+    LINKANCHOR: 'Markstikla á þessari síðu'
+    LINKDESCR: 'Lýsing á hlekk'
+    LINKEMAIL: Tölvupóstfang
+    LINKEXTERNAL: 'Önnur heimasíða'
+    LINKFILE: 'Hlaða niður skrá'
+    LINKINTERNAL: 'Síða innan heimasíðunnar'
+    LINKOPENNEWWIN: 'Opna hlekk í nýjum glugga?'
+    LINKTO: 'Hlekkur í'
+    PAGE: Síða
+    URL: 'Veffang (URL)'
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Mynd
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
-    HELP:
-      - null
-    PAGETYPE:
-      - null
-    PERMAGAIN:
-      - null
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
+    HELP: Help
+    PAGETYPE: 'Page type: '
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
-    Email:
-      - null
-    IP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
-    Status:
-      - null
+    Email: Tölvupóstfang
+    IP: 'IP tala'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
+    Status: Staða
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
@@ -623,159 +385,94 @@ is:
     db_Password: Lykilorð
     db_PasswordExpiry: 'Lykilorð rennur út'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'Tölvupóstur &amp; Lykilorð'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
-    'APPLY FILTER':
-      - null
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultNone:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Deleted %d members'
+    ResultNone: 'No changes'
+    ResultUpdated: 'Updated {count} members'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Delete
+    DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    IMPORT: 'Import from CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
-    FILTER:
-      - null
-    IMPORT:
-      - null
+    FILTER: Filter
+    IMPORT: Import
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER:
-      - null
-    SEARCHLISTINGS:
-      - null
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: Reikningur
+    FIELDLABELCURRENCY: Gjaldmiðill
   NullableField:
     IsNullLabel: 'Er Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Page
+    View: View
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 'Full stjórnanda réttindi'
+    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   PermissionRole:
-    OnlyAdminCanApply:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
-    Title:
-      - null
+    OnlyAdminCanApply: 'Only admin can apply'
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
-    PERMISSIONS_CATEGORY:
-      - null
-    UserPermissionsIntro:
-      - null
+    PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
   RelationComplexTableField.ss:
@@ -783,32 +480,19 @@ is:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
+    BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
+    CHANGEPASSWORDBELOW: 'Þú getur breytt lykilorðinu þínu fyrir neðan.'
+    CHANGEPASSWORDHEADER: 'Breyttu lykilorðinu þínu'
+    ENTERNEWPASSWORD: 'Vinsamlegast sláðu inn nýtt lykilorð'
+    ERRORPASSWORDPERMISSION: 'Þú verður að vera innskráður til að geta breytt lykilorðinu þínu!'
+    LOGGEDOUT: 'Þú hefur verið útskráð(ur). Ef þú villt innskrá þig aftur, sláðu þá inn auðkennið þín fyrir neðan.'
+    LOGIN: Innskrá
+    NOTEPAGESECURED: 'Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -828,60 +512,41 @@ is:
     TABROLES: Roles
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: 'Import from CSV'
+    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'Engin mynd sótt'
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: Aðal
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 'Bæta við nýrri röð'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Flytja út í CSV'
     PRINT: Prenta
     Print: Print
     SELECT: 'Veldu:'
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
   TableListField_PageControls.ss:
-    DISPLAYING:
-      - null
-    OF:
-      - null
-    TO:
-      - null
-    VIEWFIRST:
-      - null
-    VIEWLAST:
-      - null
-    VIEWNEXT:
-      - null
-    VIEWPREVIOUS:
-      - null
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'Sýna first'
+    VIEWLAST: 'Sýna síðast'
+    VIEWNEXT: 'Sýna næsta'
+    VIEWPREVIOUS: 'Sýna fyrri'
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS:
-      - null
-    MORE:
-      - null
+    LESS: minna
+    MORE: meira
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
@@ -908,5 +573,4 @@ is:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: útgáfur
