@@ -17,14 +17,30 @@ class SS_HTMLValue extends ViewableData {
 	 * @param string $content
 	 */
 	public function __construct($content = null) {
-		$this->document = new DOMDocument('1.0', 'UTF-8');
-		$this->document->scrictErrorChecking = false;
-
+		$this->setDocument(new DOMDocument('1.0', 'UTF-8'));
+		$this->setScrictErrorChecking(false);
+		$this->setOutputFormatting(false);
 		$this->setContent($content);
-		
+
 		parent::__construct();
 	}
-	
+
+	/**
+	 * Should strict error checking be used?
+	 * @param boolean $bool
+	 */
+	public function setScrictErrorChecking($bool) {
+		$this->getDocument()->scrictErrorChecking = $bool;
+	}
+
+	/**
+	 * Should the output be formatted?
+	 * @param boolean $bool
+	 */
+	public function setOutputFormatting($bool) {
+		$this->getDocument()->formatOutput = $bool;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -35,16 +51,15 @@ class SS_HTMLValue extends ViewableData {
 		return trim(
 			preg_replace(
 				array(
-					'/^<!DOCTYPE.+?>/i',
-					'/(.*)<body>/i',
-					'/<\/body>(.*)/i',
+					'/(.*)<body>/is',
+					'/<\/body>(.*)/is',
 				),
 				'',
 				urldecode($this->getDocument()->saveHTML())
 			)
 		);
 	}
-	
+
 	/**
 	 * @param string $content
 	 * @return bool
@@ -59,14 +74,21 @@ class SS_HTMLValue extends ViewableData {
 			"<body>$content</body></html>"
 		);
 	}
-	
+
 	/**
 	 * @return DOMDocument
 	 */
 	public function getDocument() {
 		return $this->document;
 	}
-	
+
+	/**
+	 * @param DOMDocument $document
+	 */
+	public function setDocument($document) {
+		$this->document = $document;
+	}
+
 	/**
 	 * A simple convenience wrapper around DOMDocument::getElementsByTagName().
 	 *
