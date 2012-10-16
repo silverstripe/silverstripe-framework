@@ -1,7 +1,7 @@
 sv:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ADDFILES: 'Lägg till filer'
+    EditOrgMenu: 'Redigera och organisera'
     NEWFOLDER: 'Ny mapp'
   AssetTableField:
     CREATED: 'Först uppladdad'
@@ -20,7 +20,7 @@ sv:
     DROPAREA: 'Släpp här'
     EDITALL: 'Redigera alla'
     EDITANDORGANIZE: 'Redigera och organisera'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Redigera filer'
     FILES: Filer
     FROMCOMPUTER: 'Välj filer från din dator'
     FROMCOMPUTERINFO: 'Ladda upp från din dator'
@@ -65,14 +65,14 @@ sv:
     1: Sant
   CMSLoadingScreen.ss:
     LOADING: Laddar...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'CMS:et kräver att du har javascript aktiverat.'
   CMSMain:
     ACCESS: 'Tillgång till sektionen ''{title}'''
     ACCESSALLINTERFACES: 'Tillgång till alla CMS-sektioner'
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'Min Profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -88,7 +88,7 @@ sv:
     SUCCESSEDIT: 'Sparade %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Lägg till'
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Inga rader hittades'
     SORTASC: 'Sortera stigande'
     SORTDESC: 'Sortera fallande'
   ComplexTableField_popup.ss:
@@ -177,8 +177,8 @@ sv:
     ZipType: 'ZIP packad fil'
   FileIFrameField:
     ATTACH: 'Bifoga {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED: '{type}er kan läggas till efter att du sparat första gången.'
+    ATTACHONCESAVED2: 'Filer kan läggas till efter att du sparat första gången.'
     DELETE: 'Radera {type}'
     DISALLOWEDFILETYPE: 'Filtypen är inte tillåten för uppladdning'
     FILE: Fil
@@ -191,8 +191,8 @@ sv:
   Filesystem:
     SYNCRESULTS: 'Synk genomförd: {createdcount} objekt skapades, {deletedcount} objekt raderades'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Mappar
+    SINGULARNAME: Mapp
   ForgotPasswordEmail.ss:
     HELLO: Hej
     TEXT1: 'Här är din'
@@ -200,7 +200,7 @@ sv:
     TEXT3: för
   Form:
     FIELDISREQUIRED: '%s är obligatorisk'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Kör
     VALIDATIONCREDITNUMBER: 'Kontrollera att du angav kortnummret {number} rätt'
     VALIDATIONNOTUNIQUE: 'Det angivna värdet är inte unikt'
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
@@ -249,16 +249,16 @@ sv:
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
     Locked: 'Låst?'
     NoRoles: 'Inga roller funna'
-    PLURALNAME: Groups
+    PLURALNAME: Grupper
     Parent: Föräldragrupp
     RolesAddEditLink: 'Hantera roller'
-    SINGULARNAME: Group
+    SINGULARNAME: Grupp
     Sort: Sorteringsordning
     has_many_Permissions: Tillstånd
     many_many_Members: Medlemmar
   GroupImportForm:
     Help1: '<p>Importera en eller flera grupper i <em>CSV</em>- format (komma-separerade värden). <small><a href="#" class ="toggle-advanced">Visa avancerade val</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Skapade {count} grupper'
     ResultDeleted: 'Raderade %d grupper'
     ResultUpdated: 'Uppdaterade %d grupper'
@@ -310,13 +310,13 @@ sv:
     URLNOTANOEMBEDRESOURCE: 'URLen ''{url}'' gick inte  att omvandla till ett media.'
     UpdateMEDIA: 'Uppdatera media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Filer
+    SINGULARNAME: Fil
   ImageField:
     IMAGE: Bild
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Filer
+    SINGULARNAME: Fil
   Image_iframe.ss:
     TITLE: 'Iframe för uppladdning av bild'
   LeftAndMain:
@@ -339,8 +339,8 @@ sv:
   LoginAttempt:
     Email: E-postadress
     IP: IP-adress
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: Inloggningsförsök
+    SINGULARNAME: Inloggningsförsök
     Status: Status
   Member:
     ADDGROUP: 'Lägg till grupp'
@@ -409,31 +409,31 @@ sv:
     TWODIGITYEAR: 'Två siffror för år'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small>a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Skapade {count} medlemmar'
     ResultDeleted: 'Raderade %d medlemmar'
     ResultNone: 'Inga ändringar'
     ResultUpdated: 'Uppdaterade {count} medlemmar'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Användares lösenord'
+    SINGULARNAME: 'Användares lösenord'
   MemberTableField: null
   ModelAdmin:
     DELETE: Radera
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    DELETEDRECORDS: 'Raderade {count} poster.'
+    EMPTYBEFOREIMPORT: 'Töm databasen före import'
     IMPORT: 'Importera från CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: 'Importerade {count} poster.'
     NOCSVFILE: 'Var god och bläddra efter en CSV-fil för import'
     NOIMPORT: 'Inget att importera'
     RESET: Rensa
     Title: Datamodeller
-    UPDATEDRECORDS: 'Updated {count} records.'
+    UPDATEDRECORDS: 'Uppdaterade {count} poster.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Databaskolumner
-    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECLINK: 'Visa specifikation för %s'
     IMPORTSPECRELATIONS: Relationer
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECTITLE: 'Specifikation för %s'
   ModelAdmin_Tools.ss:
     FILTER: 'Filtrera på'
     IMPORT: Importera
@@ -448,15 +448,15 @@ sv:
   NumericField:
     VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
   Pagination:
-    Page: Page
-    View: View
+    Page: Sida
+    View: Visa
   Permission:
     AdminGroup: Administratör
     CMS_ACCESS_CATEGORY: CMS-åtkomst
     FULLADMINRIGHTS: 'Fulla administrativa rättigheter'
     FULLADMINRIGHTS_HELP: 'Implicerar och gäller över alla andra tillskrivna rättigheter.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Rättigheter
+    SINGULARNAME: Rättighet
   PermissionCheckboxSetField:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
@@ -464,12 +464,12 @@ sv:
     FromRoleOnGroup: 'ärvt från roll "%s" i grupp "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Endast administratörer kan tillämpa denna roll'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: Roller
+    SINGULARNAME: Roll
     Title: Rollnamn
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Koder för rollrättigheter'
+    SINGULARNAME: 'Kodför rollrättigheter'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -477,8 +477,8 @@ sv:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
   RelationComplexTableField.ss:
     ADD: 'Lägg till'
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Exportera till CSV'
+    NOTFOUND: 'Inga rader hittades'
   Security:
     ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
     BUTTONSEND: 'Skicka återställningslänk'
@@ -531,13 +531,13 @@ sv:
     Print: 'Skriv ut'
     SELECT: 'Välj:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Inga rader hittades'
     SORTASC: 'Sortera i stigande ordning'
     SORTDESC: 'Sortera i fallande ordning'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
+    DISPLAYING: Visar
     OF: av
-    TO: to
+    TO: till
     VIEWFIRST: 'Visa första'
     VIEWLAST: 'Visa sista'
     VIEWNEXT: 'Visa nästa'
@@ -551,17 +551,17 @@ sv:
     ATTACHFILE: 'Bifoga en fil'
     ATTACHFILES: 'Bifoga fil(er)'
     AttachFile: 'Bifoga fil(er)'
-    DELETE: 'Delete from files'
+    DELETE: 'Radera från filer'
     DELETEINFO: 'Ta bort filen permanent från filarkivet'
     DOEDIT: Spara
     DROPFILE: 'Släpp en fil'
     DROPFILES: 'släpp filer'
     Dimensions: Dimensioner
-    EDIT: Edit
+    EDIT: Ändra
     EDITINFO: 'Redigera filen'
     FIELDNOTSET: 'Hittade ingen filinformation'
     FROMCOMPUTER: 'Från din dator'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Välj från filer'
     FROMFILES: 'Från filer'
     HOTLINKINFO: 'Information: Denna bild kommer att bli länkad till. Var god kontrollera med ägaren till sajten att du har tillåtelse att länka till bilden.'
     MAXNUMBEROFFILES: 'Max antal ({count}) filer överstiget.'
@@ -570,7 +570,7 @@ sv:
     REMOVEERROR: 'Fel när filen skulle tas bort'
     REMOVEINFO: 'Ta bort filen härifrån, men radera den inte från filarkivet'
     STARTALL: 'Starta alla'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Starta all uppladdningar'
     Saved: Sparad
   Versioned:
     has_many_Versions: Versioner
