@@ -302,7 +302,7 @@
 							},
 							type: "GET",
 							url: suggestionUrl,
-							data: form.serialize()+'&'+escape(searchField.attr('name'))+'='+escape(searchField.val()), 
+							data: escape(searchField.attr('name'))+'='+escape(searchField.val()), 
 							success: function(data) {
 								response( $.map(JSON.parse(data), function( name, id ) {
 									return { label: name, value: name, id: id };
