@@ -1,19 +1,32 @@
 pa:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
-    NEWFOLDER: NewFolder
+    ADDFILES:
+      - null
+    EditOrgMenu:
+      - null
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
-    FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
-    TYPE: 'File type'
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -29,50 +42,85 @@ pa:
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: Alignment
-    ALIGNEMENTEXAMPLE: 'right aligned'
-    BOLD: 'Bold Text'
-    BOLDEXAMPLE: Bold
-    CODE: 'Code Block'
-    CODEDESCRIPTION: 'Unformatted code block'
-    CODEEXAMPLE: 'Code block'
-    COLORED: 'Colored text'
-    COLOREDEXAMPLE: 'blue text'
-    EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
-    IMAGE: Image
-    IMAGEDESCRIPTION: 'Show an image in your post'
-    ITALIC: 'Italic Text'
-    ITALICEXAMPLE: Italics
-    LINK: 'Website link'
-    LINKDESCRIPTION: 'Link to another website or URL'
-    STRUCK: 'Struck-out Text'
-    STRUCKEXAMPLE: Struck-out
-    UNDERLINE: 'Underlined Text'
-    UNDERLINEEXAMPLE: Underlined
-    UNORDERED: 'Unordered list'
-    UNORDEREDDESCRIPTION: 'Unordered list'
-    UNORDEREDEXAMPLE1: 'unordered item 1'
+    ALIGNEMENT:
+      - null
+    ALIGNEMENTEXAMPLE:
+      - null
+    BOLD:
+      - null
+    BOLDEXAMPLE:
+      - null
+    CODE:
+      - null
+    CODEDESCRIPTION:
+      - null
+    CODEEXAMPLE:
+      - null
+    COLORED:
+      - null
+    COLOREDEXAMPLE:
+      - null
+    EMAILLINK:
+      - null
+    EMAILLINKDESCRIPTION:
+      - null
+    IMAGE:
+      - null
+    IMAGEDESCRIPTION:
+      - null
+    ITALIC:
+      - null
+    ITALICEXAMPLE:
+      - null
+    LINK:
+      - null
+    LINKDESCRIPTION:
+      - null
+    STRUCK:
+      - null
+    STRUCKEXAMPLE:
+      - null
+    UNDERLINE:
+      - null
+    UNDERLINEEXAMPLE:
+      - null
+    UNORDERED:
+      - null
+    UNORDEREDDESCRIPTION:
+      - null
+    UNORDEREDEXAMPLE1:
+      - null
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ username ਅਤੇ password ਪਾਉ'
-    ERRORNOTADMIN: 'ਇਹ user ਪ੍ਰਬੰਧਕ ਨਹੀ ਹੈ।'
-    ERRORNOTREC: 'That username / password isn''t recognised'
+    ENTERINFO:
+      - null
+    ERRORNOTADMIN:
+      - null
+    ERRORNOTREC:
+      - null
   Boolean:
-    0: 'False'
-    ANY: Any
-    1: 'True'
+    0:
+      - null
+    ANY:
+      - null
+    1:
+      - null
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE:
+      - null
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -80,50 +128,77 @@ pa:
     HELLO: ਹਾਏ
     PASSWORD: Password
   CheckboxField:
-    - 'False'
-    - 'True'
+    -
+      - null
+    -
+      - null
   ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
-    SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: 'Saved %s %s %s'
+    CLOSEPOPUP:
+      - null
+    SUCCESSADD2:
+      - null
+    SUCCESSEDIT:
+      - null
   ComplexTableField.ss:
-    ADDITEM: 'ਜੋੜ ੋ '
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    ADDITEM:
+      - null
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   ComplexTableField_popup.ss:
-    NEXT: ਅਗਲਾ
-    PREVIOUS: ਪਿਛਲਾ
+    NEXT:
+      - null
+    PREVIOUS:
+      - null
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
+    ATLEAST:
+      - null
+    BETWEEN:
+      - null
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: first
     FOURTH: fourth
     SECOND: second
     THIRD: third
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Date:
-    DAY: 'ਿਦਨ	'
-    DAYS: ਿਦਨ
+    DAY:
+      - null
+    DAYS:
+      - null
     HOUR: 'ਘੰਟਾ	'
-    HOURS: 'ਘੰਟੇ	'
+    HOURS:
+      - null
     MIN: 'ਿਮੰਟ	'
     MINS: 'ਿਮੰਟ	'
-    MONTH: ਮਹੀਨਾ
+    MONTH:
+      - null
     MONTHS: 'ਮਹੀਨੇੇੇੇੇ '
-    SEC: 'ਸਿਕ ੰਟ'
-    SECS: 'ਸਿਕ ੰਟ'
+    SEC:
+      - null
+    SECS:
+      - null
     TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
-    YEAR: ਸਾਲ
-    YEARS: ਸਾਲ
+    TIMEDIFFIN:
+      - null
+    YEAR:
+      - null
+    YEARS:
+      - null
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -131,89 +206,154 @@ pa:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET:
+      - null
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: '( ਚੁਣੋ )'
+    CHOOSE:
+      - null
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION:
+      - null
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
   File:
-    AviType: 'AVI video file'
-    Content: Content
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: Filename
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'Filesize is zero bytes.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Name
-    PLURALNAME: Files
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
-    SINGULARNAME: File
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
-    Title: Title
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    AviType:
+      - null
+    Content:
+      - null
+    CssType:
+      - null
+    DmgType:
+      - null
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
+    Mp3Type:
+      - null
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    TiffType:
+      - null
+    Title:
+      - null
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
+    ATTACH:
+      - null
+    ATTACHONCESAVED:
+      - null
+    ATTACHONCESAVED2:
+      - null
+    DELETE:
+      - null
+    DISALLOWEDFILETYPE:
+      - null
+    FILE:
+      - null
+    FROMCOMPUTER:
+      - null
+    FROMFILESTORE:
+      - null
+    NOSOURCE:
+      - null
+    REPLACE:
+      - null
   FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE:
+      - null
   Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS:
+      - null
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ForgotPasswordEmail.ss:
-    HELLO: ਹਾਏ
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO:
+      - null
+    TEXT1:
+      - null
+    TEXT2:
+      - null
+    TEXT3:
+      - null
   Form:
-    FIELDISREQUIRED: '%s ਚਾਹੀਦਾ ਹੈ'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validator
-    VALIDCURRENCY: 'Please enter a valid currency'
+    FIELDISREQUIRED:
+      - null
+    SubmitBtnLabel:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
-    NONE: none
+    NONE:
+      - null
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -230,118 +370,216 @@ pa:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure:
+      - null
   GridFieldDetailForm:
-    CancelBtn: Cancel
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
+    CancelBtn:
+      - null
+    Create:
+      - null
+    Delete:
+      - null
+    DeletePermissionsFailure:
+      - null
+    Deleted:
+      - null
+    Save:
+      - null
+    Saved:
+      - null
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
-    Code: 'Group Code'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Description
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Locked?'
-    NoRoles: 'No roles found'
-    PLURALNAME: Groups
-    Parent: 'Parent Group'
-    RolesAddEditLink: 'Manage roles'
-    SINGULARNAME: Group
-    Sort: 'Sort Order'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
+    AddRole:
+      - null
+    Code:
+      - null
+    DefaultGroupTitleAdministrators:
+      - null
+    DefaultGroupTitleContentAuthors:
+      - null
+    Description:
+      - null
+    GroupReminder:
+      - null
+    Locked:
+      - null
+    NoRoles:
+      - null
+    PLURALNAME:
+      - null
+    Parent:
+      - null
+    RolesAddEditLink:
+      - null
+    SINGULARNAME:
+      - null
+    Sort:
+      - null
+    has_many_Permissions:
+      - null
+    many_many_Members:
+      - null
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultUpdated:
+      - null
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    ANCHORVALUE: Anchor
-    BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'ਿਲੰਕ ਪਾਉ'
-    BUTTONREMOVELINK: 'ਿਲੰਕ ਕੱਟੋਂ'
-    BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
-    DETAILS: Details
-    EMAIL: 'ਈਮੇਲ ਪਤਾ'
-    FILE: ਫਾਈਲ
-    FOLDER: ਫੋਲਡਰ
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: 'ਲੰਬਾਈ	'
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: 'ਚੌੜਾਈ	'
-    INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert/edit link for highlighted text'
-    LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: 'ਜੋੜ ਵਰਣਨ'
-    LINKEMAIL: 'ਈਮੇਲ ਪਤਾ'
-    LINKEXTERNAL: 'ਦੂਸਰੀ ਵੈੱਬ-ਸਾਈਟ '
-    LINKFILE: ਡਾਉਨਲੋਡ
-    LINKINTERNAL: 'ਸਾਈਟ ਉੱਤੇ ਪੰਨਾ	'
-    LINKOPENNEWWIN: 'ਿਲੰਕ ਨੰੂ  ਨਵੀ window ਿਵੱਚ ਖੋਲੋ'
-    LINKTO: 'ਜੋੜ ਨੰੂ '
-    PAGE: ਪੰਨਾ
-    URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    ADDURL:
+      - null
+    ADJUSTDETAILSDIMENSIONS:
+      - null
+    ANCHORVALUE:
+      - null
+    BUTTONINSERT:
+      - null
+    BUTTONINSERTLINK:
+      - null
+    BUTTONREMOVELINK:
+      - null
+    BUTTONUpdate:
+      - null
+    CAPTIONTEXT:
+      - null
+    CSSCLASS:
+      - null
+    CSSCLASSCENTER:
+      - null
+    CSSCLASSLEFT:
+      - null
+    CSSCLASSLEFTALONE:
+      - null
+    CSSCLASSRIGHT:
+      - null
+    DETAILS:
+      - null
+    EMAIL:
+      - null
+    FILE:
+      - null
+    FOLDER:
+      - null
+    FROMCMS:
+      - null
+    FROMCOMPUTER:
+      - null
+    FROMWEB:
+      - null
+    FindInFolder:
+      - null
+    IMAGEALT:
+      - null
+    IMAGEALTTEXT:
+      - null
+    IMAGEALTTEXTDESC:
+      - null
+    IMAGEDIMENSIONS:
+      - null
+    IMAGEHEIGHTPX:
+      - null
+    IMAGETITLE:
+      - null
+    IMAGETITLETEXT:
+      - null
+    IMAGETITLETEXTDESC:
+      - null
+    IMAGEWIDTHPX:
+      - null
+    INSERTMEDIA:
+      - null
+    LINK:
+      - null
+    LINKANCHOR:
+      - null
+    LINKDESCR:
+      - null
+    LINKEMAIL:
+      - null
+    LINKEXTERNAL:
+      - null
+    LINKFILE:
+      - null
+    LINKINTERNAL:
+      - null
+    LINKOPENNEWWIN:
+      - null
+    LINKTO:
+      - null
+    PAGE:
+      - null
+    URL:
+      - null
+    URLNOTANOEMBEDRESOURCE:
+      - null
+    UpdateMEDIA:
+      - null
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ImageField:
-    IMAGE: Image
+    IMAGE:
+      - null
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
-    HELP: Help
-    PAGETYPE: 'Page type: '
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
-    PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
-    VersionUnknown: unknown
+    CANT_REORGANISE:
+      - null
+    DELETED:
+      - null
+    DropdownBatchActionsDefault:
+      - null
+    HELP:
+      - null
+    PAGETYPE:
+      - null
+    PERMAGAIN:
+      - null
+    PERMALREADY:
+      - null
+    PERMDEFAULT:
+      - null
+    PLEASESAVE:
+      - null
+    PreviewButton:
+      - null
+    REORGANISATIONSUCCESSFUL:
+      - null
+    SAVEDUP:
+      - null
+    VersionUnknown:
+      - null
   LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
+    Hello:
+      - null
+    LOGOUT:
+      - null
   LoginAttempt:
-    Email: 'Email Address'
-    IP: 'IP Address'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
-    Status: Status
+    Email:
+      - null
+    IP:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    Status:
+      - null
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'ਤਬਦੀਲ Password'
@@ -385,94 +623,159 @@ pa:
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'ਈਮੇਲ &amp; '
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    AMORPM:
+      - null
+    'APPLY FILTER':
+      - null
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
-    ResultUpdated: 'Updated {count} members'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultNone:
+      - null
+    ResultUpdated:
+      - null
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   MemberTableField: null
   ModelAdmin:
-    DELETE: Delete
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
+    FILTER:
+      - null
+    IMPORT:
+      - null
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
+    IMPORT_TAB_HEADER:
+      - null
+    SEARCHLISTINGS:
+      - null
   MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT:
+      - null
+    FIELDLABELCURRENCY:
+      - null
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page: Page
-    View: View
+    Page:
+      - null
+    View:
+      - null
   Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 'Full administrative rights'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
+    OnlyAdminCanApply:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    Title:
+      - null
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+    PERMISSIONS_CATEGORY:
+      - null
+    UserPermissionsIntro:
+      - null
   PhoneNumberField:
     VALIDATION: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਸਹੀ ਫ਼ੋਨ ਨੰਬਰ ਪਾਉ'
   RelationComplexTableField.ss:
@@ -480,19 +783,32 @@ pa:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'ਤੁਸੀਂ ਆਪਣਾ password ਹੇਠਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।ੋ'
-    CHANGEPASSWORDHEADER: 'password ਬਦਲੋ '
-    ENTERNEWPASSWORD: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਨਵਾਂ password ਪਾਉ।'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out. If you would like to log in again, enter your credentials below.'
-    LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -512,41 +828,60 @@ pa:
     TABROLES: Roles
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'ਕੋਈ ਫੋਟੋ ਅੱਪਲੋਡ ਨਹੀ ਹੋਈ'
   SiteTree:
-    TABMAIN: 'ਮੁੱਖ	'
+    TABMAIN:
+      - null
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED:
+      - null
   TableField.ss:
-    ADD: 'Add a new row'
-    ADDITEM: 'Add %s'
+    ADD:
+      - null
+    ADDITEM:
+      - null
   TableListField:
     CSVEXPORT: 'Export to CSV'
     PRINT: Print
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
+    DISPLAYING:
+      - null
+    OF:
+      - null
+    TO:
+      - null
+    VIEWFIRST:
+      - null
+    VIEWLAST:
+      - null
+    VIEWNEXT:
+      - null
+    VIEWPREVIOUS:
+      - null
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT:
+      - null
   ToggleField:
-    LESS: 'ਘੱਟ	'
-    MORE: 'ਹੋਰ	'
+    LESS:
+      - null
+    MORE:
+      - null
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
@@ -573,4 +908,5 @@ pa:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: Versions
+    has_many_Versions:
+      - null
