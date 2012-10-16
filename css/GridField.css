@@ -34,9 +34,8 @@
 .cms table.ss-gridfield-table thead tr:first-child th:last-child { -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px; }
 .cms table.ss-gridfield-table tbody { background: #FFF; }
 .cms table.ss-gridfield-table tbody tr { cursor: pointer; }
-.cms table.ss-gridfield-table tbody td { width: auto; white-space: nowrap; }
+.cms table.ss-gridfield-table tbody td { width: auto; max-width: 500px; word-wrap: break-word; }
 .cms table.ss-gridfield-table tbody td.col-buttons { width: 40px; padding: 0 8px; text-align: left; }
-.cms table.ss-gridfield-table tbody td.col-description { width: auto; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; border-right: none; text-indent: -9999em; padding: 0; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 3px -4px; display: block; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #1556b2; }
