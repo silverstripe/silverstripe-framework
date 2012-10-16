@@ -240,8 +240,8 @@ if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
 // This is necessary to force developers to acknowledge and fix
 // notice level errors (you can override this directive in your _config.php)
 if (Director::isLive()) {
-	if(defined('E_DEPRECATED')) error_reporting((E_ALL ^ E_NOTICE) ^ E_DEPRECATED);
-	else error_reporting(E_ALL ^ E_NOTICE);
+	if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT));
+	else error_reporting(E_ALL & ~E_NOTICE);
 }
 ///////////////////////////////////////////////////////////////////////////////
 // POST-MANIFEST COMMANDS
