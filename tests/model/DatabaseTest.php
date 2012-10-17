@@ -62,6 +62,22 @@ class DatabaseTest extends SapphireTest {
 		}
 	}
 
+	function testIsSchemaUpdating() {
+		$db = DB::getConn();
+
+		$this->assertFalse($db->isSchemaUpdating(), 'Before the transaction the flag is false.');
+
+		$db->beginSchemaUpdate();
+		$this->assertTrue($db->isSchemaUpdating(), 'During the transaction the flag is true.');
+
+		$db->endSchemaUpdate();
+		$this->assertFalse($db->isSchemaUpdating(), 'After the transaction the flag is false.');
+
+		$db->beginSchemaUpdate();
+		$db->cancelSchemaUpdate();
+		$this->assertFalse($db->doesSchemaNeedUpdating(), 'After cancelling the transaction the flag is false');
+	}
+
 	public function testSchemaUpdateChecking() {
 		$db = DB::getConn();
 
