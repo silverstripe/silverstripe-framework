@@ -86,11 +86,11 @@ class Deprecation {
 	protected static function get_calling_module_from_trace($backtrace) {
 		if (!isset($backtrace[1]['file'])) return;
 
-		$callingfile = $backtrace[1]['file'];
+		$callingfile = realpath($backtrace[1]['file']);
 
 		global $manifest;
 		foreach ($manifest->getModules() as $name => $path) {
-			if (strpos($callingfile, $path) === 0) {
+			if (strpos($callingfile, realpath($path)) === 0) {
 				return $name;
 			}
 		}
