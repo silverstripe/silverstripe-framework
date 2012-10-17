@@ -522,7 +522,8 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 		$php .= (count($entitySpec) == 1) ? var_export($entitySpec[0], true) : var_export($entitySpec, true);
 		$php .= ";$eol";
 		
-		return $php;
+		// Normalise linebreaks due to fix var_export output
+		return Convert::nl2os($php, $eol);
 	}
 }
 
