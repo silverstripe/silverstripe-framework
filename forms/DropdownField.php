@@ -104,6 +104,11 @@ class DropdownField extends FormField {
 	protected $emptyString = '';
 	
 	/**
+	 * @var array $disabledItems The keys for items that should be disabled (greyed out) in the dropdown
+	 */
+	protected $disabledItems = array();
+	
+	/**
 	 * Creates a new dropdown field.
 	 * @param $name The field name
 	 * @param $title The field title
@@ -154,11 +159,17 @@ class DropdownField extends FormField {
 					$selected = ($value) ? $value == $this->value : $value === $this->value;
 					$this->isSelected = $selected;
 				}
+				
+				$disabled = false;
+				if(in_array($value, $this->disabledItems) && $title != $this->emptyString ){
+					$disabled = 'disabled';
+				}
 
 				$options[] = new ArrayData(array(
 					'Title' => $title,
 					'Value' => $value,
 					'Selected' => $selected,
+					'Disabled' => $disabled,
 				));
 			}
 		}
@@ -166,6 +177,24 @@ class DropdownField extends FormField {
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
 		return parent::Field($properties);
+	}
+	
+	/**
+	 * Mark certain elements as disabled,
+	 * regardless of the {@link setDisabled()} settings.
+	 * 
+	 * @param array $items Collection of array keys, as defined in the $source array
+	 */
+	public function setDisabledItems($items){
+		$this->disabledItems = $items;
+		return $this;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	public function getDisabledItems(){
+		return $this->disabledItems;
 	}
 
 	public function getAttributes() {
