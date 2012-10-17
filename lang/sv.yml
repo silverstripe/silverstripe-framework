@@ -472,7 +472,7 @@ sv:
     SINGULARNAME: 'Kodför rollrättigheter'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+    UserPermissionsIntro: 'Genom att välja grupper för denna användare så ändras användarens rättigheter. Gå till grupper för att se vilka rättigheter de olika grupperna har.'
   PhoneNumberField:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
   RelationComplexTableField.ss:
