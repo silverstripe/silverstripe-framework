@@ -73,6 +73,8 @@ UploadField will detect the relation based on its $name property value:
 	}
 	class GalleryPage_Controller extends Page_Controller {
 	}
+	
+WARNING: Currently the UploadField doesn't fully support has_many relations, so use a many_many relation instead! 	
 
 ## Set a custom folder
 
@@ -132,36 +134,39 @@ selected files that you can then upload manually one by one:
 
 A gallery most times needs more then simple images. You might want to add a 
 description, or maybe some settings to define a transition effect for each slide. 
-First create an extended Image class:
+First create a 
+[DataExtension](http://doc.silverstripe.org/framework/en/reference/dataextension) 
+like this:
 
 	:::php
-	class GalleryItem extends Image {
+	class GalleryImage extends DataExtension {
 
 		static $db = array(
-			'Description' => 'Varchar(255)'
+			'Description' => 'Text'
+		);
+		
+		public static $belongs_many_many = array(
+			'GalleryPage' => 'GalleryPage'
 		);
 	}
 
-Now simply change the GalleryPage to use the new class:
+Now register the DataExtension for the Image class in your _config.php:
 
 	:::php
-	class GalleryPage extends Page {
+	Object::add_extension('Image', 'GalleryImage');
 	
-		static $many_many = array(
-			'GalleryImages' => 'GalleryItem'
-		);	
-		
+NOTE: although you can subclass the Image class instead of using a DataExtension, this is not advisable. For instance: when using a subclass, the 'From files' button will only return files that were uploaded for that subclass, it won't recognize any other images!			
 ### Edit uploaded images
 
 By default the UploadField will let you edit the following fields: *Title, 
 Filename, Owner and Folder*. The `fileEditFields` configuration setting allows 
 you you alter these settings. One way to go about this is create a 
-`getCustomFields` function in your GalleryItem object like this:
+`getCustomFields` function in your GalleryImage object like this:
 
 	:::php
-	class GalleryItem extends Image {
+	class GalleryImage extends DataExtension {
 		...
-
+		
 		function getCustomFields() {
 			$fields = new FieldList();
 			$fields->push(new TextField('Title', 'Title'));
