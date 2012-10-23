@@ -2,26 +2,16 @@ cs:
   AssetAdmin:
     NEWFOLDER: 'Nová složka'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Poprvé nahráno'
+    DIM: Rozměry
+    FILENAME: 'Název souboru'
+    FOLDER: Složka
+    LASTEDIT: 'Naposledy změněno'
+    OWNER: Vlastník
+    SIZE: Velikost
+    TITLE: Titulek
+    TYPE: Typ
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Vyberte soubory'
     DRAGFILESHERE: 'Táhni soubory sem'
@@ -68,27 +58,19 @@ cs:
     ERRORNOTADMIN: 'Tento uživatel není administrátor.'
     ERRORNOTREC: 'Toto uživatelské jméno / heslo nebylo rozpoznáno'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: Ne
+    ANY: Jakkýkoliv
+    1: Ano
   CMSLoadingScreen.ss:
     LOADING: Nahrávání...
     REQUIREJS: 'CMS vyžaduje, aby jste měli JavaScript zapnut.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Přístup k ''{title}'' sekci'
+    ACCESSALLINTERFACES: 'Přístup ke všem sekcím CMS'
+    ACCESSALLINTERFACESHELP: 'Prepíše více specifické nastavení přístupu.'
+    SAVE: Uložit
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: 'Můj profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vaše heslo bylo změněno pro'
     CHANGEPASSWORDTEXT2: 'Nyní můžete použít následující přihlašovací údaje pro přihlášení:'
@@ -121,8 +103,7 @@ cs:
     SECOND: druhé
     THIRD: třetí
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: Kč
   DataObject:
     PLURALNAME: 'Datové objekty'
     SINGULARNAME: 'Datový objekt'
@@ -148,8 +129,7 @@ cs:
     VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající maximu povoleného datumu ({date})'
     VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: Nenastaveno
   Director:
     INVALID_REQUEST: 'Neplatný požadavek'
   DropdownField:
@@ -162,68 +142,37 @@ cs:
   Enum:
     ANY: Jakkýkoli
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    TiffType:
-      - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    AviType: 'AVI video soubor'
+    Content: Obsah
+    CssType: 'CSS soubor'
+    DmgType: 'Apple obraz disku'
+    DocType: 'Word dokument'
+    Filename: 'Jméno souboru'
+    GifType: 'GIF obrázke - vhodné pro diagramy'
+    GzType: 'GZIP komprimační soubor'
+    HtlType: 'HTML soubor'
+    HtmlType: 'HTML soubor'
+    INVALIDEXTENSION: 'Extenze není povolena (platné: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extenze není povolena'
+    IcoType: 'Icon obrázkek'
+    JpgType: 'JPEG obrázke - vhodné pro fotografie'
+    JsType: 'Javascript soubor'
+    Mp3Type: 'MP3 audio soubor'
+    MpgType: 'MPEG video soubor'
+    NOFILESIZE: 'Velikost souboru je 0 bajtů.'
+    NOVALIDUPLOAD: 'Soubor není validní pro nahrání'
+    Name: Jméno
+    PLURALNAME: Soubory
+    PdfType: 'Adobe Acrobat PDF soubor'
+    PngType: 'PNG obrázek - vhodný jako univerzálmí formát'
+    SINGULARNAME: Soubor
+    TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
+    TOOLARGESHORT: 'Velikost souboru překračuje {size}'
+    TiffType: 'Tiff formát obrázku'
+    Title: Titulek
+    WavType: 'WAV audo soubor'
+    XlsType: 'Excel tabulka'
+    ZipType: 'ZIP komprimační soubor'
   FileIFrameField:
     ATTACH: 'Připojit {type}'
     ATTACHONCESAVED: '{type} je možné připojit až budete mít nejdříve uložen záznam.'
@@ -260,12 +209,9 @@ cs:
   FormField:
     NONE: žádný
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Smazat
+    Delete: Smazat
+    UnlinkRelation: Odpojit
   GridField:
     Add: 'Přidat {name}'
     Filter: Filtr
@@ -282,8 +228,7 @@ cs:
     RelationSearch: 'Vztah hledání'
     ResetFilter: Resetovat
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'Žádná oprávnění mazat'
   GridFieldDetailForm:
     CancelBtn: Storno
     Create: Vytvořit
@@ -316,8 +261,7 @@ cs:
     ResultDeleted: 'Smazáno %d skupin'
     ResultUpdated: 'Aktualizováno %d skupin'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Nekonečná smyčka se nachází v "{type}" hierarchii. Prosím změňte rodiče pro vyřešení tohoto problému'
   HtmlEditorField:
     ADDURL: 'Přidat URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozměry'
@@ -364,13 +308,10 @@ cs:
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Aktualizovat média'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Soubory
+    SINGULARNAME: Soubor
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Obrázek
   Image_Cached:
     PLURALNAME: Soubory
     SINGULARNAME: Soubor
@@ -391,10 +332,8 @@ cs:
     SAVEDUP: Uloženo.
     VersionUnknown: neznáme
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Ahoj
+    LOGOUT: 'Odhlásit se'
   LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
@@ -444,48 +383,28 @@ cs:
     db_Password: Heslo
     db_PasswordExpiry: 'Datum vypršení hesla'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
     'APPLY FILTER': 'Použít filtr'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Uživatelské
+    DATEFORMATBAD: 'Formát datumu je neplatný'
+    DAYNOLEADING: 'Den měsíce bez úvodní nuly'
+    DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
+    FOURDIGITYEAR: 'Čtyřčíslí roku'
+    FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
+    HOURNOLEADING: 'Hodina bez úvodní nuly'
+    MINUTENOLEADING: 'Minuta bez úvodní nuly'
+    MONTHNOLEADING: 'Číslo měsíce bez úvodní nuly'
+    Preview: Náhled
+    SHORTMONTH: 'Krátký název měsíce (např. Čer)'
+    TOGGLEHELP: 'Přepni nápovědu formátování'
+    TWODIGITDAY: 'Dvojčíslí dne měsíce'
+    TWODIGITHOUR: 'Dvojčíslí hodiny (00 až 23)'
+    TWODIGITMINUTE: 'Dvojčíslí minuty (00 až 59)'
+    TWODIGITMONTH: 'Dvojčíslí měsíce (01=Leden, atď.)'
+    TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
+    TWODIGITYEAR: 'Dvojčíslí roku'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použití</h4>\\n<ul>\\n<li>Povolené sloupce: <em>%s</em></li>\\n<li>Existující uživatelé jsou porovnáni jejich unikátní vlastností <em>Code</em>, a aktualizováni s novými hodnotami z importovaného souboru.</li>\\n<li>Skupiny mohou být přiřazeny sloupcem <em>Groups</em>. Skupiny jsou identifikovány svojí vlastností <em>Code</em>, více skupin může být odděleno čárkou. Existující členství ve skupině nejsou smazána.</li>\\n</ul>\\n</div>"
@@ -498,35 +417,21 @@ cs:
     SINGULARNAME: 'Členské heslo'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Smazat
+    DELETEDRECORDS: 'Smazáno {count} záznamů.'
+    EMPTYBEFOREIMPORT: 'Vyčistit databázi před importováním'
+    IMPORT: 'Importovat ze souboru CSV'
+    IMPORTEDRECORDS: 'Importováno {count} záznamů.'
+    NOCSVFILE: 'Prosím, vyhledejte soubor CSV pro import'
+    NOIMPORT: 'Nic k importu'
+    RESET: Resetovat
+    Title: 'Datové modely'
+    UPDATEDRECORDS: 'Aktualizováno {count} záznamů.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Sloupce databáze'
+    IMPORTSPECLINK: 'Ukázat specifikaci pro %s'
+    IMPORTSPECRELATIONS: Relace
+    IMPORTSPECTITLE: 'Specifikace pro %s'
   ModelAdmin_Tools.ss:
     FILTER: Filtrovat
     IMPORT: Importovat
@@ -561,10 +466,8 @@ cs:
     SINGULARNAME: Role
     Title: Název
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Kódy role oprávnění'
+    SINGULARNAME: 'Kód role oprávnění'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a přístupová práva'
     UserPermissionsIntro: 'Přiřazení skupin tomuto uživatelovi upraví oprávnění, které má. Podívejte se sekcie skupiny pro podrobnosti o oprávněních k jednotlivým skupinám.'
@@ -575,32 +478,19 @@ cs:
     CSVEXPORT: 'Exportovat do CSV'
     NOTFOUND: 'Žádné položky'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'K této stránce nemáte přístup. Pokud máte jiný účet, který k ní může přistupovat, můžete se přihlásit níže'
+    BUTTONSEND: 'Pošlete mi nulovací odkaz pro heslo'
+    CHANGEPASSWORDBELOW: 'Svoje heslo si můžete změnit níže.'
+    CHANGEPASSWORDHEADER: 'Změnit heslo'
+    ENTERNEWPASSWORD: 'Prosím zadejte nové heslo.'
+    ERRORPASSWORDPERMISSION: 'Pro změnu hesla musíte být přihlášení!'
+    LOGGEDOUT: 'Byli jste odhlášeni. Pokud se chcete znovu přihlásit, vložte své přihlašovací údaje.'
+    LOGIN: Přihlásit
+    NOTEPAGESECURED: 'Tato stránka je zabezpečená. Vložte své přihlašovací údaje a my Vám zároveň pošleme práva.'
+    NOTERESETLINKINVALID: '<p>Odkaz na resetování hesla není platný nebo je prošlý.</p><p>Můžete požádat o nový <a href="{link1}">zde</a> nebo změňte své heslo až <a href="{link2}">se přihlásíte</a>.</p>'
+    NOTERESETPASSWORD: 'Zadejte svou e-mailovou adresu a bude vám zaslán nulovací odkaz pro Vaše heslo'
+    PASSWORDSENTHEADER: 'Odkaz na resetování hesla byl odeslán na ''{email}'''
+    PASSWORDSENTTEXT: 'Děkujeme! Resetovací odkaz byl odeslán na ''{email}'', pokud účet existuje pro tuto emailovou adresu.'
   SecurityAdmin:
     ACCESS_HELP: 'Povolit prohlížení, přidávání a úpravu uživatelů, jako i přidělování oprávnění pro ně.'
     APPLY_ROLES: 'Použít role na skupiny'
@@ -620,10 +510,8 @@ cs:
     TABROLES: Role
     Users: Uživatelé
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: Import
+    FileFieldLabel: 'Soubor CSV <small>(Povoleny přípony: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Editovat
   SimpleImageField:
@@ -631,8 +519,7 @@ cs:
   SiteTree:
     TABMAIN: Hlavní
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'V %s ''%s je požadováno'
   TableField.ss:
     ADD: 'Přidat nový řádek'
     ADDITEM: 'Přidat %s'
