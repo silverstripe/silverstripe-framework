@@ -2,16 +2,26 @@ vi_VN:
   AssetAdmin:
     NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
-    FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
-    TYPE: 'File type'
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -58,19 +68,27 @@ vi_VN:
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    0: 'False'
-    ANY: Any
-    1: 'True'
+    0:
+      - null
+    ANY:
+      - null
+    1:
+      - null
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Lưu
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE:
+      - null
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Bạn có thể thay đổi mật khẩu tại'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -103,7 +121,8 @@ vi_VN:
     SECOND: second
     THIRD: third
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
@@ -129,7 +148,8 @@ vi_VN:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET:
+      - null
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -142,37 +162,68 @@ vi_VN:
   Enum:
     ANY: Any
   File:
-    AviType: 'AVI video file'
-    Content: Content
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: Filename
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'Filesize is zero bytes.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Name
-    PLURALNAME: Files
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
-    SINGULARNAME: File
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
-    Title: Title
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    AviType:
+      - null
+    Content:
+      - null
+    CssType:
+      - null
+    DmgType:
+      - null
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
+    Mp3Type:
+      - null
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    TiffType:
+      - null
+    Title:
+      - null
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -209,9 +260,12 @@ vi_VN:
   FormField:
     NONE: none
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -228,7 +282,8 @@ vi_VN:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure:
+      - null
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -261,7 +316,8 @@ vi_VN:
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -308,10 +364,13 @@ vi_VN:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ImageField:
-    IMAGE: Image
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -332,8 +391,10 @@ vi_VN:
     SAVEDUP: Saved.
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
+    Hello:
+      - null
+    LOGOUT:
+      - null
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
@@ -383,28 +444,48 @@ vi_VN:
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -417,21 +498,35 @@ vi_VN:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Delete
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Import
@@ -466,8 +561,10 @@ vi_VN:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -478,19 +575,32 @@ vi_VN:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
-    LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -510,8 +620,10 @@ vi_VN:
     TABROLES: Roles
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
@@ -519,7 +631,8 @@ vi_VN:
   SiteTree:
     TABMAIN: 'Nội dung'
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED:
+      - null
   TableField.ss:
     ADD: 'Add a new row'
     ADDITEM: 'Add %s'
