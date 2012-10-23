@@ -180,8 +180,12 @@ abstract class SS_Database {
 	 * @var array
 	 */
 	protected $indexList;
-	
-	
+
+	/**
+	 * Keeps track whether we are currently updating the schema.
+	 */
+	protected $schemaIsUpdating = false;
+
 	/**
 	 * Large array structure that represents a schema update transaction
 	 */
@@ -193,6 +197,7 @@ abstract class SS_Database {
 	 * Once	
 	 */
 	public function beginSchemaUpdate() {
+		$this->schemaIsUpdating = true;
 		$this->tableList = array();
 		$tables = $this->tableList();
 		foreach($tables as $table) $this->tableList[strtolower($table)] = $table;
@@ -221,6 +226,7 @@ abstract class SS_Database {
 			}
 		}
 		$this->schemaUpdateTransaction = null;
+		$this->schemaIsUpdating = false;
 	}
 
 	/**
@@ -228,6 +234,14 @@ abstract class SS_Database {
 	 */
 	public function cancelSchemaUpdate() {
 		$this->schemaUpdateTransaction = null;
+		$this->schemaIsUpdating = false;
+	}
+
+	/**
+	 * Returns true if we are during a schema update.
+	 */
+	function isSchemaUpdating() {
+		return $this->schemaIsUpdating;
 	}
 
 	/**

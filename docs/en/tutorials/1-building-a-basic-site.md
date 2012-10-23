@@ -145,8 +145,8 @@ or placed between SilverStripe template tags:
 
 **Flushing the cache**
 
-Whenever we edit a template file, we need to append *?flush=all* onto the end of the URL, e.g.
-http://localhost/your_site_name/?flush=all. SilverStripe stores template files in a cache for quicker load times. Whenever there are
+Whenever we edit a template file, we need to append *?flush=1* onto the end of the URL, e.g.
+http://localhost/your_site_name/?flush=1. SilverStripe stores template files in a cache for quicker load times. Whenever there are
 changes to the template, we must flush the cache in order for the changes to take effect.
 
 ##  The Navigation System
@@ -343,7 +343,7 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
-We can do this by going to [http://localhost/your_site_name/dev/build?flush=all](http://localhost/your_site_name/dev/build?flush=1) (replace *localhost/your_site_name* with your own domain name if applicable). 
+We can do this by going to [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) (replace *localhost/your_site_name* with your own domain name if applicable). 
 
 It may take a moment, so be patient. This add tables and fields needed by your site, and modifies any structures that have changed. It
 does this non-destructively - it will never delete your data.
@@ -366,7 +366,7 @@ It always tries to use the most specific template in an inheritance chain.
 
 ### Creating a new template
 
-To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=all*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
+To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
 
 First, we don't need the breadcrumbs and the secondary menu for the homepage. Let's remove them:
 	:::ss

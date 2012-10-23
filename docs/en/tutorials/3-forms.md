@@ -156,7 +156,7 @@ Add the following code to the existing `form.css` file:
 		}
 
 
-All going according to plan, if you visit [http://localhost/your_site_name/home?flush=all](http://localhost/your_site_name/home?flush=all) it should look something like this:
+All going according to plan, if you visit [http://localhost/your_site_name/home?flush=1](http://localhost/your_site_name/home?flush=1) it should look something like this:
 
 ![](_images/tutorial3_pollform.jpg)
 
@@ -179,7 +179,7 @@ If you recall, in the [second tutorial](2-extending-a-basic-site) we said that a
 		);
 	}
 
-If we then rebuild the database ([http://localhost/your_site_name/dev/build?flush=all](http://localhost/your_site_name/dev/build?flush=all)), we will see that the *BrowserPollSubmission* table is created. Now we just need to define 'doBrowserPoll' on *HomePage_Controller*:
+If we then rebuild the database ([http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build)), we will see that the *BrowserPollSubmission* table is created. Now we just need to define 'doBrowserPoll' on *HomePage_Controller*:
 
 **mysite/code/HomePage.php**
 

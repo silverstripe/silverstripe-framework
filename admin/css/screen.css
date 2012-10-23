@@ -149,8 +149,9 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
 .field.nolabel .help { margin-left: 0; }
+.field.checkbox label.right { margin: 4px 0 0 0; display: inline; font-style: normal; color: #444444; clear: none; }
 .field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; text-shadow: 1px 1px 0 white; }
-.field label.right { cursor: pointer; }
+.field label.right { cursor: pointer; clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
 .field .help { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
@@ -381,7 +382,7 @@ body.cms { overflow: hidden; }
 .cms-add-form #PageType ul li .description { font-style: italic; }
 
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
-.cms-content-toolbar { display: block; margin: 0 0 15px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); *zoom: 1; /* smaller treedropdown */ }
+.cms-content-toolbar { min-height: 35px; display: block; margin: 0 0 15px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); *zoom: 1; /* smaller treedropdown */ }
 .cms-content-toolbar:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .cms-content-toolbar .cms-tree-view-modes { float: right; padding-top: 5px; }
 .cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }

@@ -22,7 +22,6 @@ form.nostyle {
 	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
 	//overflow: hidden;
 
-	
 	// bottom padding accounts for the border and we have a negative
 	// margin with a postive padding to ensure the bottom border extends
 	// over the edges
@@ -47,9 +46,15 @@ form.nostyle {
 			margin-left: 0;
 		}
 	}
-	
-	label {
-		
+
+	&.checkbox label.right{
+		margin: $grid-y/2 0 0 0;
+		display:inline;
+		font-style: normal;
+		color: $color-text;
+		clear:none;
+	}	
+	label {		
 		&.left {
 			float: left;
 			display: block;
@@ -58,11 +63,15 @@ form.nostyle {
 			line-height: $grid-y * 2;
 			font-weight: bold;
 			@include text-shadow(1px 1px 0 $color-text-shadow);
-		}
-		
+		}		
 		&.right {
 			cursor: pointer;
-		}
+			clear: both;			
+			color: lighten($color-text, 20%);
+			display: block;
+			font-style: italic;
+			margin: $grid-y/2 0 0 $grid-x*23;
+		}		
 	}
 	
 	.middleColumn {
