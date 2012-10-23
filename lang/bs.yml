@@ -1,7 +1,5 @@
 bs:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NoviDirektorij
   AssetTableField:
     CREATED: 'Prvo postavljeno'

@@ -1,7 +1,5 @@
 sl:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nova mapa'
   AssetTableField:
     CREATED: 'Naloženo na začetku'

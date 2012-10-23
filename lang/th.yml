@@ -1,7 +1,5 @@
 th:
   AssetAdmin:
-    ADDFILES: เพิ่มไฟล์
-    EditOrgMenu: 'แก้ไข &amp; จัดระเบียบ'
     NEWFOLDER: สร้างโฟลเดอร์ใหม่
   AssetTableField:
     CREATED: อัพโหลดครั้งแรก

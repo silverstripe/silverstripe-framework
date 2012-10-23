@@ -1,7 +1,5 @@
 et_EE:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Uus kaust'
   AssetTableField:
     CREATED: 'Esmakordselt üles laaditud'

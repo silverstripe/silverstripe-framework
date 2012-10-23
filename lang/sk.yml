@@ -1,7 +1,5 @@
 sk:
   AssetAdmin:
-    ADDFILES: 'Pridať súbory'
-    EditOrgMenu: 'Editovať &amp; organizovať'
     NEWFOLDER: 'Nový priečinok'
   AssetTableField:
     CREATED: 'Prvýkrát nahrané'

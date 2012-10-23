@@ -1,7 +1,5 @@
 hu:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Új mappa'
   AssetTableField:
     CREATED: 'Először feltöltve'

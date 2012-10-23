@@ -1,7 +1,5 @@
 fr:
   AssetAdmin:
-    ADDFILES: 'Ajouter fichiers'
-    EditOrgMenu: 'Modifier et organiser'
     NEWFOLDER: 'Nouveau dossier'
   AssetTableField:
     CREATED: 'Premier chargement'

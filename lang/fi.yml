@@ -1,7 +1,5 @@
 fi:
   AssetAdmin:
-    ADDFILES: 'Lisää tiedostot'
-    EditOrgMenu: 'Muokkaa &amp; järjestele'
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'

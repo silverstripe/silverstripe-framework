@@ -1,7 +1,5 @@
 hr:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Novi direktorij'
   AssetTableField:
     CREATED: Uploadano

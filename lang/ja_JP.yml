@@ -1,7 +1,5 @@
 ja_JP:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 新しいフォルダ
   AssetTableField:
     CREATED: 初回アップロード日時

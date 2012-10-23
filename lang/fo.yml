@@ -1,7 +1,5 @@
 fo:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nýggj skjátta'
   AssetTableField:
     CREATED: 'First uploaded'

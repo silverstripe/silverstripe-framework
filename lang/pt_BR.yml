@@ -1,7 +1,5 @@
 pt_BR:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Nova Pasta'
   AssetTableField:
     CREATED: 'Primeiro upload'

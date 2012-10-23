@@ -1,7 +1,5 @@
 he_IL:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: תיקיהחדשה
   AssetTableField:
     CREATED: 'הועלה לראשונה'

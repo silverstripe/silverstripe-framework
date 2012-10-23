@@ -1,7 +1,5 @@
 fa_IR:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'پوشه جديد'
   AssetTableField:
     CREATED: 'First uploaded'

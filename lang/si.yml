@@ -1,7 +1,5 @@
 si:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'අලත් ගොනුවක්'
   AssetTableField:
     CREATED: 'පලමු ලිපිය අප්ලෝඩ් කරන ලදී'

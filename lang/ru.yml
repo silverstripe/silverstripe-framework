@@ -1,7 +1,5 @@
 ru:
   AssetAdmin:
-    ADDFILES: 'Добавить файлы'
-    EditOrgMenu: 'Редактирование и систематизация'
     NEWFOLDER: 'Новая папка'
   AssetTableField:
     CREATED: 'Первая загрузка'

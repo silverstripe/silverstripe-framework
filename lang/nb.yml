@@ -1,7 +1,5 @@
 nb:
   AssetAdmin:
-    ADDFILES: 'Legg til filer'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Ny Mappe'
   AssetTableField:
     CREATED: 'Først opplastet'

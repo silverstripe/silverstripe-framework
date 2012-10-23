@@ -1,7 +1,5 @@
 sv:
   AssetAdmin:
-    ADDFILES: 'Lägg till filer'
-    EditOrgMenu: 'Redigera och organisera'
     NEWFOLDER: 'Ny mapp'
   AssetTableField:
     CREATED: 'Först uppladdad'

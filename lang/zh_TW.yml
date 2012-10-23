@@ -1,7 +1,5 @@
 zh_TW:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 新資料夾
   AssetTableField:
     CREATED: 第一次上傳

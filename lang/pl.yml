@@ -1,7 +1,5 @@
 pl:
   AssetAdmin:
-    ADDFILES: 'Dodaj pliki'
-    EditOrgMenu: 'Edytuj i organizuj'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'

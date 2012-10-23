@@ -1,7 +1,5 @@
 tr:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: YeniKlasör
   AssetTableField:
     CREATED: 'Yüklenme tarihi'

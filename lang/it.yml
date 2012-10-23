@@ -1,7 +1,5 @@
 it:
   AssetAdmin:
-    ADDFILES: 'Aggiungi file'
-    EditOrgMenu: 'Modifica & organizza'
     NEWFOLDER: NuovaCartella
   AssetTableField:
     CREATED: 'Inizialmente caricato'

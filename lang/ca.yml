@@ -1,7 +1,5 @@
 ca:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NovaCarpeta
   AssetTableField:
     CREATED: 'Carregat per primer cop'

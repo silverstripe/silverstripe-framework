@@ -1,7 +1,5 @@
 uk:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Нова Тека'
   AssetTableField:
     CREATED: 'Вперше завантажено'

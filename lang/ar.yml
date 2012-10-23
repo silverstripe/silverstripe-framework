@@ -1,7 +1,5 @@
 ar:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'مجلد جديد'
   AssetTableField:
     CREATED: 'أول المرفوعات'

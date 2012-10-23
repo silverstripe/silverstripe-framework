@@ -1,7 +1,5 @@
 zh_CN:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 新建文件夹
   AssetTableField:
     CREATED: 第一次被上传

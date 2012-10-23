@@ -1,7 +1,5 @@
 es:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NuevaCarpeta
   AssetTableField:
     CREATED: 'Agregado por primera vez'

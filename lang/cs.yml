@@ -1,7 +1,5 @@
 cs:
   AssetAdmin:
-    ADDFILES: 'Přidat soubory'
-    EditOrgMenu: 'Editovat &amp; organizovat'
     NEWFOLDER: 'Nová složka'
   AssetTableField:
     CREATED: 'Poprvé nahráno'

@@ -1,7 +1,5 @@
 sr:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: 'Нова фасцикла'
   AssetTableField:
     CREATED: 'Прво достављено'
