@@ -90,7 +90,7 @@ to be children of the page in the site tree. As we only want **news articles** i
 
 We will be introduced to other fields like this as we progress; there is a full list in the documentation for `[api:SiteTree]`.
 
-Now that we have created our page types, we need to let SilverStripe rebuild the database: [http://localhost/your_site_name/dev/build?flush=all](http://localhost/your_site_name/dev/build?flush=all). SilverStripe should detect that there are two new page types, and add them to the list of page types in the database.
+Now that we have created our page types, we need to let SilverStripe rebuild the database: [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build). SilverStripe should detect that there are two new page types, and add them to the list of page types in the database.
 
 <div class="hint" markdown="1">
 It is SilverStripe convention to suffix general page types with "Page", and page types that hold other page types with
@@ -177,7 +177,7 @@ There are many more fields available in the default installation, listed in ["fo
 	return $fields;
 
 
-Finally, we return the fields to the CMS. If we flush the cache (by adding ?flush=all at the end of the URL), we will be able to edit the fields in the CMS.
+Finally, we return the fields to the CMS. If we flush the cache (by adding ?flush=1 at the end of the URL), we will be able to edit the fields in the CMS.
 
 Now that we have created our page types, let's add some content. Go into the CMS and create an *ArticleHolder* page named "News", then create a few *ArticlePage*'s within it.
 
@@ -469,7 +469,7 @@ the CMS.
 
 ![](_images/tutorial2_photo.jpg)
 
-Rebuild the database ([http://localhost/your_site_name/dev/build?flush=1](http://localhost/your_site_name/dev/build?flush=1)) and open the CMS. Create
+Rebuild the database ([http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build)) and open the CMS. Create
 a new *StaffHolder* called "Staff", and create some *StaffPage*s in it.
 
 ![](_images/tutorial2_create-staff.jpg)
