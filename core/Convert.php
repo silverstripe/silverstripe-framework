@@ -317,4 +317,15 @@ class Convert {
 		$f = URLSegmentFilter::create();
 		return $f->filter($title);
 	}
+	
+	/**
+	 * Normalises newline sequences to conform to (an) OS specific format.
+	 * @param string $data Text containing potentially mixed formats of newline
+	 * sequences including \r, \r\n, \n, or unicode newline characters
+	 * @param string $nl The newline sequence to normalise to. Defaults to that
+	 * specified by the current OS
+	 */
+	public static function nl2os($data, $nl = PHP_EOL) {
+		return preg_replace('~\R~u', $nl, $data);
+	}
 }

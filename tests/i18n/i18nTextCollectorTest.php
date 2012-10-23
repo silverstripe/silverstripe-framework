@@ -413,7 +413,7 @@ de:
     OtherEntityName: 'Other Text'
 
 YAML;
-		$this->assertEquals($yaml, $writer->getYaml($entities, 'de'));
+		$this->assertEquals($yaml, Convert::nl2os($writer->getYaml($entities, 'de')));
 	}
 	
 	public function testCollectFromIncludedTemplates() {

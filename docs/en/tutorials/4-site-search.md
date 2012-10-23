@@ -18,7 +18,7 @@ This will enable fulltext search on page content as well as names of all files i
 	:::php
 	FulltextSearchable::enable();
 
-After including that in your `_config.php` you will need to rebuild the database by visiting [http://localhost/your_site_name/home?flush=all](http://localhost/your_site_name/home?flush=all) in your web browser (replace localhost/your_site_name with a domain if applicable). This will add fulltext search columns.
+After including that in your `_config.php` you will need to rebuild the database by visiting [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) in your web browser (replace localhost/your_site_name with a domain if applicable). This will add fulltext search columns.
 
 The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your `_config.php` you can add your form as `$SearchForm`.
 
@@ -146,7 +146,7 @@ class.
 	    <% end_if %>
 	</div>
 
-Then finally add ?flush=all to the URL and you should see the new template.
+Then finally add ?flush=1 to the URL and you should see the new template.
 
 
 ![](_images/tutorial4_search.jpg)

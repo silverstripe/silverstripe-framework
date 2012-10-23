@@ -72,7 +72,7 @@ we don't need to define any additional ones for our purposes.
 
 Now that we have our models defined in PHP code,
 we need to tell the database to create the related tables. 
-Trigger a rebuild through *dev/build?flush=all* before you 
+Trigger a rebuild through *dev/build* before you 
 proceed to the next part of this tutorial.
 
 ### Organizing pages: ProjectHolder
@@ -318,7 +318,7 @@ a named list of object.
 
 Navigate to the holder page through your website navigation,
 or the "Preview" feature in the CMS. You should see a list of all projects now.
-Add `?flush=all` to the page URL to force a refresh of the template cache.
+Add `?flush=1` to the page URL to force a refresh of the template cache.
 
 To get a list of all projects, we've looped through the "Children" list,
 which is a relationship we didn't define explictly.
