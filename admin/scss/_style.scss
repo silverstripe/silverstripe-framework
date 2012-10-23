@@ -219,10 +219,10 @@ body.cms {
 
 	.ss-tabset {
 		.ss-tabset {
-			position: static;
+			position: static;			
 		}
 
-		.ui-tabs-panel {
+		.ui-tabs-nav ~ .ui-tabs-panel{
 			border-top:1px solid $color-button-generic-border;
 			clear: both;
 		}
