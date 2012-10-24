@@ -1377,6 +1377,36 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function SiteConfig() {
 		return (class_exists('SiteConfig')) ? SiteConfig::current_site_config() : null;
 	}
+	
+	/**
+	 * The href for the anchor on the Silverstripe logo.
+	 * Can be set to the base URL by calling 
+	 * LeftAndMain::setMenuLink()
+	 *
+	 * @var String
+	 */
+	static $menu_link = 'http://www.silverstripe.org/';
+	
+	/**
+	 * Sets the href for the anchor on the Silverstripe logo in the menu
+	 * If first parameter is true, it will use 
+	 *
+	 * @param Bool|String $link
+	 */
+	public static function setMenuLink($link) {
+		if ($link === false)
+			return;
+		
+		self::$menu_link = (is_bool($link)) ? Director::BaseURL() : $link;
+	}
+	
+	/**
+	 * @return String
+	 */
+	public function MenuLink()
+	{
+		return self::$menu_link;
+	}
 
 	/**
 	 * The application name. Customisable by calling
