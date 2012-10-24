@@ -1383,15 +1383,23 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Can be set to the base URL by calling 
 	 * LeftAndMain::setMenuLink()
 	 *
-	 * @var String
+	 * @var Bool|String
 	 */
 	static $menu_link = 'http://www.silverstripe.org/';
+	
+	/**
+	 * The title for the anchor on the Silverstripe logo
+	 * Set automatically depending on $menu_link value
+	 *
+	 * @var Bool|String
+	 */
+	static $menu_link_title = false;
 	
 	/**
 	 * Sets the href for the anchor on the Silverstripe logo in the menu
 	 * If first parameter is true, it will use 
 	 *
-	 * @param String $link
+	 * @param Bool|String $link
 	 */
 	public static function setMenuLink($link) {
 		if ($link === false)
@@ -1406,6 +1414,17 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function MenuLink()
 	{
 		return self::$menu_link;
+	}
+	
+	/**
+	 * @return String
+	 */
+	public function MenuLinkTitle()
+	{
+		if ( ! is_bool(self::$menu_link_title))
+			return self::$menu_link_title;
+			
+		return (self::$menu_link_title === true) ? 'View website' : 'SilverStripe (Version - ' . $this->CMSVersion() . ')';
 	}
 
 	/**
