@@ -48,6 +48,10 @@ class SS_HTMLValue extends ViewableData {
 		// strip any surrounding tags before the <body> and after the </body> which are automatically added by
 		// DOMDocument.  Note that we can't use the argument to saveHTML() as it's only supported in PHP 5.3.6+,
 		// we support 5.3.2 as a minimum in addition to the above, trim any surrounding newlines from the output
+
+		// shortcodes use square brackets which get escaped into HTML entities by saveHTML()
+		// this manually replaces them back to square brackets so that the shortcodes still work correctly
+		// we can't use urldecode() here, as valid characters like "+" will be incorrectly replaced with spaces
 		return trim(
 			preg_replace(
 				array(
@@ -55,7 +59,7 @@ class SS_HTMLValue extends ViewableData {
 					'/<\/body>(.*)/is',
 				),
 				'',
-				urldecode($this->getDocument()->saveHTML())
+				str_replace(array('%5B', '%5D'), array('[', ']'), $this->getDocument()->saveHTML())
 			)
 		);
 	}
