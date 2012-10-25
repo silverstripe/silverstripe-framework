@@ -2,26 +2,16 @@ cs:
   AssetAdmin:
     NEWFOLDER: 'Nová složka'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Poprvé nahráno'
+    DIM: Rozměry
+    FILENAME: 'Název souboru'
+    FOLDER: Složka
+    LASTEDIT: 'Naposledy změněno'
+    OWNER: Vlastník
+    SIZE: Velikost
+    TITLE: Titulek
+    TYPE: Typ
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Vyberte soubory'
     DRAGFILESHERE: 'Táhni soubory sem'
@@ -152,60 +142,37 @@ cs:
   Enum:
     ANY: Jakkýkoli
   File:
-    AviType:
-      - null
-    Content:
-      - null
+    AviType: 'AVI video soubor'
+    Content: Obsah
     CssType: 'CSS soubor'
     DmgType: 'Apple obraz disku'
-    DocType:
-      - null
+    DocType: 'Word dokument'
     Filename: 'Jméno souboru'
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
+    GifType: 'GIF obrázke - vhodné pro diagramy'
+    GzType: 'GZIP komprimační soubor'
+    HtlType: 'HTML soubor'
+    HtmlType: 'HTML soubor'
+    INVALIDEXTENSION: 'Extenze není povolena (platné: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extenze není povolena'
+    IcoType: 'Icon obrázkek'
+    JpgType: 'JPEG obrázke - vhodné pro fotografie'
+    JsType: 'Javascript soubor'
     Mp3Type: 'MP3 audio soubor'
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
+    MpgType: 'MPEG video soubor'
+    NOFILESIZE: 'Velikost souboru je 0 bajtů.'
     NOVALIDUPLOAD: 'Soubor není validní pro nahrání'
-    Name:
-      - null
+    Name: Jméno
     PLURALNAME: Soubory
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
+    PdfType: 'Adobe Acrobat PDF soubor'
+    PngType: 'PNG obrázek - vhodný jako univerzálmí formát'
+    SINGULARNAME: Soubor
+    TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
     TOOLARGESHORT: 'Velikost souboru překračuje {size}'
-    TiffType:
-      - null
+    TiffType: 'Tiff formát obrázku'
     Title: Titulek
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    WavType: 'WAV audo soubor'
+    XlsType: 'Excel tabulka'
+    ZipType: 'ZIP komprimační soubor'
   FileIFrameField:
     ATTACH: 'Připojit {type}'
     ATTACHONCESAVED: '{type} je možné připojit až budete mít nejdříve uložen záznam.'
@@ -344,8 +311,7 @@ cs:
     PLURALNAME: Soubory
     SINGULARNAME: Soubor
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Obrázek
   Image_Cached:
     PLURALNAME: Soubory
     SINGULARNAME: Soubor
@@ -419,45 +385,26 @@ cs:
   MemberAuthenticator:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
     'APPLY FILTER': 'Použít filtr'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Uživatelské
+    DATEFORMATBAD: 'Formát datumu je neplatný'
+    DAYNOLEADING: 'Den měsíce bez úvodní nuly'
+    DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
+    FOURDIGITYEAR: 'Čtyřčíslí roku'
+    FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
+    HOURNOLEADING: 'Hodina bez úvodní nuly'
+    MINUTENOLEADING: 'Minuta bez úvodní nuly'
+    MONTHNOLEADING: 'Číslo měsíce bez úvodní nuly'
+    Preview: Náhled
+    SHORTMONTH: 'Krátký název měsíce (např. Čer)'
+    TOGGLEHELP: 'Přepni nápovědu formátování'
+    TWODIGITDAY: 'Dvojčíslí dne měsíce'
+    TWODIGITHOUR: 'Dvojčíslí hodiny (00 až 23)'
+    TWODIGITMINUTE: 'Dvojčíslí minuty (00 až 59)'
+    TWODIGITMONTH: 'Dvojčíslí měsíce (01=Leden, atď.)'
+    TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
+    TWODIGITYEAR: 'Dvojčíslí roku'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použití</h4>\\n<ul>\\n<li>Povolené sloupce: <em>%s</em></li>\\n<li>Existující uživatelé jsou porovnáni jejich unikátní vlastností <em>Code</em>, a aktualizováni s novými hodnotami z importovaného souboru.</li>\\n<li>Skupiny mohou být přiřazeny sloupcem <em>Groups</em>. Skupiny jsou identifikovány svojí vlastností <em>Code</em>, více skupin může být odděleno čárkou. Existující členství ve skupině nejsou smazána.</li>\\n</ul>\\n</div>"
@@ -470,26 +417,16 @@ cs:
     SINGULARNAME: 'Členské heslo'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Smazat
+    DELETEDRECORDS: 'Smazáno {count} záznamů.'
+    EMPTYBEFOREIMPORT: 'Vyčistit databázi před importováním'
+    IMPORT: 'Importovat ze souboru CSV'
+    IMPORTEDRECORDS: 'Importováno {count} záznamů.'
+    NOCSVFILE: 'Prosím, vyhledejte soubor CSV pro import'
+    NOIMPORT: 'Nic k importu'
+    RESET: Resetovat
+    Title: 'Datové modely'
+    UPDATEDRECORDS: 'Aktualizováno {count} záznamů.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Sloupce databáze'
     IMPORTSPECLINK: 'Ukázat specifikaci pro %s'

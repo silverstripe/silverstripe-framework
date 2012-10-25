@@ -2,26 +2,16 @@ sv:
   AssetAdmin:
     NEWFOLDER: 'Ny mapp'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Först uppladdad'
+    DIM: Dimensioner
+    FILENAME: Filnamn
+    FOLDER: Mapp
+    LASTEDIT: 'Senast ändrad'
+    OWNER: Ägare
+    SIZE: Filstorlek
+    TITLE: Titel
+    TYPE: Filtyp
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Välj filer'
     DRAGFILESHERE: 'Dra filer hit'
@@ -152,60 +142,37 @@ sv:
   Enum:
     ANY: 'Vilken som helst'
   File:
-    AviType:
-      - null
-    Content:
-      - null
+    AviType: 'AVI videofil'
+    Content: Innehåll
     CssType: 'CSS fil'
     DmgType: 'Apple skivavbild'
-    DocType:
-      - null
+    DocType: 'Word dokument'
     Filename: Filnamn
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
+    GifType: 'GIF bild - bra för diagram'
+    GzType: 'GZIP packad fil'
+    HtlType: 'HTML fil'
+    HtmlType: 'HTML fil'
+    INVALIDEXTENSION: 'Filändelsen tillåts inte (tillåtna: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Filändelsen tillåts inte'
+    IcoType: 'Icon bild'
+    JpgType: 'JPEG bild - bra för fotografier'
+    JsType: 'Javascript fil'
     Mp3Type: 'MP3 ljudfil'
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
+    MpgType: 'MPEG videofil'
+    NOFILESIZE: 'Filstorleken är noll bytes'
     NOVALIDUPLOAD: 'Filen är inte giltig för uppladdning'
-    Name:
-      - null
+    Name: Namn
     PLURALNAME: Filer
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
+    PdfType: 'Adobe Acrobat PDF fil'
+    PngType: 'PNG bild - bra allmänt format'
+    SINGULARNAME: Fil
+    TOOLARGE: 'Filen är för stor, max {size} tillåts'
     TOOLARGESHORT: 'Filstorlek överskriden {size}'
-    TiffType:
-      - null
+    TiffType: 'Tiff bildformat'
     Title: Titel
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    WavType: 'WAV ljudfil'
+    XlsType: 'Excel kalkylblad'
+    ZipType: 'ZIP packad fil'
   FileIFrameField:
     ATTACH: 'Bifoga {type}'
     ATTACHONCESAVED: '{type}er kan läggas till efter att du sparat första gången.'
@@ -344,8 +311,7 @@ sv:
     PLURALNAME: Filer
     SINGULARNAME: Fil
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Bild
   Image_Cached:
     PLURALNAME: Filer
     SINGULARNAME: Fil
@@ -419,45 +385,26 @@ sv:
   MemberAuthenticator:
     TITLE: 'E-post &amp; Lösenord'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) eller PM (Post meridiem)'
     'APPLY FILTER': 'Använd filter'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Anpassad
+    DATEFORMATBAD: 'Datumformatet är ogiltigt'
+    DAYNOLEADING: 'Dag i månad utan inledande nolla'
+    DIGITSDECFRACTIONSECOND: 'En eller fler delar som representerar en decimaldel av en sekund.'
+    FOURDIGITYEAR: 'Fyrsiffrigt år'
+    FULLNAMEMONTH: 'Helt namn för månad (t ex juni)'
+    HOURNOLEADING: 'Timme utan inledande nolla'
+    MINUTENOLEADING: 'Minut utan inledande nolla'
+    MONTHNOLEADING: 'Dag i månad utan inledande nolla'
+    Preview: Förhandsgranska
+    SHORTMONTH: 'Kortnamn för månad (t ex jun)'
+    TOGGLEHELP: 'Växla formatteringshjälp'
+    TWODIGITDAY: 'Två siffror för dag i månad'
+    TWODIGITHOUR: 'Två siffror för timme (00 till 23)'
+    TWODIGITMINUTE: 'Två siffror för minut (00 till 59)'
+    TWODIGITMONTH: 'Tvåsiffrig månad (01 = januari osv)'
+    TWODIGITSECOND: 'Två siffror för sekund (00 till 59)'
+    TWODIGITYEAR: 'Två siffror för år'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small>a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\\n</ul>\\n</div>"
@@ -470,26 +417,16 @@ sv:
     SINGULARNAME: 'Användares lösenord'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Radera
+    DELETEDRECORDS: 'Raderade {count} poster.'
+    EMPTYBEFOREIMPORT: 'Töm databasen före import'
+    IMPORT: 'Importera från CSV'
+    IMPORTEDRECORDS: 'Importerade {count} poster.'
+    NOCSVFILE: 'Var god och bläddra efter en CSV-fil för import'
+    NOIMPORT: 'Inget att importera'
+    RESET: Rensa
+    Title: Datamodeller
+    UPDATEDRECORDS: 'Uppdaterade {count} poster.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Databaskolumner
     IMPORTSPECLINK: 'Visa specifikation för %s'
