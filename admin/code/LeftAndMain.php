@@ -1402,8 +1402,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param Bool|String $link
 	 */
 	public static function setMenuLink($link) {
-		if ($link === false)
-			return;
+		if ($link === false) return;
 		
 		self::$menu_link = (is_bool($link)) ? Director::BaseURL() : $link;
 	}
@@ -1411,20 +1410,21 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @return String
 	 */
-	public function MenuLink()
-	{
+	public function MenuLink() {
 		return self::$menu_link;
 	}
 	
 	/**
 	 * @return String
 	 */
-	public function MenuLinkTitle()
-	{
-		if ( ! is_bool(self::$menu_link_title))
-			return self::$menu_link_title;
-			
-		return (self::$menu_link_title === true) ? 'View website' : 'SilverStripe (Version - ' . $this->CMSVersion() . ')';
+	public function MenuLinkTitle() {
+		if ( ! is_bool(self::$menu_link_title)) return self::$menu_link_title;
+		
+		if (self::$menu_link_title === true) {
+			return 'View website';
+		} else {
+			return 'SilverStripe (Version - ' . $this->CMSVersion() . ')';
+		}
 	}
 
 	/**
