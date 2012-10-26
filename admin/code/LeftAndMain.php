@@ -1380,8 +1380,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	
 	/**
 	 * The href for the anchor on the Silverstripe logo.
-	 * Can be set to the base URL by calling 
-	 * LeftAndMain::setMenuLink()
+	 * Can be set to the base URL or a custom URL by calling
+	 * LeftAndMain::set_menu_link()
 	 *
 	 * @var Bool|String
 	 */
@@ -1397,11 +1397,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	
 	/**
 	 * Sets the href for the anchor on the Silverstripe logo in the menu
-	 * If first parameter is true, it will use 
+	 * If the parameter is true, it will use the site base URL
 	 *
 	 * @param Bool|String $link
 	 */
-	public static function setMenuLink($link) {
+	public static function set_menu_link($link) {
 		if ($link === false) return;
 		
 		self::$menu_link = (is_bool($link)) ? Director::BaseURL() : $link;
