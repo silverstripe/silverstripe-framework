@@ -133,16 +133,17 @@ The fields displayed in the edit form are from `DataObject::getCMSFields()`
 ### GridFieldConfig_RelationEditor
 
 Similar to `GridFieldConfig_RecordEditor`, but adds features to work on a record's has-many or 
-many-many relationships.
+many-many relationships. As such, it expects the list used with the `GridField` to be a
+`RelationList`. That is, the list returned by a has-many or many-many getter.
 
 The relations can be:
 
 - Searched for existing records and add a relationship
 - Detach records from the relationship (rather than removing them from the database)
-- Create new related records and automatically add the relationship.
+- Create new related records and automatically add them to the relationship.
 
 	:::php
-	$gridField = new GridField('pages', 'All pages', SiteTree::get(), GridFieldConfig_RecordEditor::create());
+	$gridField = new GridField('images', 'Linked images', $this->Images(), GridFieldConfig_RelationEditor::create());
 
 The fields displayed in the edit form are from `DataObject::getCMSFields()`
 
@@ -259,5 +260,5 @@ A GridFieldComponent sets and gets data from the GridState.
 
 ## Related
 
- * [/reference/modeladmin](ModelAdmin: A UI driven by GridField)
- * [/tutorials/5-dataobject-relationship-management](Tutorial 5: Dataobject Relationship Management)
+ * [ModelAdmin: A UI driven by GridField](/reference/modeladmin)
+ * [Tutorial 5: Dataobject Relationship Management](/tutorials/5-dataobject-relationship-management)
