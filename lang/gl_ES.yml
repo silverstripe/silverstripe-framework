@@ -2,16 +2,26 @@ gl_ES:
   AssetAdmin:
     NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED: 'Primeiro subido'
-    DIM: Dimensións
-    FILENAME: 'Nome ficheiro'
-    FOLDER: Cartafol
-    LASTEDIT: 'Último cambio'
-    OWNER: Propietario
-    SIZE: 'Tamaño ficheiro'
-    TITLE: Título
-    TYPE: 'Tipo ficheiro'
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Escoller ficheiros'
     DRAGFILESHERE: 'Arrastrar ficheiro aquí'
@@ -58,19 +68,27 @@ gl_ES:
     ERRORNOTADMIN: 'Ese usuario non é un administrador.'
     ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
   Boolean:
-    0: Falso
-    ANY: Ningún
-    1: Verdadeiro
+    0:
+      - null
+    ANY:
+      - null
+    1:
+      - null
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Acceder a todas as seccións do CMS'
-    ACCESSALLINTERFACESHELP: 'Anular a configuración de acceso máis específica.'
-    SAVE: Gardar
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE:
+      - null
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
     CHANGEPASSWORDTEXT2: 'Podes empregar agora as seguintes credenciais para iniciar sesión:'
@@ -103,7 +121,8 @@ gl_ES:
     SECOND: segundo
     THIRD: terceiro
   CurrencyField:
-    CURRENCYSYMBOL: €
+    CURRENCYSYMBOL:
+      - null
   DataObject:
     PLURALNAME: 'Obxectos de Datos'
     SINGULARNAME: 'Obxecto de Dato'
@@ -129,7 +148,8 @@ gl_ES:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET:
+      - null
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -142,37 +162,68 @@ gl_ES:
   Enum:
     ANY: Ningún
   File:
-    AviType: 'AVI video file'
-    Content: Contido
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: 'Nome ficheiro'
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'O tamaño do ficheiro é cero bytes.'
-    NOVALIDUPLOAD: 'Ficheiro non v&aacute;lido para subir'
-    Name: Nome
-    PLURALNAME: Ficheiros
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
-    SINGULARNAME: Ficheiro
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
-    Title: Título
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    AviType:
+      - null
+    Content:
+      - null
+    CssType:
+      - null
+    DmgType:
+      - null
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
+    Mp3Type:
+      - null
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    TiffType:
+      - null
+    Title:
+      - null
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -209,9 +260,12 @@ gl_ES:
   FormField:
     NONE: ningún
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Eliminar
-    UnlinkRelation: Desligar
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Add {name}'
     Filter: Filtro
@@ -228,7 +282,8 @@ gl_ES:
     RelationSearch: 'Busca relacionada'
     ResetFilter: Reiniciar
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'Non eliminar permisos'
+    DeletePermissionsFailure:
+      - null
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -261,7 +316,8 @@ gl_ES:
     ResultDeleted: 'Eliminados %d grupos'
     ResultUpdated: 'Actualizados %d grupos'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -308,10 +364,13 @@ gl_ES:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ImageField:
-    IMAGE: Imaxe
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -332,8 +391,10 @@ gl_ES:
     SAVEDUP: Saved.
     VersionUnknown: descoñecido
   LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
+    Hello:
+      - null
+    LOGOUT:
+      - null
   LoginAttempt:
     Email: 'Enderezo Correo-e'
     IP: 'Enderezo IP'
@@ -383,28 +444,48 @@ gl_ES:
     db_Password: Contrasinal
     db_PasswordExpiry: 'Data de expiración do contrasinal'
   MemberAuthenticator:
-    TITLE: 'Correo-e e Contrasinal'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Aplicar Filtro'
-    Custom: Personalizado
-    DATEFORMATBAD: 'O formato da data é inválida'
-    DAYNOLEADING: 'Día do mes sen ceros a esquerda'
-    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
-    FOURDIGITYEAR: 'Catro díxitos ano'
-    FULLNAMEMONTH: 'Nome completo do mes (p.e. Xuño)'
-    HOURNOLEADING: 'Hora sen ceros a esquerda'
-    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
-    MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
-    Preview: Previsualizar
-    SHORTMONTH: 'Nome curto do mes (p.e. Xuñ)'
-    TOGGLEHELP: 'Mudar o formato de axuda'
-    TWODIGITDAY: 'Dous díxitos día do mes'
-    TWODIGITHOUR: 'Dous díxitos para a hora (00 ata 23)'
-    TWODIGITMINUTE: 'Dous díxitos minuto (00 ata 59)'
-    TWODIGITMONTH: 'Dous díxitos para o mes (01=Xaneiro, etc.)'
-    TWODIGITSECOND: 'Dous díxitos de segundo (00 ata 59)'
-    TWODIGITYEAR: 'Dous díxitos ano'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -417,21 +498,35 @@ gl_ES:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Eliminar
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Importar dende CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Por favor navega por un ficheiro CSV para importar'
-    NOIMPORT: 'Nada para importar'
-    RESET: Reiniciar
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Import
@@ -466,8 +561,10 @@ gl_ES:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles e permisos de acceso'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -478,19 +575,32 @@ gl_ES:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
-    BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'
-    CHANGEPASSWORDBELOW: 'Podes mudar o contrasinal abaixo.'
-    CHANGEPASSWORDHEADER: 'Mudar Contrasinal'
-    ENTERNEWPASSWORD: 'Por favor insire un novo contrasinal.'
-    ERRORPASSWORDPERMISSION: 'Debes iniciar sesión para poder mudar o teu contrasinal!'
-    LOGGEDOUT: 'Pechouse a túa sesión. Se desexas iniciar sesión de novo, insire as túas credenciais a continuación.'
-    LOGIN: 'Iniciar sesión'
-    NOTEPAGESECURED: 'Esa páxina é segura. Insire as túas credenciais abaixo e enviarémoste dereito a ela.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Insire o teu enderezo de correo-e e enviarémosche unha ligazón coa que reiniciar o teu contrasinal'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Permitir a visualización, adición e edición de usuarios, asemade asinar permisos e roles aos mesmos.'
     APPLY_ROLES: 'Aplicar roles aos grupos'
@@ -510,8 +620,10 @@ gl_ES:
     TABROLES: Roles
     Users: Usuarios
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Importar dende CSV'
-    FileFieldLabel: 'Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
@@ -519,7 +631,8 @@ gl_ES:
   SiteTree:
     TABMAIN: Principal
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED:
+      - null
   TableField.ss:
     ADD: 'Engadir unha nova fila'
     ADDITEM: 'Add %s'
@@ -529,9 +642,12 @@ gl_ES:
     Print: Print
     SELECT: 'Seleccionar:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Ordear ascendentemente'
-    SORTDESC: 'Ordear descendentemente'
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
