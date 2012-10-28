@@ -1805,7 +1805,7 @@ form.import-form {
 				position: static;
 			}
 
-			.ui-tabs-panel {
+			.ui-tabs-nav ~ .ui-tabs-panel {
 				background: darken($color-widget-bg, 2%);
 				border-top:1px solid $color-button-generic-border;
 				clear: both;
