@@ -66,7 +66,8 @@ class CMSProfileControllerTest extends FunctionalTest {
 
 		$member = $this->objFromFixture('Member', 'user1');
 
-		$this->assertNotEquals($member->FirstName, 'JoeEdited', 'FirstName field was NOT changed because we modified canEdit');
+		$this->assertNotEquals($member->FirstName, 'JoeEdited',
+			'FirstName field was NOT changed because we modified canEdit');
 
 		Config::inst()->remove('Member', 'extensions');
 		Config::inst()->update('Member', 'extensions', $existingExtensions);
