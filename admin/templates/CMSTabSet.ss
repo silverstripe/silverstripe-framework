@@ -1,4 +1,4 @@
-<div $AttributesHTML>
+<div id="$id">
 	<%-- Tab nav is rendered in CMSEditForm.ss --%>
 
 	<% loop Tabs %>
