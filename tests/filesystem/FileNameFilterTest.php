@@ -53,5 +53,17 @@ class FileNameFilterTest extends SapphireTest {
 			strlen($result)
 		);
 	}
-	
+
+	function testUnderscoresStartOfNameRemoved() {
+		$name = '_test.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test.txt', $filter->filter($name));
+	}
+
+	function testDoubleUnderscoresStartOfNameRemoved() {
+		$name = '__test.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test.txt', $filter->filter($name));
+	}
+
 }
