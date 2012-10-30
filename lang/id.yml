@@ -346,6 +346,7 @@ id:
     BUTTONLOGIN: Masuk
     BUTTONLOGINOTHER: 'Masuk sebagai orang lain'
     BUTTONLOSTPASSWORD: 'Saya lupa password saya'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Membenarkan Password Baru'
     CONFIRMPASSWORD: 'Membenarkan Password'
     DATEFORMAT: 'Date format'

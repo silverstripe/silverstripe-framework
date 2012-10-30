@@ -346,6 +346,7 @@ sr:
     BUTTONLOGIN: 'Пријави се'
     BUTTONLOGINOTHER: 'Пријавите се као неко други'
     BUTTONLOSTPASSWORD: 'Заборавио сам лозинку'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Потврдите нову лозинку'
     CONFIRMPASSWORD: 'Потврдите лозинку'
     DATEFORMAT: 'Date format'

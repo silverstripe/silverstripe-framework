@@ -346,6 +346,7 @@ nb:
     BUTTONLOGIN: 'Logg inn'
     BUTTONLOGINOTHER: 'Logg inn med en annen brukerkonto'
     BUTTONLOSTPASSWORD: 'Jeg har mistet passordet'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Bekreft Nytt Passord'
     CONFIRMPASSWORD: 'Bekreft passord'
     DATEFORMAT: Datoformat

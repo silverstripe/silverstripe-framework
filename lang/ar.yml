@@ -346,6 +346,7 @@ ar:
     BUTTONLOGIN: دخول
     BUTTONLOGINOTHER: 'الدخول بحساب آخر'
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
     DATEFORMAT: 'Date format'

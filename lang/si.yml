@@ -346,6 +346,7 @@ si:
     BUTTONLOGIN: ඇතුල්වන්න
     BUTTONLOGINOTHER: 'වෙනත් නමකින් ඇතුල්වන්න'
     BUTTONLOSTPASSWORD: 'මුර පදය නැති වී ඇත'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'අලුත් මුර පදය හරිද'
     CONFIRMPASSWORD: 'මුර පදය හරිද'
     DATEFORMAT: 'Date format'

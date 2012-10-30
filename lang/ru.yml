@@ -346,6 +346,7 @@ ru:
     BUTTONLOGIN: Войти
     BUTTONLOGINOTHER: 'Войти под другим именем'
     BUTTONLOSTPASSWORD: 'Я забыл пароль'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
     CONFIRMPASSWORD: 'Подтвердить пароль'
     DATEFORMAT: 'Формат даты'

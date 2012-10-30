@@ -346,6 +346,7 @@ fi:
     BUTTONLOGIN: 'Kirjaudu sisään'
     BUTTONLOGINOTHER: 'Kirjaudu jonain muuna'
     BUTTONLOSTPASSWORD: 'Kadotin salasanani'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Syötä uusi salasana uudelleen'
     CONFIRMPASSWORD: 'Syötä salasana uudelleen'
     DATEFORMAT: Päivämäärämuoto

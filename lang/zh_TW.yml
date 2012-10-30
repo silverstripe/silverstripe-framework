@@ -346,6 +346,7 @@ zh_TW:
     BUTTONLOGIN: 登入
     BUTTONLOGINOTHER: 用別的帳戶登入
     BUTTONLOSTPASSWORD: 忘記密碼
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 確認新密碼
     CONFIRMPASSWORD: 確認密碼
     DATEFORMAT: 'Date format'

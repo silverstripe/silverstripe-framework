@@ -346,6 +346,7 @@ fr:
     BUTTONLOGIN: 'Se connecter'
     BUTTONLOGINOTHER: 'Connectez vous avec un différent identifiant'
     BUTTONLOSTPASSWORD: 'J''ai perdu mon mot de passe'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmer nouveau mot de passe'
     CONFIRMPASSWORD: 'Confirmer Mot De Passe'
     DATEFORMAT: 'Format de la date'

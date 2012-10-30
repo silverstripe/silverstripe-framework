@@ -346,6 +346,7 @@ mi_NZ:
     BUTTONLOGIN: Takiuru
     BUTTONLOGINOTHER: 'Takiuru hei tangata kē'
     BUTTONLOSTPASSWORD: 'Kua ngaro i a au taku kupuhipa'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Whakaū Kupuhipa Hōu'
     CONFIRMPASSWORD: 'Whakaū Kupuhipa'
     DATEFORMAT: 'Hōputu Rā'

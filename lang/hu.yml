@@ -346,6 +346,7 @@ hu:
     BUTTONLOGIN: Bejelentkezés
     BUTTONLOGINOTHER: 'Jelentkezzen be másként'
     BUTTONLOSTPASSWORD: 'Elvesztettem a jelszavam'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Új jelszó megerősítése'
     CONFIRMPASSWORD: 'Jelszó megerősítése'
     DATEFORMAT: 'Date format'

@@ -346,6 +346,7 @@ ms:
     BUTTONLOGIN: 'Daftar masuk'
     BUTTONLOGINOTHER: 'Daftar masuk mengunakan id pengguna yang lain'
     BUTTONLOSTPASSWORD: 'Saya telah hilang kata lalaun saya'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Sahkan Katalaluan Baru'
     CONFIRMPASSWORD: 'Sahkan Kata Lalaun'
     DATEFORMAT: 'Date format'

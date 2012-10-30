@@ -346,6 +346,7 @@ th:
     BUTTONLOGIN: เข้าสู่ระบบ
     BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: ฉันลืมรหัสผ่านของฉัน
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: ยืนยันรหัสผ่านใหม่
     CONFIRMPASSWORD: ยืนยันรหัสผ่าน
     DATEFORMAT: รูปแบบวันที่

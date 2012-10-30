@@ -346,6 +346,7 @@ ja_JP:
     BUTTONLOGIN: ログイン
     BUTTONLOGINOTHER: 他の誰かとしてログイン
     BUTTONLOSTPASSWORD: パスワードを紛失
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 新しいパスワードを確認します
     CONFIRMPASSWORD: パスワード（確認のためもう一度）
     DATEFORMAT: 'Date format'

@@ -346,6 +346,7 @@ en_GB:
     BUTTONLOGIN: 'Log in'
     BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
     DATEFORMAT: 'Date format'

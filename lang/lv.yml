@@ -346,6 +346,7 @@ lv:
     BUTTONLOGIN: PIeslēgties
     BUTTONLOGINOTHER: 'Pieslēgties ar citu kontu'
     BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
     CONFIRMPASSWORD: 'Apstiprināt paroli'
     DATEFORMAT: 'Date format'

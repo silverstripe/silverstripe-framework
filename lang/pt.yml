@@ -346,6 +346,7 @@ pt:
     BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Autenticar-se com outras credenciais'
     BUTTONLOSTPASSWORD: 'Recuperar Password'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmar Nova Password'
     CONFIRMPASSWORD: 'Confirmar Password'
     DATEFORMAT: 'Date format'

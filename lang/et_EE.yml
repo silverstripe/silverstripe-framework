@@ -346,6 +346,7 @@ et_EE:
     BUTTONLOGIN: 'Logi sisse'
     BUTTONLOGINOTHER: 'Logi sisse kellegi teisena'
     BUTTONLOSTPASSWORD: 'Kaotasin oma parooli'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Kinnita uus parool'
     CONFIRMPASSWORD: 'Kinnita parool'
     DATEFORMAT: 'Kuupäeva vorming'

@@ -346,6 +346,7 @@ bs:
     BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se sa drugim korisnikom'
     BUTTONLOSTPASSWORD: 'Zaboravio sam šifru'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Potvrdite novu šifru'
     CONFIRMPASSWORD: 'Potvrdite šifru'
     DATEFORMAT: 'Date format'

@@ -346,6 +346,7 @@ az:
     BUTTONLOGIN: 'Daxil ol'
     BUTTONLOGINOTHER: 'Başqa adla daxil ol'
     BUTTONLOSTPASSWORD: 'Parol yaddan çıxıb.'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Yeni parolun təsdiqi'
     CONFIRMPASSWORD: 'Parolu təsdiqlə'
     DATEFORMAT: 'Date format'

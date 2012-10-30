@@ -346,6 +346,7 @@ es:
     BUTTONLOGIN: 'Inicie Sesión'
     BUTTONLOGINOTHER: 'Inicie sesión como otra persona'
     BUTTONLOSTPASSWORD: 'He perdido mi contraseña'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar Contraseña'
     DATEFORMAT: 'Date format'

@@ -346,6 +346,7 @@ de:
     BUTTONLOGIN: Einloggen
     BUTTONLOGINOTHER: 'Als jemand anders einloggen'
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
     DATEFORMAT: 'Bitte geben sie das Datum im korrekten Format ein ({format})'

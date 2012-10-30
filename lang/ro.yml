@@ -346,6 +346,7 @@ ro:
     BUTTONLOGIN: Autentificare
     BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'Am uitat parola'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmati noua parola'
     CONFIRMPASSWORD: 'Confirmati parola'
     DATEFORMAT: 'Date format'

@@ -346,6 +346,7 @@ eo:
     BUTTONLOGIN: Ensaluti
     BUTTONLOGINOTHER: 'Ensaluti kiel alia homo'
     BUTTONLOSTPASSWORD: 'Mi perdis mian pasvorton'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
     CONFIRMPASSWORD: 'Konfirmu pasvorton'
     DATEFORMAT: 'Date format'

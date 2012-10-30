@@ -346,6 +346,7 @@ ne:
     BUTTONLOGIN: 'भित्र जानुस्'
     BUTTONLOGINOTHER: 'अरु कोही भएर भित्र जानुस् '
     BUTTONLOSTPASSWORD: 'मैले मेरो पासओड हराएँ'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'नयाँ पासओड Confirm गर्नुहोस् '
     CONFIRMPASSWORD: 'Confirm पासओड'
     DATEFORMAT: 'Date format'

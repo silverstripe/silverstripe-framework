@@ -346,6 +346,7 @@ tr:
     BUTTONLOGIN: Giriş
     BUTTONLOGINOTHER: 'Başka bir kullanıcı olarak giriş yap'
     BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
     CONFIRMPASSWORD: 'Şifreyi Onayla'
     DATEFORMAT: 'Date format'

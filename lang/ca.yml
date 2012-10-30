@@ -346,6 +346,7 @@ ca:
     BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Entreu com a algú diferent'
     BUTTONLOSTPASSWORD: 'He perdut la meva contrasenya'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmeu la nova contrasenya'
     CONFIRMPASSWORD: 'Confirmeu la contrasenya'
     DATEFORMAT: 'Date format'

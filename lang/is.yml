@@ -346,6 +346,7 @@ is:
     BUTTONLOGIN: Innskrá
     BUTTONLOGINOTHER: 'Innskrá sem einhver annar'
     BUTTONLOSTPASSWORD: 'Ég er búinn að gleyma lykilorðinu'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Staðfesta nýja lykilorðið'
     CONFIRMPASSWORD: 'Staðfesta lykilorð'
     DATEFORMAT: 'Date format'

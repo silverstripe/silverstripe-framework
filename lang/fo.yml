@@ -346,6 +346,7 @@ fo:
     BUTTONLOGIN: Innrita
     BUTTONLOGINOTHER: 'Innrita sum onkur annar'
     BUTTONLOSTPASSWORD: 'Eg havi gloymt mítt loyniorð'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Váttað nýtt loyniorð'
     CONFIRMPASSWORD: 'Váttað loyniorð'
     DATEFORMAT: 'Date format'

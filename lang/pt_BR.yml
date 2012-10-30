@@ -346,6 +346,7 @@ pt_BR:
     BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Entrar com outro usuário'
     BUTTONLOSTPASSWORD: 'Esqueci minha senha'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirme Nova Senha'
     CONFIRMPASSWORD: 'Confirme Senha'
     DATEFORMAT: 'Date format'

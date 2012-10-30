@@ -346,6 +346,7 @@ gl_ES:
     BUTTONLOGIN: 'Iniciar sesión'
     BUTTONLOGINOTHER: 'Iniciar sesión como'
     BUTTONLOSTPASSWORD: 'Perdín o meu contrasinal'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmar Novo Contrasinal'
     CONFIRMPASSWORD: 'Confirmar Contrasinal'
     DATEFORMAT: 'Date format'

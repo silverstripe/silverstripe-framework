@@ -346,6 +346,7 @@ he_IL:
     BUTTONLOGIN: התחבר
     BUTTONLOGINOTHER: 'התחבר כמשתמש אחר'
     BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
     CONFIRMPASSWORD: 'אשר סיסמא'
     DATEFORMAT: 'Date format'

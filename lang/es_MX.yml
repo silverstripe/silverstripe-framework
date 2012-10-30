@@ -346,6 +346,7 @@ es_MX:
     BUTTONLOGIN: Ingresar
     BUTTONLOGINOTHER: 'Ingresar como alguien más'
     BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar contraseña'
     DATEFORMAT: 'Date format'

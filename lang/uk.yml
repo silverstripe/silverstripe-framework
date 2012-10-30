@@ -346,6 +346,7 @@ uk:
     BUTTONLOGIN: Увійти
     BUTTONLOGINOTHER: 'Увійдіть кимось іншим'
     BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
     CONFIRMPASSWORD: 'Підтвердіть пароль'
     DATEFORMAT: 'Date format'

@@ -346,6 +346,7 @@ pa:
     BUTTONLOGIN: 'ਲੋਗ ਇਨ'
     BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'ਮੈਂ ਆਪਣਾ password ਗੁਆ ਿਲਆ ਹੈ।'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
     DATEFORMAT: 'Date format'

@@ -346,6 +346,7 @@ hr:
     BUTTONLOGIN: Prijavi
     BUTTONLOGINOTHER: 'Prijavite se kao netko drugi'
     BUTTONLOSTPASSWORD: 'Zaboraljena lozinka'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
     CONFIRMPASSWORD: 'Potvrdi lozinku'
     DATEFORMAT: 'Date format'
