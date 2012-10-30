@@ -1838,8 +1838,15 @@ form.import-form {
 			}
 		}
 
-		.ss-tabset .ui-tabs-panel {
-			background: darken($color-widget-bg, 2%);
+			.ui-tabs-nav ~ .ui-tabs-panel {
+				background: darken($color-widget-bg, 2%);
+				border-top:1px solid $color-button-generic-border;
+				clear: both;
+			}
+
+			&.ss-tabset-tabshidden .ui-tabs-panel {
+				border-top: none;
+			}
 		}
 	}
 }

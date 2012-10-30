@@ -148,7 +148,7 @@ class DateField extends TextField {
 		$config = array(
 			'showcalendar' => $this->getConfig('showcalendar'),
 			'isoDateformat' => $this->getConfig('dateformat'),
-			'jqueryDateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
+			'jquerydateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
 			'min' => $this->getConfig('min'),
 			'max' => $this->getConfig('max')
 		);
