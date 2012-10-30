@@ -83,22 +83,14 @@ class DropdownFieldTest extends SapphireTest {
 	public function testNumberOfSelectOptionsAvailable() {
 		/* Create a field with a blank value */
 		$field = $this->createDropdownField('(Any)');
-		
-		/* 3 options are available */
 		$this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
-		
-		/* There is one selected option, since a dropdown can only possibly have one! */
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		$this->assertEquals(count($selectedOptions), 1,
 			'We only have 1 selected option, since a dropdown can only possibly have one!');
 		
 		/* Create a field without a blank value */
 		$field = $this->createDropdownField();
-		
-		/* 2 options are available */
 		$this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
-		
-		/* There are no selected options */
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		$this->assertEquals(count($selectedOptions), 0, 'There are no selected options');
 	}
@@ -106,43 +98,31 @@ class DropdownFieldTest extends SapphireTest {
 	public function testIntegerZeroValueSeelctedOptionBehaviour() {
 		$field = $this->createDropdownField('(Any)', 0);
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
-		
-		/* The selected option is "No" */
 		$this->assertEquals((string) $selectedOptions[0], 'No', 'The selected option is "No"');
 	}
 
 	public function testBlankStringValueSelectedOptionBehaviour() {
 		$field = $this->createDropdownField('(Any)');
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
-		
-		/* The selected option is "(Any)" */
 		$this->assertEquals((string) $selectedOptions[0], '(Any)', 'The selected option is "(Any)"');
 	}
 	
 	public function testNullValueSelectedOptionBehaviour() {
 		$field = $this->createDropdownField('(Any)', null);
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
-
-		/* The selected option is "(Any)" */
 		$this->assertEquals((string) $selectedOptions[0], '(Any)', 'The selected option is "(Any)"');
 	}
 	
 	public function testStringValueSelectedOptionBehaviour() {
 		$field = $this->createDropdownField('(Any)', '1');
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
-		
-		/* The selected option is "Yes" */
 		$this->assertEquals((string) $selectedOptions[0], 'Yes', 'The selected option is "Yes"');
-		
 		$field->setSource(array(
 			'Cats' => 'Cats and Kittens',
 			'Dogs' => 'Dogs and Puppies'
 		));
 		$field->setValue('Cats');
-
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
-		
-		/* The selected option is "Cats and Kittens" */
 		$this->assertEquals((string) $selectedOptions[0], 'Cats and Kittens',
 			'The selected option is "Cats and Kittens"');
 	}
@@ -164,7 +144,7 @@ class DropdownFieldTest extends SapphireTest {
 		);
 		
 		$field = new DropdownField('Field', null, $source, $value);
-		if($emptyString) $field->setEmptyString($emptyString);
+		if($emptyString !== null) $field->setEmptyString($emptyString);
 
 		return $field;
 	}
