@@ -9,7 +9,7 @@ It uses the framework's knowledge about the model to provide sensible defaults,
 allowing you to get started in a couple of lines of code,
 while still providing a solid base for customization.
 
-The interface is mainly powered by the `[GridField](/topics/grid-field)` class,
+The interface is mainly powered by the `[GridField](/reference/grid-field)` class,
 which can also be used in other CMS areas (e.g. to manage a relation on a `SiteTree`
 record in the standard CMS interface).
 
@@ -69,7 +69,7 @@ for the search form, override `[api:DataObject->getCustomSearchContext()]` on yo
 
 ## Result Columns
 
-The results are shown in a tabular listing, powered by the `[GridField](/topics/grid-field)`,
+The results are shown in a tabular listing, powered by the `[GridField](/reference/grid-field)`,
 more specifically the `[api:GridFieldDataColumns]` component.
 It looks for a `[api:DataObject::$summary_fields]` static on your model class,
 where you can add or remove columns, or change their title.
@@ -136,7 +136,7 @@ Has-one relationships are simply implemented as a `[api:DropdownField]` by defau
 Consider replacing it with a more powerful interface in case you have many records
 (through customizing `[api:DataObject->getCMSFields]`).
 
-Has-many and many-many relationships are usually handled via the `[GridField](/topics/grid-field)` class,
+Has-many and many-many relationships are usually handled via the `[GridField](/reference/grid-field)` class,
 more specifically the `[api:GridFieldAddExistingAutocompleter]` and `[api:GridFieldRelationDelete]` components.
 They provide a list/detail interface within a single record edited in your ModelAdmin.
 
@@ -217,7 +217,7 @@ For an introduction how to customize the CMS templates, see our [CMS Architectur
 
 ## Related
 
-* [/topics/grid-field](GridField): The UI component powering ModelAdmin
+* [/reference/grid-field](GridField): The UI component powering ModelAdmin
 * [/tutorials/5-dataobject-relationship-management](Tutorial 5: Dataobject Relationship Management)
 *  `[api:SearchContext]`
 * [genericviews Module](http://silverstripe.org/generic-views-module)

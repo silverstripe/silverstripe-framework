@@ -3,7 +3,7 @@
 ## Introduction
 
 <div class="warning" markdown="1">
-	This field is deprecated in favour of the new [GridField](/topics/grid-field) API.
+	This field is deprecated in favour of the new [GridField](/reference/grid-field) API.
 </div>
 
 Form field that embeds a list of `[api:DataObject]`s into a form, such as a member list or a file list.

@@ -18,7 +18,6 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Files and Images](files): File and Image management in the database and how to manipulate images
  * [Form Validation](form-validation): Built-in validation on form fields, and how to extend it
  * [Forms](forms): Create your own form, add fields and create your own form template using the existing `Form` class
- * [GridField](grid-field): The GridField is a flexible form field for creating tables of data.
  * [Internationalization (i18n)](i18n): Displaying templates and PHP code in different languages using i18n
  * [Javascript](javascript): Best practices for developing with JavaScript in SilverStripe
  * [Module Development](module-development): Creating a module (also known as "extension" or "plugin") to contain reusable functionality

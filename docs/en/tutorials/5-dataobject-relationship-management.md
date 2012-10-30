@@ -114,7 +114,7 @@ But what about creating `Student` records?
 
 Since students are related to a single project, we will
 allow editing them right the on the CMS interface in the `Project` page type.
-We do this through a powerful field called `[GridField](/topics/grid-field)`.
+We do this through a powerful field called `[GridField](/reference/grid-field)`.
 All customization to fields for a page type are managed through a method called
 `getCMSFields()`, so let's add it there:
 
