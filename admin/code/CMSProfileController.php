@@ -19,6 +19,7 @@ class CMSProfileController extends LeftAndMain {
 		$this->setCurrentPageID(Member::currentUserID());
 
 		$form = parent::getEditForm($id, $fields);
+		if($form instanceof SS_HTTPResponse) return $form;
 		
 		$form->Fields()->push(new HiddenField('ID', null, Member::currentUserID()));
 		$form->Actions()->push(
@@ -61,7 +62,7 @@ class CMSProfileController extends LeftAndMain {
 
 		if(!$member->canEdit()) {
 			$form->sessionMessage(_t('Member.CANTEDIT', 'You don\'t have permission to do that'), 'bad');
-			return $this->controller->redirectBack();
+			return $this->redirectBack();
 		}
 
 		$response = parent::save($data, $form);
