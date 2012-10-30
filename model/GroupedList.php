@@ -16,7 +16,7 @@ class GroupedList extends SS_ListDecorator {
 		$result = array();
 
 		foreach ($this->list as $item) {
-			$key = is_object($item) ? $item->$index : $item[$index];
+			$key = is_object($item) ? ($item->$index)?$item->$index:$item->$index() : $item[$index];
 
 			if (array_key_exists($key, $result)) {
 				$result[$key]->push($item);
