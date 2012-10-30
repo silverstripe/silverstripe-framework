@@ -70,7 +70,7 @@ ru:
     ACCESSALLINTERFACESHELP: 'Отменяет индивидуальные настройки прав доступа.'
     SAVE: Сохранить
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'Мой профиль'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
     CHANGEPASSWORDTEXT2: 'Для того, чтобы войти, используйте сейчас следующие учетные данные:'
@@ -346,7 +346,7 @@ ru:
     BUTTONLOGIN: Войти
     BUTTONLOGINOTHER: 'Войти под другим именем'
     BUTTONLOSTPASSWORD: 'Я забыл пароль'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'У вас недостаточно прав'
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
     CONFIRMPASSWORD: 'Подтвердить пароль'
     DATEFORMAT: 'Формат даты'
