@@ -555,6 +555,18 @@ input.radio {
 		}
 
 	}
+
+	&.disabled {
+		opacity: 0.5;
+
+		li label {
+			cursor: default;
+		}
+
+		input[type=radio] {
+			display: none;
+		}
+	}
 	
 }
 

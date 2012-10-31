@@ -30,6 +30,41 @@
 				return $('.cms-tree');
 			},
 
+			/**
+			 * Function: disablePageCreation()
+			 * Disables the main CMS content area for page-creation if a selected PageType is unable to have children added to it
+			 *
+			 * Parameters:
+			 * (DOMElement) dropDownField
+			 *
+			 * @todo selecting a radio-button also triggers onchange which is registered here.
+			 * However, the method below won't work becuase no direct manipulation of the dropdown has been made and therefore there cannot be
+			 * any $('Form_AddForm_ParentID') cannot have a corresponding value
+			 */
+			disablePageCreateArea: function(dropDownField) {
+				var targ = $('#PageType').removeClass('disabled');
+				var stop = function(e) {
+					if(targ.hasClass('disabled')) {
+						e.preventDefault();
+						e.stopPropagation();
+						return false;
+					}
+				}
+				dropDownField.find('.tree-holder li').each(function(ind,node) {
+					if($(node).attr('id') == 'selector-ParentID-'+dropDownField.getValue() && $(node).hasClass('nochildren')) {
+						targ.addClass('disabled');
+						$('#PageType.disabled input[type=radio]')
+							.removeAttr('checked')
+							.on('click',function(e) {
+								return stop(e);
+							});
+						$('#PageType.disabled li').on('click',function(e) {
+							return stop(e);
+						});
+					}
+				});
+			},
+
 			fromTree: {
 				onselect_node: function(e, data){
 					this.refresh(data.rslt.obj);
@@ -162,6 +197,13 @@
 		
 				// Set parent node (fallback to root)
 				this.find(':input[name=ParentID]').val(selectedNode ? selectedNode.data('id') : 0);
+			},
+
+			/**
+			 * Function: onchange
+			 */
+			onchange: function() {
+				this.disablePageCreateArea($('.TreeDropdownField.single'));
 			}
 		});
 	});
