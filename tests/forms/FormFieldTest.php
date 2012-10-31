@@ -64,7 +64,7 @@ class FormFieldTest extends SapphireTest {
 		$this->assertNotContains('two="2"', $field->getAttributesHTML('one', 'two'));
 		$this->assertContains('three="3"', $field->getAttributesHTML('one', 'two'));
 	}
-	
+
 	public function testEveryFieldTransformsReadonlyAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {
