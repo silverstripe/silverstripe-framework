@@ -153,10 +153,10 @@
 						acceptFileTypes: new RegExp(config.acceptFileTypes, 'i')
 					}
 				));
+
 				if (this.data('fileupload')._isXHRUpload({multipart: true})) {
 					$('.ss-uploadfield-item-uploador').show();
-					dropZone.show(); // drag&drop avaliable
-					
+					dropZone.hide().show();
 				}
 
 				
