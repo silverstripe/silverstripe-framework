@@ -43,6 +43,7 @@
 			 */
 			disablePageCreateArea: function(dropDownField) {
 				var targ = $('#PageType').removeClass('disabled');
+				var bttn = $('#Form_AddForm_action_doAdd');
 				var stop = function(e) {
 					if(targ.hasClass('disabled')) {
 						e.preventDefault();
@@ -53,12 +54,16 @@
 				dropDownField.find('.tree-holder li').each(function(ind,node) {
 					if($(node).attr('id') == 'selector-ParentID-'+dropDownField.getValue() && $(node).hasClass('nochildren')) {
 						targ.addClass('disabled');
+						bttn.addClass('ui-state-disabled');
 						$('#PageType.disabled input[type=radio]')
 							.removeAttr('checked')
 							.on('click',function(e) {
 								return stop(e);
 							});
 						$('#PageType.disabled li').on('click',function(e) {
+							return stop(e);
+						});
+						bttn.on('click',function(e) {
 							return stop(e);
 						});
 					}
