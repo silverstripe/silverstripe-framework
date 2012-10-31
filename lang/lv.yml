@@ -1,28 +1,17 @@
 lv:
   AssetAdmin:
-    NEWFOLDER:
-      - null
+    NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'First uploaded'
+    DIM: Dimensions
+    FILENAME: Filename
+    FOLDER: Folder
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
+    TYPE: 'File type'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -38,85 +27,50 @@ lv:
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT:
-      - null
-    ALIGNEMENTEXAMPLE:
-      - null
-    BOLD:
-      - null
-    BOLDEXAMPLE:
-      - null
-    CODE:
-      - null
-    CODEDESCRIPTION:
-      - null
-    CODEEXAMPLE:
-      - null
-    COLORED:
-      - null
-    COLOREDEXAMPLE:
-      - null
-    EMAILLINK:
-      - null
-    EMAILLINKDESCRIPTION:
-      - null
-    IMAGE:
-      - null
-    IMAGEDESCRIPTION:
-      - null
-    ITALIC:
-      - null
-    ITALICEXAMPLE:
-      - null
-    LINK:
-      - null
-    LINKDESCRIPTION:
-      - null
-    STRUCK:
-      - null
-    STRUCKEXAMPLE:
-      - null
-    UNDERLINE:
-      - null
-    UNDERLINEEXAMPLE:
-      - null
-    UNORDERED:
-      - null
-    UNORDEREDDESCRIPTION:
-      - null
-    UNORDEREDEXAMPLE1:
-      - null
+    ALIGNEMENT: Līdzināšana
+    ALIGNEMENTEXAMPLE: 'izlīdzināts pa labi'
+    BOLD: 'Treknraksta teksts'
+    BOLDEXAMPLE: Treknraksts
+    CODE: Blokkods
+    CODEDESCRIPTION: 'Neformatēts blokkods'
+    CODEEXAMPLE: Blokkods
+    COLORED: 'Iekrāsots teksts'
+    COLOREDEXAMPLE: 'zils teksts'
+    EMAILLINK: 'E-pasta saite'
+    EMAILLINKDESCRIPTION: 'Izveidot saiti uz e-pasta adresi'
+    IMAGE: Attēls
+    IMAGEDESCRIPTION: 'Rādīt attēlu rakstā'
+    ITALIC: 'Slīpraksta teksts'
+    ITALICEXAMPLE: Slīpraksts
+    LINK: 'Tīmekļa vietnes saite'
+    LINKDESCRIPTION: 'Saite uz citu tīmekļa vietni vai URL'
+    STRUCK: 'Pārsvītrot tekstu'
+    STRUCKEXAMPLE: Pārsvītrots
+    UNDERLINE: 'Pasvītrots teksts'
+    UNDERLINEEXAMPLE: Pasvītrots
+    UNORDERED: 'Nesakārtots saraksts'
+    UNORDEREDDESCRIPTION: 'Nesakārtots saraksts'
+    UNORDEREDEXAMPLE1: 'nesakārtots elements 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO:
-      - null
-    ERRORNOTADMIN:
-      - null
-    ERRORNOTREC:
-      - null
+    ENTERINFO: 'Lūdz ievadiet lietotājvārdu un paroli.'
+    ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
+    ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: Nē
+    ANY: Jebkurš
+    1: Jā
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Saglabāt
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
     CHANGEPASSWORDTEXT2: 'Lai pieslēgtos, izmantojiet sekojošus datus:'
@@ -124,53 +78,35 @@ lv:
     HELLO: Sveiki
     PASSWORD: Parole
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Nē
+    - Jā
   ComplexTableField:
-    CLOSEPOPUP:
-      - null
-    SUCCESSADD2:
-      - null
-    SUCCESSEDIT:
-      - null
+    CLOSEPOPUP: 'Aizvērt izlēcošo logu'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Saglabāts %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Pievienot %s'
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Kārtot augoši'
+    SORTDESC: 'Kārtot dilstoši'
   ComplexTableField_popup.ss:
-    NEXT:
-      - null
-    PREVIOUS:
-      - null
+    NEXT: Nākamais
+    PREVIOUS: Iepriekšējais
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Mainīt paroli'
   CreditCardField:
     FIRST: pirmais
     FOURTH: ceturtais
     SECOND: otrais
     THIRD: trešais
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: Ls
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Datu Objekti'
+    SINGULARNAME: 'Datu Objekts'
   Date:
     DAY: diena
     DAYS: dienas
@@ -193,153 +129,89 @@ lv:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Izvēlieties)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
     PLURALNAME: 'Atgriezti e-pasta ieraksti'
     SINGULARNAME: 'Atgriezts e-pasta ieraksts'
   Enum:
     ANY: Jebkuru
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    TiffType:
-      - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    AviType: 'AVI video file'
+    Content: Saturs
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
+    Filename: 'Faila nosaukums'
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: 'Faila izmērs ir nulle baiti.'
+    NOVALIDUPLOAD: 'Augšupielādei nederīgs fails'
+    Name: Nosaukms
+    PLURALNAME: Faili
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
+    SINGULARNAME: Fails
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TiffType: 'Tagged image format'
+    Title: Virsraksts
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: Fails
+    FROMCOMPUTER: 'No Jūsu datora'
+    FROMFILESTORE: 'No failu glabātuves'
+    NOSOURCE: 'Lūdzu izvēlieties avota failu, kuru pievienot'
+    REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
-    TITLE:
-      - null
+    TITLE: 'Image Uploading Iframe'
   Filesystem:
-    SYNCRESULTS:
-      - null
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO:
-      - null
-    TEXT1:
-      - null
+    HELLO: Sveiki
+    TEXT1: 'Šeit ir Jūsu'
     TEXT2: 'paroles atiestatīšanas saite'
-    TEXT3:
-      - null
+    TEXT3: ' '
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: '%s ir obligāti aizpildāms.'
+    SubmitBtnLabel: Go
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'Ievadītā vērtība nav unikāla'
+    VALIDATIONPASSWORDSDONTMATCH: 'Paroles nesakrīt'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Paroles nedrīkst būt tukšas'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validators
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE:
-      - null
+    NONE: neviens
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -356,8 +228,7 @@ lv:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -368,197 +239,107 @@ lv:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole:
-      - null
-    Code:
-      - null
-    DefaultGroupTitleAdministrators:
-      - null
-    DefaultGroupTitleContentAuthors:
-      - null
-    Description:
-      - null
-    GroupReminder:
-      - null
-    Locked:
-      - null
-    NoRoles:
-      - null
-    PLURALNAME:
-      - null
-    Parent:
-      - null
-    RolesAddEditLink:
-      - null
-    SINGULARNAME:
-      - null
-    Sort:
-      - null
-    has_many_Permissions:
-      - null
-    many_many_Members:
-      - null
+    AddRole: 'Add a role for this group'
+    Code: 'Grupas kods'
+    DefaultGroupTitleAdministrators: Administratori
+    DefaultGroupTitleContentAuthors: 'Satura autori'
+    Description: Apraksts
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    Locked: 'Slēgt?'
+    NoRoles: 'No roles found'
+    PLURALNAME: Groups
+    Parent: 'Grupas vecāks'
+    RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
+    Sort: 'Kārtošanas secība'
+    has_many_Permissions: Atļaujas
+    many_many_Members: Dalībnieki
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Deleted %d groups'
+    ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL:
-      - null
-    ADJUSTDETAILSDIMENSIONS:
-      - null
-    ANCHORVALUE:
-      - null
-    BUTTONINSERT:
-      - null
-    BUTTONINSERTLINK:
-      - null
-    BUTTONREMOVELINK:
-      - null
-    BUTTONUpdate:
-      - null
-    CAPTIONTEXT:
-      - null
-    CSSCLASS:
-      - null
-    CSSCLASSCENTER:
-      - null
-    CSSCLASSLEFT:
-      - null
-    CSSCLASSLEFTALONE:
-      - null
-    CSSCLASSRIGHT:
-      - null
-    DETAILS:
-      - null
-    EMAIL:
-      - null
-    FILE:
-      - null
-    FOLDER:
-      - null
-    FROMCMS:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMWEB:
-      - null
-    FindInFolder:
-      - null
-    IMAGEALT:
-      - null
-    IMAGEALTTEXT:
-      - null
-    IMAGEALTTEXTDESC:
-      - null
-    IMAGEDIMENSIONS:
-      - null
-    IMAGEHEIGHTPX:
-      - null
-    IMAGETITLE:
-      - null
-    IMAGETITLETEXT:
-      - null
-    IMAGETITLETEXTDESC:
-      - null
-    IMAGEWIDTHPX:
-      - null
-    INSERTMEDIA:
-      - null
-    LINK:
-      - null
-    LINKANCHOR:
-      - null
-    LINKDESCR:
-      - null
-    LINKEMAIL:
-      - null
-    LINKEXTERNAL:
-      - null
-    LINKFILE:
-      - null
-    LINKINTERNAL:
-      - null
-    LINKOPENNEWWIN:
-      - null
-    LINKTO:
-      - null
-    PAGE:
-      - null
-    URL:
-      - null
-    URLNOTANOEMBEDRESOURCE:
-      - null
-    UpdateMEDIA:
-      - null
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Enkurs
+    BUTTONINSERT: Insert
+    BUTTONINSERTLINK: 'Ievietot saiti'
+    BUTTONREMOVELINK: 'Noņemt saiti'
+    BUTTONUpdate: Update
+    CAPTIONTEXT: 'Virsraksta teksts'
+    CSSCLASS: 'Novietojums / stils'
+    CSSCLASSCENTER: 'Neatkarīgs, centrēts'
+    CSSCLASSLEFT: 'Kreisajā pusē ar tekstu apkārt.'
+    CSSCLASSLEFTALONE: 'Patstāvīgi, kreisajā pusē.'
+    CSSCLASSRIGHT: 'Labajā pusē ar tekstu apkārt.'
+    DETAILS: Details
+    EMAIL: 'E-pasta adrese'
+    FILE: Fails
+    FOLDER: Mape
+    FROMCMS: 'From the CMS'
+    FROMCOMPUTER: 'From your computer'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Alternatīvais teksts (alt) - būs redzams, kad nebūs iespējams attēlot attēlu'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: Izmēri
+    IMAGEHEIGHTPX: Augstums
+    IMAGETITLE: 'Apraksts (paskaidre)  - papildus informācijai par attēlu'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: Platums
+    INSERTMEDIA: 'Insert Media'
+    LINK: Saite
+    LINKANCHOR: 'Enkurs uz šo lapu'
+    LINKDESCR: 'Saites apraksts'
+    LINKEMAIL: 'E-pasta adrese'
+    LINKEXTERNAL: 'Cita tīmekļa vietne'
+    LINKFILE: 'Lejupielādēt failu'
+    LINKINTERNAL: 'Vietnes lapa'
+    LINKOPENNEWWIN: 'Atvērt saiti jaunā logā?'
+    LINKTO: 'Saite uz'
+    PAGE: Lapa
+    URL: URL
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Attēls
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Attēla augšupielādes iframe bloks'
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
-    HELP:
-      - null
-    PAGETYPE:
-      - null
-    PERMAGAIN:
-      - null
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
+    HELP: Help
+    PAGETYPE: 'Page type: '
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
-    Email:
-      - null
-    IP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
-    Status:
-      - null
+    Email: 'E-pasta adrese'
+    IP: 'IP Adrese'
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
+    Status: Statuss
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Mainīt paroli'
@@ -603,154 +384,91 @@ lv:
     db_Password: Parole
     db_PasswordExpiry: 'Paroles Termiņa Izbeigšanās Datums'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'E-pasts un Parole'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
-    'APPLY FILTER':
-      - null
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    'APPLY FILTER': 'Apply Filter'
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultNone:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Deleted %d members'
+    ResultNone: 'No changes'
+    ResultUpdated: 'Updated {count} members'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Delete
+    DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    IMPORT: 'Import from CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
-    FILTER:
-      - null
-    IMPORT:
-      - null
+    FILTER: Filter
+    IMPORT: Import
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER:
-      - null
-    SEARCHLISTINGS:
-      - null
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: Skaits
+    FIELDLABELCURRENCY: Valūta
   NullableField:
     IsNullLabel: 'Ir Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Page
+    View: View
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: Administrators
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 'Pilnas administratora tiesības'
+    FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'mantots no lomas "%s" grupā "%s"'
   PermissionRole:
-    OnlyAdminCanApply:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
-    Title:
-      - null
+    OnlyAdminCanApply: 'Only admin can apply'
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+    Title: Title
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -761,32 +479,19 @@ lv:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat <a href="%s">atkārtoti pieslēgties</a>. '
+    BUTTONSEND: 'Nosūtīt man paroles atiestatīšanas saiti'
+    CHANGEPASSWORDBELOW: 'Jūs varat nomainīt savu paroli zemāk.'
+    CHANGEPASSWORDHEADER: 'Mainīt paroli'
+    ENTERNEWPASSWORD: 'Lūdzu ievadiet jaunu paroli.'
+    ERRORPASSWORDPERMISSION: 'Lai mainītu paroli, Jums ir jāpieslēdzas!'
+    LOGGEDOUT: 'Jūs esat atslēdzies. Ja jūs vēlaties vēlreiz pieslēgties, ievadiet zemāk savus datus. '
+    LOGIN: Pieslēgties
+    NOTEPAGESECURED: 'Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli.'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -806,55 +511,38 @@ lv:
     TABROLES: Roles
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: 'Import from CSV'
+    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'Netika augšupielādēts neviens attēls'
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: Sākums
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 'PIevienot jaunu rindu'
+    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Eksportēt uz CSV'
     PRINT: Drukāt
     Print: Print
     SELECT: 'Izvēlēties:'
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 'No items found'
+    SORTASC: 'Kārtot augošā secībā'
+    SORTDESC: 'Kārtot dilstošā secībā'
   TableListField_PageControls.ss:
-    DISPLAYING:
-      - null
-    OF:
-      - null
-    TO:
-      - null
-    VIEWFIRST:
-      - null
-    VIEWLAST:
-      - null
-    VIEWNEXT:
-      - null
-    VIEWPREVIOUS:
-      - null
+    DISPLAYING: Displaying
+    OF: of
+    TO: to
+    VIEWFIRST: 'Skatīt pirmo'
+    VIEWLAST: 'Skatīt pēdējo'
+    VIEWNEXT: 'Skatīt nākamo'
+    VIEWPREVIOUS: 'Skatīt iepriekšējo'
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: mazāk
     MORE: vairāk
@@ -884,5 +572,4 @@ lv:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: Versijas
