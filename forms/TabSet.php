@@ -108,7 +108,7 @@ class TabSet extends CompositeField {
 			$this->attributes,
 			array(
 				'id' => $this->id(),
-				'class' => 'ss-tabset ' . $this->extraClass()
+				'class' => $this->extraClass()
 			)
 		);
 	}
