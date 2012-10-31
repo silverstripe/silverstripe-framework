@@ -82,7 +82,7 @@ class DropdownFieldTest extends SapphireTest {
 	
 	public function testNumberOfSelectOptionsAvailable() {
 		/* Create a field with a blank value */
-		$field = $this->testDropdownField('(Any)');
+		$field = $this->createDropdownField('(Any)');
 		
 		/* 3 options are available */
 		$this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
@@ -93,7 +93,7 @@ class DropdownFieldTest extends SapphireTest {
 			'We only have 1 selected option, since a dropdown can only possibly have one!');
 		
 		/* Create a field without a blank value */
-		$field = $this->testDropdownField();
+		$field = $this->createDropdownField();
 		
 		/* 2 options are available */
 		$this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
@@ -104,7 +104,7 @@ class DropdownFieldTest extends SapphireTest {
 	}
 	
 	public function testIntegerZeroValueSeelctedOptionBehaviour() {
-		$field = $this->testDropdownField('(Any)', 0);
+		$field = $this->createDropdownField('(Any)', 0);
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		
 		/* The selected option is "No" */
@@ -112,7 +112,7 @@ class DropdownFieldTest extends SapphireTest {
 	}
 
 	public function testBlankStringValueSelectedOptionBehaviour() {
-		$field = $this->testDropdownField('(Any)');
+		$field = $this->createDropdownField('(Any)');
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		
 		/* The selected option is "(Any)" */
@@ -120,7 +120,7 @@ class DropdownFieldTest extends SapphireTest {
 	}
 	
 	public function testNullValueSelectedOptionBehaviour() {
-		$field = $this->testDropdownField('(Any)', null);
+		$field = $this->createDropdownField('(Any)', null);
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 
 		/* The selected option is "(Any)" */
@@ -128,7 +128,7 @@ class DropdownFieldTest extends SapphireTest {
 	}
 	
 	public function testStringValueSelectedOptionBehaviour() {
-		$field = $this->testDropdownField('(Any)', '1');
+		$field = $this->createDropdownField('(Any)', '1');
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		
 		/* The selected option is "Yes" */
@@ -147,6 +147,39 @@ class DropdownFieldTest extends SapphireTest {
 			'The selected option is "Cats and Kittens"');
 	}
 	
+	public function testNumberOfDisabledOptions() {
+		/* Create a field with a blank value & set 0 & 1 to disabled */
+		$field = $this->createDropdownField('(Any)');
+		$field->setDisabledItems(array(0,1));
+		
+		/* 3 options are available */
+		$this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
+		
+		/* There are 2 disabled options */
+		$disabledOptions = $this->findDisabledOptionElements($field->Field());
+		$this->assertEquals(count($disabledOptions), 2, 'We have 2 disabled options');
+		
+		/* Create a field without a blank value & set 1 to disabled, then set none to disabled (unset) */
+		$field = $this->createDropdownField();
+		$field->setDisabledItems(array(1));
+		
+		/* 2 options are available */
+		$this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
+		
+		/* get disabled items returns an array of one */
+		$this->assertEquals(
+			$field->getDisabledItems(),
+			array( 1 )
+		);
+		
+		/* unset disabled items */
+		$field->setDisabledItems(array());
+		
+		/* There are no disabled options anymore */
+		$disabledOptions = $this->findDisabledOptionElements($field->Field());
+		$this->assertEquals(count($disabledOptions), 0, 'There are no disabled options');
+	}
+	
 	/**
 	 * Create a test dropdown field, with the option to
 	 * set what source and blank value it should contain
@@ -156,7 +189,7 @@ class DropdownFieldTest extends SapphireTest {
 	 * @param string|integer $value The default value of the field
 	 * @return DropdownField object
 	 */
-	public function testDropdownField($emptyString = null, $value = '') {
+	public function createDropdownField($emptyString = null, $value = '') {
 		/* Set up source, with 0 and 1 integers as the values */
 		$source = array(
 			0 => 'No',
@@ -164,7 +197,7 @@ class DropdownFieldTest extends SapphireTest {
 		);
 		
 		$field = new DropdownField('Field', null, $source, $value);
-		$field->setEmptyString($emptyString);
+		if($emptyString) $field->setEmptyString($emptyString);
 
 		return $field;
 	}
@@ -204,6 +237,31 @@ class DropdownFieldTest extends SapphireTest {
 		}
 
 		return $foundSelected;
+	}
+	
+	/**
+	 * Find all the <OPTION> elements from a
+	 * string of HTML that have the "disabled"
+	 * attribute.
+	 * 
+	 * @param string $html HTML to parse for elements
+	 * @return array of SimpleXMLElement objects
+	 */
+	public function findDisabledOptionElements($html) {
+		$options = $this->findOptionElements($html);
+		
+		/* Find any elements that have the "disabled" attribute and put them into a list */
+		$foundDisabled = array();
+		foreach($options as $option) {
+			$attributes = $option->attributes();
+			if($attributes) foreach($attributes as $attribute => $value) {
+				if($attribute == 'disabled') {
+					$foundDisabled[] = $option;
+				}
+			}
+		}
+
+		return $foundDisabled;
 	}
 	
 }
