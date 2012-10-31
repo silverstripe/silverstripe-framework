@@ -1,17 +1,28 @@
 bg:
   AssetAdmin:
-    NEWFOLDER: NewFolder
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: Създаден
-    DIM: Размери
-    FILENAME: 'Име на файл'
-    FOLDER: Папка
-    LASTEDIT: 'Последна промяна'
-    OWNER: Собственик
-    SIZE: 'Големина на файла'
-    TITLE: Title
-    TYPE: 'Тип на файла'
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Избери файлове'
     DRAGFILESHERE: 'Завлечете файловете тук'
@@ -27,50 +38,85 @@ bg:
     UPLOADINPROGRESS: 'Моля, изчакайте... файловете се качват'
     UPLOADOR: ИЛИ
   BBCodeParser:
-    ALIGNEMENT: Подреждане
-    ALIGNEMENTEXAMPLE: 'подреди в дясно'
-    BOLD: 'Удебелен текст'
-    BOLDEXAMPLE: Удебелен
-    CODE: 'Блок код'
-    CODEDESCRIPTION: 'Неформатиран блок код'
-    CODEEXAMPLE: 'Блок код'
-    COLORED: 'Цветен текст'
-    COLOREDEXAMPLE: 'син текст'
-    EMAILLINK: 'Мейл връзка'
-    EMAILLINKDESCRIPTION: 'Създай връзка към мейл адрес'
-    IMAGE: Изображение
-    IMAGEDESCRIPTION: 'Показва изображение във вашата публикация'
-    ITALIC: 'Наклонен текст'
-    ITALICEXAMPLE: Наклонено
-    LINK: 'Уебсайт връзка'
-    LINKDESCRIPTION: 'Връзка към друг уебсайт или URL'
-    STRUCK: 'Задраскан Текст'
-    STRUCKEXAMPLE: Задраскай
-    UNDERLINE: 'Подчертан текст'
-    UNDERLINEEXAMPLE: Подчертано
-    UNORDERED: 'Неподреден лист'
-    UNORDEREDDESCRIPTION: 'Неподреден лист'
-    UNORDEREDEXAMPLE1: 'Неподреден предмет 1'
+    ALIGNEMENT:
+      - null
+    ALIGNEMENTEXAMPLE:
+      - null
+    BOLD:
+      - null
+    BOLDEXAMPLE:
+      - null
+    CODE:
+      - null
+    CODEDESCRIPTION:
+      - null
+    CODEEXAMPLE:
+      - null
+    COLORED:
+      - null
+    COLOREDEXAMPLE:
+      - null
+    EMAILLINK:
+      - null
+    EMAILLINKDESCRIPTION:
+      - null
+    IMAGE:
+      - null
+    IMAGEDESCRIPTION:
+      - null
+    ITALIC:
+      - null
+    ITALICEXAMPLE:
+      - null
+    LINK:
+      - null
+    LINKDESCRIPTION:
+      - null
+    STRUCK:
+      - null
+    STRUCKEXAMPLE:
+      - null
+    UNDERLINE:
+      - null
+    UNDERLINEEXAMPLE:
+      - null
+    UNORDERED:
+      - null
+    UNORDEREDDESCRIPTION:
+      - null
+    UNORDEREDEXAMPLE1:
+      - null
   BackLink_Button.ss:
     Back: Назад
   BasicAuth:
-    ENTERINFO: 'Моля, въведете потребителско име и парола.'
-    ERRORNOTADMIN: 'Този потребител не е администратор.'
-    ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
+    ENTERINFO:
+      - null
+    ERRORNOTADMIN:
+      - null
+    ERRORNOTREC:
+      - null
   Boolean:
-    0: 'False'
-    ANY: Any
-    1: 'True'
+    0:
+      - null
+    ANY:
+      - null
+    1:
+      - null
   CMSLoadingScreen.ss:
     LOADING: 'Зареждане ...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Достъп до всички секции на CMS'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Запис
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE:
+      - null
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
     CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
@@ -78,35 +124,53 @@ bg:
     HELLO: Здравей!
     PASSWORD: Парола
   CheckboxField:
-    - 'False'
-    - 'True'
+    -
+      - null
+    -
+      - null
   ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
-    SUCCESSADD2: 'Беше добавен {name}'
-    SUCCESSEDIT: 'Съхранено %s %s %s'
+    CLOSEPOPUP:
+      - null
+    SUCCESSADD2:
+      - null
+    SUCCESSEDIT:
+      - null
   ComplexTableField.ss:
-    ADDITEM: 'Добави %s'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: Възходящ
-    SORTDESC: Низходящ
+    ADDITEM:
+      - null
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   ComplexTableField_popup.ss:
-    NEXT: Следващо
-    PREVIOUS: Предишно
+    NEXT:
+      - null
+    PREVIOUS:
+      - null
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Промяна на парола'
+    ATLEAST:
+      - null
+    BETWEEN:
+      - null
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: първи
     FOURTH: четвърти
     SECOND: втори
     THIRD: трети
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
-    PLURALNAME: 'Обекти с данни'
-    SINGULARNAME: 'Обект с данни'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Date:
     DAY: ден
     DAYS: дни
@@ -129,89 +193,153 @@ bg:
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET:
+      - null
   Director:
     INVALID_REQUEST: 'Грешна заявка'
   DropdownField:
-    CHOOSE: (Избери)
+    CHOOSE:
+      - null
   EmailField:
-    VALIDATION: 'Моля, въведете имейл адрес'
+    VALIDATION:
+      - null
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
   File:
-    AviType: 'AVI video file'
-    Content: Съдържание
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: 'Име на файл'
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'Размер на файла е нула байта.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Име
-    PLURALNAME: Файлове
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
-    SINGULARNAME: Файл
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
-    Title: Title
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    AviType:
+      - null
+    Content:
+      - null
+    CssType:
+      - null
+    DmgType:
+      - null
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
+    Mp3Type:
+      - null
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    TiffType:
+      - null
+    Title:
+      - null
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'Не може да бъде качен файл от този тип'
-    FILE: Файл
-    FROMCOMPUTER: 'От компютъра'
-    FROMFILESTORE: 'От Файлове и Изображения'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
+    ATTACH:
+      - null
+    ATTACHONCESAVED:
+      - null
+    ATTACHONCESAVED2:
+      - null
+    DELETE:
+      - null
+    DISALLOWEDFILETYPE:
+      - null
+    FILE:
+      - null
+    FROMCOMPUTER:
+      - null
+    FROMFILESTORE:
+      - null
+    NOSOURCE:
+      - null
+    REPLACE:
+      - null
   FileIFrameField_iframe.ss:
-    TITLE: 'Iframe за качване на изображение'
+    TITLE:
+      - null
   Filesystem:
-    SYNCRESULTS: 'Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента'
+    SYNCRESULTS:
+      - null
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ForgotPasswordEmail.ss:
-    HELLO: Здравей!
-    TEXT1: 'Ето вашият'
+    HELLO:
+      - null
+    TEXT1:
+      - null
     TEXT2: 'адрес за рестартирване на парола'
-    TEXT3: за
+    TEXT3:
+      - null
   Form:
-    FIELDISREQUIRED: 'нужно е %s'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'Въведената стойност не е уникална'
-    VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Паролите не може да бъдат празни'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Валидатор
-    VALIDCURRENCY: 'Please enter a valid currency'
+    FIELDISREQUIRED:
+      - null
+    SubmitBtnLabel:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
-    NONE: нищо
+    NONE:
+      - null
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Откачане
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Добави {name}'
     Filter: Филтър
@@ -228,7 +356,8 @@ bg:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'Изтриването не е разрешено'
+    DeletePermissionsFailure:
+      - null
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Създай
@@ -239,107 +368,197 @@ bg:
     Saved: 'Съхранени %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Добавяне на роля към групата'
-    Code: 'Group Code'
-    DefaultGroupTitleAdministrators: Администратори
-    DefaultGroupTitleContentAuthors: 'Редактори на съдържание'
-    Description: Описание
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Заключена?'
-    NoRoles: 'Няма намерени роли'
-    PLURALNAME: Groups
-    Parent: 'Parent Group'
-    RolesAddEditLink: 'Управление на ролите'
-    SINGULARNAME: Group
-    Sort: Сортиране
-    has_many_Permissions: Разрешения
-    many_many_Members: Потребители
+    AddRole:
+      - null
+    Code:
+      - null
+    DefaultGroupTitleAdministrators:
+      - null
+    DefaultGroupTitleContentAuthors:
+      - null
+    Description:
+      - null
+    GroupReminder:
+      - null
+    Locked:
+      - null
+    NoRoles:
+      - null
+    PLURALNAME:
+      - null
+    Parent:
+      - null
+    RolesAddEditLink:
+      - null
+    SINGULARNAME:
+      - null
+    Sort:
+      - null
+    has_many_Permissions:
+      - null
+    many_many_Members:
+      - null
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultUpdated:
+      - null
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
-    ADDURL: 'Добави URL'
-    ADJUSTDETAILSDIMENSIONS: 'Детайли и размери'
-    ANCHORVALUE: Котва
-    BUTTONINSERT: Вмъкни
-    BUTTONINSERTLINK: 'Вмъкни препратка'
-    BUTTONREMOVELINK: 'Премахни препратка'
-    BUTTONUpdate: Актуализация
-    CAPTIONTEXT: 'Описание (под снимката)'
-    CSSCLASS: 'Подравняване / стил'
-    CSSCLASSCENTER: Центрирано
-    CSSCLASSLEFT: 'В ляво, с текст който да се нанася около него'
-    CSSCLASSLEFTALONE: 'В ляво, самостоятелно.'
-    CSSCLASSRIGHT: 'В дясно, с текст който да се нанася около него'
-    DETAILS: Details
-    EMAIL: 'email адрес'
-    FILE: Файл
-    FOLDER: Папка
-    FROMCMS: 'От CMS'
-    FROMCOMPUTER: 'От компютъра'
-    FROMWEB: 'От интернет'
-    FindInFolder: 'Прегледай папка'
-    IMAGEALT: 'Алтернативен текст (alt)'
-    IMAGEALTTEXT: 'Алтернативен текст (alt) - показва се ако изображението не е заредено'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Размери
-    IMAGEHEIGHTPX: Височина
-    IMAGETITLE: 'Описание (tooltip) - за допълнителна информация към изображението'
-    IMAGETITLETEXT: 'Описание (tooltip)'
-    IMAGETITLETEXTDESC: 'Допълнителна информация към изображението'
-    IMAGEWIDTHPX: Широчина
-    INSERTMEDIA: 'Вмъкване на медиа'
-    LINK: Връзка
-    LINKANCHOR: 'Котва на тази страница'
-    LINKDESCR: 'Описание на препратка'
-    LINKEMAIL: 'email адрес'
-    LINKEXTERNAL: 'Друг уебсайт'
-    LINKFILE: 'Свали файл'
-    LINKINTERNAL: 'Страница в сайта'
-    LINKOPENNEWWIN: 'Да се отвори ли препратката в нов прозорец?'
-    LINKTO: 'Препратка към'
-    PAGE: Страница
-    URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Актуализация на медиа'
+    ADDURL:
+      - null
+    ADJUSTDETAILSDIMENSIONS:
+      - null
+    ANCHORVALUE:
+      - null
+    BUTTONINSERT:
+      - null
+    BUTTONINSERTLINK:
+      - null
+    BUTTONREMOVELINK:
+      - null
+    BUTTONUpdate:
+      - null
+    CAPTIONTEXT:
+      - null
+    CSSCLASS:
+      - null
+    CSSCLASSCENTER:
+      - null
+    CSSCLASSLEFT:
+      - null
+    CSSCLASSLEFTALONE:
+      - null
+    CSSCLASSRIGHT:
+      - null
+    DETAILS:
+      - null
+    EMAIL:
+      - null
+    FILE:
+      - null
+    FOLDER:
+      - null
+    FROMCMS:
+      - null
+    FROMCOMPUTER:
+      - null
+    FROMWEB:
+      - null
+    FindInFolder:
+      - null
+    IMAGEALT:
+      - null
+    IMAGEALTTEXT:
+      - null
+    IMAGEALTTEXTDESC:
+      - null
+    IMAGEDIMENSIONS:
+      - null
+    IMAGEHEIGHTPX:
+      - null
+    IMAGETITLE:
+      - null
+    IMAGETITLETEXT:
+      - null
+    IMAGETITLETEXTDESC:
+      - null
+    IMAGEWIDTHPX:
+      - null
+    INSERTMEDIA:
+      - null
+    LINK:
+      - null
+    LINKANCHOR:
+      - null
+    LINKDESCR:
+      - null
+    LINKEMAIL:
+      - null
+    LINKEXTERNAL:
+      - null
+    LINKFILE:
+      - null
+    LINKINTERNAL:
+      - null
+    LINKOPENNEWWIN:
+      - null
+    LINKTO:
+      - null
+    PAGE:
+      - null
+    URL:
+      - null
+    URLNOTANOEMBEDRESOURCE:
+      - null
+    UpdateMEDIA:
+      - null
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ImageField:
-    IMAGE: Image
+    IMAGE:
+      - null
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Image_iframe.ss:
     TITLE: 'Iframe за качване на изображение'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Изтрит
-    DropdownBatchActionsDefault: Действия
-    HELP: Help
-    PAGETYPE: 'Page type: '
-    PERMAGAIN: 'Вие излязохте от CMS. Ако искате да влезете отново, моля, въведете потребителско име и парола.'
-    PERMALREADY: 'Съжалявам, но нямате достъп до тази част от CMS. Ако искате да влезете с друго потребителско име, моля, направете го по-долу'
-    PERMDEFAULT: 'Въведете имейл адреса и паролата си, за да влезете в CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
-    PreviewButton: Преглед
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Записано
-    VersionUnknown: непозната
+    CANT_REORGANISE:
+      - null
+    DELETED:
+      - null
+    DropdownBatchActionsDefault:
+      - null
+    HELP:
+      - null
+    PAGETYPE:
+      - null
+    PERMAGAIN:
+      - null
+    PERMALREADY:
+      - null
+    PERMDEFAULT:
+      - null
+    PLEASESAVE:
+      - null
+    PreviewButton:
+      - null
+    REORGANISATIONSUCCESSFUL:
+      - null
+    SAVEDUP:
+      - null
+    VersionUnknown:
+      - null
   LeftAndMain_Menu.ss:
-    Hello: Здравей
-    LOGOUT: 'Log out'
+    Hello:
+      - null
+    LOGOUT:
+      - null
   LoginAttempt:
-    Email: 'Email Address'
-    IP: 'IP адрес'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
-    Status: Status
+    Email:
+      - null
+    IP:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    Status:
+      - null
   Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
@@ -384,91 +603,154 @@ bg:
     db_Password: Парола
     db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
   MemberAuthenticator:
-    TITLE: 'email и парола'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'АМ (преди обед) или РМ (следобед)'
-    'APPLY FILTER': 'Приложи филтър'
-    Custom: Custom
-    DATEFORMATBAD: 'Невалиден формат на датата'
-    DAYNOLEADING: 'Ден от месеца без водеща нула'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Четирицифрена година'
-    FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
-    HOURNOLEADING: 'Час без водеща нула'
-    MINUTENOLEADING: 'Минути без водеща нула'
-    MONTHNOLEADING: 'Месец без водеща нула'
-    Preview: Преглед
-    SHORTMONTH: 'Кратко изписване на месеца (напр. Яну)'
-    TOGGLEHELP: 'Помощ за форматирането'
-    TWODIGITDAY: 'Двуцифрен ден от месеца'
-    TWODIGITHOUR: 'Час с водеща нула (00 до 23)'
-    TWODIGITMINUTE: 'Минути с водеща нула (00 до 59)'
-    TWODIGITMONTH: 'Месец с водеща нула (01=Януари, и т.н.)'
-    TWODIGITSECOND: 'Секунди с водеща нула (00 до 59)'
-    TWODIGITYEAR: 'Двуцифрена година'
+    AMORPM:
+      - null
+    'APPLY FILTER':
+      - null
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Бяха добавени {count} потребители'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
-    ResultUpdated: 'Бяха актуализирани {count} потребители'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultNone:
+      - null
+    ResultUpdated:
+      - null
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   MemberTableField: null
   ModelAdmin:
-    DELETE: Изтрий
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Преглед на CSV файл за внасяне'
-    NOIMPORT: 'Нищо за внасяне'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   ModelAdmin_Tools.ss:
-    FILTER: Филтър
-    IMPORT: Внасяне
+    FILTER:
+      - null
+    IMPORT:
+      - null
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Внасяне
-    SEARCHLISTINGS: Търсене
+    IMPORT_TAB_HEADER:
+      - null
+    SEARCHLISTINGS:
+      - null
   MoneyField:
-    FIELDLABELAMOUNT: Сума
-    FIELDLABELCURRENCY: Валута
+    FIELDLABELAMOUNT:
+      - null
+    FIELDLABELCURRENCY:
+      - null
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
   Pagination:
-    Page: Page
-    View: View
+    Page:
+      - null
+    View:
+      - null
   Permission:
-    AdminGroup: Администратор
-    CMS_ACCESS_CATEGORY: 'Достъп до CMS'
-    FULLADMINRIGHTS: 'Пълни административни права'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'
     FromRole: 'унаследена от роля "{title}"'
     FromRoleOnGroup: 'унаследено от роля "%s" на група "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
+    OnlyAdminCanApply:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    Title:
+      - null
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Permissions:
     PERMISSIONS_CATEGORY: 'Роли и разрешения за достъп'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -479,19 +761,32 @@ bg:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
-    BUTTONSEND: 'Пратете ми линка за промяна на паролата'
-    CHANGEPASSWORDBELOW: 'Можете да смените вашата парола по-долу.'
-    CHANGEPASSWORDHEADER: 'Сменете вашата парола'
-    ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
-    ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
-    LOGGEDOUT: 'Вие излязохте. Ако искате да влезете отново, въведете вашите данни по-долу.'
-    LOGIN: 'Влезте в системата'
-    NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Позволява преглед, добавяне и редактиране на потребители, както и задаване на разрешения и роли за тях.'
     APPLY_ROLES: 'Задаване роли на групи'
@@ -511,38 +806,55 @@ bg:
     TABROLES: Роли
     Users: Потребители
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Внасяне от CSV'
-    FileFieldLabel: 'CSV файл <small>(разширение: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: Редакция
   SimpleImageField:
     NOUPLOAD: 'Няма качени изображения'
   SiteTree:
-    TABMAIN: Главно
+    TABMAIN:
+      - null
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED:
+      - null
   TableField.ss:
-    ADD: 'Добави нов ред'
-    ADDITEM: 'Add %s'
+    ADD:
+      - null
+    ADDITEM:
+      - null
   TableListField:
     CSVEXPORT: 'Експортирай на CSV'
     PRINT: Принтирай
     Print: Print
     SELECT: 'Избери:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
-    VIEWFIRST: 'Преглед на първото'
-    VIEWLAST: 'Преглед на последното'
-    VIEWNEXT: 'Преглед на следващото'
-    VIEWPREVIOUS: 'Преглед на предишното'
+    DISPLAYING:
+      - null
+    OF:
+      - null
+    TO:
+      - null
+    VIEWFIRST:
+      - null
+    VIEWLAST:
+      - null
+    VIEWNEXT:
+      - null
+    VIEWPREVIOUS:
+      - null
   TimeField:
-    VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
+    VALIDATEFORMAT:
+      - null
   ToggleField:
     LESS: по-малко
     MORE: повече
@@ -572,4 +884,5 @@ bg:
     STARTALLINFO: 'Start all uploads'
     Saved: Записано
   Versioned:
-    has_many_Versions: Версии
+    has_many_Versions:
+      - null

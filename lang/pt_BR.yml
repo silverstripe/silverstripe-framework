@@ -1,17 +1,28 @@
 pt_BR:
   AssetAdmin:
-    NEWFOLDER: 'Nova Pasta'
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: 'Primeiro upload'
-    DIM: Dimensões
-    FILENAME: 'Nome do Arquivo'
-    FOLDER: Folder
-    LASTEDIT: 'Última Alteração'
-    OWNER: Dono
-    SIZE: Tamanho
-    TITLE: Título
-    TYPE: Tipo
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -27,50 +38,85 @@ pt_BR:
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: Alinhamento
-    ALIGNEMENTEXAMPLE: 'alinhado a direito'
-    BOLD: 'Texto em Negrito'
-    BOLDEXAMPLE: Negrito
-    CODE: 'Bloco de código'
-    CODEDESCRIPTION: 'Bloco de código não formatado'
-    CODEEXAMPLE: 'Bloco de código'
-    COLORED: 'Texto colorido'
-    COLOREDEXAMPLE: 'Texto em Azul'
-    EMAILLINK: 'Link para e-mail'
-    EMAILLINKDESCRIPTION: 'Cria link para um e-mail'
-    IMAGE: Imagem
-    IMAGEDESCRIPTION: 'Mostrar imagem no post'
-    ITALIC: 'Texto em Itálico'
-    ITALICEXAMPLE: Itálico
-    LINK: 'link para site'
-    LINKDESCRIPTION: 'Link para outro site ou URL'
-    STRUCK: 'Struck-out Text'
-    STRUCKEXAMPLE: Struck-out
-    UNDERLINE: 'Texto subinhado'
-    UNDERLINEEXAMPLE: Sublinhado
-    UNORDERED: Marcadores
-    UNORDEREDDESCRIPTION: Marcadores
-    UNORDEREDEXAMPLE1: 'Item não ordenado 1'
+    ALIGNEMENT:
+      - null
+    ALIGNEMENTEXAMPLE:
+      - null
+    BOLD:
+      - null
+    BOLDEXAMPLE:
+      - null
+    CODE:
+      - null
+    CODEDESCRIPTION:
+      - null
+    CODEEXAMPLE:
+      - null
+    COLORED:
+      - null
+    COLOREDEXAMPLE:
+      - null
+    EMAILLINK:
+      - null
+    EMAILLINKDESCRIPTION:
+      - null
+    IMAGE:
+      - null
+    IMAGEDESCRIPTION:
+      - null
+    ITALIC:
+      - null
+    ITALICEXAMPLE:
+      - null
+    LINK:
+      - null
+    LINKDESCRIPTION:
+      - null
+    STRUCK:
+      - null
+    STRUCKEXAMPLE:
+      - null
+    UNDERLINE:
+      - null
+    UNDERLINEEXAMPLE:
+      - null
+    UNORDERED:
+      - null
+    UNORDEREDDESCRIPTION:
+      - null
+    UNORDEREDEXAMPLE1:
+      - null
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Por favor entre nome de usuário e senha.'
-    ERRORNOTADMIN: 'Este usuário não é um administrador'
-    ERRORNOTREC: 'Este nome de usuário / senha não é reconhecido'
+    ENTERINFO:
+      - null
+    ERRORNOTADMIN:
+      - null
+    ERRORNOTREC:
+      - null
   Boolean:
-    0: 'False'
-    ANY: Any
-    1: 'True'
+    0:
+      - null
+    ANY:
+      - null
+    1:
+      - null
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Acessar todas as interfaces do CMS'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Salvar
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE:
+      - null
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Você alterou sua senha para'
     CHANGEPASSWORDTEXT2: 'Agora, você pode usar as seguintes credenciais para realizar o login:'
@@ -78,35 +124,53 @@ pt_BR:
     HELLO: Olá
     PASSWORD: Senha
   CheckboxField:
-    - 'False'
-    - 'True'
+    -
+      - null
+    -
+      - null
   ComplexTableField:
-    CLOSEPOPUP: 'Fechar janela'
-    SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: '%s %s %s salvo(s)'
+    CLOSEPOPUP:
+      - null
+    SUCCESSADD2:
+      - null
+    SUCCESSEDIT:
+      - null
   ComplexTableField.ss:
-    ADDITEM: 'Incluir %s'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Ordenar ascendente'
-    SORTDESC: 'Ordenar descendente'
+    ADDITEM:
+      - null
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   ComplexTableField_popup.ss:
-    NEXT: Próximo
-    PREVIOUS: Anterior
+    NEXT:
+      - null
+    PREVIOUS:
+      - null
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: 'Trocar senha'
+    ATLEAST:
+      - null
+    BETWEEN:
+      - null
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: primeiro
     FOURTH: quarto
     SECOND: segundo
     THIRD: terceiro
   CurrencyField:
-    CURRENCYSYMBOL: R$
+    CURRENCYSYMBOL:
+      - null
   DataObject:
-    PLURALNAME: 'Dados dos objetos'
-    SINGULARNAME: 'Dado do objeto'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Date:
     DAY: dia
     DAYS: dias
@@ -129,89 +193,153 @@ pt_BR:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET:
+      - null
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: Selecione
+    CHOOSE:
+      - null
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION:
+      - null
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Any
   File:
-    AviType: 'AVI video file'
-    Content: Conteudo
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: 'Nome do Arquivo'
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'O tamanho do arquivo é zero bytes.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Nome
-    PLURALNAME: Arquivos
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
-    SINGULARNAME: Arquivo
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
-    Title: Titulo
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    AviType:
+      - null
+    Content:
+      - null
+    CssType:
+      - null
+    DmgType:
+      - null
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
+    Mp3Type:
+      - null
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    TiffType:
+      - null
+    Title:
+      - null
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
+    ATTACH:
+      - null
+    ATTACHONCESAVED:
+      - null
+    ATTACHONCESAVED2:
+      - null
+    DELETE:
+      - null
+    DISALLOWEDFILETYPE:
+      - null
+    FILE:
+      - null
+    FROMCOMPUTER:
+      - null
+    FROMFILESTORE:
+      - null
+    NOSOURCE:
+      - null
+    REPLACE:
+      - null
   FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE:
+      - null
   Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS:
+      - null
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ForgotPasswordEmail.ss:
-    HELLO: Olá
-    TEXT1: 'Este é seu'
+    HELLO:
+      - null
+    TEXT1:
+      - null
     TEXT2: 'link para reiniciar sua senha'
-    TEXT3: para
+    TEXT3:
+      - null
   Form:
-    FIELDISREQUIRED: '%s é requerido'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'O valor inserido não é exclusivo'
-    VALIDATIONPASSWORDSDONTMATCH: 'Senha não confere'
-    VALIDATIONPASSWORDSNOTEMPTY: 'As Passwords não podem estar vazias'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Verificador
-    VALIDCURRENCY: 'Please enter a valid currency'
+    FIELDISREQUIRED:
+      - null
+    SubmitBtnLabel:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
-    NONE: nenhum
+    NONE:
+      - null
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -228,7 +356,8 @@ pt_BR:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure:
+      - null
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -239,107 +368,197 @@ pt_BR:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
-    Code: 'Grupo de código'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Descrição
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: 'Travado?'
-    NoRoles: 'No roles found'
-    PLURALNAME: Groups
-    Parent: 'Grupo pai'
-    RolesAddEditLink: 'Manage roles'
-    SINGULARNAME: Group
-    Sort: Ordenação
-    has_many_Permissions: Permissões
-    many_many_Members: Membros
+    AddRole:
+      - null
+    Code:
+      - null
+    DefaultGroupTitleAdministrators:
+      - null
+    DefaultGroupTitleContentAuthors:
+      - null
+    Description:
+      - null
+    GroupReminder:
+      - null
+    Locked:
+      - null
+    NoRoles:
+      - null
+    PLURALNAME:
+      - null
+    Parent:
+      - null
+    RolesAddEditLink:
+      - null
+    SINGULARNAME:
+      - null
+    Sort:
+      - null
+    has_many_Permissions:
+      - null
+    many_many_Members:
+      - null
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultUpdated:
+      - null
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    ANCHORVALUE: Âncora
-    BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Inserir link'
-    BUTTONREMOVELINK: 'Remover link'
-    BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alinhamento / estilo'
-    CSSCLASSCENTER: Centralizado.
-    CSSCLASSLEFT: 'Na esquerda, com o texto ajustado.'
-    CSSCLASSLEFTALONE: 'Na esquerda de si mesmo.'
-    CSSCLASSRIGHT: 'Na direita, com o texto ajustado.'
-    DETAILS: Details
-    EMAIL: 'Endereço de e-mail'
-    FILE: Arquivo
-    FOLDER: Pasta
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensões
-    IMAGEHEIGHTPX: Altura
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Largura
-    INSERTMEDIA: 'Insert Media'
-    LINK: Link
-    LINKANCHOR: 'Âncora nesta página'
-    LINKDESCR: 'Descrição do link'
-    LINKEMAIL: 'Endereço de e-mail'
-    LINKEXTERNAL: 'Outro site'
-    LINKFILE: 'Download de arquivo'
-    LINKINTERNAL: 'Página no site'
-    LINKOPENNEWWIN: 'Abrir link em nova janela?'
-    LINKTO: 'Link para'
-    PAGE: Página
-    URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    ADDURL:
+      - null
+    ADJUSTDETAILSDIMENSIONS:
+      - null
+    ANCHORVALUE:
+      - null
+    BUTTONINSERT:
+      - null
+    BUTTONINSERTLINK:
+      - null
+    BUTTONREMOVELINK:
+      - null
+    BUTTONUpdate:
+      - null
+    CAPTIONTEXT:
+      - null
+    CSSCLASS:
+      - null
+    CSSCLASSCENTER:
+      - null
+    CSSCLASSLEFT:
+      - null
+    CSSCLASSLEFTALONE:
+      - null
+    CSSCLASSRIGHT:
+      - null
+    DETAILS:
+      - null
+    EMAIL:
+      - null
+    FILE:
+      - null
+    FOLDER:
+      - null
+    FROMCMS:
+      - null
+    FROMCOMPUTER:
+      - null
+    FROMWEB:
+      - null
+    FindInFolder:
+      - null
+    IMAGEALT:
+      - null
+    IMAGEALTTEXT:
+      - null
+    IMAGEALTTEXTDESC:
+      - null
+    IMAGEDIMENSIONS:
+      - null
+    IMAGEHEIGHTPX:
+      - null
+    IMAGETITLE:
+      - null
+    IMAGETITLETEXT:
+      - null
+    IMAGETITLETEXTDESC:
+      - null
+    IMAGEWIDTHPX:
+      - null
+    INSERTMEDIA:
+      - null
+    LINK:
+      - null
+    LINKANCHOR:
+      - null
+    LINKDESCR:
+      - null
+    LINKEMAIL:
+      - null
+    LINKEXTERNAL:
+      - null
+    LINKFILE:
+      - null
+    LINKINTERNAL:
+      - null
+    LINKOPENNEWWIN:
+      - null
+    LINKTO:
+      - null
+    PAGE:
+      - null
+    URL:
+      - null
+    URLNOTANOEMBEDRESOURCE:
+      - null
+    UpdateMEDIA:
+      - null
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ImageField:
-    IMAGE: Image
+    IMAGE:
+      - null
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Image_iframe.ss:
     TITLE: 'Upload de imagem'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
-    HELP: Ajuda
-    PAGETYPE: 'Tipo de página:'
-    PERMAGAIN: 'Você foi desconectado do CMS. Se você quiser entrar novamente, digite um nome de usuário e senha abaixo.'
-    PERMALREADY: 'Sinto muito, mas você não pode acessar essa parte do CMS. Se você quiser entrar como outra pessoa, faça-o abaixo.'
-    PERMDEFAULT: 'Por favor, entre com seu e-mail e senha para entrar no sistema.'
-    PLEASESAVE: 'Por favor salve a página: Esta página não pode ser atulizada porque ainda não foi salva.'
-    PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
-    VersionUnknown: unknown
+    CANT_REORGANISE:
+      - null
+    DELETED:
+      - null
+    DropdownBatchActionsDefault:
+      - null
+    HELP:
+      - null
+    PAGETYPE:
+      - null
+    PERMAGAIN:
+      - null
+    PERMALREADY:
+      - null
+    PERMDEFAULT:
+      - null
+    PLEASESAVE:
+      - null
+    PreviewButton:
+      - null
+    REORGANISATIONSUCCESSFUL:
+      - null
+    SAVEDUP:
+      - null
+    VersionUnknown:
+      - null
   LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
+    Hello:
+      - null
+    LOGOUT:
+      - null
   LoginAttempt:
-    Email: 'Endereço de E-mail'
-    IP: 'Endereço IP'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
-    Status: Status
+    Email:
+      - null
+    IP:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    Status:
+      - null
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Alterar Senha'
@@ -384,91 +603,154 @@ pt_BR:
     db_Password: Senha
     db_PasswordExpiry: 'Data de expiração da senha'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Senha'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    AMORPM:
+      - null
+    'APPLY FILTER':
+      - null
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
-    ResultUpdated: 'Updated {count} members'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultNone:
+      - null
+    ResultUpdated:
+      - null
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   MemberTableField: null
   ModelAdmin:
-    DELETE: Excluir
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'importar do CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Por favor, localize um arquivo CSV para importar'
-    NOIMPORT: 'Não há itens a serem importados'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
+    FILTER:
+      - null
+    IMPORT:
+      - null
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
+    IMPORT_TAB_HEADER:
+      - null
+    SEARCHLISTINGS:
+      - null
   MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT:
+      - null
+    FIELDLABELCURRENCY:
+      - null
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page: Page
-    View: View
+    Page:
+      - null
+    View:
+      - null
   Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 'Todos os direitos administrativos'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
+    OnlyAdminCanApply:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
+    Title:
+      - null
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -479,19 +761,32 @@ pt_BR:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'Você não tem acesso a esta página. Se você tem outra conta que pode acessar esta página, você pode efetuar o login abaixo.'
-    BUTTONSEND: 'Envie-me o link para resetar a senha'
-    CHANGEPASSWORDBELOW: 'Você pode alterar sua senha abaixo.'
-    CHANGEPASSWORDHEADER: 'Alterar sua senha'
-    ENTERNEWPASSWORD: 'Por favor entre uma nova senha.'
-    ERRORPASSWORDPERMISSION: 'Você precisa estar logado para alterar sua senha!'
-    LOGGEDOUT: 'Você saiu do sistema. Se você gostaria de entrar novamente, digite suas credenciais abaixo'
-    LOGIN: Entrar
-    NOTEPAGESECURED: 'Esta página é protegida. Digite suas credenciais abaixo para continuar.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -511,38 +806,55 @@ pt_BR:
     TABROLES: Roles
     Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'Não foi feito o upload de nenhuma imagem'
   SiteTree:
-    TABMAIN: Principal
+    TABMAIN:
+      - null
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED:
+      - null
   TableField.ss:
-    ADD: 'Incluir nova linha'
-    ADDITEM: 'Add %s'
+    ADD:
+      - null
+    ADDITEM:
+      - null
   TableListField:
     CSVEXPORT: 'Exportar para CSV'
     PRINT: Imprimir
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
-    VIEWFIRST: 'Ver o Primeiro'
-    VIEWLAST: 'Ver o Ultimo'
-    VIEWNEXT: 'Ver o próximo'
-    VIEWPREVIOUS: 'Ver o anterior'
+    DISPLAYING:
+      - null
+    OF:
+      - null
+    TO:
+      - null
+    VIEWFIRST:
+      - null
+    VIEWLAST:
+      - null
+    VIEWNEXT:
+      - null
+    VIEWPREVIOUS:
+      - null
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT:
+      - null
   ToggleField:
     LESS: menos
     MORE: mais
@@ -572,4 +884,5 @@ pt_BR:
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
   Versioned:
-    has_many_Versions: Versões
+    has_many_Versions:
+      - null
