@@ -246,7 +246,7 @@ fr:
     Description: Description
     GroupReminder: 'Si vous choisissez un groupe parent, le groupe actuel héritera de tous ses rôles'
     Locked: 'Verrouillé?'
-    NoRoles: 'Aucun rôle n’a été trouvé'
+    NoRoles: 'Vous n’avez pas la permission pour faire ça'
     PLURALNAME: Groupes
     Parent: 'Groupe parent'
     RolesAddEditLink: 'Ajouter/éditer les rôles'
@@ -346,7 +346,7 @@ fr:
     BUTTONLOGIN: 'Se connecter'
     BUTTONLOGINOTHER: 'Connectez vous avec un différent identifiant'
     BUTTONLOSTPASSWORD: 'J''ai perdu mon mot de passe'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Vous n’avez pas la permission pour faire ça'
     CONFIRMNEWPASSWORD: 'Confirmer nouveau mot de passe'
     CONFIRMPASSWORD: 'Confirmer Mot De Passe'
     DATEFORMAT: 'Format de la date'
