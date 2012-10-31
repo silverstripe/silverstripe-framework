@@ -346,7 +346,7 @@ cs:
     BUTTONLOGIN: 'Přihlásit se'
     BUTTONLOGINOTHER: 'Přihlásit se jako někdo jiný'
     BUTTONLOSTPASSWORD: 'Zapomněl jsem heslo'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Nemáte oprávnění toto vykonat'
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
     DATEFORMAT: 'Formát datumu'

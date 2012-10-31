@@ -346,7 +346,7 @@ sk:
     BUTTONLOGIN: 'Prihlásiť sa'
     BUTTONLOGINOTHER: 'Prihlásiť sa ako niekto iný'
     BUTTONLOSTPASSWORD: 'Stratil som svoje heslo'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Nemáte oprávnenie toto vykonať'
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
     DATEFORMAT: 'Formát dátumu'
