@@ -2,16 +2,26 @@ es_MX:
   AssetAdmin:
     NEWFOLDER: 'Nueva Carpeta'
   AssetTableField:
-    CREATED: 'Agregado por primera vez'
-    DIM: Dimensiones
-    FILENAME: 'Nombre del archivo'
-    FOLDER: Carpeta
-    LASTEDIT: 'Modificado por última vez'
-    OWNER: Propietario
-    SIZE: Tamaño
-    TITLE: Título
-    TYPE: Tipo
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Seleccionar archivos'
     DRAGFILESHERE: 'Arrastrar archivos acá'
@@ -142,37 +152,61 @@ es_MX:
   Enum:
     ANY: Cualquiera
   File:
-    AviType: 'AVI video file'
-    Content: Contenido
+    AviType:
+      - null
+    Content:
+      - null
     CssType: 'CSS file'
     DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: 'Nombre de Archivo'
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
     Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'El tamaño del archivo es de cero bytes.'
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
     NOVALIDUPLOAD: 'El archivo no es válido para subirlo'
-    Name: Nombre
+    Name:
+      - null
     PLURALNAME: Archivos
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
-    SINGULARNAME: Archivo
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
     TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
+    TiffType:
+      - null
     Title: Título
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -311,7 +345,8 @@ es_MX:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Imagen
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -386,26 +421,45 @@ es_MX:
   MemberAuthenticator:
     TITLE: 'Correo-e y Contraseña'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (ante meridian) o PM (post meridiano)'
+    AMORPM:
+      - null
     'APPLY FILTER': Filtro
-    Custom: 'A medida'
-    DATEFORMATBAD: 'El formato de fecha es invalido'
-    DAYNOLEADING: 'Dia del mes sin cero a la izquierda'
-    DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
-    FOURDIGITYEAR: 'Año de 4 dígitos'
-    FULLNAMEMONTH: 'Nombre completo del mes (ej: Junio)'
-    HOURNOLEADING: 'Hora sin cero a la izquierda'
-    MINUTENOLEADING: 'Minuto sin cero a la izquierda'
-    MONTHNOLEADING: 'Dígito del mes  sin cero'
-    Preview: Previo
-    SHORTMONTH: 'Nombre corto del mes (ej: Jun)'
-    TOGGLEHELP: 'Mostrar la ayuda de formato'
-    TWODIGITDAY: 'Dia del mes de dos dígitos'
-    TWODIGITHOUR: 'Dos dígitos de la hora (00 a 23)'
-    TWODIGITMINUTE: 'Dos dígitos de los minutos (00 a 59)'
-    TWODIGITMONTH: 'Mes de 2 dígitos (01=Enero, etc.)'
-    TWODIGITSECOND: 'Dos dígitos de los segundos (00 a 59)'
-    TWODIGITYEAR: 'Año en 2 dígitos'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: "<p>Importar usurious en <em>format CSV</em> (valores separados por comas). <small><a href=\"#\" class=\"toggle-advanced\">Mostrar uso avanzado</a></small></p>\\n"
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -418,16 +472,26 @@ es_MX:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Eliminar
-    DELETEDRECORDS: 'Borrados {count} registros'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Importar desde CSV'
-    IMPORTEDRECORDS: 'Importados {count} registros'
-    NOCSVFILE: 'Por favor navegue hasta el archivo CSV a importar'
-    NOIMPORT: 'Nada por Importar'
-    RESET: Reiniciar
-    Title: 'Modelo de datos'
-    UPDATEDRECORDS: 'Actualizados {count} registros'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'
