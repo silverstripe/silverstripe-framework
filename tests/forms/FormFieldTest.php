@@ -5,6 +5,22 @@
  */
 class FormFieldTest extends SapphireTest {
 
+	public function testAddExtraClass() {
+		$field = new FormField('MyField');
+		$field->addExtraClass('class1');
+		$field->addExtraClass('class2');
+		$this->assertStringEndsWith('class1 class2', $field->extraClass());
+	}
+
+	public function testRemoveExtraClass() {
+		$field = new FormField('MyField');
+		$field->addExtraClass('class1');
+		$field->addExtraClass('class2');
+		$this->assertStringEndsWith('class1 class2', $field->extraClass());
+		$field->removeExtraClass('class1');
+		$this->assertStringEndsWith('class2', $field->extraClass());
+	}
+
 	public function testAttributes() {
 		$field = new FormField('MyField');
 		$field->setAttribute('foo', 'bar');
