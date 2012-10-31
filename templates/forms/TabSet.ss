@@ -1,4 +1,4 @@
-<div $AttributesHTML>
+<div $getAttributesHTML("class") class="ss-tabset $extraClass">
 	<ul>
 	<% loop Tabs %>
 		<li class="$FirstLast $MiddleString $extraClass"><a href="#$id" id="tab-$id">$Title</a></li>
