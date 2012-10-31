@@ -2,26 +2,16 @@ th:
   AssetAdmin:
     NEWFOLDER: สร้างโฟลเดอร์ใหม่
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: อัพโหลดครั้งแรก
+    DIM: สัดส่วนกว้างยาว
+    FILENAME: ชื่อไฟล์
+    FOLDER: โฟลเดอร์
+    LASTEDIT: เปลี่ยนแปลงล่าสุด
+    OWNER: เจ้าของ
+    SIZE: ขนาด
+    TITLE: ชื่อ
+    TYPE: ชนิด
+    URL: URL
   AssetUploadField:
     ChooseFiles: เลือกไฟล์
     DRAGFILESHERE: ลากไฟล์มาไว้ที่นี่
@@ -152,61 +142,37 @@ th:
   Enum:
     ANY: ใดๆ
   File:
-    AviType:
-      - null
-    Content:
-      - null
+    AviType: 'ไฟล์วีดีโอ AVI'
+    Content: เนื้อหา
     CssType: 'ไฟล์ CSS'
     DmgType: 'Apple disk image'
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
+    DocType: 'เอกสาร Word'
+    Filename: ชื่อไฟล์
+    GifType: 'รูปภาพ GIF - ดีสำหรับแผนผังหรือไดอะแกรม'
+    GzType: 'ไฟล์บีบอัดข้อมูล GZIP'
+    HtlType: 'ไฟล์ HTML'
+    HtmlType: 'ไฟล์ HTML'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: ส่วนเสริมไม่ได้รับอนุญาตให้ใช้งาน
+    IcoType: รูปไอคอน
+    JpgType: 'รูปภาพ JPEG - ดีสำหรับภาพถ่าย'
+    JsType: ไฟล์จาวาสคริปต์
     Mp3Type: 'ไฟล์เสียง MP3'
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
+    MpgType: 'ไฟล์วีดีโอ MPEG'
+    NOFILESIZE: ขนาดไฟล์มีขนาดเป็นศูนย์
     NOVALIDUPLOAD: 'File is not a valid upload'
-    Name:
-      - null
+    Name: ชื่อ
     PLURALNAME: ไฟล์
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
+    PdfType: 'ไฟล์ Adobe Acrobat PDF'
+    PngType: 'รูปภาพ PNG - ดีสำหรับรูปแบบที่มีเป้าหมายสำหรับใช้งานทั่วไป'
+    SINGULARNAME: ไฟล์
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'ขนาดไฟล์เกินจำนวนที่จำกัดไว้ {size}'
-    TiffType:
-      - null
+    TiffType: 'ไฟล์รูปภาพ TIF'
     Title: ชื่อ
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    WavType: 'ไฟล์เสียง WAV'
+    XlsType: 'สเปรดชีท Excel'
+    ZipType: 'ไฟล์บีบอัดข้อมูล ZIP'
   FileIFrameField:
     ATTACH: 'แนบ {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -345,8 +311,7 @@ th:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: รูปภาพ
   Image_Cached:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
@@ -421,45 +386,26 @@ th:
   MemberAuthenticator:
     TITLE: 'อีเมล &amp; รหัสผ่าน'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     'APPLY FILTER': ประยุกต์ใช้ตัวกรองข้อมูล
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Custom
+    DATEFORMATBAD: รูปแบบวันที่ไม่ถูกต้อง
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: ดูตัวอย่าง
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -472,26 +418,16 @@ th:
     SINGULARNAME: รหัสผ่านสมาชิก
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: ลบ
+    DELETEDRECORDS: 'ลบแล้ว {count} รายการ'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    IMPORT: 'นำเข้าจากไฟล์ CSV'
+    IMPORTEDRECORDS: 'นำเข้าแล้ว {count} รายการ'
+    NOCSVFILE: 'กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล'
+    NOIMPORT: ไม่มีข้อมูลให้นำเข้า
+    RESET: รีเซ็ต
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'อัพเดทแล้ว {count} รายการ'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'

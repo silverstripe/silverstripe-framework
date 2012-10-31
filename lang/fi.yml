@@ -2,26 +2,16 @@ fi:
   AssetAdmin:
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
+    DIM: Mitat
+    FILENAME: 'Tiedoston nimi'
+    FOLDER: Kansio
+    LASTEDIT: 'Viimeksi muokattu'
+    OWNER: Omistaja
+    SIZE: Koko
+    TITLE: Otsikko
+    TYPE: Tyyppi
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Valitse tiedostot'
     DRAGFILESHERE: 'Raahaa tiedotot tähän'
@@ -152,61 +142,37 @@ fi:
   Enum:
     ANY: Yhtään
   File:
-    AviType:
-      - null
-    Content:
-      - null
+    AviType: 'AVI videotiedosto'
+    Content: Sisältö
     CssType: 'CSS tiedosto'
     DmgType: 'Apple levykuva'
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
+    DocType: 'Word tiedosto'
+    Filename: Tiedostonimi
+    GifType: 'GIF kuva - hyvä kaaviolle'
+    GzType: 'GZIP pakattu tiedosto'
+    HtlType: 'HTML tiedosto'
+    HtmlType: 'HTML tiedosto'
+    INVALIDEXTENSION: 'Tiedostopääte ei ole sallittu (sallitut muodot: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Tiedostopääte ei ole sallittu'
+    IcoType: 'Icon kuva'
+    JpgType: 'JPEG kuva - hyvä valokuville'
+    JsType: 'Javascript tiedosto'
     Mp3Type: 'MP3 äänitiedosto'
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
+    MpgType: 'MPEG videotiedosto'
+    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
-    Name:
-      - null
+    Name: Nimi
     PLURALNAME: Tiedostot
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
+    PdfType: 'Adobe Acrobat PDF tiedosto'
+    PngType: 'PNG kuva - hyvä yleinen muoto'
+    SINGULARNAME: Tiedosto
+    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
     TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
-    TiffType:
-      - null
+    TiffType: 'Tiff kuva'
     Title: Otsikko
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    WavType: 'WAV äänitiedosto'
+    XlsType: 'Excel tiedosto'
+    ZipType: 'ZIP pakattu tiedosto'
   FileIFrameField:
     ATTACH: 'Liitä {type}'
     ATTACHONCESAVED: '{type} voidaan liittää, kun olet tallentanut tietueen ensimmäistä kertaa.'
@@ -345,8 +311,7 @@ fi:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Kuva
   Image_Cached:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
@@ -421,45 +386,26 @@ fi:
   MemberAuthenticator:
     TITLE: 'Sähköposti &amp; Salasana'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
     'APPLY FILTER': Suodata
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Muokattu
+    DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
+    DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
+    DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
+    FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
+    FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
+    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
+    MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
+    MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
+    Preview: Esikatselu
+    SHORTMONTH: 'Kuukauden lyhyt nimi (esim. kesä)'
+    TOGGLEHELP: 'Vaihda muotoilu apuun'
+    TWODIGITDAY: 'Kaksinumeroinen päivämäärä (01–31)'
+    TWODIGITHOUR: 'Kaksinumeroinen tuntinäyttö (00–23)'
+    TWODIGITMINUTE: 'Kaksinumeroinen minuuttinäyttö (00–59)'
+    TWODIGITMONTH: 'Kaksinumeroinen kuukausi (01=tammikuu, jne.)'
+    TWODIGITSECOND: 'Kaksinumeroinen sekunti (00–59)'
+    TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
@@ -472,26 +418,16 @@ fi:
     SINGULARNAME: 'Käyttäjän salasana'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Poista
+    DELETEDRECORDS: 'Poistettiin {count} tietuetta'
+    EMPTYBEFOREIMPORT: 'Tyhjennä tietokanta ennen tuonti'
+    IMPORT: 'Tuo CSV:stä'
+    IMPORTEDRECORDS: 'Tuotiin {count} tietuetta'
+    NOCSVFILE: 'Selaa ja tuo CSV-tiedosto'
+    NOIMPORT: 'Ei tuotavia'
+    RESET: Nollaa
+    Title: Datamallit
+    UPDATEDRECORDS: 'Päivitettiin {count} tietuetta'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Tietokannan sarakkeet'
     IMPORTSPECLINK: 'Näytä erittely kohteelle %s'
