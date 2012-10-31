@@ -1,32 +1,98 @@
 # Forms
 
-## Introduction
+HTML forms are in practice the most used way to communicate with a browser. SilverStripe provides classes to generate 
+and handle the actions and data from a form.
+
+## Overview
+
+A fully implemented form in SilverStripe includes a couple of classes that individually have separate concerns.
+
+ * Controller - Takes care of assemble the form and recieving data from it.
+ * Form - Holds sets of fields, actions and validators.
+ * FormField  - Fields that recieves data or displays them, e.g input fields.
+ * FormActions - Often submit buttons that executes actions.
+ * Validators - Validates the whole form, see [Form validation](form-validation.md) topic for more information.
+
+Depending on your needs you can customize and override any of the above classes, however the defaults are often 
+sufficient.
+
+## The Controller
+
+Forms start at the controller. Here is an simple example on how to set up a form in a controller.
+
+**Page.php**
+
+	:::php
+	class Page_Controller extends ContentController {
+		
+		public static $allowed_actions = array(
+			'HelloForm',
+		);
+		
+		// Template method
+		public function HelloForm() {
+			$fields = new FieldList();
+			$actions = new FieldList(
+				FormAction::create("doSayHello")->setTitle("Say hello")
+			);
+			$form = new Form($this, 'HelloForm', $fields, $actions);
+			// Load the form with previously sent data
+			$form->loadDataFrom($this->request->postVars());
+			return $form;
+		}
+		
+		public function doSayHello(array $data, Form $form) {
+			// Do something with $data
+			return $this->render();
+		}
+	}
+	
+**Page.ss**
+
+	:::ss
+	<!-- place where you would like the form to show up -->
+	<div>$HelloForm</div>
+
+<div class="warning" markdown='1'>
+	Be sure to add the Form name 'HelloForm' to the Controller::$allowed_actions() to be sure that form submissions 
+	get through to the correct action. 
+</div>
+
+<div class="notice" markdown='1'>
+You'll notice that we've used a new notation for creating form fields, using `create()` instead of the `new` operator. 
+These are functionally equivalent, but allows PHP to chain operations like `setTitle()` without assigning the field 
+instance to a temporary variable. For in-depth information on the create syntax, see the [Injector](/reference/injector) 
+documentation or the API documentation for `[api:Object]`::create().
+</div>
+
+## The Form
 
 Form is the base class of all forms in a SilverStripe application. Forms in your application can be created either by
 instantiating the Form class itself, or by subclassing it. 
 
-## Instantiating a form
+### Instantiating a form
 
-Creating a form is a matter of defining a method to represent that form.  This method should return a form object.  The
+Creating a form is a matter of defining a method to represent that form. This method should return a form object. The
 constructor takes the following arguments:
 
-*  `$controller`: This must be the controller that contains the form.
+*  `$controller`: This must be and instance of the controller that contains the form, often `$this`.
 *  `$name`: This must be the name of the method on that controller that is called to return the form.  The first two
 fields allow the form object to be re-created after submission.  **It's vital that they are properly set - if you ever
 have problems with form action handler not working, check that these values are correct.**
 *  `$fields`: A `[api:FieldList]` containing `[api:FormField]` instances make up fields in the form.
 *  `$actions`: A `[api:FieldList]` containing the `[api:FormAction]` objects - the buttons at the bottom.
-*  `$validator`: An optional `[api:Validator]` for more information.
+*  `$validator`: An optional `[api:Validator]` for validation of the form.
 
 Example: 
 
 	:::php
+	// Controller action
 	public function MyCustomForm() {
 		$fields = new FieldList(
-			new EmailField("Email"),
-			new EncryptField("Password")
+			EmailField::create("Email"),
+			PasswordField::create("Password")
 		);
-		$actions = new FieldList(new FormAction("login", "Log in"));
+		$actions = new FieldList(FormAction::create("login")->setTitle("Log in"));
 		return new Form($this, "MyCustomForm", $fields, $actions);
 	}
 
@@ -45,44 +111,75 @@ $name must be passed - their values depend on where the form is instantiated.
 	class MyForm extends Form {
 		public function __construct($controller, $name) {
 			$fields = new FieldList(
-				new EmailField("Email"),
-				new EncryptedField("Password")
+				EmailField::create("Email"),
+				PasswordField::create("Password")
 			);
-			$actions = new FieldList(new FormAction("login", "Log in"));
+			$actions = new FieldList(FormAction::create("login")->setTitle("Log in"));
 			
 			parent::__construct($controller, $name, $fields, $actions);
 		}
 	}
 
 
-The real difference, however, is that you can then define your controller methods within the form class itself.
+The real difference, however, is that you can then define your controller methods within the form class itself. This 
+means that the form takes responsibilities from the controller and manage how to parse and use the form 
+data.
 
+**Page.php**
 
-## Form Field Types
+	:::php
+	class Page_Controller extends ContentController {
+		
+		public static $allowed_actions = array(
+			'HelloForm',
+		);
+		
+		// Template method
+		public function HelloForm() {
+			return new MyForm($this, 'MyCustomForm');
+		}
+	}
 
-There are many classes extending `[api:FormField]`,
-there's a full overview at [form-field-types](/reference/form-field-types)
+**MyForm.php**
+
+	:::php
+	class MyForm extends Form {
+	
+		public function __construct($controller, $name) {
+			$fields = new FieldList(
+				EmailField::create("Email"),
+				PasswordField::create("Password")
+			);
+			$actions = new FieldList(FormAction::create("login")->setTitle("Log in"));
+			
+			parent::__construct($controller, $name, $fields, $actions);
+		}
+		
+		public function login(array $data, Form $form) {
+			// Authenticate the user and redirect the user somewhere
+			Controller::curr()->redirectBack();
+		}
+	}
+
+## The FormField classes
+
+There are many classes extending `[api:FormField]`. There is a full overview at 
+[form field types](/reference/form-field-types).
 
 
 ### Using Form Fields
 
-To get these fields automatically rendered into a form element, 
-all you need to do is create a new instance of the
-class, and add it to the fieldlist of the form. 
+To get these fields automatically rendered into a form element, all you need to do is create a new instance of the
+class, and add it to the fieldlist of the form.
 
 	:::php
 	$form = new Form(
 		$this, // controller
 		"SignupForm", // form name
 		new FieldList( // fields
-			TextField::create("FirstName")
-				->setTitle('First name'),
-			TextField::create("Surname")
-				->setTitle('Last name')
-				->setMaxLength(50),
-			EmailField::create("Email")
-				->setTitle("Email address")
-				->setAttribute('type', 'email')
+			TextField::create("FirstName")->setTitle('First name'),
+			TextField::create("Surname")->setTitle('Last name')->setMaxLength(50),
+			EmailField::create("Email")->setTitle("Email address")->setAttribute('type', 'email')
 		), 
 		new FieldList( // actions
 			FormAction::create("signup")->setTitle("Sign up")
@@ -92,12 +189,10 @@ class, and add it to the fieldlist of the form.
 		)
 	);
 
-You'll notice that we've used a new notation for creating form fields,
-using `create()` instead of the `new` operator. These are functionally equivalent,
-but allows PHP to chain operations like `setTitle()` without assigning
-the field instance to a temporary variable.
-
 ##  Readonly
+
+You can turn a form or individual fields into a readonly version. This is handy in the case of confirmation pages or 
+when certain fields can be edited due to permissions.
 
 Readonly on a Form
 
@@ -131,96 +226,102 @@ First of all, you need to create your form on it's own class, that way you can d
 	:::php
 	class MyForm extends Form {
 	
-		 public function __construct($controller, $name) {
-				$fields = new FieldList(
-					 new TextField('FirstName', 'First name'),
-					 new EmailField('Email', 'Email address')
-				);
-	
-				$actions = new FieldList(
-					 new FormAction('submit', 'Submit')
-				);
-	
-				parent::__construct($controller, $name, $fields, $actions);
-		 }
-	
-		 public function forTemplate() {
-				return $this->renderWith(array(
-					 $this->class,
-					 'Form'
-				));
-		 }
-	
-		 public function submit($data, $form) {
-				// do stuff here
-		 }
-	
+		public function __construct($controller, $name) {
+			$fields = new FieldList(
+				EmailField::create("Email"),
+				PasswordField::create("Password")
+			);
+			$actions = new FieldList(FormAction::create("login")->setTitle("Log in"));
+			parent::__construct($controller, $name, $fields, $actions);
+		}
+		
+		public function login(array $data, Form $form) {
+			// Do something with $data
+			Controller::curr()->redirectBack();
+		}
+		
+		public function forTemplate() {
+			return $this->renderWith(array($this->class, 'Form'));
+		}
 	}
-
-`forTemplate()` tells the `[api:Form]` class to render with a template of return value of `$this->class`, which in this case
-is *MyForm*, the name of the class. If the template doesn't exist, then it falls back to using Form.ss.
+	
+`MyForm->forTemplate()` tells the `[api:Form]` class to render with a template of return value of `$this->class`, which in this case
+is *MyForm*. If the template doesn't exist, then it falls back to using Form.ss.
 
 *MyForm.ss* should then be placed into your *templates/Includes* directory for your project. Here is an example of
 basic customisation:
 
 	:::ss
 	<form $FormAttributes>
-		 <% if Message %>
-				<p id="{$FormName}_error" class="message $MessageType">$Message</p>
-		 <% else %>
-				<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
-		 <% end_if %>
-		 
-		 <fieldset>
-				<div id="FirstName" class="field text">
-					 <label class="left" for="{$FormName}_FirstName">First name</label>
-					 $dataFieldByName(FirstName)
-				</div>
-	
-				<div id="Email" class="field email">
-					 <label class="left" for="{$FormName}_Email">Email</label>
-					 $dataFieldByName(Email)
-				</div>
-	
-				$dataFieldByName(SecurityID)
-		 </fieldset>
-	
-		 <% if Actions %>
-				<div class="Actions">
-					 <% loop Actions %>$Field<% end_loop %>
-				</div>
-		 <% end_if %>
+		<% if Message %>
+			<p id="{$FormName}_error" class="message $MessageType">$Message</p>
+		<% else %>
+			<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
+		<% end_if %>
+		
+		<fieldset>
+			<div id="Email" class="field email">
+				<label class="left" for="{$FormName}_Email">Email</label>
+				$Fields.dataFieldByName(Email)
+			</div>
+			
+			<div id="Email" class="field password">
+				<label class="left" for="{$FormName}_Password">Password</label>
+				$Fields.dataFieldByName(Password)
+			</div>
+			
+			$Fields.dataFieldByName(SecurityID)
+		</fieldset>
+		
+		<% if Actions %>
+		<div class="Actions">
+			<% loop Actions %>$Field<% end_loop %>
+		</div>
+		<% end_if %>
 	</form>
 
- `$dataFieldByName(FirstName)` will return the form control contents of `Field()` for the particular field object, in
-this case `TextField->Field()` or `EmailField->Field()` which returns an `<input>` element with specific markup
-for the type of field. Pass in the name of the field as the first parameter, as done above, to render it into the
+`$Fields.dataFieldByName(FirstName)` will return the form control contents of `Field()` for the particular field object,
+in this case `EmailField->Field()` or `PasswordField->Field()` which returns an `<input>` element with specific markup 
+for the type of field. Pass in the name of the field as the first parameter, as done above, to render it into the 
 template.
 
-To find more methods, have a look at the `[api:Form]` class, as there is a lot of different methods of customising the form
-templates, for example, you could use `<% loop Fields %>` instead of specifying each field manually, as we've done
-above.
+To find more methods, have a look at the `[api:Form]` class and `[api:FieldList]` class as there is a lot of different 
+methods of customising the form templates. An example is that you could use `<% loop Fields %>` instead of specifying 
+each field manually, as we've done above.
 
 ### Custom form field templates
 
 The easiest way to customize form fields is adding CSS classes and additional attributes.
 
 	:::php
-	$field = new TextField('MyText');
-	$field->addExtraClass('largeText');
-	$field->setAttribute('data-validation-regex', '[\d]*');
+	$field = TextField::create('MyText')
+		->addExtraClass('largeText');
+		->setAttribute('data-validation-regex', '[\d]*');
 
-	// Field() renders as:
-	// <input type="text" class="largeText" id="Form_Form_TextField" name="TextField" data-validation-regex="[\d]*">
+Will be rendered as:
 
-Each form field is rendered into a form via the `[FieldHolder()](api:FormField->FieldHolder())` method,
-which includes a container `<div>` as well as a `<label>` element (if applicable).
-You can also render each field without these structural elements through the `[Field()](api:FormField->Field())` method.
-In order to influence the form rendering, overloading these two methods is a good start.
+	:::html
+	<input type="text" name="MyText" class="text largeText" id="MyForm_MyCustomForm_MyText" data-validation-regex="[\d]*">
 
-In addition, most form fields are rendered through SilverStripe templates, e.g. `TextareaField` is rendered via `framework/templates/forms/TextareaField.ss`.
+Each form field is rendered into a form via the `[FormField->FieldHolder()](api:FormField)` method, which includes 
+a container `<div>` as well as a `<label>` element (if applicable).
+
+You can also render each field without these structural elements through the `[FormField->Field()](api:FormField)` 
+method. In order to influence the form rendering, overloading these two methods is a good start.
+
+In addition, most form fields are rendered through SilverStripe templates, e.g. `TextareaField` is rendered via 
+`framework/templates/forms/TextareaField.ss`.
+
 These templates can be overwritten globally by placing a template with the same name in your `mysite` directory,
-or set on a form field instance via `[setTemplate()](api:FormField->setTemplate())` and `[setFieldHolderTemplate()](api:FormField->setFieldHolderTemplate())`.
+or set on a form field instance via anyone of these methods:
+
+ - FormField->setTemplate()
+ - FormField->setFieldHolderTemplate()
+ - FormField->getSmallFieldHolderTemplate()
+ 
+<div class="hint" markdown='1'>
+	Caution: Not all FormFields consistently uses templates set by the above methods.
+</div>
 
 ### Securing forms against Cross-Site Request Forgery (CSRF)
 
@@ -237,10 +338,10 @@ If you want to remove certain fields from your subclass:
 			parent::__construct($controller, $name);
 			
 			// remove a normal field
-			$this->fields->removeByName('MyFieldName');
+			$this->Fields()->removeByName('MyFieldName');
 			
 			// remove a field from a tab
-			$this->fields->removeFieldFromTab('TabName', 'MyFieldName');
+			$this->Fields()->removeFieldFromTab('TabName', 'MyFieldName');
 		}
 	}
 
@@ -250,9 +351,7 @@ If you want to remove certain fields from your subclass:
 Adds a new text field called FavouriteColour next to the Content field in the CMS
 
 	:::php
-	$fields->addFieldToTab('Root.Content', new TextField('FavouriteColour'), 'Content');
-
-
+	$this->Fields()->addFieldToTab('Root.Content', new TextField('FavouriteColour'), 'Content');
 
 ## Related
 
