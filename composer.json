@@ -1,0 +1,22 @@
+{
+	"name": "silverstripe/framework",
+	"type": "silverstripe-module",
+	"description": "The SilverStripe framework",
+	"homepage": "http://silverstripe.org",
+	"license": "BSD-3-Clause",
+	"keywords": ["silverstripe", "framework"],
+	"authors": [
+		{
+			"name": "SilverStripe",
+			"homepage": "http://silverstripe.com"
+		},
+		{
+			"name": "The SilverStripe Community",
+			"homepage": "http://silverstripe.org"
+		}
+	],
+	"require": {
+		"php": ">=5.3.2",
+		"composer/installers": "*"
+	}
+}
