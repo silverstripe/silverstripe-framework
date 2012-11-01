@@ -252,7 +252,7 @@ sv:
     RolesAddEditLink: 'Hantera roller'
     SINGULARNAME: Grupp
     Sort: Sorteringsordning
-    has_many_Permissions: Tillstånd
+    has_many_Permissions: Behörigheter
     many_many_Members: Medlemmar
   GroupImportForm:
     Help1: '<p>Importera en eller flera grupper i <em>CSV</em>- format (komma-separerade värden). <small><a href="#" class ="toggle-advanced">Visa avancerade val</a></small></p>'
