@@ -149,6 +149,7 @@
 					{
 						fileInput: fileInput,
 						dropZone: dropZone,
+						form: $(fileInput).closest('form'),
 						previewAsCanvas: false,
 						acceptFileTypes: new RegExp(config.acceptFileTypes, 'i')
 					}
