@@ -403,6 +403,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * This is used in the CMS.
 	 */
 	public function ping() {
+		Requirements::clear();
 		return 1;
 	}
 	

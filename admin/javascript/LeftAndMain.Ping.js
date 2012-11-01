@@ -40,6 +40,7 @@
 					$.ajax({
 						url: 'admin/security/ping',
 						global: false,
+						type: 'POST',
 						complete: onSessionLost
 					});
 				}, this.getPingIntervalSeconds() * 1000);
