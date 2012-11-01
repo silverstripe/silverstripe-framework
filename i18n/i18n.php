@@ -1,7 +1,9 @@
 <?php
 require_once 'Zend/Translate.php';
-require_once 'i18nRailsYamlAdapter.php';
-require_once 'i18nSSLegacyAdapter.php';
+
+// Overrule Zend_Loader
+require_once FRAMEWORK_PATH . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . 'i18nRailsYamlAdapter.php';
+require_once FRAMEWORK_PATH . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . 'i18nSSLegacyAdapter.php';
 
 /**
  * Base-class for storage and retrieval of translated entities.
