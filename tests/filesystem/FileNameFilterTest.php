@@ -66,4 +66,46 @@ class FileNameFilterTest extends SapphireTest {
 		$this->assertEquals('test.txt', $filter->filter($name));
 	}
 
+	function testDotsStartOfNameRemoved() {
+		$name = '.test.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test.txt', $filter->filter($name));
+	}
+
+	function testDoubleDotsStartOfNameRemoved() {
+		$name = '..test.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test.txt', $filter->filter($name));
+	}
+
+	function testMixedInvalidCharsStartOfNameRemoved() {
+		$name = '..#@$#@$^__test.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test.txt', $filter->filter($name));
+	}
+
+	function testWhitespaceRemoved() {
+		$name = ' test doc.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test-doc.txt', $filter->filter($name));
+	}
+
+	function testUnderscoresReplacedWithDashes() {
+		$name = 'test_doc.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test-doc.txt', $filter->filter($name));
+	}
+
+	function testNonAsciiCharsReplacedWithDashes() {
+		$name = '!@#$%^test_123@##@$#%^.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test-123.txt', $filter->filter($name));
+	}
+
+	function testDuplicateDashesRemoved() {
+		$name = 'test--document.txt';
+		$filter = new FileNameFilter();
+		$this->assertEquals('test-document.txt', $filter->filter($name));
+	}
+
 }
