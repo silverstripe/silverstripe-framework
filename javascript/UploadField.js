@@ -39,9 +39,11 @@
 			//Fixes case where someone uploads a single erroring file
 			if(data.files.length == 1 && data.files[0].error !== null){
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.UploadField.UPLOADFAIL', 'Sorry your upload failed'));
+				$('.fileOverview .uploadStatus').addClass("bad").removeClass("good").removeClass("notice");
 			}else{
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.UPLOADINPROGRESS', 'Please wait… upload in progress'));//.show();
-				$('.fileOverview button').hide();
+				$('.ss-uploadfield-item-edit-all').hide();
+				$('.fileOverview .uploadStatus').addClass("notice").removeClass("good").removeClass("bad");
 			}
 
 			return result;
@@ -49,8 +51,9 @@
 		_onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
 			$.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
 			if (this._active === 0) {
-				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.FILEUPLOADCOMPLETED', 'File Upload Completed!'));//.hide();
-				$('.fileOverview button').show();
+				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.FILEUPLOADCOMPLETED', 'File upload completed!'));//.hide();
+				$('.ss-uploadfield-item-edit-all').show();
+				$('.fileOverview .uploadStatus').addClass("good").removeClass("notice").removeClass("bad");
 			}
 		}		
 	});
@@ -265,7 +268,7 @@
 			}
 		});
 
-		$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').entwine({
+		$('div.ss-upload .ss-uploadfield-item-edit-all').entwine({
 			onclick: function(e) {
 
 				if($(this).hasClass('opened')){
@@ -340,7 +343,7 @@
 				iframe.height(h);
 
 				// set container to match the same height
-				iframe.parent().height(h+parentPadding);
+				iframe.parent().animate({height: h+parentPadding}, 500);
 				iframe.contents().find('body form').css({'width':'98%'});
 
 			},
@@ -358,13 +361,13 @@
 						itemInfo.find('label .name').text(iframe.find('#Name input').val());
 					});	
 					if($('div.ss-upload  .ss-uploadfield-files .ss-uploadfield-item-actions .toggle-details-icon:not(.opened)').index() < 0){
-						$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').addClass('opened').find('.toggle-details-icon').addClass('opened');
+						$('div.ss-upload .ss-uploadfield-item-edit-all').addClass('opened').find('.toggle-details-icon').addClass('opened');
 					}
 
 				} else {
-					this.height(0);					
+					this.animate({height: 0}, 500);					
 					itemInfo.find('.toggle-details-icon').removeClass('opened');
-					$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').removeClass('opened').find('.toggle-details-icon').removeClass('opened');
+					$('div.ss-upload .ss-uploadfield-item-edit-all').removeClass('opened').find('.toggle-details-icon').removeClass('opened');
 					if(!this.hasClass('edited')){
 						text = ss.i18n._t('UploadField.NOCHANGES', 'No Changes');
 						status.addClass('ui-state-success-text');
