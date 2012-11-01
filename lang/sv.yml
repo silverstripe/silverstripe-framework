@@ -346,7 +346,7 @@ sv:
     BUTTONLOGIN: 'Logga in'
     BUTTONLOGINOTHER: 'Logga in som annan användare'
     BUTTONLOSTPASSWORD: 'Jag har glömt mitt lösenord'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     CONFIRMNEWPASSWORD: 'Bekräfta nytt lösenord'
     CONFIRMPASSWORD: 'Bekräfta lösenord'
     DATEFORMAT: Datumformat
