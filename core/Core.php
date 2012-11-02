@@ -290,7 +290,7 @@ $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigManifest($configManifest);
 
 SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-	BASE_PATH, false, isset($_GET['flush'])
+	BASE_PATH, project(), false, isset($_GET['flush'])
 ));
 
 // If in live mode, ensure deprecation, strict and notices are not reported

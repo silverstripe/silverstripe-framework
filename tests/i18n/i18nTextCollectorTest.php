@@ -33,7 +33,7 @@ class i18nTextCollectorTest extends SapphireTest {
 			$this->alternateBasePath, false, true, false
 		);
 		
-		$manifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$manifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
 		$manifest->regenerate(false);
 		SS_TemplateLoader::instance()->pushManifest($manifest);
 	}
