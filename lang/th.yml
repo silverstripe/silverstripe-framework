@@ -1,5 +1,6 @@
 th:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: สร้างโฟลเดอร์ใหม่
   AssetTableField:
     CREATED: อัพโหลดครั้งแรก

@@ -1,5 +1,6 @@
 hu:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Új mappa'
   AssetTableField:
     CREATED: 'Először feltöltve'

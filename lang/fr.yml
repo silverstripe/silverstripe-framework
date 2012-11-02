@@ -1,5 +1,6 @@
 fr:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nouveau dossier'
   AssetTableField:
     CREATED: 'Premier chargement'

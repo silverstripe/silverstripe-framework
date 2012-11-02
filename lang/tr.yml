@@ -1,5 +1,6 @@
 tr:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: YeniKlasör
   AssetTableField:
     CREATED: 'Yüklenme tarihi'

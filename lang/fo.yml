@@ -1,5 +1,6 @@
 fo:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nýggj skjátta'
   AssetTableField:
     CREATED: 'First uploaded'

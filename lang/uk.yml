@@ -1,5 +1,6 @@
 uk:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Нова Тека'
   AssetTableField:
     CREATED: 'Вперше завантажено'

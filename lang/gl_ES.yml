@@ -1,5 +1,6 @@
 gl_ES:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'Primeiro subido'

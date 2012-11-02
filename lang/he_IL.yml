@@ -1,5 +1,6 @@
 he_IL:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: תיקיהחדשה
   AssetTableField:
     CREATED: 'הועלה לראשונה'

@@ -1,5 +1,6 @@
 si:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'අලත් ගොනුවක්'
   AssetTableField:
     CREATED: 'පලමු ලිපිය අප්ලෝඩ් කරන ලදී'

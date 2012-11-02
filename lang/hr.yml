@@ -1,5 +1,6 @@
 hr:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Novi direktorij'
   AssetTableField:
     CREATED: Uploadano

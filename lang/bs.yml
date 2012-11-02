@@ -1,5 +1,6 @@
 bs:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NoviDirektorij
   AssetTableField:
     CREATED: 'Prvo postavljeno'

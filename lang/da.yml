@@ -1,5 +1,6 @@
 da:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Ny mappe'
   AssetTableField:
     CREATED: 'Først uploadet'

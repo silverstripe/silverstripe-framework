@@ -1,5 +1,6 @@
 sl:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nova mapa'
   AssetTableField:
     CREATED: 'Naloženo na začetku'

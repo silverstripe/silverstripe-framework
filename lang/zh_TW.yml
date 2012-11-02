@@ -1,5 +1,6 @@
 zh_TW:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 新資料夾
   AssetTableField:
     CREATED: 第一次上傳

@@ -1,5 +1,6 @@
 fa_IR:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'پوشه جديد'
   AssetTableField:
     CREATED: 'First uploaded'

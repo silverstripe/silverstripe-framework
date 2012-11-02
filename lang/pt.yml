@@ -1,5 +1,6 @@
 pt:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nova pasta'
   AssetTableField:
     CREATED: 'First uploaded'

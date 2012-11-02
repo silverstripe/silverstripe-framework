@@ -1,5 +1,6 @@
 es_MX:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nueva Carpeta'
   AssetTableField:
     CREATED: 'Agregado por primera vez'

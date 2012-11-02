@@ -1,5 +1,6 @@
 ca:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NovaCarpeta
   AssetTableField:
     CREATED: 'Carregat per primer cop'

@@ -1,5 +1,6 @@
 et_EE:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Uus kaust'
   AssetTableField:
     CREATED: 'Esmakordselt üles laaditud'

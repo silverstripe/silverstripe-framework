@@ -1,5 +1,6 @@
 sr:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Нова фасцикла'
   AssetTableField:
     CREATED: 'Прво достављено'

@@ -1,5 +1,6 @@
 nb:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Ny Mappe'
   AssetTableField:
     CREATED: 'Først opplastet'

@@ -1,5 +1,6 @@
 ja_JP:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 新しいフォルダ
   AssetTableField:
     CREATED: 初回アップロード日時

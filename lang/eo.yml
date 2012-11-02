@@ -1,5 +1,6 @@
 eo:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'Unue alŝutita'
