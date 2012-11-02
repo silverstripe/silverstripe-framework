@@ -96,6 +96,7 @@ An example widget is below:
 	<?php
 	
 	class FlickrWidget extends Widget {
+	
 		static $db = array(
 			"User" => "Varchar",
 			"Photoset" => "Varchar",
@@ -236,28 +237,33 @@ sure that your controller follows the usual naming conventions, and it will be a
 
 	:::php
 	class MyWidget extends Widget {
-	  static $db = array(
-	    'TestValue' => 'Text'
-	  );
+		static $db = array(
+	    	'TestValue' => 'Text'
+		);
 	}
 	
 	class MyWidget_Controller extends Widget_Controller {
-	  function MyFormName() {
-	    return new Form(
-	      $this, 
-	      'MyFormName', 
-	      new FieldSet(
-	        new TextField('TestValue')
-	      ), 
-	      new FieldSet(
-	        new FormAction('doAction')
-	      )
-	    );
-	  }
+		
+		function MyFormName() {
+			return new Form(
+				$this, 
+				'MyFormName', 
+				new FieldSet(
+	        		new TextField('TestValue')
+	      		), 
+	      		new FieldSet(
+	        		new FormAction('doAction')
+	      		)
+	    	);
+	  	}
 	  
-	  function doAction($data, $form) {
-	    // $this->widget points to the widget
-	  }
+		function doAction($data, $form) {
+	    	// $this->widget points to the widget
+	  	}
+	  
+	  	function Link() {
+			return __CLASS__;
+		}
 	}
 
 

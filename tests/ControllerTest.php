@@ -2,6 +2,8 @@
 
 class ControllerTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/ControllerTest.yml';
+
+	protected $autoFollowRedirection = false;
 	
 	function testDefaultAction() {
 		/* For a controller with a template, the default action will simple run that template. */
@@ -129,7 +131,57 @@ class ControllerTest extends FunctionalTest {
 			'Without an allowed_actions, any defined methods are recognised as actions'
 		);
 	}
-	
+
+	/* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this code was supposed to test
+	public function testBaseURL() {
+		Director::setBaseURL('/baseurl/');
+		$this->assertEquals(Controller::BaseURL(), Director::BaseURL());
+	}
+	*/
+
+	function testRedirectBackByReferer() {
+		$internalRelativeUrl = '/some-url';
+		$response = $this->get('ControllerTest_Controller/redirectbacktest', null, array('Referer' => $internalRelativeUrl));
+		$this->assertEquals(302, $response->getStatusCode());
+		$this->assertEquals($internalRelativeUrl, $response->getHeader('Location'),
+			"Redirects on internal relative URLs"
+		);
+
+		$internalAbsoluteUrl = Director::absoluteBaseURL() . '/some-url';
+		$response = $this->get('ControllerTest_Controller/redirectbacktest', null, array('Referer' => $internalAbsoluteUrl));
+		$this->assertEquals(302, $response->getStatusCode());
+		$this->assertEquals($internalAbsoluteUrl, $response->getHeader('Location'),
+			"Redirects on internal absolute URLs"
+		);
+
+		$externalAbsoluteUrl = 'http://myhost.com/some-url';
+		$response = $this->get('ControllerTest_Controller/redirectbacktest', null, array('Referer' => $externalAbsoluteUrl));
+		$this->assertEquals(200, $response->getStatusCode(),
+			"Doesn't redirect on external URLs"
+		);
+	}
+
+	function testRedirectBackByBackUrl() {
+		$internalRelativeUrl = '/some-url';
+		$response = $this->get('ControllerTest_Controller/redirectbacktest?_REDIRECT_BACK_URL=' . urlencode($internalRelativeUrl));
+		$this->assertEquals(302, $response->getStatusCode());
+		$this->assertEquals($internalRelativeUrl, $response->getHeader('Location'),
+			"Redirects on internal relative URLs"
+		);
+
+		$internalAbsoluteUrl = Director::absoluteBaseURL() . '/some-url';
+		$response = $this->get('ControllerTest_Controller/redirectbacktest?_REDIRECT_BACK_URL=' . urlencode($internalAbsoluteUrl));
+		$this->assertEquals($internalAbsoluteUrl, $response->getHeader('Location'));
+		$this->assertEquals(302, $response->getStatusCode(),
+			"Redirects on internal absolute URLs"
+		);
+
+		$externalAbsoluteUrl = 'http://myhost.com/some-url';
+		$response = $this->get('ControllerTest_Controller/redirectbacktest?_REDIRECT_BACK_URL=' . urlencode($externalAbsoluteUrl));
+		$this->assertEquals(200, $response->getStatusCode(),
+			"Doesn't redirect on external URLs"
+		);
+	}
 }
 
 /**
@@ -146,6 +198,10 @@ class ControllerTest_Controller extends Controller {
 	
 	function stringaction() {
 		return "stringaction was called.";
+	}
+
+	function redirectbacktest() {
+		return $this->redirectBack();
 	}
 }
 

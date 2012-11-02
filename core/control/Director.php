@@ -531,21 +531,42 @@ class Director {
 	
 	/**
 	 * Checks if a given URL is absolute (e.g. starts with 'http://' etc.).
+	 * URLs beginning with "//" are treated as absolute, as browsers take this to mean
+	 * the same protocol as currently being used. 
+	 * 
+	 * Useful to check before redirecting based on a URL from user submissions
+	 * through $_GET or $_POST, and avoid phishing attacks by redirecting
+	 * to an attackers server.
+	 * 
+	 * Note: Can't solely rely on PHP's parse_url() , since it is not intended to work with relative URLs
+	 * or for security purposes. filter_var($url, FILTER_VALIDATE_URL) has similar problems.
 	 * 
 	 * @param string $url
 	 * @return boolean
 	 */
 	public static function is_absolute_url($url) {
-		$url = trim($url);
-		// remove all query strings to avoid parse_url choking on URLs like 'test.com?url=http://test.com'
-		$url = preg_replace('/(.*)\?.*/', '$1', $url);
-		$parsed = parse_url($url);
-		return (isset($parsed['scheme']));
+		$colonPosition = strpos($url, ':');
+	  return (
+	  	// Base check for existence of a host on a compliant URL
+	  	parse_url($url, PHP_URL_HOST)
+	  	// Check for more than one leading slash without a protocol.
+			// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
+			// and hence a potential security risk. Single leading slashes are not an issue though.
+	  	|| preg_match('/\s*[\/]{2,}/', $url)
+	  	|| (
+	  		// If a colon is found, check if it's part of a valid scheme definition
+		  	// (meaning its not preceded by a slash, hash or questionmark).
+		  	// URLs in query parameters are assumed to be correctly urlencoded based on RFC3986,
+		  	// in which case no colon should be present in the parameters.
+	  		$colonPosition !== FALSE 
+	  		&& !preg_match('![/?#]!', substr($url, 0, $colonPosition))
+	  	)
+	  	
+	  );
 	}
 	
 	/**
-	 * Checks if a given URL is relative by checking
-	 * {@link is_absolute_url()}.
+	 * Checks if a given URL is relative by checking {@link is_absolute_url()}.
 	 * 
 	 * @param string $url
 	 * @return boolean
@@ -555,8 +576,10 @@ class Director {
 	}
 	
 	/**
-	 * Checks if the given URL is belonging to this "site",
-	 * as defined by {@link makeRelative()} and {@link absoluteBaseUrl()}.
+	 * Checks if the given URL is belonging to this "site" (not an external link).
+	 * That's the case if the URL is relative, as defined by {@link is_relative_url()},
+	 * or if the host matches {@link protocolAndHost()}.
+	 * 
 	 * Useful to check before redirecting based on a URL from user submissions
 	 * through $_GET or $_POST, and avoid phishing attacks by redirecting
 	 * to an attackers server.
@@ -565,8 +588,13 @@ class Director {
 	 * @return boolean
 	 */
 	public static function is_site_url($url) {
-		$relativeUrl = Director::makeRelative($url);
-		return (bool)self::is_relative_url($relativeUrl);
+		$urlHost = parse_url($url, PHP_URL_HOST);
+		$actualHost = parse_url(self::protocolAndHost(), PHP_URL_HOST);
+		if($urlHost && $actualHost && $urlHost == $actualHost) {
+			return true;
+		} else {
+			return self::is_relative_url($url);
+		}
 	}
 	
 	/**
