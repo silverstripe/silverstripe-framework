@@ -6,6 +6,13 @@
 @import "../admin/scss/_mixins";
 @import "_elementMixins";
 
+// Temporary. To be hidden and replaced with javascript tooltip
+.ss-uploadfield-view-allowed-extensions{
+	padding-top:20px;
+	clear:both;
+	max-width:750px;
+	display:block;
+}
 
 #AssetUploadField {
 	border-bottom: 0;
@@ -30,7 +37,6 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 	}
 }
 
-
 .ss-assetuploadfield {
 	h3 {
 		border-bottom: 1px solid $color-shadow-light;
@@ -38,6 +44,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 		margin: 0 0 8px;
 		padding: 0 0 7px;
 		clear: both;
+		position:relative;	
 	}
 	.field {
 		border-bottom: 0;
@@ -46,14 +53,30 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 	.fileOverview{
 		clear:both;
 		margin-top:10px;
-		margin-bottom:5px;
-		padding-bottom:5px;
-		height:50px;
 		position:relative;
 		
-		.ss-ui-button {
+		.uploadStatus{
+			@include clearfix;
+			.state{
+				float:left;
+				font-size: 16px;
+				font-weight:bold;
+				line-height:1.1em;
+			}
+			.details{
+				opacity:0.9;
+				float:right;		
+			}
+		}		
+	}
+	.ss-uploadfield-item-actions.edit-all{
+		clear:both;
+		position:relative;	
+		z-index:9;
+		.ss-uploadfield-item-edit-all {
+			z-index:8;
 			position:absolute;
-			bottom:0;
+			top:-33px;
 			padding:0;
 			background: none;
 			border: 0;
@@ -64,21 +87,13 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 				color: #1e7cba;	
 			}
 		}
-		.state{
-			font-size: 16px;
-			font-weight:bold;
-			line-height:20px;
-			margin-bottom:5px;
-		}
-		.details{
-			color:lighten($color-text, 15%);
-		}
 	}
 
 	
 	.ss-uploadfield-files {
 		margin: 0;
 		padding: 0;
+		clear:both;
 		
 		.ss-uploadfield-item {
 			border: 1px solid lighten($color-medium-separator, 20%);
@@ -325,7 +340,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 					}
 				}
 			}
-		}
+		}		
 	}
 }
 
