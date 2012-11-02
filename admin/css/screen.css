@@ -135,6 +135,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
 .cms .ui-accordion .ui-accordion-header { border-color: #c0c0c2; margin-bottom: 0; }
 .cms .ui-accordion .ui-accordion-content { border: 1px solid #c0c0c2; border-top: none; }
+.cms .ui-autocomplete { max-height: 240px; overflow-x: hidden; overflow-y: auto; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in framework/css/Form.css.  @package framework @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
