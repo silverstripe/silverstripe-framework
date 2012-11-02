@@ -457,6 +457,91 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(2, $gtList->count());
 	}
 
+	public function testFilterAny() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filterAny('Name', 'Bob');
+		$this->assertEquals(1, $list->count());
+	}	
+
+	public function testFilterAnyMultipleArray() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filterAny(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'Only comment should be from Bob');
+	}
+
+	public function testFilterAnyOnFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filter(array(
+			'TeamID'=>$this->idFromFixture('DataObjectTest_Team', 'team1')
+		));
+		$list = $list->filterAny(array(
+			'Name'=>array('Phil', 'Joe'),
+			'Comment'=>'This is a team comment by Bob'
+		));
+		$list = $list->sort('Name');
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals(
+			'Bob', 
+			$list->offsetGet(0)->Name, 
+			'Results should include comments from Bob, matched by comment and team'
+		);
+		$this->assertEquals(
+			'Joe', 
+			$list->offsetGet(1)->Name, 
+			'Results should include comments by Joe, matched by name and team (not by comment)'
+		);
+
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filter(array(
+			'TeamID'=>$this->idFromFixture('DataObjectTest_Team', 'team1')
+		));
+		$list = $list->filterAny(array(
+			'Name'=>array('Phil', 'Joe'),
+			'Comment'=>'This is a team comment by Bob'
+		));
+		$list = $list->sort('Name');
+		$list = $list->filter(array('Name' => 'Bob'));
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals(
+			'Bob', 
+			$list->offsetGet(0)->Name, 
+			'Results should include comments from Bob, matched by name and team'
+		);
+	}
+	
+	public function testFilterAnyMultipleWithArrayFilter() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filterAny(array('Name'=>array('Bob','Phil')));
+		$this->assertEquals(2, $list->count(), 'There should be two comments');
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	public function testFilterAnyArrayInArray() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filterAny(array(
+			'Name'=>array('Bob','Phil'),
+			'TeamID'=>array($this->idFromFixture('DataObjectTest_Team', 'team1'))))
+			->sort('Name');
+		$this->assertEquals(3, $list->count());
+		$this->assertEquals(
+			'Bob', 
+			$list->offsetGet(0)->Name, 
+			'Results should include comments from Bob, matched by name and team'
+		);
+		$this->assertEquals(
+			'Joe', 
+			$list->offsetGet(1)->Name, 
+			'Results should include comments by Joe, matched by team (not by name)'
+		);
+		$this->assertEquals(
+			'Phil', 
+			$list->offsetGet(2)->Name, 
+			'Results should include comments from Phil, matched by name (even if he\'s not in Team1)'
+		);
+	}
+
 	public function testFilterAndExcludeById() {
 		$id = $this->idFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$list = DataObjectTest_SubTeam::get()->filter('ID', $id);
