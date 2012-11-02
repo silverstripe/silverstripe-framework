@@ -54,55 +54,55 @@ class FileNameFilterTest extends SapphireTest {
 		);
 	}
 
-	function testUnderscoresStartOfNameRemoved() {
+	public function testUnderscoresStartOfNameRemoved() {
 		$name = '_test.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test.txt', $filter->filter($name));
 	}
 
-	function testDoubleUnderscoresStartOfNameRemoved() {
+	public function testDoubleUnderscoresStartOfNameRemoved() {
 		$name = '__test.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test.txt', $filter->filter($name));
 	}
 
-	function testDotsStartOfNameRemoved() {
+	public function testDotsStartOfNameRemoved() {
 		$name = '.test.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test.txt', $filter->filter($name));
 	}
 
-	function testDoubleDotsStartOfNameRemoved() {
+	public function testDoubleDotsStartOfNameRemoved() {
 		$name = '..test.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test.txt', $filter->filter($name));
 	}
 
-	function testMixedInvalidCharsStartOfNameRemoved() {
+	public function testMixedInvalidCharsStartOfNameRemoved() {
 		$name = '..#@$#@$^__test.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test.txt', $filter->filter($name));
 	}
 
-	function testWhitespaceRemoved() {
+	public function testWhitespaceRemoved() {
 		$name = ' test doc.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test-doc.txt', $filter->filter($name));
 	}
 
-	function testUnderscoresReplacedWithDashes() {
+	public function testUnderscoresReplacedWithDashes() {
 		$name = 'test_doc.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test-doc.txt', $filter->filter($name));
 	}
 
-	function testNonAsciiCharsReplacedWithDashes() {
+	public function testNonAsciiCharsReplacedWithDashes() {
 		$name = '!@#$%^test_123@##@$#%^.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test-123.txt', $filter->filter($name));
 	}
 
-	function testDuplicateDashesRemoved() {
+	public function testDuplicateDashesRemoved() {
 		$name = 'test--document.txt';
 		$filter = new FileNameFilter();
 		$this->assertEquals('test-document.txt', $filter->filter($name));
