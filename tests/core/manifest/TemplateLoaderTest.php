@@ -9,7 +9,7 @@ class TemplateLoaderTest extends SapphireTest {
 
 	public function testFindTemplates() {
 		$base     = dirname(__FILE__) . '/fixtures/templatemanifest';
-		$manifest = new SS_TemplateManifest($base, false, true);
+		$manifest = new SS_TemplateManifest($base, 'myproject', false, true);
 		$loader   = new SS_TemplateLoader();
 
 		$manifest->regenerate(false);
@@ -40,7 +40,23 @@ class TemplateLoaderTest extends SapphireTest {
 			'main'   => "$base/module/templates/Page.ss",
 			'Layout' => "$base/module/templates/Layout/CustomPage.ss"
 		);
+
 		$this->assertEquals($expectCustomPage, $loader->findTemplates(array('CustomPage', 'Page')));
+	}
+
+	public function testFindTemplatesApplicationOverridesModule() {
+		$base     = dirname(__FILE__) . '/fixtures/templatemanifest';
+		$manifest = new SS_TemplateManifest($base, 'myproject', false, true);
+		$loader   = new SS_TemplateLoader();
+
+		$manifest->regenerate(false);
+		$loader->pushManifest($manifest);
+
+		$expectPage = array(
+			'main'   => "$base/myproject/templates/CustomTemplate.ss"
+		);
+
+		$this->assertEquals($expectPage, $loader->findTemplates('CustomTemplate'));
 	}
 
 }

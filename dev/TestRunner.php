@@ -94,7 +94,7 @@ class TestRunner extends Controller {
 		SapphireTest::set_test_class_manifest($classManifest);
 
 		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-			BASE_PATH, true, isset($_GET['flush'])
+			BASE_PATH, project(), true, isset($_GET['flush'])
 		));
 	}
 
