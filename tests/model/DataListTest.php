@@ -179,6 +179,21 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals($otherExpected, $otherMap);
 	}
 	
+	public function testEach() {
+		$list = DataObjectTest_TeamComment::get();
+		
+		$count = 0;
+		$test = $this;
+		
+		$list->each(function($item) use (&$count, $test) {
+			$count++;
+			
+			$test->assertTrue(is_a($item, "DataObjectTest_TeamComment"));
+		});
+		
+		$this->assertEquals($list->Count(), $count);
+	}
+	
 	public function testFilter() {
 		// coming soon!
 		}

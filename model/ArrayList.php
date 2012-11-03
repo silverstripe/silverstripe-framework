@@ -66,6 +66,18 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	public function toArray() {
 		return $this->items;
 	}
+	
+	/**
+	 * Walks the list using the specified callback
+	 *
+	 * @param callable $callback
+	 * @return DataList
+	 */
+	public function each($callback) {
+		foreach($this as $item) {
+			$callback($item);
+		}
+	}
 
 	public function debug() {
 		$val = "<h2>" . $this->class . "</h2><ul>";
