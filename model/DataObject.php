@@ -323,7 +323,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			);
 		}
 
-		if(!is_array($record)) {
+		if(!is_array($record) && !is_a($record, "stdClass")) {
 			if(is_object($record)) $passed = "an object of type '$record->class'";
 			else $passed = "The value '$record'";
 
