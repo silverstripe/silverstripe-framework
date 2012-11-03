@@ -588,6 +588,20 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		return $result;
 	}
+	
+	/**
+	 * Walks the list using the specified callback
+	 *
+	 * @param callable $callback
+	 * @return DataList
+	 */
+	public function each($callback) {
+		foreach($this as $row) {
+			$callback($row);
+		}
+		
+		return $this;
+	}
 
 	public function debug() {
 		$val = "<h2>" . $this->class . "</h2><ul>";
