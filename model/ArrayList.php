@@ -12,7 +12,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * 
 	 * @var array
 	 */
-	protected $items;
+	protected $items = array();
 	
 	/**
 	 *
