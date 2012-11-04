@@ -1025,6 +1025,42 @@ after')
 		$result = $viewer->process(new ArrayData(array('List' => $list)));
 		$this->assertEquals($result, '');
 	}
+
+	public function testProcessOnlyIncludesRequirementsOnce() {
+		$template = new SSViewer(array('SSViewerTestProcess'));
+		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
+
+		$backend = new Requirements_Backend;
+		$backend->set_combined_files_enabled(false);
+		$backend->combine_files(
+			'RequirementsTest_ab.css',
+			array(
+				$basePath . '/RequirementsTest_a.css',
+				$basePath . '/RequirementsTest_b.css'
+			)
+		);
+
+		Requirements::set_backend($backend);
+
+		$this->assertEquals(1, substr_count($template->process(array()), "a.css"));
+		$this->assertEquals(1, substr_count($template->process(array()), "b.css"));
+
+		// if we disable the requirements then we should get nothing
+		$template->includeRequirements(false);
+		$this->assertEquals(0, substr_count($template->process(array()), "a.css"));
+		$this->assertEquals(0, substr_count($template->process(array()), "b.css"));
+	}
+
+	public function testRequireCallInTemplateInclude() {
+		$template = new SSViewer(array('SSViewerTestProcess'));
+		
+		Requirements::set_suffix_requirements(false);
+
+		$this->assertEquals(1, substr_count(
+			$template->process(array()), 
+			"tests/forms/RequirementsTest_a.js"
+		));
+	}
 }
 
 /**
