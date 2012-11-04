@@ -24,12 +24,14 @@ You can then run Composer commands by calling `php composer.phar`.  For example:
 
 Composer can create a new project for you, using the installer as a template.  To do so, run this:
 
-	php composer.phar create-project silverstripe/installer ./my/website/folder
+	php composer.phar create-project silverstripe/installer ./my/website/folder 3.0.2.1
 
 `./my/website/folder` should be the root directory where your site will live.  For example, on OS X, you might use a subdirectory of `~/Sites`.
 
 As long as your web server is up and running, this will get all the code that you need.  Now visit the site in your web
 browser, and the installation process will be completed.
+
+**Note:** The version, 3.0.2.1, is the first version that we've released that has Composer support.  Shortly, this will be replaced with 3.0.3.  Note that [a planned improvement to Composer](https://github.com/composer/composer/issues/957) would make it choose the latest stable version by default; once this has happened, we will update this document.
 
 ## Adding modules to your project
 
