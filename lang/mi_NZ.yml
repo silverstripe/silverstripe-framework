@@ -1,6 +1,6 @@
 mi_NZ:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
+    ALLOWEDEXTS: 'Ngā toronga ka whakaaetia'
     NEWFOLDER: KōpakiHōu
   AssetTableField:
     CREATED: 'Tukuatu tuatahi'
@@ -21,7 +21,7 @@ mi_NZ:
     EDITANDORGANIZE: 'Whakatika me te Whakaraupapa'
     EDITINFO: 'Whakatika kōnae'
     FILES: 'Ngā kōnae'
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Kōwhiri kōnae mai i tō rorohiko'
     FROMCOMPUTERINFO: 'Tukuatu  i tō rorohiko'
     TOTAL: Tapeke
     TOUPLOAD: 'Kōwhiria ngā kōnae hei tukuatu...'
@@ -338,8 +338,8 @@ mi_NZ:
   LoginAttempt:
     Email: 'Wāhitau Īmēra'
     IP: 'Wāhitau KI'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Ngā Whakamātau Takiuru'
+    SINGULARNAME: 'Whakamātau Takiuru'
     Status: Tūnga
   Member:
     ADDGROUP: 'Tāpiri rōpū'
@@ -464,8 +464,8 @@ mi_NZ:
     FromRoleOnGroup: 'i tukuna iho i "%s" i te rōpū "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: 'Ngā Tūnga'
+    SINGULARNAME: Tūranga
     Title: Taitara
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
