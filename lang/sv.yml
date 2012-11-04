@@ -1,7 +1,6 @@
 sv:
   AssetAdmin:
-    ADDFILES: 'Lägg till filer'
-    EditOrgMenu: 'Redigera och organisera'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Ny mapp'
   AssetTableField:
     CREATED: 'Först uppladdad'
@@ -72,7 +71,7 @@ sv:
     ACCESSALLINTERFACESHELP: 'Ersätter mer specifika behörighetsinställningar.'
     SAVE: Spara
   CMSProfileController:
-    MENUTITLE: 'Min profil'
+    MENUTITLE: 'Min Profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Du har ändrat ditt lösenord för'
     CHANGEPASSWORDTEXT2: 'Du kan nu använda följande uppgifter för att logga in:'
@@ -87,7 +86,7 @@ sv:
     SUCCESSADD2: 'Lade till {name}'
     SUCCESSEDIT: 'Sparade %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Lägg till %s'
+    ADDITEM: 'Lägg till'
     NOITEMSFOUND: 'Inga rader hittades'
     SORTASC: 'Sortera stigande'
     SORTDESC: 'Sortera fallande'
@@ -105,7 +104,7 @@ sv:
     SECOND: andra
     THIRD: tredje
   CurrencyField:
-    CURRENCYSYMBOL: €
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: Dataobjekt
     SINGULARNAME: Dataobjekt
@@ -128,8 +127,8 @@ sv:
     NOTSET: 'inte angivet'
     TODAY: 'i dag'
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
-    VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare än eller samma som det senaste godkända datumet ({date})'
-    VALIDDATEMINDATE: 'Angivet datum måste vara senare än eller samma som det tidigaste godkända datumet ({date})'
+    VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
+    VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
   DatetimeField:
     NOTSET: 'Ej satt'
   Director:
@@ -177,8 +176,8 @@ sv:
     ZipType: 'ZIP packad fil'
   FileIFrameField:
     ATTACH: 'Bifoga {type}'
-    ATTACHONCESAVED: '{type}er kan bifogas när du sparat posten för första gången'
-    ATTACHONCESAVED2: 'Filer kan bifogas när du sparat posten för första gången'
+    ATTACHONCESAVED: '{type}er kan läggas till efter att du sparat första gången.'
+    ATTACHONCESAVED2: 'Filer kan läggas till efter att du sparat första gången.'
     DELETE: 'Radera {type}'
     DISALLOWEDFILETYPE: 'Filtypen är inte tillåten för uppladdning'
     FILE: Fil
@@ -206,7 +205,7 @@ sv:
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
     VALIDATIONPASSWORDSNOTEMPTY: 'Lösenordfältet får inte vara tomt'
     VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
-    VALIDATOR: Validering
+    VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
   FormField:
     NONE: ingen
@@ -254,11 +253,11 @@ sv:
     RolesAddEditLink: 'Hantera roller'
     SINGULARNAME: Grupp
     Sort: Sorteringsordning
-    has_many_Permissions: Tillstånd
+    has_many_Permissions: Behörigheter
     many_many_Members: Medlemmar
   GroupImportForm:
     Help1: '<p>Importera en eller flera grupper i <em>CSV</em>- format (komma-separerade värden). <small><a href="#" class ="toggle-advanced">Visa avancerade val</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Avancerat</h4>\\n<ul>\\n<li>Tillåtna kolumner<em>%s</em></li>\\n<li>Existerande grupper matchas deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupphierarkier kan skapas genom att använda en <em>ParentCode</em>-kolumn.</li>\\n<li>Behörighetskoder kan anges genom en <em>PermissionCode</em>-kolumn. Existerande behörighetskoder raderas inte.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Skapade {count} grupper'
     ResultDeleted: 'Raderade %d grupper'
     ResultUpdated: 'Uppdaterade %d grupper'
@@ -330,7 +329,7 @@ sv:
     PERMDEFAULT: 'Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet.'
     PLEASESAVE: 'Var god spara sidan. Den kan inte uppdateras för att den har inte sparats ännu.'
     PreviewButton: Förhandsgranska
-    REORGANISATIONSUCCESSFUL: 'Omorganisering av sidträdet lyckades.'
+    REORGANISATIONSUCCESSFUL: 'Omorganisationen av sidträdet luyckades.'
     SAVEDUP: Sparad.
     VersionUnknown: okänd
   LeftAndMain_Menu.ss:
@@ -348,6 +347,7 @@ sv:
     BUTTONLOGIN: 'Logga in'
     BUTTONLOGINOTHER: 'Logga in som annan användare'
     BUTTONLOSTPASSWORD: 'Jag har glömt mitt lösenord'
+    CANTEDIT: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     CONFIRMNEWPASSWORD: 'Bekräfta nytt lösenord'
     CONFIRMPASSWORD: 'Bekräfta lösenord'
     DATEFORMAT: Datumformat
@@ -367,7 +367,6 @@ sv:
     NEWPASSWORD: 'Nytt lösenord'
     PASSWORD: Lösenord
     PLURALNAME: Medlemmar
-    PROFILESAVESUCCESS: 'Lyckades spara.'
     REMEMBERME: 'Kom ihåg mig nästa gång?'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
@@ -410,7 +409,7 @@ sv:
     TWODIGITYEAR: 'Två siffror för år'
   MemberImportForm:
     Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small>a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade medlemmar matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande gruppmedlemskap tas inte bort.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Skapade {count} medlemmar'
     ResultDeleted: 'Raderade %d medlemmar'
     ResultNone: 'Inga ändringar'
@@ -422,6 +421,7 @@ sv:
   ModelAdmin:
     DELETE: Radera
     DELETEDRECORDS: 'Raderade {count} poster.'
+    EMPTYBEFOREIMPORT: 'Töm databasen före import'
     IMPORT: 'Importera från CSV'
     IMPORTEDRECORDS: 'Importerade {count} poster.'
     NOCSVFILE: 'Var god och bläddra efter en CSV-fil för import'
@@ -433,7 +433,7 @@ sv:
     IMPORTSPECFIELDS: Databaskolumner
     IMPORTSPECLINK: 'Visa specifikation för %s'
     IMPORTSPECRELATIONS: Relationer
-    IMPORTSPECTITLE: 'Specification för %s'
+    IMPORTSPECTITLE: 'Specifikation för %s'
   ModelAdmin_Tools.ss:
     FILTER: 'Filtrera på'
     IMPORT: Importera
@@ -446,7 +446,7 @@ sv:
   NullableField:
     IsNullLabel: 'Är NULL'
   NumericField:
-    VALIDATION: '''{value}'' är inget nummer, bara nummer kan accepteras för det här fältet'
+    VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
   Pagination:
     Page: Sida
     View: Visa
@@ -468,10 +468,11 @@ sv:
     SINGULARNAME: Roll
     Title: Rollnamn
   PermissionRoleCode:
-    PLURALNAME: åtkomsträttighetskoder
-    SINGULARNAME: åtkomsträttighetskod
+    PLURALNAME: 'Koder för rollrättigheter'
+    SINGULARNAME: 'Kodför rollrättigheter'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller och åtkomsträttigheter'
+    UserPermissionsIntro: 'Genom att välja grupper för denna användare så ändras användarens rättigheter. Gå till grupper för att se vilka rättigheter de olika grupperna har.'
   PhoneNumberField:
     VALIDATION: 'Var god ange ett giltigt telefonnummer'
   RelationComplexTableField.ss:
@@ -518,7 +519,7 @@ sv:
   SimpleImageField:
     NOUPLOAD: 'Ingen bild uppladdad'
   SiteTree:
-    TABMAIN: Allmänt
+    TABMAIN: Huvudsaklig
   TableField:
     ISREQUIRED: 'För %s är ''%s'' obligatoriskt'
   TableField.ss:
@@ -556,7 +557,7 @@ sv:
     DROPFILE: 'Släpp en fil'
     DROPFILES: 'släpp filer'
     Dimensions: Dimensioner
-    EDIT: Redigera
+    EDIT: Ändra
     EDITINFO: 'Redigera filen'
     FIELDNOTSET: 'Hittade ingen filinformation'
     FROMCOMPUTER: 'Från din dator'

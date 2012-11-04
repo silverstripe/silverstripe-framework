@@ -1,7 +1,6 @@
 bs:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NoviDirektorij
   AssetTableField:
     CREATED: 'Prvo postavljeno'
@@ -72,12 +71,12 @@ bs:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Snimi
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
+    CHANGEPASSWORDTEXT2: 'Možete koristiti slijedeće podatke za prijavu:'
     EMAIL: Email
-    HELLO: Hi
+    HELLO: Pozdrav
     PASSWORD: Password
   CheckboxField:
     - 'False'
@@ -87,13 +86,13 @@ bs:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Dodaj %S'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Uzlazno raszvrstavanje'
+    SORTDESC: 'Silazno razvrstavanje'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Slijedeći
+    PREVIOUS: Prethodni
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -181,7 +180,7 @@ bs:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: Datoteka
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -194,10 +193,10 @@ bs:
     PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: Pozdrav
+    TEXT1: 'Ovo je Vaš'
+    TEXT2: 'link za ponovno podešavanje šifre'
+    TEXT3: za
   Form:
     FIELDISREQUIRED: '%s je obavezno'
     SubmitBtnLabel: Go
@@ -258,7 +257,7 @@ bs:
     many_many_Members: Members
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -318,7 +317,7 @@ bs:
     PLURALNAME: Files
     SINGULARNAME: File
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe za postavljanje slika'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -348,6 +347,7 @@ bs:
     BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se sa drugim korisnikom'
     BUTTONLOSTPASSWORD: 'Zaboravio sam šifru'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Potvrdite novu šifru'
     CONFIRMPASSWORD: 'Potvrdite šifru'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ bs:
     NEWPASSWORD: 'Nova šifra'
     PASSWORD: Šifra
     PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Zapamti me slijedeći put'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'
@@ -410,7 +409,7 @@ bs:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
@@ -422,6 +421,7 @@ bs:
   ModelAdmin:
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -472,10 +472,11 @@ bs:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Molimo, unesite ispravan broj telefona'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: Dodaj
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -522,12 +523,12 @@ bs:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'Dodaj novi red'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Izvezi u CSV'
     PRINT: Štampaj
-    Print: Štampaj
+    Print: Print
     SELECT: 'Select:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -549,7 +550,7 @@ bs:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

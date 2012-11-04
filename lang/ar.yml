@@ -1,7 +1,6 @@
 ar:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'مجلد جديد'
   AssetTableField:
     CREATED: 'أول المرفوعات'
@@ -21,7 +20,7 @@ ar:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: الملفات
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +59,9 @@ ar:
     ERRORNOTADMIN: 'هذا المستخدم لا يملك صلاحيات الإدارة'
     ERRORNOTREC: 'اسم المستخدم أو الرقم السري غير صحيح'
   Boolean:
-    0: 'False'
+    0: لا
     ANY: أي
-    1: 'True'
+    1: نعم
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -72,28 +71,28 @@ ar:
     ACCESSALLINTERFACESHELP: 'ينقض أكثر من توصيف الوصول المحدد'
     SAVE: حفظ
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
+    CHANGEPASSWORDTEXT2: 'يمكنك الآن استخدام هذه البيانات للدخول إلى حسابك'
     EMAIL: 'البريد الإلكتروني'
-    HELLO: Hi
+    HELLO: أهلاً
     PASSWORD: 'الرقم السري'
   CheckboxField:
-    - 'False'
-    - 'True'
+    - لا
+    - نعم
   ComplexTableField:
     CLOSEPOPUP: 'إغلاق النافذة'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'حفظ %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: أضف
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'ترتيب تصاعدي'
+    SORTDESC: 'ترتيب تنازلي'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: التالي
+    PREVIOUS: السابق
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -194,10 +193,10 @@ ar:
     PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: أهلاً
+    TEXT1: هنا
+    TEXT2: 'رابط إعادة تعيين كلمة المرور'
+    TEXT3: لـ
   Form:
     FIELDISREQUIRED: '%s مطلوب'
     SubmitBtnLabel: Go
@@ -234,7 +233,7 @@ ar:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: حذف
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -258,7 +257,7 @@ ar:
     many_many_Members: الأعضاء
   GroupImportForm:
     Help1: '<p>استيراد واحد أو أكثر من المجموعات في <em>CSV</em>تهيئة (قيم مفصولة بفواصل) <small><ahref="#" class="toggle-advanced">إظهار استخدام المتقدم</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'حذف مجموعات %d'
     ResultUpdated: 'تحديث مجموعات %d '
@@ -318,7 +317,7 @@ ar:
     PLURALNAME: Files
     SINGULARNAME: File
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'إطار تحميل الصور'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -348,6 +347,7 @@ ar:
     BUTTONLOGIN: دخول
     BUTTONLOGINOTHER: 'الدخول بحساب آخر'
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ ar:
     NEWPASSWORD: 'رقم المرور الجديد'
     PASSWORD: 'رقم المرور'
     PLURALNAME: الأعضاء
-    PROFILESAVESUCCESS: 'تم الحفظ بنجاح'
     REMEMBERME: 'تذكرني في المرة القادمة ؟'
     SINGULARNAME: العضو
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
@@ -410,7 +409,7 @@ ar:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'حذف %d أعضاء'
     ResultNone: 'بدون تغيير'
@@ -422,6 +421,7 @@ ar:
   ModelAdmin:
     DELETE: حذف
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'استيراد من CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'فضلاً استعرض ملف CSV للاستيراد'
@@ -472,10 +472,11 @@ ar:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'تصاريح القاعدة والوصول'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'فضلاً أدخل رقم هاتف صحيح'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: إضافة
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -522,12 +523,12 @@ ar:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'إضافة صف جديد'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'تصدير إلى CSV'
     PRINT: طباعة
-    Print: طباعة
+    Print: Print
     SELECT: اختيار
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -549,7 +550,7 @@ ar:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

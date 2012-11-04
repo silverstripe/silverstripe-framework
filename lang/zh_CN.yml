@@ -1,7 +1,6 @@
 zh_CN:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 新建文件夹
   AssetTableField:
     CREATED: 第一次被上传
@@ -21,7 +20,7 @@ zh_CN:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: 文件
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -72,7 +71,7 @@ zh_CN:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: 保存
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
     CHANGEPASSWORDTEXT2: 您现在可以用下列权限信息进行登路：
@@ -87,7 +86,7 @@ zh_CN:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 新加
     NOITEMSFOUND: 'No items found'
     SORTASC: 正序排列
     SORTDESC: 倒序排列
@@ -181,7 +180,7 @@ zh_CN:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: 文件
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -234,7 +233,7 @@ zh_CN:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: 删除
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -258,7 +257,7 @@ zh_CN:
     many_many_Members: 成员
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -348,6 +347,7 @@ zh_CN:
     BUTTONLOGIN: 登录
     BUTTONLOGINOTHER: 使用其他帐户登录
     BUTTONLOSTPASSWORD: 忘记密码
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 确认新密码
     CONFIRMPASSWORD: 确认密码
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ zh_CN:
     NEWPASSWORD: 新密码
     PASSWORD: 密码
     PLURALNAME: 成员
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 记住我的信息？
     SINGULARNAME: 成员
     SUBJECTPASSWORDCHANGED: 您的密码已更改
@@ -410,7 +409,7 @@ zh_CN:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
@@ -422,6 +421,7 @@ zh_CN:
   ModelAdmin:
     DELETE: 删除
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -472,6 +472,7 @@ zh_CN:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 请输入有效电话号码
   RelationComplexTableField.ss:

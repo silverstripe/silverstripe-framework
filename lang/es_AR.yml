@@ -1,7 +1,6 @@
 es_AR:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nueva Carpeta'
   AssetTableField:
     CREATED: 'Agregado por primera vez'
@@ -21,7 +20,7 @@ es_AR:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Archivos
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +59,9 @@ es_AR:
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   Boolean:
-    0: 'False'
+    0: No
     ANY: Cualquiera
-    1: 'True'
+    1: Sí
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -72,7 +71,7 @@ es_AR:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Guardar
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
     CHANGEPASSWORDTEXT2: 'Ahora puedes utilizar las siguientes credenciales para ingresar:'
@@ -80,14 +79,14 @@ es_AR:
     HELLO: Hola
     PASSWORD: Contraseña
   CheckboxField:
-    - 'False'
-    - 'True'
+    - No
+    - No
   ComplexTableField:
     CLOSEPOPUP: 'Cerrar Ventana Emergente'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Guardado %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Agregar %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Ordenar ascendente'
     SORTDESC: 'Ordenar descendente'
@@ -234,7 +233,7 @@ es_AR:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Eliminar
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -258,7 +257,7 @@ es_AR:
     many_many_Members: Miembros
   GroupImportForm:
     Help1: '<p>Importar uno o más grupos en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Se actualizaron %d grupos'
@@ -348,6 +347,7 @@ es_AR:
     BUTTONLOGIN: Acceder
     BUTTONLOGINOTHER: 'Ingresar como otra persona'
     BUTTONLOSTPASSWORD: 'He perdido mi contraseña'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar Contraseña'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ es_AR:
     NEWPASSWORD: 'Nueva contraseña'
     PASSWORD: Contraseña
     PLURALNAME: Miembros
-    PROFILESAVESUCCESS: 'Guardado con éxito.'
     REMEMBERME: '¿Recordarme la siguiente vez?'
     SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Tu contraseña ha sido cambiada'
@@ -410,7 +409,7 @@ es_AR:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Importar miembros en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Se eliminaron %d miembros'
     ResultNone: 'Sin cambios'
@@ -422,6 +421,7 @@ es_AR:
   ModelAdmin:
     DELETE: Eliminar
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importar desde CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Por favor explorar por un archivo CVS para importar'
@@ -472,6 +472,7 @@ es_AR:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Por favor ingresa un número telefónico válido'
   RelationComplexTableField.ss:

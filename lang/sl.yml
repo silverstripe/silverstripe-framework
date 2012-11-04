@@ -1,7 +1,6 @@
 sl:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nova mapa'
   AssetTableField:
     CREATED: 'Naloženo na začetku'
@@ -21,7 +20,7 @@ sl:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Datoteke
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +59,9 @@ sl:
     ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
     ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
   Boolean:
-    0: 'False'
+    0: Ne
     ANY: Katerikoli
-    1: 'True'
+    1: Da
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -72,7 +71,7 @@ sl:
     ACCESSALLINTERFACESHELP: 'Omogoča bolj specifične nastavitve za možnosti dostop.'
     SAVE: Shrani
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
     CHANGEPASSWORDTEXT2: 'Za prijavo lahko odslej uporabite naslednje podatke:'
@@ -80,14 +79,14 @@ sl:
     HELLO: 'Pozdravljeni,'
     PASSWORD: Geslo
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Ne
+    - Da
   ComplexTableField:
     CLOSEPOPUP: 'Zapri okno'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Shranjeno: %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Dodaj %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Razvrsti naraščajoče'
     SORTDESC: 'Razvrsti padajoče'
@@ -234,7 +233,7 @@ sl:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Izbriši
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -258,7 +257,7 @@ sl:
     many_many_Members: Uporabniki
   GroupImportForm:
     Help1: '<p>Uvozi eno ali več skupin v formatu <em>CSV</ em> (comma-separated values). <small> <a href="#" class="toggle-advanced">Prikaži možnosti za napredno urejanje</ a> </ small> </ p>'
-    Help2: '<div class="advanced"> <h4>Napredno urejanje</ h4> <ul> <li>Dovoljeni stolpci: <em>%s</ em>.</ li><li>Skupine so definirane z vrednostjo< em>Code</ em> in so posodobljene z novimi vrednostmi iz uvožene datoteke.</ li><li>Hierarhijo skupin ureja stolpec <em>ParentCode </ em>.</ li> <li>Dovoljenja so dodeljena v stolpcu <em>PermissionCode</ em>. Obstoječa dovoljenja se ne izbrišejo.</li></ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Število izbrisanih skupin %d'
     ResultUpdated: 'Število ponastavljenih skupin %d'
@@ -348,6 +347,7 @@ sl:
     BUTTONLOGIN: Prijava
     BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
     BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
     CONFIRMPASSWORD: 'Potrdi geslo'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ sl:
     NEWPASSWORD: 'Novo geslo'
     PASSWORD: Geslo
     PLURALNAME: Uporabniki
-    PROFILESAVESUCCESS: Shranjeno!
     REMEMBERME: 'Zapomni si me do prihodnjič'
     SINGULARNAME: Uporabnik
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
@@ -410,7 +409,7 @@ sl:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Uvoz uporabnikov v <em>formatu CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Prikaži možnosti za napredno urejanje.</a></small></p>'
-    Help2: '<div class="advanced"> <h4>Napredno urejanje</ h4><ul><li>Dovoljeni stolpci: <em>%s</ em>.</ li><li>Člani imajo unikatne vrednosti < em>Code</ em>; posodobljeni so z vrednostmi iz uvožene datoteke.</ li><li>Skupine so članom pripisane v stolpcu <em>Groups</ em>. Skupine so definirane z vrednostjo< em>Code</ em>; kadar je navedenih več skupin, so te ločene z vejico. Že dodeljena članstva v skupinah se ne izbrišejo.</ li> </ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Število izbrisanih uporabnikov: %d'
     ResultNone: 'Ni sprememb'
@@ -422,6 +421,7 @@ sl:
   ModelAdmin:
     DELETE: Izbriši
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Uvozi CSV-datoteko'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Poiščite CSV-datoteko za uvoz'
@@ -472,6 +472,7 @@ sl:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Vloge in dovoljenja za dostop'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Vpišite veljavno telefonsko številko'
   RelationComplexTableField.ss:

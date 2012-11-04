@@ -1,7 +1,6 @@
 is:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -21,7 +20,7 @@ is:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Skrár
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +59,9 @@ is:
     ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
     ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
   Boolean:
-    0: 'False'
+    0: Nei
     ANY: Einhver
-    1: 'True'
+    1: Já
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -72,7 +71,7 @@ is:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Vista
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
     CHANGEPASSWORDTEXT2: 'Þú getur núna notað eftirfarandi auðkenni til að innskrá þig:'
@@ -80,14 +79,14 @@ is:
     HELLO: Hæ
     PASSWORD: Lykilorð
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Nei
+    - Já
   ComplexTableField:
     CLOSEPOPUP: 'Loka glugga'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Vitað %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Bæta við %s.'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Raða í hækkandi röð'
     SORTDESC: 'Raða í lækkandi röð'
@@ -258,7 +257,7 @@ is:
     many_many_Members: Félagar
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -348,6 +347,7 @@ is:
     BUTTONLOGIN: Innskrá
     BUTTONLOGINOTHER: 'Innskrá sem einhver annar'
     BUTTONLOSTPASSWORD: 'Ég er búinn að gleyma lykilorðinu'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Staðfesta nýja lykilorðið'
     CONFIRMPASSWORD: 'Staðfesta lykilorð'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ is:
     NEWPASSWORD: 'Nýtt lykilorð'
     PASSWORD: Lykilorð
     PLURALNAME: Félagar
-    PROFILESAVESUCCESS: 'Vistun tókst.'
     REMEMBERME: 'Muna eftir mér í næsta skipti?'
     SINGULARNAME: Félagar
     SUBJECTPASSWORDCHANGED: 'Lykilorði þínu hefur verið breytt'
@@ -410,7 +409,7 @@ is:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
@@ -422,6 +421,7 @@ is:
   ModelAdmin:
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -472,6 +472,7 @@ is:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Vinsamlegast sláðu inn gilt símanúmer'
   RelationComplexTableField.ss:

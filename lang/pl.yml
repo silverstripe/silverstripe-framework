@@ -1,7 +1,6 @@
 pl:
   AssetAdmin:
-    ADDFILES: 'Dodaj pliki'
-    EditOrgMenu: 'Edytuj i organizuj'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
@@ -23,9 +22,9 @@ pl:
     EDITINFO: 'Edytuj pliki'
     FILES: Pliki
     FROMCOMPUTER: 'Wybierz pliki z komputera'
-    FROMCOMPUTERINFO: 'Załaduj z komputera'
+    FROMCOMPUTERINFO: 'Załaduj z twojego komputera'
     TOTAL: Razem
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Wybierz pliki do załadowania...'
     UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
     UPLOADOR: LUB
   BBCodeParser:
@@ -60,35 +59,35 @@ pl:
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
     ERRORNOTREC: 'Nie istnieje taki username/hasło'
   Boolean:
-    0: 'False'
+    0: Nie
     ANY: Jakikolwiek
-    1: 'True'
+    1: Tak
   CMSLoadingScreen.ss:
     LOADING: Wczytywanie...
-    REQUIREJS: 'CMS wymaga włączonego JavaScript.'
+    REQUIREJS: 'CMS wymaga włączonej obsługi JavaScript.'
   CMSMain:
     ACCESS: 'Dostęp do sekcji ''{title}'''
     ACCESSALLINTERFACES: 'Dostęp do wszystkich sekcji CMSa'
     ACCESSALLINTERFACESHELP: 'Nadpisuje bardziej specyficzne ustawienia dostępu.'
     SAVE: Zapisz
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT2: 'Teraz możesz używać następujących danych do logowania się:'
-    EMAIL: E-mail
+    EMAIL: Email
     HELLO: Cześć
     PASSWORD: Hasło
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Nie
+    - Tak
   ComplexTableField:
     CLOSEPOPUP: 'Zamknij Okienko'
     SUCCESSADD2: 'Dodano {name}'
     SUCCESSEDIT: 'Zapisano %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Dodaj %s'
-    NOITEMSFOUND: 'Nic nie znaleziono'
+    NOITEMSFOUND: 'Nie znaleziono żadnych elementów'
     SORTASC: 'Sortuj rosnąco'
     SORTDESC: 'Sortuj malejąco'
   ComplexTableField_popup.ss:
@@ -146,35 +145,35 @@ pl:
   File:
     AviType: 'AVI video file'
     Content: Zawartość
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
+    CssType: 'Plik CSS'
+    DmgType: 'Obraz dysku Apple'
+    DocType: 'Dokument Worda'
     Filename: 'Nazwa pliku'
-    GifType: 'GIF image - good for diagrams'
+    GifType: 'Obrazek GIF, dobry do diagramów'
     GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    HtlType: 'Plik HTML'
+    HtmlType: 'Plik HTML'
     INVALIDEXTENSION: 'Rozszerzenie niedozwolone (dozwolone: {extensions})'
     INVALIDEXTENSIONSHORT: 'Rozszerzenie niedozwolone'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
+    IcoType: Ikona
+    JpgType: 'Obrazek JPEG, dobry do zdjęć'
+    JsType: 'Plik JavaScript'
+    Mp3Type: 'Plik MP3'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
     PLURALNAME: Pliki
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PdfType: 'Plik Adobe Acrobat PDF'
+    PngType: 'Plik PNG, dobry do zastosowania w większości przypadków'
     SINGULARNAME: Plik
     TOOLARGE: 'Plik jest za duży, maksymalnie dozwolone jest {size}'
     TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
-    TiffType: 'Tagged image format'
+    TiffType: 'Plik TIFF'
     Title: Tytuł
     WavType: 'WAV audo file'
     XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    ZipType: 'Plik ZIP, skompresowany'
   FileIFrameField:
     ATTACH: 'Dołącz {type}'
     ATTACHONCESAVED: 'Element {type} może zostać dołączony dopiero po pierwszym zapisaniu rekordu.'
@@ -232,7 +231,7 @@ pl:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Anuluj
     Create: Stwórz
     Delete: Usuń
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
@@ -246,7 +245,7 @@ pl:
     DefaultGroupTitleAdministrators: Administratorzy
     DefaultGroupTitleContentAuthors: 'Autor treści'
     Description: Opis
-    GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, ta grupa otrzyma wszystkie jej role'
+    GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, obecna grupa otrzyma wszystkie jej role'
     Locked: 'Zablokowana?'
     NoRoles: 'Nie znaleziono ról'
     PLURALNAME: Grupy
@@ -258,7 +257,7 @@ pl:
     many_many_Members: Członkowie
   GroupImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n\\n<h4>Zaawansowane użycie</h4>\\n\\n<ul>\\n\\n<li>Dozwolone kolumny: <em>%s</em></li>\\n\\n<li>Istniejące grupy są dopasowywane poprzez ich unikalną wartość <em>Kod</em> i aktualizowane nowymi wartościami z zaimportowanego pliku.</li>\\n\\n<li>Można tworzyć hierarchie Grup za pomocą kolumny <em>KodNadrzędny</em>.</li>\\n\\n<li>Kody uprawnień mogą być przypisywane za pomocą kolumny <em>KodUprawnienia</em>. Istniejące kody uprawnień nie są usuwane.</li>\\n\\n</ul>\\n\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Stworzono grup: {count}'
     ResultDeleted: 'Usunięto grup: %d'
     ResultUpdated: 'Zaktualizowano grup: %d'
@@ -328,13 +327,13 @@ pl:
     PERMAGAIN: 'Zostałeś wylogowany z CMSa. Jeśli chcesz zalogować się ponownie, wpisz login i hasło poniżej.'
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
-    PLEASESAVE: 'Proszę Zapisz Stronę: Ta strona nie mogła zostać uaktualniona ponieważ nie została jeszcze zapisana.'
+    PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
   LeftAndMain_Menu.ss:
-    Hello: Cześć
+    Hello: Witaj
     LOGOUT: 'Wyloguj się'
   LoginAttempt:
     Email: 'Adres E-mail'
@@ -348,6 +347,7 @@ pl:
     BUTTONLOGIN: Zaloguj
     BUTTONLOGINOTHER: 'Zaloguj jako ktoś inny'
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
     DATEFORMAT: 'Format daty'
@@ -367,7 +367,6 @@ pl:
     NEWPASSWORD: 'Nowe hasło'
     PASSWORD: Hasło
     PLURALNAME: Członkowie
-    PROFILESAVESUCCESS: 'Poprawnie zapisano.'
     REMEMBERME: 'Zapamiętaj mnie?'
     SINGULARNAME: Członek
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
@@ -410,18 +409,19 @@ pl:
     TWODIGITYEAR: 'Dwucyfrowy rok'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Zaawansowane użycie</h4>\\n<ul>\\n<li>Dozwolone kolumny: <em>%s</em></li>\\n<li>Istniejący użytkownicy są dopasowani poprzez unikalną właściwość <em>Kod</em> i uaktualniani  nowymi wartościami z zaimportowanego pliku.</li>\\n<li>Grupy mogą być przypisane poprzez kolumnę <em>Grupy</em>. Grupy identyfikowane są poprzez unikalną właściwość  <em>Kod</em>, grupy mogą być oddzielone od siebie przecinkiem. Przypisania użytkowników do grup nie są usuwane.</li>\\n</ul>\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Stworzono członków: {count}'
     ResultDeleted: 'Usunięto %d użytkowników'
     ResultNone: 'Bez zmian'
     ResultUpdated: 'Zaktualizowano członków: {count}'
   MemberPassword:
-    PLURALNAME: 'Hasła użytkowników'
+    PLURALNAME: 'Hasła użytkownika'
     SINGULARNAME: 'Hasło użytkownika'
   MemberTableField: null
   ModelAdmin:
     DELETE: Usuń
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import z CSV'
     IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
     NOCSVFILE: 'Wybierz plik CSV do zaimportowania'
@@ -436,9 +436,9 @@ pl:
     IMPORTSPECTITLE: 'Specyfikacja %s'
   ModelAdmin_Tools.ss:
     FILTER: Filtr
-    IMPORT: Importuj
+    IMPORT: Import
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Importuj
+    IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Znajdź
   MoneyField:
     FIELDLABELAMOUNT: Ilość
@@ -449,35 +449,36 @@ pl:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
   Pagination:
     Page: Strona
-    View: Pokaż
+    View: Widok
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
-    PLURALNAME: Zezwolenia
-    SINGULARNAME: Zezwolenie
+    PLURALNAME: Uprawnienia
+    SINGULARNAME: Uprawnienie
   PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
     FromRole: 'odziedziczone z roli "{title}"'
     FromRoleOnGroup: 'odziedziczone z roli "%s" w grupie "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
+    OnlyAdminCanApply: 'Tylko administrator może to zastosować'
     PLURALNAME: Role
     SINGULARNAME: Rola
-    Title: Title
+    Title: Tytuł
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME: 'Kod roli uprawnień'
+    SINGULARNAME: 'Kod roli uprawnienia'
   Permissions:
     PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Wprowadź poprawny numer telefonu'
   RelationComplexTableField.ss:
     ADD: Dodaj
     CSVEXPORT: 'Eksportuj do CSV'
-    NOTFOUND: 'Nic nie znaleziono'
+    NOTFOUND: 'Nie znaleziono żadnych elementów'
   Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'
@@ -530,7 +531,7 @@ pl:
     Print: Drukuj
     SELECT: 'Wybierz:'
   TableListField.ss:
-    NOITEMSFOUND: 'Nic nie znaleziono'
+    NOITEMSFOUND: 'Nie znaleziono żadnych elementów'
     SORTASC: 'Sortuj w porządku rosnącym'
     SORTDESC: 'Sortuj w porządku malejącym'
   TableListField_PageControls.ss:
@@ -562,7 +563,7 @@ pl:
     FROMCOMPUTER: 'Z komputera'
     FROMCOMPUTERINFO: 'Wybierz z plików'
     FROMFILES: 'Z plików'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    HOTLINKINFO: 'Informacja: Ten obrazek pochodzi z zewnętrznego serwisu. Upewnij się, że jego twórca pozwala korzystać z niego.'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
     MAXNUMBEROFFILESSHORT: 'Można wgrać tylko {count} plik(ów/i)'
     REMOVE: Usuń

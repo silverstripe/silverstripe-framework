@@ -1,7 +1,6 @@
 ja_JP:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 新しいフォルダ
   AssetTableField:
     CREATED: 初回アップロード日時
@@ -20,10 +19,10 @@ ja_JP:
     DROPAREA: ドロップ領域
     EDITALL: すべて編集
     EDITANDORGANIZE: 編集と管理
-    EDITINFO: 'Edit files'
+    EDITINFO: ファイルを編集
     FILES: ファイル
     FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTERINFO: コンピュータからアップロード
     TOTAL: 合計
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: しばらくお待ちください...アップロードは進行中です
@@ -60,19 +59,19 @@ ja_JP:
     ERRORNOTADMIN: このユーザーは管理者（アドミニストレーター）ではありません
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   Boolean:
-    0: 'False'
+    0: 偽
     ANY: 何でも
-    1: 'True'
+    1: 真
   CMSLoadingScreen.ss:
     LOADING: 読み込み中...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: CMSを利用するにはJavascriptが有効化されている必要があります。
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: すべてのCMSのセクションへアクセス
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: 保存
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
     CHANGEPASSWORDTEXT2: '貴方は現在以下の証明書を使ってログインしています:'
@@ -80,15 +79,15 @@ ja_JP:
     HELLO: こんにちわ！
     PASSWORD: パスワード
   CheckboxField:
-    - 'False'
-    - 'True'
+    - いいえ
+    - はい
   ComplexTableField:
     CLOSEPOPUP: ポップアップを閉じる
     SUCCESSADD2: '{name}を追加しました'
     SUCCESSEDIT: '更新日時 %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
-    NOITEMSFOUND: 'No items found'
+    ADDITEM: '%sを追加する'
+    NOITEMSFOUND: 項目が見つかりませんでした
     SORTASC: 昇順
     SORTDESC: ソート（下順）
   ComplexTableField_popup.ss:
@@ -211,7 +210,7 @@ ja_JP:
   FormField:
     NONE: 何もありません
   GridAction:
-    DELETE_DESCRIPTION: 削除
+    DELETE_DESCRIPTION: Delete
     Delete: 削除
     UnlinkRelation: リンク解除
   GridField:
@@ -258,7 +257,7 @@ ja_JP:
     many_many_Members: メンバー
   GroupImportForm:
     Help1: '<p><em>CSV</em>フォーマット(カンマ区切り)から一つ以上のグループを取り込みます。<small><a href="#" class="toggle-advanced">高度な利用法について表示</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: '%dグループを削除しました'
     ResultUpdated: '%dグループを更新しました'
@@ -334,7 +333,7 @@ ja_JP:
     SAVEDUP: 保存済み
     VersionUnknown: 不明
   LeftAndMain_Menu.ss:
-    Hello: Hi
+    Hello: こんにちは！
     LOGOUT: ログアウト
   LoginAttempt:
     Email: メールアドレス
@@ -348,6 +347,7 @@ ja_JP:
     BUTTONLOGIN: ログイン
     BUTTONLOGINOTHER: 他の誰かとしてログイン
     BUTTONLOSTPASSWORD: パスワードを紛失
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 新しいパスワードを確認します
     CONFIRMPASSWORD: パスワード（確認のためもう一度）
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ ja_JP:
     NEWPASSWORD: 新しいパスワード
     PASSWORD: パスワード
     PLURALNAME: メンバー
-    PROFILESAVESUCCESS: 保存しました。
     REMEMBERME: パスワードを記憶？
     SINGULARNAME: メンバー
     SUBJECTPASSWORDCHANGED: パスワードが変わりました。
@@ -410,7 +409,7 @@ ja_JP:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p><em>CSVフォーマット</em>(コンマ区切り)でユーザーを取り込みます。 <small><a href="#" class="toggle-advanced">高度な利用方法を表示</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: '{count}メンバーを作成しました'
     ResultDeleted: '%d人のメンバーを削除しました'
     ResultNone: 変更なし
@@ -422,6 +421,7 @@ ja_JP:
   ModelAdmin:
     DELETE: 削除
     DELETEDRECORDS: '{count}レコードを削除しました。'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: CSVからインポート
     IMPORTEDRECORDS: '{count}レコードを取り込みました。'
     NOCSVFILE: インポートするためのCSVファイルを参照してください
@@ -472,12 +472,13 @@ ja_JP:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 役割とアクセス権限
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 電話番号を入力してください
   RelationComplexTableField.ss:
     ADD: 追加
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: CSVへ書き出し
+    NOTFOUND: 項目が見つかりませんでした
   Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
     BUTTONSEND: パスワードリセットのリンクを送信してください
@@ -523,14 +524,14 @@ ja_JP:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
     ADD: 新しい行を追加
-    ADDITEM: 'Add %s'
+    ADDITEM: '%sを追加'
   TableListField:
     CSVEXPORT: CSVにエクスポート
     PRINT: 印刷
     Print: Print
     SELECT: 選択：
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 項目が見つかりませんでした
     SORTASC: 昇順で並べ替え
     SORTDESC: 降順で並べ替え
   TableListField_PageControls.ss:
@@ -556,11 +557,11 @@ ja_JP:
     DROPFILE: ファイルをドロップ
     DROPFILES: ファイルをドロップ
     Dimensions: Dimensions
-    EDIT: Edit
+    EDIT: 編集
     EDITINFO: このファイルを編集
     FIELDNOTSET: ファイル情報が見つかりませんでした
     FROMCOMPUTER: コンピュータから
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: ファイルから選択
     FROMFILES: ファイルから
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: '最大数の{count}ファイルを超えました。'
@@ -569,7 +570,7 @@ ja_JP:
     REMOVEERROR: ファイルの削除におけるエラー
     REMOVEINFO: ここからこのファイルを削除。ただし、ファイルのストレージからこのファイルの削除はしない。
     STARTALL: すべて開始
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: すべてのアップロードを開始
     Saved: 保存しました
   Versioned:
     has_many_Versions: バージョン

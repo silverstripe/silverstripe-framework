@@ -1,7 +1,6 @@
 ca:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NovaCarpeta
   AssetTableField:
     CREATED: 'Carregat per primer cop'
@@ -21,7 +20,7 @@ ca:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Fitxers
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -72,12 +71,12 @@ ca:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Desa
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
+    CHANGEPASSWORDTEXT2: 'Podeu usar ara les següents credencials per a entrar:'
     EMAIL: 'Correu electrònic'
-    HELLO: Hi
+    HELLO: Hola
     PASSWORD: Contrasenya
   CheckboxField:
     - 'False'
@@ -87,13 +86,13 @@ ca:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'S''ha desat %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Afegir %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Ordena ascendentment'
+    SORTDESC: 'Ordena descendentment'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Següent
+    PREVIOUS: Anterior
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -181,7 +180,7 @@ ca:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: Fitxer
+    FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -194,10 +193,10 @@ ca:
     PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: Hola
+    TEXT1: 'Aquí teniu el vostre'
+    TEXT2: 'enllaç de reinici de la contrasenya'
+    TEXT3: per
   Form:
     FIELDISREQUIRED: 'Es requereix %s'
     SubmitBtnLabel: Go
@@ -234,7 +233,7 @@ ca:
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Suprimeix
+    Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
@@ -258,7 +257,7 @@ ca:
     many_many_Members: Membres
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -318,7 +317,7 @@ ca:
     PLURALNAME: Files
     SINGULARNAME: File
   Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Iframe Carregador d''imatge'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
@@ -348,6 +347,7 @@ ca:
     BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Entreu com a algú diferent'
     BUTTONLOSTPASSWORD: 'He perdut la meva contrasenya'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmeu la nova contrasenya'
     CONFIRMPASSWORD: 'Confirmeu la contrasenya'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ ca:
     NEWPASSWORD: 'Nova contrasenya'
     PASSWORD: Contrasenya
     PLURALNAME: Membres
-    PROFILESAVESUCCESS: 'S''ha desat amb èxit.'
     REMEMBERME: 'Recorda''m el proper cop'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
@@ -410,7 +409,7 @@ ca:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
@@ -422,6 +421,7 @@ ca:
   ModelAdmin:
     DELETE: Suprimeix
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Importa de CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Si us plau, cerqueu el fitxer CSV per a importar'
@@ -472,10 +472,11 @@ ca:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Si us plau, introduïu un número de telèfon vàlid'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: Afegeix
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -522,12 +523,12 @@ ca:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'Afegeix una nova fila'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Exporta a CSV'
     PRINT: Imprimeix
-    Print: Imprimeix
+    Print: Print
     SELECT: 'Select:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -549,7 +550,7 @@ ca:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

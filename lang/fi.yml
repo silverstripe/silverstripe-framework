@@ -1,7 +1,6 @@
 fi:
   AssetAdmin:
-    ADDFILES: 'Lisää tiedostoja'
-    EditOrgMenu: 'Muokkaa ja järjestä'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
@@ -13,7 +12,7 @@ fi:
     SIZE: Koko
     TITLE: Otsikko
     TYPE: Tyyppi
-    URL: URL-osoite
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Valitse tiedostot'
     DRAGFILESHERE: 'Raahaa tiedotot tähän'
@@ -22,7 +21,7 @@ fi:
     EDITANDORGANIZE: 'Muokkaa & järjestele'
     EDITINFO: 'Muokkaa tiedostoja'
     FILES: Tiedostot
-    FROMCOMPUTER: 'Valitse tiedostoja omalta tietokoneeltasi'
+    FROMCOMPUTER: 'Valitse tiedostot omalta tietokoneeltasi'
     FROMCOMPUTERINFO: 'Siirrä omalta tietokoneeltasi'
     TOTAL: Yhteensä
     TOUPLOAD: 'Valitse ladattavia tiedostoja...'
@@ -60,9 +59,9 @@ fi:
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
-    0: Epätosi
+    0: Ei
     ANY: Yhtään
-    1: Tosi
+    1: Kyllä
   CMSLoadingScreen.ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
@@ -72,7 +71,7 @@ fi:
     ACCESSALLINTERFACESHELP: 'Ohittaa tarkemmat käyttöoikeudet.'
     SAVE: Tallenna
   CMSProfileController:
-    MENUTITLE: 'CMS-profiili kontrolleri'
+    MENUTITLE: Profiilini
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
@@ -80,15 +79,15 @@ fi:
     HELLO: Hei
     PASSWORD: Salasana
   CheckboxField:
-    - 'Ei valintaa'
-    - Valittu
+    - Ei
+    - Kyllä
   ComplexTableField:
     CLOSEPOPUP: 'Sulje ponnahdusikkuna'
     SUCCESSADD2: 'Lisättiin {name}'
     SUCCESSEDIT: 'Tallennettu %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Lisää %s'
-    NOITEMSFOUND: 'Kohteita ei löytynyt'
+    NOITEMSFOUND: 'Merkintöjä ei löytynyt'
     SORTASC: 'Nouseva järjestys'
     SORTDESC: 'Laskeva järjestys'
   ComplexTableField_popup.ss:
@@ -105,7 +104,7 @@ fi:
     SECOND: toinen
     THIRD: kolmas
   CurrencyField:
-    CURRENCYSYMBOL: €
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: Dataobjektit
     SINGULARNAME: Dataobjekti
@@ -200,7 +199,7 @@ fi:
     TEXT3: henkilölle
   Form:
     FIELDISREQUIRED: '%s on pakollinen.'
-    SubmitBtnLabel: Lähetä
+    SubmitBtnLabel: Siirrä
     VALIDATIONCREDITNUMBER: 'Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein'
     VALIDATIONNOTUNIQUE: 'Syötetty arvo ei ole yksilöllinen'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
@@ -280,7 +279,7 @@ fi:
     CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
     DETAILS: Tiedot
     EMAIL: Sähköpostiosoite
-    FILE: Tiedostot
+    FILE: Tiedosto
     FOLDER: Kansio
     FROMCMS: CMS-järjestelmästä
     FROMCOMPUTER: 'Omalta tietokoneeltasi'
@@ -348,6 +347,7 @@ fi:
     BUTTONLOGIN: 'Kirjaudu sisään'
     BUTTONLOGINOTHER: 'Kirjaudu jonain muuna'
     BUTTONLOSTPASSWORD: 'Kadotin salasanani'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Syötä uusi salasana uudelleen'
     CONFIRMPASSWORD: 'Syötä salasana uudelleen'
     DATEFORMAT: Päivämäärämuoto
@@ -367,9 +367,8 @@ fi:
     NEWPASSWORD: 'Uusi salasana'
     PASSWORD: Salasana
     PLURALNAME: Jäsenet
-    PROFILESAVESUCCESS: 'Tallennettu onnistuneesti.'
     REMEMBERME: 'Muista seuraavalla kerralla?'
-    SINGULARNAME: Käyttäjä
+    SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
@@ -412,7 +411,7 @@ fi:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Luotiin {count} käyttäjä(ä)'
-    ResultDeleted: 'Poistettu %d käyttäjä(ä)'
+    ResultDeleted: 'Poistettu %d jäsentä'
     ResultNone: 'Ei muutoksia'
     ResultUpdated: 'Päivitettiin {count} käyttäjä(ä)'
   MemberPassword:
@@ -422,6 +421,7 @@ fi:
   ModelAdmin:
     DELETE: Poista
     DELETEDRECORDS: 'Poistettiin {count} tietuetta'
+    EMPTYBEFOREIMPORT: 'Tyhjennä tietokanta ennen tuonti'
     IMPORT: 'Tuo CSV:stä'
     IMPORTEDRECORDS: 'Tuotiin {count} tietuetta'
     NOCSVFILE: 'Selaa ja tuo CSV-tiedosto'
@@ -463,7 +463,7 @@ fi:
     FromRole: 'periytyivät roolista "{title}"'
     FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
+    OnlyAdminCanApply: 'Vain järjestelmänvalvoja on oikeudet aseta'
     PLURALNAME: Roolit
     SINGULARNAME: Rooli
     Title: 'Roolin nimi'
@@ -472,12 +472,13 @@ fi:
     SINGULARNAME: 'Käyttöoikeiden roolin koodi'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
   RelationComplexTableField.ss:
     ADD: Lisää
-    CSVEXPORT: 'Vie CSV-muodossa'
-    NOTFOUND: 'Yhtään kohdetta ei löytynyt'
+    CSVEXPORT: 'Vie CSV:nä'
+    NOTFOUND: 'Merkintöjä ei löytynyt'
   Security:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
@@ -530,13 +531,13 @@ fi:
     Print: Tulosta
     SELECT: 'Valitse:'
   TableListField.ss:
-    NOITEMSFOUND: 'Kohteita ei löytynyt'
+    NOITEMSFOUND: 'Merkintöjä ei löytynyt'
     SORTASC: 'Järjestä nousevasti'
     SORTDESC: 'Järjestä laskevasti'
   TableListField_PageControls.ss:
     DISPLAYING: Näytetään
     OF: /
-    TO: -»
+    TO: listalle
     VIEWFIRST: 'Näytä ensimmäinen'
     VIEWLAST: 'Näytä viimeinen'
     VIEWNEXT: 'Näytä seuraava'
