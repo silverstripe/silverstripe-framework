@@ -755,7 +755,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$treeTitle = $customTreeTitle;
 			} elseif(class_exists('SiteConfig')) {
 				$siteConfig = SiteConfig::current_site_config();
-				$treeTitle =  $siteConfig->Title;
+				$treeTitle =  Convert::raw2xml($siteConfig->Title);
 			} else {
 				$treeTitle = '...';
 			}
