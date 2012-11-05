@@ -254,6 +254,9 @@ form.small .field, .field.small {
 			}
 		}
 	}
+	.chzn-choices {
+		@include border-radius(3px);
+	}
 	
 	/* Date Fields */
 	input.month, input.day, input.year { 
