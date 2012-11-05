@@ -24,6 +24,9 @@
 			white-space: nowrap;
 			margin-left: 18px;
 			min-width: 18px;
+			ins.jstree-icon {
+				display: none;
+			}
 			&.jstree-open > ul {
 				display: block;
 			}
@@ -32,6 +35,11 @@
 			}
 			&.disabled > a {
 				color: #aaaaaa;
+			}
+			ul {
+				ins.jstree-icon {
+					display: block;
+				}
 			}
 		}
 		ins {
@@ -153,7 +161,7 @@
 
 	li.jstree-open > ul {
 		display: block;
-		margin-left:-13px;
+		margin-left: -18px;
 		li ul {
 			margin-left:2px;
 		}
@@ -501,7 +509,7 @@
 			background-position:0 0; 
 		}
 		.jstree-open > ins { 
-			background-position:-20px 0; 
+			background-position:-20px 0;
 		}
 	}
 } 
