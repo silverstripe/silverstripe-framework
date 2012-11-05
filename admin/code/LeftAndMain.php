@@ -402,6 +402,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * This is used in the CMS.
 	 */
 	public function ping() {
+		Requirements::clear();
 		return 1;
 	}
 	
@@ -753,7 +754,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$treeTitle = $customTreeTitle;
 			} elseif(class_exists('SiteConfig')) {
 				$siteConfig = SiteConfig::current_site_config();
-				$treeTitle =  $siteConfig->Title;
+				$treeTitle =  Convert::raw2xml($siteConfig->Title);
 			} else {
 				$treeTitle = '...';
 			}
@@ -1090,7 +1091,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 			
 			// Set this if you want to split up tabs into a separate header row
-			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			// if($form->Fields()->hasTabset()) {
+			// 	$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			// }
 			
 			// Add a default or custom validator.
 			// @todo Currently the default Validator.js implementation

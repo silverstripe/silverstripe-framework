@@ -1,7 +1,6 @@
 cs:
   AssetAdmin:
-    ADDFILES: 'Přidat soubory'
-    EditOrgMenu: 'Editovat &amp; organizovat'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nová složka'
   AssetTableField:
     CREATED: 'Poprvé nahráno'
@@ -17,7 +16,7 @@ cs:
   AssetUploadField:
     ChooseFiles: 'Vyberte soubory'
     DRAGFILESHERE: 'Táhni soubory sem'
-    DROPAREA: 'Oblast táhni (Drop)'
+    DROPAREA: 'Oblast upustění'
     EDITALL: 'Editovat vše'
     EDITANDORGANIZE: 'Editovat & organizovat'
     EDITINFO: 'Editovat soubory'
@@ -26,7 +25,7 @@ cs:
     FROMCOMPUTERINFO: 'Nahrát z vašeho počítače'
     TOTAL: Celkem
     TOUPLOAD: 'Vyberte soubory k nahrání...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Prosím čekejte... probíhá nahrávání'
     UPLOADOR: NEBO
   BBCodeParser:
     ALIGNEMENT: Zarovnání
@@ -60,28 +59,28 @@ cs:
     ERRORNOTADMIN: 'Tento uživatel není administrátor.'
     ERRORNOTREC: 'Toto uživatelské jméno / heslo nebylo rozpoznáno'
   Boolean:
-    0: Nepravda
+    0: Ne
     ANY: Jakkýkoliv
-    1: Pravda
+    1: Ano
   CMSLoadingScreen.ss:
-    LOADING: 'Nahrávání ...'
-    REQUIREJS: 'CMS vyžaduje, aby jste měli JavaScript povolen.'
+    LOADING: Nahrávání...
+    REQUIREJS: 'CMS vyžaduje, aby jste měli JavaScript zapnut.'
   CMSMain:
     ACCESS: 'Přístup k ''{title}'' sekci'
     ACCESSALLINTERFACES: 'Přístup ke všem sekcím CMS'
     ACCESSALLINTERFACESHELP: 'Prepíše více specifické nastavení přístupu.'
     SAVE: Uložit
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'Můj profil'
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Změnil/a jste své heslo na'
+    CHANGEPASSWORDTEXT1: 'Vaše heslo bylo změněno pro'
     CHANGEPASSWORDTEXT2: 'Nyní můžete použít následující přihlašovací údaje pro přihlášení:'
     EMAIL: Email
-    HELLO: Ahoj
+    HELLO: 'Dobrý den'
     PASSWORD: Heslo
   CheckboxField:
-    - Nepravda
-    - Pravda
+    - Ne
+    - Ano
   ComplexTableField:
     CLOSEPOPUP: Zavřít
     SUCCESSADD2: 'Přidáno {name}'
@@ -89,8 +88,8 @@ cs:
   ComplexTableField.ss:
     ADDITEM: 'Přidat %s'
     NOITEMSFOUND: 'Žádné položky'
-    SORTASC: 'Třídit vzestupně'
-    SORTDESC: 'Třídit sestupně'
+    SORTASC: 'Řadit vzestupně'
+    SORTDESC: 'Řadit sestupně'
   ComplexTableField_popup.ss:
     NEXT: Další
     PREVIOUS: Předchozí
@@ -128,7 +127,7 @@ cs:
     NOTSET: nenastaveno
     TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadejte platný formát datumu ({format})'
-    VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající miximu povoleného datumu ({date})'
+    VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající maximu povoleného datumu ({date})'
     VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
   DatetimeField:
     NOTSET: Nenastaveno
@@ -137,7 +136,7 @@ cs:
   DropdownField:
     CHOOSE: (Vyberte)
   EmailField:
-    VALIDATION: 'Prosím zadejte email adresu'
+    VALIDATION: 'Prosím zadejte e-mailovou adresu'
   Email_BounceRecord:
     PLURALNAME: 'Záznamy vrácené pošty'
     SINGULARNAME: 'Záznam vrácené pošty'
@@ -178,7 +177,7 @@ cs:
   FileIFrameField:
     ATTACH: 'Připojit {type}'
     ATTACHONCESAVED: '{type} je možné připojit až budete mít nejdříve uložen záznam.'
-    ATTACHONCESAVED2: 'Soubor je možné připojit až budete mít nejdříve uložen záznam.'
+    ATTACHONCESAVED2: 'Soubory je možné připojit až budete mít nejdříve uložen záznam.'
     DELETE: 'Smazat {type}'
     DISALLOWEDFILETYPE: 'Tento typ souboru není povoleno náhrát'
     FILE: Soubor
@@ -194,9 +193,9 @@ cs:
     PLURALNAME: Složky
     SINGULARNAME: Složka
   ForgotPasswordEmail.ss:
-    HELLO: Ahoj
-    TEXT1: 'Zde je váš'
-    TEXT2: 'Odkaz pro resetování hesla'
+    HELLO: 'Dobrý den'
+    TEXT1: 'Zde je Váš'
+    TEXT2: 'odkaz na reset hesla'
     TEXT3: pro
   Form:
     FIELDISREQUIRED: '%s je požadováno.'
@@ -205,7 +204,7 @@ cs:
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota není unikátní'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla se neshodují'
     VALIDATIONPASSWORDSNOTEMPTY: 'Hesla nemohou být prázdná'
-    VALIDATIONSTRONGPASSWORD: 'Hesla musí obsahovat nejméně jednu číslici a jeden alfanumerický znak.'
+    VALIDATIONSTRONGPASSWORD: 'Hesla musí obsahovat alespoň jednu číslici a jedno písmeno.'
     VALIDATOR: Validátor
     VALIDCURRENCY: 'Prosím zadejte platnou měnu'
   FormField:
@@ -213,7 +212,7 @@ cs:
   GridAction:
     DELETE_DESCRIPTION: Smazat
     Delete: Smazat
-    UnlinkRelation: Rozpojit
+    UnlinkRelation: Odpojit
   GridField:
     Add: 'Přidat {name}'
     Filter: Filtr
@@ -258,7 +257,7 @@ cs:
     many_many_Members: Členové
   GroupImportForm:
     Help1: '<p>Import jedné nebo více skupin v <em>CSV</em> formátu (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použití</h4>\\n<ul>\\n<li>Povolené sloupce: <em>%s</em></li>\\n<li>Existující skupiny jsou porovnávány jejich unikátní hodnotou <em>Code</em>, a aktualizovány novými hodnotami z importovaného souboru.</li>\\n<li>Hierarchie skupin mohou být vytvořeny použitím sloupce <em>ParentCode</em>.</li>\\n<li>Kódy práv mohou být připojeny sloupcem <em>PermissionCode</em>. Existující kódy práv nejsou vymazány.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použití</h4>\\n<ul>\\n<li>Povolené sloupce: <em>%s</em></li>\\n<li>Existující skupiny jsou porovnány jejich unikátní vlastností <em>Code</em>, a aktualizovány s novými hodnotami z\\nimportovaného souboru.</li>\\n<li>Hierarchie skupin může být tvořena použitím sloupce <em>ParentCode</em>.</li>\\n<li>Kódy oprávnění mohou být přiřazeny sloupcem <em>PermissionCode</em>. Existující oprávnění nejsou smazána.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Vytvořeno {count} skupin'
     ResultDeleted: 'Smazáno %d skupin'
     ResultUpdated: 'Aktualizováno %d skupin'
@@ -283,7 +282,7 @@ cs:
     FILE: Soubor
     FOLDER: Složka
     FROMCMS: 'Z CMS'
-    FROMCOMPUTER: 'Z vašeho počítače'
+    FROMCOMPUTER: 'Z tvého počítače'
     FROMWEB: 'Z webu'
     FindInFolder: 'Hledat ve složce'
     IMAGEALT: 'Alternativní text (alt)'
@@ -292,7 +291,7 @@ cs:
     IMAGEDIMENSIONS: Rozměry
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
-    IMAGETITLETEXT: 'Text titulku (tooltip)'
+    IMAGETITLETEXT: 'Titulek textu (tooltip)'
     IMAGETITLETEXTDESC: 'Pro další informace o obrázku'
     IMAGEWIDTHPX: Šířka
     INSERTMEDIA: 'Vložit média'
@@ -322,7 +321,7 @@ cs:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnění měnit stránky nejvyšší úrovně. Vaše změna nebyla uložena.'
     DELETED: Smazáno.
-    DropdownBatchActionsDefault: Akce
+    DropdownBatchActionsDefault: Akcie
     HELP: Nápověda
     PAGETYPE: 'Typ stránky:'
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
@@ -332,27 +331,28 @@ cs:
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.
-    VersionUnknown: neznámé
+    VersionUnknown: neznáme
   LeftAndMain_Menu.ss:
     Hello: Ahoj
-    LOGOUT: Odhlášení
+    LOGOUT: 'Odhlásit se'
   LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
     PLURALNAME: 'Pokusy přihlášení'
     SINGULARNAME: 'Pokus přihlášení'
-    Status: Stav
+    Status: Status
   Member:
     ADDGROUP: 'Přidat skupinu'
     BUTTONCHANGEPASSWORD: 'Změnit heslo'
     BUTTONLOGIN: 'Přihlásit se'
     BUTTONLOGINOTHER: 'Přihlásit se jako někdo jiný'
     BUTTONLOSTPASSWORD: 'Zapomněl jsem heslo'
+    CANTEDIT: 'Nemáte oprávnění toto vykonat'
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
     DATEFORMAT: 'Formát datumu'
     DefaultAdminFirstname: 'Implicitní Admin'
-    DefaultDateTime: implicitní
+    DefaultDateTime: výchozí
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Nové heslo nesmí být prázdné, zkuste to znovu'
     ENTEREMAIL: 'Zadejte e-mailovou adresu pro získání odkazu na restart hesla.'
@@ -367,7 +367,6 @@ cs:
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo
     PLURALNAME: Členové
-    PROFILESAVESUCCESS: 'Úspěšně uloženo'
     REMEMBERME: 'Zapamatovat si mě pro příště?'
     SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bylo změněno'
@@ -390,8 +389,8 @@ cs:
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
     'APPLY FILTER': 'Použít filtr'
-    Custom: Vlastní
-    DATEFORMATBAD: 'Formát datumu není platný'
+    Custom: Uživatelské
+    DATEFORMATBAD: 'Formát datumu je neplatný'
     DAYNOLEADING: 'Den měsíce bez úvodní nuly'
     DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
     FOURDIGITYEAR: 'Čtyřčíslí roku'
@@ -405,29 +404,30 @@ cs:
     TWODIGITDAY: 'Dvojčíslí dne měsíce'
     TWODIGITHOUR: 'Dvojčíslí hodiny (00 až 23)'
     TWODIGITMINUTE: 'Dvojčíslí minuty (00 až 59)'
-    TWODIGITMONTH: 'Dvojčíslí měséce (01=Leden, atď.)'
+    TWODIGITMONTH: 'Dvojčíslí měsíce (01=Leden, atď.)'
     TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
     TWODIGITYEAR: 'Dvojčíslí roku'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použití</h4>\\n<ul>\\n<li>Povolené sloupce: <em>%s</em></li>\\n<li>Existující uživatelé jsou porovnáváni podle jejich unikátní hodnoty <em>Code</em>y, a aktualizováni novými hodnotami z importovaného souboru.</li>\\n<li>Skupiny mohou být připojeny ze sloupce <em>Groups</em>. Skupiny jsou identifikovány jejich honotou <em>Code</em>, vícero skupin může být odděleno čárkou. Existující skupinové členství nejsou vymazány.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použití</h4>\\n<ul>\\n<li>Povolené sloupce: <em>%s</em></li>\\n<li>Existující uživatelé jsou porovnáni jejich unikátní vlastností <em>Code</em>, a aktualizováni s novými hodnotami z importovaného souboru.</li>\\n<li>Skupiny mohou být přiřazeny sloupcem <em>Groups</em>. Skupiny jsou identifikovány svojí vlastností <em>Code</em>, více skupin může být odděleno čárkou. Existující členství ve skupině nejsou smazána.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Vytvořeno {count} členů'
     ResultDeleted: 'Smazáno %d členů'
     ResultNone: 'Žádné změny'
     ResultUpdated: 'Aktualizováno {count} členů'
   MemberPassword:
-    PLURALNAME: 'Členské hesla'
+    PLURALNAME: 'Členská hesla'
     SINGULARNAME: 'Členské heslo'
   MemberTableField: null
   ModelAdmin:
     DELETE: Smazat
     DELETEDRECORDS: 'Smazáno {count} záznamů.'
+    EMPTYBEFOREIMPORT: 'Vyčistit databázi před importováním'
     IMPORT: 'Importovat ze souboru CSV'
     IMPORTEDRECORDS: 'Importováno {count} záznamů.'
     NOCSVFILE: 'Prosím, vyhledejte soubor CSV pro import'
     NOIMPORT: 'Nic k importu'
     RESET: Resetovat
-    Title: 'Modely dat'
+    Title: 'Datové modely'
     UPDATEDRECORDS: 'Aktualizováno {count} záznamů.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Sloupce databáze'
@@ -435,11 +435,11 @@ cs:
     IMPORTSPECRELATIONS: Relace
     IMPORTSPECTITLE: 'Specifikace pro %s'
   ModelAdmin_Tools.ss:
-    FILTER: Filtr
+    FILTER: Filtrovat
     IMPORT: Importovat
   ModelSidebar.ss:
     IMPORT_TAB_HEADER: Importovat
-    SEARCHLISTINGS: Vyhledat
+    SEARCHLISTINGS: Hledat
   MoneyField:
     FIELDLABELAMOUNT: Částka
     FIELDLABELCURRENCY: Měna
@@ -454,12 +454,12 @@ cs:
     AdminGroup: Administrátor
     CMS_ACCESS_CATEGORY: 'Přístup CMS'
     FULLADMINRIGHTS: 'Plná administrátorská práva'
-    FULLADMINRIGHTS_HELP: 'Znamená, a přepíše všechny ostatní přidělená oprávnění.'
+    FULLADMINRIGHTS_HELP: 'Znamená, a přepíše všechna ostatní přidělená oprávnění.'
     PLURALNAME: Oprávnění
     SINGULARNAME: Oprávnění
   PermissionCheckboxSetField:
-    AssignedTo: 'přiděleno "{title}"'
-    FromGroup: 'zděděno ze skupiny "{title}"'
+    AssignedTo: 'přiděleno k "{title}"'
+    FromGroup: 'zdědeno ze skupiny "{title}"'
     FromRole: 'zdědeno z role "{title}"'
     FromRoleOnGroup: 'děděno z role "%s" ve skupině "%s"'
   PermissionRole:
@@ -468,10 +468,11 @@ cs:
     SINGULARNAME: Role
     Title: Název
   PermissionRoleCode:
-    PLURALNAME: 'Kódy oprávnění role'
-    SINGULARNAME: 'Kód oprávnění role'
+    PLURALNAME: 'Kódy role oprávnění'
+    SINGULARNAME: 'Kód role oprávnění'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role a přístupová práva'
+    UserPermissionsIntro: 'Přiřazení skupin tomuto uživatelovi upraví oprávnění, které má. Podívejte se sekcie skupiny pro podrobnosti o oprávněních k jednotlivým skupinám.'
   PhoneNumberField:
     VALIDATION: 'Prosím zadejte platné telefonní číslo'
   RelationComplexTableField.ss:
@@ -499,10 +500,10 @@ cs:
     EDITPERMISSIONS: 'Upravit oprávnění pro skupiny'
     EDITPERMISSIONS_HELP: 'Možnost editovat oprávnění a IP adresy pro skupinu. Vyžaduje oprávnění  pro "Přístup do sekce ''Bezpečnost''".'
     GROUPNAME: 'Jméno skupiny'
-    IMPORTGROUPS: 'Import skupin'
-    IMPORTUSERS: 'Import uživatelů'
+    IMPORTGROUPS: 'Importovat skupiny'
+    IMPORTUSERS: 'Importovat uživaté'
     MEMBERS: Členové
-    MENUTITLE: Zabezpečení
+    MENUTITLE: Bezbečnost
     MemberListCaution: 'Varování: Odstranění členů z tohoto seznamu způsobí, že členové budou odtraněni ze všech skupin a databáze'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Práva
@@ -520,14 +521,14 @@ cs:
   SiteTree:
     TABMAIN: Hlavní
   TableField:
-    ISREQUIRED: 'V %s ''%s'' je požadováno'
+    ISREQUIRED: 'V %s ''%s je požadováno'
   TableField.ss:
     ADD: 'Přidat nový řádek'
     ADDITEM: 'Přidat %s'
   TableListField:
     CSVEXPORT: 'Exportovat do souboru CSV'
     PRINT: Vytisknout
-    Print: Vytisknout
+    Print: Tisk
     SELECT: 'Vybrat:'
   TableListField.ss:
     NOITEMSFOUND: 'Žádné položky'
@@ -549,7 +550,7 @@ cs:
   UploadField:
     ATTACHFILE: 'Připojit soubor'
     ATTACHFILES: 'Připojit soubory'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Připojit soubor(y)'
     DELETE: 'Smazat ze souborů'
     DELETEINFO: 'Trvale odstranit tento soubor z úložiště souborů'
     DOEDIT: Uložit
@@ -567,7 +568,7 @@ cs:
     MAXNUMBEROFFILESSHORT: 'Můžete nahrát pouze {count} souborů'
     REMOVE: Odstranit
     REMOVEERROR: 'Chyba odstranění souboru'
-    REMOVEINFO: 'Odtranit tento soubor odsud, ale nesmazat ho z ůložiště souborů'
+    REMOVEINFO: 'Odtranit tento soubor odsud, ale nesmazat ho z úložiště souborů'
     STARTALL: 'Začni vše'
     STARTALLINFO: 'Začni vše nahrávat'
     Saved: Uloženo

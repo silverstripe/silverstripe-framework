@@ -127,7 +127,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			// necessary for tree node selection in LeftAndMain.EditForm.js
 			new HiddenField('ID', false, 0)
 		);
-		
+
+		// Tab nav in CMS is rendered through separate template		
 		$root->setTemplate('CMSTabSet');
 		
 		// Add roles editing interface
@@ -161,7 +162,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		);
 		$form->addExtraClass('cms-edit-form');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
-		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		// Tab nav in CMS is rendered through separate template
+		if($form->Fields()->hasTabset()) {
+			$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		}
 		$form->addExtraClass('center ss-tabset cms-tabset ' . $this->BaseCSSClasses());
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 

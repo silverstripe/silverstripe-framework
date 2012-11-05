@@ -156,21 +156,17 @@ $gf_grid_x:	16px;
 				cursor: pointer;
 			}
 			td {
+				width: auto;
+				max-width: 500px; //This number is semi-arbitary. It is acting as a percentage limit, rather than actually constricting the width to 500px.
+				word-wrap:break-word;
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
-				// Overwritten for IE7, which doesn't support this.
-				width: auto;
-				white-space:nowrap;
+				// Overwritten for IE7, which doesn't support this.			
 				&.col-buttons {
 					width: 40px;
 					padding:0 $gf_grid_x/2;
 					text-align: left;
 				}
-
-				&.col-description {
-					width: auto;
-				}
-
 				&.col-listChildrenLink {
 					width:$gf_grid_x;
 					border-right:none;

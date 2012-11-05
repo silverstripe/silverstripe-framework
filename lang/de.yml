@@ -1,7 +1,6 @@
 de:
   AssetAdmin:
-    ADDFILES: 'Dateien hinzufügen'
-    EditOrgMenu: 'Bearbeiten und organisieren'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Neuer Ordner'
   AssetTableField:
     CREATED: 'Erstmalig hochgeladen'
@@ -23,7 +22,7 @@ de:
     EDITINFO: 'Dateien bearbeiten'
     FILES: Dateien
     FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
-    FROMCOMPUTERINFO: 'Von ihrem Computer hochladen'
+    FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
     TOTAL: Gesamt
     TOUPLOAD: 'Dateien für den Upload wählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
@@ -60,9 +59,9 @@ de:
     ERRORNOTADMIN: 'Dieser Nutzer ist kein Administrator'
     ERRORNOTREC: 'Dieser/s  Nutzername/Passwort wurde nicht erkannt'
   Boolean:
-    0: Falsch
+    0: Nein
     ANY: alle
-    1: Wahr
+    1: Ja
   CMSLoadingScreen.ss:
     LOADING: 'Lade Daten ...'
     REQUIREJS: 'Für die Benutzung des CMS wird JavaScript benötigt.'
@@ -72,7 +71,7 @@ de:
     ACCESSALLINTERFACESHELP: 'Hebt alle bereichspezifischen Berechtigungen auf.'
     SAVE: Speichern
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'Mein Profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort geändert für'
     CHANGEPASSWORDTEXT2: 'Sie können nun folgende Angaben benutzen um sich einzuloggen'
@@ -80,8 +79,8 @@ de:
     HELLO: Hi
     PASSWORD: Passwort
   CheckboxField:
-    - Falsch
-    - Wahr
+    - Nein
+    - Ja
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
     SUCCESSADD2: '{name} hinzugefügt'
@@ -163,7 +162,7 @@ de:
     MpgType: 'MPEG Videodatei'
     NOFILESIZE: 'Dateigröße ist 0 bytes'
     NOVALIDUPLOAD: 'Datei ist kein gültiger Upload'
-    Name: Dateiname
+    Name: Name
     PLURALNAME: Dateien
     PdfType: 'Adobe Acrobat PDF Datei'
     PngType: 'PNG Bild - vielseitig einsetzbar'
@@ -191,8 +190,8 @@ de:
   Filesystem:
     SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
   Folder:
-    PLURALNAME: Ordner
-    SINGULARNAME: 'In Ordner suchen'
+    PLURALNAME: Folders
+    SINGULARNAME: Ordner
   ForgotPasswordEmail.ss:
     HELLO: Hallo
     TEXT1: 'Hier ist Ihr'
@@ -235,7 +234,7 @@ de:
     CancelBtn: Abbrechen
     Create: Erstellen
     Delete: Löschen
-    DeletePermissionsFailure: 'Keine Berechtigung zum Löschen'
+    DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
     Deleted: 'Gelöscht %s %s'
     Save: Speichern
     Saved: 'Gespeichert %s %s'
@@ -249,16 +248,16 @@ de:
     GroupReminder: 'Bei Zuweisung einer Übergruppe werden alle ihre Rollen übernommen'
     Locked: 'Gesperrt?'
     NoRoles: 'Keine Rollen gefunden'
-    PLURALNAME: 'Gruppen importieren'
+    PLURALNAME: Gruppen
     Parent: Elterngruppe
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
-    SINGULARNAME: 'Gruppen Code'
+    SINGULARNAME: Gruppe
     Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
     many_many_Members: Mitglieder
   GroupImportForm:
     Help1: '<p>Eine oder mehrere Gruppen im <em>CSV</em>-Format (kommaseparierte Werte) importieren. <small><a href="#" class="toggle-advanced">Erweiterte Nutzung</a></small></p>'
-    Help2: '<div class="advanced"><h4>Erweiterte Nutzung</h4><ul><li>Gültige Spalten: <em>%s</em></li><li>Vorhandene Gruppen werden über ihren eindeutigen <em>Code</em> ermittelt und mit den Werten aus der importierten Datei aktualisiert.</li><li>Gruppen-Hierarchien können über die <em>ParentCode</em> Spalte definiert werden.</li><li>Berechtigungscodes können über die Splate <em>PermissionCode</em> zugewiesen werden, vorhandene Berechtigungen werden nicht gelöscht.</li></ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Erweiterte Benutzung</h4>\\n<ul>\\n<li>Gültige Spalten: <em>%s</em></li>\\n<li>Bereits existierende Gruppen werden anhand ihres eindeutigen <em>Code</em> identifiziert und um neue Einträge aus der Importdatei erweitert.</li>\\n<li>Berechtigungen können in der Spalte <em>PermissioinCode</em> hinzugefügt werden.  Schon zugewiesene Berechtigungen werden nicht entfernt.</li>\\n</ul>\\n</div>"
     ResultCreated: '{count} Gruppe(n) wurden erstellt'
     ResultDeleted: '%d Gruppen gelöscht'
     ResultUpdated: '%d Gruppen aktualisiert'
@@ -310,13 +309,13 @@ de:
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
     UpdateMEDIA: 'Medienobjekt aktualisieren'
   Image:
-    PLURALNAME: 'Von "Dateien"'
+    PLURALNAME: Dateien
     SINGULARNAME: Datei
   ImageField:
     IMAGE: Bild
   Image_Cached:
-    PLURALNAME: 'Von "Dateien"'
-    SINGULARNAME: 'Datei anhängen'
+    PLURALNAME: Dateien
+    SINGULARNAME: Datei
   Image_iframe.ss:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
@@ -334,7 +333,7 @@ de:
     SAVEDUP: Gespeichert.
     VersionUnknown: Unbekannt
   LeftAndMain_Menu.ss:
-    Hello: Hallo
+    Hello: Hi
     LOGOUT: Ausloggen
   LoginAttempt:
     Email: E-Mail-Adresse
@@ -348,6 +347,7 @@ de:
     BUTTONLOGIN: Einloggen
     BUTTONLOGINOTHER: 'Als jemand anders einloggen'
     BUTTONLOSTPASSWORD: 'Ich habe mein Passwort vergessen'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
     DATEFORMAT: 'Bitte geben sie das Datum im korrekten Format ein ({format})'
@@ -367,7 +367,6 @@ de:
     NEWPASSWORD: 'Neues Passwort'
     PASSWORD: Passwort
     PLURALNAME: Benutzer
-    PROFILESAVESUCCESS: 'Erfolgreich gespeichert.'
     REMEMBERME: 'Für das nächste Mal merken?'
     SINGULARNAME: Benutzer
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
@@ -410,7 +409,7 @@ de:
     TWODIGITYEAR: 'Zweistellige Jahreszahl'
   MemberImportForm:
     Help1: '<p>Mitglieder im <em>CSV</em>-Format (kommaseparierte Werte) importieren. <small><a href="#" class="toggle-advanced">Erweiterte Nutzung</a></small></p>'
-    Help2: '<div class="advanced"><h4>Advanced usage</h4><ul><li>Gültige Spalten: <em>%s</em></li><li>Vorhandene Mitglieder werden über ihren eindeutigen <em>Code</em> ermittelt und mit den Werten aus der importierten Datei aktualisiert.</li><li>Gruppen können über die Spalte <em>Gruppen</em> zugewiesen werden. Gruppen werden über ihren eindeutigen <em>Code</em> ermittelt, mehrere Gruppen können durch ein Komma getrennt werden. Vorhandene Gruppenzugehörigkeiten werden nicht gelöscht.</li></ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Erweiterte Benutzung</h4>\\n<ul>\\n<li>Gültige Spalten: <em>%s</em></li>\\n<li>Bereits existierende Benutzer werden anhand ihres eindeutigen <em>Code</em> identifiziert und um neue Einträge aus der Importdatei erweitert.</li>\\n<li>Gruppen können in der Spalte <em>Gruppen</em> hinzugefügt werden. Gruppen werden anhand ihres <em>Code</em> erkannt. Mehrere Gruppen werden Komma-separiert eingetragen. Schon zugewiesene Gruppen werden nicht entfernt.</li>\\n</ul>\\n</div>"
     ResultCreated: '{count} Mitglied(er) wurden erstellt'
     ResultDeleted: '%d Mitglieder gelöscht'
     ResultNone: 'Keine Änderungen'
@@ -422,6 +421,7 @@ de:
   ModelAdmin:
     DELETE: Löschen
     DELETEDRECORDS: '{count} Datensätze wurden gelöscht.'
+    EMPTYBEFOREIMPORT: 'Datenbank vor Import leeren'
     IMPORT: 'CSV Import'
     IMPORTEDRECORDS: '{count} Datensätze wurden importiert.'
     NOCSVFILE: 'Wählen Sie eine CSV-Datei zum Importieren'
@@ -431,9 +431,9 @@ de:
     UPDATEDRECORDS: '{count} Datensätze wurden aktualisiert.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: Datenbankspalten
-    IMPORTSPECLINK: 'Spezifikation von %s anzeigen'
+    IMPORTSPECLINK: 'Beschreibung von %s anzeigen'
     IMPORTSPECRELATIONS: Relationen
-    IMPORTSPECTITLE: 'Spezifikation von %s'
+    IMPORTSPECTITLE: 'Beschreibung von %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Importieren
@@ -449,14 +449,14 @@ de:
     VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
   Pagination:
     Page: Seite
-    View: Anzeige
+    View: Anzeigen
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
     FULLADMINRIGHTS_HELP: 'Schließt alle anderen verfügbaren Berechtigungen ein'
     PLURALNAME: Berechtigungen
-    SINGULARNAME: Berechtigung
+    SINGULARNAME: Zugriffsberechtigung
   PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
@@ -464,7 +464,7 @@ de:
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Nur Adminstratoren können beitreten'
-    PLURALNAME: 'Keine Rollen gefunden'
+    PLURALNAME: Rollen
     SINGULARNAME: Rolle
     Title: Titel
   PermissionRoleCode:
@@ -472,12 +472,13 @@ de:
     SINGULARNAME: Berechtigungsrollencode
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
+    UserPermissionsIntro: 'Durch das Hinzufügen von Benutzern zu Gruppen, werden dessen Rechte angepasst. Mehr Informationen über die Berechtigungen der einzelnen Gruppen erhältst Du im Abschnitt Gruppen.'
   PhoneNumberField:
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   RelationComplexTableField.ss:
     ADD: Hinzufügen
     CSVEXPORT: 'Als CSV exportieren'
-    NOTFOUND: 'Keine Elemente gefunden.'
+    NOTFOUND: 'Keine Elemente gefunden'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'

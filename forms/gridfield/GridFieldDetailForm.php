@@ -340,7 +340,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if($form->Fields()->hasTabset()) {
 				$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-				$form->addExtraClass('ss-tabset cms-tabset');
+				$form->addExtraClass('cms-tabset');
 			}
 
 			$form->Backlink = $this->getBackLink();

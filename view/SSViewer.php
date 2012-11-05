@@ -564,6 +564,11 @@ class SSViewer {
 	protected static $current_custom_theme = null;
 
 	/**
+	 * @var boolean
+	 */
+	protected $includeRequirements = true;
+
+	/**
 	 * Create a template from a string instead of a .ss file
 	 * 
 	 * @return SSViewer
@@ -592,7 +597,7 @@ class SSViewer {
 	/**
 	 * Returns the path to the theme folder
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public static function get_theme_folder() {
 		return self::current_theme() ? THEMES_DIR . "/" . self::current_theme() : project();
@@ -667,7 +672,11 @@ class SSViewer {
 	}
 	
 	/**
-	 * Returns true if at least one of the listed templates exists
+	 * Returns true if at least one of the listed templates exists.
+	 *
+	 * @param array $templates
+	 *
+	 * @return boolean
 	 */
 	public static function hasTemplate($templates) {
 		$manifest = SS_TemplateLoader::instance()->getManifest();
@@ -681,20 +690,25 @@ class SSViewer {
 	
 	/**
 	 * Set a global rendering option.
+	 *
 	 * The following options are available:
 	 *  - rewriteHashlinks: If true (the default), <a href="#..."> will be rewritten to contain the 
 	 *    current URL.  This lets it play nicely with our <base> tag.
 	 *  - If rewriteHashlinks = 'php' then, a piece of PHP script will be inserted before the hash 
 	 *    links: "<?php echo $_SERVER['REQUEST_URI']; ?>".  This is useful if you're generating a 
 	 *    page that will be saved to a .php file and may be accessed from different URLs.
+	 *
+	 * @param string $optionName
+	 * @param mixed $optionVal
 	 */
 	public static function setOption($optionName, $optionVal) {
 		SSViewer::$options[$optionName] = $optionVal;
 	}
 	
 	/**
- 	 * @param String
- 	 * @return Mixed
+ 	 * @param string
+ 	 *
+ 	 * @return mixed
 	 */
 	public static function getOption($optionName) {
 		return SSViewer::$options[$optionName];
@@ -705,6 +719,7 @@ class SSViewer {
 	);
     
 	protected static $topLevel = array();
+
 	public static function topLevel() {
 		if(SSViewer::$topLevel) {
 			return SSViewer::$topLevel[sizeof(SSViewer::$topLevel)-1];
@@ -728,6 +743,7 @@ class SSViewer {
 	/**
 	 * @param string $identifier A template name without '.ss' extension or path
 	 * @param string $type The template type, either "main", "Includes" or "Layout"
+	 *
 	 * @return string Full system path to a template file
 	 */
 	public static function getTemplateFileByType($identifier, $type) {
@@ -766,6 +782,7 @@ class SSViewer {
 
 	/**
 	 * Set the cache object to use when storing / retrieving partial cache blocks.
+	 *
 	 * @param Zend_Cache_Core $cache
 	 */
 	public function setPartialCacheStore($cache) {
@@ -773,11 +790,21 @@ class SSViewer {
 	}
 
 	/**
-	 * Get the cache object to use when storing / retrieving partial cache blocks
+	 * Get the cache object to use when storing / retrieving partial cache blocks.
+	 *
 	 * @return Zend_Cache_Core
 	 */
 	public function getPartialCacheStore() {
 		return $this->partialCacheStore ? $this->partialCacheStore : SS_Cache::factory('cacheblock');
+	}
+
+	/**
+	 * Flag whether to include the requirements in this response.
+	 *
+	 * @param boolean
+	 */
+	public function includeRequirements($incl = true) {
+		$this->includeRequirements = $incl;
 	}
 
 	/**
@@ -790,6 +817,7 @@ class SSViewer {
 	 * @param Object $item - The item to use as the root scope for the template
 	 * @param array|null $overlay - Any variables to layer on top of the scope
 	 * @param array|null $underlay - Any variables to layer underneath the scope
+	 *
 	 * @return string - The result of executing the template
 	 */
 	protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay) {
@@ -814,15 +842,18 @@ class SSViewer {
 
 	/**
 	 * The process() method handles the "meat" of the template processing.
-	 * It takes care of caching the output (via {@link SS_Cache}),
-	 * as well as replacing the special "$Content" and "$Layout"
-	 * placeholders with their respective subtemplates.
+	 *
+	 * It takes care of caching the output (via {@link SS_Cache}), as well as 
+	 * replacing the special "$Content" and "$Layout" placeholders with their 
+	 * respective subtemplates.
+	 *
 	 * The method injects extra HTML in the header via {@link Requirements::includeInHTML()}.
 	 * 
 	 * Note: You can call this method indirectly by {@link ViewableData->renderWith()}.
 	 * 
 	 * @param ViewableData $item
-	 * @param SS_Cache $cache Optional cache backend
+	 * @param SS_Cache $cache Optional cache backend.
+	 *
 	 * @return String Parsed template output.
 	 */
 	public function process($item, $arguments = null) {
@@ -863,14 +894,18 @@ class SSViewer {
 		foreach(array('Content', 'Layout') as $subtemplate) {
 			if(isset($this->chosenTemplates[$subtemplate])) {
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
+				$subtemplateViewer->includeRequirements(false);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
 				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
 		}
 
-		$val = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay);
-		$output = Requirements::includeInHTML($template, $val);
+		$output = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay);
+		
+		if($this->includeRequirements) {
+			$output = Requirements::includeInHTML($template, $output);
+		}
 		
 		array_pop(SSViewer::$topLevel);
 
@@ -882,6 +917,7 @@ class SSViewer {
 				} else { 
 					$thisURLRelativeToBase = strip_tags($_SERVER['REQUEST_URI']); 
 				}
+
 				$output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
 			}
 		}
@@ -895,6 +931,8 @@ class SSViewer {
 	 */
 	public static function execute_template($template, $data, $arguments = null) {
 		$v = new SSViewer($template);
+		$v->includeRequirements(false);
+
 		return $v->process($data, $arguments);
 	}
 

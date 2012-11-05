@@ -1,7 +1,6 @@
 mi_NZ:
   AssetAdmin:
-    ADDFILES: 'Tāpiri Kōnae'
-    EditOrgMenu: 'Whakatika me te Whakaraupapa'
+    ALLOWEDEXTS: 'Ngā toronga ka whakaaetia'
     NEWFOLDER: KōpakiHōu
   AssetTableField:
     CREATED: 'Tukuatu tuatahi'
@@ -12,7 +11,7 @@ mi_NZ:
     OWNER: Kaiūmanga
     SIZE: Nuinga
     TITLE: Taitara
-    TYPE: 'Tūmomo '
+    TYPE: 'Momo kōnae'
     URL: PRO
   AssetUploadField:
     ChooseFiles: 'Kōwhiri kōnae'
@@ -72,7 +71,7 @@ mi_NZ:
     ACCESSALLINTERFACESHELP: 'Ka takahi i ngā tautuhinga uru tauwhāiti ake'
     SAVE: Tiaki
   CMSProfileController:
-    MENUTITLE: PūwhakamanaKōtahaCMS
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
     CHANGEPASSWORDTEXT2: 'Ka taea te whakamahi i ēnei taipitopito tuakiri ināianei hei takiuru:'
@@ -191,8 +190,8 @@ mi_NZ:
   Filesystem:
     SYNCRESULTS: 'Kua oti te tukutahi: e {createdcount} ngā tūemi i hangaia, e {deletedcount} ngā tūemi i mukua'
   Folder:
-    PLURALNAME: 'Ngā Kōpaki'
-    SINGULARNAME: Kōpaki
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: 'Kia ora'
     TEXT1: 'Anei tō'
@@ -200,7 +199,7 @@ mi_NZ:
     TEXT3: mā
   Form:
     FIELDISREQUIRED: 'Ka hiahiatia a %s'
-    SubmitBtnLabel: Haere
+    SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
     VALIDATIONNOTUNIQUE: 'Ehara te uara i tāurua i te ahurei'
     VALIDATIONPASSWORDSDONTMATCH: 'Kāore ngā kupuhipa i te ōrite'
@@ -235,7 +234,7 @@ mi_NZ:
     CancelBtn: Whakakore
     Create: Hanga
     Delete: Muku
-    DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
+    DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
     Deleted: 'Kua mukua %s %s'
     Save: Tiaki
     Saved: 'I tiakina a %s %s'
@@ -249,16 +248,16 @@ mi_NZ:
     GroupReminder: 'Mēnā ka kōwhiri koe i tētahi rōpū matua, ka whiwhi tēnei rōpū i ōna tūnga katoa'
     Locked: 'Kua raka?'
     NoRoles: 'Kāore i kitea he tūnga'
-    PLURALNAME: 'Ngā Rōpū'
+    PLURALNAME: Groups
     Parent: 'Rōpū Matua'
     RolesAddEditLink: 'Whakahaere tūnga'
-    SINGULARNAME: Rōpū
+    SINGULARNAME: Group
     Sort: 'Raupapa Kōmaka'
     has_many_Permissions: 'Ngā Whakaaetanga'
     many_many_Members: 'Ngā Mema'
   GroupImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te hōputu <em>CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Whakamahinga ara atu anō</h4>\\n<ul>\\n<li>Ngā tīwae ka whakaaetia: <em>%s</em></li>\\n<li>Ka whakaritea ngā kaiwhakamahi mā tō rātou āhuatanga<em>Waehere</em> ahurei, ā, ka whakahōutia ki ngā uara hōu mai i te kōnae kua kawea mai</li>\\n<li>Ka taea te hanga aroākapanga rōpū mā te whakamahi i te tīwae <em>WaehereMatua</em>.</li>\\n<li>Ka taea te tautapa waehere whakaaetanga mā te tīwae<em>WaehereWhakaaetanga</em>. Kāore e ūkuia ngā waehere whakaaetanga o nāianei.</li>\\n</ul>\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'I hangaia e {count} ngā rōpū'
     ResultDeleted: 'Kua mukua e %d ngā rōpū'
     ResultUpdated: 'Kua whakahōutia e %d ngā rōpū'
@@ -280,7 +279,7 @@ mi_NZ:
     CSSCLASSRIGHT: 'I te taha matau, me te tuhinga e takai huri noa ana'
     DETAILS: 'Ngā Taipitopito'
     EMAIL: 'Wāhitau Īmēra'
-    FILE: 'Ngā kōnae'
+    FILE: Kōnae
     FOLDER: Kōpaki
     FROMCMS: 'Mai i te CMS'
     FROMCOMPUTER: 'Mai i tō rorohiko'
@@ -310,13 +309,13 @@ mi_NZ:
     URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
     UpdateMEDIA: 'Whakahōu Pāpāho'
   Image:
-    PLURALNAME: 'Ngā Kōnae'
-    SINGULARNAME: Kōnae
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
     IMAGE: Atahanga
   Image_Cached:
-    PLURALNAME: 'Ngā kōnae'
-    SINGULARNAME: Kōnae
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe Tukuatu Atahanga'
   LeftAndMain:
@@ -348,6 +347,7 @@ mi_NZ:
     BUTTONLOGIN: Takiuru
     BUTTONLOGINOTHER: 'Takiuru hei tangata kē'
     BUTTONLOSTPASSWORD: 'Kua ngaro i a au taku kupuhipa'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Whakaū Kupuhipa Hōu'
     CONFIRMPASSWORD: 'Whakaū Kupuhipa'
     DATEFORMAT: 'Hōputu Rā'
@@ -367,7 +367,6 @@ mi_NZ:
     NEWPASSWORD: 'Kupuhipa Hōu'
     PASSWORD: Kupuhipa
     PLURALNAME: 'Ngā Mema'
-    PROFILESAVESUCCESS: 'I momoho te tiaki'
     REMEMBERME: 'Ka maumahara mai ā muri atu?'
     SINGULARNAME: Mema
     SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'
@@ -410,18 +409,19 @@ mi_NZ:
     TWODIGITYEAR: 'Tau matirua'
   MemberImportForm:
     Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Whakamahinga ara atu anō</h4>\\n<ul>\\n<li>Ngā tīwae ka whakaaetia: <em>%s</em></li>\\n<li>Ka whakaritea ngā kaiwhakamahi mā tō rātou āhuatanga<em>Waehere</em> ahurei, ā, ka whakahōutia ki ngā uara hōu mai i te kōnae kua kawea mai.</li>\\n<li>Ka taea te tautapa rōpū mā te tīwae <em>Ngā Rōpū</em>. Ka tautohua ngā rōpū mā tō rātou āhuatanga <em>Waehere</em>, ka taea te whakawehe i ngā rōpū maha ki te piko. Kāore e ūkuia ngā mematanga rōpū o naianei.</li>\\n</ul>\\n</div>"
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'I hangaia e {count} ngā mema'
     ResultDeleted: 'Kua mukua e %d ngā mema'
     ResultNone: 'Kāore he huringa'
     ResultUpdated: 'I whakahōutia e {count} mhā mema'
   MemberPassword:
-    PLURALNAME: 'Ngā Kupuhipa Mema'
-    SINGULARNAME: 'Kupuhipa Mema'
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
     DELETE: Muku
     DELETEDRECORDS: 'I mukua e {count} ngā pūkete.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Kawemai i CSV'
     IMPORTEDRECORDS: 'I kawea mai e {count} ngā pūkete.'
     NOCSVFILE: 'Pūtirotiro kia kitea he kōnae CSV hei kawemai'
@@ -448,15 +448,15 @@ mi_NZ:
   NumericField:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
   Pagination:
-    Page: Whārangi
-    View: Tiro
+    Page: Page
+    View: View
   Permission:
     AdminGroup: Kaiwhakahaere
     CMS_ACCESS_CATEGORY: 'Uru CMS'
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
-    PLURALNAME: 'Ngā Whakaaetanga'
-    SINGULARNAME: Whakaaetanga
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
@@ -472,6 +472,7 @@ mi_NZ:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ngā tūnga me ngā whakaaetanga uru'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Tāurua he tau waea tika'
   RelationComplexTableField.ss:

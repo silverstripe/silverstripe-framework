@@ -1,8 +1,7 @@
 pt:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
-    NEWFOLDER: NewFolder
+    ALLOWEDEXTS: 'Allowed extensions'
+    NEWFOLDER: 'Nova pasta'
   AssetTableField:
     CREATED: 'First uploaded'
     DIM: Dimensions
@@ -15,42 +14,42 @@ pt:
     TYPE: 'File type'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    ChooseFiles: 'Escolher ficheiros'
+    DRAGFILESHERE: 'Arrastar os ficheiros para aqui'
+    DROPAREA: 'Área de arraste'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Editar e organizar'
     EDITINFO: 'Edit files'
-    FILES: Ficheiros
-    FROMCOMPUTER: 'Choose files from your computer'
+    FILES: Files
+    FROMCOMPUTER: 'Escolher ficheiros do seu computador'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: OU
   BBCodeParser:
     ALIGNEMENT: Alinhamento
     ALIGNEMENTEXAMPLE: 'Alinhado à direita'
     BOLD: 'Texto Negrito'
     BOLDEXAMPLE: Negrito
-    CODE: 'Code Block'
-    CODEDESCRIPTION: 'Unformatted code block'
-    CODEEXAMPLE: 'Code block'
+    CODE: 'Bloco de código'
+    CODEDESCRIPTION: 'Bloco de código não formatado'
+    CODEEXAMPLE: 'Bloco de código'
     COLORED: 'Texto colorido'
     COLOREDEXAMPLE: 'Texto azul'
     EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
-    IMAGE: Image
-    IMAGEDESCRIPTION: 'Show an image in your post'
+    EMAILLINKDESCRIPTION: 'Criar link para o endereço de email'
+    IMAGE: Imagem
+    IMAGEDESCRIPTION: 'Apresentar imagem na sua publicação'
     ITALIC: 'Texto Itálico'
     ITALICEXAMPLE: Itálico
     LINK: 'Website link'
-    LINKDESCRIPTION: 'Link to another website or URL'
+    LINKDESCRIPTION: 'Link para outro site ou URL'
     STRUCK: 'Struck-out Text'
     STRUCKEXAMPLE: Struck-out
     UNDERLINE: 'Texto Sublinhado'
     UNDERLINEEXAMPLE: Sublinhado
-    UNORDERED: 'Unordered list'
+    UNORDERED: 'Lista não ordenada'
     UNORDEREDDESCRIPTION: 'Lista não ordenada'
     UNORDEREDEXAMPLE1: 'item não ordenado 1'
   BackLink_Button.ss:
@@ -60,9 +59,9 @@ pt:
     ERRORNOTADMIN: 'Esse utilizador não é um administrador.'
     ERRORNOTREC: 'Esse nome de utilizador / password não é válido'
   Boolean:
-    0: 'False'
+    0: Não
     ANY: Qualquer
-    1: 'True'
+    1: Sim
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -72,7 +71,7 @@ pt:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Guardar
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
     CHANGEPASSWORDTEXT2: 'Pode utilizar agora as seguintes credenciais para se autenticar:'
@@ -80,14 +79,14 @@ pt:
     HELLO: Olá
     PASSWORD: Palavra-chave
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Não
+    - Sim
   ComplexTableField:
     CLOSEPOPUP: 'Fechar Janela'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Guardado  %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Adicionar %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Ordenar ascendente'
     SORTDESC: 'Ordenar descendente'
@@ -152,7 +151,7 @@ pt:
     Filename: 'Nome do ficheiro'
     GifType: 'GIF image - good for diagrams'
     GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
+    HtlType: 'Ficheiro HTML'
     HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
@@ -174,7 +173,7 @@ pt:
     Title: Título
     WavType: 'WAV audo file'
     XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    ZipType: 'Ficheiro compactado (ZIP)'
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -212,27 +211,27 @@ pt:
     NONE: nenhum
   GridAction:
     DELETE_DESCRIPTION: Delete
-    Delete: Delete
+    Delete: Apagar
     UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
-    Filter: Filter
+    Filter: Filtrar
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Procurar
     LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    LinkExisting: 'Link existente'
+    NewRecord: 'Novo %s'
+    NoItemsFound: 'Não foram encontrados elementos'
+    PRINTEDAT: 'Impresso em'
+    PRINTEDBY: 'Impresso por'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    RelationSearch: 'Pesquisa relacionada'
+    ResetFilter: Redefinir
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Não tem permissões para apagar'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Cancelar
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
@@ -241,34 +240,34 @@ pt:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Adicionar regra a este grupo'
     Code: 'Grupo de código'
     DefaultGroupTitleAdministrators: Administradores
     DefaultGroupTitleContentAuthors: 'Autores de Conteúdo'
     Description: Descrição
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Se escolher um grupo associado, arrecadará todas as regras deste'
     Locked: 'Fechado?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Não foram encontradas regras'
     PLURALNAME: Groups
     Parent: 'Grupo pai'
-    RolesAddEditLink: 'Manage roles'
+    RolesAddEditLink: 'Gerir regras'
     SINGULARNAME: Group
     Sort: 'Ordem de ordenação'
     has_many_Permissions: Permissões
     many_many_Members: Membros
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
+    ResultDeleted: 'Apagados %d grupos'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    ANCHORVALUE: Anchor
-    BUTTONINSERT: Insert
+    ANCHORVALUE: Âncora
+    BUTTONINSERT: Inserir
     BUTTONINSERTLINK: 'Inserir link'
     BUTTONREMOVELINK: 'Remover link'
     BUTTONUpdate: Update
@@ -276,14 +275,14 @@ pt:
     CSSCLASS: 'Alinhamento / estilo'
     CSSCLASSCENTER: 'Centrado sozinho.'
     CSSCLASSLEFT: 'Na esquerda, com texto envolvido.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    CSSCLASSLEFTALONE: 'No lado esquerdo, por si só.'
     CSSCLASSRIGHT: 'Na direita, com texto envolvido.'
-    DETAILS: Details
+    DETAILS: Detalhes
     EMAIL: 'Endereço email'
     FILE: Ficheiro
     FOLDER: Pasta
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
+    FROMCMS: 'A partir do CMS'
+    FROMCOMPUTER: 'Do seu computador'
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
@@ -297,7 +296,7 @@ pt:
     IMAGEWIDTHPX: Largura
     INSERTMEDIA: 'Insert Media'
     LINK: 'Inserir/editar link no texto seleccionado'
-    LINKANCHOR: 'Anchor on this page'
+    LINKANCHOR: 'Âncora nesta página'
     LINKDESCR: 'Descrição do link'
     LINKEMAIL: 'Endereço email'
     LINKEXTERNAL: 'Outro site'
@@ -313,7 +312,7 @@ pt:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Image
+    IMAGE: Imagem
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -322,17 +321,17 @@ pt:
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
-    HELP: Help
-    PAGETYPE: 'Page type: '
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    DropdownBatchActionsDefault: Ações
+    HELP: Ajuda
+    PAGETYPE: 'Tipo de página: '
+    PERMAGAIN: 'Saiu do CMS. Se se deseja autenticar novamente insira as suas credenciais abaixo.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    VersionUnknown: desconhecido
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -348,11 +347,12 @@ pt:
     BUTTONLOGIN: Entrar
     BUTTONLOGINOTHER: 'Autenticar-se com outras credenciais'
     BUTTONLOSTPASSWORD: 'Recuperar Password'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmar Nova Password'
     CONFIRMPASSWORD: 'Confirmar Password'
     DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrador por Omissão'
-    DefaultDateTime: default
+    DefaultDateTime: 'por omissão'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'A password não pode ser vazia, tente novamente.'
     ENTEREMAIL: 'Por favor introduza um endereço de email para obter uma ligação para o reinício da palavra-chave. '
@@ -367,7 +367,6 @@ pt:
     NEWPASSWORD: 'Nova Password'
     PASSWORD: Password
     PLURALNAME: Membros
-    PROFILESAVESUCCESS: 'Guardado com Sucesso'
     REMEMBERME: 'Lembrar-se de mim?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'A sua password foi alterada'
@@ -389,7 +388,7 @@ pt:
     TITLE: 'Email e Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
+    'APPLY FILTER': 'Aplicar filtros'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -410,10 +409,10 @@ pt:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultDeleted: 'Apagados %d utilizadores'
+    ResultNone: 'Sem alterações'
     ResultUpdated: 'Updated {count} members'
   MemberPassword:
     PLURALNAME: 'Member Passwords'
@@ -422,6 +421,7 @@ pt:
   ModelAdmin:
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -441,8 +441,8 @@ pt:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT: Quantidade
+    FIELDLABELCURRENCY: Moeda
   NullableField:
     IsNullLabel: 'é Vazio'
   NumericField:
@@ -466,12 +466,13 @@ pt:
     OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
-    Title: Title
+    Title: Título
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Regras e permissões de acesso'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Por favor insira um número de telefone válido'
   RelationComplexTableField.ss:
@@ -494,22 +495,22 @@ pt:
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
+    APPLY_ROLES: 'Aplicar regras a grupos'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS: 'Gerir permissões de grupos'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Nome do Grupo'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Importar grupos'
+    IMPORTUSERS: 'Importar utilizadores'
     MEMBERS: Membros
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
+    NEWGROUP: 'Novo grupo'
     PERMISSIONS: Permissões
     ROLES: Regras
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
-    Users: Users
+    TABROLES: Regras
+    Users: Utilizadores
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -547,29 +548,29 @@ pt:
     LESS: menos
     MORE: mais
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
+    ATTACHFILE: 'Adicionar um ficheiro'
+    ATTACHFILES: 'Adicionar ficheiros'
+    AttachFile: 'Adicionar ficheiro(s)'
     DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DELETEINFO: 'Remover permanentemente este ficheiro do sistema'
+    DOEDIT: Guardar
+    DROPFILE: 'arrastar um ficheiro'
+    DROPFILES: 'arrastar ficheiros'
     Dimensions: Dimensions
     EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
+    EDITINFO: 'Editar este ficheiro'
+    FIELDNOTSET: 'Informação do ficheiro não encontrada'
+    FROMCOMPUTER: 'Do computador'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'De ficheiros'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
+    REMOVEERROR: 'Erro ao mover o ficheiro'
+    REMOVEINFO: 'Remover este ficheiro daqui, mas não apaga do sistema'
+    STARTALL: 'Iniciar todos'
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: Guardado
   Versioned:
     has_many_Versions: Versões

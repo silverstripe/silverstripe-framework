@@ -1,7 +1,6 @@
 it:
   AssetAdmin:
-    ADDFILES: 'Aggiungi file'
-    EditOrgMenu: 'Modifica & organizza'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NuovaCartella
   AssetTableField:
     CREATED: 'Inizialmente caricato'
@@ -21,7 +20,7 @@ it:
     EDITALL: 'Modifica tutti'
     EDITANDORGANIZE: 'Modifica & organizza'
     EDITINFO: 'Modifica file'
-    FILES: File
+    FILES: Files
     FROMCOMPUTER: 'Scegli file dal tuo computer'
     FROMCOMPUTERINFO: 'Carica dal tuo conputer'
     TOTAL: Totale
@@ -60,9 +59,9 @@ it:
     ERRORNOTADMIN: 'Questo utente non è amministratore.'
     ERRORNOTREC: 'Nome utente / password non riconosciuti'
   Boolean:
-    0: Falso
+    0: NO
     ANY: Qualsiasi
-    1: Vero
+    1: SI
   CMSLoadingScreen.ss:
     LOADING: 'Caricamento in corso...'
     REQUIREJS: 'Il CMS richiede JavaScript abilitato.'
@@ -72,7 +71,7 @@ it:
     ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
     SAVE: Salva
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'Il mio Profilo'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT2: 'Ora puoi utilizzare le seguenti credenziali per accedere:'
@@ -80,14 +79,14 @@ it:
     HELLO: Ciao
     PASSWORD: Password
   CheckboxField:
-    - Falso
-    - Vero
+    - No
+    - Si
   ComplexTableField:
     CLOSEPOPUP: 'Chiudi Finestra'
     SUCCESSADD2: 'Aggiunto {name}'
     SUCCESSEDIT: 'Salvato %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Aggiungi %s'
+    ADDITEM: 'Inserisci %s'
     NOITEMSFOUND: 'Nessun elemento trovato'
     SORTASC: 'Ordina in modo ascendente'
     SORTDESC: 'Ordina in modo discendente'
@@ -105,7 +104,7 @@ it:
     SECOND: secondo
     THIRD: terzo
   CurrencyField:
-    CURRENCYSYMBOL: €
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
@@ -234,7 +233,7 @@ it:
   GridFieldDetailForm:
     CancelBtn: Annulla
     Create: Crea
-    Delete: Cancella
+    Delete: Elimina
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato %s %s'
     Save: Salva
@@ -258,7 +257,7 @@ it:
     many_many_Members: Membri
   GroupImportForm:
     Help1: '<p>Importa gruppi in formato <em>CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Utilizzo avanzato</h4>\\n<ul>\\n<li>Colonne consentite: <em>%s</em></li>\\n<li>Gruppi esistenti sono individuati attraverso il valore univoco <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\\n<li>La gerarchia dei gruppi può essere creata usando la colonna <em>ParentCode</em></li>\\n<li>I Permission Code possono essere assegnati attraverso la colonna <em>PermissionCode</em>. Permission Code esistenti non verranno cancellati.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Utilizzo avanzato</h4>\\n<ul>\\n<li>Colonne consentite: <em>%s</em></li>\\n<li>Gruppi esistenti sono individuati attraverso il valore univoco <em>Code</em> e aggiornati con i nuovi valori \\ndal file importato.</li>\\n<li>La gerarchia dei gruppi può essere creata usando la colonna <em>ParentCode</em></li>\\n<li>I Permission Code possono essere assegnati attraverso la colonna <em>PermissionCode</em>. \\nPermission Code esistenti non verranno cancellati.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creati {count} gruppi'
     ResultDeleted: 'Eliminati %d gruppi'
     ResultUpdated: 'Aggiornati %d gruppi'
@@ -280,7 +279,7 @@ it:
     CSSCLASSRIGHT: 'Sulla destra, con il testo inserito attorno.'
     DETAILS: Dettagli
     EMAIL: 'Indirizzo email'
-    FILE: Files
+    FILE: File
     FOLDER: Cartella
     FROMCMS: 'Dal CMS'
     FROMCOMPUTER: 'Dal tuo computer'
@@ -348,6 +347,7 @@ it:
     BUTTONLOGIN: Accedi
     BUTTONLOGINOTHER: 'Autenticati come qualcun altro'
     BUTTONLOSTPASSWORD: 'Ho perso la mia password'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
     DATEFORMAT: 'Formato della data'
@@ -367,7 +367,6 @@ it:
     NEWPASSWORD: 'Nuova password'
     PASSWORD: Password
     PLURALNAME: Utenti
-    PROFILESAVESUCCESS: 'Salvato con successo.'
     REMEMBERME: 'Ricordati di me la prossima volta?'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
@@ -410,7 +409,7 @@ it:
     TWODIGITYEAR: 'Anno a due cifre'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Utilizzo avanzato</h4>\\n<ul>\\n<li>Colonne consentite: <em>%s</em></li>\\n<li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>\\n<li>I gruppi possono essere assegnati attraverso la colonna <em>Groups</em>. I gruppi sono identificati attraverso la loro colonna <em>Code</em>, più gruppi devono essere separati da virgola. L''appartenenza esistente a gruppi non viene cancellata.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\\n<h4>Utilizzo avanzato</h4>\\n<ul>\\n<li>Colonne consentite: <em>%s</em></li>\\n<li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori \\ndal file importato.</li>\\n<li>I gruppi possono essere assegnati attraverso la colonna <em>Groups</em>. I gruppi sono identificati attraverso la loro colonna <em>Code</em>, \\npiù gruppi devono essere separati da virgola. L''appartenenza esistente a gruppi non viene cancellata.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Creati {count} utenti'
     ResultDeleted: 'Eliminati %d utenti'
     ResultNone: 'Nessun cambiamento'
@@ -422,6 +421,7 @@ it:
   ModelAdmin:
     DELETE: Elimina
     DELETEDRECORDS: 'Eliminati {count} record.'
+    EMPTYBEFOREIMPORT: 'Cancella database prima dell''import'
     IMPORT: 'Importa da CSV'
     IMPORTEDRECORDS: 'Importati {count} record.'
     NOCSVFILE: 'Scegli un file CSV da importare'
@@ -449,7 +449,7 @@ it:
     VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
   Pagination:
     Page: Pagina
-    View: Vedi
+    View: Visualizza
   Permission:
     AdminGroup: Amministratore
     CMS_ACCESS_CATEGORY: 'Accesso CMS'
@@ -472,6 +472,7 @@ it:
     SINGULARNAME: 'Codice Ruolo'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
+    UserPermissionsIntro: 'L''assegnazione di gruppi a questo utente modificherà i loro permessi. Vedi la sezione dei gruppi per dettagli sui permessi a gruppi individuali.'
   PhoneNumberField:
     VALIDATION: 'Per favore inserisci un numero di telefono valido'
   RelationComplexTableField.ss:

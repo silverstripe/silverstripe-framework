@@ -1,7 +1,6 @@
 lv:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -21,7 +20,7 @@ lv:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Faili
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +59,9 @@ lv:
     ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
     ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
   Boolean:
-    0: 'False'
+    0: Nē
     ANY: Jebkurš
-    1: 'True'
+    1: Jā
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -72,7 +71,7 @@ lv:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Saglabāt
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
     CHANGEPASSWORDTEXT2: 'Lai pieslēgtos, izmantojiet sekojošus datus:'
@@ -80,14 +79,14 @@ lv:
     HELLO: Sveiki
     PASSWORD: Parole
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Nē
+    - Jā
   ComplexTableField:
     CLOSEPOPUP: 'Aizvērt izlēcošo logu'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saglabāts %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Pievienot %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Kārtot augoši'
     SORTDESC: 'Kārtot dilstoši'
@@ -258,7 +257,7 @@ lv:
     many_many_Members: Dalībnieki
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -348,6 +347,7 @@ lv:
     BUTTONLOGIN: PIeslēgties
     BUTTONLOGINOTHER: 'Pieslēgties ar citu kontu'
     BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
     CONFIRMPASSWORD: 'Apstiprināt paroli'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ lv:
     NEWPASSWORD: 'Jaunā parole'
     PASSWORD: Parole
     PLURALNAME: Dalībnieki
-    PROFILESAVESUCCESS: 'Veiksmīgi saglabāts.'
     REMEMBERME: 'Atcerēties mani nākamreiz?'
     SINGULARNAME: Dalībnieks
     SUBJECTPASSWORDCHANGED: 'Jūsu parole tika nomainīta'
@@ -410,7 +409,7 @@ lv:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
@@ -422,6 +421,7 @@ lv:
   ModelAdmin:
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -472,6 +472,7 @@ lv:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Lūdzu ievadiet derīgu tālruņa numuru'
   RelationComplexTableField.ss:

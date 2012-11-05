@@ -5,6 +5,22 @@
  */
 class FormFieldTest extends SapphireTest {
 
+	public function testAddExtraClass() {
+		$field = new FormField('MyField');
+		$field->addExtraClass('class1');
+		$field->addExtraClass('class2');
+		$this->assertStringEndsWith('class1 class2', $field->extraClass());
+	}
+
+	public function testRemoveExtraClass() {
+		$field = new FormField('MyField');
+		$field->addExtraClass('class1');
+		$field->addExtraClass('class2');
+		$this->assertStringEndsWith('class1 class2', $field->extraClass());
+		$field->removeExtraClass('class1');
+		$this->assertStringEndsWith('class2', $field->extraClass());
+	}
+
 	public function testAttributes() {
 		$field = new FormField('MyField');
 		$field->setAttribute('foo', 'bar');
@@ -48,7 +64,7 @@ class FormFieldTest extends SapphireTest {
 		$this->assertNotContains('two="2"', $field->getAttributesHTML('one', 'two'));
 		$this->assertContains('three="3"', $field->getAttributesHTML('one', 'two'));
 	}
-	
+
 	public function testEveryFieldTransformsReadonlyAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {

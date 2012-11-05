@@ -1,7 +1,6 @@
 az:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -21,7 +20,7 @@ az:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     EDITINFO: 'Edit files'
-    FILES: Fayllar
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
@@ -60,9 +59,9 @@ az:
     ERRORNOTADMIN: 'İstifadəçi administrator deyil'
     ERRORNOTREC: 'Belə istifadəçi adı və ya parol tanınmadı'
   Boolean:
-    0: 'False'
+    0: Yox
     ANY: İstənilən
-    1: 'True'
+    1: Bəli
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -72,28 +71,28 @@ az:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: 'Yadda saxla'
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'You changed your password for'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
+    CHANGEPASSWORDTEXT2: 'Siz aşağıdakilarla daxil ola bilərsiniz.'
     EMAIL: E-poçt
-    HELLO: Hi
+    HELLO: Salam
     PASSWORD: Parol
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Yox
+    - Bəli
   ComplexTableField:
     CLOSEPOPUP: Bağla
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: '%s %s %s yadda saxlanıldı'
   ComplexTableField.ss:
-    ADDITEM: 'Add %s'
+    ADDITEM: '%s əlavə et'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Artma ilə sırala'
+    SORTDESC: 'Azalma ilə sırala'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Sonrakı
+    PREVIOUS: Əvvəlki
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -194,10 +193,10 @@ az:
     PLURALNAME: Folders
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
-    HELLO: Hi
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
+    HELLO: Salam
+    TEXT1: 'Burada sizin'
+    TEXT2: 'parolu sıfırlma linki'
+    TEXT3: üçün
   Form:
     FIELDISREQUIRED: '%s tələb olunur.'
     SubmitBtnLabel: Go
@@ -258,7 +257,7 @@ az:
     many_many_Members: Üzvlər
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
@@ -348,6 +347,7 @@ az:
     BUTTONLOGIN: 'Daxil ol'
     BUTTONLOGINOTHER: 'Başqa adla daxil ol'
     BUTTONLOSTPASSWORD: 'Parol yaddan çıxıb.'
+    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Yeni parolun təsdiqi'
     CONFIRMPASSWORD: 'Parolu təsdiqlə'
     DATEFORMAT: 'Date format'
@@ -367,7 +367,6 @@ az:
     NEWPASSWORD: 'Yeni parol'
     PASSWORD: Parol
     PLURALNAME: Üzvlər
-    PROFILESAVESUCCESS: 'Uğurla yadda saxlanıldı.'
     REMEMBERME: 'Yadda saxla?'
     SINGULARNAME: Üzv
     SUBJECTPASSWORDCHANGED: 'Sizin parolunuz dəyişildi'
@@ -410,7 +409,7 @@ az:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
@@ -422,6 +421,7 @@ az:
   ModelAdmin:
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -472,10 +472,11 @@ az:
     SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: İcazələr
+    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
   RelationComplexTableField.ss:
-    ADD: Add
+    ADD: 'Əlavə et'
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
@@ -522,12 +523,12 @@ az:
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
-    ADD: 'Add a new row'
+    ADD: 'Yeni sətir əlavə et'
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'CSV-yə ixrac et'
     PRINT: 'Çap et'
-    Print: 'Çap et'
+    Print: Print
     SELECT: 'Seç:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
@@ -549,7 +550,7 @@ az:
   UploadField:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    AttachFile: 'Attach file(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save

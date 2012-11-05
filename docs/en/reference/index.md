@@ -5,6 +5,7 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [Advanced templates](advanced-templates): Advanced SilverStripe template syntax
 * [BBCode](bbcode): Extensible shortcode syntax
 * [ComplexTableField](complextablefield): Manage records and their relations inside the CMS
+* [GridField](grid-field): The GridField is a flexible form field for creating tables of data.
 * [Database Structure](database-structure): Conventions and best practices for database tables and fields
 * [DataObject](dataobject): Base class for database records
 * [DataExtension](dataextension): A "mixin" system allowing to extend core classes
