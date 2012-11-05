@@ -187,6 +187,35 @@ body.cms {
 			}
 		}
 	}
+
+	.cms-content-fields .ui-tabs-nav {
+		border-bottom: none;
+		float: right;
+		margin: $grid-y 0 -1px 0;
+		padding: 0 $grid-x*3 0 0;
+
+		li {
+			float: left;
+
+			a {
+				font-weight: bold;
+				line-height: $grid-y * 2;
+				padding: $grid-y $grid-x*2.5 $grid-y;
+			}
+		}
+		.ui-state-default,
+		.ui-widget-content .ui-state-default,
+		.ui-widget-header .ui-state-default {
+			border:1px solid $color-button-generic-border;
+		}
+		.ui-state-active,
+		.ui-widget-content .ui-state-active,
+		.ui-widget-header .ui-state-active {
+			padding-bottom:1px;
+			background: $tab-panel-texture-background;
+			border:1px solid $color-button-generic-border;
+		}
+	}	
 }
 
 /** --------------------------------------------
@@ -392,34 +421,35 @@ body.cms {
 	clear: both;
 	margin: 0 0 $grid-y 0;
 	padding: $grid-y - 1 $grid-x - 1;
-	font-weight: bold;	
-	border: 1px #ccc solid;
-	background:#fff;	//for browsers that don't understand rgba
-	background:rgba(#fff,0.5);
-	@include border-radius(3px 3px 3px 3px);
+	font-weight: bold;
+	
+	border: 1px black solid;
+	
 	&.notice {
-		background: $color-notice;
-		border-color: darken(adjust-hue($color-notice, -10), 7%);		
+		background-color: lighten($color-notice, 20%);
+		border-color: $color-notice;
+		
 		a {
 			color: #999;
 		}
-	}	
+	}
+	
 	&.warning {
 		background-color: lighten($color-warning, 20%);
 		border-color: $color-warning;
 	}
 	&.error, &.bad, &.required, &.validation {
-		background: lighten($color-error, 43%);//for browsers that don't understand rgba
-		background: rgba(lighten($color-error, 40%), 0.5);
-		border-color: lighten(adjust-hue($color-error, -10), 38%);
-		color:$color-error;
-	}	
+		background-color: lighten($color-error, 20%);
+		border-color: $color-error;
+	}
+	
 	&.good {
-		background: $color-good;//for browsers that don't understand rgba
-		background: rgba($color-good,0.7);
+		background-color: $color-good;//for browsers that don't understand rgba
+		background-color: rgba($color-good,0.7);
 		border-color: $color-good;
-		color:#fff;	
-		@include text-shadow(1px -1px 0 $color-button-constructive);	
+		color:#fff;
+		@include text-shadow(1px -1px 0 $color-button-constructive);
+		@include border-radius(3px 3px 3px 3px);
 		a {
 			text-shadow:none;
 		}
@@ -476,7 +506,7 @@ body.cms {
 			padding-top:5px; //aligns label with point of arrow
 			font-weight:bold; //to match pagetype label
 			@include text-shadow(1px 1px 0 $color-text-shadow);
-		}		
+		}
 	}
 	ul.SelectionGroup {
 		padding-left:28px;
@@ -1711,9 +1741,9 @@ body.cms-dialog {
 	.title {
 		height: 26px - 2*4px; // minus padding
 		padding: 4px;
-	}	
+	}
+	
 }
-
 
 /** --------------------------------------------
  * Item Edit Form
@@ -1883,10 +1913,12 @@ form.import-form {
 .ss-uploadfield-item-edit-all .ui-button-text{
 	padding-right:0;
 }
+
+ 
 	
 .toggle-details-icon {
 	background: sprite($sprites32, menu-arrow-down) no-repeat;
-	.ss-uploadfield-item-edit-all &{
+	.fileOverview &{
 		background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
 		display:inline-block;
 		width:8px;
@@ -1896,7 +1928,7 @@ form.import-form {
 
 	&.opened {					
 		background: sprite($sprites32, menu-arrow-up) no-repeat;	
-		.ss-uploadfield-item-edit-all &{
+		.fileOverview &{
 			background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
 		}		
 	}
