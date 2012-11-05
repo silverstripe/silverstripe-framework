@@ -88,7 +88,7 @@ There are many ways that you can address this, but this is one that we recommend
 
 This is how you do it:
 
- * **Ensure that all of your fork repositories have correct composer.json files.** 
+ * **Ensure that all of your fork repositories have correct composer.json files.** Set up the project forks as you would a distributed package.  If you have cloned a repository that already has a composer.json file, then there's nothing you need to do, but if not, you will need to create one yourself.
 
  * **List all your fork repositories in your project's composer.json files.**  You do this in a `repositories` section.  Set the `type` to `vcs`, and `url` to the URL of the repository.  The result will look something like this:
 
@@ -105,7 +105,7 @@ This is how you do it:
  			...
  		}
 
- * Use `php composer.phar require` to install the module as you would normally.  Your fork will be used in place of the package version.
+ * **Install the module as you would normally.** Use the regular composer function - there are no special flags to use a fork. Your fork will be used in place of the package version.
 
  		php composer.phar require silverstipre/advancedworklow
 
