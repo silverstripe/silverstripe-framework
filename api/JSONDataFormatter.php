@@ -135,7 +135,10 @@ class JSONDataFormatter extends DataFormatter {
 	 */
 	public function convertDataObjectSet(SS_List $set, $fields = null) {
 		$items = array();
-		foreach ($set as $do) $items[] = $this->convertDataObjectToJSONObject($do, $fields);
+		foreach($set as $do) {
+			if(!$do->canView()) continue;
+			$items[] = $this->convertDataObjectToJSONObject($do, $fields);
+		}
 
 		$serobj = ArrayData::array_to_object(array(
 			"totalSize" => (is_numeric($this->totalSize)) ? $this->totalSize : null,
