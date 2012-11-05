@@ -4,6 +4,8 @@ class SS_MapTest extends SapphireTest {
 	// Borrow the model from DataObjectTest
 	static $fixture_file = 'DataObjectTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',

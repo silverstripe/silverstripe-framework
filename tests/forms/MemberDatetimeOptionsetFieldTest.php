@@ -7,6 +7,8 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 
 	public static $fixture_file = 'MemberDatetimeOptionsetFieldTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected function createDateFormatFieldForMember($member) {
 		require_once 'Zend/Date.php';
 		$defaultDateFormat = Zend_Locale_Format::getDateFormat($member->Locale);

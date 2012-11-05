@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class ShortcodeParserTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	protected $arguments, $contents, $tagName, $parser;
 	

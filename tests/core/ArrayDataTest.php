@@ -2,6 +2,8 @@
 
 class ArrayDataTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testViewabledataItemsInsideArraydataArePreserved() {
 		/* ViewableData objects will be preserved, but other objects will be converted */
 		$arrayData = new ArrayData(array(

@@ -9,6 +9,14 @@ class ImagickImageTest extends ImageTest {
 		}
 		
 		parent::setUp();
+	}
+
+	public function setUpOnce() {
+		parent::setUpOnce();
+
+		if(!extension_loaded("imagick")) {
+			return;
+		}
 		
 		Image::set_backend("ImagickBackend");
 		

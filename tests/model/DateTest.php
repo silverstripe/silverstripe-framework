@@ -7,6 +7,8 @@ class DateTest extends SapphireTest {
 	
 	protected $originalTZ;
 
+	protected static $build_db_each_test = false;
+
 	public function setUp() {
 		// Set timezone to support timestamp->date conversion.
 		$this->originalTZ = date_default_timezone_get();

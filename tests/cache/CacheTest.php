@@ -2,6 +2,8 @@
 
 class CacheTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testCacheBasics() {
 		$cache = SS_Cache::factory('test');
 		

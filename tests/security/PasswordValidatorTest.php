@@ -5,6 +5,8 @@
  */
 
 class PasswordValidatorTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testValidate() {
 		$v = new PasswordValidator();

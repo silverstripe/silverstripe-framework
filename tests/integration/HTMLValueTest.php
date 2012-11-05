@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class SS_HTMLValueTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testInvalidHTMLSaving() {
 		$value = new SS_HTMLValue();

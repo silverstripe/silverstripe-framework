@@ -1,6 +1,8 @@
 <?php
 class PasswordEncryptorTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 *
 	 * @var Config

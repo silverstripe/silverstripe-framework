@@ -5,6 +5,8 @@
  */
 
 class DiffTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	/**
 	 * @see https://groups.google.com/forum/#!topic/silverstripe-dev/yHcluCvuszo

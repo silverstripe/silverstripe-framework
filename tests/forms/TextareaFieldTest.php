@@ -2,6 +2,8 @@
 
 class TextareaFieldTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 * Quick smoke test to ensure that text is being encoded properly.
 	 */

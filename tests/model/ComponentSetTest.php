@@ -6,6 +6,8 @@
 class ComponentSetTest extends SapphireTest {
 	
 	static $fixture_file = 'ComponentSetTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	protected $extraDataObjects = array(
 		'ComponentSetTest_Player',

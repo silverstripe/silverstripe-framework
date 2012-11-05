@@ -14,6 +14,8 @@ class GridFieldEditButtonTest extends SapphireTest {
 	/** @var string */
 	public static $fixture_file = 'GridFieldActionTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	/** @var array */
 	protected $extraDataObjects = array('GridFieldAction_Delete_Team', 'GridFieldAction_Edit_Team');
 	

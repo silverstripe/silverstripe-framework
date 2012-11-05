@@ -4,6 +4,8 @@ class ControllerTest extends FunctionalTest {
 	
 	static $fixture_file = 'ControllerTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $autoFollowRedirection = false;
 	
 	public function testDefaultAction() {

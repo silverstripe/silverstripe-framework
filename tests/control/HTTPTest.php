@@ -6,6 +6,8 @@
  * @subpackage tests
  */
 class HTTPTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	/**
 	 * Tests {@link HTTP::getLinksIn()}

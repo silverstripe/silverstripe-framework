@@ -5,6 +5,8 @@
  */
 class TextTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 * Test {@link Text->LimitCharacters()}
 	 */

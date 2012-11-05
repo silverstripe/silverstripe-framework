@@ -20,6 +20,8 @@
  */
 class FieldListTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 * Test adding a field to a tab in a set.
 	 */

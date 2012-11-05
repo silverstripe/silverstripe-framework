@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class HTTPResponseTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testStatusDescriptionStripsNewlines() {
 		$r = new SS_HTTPResponse('my body', 200, "my description \nwith newlines \rand carriage returns");

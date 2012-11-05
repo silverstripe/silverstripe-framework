@@ -4,6 +4,8 @@
  * Test the API for creating GridField_URLHandler compeonnts
  */
 class GridField_URLHandlerTest extends FunctionalTest {
+
+	protected static $build_db_each_test = false;
 	public function testFormSubmission() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");
 		$formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar') );

@@ -3,6 +3,8 @@
 class DbDatetimeTest extends FunctionalTest {
 
 	static $fixture_file = 'DbDatetimeTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	protected $extraDataObjects = array('DbDatetimeTest_Team');
 

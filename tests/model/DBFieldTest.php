@@ -8,6 +8,8 @@
  *
  */
 class DBFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	/**
 	 * Test the nullValue() method on DBField.

@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class URLSegmentFilterTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testReplacesCommonEnglishSymbols() {
 		$f = new URLSegmentFilter();

@@ -9,6 +9,8 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 	public static $fixture_file = 'GridFieldExportButtonTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'GridFieldExportButtonTest_Team'
 	);

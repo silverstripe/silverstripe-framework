@@ -5,6 +5,8 @@
  */
 
 class StringFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	/**
 	 * @covers StringField->LowerCase()

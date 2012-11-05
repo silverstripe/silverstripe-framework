@@ -19,6 +19,28 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @var string|array
 	 */
 	static $fixture_file = null;
+
+	/**
+	 * Whether or not to build the database for each test or just once.
+	 *
+	 * If your test doesn't write to the database, or only writes in the last
+	 * test, setting this to true increases the speed of the test run as it only
+	 * builds the database once for the entire class, rather than once per test
+	 * method.
+	 *
+	 * @var bool
+	 */
+	protected static $build_db_each_test = true;
+
+	/**
+	 * The array of {@link YamlFixture} instances for this test class.
+	 *
+	 * These are loaded whenever building the database and are assigned to
+	 * $this->fixtures during {@link setUp()}.
+	 *
+	 * @var array
+	 */
+	protected static $loaded_fixtures = array();
 	
 	/**
 	 * Set whether to include this test in the TestRunner or to skip this.
@@ -144,6 +166,62 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $fixtures; 
 	
 	protected $model;
+
+	/**
+	 * Rebuild the database
+	 *
+	 * Rebuilds the database, if this test uses it, and populates it using
+	 * the fixtures in the YAML fixture file
+	 *
+	 * @param string $fixtureFile The path to the fixture file
+	 */
+	protected function rebuildDatabase($fixtureFile = null) {
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		static::$loaded_fixtures = array();
+
+		// Set up fixture
+		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
+			if(substr(DB::getConn()->currentDatabase(), 0, strlen($prefix) + 5) 
+					!= strtolower(sprintf('%stmpdb', $prefix))) {
+
+				//echo "Re-creating temp database... ";
+				self::create_temp_db();
+				//echo "done.\n";
+			}
+
+			singleton('DataObject')->flushCache();
+			
+			self::empty_temp_db();
+			
+			foreach($this->requireDefaultRecordsFrom as $className) {
+				$instance = singleton($className);
+				if (method_exists($instance, 'requireDefaultRecords')) $instance->requireDefaultRecords();
+				if (method_exists($instance, 'augmentDefaultRecords')) $instance->augmentDefaultRecords();
+			}
+
+			if($fixtureFile) {
+				$pathForClass = $this->getCurrentAbsolutePath();
+				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
+
+				$i = 0;
+				foreach($fixtureFiles as $fixtureFilePath) {
+					// Support fixture paths relative to the test class, rather than relative to webroot
+					// String checking is faster than file_exists() calls.
+					$isRelativeToFile = (strpos('/', $fixtureFilePath) === false 
+						|| preg_match('/^\.\./', $fixtureFilePath));
+
+					if($isRelativeToFile) {
+						$resolvedPath = realpath($pathForClass . '/' . $fixtureFilePath);
+						if($resolvedPath) $fixtureFilePath = $resolvedPath;
+					}
+					
+					$fixture = new YamlFixture($fixtureFilePath);
+					$fixture->saveIntoDatabase($this->model);
+					static::$loaded_fixtures[] = $fixture;
+				}
+			}
+		}
+	}
 	
 	public function setUp() {
 		// We cannot run the tests on this abstract class.
@@ -191,60 +269,26 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$this->originalNestedURLsState = SiteTree::nested_urls();
 		}
 
-		$className = get_class($this);
-		$fixtureFile = eval("return {$className}::\$fixture_file;");
-		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		$fixtureFile = static::$fixture_file;
 		
 		// Todo: this could be a special test model
 		$this->model = DataModel::inst();
 
-		// Set up fixture
-		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
-			if(substr(DB::getConn()->currentDatabase(), 0, strlen($prefix) + 5) 
-					!= strtolower(sprintf('%stmpdb', $prefix))) {
+		// Build the database if we build for each test
+		if(static::$build_db_each_test) {
+			$this->rebuildDatabase($fixtureFile);
+			$this->fixtures = static::$loaded_fixtures;
+		} else {
+			$this->fixtures = array_map(function($fixture) { return clone $fixture; }, static::$loaded_fixtures);
+		}
 
-				//echo "Re-creating temp database... ";
-				self::create_temp_db();
-				//echo "done.\n";
-			}
+		// backwards compatibility: Load first fixture into $this->fixture
+		if($this->fixtures) {
+			$this->fixture = $this->fixtures[0];
+		}
 
-			singleton('DataObject')->flushCache();
-			
-			self::empty_temp_db();
-			
-			foreach($this->requireDefaultRecordsFrom as $className) {
-				$instance = singleton($className);
-				if (method_exists($instance, 'requireDefaultRecords')) $instance->requireDefaultRecords();
-				if (method_exists($instance, 'augmentDefaultRecords')) $instance->augmentDefaultRecords();
-			}
-
-			if($fixtureFile) {
-				$pathForClass = $this->getCurrentAbsolutePath();
-				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
-
-				$i = 0;
-				foreach($fixtureFiles as $fixtureFilePath) {
-					// Support fixture paths relative to the test class, rather than relative to webroot
-					// String checking is faster than file_exists() calls.
-					$isRelativeToFile = (strpos('/', $fixtureFilePath) === false 
-						|| preg_match('/^\.\./', $fixtureFilePath));
-
-					if($isRelativeToFile) {
-						$resolvedPath = realpath($pathForClass . '/' . $fixtureFilePath);
-						if($resolvedPath) $fixtureFilePath = $resolvedPath;
-					}
-					
-					$fixture = new YamlFixture($fixtureFilePath);
-					$fixture->saveIntoDatabase($this->model);
-					$this->fixtures[] = $fixture;
-
-					// backwards compatibility: Load first fixture into $this->fixture
-					if($i == 0) $this->fixture = $fixture;
-					$i++;
-				}
-			}
-			
-			$this->logInWithPermission("ADMIN");
+		if($fixtureFile) {
+			$this->logInWithPermission('ADMIN');
 		}
 		
 		// Set up email
@@ -308,6 +352,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Set default timezone consistently to avoid NZ-specific dependencies
 		date_default_timezone_set('UTC');
+
+		// Build the database if we don't rebuild for every test
+		if(!static::$build_db_each_test) {
+			// Todo: this could be a special test model
+			$this->model = DataModel::inst();
+
+			$fixtureFile = static::$fixture_file;
+			$this->rebuildDatabase($fixtureFile);
+			$this->fixtures = static::$loaded_fixtures;
+		}
 	}
 	
 	/**
@@ -330,6 +384,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				}
 			}
 		}
+
+		static::$loaded_fixtures = array();
 		
 		if($this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
 			$this->resetDBSchema();

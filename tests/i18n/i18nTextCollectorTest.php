@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class i18nTextCollectorTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	/**
 	 * @var string $tmpBasePath Used to write language files.

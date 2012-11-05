@@ -1,6 +1,8 @@
 <?php
 
 class SSViewerTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function setUp() {
 		parent::setUp();
 		SSViewer::set_source_file_comments(false);

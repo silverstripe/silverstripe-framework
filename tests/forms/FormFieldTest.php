@@ -5,6 +5,8 @@
  */
 class FormFieldTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testAddExtraClass() {
 		$field = new FormField('MyField');
 		$field->addExtraClass('class1');

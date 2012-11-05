@@ -2,6 +2,8 @@
 
 class HTTPRequestTest extends SapphireTest {
 	static $fixture_file = null;
+
+	protected static $build_db_each_test = false;
 	
 	public function testMatch() {
 		$request = new SS_HTTPRequest("GET", "admin/crm/add");

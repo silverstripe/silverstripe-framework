@@ -11,6 +11,8 @@
  * @subpackage tests
  */
 class SS_DatetimeTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function testNowWithSystemDate() {
 		$systemDatetime = DBField::create_field('SS_Datetime', date('Y-m-d H:i:s'));
 		$nowDatetime = SS_Datetime::now();

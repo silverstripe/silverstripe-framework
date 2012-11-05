@@ -5,6 +5,8 @@
  */
 
 class HTMLCleanerTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testHTMLClean() {
 		$cleaner = HTMLCleaner::inst();

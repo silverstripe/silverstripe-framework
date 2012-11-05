@@ -3,6 +3,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	static $fixture_file = 'GridFieldTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array('GridFieldTest_Team', 'GridFieldTest_Player');
 	
 	public function testSearch() {

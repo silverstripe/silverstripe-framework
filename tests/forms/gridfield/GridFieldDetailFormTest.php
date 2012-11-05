@@ -3,6 +3,8 @@
 class GridFieldDetailFormTest extends FunctionalTest {
 	static $fixture_file = 'GridFieldDetailFormTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'GridFieldDetailFormTest_Person',
 		'GridFieldDetailFormTest_PeopleGroup',
@@ -65,45 +67,6 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$this->assertEquals('Jane', (string) $firstName[0]);
 		$this->assertEquals('Doe', (string) $surname[0]);
-	}
-
-	public function testEditForm() {
-		$this->logInWithPermission('ADMIN');
-		$group = GridFieldDetailFormTest_PeopleGroup::get()
-			->filter('Name', 'My Group')
-			->sort('Name')
-			->First();
-		$firstperson = $group->People()->First();
-		$this->assertTrue($firstperson->Surname != 'Baggins');
-
-		$response = $this->get('GridFieldDetailFormTest_Controller');
-		$this->assertFalse($response->isError());
-		$parser = new CSSContentParser($response->getBody());
-		$editlinkitem = $parser->getBySelector('.ss-gridfield-items .first .edit-link');
-		$editlink = (string) $editlinkitem[0]['href'];
-
-		$response = $this->get($editlink);
-		$this->assertFalse($response->isError());
-
-		$parser = new CSSContentParser($response->getBody());
-		$editform = $parser->getBySelector('#Form_ItemEditForm');
-		$editformurl = (string) $editform[0]['action'];
-		
-		$response = $this->post(
-			$editformurl,
-			array(
-				'FirstName' => 'Bilbo',
-				'Surname' => 'Baggins',
-				'action_doSave' => 1
-			)
-		);
-		$this->assertFalse($response->isError());
-
-		$group = GridFieldDetailFormTest_PeopleGroup::get()
-			->filter('Name', 'My Group')
-			->sort('Name')
-			->First();
-		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
 	}
 
 	public function testNestedEditForm() {
@@ -176,6 +139,45 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$form = $request->ItemEditForm();
 		$this->assertNotNull($form->Fields()->fieldByName('Callback'));
+	}
+
+	public function testEditForm() {
+		$this->logInWithPermission('ADMIN');
+		$group = GridFieldDetailFormTest_PeopleGroup::get()
+			->filter('Name', 'My Group')
+			->sort('Name')
+			->First();
+		$firstperson = $group->People()->First();
+		$this->assertTrue($firstperson->Surname != 'Baggins');
+
+		$response = $this->get('GridFieldDetailFormTest_Controller');
+		$this->assertFalse($response->isError());
+		$parser = new CSSContentParser($response->getBody());
+		$editlinkitem = $parser->getBySelector('.ss-gridfield-items .first .edit-link');
+		$editlink = (string) $editlinkitem[0]['href'];
+
+		$response = $this->get($editlink);
+		$this->assertFalse($response->isError());
+
+		$parser = new CSSContentParser($response->getBody());
+		$editform = $parser->getBySelector('#Form_ItemEditForm');
+		$editformurl = (string) $editform[0]['action'];
+		
+		$response = $this->post(
+			$editformurl,
+			array(
+				'FirstName' => 'Bilbo',
+				'Surname' => 'Baggins',
+				'action_doSave' => 1
+			)
+		);
+		$this->assertFalse($response->isError());
+
+		$group = GridFieldDetailFormTest_PeopleGroup::get()
+			->filter('Name', 'My Group')
+			->sort('Name')
+			->First();
+		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
 	}
 }
 

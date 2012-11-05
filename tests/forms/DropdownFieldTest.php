@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class DropdownFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testGetSource() {
 		$source = array(1=>'one');

@@ -6,6 +6,8 @@
  */
 class CurrencyFieldTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testValidate() {
 		$f = new CurrencyField('TestField');
 		

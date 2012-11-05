@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class TimeFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function setUp() {
 		parent::setUp();

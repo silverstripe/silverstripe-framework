@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class DateFieldViewJQueryTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testConvert() {
 		$this->assertEquals(

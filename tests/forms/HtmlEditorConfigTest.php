@@ -5,6 +5,8 @@
  */
 class HtmlEditorConfigTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testEnablePluginsByString() {
 		$c = new HtmlEditorConfig();
 		$c->enablePlugins('plugin1');

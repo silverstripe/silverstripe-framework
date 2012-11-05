@@ -1,6 +1,8 @@
 <?php
 
 class DataQueryTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	/**
 	 * Test the leftJoin() and innerJoin method of the DataQuery object
 	 */

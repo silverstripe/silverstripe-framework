@@ -7,6 +7,8 @@
  * @subpackage tests
  */
 class ViewableDataTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testRequiresCasting() {
 		$caster = new ViewableDataTest_Castable();

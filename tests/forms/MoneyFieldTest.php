@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class MoneyFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	protected $extraDataObjects = array(
 		'MoneyFieldTest_Object',

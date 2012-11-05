@@ -6,6 +6,8 @@
  */
 class RandomGeneratorTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testGenerateEntropy() {
 		$r = new RandomGenerator();
 		$this->assertNotNull($r->generateEntropy());

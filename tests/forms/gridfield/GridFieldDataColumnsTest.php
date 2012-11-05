@@ -1,6 +1,8 @@
 <?php
 class GridFieldDataColumnsTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 * @covers GridFieldDataColumns::getDisplayFields
 	 */

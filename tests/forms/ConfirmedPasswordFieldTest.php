@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class ConfirmedPasswordFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function testSetValue() {
 		$field = new ConfirmedPasswordField('Test', 'Testing', 'valueA');
 		$this->assertEquals('valueA', $field->Value());

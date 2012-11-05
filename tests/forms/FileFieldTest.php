@@ -5,6 +5,8 @@
  */
 class FileFieldTest extends FunctionalTest {
 
+	protected static $build_db_each_test = false;
+
 	/** 
 	 * Test a valid upload of a required file in a form. Error is set to 0, as the upload went well 
 	 */

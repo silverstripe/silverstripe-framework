@@ -4,6 +4,8 @@ class SQLQueryTest extends SapphireTest {
 	
 	static $fixture_file = null;
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'SQLQueryTest_DO',
 	);

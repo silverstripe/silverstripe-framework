@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class FileNameFilterTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testFilter() {
 		$name = 'Brötchen  für allë-mit_Unterstrich!.jpg';

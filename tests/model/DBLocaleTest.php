@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class DBLocaleTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function testNice() {
 		$l = DBField::create_field('DBLocale', 'de_DE');
 		$this->assertEquals($l->Nice(), 'German');

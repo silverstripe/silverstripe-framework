@@ -4,6 +4,8 @@ class XMLDataFormatterTest extends SapphireTest {
 
 	public static $fixture_file = 'XMLDataFormatterTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	public function setUp() {
 		ShortcodeParser::get_active()->register('test_shortcode', array($this, 'shortcodeSaver'));
 

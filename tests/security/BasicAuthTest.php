@@ -10,6 +10,8 @@ class BasicAuthTest extends FunctionalTest {
 
 	static $fixture_file = 'BasicAuthTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	public function setUp() {
 		parent::setUp();
 

@@ -7,6 +7,8 @@
 class PermissionTest extends SapphireTest {
 
 	static $fixture_file = 'PermissionTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	public function testGetCodesGrouped() {
 		$codes = Permission::get_codes();

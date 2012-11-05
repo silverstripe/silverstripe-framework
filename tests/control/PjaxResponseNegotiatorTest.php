@@ -1,5 +1,7 @@
 <?php
 class PjaxResponseNegotiatorTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testDefaultCallbacks() {
 		$negotiator = new PjaxResponseNegotiator(array(

@@ -5,6 +5,8 @@
  * @subpackage tests
  */
 class FormActionTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testGetField() {
 		$formAction = new FormAction('test');

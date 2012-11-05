@@ -2,6 +2,8 @@
 
 class EmailFieldTest extends FunctionalTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 * Check the php validator for email addresses. We should be checking against RFC 5322 which defines email address
 	 * syntax.

@@ -11,6 +11,8 @@ define('TEST_SERVICES', dirname(__FILE__) . '/testservices');
  * @license BSD License http://silverstripe.org/bsd-license/
  */
 class InjectorTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testCorrectlyInitialised() {
 		$injector = Injector::inst();

@@ -8,6 +8,8 @@
  */
 
 class SessionTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testGetSetBasics() {
 		Session::set('Test', 'Test');
