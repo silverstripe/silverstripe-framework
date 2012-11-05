@@ -38,7 +38,7 @@
 				// setup pinging for login expiry
 				setInterval(function() {
 					$.ajax({
-						url: 'admin/security/ping',
+						url: 'Security/ping',
 						global: false,
 						type: 'POST',
 						complete: onSessionLost

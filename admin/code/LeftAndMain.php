@@ -80,7 +80,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'updatetreenodes',
 		'printable',
 		'show',
-		'ping',
 		'EditorToolbar',
 		'EditForm',
 		'AddForm',
@@ -398,15 +397,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return $this->getResponseNegotiator()->respond($request);
 	}
 
-	/**
-	 * admin/ping can be visited with ajax to keep a session alive.
-	 * This is used in the CMS.
-	 */
-	public function ping() {
-		Requirements::clear();
-		return 1;
-	}
-	
 	/**
 	 * If this is set to true, the "switchView" context in the
 	 * template is shown, with links to the staging and publish site.

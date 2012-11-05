@@ -14,6 +14,7 @@ class Security extends Controller {
 	    'lostpassword', 
 	    'passwordsent', 
 	    'changepassword', 
+		'ping',
 		'LoginForm',
 		'ChangePasswordForm',
 		'LostPasswordForm',
@@ -294,6 +295,13 @@ class Security extends Controller {
 		return "Security/$action";
 	}
 
+	/**
+	 * This action is available as a keep alive, so user
+	 * sessions don't timeout. A common use is in the admin.
+	 */
+	public function ping() {
+		return 1;
+	}
 
 	/**
 	 * Log the currently logged in user out
