@@ -110,14 +110,14 @@ By default, these modules aren't installed, but you can install them with a spec
 Composer is designed to be portable and not require installation in special locations of your computer.  This is
 useful in certain circumstances, but sometimes it's helpful simply to have composer installed in the path of your workstation.
 
-To do this, we can set up a simple wrapper script in your path.  Go to a directory in your path that you can write to.  I have `~/bin` set up for this purpose.  You could also go to `/usr/bin/` and log in as root.
+To do this, we can make the composer download an executable script.  Go to a directory in your path that you can write to.  I have `~/bin` set up for this purpose.  You could also go to `/usr/bin/` and log in as root.
 
 	cd ~/bin
 
 Then download composer.phar to this directory and create a 1 line binary file
 
 	curl -s https://getcomposer.org/installer | php
-	echo "php `dirname \`pwd\``/composer.phar \$*" > composer
+	mv composer.phar composer
 	chmod +x composer
 
 Now check that it works:
