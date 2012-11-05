@@ -89,10 +89,11 @@ body.cms {
 .cms-content-header {
 	padding-left: $grid-x * 2;
 	z-index: 60;
-	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
+	min-height: 40px;
 	background: {
-		image:url(../images/textures/cms_content_header.png);
-		repeat:repeat;
+		image: url(../images/textures/cms_content_header.png);
+		repeat: repeat;
+		position: left bottom;
 	}
 
 	.cms-content-header-info *,
@@ -118,15 +119,14 @@ body.cms {
 
 	.cms-content-header-info {
 		float:left;
-		// TODO 2px less than tabs to ensure tabs bottom align correctly, shouldn't be necessary
-		line-height: 38px; 
+		line-height: 39px; 
 	}
 	
 	.cms-content-header-tabs {
 		float: right;
 		padding-right: $grid-x*3;
-		line-height: 40px;
-
+		line-height: 39px;
+		right: 0;
 		.ui-tabs-nav {
 			li {
 				a {
@@ -134,6 +134,7 @@ body.cms {
 					float: none;
 					line-height: 40px;
 					font-weight: bold;
+					height: 40px;
 					margin: 0;
 					padding: 0 $grid-x*2;
 				}
@@ -166,6 +167,7 @@ body.cms {
 			}
 		}
 	}
+
 
 	// Reset to default styles
 	.ss-ui-button {
@@ -249,7 +251,7 @@ body.cms {
 				a {
 					font-weight: bold;
 					line-height: $grid-y * 2;
-					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+					padding: 0 ($grid-x * 2 + 4) 0;
 					text-transform: capitalize;
 					text-indent: -9999em;
 					display: block;
@@ -273,7 +275,6 @@ body.cms {
 				border: {
 					top:none;
 				}
-				padding-bottom:1px;
 		
 				&.content-treeview a {
 					background-position: 2px -40px;
@@ -291,7 +292,7 @@ body.cms {
 
 .CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 	.cms-content-header-tabs .ui-tabs-nav .ui-state-active {
-		background: darken($color-widget-bg, 2%);
+		background: $color-widget-bg;
 	}
 }
 
@@ -338,7 +339,7 @@ body.cms {
 		height: 100%;
 		overflow: hidden;
 		position: absolute;
-		background: transparent url(../images/logo.gif) no-repeat 50% 50%;
+		background: transparent url(../images/silverstripe_logo.png) no-repeat 50% 50%;
 	}
 
 	p {
@@ -358,7 +359,7 @@ body.cms {
 			@include border-radius(5px);
 			display: inline-block;
 			zoom: 1;
-      *display: inline;
+      		*display: inline;
 		}
 	}
 	
@@ -400,10 +401,8 @@ body.cms {
 	&.notice {
 		background: $color-notice;
 		border-color: darken(adjust-hue($color-notice, -10), 7%);		
-		a {
-			color: #999;
-		}
 	}	
+
 	&.warning {
 		background-color: lighten($color-warning, 20%);
 		border-color: $color-warning;
@@ -1826,22 +1825,22 @@ form.import-form {
 .cms-container {
 	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 		// Fix pixel gap between nav tree and main page header
-		margin-left: -1px; // Removed to close gap far right of right tabs?
+		margin-left: -1px;
 
 		.cms-edit-form {
-			background:darken($color-widget-bg, 2%);
+			background: $color-widget-bg;
 
 			.ui-tabs-nav {
 				.ui-state-active,
 				.ui-widget-content .ui-state-active,
 				.ui-widget-header .ui-state-active {
-					background:darken($color-widget-bg, 2%);
+					background: $color-widget-bg;
 				}
 			}
 		}
 
 		.ui-tabs-nav ~ .ui-tabs-panel {
-			background: darken($color-widget-bg, 2%);
+			background: $color-widget-bg;
 			border-top:1px solid $color-button-generic-border;
 			clear: both;
 		}
