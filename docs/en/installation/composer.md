@@ -111,11 +111,36 @@ This is how you do it:
 
 Composer will scan all of the repositories you list, collect meta-data about the packages within them, and use them in favour of the packages listed on packagist.  To switch back to using the mainline version of the package, just remove your the `repositories` section from `composer.json` and run `php composer.phar update`.
 
-**Note:** It is important to keep using the same pattern of branch names as the main repositories does. If your version is a fork of 3.0, then call the branch `3.0`, not `3.0-myproj` or `myproj`. Otherwise, the depenency resolution gets confused.
-
 For more information, read the ["Repositories" chapter of the Composer documentation](http://getcomposer.org/doc/05-repositories.md).
 
-## Preparing your project for working on SilverStripe
+### Forks and branch names
+
+Generally, you should keep using the same pattern of branch names as the main repositories does. If your version is a fork of 3.0, then call the branch `3.0`, not `3.0-myproj` or `myproj`. Otherwise, the depenency resolution gets confused.
+
+Sometimes, however, this isn't feasible.  For example, you might have a number of project forks stored in a single repository, such as your personal github fork of a project.  Or you might be testing/developing a feature branch.  Or it might just be confusing to other team members to call the branch of your modified version `3.0`.
+
+In this case, you need to use Composer's aliasing feature to specify how you want the project branch to be treated, when it comes to dependency resolution.	
+
+Open `composer.json`, and find the module's `require`.  Then put `as (core version name)` on the end.
+
+	{
+		...
+		"require": {
+			"php": ">=5.3.2",
+			"silverstripe/cms": "3.0.3",
+			"silverstripe/framework": "dev-myproj as 3.0.x-dev",
+			"silverstripe-themes/simple": "*"
+		},
+		...
+	}
+
+What is means is that when the `myproj` branch is checked out into a project, this will satisfy any dependencies that 3.0.x-dev would meet.  So, if another module has `"silverstripe/framework": ">=3.0.0"` in its dependency list, it won't get a conflict.
+
+Both the version and the alias are specified as Composer versions, not branch names.  For the relationship between branch/tag names and Composer vesrions, read [the relevant Composer documentation](http://getcomposer.org/doc/02-libraries.md#specifying-the-version).
+
+This is not the only way to set things up in Composer. For more information on this topic, read the ["Aliases" chapter of the Composer documentation](http://getcomposer.org/doc/articles/aliases.md).
+
+## Setting up an environment for working on SilverStripe
 
 So you want to contribute to SilverStripe? Fantastic! There are a couple modules that are helpful
 
