@@ -10,9 +10,9 @@
 class LessThanFilter extends SearchFilter {
 	
 	/**
-	 * @return $query
+	 * @return DataQuery
 	 */
-	public function apply(DataQuery $query) {
+	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$value = $this->getDbFormattedValue();
 
@@ -21,8 +21,21 @@ class LessThanFilter extends SearchFilter {
 		
 		return $query->where($filter);
 	}
+
+	/**
+	 * @return DataQuery
+	 */
+	protected function excludeOne(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
+		$value = $this->getDbFormattedValue();
+
+		if(is_numeric($value)) $filter = sprintf("%s >= %s", $this->getDbName(), Convert::raw2sql($value));
+		else $filter = sprintf("%s >= '%s'", $this->getDbName(), Convert::raw2sql($value));
+		
+		return $query->where($filter);
+	}
 	
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '';
+		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
 	}
 }

@@ -6,29 +6,47 @@
 
 /**
  * Checks if a value starts with one of the items of in a given set.
- * SQL syntax used: Column IN ('val1','val2')
+ * @deprecated 3.1 Use StartsWithFilter instead
  * 
  * @todo Add negation (NOT IN)6
  * @package framework
  * @subpackage search
  */
 class StartsWithMultiFilter extends SearchFilter {
+	function __construct($fullName, $value = false, array $modifiers = array()) {
+		Deprecation::notice('3.1', 'Use StartsWithFilter instead.');
+		parent::__construct($fullName, $value, $modifiers);
+	}
 	
 	public function apply(DataQuery $query) {
-		$this->model = $query->applyRelation($this->relation);
-		$values = explode(',', $this->getValue());
-		
-		foreach($values as $value) {
-			$matches[] = sprintf("%s LIKE '%s%%'",
-				$this->getDbName(),
-				Convert::raw2sql(str_replace("'", '', $value))
-			);
+		if (!is_array($this->getValue())) {
+			$values = explode(',',$this->getValue());
+		} else {
+			$values = $this->getValue();
 		}
-		
-		return $query->where(implode(" OR ", $matches));
+		$filter = new StartsWithFilter($this->getFullName(), $values, $this->getModifiers());
+		return $filter->apply($query);
+	}
+
+	protected function applyOne(DataQuery $query) {
+		/* NO OP */
+	}
+
+	public function exclude(DataQuery $query) {
+		if (!is_array($this->getValue())) {
+			$values = explode(',',$this->getValue());
+		} else {
+			$values = $this->getValue();
+		}
+		$filter = new StartsWithFilter($this->getFullName(), $values, $this->getModifiers());
+		return $filter->exclude($query);
+	}
+
+	protected function excludeOne(DataQuery $query) {
+		/* NO OP */
 	}
 	
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '';
+		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
 	}
 }

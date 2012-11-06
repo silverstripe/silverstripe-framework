@@ -7,10 +7,20 @@
 class ImageTest extends SapphireTest {
 	
 	static $fixture_file = 'ImageTest.yml';
-
+	
+	protected $origBackend;
+	
 	public function setUp() {
+		if(get_class($this) == "ImageTest")
+			$this->skipTest = true;
+	
 		parent::setUp();
 		
+		if($this->skipTest)
+			return;
+		
+		$this->origBackend = Image::get_backend();
+	
 		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
 
 		// Create a test folders for each of the fixture references
@@ -21,18 +31,28 @@ class ImageTest extends SapphireTest {
 			
 			if(!file_exists(BASE_PATH."/$folder->Filename")) mkdir(BASE_PATH."/$folder->Filename");
 		}
-		
-		// Create a test files for each of the fixture references
+	}
+	
+	public function tearDown() {
+		Image::set_backend($this->origBackend);
+	
+		/* Remove the test files that we've created */
 		$fileIDs = $this->allFixtureIDs('Image');
 		foreach($fileIDs as $fileID) {
 			$file = DataObject::get_by_id('Image', $fileID);
-			$image = imagecreatetruecolor(300,300);
-		
-			imagepng($image, BASE_PATH."/$file->Filename");
-			imagedestroy($image);
-		
-			$file->write();
+			if($file && file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
 		}
+
+		/* Remove the test folders that we've crated */
+		$folderIDs = $this->allFixtureIDs('Folder');
+		foreach($folderIDs as $folderID) {
+			$folder = DataObject::get_by_id('Folder', $folderID);
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
+				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+			}
+		}
+		
+		parent::tearDown();
 	}
 	
 	public function testGetTagWithTitle() {
@@ -59,26 +79,6 @@ class ImageTest extends SapphireTest {
 		$actual = $image->getTag();
 		
 		$this->assertEquals($expected, $actual);
-	}
-	
-	public function tearDown() {
-		/* Remove the test files that we've created */
-		$fileIDs = $this->allFixtureIDs('Image');
-		foreach($fileIDs as $fileID) {
-			$file = DataObject::get_by_id('Image', $fileID);
-			if($file && file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
-		}
-
-		/* Remove the test folders that we've crated */
-		$folderIDs = $this->allFixtureIDs('Folder');
-		foreach($folderIDs as $folderID) {
-			$folder = DataObject::get_by_id('Folder', $folderID);
-			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
-				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
-			}
-		}
-		
-		parent::tearDown();
 	}
 	
 	public function testMultipleGenerateManipulationCalls() {

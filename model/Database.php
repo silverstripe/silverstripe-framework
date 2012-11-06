@@ -486,8 +486,6 @@ abstract class SS_Database {
 		$fieldValue = null;
 		$newTable = false;
 		
-		Profiler::mark('requireField');
-		
 		// backwards compatibility patch for pre 2.4 requireField() calls
 		$spec_orig=$spec;
 		
@@ -538,10 +536,7 @@ abstract class SS_Database {
 		}
 		
 		if($newTable || $fieldValue=='') {
-			Profiler::mark('createField');
-			
 			$this->transCreateField($table, $field, $spec_orig);
-			Profiler::unmark('createField');
 			$this->alterationMessage("Field $table.$field: created as $spec_orig","created");
 		} else if($fieldValue != $specValue) {
 			// If enums/sets are being modified, then we need to fix existing data in the table.
@@ -577,13 +572,12 @@ abstract class SS_Database {
 					}
 				}
 			}
-			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec_orig);
-			Profiler::unmark('alterField');
-			$this->alterationMessage("Field $table.$field: changed to $specValue"
-				. " <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
+			$this->alterationMessage(
+				"Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>",
+				"changed"
+			);
 		}
-		Profiler::unmark('requireField');
 	}
 	
 	/**

@@ -1127,7 +1127,24 @@ class DataObjectTest extends SapphireTest {
 		
 	}
 	
-
+	public function testWriteOverwritesCreated() {
+		// Previously, if you set DataObject::$Created before the object was first written, it would be overwritten
+		$pastdate = new SS_DateTime();
+		$pastdate->setValue(Date::past_date(1));
+		
+		$obj = new DataObjectTest_Player();
+		$obj->Created = $pastdate->Value;
+		$obj->write();
+		
+		$objID = $obj->ID;
+		
+		unset($obj);
+		DataObject::reset();
+		
+		$obj = DataObjectTest_Player::get()->byID($objID);
+		
+		$this->assertEquals($pastdate->Value, $obj->Created);
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {

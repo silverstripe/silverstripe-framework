@@ -89,10 +89,11 @@ body.cms {
 .cms-content-header {
 	padding-left: $grid-x * 2;
 	z-index: 60;
-	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
+	min-height: 40px;
 	background: {
-		image:url(../images/textures/cms_content_header.png);
-		repeat:repeat;
+		image: url(../images/textures/cms_content_header.png);
+		repeat: repeat;
+		position: left bottom;
 	}
 
 	.cms-content-header-info *,
@@ -118,15 +119,14 @@ body.cms {
 
 	.cms-content-header-info {
 		float:left;
-		// TODO 2px less than tabs to ensure tabs bottom align correctly, shouldn't be necessary
-		line-height: 38px; 
+		line-height: 39px; 
 	}
 	
 	.cms-content-header-tabs {
 		float: right;
 		padding-right: $grid-x*3;
-		line-height: 40px;
-
+		line-height: 39px;
+		right: 0;
 		.ui-tabs-nav {
 			li {
 				a {
@@ -134,6 +134,7 @@ body.cms {
 					float: none;
 					line-height: 40px;
 					font-weight: bold;
+					height: 40px;
 					margin: 0;
 					padding: 0 $grid-x*2;
 				}
@@ -167,6 +168,7 @@ body.cms {
 		}
 	}
 
+
 	// Reset to default styles
 	.ss-ui-button {
 		line-height: $grid-x*3;
@@ -186,7 +188,7 @@ body.cms {
 				}
 			}
 		}
-	}		
+	}
 }
 
 /** --------------------------------------------
@@ -249,7 +251,7 @@ body.cms {
 				a {
 					font-weight: bold;
 					line-height: $grid-y * 2;
-					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+					padding: 0 ($grid-x * 2 + 4) 0;
 					text-transform: capitalize;
 					text-indent: -9999em;
 					display: block;
@@ -273,7 +275,6 @@ body.cms {
 				border: {
 					top:none;
 				}
-				padding-bottom:1px;
 		
 				&.content-treeview a {
 					background-position: 2px -40px;
@@ -291,7 +292,7 @@ body.cms {
 
 .CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 	.cms-content-header-tabs .ui-tabs-nav .ui-state-active {
-		background: darken($color-widget-bg, 2%);
+		background: $color-widget-bg;
 	}
 }
 
@@ -338,7 +339,7 @@ body.cms {
 		height: 100%;
 		overflow: hidden;
 		position: absolute;
-		background: transparent url(../images/logo.gif) no-repeat 50% 50%;
+		background: transparent url(../images/silverstripe_logo.png) no-repeat 50% 50%;
 	}
 
 	p {
@@ -358,7 +359,7 @@ body.cms {
 			@include border-radius(5px);
 			display: inline-block;
 			zoom: 1;
-      *display: inline;
+      		*display: inline;
 		}
 	}
 	
@@ -387,41 +388,38 @@ body.cms {
  * Messages
  * -------------------------------------------- */
 
-.message {
+.message {												// White
 	display: block;
 	clear: both;
 	margin: 0 0 $grid-y 0;
-	padding: $grid-y - 1 $grid-x - 1;
-	font-weight: bold;
-	
-	border: 1px black solid;
-	
-	&.notice {
-		background-color: lighten($color-notice, 20%);
-		border-color: $color-notice;
-		
-		a {
-			color: #999;
-		}
+	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
+	font-weight: normal;	
+	border: 1px #ccc solid;
+	background: #fff;									// for browsers that don't understand rgba
+	background: rgba(#fff,0.5);
+	text-shadow: none;
+	@include border-radius(3px 3px 3px 3px);
+
+	&.notice {		
+		background-color: lighten($color-notice,22%);	// Blue
+		border-color: $color-notice;	
 	}
-	
-	&.warning {
-		background-color: lighten($color-warning, 20%);
+	&.warning {											// Yellow
+		background-color: lighten($color-warning,47%);
 		border-color: $color-warning;
 	}
-	&.error, &.bad, &.required, &.validation {
-		background-color: lighten($color-error, 20%);
+	&.error, &.bad, &.required, &.validation {			// Red
+		background-color: lighten($color-error,24%);
 		border-color: $color-error;
-	}
-	
-	&.good {
-		background-color: $color-good;//for browsers that don't understand rgba
-		background-color: rgba($color-good,0.7);
+	}	
+	&.good {											// Green
+		background-color: lighten($color-good,40%);
 		border-color: $color-good;
-		color:#fff;
-		@include text-shadow(1px -1px 0 $color-button-constructive);
-		@include border-radius(3px 3px 3px 3px);
 	}
+	/*													// Orange
+		background: lighten($color-optional,16%);
+		border-color: $color-optional;
+	*/
 	
 	p {
 		margin: 0;
@@ -474,7 +472,7 @@ body.cms {
 			padding-top:5px; //aligns label with point of arrow
 			font-weight:bold; //to match pagetype label
 			@include text-shadow(1px 1px 0 $color-text-shadow);
-		}
+		}		
 	}
 	ul.SelectionGroup {
 		padding-left:28px;
@@ -1136,6 +1134,17 @@ form.member-profile-form {
 			}
 		}
 	}
+
+	form.member-profile-form {
+		#Root .ui-tabs-nav {
+			display: none;
+		}
+		
+		#Root_Main, #Root_Permissions {
+			border: none;
+		}
+	}
+		
 }
 
 /** --------------------------------------------
@@ -1698,9 +1707,9 @@ body.cms-dialog {
 	.title {
 		height: 26px - 2*4px; // minus padding
 		padding: 4px;
-	}
-	
+	}	
 }
+
 
 /** --------------------------------------------
  * Item Edit Form
@@ -1813,54 +1822,28 @@ form.import-form {
 .cms-container {
 	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 		// Fix pixel gap between nav tree and main page header
-	 	margin-left: -1px; // Removed to close gap far right of right tabs?
-	 	//Styling of tabs on page edit
-	 	.cms-edit-form {
-	 		background:darken($color-widget-bg, 2%);
-	 		
+		margin-left: -1px;
+
+		.cms-edit-form {
+			background: $color-widget-bg;
+
 			.ui-tabs-nav {
-				border-bottom: none;
-				float: right;
-				margin: $grid-y 0 -1px 0;
-				padding: 0 $grid-x*3 0 0;
-				
-				li {
-					float: left;
-					
-					a {
-						font-weight: bold;
-						line-height: $grid-y * 2;
-						padding: $grid-y $grid-x*2.5 $grid-y;
-					}
-				}
-				.ui-state-default,
-				.ui-widget-content .ui-state-default,
-				.ui-widget-header .ui-state-default {
-					border:1px solid $color-button-generic-border;
-				}
 				.ui-state-active,
 				.ui-widget-content .ui-state-active,
 				.ui-widget-header .ui-state-active {
-					padding-bottom:1px;
-					background:darken($color-widget-bg, 2%);
-					border:1px solid $color-button-generic-border;
+					background: $color-widget-bg;
 				}
 			}
 		}
-		.ss-tabset {
-			.ss-tabset {
-				position: static;
-			}
 
-			.ui-tabs-nav ~ .ui-tabs-panel {
-				background: darken($color-widget-bg, 2%);
-				border-top:1px solid $color-button-generic-border;
-				clear: both;
-			}
+		.ui-tabs-nav ~ .ui-tabs-panel {
+			background: $color-widget-bg;
+			border-top:1px solid $color-button-generic-border;
+			clear: both;
+		}
 
-			&.ss-tabset-tabshidden .ui-tabs-panel {
-				border-top: none;
-			}
+		&.ss-tabset-tabshidden .ui-tabs-panel {
+			border-top: none;
 		}
 	}
 }
@@ -1896,12 +1879,10 @@ form.import-form {
 .ss-uploadfield-item-edit-all .ui-button-text{
 	padding-right:0;
 }
-
- 
 	
 .toggle-details-icon {
 	background: sprite($sprites32, menu-arrow-down) no-repeat;
-	.fileOverview &{
+	.ss-uploadfield-item-edit-all &{
 		background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
 		display:inline-block;
 		width:8px;
@@ -1911,7 +1892,7 @@ form.import-form {
 
 	&.opened {					
 		background: sprite($sprites32, menu-arrow-up) no-repeat;	
-		.fileOverview &{
+		.ss-uploadfield-item-edit-all &{
 			background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
 		}		
 	}

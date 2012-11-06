@@ -87,7 +87,7 @@ html {
 .cms table.ss-gridfield-table {
 	tbody td {
 		// Overrule width: 100% setting to trigger "shrink fit"
-		// of button row, which IE7 doesn't support
+		// of button row, which IE7 does not support
 		width: auto;
 	}
 	tr th.extra span input {

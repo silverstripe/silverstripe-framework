@@ -374,6 +374,12 @@ jQuery.noConflict();
 				// case we'll ignore the response
 				if(!data) return;
 
+				// Support a full reload
+				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
+					document.location.href = xhr.getResponseHeader('X-ControllerURL');
+					return;
+				}
+
 				// Update title
 				var title = xhr.getResponseHeader('X-Title');
 				if(title) document.title = title;
