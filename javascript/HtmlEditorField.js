@@ -272,8 +272,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				ed.create(this.attr('id'), config, function() {
 					// Delayed show because TinyMCE calls hide() via setTimeout on removing an element,
 					// which is called in quick succession with adding a new editor after ajax loading new markup
+
+					//storing the container object before setting timeout
+					var redrawObj = $(ed.getInstance().getContainer());
 					setTimeout(function() {
-						$(ed.getContainer()).show();
+						redrawObj.show();
 					}, 10);
 				});
 				

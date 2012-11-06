@@ -17,7 +17,6 @@ lets you install and upgrade SilverStripe and its modules.  Although installing 
 Other ways to get SilverStripe:
 
  * If you just want to get the code as quickly as possible, you can [download SilverStripe from our website](http://silverstripe.org/download).
- * If you like doing things yourself, you can [download SilverStripe from source](from-source) manually.
  * If you already have an installed version of SilverStripe, and you haven't used Composer to get it, please see our [upgrading](upgrading) guide.  Note that [Composer](composer) provides its own tools for upgrading.
 
 ## Setting up a server
