@@ -200,6 +200,10 @@ table.ss-gridfield-table {
 
 // CMS Content header & tab fix
 .cms-content-header {
+	// Line-height doesn't correctly apply.
+	// TODO Fix vertical alignment of headline vs. tab labels
+	min-height: 40px;
+
 	h2 {
 		float: left;	
 		.section-icon {
