@@ -1,6 +1,7 @@
 en:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
+    ADDFILES: 'Add files'
+    EditOrgMenu: 'Edit &amp; organize'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -238,6 +239,8 @@ en:
     Deleted: 'Deleted %s %s'
     Save: Save
     Saved: 'Saved %s %s'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss:
     'Go back': 'Go back'
   Group:
@@ -368,6 +371,7 @@ en:
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
     PLURALNAME: Members
+    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
