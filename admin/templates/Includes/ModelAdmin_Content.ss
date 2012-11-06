@@ -12,7 +12,7 @@
 			</h2>
 		</div>
 
-		<div class="cms-content-header-tabs">
+		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
 			<ul>
 			<% loop ManagedModelTabs %>
 				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">

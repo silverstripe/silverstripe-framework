@@ -119,56 +119,9 @@ body.cms {
 
 	.cms-content-header-info {
 		float:left;
-		line-height: 39px; 
+		line-height: 40px; // same as tabs
 	}
 	
-	.cms-content-header-tabs {
-		float: right;
-		padding-right: $grid-x*3;
-		line-height: 39px;
-		right: 0;
-		.ui-tabs-nav {
-			li {
-				a {
-					@include inline-block;
-					float: none;
-					line-height: 40px;
-					font-weight: bold;
-					height: 40px;
-					margin: 0;
-					padding: 0 $grid-x*2;
-				}
-			}
-			
-			.ui-state-default, 
-			.ui-widget-content .ui-state-default, 
-			.ui-widget-header .ui-state-default {
-				border: {
-					top:none;
-				}
-				@include box-shadow($color-shadow-light 0 0 2px);
-			}
-			
-			.ui-state-active, 
-			.ui-widget-content .ui-state-active, 
-			.ui-widget-header .ui-state-active {
-				border: {
-					top:none;
-				}
-				padding-bottom:0px;
-				@include box-shadow(none);
-			}
-			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-				border-radius:0;
-			}
-
-			.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-				border-radius:0;
-			}
-		}
-	}
-
-
 	// Reset to default styles
 	.ss-ui-button {
 		line-height: $grid-x*3;
@@ -179,121 +132,172 @@ body.cms {
 	}
 }
 
-.cms-edit-form {
-	.cms-content-header-tabs {
-		.ui-tabs-nav {
-			li {
-				a {
-					text-indent:0;
-				}
-			}
-		}
-	}
-}
-
 /** --------------------------------------------
  * Tabs
  * -------------------------------------------- */
-.cms-content-header .ui-tabs-nav, .cms-dialog .ui-tabs-nav {
-	li {
-		margin:0;
-		a {
-			font-weight: bold;
-			line-height: $grid-y * 2;
-			padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
-		}
+
+.ui-tabs {
+	padding: 0;
+	background: none;
+
+	.ui-tabs {
+		position: static;
 	}
 	
-	.ui-state-default, 
-	.ui-widget-content .ui-state-default, 
-	.ui-widget-header .ui-state-default {
-		background-color: $color-base;
-		text-shadow: lighten($color-tab, 5%) 0 1px 0;
-		@include background-image(
-			linear-gradient($color-base, darken($color-base, 12%))
-			);
+	.ui-widget-header {
+		border: 0;
+		background: none;
+	}
+
+	.ui-tabs-panel {
+		padding: $grid-y;
+		background: transparent; // default it's white
+	}
+ 	
+	.ui-tabs-nav {
+		float: right;
+		margin: 0 0 -1px 0;
+		padding: 0 $grid-x 0 0;
+		border-bottom: none;
+
+		& ~ .ui-tabs-panel {
+			border-top:1px solid $color-button-generic-border;
+			clear: both;
+		}
 		
+		li {
+			top: 0;
+			float: left;
+			border-bottom: 0 !important;
+			
+			a {
+				@include inline-block;
+				float: none;
+				font-weight: bold;
+				color: $color-text;
+				line-height: $grid-y * 4;
+				padding: 0 $grid-x*2 0;
+			}
+		}
+
+		.ui-state-default {
+			border:1px solid $color-button-generic-border;
+			background:darken($color-widget-bg, 10%);
+
+			a {
+				color: lighten($color-text, 10%);
+				text-shadow: lighten($color-tab, 5%) 0 1px 0;
+			}
+		}
+
+		.ui-state-active {
+			padding-bottom:1px;
+			border:1px solid $color-button-generic-border;
+			// needs a background image to overlay the divider line
+			background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+
+			a {
+				color: $color-text;
+			}
+		}
+		
+		&.ui-state-active {
+			border-color: $color-medium-separator;
+		}
+
+		li.cms-tabset-icon {
+			text-indent:-9999em;
+
+			a {
+				display: block;
+				padding-left: 40px; // icon width
+				padding-right: 0;
+			}
+
+			&.list a {background: sprite($sprites64, tab-list) no-repeat;}
+			&.tree a {background: sprite($sprites64, tab-tree) no-repeat;}
+			&.gallery a {background: sprite($sprites64, tab-gallery) no-repeat;}
+			&.edit a {background: sprite($sprites64, tab-edit) no-repeat;}
+			&.search a {background: sprite($sprites64, tab-search) no-repeat;}
+
+			&.list.ui-state-active a {background: sprite($sprites64, tab-list-hover) no-repeat;}
+			&.tree.ui-state-active a {background: sprite($sprites64, tab-tree-hover) no-repeat;}
+			&.gallery.ui-state-active a {background: sprite($sprites64, tab-gallery-hover) no-repeat;}
+			&.edit.ui-state-active a {background: sprite($sprites64, tab-edit-hover) no-repeat;}
+			&.search.ui-state-active a {background: sprite($sprites64, tab-search-hover) no-repeat;}
+		}
+	}
+
+	.cms-panel-padded .ui-tabs-panel {
+		padding: 0;	// Removes double paddle around main pages page, does not effect other areas of the site from what I can tell
+	}
+
+	&.ss-tabset-tabshidden .ui-tabs-panel {
+		border-top: none;
+	}
+
+	// Reset to default styles
+	.ss-ui-button {
+		line-height: $grid-x*3;
+
+		.ui-button-text {
+			line-height: 1.4;
+		}
+	}
+}
+ 
+/**
+ * Primary styles which sit on top of screen, with different tab colors.
+ * TODO Only use one "primary" selector and fix HTMLEditorField TabSet addExtraClass()
+ */
+.ui-tabs.cms-tabset-primary .ui-tabs-nav, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary {
+	li {
+		margin-right: 0; // tabs are directly adjacent
+		a {
+			margin: 0;
+			// overlap divider line below
+			line-height: 40px - 1px;
+		}
+	}
+
+	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
+		border-radius:0;
+	}
+
+	.ui-state-default {
+		@include box-shadow($color-shadow-light 0 0 2px);
+		background-color: $color-base;
+		@include background-image(
+			linear-gradient(lighten($color-base, 12%), $color-base)
+		);
+
+		border-top:none;			
 		border: {
 			right-color: darken($color-base, 15%);
 			left-color: lighten($color-base, 10%);
 		}
-
-		a {
-			color: #FFF;
-			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-		}
 	}
-	
-	.ui-state-active, 
-	.ui-widget-content .ui-state-active, 
-	.ui-widget-header .ui-state-active {
+
+	.ui-state-active {
+		@include box-shadow(none);
+		background: darken($color-widget-bg, 2%);
 		background: $tab-panel-texture-background;
+		border-top: none;
 		border: {
 			right-color: darken($color-tab, 15%); // same color as divider between header and body, needed for IE
 			left-color: darken($color-tab, 15%);
 		}
-		margin-right:-1px;
-		margin-left:-1px;
 		z-index:2;
 		
 		a {
 			border-bottom: none;
-			color: $color-text;
-			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
 		}
 	}
 }
 
-.CMSPagesController {
-	.cms-content-header-tabs {
-		.ui-tabs-nav {
-			li {
-				a {
-					font-weight: bold;
-					line-height: $grid-y * 2;
-					padding: 0 ($grid-x * 2 + 4) 0;
-					text-transform: capitalize;
-					text-indent: -9999em;
-					display: block;
-					background: url(../images/content-header-tabs-sprite.png) no-repeat;
-				}
-
-				&.content-treeview a {
-					background-position: 2px 0px;
-				}
-				&.content-galleryview a {
-					background-position: -87px 0px;
-				}
-				&.content-listview a {
-					background-position: -38px 0px;
-				}
-			}
-			
-			.ui-state-active, 
-			.ui-widget-content .ui-state-active, 
-			.ui-widget-header .ui-state-active {
-				border: {
-					top:none;
-				}
-		
-				&.content-treeview a {
-					background-position: 2px -40px;
-				}
-				&.content-galleryview a {
-					background-position: -87px -40px;
-				}
-				&.content-listview a {
-					background-position: -38px -40px;
-				}
-			}
-		}
-	}
-}
-
-.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
-	.cms-content-header-tabs .ui-tabs-nav .ui-state-active {
-		background: $color-widget-bg;
-	}
+.cms-content-header-tabs {
+	float: right;
+	padding-right: $grid-x;
 }
 
 /** -------------------------------------------------------
@@ -971,26 +975,6 @@ body.cms {
 
 form.member-profile-form {
 	padding: 0 $grid-x*2 0 0;
-	.ui-tabs-nav {
-		margin-right:40px !important; //adds a 40px gap to the right of the tabs to match designs on main CMS
-		float:right;
-		.ui-state-active, 
-		.ui-widget-content .ui-state-active, 
-		.ui-widget-header .ui-state-active {
-			padding-bottom: 1px;
-			margin-bottom:-1px;
-		}
-		.ui-state-default,
-		.ui-widget-content .ui-state-default,
-		.ui-widget-header .ui-state-default {
-			border: {
-				top:none;
-			}
-			a {
-				padding:12px 20px 11px;
-			}
-		}
-	}
 
 	#Root_Permissions {
 		clear:both;
@@ -1074,18 +1058,6 @@ form.member-profile-form {
 		}
 	}
 
-	.ui-tabs-nav {
-		li {
-			margin:0 0 -1px 0;
-		}
-		.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-			border-radius:0;
-		}
-
-		.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-			border-radius:0;
-		}
-	}
 }
 
 .cms {
@@ -1372,97 +1344,25 @@ form.member-profile-form {
 			float: right;
 		}
 
-		.cms-tabset {	
-			@include border-radius(none);
-
-			.tab {
-				background: none;
-				overflow-y: auto;
+		.ui-tabs{
+			position:static;
+			// Shift navigation upwards to be horizontally centered with dialog title.
+			// Can't use floats since this title is in a different DOM parent sibling
+			// Note: Does NOT apply to member profile form (unnecessary, since it doesn't have a dialog title)
+			.ui-tabs-nav {
+				position:absolute;
+				top:0;
+				// Tabs nav is included in scollbar. By absolutely positioning it off the edge,
+				// we avoid tabs shifting position when scrollbar toggles
+				right: 40px;
 			}
 
-			&.ui-tabs {
-				background: none;
-
-				.ui-tabs-nav {
-					border: none;
-					padding: 0 $grid-x*5 0 0; //allows for 40px gap to the right of tabs to match the tabs on main CMS
-					float:right;
-
-					li {	
-						margin:0;
-						&.ui-tabs-selected {
-							margin-bottom: -1px;
-							padding-bottom:11px;
-						}
-
-						&:first-child {
-							margin-left: 15px;
-						}
-						font-weight: bold;
-						line-height: 16px;
-						padding: 12px 12px 10px;
-						border-bottom: 2px solid #B3B3B3;
-					}
-
-					.ui-state-focus a {
-						outline:none;
-					}
-
-					.ui-state-default, 
-					.ui-widget-content .ui-state-default, 
-					.ui-widget-header .ui-state-default {
-						background-color: $color-base;
-						@include background-image(
-							linear-gradient($color-base, darken($color-base, 12%))
-							);
-						
-						border: {
-							right-color: darken($color-tab, 20%);
-							left-color: $color-tab;
-							bottom:none;
-							top:none;
-						}
-						text-shadow: lighten($color-tab, 60%) 0 1px 0;
-					}
-					
-					.ui-state-active, 
-					.ui-widget-content .ui-state-active, 
-					.ui-widget-header .ui-state-active {
-						background: $color-widget-bg;
-						border: {
-							right-color: darken($color-tab, 20%);
-							left-color: darken($color-tab, 20%);
-						}
-						margin-right:-1px;
-						margin-left:-3px;
-						z-index:2;
-						
-						a {
-							border: {
-								bottom:none;
-								top:none;
-							}
-
-						}
-					}
-					.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-						border-radius:0;
-					}
-
-					.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-						border-radius:0;
-					}
-				}
-				
-
-				.ui-tabs-panel {
-					background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-					overflow-x:hidden;
-					clear:both;
-					border-top: 1px solid darken($color-tab, 20%);
-				}
+			// Don't show top border, since these styles already have a title bar
+			.ui-tabs-panel {
+				border: 0;
 			}
 		}
+
 		.clear {
 			clear: both;
 		}
@@ -1559,42 +1459,7 @@ body.cms-dialog {
 			margin: 10px;
 		}
 	}
-	.ui-tabs{
-		position:static;
-		ul.ui-tabs-nav{
-			float:right;
-			position:absolute;
-			top:0;
-			right: 40px;
-			li{
-				background-color:#92A6B3;
-				@include background-image(
-					linear-gradient(#B0BEC7, #8CA1AE)
-				);			
-				@include border-radius(0px);
-				padding-top: 10px;
-				height: 28px;
-				overflow:hidden;
-				font-weight:bold;
-				a{
-					color:#fff;
-					text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-					display:block;
-					height:100%;
-				}
-				&.ui-state-active{
-					background:  #F0F3F4 url("../admin/images/textures/bg_cms_main_content.png") repeat left top;
-					a{
-						color:$color-text;
-						text-shadow: none;
-					}
-				}
-			}
-		}
-		.ui-tabs-panel{
-			padding:0;
-		}
-	}
+
 	.ss-insert-media, .Actions, .ss-insert-link{
 		padding:$grid-y $grid-x*2 ;
 	}
@@ -1825,29 +1690,7 @@ form.import-form {
 .cms-container {
 	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 		// Fix pixel gap between nav tree and main page header
-		margin-left: -1px;
-
-		.cms-edit-form {
-			background: $color-widget-bg;
-
-			.ui-tabs-nav {
-				.ui-state-active,
-				.ui-widget-content .ui-state-active,
-				.ui-widget-header .ui-state-active {
-					background: $color-widget-bg;
-				}
-			}
-		}
-
-		.ui-tabs-nav ~ .ui-tabs-panel {
-			background: $color-widget-bg;
-			border-top:1px solid $color-button-generic-border;
-			clear: both;
-		}
-
-		&.ss-tabset-tabshidden .ui-tabs-panel {
-			border-top: none;
-		}
+	 	margin-left: -1px; // Removed to close gap far right of right tabs?
 	}
 }
 
