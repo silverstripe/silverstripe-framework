@@ -119,7 +119,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms .ui-tabs { padding: 0; background: none; }
 .cms .ui-tabs .ui-widget-header { border: 0; background: none; }
 .cms .ui-tabs .ui-tabs-nav { margin: 0; padding: 0; }
-.cms .ui-tabs .ui-tabs-nav li { top: 0; }
+.cms .ui-tabs .ui-tabs-nav li { top: 0; border-bottom: 0 !important; }
 .cms .ui-tabs .ui-tabs-nav li a { padding: 0 15px; }
 .cms .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
 .cms .ui-tabs .ui-tabs-panel { background: transparent; }

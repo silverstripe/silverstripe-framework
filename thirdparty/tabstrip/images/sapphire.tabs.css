@@ -33,7 +33,7 @@
     content: " ";
 }
 
-/* If I just say li I get into problems with ".ul-tabs-nav .ui-tabs-selected" below */
+/* If I just say li I get into problems with ".ul-tabs-nav .ui-tabs-active" below */
 .ui-tabs-nav li {
 	float: left;
 	list-style: none;
@@ -58,17 +58,17 @@
 	font-weight: bold;
 }
 
-.ui-tabs-nav li.ui-tabs-selected {
+.ui-tabs-nav li.ui-tabs-active {
 	background: url(images/sel_li_bg.gif) no-repeat left top;
 	top: 1px;
 }
-.ui-tabs-nav li.ui-tabs-selected a {
+.ui-tabs-nav li.ui-tabs-active a {
 	background: url(images/sel_a_bg.gif) no-repeat right top;
 	padding: 6px 9px 5px 0;
 	color: #0074c6;
 }
 
-.ui-tabs-nav .ui-tabs-selected a:link, .ui-tabs-nav .ui-tabs-selected a:visited,
+.ui-tabs-nav .ui-tabs-active a:link, .ui-tabs-nav .ui-tabs-active a:visited,
 .ui-tabs-nav .ui-tabs-disabled a:link, .ui-tabs-nav .ui-tabs-disabled a:visited { /* @ Opera, use pseudo classes otherwise it confuses cursor... */
     cursor: text;
 }

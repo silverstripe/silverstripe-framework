@@ -918,23 +918,21 @@ jQuery.noConflict();
 			redrawTabs: function() {
 				this.rewriteHashlinks();
 
-				var id = this.attr('id'), cookieId = 'ui-tabs-' + id, 
-					selectedTab = this.find('ul:first .ui-tabs-selected');
+				var id = this.attr('id'), selectedTab = this.find('ul:first .ui-tabs-active');
 
-				// Fix for wrong cookie storage of deselected tabs
-				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
 				if(!this.data('tabs')) this.tabs({
-					cookie: ($.cookie && id) ? { expires: 30, path: '/', name: cookieId } : false,
-					ajaxOptions: {
-						// Overwrite ajax loading to use CMS logic instead
-						beforeSend: function(xhr, settings) {
-							if(!isSameUrl(document.location.href, settings.url)) {
-								$('.cms-container').loadPanel(settings.url);
-							}
-							return false;
-						}
-					},
 					selected: (selectedTab.index() != -1) ? selectedTab.index() : 0,
+					beforeLoad: function(e, settings) {
+						// Overwrite ajax loading to use CMS logic instead
+						var makeAbs = $.path.makeUrlAbsolute,
+							baseUrl = $('base').attr('href'),
+							isSame = (makeAbs(settings.url, baseUrl) == makeAbs(document.location.href));
+
+						if(!isSame) $('.cms-container').loadPanel(settings.url);
+						$(this).tabs('select', settings.tab.index());
+
+						return false;
+					},
 					show: function(e, ui) {
 						// Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
 						var actions = $(this).closest('form').find('.Actions');
@@ -948,15 +946,14 @@ jQuery.noConflict();
 			},
 		
 			/**
-			 * Replace prefixes for all hashlinks in tabs.
-			 * SSViewer rewrites them from "#Root_MyTab" to
-			 * e.g. "/admin/#Root_MyTab" which makes them
-			 * unusable for jQuery UI.
+			 * Ensure hash links are prefixed with the current page URL,
+			 * otherwise jQuery interprets them as being external.
 			 */
 			rewriteHashlinks: function() {
 				$(this).find('ul a').each(function() {
-					var href = $(this).attr('href');
-					if(href) $(this).attr('href', href.replace(/.*(#.*)/, '$1'));
+					var matches = $(this).attr('href').match(/#.*/);
+					if(!matches) return;
+					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);
 				});
 			}
 		});
