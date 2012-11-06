@@ -10,7 +10,7 @@
 				this._super();
 			},
 			onremove: function() {
-				if(this.data('tabs')) this.tabs('destroy');
+				if(this.data('uiTabs')) this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {
