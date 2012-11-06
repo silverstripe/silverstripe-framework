@@ -12,7 +12,7 @@
 		</div>
 		<% if Fields.hasTabset %>
 			<% with Fields.fieldByName('Root') %>
-			<div class="cms-content-header-tabs">
+			<div class="cms-content-header-tabs cms-tabset-nav-primary">
 				<ul>
 				<% loop Tabs %>
 					<li<% if extraClass %> class="$extraClass"<% end_if %>><a href="#$id">$Title</a></li>

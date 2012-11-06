@@ -94,6 +94,7 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; }
 .cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 4px -4px; display: block; }
 
+.cms-content-header { min-height: 40px; }
 .cms-content-header h2 { float: left; }
 .cms-content-header h2 .section-icon { display: none; }
 .cms-content-header .cms-content-header-tabs { position: absolute; right: 0; }
