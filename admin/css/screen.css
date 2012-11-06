@@ -24,6 +24,7 @@ If more variables exist in the future, consider creating a variables file.*/
 /** ----------------------------- Theme ------------------------------ */
 /** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
 /** ----------------------------------------------- Colours ------------------------------------------------ */
+/*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
@@ -334,12 +335,14 @@ body.cms { overflow: hidden; }
 .cms-content-actions { margin: 0; padding: 12px 16px; z-index: 0; border-top: 1px solid rgba(201, 205, 206, 0.8); border-top: 1px solid #FAFAFA; -webkit-box-shadow: #cccccc 0 -1px 1px; -moz-box-shadow: #cccccc 0 -1px 1px; box-shadow: #cccccc 0 -1px 1px; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
-.message { display: block; clear: both; margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px #ccc solid; background: #fff; background: rgba(255, 255, 255, 0.5); -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
-.message.notice { background: #d9edf7; border-color: #bce8f1; }
-.message.warning { background-color: #ffbe66; border-color: #ff9300; }
-.message.error, .message.bad, .message.required, .message.validation { background: #f6e7e7; background: rgba(241, 220, 220, 0.5); border-color: #efd4d8; color: #b94a48; }
-.message.good { background: #65a839; background: rgba(101, 168, 57, 0.7); border-color: #65a839; color: #fff; text-shadow: 1px -1px 0 #1f9433; }
-.message.good a, .message.good .cms .jstree .jstree-wholerow a:hover, .cms .jstree .jstree-wholerow .message.good a:hover, .message.good .cms .jstree .jstree-wholerow #vakata-contextmenu li.vakata-hover > a, .cms .jstree .jstree-wholerow #vakata-contextmenu .message.good li.vakata-hover > a, .message.good .cms #vakata-contextmenu .jstree .jstree-wholerow li.vakata-hover > a, .cms #vakata-contextmenu .jstree .jstree-wholerow .message.good li.vakata-hover > a, .message.good .cms .jstree .jstree-wholerow .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li.vakata-hover > a, .cms .jstree .jstree-wholerow .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .message.good li.vakata-hover > a, .message.good .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .cms .jstree .jstree-wholerow li.vakata-hover > a, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .cms .jstree .jstree-wholerow .message.good li.vakata-hover > a, .message.good .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a:hover, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow .message.good a:hover, .message.good .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow .cms #vakata-contextmenu li.vakata-hover > a, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow .cms #vakata-contextmenu .message.good li.vakata-hover > a, .message.good .cms #vakata-contextmenu .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow li.vakata-hover > a, .cms #vakata-contextmenu .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow .message.good li.vakata-hover > a, .message.good .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow #vakata-contextmenu li.vakata-hover > a, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow #vakata-contextmenu .message.good li.vakata-hover > a, .message.good .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .jstree .jstree-wholerow li.vakata-hover > a, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .jstree .jstree-wholerow .message.good li.vakata-hover > a { text-shadow: none; }
+.message { display: block; clear: both; margin: 0 0 8px 0; padding: 10px 12px; font-weight: normal; border: 1px #ccc solid; background: #fff; background: rgba(255, 255, 255, 0.5); text-shadow: none; -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; /*													// Orange
+	background: lighten($color-optional,16%);
+	border-color: $color-optional;
+*/ }
+.message.notice { background-color: #f0f8fc; border-color: #93cde8; }
+.message.warning { background-color: #fefbde; border-color: #e9d104; }
+.message.error, .message.bad, .message.required, .message.validation { background-color: #fae8e9; border-color: #e68288; }
+.message.good { background-color: #eaf6e4; border-color: #72c34b; }
 .message p { margin: 0; }
 
 /** -------------------------------------------- Page icons -------------------------------------------- */
