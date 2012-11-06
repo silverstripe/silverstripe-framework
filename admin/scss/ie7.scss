@@ -87,7 +87,7 @@ html {
 .cms table.ss-gridfield-table {
 	tbody td {
 		// Overrule width: 100% setting to trigger "shrink fit"
-		// of button row, which IE7 doesn't support
+		// of button row, which IE7 does not support
 		width: auto;
 	}
 	tr th.extra span input {
@@ -200,6 +200,10 @@ table.ss-gridfield-table {
 
 // CMS Content header & tab fix
 .cms-content-header {
+	// Line-height doesn't correctly apply.
+	// TODO Fix vertical alignment of headline vs. tab labels
+	min-height: 40px;
+
 	h2 {
 		float: left;	
 		.section-icon {

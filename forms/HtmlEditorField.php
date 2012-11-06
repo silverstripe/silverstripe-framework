@@ -447,6 +447,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				$fromCMS
 			)
 		);
+		$tabSet->addExtraClass('cms-tabset-primary');
 
 		$allFields = new CompositeField(
 			$tabSet,

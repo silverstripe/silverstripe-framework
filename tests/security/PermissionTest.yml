@@ -3,7 +3,7 @@ PermissionRole:
       Title: Author
    access:
       Title: Access Administrator
-   
+
 PermissionRoleCode:
    author1:
       Role: =>PermissionRole.author
@@ -28,7 +28,7 @@ Member:
    globalauthor:
       FirstName: Test
       Surname: Global Author
-      
+
 Group:
    author:
       Title: Authors

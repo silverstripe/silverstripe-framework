@@ -323,7 +323,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			);
 		}
 
-		if(!is_array($record)) {
+		if(!is_array($record) && !is_a($record, "stdClass")) {
 			if(is_object($record)) $passed = "an object of type '$record->class'";
 			else $passed = "The value '$record'";
 
@@ -1147,7 +1147,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						if($idx == 0) {
 							$manipulation[$class]['fields']["LastEdited"] = "'".SS_Datetime::now()->Rfc2822()."'";
 							if($dbCommand == 'insert') {
-								$manipulation[$class]['fields']["Created"] = "'".SS_Datetime::now()->Rfc2822()."'";
+								if(!empty($this->record["Created"])) {
+									$manipulation[$class]['fields']["Created"]
+										= DB::getConn()->prepStringForDB($this->record["Created"]);
+								} else {
+									$manipulation[$class]['fields']["Created"]
+										= DB::getConn()->prepStringForDB(SS_Datetime::now()->Rfc2822());
+								}
 								//echo "<li>$this->class - " .get_class($this);
 								$manipulation[$class]['fields']["ClassName"]
 									= DB::getConn()->prepStringForDB($this->class);
@@ -3286,14 +3292,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function defaultSearchFilters() {
 		$filters = array();
+
 		foreach($this->searchableFields() as $name => $spec) {
 			$filterClass = $spec['filter'];
-			// if $filterClass is not set a name of any subclass of SearchFilter than assing 'PartiailMatchFilter' to it
-			if (!is_subclass_of($filterClass, 'SearchFilter')) {
-				$filterClass = 'PartialMatchFilter';
+			
+			if($spec['filter'] instanceof SearchFilter) {
+				$filters[$name] = $spec['filter'];
+			} else {
+				$class = $spec['filter'];
+
+				if(!is_subclass_of($spec['filter'], 'SearchFilter')) {
+					$class = 'PartialMatchFilter';
+				}
+
+				$filters[$name] = new $class($name);
 			}
-			$filters[$name] = new $filterClass($name);
 		}
+
 		return $filters;
 	}
 

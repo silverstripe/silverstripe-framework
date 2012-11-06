@@ -12,7 +12,7 @@
 			<% with CurrentMember %>
 				<span>
 					<% _t('LeftAndMain_Menu.ss.Hello','Hi') %>
-					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link ss-ui-dialog-link" data-popupclass="edit-profile-popup">
+					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
 				</span>
@@ -27,22 +27,7 @@
 				<a href="$Link" <% if Code == 'Help' %>target="_blank"<% end_if%>>
 					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
 					<span class="text">$Title</span>
-				</a>
-			
-				<% if Code == 'AssetAdmin' %>
-					<ul>
-						<li class="first <% if Top.class == 'AssetAdmin' %>current<% end_if %>" id="Menu-AssetAdmin">
-							<a href="admin/assets/">
-								<span class="text"><% _t('AssetAdmin.EditOrgMenu', 'Edit &amp; organize') %></span>
-							</a>
-						</li>
-						<li class="last <% if Top.class == 'CMSFileAddController' %>current<% end_if %>" id="Menu-CMSFileAddController">
-							<a href="admin/assets/add">
-								<span class="text"><% _t('AssetAdmin.ADDFILES', 'Add files') %></span>
-							</a>
-						</li>
-					</ul>
-				<% end_if %>
+				</a>			
 			</li>
 		<% end_loop %>
 		</ul>
