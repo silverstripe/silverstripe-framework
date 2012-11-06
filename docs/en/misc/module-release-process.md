@@ -111,7 +111,7 @@ that you can link from the `README.md` file. Example:
 			tutorial.md
 			howto-search-mymodule.md
 
-The ["sapphiredocs" module](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk) can be used
+The ["docsviewer" module](http://open.silverstripe.org/browser/modules/docsviewer/trunk) can be used
 to list and render content inside a `docs/` folder (although it is not required, Markdown is designed
 to be readable in plain text as well).
 

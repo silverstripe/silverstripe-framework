@@ -42,14 +42,14 @@ ul.tabstrip {
 			color: #000;
 		}
 			ul.tabstrip li.current,
-			ul.tabstrip li.ui-tabs-selected,
+			ul.tabstrip li.ui-tabs-active,
 			ul.tabstrip li.sel,
 			ul.tabstrip li.over {
 				background: url(images/sel_li_bg.gif) no-repeat left top;
 				top: 1px;
 			}
 				ul.tabstrip li.current a,
-				ul.tabstrip li.ui-tabs-selected a,
+				ul.tabstrip li.ui-tabs-active a,
 				ul.tabstrip li.sel a,
 				ul.tabstrip li.over a {
 					background: url(images/sel_a_bg.gif) no-repeat right top;

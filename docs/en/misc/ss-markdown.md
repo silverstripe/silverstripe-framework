@@ -17,9 +17,9 @@ and HTML output should still be readable with our custom markup unparsed.
 While most of the Markdown syntax is parseable by all common implementations,
 the special syntax is relying on a custom SilverStripe project that powers `http://doc.silverstripe.org`.
 
-The website a standard SilverStripe installation with the [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs/)
-module installed (see module [README](https://github.com/silverstripe/silverstripe-sapphiredocs/blob/master/README.md) and
-[documentation](https://github.com/silverstripe/silverstripe-sapphiredocs/tree/master/docs/en)).
+The website a standard SilverStripe installation with the [docsviewer](https://github.com/silverstripe/silverstripe-docsviewer/)
+module installed (see module [README](https://github.com/silverstripe/silverstripe-docsviewer/blob/master/README.md) and
+[documentation](https://github.com/silverstripe/silverstripe-docsviewer/tree/master/docs/en)).
 
 ## Syntax
 
@@ -96,11 +96,11 @@ You can link to absolute image URLs as well, of course.
 
 ### How do I preview my own SS Markdown?
 
-Thats only possible with the `sapphiredocs` module - we don't have a standalone parser.
+Thats only possible with the `docsviewer` module - we don't have a standalone parser.
 
 ### Can I run my own documentation server?
 
-Yes, the `sapphiredocs` module just requires a default SilverStripe installation (2.4+).
+Yes, the `docsviewer` module just requires a default SilverStripe installation (2.4+).
 
 ### Can I generate SS Markdown other formats?
 
@@ -108,7 +108,7 @@ Currently this is not supported, as all HTML is generated on the fly.
 
 ### Can I contribute to the parser and rendering project?
 
-Of course, the `sapphiredocs` code is BSD licensed - we're looking forward to your contributions!
+Of course, the `docsviewer` code is BSD licensed - we're looking forward to your contributions!
 
 ## Related ##
 

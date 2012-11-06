@@ -10,7 +10,7 @@
 				this._super();
 			},
 			onremove: function() {
-				this.tabs('destroy');
+				if(this.data('tabs')) this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {
@@ -19,15 +19,14 @@
 			},
 		
 			/**
-			 * Replace prefixes for all hashlinks in tabs.
-			 * SSViewer rewrites them from "#Root_MyTab" to
-			 * e.g. "/admin/#Root_MyTab" which makes them
-			 * unusable for jQuery UI.
+			 * Ensure hash links are prefixed with the current page URL,
+			 * otherwise jQuery interprets them as being external.
 			 */
 			rewriteHashlinks: function() {
 				$(this).find('ul a').each(function() {
-					var href = $(this).attr('href');
-					if(href) $(this).attr('href', href.replace(/.*(#.*)/, '$1'));
+					var matches = $(this).attr('href').match(/#.*/);
+					if(!matches) return;
+					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);
 				});
 			}
 		});

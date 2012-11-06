@@ -39,7 +39,7 @@ getting out of date.
 
 *  End-user: [userhelp.silverstripe.org](http://userhelp.silverstripe.org) - a custom SilverStripe project (not open sourced at the moment).
 *  Developer Guides: [doc.silverstripe.org](http://doc.silverstripe.org) - powered by a
-SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
+SilverStripe project that uses the ["docsviewer" module](https://github.com/silverstripe/silverstripe-docsviewer)
 to convert Markdown formatted files into searchable HTML pages with index lists.
 Its contents are fetched from different releases automatically every couple of minutes.
 *  Developer API Docuumentation: [api.silverstripe.org](http://api.silverstripe.org) - powered by a customized
