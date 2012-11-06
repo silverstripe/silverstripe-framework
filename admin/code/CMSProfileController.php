@@ -2,6 +2,9 @@
 class CMSProfileController extends LeftAndMain {
 
 	static $url_segment = 'myprofile';
+
+	static $menu_title = 'My Profile';
+
 	static $required_permission_codes = false;
 
 	public function index($request) {
