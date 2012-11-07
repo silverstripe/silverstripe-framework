@@ -127,9 +127,9 @@ in jQuery.entwine, we're trying to reuse library code wherever possible.
 The most prominent example of this is the usage of [jQuery UI](http://jqueryui.com) for
 dialogs and buttons.
 
-The CMS includes the jQuery.entwine inspector. Press Ctrl+` to bring down the inspector.
+The CMS includes the jQuery.entwine inspector. Press Ctrl+` ("backtick") to bring down the inspector.
 You can then click on any element in the CMS to see which entwine methods are bound to
-any particular element.
+any particular element. 
 
 ## JavaScript and CSS dependencies via Requirements and Ajax
 
