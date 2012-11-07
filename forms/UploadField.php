@@ -627,7 +627,7 @@ class UploadField extends FileField {
 	public function isSaveable() {
 		$record = $this->getRecord();
 		// Don't allow upload or edit of a relation when the underlying record hasn't been persisted yet
-		return (!$record || !$this->managesRelation() || $record->exists());
+		return ($record && $record->exists()) || $this->managesRelation();
 	}
 }
 
