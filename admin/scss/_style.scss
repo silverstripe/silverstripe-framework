@@ -417,41 +417,38 @@ body.cms {
  * Messages
  * -------------------------------------------- */
 
-.message {
+.message {												// White
 	display: block;
 	clear: both;
 	margin: 0 0 $grid-y 0;
-	padding: $grid-y - 1 $grid-x - 1;
-	font-weight: bold;	
+	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
+	font-weight: normal;	
 	border: 1px #ccc solid;
-	background:#fff;	//for browsers that don't understand rgba
-	background:rgba(#fff,0.5);
+	background: #fff;									// for browsers that don't understand rgba
+	background: rgba(#fff,0.5);
+	text-shadow: none;
 	@include border-radius(3px 3px 3px 3px);
-	&.notice {
-		background: $color-notice;
-		border-color: darken(adjust-hue($color-notice, -10), 7%);		
-	}	
 
-	&.warning {
-		background-color: lighten($color-warning, 20%);
+	&.notice {		
+		background-color: lighten($color-notice,22%);	// Blue
+		border-color: $color-notice;	
+	}
+	&.warning {											// Yellow
+		background-color: lighten($color-warning,47%);
 		border-color: $color-warning;
 	}
-	&.error, &.bad, &.required, &.validation {
-		background: lighten($color-error, 43%);//for browsers that don't understand rgba
-		background: rgba(lighten($color-error, 40%), 0.5);
-		border-color: lighten(adjust-hue($color-error, -10), 38%);
-		color:$color-error;
+	&.error, &.bad, &.required, &.validation {			// Red
+		background-color: lighten($color-error,24%);
+		border-color: $color-error;
 	}	
-	&.good {
-		background: $color-good;//for browsers that don't understand rgba
-		background: rgba($color-good,0.7);
+	&.good {											// Green
+		background-color: lighten($color-good,40%);
 		border-color: $color-good;
-		color:#fff;	
-		@include text-shadow(1px -1px 0 $color-button-constructive);	
-		a {
-			text-shadow:none;
-		}
 	}
+	/*													// Orange
+		background: lighten($color-optional,16%);
+		border-color: $color-optional;
+	*/
 	
 	p {
 		margin: 0;
