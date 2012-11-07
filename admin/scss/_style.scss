@@ -143,21 +143,24 @@ body.cms {
 	.ui-tabs {
 		position: static;
 	}
-	
+
+	.ui-tabs-panel {
+		padding: $grid-x 0;
+	}
+
 	.ui-widget-header {
 		border: 0;
 		background: none;
 	}
 
 	.ui-tabs-panel {
-		padding: $grid-y;
 		background: transparent; // default it's white
 	}
  	
 	.ui-tabs-nav {
 		float: right;
 		margin: 0 0 -1px 0;
-		padding: 0 $grid-x 0 0;
+		padding: 0 $grid-x*2 0 0;
 		border-bottom: none;
 
 		& ~ .ui-tabs-panel {
@@ -177,6 +180,11 @@ body.cms {
 				color: $color-text;
 				line-height: $grid-y * 4;
 				padding: 0 $grid-x*2 0;
+			}
+
+			&:last-child {
+				// correctly right-align last tab
+				margin-right: 0;
 			}
 		}
 
@@ -228,8 +236,26 @@ body.cms {
 		}
 	}
 
+	.cms-edit-form {
+		padding: $grid-x $grid-y*2 0 $grid-y*2;
+
+		.ui-tabs-panel {
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		.ui-tabs-nav {
+			padding-right: 0;
+		}
+	}
+
 	.cms-panel-padded .ui-tabs-panel {
-		padding: 0;	// Removes double paddle around main pages page, does not effect other areas of the site from what I can tell
+		padding: 0;	// Removes double paddle around main pages page, does not effect other areas of the site
+
+		.ui-tabs-panel {
+			// Reset nested tabs to default styling
+			padding: $grid-x 0 0 0;
+		}
 	}
 
 	&.ss-tabset-tabshidden .ui-tabs-panel {
@@ -297,7 +323,6 @@ body.cms {
 
 .cms-content-header-tabs {
 	float: right;
-	padding-right: $grid-x;
 }
 
 /** -------------------------------------------------------
@@ -1273,7 +1298,7 @@ form.member-profile-form {
 
 .cms {
 	.cms-panel-padded {
-		padding: $grid-y*2 $grid-x*2;
+		padding: $grid-y $grid-x*2;
 		margin:0;
 	}
 }
