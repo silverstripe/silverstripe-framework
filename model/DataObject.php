@@ -147,7 +147,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public static $cache_has_own_table_field = array();
 	protected static $_cache_get_one;
 	protected static $_cache_get_class_ancestry;
-	protected static $_cache_composite_fields = array();	
+	protected static $_cache_composite_fields = array();
+	protected static $_cache_custom_database_fields = array();
 	protected static $_cache_field_labels = array();
 
 	/**
@@ -226,8 +227,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
 	 */
 	public static function custom_database_fields($class) {
+		if(isset(self::$_cache_custom_database_fields[$class])) {
+			return self::$_cache_custom_database_fields[$class];
+		}
+
 		$fields = Config::inst()->get($class, 'db', Config::UNINHERITED);
-		
+
 		foreach(self::composite_fields($class, false) as $fieldName => $fieldClass) {
 			// Remove the original fieldname, it's not an actual database column
 			unset($fields[$fieldName]);
@@ -244,8 +249,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($hasOne) foreach(array_keys($hasOne) as $field) {
 			$fields[$field . 'ID'] = 'ForeignKey';
 		}
-		
-		return (array)$fields;
+
+		$output = (array) $fields;
+
+		self::$_cache_custom_database_fields[$class] = $output;
+
+		return $output;
 	}
 	
 	/**
@@ -2899,6 +2908,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		DataObject::$cache_has_own_table_field = array();
 		DataObject::$_cache_get_one = array();
 		DataObject::$_cache_composite_fields = array();
+		DataObject::$_cache_custom_database_fields = array();
 		DataObject::$_cache_get_class_ancestry = array();
 		DataObject::$_cache_field_labels = array();
 	}
