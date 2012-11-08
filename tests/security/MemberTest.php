@@ -624,6 +624,30 @@ class MemberTest extends FunctionalTest {
 		return $extensions;
 	}
 
+	public function testGenerateAutologinTokenAndStoreHash() {
+		$enc = new PasswordEncryptor_Blowfish();
+
+		$m = new Member();
+		$m->PasswordEncryption = 'blowfish';
+		$m->Salt = $enc->salt('123');
+
+		$token = $m->generateAutologinTokenAndStoreHash();
+
+		$this->assertEquals($m->encryptWithUserSettings($token), $m->AutoLoginHash, 'Stores the token as ahash.');
+	}
+
+	public function testValidateAutoLoginToken() {
+		$enc = new PasswordEncryptor_Blowfish();
+
+		$m = new Member();
+		$m->PasswordEncryption = 'blowfish';
+		$m->Salt = $enc->salt('123');
+
+		$token = $m->generateAutologinTokenAndStoreHash();
+		
+		$this->assertTrue($m->validateAutoLoginToken($token), 'Tests the token validity against member correctly.');
+	}
+
 }
 class MemberTest_ViewingAllowedExtension extends DataExtension implements TestOnly {
 
