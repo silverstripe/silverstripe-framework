@@ -16,31 +16,25 @@ fundamental concepts that we build on in this documentation.
 
 If you're more familiar with unit testing, but want a refresher of some of the concepts and terminology, you can browse
 the [Testing Glossary](#glossary).
-
 To get started now, follow the installation instructions below, and check
 [Troubleshooting](/topics/testing/testing-guide-troubleshooting) in case you run into any problems.
 
 ## Installation
 
-The framework has a required dependency on [PHPUnit](http://www.phpunit.de/) and an optional dependency on
-[SimpleTest](http://simpletest.org/), the two premiere PHP testing frameworks.
+Unit tests are not included in the normal SilverStripe downloads,
+you are expected to work with local git repositories 
+([installation instructions](/topics/installation/composer)).
 
-To run SilverStripe tests, you'll need to be able to access PHPUnit on your include path. First, you'll need to make sure
-that you have the PEAR command line client installed. To test this out, type `pear help` at your prompt. You should
-see a bunch of generic PEAR info. If it's not installed, you'll need to set it up first (see: [Getting Started with
-PEAR](http://www.sitepoint.com/article/getting-started-with-pear/)) or else manually install PHPUnit (see: [Installation
-instructions](http://www.phpunit.de/pocket_guide/3.3/en/installation.html)).
+Once you've got the project up and running,
+check out the additional requirements to run unit tests:
 
-The PHPUnit installation via PEAR is very straightforward.
-You might have to perform the following commands as root or super user (sudo).
+	composer update --dev
 
-<del>We need a specific version of PHPUnit (3.3.x), as 3.4 or higher breaks our test runner (see [#4573](http://open.silverstripe.com/ticket/4573))</del>
+The will install (among other things) the [PHPUnit](http://www.phpunit.de/) dependency,
+which is the framework we're building our unit tests on.
 
-At your prompt, type the following commands:
-
-	pear channel-discover pear.phpunit.de 
-	pear channel-discover pear.symfony-project.com
-	pear install phpunit/PHPUnit
+Alternatively, you can check out phpunit globally via the PEAR packanage manager
+([instructions](https://github.com/sebastianbergmann/phpunit/)).
 
 ## Running Tests
 
@@ -57,6 +51,7 @@ their own:
 
 	/path/to/project$ sake dev/tests/all
 
+Alternatively, you can use the `phpunit` binary to run tests, see [PHPUnit Configuration](phpunit-configuration) for details.
 
 ### Partial Test Runs
 

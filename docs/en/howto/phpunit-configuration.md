@@ -21,14 +21,18 @@ If you're using [phpUnderControl](http://phpundercontrol.org/) or a similar tool
 you will most likely need the `--log-junit` and `--coverage-xml` flags that are not available through `sake`.
 
 All command-line arguments are documented on [phpunit.de](http://www.phpunit.de/manual/current/en/textui.html).
-
-## Usage of "phpunit" executable
+phpunit
+## Usage of "" executable
 
  * `phpunit`: Runs all tests in all folders
  * `phpunit framework/tests/`: Run all tests of the framework module
  * `phpunit framework/tests/filesystem`: Run all filesystem tests within the framework module
  * `phpunit framework/tests/filesystem/FolderTest.php`: Run a single test
  * `phpunit framework/tests '' flush=all`: Run tests with optional `$_GET` parameters (you need an empty second argument)
+
+Note that if you have installed PHPUnit through Composer rather than PEAR
+([instructions](/topics/installation/composer)), the binary will be placed
+in `vendor/bin/phpunit` instead of `phpunit`.
 
 ## Coverage reports
 
