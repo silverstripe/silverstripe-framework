@@ -296,6 +296,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 				->setAttribute('data-icon', 'accept'));
 
 			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+				->setUseButtonTag(true)
 				->addExtraClass('ss-ui-action-destructive'));
 
 		}else{ // adding new record
