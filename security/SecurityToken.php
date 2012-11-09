@@ -206,7 +206,7 @@ class SecurityToken extends Object {
 	 */
 	protected function generate() {
 		$generator = new RandomGenerator();
-		return $generator->generateHash('sha1');
+		return $generator->randomToken('sha1');
 	}
 	
 }

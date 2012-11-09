@@ -557,6 +557,30 @@ class MemberTest extends FunctionalTest {
 		);
 	}
 
+	public function testGenerateAutologinTokenAndStoreHash() {
+		$enc = new PasswordEncryptor_PHPHash('sha1');
+
+		$m = new Member();
+		$m->PasswordEncryption = 'sha1';
+		$m->Salt = $enc->salt('123');
+
+		$token = $m->generateAutologinTokenAndStoreHash();
+
+		$this->assertEquals($m->encryptWithUserSettings($token), $m->AutoLoginHash, 'Stores the token as ahash.');
+	}
+
+	public function testValidateAutoLoginToken() {
+		$enc = new PasswordEncryptor_PHPHash('sha1');
+
+		$m = new Member();
+		$m->PasswordEncryption = 'sha1';
+		$m->Salt = $enc->salt('123');
+
+		$token = $m->generateAutologinTokenAndStoreHash();
+
+		$this->assertTrue($m->validateAutoLoginToken($token), 'Tests the token validity against member correctly.');
+	}
+
 	/**
 	 * Add the given array of member extensions as class names.
 	 * This is useful for re-adding extensions after being removed
