@@ -502,13 +502,18 @@ class Security extends Controller {
 
 
 	/**
-	 * Create a link to the password reset form
+	 * Create a link to the password reset form.
 	 *
-	 * @param string $autoLoginHash The auto login hash
+	 * GET parameters used:
+	 * - m: member ID
+	 * - t: plaintext token
+	 *
+	 * @param Member $member Member object associated with this link.
+	 * @param string $autoLoginHash The auto login token.
 	 */
-	public static function getPasswordResetLink($autoLoginHash) {
-		$autoLoginHash = urldecode($autoLoginHash);
-		return self::Link('changepassword') . "?h=$autoLoginHash";
+	public static function getPasswordResetLink($member, $autologinToken) {
+		$autologinToken = urldecode($autologinToken);
+		return self::Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
 	}
 	
 	/**
@@ -531,15 +536,22 @@ class Security extends Controller {
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 
-		// First load with hash: Redirect to same URL without hash to avoid referer leakage
-		if(isset($_REQUEST['h']) && Member::member_from_autologinhash($_REQUEST['h'])) {
-			// The auto login hash is valid, store it for the change password form.
-			// Temporary value, unset in ChangePasswordForm
-			Session::set('AutoLoginHash', $_REQUEST['h']);
+		// Extract the member from the URL.
+		$member = null;
+		if (isset($_REQUEST['m'])) {
+			$member = DataObject::get_by_id('Member', (int)$_REQUEST['m']);
+		}
+
+		// Check whether we are merely changin password, or resetting.
+		if(isset($_REQUEST['t']) && $member && $member->validateAutoLoginToken($_REQUEST['t'])) {
+			// On first valid password reset request redirect to the same URL without hash to avoid referrer leakage.
+
+			// Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
+			Session::set('AutoLoginHash', $member->encryptWithUserSettings($_REQUEST['t']));
 			
 			return $this->redirect($this->Link('changepassword'));
-		// Redirection target after "First load with hash"
 		} elseif(Session::get('AutoLoginHash')) {
+			// Subsequent request after the "first load with hash" (see previous if clause).
 			$customisedController = $controller->customise(array(
 				'Content' =>
 					'<p>' . 
@@ -548,15 +560,15 @@ class Security extends Controller {
 				'Form' => $this->ChangePasswordForm(),
 			));
 		} elseif(Member::currentUser()) {
-			// let a logged in user change his password
+			// Logged in user requested a password change form.
 			$customisedController = $controller->customise(array(
 				'Content' => '<p>' . _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
 				'Form' => $this->ChangePasswordForm()));
 
 		} else {
-			// show an error message if the auto login hash is invalid and the
+			// show an error message if the auto login token is invalid and the
 			// user is not logged in
-			if(isset($_REQUEST['h'])) {
+			if(!isset($_REQUEST['t']) || !$member) {
 				$customisedController = $controller->customise(
 					array('Content' =>
 						sprintf(

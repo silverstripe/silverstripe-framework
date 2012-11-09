@@ -91,7 +91,7 @@ abstract class PasswordEncryptor {
 	 */
 	function salt($password, $member = null) {
 		$generator = new RandomGenerator();
-		return substr($generator->generateHash('sha1'), 0, 50);
+		return substr($generator->randomToken('sha1'), 0, 50);
 	}
 	
 	/**

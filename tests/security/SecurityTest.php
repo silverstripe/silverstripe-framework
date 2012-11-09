@@ -196,7 +196,12 @@ class SecurityTest extends FunctionalTest {
 		// Load password link from email
 		$admin = DataObject::get_by_id('Member', $admin->ID);
 		$this->assertNotNull($admin->AutoLoginHash, 'Hash has been written after lost password');
-		$response = $this->get('Security/changepassword/?h=' . $admin->AutoLoginHash);
+
+		// We don't have access to the token - generate a new token and hash pair.
+		$token = $admin->generateAutologinTokenAndStoreHash();
+
+		// Check.
+		$response = $this->get('Security/changepassword/?m='.$admin->ID.'&t=' . $token);
 		$this->assertEquals(302, $response->getStatusCode());
 		$this->assertEquals(Director::baseUrl() . 'Security/changepassword', $response->getHeader('Location'));
 		
