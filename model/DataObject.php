@@ -145,6 +145,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public static $cache_has_own_table = array();
 	public static $cache_has_own_table_field = array();
+	protected static $_cache_db = array();
 	protected static $_cache_get_one;
 	protected static $_cache_get_class_ancestry;
 	protected static $_cache_composite_fields = array();
@@ -1578,23 +1579,28 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				continue;
 			}
 
+			if(isset(self::$_cache_db[$class])) {
+				$dbItems = self::$_cache_db[$class];
+			} else {
+				$dbItems = (array) Config::inst()->get($class, 'db', Config::UNINHERITED);
+				self::$_cache_db[$class] = $dbItems;
+			}
+
 			if($fieldName) {
-				$db = Config::inst()->get($class, 'db', Config::UNINHERITED);
-				
-				if(isset($db[$fieldName])) {
-					return $db[$fieldName];
+				if(isset($dbItems[$fieldName])) {
+					return $dbItems[$fieldName];
 				}
 			} else {
-				$newItems = (array)Config::inst()->get($class, 'db', Config::UNINHERITED);
 				// Validate the data
-				foreach($newItems as $k => $v) {
+				foreach($dbItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
 						user_error("$class::\$db has a bad entry: " 
 						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a"
 						. " property name, and the map value should be the property type.", E_USER_ERROR);
 					}
 				}
-				$items = isset($items) ? array_merge((array)$items, $newItems) : $newItems;
+
+				$items = isset($items) ? array_merge((array) $items, $dbItems) : $dbItems;
 			}
 		}
 
@@ -2906,6 +2912,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public static function reset() {
 		DataObject::$cache_has_own_table = array();
 		DataObject::$cache_has_own_table_field = array();
+		DataObject::$_cache_db = array();
 		DataObject::$_cache_get_one = array();
 		DataObject::$_cache_composite_fields = array();
 		DataObject::$_cache_custom_database_fields = array();
