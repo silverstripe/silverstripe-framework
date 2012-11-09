@@ -1380,31 +1380,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	
 	/**
 	 * The href for the anchor on the Silverstripe logo.
-	 * Can be set to the base URL or a custom URL by calling
-	 * LeftAndMain::set_menu_link()
+	 * Set by calling LeftAndMain::set_menu_link()
 	 *
-	 * @var Bool|String
+	 * @var String
 	 */
 	static $menu_link = 'http://www.silverstripe.org/';
 	
 	/**
 	 * The title for the anchor on the Silverstripe logo
-	 * Set automatically depending on $menu_link value
+	 * Set by calling LeftAndMain::set_menu_link_title()
 	 *
-	 * @var Bool|String
+	 * @var String
 	 */
-	static $menu_link_title = false;
+	static $menu_link_title = null;
 	
 	/**
 	 * Sets the href for the anchor on the Silverstripe logo in the menu
-	 * If the parameter is true, it will use the site base URL
 	 *
-	 * @param Bool|String $link
+	 * @param String $link
 	 */
-	public static function set_menu_link($link) {
-		if ($link === false) return;
-		
-		self::$menu_link = (is_bool($link)) ? Director::BaseURL() : $link;
+	public static function set_menu_link($link) {		
+		self::$menu_link = $link;
 	}
 	
 	/**
@@ -1415,13 +1411,20 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 	
 	/**
+	 * Sets the title for the anchor on the Silverstripe logo in the menu
+	 *
+	 * @param String $link
+	 */
+	public static function set_menu_link_title($title) {
+		self::$menu_link_title = $title;
+	}
+	
+	/**
 	 * @return String
 	 */
 	public function MenuLinkTitle() {
-		if ( ! is_bool(self::$menu_link_title)) return self::$menu_link_title;
-		
-		if (self::$menu_link_title === true) {
-			return 'View website';
+		if (self::$menu_link_title) {
+			return self::$menu_link_title;
 		} else {
 			return 'SilverStripe (Version - ' . $this->CMSVersion() . ')';
 		}
