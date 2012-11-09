@@ -55,17 +55,17 @@ class CmsUiContext extends BehatContext
     }
 
     /**
-     * @Then /^I should see "([^"]*)" notice$/
+     * @Then /^I should see a "([^"]*)" notice$/
      */
-    public function iShouldSeeNotice($notice)
+    public function iShouldSeeANotice($notice)
     {
         $this->getMainContext()->assertElementContains('.notice-wrap', $notice);
     }
 
     /**
-     * @Then /^I should see "([^"]*)" message$/
+     * @Then /^I should see a "([^"]*)" message$/
      */
-    public function iShouldSeeMessage($message)
+    public function iShouldSeeAMessage($message)
     {
         $this->getMainContext()->assertElementContains('.message', $message);
     }
@@ -127,9 +127,9 @@ class CmsUiContext extends BehatContext
     }
 
     /**
-     * @Given /^I should see "([^"]*)" button in CMS Content Toolbar$/
+     * @Given /^I should see a "([^"]*)" button in CMS Content Toolbar$/
      */
-    public function iShouldSeeButtonInCmsContentToolbar($text)
+    public function iShouldSeeAButtonInCmsContentToolbar($text)
     {
         $cms_content_toolbar_element = $this->getCmsContentToolbarElement();
 
@@ -160,10 +160,11 @@ class CmsUiContext extends BehatContext
     }
 
     /**
-     * @When /^I expand Filter CMS Panel$/
+     * @When /^I expand the "([^"]*)" CMS Panel$/
      */
-    public function iExpandFilterCmsPanel()
+    public function iExpandTheCmsPanel()
     {
+        // TODO Make dynamic, currently hardcoded to first panel
         $page = $this->getSession()->getPage();
 
         $panel_toggle_element = $page->find('css', '.cms-content > .cms-panel > .cms-panel-toggle > .toggle-expand');
@@ -193,7 +194,7 @@ class CmsUiContext extends BehatContext
     public function theTableShouldContain($table, $text)
     {
         $table_element = $this->getGridfieldTable($table);
-
+var_dump($table_element);
         $element = $table_element->find('named', array('content', "'$text'"));
         assertNotNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
     }

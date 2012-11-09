@@ -55,9 +55,9 @@ class CmsFormsContext extends BehatContext
     }
 
     /**
-     * @When /^I fill in content form with "([^"]*)"$/
+     * @When /^I fill in the content form with "([^"]*)"$/
      */
-    public function stepIFillInContentFormWith($content)
+    public function stepIFillInTheContentFormWith($content)
     {
         $this->getSession()->evaluateScript("tinyMCE.get('Form_EditForm_Content').setContent('$content')");
     }

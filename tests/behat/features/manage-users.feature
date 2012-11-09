@@ -53,13 +53,13 @@ Feature: Manage users
   @javascript
   Scenario: I can add a user to the system
     When I click the "Users" CMS tab
-    And I press "Add Member" button
+    And I press the "Add Member" button
     And I fill in the following:
       | First Name | John |
       | Surname | Doe |
       | Email | john.doe@test.com |
-    And I press "Create" button
-    Then I should see "Saved member" message
+    And I press the "Create" button
+    Then I should see a "Saved member" message
 
     When I go to "admin/security/"
     Then I should see "john.doe@test.com" in the "#Root_Users" element
@@ -70,8 +70,8 @@ Feature: Manage users
     And I click "staffmember@test.com" in the "#Root_Users" element
     And I select "Admin Group" from "Groups"
     And I additionally select "Administrators" from "Groups"
-    And I press "Save" button
-    Then I should see "Saved Member" message
+    And I press the "Save" button
+    Then I should see a "Saved Member" message
 
     When I go to "admin/security"
     And I click the "Groups" CMS tab
@@ -82,6 +82,6 @@ Feature: Manage users
   Scenario: I can delete an existing user
     When I click the "Users" CMS tab
     And I click "staffmember@test.com" in the "#Root_Users" element
-    And I press "Delete" button
+    And I press the "Delete" button
     Then I should see "admin@test.com"
     And I should not see "staffmember@test.com"
