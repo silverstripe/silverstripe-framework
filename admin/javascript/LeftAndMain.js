@@ -803,6 +803,40 @@ jQuery.noConflict();
 		 */	
 		$('.cms-search-form').entwine({
 
+			// used by Content in the search filter to limit results based on its input
+			searchContent: function(name) {
+
+				var value = $('#' + this.closest('form').attr('id') + '_q-' + name).val();
+				var valueLength = value.length;
+				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
+					// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
+					// as it handles checkbox values more consistently
+					var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
+					return (vals.length);
+				});
+				var url = this.attr('action');
+				var delay = (function() {
+					var timer = 0;
+					return function(callback, ms) {
+						clearTimeout(timer);
+						timer = setTimeout(callback, ms);
+					};
+				})();
+				var container = this.closest('.cms-container');
+				$('#' + this.closest('form').attr('id') + '_q-' + name).focus();
+
+				delay(function() {
+					if (valueLength < 2) return false;
+					// Remove empty elements and make the URL prettier
+					if(nonEmptyInputs.length) url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
+
+					container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
+					$('.cms-container').loadPanel(url);
+					//container.loadPanel(url);
+					return false;
+				}, 1000);
+
+			},
 			onsubmit: function() {
 				// Remove empty elements and make the URL prettier
 				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
