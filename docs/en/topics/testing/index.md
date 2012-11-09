@@ -146,6 +146,9 @@ For example, you could have a `phpunit-unit-tests.xml` and `phpunit-functional-t
 
 **Assertion:** A predicate statement that must be true when a test runs.
 
+**Behat:** A behaviour-driven testing library used with SilverStripe as a higher-level
+alternative to the `FunctionalTest` API, see [http://behat.org](http://behat.org).
+
 **Test Case:** The atomic class type in most unit test frameworks. New unit tests are created by inheriting from the
 base test case.
 

@@ -63,3 +63,6 @@ We can use string processing on the body of the response to then see if it fits 
 
 If you're testing for natural language responses like error messages, make sure to use [i18n](/topics/i18n) translations through
 the *_t()* method to avoid tests failing when i18n is enabled.
+
+Note that for a more highlevel testing approach, SilverStripe also supports 
+[behaviour-driven testing through Behat](https://github.com/silverstripe-labs/silverstripe-behat-extension). It interacts directly with your website or CMS interface by remote controlling an actual browser, driven by natural language assertions.
