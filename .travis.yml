@@ -1,0 +1,28 @@
+language: php 
+php: 
+ - 5.3
+
+env:
+ - TESTDB=MYSQL
+ - TESTDB=PGSQL
+
+before_script:
+ - phpenv rehash
+ - ./tests/travis/before_script ~/builds/ss 
+ - cd ~/builds/ss
+
+script: 
+ - phpunit -c phpunit.xml.dist 
+
+branches:
+  except:
+    - 2.1
+    - 2.2
+    - 2.3
+    - post-2.4
+    - translation-staging
+
+notifications:
+  irc:
+    channels:
+     - "irc.freenode.org#silverstripe"
