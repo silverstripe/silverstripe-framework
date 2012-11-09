@@ -377,10 +377,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			} elseif($this->popupController->hasMethod('Breadcrumbs')) {
 				$parents = $this->popupController->Breadcrumbs(false)->items;
 				$backlink = array_pop($parents)->Link;
-			} else {
-				$backlink = $toplevelController->Link();
-			}
+			} 
 		}
+		if(!$backlink) $backlink = $toplevelController->Link();
+		
 		return $backlink;
 	}
 
