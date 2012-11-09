@@ -1387,14 +1387,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	static $menu_link = 'http://www.silverstripe.org/';
 	
 	/**
-	 * The title for the anchor on the Silverstripe logo
-	 * Set by calling LeftAndMain::set_menu_link_title()
-	 *
-	 * @var String
-	 */
-	static $menu_link_title = null;
-	
-	/**
 	 * Sets the href for the anchor on the Silverstripe logo in the menu
 	 *
 	 * @param String $link
@@ -1408,26 +1400,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function MenuLink() {
 		return self::$menu_link;
-	}
-	
-	/**
-	 * Sets the title for the anchor on the Silverstripe logo in the menu
-	 *
-	 * @param String $link
-	 */
-	public static function set_menu_link_title($title) {
-		self::$menu_link_title = $title;
-	}
-	
-	/**
-	 * @return String
-	 */
-	public function MenuLinkTitle() {
-		if (self::$menu_link_title) {
-			return self::$menu_link_title;
-		} else {
-			return 'SilverStripe (Version - ' . $this->CMSVersion() . ')';
-		}
 	}
 
 	/**
