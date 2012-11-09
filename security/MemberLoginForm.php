@@ -229,12 +229,12 @@ JS
 		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");
 
 		if($member) {
-			$member->generateAutologinHash();
+			$token = $member->generateAutologinTokenAndStoreHash();
 
 			$member->sendInfo(
 				'forgotPassword',
 				array(
-					'PasswordResetLink' => Security::getPasswordResetLink($member->AutoLoginHash)
+					'PasswordResetLink' => Security::getPasswordResetLink($member, $token)
 				)
 			);
 
