@@ -822,12 +822,16 @@ jQuery.noConflict();
 		$('.cms-search-form').entwine({
 
 			// used by Content in the search filter to limit results based on its input
-			searchContent: function() {
+			searchContent: function(e) {
 
-				var id = '#' + event.target.id;
+				// check if e.target is set as IE8 does not support it
+				if (e.target) {
+					var id = '#' + e.target.id;
+				} else {
+					var id = '#' + e.srcElement.id;
+				}
 				var value = $(id).val();
 				var valueLength = value.length;
-				if (valueLength < 2) return false;
 				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
 					// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
 					// as it handles checkbox values more consistently
