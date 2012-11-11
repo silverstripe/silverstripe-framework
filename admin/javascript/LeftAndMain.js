@@ -822,9 +822,9 @@ jQuery.noConflict();
 		$('.cms-search-form').entwine({
 
 			// used by Content in the search filter to limit results based on its input
-			searchContent: function(name) {
+			searchContent: function() {
 
-				var id = '#' + this.closest('form').attr('id') + '_q-' + name;
+				var id = '#' + event.target.id;
 				var value = $(id).val();
 				var valueLength = value.length;
 				if (valueLength < 2) return false;
@@ -843,7 +843,6 @@ jQuery.noConflict();
 					};
 				})();
 				var container = this.closest('.cms-container');
-				$('#' + this.closest('form').attr('id') + '_q-' + name).focus();
 
 				delay(function() {
 					// Remove empty elements and make the URL prettier
