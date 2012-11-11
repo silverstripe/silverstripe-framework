@@ -852,7 +852,6 @@ jQuery.noConflict();
 					// Remove empty elements and make the URL prettier
 					if(nonEmptyInputs.length) url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
 
-					container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
 					container.loadPanelFocus(url, null, null, null, id);
 					return false;
 				}, 1000);
