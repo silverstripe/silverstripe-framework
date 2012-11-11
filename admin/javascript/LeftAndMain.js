@@ -208,6 +208,24 @@ jQuery.noConflict();
 				}
 			},
 
+			// same as loadPanel but sets the focus on something
+			loadPanelFocus: function(url, title, data, forceReload, focus) {
+				this.loadPanel(url, title, data, forceReload);
+				var delay = (function() {
+					var timer = 0;
+					return function(callback, ms) {
+						clearTimeout(timer);
+						timer = setTimeout(callback, ms);
+					};
+				})();
+				delay(function() {
+					var temp = $(focus).val();	
+					$(focus).val('');
+					$(focus).focus();
+					$(focus).val(temp);
+				}, 1000);
+			},
+
 			/**
 			 * Nice wrapper for reloading current history state.
 			 */
@@ -806,8 +824,10 @@ jQuery.noConflict();
 			// used by Content in the search filter to limit results based on its input
 			searchContent: function(name) {
 
-				var value = $('#' + this.closest('form').attr('id') + '_q-' + name).val();
+				var id = '#' + this.closest('form').attr('id') + '_q-' + name;
+				var value = $(id).val();
 				var valueLength = value.length;
+				if (valueLength < 2) return false;
 				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
 					// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
 					// as it handles checkbox values more consistently
@@ -826,13 +846,11 @@ jQuery.noConflict();
 				$('#' + this.closest('form').attr('id') + '_q-' + name).focus();
 
 				delay(function() {
-					if (valueLength < 2) return false;
 					// Remove empty elements and make the URL prettier
 					if(nonEmptyInputs.length) url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
 
 					container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
-					$('.cms-container').loadPanel(url);
-					//container.loadPanel(url);
+					container.loadPanelFocus(url, null, null, null, id);
 					return false;
 				}, 1000);
 
