@@ -1,5 +1,16 @@
 <?php
+
+/**
+ * @package framework
+ * @subpackage filesystem
+ */
+
+if(class_exists('Imagick')) {
 class ImagickBackend extends Imagick implements Image_Backend {
+	
+	/**
+	 * @var int
+	 */
 	protected static $default_quality = 75;
 	
 	/**
@@ -263,4 +274,5 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		
 		return $new;
 	}
+}
 }
