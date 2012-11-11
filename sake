@@ -20,11 +20,17 @@ elif [ -d ./framework ]; then
 elif [ -d ./sapphire ]; then
 	framework=./sapphire
 	base=.
+elif [ -d ../framework ]; then
+	framework=../framework
+	base=..
+elif [ -d ../sapphire ]; then
+	framework=../sapphire
+	base=..
 elif [ -f ./cli-script.php ]; then
 	framework=.
 	base=..
 else
-	echo "Can't find ./framework/cli-script.php or ./cli-script.php"
+	echo "Can't find framework/cli-script.php or ./cli-script.php"
 	exit 1
 fi
 
@@ -45,6 +51,7 @@ fi
 
 if [ "$1" = "installsake" ]; then
 	echo "Installing sake to /usr/bin..."
+	rm -rf /usr/bin/sake
 	cp $0 /usr/bin
 	exit 0
 fi
