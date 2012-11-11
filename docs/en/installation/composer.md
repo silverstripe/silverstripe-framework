@@ -59,7 +59,35 @@ The second part, `*`, is a version string.  `*` is a good default: it will give 
 
 <div class="warning" markdown="1">
 `master` is not a legal version string - it's a branch name.  These are different things.  The version string that would get you the branch is `dev-master`.  The version string that would get you a numeric branch is a little different.  The version string for the `3.0` branch is `3.0.x-dev`.  But, frankly, maybe you should just use `*`.
-</div>	
+</div>
+
+## Updating dependencies
+
+Except for the control code of the Voyager space probe, every piece of code in the universe gets updated from time to time.  SilverStripe modules are no exception.  How do you download these updates into your site?
+
+To get the latest updates of the modules in your project, run this command:
+
+	composer update
+
+Updates to the required modules will be installed, and the `composer.lock` file will get updated with the specific commits of each of those.
+
+## Deploying projects with Composer
+
+When deploying projects with composer, you could just push the code and run `composer update`.  However, this is risky.  In particular, if you were referencing development dependencies and a change was made between your testing and your depoyment to production, you would end up deploying untested code.  Not cool!
+
+The `composer.lock` file helps with this.  It references the specific commits that have been checked out, rather than the version string.  You can run `composer install` to install dependencies from this rather than `composer.json`.
+
+So, your deployment process, as it relates to Composer, should be as follows:
+
+ * Run `composer update` on your development version before you start whatever testing you have planned.  Perform all the necessary testing.
+
+ * Check `composer.lock` into your repository.
+
+ * Deploy your project code base, using the deployment tool of your choice.
+
+ * Run the following command on your production version.
+
+ 	composer install
 
 # Advanced usage
 
