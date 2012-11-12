@@ -2,12 +2,10 @@
 
 	<div class="cms-content-header north">
 		<% with EditForm %>
-			<div class="cms-content-header-info">
-				<h2>
+			<div class="cms-content-header-info">				
 				<% with Controller %>
 					<% include CMSBreadcrumbs %>
-				<% end_with %>
-				</h2>
+				<% end_with %>				
 			</div>
 			<% if Fields.hasTabset %>
 				<% with Fields.fieldByName('Root') %>
