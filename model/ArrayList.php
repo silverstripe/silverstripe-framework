@@ -19,7 +19,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @param array $items - an initial array to fill this object with
 	 */
 	public function __construct(array $items = array()) {
-		$this->items = $items;
+		$this->items = array_values($items);
 		parent::__construct();
 	}
 	
@@ -138,9 +138,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @param mixed $item 
 	 */
 	public function remove($item) {
+		$renumberKeys = false;
 		foreach ($this->items as $key => $value) {
-			if ($item === $value) unset($this->items[$key]);
+			if ($item === $value) {
+				$renumberKeys = true;
+				unset($this->items[$key]);
+			}
 		}
+		if($renumberKeys) $this->items = array_values($this->items);
 	}
 
 	/**
@@ -177,16 +182,20 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function removeDuplicates($field = 'ID') {
 		$seen = array();
+		$renumberKeys = false;
 
 		foreach ($this->items as $key => $item) {
 			$value = $this->extractValue($item, $field);
 
 			if (array_key_exists($value, $seen)) {
+				$renumberKeys = true;
 				unset($this->items[$key]);
 			}
 
 			$seen[$value] = true;
 		}
+
+		if($renumberKeys) $this->items = array_values($this->items);
 	}
 
 	/**
@@ -474,7 +483,6 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		$itemsToKeep = array();
 
 		$hitsRequiredToRemove = count($removeUs);
 		$matches = array();
@@ -489,13 +497,17 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		$keysToRemove = array_keys($matches,$hitsRequiredToRemove);
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
 
-		foreach($keysToRemove as $itemToRemoveIdx){
-			$list->remove($this->items[$itemToRemoveIdx]);
+		$itemsToKeep = array();
+		foreach($this->items as $key => $value) {
+			if(!in_array($key, $keysToRemove)) {
+				$itemsToKeep[] = $value;
+			}
 		}
 
+		// TODO 3.1: This currently mutates existing array
+		$list = /* clone */ $this;
+		$list->items = $itemsToKeep;
 		return $list;
 	}
 

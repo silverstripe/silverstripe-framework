@@ -428,15 +428,15 @@ class ArrayListTest extends SapphireTest {
 	 */
 	public function testSimpleExclude() {
 		$list = new ArrayList(array(
-			0=>array('Name' => 'Steve'),
-			1=>array('Name' => 'Bob'),
-			2=>array('Name' => 'John')
+			array('Name' => 'Steve'),
+			array('Name' => 'Bob'),
+			array('Name' => 'John')
 		));
 		
 		$list->exclude('Name', 'Bob');
 		$expected = array(
-			0=>array('Name' => 'Steve'),
-			2=>array('Name' => 'John')
+			array('Name' => 'Steve'),
+			array('Name' => 'John')
 		);
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should not contain Bob');
@@ -466,12 +466,12 @@ class ArrayListTest extends SapphireTest {
 	 */
 	public function testSimpleExcludeWithArray() {
 		$list = new ArrayList(array(
-			0=>array('Name' => 'Steve'),
-			1=>array('Name' => 'Bob'),
-			2=>array('Name' => 'John')
+			array('Name' => 'Steve'),
+			array('Name' => 'Bob'),
+			array('Name' => 'John')
 		));
 		$list->exclude('Name', array('Steve','John'));
-		$expected = array(1=>array('Name' => 'Bob'));
+		$expected = array(array('Name' => 'Bob'));
 		$this->assertEquals(1, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Bob');
 	}
@@ -481,16 +481,16 @@ class ArrayListTest extends SapphireTest {
 	 */
 	public function testExcludeWithTwoArrays() {
 		$list = new ArrayList(array(
-			0=>array('Name' => 'Bob' , 'Age' => 21),
-			1=>array('Name' => 'Bob' , 'Age' => 32),
-			2=>array('Name' => 'John', 'Age' => 21)
+			array('Name' => 'Bob' , 'Age' => 21),
+			array('Name' => 'Bob' , 'Age' => 32),
+			array('Name' => 'John', 'Age' => 21)
 		));
 		
 		$list->exclude(array('Name' => 'Bob', 'Age' => 21));
 		
 		$expected = array(
-			1=>array('Name' => 'Bob', 'Age' => 32),
-			2=>array('Name' => 'John', 'Age' => 21)
+			array('Name' => 'Bob', 'Age' => 32),
+			array('Name' => 'John', 'Age' => 21)
 		);
 		
 		$this->assertEquals(2, $list->count());
@@ -502,23 +502,23 @@ class ArrayListTest extends SapphireTest {
 	 */
 	public function testMultipleExclude() {
 		$list = new ArrayList(array(
-			0 => array('Name' => 'bob', 'Age' => 10),
-			1 => array('Name' => 'phil', 'Age' => 11),
-			2 => array('Name' => 'bob', 'Age' => 12),
-			3 => array('Name' => 'phil', 'Age' => 12),
-			4 => array('Name' => 'bob', 'Age' => 14),
-			5 => array('Name' => 'phil', 'Age' => 14),
-			6 => array('Name' => 'bob', 'Age' => 16),
-			7 => array('Name' => 'phil', 'Age' => 16)
+			array('Name' => 'bob', 'Age' => 10),
+			array('Name' => 'phil', 'Age' => 11),
+			array('Name' => 'bob', 'Age' => 12),
+			array('Name' => 'phil', 'Age' => 12),
+			array('Name' => 'bob', 'Age' => 14),
+			array('Name' => 'phil', 'Age' => 14),
+			array('Name' => 'bob', 'Age' => 16),
+			array('Name' => 'phil', 'Age' => 16)
 		));
 
 		$list->exclude(array('Name'=>array('bob','phil'),'Age'=>array(10, 16)));
 		$expected = array(
-			1 => array('Name' => 'phil', 'Age' => 11),
-			2 => array('Name' => 'bob', 'Age' => 12),
-			3 => array('Name' => 'phil', 'Age' => 12),
-			4 => array('Name' => 'bob', 'Age' => 14),
-			5 => array('Name' => 'phil', 'Age' => 14),
+			array('Name' => 'phil', 'Age' => 11),
+			array('Name' => 'bob', 'Age' => 12),
+			array('Name' => 'phil', 'Age' => 12),
+			array('Name' => 'bob', 'Age' => 14),
+			array('Name' => 'phil', 'Age' => 14),
 		);
 		$this->assertEquals($expected, $list->toArray());
 	}
@@ -528,26 +528,26 @@ class ArrayListTest extends SapphireTest {
 	 */
 	public function testMultipleExcludeNoMatch() {
 		$list = new ArrayList(array(
-			0 => array('Name' => 'bob', 'Age' => 10),
-			1 => array('Name' => 'phil', 'Age' => 11),
-			2 => array('Name' => 'bob', 'Age' => 12),
-			3 => array('Name' => 'phil', 'Age' => 12),
-			4 => array('Name' => 'bob', 'Age' => 14),
-			5 => array('Name' => 'phil', 'Age' => 14),
-			6 => array('Name' => 'bob', 'Age' => 16),
-			7 => array('Name' => 'phil', 'Age' => 16)
+			array('Name' => 'bob', 'Age' => 10),
+			array('Name' => 'phil', 'Age' => 11),
+			array('Name' => 'bob', 'Age' => 12),
+			array('Name' => 'phil', 'Age' => 12),
+			array('Name' => 'bob', 'Age' => 14),
+			array('Name' => 'phil', 'Age' => 14),
+			array('Name' => 'bob', 'Age' => 16),
+			array('Name' => 'phil', 'Age' => 16)
 		));
 
 		$list->exclude(array('Name'=>array('bob','phil'),'Age'=>array(10, 16),'Bananas'=>true));
 		$expected = array(
-			0 => array('Name' => 'bob', 'Age' => 10),
-			1 => array('Name' => 'phil', 'Age' => 11),
-			2 => array('Name' => 'bob', 'Age' => 12),
-			3 => array('Name' => 'phil', 'Age' => 12),
-			4 => array('Name' => 'bob', 'Age' => 14),
-			5 => array('Name' => 'phil', 'Age' => 14),
-			6 => array('Name' => 'bob', 'Age' => 16),
-			7 => array('Name' => 'phil', 'Age' => 16)
+			array('Name' => 'bob', 'Age' => 10),
+			array('Name' => 'phil', 'Age' => 11),
+			array('Name' => 'bob', 'Age' => 12),
+			array('Name' => 'phil', 'Age' => 12),
+			array('Name' => 'bob', 'Age' => 14),
+			array('Name' => 'phil', 'Age' => 14),
+			array('Name' => 'bob', 'Age' => 16),
+			array('Name' => 'phil', 'Age' => 16)
 		);
 		$this->assertEquals($expected, $list->toArray());
 	}
@@ -557,29 +557,29 @@ class ArrayListTest extends SapphireTest {
 	 */
 	public function testMultipleExcludeThreeArguments() {
 		$list = new ArrayList(array(
-			0 => array('Name' => 'bob', 'Age' => 10, 'HasBananas'=>false),
-			1 => array('Name' => 'phil','Age' => 11, 'HasBananas'=>true),
-			2 => array('Name' => 'bob', 'Age' => 12, 'HasBananas'=>true),
-			3 => array('Name' => 'phil','Age' => 12, 'HasBananas'=>true),
-			4 => array('Name' => 'bob', 'Age' => 14, 'HasBananas'=>false),
-			4 => array('Name' => 'ann', 'Age' => 14, 'HasBananas'=>true),
-			5 => array('Name' => 'phil','Age' => 14, 'HasBananas'=>false),
-			6 => array('Name' => 'bob', 'Age' => 16, 'HasBananas'=>false),
-			7 => array('Name' => 'phil','Age' => 16, 'HasBananas'=>true),
-			8 => array('Name' => 'clair','Age' => 16, 'HasBananas'=>true)
+			array('Name' => 'bob', 'Age' => 10, 'HasBananas'=>false),
+			array('Name' => 'phil','Age' => 11, 'HasBananas'=>true),
+			array('Name' => 'bob', 'Age' => 12, 'HasBananas'=>true),
+			array('Name' => 'phil','Age' => 12, 'HasBananas'=>true),
+			array('Name' => 'bob', 'Age' => 14, 'HasBananas'=>false),
+			array('Name' => 'ann', 'Age' => 14, 'HasBananas'=>true),
+			array('Name' => 'phil','Age' => 14, 'HasBananas'=>false),
+			array('Name' => 'bob', 'Age' => 16, 'HasBananas'=>false),
+			array('Name' => 'phil','Age' => 16, 'HasBananas'=>true),
+			array('Name' => 'clair','Age' => 16, 'HasBananas'=>true)
 		));
 
 		$list->exclude(array('Name'=>array('bob','phil'),'Age'=>array(10, 16),'HasBananas'=>true));
 		$expected = array(
-			0 => array('Name' => 'bob', 'Age' => 10, 'HasBananas'=>false),
-			1 => array('Name' => 'phil','Age' => 11, 'HasBananas'=>true),
-			2 => array('Name' => 'bob', 'Age' => 12, 'HasBananas'=>true),
-			3 => array('Name' => 'phil','Age' => 12, 'HasBananas'=>true),
-			4 => array('Name' => 'bob', 'Age' => 14, 'HasBananas'=>false),
-			4 => array('Name' => 'ann', 'Age' => 14, 'HasBananas'=>true),
-			5 => array('Name' => 'phil','Age' => 14, 'HasBananas'=>false),
-			6 => array('Name' => 'bob', 'Age' => 16, 'HasBananas'=>false),
-			8 => array('Name' => 'clair','Age' => 16, 'HasBananas'=>true)
+			array('Name' => 'bob', 'Age' => 10, 'HasBananas'=>false),
+			array('Name' => 'phil','Age' => 11, 'HasBananas'=>true),
+			array('Name' => 'bob', 'Age' => 12, 'HasBananas'=>true),
+			array('Name' => 'phil','Age' => 12, 'HasBananas'=>true),
+			array('Name' => 'bob', 'Age' => 14, 'HasBananas'=>false),
+			array('Name' => 'ann', 'Age' => 14, 'HasBananas'=>true),
+			array('Name' => 'phil','Age' => 14, 'HasBananas'=>false),
+			array('Name' => 'bob', 'Age' => 16, 'HasBananas'=>false),
+			array('Name' => 'clair','Age' => 16, 'HasBananas'=>true)
 		);
 		$this->assertEquals($expected, $list->toArray());
 	}
