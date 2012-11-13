@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Test\Behaviour;
+
 use SilverStripe\BehatExtension\Context\SilverStripeContext,
     SilverStripe\BehatExtension\Context\BasicContext,
     SilverStripe\BehatExtension\Context\LoginContext,
