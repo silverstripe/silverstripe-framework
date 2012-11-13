@@ -180,9 +180,17 @@ class CmsUiContext extends BehatContext
      */
     public function iClickTheCmsTab($tab)
     {
-        $cms_tabs_element = $this->getCmsTabsElement();
+        $this->getSession()->wait(5000, "window.jQuery('.ui-tabs-nav').size() > 0");
 
-        $tab_element = $cms_tabs_element->find('named', array('link_or_button', "'$tab'"));
+        $page = $this->getSession()->getPage();
+        $tabsets = $page->findAll('css', '.ui-tabs-nav');
+        assertNotNull($tabsets, 'CMS tabs not found');
+
+        $tab_element = null;
+        foreach($tabsets as $tabset) {
+            if($tab_element) continue;
+            $tab_element = $tabset->find('named', array('link_or_button', "'$tab'"));
+        }
         assertNotNull($tab_element, sprintf('%s tab not found', $tab));
 
         $tab_element->click();
