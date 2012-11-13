@@ -202,7 +202,7 @@ class CmsUiContext extends BehatContext
     public function theTableShouldContain($table, $text)
     {
         $table_element = $this->getGridfieldTable($table);
-var_dump($table_element);
+
         $element = $table_element->find('named', array('content', "'$text'"));
         assertNotNull($element, sprintf('Element containing `%s` not found in `%s` table', $text, $table));
     }
@@ -260,5 +260,55 @@ var_dump($table_element);
 
         $this->getMainContext()->assertPageNotContainsText($content);
         $driver->switchToWindow();
+    }
+
+    /**
+     * Workaround for chosen.js dropdowns which hide the original dropdown field.
+     * 
+     * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)" dropdown$/
+     */
+    public function theIFillInTheDropdownWith($field, $value)
+    {
+        $field = $this->fixStepArgument($field);
+        $value = $this->fixStepArgument($value);
+
+        $inputField = $this->getSession()->getPage()->findField($field);
+        if(null === $inputField) {
+            throw new ElementNotFoundException(sprintf(
+                'Chosen.js dropdown named "%s" not found',
+                $field
+            ));
+        }
+
+        $container = $inputField->getParent()->getParent();
+        if(null === $container) throw new ElementNotFoundException('Chosen.js field container not found');
+        
+        $linkEl = $container->find('xpath', './/a');
+        if(null === $linkEl) throw new ElementNotFoundException('Chosen.js link element  not found');
+        $linkEl->click();
+        $this->getSession()->wait(100); // wait for dropdown overlay to appear
+
+        $listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
+        if(null === $listEl) 
+        {
+            throw new ElementNotFoundException(sprintf(
+                'Chosen.js list element with title "%s" not found',
+                $value
+            ));
+        }
+        $listEl->click();
+    }
+
+    /**
+     * Returns fixed step argument (with \\" replaced back to ").
+     *
+     * @param string $argument
+     *
+     * @return string
+     */
+    protected function fixStepArgument($argument)
+    {
+        return str_replace('\\"', '"', $argument);
     }
 }
