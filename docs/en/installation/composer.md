@@ -24,7 +24,7 @@ Or [download composer.phar](http://getcomposer.org/composer.phar) manually, and 
 
 You can then run Composer commands by calling `composer`.  For example:
 
-	compser help
+	composer help
 
 <div class="hint" markdown="1">
 It is also possible to keep `composer.phar` out of your path, for example, to put it in your project root.  Every command would then start with `php composer.phar` instead of `composer`.  This is handy if need to keep your installation isolated from the rest of your computer's set-up, but we recommend putting composer into the path for most people.
@@ -45,7 +45,7 @@ browser, and the installation process will be completed.
 
 ## Adding modules to your project
 
-Composer isn't only used to download SilverStripe CMS: it can also be used to manage all the modules.  Installing a module can be done with the following command:
+Composer isn't only used to download SilverStripe CMS, it can also be used to manage all SilverStripe modules.  Installing a module can be done with the following command:
 
 	composer require silverstripe/forum:*
 
@@ -55,7 +55,7 @@ This command has two parts.  First is `silverstripe/forum`. This is the name of 
 
 This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for pacakges on [packagist.org](https://packagist.org/search/?q=silverstripe).
 
-The second part, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
+The second part after the colon, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
 
 <div class="warning" markdown="1">
 `master` is not a legal version string - it's a branch name.  These are different things.  The version string that would get you the branch is `dev-master`.  The version string that would get you a numeric branch is a little different.  The version string for the `3.0` branch is `3.0.x-dev`.  But, frankly, maybe you should just use `*`.
@@ -63,7 +63,7 @@ The second part, `*`, is a version string.  `*` is a good default: it will give 
 
 ## Updating dependencies
 
-Except for the control code of the Voyager space probe, every piece of code in the universe gets updated from time to time.  SilverStripe modules are no exception.  How do you download these updates into your site?
+Except for the control code of the Voyager space probe, every piece of code in the universe gets updated from time to time.  SilverStripe modules are no exception.
 
 To get the latest updates of the modules in your project, run this command:
 
@@ -174,7 +174,7 @@ Open `composer.json`, and find the module's `require`.  Then put `as (core versi
 		...
 	}
 
-What is means is that when the `myproj` branch is checked out into a project, this will satisfy any dependencies that 3.0.x-dev would meet.  So, if another module has `"silverstripe/framework": ">=3.0.0"` in its dependency list, it won't get a conflict.
+What this means is that when the `myproj` branch is checked out into a project, this will satisfy any dependencies that 3.0.x-dev would meet.  So, if another module has `"silverstripe/framework": ">=3.0.0"` in its dependency list, it won't get a conflict.
 
 Both the version and the alias are specified as Composer versions, not branch names.  For the relationship between branch/tag names and Composer vesrions, read [the relevant Composer documentation](http://getcomposer.org/doc/02-libraries.md#specifying-the-version).
 
