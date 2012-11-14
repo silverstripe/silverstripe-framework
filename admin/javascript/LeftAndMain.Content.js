@@ -24,11 +24,9 @@
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 				
 				// Force initialization of certain UI elements to avoid layout glitches
-				this.layout();
 				this.add(this.find('.cms-tabset')).redrawTabs();
 				this.find('.cms-content-header').redraw();
 				this.find('.cms-content-actions').redraw();
-				this.layout();
 			}
 		});
 
@@ -83,8 +81,6 @@
 		$('.cms-content .cms-content-fields').entwine({
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-
-				this.layout();
 			}
 		});
 
