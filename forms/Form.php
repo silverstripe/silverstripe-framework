@@ -1296,34 +1296,6 @@ class Form extends RequestHandler {
 	}
 	
 	/**
-	 * Disable security tokens for every form.
-	 * Note that this doesn't apply to {@link SecurityToken}
-	 * instances outside of the Form class, nor applies
-	 * to existing form instances.
-	 * 
-	 * See {@link enable_all_security_tokens()}.
-	 * 
-	 * @deprecated 2.5 Use SecurityToken::disable()
-	 */
-	public static function disable_all_security_tokens() {
-		Deprecation::notice('2.5', 'Use SecurityToken::disable() instead.');
-		SecurityToken::disable();
-	}
-	
-	/**
-	 * Returns true if security is enabled - that is if the security token
-	 * should be included and checked on this form.
-	 * 
-	 * @deprecated 2.5 Use Form->getSecurityToken()->isEnabled()
-	 *
-	 * @return bool
-	 */
-	public function securityTokenEnabled() {
-		Deprecation::notice('2.5', 'Use Form->getSecurityToken()->isEnabled() instead.');
-		return $this->securityToken->isEnabled();
-	}
-	
-	/**
 	 * Returns the security token for this form (if any exists).
 	 * Doesn't check for {@link securityTokenEnabled()}.
 	 * Use {@link SecurityToken::inst()} to get a global token.
