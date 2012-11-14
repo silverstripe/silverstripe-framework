@@ -821,6 +821,7 @@ class FormField extends RequestHandler {
 	 * @return string Description
 	 */
 	public function setDescription($description) {
+		$this->addExtraClass('ss-tooltip');
 		$this->description = $description;
 		return $this;
 	}
