@@ -576,24 +576,6 @@ class Form extends RequestHandler {
 	}
 	
 	/**
-	 * Get a named field from this form's fields.
-	 * It will traverse into composite fields for you, to find the field you want.
-	 * It will only return a data field.
-	 * 
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 * @return FormField
-	 */
-	public function dataFieldByName($name) {
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->dataFieldByName($field->getName())) $this->fields->push($field);
-		}
-		
-		return $this->fields->dataFieldByName($name);
-	}
-
-	/**
 	 * Return the form's action buttons - used by the templates
 	 * 
 	 * @return FieldList The action list
@@ -618,18 +600,6 @@ class Form extends RequestHandler {
 	public function unsetAllActions(){
 		$this->actions = new FieldList();
 		return $this;
-	}
-
-	/**
-	 * Unset the form's action button by its name.
-	 * 
-	 * @deprecated 3.0 Use Actions() and FieldList API instead
-	 * @param string $name
-	 */
-	public function unsetActionByName($name) {
-		Deprecation::notice('3.0', 'Use Actions() and FieldList API instead');
-
-		$this->actions->removeByName($name);
 	}
 
 	/**
@@ -665,34 +635,6 @@ class Form extends RequestHandler {
 		$attrs = array_merge($attrs, $this->attributes);
 
 		return $attrs;
-	}
-
-	/**
-	 * Unset the form's dataField by its name
-	 *
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 */
-	public function unsetDataFieldByName($fieldName){
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		foreach($this->Fields()->dataFields() as $child) {
-			if(is_object($child) && ($child->getName() == $fieldName || $child->Title() == $fieldName)) {
-				$child = null;
-			}
-		}
-	}
-	
-	/**
-	 * Remove a field from the given tab.
-	 *
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 */
-	public function unsetFieldFromTab($tabName, $fieldName) {
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		// Find the tab
-		$tab = $this->Fields()->findOrMakeTab($tabName);
-		$tab->removeByName($fieldName);
 	}
 
 	/**
@@ -1216,25 +1158,6 @@ class Form extends RequestHandler {
 		return $data;
 	}
 
-	/**
-	 * Resets a specific field to its passed default value.
-	 * Does NOT clear out all submitted data in the form.
-	 *
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 * @param string $fieldName
-	 * @param mixed $fieldValue
-	 */
-	public function resetField($fieldName, $fieldValue = null) {
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		$dataFields = $this->fields->dataFields();
-		if($dataFields) foreach($dataFields as $field) {
-			if($field->getName()==$fieldName) {
-				$field = $field->setValue($fieldValue);
-			}
-		}
-	}
-	
 	/**
 	 * Call the given method on the given field.
 	 * This is used by Ajax-savvy form fields.  By putting '&action=callfieldmethod' to the end
