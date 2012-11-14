@@ -44,30 +44,6 @@
 class FileField extends FormField {
 	
 	/**
-	 * Restrict filesize for either all filetypes
-	 * or a specific extension, with extension-name
-	 * as array-key and the size-restriction in bytes as array-value.
-	 *
-	 * @deprecated 2.5
-	 * @var array 
-	 */
-	public $allowedMaxFileSize = array();
-
-	/**
-	 * @var array Collection of extensions. 
-	 * Extension-names are treated case-insensitive.
-	 * 
-	 * Example:
-	 * <code>
-	 * 	array("jpg","GIF")
-	 * </code>
-	 *
-	 * @deprecated 2.5
-	 * @var array
-	 */
-	public $allowedExtensions = array();
-	
-	/**
 	 * Flag to automatically determine and save a has_one-relationship
 	 * on the saved record (e.g. a "Player" has_one "PlayerImage" would
 	 * trigger saving the ID of newly created file into "PlayerImageID"
