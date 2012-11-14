@@ -308,26 +308,6 @@ class Director implements TemplateGlobalProvider {
 			}
 		}
 	}
-	
-	/**
-	 * Returns the urlParam with the given name
-	 * 
-	 * @deprecated 3.0 Use SS_HTTPRequest->param()
-	 */
-	public static function urlParam($name) {
-		Deprecation::notice('3.0', 'Use SS_HTTPRequest->param() instead.');
-		if(isset(Director::$urlParams[$name])) return Director::$urlParams[$name];
-	}
-	
-	/**
-	 * Returns an array of urlParams.
-	 * 
-	 * @deprecated 3.0 Use SS_HTTPRequest->params()
-	 */
-	public static function urlParams() {
-		Deprecation::notice('3.0', 'Use SS_HTTPRequest->params() instead.');
-		return Director::$urlParams;
-	}
 
 	/**
 	 * Set url parameters (should only be called internally by RequestHandler->handleRequest()).
