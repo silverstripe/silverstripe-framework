@@ -78,14 +78,6 @@ class FileField extends FormField {
 	 * @param int $value The value of the field.
 	 */
 	public function __construct($name, $title = null, $value = null) {
-		if(count(func_get_args()) > 3) {
-			Deprecation::notice(
-				'3.0', 
-				'Use setRightTitle() and setFolderName() instead of constructor arguments', 
-				Deprecation::SCOPE_GLOBAL
-			);
-		}
-
 		$this->upload = new Upload();
 	
 		parent::__construct($name, $title, $value);
