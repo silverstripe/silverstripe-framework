@@ -1455,20 +1455,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * Sets the component of a relationship.
-	 * This should only need to be called internally,
-	 * and is mainly due to the caching logic in {@link getComponents()}
-	 * and {@link getManyManyComponents()}.
-	 *
-	 * @param string $componentName Name of the component
-	 * @param DataObject|HasManyList|ManyManyList $componentValue Value of the component
-	 * @deprecated 3.0 Not used internally anymore.
-	 */
-	public function setComponent($componentName, $componentValue) {
-		Deprecation::notice('3.0', 'Not used internally anymore.');
-	}
-
-	/**
 	 * Returns a many-to-many component, as a ManyManyList.
 	 * @param string $componentName Name of the many-many component
 	 * @return ManyManyList The set of components
