@@ -247,30 +247,6 @@ class FormField extends RequestHandler {
 	}
 
 	/**
-	 * Set tabindex HTML attribute
-	 * (defaults to none).
-	 *
-	 * @deprecated 3.0 Use setAttribute("tabindex") instead
-	 * @param int $index
-	 */
-	public function setTabIndex($index) {
-		Deprecation::notice('3.0', 'Use setAttribute("tabindex") instead');
-		$this->setAttribute($index);
-		return $this;
-	}
-
-	/**
-	 * Get tabindex (if previously set)
-	 * 
-	 * @deprecated 3.0 Use getAttribute("tabindex") instead
-	 * @return int
-	 */
-	public function getTabIndex() {
-		Deprecation::notice('3.0', 'Use getAttribute("tabindex") instead');
-		return $this->getAttribute('tabindex');
-	}
-
-	/**
 	 * Compiles all CSS-classes. Optionally includes a "nolabel"-class
 	 * if no title was set on the formfield.
 	 * Uses {@link Message()} and {@link MessageType()} to add validatoin
@@ -795,15 +771,6 @@ class FormField extends RequestHandler {
 	 */
 	public function validate($validator) {
 		return true;
-	}
-
-	/**
-	 * @deprecated 3.0 Use setDescription()
-	 */
-	public function describe($description) {
-		Deprecation::notice('3.0', 'Use setDescription()');
-		$this->setDescription($description);
-		return $this;
 	}
 
 	/**
