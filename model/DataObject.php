@@ -2952,24 +2952,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * @deprecated 3.0 Use DataObject::database_fields() instead
-	 * @see DataObject::database_fields()
-	 */
-	public function databaseFields() {
-		Deprecation::notice('3.0', 'Use DataObject::database_fields() instead.');
-		return self::database_fields($this->class);
-	}
-	
-	/**
-	 * @deprecated 3.0 Use DataObject::custom_database_fields() instead
-	 * @see DataObject::custom_database_fields()
-	 */
-	public function customDatabaseFields() {
-		Deprecation::notice('3.0', 'Use DataObject::custom_database_fields() instead.');
-		return self::custom_database_fields($this->class);
-	}
-	
-	/**
 	 * Returns fields bu traversing the class heirachy in a bottom-up direction.
 	 *
 	 * Needed to avoid getCMSFields being empty when customDatabaseFields overlooks
