@@ -401,55 +401,6 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Redirect to another page.
-	 * @deprecated 2.5 Use Controller->redirect()
-	 *  - $url can be an absolute URL
-	 *  - or it can be a URL relative to the "site base"
-	 *  - if it is just a word without an slashes, then it redirects to another action on the current controller.
-	 */
-	public static function redirect($url, $code=302) {
-		Deprecation::notice('2.5', 'Use Controller->redirect() instead.');
-		Controller::curr()->redirect($url, $code);
-	}
-
-	/**
-	 * Tests whether a redirection has been requested.
-	 * @deprecated 2.5 Use Controller->redirectedTo() instead
-	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will
-	 *                return null;
-	 */
-	public static function redirected_to() {
-		Deprecation::notice('2.5', 'Use Controller->redirectedTo() instead.');
-		return Controller::curr()->redirectedTo();
-	}
-	
-	/**
-	 * Sets the HTTP status code
-	 * @deprecated 2.5 Use Controller->getResponse()->setStatusCode() instead
-	 */
-	public static function set_status_code($code) {
-		Deprecation::notice('2.5', 'Use Controller->getResponse()->setStatusCode() instead');
-		return Controller::curr()->getResponse()->setStatusCode($code);
-	}
-	
-	/**
-	 * Returns the current HTTP status code
-	 * @deprecated 2.5 Use Controller->getResponse()->getStatusCode() instead
-	 */
-	public static function get_status_code() {
-		Deprecation::notice('2.5', 'Use Controller->getResponse()->getStatusCode() instead');
-		return Controller::curr()->getResponse()->getStatusCode();
-	}
-
-	/**
-	 * @deprecated 2.5 Use Controller->redirectBack()
-	 */
-	public static function redirectBack() {
-		Deprecation::notice('2.5', 'Use Controller->redirectBack() instead.');
-		Controller::curr()->redirectBack();
-	}
-
-	/**
 	 * Returns the root URL for the site.
 	 * It will be automatically calculated unless it is overridden with {@link setBaseURL()}.
 	 */
