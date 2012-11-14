@@ -418,6 +418,9 @@ jQuery.noConflict();
 					// Set loading state and store element state
 					var origStyle = contentEl.attr('style');
 					var origVisible = contentEl.is(':visible');
+					var origLayoutApplied = (typeof contentEl.data('jlayout')!=='undefined');
+					var origParent = contentEl.parent();
+					var origParentLayoutApplied = (typeof origParent.data('jlayout')!=='undefined');
 					var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
 					var elemClasses = contentEl.attr('class');
 					var origLayoutClasses = [];
@@ -444,6 +447,17 @@ jQuery.noConflict();
 
 					// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
 					if(origVisible) newContentEl.css('visibility', 'visible');
+
+					// Rebuild internal jlayout structures to point to the new elements.
+					if (origParentLayoutApplied) {
+						// Apply to parent to restore the hierarchy. Otherwise when the top-level layout() is called 
+						// jlayout will not be able to reach the new children and the layout will break.
+						origParent.layout();
+					}
+					else if (origLayoutApplied) {
+						// This is the root layout element.
+						newContentEl.layout();
+					}
 				});
 
 				// Re-init tabs (in case the form tag itself is a tabset)
