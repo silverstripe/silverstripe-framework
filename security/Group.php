@@ -217,15 +217,6 @@ class Group extends DataObject {
 	}
 	
 	/**
-	 * @deprecated 2.5
-	 */
-	public static function addToGroupByName($member, $groupcode) {
-		Deprecation::notice('2.5', 'Use $member->addToGroupByCode($groupcode) instead.');
-		
-		return $member->addToGroupByCode($groupcode);
-	}
-	
-	/**
 	 * Get many-many relation to {@link Member},
 	 * including all members which are "inherited" from children groups of this record.
 	 * See {@link DirectMembers()} for retrieving members without any inheritance.
@@ -321,14 +312,6 @@ class Group extends DataObject {
 			"\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID,
 			'"Sort"'
 		);
-	}
-	
-	/**
-	 * @deprecated 3.0 Use getTreeTitle()
-	 */
-	public function TreeTitle() {
-		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
-		return $this->getTreeTitle();
 	}
 	
 	public function getTreeTitle() {
