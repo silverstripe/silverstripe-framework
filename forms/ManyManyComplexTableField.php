@@ -30,7 +30,7 @@
  * );
  * </code>
  * 
- * @deprecated 3.0 Use GridField with GridFieldConfig_RelationEditor
+ * @deprecated 3.1 Use GridField with GridFieldConfig_RelationEditor
  * 
  * @package forms
  * @subpackage fields-relational
