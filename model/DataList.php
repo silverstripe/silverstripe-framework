@@ -234,20 +234,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Return a new DataList instance with a join clause added to this list's query.
-	 *
-	 * @param type $join Escaped SQL statement
-	 * @return DataList 
-	 * @deprecated 3.0
-	 */
-	public function join($join) {
-		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
-		return $this->alterDataQuery_30(function($query) use ($join){
-			$query->join($join);
-		});
-	}
-
-	/**
 	 * Return a new DataList instance with the records returned in this query restricted by a limit clause
 	 * 
 	 * @param int $limit
