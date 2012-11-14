@@ -2739,42 +2739,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Take a database {@link SS_Query} and instanciate an object for each record.
-	 * 
-	 * @deprecated 3.0 Replaced by DataList
-	 *
-	 * @param SS_Query|array $records The database records, a {@link SS_Query} object or an array of maps.
-	 * @param string $containerClass The class to place all of the objects into.
-	 *
-	 * @return mixed The new objects in an object of type $containerClass
-	 */
-	public function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
-		Deprecation::notice('3.0', 'Use DataList instead.');
-
-		foreach($records as $record) {
-			if(empty($record['RecordClassName'])) {
-				$record['RecordClassName'] = $record['ClassName'];
-			}
-			if(class_exists($record['RecordClassName'])) {
-				$results[] = new $record['RecordClassName']($record);
-			} else {
-				if(!$baseClass) {
-					user_error("Bad RecordClassName '{$record['RecordClassName']}' and "
-						. "\$baseClass not set", E_USER_ERROR);
-				} else if(!is_string($baseClass) || !class_exists($baseClass)) {
-					user_error("Bad RecordClassName '{$record['RecordClassName']}' and bad "
-						. "\$baseClass '$baseClass not set", E_USER_ERROR);
-				}
-				$results[] = new $baseClass($record);
-			}
-		}
-
-		if(isset($results)) {
-			return new $containerClass($results);
-		}
-	}
-
-	/**
 	 * Return the first item matching the given query.
 	 * All calls to get_one() are cached.
 	 *
