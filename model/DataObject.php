@@ -2017,17 +2017,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Return a map of all the fields for this record
-	 * @deprecated 2.4 Use toMap()
-	 *
-	 * @return array A map of field names to field values.
-	 */
-	public function getAllFields() {
-		Deprecation::notice('3.0', 'Use toMap() instead.');
-		return $this->toMap();
-	}
-
-	/**
 	 * Loads all the stub fields that an initial lazy load didn't load fully.
 	 *
 	 * @param tableClass Base table to load the values from. Others are joined as required.
