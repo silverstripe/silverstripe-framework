@@ -2633,23 +2633,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
-	 */
-	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having="") {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
-		return $this->extendedSQL($filter, $sort, $limit, $join, $having);
-	}
-
-	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
-	 */
-	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = ""){
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
-		$dataList = DataObject::get($this->class, $filter, $sort, $join, $limit);
-		return $dataList->dataQuery()->query();
-	}
-
-	/**
 	 * Return all objects matching the filter
 	 * sub-classes are automatically selected and included
 	 *
