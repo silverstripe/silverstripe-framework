@@ -809,38 +809,6 @@ class Director implements TemplateGlobalProvider {
 		}
 	}
 
-	/**
-	 * Specify HTTP_HOST values that are development environments.
-	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 * 
-	 * CAUTION: Domain information can easily be spoofed in HTTP requests,
-	 * we recommend to set this mode via {@link Director::set_environment_type()}
-	 * or an _ss_environment.php instead.
-	 * 
-	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
-	 * @param $servers array An array of HTTP_HOST values that should be treated as development environments.
-	 */
-	public static function set_dev_servers($servers) {
-		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
-		Director::$dev_servers = $servers;
-	}
-	
-	/**
-	 * Specify HTTP_HOST values that are test environments.
-	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 * 
-	 * CAUTION: Domain information can easily be spoofed in HTTP requests,
-	 * we recommend to set this mode via {@link Director::set_environment_type()}
-	 * or an _ss_environment.php instead.
-	 * 
-	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
-	 * @param $servers array An array of HTTP_HOST values that should be treated as test environments.
-	 */
-	public static function set_test_servers($servers) {
-		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
-		Director::$test_servers = $servers;
-	}
-
 	/*
 	 * This function will return true if the site is in a live environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
