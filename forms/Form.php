@@ -749,14 +749,6 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * @deprecated 3.0 Please use {@link getEncType}.
-	 */
-	public function FormEncType() {
-		Deprecation::notice('3.0', 'Please use Form->getEncType() instead.');
-		return $this->getEncType();
-	}
-
-	/**
 	 * Returns the real HTTP method for the form:
 	 * GET, POST, PUT, DELETE or HEAD.
 	 * As most browsers only support GET and POST in
