@@ -11,8 +11,6 @@ abstract class StringField extends DBField {
 
 	static $casting = array(
 		"LimitCharacters" => "Text",
-		"Lower" => "Text",
-		"Upper" => "Text",
 		"LowerCase" => "Text",
 		"UpperCase" => "Text",
 	);
@@ -114,15 +112,6 @@ abstract class StringField extends DBField {
 	public function LowerCase() {
 		return mb_strtolower($this->value);
 	}
-		
-	/**
-	 * Return another DBField object with this value in lowercase.
-	 * @deprecated 3.0 Use LowerCase() instead.
-	 */
-	public function Lower() {
-		Deprecation::notice('3.0', 'Use LowerCase() instead.');
-		return $this->LowerCase();
-	}
 
 	/**
 	 * Converts the current value for this Enum DBField to uppercase.
@@ -130,15 +119,6 @@ abstract class StringField extends DBField {
 	 */ 
 	public function UpperCase() {
 		return mb_strtoupper($this->value);
-	}
-
-	/**
-	 * Return another DBField object with this value in uppercase.
-	 * @deprecated 3.0 Use UpperCase() instead.
-	 */
-	public function Upper() {
-		Deprecation::notice('3.0', 'Use UpperCase() instead.');
-		return $this->UpperCase();
 	}
 
 }
