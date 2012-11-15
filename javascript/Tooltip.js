@@ -8,7 +8,11 @@
 		 */
 		$('.ss-tooltip').entwine({
 			onmatch : function() {
-				$('.ss-tooltip').tooltip();
+				this.tooltip({
+					show: { effect: "fadeIn", duration: 300, delay: 300 },
+					hide: { effect: "fadeOut", duration: 300, delay: 0 },
+					position: { my: "left+15 top", at: "right top", collision: "flipfit"}
+				});
 			}
 		});
 }(jQuery));
