@@ -118,6 +118,23 @@ class FormField extends RequestHandler {
 	}
 
 	/**
+	 * Construct and return HTML tag.
+	 */
+	public static function create_tag($tag, $attributes, $content = null) {
+		$preparedAttributes = '';
+		foreach($attributes as $k => $v) {
+			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes
+			// can sometimes get finicky
+			if(!empty($v) || $v === '0' || $k == 'value') {
+				$preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
+			}
+		}
+
+		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
+		else return "<$tag$preparedAttributes />";
+	}
+
+	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
@@ -739,26 +756,9 @@ class FormField extends RequestHandler {
 		return strtolower(preg_replace('/Field$/', '', $this->class));	
 	}
 
-	/**
-	 * Construct and return HTML tag.
-	 * 
-	 * @deprecated 3.0 Please define your own FormField template using {@link setFieldTemplate()}
-	 * and/or {@link renderFieldTemplate()}
-	 * 
-	 * @todo Transform to static helper method.
-	 */
 	public function createTag($tag, $attributes, $content = null) {
-		$preparedAttributes = '';
-		foreach($attributes as $k => $v) {
-			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes
-			// can sometimes get finicky
-			if(!empty($v) || $v === '0' || $k == 'value') {
-				$preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
-			}
-		}
-
-		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
-		else return "<$tag$preparedAttributes />";
+		Deprecation::notice('3.1', 'Use FormField::create_tag()');
+		return self::create_tag($tag, $attributes, $content);
 	}
 
 	/**

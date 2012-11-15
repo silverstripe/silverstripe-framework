@@ -76,11 +76,10 @@ class HtmlEditorField extends TextareaField {
 			}
 		}
 
-		return $this->createTag (
-			'textarea',
-			$this->getAttributes(),
-			htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8')
-		);
+		$properties['Value'] = htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8');
+		$obj = $this->customise($properties);
+
+		return $obj->renderWith($this->getTemplates());
 	}
 
 	public function getAttributes() {

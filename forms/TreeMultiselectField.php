@@ -115,7 +115,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		} 
 		
-		return $this->createTag (
+		return FormField::create_tag(
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
@@ -125,7 +125,7 @@ class TreeMultiselectField extends TreeDropdownField {
 				'data-title' => $title,
 				'title' => $this->getDescription()
 			),
-			$this->createTag (
+			FormField::create_tag(
 				'input',
 				array (
 					'id'    => $this->id(),
