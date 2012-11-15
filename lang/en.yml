@@ -493,15 +493,8 @@ en:
   TableListField:
     CSVEXPORT: 'Export to CSV'
     Print: Print
-    SELECT: 'Select:'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
     OF: of
-    TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
