@@ -20,7 +20,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	}
 	
 	/**
-	 * Return any special attributes that will be used for FormField::createTag()
+	 * Return any special attributes that will be used for FormField::create_tag()
 	 *
 	 * @param GridField $gridField
 	 * @param DataObject $record

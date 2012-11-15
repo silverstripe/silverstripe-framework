@@ -21,7 +21,7 @@
  *  - childID                Identifier of the database-record (the targeted table is determined by the $sourceClass
  *                           parameter)
  *  
- * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
+ * @deprecated 3.1 Use GridField with GridFieldConfig_RecordEditor
  *
  * @todo Control width/height of popup by constructor (hardcoded at the moment)
  * @package forms
@@ -453,7 +453,7 @@ JS;
 	}
 	
 	/**
-	 * @deprecated 3.0
+	 * @deprecated 3.1
 	 */
 	public function setRelationAutoSetting($value) {
 		Deprecation::notice('3.0', 'Manipulate the DataList instead.');

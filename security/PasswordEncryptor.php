@@ -104,22 +104,6 @@ abstract class PasswordEncryptor {
 	
 	/**
 	 * This usually just returns a strict string comparison,
-	 * but is necessary for {@link PasswordEncryptor_LegacyPHPHash}.
-	 * 
-	 * @param String $hash1
-	 * @param String $hash2
-	 * @return boolean
-	 *
-	 * @deprecated 3.0 - Use PasswordEncryptor::check() instead.
-	 */
-	public function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0',
-			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
-		return ($hash1 === $hash2);
-	}
-
-	/**
-	 * This usually just returns a strict string comparison,
 	 * but is necessary for retain compatibility with password hashed
 	 * with flawed algorithms - see {@link PasswordEncryptor_LegacyPHPHash} and
 	 * {@link PasswordEncryptor_Blowfish}
@@ -354,15 +338,6 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 		// In that way we can store also a SHA256 encrypted password in just 64
 		// letters.
 		return substr(base_convert($password, 16, 36), 0, 64);
-	}
-	
-	public function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0',
-			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
-
-		// Due to flawed base_convert() floating poing precision, 
-		// only the first 10 characters are consistently useful for comparisons.
-		return (substr($hash1, 0, 10) === substr($hash2, 0, 10));
 	}
 
 	public function check($hash, $password, $salt = null, $member = null) {

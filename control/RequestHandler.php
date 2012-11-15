@@ -365,14 +365,6 @@ class RequestHandler extends ViewableData {
 	}
 
 	/**
-	 * @deprecated 3.0 Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())
-	 */
-	public function isAjax() {
-		Deprecation::notice('3.0', 'Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())');
-		return $this->request->isAjax();
-	}
-
-	/**
 	 * Returns the SS_HTTPRequest object that this controller is using.
 	 * Returns a placeholder {@link NullHTTPRequest} object unless 
 	 * {@link handleAction()} or {@link handleRequest()} have been called,

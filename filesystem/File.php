@@ -235,14 +235,6 @@ class File extends DataObject {
 	}
 
 	/**
-	 * @deprecated 3.0 Use getTreeTitle()
-	 */
-	public function TreeTitle() {
-		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
-		return $this->getTreeTitle();
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getTreeTitle() {
