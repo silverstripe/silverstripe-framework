@@ -82,7 +82,17 @@ class Debug {
 		}
 
 	}
-	
+
+	public static function caller() {
+		$bt = debug_backtrace();
+		$caller = $bt[2];
+		$caller['line'] = $bt[1]['line'];
+		$caller['file'] = $bt[1]['file'];
+		if(!isset($caller['class'])) $caller['class'] = '';
+		if(!isset($caller['type'])) $caller['type'] = '';
+		return $caller;
+	}
+
 	/**
 	 * Close out the show dumper
 	 *
