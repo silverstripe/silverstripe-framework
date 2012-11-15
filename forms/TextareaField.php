@@ -32,21 +32,6 @@ class TextareaField extends FormField {
 	 */
 	protected $cols = 20;
 
-	/**
-	 * Create a new textarea field.
-	 * 
-	 * @param $name Field name
-	 * @param $title Field title
-	 * @param $value The current value
-	 */
-	public function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) {
-			Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments');
-		}
-
-		parent::__construct($name, $title, $value);
-	}
-
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
