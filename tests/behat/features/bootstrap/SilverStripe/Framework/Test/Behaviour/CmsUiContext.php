@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Test\Behaviour;
+namespace SilverStripe\Framework\Test\Behaviour;
 
 use Behat\Behat\Context\ClosuredContextInterface,
     Behat\Behat\Context\TranslatedContextInterface,

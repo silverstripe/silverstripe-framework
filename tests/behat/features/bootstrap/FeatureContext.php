@@ -1,12 +1,12 @@
 <?php
 
-namespace SilverStripe\Test\Behaviour;
+namespace SilverStripe\Framework\Test\Behaviour;
 
 use SilverStripe\BehatExtension\Context\SilverStripeContext,
     SilverStripe\BehatExtension\Context\BasicContext,
     SilverStripe\BehatExtension\Context\LoginContext,
-    SilverStripe\Test\Behaviour\CmsFormsContext,
-    SilverStripe\Test\Behaviour\CmsUiContext;
+    SilverStripe\Framework\Test\Behaviour\CmsFormsContext,
+    SilverStripe\Framework\Test\Behaviour\CmsUiContext;
 
 // PHPUnit
 require_once 'PHPUnit/Autoload.php';
