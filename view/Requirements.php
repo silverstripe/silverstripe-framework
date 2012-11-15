@@ -569,7 +569,7 @@ class Requirements_Backend {
 	
 	/**
 	 * Needed to actively prevent the inclusion of a file,
-	 * e.g. when using your own prototype.js.
+	 * e.g. when using your own jQuery version.
 	 * Blocking should only be used as an exception, because
 	 * it is hard to trace back. You can just block items with an
 	 * ID, so make sure you add an unique identifier to customCSS() and customScript().

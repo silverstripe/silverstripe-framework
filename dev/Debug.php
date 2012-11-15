@@ -406,9 +406,6 @@ class Debug {
 			} 
 		}
 		
-		// Legacy error handling for customized prototype.js Ajax.Base.responseIsSuccess()
-		// if(Director::is_ajax()) echo "ERROR:\n";
-		
 		$reporter = self::create_debug_view();
 		
 		// Coupling alert: This relies on knowledge of how the director gets its URL, it could be improved.

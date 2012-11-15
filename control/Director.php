@@ -722,7 +722,7 @@ class Director implements TemplateGlobalProvider {
 
 	/**
 	 * Checks if the current HTTP-Request is an "Ajax-Request"
-	 * by checking for a custom header set by prototype.js or
+	 * by checking for a custom header set by jQuery or
 	 * wether a manually set request-parameter 'ajax' is present.
 	 *
 	 * @return boolean
