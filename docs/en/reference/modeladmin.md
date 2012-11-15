@@ -130,6 +130,19 @@ For example, we might want to have a checkbox which limits search results to exp
 		}
 	}
 
+To alter how the results are displayed (via `[api:GridField]`), you can also overload the `getEditForm()` method. For example, to add a new component.
+
+	:::php
+	class MyAdmin extends ModelAdmin {
+		// ...
+		public function getEditForm($id = null, $fields = null) {
+			$form = parent::getEditForm($id, $fields);
+			$gridField = $form->Fields()->fieldByName($this->sanitiseClassName($this->modelClass));
+			$gridField->getConfig()->addComponent(new GridFieldFilterHeader());
+			return $form;
+		}
+	}
+
 ## Managing Relationships
 
 Has-one relationships are simply implemented as a `[api:DropdownField]` by default.
