@@ -31,7 +31,7 @@
  * 
  * @see http://doc.silverstripe.org/tutorial/5-dataobject-relationship-management
  * 
- * @deprecated 3.0 Use GridField with GridFieldConfig_RelationEditor
+ * @deprecated 3.1 Use GridField with GridFieldConfig_RelationEditor
  * 
  * @package forms
  * @subpackage fields-relational

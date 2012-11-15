@@ -55,7 +55,7 @@ class GroupedDropdownField extends DropdownField {
 			}
 		}
 
-		return $this->createTag('select', $this->getAttributes(), $options);
+		return FormField::create_tag('select', $this->getAttributes(), $options);
 	}
 
 	public function Type() {

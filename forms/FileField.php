@@ -44,30 +44,6 @@
 class FileField extends FormField {
 	
 	/**
-	 * Restrict filesize for either all filetypes
-	 * or a specific extension, with extension-name
-	 * as array-key and the size-restriction in bytes as array-value.
-	 *
-	 * @deprecated 2.5
-	 * @var array 
-	 */
-	public $allowedMaxFileSize = array();
-
-	/**
-	 * @var array Collection of extensions. 
-	 * Extension-names are treated case-insensitive.
-	 * 
-	 * Example:
-	 * <code>
-	 * 	array("jpg","GIF")
-	 * </code>
-	 *
-	 * @deprecated 2.5
-	 * @var array
-	 */
-	public $allowedExtensions = array();
-	
-	/**
 	 * Flag to automatically determine and save a has_one-relationship
 	 * on the saved record (e.g. a "Player" has_one "PlayerImage" would
 	 * trigger saving the ID of newly created file into "PlayerImageID"
@@ -102,14 +78,6 @@ class FileField extends FormField {
 	 * @param int $value The value of the field.
 	 */
 	public function __construct($name, $title = null, $value = null) {
-		if(count(func_get_args()) > 3) {
-			Deprecation::notice(
-				'3.0', 
-				'Use setRightTitle() and setFolderName() instead of constructor arguments', 
-				Deprecation::SCOPE_GLOBAL
-			);
-		}
-
 		$this->upload = new Upload();
 	
 		parent::__construct($name, $title, $value);

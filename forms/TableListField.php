@@ -11,7 +11,7 @@
  * All get variables are namespaced in the format ctf[MyFieldName][MyParameter] to avoid collisions
  * when multiple TableListFields are present in a form.
  * 
- * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
+ * @deprecated 3.1 Use GridField with GridFieldConfig_RecordEditor
  * 
  * @package forms
  * @subpackage fields-relational

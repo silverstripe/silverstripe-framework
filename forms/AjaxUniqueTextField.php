@@ -52,7 +52,7 @@ class AjaxUniqueTextField extends TextField {
 			'maxlength' => ($this->maxLength) ? $this->maxLength : null
 		);
 		
-		return $this->createTag('input', $attributes);
+		return FormField::create_tag('input', $attributes);
 	}
 
 	public function validate( $validator ) {

@@ -531,24 +531,6 @@ class DataQuery {
 	}
 
 	/**
-	 * Add a join clause to this query
-	 * @deprecated 3.0 Use innerJoin() or leftJoin() instead.
-	 */
-	public function join($join) {
-		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
-		if($join) {
-			$this->query->addFrom($join);
-			// TODO: This needs to be resolved for all databases
-
-			if(DB::getConn() instanceof MySQLDatabase) {
-				$from = $this->query->getFrom();
-				$this->query->setGroupBy(reset($from) . ".\"ID\"");
-			}
-		}
-		return $this;
-	}
-	
-	/**
 	 * Add an INNER JOIN clause to this query.
 	 * 
 	 * @param String $table The unquoted table name to join to.
