@@ -1,30 +1,18 @@
 mi_NZ:
   AssetAdmin:
-    ALLOWEDEXTS:
-      - null
-    NEWFOLDER:
-      - null
+    ALLOWEDEXTS: 'Ngā toronga ka whakaaetia'
+    NEWFOLDER: KōpakiHōu
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Tukuatu tuatahi'
+    DIM: 'Ngā Rahinga'
+    FILENAME: 'Ingoa Kōnae'
+    FOLDER: Kōpaki
+    LASTEDIT: 'Hurihanga tōmuri'
+    OWNER: Kaiūmanga
+    SIZE: Nuinga
+    TITLE: Taitara
+    TYPE: 'Momo kōnae'
+    URL: PRO
   AssetUploadField:
     ChooseFiles: 'Kōwhiri kōnae'
     DRAGFILESHERE: 'Tōia mai ngā kōnae ki konei'
@@ -71,27 +59,19 @@ mi_NZ:
     ERRORNOTADMIN: 'Ehara tēnā kaiwhakamahi i te kaiwhakahaere'
     ERRORNOTREC: 'Kāore i te mōhiotia tēnā ingoa kaiwhakamahi / kupuhipa'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: Hē
+    ANY: 'Ko tētahi'
+    1: Pono
   CMSLoadingScreen.ss:
     LOADING: 'Uta ana...'
     REQUIREJS: 'Ka hiahia te CMS kia whakahohea te JavaScript'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Uru ki te wāhanga ''{title}'''
+    ACCESSALLINTERFACES: 'Uru ki ngā wāhanga CMS katoa'
+    ACCESSALLINTERFACESHELP: 'Ka takahi i ngā tautuhinga uru tauwhāiti ake'
+    SAVE: Tiaki
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
     CHANGEPASSWORDTEXT2: 'Ka taea te whakamahi i ēnei taipitopito tuakiri ināianei hei takiuru:'
@@ -99,48 +79,35 @@ mi_NZ:
     HELLO: 'Kia ora'
     PASSWORD: Kupuhipa
   CheckboxField:
-    -
-      - null
-    -
-      - null
+    - Hē
+    - Pono
   ComplexTableField:
     CLOSEPOPUP: 'Kati Pakū-Ake'
     SUCCESSADD2: 'Kua tāpiritia a  {name}'
     SUCCESSEDIT: 'I tiakina a %s %s %s'
   ComplexTableField.ss:
-    ADDITEM:
-      - null
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    ADDITEM: 'Tāpiri %s'
+    NOITEMSFOUND: 'Kāore i kitea he tūemi'
+    SORTASC: 'Kōmaka aupiki'
+    SORTDESC: 'Kōmaka auheke'
   ComplexTableField_popup.ss:
     NEXT: Panuku
     PREVIOUS: Tōmua
   ConfirmedPasswordField:
-    ATLEAST:
-      - null
-    BETWEEN:
-      - null
-    MAXIMUM:
-      - null
-    SHOWONCLICKTITLE:
-      - null
+    ATLEAST: 'Kia {min} pūāhua i te iti rawa te roa o ngā kupuhipa.'
+    BETWEEN: 'Me noho te roa o ngā kupuhipa i waenga i te {min} ki te {max} ngā pūāhua'
+    MAXIMUM: 'Kaua i hipa i te {max} pūāhua te roa o ngā kupuhipa.'
+    SHOWONCLICKTITLE: 'Huri Kupuhipa'
   CreditCardField:
     FIRST: tuatahi
     FOURTH: tuawhā
     SECOND: tuarua
     THIRD: tuatoru
   CurrencyField:
-    CURRENCYSYMBOL:
-      - null
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Ngā Ahanoa Raraunga'
+    SINGULARNAME: 'Ahanoa Raraunga'
   Date:
     DAY: rā
     DAYS: 'ngā rā'
@@ -163,148 +130,89 @@ mi_NZ:
     VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'
     VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Kāore i tautuhia'
   Director:
     INVALID_REQUEST: 'Tono muhu'
   DropdownField:
-    CHOOSE:
-      - null
+    CHOOSE: (Kōwhiri)
   EmailField:
-    VALIDATION:
-      - null
+    VALIDATION: 'Tāurua he wāhitau īmēra '
   Email_BounceRecord:
     PLURALNAME: 'Ngā Pūrongo Tāwhana Īmēra'
     SINGULARNAME: 'Pūrongo Tāwhana Īmēra'
   Enum:
     ANY: 'Ko tētahi'
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    TiffType:
-      - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    AviType: 'AVI video file'
+    Content: 'Ngā Ihirangi'
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
+    Filename: 'Ingoa Kōnae'
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Kāore e whakaaetia te toronga (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Kāore e whakaaetia te toronga'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: 'He kore ngā paita kei te kōnae'
+    NOVALIDUPLOAD: 'Ehara te kōnae i te tukuatu pono'
+    Name: Ingoa
+    PLURALNAME: 'Ngā Kōnae'
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
+    SINGULARNAME: Kōnae
+    TOOLARGE: 'He rahi rawa te rahi kōnae, he {size} te rahi mōrahi ka taea'
+    TOOLARGESHORT: 'Ka hipa te {size} i te rahi kōnae'
+    TiffType: 'Tagged image format'
+    Title: Taitara
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH:
-      - null
-    ATTACHONCESAVED:
-      - null
-    ATTACHONCESAVED2:
-      - null
-    DELETE:
-      - null
-    DISALLOWEDFILETYPE:
-      - null
-    FILE:
-      - null
-    FROMCOMPUTER:
-      - null
-    FROMFILESTORE:
-      - null
-    NOSOURCE:
-      - null
-    REPLACE:
-      - null
+    ATTACH: 'Āpiti  {type}'
+    ATTACHONCESAVED: 'Ka taea te āpiti i ngā {type} ina oti te tiaki tuatahi o te pūkete.'
+    ATTACHONCESAVED2: 'Ka taea te āpiti kōnae ina oti te tiaki tuatahi o te pūkete.'
+    DELETE: 'Muku {type}'
+    DISALLOWEDFILETYPE: 'Kāore e whakaaetia ki te tukuatu i tēnei momo kōnae'
+    FILE: Kōnae
+    FROMCOMPUTER: 'Mai i tō Rorohiko'
+    FROMFILESTORE: 'Mai i te pātaka kōnae'
+    NOSOURCE: 'Kōwhiria he kōnae pūtake hei tāpiri'
+    REPLACE: 'Whakakapi {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe Tukuatu Atahanga'
   Filesystem:
     SYNCRESULTS: 'Kua oti te tukutahi: e {createdcount} ngā tūemi i hangaia, e {deletedcount} ngā tūemi i mukua'
   Folder:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: 'Kia ora'
     TEXT1: 'Anei tō'
     TEXT2: 'hono tautuhi kupuhipa anō'
     TEXT3: mā
   Form:
-    FIELDISREQUIRED:
-      - null
-    SubmitBtnLabel:
-      - null
-    VALIDATIONCREDITNUMBER:
-      - null
-    VALIDATIONNOTUNIQUE:
-      - null
-    VALIDATIONPASSWORDSDONTMATCH:
-      - null
-    VALIDATIONPASSWORDSNOTEMPTY:
-      - null
-    VALIDATIONSTRONGPASSWORD:
-      - null
-    VALIDATOR:
-      - null
-    VALIDCURRENCY:
-      - null
+    FIELDISREQUIRED: 'Ka hiahiatia a %s'
+    SubmitBtnLabel: Go
+    VALIDATIONCREDITNUMBER: 'Tirohia kua tika tō tāuru i te tau kāri nama {number}'
+    VALIDATIONNOTUNIQUE: 'Ehara te uara i tāurua i te ahurei'
+    VALIDATIONPASSWORDSDONTMATCH: 'Kāore ngā kupuhipa i te ōrite'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Kia kaua e noho piako ngā kupuhipa'
+    VALIDATIONSTRONGPASSWORD: 'Kia kotahi tonu te mati, kia tahi hoki te pūāhua retawhika i te iti rawa o ngā kupuhipa'
+    VALIDATOR: Pūwhakamana
+    VALIDCURRENCY: 'Tāurua he moni tika'
   FormField:
-    NONE:
-      - null
+    NONE: Kore
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Muku
+    Delete: Muku
+    UnlinkRelation: Wetehono
   GridField:
     Add: 'Tāpiri {name}'
     Filter: Tātari
@@ -321,8 +229,7 @@ mi_NZ:
     RelationSearch: 'Rapu whanaunga'
     ResetFilter: 'Tautuhi anō'
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'Kāore he muku whakaaetanga'
   GridFieldDetailForm:
     CancelBtn: Whakakore
     Create: Hanga
@@ -333,157 +240,101 @@ mi_NZ:
     Saved: 'I tiakina a %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole:
-      - null
-    Code:
-      - null
-    DefaultGroupTitleAdministrators:
-      - null
-    DefaultGroupTitleContentAuthors:
-      - null
-    Description:
-      - null
-    GroupReminder:
-      - null
-    Locked:
-      - null
-    NoRoles:
-      - null
-    PLURALNAME:
-      - null
-    Parent:
-      - null
-    RolesAddEditLink:
-      - null
-    SINGULARNAME:
-      - null
-    Sort:
-      - null
-    has_many_Permissions:
-      - null
-    many_many_Members:
-      - null
+    AddRole: 'Tāpiritia he tūnga mō tēnei rōpū'
+    Code: 'Waehere Rōpū'
+    DefaultGroupTitleAdministrators: 'Ngā Kaiwhakahaere'
+    DefaultGroupTitleContentAuthors: 'Ngā Kaituhi Ihirangi'
+    Description: Whakaahuatanga
+    GroupReminder: 'Mēnā ka kōwhiri koe i tētahi rōpū matua, ka whiwhi tēnei rōpū i ōna tūnga katoa'
+    Locked: 'Kua raka?'
+    NoRoles: 'Kāore i kitea he tūnga'
+    PLURALNAME: Groups
+    Parent: 'Rōpū Matua'
+    RolesAddEditLink: 'Whakahaere tūnga'
+    SINGULARNAME: Group
+    Sort: 'Raupapa Kōmaka'
+    has_many_Permissions: 'Ngā Whakaaetanga'
+    many_many_Members: 'Ngā Mema'
   GroupImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Kawea mai ngā kaiwhakamahi i te hōputu <em>CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
+    ResultCreated: 'I hangaia e {count} ngā rōpū'
+    ResultDeleted: 'Kua mukua e %d ngā rōpū'
+    ResultUpdated: 'Kua whakahōutia e %d ngā rōpū'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Kua kitea he koromeke mutunga kore i roto i te aroākapanga "{type}". Hurihia te matua hei whakaea i tēnei'
   HtmlEditorField:
-    ADDURL:
-      - null
+    ADDURL: 'Tāpiri PRO'
     ADJUSTDETAILSDIMENSIONS: 'Ngā taipitopito &amp; ngā rahinga'
     ANCHORVALUE: Punga
     BUTTONINSERT: Kōkohu
     BUTTONINSERTLINK: 'Kōkuhu hono'
     BUTTONREMOVELINK: 'Tango hono'
-    BUTTONUpdate:
-      - null
-    CAPTIONTEXT:
-      - null
+    BUTTONUpdate: Whakahōu
+    CAPTIONTEXT: 'Tuhinga tapanga'
     CSSCLASS: 'Tiaroaro / kāhua'
     CSSCLASSCENTER: 'I tauwaengatia, i tōna kotahi'
-    CSSCLASSLEFT:
-      - null
+    CSSCLASSLEFT: 'I te taha mauī, me te tuhinga e takai huri noa ana'
     CSSCLASSLEFTALONE: 'Kei te mauī, i tōna kotahi'
     CSSCLASSRIGHT: 'I te taha matau, me te tuhinga e takai huri noa ana'
-    DETAILS:
-      - null
+    DETAILS: 'Ngā Taipitopito'
     EMAIL: 'Wāhitau Īmēra'
     FILE: Kōnae
     FOLDER: Kōpaki
     FROMCMS: 'Mai i te CMS'
     FROMCOMPUTER: 'Mai i tō rorohiko'
-    FROMWEB:
-      - null
+    FROMWEB: 'Mai i te tukutuku'
     FindInFolder: 'Rapu i te Kōpaki'
-    IMAGEALT:
-      - null
+    IMAGEALT: 'Tuhinga kē (alt)'
     IMAGEALTTEXT: 'Tuhinga kē - ka whakaaturia ki te kore e taea te whakaatu atahanga'
-    IMAGEALTTEXTDESC:
-      - null
+    IMAGEALTTEXTDESC: 'Ka whakaaturia ki ngā pūpānui mata, mēnā rānei kāore e taea te atahanga te whakaatu'
     IMAGEDIMENSIONS: 'Ngā Rahinga'
-    IMAGEHEIGHTPX:
-      - null
-    IMAGETITLE:
-      - null
+    IMAGEHEIGHTPX: Teitei
+    IMAGETITLE: 'Tuhinga taitara (ākiutauta) - mō ngā mōhiohio tāpiri mō te atahanga'
     IMAGETITLETEXT: 'Tuhinga taitara (ākiutauta) '
     IMAGETITLETEXTDESC: 'Mō ētahi atu mōhiohio mō te atahanga'
     IMAGEWIDTHPX: Whānui
     INSERTMEDIA: 'Kōkuhu Pāpāho'
     LINK: 'Kōkuhu hono'
     LINKANCHOR: 'He punga kei tēnei whārangi'
-    LINKDESCR:
-      - null
+    LINKDESCR: 'Whakaahuatanga hono'
     LINKEMAIL: 'Wāhitau Īmēra'
     LINKEXTERNAL: 'Tētahi atu paetukutuku'
     LINKFILE: 'Tīkina ake he kōnae'
     LINKINTERNAL: 'Whārangi kei te pae'
-    LINKOPENNEWWIN:
-      - null
-    LINKTO:
-      - null
-    PAGE:
-      - null
+    LINKOPENNEWWIN: 'Ka whakatuwhera hono i te matapihi hōu?'
+    LINKTO: 'Hono ki'
+    PAGE: Whārangi
     URL: PRO
-    URLNOTANOEMBEDRESOURCE:
-      - null
+    URLNOTANOEMBEDRESOURCE: 'Kāore e taea te huri i te PRO ''{url}'' hei rawa pāpāho.'
     UpdateMEDIA: 'Whakahōu Pāpāho'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Atahanga
   Image_Cached:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   Image_iframe.ss:
     TITLE: 'Iframe Tukuatu Atahanga'
   LeftAndMain:
-    CANT_REORGANISE:
-      - null
-    DELETED:
-      - null
-    DropdownBatchActionsDefault:
-      - null
-    HELP:
-      - null
-    PAGETYPE:
-      - null
-    PERMAGAIN:
-      - null
-    PERMALREADY:
-      - null
-    PERMDEFAULT:
-      - null
-    PLEASESAVE:
-      - null
-    PreviewButton:
-      - null
-    REORGANISATIONSUCCESSFUL:
-      - null
-    SAVEDUP:
-      - null
-    VersionUnknown:
-      - null
+    CANT_REORGANISE: 'Kāore tō mana whakakē i ngā whārangi taumata Matua. Kāore tō huringa i tiakina.'
+    DELETED: 'I mukua'
+    DropdownBatchActionsDefault: 'Ngā Mahi'
+    HELP: Āwhina
+    PAGETYPE: 'Momo whārangi:'
+    PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa. '
+    PERMALREADY: 'Aroha mai, kāore e taea te whakauru i tērā wāhanga o te CMS. Ki te pīrangi koe ki te takiuru atu mā tētahi atu ingoa, whakamahia ki raro nei.'
+    PERMDEFAULT: 'Whiriwhiria koa tētahi aratuka motuhēhēnga me te tāuru i ō pūkenga ki te whakauru i te CMS.'
+    PLEASESAVE: 'Tiaki Whārangi: Kāore i taea tēnei whārangi te whakahōu nā te mea kāore anō kia tiakina.'
+    PreviewButton: Arokite
+    REORGANISATIONSUCCESSFUL: 'Kua momoho te whakaraupapa anō i te rākau pae'
+    SAVEDUP: 'Kua Tiakina'
+    VersionUnknown: 'tē mōhiotia'
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: 'Kia ora'
+    LOGOUT: Takiputa
   LoginAttempt:
     Email: 'Wāhitau Īmēra'
     IP: 'Wāhitau KI'
@@ -534,97 +385,55 @@ mi_NZ:
     db_Password: Kupuhipa
     db_PasswordExpiry: 'Rā Mōnehu Kupuhipa'
   MemberAuthenticator:
-    TITLE:
-      - null
+    TITLE: 'Īmērā &amp; Kupuhipa'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem), PM (Post meridiem) rānei'
     'APPLY FILTER': 'Hoatu Tātari'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Ritenga
+    DATEFORMATBAD: 'He muhu te hōputu rā'
+    DAYNOLEADING: 'Rā o te marama kāore he kore i mua'
+    DIGITSDECFRACTIONSECOND: 'Kotahi neke atu ngā mati e tohu ana i te hautau ā-ira o te hēkona'
+    FOURDIGITYEAR: 'Tau matiwhā'
+    FULLNAMEMONTH: 'Ingoa marama katoa (hei tauira, Pipiri)'
+    HOURNOLEADING: 'Haora, kāore he kore i mua'
+    MINUTENOLEADING: 'Meneti, kāore he kore i mua'
+    MONTHNOLEADING: 'Mati marama kāore he kore i mua'
+    Preview: Arokite
+    SHORTMONTH: 'Ingoa marama poto (hei tauira, Pip)'
+    TOGGLEHELP: 'Takahurihia te āwhina whakahōputu'
+    TWODIGITDAY: 'Rā marama matirua'
+    TWODIGITHOUR: 'Ngā mati haora e rua (00 ki te 23)'
+    TWODIGITMINUTE: 'Ngā mati meneti e rua (00 ki te 59)'
+    TWODIGITMONTH: 'Marama matirua (01=Kohitātea)'
+    TWODIGITSECOND: 'Ngā mati hēkona e rua (00 ki te 59)'
+    TWODIGITYEAR: 'Tau matirua'
   MemberImportForm:
-    Help1:
-      - null
-    Help2:
-      - null
-    ResultCreated:
-      - null
-    ResultDeleted:
-      - null
-    ResultNone:
-      - null
-    ResultUpdated:
-      - null
+    Help1: '<p>Kawea mai ngā kaiwhakamahi i te <em>hōputu CSV </em> (ngā uara ka wehea ki te piko). <small><a href="#" class="toggle-advanced">Whakaatu whakamahinga ara atu anō</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    ResultCreated: 'I hangaia e {count} ngā mema'
+    ResultDeleted: 'Kua mukua e %d ngā mema'
+    ResultNone: 'Kāore he huringa'
+    ResultUpdated: 'I whakahōutia e {count} mhā mema'
   MemberPassword:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Muku
+    DELETEDRECORDS: 'I mukua e {count} ngā pūkete.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    IMPORT: 'Kawemai i CSV'
+    IMPORTEDRECORDS: 'I kawea mai e {count} ngā pūkete.'
+    NOCSVFILE: 'Pūtirotiro kia kitea he kōnae CSV hei kawemai'
+    NOIMPORT: 'Kāore he mea hei kawemai'
+    RESET: 'Tautuhi Anō'
+    Title: 'Ngā Tauira Raraunga'
+    UPDATEDRECORDS: 'I whakahōutia e {count} ngā pūkete.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Ngā tīwae pātengi raraunga'
+    IMPORTSPECLINK: 'Whakaatu Whakapūtātanga mō %s'
+    IMPORTSPECRELATIONS: 'Ngā Pānga'
+    IMPORTSPECTITLE: 'Whakapūtātanga mō %s'
   ModelAdmin_Tools.ss:
     FILTER: Tātari
     IMPORT: Kawemai
@@ -632,32 +441,22 @@ mi_NZ:
     IMPORT_TAB_HEADER: Kawemai
     SEARCHLISTINGS: Rapu
   MoneyField:
-    FIELDLABELAMOUNT:
-      - null
-    FIELDLABELCURRENCY:
-      - null
+    FIELDLABELAMOUNT: Rahinga
+    FIELDLABELCURRENCY: Moni
   NullableField:
     IsNullLabel: 'He Kore Tēnei'
   NumericField:
     VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
   Pagination:
-    Page:
-      - null
-    View:
-      - null
+    Page: Page
+    View: View
   Permission:
-    AdminGroup:
-      - null
-    CMS_ACCESS_CATEGORY:
-      - null
-    FULLADMINRIGHTS:
-      - null
-    FULLADMINRIGHTS_HELP:
-      - null
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    AdminGroup: Kaiwhakahaere
+    CMS_ACCESS_CATEGORY: 'Uru CMS'
+    FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
+    FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
@@ -669,10 +468,8 @@ mi_NZ:
     SINGULARNAME: Tūranga
     Title: Taitara
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Ngā tūnga me ngā whakaaetanga uru'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -683,32 +480,19 @@ mi_NZ:
     CSVEXPORT: 'Kaweatu ki CSV'
     NOTFOUND: 'Kāore i kitea he tūemi'
   Security:
-    ALREADYLOGGEDIN:
-      - null
-    BUTTONSEND:
-      - null
-    CHANGEPASSWORDBELOW:
-      - null
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
-    ERRORPASSWORDPERMISSION:
-      - null
-    LOGGEDOUT:
-      - null
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
-    NOTERESETLINKINVALID:
-      - null
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    ALREADYLOGGEDIN: 'Kāore i te whakaaetia kia uru koe ki tēnei whārangi. Mēnā he pūkete anō tōu e taea ai te uru ki tēnā whārangi, ka taea te takiuru anō i raro.'
+    BUTTONSEND: 'Tukuna mai te hono tautuhi kupuhipa anō'
+    CHANGEPASSWORDBELOW: 'Ka taea te huri i tō kupuhipa i raro'
+    CHANGEPASSWORDHEADER: 'Hurihia tō kupuhipa'
+    ENTERNEWPASSWORD: 'Tāurua he kupuhipa hōu'
+    ERRORPASSWORDPERMISSION: 'Me takiuru koe i mua i te huri i tō kupuhipa!'
+    LOGGEDOUT: 'Kua takiputaina atu koe. Ki te pīrangi koe ki te takiuru atu anō, tāurutia ō taipitopito tuakiri ki raro. '
+    LOGIN: Takiuru
+    NOTEPAGESECURED: 'Kua ngita tēnā whārangi. Tāurua ō taipitoptio tuakiri ki raro, ā, mā mātou koe e tuku kia haere tonu.'
+    NOTERESETLINKINVALID: '<p>He muhu, kua mōnehu rānei te hono tautuhi kupuhipa anō.</p><p>Ka taea te tono i te mea hōu<a href="{link1}">i konei</a> ka huri rānei i tō kupuhipa ā muri i tō<a href="{link2}">takiuru</a>.</p>'
+    NOTERESETPASSWORD: 'Tāurua tō wāhitau īmēra, mā mātou e tuku tētahi hono ki a koe e taea ai te tautuhi anō i tō kupuhipa'
+    PASSWORDSENTHEADER: 'I tukuna he hono tautuhi kupuhipa anō ki ''{email}'''
+    PASSWORDSENTTEXT: 'Kia ora! Kua tukuna he hono tautuhi anō ki ''{email}'',engari rā kei te tīariari he pūkete mō taua wāhitau īmēra.'
   SecurityAdmin:
     ACCESS_HELP: 'Tukuna te tiro, te tāpiri me te whakatika i ngā kaiwhakamahi, me te tautapa anō hoki i ngā whakaaetanga me ngā tūnga ki a rātou.'
     APPLY_ROLES: 'Hoatu tūnga ki ngā rōpū'
@@ -728,37 +512,28 @@ mi_NZ:
     TABROLES: 'Ngā Tūnga'
     Users: 'Ngā Kaiwhakamahi'
   SecurityAdmin_MemberImportForm:
-    BtnImport:
-      - null
-    FileFieldLabel:
-      - null
+    BtnImport: 'Kawemai i CSV'
+    FileFieldLabel: 'Kōnae CSV <small>(Ngā toronga ka whakaaetia: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Whakatika
   SimpleImageField:
     NOUPLOAD: 'Kāore He Atahanga Tukuatu'
   SiteTree:
-    TABMAIN:
-      - null
+    TABMAIN: Matua
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'Ka hiahiatia te %s i te ''%s'' '
   TableField.ss:
-    ADD:
-      - null
-    ADDITEM:
-      - null
+    ADD: 'Tāpiri haupae hōu'
+    ADDITEM: 'Tāpiri %s'
   TableListField:
     CSVEXPORT: 'Kaweake ki CSV'
     PRINT: Tā
     Print: Tā
     SELECT: 'Tīpako:'
   TableListField.ss:
-    NOITEMSFOUND:
-      - null
-    SORTASC:
-      - null
-    SORTDESC:
-      - null
+    NOITEMSFOUND: 'Kāore i kitea he tūemi'
+    SORTASC: 'Kōmakatia ki te raupapa aupiki'
+    SORTDESC: 'Kōmakatia ki te raupapa auheke'
   TableListField_PageControls.ss:
     DISPLAYING: 'Whakaatu ana'
     OF: o
@@ -768,8 +543,7 @@ mi_NZ:
     VIEWNEXT: 'Tiro panuku'
     VIEWPREVIOUS: 'Tiro tōmua'
   TimeField:
-    VALIDATEFORMAT:
-      - null
+    VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
   ToggleField:
     LESS: 'iti iho'
     MORE: 'nui ake'
@@ -799,5 +573,4 @@ mi_NZ:
     STARTALLINFO: 'Tīmataria ngā tukuatu katoa'
     Saved: 'Kua Tiakina'
   Versioned:
-    has_many_Versions:
-      - null
+    has_many_Versions: 'Ngā Putanga'
