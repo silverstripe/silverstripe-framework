@@ -847,14 +847,7 @@ abstract class Object {
 	public function uninherited($name) {
 		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::UNINHERITED);
 	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function set_uninherited() {
-		Deprecation::notice('2.4', 'Use a custom static on your object instead.');
-	}
-	
+
 	// --------------------------------------------------------------------------------------------------------------
 	
 	/**
