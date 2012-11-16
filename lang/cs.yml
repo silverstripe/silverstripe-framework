@@ -1,6 +1,6 @@
 cs:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
+    ALLOWEDEXTS: 'Povolené extenze'
     NEWFOLDER: 'Nová složka'
   AssetTableField:
     CREATED: 'Poprvé nahráno'
