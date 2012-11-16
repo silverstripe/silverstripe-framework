@@ -1,18 +1,30 @@
 th:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: สร้างโฟลเดอร์ใหม่
+    ALLOWEDEXTS:
+      - null
+    NEWFOLDER:
+      - null
   AssetTableField:
-    CREATED: อัพโหลดครั้งแรก
-    DIM: สัดส่วนกว้างยาว
-    FILENAME: ชื่อไฟล์
-    FOLDER: โฟลเดอร์
-    LASTEDIT: เปลี่ยนแปลงล่าสุด
-    OWNER: เจ้าของ
-    SIZE: ขนาด
-    TITLE: ชื่อ
-    TYPE: ชนิด
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: เลือกไฟล์
     DRAGFILESHERE: ลากไฟล์มาไว้ที่นี่
@@ -59,19 +71,27 @@ th:
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    0: ไม่ตกลง
-    ANY: ใดๆ
-    1: ตกลง
+    0:
+      - null
+    ANY:
+      - null
+    1:
+      - null
   CMSLoadingScreen.ss:
     LOADING: กำลังโหลด...
     REQUIREJS: 'CMS ตัวนี้จำเป็นต้องมีการเปิดใช้งานจาวาสคริปต์'
   CMSMain:
-    ACCESS: 'เข้าไปในส่วนของ ''{title}'''
-    ACCESSALLINTERFACES: 'เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: บันทึก
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE:
+      - null
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
     CHANGEPASSWORDTEXT2: 'คุณสามารถใช้ข้อมูลส่วนตัวต่อไปนี้เพื่อเข้าสู่ระบบ:'
@@ -79,35 +99,48 @@ th:
     HELLO: สวัสดี
     PASSWORD: รหัสผ่าน
   CheckboxField:
-    - ไม่ตกลง
-    - ตกลง
+    -
+      - null
+    -
+      - null
   ComplexTableField:
     CLOSEPOPUP: ปิดหน้าต่างป๊อปอัพ
     SUCCESSADD2: 'เพิ่มแล้ว {name}'
     SUCCESSEDIT: 'บันทึกแล้ว %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'เพิ่ม %s'
-    NOITEMSFOUND: ไม่พบรายการที่ต้องการ
-    SORTASC: จัดเรียงจากน้อยมามาก
-    SORTDESC: จัดเรียงจากมากไปน้อย
+    ADDITEM:
+      - null
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   ComplexTableField_popup.ss:
     NEXT: ถัดไป
     PREVIOUS: ก่อนหน้า
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
+    ATLEAST:
+      - null
+    BETWEEN:
+      - null
+    MAXIMUM:
+      - null
+    SHOWONCLICKTITLE:
+      - null
   CreditCardField:
     FIRST: แรก
     FOURTH: ที่สี่
     SECOND: วินาที
     THIRD: ที่สาม
   CurrencyField:
-    CURRENCYSYMBOL: $
+    CURRENCYSYMBOL:
+      - null
   DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Date:
     DAY: วัน
     DAYS: วัน
@@ -130,89 +163,148 @@ th:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: ไม่ต้องกำหนด
+    NOTSET:
+      - null
   Director:
     INVALID_REQUEST: การร้องขอไม่ถูกต้อง
   DropdownField:
-    CHOOSE: (เลือก)
+    CHOOSE:
+      - null
   EmailField:
-    VALIDATION: กรุณากรอกที่อยู่อีเมล
+    VALIDATION:
+      - null
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: ใดๆ
   File:
-    AviType: 'ไฟล์วีดีโอ AVI'
-    Content: เนื้อหา
-    CssType: 'ไฟล์ CSS'
-    DmgType: 'Apple disk image'
-    DocType: 'เอกสาร Word'
-    Filename: ชื่อไฟล์
-    GifType: 'รูปภาพ GIF - ดีสำหรับแผนผังหรือไดอะแกรม'
-    GzType: 'ไฟล์บีบอัดข้อมูล GZIP'
-    HtlType: 'ไฟล์ HTML'
-    HtmlType: 'ไฟล์ HTML'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: ส่วนเสริมไม่ได้รับอนุญาตให้ใช้งาน
-    IcoType: รูปไอคอน
-    JpgType: 'รูปภาพ JPEG - ดีสำหรับภาพถ่าย'
-    JsType: ไฟล์จาวาสคริปต์
-    Mp3Type: 'ไฟล์เสียง MP3'
-    MpgType: 'ไฟล์วีดีโอ MPEG'
-    NOFILESIZE: ขนาดไฟล์มีขนาดเป็นศูนย์
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: ชื่อ
-    PLURALNAME: ไฟล์
-    PdfType: 'ไฟล์ Adobe Acrobat PDF'
-    PngType: 'รูปภาพ PNG - ดีสำหรับรูปแบบที่มีเป้าหมายสำหรับใช้งานทั่วไป'
-    SINGULARNAME: ไฟล์
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'ขนาดไฟล์เกินจำนวนที่จำกัดไว้ {size}'
-    TiffType: 'ไฟล์รูปภาพ TIF'
-    Title: ชื่อ
-    WavType: 'ไฟล์เสียง WAV'
-    XlsType: 'สเปรดชีท Excel'
-    ZipType: 'ไฟล์บีบอัดข้อมูล ZIP'
+    AviType:
+      - null
+    Content:
+      - null
+    CssType:
+      - null
+    DmgType:
+      - null
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
+    Mp3Type:
+      - null
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    TiffType:
+      - null
+    Title:
+      - null
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
-    ATTACH: 'แนบ {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'ลบ {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: ไฟล์
-    FROMCOMPUTER: จากเครื่องคอมพิวเตอร์ของคุณ
-    FROMFILESTORE: จากพื้นที่จัดเก็บไฟล์
-    NOSOURCE: กรุณาเลือกไฟล์แหล่งข้อมูลที่ต้องการแนบไฟล์
-    REPLACE: 'แทนที่ {type}'
+    ATTACH:
+      - null
+    ATTACHONCESAVED:
+      - null
+    ATTACHONCESAVED2:
+      - null
+    DELETE:
+      - null
+    DISALLOWEDFILETYPE:
+      - null
+    FILE:
+      - null
+    FROMCOMPUTER:
+      - null
+    FROMFILESTORE:
+      - null
+    NOSOURCE:
+      - null
+    REPLACE:
+      - null
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
-    PLURALNAME: โฟลเดอร์
-    SINGULARNAME: โฟลเดอร์
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ForgotPasswordEmail.ss:
     HELLO: สวัสดี
     TEXT1: นี่คือ
     TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
     TEXT3: สำหรับ
   Form:
-    FIELDISREQUIRED: '%s เป็นข้อมูลที่จำเป็น'
-    SubmitBtnLabel: ไป
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
-    VALIDATIONPASSWORDSDONTMATCH: รหัสผ่านไม่ตรงกัน
-    VALIDATIONPASSWORDSNOTEMPTY: รหัสผ่านไม่สามารถเว้นว่างได้
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validator
-    VALIDCURRENCY: กรุณากรอกสกุลเงินที่ถูกต้อง
+    FIELDISREQUIRED:
+      - null
+    SubmitBtnLabel:
+      - null
+    VALIDATIONCREDITNUMBER:
+      - null
+    VALIDATIONNOTUNIQUE:
+      - null
+    VALIDATIONPASSWORDSDONTMATCH:
+      - null
+    VALIDATIONPASSWORDSNOTEMPTY:
+      - null
+    VALIDATIONSTRONGPASSWORD:
+      - null
+    VALIDATOR:
+      - null
+    VALIDCURRENCY:
+      - null
   FormField:
-    NONE: ไม่มี
+    NONE:
+      - null
   GridAction:
-    DELETE_DESCRIPTION: ลบ
-    Delete: ลบ
-    UnlinkRelation: ยกเลิกการลิงก์
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'เพิ่ม {name}'
     Filter: ตัวกรองข้อมูล
@@ -229,7 +321,8 @@ th:
     RelationSearch: 'Relation search'
     ResetFilter: รีเซ็ต
   GridFieldAction_Delete:
-    DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบได้
+    DeletePermissionsFailure:
+      - null
   GridFieldDetailForm:
     CancelBtn: ยกเลิก
     Create: สร้าง
@@ -240,101 +333,157 @@ th:
     Saved: 'บันทึกแล้ว %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: เพิ่มบทบาทให้กับกลุ่มนี้
-    Code: รหัสกลุ่ม
-    DefaultGroupTitleAdministrators: ผู้ดูและระบบ
-    DefaultGroupTitleContentAuthors: ผู้แต่งเนื้อหา
-    Description: คำอธิบาย
-    GroupReminder: 'หากคุณเลือกกลุ่มแม่, กลุ่มดังกล่าวนี้จะถึงบทบาททั้งหมดของกลุ่มแม่มา'
-    Locked: 'ล็อค?'
-    NoRoles: ไม่พบบทบาทที่ต้องการ
-    PLURALNAME: กลุ่ม
-    Parent: กลุ่มหลักต้นทาง
-    RolesAddEditLink: เพิ่ม/แก้ไขบทบาท
-    SINGULARNAME: กลุ่ม
-    Sort: จัดลำดับ
-    has_many_Permissions: สิทธิ์
-    many_many_Members: สมาชิก
+    AddRole:
+      - null
+    Code:
+      - null
+    DefaultGroupTitleAdministrators:
+      - null
+    DefaultGroupTitleContentAuthors:
+      - null
+    Description:
+      - null
+    GroupReminder:
+      - null
+    Locked:
+      - null
+    NoRoles:
+      - null
+    PLURALNAME:
+      - null
+    Parent:
+      - null
+    RolesAddEditLink:
+      - null
+    SINGULARNAME:
+      - null
+    Sort:
+      - null
+    has_many_Permissions:
+      - null
+    many_many_Members:
+      - null
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'สร้างกลุ่มแล้ว {count} กลุ่ม'
-    ResultDeleted: 'ลบกลุ่มแล้ว %d กลุ่ม'
-    ResultUpdated: 'อัพเดทแล้ว %d กลุ่ม'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultUpdated:
+      - null
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
-    ADDURL: 'เพิ่ม URL'
+    ADDURL:
+      - null
     ADJUSTDETAILSDIMENSIONS: 'รายละเอียด &amp; ขนาดสัดส่วน'
     ANCHORVALUE: Anchor
     BUTTONINSERT: แทรก
     BUTTONINSERTLINK: แทรกลิงค์
     BUTTONREMOVELINK: ลบลิงค์
-    BUTTONUpdate: อัพเดท
-    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
+    BUTTONUpdate:
+      - null
+    CAPTIONTEXT:
+      - null
     CSSCLASS: 'การจัดวาง / รูปแบบ'
     CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    CSSCLASSLEFT:
+      - null
     CSSCLASSLEFTALONE: 'On the left, on its own.'
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
-    DETAILS: รายละเอียด
+    DETAILS:
+      - null
     EMAIL: ที่อยู่อีเมล
     FILE: ไฟล์
     FOLDER: โฟลเดอร์
     FROMCMS: 'จาก CMS'
     FROMCOMPUTER: จากคอมพิวเตอร์ของคุณ
-    FROMWEB: จากเว็บไซต์
+    FROMWEB:
+      - null
     FindInFolder: ค้นหาในโฟลเดอร์
-    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALT:
+      - null
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC:
+      - null
     IMAGEDIMENSIONS: ขนาดสัดส่วน
-    IMAGEHEIGHTPX: ส่วนสูง
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGEHEIGHTPX:
+      - null
+    IMAGETITLE:
+      - null
     IMAGETITLETEXT: 'ข้อความหัวเรื่อง (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: ความกว้าง
     INSERTMEDIA: แทรกมีเดีย
     LINK: ลิงก์
     LINKANCHOR: 'Anchor on this page'
-    LINKDESCR: คำอธิบายลิงค์
+    LINKDESCR:
+      - null
     LINKEMAIL: ที่อยู่อีเมล
     LINKEXTERNAL: เว็บไซต์อื่นๆ
     LINKFILE: ดาวน์โหลดไฟล์
     LINKINTERNAL: หน้าเว็บบนเว็บไซต์
-    LINKOPENNEWWIN: เปิดลิงค์ในหน้าต่างใหม่
-    LINKTO: ลิงค์ไปที่
-    PAGE: หน้าเว็บ
+    LINKOPENNEWWIN:
+      - null
+    LINKTO:
+      - null
+    PAGE:
+      - null
     URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    URLNOTANOEMBEDRESOURCE:
+      - null
     UpdateMEDIA: อัพเดทมีเดีย
   Image:
-    PLURALNAME: ไฟล์
-    SINGULARNAME: ไฟล์
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ImageField:
-    IMAGE: รูปภาพ
+    IMAGE:
+      - null
   Image_Cached:
-    PLURALNAME: ไฟล์
-    SINGULARNAME: ไฟล์
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Image_iframe.ss:
     TITLE: 'หน้าต่าง iframe สำหรับอัพโหลดรูปภาพ'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: ลบแล้ว
-    DropdownBatchActionsDefault: การกระทำ
-    HELP: ช่วยเหลือ
-    PAGETYPE: 'ชนิดหน้าเว็บ:'
-    PERMAGAIN: 'คุณได้ออกจากระบบของ CMS แล้ว หากคุณต้องการเข้าสู่ระบบอีกครั้ง กรุณากรอกชื่อผู้ใช้งานและรหัสผ่านของคุณด้านล่าง'
-    PERMALREADY: 'ขออภัย, คุณไม่สามารถเข้าใช้งานในส่วนนี้ของ CMS ได้ หากคุณต้องการเข้าสู่ระบบในชื่ออื่นได้จากด้านล่าง'
-    PERMDEFAULT: 'กรุณาเลือกวิธีการยืนยันตัวบุคคลและกรอกข้อมูลประจำตัวเพื่อเข้าใช้งาน CMS'
-    PLEASESAVE: 'กรุณาบันทึกหน้าเว็บ หน้าเว็บนี้ยังไม่สามรถอัพเดทข้อมูลได้ เนื่องจากยังไม่ได้ถูกบันทึกข้อมูล'
-    PreviewButton: ดูตัวอย่าง
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: บันทึกแล้ว
-    VersionUnknown: ไม่ทราบ
+    CANT_REORGANISE:
+      - null
+    DELETED:
+      - null
+    DropdownBatchActionsDefault:
+      - null
+    HELP:
+      - null
+    PAGETYPE:
+      - null
+    PERMAGAIN:
+      - null
+    PERMALREADY:
+      - null
+    PERMDEFAULT:
+      - null
+    PLEASESAVE:
+      - null
+    PreviewButton:
+      - null
+    REORGANISATIONSUCCESSFUL:
+      - null
+    SAVEDUP:
+      - null
+    VersionUnknown:
+      - null
   LeftAndMain_Menu.ss:
-    Hello: สวัสดีค่ะ
-    LOGOUT: ออกจากระบบ
+    Hello:
+      - null
+    LOGOUT:
+      - null
   LoginAttempt:
     Email: ที่อยู่อีเมล
     IP: ไอพีเครื่อง
@@ -385,55 +534,97 @@ th:
     db_Password: รหัสผ่าน
     db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ
   MemberAuthenticator:
-    TITLE: 'อีเมล &amp; รหัสผ่าน'
+    TITLE:
+      - null
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': ประยุกต์ใช้ตัวกรองข้อมูล
-    Custom: Custom
-    DATEFORMATBAD: รูปแบบวันที่ไม่ถูกต้อง
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: ดูตัวอย่าง
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
-    ResultDeleted: 'ลบสมาชิกแล้ว %d สมาชิก'
-    ResultNone: ยังไม่มีการเปลี่ยนแปลง
-    ResultUpdated: 'Updated {count} members'
+    Help1:
+      - null
+    Help2:
+      - null
+    ResultCreated:
+      - null
+    ResultDeleted:
+      - null
+    ResultNone:
+      - null
+    ResultUpdated:
+      - null
   MemberPassword:
-    PLURALNAME: รหัสผ่านสมาชิก
-    SINGULARNAME: รหัสผ่านสมาชิก
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   MemberTableField: null
   ModelAdmin:
-    DELETE: ลบ
-    DELETEDRECORDS: 'ลบแล้ว {count} รายการ'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'นำเข้าจากไฟล์ CSV'
-    IMPORTEDRECORDS: 'นำเข้าแล้ว {count} รายการ'
-    NOCSVFILE: 'กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล'
-    NOIMPORT: ไม่มีข้อมูลให้นำเข้า
-    RESET: รีเซ็ต
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'อัพเดทแล้ว {count} รายการ'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   ModelAdmin_Tools.ss:
     FILTER: กรองข้อมูล
     IMPORT: นำเข้า
@@ -441,22 +632,32 @@ th:
     IMPORT_TAB_HEADER: นำเข้า
     SEARCHLISTINGS: ค้นหา
   MoneyField:
-    FIELDLABELAMOUNT: จำนวน
-    FIELDLABELCURRENCY: สกุลเงิน
+    FIELDLABELAMOUNT:
+      - null
+    FIELDLABELCURRENCY:
+      - null
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page: หน้า
-    View: เปิดดู
+    Page:
+      - null
+    View:
+      - null
   Permission:
-    AdminGroup: ผู้ดูแลระบบ
-    CMS_ACCESS_CATEGORY: 'การเข้าถึง CMS'
-    FULLADMINRIGHTS: 'Full administrative rights'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: สิทธิ์อนุญาต
-    SINGULARNAME: สิทธิ์อนุญาต
+    AdminGroup:
+      - null
+    CMS_ACCESS_CATEGORY:
+      - null
+    FULLADMINRIGHTS:
+      - null
+    FULLADMINRIGHTS_HELP:
+      - null
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -468,8 +669,10 @@ th:
     SINGULARNAME: บทบาท
     Title: หัวเรื่อง
   PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Permissions:
     PERMISSIONS_CATEGORY: บทบาทและสิทธิ์การเข้าใช้งาน
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -480,19 +683,32 @@ th:
     CSVEXPORT: 'ส่งออกเป็นไฟล์ CSV'
     NOTFOUND: ไม่พบรายการที่ต้องการ
   Security:
-    ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ <a href="%s">เข้าสู่ระบบอีกครั้ง</a>'
-    BUTTONSEND: ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน
-    CHANGEPASSWORDBELOW: คุณสามารถเปลี่ยนรหัสผ่านของคุณได้จากด้านล่าง
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: กรุณากรอกรหัสผ่านใหม่ของคุณ
-    ERRORPASSWORDPERMISSION: 'คุณต้องเข้าสู่ระบบก่อน จึงจะสามารถเปลี่ยนรหัสผ่านของคุณได้'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
-    LOGIN: เข้าสู่ระบบ
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    ALREADYLOGGEDIN:
+      - null
+    BUTTONSEND:
+      - null
+    CHANGEPASSWORDBELOW:
+      - null
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
+    ERRORPASSWORDPERMISSION:
+      - null
+    LOGGEDOUT:
+      - null
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
+    NOTERESETLINKINVALID:
+      - null
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: กำหนดบทบาทให้กลุ่ม
@@ -512,28 +728,37 @@ th:
     TABROLES: บทบาท
     Users: ผู้ใช้งาน
   SecurityAdmin_MemberImportForm:
-    BtnImport: นำเข้า
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    BtnImport:
+      - null
+    FileFieldLabel:
+      - null
   SilverStripeNavigator:
     Edit: แก้ไข
   SimpleImageField:
     NOUPLOAD: ยังไม่มีรูปภาพที่ถูกอัพโหลด
   SiteTree:
-    TABMAIN: หลัก
+    TABMAIN:
+      - null
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED:
+      - null
   TableField.ss:
-    ADD: เพิ่มแถวใหม่
-    ADDITEM: 'เพิ่ม %s'
+    ADD:
+      - null
+    ADDITEM:
+      - null
   TableListField:
     CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
     PRINT: สั่งพิมพ์
     Print: พิมพ์
     SELECT: เลือก
   TableListField.ss:
-    NOITEMSFOUND: ไม่พบรายการที่ต้องการ
-    SORTASC: จัดเรียงลำดับจากน้อยมามาก
-    SORTDESC: จัดเรียงลำดับจากมากมาน้อย
+    NOITEMSFOUND:
+      - null
+    SORTASC:
+      - null
+    SORTDESC:
+      - null
   TableListField_PageControls.ss:
     DISPLAYING: แสดง
     OF: จาก
@@ -543,7 +768,8 @@ th:
     VIEWNEXT: เปิดดูหน้าเว็บถัดไป
     VIEWPREVIOUS: เปิดดูหน้าเว็บก่อนหน้า
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT:
+      - null
   ToggleField:
     LESS: less
     MORE: เพิ่มเติม
@@ -573,4 +799,5 @@ th:
     STARTALLINFO: เริ่มการอัพโหลดทั้งหมด
     Saved: บันทึกแล้ว
   Versioned:
-    has_many_Versions: เวอร์ชั่น
+    has_many_Versions:
+      - null
