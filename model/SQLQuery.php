@@ -720,13 +720,6 @@ class SQLQuery {
 	 */
 	public function setWhere($where) {
 		$this->where = array();
-
-		$args = func_get_args();
-		if(isset($args[1])) {
-			Deprecation::notice('3.0',
-				'Multiple arguments to where is deprecated. Pleas use where("Column = Something") syntax instead');
-		}
-
 		return $this->addWhere($where);
 	}
 
