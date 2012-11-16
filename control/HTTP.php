@@ -186,17 +186,6 @@ class HTTP {
 	}
 	
 	/**
-	 * Get mime type based on extension
-	 *
-	 * @uses finfo
-	 * @deprecated Use HTTP::get_mime_type() instead
-	 */
-	public static function getMimeType($filename) {
-		Deprecation::notice('3.0', 'Use HTTP::get_mime_type() instead.');
-		self::get_mime_type($filename);
-	}
-	
-	/**
 	 * Get the MIME type based on a file's extension.
 	 *
 	 * If the finfo class exists in PHP, and the file actually exists, then use that
