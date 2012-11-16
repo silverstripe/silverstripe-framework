@@ -3,26 +3,16 @@ hu:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Új mappa'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Először feltöltve'
+    DIM: Képméret
+    FILENAME: Fájlnév
+    FOLDER: Folder
+    LASTEDIT: 'Utoljára változott'
+    OWNER: Tulajdonos
+    SIZE: Méret
+    TITLE: Cím
+    TYPE: Típus
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -69,27 +59,19 @@ hu:
     ERRORNOTADMIN: 'Ez a felhasználó nem adminisztrátor. '
     ERRORNOTREC: 'Ez a felhasználónév / jelszó nem létezik'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: 'False'
+    ANY: Any
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Elérés minden CMS interfészhez'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Mentés
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Megváltoztattad a jelszavad erre: '
     CHANGEPASSWORDTEXT2: 'Mostantól a következő adatokat használhatod a bejelentkezéshez:'
@@ -148,8 +130,7 @@ hu:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -162,68 +143,37 @@ hu:
   Enum:
     ANY: Any
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    TiffType:
-      - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    AviType: 'AVI video file'
+    Content: Tartalom
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
+    Filename: Fájlnév
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: 'Filesize is zero bytes.'
+    NOVALIDUPLOAD: 'File is not a valid upload'
+    Name: Name
+    PLURALNAME: Fájlok
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
+    SINGULARNAME: Fájl
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TiffType: 'Tagged image format'
+    Title: Title
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -260,12 +210,9 @@ hu:
   FormField:
     NONE: none
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -282,8 +229,7 @@ hu:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -316,8 +262,7 @@ hu:
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -364,13 +309,10 @@ hu:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Image
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -391,10 +333,8 @@ hu:
     SAVEDUP: Saved.
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
@@ -447,45 +387,26 @@ hu:
   MemberAuthenticator:
     TITLE: 'E-mail és jelszó'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     'APPLY FILTER': 'Apply Filter'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -498,35 +419,21 @@ hu:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Törlés
+    DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    IMPORT: 'Betöltés CSV-ből'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Kérünk, válaszd ki a betöltendő CSV fájlt'
+    NOIMPORT: 'Nincs mit betölteni'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Import
@@ -561,10 +468,8 @@ hu:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -578,23 +483,16 @@ hu:
     ALREADYLOGGEDIN: 'Nincs hozzáférésed ehhez az oldalhoz. Ha van egy másik azonosítód, mellyel hozzá tudsz férni ehhez az oldalhoz, alább bejelentkezhetsz.'
     BUTTONSEND: 'Új jelszót kérő link elküldése'
     CHANGEPASSWORDBELOW: 'Alább meg tudod változtatni a jelszavad.'
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
+    CHANGEPASSWORDHEADER: 'Jelszó megváltoztatása'
+    ENTERNEWPASSWORD: 'Kérünk, add meg az új jelszavad.'
     ERRORPASSWORDPERMISSION: 'Hogy meg tudd változtatni a jelszavad, bejelentkezve kell lenned.'
     LOGGEDOUT: 'Kiléptetésre kerültél. Ha újra be szeretnél jelentkezni, add meg alább az azonosítási adataid.'
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: 'Ez az oldal védett. Add meg alább az azonosítási adataidat, és továbbirányítunk.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    NOTERESETPASSWORD: 'Add meg az e-mail címed, és küldünk egy linket, mellyel új jelszót kérhetsz.'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -623,8 +521,7 @@ hu:
   SiteTree:
     TABMAIN: Fő
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
     ADD: 'Add a new row'
     ADDITEM: 'Add %s'

@@ -3,26 +3,16 @@ uk:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Нова Тека'
   AssetTableField:
-    CREATED:
-      - null
-    DIM:
-      - null
-    FILENAME:
-      - null
-    FOLDER:
-      - null
-    LASTEDIT:
-      - null
-    OWNER:
-      - null
-    SIZE:
-      - null
-    TITLE:
-      - null
-    TYPE:
-      - null
-    URL:
-      - null
+    CREATED: 'Вперше завантажено'
+    DIM: Виміри
+    FILENAME: 'Ім''я файлу'
+    FOLDER: Folder
+    LASTEDIT: 'Востаннє змінено'
+    OWNER: Власник
+    SIZE: Розмір
+    TITLE: Назва
+    TYPE: Тип
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -69,27 +59,19 @@ uk:
     ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
     ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
   Boolean:
-    0:
-      - null
-    ANY:
-      - null
-    1:
-      - null
+    0: 'False'
+    ANY: Any
+    1: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS:
-      - null
-    ACCESSALLINTERFACES:
-      - null
-    ACCESSALLINTERFACESHELP:
-      - null
-    SAVE:
-      - null
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Зберегти
   CMSProfileController:
-    MENUTITLE:
-      - null
+    MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
@@ -148,8 +130,7 @@ uk:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET:
-      - null
+    NOTSET: 'Not set'
   Director:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
@@ -162,68 +143,37 @@ uk:
   Enum:
     ANY: Будь-який
   File:
-    AviType:
-      - null
-    Content:
-      - null
-    CssType:
-      - null
-    DmgType:
-      - null
-    DocType:
-      - null
-    Filename:
-      - null
-    GifType:
-      - null
-    GzType:
-      - null
-    HtlType:
-      - null
-    HtmlType:
-      - null
-    INVALIDEXTENSION:
-      - null
-    INVALIDEXTENSIONSHORT:
-      - null
-    IcoType:
-      - null
-    JpgType:
-      - null
-    JsType:
-      - null
-    Mp3Type:
-      - null
-    MpgType:
-      - null
-    NOFILESIZE:
-      - null
-    NOVALIDUPLOAD:
-      - null
-    Name:
-      - null
-    PLURALNAME:
-      - null
-    PdfType:
-      - null
-    PngType:
-      - null
-    SINGULARNAME:
-      - null
-    TOOLARGE:
-      - null
-    TOOLARGESHORT:
-      - null
-    TiffType:
-      - null
-    Title:
-      - null
-    WavType:
-      - null
-    XlsType:
-      - null
-    ZipType:
-      - null
+    AviType: 'AVI video file'
+    Content: Content
+    CssType: 'CSS file'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
+    Filename: Filename
+    GifType: 'GIF image - good for diagrams'
+    GzType: 'GZIP compressed file'
+    HtlType: 'HTML file'
+    HtmlType: 'HTML file'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    IcoType: 'Icon image'
+    JpgType: 'JPEG image - good for photos'
+    JsType: 'Javascript file'
+    Mp3Type: 'MP3 audio file'
+    MpgType: 'MPEG video file'
+    NOFILESIZE: 'Filesize is zero bytes.'
+    NOVALIDUPLOAD: 'Цей файл не може бути завантаженим'
+    Name: Name
+    PLURALNAME: Файли
+    PdfType: 'Adobe Acrobat PDF file'
+    PngType: 'PNG image - good general-purpose format'
+    SINGULARNAME: Файл
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TiffType: 'Tagged image format'
+    Title: Title
+    WavType: 'WAV audo file'
+    XlsType: 'Excel spreadsheet'
+    ZipType: 'ZIP compressed file'
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -260,12 +210,9 @@ uk:
   FormField:
     NONE: none
   GridAction:
-    DELETE_DESCRIPTION:
-      - null
-    Delete:
-      - null
-    UnlinkRelation:
-      - null
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
@@ -282,8 +229,7 @@ uk:
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure:
-      - null
+    DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -316,8 +262,7 @@ uk:
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed:
-      - null
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
@@ -364,13 +309,10 @@ uk:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: Files
+    SINGULARNAME: File
   ImageField:
-    IMAGE:
-      - null
+    IMAGE: Зображення
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -391,10 +333,8 @@ uk:
     SAVEDUP: Saved.
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
-    Hello:
-      - null
-    LOGOUT:
-      - null
+    Hello: Hi
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
@@ -447,45 +387,26 @@ uk:
   MemberAuthenticator:
     TITLE: 'Е-пошта та Пароль'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     'APPLY FILTER': 'Apply Filter'
-    Custom:
-      - null
-    DATEFORMATBAD:
-      - null
-    DAYNOLEADING:
-      - null
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
-    MONTHNOLEADING:
-      - null
-    Preview:
-      - null
-    SHORTMONTH:
-      - null
-    TOGGLEHELP:
-      - null
-    TWODIGITDAY:
-      - null
-    TWODIGITHOUR:
-      - null
-    TWODIGITMINUTE:
-      - null
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
-    TWODIGITYEAR:
-      - null
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -498,35 +419,21 @@ uk:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE:
-      - null
-    DELETEDRECORDS:
-      - null
-    EMPTYBEFOREIMPORT:
-      - null
-    IMPORT:
-      - null
-    IMPORTEDRECORDS:
-      - null
-    NOCSVFILE:
-      - null
-    NOIMPORT:
-      - null
-    RESET:
-      - null
-    Title:
-      - null
-    UPDATEDRECORDS:
-      - null
+    DELETE: Delete
+    DELETEDRECORDS: 'Deleted {count} records.'
+    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    IMPORT: 'Імпортувати з CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS:
-      - null
-    IMPORTSPECLINK:
-      - null
-    IMPORTSPECRELATIONS:
-      - null
-    IMPORTSPECTITLE:
-      - null
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECLINK: 'Show Specification for %s'
+    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
     IMPORT: Import
@@ -561,10 +468,8 @@ uk:
     SINGULARNAME: Role
     Title: Title
   PermissionRoleCode:
-    PLURALNAME:
-      - null
-    SINGULARNAME:
-      - null
+    PLURALNAME: 'Permission Role Cods'
+    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
@@ -578,23 +483,16 @@ uk:
     ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
     BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
     CHANGEPASSWORDBELOW: 'Ви можете змінити пароль нижче.'
-    CHANGEPASSWORDHEADER:
-      - null
-    ENTERNEWPASSWORD:
-      - null
+    CHANGEPASSWORDHEADER: 'Змінити свій пароль'
+    ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
     ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
     LOGGEDOUT: 'Ви вийшли з системи. Якщо Ви хочете знову увійти, то введіть дані нижче.'
-    LOGIN:
-      - null
-    NOTEPAGESECURED:
-      - null
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD:
-      - null
-    PASSWORDSENTHEADER:
-      - null
-    PASSWORDSENTTEXT:
-      - null
+    NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Застосувати ролі до груп'
@@ -623,8 +521,7 @@ uk:
   SiteTree:
     TABMAIN: Головна
   TableField:
-    ISREQUIRED:
-      - null
+    ISREQUIRED: 'In %s ''%s'' is required'
   TableField.ss:
     ADD: 'Add a new row'
     ADDITEM: 'Add %s'
