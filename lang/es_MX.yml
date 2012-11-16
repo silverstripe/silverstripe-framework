@@ -387,25 +387,34 @@ es_MX:
   MemberAuthenticator:
     TITLE: 'Correo-e y Contraseña'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (ante meridian) o PM (post meridiano)'
+    AMORPM:
+      - null
     'APPLY FILTER': Filtro
     Custom: 'A medida'
     DATEFORMATBAD: 'El formato de fecha es invalido'
     DAYNOLEADING: 'Dia del mes sin cero a la izquierda'
-    DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
-    FOURDIGITYEAR: 'Año de 4 dígitos'
-    FULLNAMEMONTH: 'Nombre completo del mes (ej: Junio)'
-    HOURNOLEADING: 'Hora sin cero a la izquierda'
-    MINUTENOLEADING: 'Minuto sin cero a la izquierda'
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
     MONTHNOLEADING: 'Dígito del mes  sin cero'
     Preview: Previo
-    SHORTMONTH: 'Nombre corto del mes (ej: Jun)'
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Mostrar la ayuda de formato'
     TWODIGITDAY: 'Dia del mes de dos dígitos'
     TWODIGITHOUR: 'Dos dígitos de la hora (00 a 23)'
     TWODIGITMINUTE: 'Dos dígitos de los minutos (00 a 59)'
-    TWODIGITMONTH: 'Mes de 2 dígitos (01=Enero, etc.)'
-    TWODIGITSECOND: 'Dos dígitos de los segundos (00 a 59)'
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
     TWODIGITYEAR: 'Año en 2 dígitos'
   MemberImportForm:
     Help1: "<p>Importar usurious en <em>format CSV</em> (valores separados por comas). <small><a href=\"#\" class=\"toggle-advanced\">Mostrar uso avanzado</a></small></p>\\n"

@@ -387,25 +387,34 @@ cs:
   MemberAuthenticator:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (před polednem) nebo PM (odpoledne)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Použít filtr'
     Custom: Uživatelské
     DATEFORMATBAD: 'Formát datumu je neplatný'
     DAYNOLEADING: 'Den měsíce bez úvodní nuly'
-    DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
-    FOURDIGITYEAR: 'Čtyřčíslí roku'
-    FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
-    HOURNOLEADING: 'Hodina bez úvodní nuly'
-    MINUTENOLEADING: 'Minuta bez úvodní nuly'
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
     MONTHNOLEADING: 'Číslo měsíce bez úvodní nuly'
     Preview: Náhled
-    SHORTMONTH: 'Krátký název měsíce (např. Čer)'
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Přepni nápovědu formátování'
     TWODIGITDAY: 'Dvojčíslí dne měsíce'
     TWODIGITHOUR: 'Dvojčíslí hodiny (00 až 23)'
     TWODIGITMINUTE: 'Dvojčíslí minuty (00 až 59)'
-    TWODIGITMONTH: 'Dvojčíslí měsíce (01=Leden, atď.)'
-    TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
     TWODIGITYEAR: 'Dvojčíslí roku'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'

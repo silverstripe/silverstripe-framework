@@ -387,25 +387,34 @@ bg:
   MemberAuthenticator:
     TITLE: 'email и парола'
   MemberDatetimeOptionsetField:
-    AMORPM: 'АМ (преди обед) или РМ (следобед)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Приложи филтър'
     Custom: Custom
     DATEFORMATBAD: 'Невалиден формат на датата'
     DAYNOLEADING: 'Ден от месеца без водеща нула'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Четирицифрена година'
-    FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
-    HOURNOLEADING: 'Час без водеща нула'
-    MINUTENOLEADING: 'Минути без водеща нула'
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
     MONTHNOLEADING: 'Месец без водеща нула'
     Preview: Преглед
-    SHORTMONTH: 'Кратко изписване на месеца (напр. Яну)'
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Помощ за форматирането'
     TWODIGITDAY: 'Двуцифрен ден от месеца'
     TWODIGITHOUR: 'Час с водеща нула (00 до 23)'
     TWODIGITMINUTE: 'Минути с водеща нула (00 до 59)'
-    TWODIGITMONTH: 'Месец с водеща нула (01=Януари, и т.н.)'
-    TWODIGITSECOND: 'Секунди с водеща нула (00 до 59)'
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
     TWODIGITYEAR: 'Двуцифрена година'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'

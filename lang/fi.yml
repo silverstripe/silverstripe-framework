@@ -387,25 +387,34 @@ fi:
   MemberAuthenticator:
     TITLE: 'Sähköposti &amp; Salasana'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
+    AMORPM:
+      - null
     'APPLY FILTER': Suodata
     Custom: Muokattu
     DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
     DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
-    DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
-    FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
-    FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
-    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
-    MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
     MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
     Preview: Esikatselu
-    SHORTMONTH: 'Kuukauden lyhyt nimi (esim. kesä)'
+    SHORTMONTH:
+      - null
     TOGGLEHELP: 'Vaihda muotoilu apuun'
     TWODIGITDAY: 'Kaksinumeroinen päivämäärä (01–31)'
     TWODIGITHOUR: 'Kaksinumeroinen tuntinäyttö (00–23)'
     TWODIGITMINUTE: 'Kaksinumeroinen minuuttinäyttö (00–59)'
-    TWODIGITMONTH: 'Kaksinumeroinen kuukausi (01=tammikuu, jne.)'
-    TWODIGITSECOND: 'Kaksinumeroinen sekunti (00–59)'
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
     TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
