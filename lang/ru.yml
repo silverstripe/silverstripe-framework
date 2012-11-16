@@ -387,34 +387,25 @@ ru:
   MemberAuthenticator:
     TITLE: 'Email и Пароль'
   MemberDatetimeOptionsetField:
-    AMORPM:
-      - null
+    AMORPM: 'AM (Ante meridiem) или PM (Post meridiem)'
     'APPLY FILTER': 'Применить фильтр'
     Custom: Пользовательский
     DATEFORMATBAD: 'Неверный формат даты'
     DAYNOLEADING: 'Число месяца без ведущего нуля'
-    DIGITSDECFRACTIONSECOND:
-      - null
-    FOURDIGITYEAR:
-      - null
-    FULLNAMEMONTH:
-      - null
-    HOURNOLEADING:
-      - null
-    MINUTENOLEADING:
-      - null
+    DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
+    FOURDIGITYEAR: 'Год четырьмя цифрами'
+    FULLNAMEMONTH: 'Название месяца полностью (июнь)'
+    HOURNOLEADING: 'Часы без ведущего нуля'
+    MINUTENOLEADING: 'Минуты без ведущего нуля'
     MONTHNOLEADING: 'Месяц без ведущего нуля'
     Preview: Просмотр
-    SHORTMONTH:
-      - null
+    SHORTMONTH: 'Сокращенное название месяца (Июн)'
     TOGGLEHELP: 'Включить подсказки форматирования'
     TWODIGITDAY: 'Число месяца: двумя цифрами'
     TWODIGITHOUR: 'Часы: двумя цифрами (00 - 23)'
     TWODIGITMINUTE: 'Минуты: двумя цифрами (00 - 59)'
-    TWODIGITMONTH:
-      - null
-    TWODIGITSECOND:
-      - null
+    TWODIGITMONTH: 'Месяц двумя цифрами (01=январь и т.д.)'
+    TWODIGITSECOND: 'Секунды: двумя цифрами (00 - 59)'
     TWODIGITYEAR: 'Год: двумя цифрами'
   MemberImportForm:
     Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Показать подробности</a></small></p>'
