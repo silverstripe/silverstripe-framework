@@ -118,19 +118,6 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @param int $length
 	 * @return ArrayList 
 	 */
-	public function getRange($offset, $length) {
-		Deprecation::notice("3.0", 'getRange($offset, $length) is deprecated.  Use limit($length, $offset) instead.'
-			. ' Note the new argument order.');
-		return $this->limit($length, $offset);
-	}
-
-	/**
-	 * Get a sub-range of this dataobjectset as an array
-	 * 
-	 * @param int $offset
-	 * @param int $length
-	 * @return ArrayList 
-	 */
 	public function limit($length, $offset = 0) {
 		return new ArrayList(array_slice($this->items, $offset, $length));
 	}
