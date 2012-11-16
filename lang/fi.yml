@@ -3,16 +3,26 @@ fi:
     ALLOWEDEXTS: 'Sallitut laajennukset'
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
-    CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
-    DIM: Mitat
-    FILENAME: 'Tiedoston nimi'
-    FOLDER: Kansio
-    LASTEDIT: 'Viimeksi muokattu'
-    OWNER: Omistaja
-    SIZE: Koko
-    TITLE: Otsikko
-    TYPE: Tyyppi
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Valitse tiedostot'
     DRAGFILESHERE: 'Raahaa tiedotot tähän'
@@ -59,19 +69,27 @@ fi:
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
-    0: Ei
-    ANY: Yhtään
-    1: Kyllä
+    0:
+      - null
+    ANY:
+      - null
+    1:
+      - null
   CMSLoadingScreen.ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
   CMSMain:
-    ACCESS: 'Pääsy ''{title}'' -osioon'
-    ACCESSALLINTERFACES: 'Pääsy kaikkiin CMS-osioihin'
-    ACCESSALLINTERFACESHELP: 'Ohittaa tarkemmat käyttöoikeudet.'
-    SAVE: Tallenna
+    ACCESS:
+      - null
+    ACCESSALLINTERFACES:
+      - null
+    ACCESSALLINTERFACESHELP:
+      - null
+    SAVE:
+      - null
   CMSProfileController:
-    MENUTITLE: Profiilini
+    MENUTITLE:
+      - null
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
@@ -130,7 +148,8 @@ fi:
     VALIDDATEMAXDATE: 'Päivämäärän on oltava vanhempi tai sovittava asetettuun maksimiin ({date})'
     VALIDDATEMINDATE: 'Päivämäärän on oltava uudempi tai sovittava vähintään asetettuun minimiin ({date})'
   DatetimeField:
-    NOTSET: 'Ei asetettu'
+    NOTSET:
+      - null
   Director:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
   DropdownField:
@@ -143,37 +162,68 @@ fi:
   Enum:
     ANY: Yhtään
   File:
-    AviType: 'AVI videotiedosto'
-    Content: Sisältö
-    CssType: 'CSS tiedosto'
-    DmgType: 'Apple levykuva'
-    DocType: 'Word tiedosto'
-    Filename: Tiedostonimi
-    GifType: 'GIF kuva - hyvä kaaviolle'
-    GzType: 'GZIP pakattu tiedosto'
-    HtlType: 'HTML tiedosto'
-    HtmlType: 'HTML tiedosto'
-    INVALIDEXTENSION: 'Tiedostopääte ei ole sallittu (sallitut muodot: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Tiedostopääte ei ole sallittu'
-    IcoType: 'Icon kuva'
-    JpgType: 'JPEG kuva - hyvä valokuville'
-    JsType: 'Javascript tiedosto'
-    Mp3Type: 'MP3 äänitiedosto'
-    MpgType: 'MPEG videotiedosto'
-    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
-    NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
-    Name: Nimi
-    PLURALNAME: Tiedostot
-    PdfType: 'Adobe Acrobat PDF tiedosto'
-    PngType: 'PNG kuva - hyvä yleinen muoto'
-    SINGULARNAME: Tiedosto
-    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
-    TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
-    TiffType: 'Tiff kuva'
-    Title: Otsikko
-    WavType: 'WAV äänitiedosto'
-    XlsType: 'Excel tiedosto'
-    ZipType: 'ZIP pakattu tiedosto'
+    AviType:
+      - null
+    Content:
+      - null
+    CssType:
+      - null
+    DmgType:
+      - null
+    DocType:
+      - null
+    Filename:
+      - null
+    GifType:
+      - null
+    GzType:
+      - null
+    HtlType:
+      - null
+    HtmlType:
+      - null
+    INVALIDEXTENSION:
+      - null
+    INVALIDEXTENSIONSHORT:
+      - null
+    IcoType:
+      - null
+    JpgType:
+      - null
+    JsType:
+      - null
+    Mp3Type:
+      - null
+    MpgType:
+      - null
+    NOFILESIZE:
+      - null
+    NOVALIDUPLOAD:
+      - null
+    Name:
+      - null
+    PLURALNAME:
+      - null
+    PdfType:
+      - null
+    PngType:
+      - null
+    SINGULARNAME:
+      - null
+    TOOLARGE:
+      - null
+    TOOLARGESHORT:
+      - null
+    TiffType:
+      - null
+    Title:
+      - null
+    WavType:
+      - null
+    XlsType:
+      - null
+    ZipType:
+      - null
   FileIFrameField:
     ATTACH: 'Liitä {type}'
     ATTACHONCESAVED: '{type} voidaan liittää, kun olet tallentanut tietueen ensimmäistä kertaa.'
@@ -210,9 +260,12 @@ fi:
   FormField:
     NONE: 'Ei yhtään'
   GridAction:
-    DELETE_DESCRIPTION: Poista
-    Delete: Poista
-    UnlinkRelation: 'Pura linkitys'
+    DELETE_DESCRIPTION:
+      - null
+    Delete:
+      - null
+    UnlinkRelation:
+      - null
   GridField:
     Add: 'Lisää {name}'
     Filter: Suodatin
@@ -229,7 +282,8 @@ fi:
     RelationSearch: Relaatiohaku
     ResetFilter: Nollaa
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
+    DeletePermissionsFailure:
+      - null
   GridFieldDetailForm:
     CancelBtn: Peruuta
     Create: Luo
@@ -262,7 +316,8 @@ fi:
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
   Hierarchy:
-    InfiniteLoopNotAllowed: '"{type}" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman.'
+    InfiniteLoopNotAllowed:
+      - null
   HtmlEditorField:
     ADDURL: 'Lisää URL-osoite'
     ADJUSTDETAILSDIMENSIONS: 'Tarkat tiedot &amp; mitat'
@@ -309,10 +364,13 @@ fi:
     URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu liittää mediaa'
     UpdateMEDIA: 'Päivitä media'
   Image:
-    PLURALNAME: Tiedostot
-    SINGULARNAME: Tiedosto
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   ImageField:
-    IMAGE: Kuva
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
@@ -333,8 +391,10 @@ fi:
     SAVEDUP: Tallennettu.
     VersionUnknown: tuntematon
   LeftAndMain_Menu.ss:
-    Hello: Hei
-    LOGOUT: 'Kirjaudu ulos'
+    Hello:
+      - null
+    LOGOUT:
+      - null
   LoginAttempt:
     Email: Sähköpostiosoite
     IP: IP-osoite
@@ -387,26 +447,45 @@ fi:
   MemberAuthenticator:
     TITLE: 'Sähköposti &amp; Salasana'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
+    AMORPM:
+      - null
     'APPLY FILTER': Suodata
-    Custom: Muokattu
-    DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
-    DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
-    DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
-    FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
-    FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
-    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
-    MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
-    MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
-    Preview: Esikatselu
-    SHORTMONTH: 'Kuukauden lyhyt nimi (esim. kesä)'
-    TOGGLEHELP: 'Vaihda muotoilu apuun'
-    TWODIGITDAY: 'Kaksinumeroinen päivämäärä (01–31)'
-    TWODIGITHOUR: 'Kaksinumeroinen tuntinäyttö (00–23)'
-    TWODIGITMINUTE: 'Kaksinumeroinen minuuttinäyttö (00–59)'
-    TWODIGITMONTH: 'Kaksinumeroinen kuukausi (01=tammikuu, jne.)'
-    TWODIGITSECOND: 'Kaksinumeroinen sekunti (00–59)'
-    TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
@@ -419,21 +498,35 @@ fi:
     SINGULARNAME: 'Käyttäjän salasana'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Poista
-    DELETEDRECORDS: 'Poistettiin {count} tietuetta'
-    EMPTYBEFOREIMPORT: 'Tyhjennä tietokanta ennen tuonti'
-    IMPORT: 'Tuo CSV:stä'
-    IMPORTEDRECORDS: 'Tuotiin {count} tietuetta'
-    NOCSVFILE: 'Selaa ja tuo CSV-tiedosto'
-    NOIMPORT: 'Ei tuotavia'
-    RESET: Nollaa
-    Title: Datamallit
-    UPDATEDRECORDS: 'Päivitettiin {count} tietuetta'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Tietokannan sarakkeet'
-    IMPORTSPECLINK: 'Näytä erittely kohteelle %s'
-    IMPORTSPECRELATIONS: Yhteydet
-    IMPORTSPECTITLE: 'Erittely kohteelle %s'
+    IMPORTSPECFIELDS:
+      - null
+    IMPORTSPECLINK:
+      - null
+    IMPORTSPECRELATIONS:
+      - null
+    IMPORTSPECTITLE:
+      - null
   ModelAdmin_Tools.ss:
     FILTER: Suodin
     IMPORT: Tuo
@@ -468,8 +561,10 @@ fi:
     SINGULARNAME: Rooli
     Title: 'Roolin nimi'
   PermissionRoleCode:
-    PLURALNAME: 'Käyttöoikeiden roolin koodit'
-    SINGULARNAME: 'Käyttöoikeiden roolin koodi'
+    PLURALNAME:
+      - null
+    SINGULARNAME:
+      - null
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
     UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
@@ -483,16 +578,23 @@ fi:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
     CHANGEPASSWORDBELOW: 'Voit vaihtaa salasanaasi alla.'
-    CHANGEPASSWORDHEADER: 'Vaihda salasanasi'
-    ENTERNEWPASSWORD: 'Syötä uusi salasanasi'
+    CHANGEPASSWORDHEADER:
+      - null
+    ENTERNEWPASSWORD:
+      - null
     ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään, jotta voit vaihtaa salasanasi.'
     LOGGEDOUT: 'Kirjauduit ulos. Jos haluat kirjautua sisään, syötä tietosi alle.'
-    LOGIN: 'Kirjaudu sisään'
-    NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle ja annamme sinulle oikeat oikeudet.'
+    LOGIN:
+      - null
+    NOTEPAGESECURED:
+      - null
     NOTERESETLINKINVALID: '<p>Salasanan nollauslinkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href="{link1}">napsauttamalla tästä</a> tai vaihtaa salasanasi <a href="{link2}">kirjautumisen jälkeen</a>.</p>'
-    NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
-    PASSWORDSENTHEADER: 'Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'''
-    PASSWORDSENTTEXT: 'Kiitos! Salasanan palautuslinkki lähetettiin osoitteeseen ''{email}'', joka on liitettynä tähän käyttäjätiliin.'
+    NOTERESETPASSWORD:
+      - null
+    PASSWORDSENTHEADER:
+      - null
+    PASSWORDSENTTEXT:
+      - null
   SecurityAdmin:
     ACCESS_HELP: 'Oikeuttaa käyttäjien katselun, lisäämisen ja muokkaamisen, kuten myös käyttöoikeuksien ja roolien määrittämisen heille.'
     APPLY_ROLES: 'Aseta roolit ryhmille'
@@ -521,7 +623,8 @@ fi:
   SiteTree:
     TABMAIN: Yleiset
   TableField:
-    ISREQUIRED: 'Kohteessa %s on ''%s'' pakollinen'
+    ISREQUIRED:
+      - null
   TableField.ss:
     ADD: 'Lisää uusi rivi'
     ADDITEM: 'Lisää %s'
