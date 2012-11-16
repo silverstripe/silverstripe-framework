@@ -99,7 +99,7 @@ abstract class PasswordEncryptor {
 	 */
 	public function salt($password, $member = null) {
 		$generator = new RandomGenerator();
-		return substr($generator->generateHash('sha1'), 0, 50);
+		return substr($generator->randomToken('sha1'), 0, 50);
 	}
 	
 	/**
@@ -281,7 +281,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	 */
 	public function salt($password, $member = null) {
 		$generator = new RandomGenerator();
-		return sprintf('%02d', self::$cost) . '$' . substr($generator->generateHash('sha1'), 0, 22);
+		return sprintf('%02d', self::$cost) . '$' . substr($generator->randomToken('sha1'), 0, 22);
 	}
 
 	public function check($hash, $password, $salt = null, $member = null) {

@@ -258,12 +258,12 @@ JS
 		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");
 
 		if($member) {
-			$member->generateAutologinHash();
+			$token = $member->generateAutologinTokenAndStoreHash();
 
 			$e = Member_ForgotPasswordEmail::create();
 			$e->populateTemplate($member);
 			$e->populateTemplate(array(
-				'PasswordResetLink' => Security::getPasswordResetLink($member->AutoLoginHash)
+				'PasswordResetLink' => Security::getPasswordResetLink($member, $token)
 			));
 			$e->setTo($member->Email);
 			$e->send();

@@ -227,7 +227,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 */
 	protected function generate() {
 		$generator = new RandomGenerator();
-		return $generator->generateHash('sha1');
+		return $generator->randomToken('sha1');
 	}
 
 	public static function get_template_global_variables() {
