@@ -1080,7 +1080,10 @@ class SQLQuery {
 	public function lastRow() {
 		$query = clone $this;
 		$offset = $this->limit ? $this->limit['start'] : 0;
-		$query->setLimit(1, $this->count() + $offset - 1);
+		
+		// Limit index to start in case of empty results
+		$index = max($this->count() + $offset - 1, 0);
+		$query->setLimit(1, $index);
 		return $query;
 	}
 
