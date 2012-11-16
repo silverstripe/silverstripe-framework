@@ -153,7 +153,7 @@ class FormTest extends FunctionalTest {
 		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
 		$team2 = $this->objFromFixture('FormTest_Team', 'team2');
 		$form->loadDataFrom($captainWithDetails);
-		$form->loadDataFrom($team2, true);
+		$form->loadDataFrom($team2, Form::MERGE_CLEAR_MISSING);
 		$this->assertEquals(
 			$form->getData(), 
 			array(
@@ -166,7 +166,35 @@ class FormTest extends FunctionalTest {
 			'LoadDataFrom() overwrites fields not found in the object with $clearMissingFields=true'
 		);
 	}
-	
+
+	public function testLoadDataFromIgnoreFalseish() {
+		$form = new Form(
+			new Controller(),
+			'Form',
+			new FieldList(
+				new TextField('Biography', 'Biography', 'Custom Default')
+			),
+			new FieldList()
+		);
+
+		$captainNoDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
+		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainWithDetails');
+
+		$form->loadDataFrom($captainNoDetails, Form::MERGE_IGNORE_FALSEISH);
+		$this->assertEquals(
+			$form->getData(),
+			array('Biography' => 'Custom Default'),
+			'LoadDataFrom() doesn\'t overwrite fields when MERGE_IGNORE_FALSEISH set and values are false-ish'
+		);
+
+		$form->loadDataFrom($captainWithDetails, Form::MERGE_IGNORE_FALSEISH);
+		$this->assertEquals(
+			$form->getData(),
+			array('Biography' => 'Bio 1'),
+			'LoadDataFrom() does overwrite fields when MERGE_IGNORE_FALSEISH set and values arent false-ish'
+		);
+	}
+
 	public function testFormMethodOverride() {
 		$form = $this->getStubForm();
 		$form->setFormMethod('GET');
