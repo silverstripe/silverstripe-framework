@@ -3,16 +3,26 @@ et_EE:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Uus kaust'
   AssetTableField:
-    CREATED: 'Esmakordselt üles laaditud'
-    DIM: Mõõtmed
-    FILENAME: Failinimi
-    FOLDER: Folder
-    LASTEDIT: 'Viimati muudetud'
-    OWNER: Omanik
-    SIZE: Suurus
-    TITLE: Pealkiri
-    TYPE: Tüüp
-    URL: Aadress
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
@@ -151,13 +161,16 @@ et_EE:
     Filename: Failinimi
     GifType: 'GIF image - good for diagrams'
     GzType: 'GZIP tihendatud fail'
-    HtlType: 'HTML fail'
+    HtlType:
+      - null
     HtmlType: 'HTML fail'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
+    IcoType:
+      - null
     JpgType: 'JPEG pilt - hea fotode jaoks'
-    JsType: 'Javascripti fail'
+    JsType:
+      - null
     Mp3Type: 'MP3 helifail'
     MpgType: 'MPEG videofail'
     NOFILESIZE: 'Faili suurus on null bitti.'
@@ -165,15 +178,19 @@ et_EE:
     Name: Nimi
     PLURALNAME: Failid
     PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PngType:
+      - null
     SINGULARNAME: Fail
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGE:
+      - null
     TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
+    TiffType:
+      - null
     Title: Pealkiri
     WavType: 'WAV helifail'
     XlsType: 'Exceli arvutustabel'
-    ZipType: 'ZIP tihendatud fail'
+    ZipType:
+      - null
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -312,7 +329,8 @@ et_EE:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Image
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -387,26 +405,45 @@ et_EE:
   MemberAuthenticator:
     TITLE: 'E-post ja parool'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -419,16 +456,26 @@ et_EE:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Kustuta
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Impordi CSV failist'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Palun avage CSV fail impordiks'
-    NOIMPORT: 'Midagi pole importida'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'

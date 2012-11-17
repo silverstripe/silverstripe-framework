@@ -3,16 +3,26 @@ it:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NuovaCartella
   AssetTableField:
-    CREATED: 'Inizialmente caricato'
-    DIM: Dimensioni
-    FILENAME: 'Nome del file'
-    FOLDER: Cartella
-    LASTEDIT: 'Ultima modifica'
-    OWNER: Proprietario
-    SIZE: Dimensione
-    TITLE: Titolo
-    TYPE: 'Tipo di file'
-    URL: URL
+    CREATED:
+      - null
+    DIM:
+      - null
+    FILENAME:
+      - null
+    FOLDER:
+      - null
+    LASTEDIT:
+      - null
+    OWNER:
+      - null
+    SIZE:
+      - null
+    TITLE:
+      - null
+    TYPE:
+      - null
+    URL:
+      - null
   AssetUploadField:
     ChooseFiles: 'Scegli file'
     DRAGFILESHERE: 'Trascina file qui'
@@ -151,13 +161,16 @@ it:
     Filename: 'Nome del file'
     GifType: 'Immagine GIF - consigliata per diagrammi'
     GzType: 'File compresso GZIP'
-    HtlType: 'File HTML'
+    HtlType:
+      - null
     HtmlType: 'File HTML'
     INVALIDEXTENSION: 'Estensione non consentita (valide: {extensions})'
     INVALIDEXTENSIONSHORT: 'Estensione non consentita'
-    IcoType: Icona
+    IcoType:
+      - null
     JpgType: 'Immagine JPEG - consigliata per foto'
-    JsType: 'File Javascript'
+    JsType:
+      - null
     Mp3Type: 'File audio MP3'
     MpgType: 'File video MPEG'
     NOFILESIZE: 'La dimensione del file è zero byte.'
@@ -165,15 +178,19 @@ it:
     Name: Nome
     PLURALNAME: File
     PdfType: 'File Adobe Acrobat PDF'
-    PngType: 'Immagine PNG - consigliata per utilizzo generico'
+    PngType:
+      - null
     SINGULARNAME: File
-    TOOLARGE: 'La dimensione del file è troppo grande, massimo consentito {size}'
+    TOOLARGE:
+      - null
     TOOLARGESHORT: 'La dimensione del file eccede {size}'
-    TiffType: 'Immagine TIFF'
+    TiffType:
+      - null
     Title: Titolo
     WavType: 'File audio WAV'
     XlsType: 'Foglio di calcolo Excel'
-    ZipType: 'File compresso ZIP'
+    ZipType:
+      - null
   FileIFrameField:
     ATTACH: 'Allega {type}'
     ATTACHONCESAVED: '{type} può essere allegato quando hai salvato per la prima volta.'
@@ -312,7 +329,8 @@ it:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Immagine
+    IMAGE:
+      - null
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -387,26 +405,45 @@ it:
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) o PM (Post meridiem)'
+    AMORPM:
+      - null
     'APPLY FILTER': 'Applica filtro'
-    Custom: Personalizza
-    DATEFORMATBAD: 'Il formato della data non è valido'
-    DAYNOLEADING: 'Giorno del mese senza zero iniziale'
-    DIGITSDECFRACTIONSECOND: 'Una o più cifre che rappresentano una frazione decimale di secondo'
-    FOURDIGITYEAR: 'Anno a quattro cifre'
-    FULLNAMEMONTH: 'Nome completo del mese (es. Giugno)'
-    HOURNOLEADING: 'Ore senza zero iniziale'
-    MINUTENOLEADING: 'Minuti senza zero iniziale'
-    MONTHNOLEADING: 'Mese senza zero iniziale'
-    Preview: Anteprima
-    SHORTMONTH: 'Nome corto del mese (es. Giu)'
-    TOGGLEHELP: 'Mostra/Nascondi aiuto formattazione'
-    TWODIGITDAY: 'Giorno del mese a due cifre'
-    TWODIGITHOUR: 'Ora a due cifre (00 a 23)'
-    TWODIGITMINUTE: 'Minuti a due cifre (00 a 59)'
-    TWODIGITMONTH: 'Mese a due cifre (01=Gennaio, ecc.)'
-    TWODIGITSECOND: 'Secondi a due cifre (00 a 59)'
-    TWODIGITYEAR: 'Anno a due cifre'
+    Custom:
+      - null
+    DATEFORMATBAD:
+      - null
+    DAYNOLEADING:
+      - null
+    DIGITSDECFRACTIONSECOND:
+      - null
+    FOURDIGITYEAR:
+      - null
+    FULLNAMEMONTH:
+      - null
+    HOURNOLEADING:
+      - null
+    MINUTENOLEADING:
+      - null
+    MONTHNOLEADING:
+      - null
+    Preview:
+      - null
+    SHORTMONTH:
+      - null
+    TOGGLEHELP:
+      - null
+    TWODIGITDAY:
+      - null
+    TWODIGITHOUR:
+      - null
+    TWODIGITMINUTE:
+      - null
+    TWODIGITMONTH:
+      - null
+    TWODIGITSECOND:
+      - null
+    TWODIGITYEAR:
+      - null
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Utilizzo avanzato</h4>\\n<ul>\\n<li>Colonne consentite: <em>%s</em></li>\\n<li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori \\ndal file importato.</li>\\n<li>I gruppi possono essere assegnati attraverso la colonna <em>Groups</em>. I gruppi sono identificati attraverso la loro colonna <em>Code</em>, \\npiù gruppi devono essere separati da virgola. L''appartenenza esistente a gruppi non viene cancellata.</li>\\n</ul>\\n</div>"
@@ -419,16 +456,26 @@ it:
     SINGULARNAME: 'Password utente'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Elimina
-    DELETEDRECORDS: 'Eliminati {count} record.'
-    EMPTYBEFOREIMPORT: 'Cancella database prima dell''import'
-    IMPORT: 'Importa da CSV'
-    IMPORTEDRECORDS: 'Importati {count} record.'
-    NOCSVFILE: 'Scegli un file CSV da importare'
-    NOIMPORT: 'Nulla da importare.'
-    RESET: Azzera
-    Title: 'Modelli di dati'
-    UPDATEDRECORDS: 'Aggiornati {count} record.'
+    DELETE:
+      - null
+    DELETEDRECORDS:
+      - null
+    EMPTYBEFOREIMPORT:
+      - null
+    IMPORT:
+      - null
+    IMPORTEDRECORDS:
+      - null
+    NOCSVFILE:
+      - null
+    NOIMPORT:
+      - null
+    RESET:
+      - null
+    Title:
+      - null
+    UPDATEDRECORDS:
+      - null
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Colonne database'
     IMPORTSPECLINK: 'Mostra specifiche per %s'
