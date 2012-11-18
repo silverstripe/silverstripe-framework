@@ -250,6 +250,11 @@ Keep in mind that the returned view isn't always decided upon when the Ajax requ
 is fired, so the server might decide to change it based on its own logic,
 sending back different `X-Pjax` headers and content.
 
+On the client, you can set your preference through the `data-pjax-target` attributes
+on links or through the `X-Pjax` header. For firing off an Ajax request that is
+tracked in the browser history, use the `pjax` attribute on the state data.
+
+	$('.cms-container').loadPanel('admin/pages', null, {pjax: 'Content'});
 
 ## Ajax Redirects
 
