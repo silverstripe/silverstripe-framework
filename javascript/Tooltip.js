@@ -28,6 +28,20 @@
 			onmouseup : function() {
 				this.tooltip('close');
 				this.tooltip({disabled: true});
+			},
+			onmouseover : function() {
+				// TODO implement touchstart, touchend for touch screen devices
+				if (window.Touch) {
+					var title = $(this).data('title');
+					this.attr('title', title);
+					this.tooltip({disabled: false});
+					this.tooltip({
+						show: { effect: "fadeIn", duration: 300, delay: 300 },
+						hide: { effect: "fadeOut", duration: 300, delay: 0 },
+						position: { my: "left+15 top", at: "right top", collision: "flipfit"}
+					});
+					this.tooltip('open');
+				}
 			}
 		});
 }(jQuery));
