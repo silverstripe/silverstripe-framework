@@ -14,50 +14,50 @@ af:
     TYPE: 'File type'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    ChooseFiles: 'Kies lêers'
+    DRAGFILESHERE: 'Trek lêers hiernatoe'
+    DROPAREA: 'Laat val area'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Verander en organiseer'
     EDITINFO: 'Edit files'
     FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Kies lêers van jou rekenaar af'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Total
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Belyning
-    ALIGNEMENTEXAMPLE: 'right aligned'
+    ALIGNEMENTEXAMPLE: 'Rig na regs'
     BOLD: 'Vet Teks'
     BOLDEXAMPLE: Vet
-    CODE: 'Code Block'
-    CODEDESCRIPTION: 'Unformatted code block'
-    CODEEXAMPLE: 'Code block'
+    CODE: 'Kode blok'
+    CODEDESCRIPTION: 'Ongeformateerde kode blok'
+    CODEEXAMPLE: 'Kode blok'
     COLORED: 'Gekleurde teks'
     COLOREDEXAMPLE: 'blou teks'
-    EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
-    IMAGE: Image
-    IMAGEDESCRIPTION: 'Show an image in your post'
+    EMAILLINK: 'Epos skakel'
+    EMAILLINKDESCRIPTION: 'Skep skakel na epos adres'
+    IMAGE: 'Geen prentjie gelaai nie'
+    IMAGEDESCRIPTION: 'Wys ''n foto in wat jy gepos het'
     ITALIC: 'Skuinsstrepe Teks'
     ITALICEXAMPLE: Skuinsstrepe
-    LINK: 'Website link'
-    LINKDESCRIPTION: 'Link to another website or URL'
+    LINK: 'Webwerf skakel'
+    LINKDESCRIPTION: 'Koppel aan ''n ander webwerf of URL'
     STRUCK: 'Deur-gestreepde Teks'
     STRUCKEXAMPLE: Deur-gestreep
     UNDERLINE: 'Beklemtoonde Teks'
     UNDERLINEEXAMPLE: Beklemtoon
-    UNORDERED: 'Unordered list'
-    UNORDEREDDESCRIPTION: 'Unordered list'
-    UNORDEREDEXAMPLE1: 'unordered item 1'
+    UNORDERED: 'Ongeorganiseerde lys'
+    UNORDEREDDESCRIPTION: 'Ongeorganiseerde lys'
+    UNORDEREDEXAMPLE1: 'Ongeorganiseerde item 1'
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 'Please enter a username and password.'
-    ERRORNOTADMIN: 'That user is not an administrator.'
-    ERRORNOTREC: 'That username / password isn''t recognised'
+    ENTERINFO: 'Tik asseblief ''n verbruikersnaam en wagwoord in'
+    ERRORNOTADMIN: 'Daardie verbruiker is nie ''n administreerder nie'
+    ERRORNOTREC: 'Daar die verbruikersnaam / wagwoord is nie herken nie'
   Boolean:
     0: 'False'
     ANY: Any
@@ -82,17 +82,17 @@ af:
     - 'False'
     - 'True'
   ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
+    CLOSEPOPUP: 'Maak wipop toe'
     SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: 'Saved %s %s %s'
+    SUCCESSEDIT: 'Gestoor %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Byvoeg %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
+    NEXT: Volgende
+    PREVIOUS: Vorige
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -109,20 +109,20 @@ af:
     PLURALNAME: 'Data Voorwerpe'
     SINGULARNAME: 'Data Voorwerp'
   Date:
-    DAY: ' day'
-    DAYS: ' days'
-    HOUR: ' hour'
-    HOURS: ' hours'
-    MIN: ' min'
-    MINS: ' mins'
-    MONTH: ' month'
-    MONTHS: ' months'
-    SEC: ' sec'
-    SECS: ' secs'
+    DAY: dag
+    DAYS: dae
+    HOUR: uur
+    HOURS: ure
+    MIN: minuut
+    MINS: minute
+    MONTH: maand
+    MONTHS: maande
+    SEC: sekonde
+    SECS: sekondes
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ' year'
-    YEARS: ' years'
+    YEAR: jaar
+    YEARS: jare
   DateField:
     NOTSET: 'nier gestel'
     TODAY: vandag
@@ -138,10 +138,10 @@ af:
   EmailField:
     VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
-    PLURALNAME: 'Email Bounce Records'
-    SINGULARNAME: 'Email Bounce Record'
+    PLURALNAME: 'Epos hop rekords'
+    SINGULARNAME: 'Epos hop rekord'
   Enum:
-    ANY: Any
+    ANY: Enige
   File:
     AviType: 'AVI video file'
     Content: Content
@@ -211,31 +211,31 @@ af:
     NONE: geen
   GridAction:
     DELETE_DESCRIPTION: Delete
-    Delete: Delete
+    Delete: 'Wis uit'
     UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Vind
     LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
+    LinkExisting: 'Koppel bestaande'
+    NewRecord: 'Nuwe %s'
+    NoItemsFound: 'Geen items gevind nie'
     PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    PRINTEDBY: 'Gedruk deur'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    ResetFilter: Herstel
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Geen uit wis toestemmings nie'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    Delete: 'Wis uit'
+    DeletePermissionsFailure: 'Geen uit wis toestemmings nie'
+    Deleted: 'Uitgewisde %s %s'
     Save: Save
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
@@ -245,7 +245,7 @@ af:
     DefaultGroupTitleAdministrators: Administrateurs
     DefaultGroupTitleContentAuthors: 'Inhouds Outeurs'
     Description: Beskrywing
-    GroupReminder: 'As jy ''n ouer groep kies sal hierdie groep al daardie rolle aan aanneem'
+    GroupReminder: 'As jy ''n ouer groep kies sal hierdie groep al daardie rolle aanneem'
     Locked: 'Gesluit?'
     NoRoles: 'Geen rolle gevind nie'
     PLURALNAME: Groups
@@ -267,44 +267,44 @@ af:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anker
-    BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 'Insert link'
-    BUTTONREMOVELINK: 'Remove link'
+    BUTTONINSERT: 'Plaas in'
+    BUTTONINSERTLINK: 'Sit in'
+    BUTTONREMOVELINK: 'Verwyder skakel'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
+    CSSCLASS: 'Belyning styl'
+    CSSCLASSCENTER: 'In die middel op sy eie'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
     CSSCLASSLEFTALONE: 'Op die linkerkant, op sy eie.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    CSSCLASSRIGHT: 'Regs met teks wat rondom vloei'
     DETAILS: Details
-    EMAIL: 'Email address'
-    FILE: File
+    EMAIL: 'Epos Adres'
+    FILE: Lêer
     FOLDER: Folder
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
+    FROMCMS: 'Van die CMS'
+    FROMCOMPUTER: 'Van you rekenaar'
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXT: 'Alternatiewe teks (alt) - word gewys as prentjie nie beskikbaar is nie'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
+    IMAGEDIMENSIONS: Afmetings
+    IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
+    IMAGEWIDTHPX: Wydte
     INSERTMEDIA: 'Insert Media'
-    LINK: 'Insert Link'
+    LINK: 'Sit skakel in'
     LINKANCHOR: 'Anker op hierdie bladsy'
     LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
-    LINKEXTERNAL: 'Another website'
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
+    LINKEMAIL: 'Epos Adres'
+    LINKEXTERNAL: 'Ander webwerf'
+    LINKFILE: 'Laai ''n lêer af'
+    LINKINTERNAL: 'Bladsy op die webwerf'
     LINKOPENNEWWIN: 'Open link in a new window?'
     LINKTO: 'Link to'
-    PAGE: Page
+    PAGE: Bladsy
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
@@ -312,7 +312,7 @@ af:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Image
+    IMAGE: 'Geen prentjie gelaai nie'
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -336,11 +336,11 @@ af:
     Hello: Hi
     LOGOUT: 'Log out'
   LoginAttempt:
-    Email: 'Email Address'
-    IP: 'IP Address'
+    Email: 'Epos Adres'
+    IP: 'IP Adres'
     PLURALNAME: 'Login Attempts'
     SINGULARNAME: 'Login Attempt'
-    Status: Status
+    Status: Posisie
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Verander Wagwoord'
@@ -388,7 +388,7 @@ af:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
+    'APPLY FILTER': 'Wend filter aan'
     Custom: Custom
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
@@ -419,7 +419,7 @@ af:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Delete
+    DELETE: 'Wis uit'
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
@@ -474,7 +474,7 @@ af:
     PERMISSIONS_CATEGORY: 'Rolle en toegang permissies'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
+    VALIDATION: 'Tik asseblief  ''n geldige telefoon nommer in'
   RelationComplexTableField.ss:
     ADD: 'Voeg by'
     CSVEXPORT: 'Export to CSV'
@@ -538,39 +538,39 @@ af:
     DISPLAYING: Displaying
     OF: of
     TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
+    VIEWFIRST: 'Wys eerste'
+    VIEWLAST: 'Wys laaste'
+    VIEWNEXT: 'Wys volgende'
+    VIEWPREVIOUS: 'Wys vorige'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: less
-    MORE: more
+    LESS: minder
+    MORE: meer
   UploadField:
     ATTACHFILE: 'Heg lêer aan'
     ATTACHFILES: 'Heg lêer(s) aan'
     AttachFile: 'Aangehegde lêer(s)'
     DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
+    DELETEINFO: 'Wis die lêer uit die lêer stoor uit'
     DOEDIT: Stoor
-    DROPFILE: 'drop a file'
+    DROPFILE: 'Laat val ''n lêer'
     DROPFILES: 'Skuif lêers hiernatoe'
     Dimensions: Dimensions
     EDIT: Edit
     EDITINFO: 'Verander die lêer'
     FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
-    FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTER: 'Van jou rekenaar'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Van die lêers afdeling'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
+    REMOVEERROR: 'Daar het ''n fout onstaan met die verwydering van die lêer'
+    REMOVEINFO: 'Verwyder die lêer van hier af maar moet dit nie uit die lêer stoor uitwis nie'
+    STARTALL: 'Begin alles'
     STARTALLINFO: 'Start all uploads'
-    Saved: Saved
+    Saved: Gestoor
   Versioned:
     has_many_Versions: Weergawe
