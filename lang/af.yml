@@ -549,17 +549,17 @@ af:
     MORE: more
   UploadField:
     ATTACHFILE: 'Heg lêer aan'
-    ATTACHFILES: 'Attach files'
+    ATTACHFILES: 'Heg lêer(s) aan'
     AttachFile: 'Aangehegde lêer(s)'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DOEDIT: Stoor
     DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DROPFILES: 'Skuif lêers hiernatoe'
     Dimensions: Dimensions
     EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
+    EDITINFO: 'Verander die lêer'
+    FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
     FROMCOMPUTER: 'From your computer'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Van die lêers afdeling'
