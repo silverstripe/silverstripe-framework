@@ -1,12 +1,12 @@
 af:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: NewFolder
+    NEWFOLDER: 'Nuwe Dossier'
   AssetTableField:
     CREATED: 'First uploaded'
     DIM: Dimensions
     FILENAME: Filename
-    FOLDER: Folder
+    FOLDER: Dossier
     LASTEDIT: 'Last changed'
     OWNER: Eienaar
     SIZE: 'File size'
@@ -64,12 +64,12 @@ af:
     1: Waar
   CMSLoadingScreen.ss:
     LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    REQUIREJS: 'Die IBS vereis dat JavaScript aangeskakel is'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
+    ACCESSALLINTERFACES: 'Toegang tot alle IBS gedeeltes'
+    ACCESSALLINTERFACESHELP: 'Oorheers meer spesifieke toegans verstellings'
+    SAVE: Stoor
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
@@ -179,10 +179,10 @@ af:
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
+    DISALLOWEDFILETYPE: 'Dit word nie toegelaat om hierde lêer tipe op te laai nie'
+    FILE: Lêer
+    FROMCOMPUTER: 'Van jou rekenaar'
+    FROMFILESTORE: 'Vanuit die lêer stoor'
     NOSOURCE: 'Kies asseblief ''n bron lêer om by te voeg'
     REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
@@ -190,8 +190,8 @@ af:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
+    PLURALNAME: Dossiers
+    SINGULARNAME: Dossier
   ForgotPasswordEmail.ss:
     HELLO: Hi
     TEXT1: 'Hier is u'
@@ -231,7 +231,7 @@ af:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Geen uit wis toestemmings nie'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: 'Kanselleer '
     Create: Create
     Delete: 'Wis uit'
     DeletePermissionsFailure: 'Geen uit wis toestemmings nie'
@@ -271,20 +271,20 @@ af:
     BUTTONINSERTLINK: 'Sit in'
     BUTTONREMOVELINK: 'Verwyder skakel'
     BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
+    CAPTIONTEXT: 'Onderskrif teks'
     CSSCLASS: 'Belyning styl'
     CSSCLASSCENTER: 'In die middel op sy eie'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    CSSCLASSLEFT: ' Links met teks wat rondom vloei'
     CSSCLASSLEFTALONE: 'Op die linkerkant, op sy eie.'
     CSSCLASSRIGHT: 'Regs met teks wat rondom vloei'
-    DETAILS: Details
+    DETAILS: Besonderhede
     EMAIL: 'Epos Adres'
     FILE: Lêer
-    FOLDER: Folder
-    FROMCMS: 'Van die CMS'
+    FOLDER: Dossier
+    FROMCMS: 'Van die IBS'
     FROMCOMPUTER: 'Van you rekenaar'
     FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
+    FindInFolder: 'Find in dossier'
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternatiewe teks (alt) - word gewys as prentjie nie beskikbaar is nie'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
@@ -297,13 +297,13 @@ af:
     INSERTMEDIA: 'Insert Media'
     LINK: 'Sit skakel in'
     LINKANCHOR: 'Anker op hierdie bladsy'
-    LINKDESCR: 'Link description'
+    LINKDESCR: 'Skakel beskrywing'
     LINKEMAIL: 'Epos Adres'
     LINKEXTERNAL: 'Ander webwerf'
     LINKFILE: 'Laai ''n lêer af'
     LINKINTERNAL: 'Bladsy op die webwerf'
     LINKOPENNEWWIN: 'Wil jy die skakel in ''n nuwe venster oop maak?'
-    LINKTO: 'Link to'
+    LINKTO: 'Koppel aan'
     PAGE: Bladsy
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
@@ -321,13 +321,13 @@ af:
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Aksies
     HELP: Help
-    PAGETYPE: 'Page type: '
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PAGETYPE: 'Bladsy tipe:'
+    PERMAGAIN: 'Jy is uit die IBS uitgeteken. As jy weer wil inteken, moet jy ''n gebruikersnaam en wagwoord onder in tik'
+    PERMALREADY: 'Ek is jammer, maar jy het nie toestemming om dié gedeelte van die IBS te besugtig nie. As jy as iemand anders wil inteken doen so hieronder'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PLEASESAVE: 'Stoor asseblief die bladsy: Die bladsy kon nie opgedateer word nie omdat dit nog nie gestoor is nie'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -442,7 +442,7 @@ af:
     SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Bedrag
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELCURRENCY: 'Geld eenheid'
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
@@ -466,7 +466,7 @@ af:
     OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
-    Title: Title
+    Title: Tietel
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
