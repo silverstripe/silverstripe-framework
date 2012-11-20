@@ -8,7 +8,7 @@ af:
     FILENAME: Filename
     FOLDER: Folder
     LASTEDIT: 'Last changed'
-    OWNER: Owner
+    OWNER: Eienaar
     SIZE: 'File size'
     TITLE: Title
     TYPE: 'File type'
@@ -61,7 +61,7 @@ af:
   Boolean:
     0: 'False'
     ANY: Any
-    1: 'True'
+    1: Waar
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -302,7 +302,7 @@ af:
     LINKEXTERNAL: 'Ander webwerf'
     LINKFILE: 'Laai ''n lêer af'
     LINKINTERNAL: 'Bladsy op die webwerf'
-    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKOPENNEWWIN: 'Wil jy die skakel in ''n nuwe venster oop maak?'
     LINKTO: 'Link to'
     PAGE: Bladsy
     URL: URL
@@ -441,7 +441,7 @@ af:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
-    FIELDLABELAMOUNT: Amount
+    FIELDLABELAMOUNT: Bedrag
     FIELDLABELCURRENCY: Currency
   NullableField:
     IsNullLabel: 'Is Null'
