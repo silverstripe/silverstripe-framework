@@ -83,7 +83,7 @@ af:
     - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Maak wipop toe'
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: '{name} bygesit'
     SUCCESSEDIT: 'Gestoor %s %s %s'
   ComplexTableField.ss:
     ADDITEM: 'Byvoeg %s'
@@ -119,7 +119,7 @@ af:
     MONTHS: maande
     SEC: sekonde
     SECS: sekondes
-    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFAGO: '{difference} terug'
     TIMEDIFFIN: 'in {difference}'
     YEAR: jaar
     YEARS: jare
@@ -132,11 +132,11 @@ af:
   DatetimeField:
     NOTSET: 'Not set'
   Director:
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Ongeldige versoek'
   DropdownField:
     CHOOSE: (Kies)
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION: 'Verskaf asseblief  ''n epos adres '
   Email_BounceRecord:
     PLURALNAME: 'Epos hop rekords'
     SINGULARNAME: 'Epos hop rekord'
@@ -175,16 +175,16 @@ af:
     XlsType: 'Excel spreadsheet'
     ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACH: 'Heg {type} aan'
+    ATTACHONCESAVED: '{type}e kan aangeheg word sodra jy die rekord vir die eerste keer gestoor het'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    DELETE: 'Verwyder {type}'
     DISALLOWEDFILETYPE: 'Dit word nie toegelaat om hierde lêer tipe op te laai nie'
     FILE: Lêer
     FROMCOMPUTER: 'Van jou rekenaar'
     FROMFILESTORE: 'Vanuit die lêer stoor'
     NOSOURCE: 'Kies asseblief ''n bron lêer om by te voeg'
-    REPLACE: 'Replace {type}'
+    REPLACE: 'Vervang {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
@@ -206,38 +206,38 @@ af:
     VALIDATIONPASSWORDSNOTEMPTY: 'Wagwoorde kan nie leeg wees nie'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Vergeldiger
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: 'Tik asseblief ''n geldige geldeenheid in '
   FormField:
     NONE: geen
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: 'Wis uit'
+    DELETE_DESCRIPTION: Verwyder
+    Delete: Verwyder
     UnlinkRelation: Unlink
   GridField:
-    Add: 'Add {name}'
+    Add: 'Voeg {name}'
     Filter: Filter
     FilterBy: 'Filter by '
     Find: Vind
-    LEVELUP: 'Level up'
+    LEVELUP: 'Op een vlak'
     LinkExisting: 'Koppel bestaande'
     NewRecord: 'Nuwe %s'
     NoItemsFound: 'Geen items gevind nie'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Gedruk deur'
-    PlaceHolder: 'Find {type}'
+    PlaceHolder: 'Vind {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Herstel
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'Geen uit wis toestemmings nie'
+    DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
   GridFieldDetailForm:
     CancelBtn: 'Kanselleer '
-    Create: Create
-    Delete: 'Wis uit'
-    DeletePermissionsFailure: 'Geen uit wis toestemmings nie'
-    Deleted: 'Uitgewisde %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
+    Create: Skep
+    Delete: Verwyder
+    DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
+    Deleted: 'Verwyderde %s %s'
+    Save: Stoor
+    Saved: 'Gestoor %s %s'
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Voeg nog ''n rol by hierdie groep'
@@ -320,7 +320,7 @@ af:
     TITLE: 'Iframe wat fotos laai'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
+    DELETED: 'Was verwyder'
     DropdownBatchActionsDefault: Aksies
     HELP: Help
     PAGETYPE: 'Bladsy tipe:'
@@ -328,9 +328,9 @@ af:
     PERMALREADY: 'Ek is jammer, maar jy het nie toestemming om dié gedeelte van die IBS te besugtig nie. As jy as iemand anders wil inteken doen so hieronder'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Stoor asseblief die bladsy: Die bladsy kon nie opgedateer word nie omdat dit nog nie gestoor is nie'
-    PreviewButton: Preview
+    PreviewButton: Beskou
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: Gestoor
     VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -419,8 +419,8 @@ af:
     SINGULARNAME: 'Member Password'
   MemberTableField: null
   ModelAdmin:
-    DELETE: 'Wis uit'
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETE: Verwyder
+    DELETEDRECORDS: 'Verwyder {count} rekords'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
@@ -436,10 +436,10 @@ af:
     IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
-    IMPORT: Import
+    IMPORT: 'Voer in'
   ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
+    IMPORT_TAB_HEADER: 'Voer in'
+    SEARCHLISTINGS: Soek
   MoneyField:
     FIELDLABELAMOUNT: Bedrag
     FIELDLABELCURRENCY: 'Geld eenheid'
@@ -515,7 +515,7 @@ af:
     BtnImport: 'Voer In'
     FileFieldLabel: 'CSV Lêer <small>(Laat toe uitbreidings: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Verander
   SimpleImageField:
     NOUPLOAD: 'Geen foto gelaai nie'
   SiteTree:
@@ -551,7 +551,7 @@ af:
     ATTACHFILE: 'Heg lêer aan'
     ATTACHFILES: 'Heg lêer(s) aan'
     AttachFile: 'Aangehegde lêer(s)'
-    DELETE: 'Delete from files'
+    DELETE: 'Verwyder van lêers af'
     DELETEINFO: 'Wis die lêer uit die lêer stoor uit'
     DOEDIT: Stoor
     DROPFILE: 'Laat val ''n lêer'
@@ -568,7 +568,7 @@ af:
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Daar het ''n fout onstaan met die verwydering van die lêer'
-    REMOVEINFO: 'Verwyder die lêer van hier af maar moet dit nie uit die lêer stoor uitwis nie'
+    REMOVEINFO: 'Verwyder die lêer van hier af maar moet dit nie uit die lêer stoor verwyder nie'
     STARTALL: 'Begin alles'
     STARTALLINFO: 'Start all uploads'
     Saved: Gestoor
