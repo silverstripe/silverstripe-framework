@@ -928,14 +928,14 @@ jQuery.noConflict();
 
 				if(!this.data('uiTabs')) this.tabs({
 					active: (activeTab.index() != -1) ? activeTab.index() : 0,
-					beforeLoad: function(e, settings) {
+					beforeLoad: function(e, ui) {
 						// Overwrite ajax loading to use CMS logic instead
 						var makeAbs = $.path.makeUrlAbsolute,
 							baseUrl = $('base').attr('href'),
-							isSame = (makeAbs(settings.url, baseUrl) == makeAbs(document.location.href));
+							isSame = (makeAbs(ui.ajaxSettings.url, baseUrl) == makeAbs(document.location.href));
 
-						if(!isSame) $('.cms-container').loadPanel(settings.url);
-						$(this).tabs('select', settings.tab.index());
+						if(!isSame) $('.cms-container').loadPanel(ui.ajaxSettings.url);
+						$(this).tabs('select', ui.tab.index());
 
 						return false;
 					},
