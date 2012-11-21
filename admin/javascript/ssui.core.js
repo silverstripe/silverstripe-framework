@@ -83,15 +83,15 @@
 			}
 
 			// Create missing elements.
-			if (this.options.alternate.text) {
-				this.buttonElement.append(
-					"<span class='ui-button-text-alternate ui-button-text'>" + this.options.alternate.text + "</span>"
-				);
-			}
 			if (this.options.alternate.icon) {
 				this.buttonElement.append(
 					"<span class='ui-button-icon-alternate ui-button-icon-primary ui-icon btn-icon-" 
 					+ this.options.alternate.icon + "'></span>"
+				);
+			}
+			if (this.options.alternate.text) {
+				this.buttonElement.append(
+					"<span class='ui-button-text-alternate ui-button-text'>" + this.options.alternate.text + "</span>"
 				);
 			}
 
