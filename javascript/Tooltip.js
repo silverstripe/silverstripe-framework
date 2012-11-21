@@ -32,8 +32,8 @@
 				this.tooltip('close');
 				this.tooltip({disabled: true});
 			},
-			onmouseover : function() {
-				// TODO implement touchstart, touchend for touch screen devices
+			onmouseenter : function() {
+				// handle touch screen devices
 				if (window.Touch) {
 					this.tooltipshow();
 				}
