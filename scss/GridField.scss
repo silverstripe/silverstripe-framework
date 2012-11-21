@@ -39,13 +39,12 @@ $gf_grid_x:	16px;
 .cms {
 	.ss-gridfield {
 		& > div {
-			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
 				margin-bottom: 0;
 				.action {
-					margin-bottom: $gf_grid_y;
-				}
+				margin-bottom:$gf_grid_y;
 			}
+		}
 		}
 
 		&[data-selectable] {
@@ -66,9 +65,6 @@ $gf_grid_x:	16px;
 			span.btn-icon-download-csv {
 				height:17px; //exact height of icon
 			}
-			.ui-button-text {
-				padding-left:26px; //to accomodate wider export icon
-			} 
 	 	}
 	 	.right {
 	 		float:right;
@@ -95,8 +91,8 @@ $gf_grid_x:	16px;
 
 		.ss-gridfield-buttonrow {
 			font-size: $gf_grid_y*1.2;
+			}
 		}
-	}
 	
 	.ss-gridfield {
 		.grid-levelup {
@@ -120,7 +116,7 @@ $gf_grid_x:	16px;
 			margin-bottom: $gf_grid_y;
 			@include inline-block();
 		}
-	}
+		}
 	table.ss-gridfield-table {
 		display: table; 
 		@include box-shadow-none;		

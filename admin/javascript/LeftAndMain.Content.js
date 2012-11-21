@@ -15,9 +15,8 @@
 				
 				// Force initialization of certain UI elements to avoid layout glitches
 				this.find('.cms-tabset').redrawTabs();
-				this.find('.ss-ui-tabs-nav').redraw();
-				
 				this._super();
+
 			},
 
 			redraw: function() {

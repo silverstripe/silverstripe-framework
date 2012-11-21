@@ -54,15 +54,17 @@ body.cms {
  * Helpers
  * -------------------------------------------- */
 
-.cms-helper-hide-actions {
-	.Actions {
-		display: none;
-	}
-}
-
 .hide {
 	display: none;
 }
+
+.cms-helper-hide-actions {
+	.Actions {
+		@extend .hide;
+	}
+}
+
+
 
 /** --------------------------------------------
  * Panels Styles
@@ -248,7 +250,7 @@ body.cms {
 		}
 	}
 
-	.cms-edit-form, .cms-content-fields { 
+	.cms-edit-form, .cms-content-fields { /*not sure if .cms-content-fields effects other areas*/
 		.cms-panel-padded { /* Has padded area inside it */
 			padding: 0;
 			margin: 0;	
@@ -540,8 +542,9 @@ p.message {
 		overflow: auto;
 	}	
 }
+
 #PageType {
-		ul {
+	ul {
 		padding-left: 20px;
 		li {
 			float: none;
@@ -607,6 +610,7 @@ p.message {
 	min-height: 29px;
 	display: block;
 	margin: 0 0 15px 0;
+	padding-bottom: 9px;
 	
 	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	@include legacy-pie-clearfix();
@@ -1579,9 +1583,6 @@ form.small {
 		span.btn-icon-download-csv {
 			height:17px; //exact height of icon
 		}
-		.ui-button-text {
-			padding-left:26px; //to accomodate wider export icon
-		} 
  	}
 }
 

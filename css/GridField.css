@@ -8,14 +8,15 @@
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
-.cms .ss-gridfield > div { margin-bottom: 36px; }
+/*Mixin used to generate slightly smaller text and forms
+Used in side panels and action tabs
+*/
 .cms .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 0; }
 .cms .ss-gridfield > div.addNewGridFieldButton .action { margin-bottom: 12px; }
 .cms .ss-gridfield[data-selectable] tr.ui-selected, .cms .ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
 .cms .ss-gridfield[data-selectable] td { cursor: pointer; }
 .cms .ss-gridfield span button#action_gridfield_relationfind { display: none; }
 .cms .ss-gridfield p button#action_export span.btn-icon-download-csv { height: 17px; }
-.cms .ss-gridfield p button#action_export .ui-button-text { padding-left: 26px; }
 .cms .ss-gridfield .right { float: right; }
 .cms .ss-gridfield .right > * { float: right; margin-left: 8px; }
 .cms .ss-gridfield .right .pagination-records-number { font-size: 1.0em; padding: 6px 3px 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); font-weight: normal; }

@@ -108,7 +108,79 @@
 	transition: $properties;
 }
 
+@mixin duration($time, $webkit:true){
+  @if($webkit){
+    -webkit-transition-duration: $time;
+  } 
+  -moz-transition-duration: $time;
+  -o-transition-duration: $time;
+  transition-duration: $time; 
+}
 
 
+/*Mixin used to generate slightly smaller text and forms
+Used in side panels and action tabs
+*/
+@mixin tightSpacing{
+	h3,h4,h5 {
+		font-weight: bold;
+		line-height: $grid-y * 2;
+	}
+	h3 {
+		font-size: $font-base-size + 1;
+	}
 
+	h4 {
+		font-size: $font-base-size;
+		margin:5px 0;
+	}
+	
+	.ui-widget-content {
+		background: none;
+	}
+	
+	.field {
+		/* 
+		 * Fields are more compressed in the sidebar compared to the
+		 * main content editing window so the below alters the internal
+		 * spacing of the fields so we can move that spacing to between
+		 * the form fields rather than padding
+		 */
+		label {
+			float: none;
+			width: auto;
+			font-size: 11px;
+			padding: 0 $grid-x 4px 0;
+		}
+		
+		.middleColumn {
+			margin: 0;
+		}
+		
+		input.text,
+		select,
+		textarea {
+			padding: 5px;
+			font-size: 11px;
+		}
+		
+		&.checkbox {
+			padding: 0 8px 0;
+			
+			input { 
+				margin: 2px 0; 
+			}
+		}
+	}
 
+	.fieldgroup {
+		.fieldgroup-field {
+			padding: 0;
+			
+			.field {
+				margin: 0;
+				padding: 0;
+			}
+		}
+	}
+}

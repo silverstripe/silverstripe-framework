@@ -1,0 +1,428 @@
+/********************************************
+
+Defines the styles for the action tabset, found on the site tree, 
+and as a single (more options) tab in page view. This is a special 
+use case of tabs, so the default tab styling should not apply 
+
+
+**********************************************/
+
+
+$border: 1px solid darken(#D9D9D9, 15%);
+
+.cms {	
+	.ss-ui-action-tabset{
+		position:relative;
+		float:left;
+
+		/*Style the "tabs" navigation for multiple tabs*/
+		ul.ui-tabs-nav{				
+			@include clearfix;			
+			padding:0;			
+			overflow:visible;
+			float:left;	
+			height: 28px;
+			border:$border;
+			@include border-radius(3px);
+			&:focus,&:active{
+				outline:none;
+				box-shadow:none;
+				-webkit-box-shadow: none;
+			}			
+			li{
+				&:focus, &:active{
+					outline:none;
+					box-shadow:none;
+					-webkit-box-shadow: none;
+				}
+				width: 110px;
+				overflow:visible;
+				background:#eaeaea;
+				@include background-image(linear-gradient(top, #f8f8f8, #D9D9D9));					
+				border-radius: none;
+				@include border-radius(0);				
+				border: none;
+				border-right:1px solid #eee;
+				border-left: $border;
+				margin:0;
+				&.ui-state-active{
+					background:#f8f8f8;
+					border-bottom:none !important; //jquery-ui style has important on it
+					@include border-bottom-left-radius(0px);
+					@include border-bottom-right-radius(0px);					
+					a {
+						@include border-bottom-left-radius(0px);
+						@include border-bottom-right-radius(0px);	
+						&:focus, span:focus,&:active, span:active{
+							outline:none;
+							box-shadow:none;
+							-webkit-box-shadow: none;
+						}
+					}
+				}
+				&.first{
+					@include border-top-left-radius(3px);
+					@include border-bottom-left-radius(3px);
+					border-left:none;
+				}
+				&.last{					
+					@include border-top-right-radius(3px);
+					@include border-bottom-right-radius(3px);
+					border-right:none;
+				}
+				a.tab-nav-link{
+					color:$color-text;
+					font-weight:bold;				
+					line-height:16px;
+					display:inline-block;
+					padding: 5px 10px;
+					.ui-no-icon {
+						display:inline-block;
+						float:left;
+						padding: 0 2px;
+						width:16px;
+						height:16px;
+					}
+					.title{						
+						display:inline-block;
+						line-height: 18px;
+					}
+					&.view-mode-batchactions-wrapper .title {
+						margin-left: 22px;
+					}
+				}
+			}
+		}
+		&.tabset-open {	
+			ul.ui-tabs-nav,		 
+			ul.ui-tabs-nav li.first {
+				@include border-bottom-left-radius(0);
+			}
+		}
+		&.tabset-open-last {			 
+			ul.ui-tabs-nav li.last {
+				@include border-bottom-right-radius(0);
+			}
+		}
+		
+		.batch-check, .ui-icon { /* position a checkbox & icon within a tab */
+			display: inline-block;
+			float:left;
+			margin-left: -2px;
+			padding-right: 6px;
+		}
+		.batch-check {
+			margin: 6px 0px 5px 9px;
+			position: absolute;
+		}
+		&.single{ 
+			ul.ui-tabs-nav{		
+				background:none;
+				border:none;
+				display:inline;
+				padding:0;
+				float:left;
+				li{
+					display:inline;
+					background:none;
+					border:none;
+					padding:0;
+					border-bottom:none !important; //jquery-ui style has important on it
+					
+					&:hover, &:focus, &:active{
+						@include box-shadow(none);
+						outline:none;
+					}
+					a{
+						color: $color-text-blue-link;
+						@include text-shadow(#fff 0 1px 1px);
+						padding:0 0 0 10px;
+						line-height:24px;
+
+						&:hover, &:focus, &:active{
+							@include box-shadow(none);
+							outline:none;							
+						}
+						&:hover{
+							@include text-shadow(#fff 0 10px 10px);
+							color: darken($color-text-blue-link,8%);
+							&:after{
+								border-bottom: 4px solid darken($color-text-blue-link,8%);
+							}
+						}
+					}					
+				}
+			}
+		}	
+
+		/* Style the tab panels */
+		.ss-ui-action-tab.ui-tabs-panel{
+			display:block;
+			clear:both;
+			background:#f8f8f8 !important; //Because ie7 doesn't understanding what the 'C' in CSS stands for
+			position:absolute;
+			top:30px;
+			border:$border;
+			border-top:none;
+			width:202px;
+			z-index:1;
+			padding:10px;
+			padding-top:15px;
+			@include tightSpacing;
+			margin:0;
+			float:left;
+			.field label{
+				font-size:12px;
+			}
+			.cms-content-fields{
+				overflow:visible;
+			}
+			.chzn-container-single{
+				width:100% !important;
+				.chzn-single{
+					padding: 0 0 0 5px;
+					float:none;					
+				}
+			} 
+			.cms-content-actions, .cms-preview-controls{
+				padding:0;
+				height:auto;
+				border:none;
+				@include box-shadow(none);
+
+			}
+			.field{
+				border-bottom:none;
+				@include box-shadow(none);				
+			}
+			.cms-edit-form{
+				width:100%;
+			}
+			.CompositeField{
+				margin:0;
+				padding:0;
+				float:none;				
+			}
+			.parent-mode{
+				padding-top:0;
+			}
+		
+			.treedropdown, .SelectionGroup li.selected div.field{
+				margin:10px 0 0 0;	
+				//@include box-shadow(inset 0 1px 0 #fff, 0 1px 1px rgba(0,0,0,0.1));							
+				.treedropdownfield-title{
+					position:absolute;
+					z-index:2;					
+					padding:5px;
+				}				
+				.treedropdownfield-panel{
+					margin-top:11px;
+				}
+				.treedropdownfield-toggle-panel-link{
+					background:none;
+					border-left:none;
+					padding:5px 3px;
+					.ui-icon{
+						float:right;
+						opacity:0.7;
+					}
+				}
+			}
+			#PageType ul{
+				padding:0;
+				li{
+					padding:4px 5px;					
+				}
+			} 
+			.cms-add-form ul.SelectionGroup{
+				padding-left:0;
+				padding-right:0;
+				overflow:visible;
+				border-bottom:none;
+			}
+			label.extra-details{
+				overflow:hidden;
+				margin-top:10px;
+				display: block;
+				color: lighten($color-text, 35%);
+				font-style:italic;
+				font-weight:normal;
+				font-size:1em;
+				float:left;				
+				@include text-shadow(none);
+				&.fill{
+					&:before{
+						color:#fff;
+						content: '?';
+						font-size:12px;
+						@include box-sizing('border-box');
+						padding-left:3px;
+						padding-right:3px;
+						display:block;
+						float:left;
+						@include text-shadow(none);
+						@include border-radius(50px);
+						background-color:lighten($color-text, 45%);
+						width:15px;
+						height:15px;
+						margin-right:5px;
+						margin-bottom:5px;
+					}
+				}
+			}
+			&.first {
+				left: 0;
+				width: 203px;
+			}
+			.ui-icon {
+				padding-right: 0;
+			}
+			.tab-nav-link, .ss-ui-button {
+				font-size: 12px;
+			}
+		}
+		.last .ss-ui-action-tab{
+			right:-1px;
+			left:auto;
+		}
+	}		
+
+	/**********************
+	Styles for pop-up tabs in bottom panel
+	************************/
+	.south .Actions{
+		overflow:visible; //put this somewhere else/more generic
+
+		.rise-up.ss-ui-action-tabset{
+			ul.ui-tabs-nav {				
+				margin: 0;
+				li {
+					a.ui-tabs-anchor {
+						font-weight: normal;
+						font-size: 13px;
+						line-height: 24px;
+						padding-right: 25px;
+						&:after {
+							background: sprite($sprites32, arrow_down_lighter) no-repeat;
+							width: 16px;
+							height: 16px;
+							content: "";
+							display: inline-block;
+							margin-left: 6px;
+							border-bottom: 0;
+							
+						}
+						&:hover:after {
+							border-bottom: 0;
+							background: sprite($sprites32, arrow_down_darker) no-repeat;
+						}
+									
+					}
+					&.ui-state-active a.ui-tabs-anchor {
+						&:after {
+							background: sprite($sprites32, arrow_up_lighter) no-repeat;
+						}
+						&:hover:after {
+							background: sprite($sprites32, arrow_up_darker) no-repeat;
+						}
+					}
+				}
+			}
+			.ui-tabs-panel{
+				@include clearfix;
+				@include border-top-radius(3px);
+				@include border-bottom-radius(0);
+				@include tightSpacing;
+				background-color: $tab-panel-texture-color;
+				border:1px solid #ccc;
+				border-bottom:1px solid $tab-panel-texture-color;
+				clear:both;
+				display:block;
+				position:absolute;
+				top:-204px;
+				width:190px;	/* same width as buttons within panel */
+				z-index:1;
+				padding:10px;				
+				margin:0;
+				margin-top:1px;
+				.chzn-container-single .chzn-single{
+					padding: 0 0 0 5px;
+					float:none;
+				}
+				@extend .button-no-style;
+				button.ss-ui-button{
+					&:hover, &:focus, &:active{
+						/*text-decoration:underline;*/
+						background-color: darken($tab-panel-texture-color,4%);
+						@include box-shadow(none);
+						outline:none;
+					}
+					
+				}
+				.cms-sitetree-information {
+					border-bottom: 1px solid $color-light-separator;
+					margin-bottom: 8px;
+					p.meta-info {
+						color: #999;
+						font-size: 11px;
+						line-height: 16px;
+						margin-bottom: 8px;
+					}	
+				}
+			}
+			.last .ui-tabs-panel.ss-ui-action-tab{
+				right:-1px;
+				left:auto;
+			}			
+		}
+	}
+	
+
+	/* Styles for the cms-actions in tree view, to use more limited space.
+	Title hidden in tree view, until hover/active state added. Active is applied 
+	to the first tab within the template, so there should always be one title 
+	visible. Added and removed with js in TabSet.js  */
+	.cms-tree-view-sidebar{
+		min-width: 176px; 					/* for when the scrollbar is present & find dropdown open */
+		.ss-ui-action-tabset.ss-tabset.multi{
+			ul.ui-tabs-nav{
+				>li{	
+					width: auto;				
+					a.tab-nav-link{
+						width:30px;
+						overflow:hidden;
+						@include box-sizing(border-box);
+						padding-right:0;
+						@include duration(0.5s);
+						&.active{
+							width:110px;	
+							@include duration(0.5s);
+						}
+					}				
+				}				
+			}
+			&.tabset-open, &.tabset-open-last {
+				ul.ui-tabs-nav, 
+				ul.ui-tabs-nav li.first, 
+				ul.ui-tabs-nav li.last {
+					@include border-bottom-right-radius(0);
+					@include border-bottom-left-radius(0);
+				}
+			}
+		}
+		.ui-tabs .ui-tabs-panel.ss-ui-action-tab {
+			width:162px;
+			padding:10px 6px;
+			.field {
+				max-width:160px;				
+			}
+			.ui-icon {
+				padding-right: 0;
+			}		
+		}
+		.last .ui-tabs-panel.ss-ui-action-tab {
+			right:0;
+			left:auto;
+		}
+	}	
+}
