@@ -47,13 +47,29 @@
 		/**
 		 * Create a new instance based on a textarea field.
 		 *
+		 * Please proxy the events from your editor implementation into JS events
+		 * on the textarea field. For events that do not map directly, use the 
+		 * following naming scheme: editor<event>.
+		 *
 		 * @param String
 		 * @param Object Implementation specific configuration
 		 * @param Function
 		 */
-		create: function(domID, config, onSuccess) {
+		create: function(domID, config) {
 			var ed = new tinymce.Editor(domID, config);
-			ed.onInit.add(onSuccess);
+
+			// Patch TinyMCE events into underlying textarea field.
+			ed.onInit.add(function(ed) {
+				jQuery(ed.getElement()).trigger('editorinit');
+			});
+			ed.onChange.add(function(ed, l) {
+				// Update underlying textarea on every change, so external handlers
+				// such as changetracker have a chance to trigger properly.
+				ed.save();
+				jQuery(ed.getElement()).trigger('change');
+			});
+			// Add more events here as needed.
+
 			ed.render();
 		},
 		/**
@@ -245,15 +261,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return this.closest('form');
 			},
 
-			fromContainingForm: {
-				onbeforesubmitform: function(){
-					if(this.isChanged()) {
-						this.getEditor().save();
-						this.trigger('change'); // TinyMCE assigns value attr directly, which doesn't trigger change event
-					}
-				}
-			},
-
 			fromWindow: {
 				onload: function(){
 					this.redraw();
@@ -269,18 +276,20 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Create editor instance and render it.
 				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
 				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
-				ed.create(this.attr('id'), config, function() {
-					// Delayed show because TinyMCE calls hide() via setTimeout on removing an element,
-					// which is called in quick succession with adding a new editor after ajax loading new markup
+				ed.create(this.attr('id'), config);
 
-					//storing the container object before setting timeout
-					var redrawObj = $(ed.getInstance().getContainer());
-					setTimeout(function() {
-						redrawObj.show();
-					}, 10);
-				});
-				
 				this._super();
+			},
+
+			oneditorinit: function() {
+				// Delayed show because TinyMCE calls hide() via setTimeout on removing an element,
+				// which is called in quick succession with adding a new editor after ajax loading new markup
+
+				//storing the container object before setting timeout
+				var redrawObj = $(this.getEditor().getInstance().getContainer());
+				setTimeout(function() {
+					redrawObj.show();
+				}, 10);
 			},
 
 			'from .cms-container': {
