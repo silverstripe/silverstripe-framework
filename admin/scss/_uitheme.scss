@@ -45,16 +45,16 @@
 		z-index: 100000;
 	}
 	
-	& a.ui-state-hover {
+	a.ui-state-hover {
 		border-color: transparent;
 		background: transparent;
 		
-		& .ui-icon-closethick {
+		.ui-icon-closethick {
 			background: sprite($sprites32, dialog-close-over) no-repeat;
 		}
 	}
 	
-	& .ui-icon-closethick {
+	.ui-icon-closethick {
 		background: sprite($sprites32, dialog-close) no-repeat;
 		width: 30px;
 		height:  30px;
