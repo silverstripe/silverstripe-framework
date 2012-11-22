@@ -9,7 +9,7 @@
 <body class="loading cms" lang="$Locale.RFC1766" data-frameworkpath="$ModulePath(framework)">
 	<% include CMSLoadingScreen %>
 	
-	<div class="cms-container center" data-layout-type="border">
+	<div class="cms-container center" data-layout-type="custom">
 		$Menu
 		$Content
 

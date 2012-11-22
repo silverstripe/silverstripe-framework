@@ -10,7 +10,7 @@
 $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
-$color-dark-bg: #003050 !default;
+$color-dark-bg: #142136 /*#003050*/ !default;
 $color-dark-separator: #19435c !default;
 $color-medium-separator: #808080 !default;
 $color-light-separator: rgba(201, 205, 206, 0.8) !default;
@@ -66,7 +66,7 @@ $color-cms-batchactions-menu-selected-background: #efe999 !default;
 /** -----------------------------------------------
  * Textures
  * ----------------------------------------------- */
-$tab-panel-texture-color: #f0f3f4 !default;
+$tab-panel-texture-color: /*#f0f3f4*/ #ECEFF1 !default;
 $tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left !default;
 
 /** -----------------------------------------------

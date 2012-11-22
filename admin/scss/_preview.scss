@@ -1,0 +1,243 @@
+/* -------------------------- */
+
+.cms-preview-controls {
+	z-index: 1;
+	background: $color-widget-bg;	
+	min-height: 28px;
+	padding: $grid-y*1.5 $grid-y*1.5;
+}
+
+
+.cms-navigator {
+	width: 100%;
+
+	/* Old selecter - to delete */
+	.chzn-results li {
+		display: list-item;
+	}
+	.field {
+		display: inline-block;
+		float: right;
+		margin-right: $grid-x/2;
+	}	
+}
+
+/* Preview selector */
+ul.preview-selector {
+	li {
+		position: relative;
+		float: right;
+		margin: 1px 0 0;
+		.preview-selected span {
+			display: none;
+		}
+		a {
+			padding: 6px 6px 6px 30px;
+			width: 0px;
+			text-indent: 299px;
+			overflow: hidden;
+			background: {
+				color: #FFF;
+				image: url(../images/preview_icons.png);
+				repeat: no-repeat;
+			}
+			&.icon-auto {
+				background-position: -3px -246px;
+			}
+			&.icon-desktop {
+				background-position: -3px -62px;
+			}
+			&.icon-tablet {
+				background-position: -3px -33px;
+			}
+			&.icon-mobile {
+				background-position: -3px -1px;
+			}
+			&.icon-split {
+				background-position: -3px -214px;
+			}
+			&.icon-edit {
+				background-position: -3px -184px;
+			}
+			&.icon-preview {
+				background-position: -3px -154px;
+			}
+			&.icon-window {
+				background-position: -3px -124px;
+			}
+			&:hover {
+				background-color: lighten($color-widget-bg,2%);
+				text-decoration: none;
+			}
+		}
+		li {
+			border: none;
+			margin: 0;
+		
+			a {
+				display: block;
+				line-height: 18px;
+				height: auto;
+				border-bottom: 1px solid $color-light-separator;
+				width: 90px;
+				text-indent: 0;						
+				
+				&.icon-auto {
+					background-position: -3px -242px;
+				}
+				&.icon-desktop {
+					background-position: -3px -58px;
+				}
+				&.icon-tablet {
+					background-position: -3px -29px;
+				}
+				&.icon-mobile {
+					background-position: -3px 3px;
+				}
+				&.icon-split {
+					background-position: -3px -211px;
+				}
+				&.icon-edit {
+					background-position: -3px -182px;
+				}
+				&.icon-preview {
+					background-position: -3px -152px;
+				}
+				&.icon-window {
+					background-position: -3px -122px;
+				}
+				
+			}
+			&.last a {
+				border-bottom: none;
+			}
+			&.active a {
+				background-color: $color-widget-bg;
+			}
+		}
+		.preview-selected {
+			a {
+				float:left;
+				display: inline;
+				height: 16px;
+				width:1px;
+				background-color: transparent;
+				padding-right: 0;
+			}
+		}
+		
+		.preview-size-menu {
+			display: none;
+			@include border-radius(4px 4px 0 4px);
+			border: 1px solid $color-light-separator;
+			background-color: #FFF;
+			overflow: hidden;
+			position: absolute;
+			right: 0px;
+			top: -125px; 				/* height for 4 items */
+		}
+	}
+	li:hover, &.active {
+		.preview-size-menu {
+			display: block;
+		}
+	}
+	li:hover .preview-selected a, &.active .preview-selected a {
+		background-color: darken($color-widget-bg,6%);
+		@include border-radius(0 0 4px 4px);
+	}
+}
+
+/* Preview selector - Override for double label */
+ul.double-label li {
+	li a {
+		line-height: 12px;
+		padding: 5px 6px 5px 30px;
+		span {
+			color: lighten($color-text,10%);
+			font-size: 10px;
+			display: block;
+		}
+	}
+	.preview-size-menu {
+		top: -141px;				/* height for 4 items */
+	}
+}
+
+/* On Off Switch*/
+.cms-preview-states {
+	float: right;
+	margin-top: 2px;
+	margin-right: 7px;
+	position: relative; 
+	width: 100px;
+	label {
+    	display: block; 
+    	overflow: hidden; 
+    	cursor: pointer;
+    	border: 1px solid darken($color-menu-button, 15%);
+    	@include border-radius(3px);
+	}
+}		   
+
+.switch-options{
+	display:block;
+	width: 200%; 
+	margin-left: -100%;
+	@include transition(margin 0.3s ease-in 0s);
+    a {			    
+		text-align: right;
+    	width: 50%; 
+    	float: left; 
+    	display: block;
+    	padding: 0 6px 0 0; 
+    	height: 24px; 
+	    line-height: 24px;
+	    color: #FFF;
+	    background-color: $color-menu-button; 
+	    @include background-image(linear-gradient(
+			darken($color-menu-button, 10%),
+			$color-menu-button 
+		));
+		@include box-shadow(darken($color-menu-button, 15%) 0 0 2px inset);
+    	@include box-sizing(border-box);   
+		&:hover {
+			text-decoration: none;
+		}
+		&.first, &:first-child {
+	    	text-align: left;
+	    	padding-left: 8px;
+	    	padding-right: 0;
+    	}
+  
+	}
+}
+.switch {
+	display:block;
+    width: 8px; 
+    margin: 0px;
+    position: absolute; 
+    top: 0; 
+    bottom: 0; 
+    right: 90px;
+    border: 1px solid lighten($color-medium-separator,10%); 
+    @include box-shadow(#FFF 0 0 2px inset);
+    @include border-radius(3px);
+    background: $color-widget-bg;
+    @include background-image(linear-gradient(
+		rgba(0,0,0,0.2) 0%,
+		rgba(0,0,0,0) 100%
+	));
+	@include transition(all 0.3s ease-in 0s); 
+}
+input.hide{
+	display:none;
+}
+input:checked + label {
+	.switch-options {
+    	margin-left: 0;
+    }
+    .switch {
+    	right: 0px;
+    }
+}
