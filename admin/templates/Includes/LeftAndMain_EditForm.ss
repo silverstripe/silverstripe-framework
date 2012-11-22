@@ -3,12 +3,10 @@
 <% end_if %>
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
-			<% include BackLink_Button %>
-			<h2 id="page-title-heading">
+			<% include BackLink_Button %>			
 			<% with Controller %>
 				<% include CMSBreadcrumbs %>
-			<% end_with %>
-			</h2>
+			<% end_with %>			
 		</div>
 		<% if Fields.hasTabset %>
 			<% with Fields.fieldByName('Root') %>
