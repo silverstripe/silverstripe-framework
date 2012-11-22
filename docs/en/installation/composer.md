@@ -183,11 +183,14 @@ This is not the only way to set things up in Composer. For more information on t
 
 ## Setting up an environment for contributing to SilverStripe
 
-So you want to contribute to SilverStripe? Fantastic! There are a couple modules that will help you, that aren't installed by default:
+So you want to contribute to SilverStripe? Fantastic! You have to initialize your project from the latest development branch, 
+rather than a release tag. The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
+
+	composer create-project silverstripe/installer --dev ./my/website/folder 3.0.x-dev
+
+The `--dev` flag will add a couple modules which are useful for SilverStripe development:
 
  * The `compass` module will regenerate CSS if you update the SCSS files
  * The `docsviewer` module will let you preview changes to the project documentation
 
-By default, these modules aren't installed, but you can install them with a special version of composer's update command:
-
-	composer update --dev
+Note that you can also include those into an existing project by running `composer update --dev`.
