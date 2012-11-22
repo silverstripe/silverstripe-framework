@@ -4,6 +4,7 @@ jQuery.noConflict();
  * File: LeftAndMain.js
  */
 (function($) {
+
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
@@ -147,16 +148,22 @@ jQuery.noConflict();
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
-				// Move from inner to outer layouts. Some of the elements might not exist.
-				// Not all edit forms are layouted, so qualify by their data value.
+				// Use the three column compressor layout, which squishes preview, then menu, then content
+				this.data('jlayout', jLayout.threeColumnCompressor({
+					menu: this.children('.cms-menu'),
+					content: this.children('.cms-content'),
+					preview: this.children('.cms-preview')}
+				));
+				
+				// Do the layout - this also lays out children. We move from outside to inside, resizing to fit the parent
+				this.layout();
 
-				this.layout({resize: false});
-				this.find('.cms-panel-layout').redraw(); 
-				this.find('.cms-content-fields[data-layout-type]').redraw(); 
-				this.find('.cms-edit-form[data-layout-type]').redraw(); 
+				// Redraw on all the children that need it
+				this.find('.cms-panel-layout').redraw();
+				this.find('.cms-content-fields[data-layout-type]').redraw();
+				this.find('.cms-edit-form[data-layout-type]').redraw();
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
-				this.layout({resize: false});
 			},
 
 			/**
@@ -800,8 +807,6 @@ jQuery.noConflict();
 		$(".cms-panel-layout").entwine({
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-
-				this.layout({resize: false});
 			}
 		});
 	

@@ -101,5 +101,9 @@
 	*:first-child &{ zoom:1;}
 }
 
-
-
+@mixin transition($properties: margin 0.3s ease-in 0s){
+   	-moz-transition: $properties; 
+	-webkit-transition: $properties;
+	-o-transition: $properties; 
+	transition: $properties;
+}
