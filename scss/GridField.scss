@@ -41,7 +41,7 @@ $gf_grid_x:	16px;
 		& > div {
 			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
-				margin-bottom:$gf_grid_y;
+				margin: 0 0 $gf_grid_y 0;
 				@include clearfix;
 			}
 		}
@@ -244,6 +244,9 @@ $gf_grid_x:	16px;
 					&.gridfield-button-delete {
 						width: 20px;
 						margin: 0;
+						.ui-icon {
+							left: 0;
+						}
 						span.btn-icon-decline {
 							left: 2px;
 						}
@@ -251,11 +254,13 @@ $gf_grid_x:	16px;
 				}
 				a.view-link, a.edit-link {
 					display:inline-block;
+					float: left;
 					width:20px;
 					height:20px; //min height to fit the edit icon
-					text-indent:9999em;
+					text-indent:-9999em;
 					overflow: hidden;
 					vertical-align: middle;
+					margin-right: 8px;
 				}
 				a.view-link {
 					background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px;
@@ -340,7 +345,9 @@ $gf_grid_x:	16px;
 						min-width: $gf_grid_x*12.5;
 						padding-right:0;
 						&.filter-buttons{
-							min-width:0;
+							min-width:50px;
+							box-shadow: none;
+							border: none;
 							div{
 								width:auto;
 								display:inline;
@@ -410,7 +417,7 @@ $gf_grid_x:	16px;
 						@include box-shadow-none; 
 					}
 					&.ss-gridfield-sort {
-						background: transparent url(../images/arrows.png) no-repeat right 6px;
+						background: transparent url(../images/arrows.png) no-repeat right 2px;
 						border:none;	
 						width:100%;
 						text-align: left;
@@ -419,13 +426,13 @@ $gf_grid_x:	16px;
 						color: #fff;
 						@include border-radius(0);
 						&:hover {
-							background-position: right -34px;
+							background-position: right -38px;
 						}
 						&.ss-gridfield-sorted-desc {
-							background-position: right -72px;
+							background-position: right -76px;
 						}
 						&.ss-gridfield-sorted-asc {
-							background-position: right -116px;
+							background-position: right -120px;
 						}
 					}
 

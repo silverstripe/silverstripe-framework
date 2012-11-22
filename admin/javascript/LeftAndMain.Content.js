@@ -89,7 +89,7 @@
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
 				// Fix dimensions to actual extents, in preparation for a relayout via jslayout.
-				this.height('28px');
+				this.height('auto');
 				this.height(this.innerHeight()-this.css('padding-top')-this.css('padding-bottom'));
 			}
 		});

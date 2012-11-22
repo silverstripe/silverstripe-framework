@@ -120,7 +120,7 @@ body.cms {
 
 	.cms-content-header-info {
 		float:left;
-		line-height: 40px; // same as tabs
+		line-height: 34px; 
 	}
 	
 	// Reset to default styles
@@ -133,9 +133,10 @@ body.cms {
 	}
 }
 
-#Form_EditForm.CMSMain {
-	padding: 0; /* fixs the double padding around the edit panel - move to framework? */
+.cms-edit-form.CMSMain {
+	padding: 0;
 }
+
 
 /** --------------------------------------------
  * Tabs
@@ -152,6 +153,9 @@ body.cms {
 	.ui-tabs-panel {
 		padding: $grid-x 0;
 		background: transparent; // default it's white
+		&.cms-edit-form {
+			padding: 0;
+		}
 	}
 
 	.ui-widget-header {
@@ -162,7 +166,7 @@ body.cms {
 	.ui-tabs-nav {
 		float: right;
 		margin: 0 0 -1px 0;
-		padding: 0 $grid-x*2 0 0;
+		padding: 0 $grid-x*1.5 0 0;
 		border-bottom: none;
 
 		~ .ui-tabs-panel {
@@ -203,8 +207,7 @@ body.cms {
 		.ui-state-active {
 			padding-bottom:1px;
 			border:1px solid $color-button-generic-border;
-			// needs a background image to overlay the divider line
-			background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+			background-color: $tab-panel-texture-color;
 
 			a {
 				color: $color-text;
@@ -238,26 +241,43 @@ body.cms {
 		}
 	}
 
-	.cms-edit-form {
-		padding: $grid-x $grid-y*2 0 $grid-y*2;
-
-		.ui-tabs-panel {
-			padding-left: 0;
-			padding-right: 0;
+	.cms-edit-form, .cms-content-fields { 
+		.cms-panel-padded { /* Has padded area inside it */
+			padding: 0;
+			margin: 0;	
 		}
-
+		.ui-tabs-panel, .ss-gridfield  {
+			margin: 12px;
+			padding: 0 0 12px;
+			.ss-gridfield { 						/* Files area & inside second level tabs */
+				padding: 0; 						/* should be zero ideally */
+				margin: 0 0 12px;
+			}
+		}
 		.ui-tabs-nav {
-			padding-right: 0;
+			margin: 10px 12px 0;
+			padding: 0 8px 0 0;						/* second set of tabs */
+		}
+		#tree_actions .ui-tabs-nav{
+			margin: 0;
 		}
 	}
 
-	.cms-panel-padded .ui-tabs-panel {
-		padding: 0;	// Removes double paddle around main pages page, does not effect other areas of the site
-
-		.ui-tabs-panel {
-			// Reset nested tabs to default styling
-			padding: $grid-x 0 0 0;
+	.cms-panel-padded {
+		h3 {
+			margin-left: 12px;						/* reports headers, probably too specific */
 		}
+		.ui-tabs-panel {
+			margin: 0;
+			padding: 12px 12px 12px;
+
+			.ui-tabs-panel {
+				padding: $grid-x 0 0 0;
+			}
+		}
+	}
+	.ui-tabs .ui-tabs-panel {						/* second level tabs */
+		padding-top: 8px;
 	}
 
 	&.ss-tabset-tabshidden .ui-tabs-panel {
@@ -278,7 +298,11 @@ body.cms {
  * Primary styles which sit on top of screen, with different tab colors.
  * TODO Only use one "primary" selector and fix HTMLEditorField TabSet addExtraClass()
  */
-.ui-tabs.cms-tabset-primary .ui-tabs-nav, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary {
+.ui-tabs.cms-tabset-primary .ui-tabs-nav, 
+.ui-tabs .ui-tabs-nav.cms-tabset-nav-primary, 
+.ui-tabs .cms-content-header-tabs .ui-tabs-nav {
+	border-left: 1px solid darken($color-tab, 15%);
+	
 	li {
 		margin-right: 0; // tabs are directly adjacent
 		margin-top: 0;
@@ -311,11 +335,10 @@ body.cms {
 		@include box-shadow(none);
 		background: darken($color-widget-bg, 2%);
 		background: $tab-panel-texture-color;
-		/*background: $tab-panel-texture-background;*/
 		border-top: none;
 		border: {
 			right-color: darken($color-tab, 15%); // same color as divider between header and body, needed for IE
-			left-color: darken($color-tab, 15%);
+			left-color: $tab-panel-texture-color;
 		}
 		z-index:2;
 		
@@ -416,6 +439,7 @@ body.cms {
 	border-top: 1px solid #FAFAFA;
 	@include box-shadow(1px 0 0 $tab-panel-texture-color, #CCC 0 -1px 1px);
 	height: 28px;
+	background-color: $tab-panel-texture-color;
 }
 
 
@@ -426,7 +450,7 @@ body.cms {
 .message {												// White
 	display: block;
 	clear: both;
-	margin: 0 0 $grid-y 0;
+	margin: $grid-y 0;
 	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
 	font-weight: normal;	
 	border: 1px #ccc solid;
@@ -455,6 +479,9 @@ body.cms {
 	p {
 		margin: 0;
 	}
+}
+p.message {
+	margin-bottom: $grid-y*1.5;
 }
 
 /** --------------------------------------------
@@ -595,7 +622,7 @@ body.cms {
 		}
 	}
 
-/* smaller treedropdown */
+	/* smaller treedropdown */
 	.chzn-container-single .chzn-single  {
 		height: 26px;
 		line-height: 26px;
@@ -636,6 +663,10 @@ body.cms {
 			float:right;
 			width:24px;
 		}	
+	}
+	
+	.ss-ui-button {
+		margin-bottom: $grid-y;
 	}
 }
 
@@ -882,7 +913,10 @@ select.preview-dropdown {
 }
 
 .cms-preview {
-	background: #FFF url(../images/preview.png) no-repeat center center;
+	background-color: $tab-panel-texture-color;
+	height: 100%;
+	width: 100%;
+
 	&.is-collapsed {
 		.cms-preview-toggle {
 			a {
@@ -890,10 +924,106 @@ select.preview-dropdown {
 			}
 		}
 	}	
-	iframe {
-		width: 100%;
+
+	.preview-note {
+		font-weight: 18px;
+		display: block;
+		position: absolute;
+		text-align: center;
+		width: 300px;
+		height: 82px;
+		left: 50%;
+		top: 50%;
+		margin-top: -50px; 				
+		margin-left: -150px;				/* half of width */
+		color: #CDD7DC;
+		font-weight: bold;
+		font-size: 22px;
+		text-shadow: 0 1px 0 #fff;
+		span {
+			background: sprite($sprites64, preview) no-repeat;
+			width: 50px;
+			height: 41px;
+			margin: 0 auto 20px;
+			display: block;
+		}
+	}
+
+	.preview-scroll {
 		height: 100%;
-	}   	
+		width: 100%;
+		overflow: auto;
+		position: relative;
+
+		.preview-device-outer {
+			height: 100%;
+			width: 100%;
+
+			.preview-device-inner {
+				height: 100%;
+				width: 100%;
+
+				iframe {
+					height: 100%;
+					width: 100%;
+					overflow-y: auto;
+				}
+			}
+		}
+	}
+	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape {
+		.preview-scroll {
+			background-color: $tab-panel-texture-color; 		/* hide website preview icon */
+			.preview-device-outer {
+				padding: 16px;
+				/*background-color: darken($tab-panel-texture-color,3%);*/
+				background-color: #414141;
+			}
+		}
+	}
+	&.mobile {
+		.preview-scroll .preview-device-outer {
+			width: 335px; 										/* add 15px for desktop scrollbar */
+			height: 568px;
+			margin: 30px auto 30px;
+
+			.preview-device-inner {
+				width: 335px;
+			}
+		}
+	}
+	&.mobileLandscape .preview-scroll .preview-device-outer {
+		width: 583px;											/* add 15px for desktop scrollbar */
+		height: 320px;
+		margin: 12% auto;
+
+		.preview-device-inner {
+			width: 583px;
+		}
+	}
+	&.tablet .preview-scroll .preview-device-outer { 
+		width: 783px;											/* add 15px for desktop scrollbar */
+		height: 1024px;
+		padding-top: 0;
+		margin: 0 auto;
+
+		.preview-device-inner {
+			width: 783px;
+		}
+	}
+	&.tabletLandscape .preview-scroll .preview-device-outer {
+		width: 1039px;											/* add 15px for desktop scrollbar */
+		height: 768px;
+		padding-top: 0;
+		margin: 0 auto;
+
+		.preview-device-inner {
+			width: 1039px;
+		}
+	}
+	&.desktop .preview-scroll .preview-device-outer {
+		width: 1024px;
+	}
 }
 
 
@@ -1077,6 +1207,8 @@ form.member-profile-form {
 		@include box-shadow(0 0 1px rgba(107, 120, 123, 0.5));
 		&.south {
 			border-top: 1px solid $color-light-separator;
+			position: absolute;
+			bottom: 0;
 		}
 		a { 
 			display: block;
@@ -1104,23 +1236,13 @@ form.member-profile-form {
 	}	
 	&.collapsed {
 		cursor: pointer;
-		%display-none{
+		.cms-panel-header *, 
+		.cms-panel-content,
+		.cms-panel-toggle a.toggle-collapse{
 			display:none;
 		}
-		.cms-panel-header * {
-			@extend %display-none;
-		}
-		
-		.cms-panel-content {
-			@extend %display-none;
-		}
-
 		.cms-panel-toggle a.toggle-expand {
 			display: block;
-		}
-
-		.cms-panel-toggle a.toggle-collapse {
-			@extend %display-none;
 		}
 
 	}
@@ -1192,13 +1314,6 @@ form.member-profile-form {
 		li a span {
 		   display: block !important;
 		}
-	}
-}
-
-.cms {
-	.cms-panel-padded {
-		padding: $grid-y $grid-x*2 $grid-y*2;
-		margin:0;
 	}
 }
 
@@ -1610,12 +1725,12 @@ form.import-form {
  * Page Edit Controller
  * -------------------------------------------- */
 
-.cms-container {
+/*.cms-container {
 	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 		// Fix pixel gap between nav tree and main page header
 	 	margin-left: -1px; // Removed to close gap far right of right tabs?
 	}
-}
+}*/
 
 /** --------------------------------------------
  * Page Settings Controller
@@ -1625,7 +1740,6 @@ form.import-form {
 	.tab#Root_Settings {
 		.optionset li {
 			white-space:nowrap;
-			padding-top:$grid-y;
 			label {
 				padding-left:2px;
 			}

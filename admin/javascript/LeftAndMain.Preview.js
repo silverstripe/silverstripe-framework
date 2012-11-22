@@ -213,6 +213,7 @@
 		});	
 		
 
+		
 		$('#cms-preview-mode-dropdown').entwine({
 			onchange: function(e) {
 				e.preventDefault();
@@ -225,28 +226,72 @@
 					content.addClass('is-collapsed');
 				}
 				content.parent().redraw();
+				this.addIcon(); //run generic addIcon, on select.preview-dropdown
 			}
 		});
 
 
-		// Preview selectors (screen size, screen mode)
-		$('.preview-selector .preview-selected').entwine({
-			onclick: function(e) {
-				e.preventDefault();
-				this.parents('.preview-selector').toggleClass('active');
+		/*
+		*	Add a class to the chzn select trigger based on the currently 
+		*	selected option. Update as this changes
+		*/
+		$('.preview-selector select.preview-dropdown').entwine({			
+			addIcon: function(){			
+				var selected = this.find(':selected');				
+				var iconClass = selected.attr('data-icon');	
+								
+				var target = this.parent().find('.chzn-container a.chzn-single');
+				var oldIcon = target.attr('data-icon');
+				if(oldIcon != undefined){
+					target.removeClass(oldIcon);
+				}
+				target.addClass(iconClass);
+				target.attr('data-icon', iconClass);				
 			}
 		});
-		$(".preview-selector .preview-size-menu li").entwine({
-			onclick: function(e) {
-				var text = $(this).html();
-				this.parents('.preview-selector').removeClass('active').find('.preview-selected').html(text);
-				this.siblings().removeClass('active');
-				this.addClass('active');
+
+		/*
+		* When chzn initiated run select redraw
+		* Apply description text if applicable
+		*/
+		$('.preview-selector a.chzn-single').entwine({
+			onadd: function() {						
+				this.closest('.preview-selector').find('select').addIcon();				
+			},
+			onclick: function(){				
+				var parent = this.closest('.preview-selector');
+				if(parent.hasClass('open')){
+					parent.removeClass('open');
+				}else{
+					parent.addClass('open');
+				}				
 			}
-		}); 
+		});
 
-
-		
+		/* 
+		* Means of having extra styled data in chzn 'preview-selector' selects 
+		* When chzn ul is ready, grab data-description from original select. 
+		* If it exists, append to option and add description class to list item
+		*/
+		$('.preview-selector .chzn-drop ul').entwine({
+			onmatch: function() {
+				this.redraw();
+			},
+			redraw: function(){
+				var that = this;
+				var options = this.closest('.preview-selector').find('select option');		
+							
+				$.each(options, function(index, option){
+					var target = $(that).find("li:eq("+index+")");
+					var description = $(option).attr('data-description');								
+					if(description != undefined && !$(target).hasClass('description')){					
+						$(target).append('<span>' + description + '</span>');
+						$(target).addClass('description'); 
+					}
+				});
+				
+			}
+		});	
 
 		$('.cms-edit-form').entwine({
 			/**
@@ -263,6 +308,22 @@
 				});
 				return urls ? urls[0] : false;
 			}
+		});
+
+
+		// Recalculate the preview space to allow for horizontal scrollbar and the preview actions panel
+		var toolbarSize = 53; 							// Height of the preview actions panel
+		$('.preview-scroll').entwine({
+			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+				var previewHeight = (this.height() - toolbarSize);
+				this.height(previewHeight);
+			}, 
+			onmatch: function() {
+				this.redraw();
+			}
+			// Todo: Need to recalculate on resize of browser
+
 		});
 
 	});

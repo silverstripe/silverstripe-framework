@@ -7,7 +7,7 @@
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-gridfield > div { margin-bottom: 36px; }
-.cms .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 12px; }
+.cms .ss-gridfield > div.addNewGridFieldButton { margin: 0 0 12px 0; }
 .cms .ss-gridfield > div.addNewGridFieldButton:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
 *:first-child .cms .ss-gridfield > div.addNewGridFieldButton { zoom: 1; }
 .cms .ss-gridfield[data-selectable] tr.ui-selected, .cms .ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
@@ -50,8 +50,9 @@
 .cms table.ss-gridfield-table tbody td button.ui-state-hover { background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.ui-state-active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.gridfield-button-delete { width: 20px; margin: 0; }
+.cms table.ss-gridfield-table tbody td button.gridfield-button-delete .ui-icon { left: 0; }
 .cms table.ss-gridfield-table tbody td button.gridfield-button-delete span.btn-icon-decline { left: 2px; }
-.cms table.ss-gridfield-table tbody td a.view-link, .cms table.ss-gridfield-table tbody td a.edit-link { display: inline-block; width: 20px; height: 20px; text-indent: 9999em; overflow: hidden; vertical-align: middle; }
+.cms table.ss-gridfield-table tbody td a.view-link, .cms table.ss-gridfield-table tbody td a.edit-link { display: inline-block; float: left; width: 20px; height: 20px; text-indent: -9999em; overflow: hidden; vertical-align: middle; margin-right: 8px; }
 .cms table.ss-gridfield-table tbody td a.view-link { background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px; }
 .cms table.ss-gridfield-table tbody td a.edit-link { background: url(../admin/images/btn-icon/document--pencil.png) no-repeat 2px 0px; }
 .cms table.ss-gridfield-table tfoot { color: #323e46; }
@@ -69,7 +70,7 @@
 .cms table.ss-gridfield-table tr th { font-weight: bold; font-size: 12px; color: #FFF; padding: 5px; border-right: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th div.fieldgroup, .cms table.ss-gridfield-table tr th div.fieldgroup-field { width: 100%; position: relative; }
 .cms table.ss-gridfield-table tr th div.fieldgroup { min-width: 200px; padding-right: 0; }
-.cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 0; }
+.cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 50px; box-shadow: none; border: none; }
 .cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons div { width: auto; display: inline; }
 .cms table.ss-gridfield-table tr th.main { white-space: nowrap; border-top: 1px solid #a4b4bf; border-left: 1px solid #a4b4bf; color: #fff; background: #98aab6; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th.main span { text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); padding-left: 8px; padding-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; margin-right: 8px; }
@@ -83,10 +84,10 @@
 .cms table.ss-gridfield-table tr th button#action_gridfield_relationadd:hover { color: #444 !important; /* Not sure why IE think it needs this */ }
 .cms table.ss-gridfield-table tr th button:hover { color: #ccc !important; /* Not sure why IE think it needs this */ }
 .cms table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { color: #fff !important; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-.cms table.ss-gridfield-table tr th button.ss-gridfield-sort { background: transparent url(../images/arrows.png) no-repeat right 6px; border: none; width: 100%; text-align: left; padding: 2px 8px 2px 0; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); color: #fff; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; }
-.cms table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { background-position: right -34px; }
-.cms table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-desc { background-position: right -72px; }
-.cms table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-asc { background-position: right -116px; }
+.cms table.ss-gridfield-table tr th button.ss-gridfield-sort { background: transparent url(../images/arrows.png) no-repeat right 2px; border: none; width: 100%; text-align: left; padding: 2px 8px 2px 0; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); color: #fff; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; }
+.cms table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { background-position: right -38px; }
+.cms table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-desc { background-position: right -76px; }
+.cms table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted-asc { background-position: right -120px; }
 .cms table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter { background-color: #55a4d2; border: none; display: block; text-indent: -9999em; width: 30px; height: 25px; background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI4NzA5OSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-linear-gradient(#338dc1, #287099); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -moz-linear-gradient(#338dc1, #287099); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -o-linear-gradient(#338dc1, #287099); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, linear-gradient(#338dc1, #287099); width: 26px; border-top: 1px solid #4199cd; }
 .cms table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.hover-alike:active, .cms table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter:active, .cms table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.hover-alike, .cms table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter:hover { background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzU1YTRkMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #55a4d2), color-stop(100%, #338dc1)); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -webkit-linear-gradient(#55a4d2, #338dc1); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -moz-linear-gradient(#55a4d2, #338dc1); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, -o-linear-gradient(#55a4d2, #338dc1); background: url(../images/icons/filter-icons.png) no-repeat -15px 4px, linear-gradient(#55a4d2, #338dc1); }
 .cms table.ss-gridfield-table tr th button.ss-ui-button.ss-gridfield-button-filter.trigger { margin-left: 12px; border: none; background: url(../images/icons/filter-icons.png) no-repeat -17px 6px; padding-right: 46px; margin: 0 6px; }
