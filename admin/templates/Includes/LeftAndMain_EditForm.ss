@@ -43,7 +43,7 @@
 		</fieldset>
 	</div>
 
-	<div class="cms-content-actions south">
+	<div class="cms-content-actions cms-content-controls south">
 		<% if Actions %>
 		<div class="Actions">
 			<% loop Actions %>
