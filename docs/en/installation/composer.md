@@ -100,14 +100,15 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 		"description": "The SilverStripe Framework Installer",
 		"require": {
 			"php": ">=5.3.2",
-			"silverstripe/cms": "3.0.3",
-			"silverstripe/framework": "3.0.3",
+			"silverstripe/cms": "3.0.2.1",
+			"silverstripe/framework": "3.0.2.1",
 			"silverstripe-themes/simple": "*"
 		},
 		"require-dev": {
 			"silverstripe/compass": "*",
 			"silverstripe/docsviewer": "*"
 		},
+		"minimum-stability": "dev"
 	}
 	
 To add modules, you should add more entries into the `"require"` section.  For example, we might add the blog and forum modules.  Be careful with the commas at the end of the lines!
@@ -167,7 +168,7 @@ Open `composer.json`, and find the module's `require`.  Then put `as (core versi
 		...
 		"require": {
 			"php": ">=5.3.2",
-			"silverstripe/cms": "3.0.3",
+			"silverstripe/cms": "3.0.2.1",
 			"silverstripe/framework": "dev-myproj as 3.0.x-dev",
 			"silverstripe-themes/simple": "*"
 		},
