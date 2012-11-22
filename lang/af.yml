@@ -3,27 +3,27 @@ af:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nuwe Dossier'
   AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
+    CREATED: 'Eerste opgelaai'
+    DIM: Afmetings
+    FILENAME: 'Lêer naam'
     FOLDER: Dossier
-    LASTEDIT: 'Last changed'
+    LASTEDIT: 'Laaste verander'
     OWNER: Eienaar
-    SIZE: 'File size'
-    TITLE: Title
-    TYPE: 'File type'
+    SIZE: 'Lêer grootte'
+    TITLE: Titel
+    TYPE: 'Lêer tipe'
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Kies lêers'
     DRAGFILESHERE: 'Trek lêers hiernatoe'
     DROPAREA: 'Laat val area'
-    EDITALL: 'Edit all'
+    EDITALL: 'Verander alles'
     EDITANDORGANIZE: 'Verander en organiseer'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Lêers
     FROMCOMPUTER: 'Kies lêers van jou rekenaar af'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
+    TOTAL: Totaal
     TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OF
@@ -53,17 +53,17 @@ af:
     UNORDEREDDESCRIPTION: 'Ongeorganiseerde lys'
     UNORDEREDEXAMPLE1: 'Ongeorganiseerde item 1'
   BackLink_Button.ss:
-    Back: Back
+    Back: Terug
   BasicAuth:
     ENTERINFO: 'Tik asseblief ''n verbruikersnaam en wagwoord in'
     ERRORNOTADMIN: 'Daardie verbruiker is nie ''n administreerder nie'
     ERRORNOTREC: 'Daar die verbruikersnaam / wagwoord is nie herken nie'
   Boolean:
-    0: 'False'
-    ANY: Any
+    0: Onwaar
+    ANY: Enige
     1: Waar
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: 'Besig om te laai...'
     REQUIREJS: 'Die IBS vereis dat JavaScript aangeskakel is'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
@@ -71,7 +71,7 @@ af:
     ACCESSALLINTERFACESHELP: 'Oorheers meer spesifieke toegans verstellings'
     SAVE: Stoor
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'My profiel'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'U het die wagwoord vir'
     CHANGEPASSWORDTEXT2: 'Jy kan nou die volgende sekuriteitsbesonderhede gebruik om in te teken'
@@ -79,8 +79,8 @@ af:
     HELLO: 'Hi daar'
     PASSWORD: Wagwoord
   CheckboxField:
-    - 'False'
-    - 'True'
+    - Onwaar
+    - Waar
   ComplexTableField:
     CLOSEPOPUP: 'Maak wipop toe'
     SUCCESSADD2: '{name} bygesit'
@@ -88,8 +88,8 @@ af:
   ComplexTableField.ss:
     ADDITEM: 'Byvoeg %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
+    SORTASC: 'Sorteer in stygende orde'
+    SORTDESC: 'Sorteer in dalende orde'
   ComplexTableField_popup.ss:
     NEXT: Volgende
     PREVIOUS: Vorige
@@ -130,7 +130,7 @@ af:
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DatetimeField:
-    NOTSET: 'Not set'
+    NOTSET: 'Nie gestel nie'
   Director:
     INVALID_REQUEST: 'Ongeldige versoek'
   DropdownField:
@@ -144,14 +144,14 @@ af:
     ANY: Enige
   File:
     AviType: 'AVI video file'
-    Content: Content
-    CssType: 'CSS file'
+    Content: Inhoud
+    CssType: 'CSS lêer'
     DmgType: 'Apple disk image'
     DocType: 'Word document'
-    Filename: Filename
+    Filename: 'Lêer naam'
     GifType: 'GIF image - good for diagrams'
     GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
+    HtlType: 'HTML lêer'
     HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
@@ -161,16 +161,16 @@ af:
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Lêergrootte is nul grepe.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Name
+    NOVALIDUPLOAD: 'Lêer is nie geld vir oplaai nie'
+    Name: Naam
     PLURALNAME: Lêers
     PdfType: 'Adobe Acrobat PDF file'
     PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Lêer
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGESHORT: 'Lêer is groter as {size}'
     TiffType: 'Tagged image format'
-    Title: Title
+    Title: Titel
     WavType: 'WAV audo file'
     XlsType: 'Excel spreadsheet'
     ZipType: 'ZIP compressed file'
@@ -199,7 +199,7 @@ af:
     TEXT3: vir
   Form:
     FIELDISREQUIRED: '%s word benodig.'
-    SubmitBtnLabel: Go
+    SubmitBtnLabel: Gaan
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The waarde wat ingesleutel is is nie uniek nie'
     VALIDATIONPASSWORDSDONTMATCH: 'Wagwoorde pas nie'
@@ -212,7 +212,7 @@ af:
   GridAction:
     DELETE_DESCRIPTION: Verwyder
     Delete: Verwyder
-    UnlinkRelation: Unlink
+    UnlinkRelation: Ontkoppel
   GridField:
     Add: 'Voeg {name}'
     Filter: Filter
@@ -248,10 +248,10 @@ af:
     GroupReminder: 'As jy ''n ouer groep kies sal hierdie groep al daardie rolle aanneem'
     Locked: 'Gesluit?'
     NoRoles: 'Geen rolle gevind nie'
-    PLURALNAME: Groups
+    PLURALNAME: Groepe
     Parent: 'Ouer Groep'
     RolesAddEditLink: 'Bestuur rolle'
-    SINGULARNAME: Group
+    SINGULARNAME: Groep
     Sort: 'Sorteerings orde'
     has_many_Permissions: Toestemmings
     many_many_Members: Lidde
@@ -309,13 +309,13 @@ af:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Lêers
+    SINGULARNAME: Lêer
   ImageField:
     IMAGE: 'Geen prentjie gelaai nie'
   Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    PLURALNAME: Lêers
+    SINGULARNAME: Lêer
   Image_iframe.ss:
     TITLE: 'Iframe wat fotos laai'
   LeftAndMain:
@@ -334,23 +334,23 @@ af:
     VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
-    LOGOUT: 'Log out'
+    LOGOUT: 'Teken af'
   LoginAttempt:
     Email: 'Epos Adres'
     IP: 'IP Adres'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Inteken Pogings'
+    SINGULARNAME: 'Inteken Poging'
     Status: Posisie
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Voeg groep by'
     BUTTONCHANGEPASSWORD: 'Verander Wagwoord'
     BUTTONLOGIN: 'Teken in'
     BUTTONLOGINOTHER: 'Teken in as iemand anders'
     BUTTONLOSTPASSWORD: 'Ek het my wagwoord verloor'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Jy het nie toestemming om dit te doen nie'
     CONFIRMNEWPASSWORD: 'Bevestig Nuwe Wagwoord'
     CONFIRMPASSWORD: 'Bevestig wagwoord'
-    DATEFORMAT: 'Date format'
+    DATEFORMAT: 'Datum formaat'
     DefaultAdminFirstname: 'Verstek Admin'
     DefaultDateTime: Gewone
     EMAIL: Epos
@@ -363,7 +363,7 @@ af:
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Koppelvlak Taal'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    LOGGEDINAS: 'Jy is ingeteken as {name}'
     NEWPASSWORD: 'Nuwe wagwoord'
     PASSWORD: Wagwoord
     PLURALNAME: Lidde
@@ -375,7 +375,7 @@ af:
     TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: '''n Ander lid bestaan al klaar met dieselfde %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'U ou wagwoord'
     belongs_many_many_Groups: Groepe
     db_LastVisited: 'Laaste datum besoek'
@@ -385,12 +385,12 @@ af:
     db_Password: Wagwoord
     db_PasswordExpiry: 'Wagwoord Vervaldatum'
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Password'
+    TITLE: 'Epos &amp; Wagwoord'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
     'APPLY FILTER': 'Wend filter aan'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
+    Custom: 'Maak pas'
+    DATEFORMATBAD: 'Die datum formaat is ongeldig'
     DAYNOLEADING: 'Day of month without leading zero'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
     FOURDIGITYEAR: 'Four-digit year'
@@ -398,15 +398,15 @@ af:
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
     MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
+    Preview: Voorskou
     SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
+    TOGGLEHELP: 'Skakel formateringshelp aan'
+    TWODIGITDAY: 'Twee syfer dag van die maand'
     TWODIGITHOUR: 'Two digits of hour (00 through 23)'
     TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    TWODIGITYEAR: 'Twee syfer jaar'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -415,24 +415,24 @@ af:
     ResultNone: 'Geen veranderinge'
     ResultUpdated: 'Updated {count} members'
   MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
+    PLURALNAME: 'Lid Wagwoorde'
+    SINGULARNAME: 'Lid Wagwoord'
   MemberTableField: null
   ModelAdmin:
     DELETE: Verwyder
     DELETEDRECORDS: 'Verwyder {count} rekords'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Import from CSV'
+    EMPTYBEFOREIMPORT: 'Maak databasis skoon voordat data ingevoer word'
+    IMPORT: 'Voer in van CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
+    NOIMPORT: 'Niks om in te voer nie'
+    RESET: Herstel
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECFIELDS: 'Databasis kolomme'
     IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECRELATIONS: Verhoudings
     IMPORTSPECTITLE: 'Specification for %s'
   ModelAdmin_Tools.ss:
     FILTER: Filter
@@ -448,15 +448,15 @@ af:
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page: Page
-    View: View
+    Page: Bladsy
+    View: Wys
   Permission:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'IBS Toegang'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Impliseer en oorskryf alle ander toegekende permissies.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Toestemmings
+    SINGULARNAME: Toestemming
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -464,8 +464,8 @@ af:
     FromRoleOnGroup: 'oorgeërf van rol "%s" op groep "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
+    PLURALNAME: Rolle
+    SINGULARNAME: Rol
     Title: Tietel
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
@@ -481,16 +481,16 @@ af:
     NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'U het nie toegang tot hierdie bladsy nie. As u n'' ander rekening het wat toegang tot hierdie bladsy het, kan u weer <a href="%s">inteken</a>.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
-    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
-    LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
+    BUTTONSEND: 'Stuur vir my die wagwoord herstel skakel'
+    CHANGEPASSWORDBELOW: 'Jy kan jou wagwoord onder verander'
+    CHANGEPASSWORDHEADER: 'Verander jou wagwoord'
+    ENTERNEWPASSWORD: 'Sleutel asseblief ''n nuwe wagwoord in'
+    ERRORPASSWORDPERMISSION: 'Jy moet ingeteken wees om jou wagwoord te verander'
+    LOGGEDOUT: 'Jy is uit uitgeteken. As jy weer wil inteken, moet jy ''n gebruikersnaam en wagwoord onder in tik'
+    LOGIN: 'Teken in'
+    NOTEPAGESECURED: 'Daai bladsy is beveilig. Sleutel jou informasie onder in sodat ons jou op jou pad kan stuur'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
+    NOTERESETPASSWORD: 'Sleutel you epos adres in sodat ons vir jou ''n herstel skakel kan epos'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
@@ -503,7 +503,7 @@ af:
     IMPORTGROUPS: 'Voer groepe in'
     IMPORTUSERS: 'Belangrike gebruikers'
     MEMBERS: Lede
-    MENUTITLE: Security
+    MENUTITLE: Sekuriteit
     MemberListCaution: 'Waarskuwing: Deur lede te verwyder van hierdie lys sal hulle ook van alle groepe en die databasis verwyder'
     NEWGROUP: 'Nuwe groep'
     PERMISSIONS: Toegangsregte
@@ -528,22 +528,22 @@ af:
   TableListField:
     CSVEXPORT: 'Voer uit na CSV lêer'
     PRINT: Druk
-    Print: Print
+    Print: Druk
     SELECT: Kies
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sorteer in stygende orde'
     SORTDESC: 'Sorteer in dalende orde'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+    DISPLAYING: 'Wys huidiglik'
+    OF: van
+    TO: na
     VIEWFIRST: 'Wys eerste'
     VIEWLAST: 'Wys laaste'
     VIEWNEXT: 'Wys volgende'
     VIEWPREVIOUS: 'Wys vorige'
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
   ToggleField:
     LESS: minder
     MORE: meer
@@ -556,17 +556,17 @@ af:
     DOEDIT: Stoor
     DROPFILE: 'Laat val ''n lêer'
     DROPFILES: 'Skuif lêers hiernatoe'
-    Dimensions: Dimensions
-    EDIT: Edit
+    Dimensions: Afmetings
+    EDIT: Verander
     EDITINFO: 'Verander die lêer'
     FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
     FROMCOMPUTER: 'Van jou rekenaar'
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Van die lêers afdeling'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILES: 'Maksimum aantal van {count} lêer(s) oorskry '
+    MAXNUMBEROFFILESSHORT: 'Kan net {count} lêer oplaai'
+    REMOVE: Verwyder
     REMOVEERROR: 'Daar het ''n fout onstaan met die verwydering van die lêer'
     REMOVEINFO: 'Verwyder die lêer van hier af maar moet dit nie uit die lêer stoor verwyder nie'
     STARTALL: 'Begin alles'
