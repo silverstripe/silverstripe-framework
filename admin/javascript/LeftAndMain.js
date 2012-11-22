@@ -243,7 +243,8 @@ jQuery.noConflict();
 				$(button).addClass('loading');
 	
 				// validate if required
-				if(!form.validate()) {
+				var validationResult = form.validate();
+				if(typeof validationResult!=='undefined' && !validationResult) {
 					// TODO Automatically switch to the tab/position of the first error
 					statusMessage("Validation failed.", "bad");
 
