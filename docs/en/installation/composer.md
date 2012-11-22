@@ -12,21 +12,29 @@ For more information about Composer, visit [its website](http://getcomposer.org/
 
 ## Installing composer
 
-To install Composer, run the following command from your command-line.
+To install Composer, run the following commands from your command-line.
 
+	# Download composer.phar
 	curl -s https://getcomposer.org/installer | php
 
-Or [download composer.phar](http://getcomposer.org/composer.phar) manually.
+	# Move to your path
+	sudo mv composer.phar /usr/bin/composer
 
-You can then run Composer commands by calling `php composer.phar`.  For example:
+Or [download composer.phar](http://getcomposer.org/composer.phar) manually, and rename `composer.phar` as `composer`, and put it in your path.  On Windows, you should call the file `composer.bat`.
 
-	php composer.phar help
-	
+You can then run Composer commands by calling `composer`.  For example:
+
+	composer help
+
+<div class="hint" markdown="1">
+It is also possible to keep `composer.phar` out of your path, for example, to put it in your project root.  Every command would then start with `php composer.phar` instead of `composer`.  This is handy if need to keep your installation isolated from the rest of your computer's set-up, but we recommend putting composer into the path for most people.
+</div>	
+
 ## Create a new site
 
 Composer can create a new site for you, using the installer as a template.  To do so, run this:
 
-	php composer.phar create-project silverstripe/installer ./my/website/folder 3.0.2.1
+	composer create-project silverstripe/installer ./my/website/folder 3.0.2.1
 
 `./my/website/folder` should be the root directory where your site will live.  For example, on OS X, you might use a subdirectory of `~/Sites`.
 
@@ -37,17 +45,49 @@ browser, and the installation process will be completed.
 
 ## Adding modules to your project
 
-Composer isn't only used to download SilverStripe CMS: it can also be used to manage all the modules.  Installing a module can be done with the following command:
+Composer isn't only used to download SilverStripe CMS, it can also be used to manage all SilverStripe modules.  Installing a module can be done with the following command:
 
-	php composer.phar require silverstripe/forum:*
+	composer require silverstripe/forum:*
 
 This command has two parts.  First is `silverstripe/forum`. This is the name of the package.  You can find other packages with the following command:
 
-	php composer.phar search silverstripe
+	composer search silverstripe
 
 This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for pacakges on [packagist.org](https://packagist.org/search/?q=silverstripe).
 
-The second part, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
+The second part after the colon, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed.  Alternatively, you can specificy a specific version, or a constraint such as `>=3.0`.  For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
+
+<div class="warning" markdown="1">
+`master` is not a legal version string - it's a branch name.  These are different things.  The version string that would get you the branch is `dev-master`.  The version string that would get you a numeric branch is a little different.  The version string for the `3.0` branch is `3.0.x-dev`.  But, frankly, maybe you should just use `*`.
+</div>
+
+## Updating dependencies
+
+Except for the control code of the Voyager space probe, every piece of code in the universe gets updated from time to time.  SilverStripe modules are no exception.
+
+To get the latest updates of the modules in your project, run this command:
+
+	composer update
+
+Updates to the required modules will be installed, and the `composer.lock` file will get updated with the specific commits of each of those.
+
+## Deploying projects with Composer
+
+When deploying projects with composer, you could just push the code and run `composer update`.  However, this is risky.  In particular, if you were referencing development dependencies and a change was made between your testing and your depoyment to production, you would end up deploying untested code.  Not cool!
+
+The `composer.lock` file helps with this.  It references the specific commits that have been checked out, rather than the version string.  You can run `composer install` to install dependencies from this rather than `composer.json`.
+
+So, your deployment process, as it relates to Composer, should be as follows:
+
+ * Run `composer update` on your development version before you start whatever testing you have planned.  Perform all the necessary testing.
+
+ * Check `composer.lock` into your repository.
+
+ * Deploy your project code base, using the deployment tool of your choice.
+
+ * Run the following command on your production version.
+
+ 	composer install
 
 # Advanced usage
 
@@ -60,21 +100,22 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 		"description": "The SilverStripe Framework Installer",
 		"require": {
 			"php": ">=5.3.2",
-			"silverstripe/cms": "3.0.3",
-			"silverstripe/framework": "3.0.3",
+			"silverstripe/cms": "3.0.2.1",
+			"silverstripe/framework": "3.0.2.1",
 			"silverstripe-themes/simple": "*"
 		},
 		"require-dev": {
 			"silverstripe/compass": "*",
 			"silverstripe/docsviewer": "*"
 		},
+		"minimum-stability": "dev"
 	}
 	
 To add modules, you should add more entries into the `"require"` section.  For example, we might add the blog and forum modules.  Be careful with the commas at the end of the lines!
 
 Save your file, and then run the following command to refresh the installed packages:
 
-	php composer.phar update
+	composer update
 
 ## Working with project forks and unreleased modules
 
@@ -107,9 +148,9 @@ This is how you do it:
 
  * **Install the module as you would normally.** Use the regular composer function - there are no special flags to use a fork. Your fork will be used in place of the package version.
 
- 		php composer.phar require silverstipre/advancedworklow
+ 		composer require silverstripe/advancedworkflow
 
-Composer will scan all of the repositories you list, collect meta-data about the packages within them, and use them in favour of the packages listed on packagist.  To switch back to using the mainline version of the package, just remove your the `repositories` section from `composer.json` and run `php composer.phar update`.
+Composer will scan all of the repositories you list, collect meta-data about the packages within them, and use them in favour of the packages listed on packagist.  To switch back to using the mainline version of the package, just remove your the `repositories` section from `composer.json` and run `composer update`.
 
 For more information, read the ["Repositories" chapter of the Composer documentation](http://getcomposer.org/doc/05-repositories.md).
 
@@ -127,48 +168,29 @@ Open `composer.json`, and find the module's `require`.  Then put `as (core versi
 		...
 		"require": {
 			"php": ">=5.3.2",
-			"silverstripe/cms": "3.0.3",
+			"silverstripe/cms": "3.0.2.1",
 			"silverstripe/framework": "dev-myproj as 3.0.x-dev",
 			"silverstripe-themes/simple": "*"
 		},
 		...
 	}
 
-What is means is that when the `myproj` branch is checked out into a project, this will satisfy any dependencies that 3.0.x-dev would meet.  So, if another module has `"silverstripe/framework": ">=3.0.0"` in its dependency list, it won't get a conflict.
+What this means is that when the `myproj` branch is checked out into a project, this will satisfy any dependencies that 3.0.x-dev would meet.  So, if another module has `"silverstripe/framework": ">=3.0.0"` in its dependency list, it won't get a conflict.
 
 Both the version and the alias are specified as Composer versions, not branch names.  For the relationship between branch/tag names and Composer vesrions, read [the relevant Composer documentation](http://getcomposer.org/doc/02-libraries.md#specifying-the-version).
 
 This is not the only way to set things up in Composer. For more information on this topic, read the ["Aliases" chapter of the Composer documentation](http://getcomposer.org/doc/articles/aliases.md).
 
-## Setting up an environment for working on SilverStripe
+## Setting up an environment for contributing to SilverStripe
 
-So you want to contribute to SilverStripe? Fantastic! There are a couple modules that are helpful
+So you want to contribute to SilverStripe? Fantastic! You have to initialize your project from the latest development branch, 
+rather than a release tag. The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
+
+	composer create-project silverstripe/installer --dev ./my/website/folder 3.0.x-dev
+
+The `--dev` flag will add a couple modules which are useful for SilverStripe development:
 
  * The `compass` module will regenerate CSS if you update the SCSS files
  * The `docsviewer` module will let you preview changes to the project documentation
 
-By default, these modules aren't installed, but you can install them with a special version of composer's update command:
-
-	php composer.phar update --dev
-
-## Creating a 'composer' binary
-
-Composer is designed to be portable and not require installation in special locations of your computer.  This is
-useful in certain circumstances, but sometimes it's helpful simply to have composer installed in the path of your workstation.
-
-To do this, we can make the composer download an executable script.  Go to a directory in your path that you can write to.  I have `~/bin` set up for this purpose.  You could also go to `/usr/bin/` and log in as root.
-
-	cd ~/bin
-
-Then download composer.phar to this directory and create a 1 line binary file
-
-	curl -s https://getcomposer.org/installer | php
-	mv composer.phar composer
-	chmod +x composer
-
-Now check that it works:
-
-	composer help
-	composer list
-
-In any of the commands above, you can replace `php composer.phar` with `composer`.
+Note that you can also include those into an existing project by running `composer update --dev`.

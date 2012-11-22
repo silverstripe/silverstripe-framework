@@ -749,8 +749,14 @@ class DataObjectTest extends SapphireTest {
 		$obj = new DataObjectTest_Fixture();
 		$this->assertEquals(
 			$obj->MyFieldWithDefault,
-			"Default Value",
-			"Defaults are populated for in-memory object from \$defaults array"
+			'Default Value',
+			'Defaults are populated for in-memory object from $defaults array'
+		);
+
+		$this->assertEquals(
+			$obj->MyFieldWithAltDefault,
+			'Default Value',
+			'Defaults are populated from overloaded populateDefaults() method'
 		);
 	}
 	
@@ -1108,25 +1114,7 @@ class DataObjectTest extends SapphireTest {
 		DataObject::get();
 		
 	}
-	
-	public function testWriteOverwritesCreated() {
-		// Previously, if you set DataObject::$Created before the object was first written, it would be overwritten
-		$pastdate = new SS_DateTime();
-		$pastdate->setValue(Date::past_date(1));
-		
-		$obj = new DataObjectTest_Player();
-		$obj->Created = $pastdate->Value;
-		$obj->write();
-		
-		$objID = $obj->ID;
-		
-		unset($obj);
-		DataObject::reset();
-		
-		$obj = DataObjectTest_Player::get()->byID($objID);
-		
-		$this->assertEquals($pastdate->Value, $obj->Created);
-	}
+
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -1190,18 +1178,25 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 		'Data' => 'Varchar',
 		'Duplicate' => 'Varchar',
 		'DbObject' => 'Varchar',
-		
-		// Field with default
-		'MyField' => 'Varchar',
-		
+
 		// Field types
-		"DateField" => "Date",
-		"DatetimeField" => "Datetime",
+		'DateField' => 'Date',
+		'DatetimeField' => 'Datetime',
+
+		'MyFieldWithDefault' => 'Varchar',
+		'MyFieldWithAltDefault' => 'Varchar'
 	);
 
 	static $defaults = array(
-		'MyFieldWithDefault' => 'Default Value', 
+		'MyFieldWithDefault' => 'Default Value',
 	);
+
+	public function populateDefaults() {
+		parent::populateDefaults();
+
+		$this->MyFieldWithAltDefault = 'Default Value';
+	}
+
 }
 
 class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
@@ -1293,6 +1288,7 @@ class DataObjectTest_TeamComment extends DataObject {
 	static $has_one = array(
 		'Team' => 'DataObjectTest_Team'
 	);
+
 }
 
 DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');

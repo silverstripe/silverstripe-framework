@@ -1022,7 +1022,9 @@ class Requirements_Backend {
 				// file exists, check modification date of every contained file
 				$srcLastMod = 0;
 				foreach($fileList as $file) {
-					$srcLastMod = max(filemtime($base . $file), $srcLastMod);
+				    if(file_exists($base . $file)) {
+				        $srcLastMod = max(filemtime($base . $file), $srcLastMod);
+				    }
 				}
 				$refresh = $srcLastMod > filemtime($combinedFilePath);
 			} else {

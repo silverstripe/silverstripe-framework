@@ -23,5 +23,8 @@
 		"branch-alias": {
 			"dev-master": "3.1.x-dev"
 		}
+	},
+	"autoload": {
+		"classmap": ["tests/behat/features/bootstrap"]	
 	}
 }

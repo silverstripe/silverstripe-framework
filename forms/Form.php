@@ -1014,6 +1014,10 @@ class Form extends RequestHandler {
 		return true;
 	}
 
+	const MERGE_DEFAULT = 0;
+	const MERGE_CLEAR_MISSING = 1;
+	const MERGE_IGNORE_FALSEISH = 2;
+
 	/**
 	 * Load data from the given DataObject or array.
 	 * It will call $object->MyField to get the value of MyField.
@@ -1032,18 +1036,41 @@ class Form extends RequestHandler {
 	 * @uses FormField->setValue()
 	 * 
 	 * @param array|DataObject $data
-	 * @param boolean $clearMissingFields By default, fields which don't match
-	 *  a property or array-key of the passed {@link $data} argument are "left alone",
-	 *  meaning they retain any previous values (if present). If this flag is set to true,
-	 *  those fields are overwritten with null regardless if they have a match in {@link $data}.
-	 * @param $fieldList An optional list of fields to process.  This can be useful when you have a 
+	 * @param int $mergeStrategy
+	 *  For every field, {@link $data} is interogated whether it contains a relevant property/key, and
+	 *  what that property/key's value is.
+	 *
+	 *  By default, if {@link $data} does contain a property/key, the fields value is always replaced by {@link $data}'s
+	 *  value, even if that value is null/false/etc. Fields which don't match any property/key in {@link $data} are
+	 *  "left alone", meaning they retain any previous value.
+	 *
+	 *  You can pass a bitmask here to change this behaviour.
+	 *
+	 *  Passing CLEAR_MISSING means that any fields that don't match any property/key in
+	 *  {@link $data} are cleared.
+	 *
+	 *  Passing IGNORE_FALSEISH means that any false-ish value in {@link $data} won't replace
+	 *  a field's value.
+	 *
+	 *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
+	 *  CLEAR_MISSING
+	 *
+	 * @param $fieldList An optional list of fields to process.  This can be useful when you have a
 	 * form that has some fields that save to one object, and some that save to another.
 	 * @return Form
 	 */
-	public function loadDataFrom($data, $clearMissingFields = false, $fieldList = null) {
+	public function loadDataFrom($data, $mergeStrategy = 0, $fieldList = null) {
 		if(!is_object($data) && !is_array($data)) {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
 			return $this;
+		}
+
+		// Handle the backwards compatible case of passing "true" as the second argument
+		if ($mergeStrategy === true) {
+			$mergeStrategy = self::MERGE_CLEAR_MISSING;
+		}
+		else if ($mergeStrategy === false) {
+			$mergeStrategy = 0;
 		}
 
 		// if an object is passed, save it for historical reference through {@link getRecord()}
@@ -1059,37 +1086,50 @@ class Form extends RequestHandler {
 			
 			// First check looks for (fieldname)_unchanged, an indicator that we shouldn't overwrite the field value
 			if(is_array($data) && isset($data[$name . '_unchanged'])) continue;
-			
-			// get value in different formats
-			$hasObjectValue = false;
-			if(
-				is_object($data) 
-				&& (
-					isset($data->$name)
-					|| $data->hasMethod($name)
-					|| ($data->hasMethod('hasField') && $data->hasField($name))
-				)
-			) {
-				// We don't actually call the method because it might be slow.  
-				// In a later release, relation methods will just return references to the query that should be
-				// executed, and so we will be able to safely pass the return value of the relation method to the
-				// first argument of setValue
-				$val = $data->__get($name);
-				$hasObjectValue = true;
-			} else if(strpos($name,'[') && is_array($data) && !isset($data[$name])) {
-				// if field is in array-notation, we need to resolve the array-structure PHP creates from query-strings
-				preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', urldecode(http_build_query($data)), $matches);
-				$val = isset($matches[1]) ? $matches[1] : null;
-			} elseif(is_array($data) && array_key_exists($name, $data)) {
-				// else we assume its a simple keyed array
-				$val = $data[$name];
-			} else {
-				$val = null;
+
+			// Does this property exist on $data?
+			$exists = false;
+			// The value from $data for this field
+			$val = null;
+
+			if(is_object($data)) {
+				$exists = (
+					isset($data->$name) ||
+					$data->hasMethod($name) ||
+					($data->hasMethod('hasField') && $data->hasField($name))
+				);
+
+				if ($exists) {
+					$val = $data->__get($name);
+				}
+			}
+			else if(is_array($data)){
+				if(array_key_exists($name, $data)) {
+					$exists = true;
+					$val = $data[$name];
+				}
+				// If field is in array-notation we need to access nested data
+				else if(strpos($name,'[')) {
+					// First encode data using PHP's method of converting nested arrays to form data
+					$flatData = urldecode(http_build_query($data));
+					// Then pull the value out from that flattened string
+					preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', $flatData, $matches);
+
+					if (isset($matches[1])) {
+						$exists = true;
+						$val = $matches[1];
+					}
+				}
 			}
 
 			// save to the field if either a value is given, or loading of blank/undefined values is forced
-			if(isset($val) || $hasObjectValue || $clearMissingFields) {
-				// pass original data as well so composite fields can act on the additional information
+			if($exists){
+				if ($val != false || ($mergeStrategy & self::MERGE_IGNORE_FALSEISH) != self::MERGE_IGNORE_FALSEISH){
+					// pass original data as well so composite fields can act on the additional information
+					$field->setValue($val, $data);
+				}
+			}
+			else if(($mergeStrategy & self::MERGE_CLEAR_MISSING) == self::MERGE_CLEAR_MISSING){
 				$field->setValue($val, $data);
 			}
 		}

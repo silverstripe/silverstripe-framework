@@ -166,9 +166,9 @@ in jQuery.entwine, we're trying to reuse library code wherever possible.
 The most prominent example of this is the usage of [jQuery UI](http://jqueryui.com) for
 dialogs and buttons.
 
-The CMS includes the jQuery.entwine inspector. Press Ctrl+` to bring down the inspector.
+The CMS includes the jQuery.entwine inspector. Press Ctrl+` ("backtick") to bring down the inspector.
 You can then click on any element in the CMS to see which entwine methods are bound to
-any particular element.
+any particular element. 
 
 ## JavaScript and CSS dependencies via Requirements and Ajax
 
@@ -289,6 +289,11 @@ Keep in mind that the returned view isn't always decided upon when the Ajax requ
 is fired, so the server might decide to change it based on its own logic,
 sending back different `X-Pjax` headers and content.
 
+On the client, you can set your preference through the `data-pjax-target` attributes
+on links or through the `X-Pjax` header. For firing off an Ajax request that is
+tracked in the browser history, use the `pjax` attribute on the state data.
+
+	$('.cms-container').loadPanel('admin/pages', null, {pjax: 'Content'});
 
 ## Ajax Redirects
 

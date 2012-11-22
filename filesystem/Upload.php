@@ -159,7 +159,7 @@ class Upload extends Controller {
 		}
 
 		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$relativeFilePath")) {
-			$this->file->ParentID = $parentFolder->ID;
+			$this->file->ParentID = $parentFolder ? $parentFolder->ID : 0;
 			// This is to prevent it from trying to rename the file
 			$this->file->Name = basename($relativeFilePath);
 			$this->file->write();

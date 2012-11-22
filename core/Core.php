@@ -275,9 +275,15 @@ $flush = (isset($_GET['flush']) || isset($_REQUEST['url']) && (
 ));
 $manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
 
+// Register SilverStripe's class map autoload
 $loader = SS_ClassLoader::instance();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
+
+// Fall back to Composer's autoloader (e.g. for PHPUnit), if composer is used
+if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
+	require_once BASE_PATH . '/vendor/autoload.php';
+}
 
 // Now that the class manifest is up, load the configuration
 $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
