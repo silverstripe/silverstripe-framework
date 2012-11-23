@@ -11,9 +11,12 @@ class SecurityDefaultAdminTest extends SapphireTest {
 	}
 	
 	public function testCheckDefaultAdmin() {
-		// TODO There's currently no way to inspect default admin state,
-		//  hence we don't override existing settings
-		if(Security::has_default_admin()) return;
+		if(Security::has_default_admin()) {
+			$this->markTestSkipped(
+				'Default admin present. There\'s no way to inspect default admin state, ' .
+				'so we don\'t override existing settings'
+			);
+		}
 		
 		Security::setDefaultAdmin('admin', 'password');
 		

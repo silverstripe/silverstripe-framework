@@ -542,21 +542,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *               'customHeaders', 'htmlContent', inlineImages'
 	 */
 	public function assertEmailSent($to, $from = null, $subject = null, $content = null) {
-		// To do - this needs to be turned into a "real" PHPUnit ass
-		if(!$this->findEmail($to, $from, $subject, $content)) {
-			
-			$infoParts = "";
-			$withParts = array();
-			if($to) $infoParts .= " to '$to'";
-			if($from) $infoParts .= " from '$from'";
-			if($subject) $withParts[] = "subject '$subject'";
-			if($content) $withParts[] = "content '$content'";
-			if($withParts) $infoParts .= " with " . implode(" and ", $withParts);
-			
-			throw new PHPUnit_Framework_AssertionFailedError(
-                "Failed asserting that an email was sent$infoParts."
-            );
-		}
+		$found = (bool)$this->findEmail($to, $from, $subject, $content);
+
+		$infoParts = "";
+		$withParts = array();
+		if($to) $infoParts .= " to '$to'";
+		if($from) $infoParts .= " from '$from'";
+		if($subject) $withParts[] = "subject '$subject'";
+		if($content) $withParts[] = "content '$content'";
+		if($withParts) $infoParts .= " with " . implode(" and ", $withParts);
+
+		$this->assertTrue(
+			$found,
+			"Failed asserting that an email was sent$infoParts."
+		);
 	}
 
 
@@ -596,14 +595,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			}
 
 			// We couldn't find a match - assertion failed
-			if(!$matched) {
-				throw new PHPUnit_Framework_AssertionFailedError(
-	                "Failed asserting that the SS_List contains an item matching "
-						. var_export($match, true) . "\n\nIn the following SS_List:\n" 
-						. $this->DOSSummaryForMatch($dataObjectSet, $match)
-	            );
-			}
-
+			$this->assertTrue(
+				$matched,
+				"Failed asserting that the SS_List contains an item matching "
+				. var_export($match, true) . "\n\nIn the following SS_List:\n" 
+				. $this->DOSSummaryForMatch($dataObjectSet, $match)
+			);
 		}
 	} 
 	
@@ -642,23 +639,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			}
 
 			// We couldn't find a match - assertion failed
-			if(!$matched) {
-				throw new PHPUnit_Framework_AssertionFailedError(
-	                "Failed asserting that the SS_List contains an item matching "
-						. var_export($match, true) . "\n\nIn the following SS_List:\n" 
-						. $this->DOSSummaryForMatch($dataObjectSet, $match)
-	            );
-			}
+			$this->assertTrue(
+				$matched,
+				"Failed asserting that the SS_List contains an item matching "
+				. var_export($match, true) . "\n\nIn the following SS_List:\n" 
+				. $this->DOSSummaryForMatch($dataObjectSet, $match)
+			);
 		}
 		
 		// If we have leftovers than the DOS has extra data that shouldn't be there
-		if($extracted) {
+		$this->assertTrue(
+			(count($extracted) == 0),
 			// If we didn't break by this point then we couldn't find a match
-			throw new PHPUnit_Framework_AssertionFailedError(
-	            "Failed asserting that the SS_List contained only the given items, the "
-					. "following items were left over:\n" . var_export($extracted, true)
-	        );
-		}
+			"Failed asserting that the SS_List contained only the given items, the "
+			. "following items were left over:\n" . var_export($extracted, true)
+		);
 	} 
 
 	/**
@@ -678,12 +673,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
 
 		foreach($extracted as $i => $item) {
-			if(!$this->dataObjectArrayMatch($item, $match)) {
-				throw new PHPUnit_Framework_AssertionFailedError(
-		            "Failed asserting that the the following item matched " 
-					. var_export($match, true) . ": " . var_export($item, true)
-		        );
-			}
+			$this->assertTrue(
+				$this->dataObjectArrayMatch($item, $match),
+				"Failed asserting that the the following item matched " 
+				. var_export($match, true) . ": " . var_export($item, true)
+			);
 		}
 	} 
 	

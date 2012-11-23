@@ -148,7 +148,7 @@ class AggregateTest extends SapphireTest {
 	 * Test aggregates are cached properly
 	 */
 	public function testCache() {
-		
+		$this->markTestIncomplete();		
 	}
 	/* */
 	
