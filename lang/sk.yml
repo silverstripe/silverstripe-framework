@@ -503,7 +503,7 @@ sk:
     IMPORTGROUPS: 'Importovať skupiny'
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
-    MENUTITLE: Zabezpečenie
+    MENUTITLE: Bezpečnosť
     MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstáni zo všetkých skupín a databázy.'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Právomoci
