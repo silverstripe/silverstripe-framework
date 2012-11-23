@@ -164,6 +164,8 @@ class FileTest extends SapphireTest {
 	
 	/**
 	 * @see http://open.silverstripe.org/ticket/5693
+	 *
+	 * @expectedException ValidationException
 	 */
 	public function testSetNameWithInvalidExtensionDoesntChangeFilesystem() {
 		$origExts = File::$allowed_extensions;
@@ -177,11 +179,8 @@ class FileTest extends SapphireTest {
 			$file->write();
 		} catch(ValidationException $e) {
 			File::$allowed_extensions = $origExts;
-			return;
+			throw $e;
 		}
-		
-		$this->fail('Expected ValidationException not raised');
-		File::$allowed_extensions = $origExts;
 	}
 	
 	public function testLinkAndRelativeLink() {

@@ -39,6 +39,6 @@ class PasswordValidatorTest extends SapphireTest {
 	}
 	
 	public function testHistoricalPasswordCount() {
-		// TODO
+		$this->markTestIncomplete();
 	}
 }

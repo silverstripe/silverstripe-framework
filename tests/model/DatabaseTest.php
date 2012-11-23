@@ -51,15 +51,18 @@ class DatabaseTest extends SapphireTest {
 	}
 
 	public function testMySQLCreateTableOptions() {
-		if(DB::getConn() instanceof MySQLDatabase) {
-			$ret = DB::query(sprintf(
-				'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
-				'DatabaseTest_MyObject'
-			))->first();
-			$this->assertEquals($ret['Engine'],'InnoDB',
-				"MySQLDatabase tables can be changed to InnoDB through DataObject::\$create_table_options"
-			);
+		if(!(DB::getConn() instanceof MySQLDatabase)) {
+			$this->markTestSkipped('MySQL only');
 		}
+
+
+		$ret = DB::query(sprintf(
+			'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
+			'DatabaseTest_MyObject'
+		))->first();
+		$this->assertEquals($ret['Engine'],'InnoDB',
+			"MySQLDatabase tables can be changed to InnoDB through DataObject::\$create_table_options"
+		);
 	}
 
 	function testIsSchemaUpdating() {

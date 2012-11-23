@@ -296,6 +296,7 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	public function testCacheToFile() {
+		$this->markTestIncomplete();
 		/* 
 		// This doesn't run properly on our build slave.
 		$obj = new ObjectTest_CacheTest();

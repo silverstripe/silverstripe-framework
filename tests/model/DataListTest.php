@@ -195,8 +195,8 @@ class DataListTest extends SapphireTest {
 	}
 	
 	public function testFilter() {
-		// coming soon!
-		}
+		$this->markTestIncomplete();
+	}
 		
 	public function testWhere() {
 		// We can use raw SQL queries with where.  This is only recommended for advanced uses;

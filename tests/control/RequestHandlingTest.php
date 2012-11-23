@@ -26,7 +26,7 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 	
 	public function testRequestHandlerChainingAllParams() {
-		// TODO
+		$this->markTestIncomplete();
 	}
 	
 	public function testMethodCallingOnController() {

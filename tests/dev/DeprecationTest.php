@@ -25,7 +25,7 @@ class DeprecationTest extends SapphireTest {
 
 	public function testLesserVersionTriggersNoNotice() {
 		Deprecation::notification_version('1.0.0');
-		Deprecation::notice('2.0', 'Deprecation test failed');
+		$this->assertNull(Deprecation::notice('2.0', 'Deprecation test failed'));
 	}
 
 	/**
@@ -38,8 +38,8 @@ class DeprecationTest extends SapphireTest {
 
 	public function testBetaVersionDoesntTriggerNoticeWhenDeprecationDoesntSpecifyReleasenum() {
 		Deprecation::notification_version('2.0.0-beta1');
-		Deprecation::notice('2.0', 'Deprecation test failed');
-		Deprecation::notice('2.0.0', 'Deprecation test failed');
+		$this->assertNull(Deprecation::notice('2.0', 'Deprecation test failed'));
+		$this->assertNull(Deprecation::notice('2.0.0', 'Deprecation test failed'));
 	}
 
 	/**
@@ -99,7 +99,7 @@ class DeprecationTest extends SapphireTest {
 
 	protected function callThatOriginatesFromFramework() {
 		$this->assertEquals(DeprecationTest_Deprecation::get_module(), FRAMEWORK_DIR);
-		Deprecation::notice('2.0', 'Deprecation test passed');
+		$this->assertNull(Deprecation::notice('2.0', 'Deprecation test passed'));
 	}
 
 }

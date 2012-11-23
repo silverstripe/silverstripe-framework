@@ -161,7 +161,7 @@ class ConfigTest extends SapphireTest {
 	}
 
 	public function testFragmentOrder() {
-		// $manifest = new SS_ConfigManifest(BASE_PATH, false, true);
+		$this->markTestIncomplete();
 	}
 	
 }

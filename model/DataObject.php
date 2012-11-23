@@ -1245,7 +1245,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		
         // Deleting a record without an ID shouldn't do anything
-        if(!$this->ID) throw new Exception("DataObject::delete() called on a DataObject without an ID");
+        if(!$this->ID) throw new LogicException("DataObject::delete() called on a DataObject without an ID");
 
 		// TODO: This is quite ugly.  To improve:
 		//  - move the details of the delete code in the DataQuery system

@@ -206,7 +206,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 
 	public function testNoErrorMessageForControlWithinCached() {
 		$this->_reset(true);
-		$this->_runtemplate('<% cached %><% control Foo %>$Bar<% end_control %><% end_cached %>');
+		$this->assertNotNull($this->_runtemplate('<% cached %><% control Foo %>$Bar<% end_control %><% end_cached %>'));
 	}
 	
 	/**
@@ -220,8 +220,8 @@ class SSViewerCacheBlockTest extends SapphireTest {
 
 	public function testNoErrorMessageForCachedWithinControlWithinUncached() {
 		$this->_reset(true);
-		$this->_runtemplate(
-			'<% uncached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_uncached %>');
+		$this->assertNotNull($this->_runtemplate(
+			'<% uncached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_uncached %>'));
 	}
 
 	/**
