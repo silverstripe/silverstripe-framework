@@ -801,6 +801,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function resetDBSchema($includeExtraDataObjects = false) {
 		if(self::using_temp_db()) {
+			DataObject::reset();
+
 			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
 			Injector::inst()->unregisterAllObjects();
 
