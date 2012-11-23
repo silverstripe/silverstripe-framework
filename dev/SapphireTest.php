@@ -272,6 +272,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * for tearing down the state again.
 	 */
 	public function setUpOnce() {
+		$isAltered = false;
+
 		// Remove any illegal extensions that are present
 		foreach($this->illegalExtensions as $class => $extensions) {
 			foreach($extensions as $extension) {
@@ -298,7 +300,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 		
 		// If we have made changes to the extensions present, then migrate the database schema.
-		if($this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
+		if($isAltered || $this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
 			if(!self::using_temp_db()) self::create_temp_db();
 			$this->resetDBSchema(true);
 		}
