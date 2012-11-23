@@ -603,7 +603,8 @@ class DataQuery {
     			 	$ancestry = $model->getClassAncestry();
     				$foreignKey = $model->getRemoteJoinField($rel);
     				$this->query->addLeftJoin($component,
-    					"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+    					"\"$rel\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"",
+					$rel);
     				/**
     				 * add join clause to the component's ancestry classes so that the search filter could search on
     				 * its ancestor fields.
