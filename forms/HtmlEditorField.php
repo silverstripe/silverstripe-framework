@@ -46,11 +46,6 @@ class HtmlEditorField extends TextareaField {
 	 * @see TextareaField::__construct()
 	 */
 	public function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) {
-			Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments',
-				Deprecation::SCOPE_GLOBAL);
-		}
-
 		parent::__construct($name, $title, $value);
 		
 		self::include_js();
@@ -81,11 +76,10 @@ class HtmlEditorField extends TextareaField {
 			}
 		}
 
-		return $this->createTag (
-			'textarea',
-			$this->getAttributes(),
-			htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8')
-		);
+		$properties['Value'] = htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8');
+		$obj = $this->customise($properties);
+
+		return $obj->renderWith($this->getTemplates());
 	}
 
 	public function getAttributes() {
@@ -447,6 +441,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				$fromCMS
 			)
 		);
+		$tabSet->addExtraClass('cms-tabset-primary');
 
 		$allFields = new CompositeField(
 			$tabSet,

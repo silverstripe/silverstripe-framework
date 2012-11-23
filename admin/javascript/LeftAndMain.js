@@ -243,7 +243,8 @@ jQuery.noConflict();
 				$(button).addClass('loading');
 	
 				// validate if required
-				if(!form.validate()) {
+				var validationResult = form.validate();
+				if(typeof validationResult!=='undefined' && !validationResult) {
 					// TODO Automatically switch to the tab/position of the first error
 					statusMessage("Validation failed.", "bad");
 
@@ -373,6 +374,12 @@ jQuery.noConflict();
 				// Pseudo-redirects via X-ControllerURL might return empty data, in which
 				// case we'll ignore the response
 				if(!data) return;
+
+				// Support a full reload
+				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
+					document.location.href = xhr.getResponseHeader('X-ControllerURL');
+					return;
+				}
 
 				// Update title
 				var title = xhr.getResponseHeader('X-Title');

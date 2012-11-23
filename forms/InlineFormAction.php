@@ -1,7 +1,7 @@
 <?php
 /**
  * Render a button that will submit the form its contained in through ajax.
- * If you want to add custom behaviour, please set {@link inlcudeDefaultJS()} to FALSE and work with behaviour.js.
+ * If you want to add custom behaviour, please set {@link inlcudeDefaultJS()} to FALSE
  * 
  * @see framework/javascript/InlineFormAction.js
  * 

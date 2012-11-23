@@ -66,6 +66,18 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	public function toArray() {
 		return $this->items;
 	}
+	
+	/**
+	 * Walks the list using the specified callback
+	 *
+	 * @param callable $callback
+	 * @return DataList
+	 */
+	public function each($callback) {
+		foreach($this as $item) {
+			$callback($item);
+		}
+	}
 
 	public function debug() {
 		$val = "<h2>" . $this->class . "</h2><ul>";
@@ -97,19 +109,6 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Get a sub-range of this dataobjectset as an array
-	 * 
-	 * @param int $offset
-	 * @param int $length
-	 * @return ArrayList 
-	 */
-	public function getRange($offset, $length) {
-		Deprecation::notice("3.0", 'getRange($offset, $length) is deprecated.  Use limit($length, $offset) instead.'
-			. ' Note the new argument order.');
-		return $this->limit($length, $offset);
 	}
 
 	/**

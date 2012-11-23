@@ -27,7 +27,7 @@
  */
 class FulltextFilter extends SearchFilter {
 
-	public function apply(DataQuery $query) {
+	protected function applyOne(DataQuery $query) {
 		return $query->where(sprintf(
 			"MATCH (%s) AGAINST ('%s')",
 			$this->getDbName(),
@@ -35,7 +35,15 @@ class FulltextFilter extends SearchFilter {
 		));
 	}
 
+	protected function excludeOne(DataQuery $query) {
+		return $query->where(sprintf(
+			"NOT MATCH (%s) AGAINST ('%s')",
+			$this->getDbName(),
+			Convert::raw2sql($this->getValue())
+		));
+	}
+
 	public function isEmpty() {
-		return $this->getValue() == null || $this->getValue() == '';
+		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
 	}
 }

@@ -470,7 +470,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member->canEdit());
 		
 		/* Apply a extension that allows viewing in any case (most likely the case for member profiles) */
-		Object::add_extension('Member', 'MemberTest_ViewingAllowedExtension');
+		Member::add_extension('MemberTest_ViewingAllowedExtension');
 		$member2 = $this->objFromFixture('Member', 'staffmember');
 		
 		$this->assertTrue($member2->canView());
@@ -478,8 +478,8 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member2->canEdit());
 	
 		/* Apply a extension that denies viewing of the Member */
-		Object::remove_extension('Member', 'MemberTest_ViewingAllowedExtension');
-		Object::add_extension('Member', 'MemberTest_ViewingDeniedExtension');
+		Member::remove_extension('MemberTest_ViewingAllowedExtension');
+		Member::add_extension('MemberTest_ViewingDeniedExtension');
 		$member3 = $this->objFromFixture('Member', 'managementmember');
 		
 		$this->assertFalse($member3->canView());
@@ -487,15 +487,15 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member3->canEdit());
 	
 		/* Apply a extension that allows viewing and editing but denies deletion */
-		Object::remove_extension('Member', 'MemberTest_ViewingDeniedExtension');
-		Object::add_extension('Member', 'MemberTest_EditingAllowedDeletingDeniedExtension');
+		Member::remove_extension('MemberTest_ViewingDeniedExtension');
+		Member::add_extension('MemberTest_EditingAllowedDeletingDeniedExtension');
 		$member4 = $this->objFromFixture('Member', 'accountingmember');
 		
 		$this->assertTrue($member4->canView());
 		$this->assertFalse($member4->canDelete());
 		$this->assertTrue($member4->canEdit());
 		
-		Object::remove_extension('Member', 'MemberTest_EditingAllowedDeletingDeniedExtension');
+		Member::remove_extension('MemberTest_EditingAllowedDeletingDeniedExtension');
 		$this->addExtensions($extensions);
 	}
 	
@@ -603,7 +603,7 @@ class MemberTest extends FunctionalTest {
 	 */
 	protected function addExtensions($extensions) {
 		if($extensions) foreach($extensions as $extension) {
-			Object::add_extension('Member', $extension);
+			Member::add_extension($extension);
 		}
 		return $extensions;
 	}
@@ -619,7 +619,7 @@ class MemberTest extends FunctionalTest {
 	 */
 	protected function removeExtensions($extensions) {
 		if($extensions) foreach($extensions as $extension) {
-			Object::remove_extension('Member', $extension);
+			Member::remove_extension($extension);
 		}
 		return $extensions;
 	}

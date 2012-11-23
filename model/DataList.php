@@ -234,20 +234,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Return a new DataList instance with a join clause added to this list's query.
-	 *
-	 * @param type $join Escaped SQL statement
-	 * @return DataList 
-	 * @deprecated 3.0
-	 */
-	public function join($join) {
-		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
-		return $this->alterDataQuery_30(function($query) use ($join){
-			$query->join($join);
-		});
-	}
-
-	/**
 	 * Return a new DataList instance with the records returned in this query restricted by a limit clause
 	 * 
 	 * @param int $limit
@@ -256,10 +242,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	public function limit($limit, $offset = 0) {
 		if(!$limit && !$offset) {
 			return $this;
-		}
-		if($limit && !is_numeric($limit)) {
-			Deprecation::notice('3.0', 'Please pass limits as 2 arguments, rather than an array or SQL fragment.',
-				Deprecation::SCOPE_GLOBAL);
 		}
 		return $this->alterDataQuery_30(function($query) use ($limit, $offset){
 			$query->limit($limit, $offset);
@@ -374,36 +356,75 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new instance of the list with an added filter
 	 */
 	public function addFilter($filterArray) {
-		$SQL_Statements = array();
 		foreach($filterArray as $field => $value) {
-			if(is_array($value)) {
-				$customQuery = 'IN (\''.implode('\',\'',Convert::raw2sql($value)).'\')';
-			} else {
-				$customQuery = '= \''.Convert::raw2sql($value).'\'';
-			}
-			
-			if(stristr($field,':')) {
-				$fieldArgs = explode(':',$field);
-				$field = array_shift($fieldArgs);
-				foreach($fieldArgs as $fieldArg){
-					$comparisor = $this->applyFilterContext($field, $fieldArg, $value);
-				}
-			} else {
-				if($field == 'ID') {
-					$field = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
-				} else {
-					$field = '"' . Convert::raw2sql($field) . '"';
-				}
-
-				$SQL_Statements[] = $field . ' ' . $customQuery;
-			}
+			$fieldArgs = explode(':', $field);
+			$field = array_shift($fieldArgs);
+			$filterType = array_shift($fieldArgs);
+			$modifiers = $fieldArgs;
+			$this->applyFilterContext($field, $filterType, $modifiers, $value);
 		}
 
-		if(!count($SQL_Statements)) return $this;
+		return $this;
+	}
 
-		return $this->alterDataQuery_30(function($query) use ($SQL_Statements){
-			foreach($SQL_Statements as $SQL_Statement){
-				$query->where($SQL_Statement);
+	/**
+	 * Return a copy of this list which does not contain items matching any of these charactaristics.
+	 *
+	 * @example // filter bob from list
+	 *          $list = $list->filterAny('Name', 'bob'); 
+	 *          // SQL: WHERE "Name" = 'bob'
+	 * @example // filter aziz and bob from list
+	 *          $list = $list->filterAny('Name', array('aziz', 'bob'); 
+	 *          // SQL: WHERE ("Name" IN ('aziz','bob'))
+	 * @example // filter by bob or anybody aged 21
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>21)); 
+	 *          // SQL: WHERE ("Name" = 'bob' OR "Age" = '21')
+	 * @example // filter by bob or anybody aged 21 or 43
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43))); 
+	 *          // SQL: WHERE ("Name" = 'bob' OR ("Age" IN ('21', '43'))
+	 * @example // bob age 21 or 43, phil age 21 or 43 would be excluded
+	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+	 *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
+	 *
+	 * @todo extract the sql from this method into a SQLGenerator class
+	 *
+	 * @param string|array See {@link filter()}
+	 * @return DataList
+	 */
+	public function filterAny() {
+		$numberFuncArgs = count(func_get_args());
+		$whereArguments = array();
+
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
+			$whereArguments = func_get_arg(0);
+		} elseif($numberFuncArgs == 2) {
+			$whereArguments[func_get_arg(0)] = func_get_arg(1);
+		} else {
+			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
+		}
+
+		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
+			$subquery = $query->disjunctiveGroup();
+
+			foreach($whereArguments as $field => $value) {
+				$fieldArgs = explode(':', $field);
+				$field = array_shift($fieldArgs);
+				$filterType = array_shift($fieldArgs);
+				$modifiers = $fieldArgs;
+
+				// This is here since PHP 5.3 can't call protected/private methods in a closure.
+				$t = singleton($list->dataClass())->dbObject($field);
+				if($filterType) {
+					$className = "{$filterType}Filter";
+				} else {
+					$className = 'ExactMatchFilter';
+				}
+				if(!class_exists($className)){
+					$className = 'ExactMatchFilter';
+					array_unshift($modifiers, $filterType);
+				}
+				$t = new $className($field, $value, $modifiers);
+				$t->apply($subquery);
 			}
 		});
 	}
@@ -459,16 +480,22 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string $field - the fieldname in the db
 	 * @param string $comparisators - example StartsWith, relates to a filtercontext
+	 * @param array $modifiers - Modifiers to pass to the filter, ie not,nocase
 	 * @param string $value - the value that the filtercontext will use for matching
 	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
 	 */
-	private function applyFilterContext($field, $comparisators, $value) {
+	private function applyFilterContext($field, $comparisators, $modifiers, $value) {
 		$t = singleton($this->dataClass())->dbObject($field);
-		$className = "{$comparisators}Filter";
-		if(!class_exists($className)){
-			throw new InvalidArgumentException('There are no '.$comparisators.' comparisator');
+		if($comparisators) {
+			$className = "{$comparisators}Filter";
+		} else {
+			$className = 'ExactMatchFilter';
 		}
-		$t = new $className($field,$value);
+		if(!class_exists($className)){
+			$className = 'ExactMatchFilter';
+			array_unshift($modifiers, $comparisators);
+		}
+		$t = new $className($field, $value, $modifiers);
 		$t->apply($this->dataQuery());
 	}
 	
@@ -500,25 +527,29 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
 		}
 
-		$SQL_Statements = array();
-		foreach($whereArguments as $fieldName => $value) {
-			if($fieldName == 'ID') {
-				$fieldName = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
-			} else {
-				$fieldName = '"' . Convert::raw2sql($fieldName) . '"';
+		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
+			$subquery = $query->disjunctiveGroup();
+
+			foreach($whereArguments as $field => $value) {
+				$fieldArgs = explode(':', $field);
+				$field = array_shift($fieldArgs);
+				$filterType = array_shift($fieldArgs);
+				$modifiers = $fieldArgs;
+
+				// This is here since PHP 5.3 can't call protected/private methods in a closure.
+				$t = singleton($list->dataClass())->dbObject($field);
+				if($filterType) {
+					$className = "{$filterType}Filter";
+				} else {
+					$className = 'ExactMatchFilter';
+				}
+				if(!class_exists($className)){
+					$className = 'ExactMatchFilter';
+					array_unshift($modifiers, $filterType);
+				}
+				$t = new $className($field, $value, $modifiers);
+				$t->exclude($subquery);
 			}
-
-			if(is_array($value)){
-				$SQL_Statements[] = ($fieldName . ' NOT IN (\''.implode('\',\'', Convert::raw2sql($value)).'\')');
-			} else {
-				$SQL_Statements[] = ($fieldName . ' != \''.Convert::raw2sql($value).'\'');
-			}
-		}
-
-		if(!count($SQL_Statements)) return $this;
-
-		return $this->alterDataQuery_30(function($query) use ($SQL_Statements){
-			$query->whereAny($SQL_Statements);
 		});
 	}
 	
@@ -544,7 +575,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Return a new DataList instance with an inner join clause added to this list's query.
 	 *
-	 * @param string $table Table name (unquoted)
+	 * @param string $table Table name (unquoted and as escaped SQL)
 	 * @param string $onClause Escaped SQL statement, e.g. '"Table1"."ID" = "Table2"."ID"'
 	 * @param string $alias - if you want this table to be aliased under another name
 	 * @return DataList 
@@ -558,7 +589,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Return a new DataList instance with a left join clause added to this list's query.
 	 *
-	 * @param string $table Table name (unquoted)
+	 * @param string $table Table name (unquoted and as escaped SQL)
 	 * @param string $onClause Escaped SQL statement, e.g. '"Table1"."ID" = "Table2"."ID"'
 	 * @param string $alias - if you want this table to be aliased under another name
 	 * @return DataList 
@@ -600,6 +631,20 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		}
 
 		return $result;
+	}
+	
+	/**
+	 * Walks the list using the specified callback
+	 *
+	 * @param callable $callback
+	 * @return DataList
+	 */
+	public function each($callback) {
+		foreach($this as $row) {
+			$callback($row);
+		}
+		
+		return $this;
 	}
 
 	public function debug() {

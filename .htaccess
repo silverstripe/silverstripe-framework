@@ -1,7 +1,7 @@
 <FilesMatch "\.(php|php3|php4|php5|phtml|inc)$">
 	Deny from all
 </FilesMatch>
-<FilesMatch "(main|static-main|rpc|tiny_mce_gzip)\.php$">
+<FilesMatch "(main|rpc|tiny_mce_gzip)\.php$">
 	Allow from all
 </FilesMatch>
 <FilesMatch "silverstripe_version$">

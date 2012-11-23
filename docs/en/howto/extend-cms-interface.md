@@ -97,7 +97,7 @@ Create a new file called `zzz_admin/code/BookmarkedPageExtension.php` and insert
 Enable the extension with the following line in `zzz_mysite/_config.php`:
 
 	:::php
-	Object::add_extension('SiteTree', 'BookmarkedPageExtension');
+	SiteTree::add_extension('BookmarkedPageExtension');
 
 In order to add the field to the database, run a `dev/build/?flush=all`.
 Refresh the CMS, open a page for editing and you should see the new checkbox.
@@ -121,7 +121,7 @@ Add the following code to a new file `zzz_admin/code/BookmarkedLeftAndMainExtens
 Enable the extension with the following line in `zzz_mysite/_config.php`:
 
 	:::php
-	Object::add_extension('LeftAndMain', 'BookmarkedPagesLeftAndMainExtension');
+	LeftAndMain::add_extension('BookmarkedPagesLeftAndMainExtension');
 
 As the last step, replace the hardcoded links with our list from the database.
 Find the `<ul>` you created earlier in `zzz_admin/admin/templates/LeftAndMain.ss`

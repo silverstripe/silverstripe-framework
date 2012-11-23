@@ -1927,20 +1927,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function set_default_locale($locale) {
 		self::$default_locale = $locale;
 	}
-	
-	/**
-	 * Include a locale file determined by module name and locale 
-	 * 
-	 * @deprecated 3.0 Use Zend_Translate instead
-	 * 
-	 * @param string $module Module that contains the locale file
-	 * @param string $locale Locale to be loaded
-	 */
-	public static function include_locale_file($module, $locale) {
-		Deprecation::notice('3.0', 'Use Zend_Translate instead.');
-		
-		if (file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) include_once($file);
-	}
 
 	/**
 	 * Includes all available language files for a certain defined locale.

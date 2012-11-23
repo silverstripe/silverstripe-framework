@@ -230,21 +230,22 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * Get all the 'any' permission codes available to the given member.
-	 * @return array();
+	 *
+	 * @return array
 	 */
 	public static function permissions_for_member($memberID) {
 		$groupList = self::groupList($memberID);
+
 		if($groupList) {
 			$groupCSV = implode(", ", $groupList);
 
-			// Raw SQL for efficiency
-			return array_unique(DB::query("
+			$allowed = array_unique(DB::query("
 				SELECT \"Code\"
 				FROM \"Permission\"
 				WHERE \"Type\" = " . self::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
-				
+
 				UNION
-				
+
 				SELECT \"Code\"
 				FROM \"PermissionRoleCode\" PRC
 				INNER JOIN \"PermissionRole\" PR ON PRC.\"RoleID\" = PR.\"ID\"
@@ -252,9 +253,16 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 				WHERE \"GroupID\" IN ($groupCSV)
 			")->column());
 
-		} else {
-			return array();
+			$denied = array_unique(DB::query("
+				SELECT \"Code\"
+				FROM \"Permission\"
+				WHERE \"Type\" = " . self::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+			")->column());                        
+			
+			return array_diff($allowed, $denied);         
 		}
+		
+		return array();
 	}
 
 

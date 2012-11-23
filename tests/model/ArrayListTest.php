@@ -60,6 +60,21 @@ class ArrayListTest extends SapphireTest {
 			array('First' => 'ThirdFirst', 'Second' => 'ThirdSecond')
 		));
 	}
+	
+	public function testEach() {
+		$list = new ArrayList(array(1, 2, 3));
+		
+		$count = 0;
+		$test = $this;
+		
+		$list->each(function($item) use (&$count, $test) {
+			$count++;
+			
+			$test->assertTrue(is_int($item));
+		});
+		
+		$this->assertEquals($list->Count(), $count);
+	}
 
 	public function testLimit() {
 		$list = new ArrayList(array(

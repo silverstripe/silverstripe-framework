@@ -82,18 +82,6 @@ en:
   CheckboxField:
     NO: No
     YES: Yes
-  ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
-    SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: 'Saved %s %s %s'
-  ComplexTableField.ss:
-    ADDITEM: 'Add %s'
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort ascending'
-    SORTDESC: 'Sort descending'
-  ComplexTableField_popup.ss:
-    NEXT: Next
-    PREVIOUS: Previous
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -176,18 +164,7 @@ en:
     XlsType: 'Excel spreadsheet'
     ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
-  FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
@@ -315,8 +292,6 @@ en:
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
-  ImageField:
-    IMAGE: Image
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -480,10 +455,6 @@ en:
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Please enter a valid phone number'
-  RelationComplexTableField.ss:
-    ADD: Add
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
     BUTTONSEND: 'Send me the password reset link'
@@ -521,32 +492,13 @@ en:
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
-  SimpleImageField:
-    NOUPLOAD: 'No Image Uploaded'
   SiteTree:
     TABMAIN: Main
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
-    ADD: 'Add a new row'
-    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Export to CSV'
-    PRINT: Print
     Print: Print
-    SELECT: 'Select:'
-  TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
   TableListField_PageControls.ss:
-    DISPLAYING: Displaying
     OF: of
-    TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:

@@ -339,13 +339,13 @@ class GridField extends FormField {
 					// A return value of null means this columns should be skipped altogether.
 					if($colContent === null) continue;
 					$colAttributes = $this->getColumnAttributes($record, $column);
-					$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+					$rowContent .= FormField::create_tag('td', $colAttributes, $colContent);
 				}
 				$classes = array('ss-gridfield-item');
 				if ($idx == 0) $classes[] = 'first';
 				if ($idx == $total-1) $classes[] = 'last';
 				$classes[] = ($idx % 2) ? 'even' : 'odd';
-				$row = $this->createTag(
+				$row = FormField::create_tag(
 					'tr',
 					array(
 						"class" => implode(' ', $classes),
@@ -361,26 +361,27 @@ class GridField extends FormField {
 		} 
 		
 		// Display a message when the grid field is empty
-		if(!(isset($content['body']) && $content['body'])) {    
-			$content['body'] = $this->createTag(
+		if(!(isset($content['body']) && $content['body'])) {
+			$content['body'] = FormField::create_tag(
 				'tr',
 				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
-				$this->createTag(
+				FormField::create_tag(
 					'td',
 					array('colspan' => count($columns)),
-					_t('GridField.NoItemsFound', 'No items found'))
+					_t('GridField.NoItemsFound', 'No items found')
+				)
 			);
 		}
 
 		// Turn into the relevant parts of a table
 		$head = $content['header']
-			? $this->createTag('thead', array(), $content['header'])
+			? FormField::create_tag('thead', array(), $content['header'])
 			: '';
 		$body = $content['body']
-			? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), $content['body'])
+			? FormField::create_tag('tbody', array('class' => 'ss-gridfield-items'), $content['body'])
 			: '';
 		$foot = $content['footer']
-			? $this->createTag('tfoot', array(), $content['footer'])
+			? FormField::create_tag('tfoot', array(), $content['footer'])
 			: '';
 
 		$this->addExtraClass('ss-gridfield field');
@@ -398,9 +399,9 @@ class GridField extends FormField {
 
 
 		return
-			$this->createTag('fieldset', $attrs, 
+			FormField::create_tag('fieldset', $attrs, 
 				$content['before'] .
-				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
+				FormField::create_tag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
 				$content['after']
 			);
 	}

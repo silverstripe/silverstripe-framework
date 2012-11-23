@@ -569,7 +569,7 @@ class Requirements_Backend {
 	
 	/**
 	 * Needed to actively prevent the inclusion of a file,
-	 * e.g. when using your own prototype.js.
+	 * e.g. when using your own jQuery version.
 	 * Blocking should only be used as an exception, because
 	 * it is hard to trace back. You can just block items with an
 	 * ID, so make sure you add an unique identifier to customCSS() and customScript().
@@ -648,10 +648,10 @@ class Requirements_Backend {
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
 	public function includeInHTML($templateFile, $content) {
-		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
-		
-		if((strpos($content, '</head>') !== false || strpos($content, '</head ') !== false)
-				&& ($this->css||$this->javascript||$this->customCSS||$this->customScript||$this->customHeadTags)) {
+		if(
+			(strpos($content, '</head>') !== false || strpos($content, '</head ') !== false) 
+			&& ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)
+		) {
 			$requirements = '';
 			$jsRequirements = '';
 			
@@ -699,9 +699,10 @@ class Requirements_Backend {
 				// We put script tags into the body, for performance.
 				// If your template already has script tags in the body, then we put our script 
 				// tags just before those. Otherwise, we put it at the bottom.
-				$p1 = strripos($content, '<script');
 				$p2 = stripos($content, '<body');
-				if($p1 !== false && $p1 > $p2) {
+				$p1 = stripos($content, '<script', $p2);
+				
+				if($p1 !== false) {
 					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
 					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
@@ -714,8 +715,6 @@ class Requirements_Backend {
 				$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
 			}
 		} 
-		
-		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 		
 		return $content;
 	}

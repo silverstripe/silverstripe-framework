@@ -7,8 +7,7 @@
  * Often used alongside {@link GridFieldDeleteAction} for detaching existing records from a relatinship.
  * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldAddExistingAutocompleter
-		implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
+class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 	
 	/**
 	 * Which template to use for rendering
@@ -28,10 +27,25 @@ class GridFieldAddExistingAutocompleter
 	protected $searchList;
 
 	/**
-	 * Which columns that should be used for doing a "StartsWith" search.
+	 * Define column names which should be included in the search.
+	 * By default, they're searched with a {@link StartsWithFilter}.
+	 * To define custom filters, use the same notation as {@link DataList->filter()},
+	 * e.g. "Name:EndsWith".
+	 * 
 	 * If multiple fields are provided, the filtering is performed non-exclusive.
-	 * If no fields are provided, tries to auto-detect a "Title" or "Name" field,
-	 * and falls back to the first textual field defined on the object.
+	 * If no fields are provided, tries to auto-detect fields from
+	 * {@link DataObject->searchableFields()}.
+	 * 
+	 * The fields support "dot-notation" for relationships, e.g.
+	 * a entry called "Team.Name" will search through the names of
+	 * a "Team" relationship.
+	 *
+	 * @example
+	 *  array(
+	 *  	'Name',
+	 *  	'Email:StartsWith',
+	 *  	'Team.Name'
+	 *  )
 	 *
 	 * @var Array
 	 */
@@ -192,16 +206,15 @@ class GridFieldAddExistingAutocompleter
 				$dataClass));
 		}
 
-		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
-		$stmts = array();
+		$params = array();
 		foreach($searchFields as $searchField) {
-			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField,
-				Convert::raw2sql($request->getVar('gridfield_relationsearch')));
+			$params[$searchField] = $request->getVar('gridfield_relationsearch');
 		}
-		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
-		$results = $results->sort($searchFields[0], 'ASC');
-		$results = $results->limit($this->getResultsLimit());
-
+		$results = $allList
+			->subtract($gridField->getList())
+			->filterAny($params)
+			->sort(strtok($searchFields[0], ':'), 'ASC')
+			->limit($this->getResultsLimit());
 		$json = array();
 		foreach($results as $result) {
 			$json[$result->ID] = SSViewer::fromString($this->resultsFormat)->process($result);
@@ -250,20 +263,56 @@ class GridFieldAddExistingAutocompleter
 	}
 
 	/**
-	 * Detect searchable 
+	 * Detect searchable fields and searchable relations.
+	 * Falls back to {@link DataObject->summaryFields()} if
+	 * no custom search fields are defined.
 	 * 
-	 * @param  String
-	 * @return Array
+	 * @param  String the class name
+	 * @return Array|null names of the searchable fields
 	 */
-	protected function scaffoldSearchFields($dataClass) {
+	public function scaffoldSearchFields($dataClass) {
 		$obj = singleton($dataClass);
-		if($obj->hasDatabaseField('Title')) {
-			return array('Title');
-		} else if($obj->hasDatabaseField('Name')) {
-			return array('Name');
-		} else {
-			return null;
+		$fields = null;
+		if($fieldSpecs = $obj->searchableFields()) {
+			$customSearchableFields = $obj->stat('searchable_fields');
+			foreach($fieldSpecs as $name => $spec) {
+				if(is_array($spec) && array_key_exists('filter', $spec)) {
+					// The searchableFields() spec defaults to PartialMatch,
+					// so we need to check the original setting.
+					// If the field is defined $searchable_fields = array('MyField'),
+					// then default to StartsWith filter, which makes more sense in this context.
+					if(!$customSearchableFields || array_search($name, $customSearchableFields)) {
+						$filter = 'StartsWith';
+					} else {
+						$filter = preg_replace('/Filter$/', '', $spec['filter']);
+					}
+					$name = "{$name}:{$filter}";
+				} elseif (strpos($name, ':') === FALSE) {
+				    // add the filter type to seachable field
+				    // if not already done
+				    $name = "$name:StartsWith";
+				}
+				if (strpos($name, '.')) {
+				    // filter searchable fields to remove all
+				    // non has_many relation types
+				    $nameParts = explode('.', $name);
+				    $relationName = $nameParts[0];
+				    if (singleton($dataClass)->has_many($relationName) === false) {
+					continue;
+				    }
+				}
+				$fields[] = $name;
+			}
 		}
+		if (is_null($fields)) {
+			if ($obj->hasDatabaseField('Title')) {
+				$fields = array('Title');
+			} elseif ($obj->hasDatabaseField('Name')) {
+				$fields = array('Name');
+			}
+		}
+
+		return $fields;
 	}
 
 	/**

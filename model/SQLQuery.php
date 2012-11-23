@@ -720,13 +720,6 @@ class SQLQuery {
 	 */
 	public function setWhere($where) {
 		$this->where = array();
-
-		$args = func_get_args();
-		if(isset($args[1])) {
-			Deprecation::notice('3.0',
-				'Multiple arguments to where is deprecated. Pleas use where("Column = Something") syntax instead');
-		}
-
 		return $this->addWhere($where);
 	}
 
@@ -888,8 +881,8 @@ class SQLQuery {
 				else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 
 				$aliasClause = ($alias != $join['table']) ? " AS \"" . Convert::raw2sql($alias) . "\"" : "";
-				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"" . Convert::raw2sql($join['table'])
-					. "\"$aliasClause ON $filter";
+				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"" 
+					. $join['table'] . "\"$aliasClause ON $filter";
 			}
 		}
 

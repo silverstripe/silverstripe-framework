@@ -76,7 +76,6 @@ class DevelopmentAdmin extends Controller {
 	public function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
-			"buildcache" => "Rebuild the static cache, if you're using StaticPublisher",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
 			"tests/startsession" => "Start a test session in your browser"

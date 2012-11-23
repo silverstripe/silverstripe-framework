@@ -45,7 +45,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	}
 	
 	/**
-	 * Return any special attributes that will be used for FormField::createTag()
+	 * Return any special attributes that will be used for FormField::create_tag()
 	 *
 	 * @param GridField $gridField
 	 * @param DataObject $record

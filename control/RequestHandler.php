@@ -303,7 +303,8 @@ class RequestHandler extends ViewableData {
 						return true;
 					} elseif(substr($test, 0, 2) == '->') {
 						// Case 2: Determined by custom method with "->" prefix
-						return $this->{substr($test, 2)}();
+						list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
+						return call_user_func_array(array($this, $method), $arguments);
 					} else {
 						// Case 3: Value is a permission code to check the current member against
 						return Permission::check($test);
@@ -353,20 +354,14 @@ class RequestHandler extends ViewableData {
 	 * @uses SS_HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
-		$e = new SS_HTTPResponse_Exception($errorMessage, $errorCode);
+		// Call a handler method such as onBeforeHTTPError404
+		$this->extend('onBeforeHTTPError' . $errorCode, $this->request);
 
-		// Error responses should always be considered plaintext, for security reasons
-		$e->getResponse()->addHeader('Content-Type', 'text/plain');
+		// Call a handler method such as onBeforeHTTPError, passing 404 as the first arg
+		$this->extend('onBeforeHTTPError', $errorCode, $this->request);
 
-		throw $e;
-	}
-
-	/**
-	 * @deprecated 3.0 Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())
-	 */
-	public function isAjax() {
-		Deprecation::notice('3.0', 'Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())');
-		return $this->request->isAjax();
+		// Throw a new exception
+		throw new SS_HTTPResponse_Exception($errorMessage, $errorCode);
 	}
 
 	/**
