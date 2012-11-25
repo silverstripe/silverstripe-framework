@@ -10,7 +10,7 @@ bg:
     LASTEDIT: 'Последна промяна'
     OWNER: Собственик
     SIZE: 'Големина на файла'
-    TITLE: Title
+    TITLE: Заглавие
     TYPE: 'Тип на файла'
     URL: URL
   AssetUploadField:
@@ -71,7 +71,7 @@ bg:
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Запис
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'Моят профил'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
     CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
@@ -161,7 +161,7 @@ bg:
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Размер на файла е нула байта.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
+    NOVALIDUPLOAD: 'Невалиден файл за качване'
     Name: Име
     PLURALNAME: Файлове
     PdfType: 'Adobe Acrobat PDF file'
@@ -347,7 +347,7 @@ bg:
     BUTTONLOGIN: Влез
     BUTTONLOGINOTHER: 'Влез като някой друг'
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Нямаш права за това действие'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
     CONFIRMPASSWORD: 'Потвърдете паролата'
     DATEFORMAT: 'Date format'
@@ -355,14 +355,14 @@ bg:
     DefaultDateTime: 'по подразбиране'
     EMAIL: Еmail
     EMPTYNEWPASSWORD: 'Не е въведена нова парола'
-    ENTEREMAIL: 'Връзка за анулиране на парола'
+    ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
     ERRORLOCKEDOUT: 'Вашата сметка бе изключена временно защото имаше много неуспешни опити за влизане. Моля опитайте отново след 20 минути.'
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
     ERRORWRONGCRED: 'Това не изглежда да е правилен email адрес или парола. Моля опитайте отново.'
     FIRSTNAME: Име
     INTERFACELANG: Език
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    INVALIDNEWPASSWORD: 'Не може да бъде приета паролата: {password}'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
@@ -422,11 +422,11 @@ bg:
     DELETE: Изтрий
     DELETEDRECORDS: 'Deleted {count} records.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Import from CSV'
+    IMPORT: 'Внасяне от CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Преглед на CSV файл за внасяне'
     NOIMPORT: 'Нищо за внасяне'
-    RESET: Reset
+    RESET: Нулиране
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
@@ -503,7 +503,7 @@ bg:
     IMPORTGROUPS: 'Внасяне на файл с групи'
     IMPORTUSERS: 'Внасяне на файл с потребители'
     MEMBERS: Потребители
-    MENUTITLE: Security
+    MENUTITLE: Сигурност
     MemberListCaution: 'Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни.'
     NEWGROUP: 'Нова група'
     PERMISSIONS: Разрешения
