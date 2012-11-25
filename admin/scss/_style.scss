@@ -1100,6 +1100,12 @@ form.member-profile-form {
 		overflow-x: auto;
 		background: none;
 		width:100%;
+		.cms-help-toggle {
+			text-indent: -9999em;
+			display: inline-block;
+			width: 20px;
+			background:url(../images/question.png) no-repeat 0px 0px;
+		}
 		#Root_Main {
 			.confirmedpassword {
 				border-bottom:none;
@@ -1107,12 +1113,6 @@ form.member-profile-form {
 			}
 			.customFormat {
 				max-width:80px;
-			}
-			.cms-help-toggle {
-				text-indent: -9999em;
-				display: inline-block;
-				width: 20px;
-				background:url(../images/question.png) no-repeat 0px 0px;
 			}
 		}
 		#Root_Permissions{
