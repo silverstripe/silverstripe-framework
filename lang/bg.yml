@@ -1,7 +1,7 @@
 bg:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: NewFolder
+    NEWFOLDER: НоваПапка
   AssetTableField:
     CREATED: Създаден
     DIM: Размери
@@ -16,12 +16,12 @@ bg:
   AssetUploadField:
     ChooseFiles: 'Избери файлове'
     DRAGFILESHERE: 'Завлечете файловете тук'
-    DROPAREA: 'Drop Area'
+    DROPAREA: 'Зона за пускане'
     EDITALL: 'Редакция на всички'
     EDITANDORGANIZE: 'Редактиране и подреждане'
     EDITINFO: 'Edit files'
     FILES: Файлове
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Избери файлове от компютъра'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Общо
     TOUPLOAD: 'Choose files to upload...'
@@ -82,7 +82,7 @@ bg:
     - 'False'
     - 'True'
   ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
+    CLOSEPOPUP: 'Затвори прозореца'
     SUCCESSADD2: 'Беше добавен {name}'
     SUCCESSEDIT: 'Съхранено %s %s %s'
   ComplexTableField.ss:
@@ -141,7 +141,7 @@ bg:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
   Enum:
-    ANY: Any
+    ANY: Някой
   File:
     AviType: 'AVI video file'
     Content: Съдържание
@@ -170,7 +170,7 @@ bg:
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     TiffType: 'Tagged image format'
-    Title: Title
+    Title: Заглавие
     WavType: 'WAV audo file'
     XlsType: 'Excel spreadsheet'
     ZipType: 'ZIP compressed file'
@@ -183,7 +183,7 @@ bg:
     FILE: Файл
     FROMCOMPUTER: 'От компютъра'
     FROMFILESTORE: 'От Файлове и Изображения'
-    NOSOURCE: 'Please select a source file to attach'
+    NOSOURCE: 'Избери файл за прикачване'
     REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe за качване на изображение'
@@ -211,23 +211,23 @@ bg:
     NONE: нищо
   GridAction:
     DELETE_DESCRIPTION: Delete
-    Delete: Delete
+    Delete: Изтрий
     UnlinkRelation: Откачане
   GridField:
     Add: 'Добави {name}'
     Filter: Филтър
     FilterBy: 'Филтриране по'
-    Find: Find
+    Find: Търси
     LEVELUP: 'Ниво нагоре'
-    LinkExisting: 'Link Existing'
+    LinkExisting: 'Свържи към съществуващ'
     NewRecord: 'Нов %s'
     NoItemsFound: 'Няма намерени елементи'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    PRINTEDAT: 'Отпечатано на'
+    PRINTEDBY: 'Отпечатано от'
     PlaceHolder: 'Намери {type}'
     PlaceHolderWithLabels: 'Намери {type} по {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    RelationSearch: 'Търсене на връзка'
+    ResetFilter: Изчистване
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
   GridFieldDetailForm:
@@ -256,11 +256,11 @@ bg:
     has_many_Permissions: Разрешения
     many_many_Members: Потребители
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Внасяне на една или повече групи в <em>CSV формат</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Покажи начин на употреба</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    ResultDeleted: 'Бяха изтрити %d групи'
+    ResultUpdated: 'Бяха обновени %d групи'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
@@ -277,7 +277,7 @@ bg:
     CSSCLASSLEFT: 'В ляво, с текст който да се нанася около него'
     CSSCLASSLEFTALONE: 'В ляво, самостоятелно.'
     CSSCLASSRIGHT: 'В дясно, с текст който да се нанася около него'
-    DETAILS: Details
+    DETAILS: Детайли
     EMAIL: 'email адрес'
     FILE: Файл
     FOLDER: Папка
@@ -312,7 +312,7 @@ bg:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Image
+    IMAGE: Изображение
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -322,12 +322,12 @@ bg:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Изтрит
     DropdownBatchActionsDefault: Действия
-    HELP: Help
-    PAGETYPE: 'Page type: '
+    HELP: Помощ
+    PAGETYPE: 'Тип на страницата'
     PERMAGAIN: 'Вие излязохте от CMS. Ако искате да влезете отново, моля, въведете потребителско име и парола.'
     PERMALREADY: 'Съжалявам, но нямате достъп до тази част от CMS. Ако искате да влезете с друго потребителско име, моля, направете го по-долу'
     PERMDEFAULT: 'Въведете имейл адреса и паролата си, за да влезете в CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PLEASESAVE: 'Съхрани страницата: Тази страница не може да бъде обновена, защото още не е записана.'
     PreviewButton: Преглед
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Записано
@@ -336,11 +336,11 @@ bg:
     Hello: Здравей
     LOGOUT: 'Log out'
   LoginAttempt:
-    Email: 'Email Address'
+    Email: 'Email адрес'
     IP: 'IP адрес'
     PLURALNAME: 'Login Attempts'
     SINGULARNAME: 'Login Attempt'
-    Status: Status
+    Status: Статус
   Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
@@ -389,10 +389,10 @@ bg:
   MemberDatetimeOptionsetField:
     AMORPM: 'АМ (преди обед) или РМ (следобед)'
     'APPLY FILTER': 'Приложи филтър'
-    Custom: Custom
+    Custom: Произволно
     DATEFORMATBAD: 'Невалиден формат на датата'
     DAYNOLEADING: 'Ден от месеца без водеща нула'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
     FOURDIGITYEAR: 'Четирицифрена година'
     FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
     HOURNOLEADING: 'Час без водеща нула'
@@ -408,11 +408,11 @@ bg:
     TWODIGITSECOND: 'Секунди с водеща нула (00 до 59)'
     TWODIGITYEAR: 'Двуцифрена година'
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Внасяне на потебители в <em>CSV формат</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Покажи начин на употреба</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Бяха добавени {count} потребители'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultDeleted: 'Бяха изтрити %d членове'
+    ResultNone: 'Нямаше промени'
     ResultUpdated: 'Бяха актуализирани {count} потребители'
   MemberPassword:
     PLURALNAME: 'Member Passwords'
@@ -532,8 +532,8 @@ bg:
     SELECT: 'Избери:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+    SORTASC: 'Сортирай възходящо'
+    SORTDESC: 'Сортирай низходящо'
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
@@ -559,10 +559,10 @@ bg:
     Dimensions: Размери
     EDIT: Edit
     EDITINFO: 'Редактирай този файл'
-    FIELDNOTSET: 'File information not found'
+    FIELDNOTSET: 'Информация за файла не беше намерена'
     FROMCOMPUTER: 'От компютъра'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'От файлове'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
     MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
