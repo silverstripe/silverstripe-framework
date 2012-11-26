@@ -13,7 +13,7 @@
 		$Menu
 		$Content
 
-		<div class="cms-preview east <% if IsPreviewExpanded %>is-expanded<% else %>is-collapsed<% end_if %>" data-layout-type="border">
+		<div class="cms-preview east" data-layout-type="border">
 			<div class="preview-note"><span><!-- --></span><% _t('CMSPageHistoryController_versions.ss.PREVIEW','Website preview') %></div>
 			<div class="preview-scroll">
 				<div class="preview-device-outer">

@@ -85,25 +85,11 @@ So to add or "subclass" a tools panel, simply create this file and it's automati
 
 ## Layout and Panels
 
-The CMS markup is structured into "panels", which are the base units containing
-interface components (or other panels), as declared by the class `cms-panel`. Panels can be made collapsible, and
-get the ability to be resized and aligned with a layout manager, in our case [jLayout](http://www.bramstein.com/projects/jlayout/).
-This layout manager applies CSS declarations (mostly dimensions and positioning) via JavaScript,
-by extracting additional metadata from the markup in the form of HTML5 data attributes.
-We're using a "border layout" which separates the panels into five areas: north, south, east, west and center (all of which are optional).
-As layouts can be nested, this allows for some powerful combinations. Our 
-[Howto: Extend the CMS Interface](../howto/extend-cms-interface) has a practical example on
-how to add a bottom panel to the CMS UI. 
+The various panels and UI components within them are loosely coupled to the layout engine through the `data-layout-type`
+attribute. The layout is triggered on the top element and cascades into children, with a `redraw` method defined on
+each panel and UI component that needs to update itself as a result of layouting.
 
-The various panels and UI components within them are not tightly coupled
-to the layout engine, so any changes in dimension which impact the overall layout
-need to be handled manually. In SilverStripe, we've established a convention for a `redraw()`
-method on each panel and UI component for this purpose, which is usually invoked
-through its parent container. Invocation order is crucial here, generally going from
-innermost to outermost elements. For example, the tab panels have be applied in the CMS form
-before the form itself is layouted with its sibling panels to avoid incorrect dimensions.
-
-![Layout variations](_images/cms-architecture.png)
+Refer to [Layout reference](../reference/layout) for further information.
 
 ## Forms
 
@@ -497,4 +483,5 @@ through the `PjaxResponseNegotiator` class (see above).
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
  * [Howto: Customize the CMS tree](../howto/customize-cms-tree)
  * [Reference: ModelAdmin](../reference/modeladmin)
+ * [Reference: Layout](../reference/layout)
  * [Topics: Rich Text Editing](../topics/rich-text-editing)
