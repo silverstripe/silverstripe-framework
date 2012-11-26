@@ -814,6 +814,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			resetFields: function() {				
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
 				this.find('.ss-gridfield-items .ui-selected').removeClass('ui-selected'); // Unselect all items
+				this.find('li.ss-uploadfield-item').remove(); // Remove all selected items
 				this.redraw();
 
 				this._super();
