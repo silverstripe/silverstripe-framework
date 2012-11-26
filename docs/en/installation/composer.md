@@ -30,18 +30,32 @@ You can then run Composer commands by calling `composer`.  For example:
 It is also possible to keep `composer.phar` out of your path, for example, to put it in your project root.  Every command would then start with `php composer.phar` instead of `composer`.  This is handy if need to keep your installation isolated from the rest of your computer's set-up, but we recommend putting composer into the path for most people.
 </div>	
 
+#### Updating composer
+
+If you already have composer installed you can update it by running:
+
+	sudo composer self-update
+	
+Composer updates regularly, so you should run this command fairly often. These instructions assume you are running the latest version.
+
 ## Create a new site
 
 Composer can create a new site for you, using the installer as a template.  To do so, run this:
 
-	composer create-project silverstripe/installer ./my/website/folder 3.0.2.1
+	composer create-project silverstripe/installer ./my/website/folder
 
 `./my/website/folder` should be the root directory where your site will live.  For example, on OS X, you might use a subdirectory of `~/Sites`.
 
-As long as your web server is up and running, this will get all the code that you need.  Now visit the site in your web
-browser, and the installation process will be completed.
+As long as your web server is up and running, this will get all the code that you need. 
 
-**Note:** The version, 3.0.2.1, is the first version that we've released that has Composer support.  Shortly, this will be replaced with 3.0.3.  Note that [a planned improvement to Composer](https://github.com/composer/composer/issues/957) would make it choose the latest stable version by default; once this has happened, we will update this document.
+Now visit the site in your web browser, and the installation process will be completed.
+
+#### Selecting a version
+
+By default composer will download the latest stable version. You can also specify
+a version to download that version explicitly, i.e. this will download 3.0.3:
+
+	composer create-project silverstripe/installer ./my/website/folder 3.0.3
 
 ## Adding modules to your project
 
@@ -100,8 +114,8 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 		"description": "The SilverStripe Framework Installer",
 		"require": {
 			"php": ">=5.3.2",
-			"silverstripe/cms": "3.0.2.1",
-			"silverstripe/framework": "3.0.2.1",
+			"silverstripe/cms": "3.0.*@stable",
+			"silverstripe/framework": "3.0.*@stable",
 			"silverstripe-themes/simple": "*"
 		},
 		"require-dev": {
@@ -114,6 +128,46 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 To add modules, you should add more entries into the `"require"` section.  For example, we might add the blog and forum modules.  Be careful with the commas at the end of the lines!
 
 Save your file, and then run the following command to refresh the installed packages:
+
+	composer update
+
+## Using development versions
+
+Composer will by default download the latest stable version of silverstripe/installer.
+The `composer.json` file that comes with silverstripe/installer may also explicitly state it requires the stable version of cms and framework - this is to ensure that when developers are getting started, running `composer update` won't upgrade their project to an unstable version
+
+However it is relatively easy to tell composer to use development versions. Not only
+is this required if you want to contribute back to the SilverStripe project, it also allows you to get fixes and API changes early.
+
+This is a two step process. First you get composer to start a project based on
+the latest unstable silverstripe/installer
+
+	composer create-project silverstripe/installer ./my/website/folder master-dev
+
+Or for the latest development version in the 3.0.x series
+
+	composer create-project silverstripe/installer ./my/website/folder 3.0.x-dev
+
+You then remove any references to @stable in the created `composer.json`. For instance
+if your `composer.json` contained this:
+
+	"require": {
+		"php": ">=5.3.2",
+		"silverstripe/cms": "3.0.*@stable",
+		"silverstripe/framework": "3.0.*@stable",
+		"silverstripe-themes/simple": "*"
+	},
+
+You would change it to read
+
+	"require": {
+		"php": ">=5.3.2",
+		"silverstripe/cms": "3.0.*",
+		"silverstripe/framework": "3.0.*",
+		"silverstripe-themes/simple": "*"
+	},
+	
+And then run
 
 	composer update
 
@@ -183,10 +237,20 @@ This is not the only way to set things up in Composer. For more information on t
 
 ## Setting up an environment for contributing to SilverStripe
 
-So you want to contribute to SilverStripe? Fantastic! You have to initialize your project from the latest development branch, 
-rather than a release tag. The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
+So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
+You have to tell composer three things in order to be able to do this:
 
-	composer create-project silverstripe/installer --dev ./my/website/folder 3.0.x-dev
+  - Keep the full git repository information
+  - Include dependancies marked as "developer" requirements
+  - Use the development version, not the latest stable version
+
+The first two steps are done as part of the initial create project using additional arguments. For instance:
+
+	composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
+
+The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
+
+The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
 
 The `--dev` flag will add a couple modules which are useful for SilverStripe development:
 
@@ -194,3 +258,5 @@ The `--dev` flag will add a couple modules which are useful for SilverStripe dev
  * The `docsviewer` module will let you preview changes to the project documentation
 
 Note that you can also include those into an existing project by running `composer update --dev`.
+
+You will then need to edit your `composer.json` file as explained above in [Using development versions](#using-development-versions)
