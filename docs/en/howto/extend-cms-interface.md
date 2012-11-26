@@ -21,11 +21,13 @@ the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` t
 We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
-Copy the template markup of the base implementation at `framework/admin/templates/LeftAndMain.ss` into `mysite/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after the `$Content` tag:
+Copy the template markup of the base implementation at `framework/admin/templates/LeftAndMain.ss` into
+`mysite/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after
+the `$Content` tag:
 	
 	:::ss
 	...
-	<div class="cms-container" data-layout="{type: 'border'}">
+	<div class="cms-container" data-layout-type="border">
 		$Menu
 		$Content
 		<div class="cms-bottom-bar south">
@@ -45,6 +47,8 @@ The important piece of information is the `south` class in our new `<div>` struc
 plus the height value in our CSS. It instructs the existing parent layout how to render the element.
 This layout manager ([jLayout](http://www.bramstein.com/projects/jlayout/)) 
 allows us to build complex layouts with minimal JavaScript configuration.
+
+See [layout reference](../reference/layout) for more specific information on CMS layouting.
 	
 ## Include custom CSS in the CMS
 
@@ -129,5 +133,6 @@ blocks and concepts for more complex extensions as well.
 
 ## Related
 
- * [CMS Architecture](../reference/cms-architecture)
+ * [Reference: CMS Architecture](../reference/cms-architecture)
+ * [Reference: Layout](../reference/layout)
  * [Topics: Rich Text Editing](../topics/rich-text-editing)

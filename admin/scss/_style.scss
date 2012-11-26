@@ -137,6 +137,12 @@ body.cms {
 	padding: 0;
 }
 
+// Hide threeColumnCompressor column.
+.cms-container {
+	.column-hidden {
+		display: none;
+	}
+}
 
 /** --------------------------------------------
  * Tabs
@@ -916,14 +922,6 @@ select.preview-dropdown {
 	background-color: $tab-panel-texture-color;
 	height: 100%;
 	width: 100%;
-
-	&.is-collapsed {
-		.cms-preview-toggle {
-			a {
-				left: -15px; // point left
-			}
-		}
-	}	
 
 	.preview-note {
 		font-weight: 18px;
