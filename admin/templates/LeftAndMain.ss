@@ -15,7 +15,7 @@
 
 		<div class="cms-preview east" data-layout-type="border">
 			<div class="preview-note"><span><!-- --></span><% _t('CMSPageHistoryController_versions.ss.PREVIEW','Website preview') %></div>
-			<div class="preview-scroll">
+			<div class="preview-scroll center">
 				<div class="preview-device-outer">
 					<div class="preview-device-inner">
 						<iframe src="about:blank" class="center" name="cms-preview-iframe"></iframe>

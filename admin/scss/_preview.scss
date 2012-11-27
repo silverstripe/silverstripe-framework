@@ -2,16 +2,16 @@
 /* -------------------------- */
 .cms-content-controls{
 
-	/*Styling of the backgroundcontrols sit on*/
+	/* Styling the background, controls sit on */
 	&.cms-preview-controls {
 		z-index: 1;
 		background: $color-widget-bg;	
-		min-height: 28px;
+		height: 30px; /* should be set in js Layout to match page actions */
 		padding: $grid-y*1.5 $grid-y*1.5;
 	}
 
-	/* Styling for icons in controls*/
-	.icon-view, .cms-navigator .dropdown a.chzn-single{
+	/* Styling for icons in controls */
+	.icon-view, .dropdown a.chzn-single {
 		white-space: nowrap;
 		&:before {
 			display:inline-block;
@@ -48,118 +48,141 @@
 	}
 	.cms-navigator{
 		width: 100%;
+	}
+	.dropdown a.chzn-single{
+		text-indent:-200px;
+	}
 
-		.dropdown a.chzn-single{
-			text-indent:-200px;
-		}
-		/* Preview selectors. Overrides default chosen styles and applies its own */
-		.preview-selector{
-			float:right;
-			border-bottom:none;
-			position:relative;
+	/* Preview selectors. Overrides default chosen styles and applies its own */
+	.preview-selector{
+		float:right;
+		border-bottom:none;
+		position:relative;
+		@include box-shadow(none);
+		margin: 3px 0 0 4px;
+		padding: 0;
+
+		a.chzn-single {						
+			width: 20px;
+			padding: 6px 5px;
+			height: 18px;
+			margin: -3px 0 0;
+			filter: none;	/* remove ie background */
+			background: none;
+			border: none;
 			@include box-shadow(none);
-			margin: 3px 0 0 4px;
-			padding: 0;
+			@include border-radius(3px);
 
-			a.chzn-single {
-				width: 20px;
-				padding: 6px 5px;
-				height: 18px;
-				margin: -3px 0 0;
-				background:none;
-				border:none;
-				@include box-shadow(none);
-				@include border-radius(3px);
 
-				&:hover, &:focus, &.chzn-single-with-drop  {
-					background-color: darken($color-widget-bg,6%);
-				}
-				&.chzn-single-with-drop {
-					@include border-radius(0 0 3px 3px);
-				}
-				div {
-					display: none;
-				}
+			&:hover, &:focus, &.chzn-single-with-drop  {
+				background-color: darken($color-widget-bg,6%);
 			}
+			&.chzn-single-with-drop {
+				@include border-radius(0 0 3px 3px);
+			}
+			div {
+				display: none;
+			}
+		}
 
+		&.open{
 			.chzn-drop{
+				position:absolute;
 				left: auto !important; //over-ride chosen inline styles
 				right: 0;
-				position: absolute;
-				@include border-radius(3px 3px 0 3px);
-				display: none;
+			}	
+		}
 
-				.chzn-results {
-					width: 135px;
+		.chzn-drop{
+			@include border-radius(3px 3px 0 3px);
+			@include box-shadow(0 0 3px rgba(0, 0, 0, 0.1));
+			.chzn-results {
+				width: 135px;
+				.result-selected {
+					background: $color-widget-bg;
 				}
 			}
-			
+		}			
 
-			.chzn-container.chzn-with-rise {
-				width:auto !important; //over-ride chosen inline styles
+		.chzn-container.chzn-with-rise {
+			width:auto !important; //over-ride chosen inline styles
 
-				.chzn-drop {	
-					padding: 0;
-					border-bottom: 1px solid #aaa;
-					margin-top: -5px;
-					width: auto !important; //over-ride chosen inline width (doesn't take image into account)
-					
-					.chzn-search {
-						display: none;
-					}
 
-					ul{
-						padding:0;
-						margin:0;
+			.chzn-drop {	
+				padding: 0;
+				border-bottom: 1px solid #aaa;
+				margin-top: -5px;
+				width: auto !important; //over-ride chosen inline width (doesn't take image into account)
+				
+				.chzn-search {
+					display: none;
+				}
 
-						li{
-							font-size: 12px;
-							line-height: 16px;
-							padding: 7px 16px 7px 6px;
-							color: $color-text-blue-link;
-							border-bottom: 1px solid $color-light-separator;
+				ul{
+					padding:0;
+					margin:0;
+
+					li{
+						font-size: 12px;
+						line-height: 16px;
+						padding: 7px 16px 7px 6px;
+						color: $color-text-blue-link;
+						border-bottom: 1px solid #DDD;
+						background-color: #FFF;
+
+						&:before{
+							margin-right: 2px;
+						}
+						&.description {
+							padding-top: 5px;
+							padding-bottom: 5px;
 							&:before{
-								margin-right: 2px;
+								margin-top: 5px;
 							}
-							&.description {
-								padding-top: 5px;
-								padding-bottom: 5px;
-								&:before{
-									margin-top: 5px;
-								}
-							}
-							&.highlighted, &:hover, &:focus {
-								color:$color-text-blue-link;
-								background: lighten($color-widget-bg,2%);
-								text-decoration: none;
-							}
-							&.first {
-								@include border-radius(4px 4px 0px 0px);
-							}
-							&.last {
-								@include border-radius(0px 0px 4px 4px);
-								border-bottom:none;
-							}
-							/* Description styling */
-							span { 
-								display:block;
-								color: lighten($color-text-dark, 30%);
-								font-size:0.85em;
-								line-height:1.1em;
-								padding-left:23px;
-							}
-							.icon-view {
-								margin-right: 4px;
-							}
-						}			
-					}
-				}				
+						}
+						&.highlighted, &:hover, &:focus {
+							color: $color-text-blue-link;
+							filter: none;
+							background: lighten($color-widget-bg,2%);
+							text-decoration: none;
+						}
+						&.first {
+							@include border-radius(3px 3px 0 0);
+						}
+						&.last {
+							border-bottom: none;
+							@include border-radius(0 0 0 3px);
+						}
+
+						/* Description styling */
+						span { 
+							display:block;
+							color: lighten($color-text-dark, 30%);
+							font-size:0.85em;
+							line-height:1.1em;
+							padding-left:23px;
+						}
+						.icon-view {
+							margin-right: 4px;
+						}
+						
+					}			
+				}
+			}				
+		}
+		&.open .chzn-drop { 
+			//display: block;
+		}
+		.chzn-drop ul.chzn-results li.result-selected {
+			background: darken($color-widget-bg, 2%);
+			color: $color-text;
+			&.highlighted, &:hover, &:focus {
+				background: darken($color-widget-bg, 2%);
+				color: $color-text;
 			}
-			&.open .chzn-drop { 
-				display: block;
-			}
-		} 
-	}	
+		}	
+	} 
+
 	.cms-preview-states{
 		float: right;
 		position: relative; 
@@ -168,3 +191,4 @@
 		width: 100px;
 	}
 }
+

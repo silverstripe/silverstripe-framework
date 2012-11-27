@@ -8,13 +8,12 @@
  */
 
 .cms-logo-header {
-	background-color: $color-dark-bg;
 	position: relative !important;
 	top:auto !important;
 	height:auto !important;
 	padding: 0 8px;
 	line-height: 24px;
-
+	background-color: lighten($color-dark-bg,10%);
 	@include background-image(
 		linear-gradient(lighten($color-dark-bg,20%), $color-dark-bg)
 	);
@@ -43,11 +42,9 @@
 	.collapsed &{
 		padding:0;
 	}
-
 	.version {
 		display: none; 
 	} 
-
 	a {
 		position: absolute;
 		top: $grid-y;
@@ -57,8 +54,8 @@
 		background: $application-logo-small no-repeat left center;
 		text-indent: -9999em;
 		padding: 0 1px;
+		left: 0;
 	}
-
 	span {
 		font-weight: bold;
 		font-size: $font-base-size;
@@ -88,7 +85,7 @@
 .cms-menu {
 	z-index: 80;
 	background: $color-base;
-	width: ($grid-x * 24); // Removed right border as it clashes with different blues
+	width: ($grid-x * 20);
 
 	@include box-shadow($color-shadow-blacker 0 0 3px);
 	a {
@@ -96,7 +93,7 @@
 	}
 	
 	.cms-panel-content {
-		width: ($grid-x * 24) - 1; /* 8x24 - 1 */
+		width: ($grid-x * 20);
 		overflow-x: hidden;
 		overflow-y: auto;
 		position: relative !important;
@@ -105,7 +102,7 @@
 	}
 		
 	&.collapsed {
-		width: 40px !important;
+		width: 40px;
 		cursor: auto;
 		z-index: 1000;
 		

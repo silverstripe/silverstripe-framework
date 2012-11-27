@@ -289,15 +289,6 @@ body.cms {
 	&.ss-tabset-tabshidden .ui-tabs-panel {
 		border-top: none;
 	}
-
-	// Reset to default styles
-	.ss-ui-button {
-		line-height: $grid-x*3;
-
-		.ui-button-text {
-			line-height: 1.4;
-		}
-	}
 }
  
 /**
@@ -441,9 +432,11 @@ body.cms {
 	margin: 0;
 	padding: $grid-y*1.5 $grid-y*2;
 	z-index: 0;
-	border-top: 1px solid $color-light-separator;
-	border-top: 1px solid #FAFAFA;
-	@include box-shadow(1px 0 0 $tab-panel-texture-color, #CCC 0 -1px 1px);
+	border-top: 1px solid lighten($color-separator, 4%);
+	@include box-shadow(
+		1px 0 0 $tab-panel-texture-color, 
+		$box-shadow-shine 0 1px 0px inset, 
+		$color-shadow-light 0 0 1px);
 	height: 28px;
 	background-color: $tab-panel-texture-color;
 }
@@ -614,7 +607,7 @@ p.message {
 	display: block;
 	margin: 0 0 15px 0;
 	
-	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
+	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	@include legacy-pie-clearfix();
 	
 	.cms-tree-view-modes {
@@ -687,7 +680,8 @@ p.message {
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
-	@include box-shadow($color-shadow-black 0 2px 3px);
+	border-right: 1px solid $color-separator;
+	@include box-shadow($box-shadow-shine -1px 0 0 inset, 0 0 1px $color-shadow-light);
 	float: left;
 	position: relative;
 
@@ -700,7 +694,7 @@ p.message {
 		margin: 0 0 $grid-y - 1;
 		line-height: $grid-y * 3;
 		
-		@include doubleborder(bottom, $color-light-separator, lighten($color-shadow-light, 95%));
+		@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	}
 	
 	.cms-panel-content {
@@ -771,7 +765,7 @@ p.message {
 		}
 		
 		&.checkbox {
-			padding: 0 8px 0;
+			padding: 0 0 8px;
 			
 			input { 
 				margin: 2px 0; 
@@ -845,6 +839,7 @@ p.message {
 		padding: 4px 6px;
 		border: 1px solid #aaa;
 		margin-bottom: 8px;
+		background-color: #D9D9D9;
 		@include background-image(linear-gradient(top, #fff, #D9D9D9));
 		border-top-left-radius: 4px;
 		border-bottom-left-radius: 4px;	
@@ -969,12 +964,11 @@ select.preview-dropdown {
 			}
 		}
 	}
-	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape {
+	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape, &.desktop {
 		.preview-scroll {
 			background-color: $tab-panel-texture-color; 		/* hide website preview icon */
 			.preview-device-outer {
-				padding: 16px;
-				/*background-color: darken($tab-panel-texture-color,3%);*/
+				padding: 0 16px 16px;
 				background-color: #414141;
 			}
 		}
@@ -984,6 +978,7 @@ select.preview-dropdown {
 			width: 335px; 										/* add 15px for desktop scrollbar */
 			height: 568px;
 			margin: 30px auto 30px;
+			padding-top: 16px;
 
 			.preview-device-inner {
 				width: 335px;
@@ -994,6 +989,7 @@ select.preview-dropdown {
 		width: 583px;											/* add 15px for desktop scrollbar */
 		height: 320px;
 		margin: 12% auto;
+		padding-top: 16px;
 
 		.preview-device-inner {
 			width: 583px;
@@ -1002,7 +998,6 @@ select.preview-dropdown {
 	&.tablet .preview-scroll .preview-device-outer { 
 		width: 783px;											/* add 15px for desktop scrollbar */
 		height: 1024px;
-		padding-top: 0;
 		margin: 0 auto;
 
 		.preview-device-inner {
@@ -1012,7 +1007,6 @@ select.preview-dropdown {
 	&.tabletLandscape .preview-scroll .preview-device-outer {
 		width: 1039px;											/* add 15px for desktop scrollbar */
 		height: 768px;
-		padding-top: 0;
 		margin: 0 auto;
 
 		.preview-device-inner {
@@ -1021,6 +1015,8 @@ select.preview-dropdown {
 	}
 	&.desktop .preview-scroll .preview-device-outer {
 		width: 1024px;
+		height: 800px;
+		margin: 0 auto;
 	}
 }
 
@@ -1202,11 +1198,13 @@ form.member-profile-form {
 .cms-panel {
 	overflow: hidden;
 	.cms-panel-toggle {
-		@include box-shadow(0 0 1px rgba(107, 120, 123, 0.5));
+		@include box-shadow(0 0 1px $box-shadow-shine);
 		&.south {
-			border-top: 1px solid $color-light-separator;
+			border-top: 1px solid darken($color-base, 6%);
+			@include box-shadow(lighten($color-base, 4%) 0 1px 0px inset);
 			position: absolute;
 			bottom: 0;
+			width:100%;
 		}
 		a { 
 			display: block;
@@ -1229,7 +1227,8 @@ form.member-profile-form {
 	}
 	&.cms-content-tools .cms-panel-toggle {
 		&.south {
-			border-top: 1px solid #FFF;
+			border-top: 1px solid darken($tab-panel-texture-color,10%);
+			@include box-shadow($box-shadow-shine 0 1px 0px inset);
 		}
 	}	
 	&.collapsed {
@@ -1575,6 +1574,9 @@ body.cms-dialog {
 	margin-bottom: $grid-y*2;
 	.filter &{
 		margin-bottom:0;
+	}
+	.Actions {
+		padding: 0;
 	}
 }
 
