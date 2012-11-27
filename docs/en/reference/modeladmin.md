@@ -152,6 +152,8 @@ Consider replacing it with a more powerful interface in case you have many recor
 Has-many and many-many relationships are usually handled via the `[GridField](/reference/grid-field)` class,
 more specifically the `[api:GridFieldAddExistingAutocompleter]` and `[api:GridFieldRelationDelete]` components.
 They provide a list/detail interface within a single record edited in your ModelAdmin.
+The `[GridField](/reference/grid-field)` docs also explain how to manage 
+extra relation fields on join tables through its detail forms.
 
 ## Permissions
 
