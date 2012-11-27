@@ -154,6 +154,8 @@ more specifically the `[api:GridFieldAddExistingAutocompleter]` and `[api:GridFi
 They provide a list/detail interface within a single record edited in your ModelAdmin.
 The `[GridField](/reference/grid-field)` docs also explain how to manage 
 extra relation fields on join tables through its detail forms.
+The autocompleter can also search attributes on relations,
+based on the search fields defined through `[api:DataObject::searchableFields()]`.
 
 ## Permissions
 
