@@ -257,6 +257,20 @@ class Versioned extends DataExtension {
 				. $dataQuery->getQueryParam('Versioned.mode'));
 		}
 	}
+
+	/**
+	 * For lazy loaded fields requiring extra sql manipulation, ie versioning
+	 * @param SQLQuery $query
+	 * @param DataQuery $dataQuery
+	 * @param array $record 
+	 */
+	function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $record) {
+		$dataClass = $dataQuery->dataClass();
+	    if (isset($record['Version'])){
+			$dataQuery->where("\"$dataClass\".\"Version\" = " . $record['Version']);
+			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
+		}
+	}
 	
 	/**
 	 * Keep track of the archive tables that have been created 
