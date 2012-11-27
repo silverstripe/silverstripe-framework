@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class CSSContentParserTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function testSelector2xpath() {
 		$parser = new CSSContentParser("<html><head><title>test</title></head><body><p>test</p></body></html>");
 

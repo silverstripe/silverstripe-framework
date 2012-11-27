@@ -9,6 +9,8 @@ class DirectorTest extends SapphireTest {
 
 	protected static $originalRequestURI;
 
+	protected static $build_db_each_test = false;
+
 	public function setUp() {
 		parent::setUp();
 

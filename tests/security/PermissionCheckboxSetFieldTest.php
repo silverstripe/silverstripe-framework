@@ -5,6 +5,8 @@
  */
 class PermissionCheckboxSetFieldTest extends SapphireTest {
 	static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	public function testHiddenPermissions() {
 		$f = new PermissionCheckboxSetField(

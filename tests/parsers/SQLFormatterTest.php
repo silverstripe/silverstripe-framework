@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class SQLFormatterTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testNewlineHanding() {
 		$formatter = new SQLFormatter();

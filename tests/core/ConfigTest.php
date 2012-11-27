@@ -54,6 +54,8 @@ class ConfigStaticTest_Combined3 extends ConfigStaticTest_Combined2 {
 
 class ConfigTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testUpdateStatic() {
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First', 'first', Config::FIRST_SET),
 			array('test_1'));

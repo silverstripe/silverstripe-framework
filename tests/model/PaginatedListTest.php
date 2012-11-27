@@ -9,6 +9,8 @@ class PaginatedListTest extends SapphireTest {
 
 	static $fixture_file = 'DataObjectTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',		
 		'DataObjectTest_SubTeam',

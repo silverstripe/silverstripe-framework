@@ -6,6 +6,8 @@
 
 class GridFieldConfigTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testGetComponents() {
 		$config = GridFieldConfig::create();
 		$this->assertInstanceOf('ArrayList', $config->getComponents());

@@ -9,6 +9,8 @@ class FileFinderTest extends SapphireTest {
 
 	protected $base;
 
+	protected static $build_db_each_test = false;
+
 	public function __construct() {
 		$this->base = dirname(__FILE__) . '/fixtures/filefinder';
 		parent::__construct();

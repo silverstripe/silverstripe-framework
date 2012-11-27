@@ -6,6 +6,8 @@
 class HtmlEditorFieldTest extends FunctionalTest {
 	
 	public static $fixture_file = 'HtmlEditorFieldTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	public static $use_draft_site = true;
 	

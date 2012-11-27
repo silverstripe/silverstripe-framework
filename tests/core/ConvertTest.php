@@ -6,6 +6,8 @@
  */
 class ConvertTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 * Tests {@link Convert::raw2att()}
 	 */

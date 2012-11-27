@@ -5,6 +5,8 @@
  */
 class ClassInfoTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testExists() {
 		$this->assertTrue(ClassInfo::exists('Object'));
 		$this->assertTrue(ClassInfo::exists('ClassInfoTest'));

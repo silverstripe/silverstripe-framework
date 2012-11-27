@@ -8,6 +8,8 @@ class GridFieldPaginatorTest extends FunctionalTest {
 	
 	/** @var string */
 	static $fixture_file = 'GridFieldTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	/** @var Form */
 	protected $form;

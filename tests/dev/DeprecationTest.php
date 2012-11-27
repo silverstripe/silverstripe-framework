@@ -12,6 +12,8 @@ class DeprecationTest_Deprecation extends Deprecation {
 
 class DeprecationTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	static $originalVersionInfo;
 
 	public function setUp() {

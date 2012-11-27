@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class CurrencyTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function testNiceFormatting() {
 		// Test a bunch of different data values and results in Nice() and Whole()
 		$tests = array(

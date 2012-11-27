@@ -7,6 +7,8 @@ class FormTest extends FunctionalTest {
 	
 	static $fixture_file = 'FormTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'FormTest_Player',
 		'FormTest_Team',

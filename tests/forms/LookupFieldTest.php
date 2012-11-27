@@ -8,6 +8,8 @@ class LookupFieldTest extends SapphireTest {
 	
 	static $fixture_file = 'LookupFieldTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	public function testNullValueWithNumericArraySource() {
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);

@@ -11,6 +11,8 @@ class FormScaffolderTest extends SapphireTest {
 	
 	static $fixture_file = 'FormScaffolderTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'FormScaffolderTest_Article',
 		'FormScaffolderTest_Tag',

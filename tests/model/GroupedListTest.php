@@ -7,6 +7,8 @@
  */
 class GroupedListTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testGroupBy() {
 		$list = new GroupedList(new ArrayList(array(
 			array('Name' => 'AAA'),

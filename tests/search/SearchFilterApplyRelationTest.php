@@ -10,6 +10,8 @@
  */
 class SearchFilterApplyRelationTest extends SapphireTest{
 	static $fixture_file = 'SearchFilterApplyRelationTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	protected $extraDataObjects = array(
 		'SearchFilterApplyRelationTest_DO',

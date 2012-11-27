@@ -5,6 +5,8 @@
  */
 
 class MemoryLimitTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testIncreaseMemoryLimitTo() {
 		if(!$this->canChangeMemory()) return;

@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class CompositeFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testFieldPosition() {
 		$compositeOuter = new CompositeField(

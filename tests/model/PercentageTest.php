@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class PercentageTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testNice() {
 		/* Test the default Nice() output of Percentage */

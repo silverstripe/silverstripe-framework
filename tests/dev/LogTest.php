@@ -5,6 +5,8 @@
  */
 class SS_LogTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	protected $testEmailWriter;
 
 	public function setUp() {

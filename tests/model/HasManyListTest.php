@@ -1,6 +1,8 @@
 <?php
 
 class HasManyListTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	// Borrow the model from DataObjectTest
 	public static $fixture_file = 'DataObjectTest.yml';

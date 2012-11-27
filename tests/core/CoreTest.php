@@ -8,6 +8,8 @@
  */
 class CoreTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	protected $tempPath;
 
 	public function setUp() {

@@ -9,6 +9,14 @@ class GDImageTest extends ImageTest {
 		}
 	
 		parent::setUp();
+	}
+
+	public function setUpOnce() {
+		parent::setUpOnce();
+
+		if(!extension_loaded("gd")) {
+			return;
+		}
 		
 		Image::set_backend("GDBackend");
 		

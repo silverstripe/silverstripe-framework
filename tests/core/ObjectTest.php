@@ -8,6 +8,8 @@
  * @todo tests for setting statics through extensions (#2387)
  */
 class ObjectTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function setUp() {
 		parent::setUp();

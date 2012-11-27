@@ -1,6 +1,9 @@
 <?php
 
 class CSVParserTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
+	
 	public function testParsingWithHeaders() {
 		/* By default, a CSV file will be interpreted as having headers */
 		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');

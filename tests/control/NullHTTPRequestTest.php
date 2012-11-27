@@ -5,6 +5,8 @@
  */
 class NullHTTPRequestTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testAllHttpVerbsAreFalse() {
 		$r = new NullHTTPRequest();
 		$this->assertFalse($r->isGET());

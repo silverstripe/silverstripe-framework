@@ -1,6 +1,8 @@
 <?php
 class GridFieldTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	/**
 	 * @covers GridField::__construct
 	 */

@@ -7,6 +7,8 @@
  * @todo Figure out how to clear the modified state of Requirements class - might affect other tests.
  */
 class RequirementsTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	static $html_template = '<html><head></head><body></body></html>';
 	

@@ -4,6 +4,8 @@ class YamlFixtureTest extends SapphireTest {
 
 	static $fixture_file = 'YamlFixtureTest.yml';
 
+	protected static $build_db_each_test = false;
+
 	protected $extraDataObjects = array(
 		'YamlFixtureTest_DataObject',
 		'YamlFixtureTest_DataObjectRelation',

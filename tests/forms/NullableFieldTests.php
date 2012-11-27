@@ -7,6 +7,8 @@
  *
  */
 class NullableFieldTests extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	/**
 	 * Test that the NullableField works when it wraps a TextField containing actual content

@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class OptionsetFieldTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function testSetDisabledItems() {
 		$f = new OptionsetField(
 			'Test', 

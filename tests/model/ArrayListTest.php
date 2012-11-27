@@ -5,6 +5,8 @@
  */
 class ArrayListTest extends SapphireTest {
 
+	protected static $build_db_each_test = false;
+
 	public function testArrayAccessExists() {
 		$list = new ArrayList(array(
 			$one = new DataObject(array('Title' => 'one')),

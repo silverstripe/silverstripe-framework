@@ -7,6 +7,8 @@
 class ListboxFieldTest extends SapphireTest {
 
 	static $fixture_file = 'ListboxFieldTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	protected $extraDataObjects = array('ListboxFieldTest_DataObject', 'ListboxFieldTest_Article',
 		'ListboxFieldTest_Tag');

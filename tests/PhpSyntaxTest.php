@@ -8,6 +8,8 @@
  * Test the syntax of the PHP files with various settings
  */
 class PhpSyntaxTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	public function setUp() {
 		parent::setUp();
 		$this->markTestSkipped('This needs to be written to include only core php files, not test/thirdparty files');

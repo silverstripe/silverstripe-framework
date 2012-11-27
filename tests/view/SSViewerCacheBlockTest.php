@@ -21,6 +21,8 @@ class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
 }
 
 class SSViewerCacheBlockTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	protected $extraDataObjects = array('SSViewerCacheBlockTest_Model');
 	

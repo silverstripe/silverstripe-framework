@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class BacktraceTest extends SapphireTest {
+
+	protected static $build_db_each_test = false;
 	
 	public function testFullFuncNameWithArgsAndCustomCharLimit() {
 		$func = array(

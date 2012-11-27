@@ -52,6 +52,8 @@ class AggregateTest_Baz extends DataObject implements TestOnly {
 
 class AggregateTest extends SapphireTest {
 	static $fixture_file = 'AggregateTest.yml';
+
+	protected static $build_db_each_test = false;
 	
 	protected $extraDataObjects = array(
 		'AggregateTest_Foo',
@@ -89,7 +91,6 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($foo->Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
 		$this->assertEquals($foo->Aggregate('AggregateTest_Fab')->Max('Fab'), 3);
 	}
-	/* */
 	
 	/**
 	 * Test basic aggregation on a given dataobject
@@ -107,7 +108,6 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($foo->Aggregate()->Max('Foo'), 9);
 		$this->assertEquals($fab->Aggregate()->Max('Fab'), 3);
 	}
-	/* */
 	
 	/**
 	 * Test base-level field access - was failing due to use of custom_database_fields, not just database_fields
@@ -126,7 +126,6 @@ class AggregateTest extends SapphireTest {
 			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"Created" DESC')->Created)
 		);
 	}
-	/* */
 
 	/**
 	 * Test aggregation takes place on the passed type & it's children only
@@ -142,7 +141,6 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($foo->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
 		
 	}
-	/* */
 
 	/**
 	 * Test aggregates are cached properly
@@ -150,7 +148,17 @@ class AggregateTest extends SapphireTest {
 	public function testCache() {
 		$this->markTestIncomplete();		
 	}
-	/* */
+	
+	/**
+	 * Test basic relationship aggregation
+	 */
+	public function testRelationshipAggregate() {
+		$bar1 = $this->objFromFixture('AggregateTest_Bar', 'bar1');
+		$this->assertEquals($bar1->RelationshipAggregate('Foos')->Max('Foo'), 8);
+
+		$baz1 = $this->objFromFixture('AggregateTest_Baz', 'baz1');
+		$this->assertEquals($baz1->RelationshipAggregate('Foos')->Max('Foo'), 8);
+	}
 	
 	/**
 	 * Test cache is correctly flushed on write
@@ -186,19 +194,6 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($fab->Aggregate('AggregateTest_Fab')->Max('Foo'), 15);
 		$this->assertEquals($fab->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
 	}
-	/* */
-	
-	/**
-	 * Test basic relationship aggregation
-	 */
-	public function testRelationshipAggregate() {
-		$bar1 = $this->objFromFixture('AggregateTest_Bar', 'bar1');
-		$this->assertEquals($bar1->RelationshipAggregate('Foos')->Max('Foo'), 8);
-
-		$baz1 = $this->objFromFixture('AggregateTest_Baz', 'baz1');
-		$this->assertEquals($baz1->RelationshipAggregate('Foos')->Max('Foo'), 8);
-	}
-	/* */
 	
 	/**
 	 * Copied from DataObject::__construct(), special case for MSSQLDatabase.

@@ -6,6 +6,8 @@
  */
 class RequestHandlingTest extends FunctionalTest {
 	static $fixture_file = null;
+
+	protected static $build_db_each_test = false;
 	
 	// public function testRequestHandlerChainingLatestParams() {
 	// 	$c = new RequestHandlingTest_Controller();

@@ -6,7 +6,9 @@
  */
 class RestfulServiceTest extends SapphireTest {
 	
-	protected $member_unique_identifier_field = ''; 
+	protected $member_unique_identifier_field = '';
+
+	protected static $build_db_each_test = false;
 	
 	public function setUp() {
 		// backup the project unique identifier field

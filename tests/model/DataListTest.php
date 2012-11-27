@@ -557,25 +557,6 @@ class DataListTest extends SapphireTest {
 		);
 	}
 
-	public function testFilterAndExcludeById() {
-		$id = $this->idFromFixture('DataObjectTest_SubTeam', 'subteam1');
-		$list = DataObjectTest_SubTeam::get()->filter('ID', $id);
-		$this->assertEquals($id, $list->first()->ID);
-
-		$list = DataObjectTest_SubTeam::get();
-		$this->assertEquals(3, count($list));
-		$this->assertEquals(2, count($list->exclude('ID', $id)));
-
-		// Check that classes with namespaces work.
-		$obj = new DataObjectTest\NamespacedClass();
-		$obj->Name = "Test";
-		$obj->write();
-
-		$list = DataObjectTest\NamespacedClass::get()->filter('ID', $obj->ID);
-		$this->assertEquals('Test', $list->First()->Name);
-		$this->assertEquals(0, $list->exclude('ID', $obj->ID)->count());
-	}
-
 	/**
 	 * $list->exclude('Name', 'bob'); // exclude bob from list
 	 */
@@ -734,5 +715,24 @@ class DataListTest extends SapphireTest {
 			'Team 2',
 			'Team 1',
 		), $list->column("Title"));
+	}
+
+	public function testFilterAndExcludeById() {
+		$id = $this->idFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$list = DataObjectTest_SubTeam::get()->filter('ID', $id);
+		$this->assertEquals($id, $list->first()->ID);
+
+		$list = DataObjectTest_SubTeam::get();
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(2, count($list->exclude('ID', $id)));
+
+		// Check that classes with namespaces work.
+		$obj = new DataObjectTest\NamespacedClass();
+		$obj->Name = "Test";
+		$obj->write();
+
+		$list = DataObjectTest\NamespacedClass::get()->filter('ID', $obj->ID);
+		$this->assertEquals('Test', $list->First()->Name);
+		$this->assertEquals(0, $list->exclude('ID', $obj->ID)->count());
 	}
 }
