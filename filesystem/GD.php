@@ -459,4 +459,17 @@ class GDBackend extends Object implements Image_Backend {
 	}
 	
 }
-class_alias("GDBackend", "GD");
+
+/**
+ * Backwards compatibility
+ */
+class GD extends GDBackend {
+	public static function set_default_quality($quality) {
+		Deprecation::notice(
+			'3.1', 
+			'GDBackend::set_default_quality instead',
+			Deprecation::SCOPE_CLASS
+		);
+		GDBackend::set_default_quality($quality);
+	}	
+}
