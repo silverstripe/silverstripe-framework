@@ -18,9 +18,6 @@
 		 */
 		$('.cms-preview').entwine({
 			
-			// Minimum width to keep the CMS operational
-			SharedWidth: null,
-			
 			onadd: function() {
 				var self = this, layoutContainer = this.parent();
 				// this.resizable({
@@ -29,9 +26,6 @@
 				// 		$('.cms-container').layout({resize: false});
 				// 	}
 				// });
-				
-				// TODO Compute dynamically
-				this.setSharedWidth(500);
 				
 				// Create layout and controls
 				this.find('iframe').addClass('center');
@@ -77,11 +71,21 @@
 				this.updatePreview();
 			},
 
+			/**
+			 * Update preview whenever any panels are reloaded.
+			 */
 			'from .cms-container': {
-				onaftersubmitform: function(){
-					this.updateAfterXhr();
-				},
 				onafterstatechange: function(){
+					this.updateAfterXhr();
+				}
+			},
+
+			/**
+			 * Update preview whenever form is submitted. This does not use the usual LeftAndmMain::loadPanel
+			 * functionality which is already covered in onafterstatechange above.
+			 */
+			'from .cms-container .cms-edit-form': {
+				onaftersubmitform: function(){
 					this.updateAfterXhr();
 				}
 			},
@@ -166,16 +170,6 @@
 			}
 		});
 		
-		$('.cms-preview.collapsed').entwine({
-			onmatch: function() {
-				this.find('a').text('<');
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
-			}
-		});
-		
 		$('.cms-preview.blocked').entwine({
 			onmatch: function() {
 				this.find('.cms-preview-overlay').show();
@@ -183,16 +177,6 @@
 			},
 			onunmatch: function() {
 				this.find('.cms-preview-overlay').hide();
-				this._super();
-			}
-		});
-		
-		$('.cms-preview.expanded').entwine({
-			onmatch: function() {
-				this.find('a').text('>');
-				this._super();
-			},
-			onunmatch: function() {
 				this._super();
 			}
 		});
@@ -212,9 +196,7 @@
 			}
 		});	
 		
-
-		
-		$('#cms-preview-mode-dropdown').entwine({
+		$('.preview-mode-selector select').entwine({
 			onchange: function(e) {
 				e.preventDefault();
 
@@ -229,17 +211,75 @@
 					container.previewMode();
 				}
 
-				this.addIcon(); //run generic addIcon, on select.preview-dropdown
+				this.addIcon();
+
+				// Synchronise other preview-mode selectors to display the same state.
+				$('.preview-mode-selector select').not(this)
+					.val(this.val())
+					.trigger('liszt:updated')
+					.addIcon();
 			}
 		});
 
+		$('.preview-size-selector select').entwine({
+			onchange: function(e) {
+				e.preventDefault();
+
+				var preview = $('.cms-preview');
+				var size = $(this).val();
+
+				preview
+					.removeClass('auto desktop tablet mobile')
+					.addClass(size);
+
+				this.addIcon();
+			}
+		});
+
+		/**
+		 * React to state view mode changes by showing/hiding the preview-mode selector.
+		 */
+		$('.cms-preview.column-hidden').entwine({
+			onmatch: function() {
+				$('#preview-mode-dropdown-in-content').show();
+				this._super();
+			},
+			onunmatch: function() {
+				$('#preview-mode-dropdown-in-content').hide();
+				this._super();
+			}
+		});
+
+		/**
+		 * Initialise the CMS's preview-mode selector.
+		 */
+		$('#preview-mode-dropdown-in-content').entwine({
+			onmatch: function() {
+				if ($('.cms-preview').is('.column-hidden')) {
+					this.show();
+				}
+				else {
+					this.hide();
+				}
+				this._super();
+			},
+			onunmatch: function() {
+				this._super();
+			}
+		});
 
 		/*
 		*	Add a class to the chzn select trigger based on the currently 
 		*	selected option. Update as this changes
 		*/
-		$('.preview-selector select.preview-dropdown').entwine({			
-			addIcon: function(){			
+		$('.preview-selector select.preview-dropdown').entwine({
+			'onliszt:showing_dropdown': function() {
+				this.siblings().find('.chzn-drop').addClass('open').alignRight();
+			},
+			'onliszt:hiding_dropdown': function() {
+				this.siblings().find('.chzn-drop').removeClass('open').removeRightAlign();
+			},
+			addIcon: function(){	
 				var selected = this.find(':selected');				
 				var iconClass = selected.attr('data-icon');	
 								
@@ -254,21 +294,36 @@
 		});
 
 		/*
-		* When chzn initiated run select redraw
+		* When chzn initiated run select addIcon
 		* Apply description text if applicable
 		*/
 		$('.preview-selector a.chzn-single').entwine({
-			onadd: function() {						
-				this.closest('.preview-selector').find('select').addIcon();				
+			onmatch: function() {								
+				this.closest('.preview-selector').find('select').addIcon();	
+				this._super();
 			},
-			onclick: function(){				
-				var parent = this.closest('.preview-selector');
-				if(parent.hasClass('open')){
-					parent.removeClass('open');
-				}else{
-					parent.addClass('open');
-				}				
+			onunmatch: function() {
+				this._super();
 			}
+		});
+
+
+		$('.preview-selector .chzn-drop').entwine({
+			alignRight: function(){					
+				var that = this;
+				$(this).hide();
+				/* Delay so styles applied after chosen applies css	
+				   (the line after we find out the dropdown is open)
+				*/
+				setTimeout(function(){ 
+					$(that).css({left:'auto', right:0});
+					$(that).show();	
+				}, 100);							
+			},
+			removeRightAlign:function(){
+				$(this).css({right:'auto'});
+			}
+
 		});
 
 		/* 
@@ -276,25 +331,36 @@
 		* When chzn ul is ready, grab data-description from original select. 
 		* If it exists, append to option and add description class to list item
 		*/
+		/*
+
+		Currently buggy (adds dexcription, then re-renders). This may need to 
+		be done inside chosen. Chosen recommends to do this stuff in the css, 
+		but that option is inaccessible and untranslatable 
+		(https://github.com/harvesthq/chosen/issues/399)
+
 		$('.preview-selector .chzn-drop ul').entwine({
 			onmatch: function() {
-				this.redraw();
+				this.extraData();
+				this._super();
 			},
-			redraw: function(){
+			onunmatch: function() {
+				this._super();
+			},
+			extraData: function(){
 				var that = this;
-				var options = this.closest('.preview-selector').find('select option');		
-							
+				var options = this.closest('.preview-selector').find('select option');	
+					
 				$.each(options, function(index, option){
-					var target = $(that).find("li:eq("+index+")");
-					var description = $(option).attr('data-description');								
-					if(description != undefined && !$(target).hasClass('description')){					
+					var target = $(that).find("li:eq(" + index + ")");
+					var description = $(option).attr('data-description');
+					if(description != undefined && !$(target).hasClass('description')){
 						$(target).append('<span>' + description + '</span>');
-						$(target).addClass('description'); 
+						$(target).addClass('description');						
 					}
 				});
-				
 			}
-		});	
+		}); */
+
 
 		$('.cms-edit-form').entwine({
 			/**
@@ -324,6 +390,10 @@
 			}, 
 			onmatch: function() {
 				this.redraw();
+				this._super();
+			},
+			onunmatch: function() {
+				this._super();
 			}
 			// Todo: Need to recalculate on resize of browser
 

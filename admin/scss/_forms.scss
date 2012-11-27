@@ -16,8 +16,8 @@ form.nostyle {
 
 .field {
 	display: block;
-	border-bottom: 1px solid $color-shadow-light;
-    @include box-shadow(0 1px 0 lighten($color-shadow-light, 16%));
+	border-bottom: 1px solid $color-light-separator;
+    @include box-shadow(0 1px 0 $box-shadow-shine-minimal);
 
 	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
 	//overflow: hidden;
@@ -308,8 +308,8 @@ form.small .field, .field.small {
 	}
 
 	.Actions {
-		max-height: 28px;
-		overflow: auto;
+		min-height: 30px;
+		overflow: visible;
 		padding: 8px 12px;
 	}
 	.south .Actions, .ui-tabs-panel .Actions,  .ui-tabs-panel iframe .Actions {
@@ -694,6 +694,10 @@ input.radio {
 	    	@include box-sizing(border-box);   
 			&:hover {
 				text-decoration: none;
+				@include background-image(linear-gradient(
+					lighten(#2b9c32, 5%),
+					lighten(#64ab36, 5%)
+				));
 			}
 			&.first {
 		    	text-align: left;
@@ -704,6 +708,12 @@ input.radio {
 					darken($color-menu-button, 10%),
 					$color-menu-button 
 				));
+				&:hover{
+					@include background-image(linear-gradient(
+						$color-menu-button,
+						lighten($color-menu-button, 5%) 
+					));
+				}
 	    	}
 	  
 		}
@@ -724,8 +734,9 @@ input.radio {
 			rgba(0,0,0,0.2) 0%,
 			rgba(0,0,0,0) 100%
 		));
-		@include transition(all 0.3s ease-in 0s); 
+		@include transition(all 0.3s ease-in 0s); 		
 	}
+
 }
 
 
