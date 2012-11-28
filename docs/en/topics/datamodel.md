@@ -260,6 +260,22 @@ use case could be when you want to find all the members that does not exist in a
 	// ... Finding all members that does not belong to $group.
 	$otherMembers = Member::get()->subtract($group->Members());
 
+### Limit
+
+You can limit the amount of records returned in a DataList by using the `limit()` method.
+	
+	:::php
+	// Returning the first 5 members, sorted alphabetically by Surname
+	$members = Member::get()->sort('Surname')->limit(5);
+	
+`limit()` accepts two arguments, the first being the amount of results you want returned, with an optional second
+parameter to specify the offset, which allows you to tell the system where to start getting the results from. The
+offset, if not provided as an argument, will default to 0.
+
+	:::php
+	// Return 5 members starting from the 5th result
+	$members = Member::get()->sort('Surname')->limit(5, 4);
+
 ### Raw SQL options for advanced users
 
 Occasionally, the system described above won't let you do exactly what you need to do.  In these situations, we have 
