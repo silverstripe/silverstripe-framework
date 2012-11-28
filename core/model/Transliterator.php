@@ -6,14 +6,14 @@
  * Usage:
  * 
  * <code>
- * $tr = new Transliterator();
+ * $tr = new SS_Transliterator();
  * $ascii = $tr->toASCII($unicode);
  * </code>
  * 
  * @package sapphire
  * @subpackage model
  */
-class Transliterator {
+class SS_Transliterator {
 	/**
 	 * Allow the use of iconv() to perform transliteration.  Set to false to disable.
 	 * Even if this variable is true, iconv() won't be used if it's not installed.
@@ -58,4 +58,8 @@ class Transliterator {
 	protected function useIconv($source) {
  		return iconv("utf-8", "us-ascii//IGNORE//TRANSLIT", $source);
 	}
+}
+
+if(!class_exists('Transliterator')) {
+	class Transliterator extends SS_Transliterator {}
 }
