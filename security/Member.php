@@ -11,11 +11,11 @@ class Member extends DataObject {
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar',
 		'Password' => 'Varchar(160)',
-		'RememberLoginToken' => 'Varchar(50)',
+		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
-		'AutoLoginHash' => 'Varchar(50)',
+		'AutoLoginHash' => 'Varchar(160)',
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
 		// not an actual encryption algorithm.
@@ -327,9 +327,11 @@ class Member extends DataObject {
 		$this->NumVisit++;
 
 		if($remember) {
+			// Store the hash and give the client the cookie with the token.
 			$generator = new RandomGenerator();
-			$token = $generator->generateHash('sha1');
-			$this->RememberLoginToken = $token;
+			$token = $generator->randomToken('sha1');
+			$hash = $this->encryptWithUserSettings($token);
+			$this->RememberLoginToken = $hash;
 			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
 		} else {
 			$this->RememberLoginToken = null;
@@ -387,7 +389,8 @@ class Member extends DataObject {
 			$member = DataObject::get_one("Member", "\"Member\".\"ID\" = '$SQL_uid'");
 
 			// check if autologin token matches
-			if($member && (!$member->RememberLoginToken || $member->RememberLoginToken != $token)) {
+			$hash = $member->encryptWithUserSettings($token);
+			if($member && (!$member->RememberLoginToken || $member->RememberLoginToken != $hash)) {
 				$member = null;
 			}
 
@@ -398,8 +401,10 @@ class Member extends DataObject {
 				if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0, null, null, false, true);
 				
 				$generator = new RandomGenerator();
-				$member->RememberLoginToken = $generator->generateHash('sha1');
-				Cookie::set('alc_enc', $member->ID . ':' . $member->RememberLoginToken, 90, null, null, false, true);
+				$token = $generator->randomToken('sha1');
+				$hash = $member->encryptWithUserSettings($token);
+				$member->RememberLoginToken = $hash;
+				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
 
 				$member->NumVisit++;
 				$member->write();
@@ -430,27 +435,76 @@ class Member extends DataObject {
 		$this->extend('memberLoggedOut');
 	}
 
+	/**
+	 * Utility for generating secure password hashes for this member.
+	 */
+	public function encryptWithUserSettings($string) {
+		if (!$string) return null;
+
+		// If the algorithm or salt is not available, it means we are operating
+		// on legacy account with unhashed password. Do not hash the string.
+		if (!$this->PasswordEncryption) {
+			return $string;
+		}
+
+		// We assume we have PasswordEncryption and Salt available here.
+		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
+		return $e->encrypt($string, $this->Salt);
+
+	}
 
 	/**
-	 * Generate an auto login hash
-	 *
-	 * This creates an auto login hash that can be used to reset the password.
+	 * Generate an auto login token which can be used to reset the password,
+	 * at the same time hashing it and storing in the database.
 	 *
 	 * @param int $lifetime The lifetime of the auto login hash in days (by default 2 days)
 	 *
+	 * @returns string Token that should be passed to the client (but NOT persisted).
+	 *
 	 * @todo Make it possible to handle database errors such as a "duplicate key" error
 	 */
-	function generateAutologinHash($lifetime = 2) {
-
+	public function generateAutologinTokenAndStoreHash($lifetime = 2) {
 		do {
 			$generator = new RandomGenerator();
-			$hash = $generator->generateHash('sha1');
+			$token = $generator->randomToken();
+			$hash = $this->encryptWithUserSettings($token);
 		} while(DataObject::get_one('Member', "\"AutoLoginHash\" = '$hash'"));
 
 		$this->AutoLoginHash = $hash;
 		$this->AutoLoginExpired = date('Y-m-d', time() + (86400 * $lifetime));
 
 		$this->write();
+
+		return $token;
+	}
+
+	/**
+	 * @deprecated 2.4
+	 */
+	public function generateAutologinHash($lifetime = 2) {
+		user_error(
+			'Member::generateAutologinHash is deprecated - tokens are no longer saved directly into the database '.
+			'in plaintext. Use the return value of the Member::generateAutologinTokenAndHash to get the token '.
+			'instead.',
+			E_USER_ERROR);
+	}
+
+	/**
+	 * Check the token against the member.
+	 *
+	 * @param string $autologinToken
+	 *
+	 * @returns bool Is token valid?
+	 */
+	public function validateAutoLoginToken($autologinToken) {
+		$hash = $this->encryptWithUserSettings($autologinToken);
+
+		$member = DataObject::get_one(
+			'Member',
+			"\"AutoLoginHash\"='" . $hash . "' AND \"AutoLoginExpired\" > " . DB::getConn()->now()
+		);
+
+		return (bool)$member;
 	}
 
 	/**
@@ -468,7 +522,6 @@ class Member extends DataObject {
 
 		return $member;
 	}
-
 
 	/**
 	 * Send signup, change password or forgot password informations to an user

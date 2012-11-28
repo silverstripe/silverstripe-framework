@@ -14,14 +14,14 @@ class RandomGeneratorTest extends SapphireTest {
 	
 	function testGenerateHash() {
 		$r = new RandomGenerator();
-		$this->assertNotNull($r->generateHash());
-		$this->assertNotEquals($r->generateHash(), $r->generateHash());
+		$this->assertNotNull($r->randomToken());
+		$this->assertNotEquals($r->randomToken(), $r->randomToken());
 	}
 	
 	function testGenerateHashWithAlgorithm() {
 		$r = new RandomGenerator();
-		$this->assertNotNull($r->generateHash('md5'));
-		$this->assertNotEquals($r->generateHash(), $r->generateHash('md5'));
+		$this->assertNotNull($r->randomToken('md5'));
+		$this->assertNotEquals($r->randomToken(), $r->randomToken('md5'));
 	}
 	
 }

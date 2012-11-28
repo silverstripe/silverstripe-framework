@@ -93,14 +93,14 @@ class RestfulServiceTest extends SapphireTest {
 	 * @expectedException PHPUnit_Framework_Error 
 	 */
 	function testIncorrectData() {
-		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
-		$test1 = $connection->request('RestfulServiceTest_Controller/invalid?usetestmanifest=1&flush=1');
+		$connection = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
+		$test1 = $connection->request('RestfulServiceTest_Controller/invalid');
 		$test1->xpath("\\fail");
 	}
 	
 	function testHttpErrorWithoutCache() {
-		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
-		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache?usetestmanifest=1&flush=1');
+		$connection = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
+		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache');
 		
 		$this->assertEquals(400, $response->getStatusCode());
 		$this->assertFalse($response->getCachedBody());
@@ -108,30 +108,6 @@ class RestfulServiceTest extends SapphireTest {
 		
 	}
 	
-	function testHttpErrorWithCache() {
-		$subUrl = 'RestfulServiceTest_Controller/httpErrorWithCache?usetestmanifest=1&flush=1';
-		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
-		$this->createFakeCachedResponse($connection, $subUrl); 
-		$response = $connection->request($subUrl);
-		
-		$this->assertEquals(400, $response->getStatusCode());
-		$this->assertEquals("Cache response body",$response->getCachedBody());
-		$this->assertContains("<error>HTTP Error</error>", $response->getBody());
-		
-	}
-	
-	/**
-	 * Simulate cached response file for testing error requests that are supposed to have cache files
-	 */
-	private function createFakeCachedResponse($connection, $subUrl) {
-		$fullUrl = $connection->getAbsoluteRequestURL($subUrl);
-		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
-		$cache_file = md5($fullUrl);	// Encoded name of cache file
-		$cache_path = $cachedir."/xmlresponse_$cache_file";
-		$cacheResponse = new RestfulService_Response("Cache response body");
-		$store = serialize($cacheResponse);
-		file_put_contents($cache_path, $store);
-	}
 }
 
 class RestfulServiceTest_Controller extends Controller {
@@ -218,7 +194,7 @@ XML;
 class RestfulServiceTest_MockRestfulService extends RestfulService {
 	
 	public $session = null;
-	
+
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null) {
 		
 		if(!$this->session) {
@@ -263,7 +239,6 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 		else $postVars = $data;
 		
 		$responseFromDirector = Director::test($url, $postVars, $this->session, $method, $body, $headers);
-		
 		$response = new RestfulService_Response(
 			$responseFromDirector->getBody(), 
 			$responseFromDirector->getStatusCode()
@@ -272,4 +247,3 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 		return $response;
 	}
 }
-?>

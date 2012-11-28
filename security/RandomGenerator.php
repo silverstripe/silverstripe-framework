@@ -57,16 +57,26 @@ class RandomGenerator {
 		// Fallback to good old mt_rand()
 		return uniqid(mt_rand(), true);
 	}
-	
+
 	/**
-	 * Generates a hash suitable for manual session identifiers, CSRF tokens, etc.
+	 * Generates a random token that can be used for session IDs, CSRF tokens etc., based on
+	 * hash algorithms.
+	 *
+	 * If you are using it as a password equivalent (e.g. autologin token) do NOT store it 
+	 * in the database as a plain text but encrypt it with Member::encryptWithUserSettings.
 	 * 
 	 * @param String $algorithm Any identifier listed in hash_algos() (Default: whirlpool)
-	 *  If possible, choose a slow algorithm which complicates brute force attacks.
+	 *
 	 * @return String Returned length will depend on the used $algorithm
 	 */
-	function generateHash($algorithm = 'whirlpool') {
+	function randomToken($algorithm = 'whirlpool') {
 		return hash($algorithm, $this->generateEntropy());
 	}
-	
+
+	/**
+	 * @deprecated 3.1
+	 */
+	public function generateHash($algorithm = 'whirlpool') {
+		return $this->randomToken($algorithm);
+	}
 }

@@ -8,6 +8,8 @@
  * @todo Exclude this test from a standard test run - not all test environments
  *  might have a webserver installed, or have it accessible for HTTP requests
  *  from localhost.
+ *
+ * @group sanitychecks
  * 
  * @package sapphire
  * @subpackage tests

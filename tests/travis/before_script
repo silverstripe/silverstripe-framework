@@ -1,0 +1,10 @@
+BUILD_DIR=$1
+git clone --depth=100 --branch 2.4 --quiet git://github.com/silverstripe/silverstripe-installer.git $BUILD_DIR
+git clone --depth=100 --branch 2.4 --quiet git://github.com/silverstripe/silverstripe-cms.git $BUILD_DIR/cms
+git clone --depth=100 --branch 1.2 --quiet git://github.com/silverstripe-labs/silverstripe-sqlite3.git $BUILD_DIR/sqlite3
+git clone --depth=100 --branch 1.0 --quiet git://github.com/silverstripe/silverstripe-postgresql.git $BUILD_DIR/postgresql
+cp ./tests/travis/_ss_environment.php $BUILD_DIR
+cp ./tests/travis/_config.php $BUILD_DIR/mysite
+cp -r . $BUILD_DIR/sapphire
+
+cd $BUILD_DIR
