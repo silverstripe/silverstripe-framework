@@ -155,7 +155,7 @@ sk:
     HtmlType: 'HTML súbor'
     INVALIDEXTENSION: 'Extenzia nie je povolená (platné: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extenzia nie je povolená'
-    IcoType: 'Icon obrázok'
+    IcoType: 'Ikona obrázok'
     JpgType: 'JPEG obrázok - vhodné pre fotografie'
     JsType: 'Javascript súbor'
     Mp3Type: 'MP3 audio súbor'
