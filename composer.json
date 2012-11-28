@@ -18,5 +18,10 @@
 	"require": {
 		"php": ">=5.2.4",
 		"composer/installers": "*"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-post-2.4": "2.5.x-dev"
+		}
 	}
 }
