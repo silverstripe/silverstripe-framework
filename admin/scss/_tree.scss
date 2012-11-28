@@ -111,15 +111,12 @@
 				background: transparent !important;
 				width: 100%;
 			}
-			a{
+			a, a:hover{
 				@extend %no-margin-padding;
 				text-indent: -9999px !important;
 				width: 100%;
 				border-right-width: 0px !important;
-				border-left-width: 0px !important;
-				&:hover{
-					@extend a;
-				}
+				border-left-width: 0px !important;				
 			}
 			ins, 
 			span, 
@@ -316,7 +313,11 @@
 				margin-right: 5px;
 			}
 			&.vakata-hover > a{
-				@extend a:hover;
+				padding: 1px 10px;
+				background: #3875d7;
+				@include background-image(linear-gradient(top, #3875d7 20%, #2a62bc 90%));
+				color: #FFF;
+				border: none;
 			} 
 		}
 	}
