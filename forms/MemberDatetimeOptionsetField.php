@@ -9,6 +9,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		$options = '';
 		$odd = 0;
 		$source = $this->getSource();
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/Tooltip.js");
 
 		foreach($source as $key => $value) {
 			// convert the ID to an HTML safe value (dots are not replaced, as they are valid in an ID attribute)
@@ -48,12 +49,11 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 			Zend_Date::now()->toString($value)
 		) : '';
 		$options .= sprintf(
-			'<a class="cms-help-toggle" href="#%s">%s</a>',
+			'<a id="' . $this->id() . '_id" class="ss-tooltip cms-help-toggle" title="' . $this->getFormattingHelpText() . '" href="#%s">%s</a>',
 			$this->id() . '_Help',
 			_t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help')
 		);
 		$options .= "<div id=\"" . $this->id() . "_Help\">";
-		$options .= $this->getFormattingHelpText();
 		$options .= "</div>";
 		$options .= "</li>\n";
 
