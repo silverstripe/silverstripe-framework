@@ -70,6 +70,27 @@ class CmsUiContext extends BehatContext
         $this->getMainContext()->assertElementContains('.message', $message);
     }
 
+    /**
+     * @Given /^I see a tooltip on the element "([^"]*)" with the "([^"]*)" text$/
+     */
+    public function iSeeATooltipOnTheElementWithTheText($selector, $text)
+    {
+        $page = $this->getSession()->getPage();
+
+	$tooltipClass = $page->find('css', '.ui-tooltip');
+        assertNotNull($tooltipClass, 'UI-TOOLTIP not found');
+
+        $parentElement = $page->find('css', $selector);
+        assertNotNull($parentElement, sprintf('"%s" element not found', $selector));
+
+        $element = $parentElement->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
+        assertNotNull($element, sprintf('"%s" not found', $text));
+
+        $tooltip = $element->getAttribute('aria-describedby');
+        //$tooltip = $element->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', 'ui-tooltip'));
+        assertNotNull($tooltip, 'ARIA-DESCRIBEDBY not found');
+    }
+
     protected function getCmsTabsElement()
     {
         $this->getSession()->wait(5000, "window.jQuery('.cms-content-header-tabs').size() > 0");
