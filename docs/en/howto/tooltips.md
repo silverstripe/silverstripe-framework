@@ -10,9 +10,14 @@ remains or until the mouse is clicked or on a touch screen device when the user 
 
 Below is an example of adding a tooltip to the custom date fields in MemberDatetimeOptionssetField.php
 the tooltip contains data from the title attribute and the classes ss-tooltip and cms-help-toggle are added.
+The javascript file Tooltip.js will also need to be included this has been written using Entwine and handles
+initialising the tooltips and setting the tooltip parameters like fading, positioning and how to toggle the tooltips.
 
 
     :::ss
+
+	Requirements::javascript(FRAMEWORK_DIR . "/javascript/Tooltip.js");
+
 	$options .= sprintf(
 		'<a class="ss-tooltip cms-help-toggle" title="' . $this->getFormattingHelpText() . '" href="#%s">%s</a>',
 		$this->id() . '_Help',
