@@ -821,10 +821,10 @@ jQuery.noConflict();
 		$('.cms-search-form').entwine({
 
 			onkeyup : function (e) {
-				$('.cms-search-form').searchContent(e);
+				this.searchContent(e);
 			},
 			onchange : function (e) {
-				$('.cms-search-form').searchContent(e);
+				this.searchContent(e);
 			},
 
 			// used by Content in the search filter to limit results based on its input
