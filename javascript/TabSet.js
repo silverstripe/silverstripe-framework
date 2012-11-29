@@ -64,14 +64,33 @@
 							}	
 						});
 					}
-				}else if(this.parents('.south')){
+				}else if(this.parents('.cms-content-actions')){
+					var that = this;
+					var closeHandler = function(event){						
+					    if (!$(event.target).closest(that).length) {
+					       that.tabs('option', 'active', false);
+					       	var frame = $('.cms').find('iframe');	
+							frame.each(function(index, iframe){
+								$(iframe).contents().off('click', closeHandler);
+							});										
+					       $(document).off('click', closeHandler);		
+					    };
+					}
 					this.tabs({
 						beforeActivate:function(event, ui){
 							var activePanel = ui.newPanel;
-							var activeTab = ui.newTab;							
+							var activeTab = ui.newTab;	
+							var frame = $('.cms').find('iframe');						
 							if($(activePanel).length > 0){
 								$(activePanel).attr("style","left: "+activeTab.position().left+"px");								
-							}																						
+							}							
+							$(document).on('click', closeHandler);	
+							//Make sure iframe click also closes tab							
+							if(frame.length > 0){								
+								frame.each(function(index, iframe){
+									$(iframe).contents().on('click', closeHandler);
+								});									
+							}																				
 						}	
 					});	
 				}
@@ -95,6 +114,7 @@
 				var trigger = $(this).find('.ui-tabs-nav').outerHeight();
 				var endOfWindow = ($(window).height() + $(document).scrollTop()) - trigger;
 				var elPos = $(this).find('.ui-tabs-nav').offset().top;
+				var that = this;
 				if(elPos + elHeight >= endOfWindow && elPos - elHeight > 0){
 					this.addClass('rise-up');	
 
@@ -103,16 +123,16 @@
 						activate:function(event, ui){
 							var activePanel = ui.newPanel;
 							var activeTab = ui.newTab;			
-							if(activeTab.position()!=null){
-								var top = -activePanel.outerHeight();
+							if(activeTab.position() != null){
+								var topPosition = -activePanel.outerHeight();
 								var containerSouth = activePanel.parents('.south');
 								if(containerSouth){
-									var padding = activeTab.offset().top-containerSouth.offset().top;								
-									top = top-padding;	
-								}	
-								var style =	$(activePanel).attr("style");				
+									//If container is the southern panel, make tab appear from the top of the container
+									var padding = activeTab.offset().top - containerSouth.offset().top;								
+									topPosition = topPosition-padding;	
+								}	 											
 
-								$(activePanel).attr("style", style+"top: "+top+"px;");									
+								$(activePanel).css('top',topPosition+"px");									
 							}
 						}
 					});				
