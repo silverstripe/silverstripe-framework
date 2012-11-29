@@ -94,14 +94,6 @@
 					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
 					firstTabWithErrors.closest('.tabset').tabs('select', firstTabWithErrors.attr('id'));
 				}
-				
-				// Move navigator to preview if one is available.
-				// If not, just leave the links in the form.
-				var previewEl = $('.cms-preview');
-				if(previewEl.length) {
-					// TODO Relies on DOM element order (the second .cms-navigator is the "old" one)
-					previewEl.find('.cms-preview-controls').html(this.find('.cms-navigator').detach());
-				}
 			
 				this._super();
 			},

@@ -27,13 +27,17 @@ This causes the framework to:
 to the layout manager)
 * trigger `redraw` on children which also cascades deeper into the hierarchy (this is framework activity)
 
-Caveat #1: `layout` is also triggered when a DOM element is replaced with AJAX in `LeftAndMain::handleAjaxResponse`. In
+<div class="notice" markdown='1'>
+Caveat: `layout` is also triggered when a DOM element is replaced with AJAX in `LeftAndMain::handleAjaxResponse`. In
 this case it is triggered on the parent of the element being replaced so jLayout has a chance to rebuild its algorithms.
 Calling the top level `layout` is not enough as it will wrongly descend down the detached element's hierarchy.
+</div>
 
-Caveat #2: invocation order of the `redraws` is crucial here, generally going from innermost to outermost elements.  For
+<div class="notice" markdown='1'>
+Caveat: invocation order of the `redraws` is crucial here, generally going from innermost to outermost elements.  For
 example, the tab panels have be applied in the CMS form before the form itself is layouted with its sibling panels to
 avoid incorrect dimensions.
+</div>
 
 ![Layout variations](_images/cms-architecture.png)
 
@@ -70,12 +74,12 @@ panel to the CMS UI.
 The following methods are available as an interface to underlying _threeColumnCompressor_ algorithm on the 
 `.cms-container` entwine:
 
-* _getLayoutOptions_: get currently used _threeColumnCompressor_ options.
-* _updateLayoutOptions_: change specified options and trigger the laying out: 
+* **getLayoutOptions**: get currently used _threeColumnCompressor_ options.
+* **updateLayoutOptions**: change specified options and trigger the laying out: 
 `$('.cms-container').updateLayoutOptions({mode: 'split'});`
-* _splitViewMode_: enable side by side editing.
-* _contentViewMode_: only menu and content areas are shown.
-* _previewMode_: only menu and preview areas are shown.
+* **splitViewMode**: enable side by side editing.
+* **contentViewMode**: only menu and content areas are shown.
+* **previewMode**: only menu and preview areas are shown.
 
 ### CSS classes
 
@@ -103,7 +107,7 @@ The parameters are as follows:
 * **column-spec-object**: object providing the _menu_, _content_ and _preview_ elements (all fields mandatory)
 * **options-object**: object providing the configuration (all fields mandatory, see options below)
 
-### Available options
+### Layout options
 
 * _minContentWidth_: minimum size for the content display as long as the preview is visible
 * _minPreviewWidth_: preview will not be displayed below this size
@@ -112,4 +116,5 @@ The parameters are as follows:
 ## Related
 
  * [Reference: CMS Architecture](../reference/cms-architecture)
+ * [Reference: Preview](../reference/preview)
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)

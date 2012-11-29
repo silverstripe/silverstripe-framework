@@ -1044,7 +1044,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$fields->push(new HiddenField('ParentID'));
 			}
 
-			// Added in-line to the form, but plucked into different view by LeftAndMain.Preview.js upon load
+			// Added in-line to the form, but plucked into different view by frontend scripts.
 			if(in_array('CMSPreviewable', class_implements($record))) {
 				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
 				$navField->setAllowHTML(true);
