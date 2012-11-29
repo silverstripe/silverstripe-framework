@@ -20,12 +20,12 @@
 	</span>
 
 	<div class="cms-preview-states switch-states">
-		<input type="checkbox" name="cms-preview" class="state cms-preview" id="cms-preview-state" checked>
+		<input type="checkbox" name="cms-preview" class="state cms-preview-checkbox" id="cms-preview-state" checked>
 		<label for="cms-preview-state">
 			<span class="switch-options">
 				<% loop Items %>
 				$Items.count
-				<a href="$Link" class="$FirstLast <% if isActive %> active<% end_if %>">$Title</a>
+				<a href="$Link" name="$Name" class="$FirstLast <% if isActive %> active<% end_if %>">$Title</a>
 				<% end_loop %>
 			</span>
 			<span class="switch"></span>
