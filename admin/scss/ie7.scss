@@ -1,5 +1,7 @@
 @import 'themes/default';
 @import 'ieShared';
+@import "compass/utilities/sprites/sprite-img";
+@import "sprites.scss";
 
 html {
 	overflow: hidden;
@@ -222,4 +224,22 @@ table.ss-gridfield-table {
 .cms .Actions > .cms-preview-toggle-link{
 	display:block;
 }
+
+//IE7 can't use before and after. Compromise 
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset{
+	a.ui-tabs-anchor{
+		background: sprite($sprites32, arrow_down_lighter) no-repeat;
+		padding-left:20px;
+		&:hover {
+			background: sprite($sprites32, arrow_down_darker) no-repeat;
+		}
+	}
+	.ui-state-active a.ui-tabs-anchor {
+		background: sprite($sprites32, arrow_up_lighter) no-repeat;
+		&:hover {
+			background: sprite($sprites32, arrow_up_darker) no-repeat;
+		}			
+	} 
+}
+
 @include IEVerticalPanelText;

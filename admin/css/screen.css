@@ -196,10 +196,10 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .field.remove-splitter { border-bottom: none; box-shadow: none; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
-.cms .button-no-style button, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button { background: none; border: none; display: block; margin: 0; outline: none; color: #0073c1; font-weight: normal; width: 210px; /* same as width of surrounding panel */ text-align: left; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; text-shadow: none; margin-left: -10px; }
-.cms .button-no-style button.ss-ui-action-destructive, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-action-destructive { color: #c22730; }
-.cms .button-no-style button span, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button span { padding-left: 0; padding-right: 0; }
-.cms .button-no-style button:hover, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button:hover, .cms .button-no-style button:focus, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button:focus, .cms .button-no-style button:active, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button:active { outline: none; background: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; border: none; }
+.cms .button-no-style button, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button { background: none; border: none; display: block; margin: 0; outline: none; color: #0073c1; font-weight: normal; width: 210px; /* same as width of surrounding panel */ text-align: left; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; text-shadow: none; margin-left: -10px; }
+.cms .button-no-style button.ss-ui-action-destructive, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-action-destructive { color: #c22730; }
+.cms .button-no-style button span, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button span { padding-left: 0; padding-right: 0; }
+.cms .button-no-style button:hover, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button:hover, .cms .button-no-style button:focus, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button:focus, .cms .button-no-style button:active, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button:active { outline: none; background: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; border: none; }
 .cms .Actions > *, .cms .cms-actions-row > * { display: block; float: left; margin-right: 8px; }
 .cms .Actions > *:last-child, .cms .cms-actions-row > *:last-child { margin-right: 0; }
 .cms .Actions { min-height: 30px; overflow: auto; padding: 8px 12px; }
@@ -946,12 +946,12 @@ use case of tabs, so the default tab styling should not apply
 
 **********************************************/
 .cms { /**********************
-Styles for pop-up tabs in bottom panel
+Styles for edit page action menus  
 ************************/ /* Styles for the cms-actions in tree view, to use more limited space.
 Title hidden in tree view, until hover/active state added. Active is applied 
 to the first tab within the template, so there should always be one title 
 visible. Added and removed with js in TabSet.js  */ }
-.cms .ss-ui-action-tabset { position: relative; float: left; /*Style the "tabs" navigation for multiple tabs*/ /* Style the tab panels */ }
+.cms .ss-ui-action-tabset { position: relative; float: left; /*Style the "tabs" navigation for action tabs (as in the sitetree batch actions)*/ /* Style the tab panels */ }
 .cms .ss-ui-action-tabset ul.ui-tabs-nav { overflow: hidden; *zoom: 1; padding: 0; overflow: visible; float: left; height: 28px; border: 1px solid #b3b3b3; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .cms .ss-ui-action-tabset ul.ui-tabs-nav:focus, .cms .ss-ui-action-tabset ul.ui-tabs-nav:active { outline: none; box-shadow: none; -webkit-box-shadow: none; }
 .cms .ss-ui-action-tabset ul.ui-tabs-nav li { width: 110px; overflow: visible; background: #eaeaea; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y4ZjhmOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q5ZDlkOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f8f8f8), color-stop(100%, #d9d9d9)); background-image: -webkit-linear-gradient(top, #f8f8f8, #d9d9d9); background-image: -moz-linear-gradient(top, #f8f8f8, #d9d9d9); background-image: -o-linear-gradient(top, #f8f8f8, #d9d9d9); background-image: linear-gradient(top, #f8f8f8, #d9d9d9); border-radius: none; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; border: none; border-right: 1px solid #eee; border-left: 1px solid #b3b3b3; margin: 0; }
@@ -969,32 +969,32 @@ visible. Added and removed with js in TabSet.js  */ }
 .cms .ss-ui-action-tabset.tabset-open-last ul.ui-tabs-nav li.last { -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 .cms .ss-ui-action-tabset .batch-check, .cms .ss-ui-action-tabset .ui-icon { /* position a checkbox & icon within a tab */ display: inline-block; float: left; margin-left: -2px; padding-right: 6px; }
 .cms .ss-ui-action-tabset .batch-check { margin: 6px 0px 5px 9px; position: absolute; }
-.cms .ss-ui-action-tabset.single ul.ui-tabs-nav { background: none; border: none; display: inline; padding: 0; float: left; }
-.cms .ss-ui-action-tabset.single ul.ui-tabs-nav li { display: inline; background: none; border: none; padding: 0; border-bottom: none !important; }
-.cms .ss-ui-action-tabset.single ul.ui-tabs-nav li:hover, .cms .ss-ui-action-tabset.single ul.ui-tabs-nav li:focus, .cms .ss-ui-action-tabset.single ul.ui-tabs-nav li:active { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; outline: none; }
-.cms .ss-ui-action-tabset.single ul.ui-tabs-nav li a { color: #0073c1; text-shadow: white 0 1px 1px; padding: 0 0 0 10px; line-height: 24px; }
-.cms .ss-ui-action-tabset.single ul.ui-tabs-nav li a:hover, .cms .ss-ui-action-tabset.single ul.ui-tabs-nav li a:focus, .cms .ss-ui-action-tabset.single ul.ui-tabs-nav li a:active { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; outline: none; }
-.cms .ss-ui-action-tabset.single ul.ui-tabs-nav li a:hover { text-shadow: white 0 10px 10px; color: #005b98; }
-.cms .ss-ui-action-tabset.single ul.ui-tabs-nav li a:hover:after { border-bottom: 4px solid #005b98; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel { display: block; clear: both; background: #f8f8f8 !important; position: absolute; top: 30px; border: 1px solid #b3b3b3; border-top: none; width: 202px; z-index: 1; padding: 10px; padding-top: 15px; margin: 0; float: left; }
+.cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav { background: none; border: none; display: inline; padding: 0; float: left; }
+.cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li { display: inline; background: none; border: none; padding: 0; border-bottom: none !important; }
+.cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li:hover, .cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li:focus, .cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li:active { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; outline: none; }
+.cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li a { color: #0073c1; text-shadow: white 0 1px 1px; padding: 0 0 0 10px; line-height: 24px; }
+.cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li a:hover, .cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li a:focus, .cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li a:active { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; outline: none; }
+.cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li a:hover { text-shadow: white 0 10px 10px; color: #005b98; }
+.cms .ss-ui-action-tabset.action-menus ul.ui-tabs-nav li a:hover:after { border-bottom: 4px solid #005b98; }
+.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel { /* Restyle for smaller area*/ background: #f8f8f8 !important; border: 1px solid #b3b3b3; border-top: none; clear: both; display: block; float: left; margin: 0; padding: 10px; padding-top: 15px; position: absolute; top: 30px; width: 202px; z-index: 1; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel h3, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel h4, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel h5 { font-weight: bold; line-height: 16px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel h3 { font-size: 13px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel h4 { font-size: 12px; margin: 5px 0; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .ui-widget-content { background: none; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field { /*  Fields are more compressed in the sidebar compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field label { float: none; width: auto; font-size: 11px; padding: 0 8px 4px 0; }
+.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field { /*  Fields are more compressed in some areas compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
+.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field label { float: none; width: auto; font-size: 12px; padding: 0 8px 4px 0; }
+.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field label.extra-details { overflow: hidden; margin-top: 10px; display: block; color: #9d9d9d; font-style: italic; font-weight: normal; font-size: 1em; float: left; text-shadow: none; }
+.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field label.extra-details.fill:before { color: #fff; content: '?'; font-size: 12px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding-left: 3px; padding-right: 3px; display: block; float: left; text-shadow: none; -webkit-border-radius: 50px; -moz-border-radius: 50px; -ms-border-radius: 50px; -o-border-radius: 50px; border-radius: 50px; background-color: #b7b7b7; width: 15px; height: 15px; margin-right: 5px; margin-bottom: 5px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field .middleColumn { margin: 0; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field input.text, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field select, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field textarea { padding: 5px; font-size: 11px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field.checkbox { padding: 0 8px 0; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field.checkbox input { margin: 2px 0; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .fieldgroup .fieldgroup-field { padding: 0; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .fieldgroup .fieldgroup-field .field { margin: 0; padding: 0; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field label { font-size: 12px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .cms-content-fields { overflow: visible; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .chzn-container-single { width: 100% !important; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .chzn-container-single .chzn-single { padding: 0 0 0 5px; float: none; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .cms-content-actions, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .cms-preview-controls { padding: 0; height: auto; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .field { border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .cms-edit-form { width: 100%; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .CompositeField { margin: 0; padding: 0; float: none; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .parent-mode { padding-top: 0; }
@@ -1003,45 +1003,58 @@ visible. Added and removed with js in TabSet.js  */ }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .treedropdown .treedropdownfield-panel, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .SelectionGroup li.selected div.field .treedropdownfield-panel { margin-top: 11px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .treedropdown .treedropdownfield-toggle-panel-link, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .SelectionGroup li.selected div.field .treedropdownfield-toggle-panel-link { background: none; border-left: none; padding: 5px 3px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .treedropdown .treedropdownfield-toggle-panel-link .ui-icon, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .SelectionGroup li.selected div.field .treedropdownfield-toggle-panel-link .ui-icon { float: right; opacity: 0.7; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel #PageType ul { padding: 0; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel #PageType ul li { padding: 4px 5px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .cms-add-form ul.SelectionGroup { padding-left: 0; padding-right: 0; overflow: visible; border-bottom: none; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel label.extra-details { overflow: hidden; margin-top: 10px; display: block; color: #9d9d9d; font-style: italic; font-weight: normal; font-size: 1em; float: left; text-shadow: none; }
-.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel label.extra-details.fill:before { color: #fff; content: '?'; font-size: 12px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding-left: 3px; padding-right: 3px; display: block; float: left; text-shadow: none; -webkit-border-radius: 50px; -moz-border-radius: 50px; -ms-border-radius: 50px; -o-border-radius: 50px; border-radius: 50px; background-color: #b7b7b7; width: 15px; height: 15px; margin-right: 5px; margin-bottom: 5px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel.first { left: 0; width: 203px; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .ui-icon { padding-right: 0; }
 .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .tab-nav-link, .cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel .ss-ui-button { font-size: 12px; }
+.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel #PageType ul { padding: 0; }
+.cms .ss-ui-action-tabset .ss-ui-action-tab.ui-tabs-panel #PageType ul li { padding: 4px 5px; }
 .cms .ss-ui-action-tabset .last .ss-ui-action-tab { right: -1px; left: auto; }
-.cms .south .Actions { overflow: visible; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav { margin: 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li a.ui-tabs-anchor { font-weight: normal; font-size: 13px; line-height: 24px; padding-right: 25px; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li a.ui-tabs-anchor:after { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1189px no-repeat; width: 16px; height: 16px; content: ""; display: inline-block; margin-left: 6px; border-bottom: 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li a.ui-tabs-anchor:hover:after { border-bottom: 0; background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1163px no-repeat; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li.ui-state-active a.ui-tabs-anchor:after { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1215px no-repeat; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li.ui-state-active a.ui-tabs-anchor:hover:after { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1137px no-repeat; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel { overflow: hidden; *zoom: 1; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; background-color: #eceff1; border: 1px solid #ccc; border-bottom: 1px solid #eceff1; clear: both; display: block; position: absolute; top: -204px; width: 190px; /* same width as buttons within panel */ z-index: 1; padding: 10px; margin: 0; margin-top: 1px; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h3, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h4, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h5 { font-weight: bold; line-height: 16px; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h3 { font-size: 13px; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h4 { font-size: 12px; margin: 5px 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .ui-widget-content { background: none; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field { /*  Fields are more compressed in the sidebar compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field label { float: none; width: auto; font-size: 11px; padding: 0 8px 4px 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field .middleColumn { margin: 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field input.text, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field select, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field textarea { padding: 5px; font-size: 11px; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field.checkbox { padding: 0 8px 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field.checkbox input { margin: 2px 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .fieldgroup .fieldgroup-field { padding: 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .fieldgroup .fieldgroup-field .field { margin: 0; padding: 0; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .chzn-container-single .chzn-single { padding: 0 0 0 5px; float: none; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button:hover, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button:focus, .cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button:active { /*text-decoration:underline;*/ background-color: #e0e5e8; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; outline: none; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-sitetree-information { border-bottom: 1px solid #d0d3d5; margin-bottom: 8px; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-sitetree-information p.meta-info { color: #999; font-size: 11px; line-height: 16px; margin-bottom: 8px; }
-.cms .south .Actions .rise-up.ss-ui-action-tabset .last .ui-tabs-panel.ss-ui-action-tab { right: -1px; left: auto; }
+.cms .cms-content-actions .Actions { overflow: visible; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav { margin: 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li a.ui-tabs-anchor { font-weight: normal; font-size: 13px; line-height: 24px; padding-right: 25px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li a.ui-tabs-anchor:after { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1189px no-repeat; width: 16px; height: 16px; content: ""; display: inline-block; margin-left: 6px; border-bottom: 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li a.ui-tabs-anchor:hover:after { border-bottom: 0; background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1163px no-repeat; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li.ui-state-active a.ui-tabs-anchor:after { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1215px no-repeat; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset ul.ui-tabs-nav li.ui-state-active a.ui-tabs-anchor:hover:after { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1137px no-repeat; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel { overflow: hidden; *zoom: 1; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; /* Restyle for smaller area*/ background-color: #eceff1; border: 1px solid #ccc; border-bottom: 1px solid #eceff1; clear: both; display: block; position: absolute; top: -204px; width: 190px; /* same width as buttons within panel */ z-index: 1; padding: 10px; margin: 0; margin-top: 1px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h3, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h4, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h5 { font-weight: bold; line-height: 16px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h3 { font-size: 13px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel h4 { font-size: 12px; margin: 5px 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .ui-widget-content { background: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field { /*  Fields are more compressed in some areas compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field label { float: none; width: auto; font-size: 12px; padding: 0 8px 4px 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field label.extra-details { overflow: hidden; margin-top: 10px; display: block; color: #9d9d9d; font-style: italic; font-weight: normal; font-size: 1em; float: left; text-shadow: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field label.extra-details.fill:before { color: #fff; content: '?'; font-size: 12px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding-left: 3px; padding-right: 3px; display: block; float: left; text-shadow: none; -webkit-border-radius: 50px; -moz-border-radius: 50px; -ms-border-radius: 50px; -o-border-radius: 50px; border-radius: 50px; background-color: #b7b7b7; width: 15px; height: 15px; margin-right: 5px; margin-bottom: 5px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field .middleColumn { margin: 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field input.text, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field select, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field textarea { padding: 5px; font-size: 11px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field.checkbox { padding: 0 8px 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .field.checkbox input { margin: 2px 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .fieldgroup .fieldgroup-field { padding: 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .fieldgroup .fieldgroup-field .field { margin: 0; padding: 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-content-fields { overflow: visible; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .chzn-container-single { width: 100% !important; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .chzn-container-single .chzn-single { padding: 0 0 0 5px; float: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-content-actions, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-preview-controls { padding: 0; height: auto; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-edit-form { width: 100%; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .CompositeField { margin: 0; padding: 0; float: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .parent-mode { padding-top: 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .treedropdown, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .SelectionGroup li.selected div.field { margin: 10px 0 0 0; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .treedropdown .treedropdownfield-title, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .SelectionGroup li.selected div.field .treedropdownfield-title { position: absolute; z-index: 2; padding: 5px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .treedropdown .treedropdownfield-panel, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .SelectionGroup li.selected div.field .treedropdownfield-panel { margin-top: 11px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .treedropdown .treedropdownfield-toggle-panel-link, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .SelectionGroup li.selected div.field .treedropdownfield-toggle-panel-link { background: none; border-left: none; padding: 5px 3px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .treedropdown .treedropdownfield-toggle-panel-link .ui-icon, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .SelectionGroup li.selected div.field .treedropdownfield-toggle-panel-link .ui-icon { float: right; opacity: 0.7; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-add-form ul.SelectionGroup { padding-left: 0; padding-right: 0; overflow: visible; border-bottom: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .chzn-container-single .chzn-single { padding: 0 0 0 5px; float: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button:hover, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button:focus, .cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button:active { /*text-decoration:underline;*/ background-color: #e0e5e8; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; outline: none; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-sitetree-information { border-bottom: 1px solid #d0d3d5; margin-bottom: 8px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-tabs-panel .cms-sitetree-information p.meta-info { color: #999; font-size: 11px; line-height: 16px; margin-bottom: 8px; }
+.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .last .ui-tabs-panel.ss-ui-action-tab { right: -1px; left: auto; }
 .cms .cms-tree-view-sidebar { min-width: 176px; /* for when the scrollbar is present & find dropdown open */ }
-.cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi ul.ui-tabs-nav > li { width: auto; }
-.cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi ul.ui-tabs-nav > li a.tab-nav-link { width: 30px; overflow: hidden; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding-right: 0; -webkit-transition-duration: 0.5s; -moz-transition-duration: 0.5s; -o-transition-duration: 0.5s; transition-duration: 0.5s; }
-.cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi ul.ui-tabs-nav > li a.tab-nav-link.active { width: 110px; -webkit-transition-duration: 0.5s; -moz-transition-duration: 0.5s; -o-transition-duration: 0.5s; transition-duration: 0.5s; }
-.cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi.tabset-open ul.ui-tabs-nav, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi.tabset-open ul.ui-tabs-nav li.first, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi.tabset-open ul.ui-tabs-nav li.last, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi.tabset-open-last ul.ui-tabs-nav, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi.tabset-open-last ul.ui-tabs-nav li.first, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.ss-tabset.multi.tabset-open-last ul.ui-tabs-nav li.last { -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; }
+.cms .cms-tree-view-sidebar .ss-ui-action-tabset ul.ui-tabs-nav > li { width: auto; }
+.cms .cms-tree-view-sidebar .ss-ui-action-tabset ul.ui-tabs-nav > li a.tab-nav-link { width: 30px; overflow: hidden; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding-right: 0; -webkit-transition-duration: 0.5s; -moz-transition-duration: 0.5s; -o-transition-duration: 0.5s; transition-duration: 0.5s; }
+.cms .cms-tree-view-sidebar .ss-ui-action-tabset ul.ui-tabs-nav > li a.tab-nav-link.active { width: 110px; -webkit-transition-duration: 0.5s; -moz-transition-duration: 0.5s; -o-transition-duration: 0.5s; transition-duration: 0.5s; }
+.cms .cms-tree-view-sidebar .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav li.first, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav li.last, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.tabset-open-last ul.ui-tabs-nav, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.tabset-open-last ul.ui-tabs-nav li.first, .cms .cms-tree-view-sidebar .ss-ui-action-tabset.tabset-open-last ul.ui-tabs-nav li.last { -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; }
 .cms .cms-tree-view-sidebar .ui-tabs .ui-tabs-panel.ss-ui-action-tab { width: 162px; padding: 10px 6px; }
 .cms .cms-tree-view-sidebar .ui-tabs .ui-tabs-panel.ss-ui-action-tab .field { max-width: 160px; }
 .cms .cms-tree-view-sidebar .ui-tabs .ui-tabs-panel.ss-ui-action-tab .ui-icon { padding-right: 0; }
