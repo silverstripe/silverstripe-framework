@@ -279,6 +279,11 @@ class DatetimeField extends FormField {
 		
 		return $field;
 	}
+
+	public function __clone() {
+		$this->dateField = clone $this->dateField;
+		$this->timeField = clone $this->timeField;
+	}
 }
 
 /**
