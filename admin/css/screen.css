@@ -155,6 +155,7 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
 .field .help { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
 .field.help label.right { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
+.field.checkbox .help, .field.ss-gridfield .help { margin-left: 0; }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { width: 100%; max-width: 512px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .field input.text.help, .field textarea.help, .field select.help, .field .TreeDropdownField.help { margin: 0; }
 .field input.text .help, .field textarea .help, .field select .help, .field .TreeDropdownField .help { max-width: 512px; }
