@@ -54,6 +54,9 @@ class PhoneNumberField extends FormField {
 			$field->push(new NumericField( $this->name.'[Extension]', 'ext', $extension, 6));
 		}
 
+		$description = $this->getDescription();
+		if($description) $fields->getChildren()->First()->setDescription($description);
+
 		foreach($fields as $field) {
 			$field->setDisabled($this->isDisabled());
 			$field->setReadonly($this->isReadonly());
