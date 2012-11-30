@@ -77,6 +77,8 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		$oldItems = $this->firstItems;
 		$this->firstItems = array($key => $value);
 		if($oldItems) $this->firstItems = $this->firstItems + $oldItems;
+		
+		return $this;
 	}
 
 	// ArrayAccess
