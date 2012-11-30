@@ -998,6 +998,15 @@ form.member-profile-form {
 	}
 }
 
+.memberdatetimeoptionset {
+	.description {
+		font-style: normal;
+	}
+	.toggle {
+		font-size: $font-base-size - 1;
+	}
+}
+
 .cms {
 	.cms-content {
 		border-right: 1px solid #BBB;

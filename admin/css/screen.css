@@ -555,6 +555,9 @@ form.member-profile-form #Groups .middleColumn { margin-left: 0; width: 100%; }
 form.member-profile-form #Groups .middleColumn .TreeDropdownField { width: 90%; max-width: 90%; }
 form.member-profile-form #Permissions .optionset li { float: none; width: auto; }
 
+.memberdatetimeoptionset .description { font-style: normal; }
+.memberdatetimeoptionset .toggle { font-size: 11px; }
+
 .cms .cms-content { border-right: 1px solid #BBB; -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; background: #eceff1; width: 800px; z-index: 40; }
 .cms .cms-content-fields { overflow-y: auto; overflow-x: auto; background: none; width: 100%; }
 .cms .cms-content-fields #Root_Main .confirmedpassword { border-bottom: none; box-shadow: none; }

@@ -929,25 +929,6 @@ jQuery.noConflict();
 		});
 
 		/**
-		 * Simple toggle link, which points to a DOm element by its ID selector
-		 * in the href attribute (which doubles as an anchor link to that element).
-		 */
-		$('.cms .cms-help-toggle').entwine({
-			onmatch: function() {
-				this._super();
-
-				$(this.attr('href')).hide();
-			},
-			onunmatch: function() {
-				this._super();
-			},
-			onclick: function(e) {
-				$(this.attr('href')).toggle();
-				e.preventDefault();
-			}
-		});
-
-		/**
 		 * Allows to lazy load a panel, by leaving it empty
 		 * and declaring a URL to load its content via a 'url' HTML5 data attribute.
 		 * The loaded HTML is cached, with cache key being the 'url' attribute.
