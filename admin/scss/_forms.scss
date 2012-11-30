@@ -106,6 +106,9 @@ form.nostyle {
 			margin: $grid-y/2 0 0 $grid-x*23;
 		}
 	}
+	&.checkbox .help, &.ss-gridfield .help {
+		margin-left: 0;
+	}
 	
 	input.text,
 	textarea,
