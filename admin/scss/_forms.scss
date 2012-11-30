@@ -287,19 +287,19 @@ form.small .field, .field.small {
 .cms {
 	.button-no-style{
 		button{
+			@include border-radius(0);
 			background: none;
 			border: none;
+			color: $color-text-blue-link;
 			display: block;
+			font-weight:normal;	
 			margin:0;
 			outline:none;
-			color: $color-text-blue-link;
-			font-weight:normal;
-			width: 210px; 									/* same as width of surrounding panel */
-			text-align: left;
-			@include border-radius(0);
-			text-shadow: none;
-			margin-left:-10px;
-
+			padding-left:10px;
+			padding-right:10px;	
+			text-align: left;			
+			text-shadow: none;	
+			white-space:normal;		
 			&.ss-ui-action-destructive{
 				color: darken($color-error,25%);
 			}
@@ -307,10 +307,10 @@ form.small .field, .field.small {
 				padding-left:0;
 				padding-right:0;
 			}
-			&:hover, &:focus, &:active{			
+			&:hover, &:focus, &:active{	
+				@include box-shadow(none);		
 				outline:none;
-				background:none;
-				@include box-shadow(none);
+				background:none;				
 				border:none;
 			}
 		}
@@ -508,6 +508,18 @@ form.small .field, .field.small {
 		display: block;
 		width: 16px;
 		height: 16px;
+	}
+
+	/* Tempory fix: Overide default icon & text styles as the order of the icon and text are mixed up */
+	.south .Actions .ss-ui-button.ss-ui-action-constructive {
+		.ui-button-text-alternate {
+			margin-left: 22px;
+		}
+		.ui-icon {
+			position: absolute;
+			left: 10px;
+			top: 5px;
+		}
 	}
 }
 
