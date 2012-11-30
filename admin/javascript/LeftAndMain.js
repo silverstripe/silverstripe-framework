@@ -504,7 +504,22 @@ jQuery.noConflict();
 					if($(el).data('ignoreTabState')) return; // allow opt-out
 					activeTabs.push({id:id, active:$(el).tabs('option', 'active')});
 				});
-				if(activeTabs) window.sessionStorage.setItem('tabs-' + url, JSON.stringify(activeTabs));
+
+				if(activeTabs) {
+					var tabsUrl = 'tabs-' + url;
+					try {
+						window.sessionStorage.setItem(tabsUrl, JSON.stringify(activeTabs));
+					} catch(err) {
+						if (err.code === DOMException.QUOTA_EXCEEDED_ERR && window.sessionStorage.length === 0) {
+							// If this fails we ignore the error as the only issue is that it 
+							// does not remember the tab state.
+							// This is a Safari bug which happens when private browsing is enabled.
+							return;
+						} else {
+							throw err;
+						}
+					}
+				}
 			},
 
 			/**
