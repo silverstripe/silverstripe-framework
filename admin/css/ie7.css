@@ -127,6 +127,21 @@ fieldset.switch-states .switch .slide-button { display: none; }
 
 html { overflow: hidden; }
 
+.cms-content-toolbar { padding-bottom: 5px; }
+
+.cms-menu-list li { list-style-type: none; width: 100%; float: left; margin: 0px; padding: 0px; }
+
+/* Site tree 
+------------------------- */
+.cms-tree-view-modes div { float: left; }
+.cms-tree-view-modes span { float: left; padding-top: 5px; }
+
+.cms-panel-content .cms-tree li { width: 200px; overflow: hidden; float: left; display: inline; }
+
+.jstree li a .ui-icon { text-indent: 0px !important; }
+
+/* Forms and files area
+-----------------------------*/
 .field input.text, .field textarea, .field .TreeDropdownField { width: 94%; }
 
 select { padding: 10px 0; height: 30px; }
@@ -149,6 +164,8 @@ select { padding: 10px 0; height: 30px; }
 
 .jstree li a .ui-icon { text-indent: 0px !important; }
 
+/* Gridfield 
+------------------------- */
 .cms table.ss-gridfield-table tbody td { width: auto; }
 .cms table.ss-gridfield-table tr th.extra span input { height: 23px; }
 
@@ -173,11 +190,13 @@ table.ss-gridfield-table tr.title th h2 { float: left; }
 table.ss-gridfield-table tr.ss-gridfield-item.odd { background: white; }
 table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 
-.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form { overflow: hidden; }
-.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form input { width: 160px; }
-
 .cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; }
 .cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 4px -4px; display: block; }
+
+.ss-ui-button.ss-gridfield-button-filter { border: none !important; }
+
+.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form { overflow: hidden; }
+.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form input { width: 160px; }
 
 .cms-content-header h2 { float: left; }
 .cms-content-header h2 .section-icon { display: none; }
@@ -189,10 +208,17 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 
 .cms .Actions > .cms-preview-toggle-link { display: block; }
 
-.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset a.ui-tabs-anchor { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1189px no-repeat; padding-left: 20px; }
-.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset a.ui-tabs-anchor:hover { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1163px no-repeat; }
-.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-state-active a.ui-tabs-anchor { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1215px no-repeat; }
-.cms .cms-content-actions .Actions .rise-up.ss-ui-action-tabset .ui-state-active a.ui-tabs-anchor:hover { background: url('../images/sprites-32x32-sf6890c994e.png') 0 -1137px no-repeat; }
-
 .cms-panel-content-collapsed { position: relative; width: 40px; }
 .cms-panel-content-collapsed h2.cms-panel-header, .cms-panel-content-collapsed h3.cms-panel-header { zoom: 1; position: absolute; top: 10px; right: 10px; writing-mode: tb-rl; float: right; z-index: 5000; }
+
+.cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset { width: 190px; }
+.cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav a.ui-tabs-anchor { background: transparent url(../images/sprites-32x32/arrow_down_lighter.png) no-repeat right top; }
+.cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav a.ui-tabs-anchor:hover { background: transparent url(../images/sprites-32x32/arrow_down_darker.png) no-repeat right top; }
+.cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav .ui-state-active a.ui-tabs-anchor { background: transparent url(../images/sprites-32x32/arrow_up_lighter.png) no-repeat right top; }
+.cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav .ui-state-active a.ui-tabs-anchor:hover { background: transparent url(../images/sprites-32x32/arrow_up_darker.png) no-repeat right top; }
+.cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button { width: 190px; /* Width 100% not calculating by ie7 */ }
+
+/* Tempory fix as jquery loads too slow to add icons */
+button.ui-button-text-icon-primary { padding-left: 30px !important; }
+button.ui-button-text-icon-primary span.ui-button-icon-primary { position: absolute !important; top: 5px !important; left: 8px !important; }
+button.ui-button-text-icon-primary .ui-button-text { margin-left: 0 !important; }
