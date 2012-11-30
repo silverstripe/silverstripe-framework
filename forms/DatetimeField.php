@@ -87,7 +87,7 @@ class DatetimeField extends FormField {
 	
 	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
-		
+
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
 		return $this->dateField->FieldHolder() . 
 			$this->timeField->FieldHolder() . 
@@ -235,6 +235,15 @@ class DatetimeField extends FormField {
 	
 	public function getLocale() {
 		return $this->dateField->getLocale();
+	}
+
+	public function setDescription($description) {
+		parent::setDescription($description);
+
+		$this->dateField->setDescription($description);
+		$this->timeField->setDescription($description);
+
+		return $this;
 	}
 	
 	/**
