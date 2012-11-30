@@ -72,14 +72,17 @@ for the search form, override `[api:DataObject->getCustomSearchContext()]` on yo
 The results are shown in a tabular listing, powered by the `[GridField](/reference/grid-field)`,
 more specifically the `[api:GridFieldDataColumns]` component.
 It looks for a `[api:DataObject::$summary_fields]` static on your model class,
-where you can add or remove columns, or change their title.
+where you can add or remove columns. To change the title, use `[api:DataObject::$field_labels]`.
 
 	:::php
 	class Product extends DataObject {
 	   // ...
+	   static $field_labels = array(
+	      'Price' => 'Cost' // renames the column to "Cost"
+	   );
 	   static $summary_fields = array(
-	      'Name' => 'Name',
-	      'Price' => 'Cost', // renames the column to "Cost"
+	      'Name',
+	      'Price',
 	      // leaves out the 'ProductCode' field, removing the column
 	   );
 	}
