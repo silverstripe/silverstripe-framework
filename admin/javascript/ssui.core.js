@@ -109,7 +109,7 @@
 			this.element.find('.ui-button-icon-alternate').remove();
 
 			$.ui.button.prototype.destroy.call( this );
-		},
+		}
 	});
 
 	/**
