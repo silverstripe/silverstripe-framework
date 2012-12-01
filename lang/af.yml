@@ -19,12 +19,12 @@ af:
     DROPAREA: 'Laat val area'
     EDITALL: 'Verander alles'
     EDITANDORGANIZE: 'Verander en organiseer'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Verander lêers'
     FILES: Lêers
     FROMCOMPUTER: 'Kies lêers van jou rekenaar af'
-    FROMCOMPUTERINFO: 'Upload from your computer'
+    FROMCOMPUTERINFO: 'Laai op van jou rekenaar af'
     TOTAL: Totaal
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Kies lêers om op te laai...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OF
   BBCodeParser:
@@ -86,8 +86,8 @@ af:
     SUCCESSADD2: '{name} bygesit'
     SUCCESSEDIT: 'Gestoor %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Byvoeg %s'
-    NOITEMSFOUND: 'No items found'
+    ADDITEM: 'Voeg %s  by'
+    NOITEMSFOUND: 'Geen item gevind nie'
     SORTASC: 'Sorteer in stygende orde'
     SORTDESC: 'Sorteer in dalende orde'
   ComplexTableField_popup.ss:
@@ -147,7 +147,7 @@ af:
     Content: Inhoud
     CssType: 'CSS lêer'
     DmgType: 'Apple disk image'
-    DocType: 'Word document'
+    DocType: 'Word dokument'
     Filename: 'Lêer naam'
     GifType: 'GIF image - good for diagrams'
     GzType: 'GZIP compressed file'
@@ -155,10 +155,10 @@ af:
     HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
+    IcoType: 'Ikoon prentjie'
+    JpgType: 'JPEG prentjie - werk goed vir fotos'
     JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
+    Mp3Type: 'MP3 klank lêer'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Lêergrootte is nul grepe.'
     NOVALIDUPLOAD: 'Lêer is nie geld vir oplaai nie'
@@ -171,7 +171,7 @@ af:
     TOOLARGESHORT: 'Lêer is groter as {size}'
     TiffType: 'Tagged image format'
     Title: Titel
-    WavType: 'WAV audo file'
+    WavType: 'WAV klank lêer'
     XlsType: 'Excel spreadsheet'
     ZipType: 'ZIP compressed file'
   FileIFrameField:
@@ -186,7 +186,7 @@ af:
     NOSOURCE: 'Kies asseblief ''n bron lêer om by te voeg'
     REPLACE: 'Vervang {type}'
   FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Prentjie oplaaiende ''Iframe'''
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
@@ -204,7 +204,7 @@ af:
     VALIDATIONNOTUNIQUE: 'The waarde wat ingesleutel is is nie uniek nie'
     VALIDATIONPASSWORDSDONTMATCH: 'Wagwoorde pas nie'
     VALIDATIONPASSWORDSNOTEMPTY: 'Wagwoorde kan nie leeg wees nie'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONSTRONGPASSWORD: 'Wagwoorde moet minstens een nommer en een alfa-numeriese karaketer bevat'
     VALIDATOR: Vergeldiger
     VALIDCURRENCY: 'Tik asseblief ''n geldige geldeenheid in '
   FormField:
@@ -222,11 +222,11 @@ af:
     LinkExisting: 'Koppel bestaande'
     NewRecord: 'Nuwe %s'
     NoItemsFound: 'Geen items gevind nie'
-    PRINTEDAT: 'Printed at'
+    PRINTEDAT: 'Gedruk te'
     PRINTEDBY: 'Gedruk deur'
     PlaceHolder: 'Vind {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
+    RelationSearch: 'Soek vir verwantskap'
     ResetFilter: Herstel
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
@@ -256,11 +256,11 @@ af:
     has_many_Permissions: Toestemmings
     many_many_Members: Lidde
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p> Voer een of meer groepe in <em>CSV</em>formaat (komma geskeide waardes).<small> <a href="#" class="toggle-advanced">Wys gevorderde gebruike</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    ResultDeleted: 'Verwyderde %d groepe'
+    ResultUpdated: '%d Groepe was opgedateer'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
@@ -270,7 +270,7 @@ af:
     BUTTONINSERT: 'Plaas in'
     BUTTONINSERTLINK: 'Sit in'
     BUTTONREMOVELINK: 'Verwyder skakel'
-    BUTTONUpdate: Update
+    BUTTONUpdate: Verander
     CAPTIONTEXT: 'Onderskrif teks'
     CSSCLASS: 'Belyning styl'
     CSSCLASSCENTER: 'In die middel op sy eie'
@@ -290,11 +290,11 @@ af:
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Afmetings
     IMAGEHEIGHTPX: Hoogte
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLE: 'Titel teks (leidraad) - vir addisionele informasie oor die prentjie'
+    IMAGETITLETEXT: 'Titel teks (leidraad)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Wydte
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: 'Voeg Media In'
     LINK: 'Sit skakel in'
     LINKANCHOR: 'Anker op hierdie bladsy'
     LINKDESCR: 'Skakel beskrywing'
@@ -307,7 +307,7 @@ af:
     PAGE: Bladsy
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    UpdateMEDIA: 'Verander Media'
   Image:
     PLURALNAME: Lêers
     SINGULARNAME: Lêer
@@ -372,7 +372,7 @@ af:
     SUBJECTPASSWORDCHANGED: 'U wagwoord het verander.'
     SUBJECTPASSWORDRESET: 'U wagwoord herlaai skakel'
     SURNAME: Van
-    TIMEFORMAT: 'Time format'
+    TIMEFORMAT: 'Tyd formaat'
     VALIDATIONMEMBEREXISTS: '''n Ander lid bestaan al klaar met dieselfde %s'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welkom terug, {firstname}'
@@ -387,14 +387,14 @@ af:
   MemberAuthenticator:
     TITLE: 'Epos &amp; Wagwoord'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    AMORPM: 'AM (Oggend) of PM (Middag)'
     'APPLY FILTER': 'Wend filter aan'
     Custom: 'Maak pas'
     DATEFORMATBAD: 'Die datum formaat is ongeldig'
-    DAYNOLEADING: 'Day of month without leading zero'
+    DAYNOLEADING: 'Dag van die maand sonder ''n zero vooraan'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    FOURDIGITYEAR: 'View syfer jaar'
+    FULLNAMEMONTH: 'Volle naam van maand (bv Junie)'
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
     MONTHNOLEADING: 'Month digit without leading zero'
@@ -427,7 +427,7 @@ af:
     NOCSVFILE: 'Please browse for a CSV file to import'
     NOIMPORT: 'Niks om in te voer nie'
     RESET: Herstel
-    Title: 'Data Models'
+    Title: 'Data modelle'
     UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Databasis kolomme'
@@ -453,7 +453,7 @@ af:
   Permission:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'IBS Toegang'
-    FULLADMINRIGHTS: 'Full administrative rights'
+    FULLADMINRIGHTS: 'Volle administratiewe regte '
     FULLADMINRIGHTS_HELP: 'Impliseer en oorskryf alle ander toegekende permissies.'
     PLURALNAME: Toestemmings
     SINGULARNAME: Toestemming
@@ -463,7 +463,7 @@ af:
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'oorgeërf van rol "%s" op groep "%s"'
   PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
+    OnlyAdminCanApply: 'Slegs administrateur daarvoor aansoek doen'
     PLURALNAME: Rolle
     SINGULARNAME: Rol
     Title: Tietel
@@ -477,8 +477,8 @@ af:
     VALIDATION: 'Tik asseblief  ''n geldige telefoon nommer in'
   RelationComplexTableField.ss:
     ADD: 'Voeg by'
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    CSVEXPORT: 'Voer uit na CSV'
+    NOTFOUND: 'Geen items gevind nie'
   Security:
     ALREADYLOGGEDIN: 'U het nie toegang tot hierdie bladsy nie. As u n'' ander rekening het wat toegang tot hierdie bladsy het, kan u weer <a href="%s">inteken</a>.'
     BUTTONSEND: 'Stuur vir my die wagwoord herstel skakel'
@@ -521,17 +521,17 @@ af:
   SiteTree:
     TABMAIN: Hoof
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED: 'In %s ''%s'' word benodig.'
   TableField.ss:
     ADD: 'Voeg nuwe ry by'
-    ADDITEM: 'Add %s'
+    ADDITEM: 'Voeg %s  by'
   TableListField:
     CSVEXPORT: 'Voer uit na CSV lêer'
     PRINT: Druk
     Print: Druk
     SELECT: Kies
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Geen item gevind nie'
     SORTASC: 'Sorteer in stygende orde'
     SORTDESC: 'Sorteer in dalende orde'
   TableListField_PageControls.ss:
@@ -561,7 +561,7 @@ af:
     EDITINFO: 'Verander die lêer'
     FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
     FROMCOMPUTER: 'Van jou rekenaar'
-    FROMCOMPUTERINFO: 'Select from files'
+    FROMCOMPUTERINFO: 'Kied uit lêers uit'
     FROMFILES: 'Van die lêers afdeling'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Maksimum aantal van {count} lêer(s) oorskry '
@@ -570,7 +570,7 @@ af:
     REMOVEERROR: 'Daar het ''n fout onstaan met die verwydering van die lêer'
     REMOVEINFO: 'Verwyder die lêer van hier af maar moet dit nie uit die lêer stoor verwyder nie'
     STARTALL: 'Begin alles'
-    STARTALLINFO: 'Start all uploads'
+    STARTALLINFO: 'Begin op alles op te laai'
     Saved: Gestoor
   Versioned:
     has_many_Versions: Weergawe
