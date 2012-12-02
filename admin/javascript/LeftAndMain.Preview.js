@@ -73,6 +73,7 @@
 					this.unblock();
 				} else {
 					this.block();
+					this.toggle();
 				}
 			},
 
