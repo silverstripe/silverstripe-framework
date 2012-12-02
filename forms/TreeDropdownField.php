@@ -266,7 +266,7 @@ class TreeDropdownField extends FormField {
 		}
 		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->'
 			. $this->keyField . '\" class=\"class-$child->class"' 
-			. ' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
+			. ' . $child->markingClasses() . $child->CMSTreeClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 
 		if($isSubTree) {
 			return substr(trim($obj->getChildrenAsUL('', $eval, null, true, $this->childrenMethod)), 4, -5);
