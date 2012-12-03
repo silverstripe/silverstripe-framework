@@ -6,12 +6,15 @@ With the addition of side-by-side editing, the preview has the ability to appear
 content in the _Pages_ section of the CMS. The site is rendered into an iframe. It will update itself whenever the
 content is saved, and relevant pages will be loaded for editing when the user navigates around in the preview.
 
-The root element for preview is `.cms-preview` which maintains the internal states neccessary for rendering. It provides
-function calls for transitioning between these states and has the ability to redraw the area.
+The root element for preview is `.cms-preview` which maintains the internal states neccessary for rendering within the
+entwine properties. It provides function calls for transitioning between these states and has the ability to update the
+appearance of the option selectors.
 
 In terms of backend support, it relies on `SilverStripeNavigator` to be rendered into the `.cms-edit-form`.
 _LeftAndMain_ will automatically take care of generating it as long as the `*_SilverStripeNavigator` template is found -
 first segment has to match current _LeftAndMain_-derived class (e.g. `LeftAndMain_SilverStripeNavigator`).
+
+We use `ss.preview` entwine namespace for all preview-related entwines.
 
 <div class="notice" markdown='1'>
 Caveat: `SilverStripeNavigator` and `CMSPreviewable` interface currently only support SiteTree objects that are
@@ -19,10 +22,20 @@ _Versioned_.  They are not general enough for using on any other DataObject. Tha
 of the feature.
 </div>
 
-If the `SilverStripeNavigator` structure is found, it is detached and installed in the `.cms-preview-control` panel at
-the bottom of the preview, and the preview is enabled into _split_ mode.
+## Enabling preview
 
-We use `ss.preview` entwine namespace for all preview-related entwines.
+The frontend decides on the preview being enabled or disabled based on the presnce of the `.cms-previewable` class. If
+this class is not found the preview will remain hidden, and the layout will stay in the _content_ mode.
+
+If the class is found, frontend looks for the `SilverStripeNavigator` structure and moves it to the
+`.cms-preview-control` panel at the bottom of the preview.  This structure supplies preview options such as state
+selector.
+
+If the navigator is not found, the preview appears in the GUI, but is shown as "blocked" - i.e. displaying the "preview
+unavailable" overlay.
+
+The preview can be affected by calling `enablePreview` and `disablePreview`. You can check if the preview is active by
+inspecting the `IsPreviewEnabled` entwine property.
 
 ## Preview states
 
@@ -95,9 +108,13 @@ Namespace `ss.preview`, selector `.cms-preview`:
 
 * **getCurrentStateName**: get the name of the current state (e.g. _LiveLink_ or _StageLink_).
 * **getCurrentSizeName**: get the name of the current device size.
+* **getIsPreviewEnabled**: check if the preview is enabled.
 * **changeState**: one of the `AllowedStates`.
 * **changeSize**: one of _auto_, _desktop_, _tablet_, _mobile_.
 * **changeMode**: maps to _threeColumnLayout_ modes - _split_, _preview_, _content_.
+* **enablePreview**: activate the preview and switch to the _split_ mode. Try to load the relevant URL from the content.
+* **disablePreview**: deactivate the preview and switch to the _content_ mode. Preview will re-enable itself when new
+previewable content is loaded.
 
 ## Related
 

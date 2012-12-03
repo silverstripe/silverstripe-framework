@@ -1081,7 +1081,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
-			
+
+			// Announce the capability so the frontend can decide whether to allow preview or not.
+			if(in_array('CMSPreviewable', class_implements($record))) {
+				$form->addExtraClass('cms-previewable');
+			}
+
 			// Set this if you want to split up tabs into a separate header row
 			// if($form->Fields()->hasTabset()) {
 			// 	$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
