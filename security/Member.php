@@ -15,7 +15,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
-		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(160)',
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
@@ -584,7 +583,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$fields->removeByName('RememberLoginToken');
 		$fields->removeByName('NumVisit');
 		$fields->removeByName('LastVisited');
-		$fields->removeByName('Bounced');
 		$fields->removeByName('AutoLoginHash');
 		$fields->removeByName('AutoLoginExpired');
 		$fields->removeByName('PasswordEncryption');
@@ -1197,7 +1195,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			i18n::get_existing_translations()
 		));
 
-		$mainFields->removeByName('Bounced');
 		$mainFields->removeByName('RememberLoginToken');
 		$mainFields->removeByName('AutoLoginHash');
 		$mainFields->removeByName('AutoLoginExpired');
