@@ -40,7 +40,7 @@
 			 * Switch the preview to different state.
 			 * stateName can be one of the "AllowedStates".
 			 */
-			changeState: function(stateName) {
+			changeState: function(stateName) {				
 				this.setCurrentStateName(stateName);
 				this._updatePreview();
 				this.redraw();
@@ -90,10 +90,12 @@
 			 * Update the visual appearance to match the internal preview state.
 			 */
 			redraw: function() {
+
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
 				// Update preview state selector.
 				var currentStateName = this.getCurrentStateName();
+
 				if (currentStateName) {
 					this.find('.cms-preview-states').changeVisibleState(currentStateName);
 				}
@@ -158,8 +160,8 @@
 			_getNavigatorStates: function() {
 				// Walk through available states and get the URLs.
 				var urlMap = $.map(this.getAllowedStates(), function(name) {
-					var stateLink = $('.cms-preview-states .switch-options a[name=' + name + ']');
-					return stateLink.length ? {name: name, url: stateLink.attr('href')} : null;
+					var stateLink = $('.cms-preview-states .state-name[data-name=' + name + ']');
+					return stateLink.length ? {name: name, url: stateLink.attr('data-link')} : null;
 				});
 
 				return urlMap;
@@ -341,18 +343,15 @@
 			}
 		});
 
-		$('.cms-preview-states .switch-options a').entwine({
+		$('.cms-preview-states .state-name').entwine({
 			/**
 			 * Reacts to the user changing the state of the preview.
 			 * TODO Rewrite this function to ensure we can handle 1,2,3+ states.
 			 */
 			onclick: function(e) {			
-				var targetStateName = $(this).siblings('a').attr('name');
-
+				var targetStateName = $(this).attr('data-name');
 				// Reload preview with the selected state.
-				$('.cms-preview').changeState(targetStateName);
-
-				return false;
+				$('.cms-preview').changeState(targetStateName);				
 			}
 		});	
 		
