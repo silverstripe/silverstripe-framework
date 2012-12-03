@@ -2,17 +2,13 @@
 	$.entwine('ss.preview', function($){
 
 		/**
-		 * Shows a previewable website state alongside its editable version in backend UI, 
-		 * typically a page. This allows CMS users to seamlessly switch between preview and 
-		 * edit mode in the same browser window. The preview panel is embedded in the layout 
-		 * of the backend UI, and loads its content via an iframe.
+		 * Shows a previewable website state alongside its editable version in backend UI.
 		 *
-		 * Relies on the server responses to indicate if a preview URL is available for the 
-		 * currently loaded admin interface. If no preview is available, the panel is "blocked"
-		 * automatically.
-		 * 
-		 * Internal links within the preview iframe trigger a refresh of the admin panel as well,
-		 * while all external links are disabled (via JavaScript).
+		 * Relies on the server responses to indicate if a preview is available for the 
+		 * currently loaded admin interface - signified by class ".cms-previewable" being present.
+		 *
+		 * The preview options at the bottom are constructured by grabbing a SilverStripeNavigator 
+		 * structure also provided by the backend.
 		 */
 		$('.cms-preview').entwine({
 
@@ -36,13 +32,18 @@
 			CurrentSizeName: 'auto',
 
 			/**
+			 * Flags whether the preview is available on this CMS section.
+			 */
+			IsPreviewEnabled: false,
+
+			/**
 			 * API
 			 * Switch the preview to different state.
 			 * stateName can be one of the "AllowedStates".
 			 */
 			changeState: function(stateName) {				
 				this.setCurrentStateName(stateName);
-				this._updatePreview();
+				this._loadCurrentState();
 				this.redraw();
 
 				return this;
@@ -112,45 +113,113 @@
 				if (currentSizeName) {
 					this.find('.preview-size-selector').changeVisibleSize(this.getCurrentSizeName());
 				}
+
+				return this;
 			},
 
+			/**
+			 * Disable the area - it will not appear in the GUI.
+			 * Caveat: the preview will be automatically enabled when ".cms-previewable" class is detected.
+			 */
+			disablePreview: function() {
+				this._loadUrl('about:blank');
+				this._block();
+				this.changeMode('content');
+				this.setIsPreviewEnabled(false);
+				return this;
+			},
+
+			/**
+			 * Enable the area and start updating to reflect the content editing.
+			 */
+			enablePreview: function() {
+				this.setIsPreviewEnabled(true);
+				this.changeMode('split');
+				this._loadCurrentState();
+				return this;
+			},
+
+			/**
+			 * Initialise the preview element.
+			 */
 			onadd: function() {
 				var self = this, layoutContainer = this.parent();
-				// this.resizable({
-				// 	handles: 'w',
-				// 	stop: function(e, ui) {
-				// 		$('.cms-container').layout({resize: false});
-				// 	}
-				// });
-				
+
 				// Create layout and controls
 				this.find('iframe').addClass('center');
 				this.find('iframe').bind('load', function() {
-					self._fixIframeLinks();
+					self._adjustIframeForPreview();
 
 					// Load edit view for new page, but only if the preview is activated at the moment.
 					// This avoids e.g. force-redirections of the edit view on RedirectorPage instances.
 					self._loadCurrentPage();
 				});
 				
-				this.data('cms-preview-initialized', true);
-				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
 				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
 				this.find('.cms-preview-overlay-light').hide();
-				$('.cms-preview-toggle-link')[this._canPreview() ? 'show' : 'hide']();
+				$('.cms-preview-toggle-link')[this.getIsPreviewEnabled() ? 'show' : 'hide']();
 
-				self._fixIframeLinks();
-				this._updatePreview();
+				this.disablePreview();
 
 				this._super();
 			},
 
 			/**
-			 * Load the URL into the preview iframe.
+			 * Set the preview to unavailable - could be still visible. This is purely visual.
+			 */
+			_block: function() {
+				this.addClass('blocked');
+				return this;
+			},
+
+			/**
+			 * Set the preview to available (remove the overlay);
+			 */
+			_unblock: function() {
+				this.removeClass('blocked');
+				return this;
+			},
+
+			/**
+			 * Update the preview according to the CMS section capabilities.
+			 */
+			_initialiseFromContent: function() {
+				if (!$('.cms-previewable').length) {
+					this.disablePreview();
+				} else {
+					this.enablePreview();
+					this._moveNavigator();
+				}
+				return this;
+			},
+
+			/**
+			 * Update preview whenever any panels are reloaded.
+			 */
+			'from .cms-container': {
+				onafterstatechange: function(){
+					this._initialiseFromContent();
+				}
+			},
+
+			/**
+			 * Update preview whenever a form is submitted.
+			 * This is an alternative to the LeftAndmMain::loadPanel functionality which we already
+			 * cover in the onafterstatechange handler.
+			 */
+			'from .cms-container .cms-edit-form': {
+				onaftersubmitform: function(){
+					this._initialiseFromContent();
+				}
+			},
+
+			/**
+			 * Change the URL of the preview iframe.
 			 */
 			_loadUrl: function(url) {
 				this.find('iframe').attr('src', url);
+				return this;
 			},
 
 			/**
@@ -168,10 +237,15 @@
 			},
 
 			/**
-			 * Reload the preview while keeping current state.
-			 * Fall back to first preferred state if state is no longer available.
+			 * Load current state into the preview (e.g. StageLink or LiveLink).
+			 * We try to reuse the state we have been previously in. Otherwise we fall back
+			 * to the first state available on the "AllowedStates" list.
+			 *
+			 * @returns New state name.
 			 */
-			_updatePreview: function() {
+			_loadCurrentState: function() {
+				if (!this.getIsPreviewEnabled()) return this;
+
 				var states = this._getNavigatorStates();
 				var currentStateName = this.getCurrentStateName();
 				var currentState = null;
@@ -184,42 +258,37 @@
 				}
 
 				if (currentState[0]) {
-					// State is available.
+					// State is available on the newly loaded content. Get it.
 					this._loadUrl(currentState[0].url);
 					this._unblock();
 				} else if (states.length) {
-					// Fall back to first preferred state.
+					// Fall back to the first available content state.
 					this.setCurrentStateName(states[0].name);
 					this._loadUrl(states[0].url);
 					this._unblock();
 				} else {
-					// No state available.
+					// No state available at all.
+					this.setCurrentStateName(null);
 					this._block();
 				}
+
 				return this;
 			},
 
-			_updateAfterXhr: function(){
-				$('.cms-preview-toggle-link')[this._canPreview() ? 'show' : 'hide']();
-				this._updatePreview();
-			},
-
 			/**
-			 * Update preview whenever any panels are reloaded.
+			 * Move the navigator from the content to the preview bar.
 			 */
-			'from .cms-container': {
-				onafterstatechange: function(){
-					this._updateAfterXhr();
-				}
-			},
+			_moveNavigator: function() {
+				var previewEl = $('.cms-preview .cms-preview-controls');
+				var navigatorEl = $('.cms-edit-form .cms-navigator');
 
-			/**
-			 * Update preview whenever form is submitted. This does not use the usual LeftAndmMain::loadPanel
-			 * functionality which is already covered in onafterstatechange above.
-			 */
-			'from .cms-container .cms-edit-form': {
-				onaftersubmitform: function(){
-					this._updateAfterXhr();
+				if (navigatorEl.length && previewEl.length) {
+					// Navigator is available - install the navigator.
+					previewEl.html($('.cms-edit-form .cms-navigator').detach());
+					$('.cms-preview')._loadCurrentState();
+				} else {
+					// Navigator not available.
+					this._block();
 				}
 			},
 
@@ -228,9 +297,10 @@
 			 * based on metadata sent along with this document.
 			 */
 			_loadCurrentPage: function() {
-				var doc = this.find('iframe')[0].contentDocument, containerEl = $('.cms-container');
+				if (!this.getIsPreviewEnabled()) return;
 
-				if(!this._canPreview()) return;
+				var doc = this.find('iframe')[0].contentDocument,
+					containerEl = $('.cms-container');
 
 				// Load this page in the admin interface if appropriate
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'); 
@@ -246,18 +316,9 @@
 			},
 
 			/**
-			 * Determines if the current interface is capable of previewing its managed record.
-			 *
-			 * Returns: {boolean}
+			 * Prepare the iframe content for preview.
 			 */
-			_canPreview: function() {
-				var contentEl = $('.cms-container .cms-content');
-				// Only load if we're in the "edit page" view
-				var blockedClasses = ['CMSPagesController', 'CMSPageHistoryController'];
-				return !(contentEl.is('.' + blockedClasses.join(',.')));
-			},
-			
-			_fixIframeLinks: function() {
+			_adjustIframeForPreview: function() {
 				var iframe = this.find('iframe')[0];
 				if(iframe){
 					var doc = iframe.contentDocument;
@@ -267,15 +328,13 @@
 		
 				if(!doc) return;
 
-				// Block outside links from going anywhere
+				// Open external links in new window to avoid "escaping" the internal page context in the preview
+				// iframe, which is important to stay in for the CMS logic.
 				var links = doc.getElementsByTagName('A');
 				for (var i = 0; i < links.length; i++) {
 					var href = links[i].getAttribute('href');
 					if(!href) continue;
 					
-					// Open external links in new window to avoid "escaping" the
-					// internal page context in the preview iframe,
-					// which is important to stay in for the CMS logic.
 					if (href.match(/^http:\/\//)) links[i].setAttribute('target', '_blank');
 				}
 
@@ -284,36 +343,18 @@
 				if(navi) navi.style.display = 'none';
 				var naviMsg = doc.getElementById('SilverStripeNavigatorMessage');
 				if(naviMsg) naviMsg.style.display = 'none';
-			},
-
-			_block: function() {
-				this.addClass('blocked');
-			},
-			
-			_unblock: function() {
-				this.removeClass('blocked');
 			}
 		});
 
 		$('.cms-edit-form').entwine({
-			/**
-			 * Initialise the navigator - move it from the EditForm to the preview.
-			 */
 			onadd: function() {	
-				var previewEl = $('.cms-preview .cms-preview-controls');
-				var navigatorEl = $('.cms-edit-form .cms-navigator');
-
-				if (navigatorEl.length && previewEl.length) {
-					// Preview is available - install the navigator.
-					previewEl.html($('.cms-edit-form .cms-navigator').detach());
-					$('.cms-preview').changeMode('split');
-				} else {
-					// Preview not available.
-					$('.cms-preview').changeMode('content');
-				}
+				$('.cms-preview')._initialiseFromContent();
 			}
 		});
 		
+		/**
+		 * Update the "preview unavailable" overlay according to the class.
+		 */
 		$('.cms-preview.blocked').entwine({
 			onmatch: function() {
 				this.find('.cms-preview-overlay').show();
@@ -331,7 +372,7 @@
 		 */
 		$('.cms-preview-states').entwine({
 			/**
-			 * Change the displayed state.
+			 * Change the appearance of the state selector.
 			 */
 			changeVisibleState: function(state) {
 				// Arbitrary mapping from checkbox state to the preview state.
@@ -361,7 +402,7 @@
 		 */
 		$('.preview-mode-selector').entwine({
 			/**
-			 * Change the displayed mode.
+			 * Change the appearance of the mode selector.
 			 */
 			changeVisibleMode: function(mode) {
 				this.find('select')
@@ -421,7 +462,7 @@
 		 */
 		$('.preview-size-selector').entwine({
 			/**
-			 * Change the displayed size.
+			 * Change the appearance of the size selector.
 			 */
 			changeVisibleSize: function(size) {
 				this.find('select')
@@ -444,7 +485,7 @@
 		});
 
 		/**
-		 * Chosen plumbing.
+		 * "Chosen" plumbing.
 		 * -------------------------------------------------------------------
 		 */
 
