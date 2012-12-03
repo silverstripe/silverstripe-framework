@@ -639,106 +639,113 @@ input.radio {
 
 /***************************************************************
 * On/Off Switch. 
-* Supports switching between two values (eg Draft/Published)
+* Supports switching between up to 5 values (used for Draft/Published)
 * Example html set-up:
-* <div class="switch-states">
-*	    <input type="checkbox" class="state" id="switch" checked>
-*	    <label for="switch">
-*		    <span class="switch-options">*		    	   	
-*		    	<a href="" class="first active">On</a>
-*				<a href="" class="last">Off</a>				
-*		    </span>
-*		    <span class="switch"></span>
-*	    </label>
-*</div> 
+*	<fieldset class="switch-states size_2"> 			
+*		<div class="switch">				
+*			<input id="Draft" class="first" name="view" type="radio" checked>
+*			<label for="Draft"><span>Draft</span></label>	
+*			<input id="Published" class="last" name="view" type="radio">
+*			<label for="Published"><span>Published</span></label>						
+*			<span class="slide-button"></span>	
+*		</div>			
+*	</fieldset>
 ****************************************************************/
-.switch-states {
-	label { /* Single label includes both switch options*/
-    	display: block; 
-    	overflow: hidden; 
-    	cursor: pointer;
-    	@include border-radius(3px);
-	}
-	input:checked + label { 
-		.switch-options {
-	    	margin-left: 0;
-	    }
-	    .switch {
-	    	right: 0px;
-	    }
-	}
-	input.state{ /* Hidden checkbox records the state of the switch */
-		display:none;
-	}	
-	.switch-options{ /* span wrapping both switch options */
-		display:block;
-		width: 200%; 
-		margin-left: -100%;
-		@include transition(margin 0.3s ease-in 0s);
-	    a {			    
-			text-align: right;
-	    	width: 50%; 
-	    	float: left; 
-	    	display: block;
-	    	padding: 0 8px 0 0; 
-	    	height: 24px; 
-		    line-height: 24px;
-		    color: #FFF;
-		    background-color: #93BE42;
-	    	@include background-image(linear-gradient(
+fieldset.switch-states{
+	.switch{
+		@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1));
+		@include border-radius(3px);
+		-webkit-animation: bugfix infinite 1s; //Bugfix for older Webkit, including mobile Webkit.
+		background:lighten(#2d3035,69%); 
+		display: block;				
+		height: 25px;
+		margin-top:3px;
+		padding: 0;
+		position: relative;			
+		width:100%;
+		z-index:5;
+		label{
+			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));	
+			color:lighten($color-text-dark,5%);
+			color:rgba($color-text-dark,0.5);
+			float:left;
+			font-weight:bold;
+			height: 100%;
+			line-height: 25px;
+			padding-left:15px;
+			position:relative;
+			text-align:center;			
+			vertical-align: middle;		
+			z-index:2;	
+			&:hover{
+				color:$color-text-dark;
+				//color:#2b9c32;
+			}	
+			span{
+				@include box-sizing('border-box');
+				padding:10px;				
+			}			
+		}
+		input {
+			opacity: 0;
+			position: absolute;			
+			&:checked + label {
+				@include transition(all 0.3s ease-out 0s); 	
+				color: #fff;
+				text-shadow: 0 -1px 0 darken($color-menu-button,10%);
+			}
+		}
+		.slide-button{
+			@include background-image(linear-gradient(
 				#2b9c32,
 				#64ab36
-			));
-		    
-			@include box-shadow(darken($color-menu-button, 15%) 0 0 2px inset);
-	    	@include box-sizing(border-box);   
-			&:hover {
-				text-decoration: none;
-				@include background-image(linear-gradient(
-					lighten(#2b9c32, 5%),
-					lighten(#64ab36, 5%)
-				));
-			}
-			&.first {
-		    	text-align: left;
-		    	padding-left: 8px;
-		    	padding-right: 0;
-		    	background-color: $color-menu-button; 
-			    @include background-image(linear-gradient(
-					darken($color-menu-button, 10%),
-					$color-menu-button 
-				));
-				&:hover{
-					@include background-image(linear-gradient(
-						$color-menu-button,
-						lighten($color-menu-button, 5%) 
-					));
-				}
-	    	}
-	  
+			));		
+			@include border-radius(3px);
+			@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2));
+			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));
+			@include transition(all 0.3s ease-out 0s); 	
+			background-color: $color-menu-button; 
+			display:block;
+			height: 100%;
+			left:0;
+			padding: 0;
+			position: absolute;
+			top: 0;	
+			z-index: 1;	
 		}
 	}
-	.switch { /* Divider, styled to look like a switch */
-		display:block;
-	    width: 8px; 
-	    margin: 0px;
-	    position: absolute; 
-	    top: 0; 
-	    bottom: 0; 
-	    right: 90px;
-	    border: 1px solid lighten($color-medium-separator,10%); 
-	    @include box-shadow(#FFF 0 0 2px inset);
-	    @include border-radius(3px);
-	    background: $color-widget-bg;
-	    @include background-image(linear-gradient(
-			rgba(0,0,0,0.2) 0%,
-			rgba(0,0,0,0) 100%
-		));
-		@include transition(all 0.3s ease-in 0s); 		
-	}
 
-}
+	/*	
+		Produce css for up to 5 states.
 
-
-
+		Note: with a little adjustment the switch can take more than 5 items, 
+		but a dropdown would probably be more appropriate
+	*/
+	@for $i from 1 through 5 {
+		&.size_#{$i} {
+			label span, .slide-button { 
+				width:  100% / $i;				
+			}	  			
+			@if $i == 1{
+				label span{
+					padding-right:25px; //even up the padding for a single item
+				}
+			}
+			input:checked:nth-of-type(2) ~ .slide-button {	
+				left: 100% / $i;
+			}
+			input:checked:nth-of-type(3) ~ .slide-button {	
+				left: (100% / $i) * 2;
+			}
+			input:checked:nth-of-type(4) ~ .slide-button {	
+				left: (100% / $i) * 3;
+			}
+			input:checked:nth-of-type(5) ~ .slide-button {	
+				left: (100% / $i) * 4;
+			}
+		} 
+	}		
+} 
+//old web-kit browser fix	
+@-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
 

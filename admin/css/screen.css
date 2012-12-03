@@ -285,29 +285,60 @@ input.radio { margin-left: 0; }
 
 /***************************************************************
 * On/Off Switch. 
-* Supports switching between two values (eg Draft/Published)
+* Supports switching between up to 5 values (used for Draft/Published)
 * Example html set-up:
-* <div class="switch-states">
-*	    <input type="checkbox" class="state" id="switch" checked>
-*	    <label for="switch">
-*		    <span class="switch-options">*		    	   	
-*		    	<a href="" class="first active">On</a>
-*				<a href="" class="last">Off</a>				
-*		    </span>
-*		    <span class="switch"></span>
-*	    </label>
-*</div> 
+*	<fieldset class="switch-states size_2"> 			
+*		<div class="switch">				
+*			<input id="Draft" class="first" name="view" type="radio" checked>
+*			<label for="Draft"><span>Draft</span></label>	
+*			<input id="Published" class="last" name="view" type="radio">
+*			<label for="Published"><span>Published</span></label>						
+*			<span class="slide-button"></span>	
+*		</div>			
+*	</fieldset>
 ****************************************************************/
-.switch-states label { /* Single label includes both switch options*/ display: block; overflow: hidden; cursor: pointer; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
-.switch-states input:checked + label .switch-options { margin-left: 0; }
-.switch-states input:checked + label .switch { right: 0px; }
-.switch-states input.state { /* Hidden checkbox records the state of the switch */ display: none; }
-.switch-states .switch-options { /* span wrapping both switch options */ display: block; width: 200%; margin-left: -100%; -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s; -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s; }
-.switch-states .switch-options a { text-align: right; width: 50%; float: left; display: block; padding: 0 8px 0 0; height: 24px; line-height: 24px; color: #FFF; background-color: #93BE42; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJiOWMzMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0YWIzNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #2b9c32), color-stop(100%, #64ab36)); background-image: -webkit-linear-gradient(#2b9c32, #64ab36); background-image: -moz-linear-gradient(#2b9c32, #64ab36); background-image: -o-linear-gradient(#2b9c32, #64ab36); background-image: linear-gradient(#2b9c32, #64ab36); -webkit-box-shadow: #236184 0 0 2px inset; -moz-box-shadow: #236184 0 0 2px inset; box-shadow: #236184 0 0 2px inset; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
-.switch-states .switch-options a:hover { text-decoration: none; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMxYjAzOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzZmYmUzYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #31b038), color-stop(100%, #6fbe3c)); background-image: -webkit-linear-gradient(#31b038, #6fbe3c); background-image: -moz-linear-gradient(#31b038, #6fbe3c); background-image: -o-linear-gradient(#31b038, #6fbe3c); background-image: linear-gradient(#31b038, #6fbe3c); }
-.switch-states .switch-options a.first { text-align: left; padding-left: 8px; padding-right: 0; background-color: #338dc1; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI4NzA5OSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #287099), color-stop(100%, #338dc1)); background-image: -webkit-linear-gradient(#287099, #338dc1); background-image: -moz-linear-gradient(#287099, #338dc1); background-image: -o-linear-gradient(#287099, #338dc1); background-image: linear-gradient(#287099, #338dc1); }
-.switch-states .switch-options a.first:hover { background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMzOGRjMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzQxOTljZCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #4199cd)); background-image: -webkit-linear-gradient(#338dc1, #4199cd); background-image: -moz-linear-gradient(#338dc1, #4199cd); background-image: -o-linear-gradient(#338dc1, #4199cd); background-image: linear-gradient(#338dc1, #4199cd); }
-.switch-states .switch { /* Divider, styled to look like a switch */ display: block; width: 8px; margin: 0px; position: absolute; top: 0; bottom: 0; right: 90px; border: 1px solid #9a9a9a; -webkit-box-shadow: white 0 0 2px inset; -moz-box-shadow: white 0 0 2px inset; box-shadow: white 0 0 2px inset; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; background: #eceff1; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgwLCAwLCAwLCAwLjIpIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDAsIDAsIDAsIDApIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g'); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0.2)), color-stop(100%, rgba(0, 0, 0, 0))); background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%); background-image: -moz-linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%); background-image: -o-linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%); background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%); -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s; -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; }
+fieldset.switch-states { 	/*	
+		Produce css for up to 5 states.
+
+		Note: with a little adjustment the switch can take more than 5 items, 
+		but a dropdown would probably be more appropriate
+	*/ }
+fieldset.switch-states .switch { -webkit-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); -moz-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-animation: bugfix infinite 1s; background: #dee0e3; display: block; height: 25px; margin-top: 3px; padding: 0; position: relative; width: 100%; z-index: 5; }
+fieldset.switch-states .switch label { text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); color: #2c2c2c; color: rgba(31, 31, 31, 0.5); float: left; font-weight: bold; height: 100%; line-height: 25px; padding-left: 15px; position: relative; text-align: center; vertical-align: middle; z-index: 2; }
+fieldset.switch-states .switch label:hover { color: #2b9c32; }
+fieldset.switch-states .switch label span { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding: 10px; }
+fieldset.switch-states .switch input { opacity: 0; position: absolute; }
+fieldset.switch-states .switch input:checked + label { -moz-transition: all 0.3s ease-out 0s; -webkit-transition: all 0.3s ease-out 0s; -o-transition: all 0.3s ease-out 0s; transition: all 0.3s ease-out 0s; color: #fff; text-shadow: 0 -1px 0 #287099; }
+fieldset.switch-states .switch .slide-button { background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJiOWMzMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0YWIzNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #2b9c32), color-stop(100%, #64ab36)); background-image: -webkit-linear-gradient(#2b9c32, #64ab36); background-image: -moz-linear-gradient(#2b9c32, #64ab36); background-image: -o-linear-gradient(#2b9c32, #64ab36); background-image: linear-gradient(#2b9c32, #64ab36); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); -moz-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); -moz-transition: all 0.3s ease-out 0s; -webkit-transition: all 0.3s ease-out 0s; -o-transition: all 0.3s ease-out 0s; transition: all 0.3s ease-out 0s; background-color: #338dc1; display: block; height: 100%; left: 0; padding: 0; position: absolute; top: 0; z-index: 1; }
+fieldset.switch-states.size_1 label span, fieldset.switch-states.size_1 .slide-button { width: 100%; }
+fieldset.switch-states.size_1 label span { padding-right: 25px; }
+fieldset.switch-states.size_1 input:checked:nth-of-type(2) ~ .slide-button { left: 100%; }
+fieldset.switch-states.size_1 input:checked:nth-of-type(3) ~ .slide-button { left: 200%; }
+fieldset.switch-states.size_1 input:checked:nth-of-type(4) ~ .slide-button { left: 300%; }
+fieldset.switch-states.size_1 input:checked:nth-of-type(5) ~ .slide-button { left: 400%; }
+fieldset.switch-states.size_2 label span, fieldset.switch-states.size_2 .slide-button { width: 50%; }
+fieldset.switch-states.size_2 input:checked:nth-of-type(2) ~ .slide-button { left: 50%; }
+fieldset.switch-states.size_2 input:checked:nth-of-type(3) ~ .slide-button { left: 100%; }
+fieldset.switch-states.size_2 input:checked:nth-of-type(4) ~ .slide-button { left: 150%; }
+fieldset.switch-states.size_2 input:checked:nth-of-type(5) ~ .slide-button { left: 200%; }
+fieldset.switch-states.size_3 label span, fieldset.switch-states.size_3 .slide-button { width: 33.33333%; }
+fieldset.switch-states.size_3 input:checked:nth-of-type(2) ~ .slide-button { left: 33.33333%; }
+fieldset.switch-states.size_3 input:checked:nth-of-type(3) ~ .slide-button { left: 66.66667%; }
+fieldset.switch-states.size_3 input:checked:nth-of-type(4) ~ .slide-button { left: 100%; }
+fieldset.switch-states.size_3 input:checked:nth-of-type(5) ~ .slide-button { left: 133.33333%; }
+fieldset.switch-states.size_4 label span, fieldset.switch-states.size_4 .slide-button { width: 25%; }
+fieldset.switch-states.size_4 input:checked:nth-of-type(2) ~ .slide-button { left: 25%; }
+fieldset.switch-states.size_4 input:checked:nth-of-type(3) ~ .slide-button { left: 50%; }
+fieldset.switch-states.size_4 input:checked:nth-of-type(4) ~ .slide-button { left: 75%; }
+fieldset.switch-states.size_4 input:checked:nth-of-type(5) ~ .slide-button { left: 100%; }
+fieldset.switch-states.size_5 label span, fieldset.switch-states.size_5 .slide-button { width: 20%; }
+fieldset.switch-states.size_5 input:checked:nth-of-type(2) ~ .slide-button { left: 20%; }
+fieldset.switch-states.size_5 input:checked:nth-of-type(3) ~ .slide-button { left: 40%; }
+fieldset.switch-states.size_5 input:checked:nth-of-type(4) ~ .slide-button { left: 60%; }
+fieldset.switch-states.size_5 input:checked:nth-of-type(5) ~ .slide-button { left: 80%; }
+
+@-webkit-keyframes bugfix { from { position: relative; }
+  to { position: relative; } }
 
 /**
 * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
@@ -1097,9 +1128,14 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 =======
 .cms-content-controls { /* Styling the background, controls sit on */ /* Styling for icons in controls */ /* Preview selectors. Overrides default chosen styles and applies its own */ }
 .cms-content-controls.cms-preview-controls { z-index: 1; background: #eceff1; height: 30px; /* should be set in js Layout to match page actions */ padding: 12px 12px; }
+<<<<<<< HEAD
 .cms-content-controls .icon-view, .cms-content-controls .dropdown a.chzn-single { white-space: nowrap; }
 .cms-content-controls .icon-view:before, .cms-content-controls .dropdown a.chzn-single:before { display: inline-block; float: left; content: ''; width: 23px; height: 17px; overflow: hidden; }
 >>>>>>> 4e83d0d... BUG preview state icon missing from edit side and ie bugs
+=======
+.cms-content-controls .icon-view, .cms-content-controls .preview-selector.dropdown a.chzn-single { white-space: nowrap; }
+.cms-content-controls .icon-view:before, .cms-content-controls .preview-selector.dropdown a.chzn-single:before { display: inline-block; float: left; content: ''; width: 23px; height: 17px; overflow: hidden; }
+>>>>>>> ba1cc62... Switch dropdown changes
 .cms-content-controls .icon-auto:before { background: url('../images/sprites-32x32-se93fc83bf9.png') 0 -108px no-repeat; }
 .cms-content-controls .icon-desktop:before { background: url('../images/sprites-32x32-se93fc83bf9.png') 0 -81px no-repeat; }
 .cms-content-controls .icon-tablet:before { background: url('../images/sprites-32x32-se93fc83bf9.png') 0 -162px no-repeat; }
@@ -1139,7 +1175,7 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 >>>>>>> 5e0cbc7... Add extra preview-mode selector to the CMS actions.
 =======
 .cms-content-controls .cms-navigator { width: 100%; }
-.cms-content-controls .dropdown a.chzn-single { text-indent: -200px; }
+.cms-content-controls .preview-selector.dropdown a.chzn-single { text-indent: -200px; }
 .cms-content-controls .preview-selector { float: right; border-bottom: none; position: relative; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; margin: 3px 0 0 4px; padding: 0; }
 .cms-content-controls .preview-selector a.chzn-single { width: 20px; padding: 6px 5px; height: 18px; margin: -3px 0 0; filter: none; /* remove ie background */ background: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .cms-content-controls .preview-selector a.chzn-single:hover, .cms-content-controls .preview-selector a.chzn-single:focus, .cms-content-controls .preview-selector a.chzn-single.chzn-single-with-drop { background-color: #dae0e5; }
@@ -1164,8 +1200,19 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul li .icon-view { margin-right: 4px; }
 .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected { background: #e6eaed; color: #444444; }
 .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected.highlighted, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:hover, .cms-content-controls .preview-selector .chzn-drop ul.chzn-results li.result-selected:focus { background: #e6eaed; color: #444444; }
+<<<<<<< HEAD
 >>>>>>> 6280c9b... BUG ie styles for riseup chosen selects, Menu width
 .cms-content-controls .cms-preview-states { float: right; position: relative; margin-top: 3px; margin-right: 7px; width: 100px; }
+=======
+.cms-content-controls .cms-preview-states { float: right; }
+<<<<<<< HEAD
+>>>>>>> 37eff69... Replace switch (todo: abstract js to work with either switch or drop-up)
+=======
+.cms-content-controls .cms-preview-states select { max-width: 150px; }
+.cms-content-controls .cms-preview-states.dropdown { max-width: 150px; }
+.cms-content-controls .cms-preview-states.dropdown a.chzn-single span { margin: 0; }
+.cms-content-controls .cms-preview-states.dropdown .chzn-container { max-width: 150px; }
+>>>>>>> ba1cc62... Switch dropdown changes
 
 .ModelAdmin .cms-content-fields { overflow: hidden; }
 .ModelAdmin .cms-content-fields .cms-edit-form { overflow-y: auto; overflow-x: hidden; }

@@ -11,7 +11,7 @@
 	}
 
 	/* Styling for icons in controls */
-	.icon-view, .dropdown a.chzn-single {
+	.icon-view, .preview-selector.dropdown a.chzn-single {
 		white-space: nowrap;
 		&:before {
 			display:inline-block;
@@ -49,7 +49,7 @@
 	.cms-navigator{
 		width: 100%;
 	}
-	.dropdown a.chzn-single{
+	.preview-selector.dropdown a.chzn-single{
 		text-indent:-200px;
 	}
 
@@ -170,9 +170,6 @@
 				}
 			}				
 		}
-		&.open .chzn-drop { 
-			//display: block;
-		}
 		.chzn-drop ul.chzn-results li.result-selected {
 			background: darken($color-widget-bg, 2%);
 			color: $color-text;
@@ -185,10 +182,22 @@
 
 	.cms-preview-states{
 		float: right;
-		position: relative; 
-		margin-top: 3px;
-		margin-right: 7px;
-		width: 100px;
+		select{
+			max-width:150px;
+		}
+
+		&.dropdown{
+			max-width:150px;
+			a.chzn-single{
+				span{
+					margin:0;
+				}
+			}
+			.chzn-container{
+				max-width:150px;
+			}
+		}
 	}
+
 }
 
