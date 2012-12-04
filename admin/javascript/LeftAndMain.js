@@ -923,14 +923,8 @@ jQuery.noConflict();
 				if(!this.data('uiTabs')) this.tabs({
 					active: (activeTab.index() != -1) ? activeTab.index() : 0,
 					beforeLoad: function(e, ui) {
-						// Overwrite ajax loading to use CMS logic instead
-						var makeAbs = $.path.makeUrlAbsolute,
-							baseUrl = $('base').attr('href'),
-							isSame = (makeAbs(ui.ajaxSettings.url, baseUrl) == makeAbs(document.location.href));
-
-						if(!isSame) $('.cms-container').loadPanel(ui.ajaxSettings.url);
-						$(this).tabs('select', ui.tab.index());
-
+						// Disable automatic ajax loading of tabs without matching DOM elements, 
+						// determining if the current URL differs from the tab URL is too error prone.
 						return false;
 					},
 					activate: function(e, ui) {
