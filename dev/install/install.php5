@@ -1281,6 +1281,7 @@ ErrorDocument 500 /assets/error-500.html
 	$baseClause
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_URI} !\.php$
 	RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
 </IfModule>
 TEXT;
