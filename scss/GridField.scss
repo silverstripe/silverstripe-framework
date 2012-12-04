@@ -164,7 +164,7 @@ $gf_grid_x:	16px;
 				// The last column (buttons) should always shrink to fit.
 				// Overwritten for IE7, which doesn't support this.			
 				&.col-buttons {
-					width: 40px;
+					width: 50px;
 					padding:0 $gf_grid_x/2;
 					text-align: left;
 				}
