@@ -569,12 +569,24 @@ See `[api:DataObject::$has_many]` for more info on the described relations.
 	
 	  // can be accessed by $myTeam->ActivePlayers()
 	  public function ActivePlayers() {
-	    return $this->Players("Status='Active'");
+	    return $this->Players()->filter('Status', 'Active');
 	  }
 	}
 
 Note: Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the 
 filtered criteria on the added record.
+
+### Relations on Unsaved Objects
+
+You can also set *has_many* and *many_many* relations before the `DataObject` is saved. This behaviour uses the
+`[api:UnsavedRelationList]` and converts it into the correct `RelationList` when saving the `DataObject` for the
+first time.
+
+This unsaved lists will also recursively save any unsaved objects that they contain.
+
+As these lists are not backed by the database, most of the filtering methods on `DataList` cannot be used on a
+list of this type. As such, an `UnsavedRelationList` should only be used for setting a relation before saving an
+object, not for displaying the objects contained in the relation.
 
 ## Validation and Constraints
 

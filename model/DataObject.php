@@ -158,6 +158,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $components;
 
 	/**
+	 * Non-static cache of has_many and many_many relations that can't be written until this object is saved.
+	 */
+	protected $unsavedRelations;
+
+	/**
 	 * Returns when validation on DataObjects is enabled.
 	 * @return bool
 	 */
@@ -1188,6 +1193,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				
 				DB::manipulate($manipulation);
+
+				// If there's any relations that couldn't be saved before, save them now (we have an ID here)
+				if($this->unsavedRelations) {
+					foreach($this->unsavedRelations as $name => $list) {
+						$list->changeToList($this->$name());
+					}
+					$this->unsavedRelations = array();
+				}
+
 				$this->onAfterWrite();
 
 				$this->changed = null;
@@ -1365,6 +1379,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				. " on class '$this->class'", E_USER_ERROR);
 		}
 
+		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
+		if(!$this->ID) {
+			if(!isset($this->unsavedRelations[$componentName])) {
+				$this->unsavedRelations[$componentName] =
+					new UnsavedRelationList($this->class, $componentName, $componentClass); 
+			}
+			return $this->unsavedRelations[$componentName];
+		}
+
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 		
 		$result = new HasManyList($componentClass, $joinField);
@@ -1473,6 +1496,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
+
+		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
+		if(!$this->ID) {
+			if(!isset($this->unsavedRelations[$componentName])) {
+				$this->unsavedRelations[$componentName] =
+					new UnsavedRelationList($parentClass, $componentName, $componentClass); 
+			}
+			return $this->unsavedRelations[$componentName];
+		}
 		
 		$result = Injector::inst()->create('ManyManyList', $componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
