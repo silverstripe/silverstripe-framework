@@ -403,6 +403,10 @@ class GDBackend extends Object implements Image_Backend {
 		$height = $this->height;
 		$newGD = imagecreatetruecolor($this->width, $this->height);
 		
+		// Preserves transparency between images
+		imagealphablending($newGD, false);
+		imagesavealpha($newGD, true);
+		
 		$rt = $rv + $bv + $gv;
 		$rr = ($rv == 0) ? 0 : 1/($rt/$rv);
 		$br = ($bv == 0) ? 0 : 1/($rt/$bv);
@@ -412,7 +416,7 @@ class GDBackend extends Object implements Image_Backend {
 				$pxrgb = imagecolorat($this->gd, $dx, $dy);
 				$heightgb = ImageColorsforIndex($this->gd, $pxrgb);
 				$newcol = ($rr*$heightgb['red']) + ($br*$heightgb['blue']) + ($gr*$heightgb['green']);
-				$setcol = ImageColorAllocate($newGD, $newcol, $newcol, $newcol);
+				$setcol = ImageColorAllocateAlpha($newGD, $newcol, $newcol, $newcol, $heightgb['alpha']);
 				imagesetpixel($newGD, $dx, $dy, $setcol);
 			}
 		}
@@ -437,16 +441,16 @@ class GDBackend extends Object implements Image_Backend {
 
 			$ext = strtolower(substr($filename, strrpos($filename,'.')+1));
 			if(!isset($type)) switch($ext) {
-				case "gif": $type = 1; break;
-				case "jpeg": case "jpg": case "jpe": $type = 2; break;
-				default: $type = 3; break;
+				case "gif": $type = IMAGETYPE_GIF; break;
+				case "jpeg": case "jpg": case "jpe": $type = IMAGETYPE_JPEG; break;
+				default: $type = IMAGETYPE_PNG; break;
 			}
 			
 			// if the extension does not exist, the file will not be created!
 			
 			switch($type) {
-				case 1: imagegif($this->gd, $filename); break;
-				case 2: imagejpeg($this->gd, $filename, $this->quality); break;
+				case IMAGETYPE_GIF: imagegif($this->gd, $filename); break;
+				case IMAGETYPE_JPEG: imagejpeg($this->gd, $filename, $this->quality); break;
 				
 				// case 3, and everything else
 				default: 
