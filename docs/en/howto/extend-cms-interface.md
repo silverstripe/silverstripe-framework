@@ -13,28 +13,15 @@ guide on [CMS Architecture](../reference/cms-architecture).
 
 ## Overload a CMS template ##
 
-First of all, create a new folder structure in your SilverStripe webroot, which will
-form our module for this example. 
-	
-	cms/
-	framework/
-	zzz_admin/
-		_config.php
-		code/
-		css/
-		admin/
-			templates/
-				
-Note: The `zzz_` prefix and `admin/` subfolder are only a temporary measure necessary to ensure our templates
-are included *after* the original CMS templates. At the moment, you can't use the `mysite/` folder
-to achieve the same result.
+If you place a template with an identical name into your application template directory
+(usually `mysite/templates/`), it'll take priority over the built-in one.
 
 CMS templates are inherited based on their controllers, similar to subclasses of
 the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` template).
 We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
-Copy the template markup of the base implementation at `framework/admin/templates/LeftAndMain.ss` into `zzz_admin/admin/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after the `$Content` tag:
+Copy the template markup of the base implementation at `framework/admin/templates/LeftAndMain.ss` into `mysite/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after the `$Content` tag:
 	
 	:::ss
 	...
@@ -62,7 +49,7 @@ allows us to build complex layouts with minimal JavaScript configuration.
 ## Include custom CSS in the CMS
 
 In order to show the links in one line, we'll add some CSS, and get it to load with the CMS interface.
-Paste the following content into a new file called `zzz_admin/css/BookmarkedPages.css`:
+Paste the following content into a new file called `mysite/css/BookmarkedPages.css`:
 
 	:::css
 	.cms-bottom-bar {height: 20px; padding: 5px; background: #C6D7DF;}
@@ -70,17 +57,17 @@ Paste the following content into a new file called `zzz_admin/css/BookmarkedPage
 	.cms-bottom-bar ul li {float: left; margin-left: 1em;}
 	.cms-bottom-bar a {color: #444444;}
 
-Load the new CSS file into the CMS, by adding the following line to `zzz_admin/_config.php`:
+Load the new CSS file into the CMS, by adding the following line to `mysite/_config.php`:
 
 	:::php
 	<?php
-	LeftAndMain::require_css('zzz_admin/css/BookmarkedPages.css');
+	LeftAndMain::require_css('mysite/css/BookmarkedPages.css');
 
 ## Create a "bookmark" flag on pages ##
 
 Now we'll define which pages are actually bookmarked, a flag that is stored in the database.
 For this we need to decorate the page record with a `DataExtension`.
-Create a new file called `zzz_admin/code/BookmarkedPageExtension.php` and insert the following code.
+Create a new file called `mysite/code/BookmarkedPageExtension.php` and insert the following code.
 
 	:::php
 	<?php
@@ -94,7 +81,7 @@ Create a new file called `zzz_admin/code/BookmarkedPageExtension.php` and insert
 		}
 	}
 
-Enable the extension with the following line in `zzz_mysite/_config.php`:
+Enable the extension with the following line in `mysite/_config.php`:
 
 	:::php
 	SiteTree::add_extension('BookmarkedPageExtension');
@@ -108,7 +95,7 @@ One piece in the puzzle is still missing: How do we get the list of bookmarked
 pages from the datbase into the template we've already created (with hardcoded links)? 
 Again, we extend a core class: The main CMS controller called `LeftAndMain`.
 
-Add the following code to a new file `zzz_admin/code/BookmarkedLeftAndMainExtension.php`;
+Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension.php`;
 
 	:::php
 	<?php
@@ -118,13 +105,13 @@ Add the following code to a new file `zzz_admin/code/BookmarkedLeftAndMainExtens
 		}
 	}
 	
-Enable the extension with the following line in `zzz_mysite/_config.php`:
+Enable the extension with the following line in `mysite/_config.php`:
 
 	:::php
 	LeftAndMain::add_extension('BookmarkedPagesLeftAndMainExtension');
 
 As the last step, replace the hardcoded links with our list from the database.
-Find the `<ul>` you created earlier in `zzz_admin/admin/templates/LeftAndMain.ss`
+Find the `<ul>` you created earlier in `mysite/admin/templates/LeftAndMain.ss`
 and replace it with the following:
 
 	:::ss
