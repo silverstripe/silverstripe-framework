@@ -44,7 +44,7 @@
 			 * (Object)
 			 */
 			ChangeTrackerOptions: {
-				ignoreFieldSelector: '.no-change-track, .ss-upload :input'
+				ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input'
 			},
 		
 			/**

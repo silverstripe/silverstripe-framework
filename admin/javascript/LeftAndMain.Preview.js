@@ -96,7 +96,6 @@
 
 				// Update preview state selector.
 				var currentStateName = this.getCurrentStateName();
-
 				if (currentStateName) {
 					this.find('.cms-preview-states').changeVisibleState(currentStateName);
 				}
@@ -133,9 +132,10 @@
 			 * Enable the area and start updating to reflect the content editing.
 			 */
 			enablePreview: function() {
-				this.setIsPreviewEnabled(true);
-				this.changeMode('split');
-				this._loadCurrentState();
+				if (!this.getIsPreviewEnabled()) {
+					this.setIsPreviewEnabled(true);
+					this.changeMode('split');
+				}
 				return this;
 			},
 
@@ -190,6 +190,8 @@
 				} else {
 					this.enablePreview();
 					this._moveNavigator();
+					this._loadCurrentState();
+					this.redraw();
 				}
 				return this;
 			},
@@ -285,7 +287,6 @@
 				if (navigatorEl.length && previewEl.length) {
 					// Navigator is available - install the navigator.
 					previewEl.html($('.cms-edit-form .cms-navigator').detach());
-					$('.cms-preview')._loadCurrentState();
 				} else {
 					// Navigator not available.
 					this._block();
@@ -375,19 +376,13 @@
 			 * Change the appearance of the state selector.
 			 */
 			changeVisibleState: function(state) {
-				// Arbitrary mapping from checkbox state to the preview state.
-				if (state==='LiveLink') {
-					this.find('.cms-preview-checkbox').prop('checked', false);
-				} else {
-					this.find('.cms-preview-checkbox').prop('checked', true);
-				}
+				this.find('input[data-name="'+state+'"]').prop('checked', true);
 			}
 		});
 
 		$('.cms-preview-states .state-name').entwine({
 			/**
 			 * Reacts to the user changing the state of the preview.
-			 * TODO Rewrite this function to ensure we can handle 1,2,3+ states.
 			 */
 			onclick: function(e) {			
 				var targetStateName = $(this).attr('data-name');
