@@ -156,7 +156,7 @@ unique template (write your own XML in themes/yourtheme/templates/Students.ss)
 			$link = $this->Link("students"), 
 			$title = "Students feed" 
 		);
-		$rss->setTemplate('Students.ss');
+		$rss->setTemplate('Students');
 		return $rss->outputToBrowser();
 	}
 
