@@ -8,7 +8,7 @@
 
 /** ----------------------------------------------------
  * Basic form fields
- * ---------------------------------------------------- */
+ * ---------------------------------------------------- */	
 
 form.nostyle {
 	@include clear-form-field-styles();
@@ -37,7 +37,7 @@ form.nostyle {
 	// need to use relative positioning and overflow hidden will not expand
 	// the containing boxes
 	@include legacy-pie-clearfix();
-
+	
 	&.nolabel {
 		.middleColumn {
 			margin-left: 0;
@@ -53,8 +53,8 @@ form.nostyle {
 		font-style: normal;
 		color: $color-text;
 		clear:none;
-	}
-	label {
+	}	
+	label {		
 		&.left {
 			float: left;
 			display: block;
@@ -63,21 +63,21 @@ form.nostyle {
 			line-height: $grid-y * 2;
 			font-weight: bold;
 			@include text-shadow(1px 1px 0 $color-text-shadow);
-		}
+		}		
 		&.right {
 			cursor: pointer;
-			clear: both;
+			clear: both;			
 			color: lighten($color-text, 20%);
 			display: block;
 			font-style: italic;
 			margin: $grid-y/2 0 0 $grid-x*23;
-		}
+		}		
 	}
-
+	
 	.middleColumn {
 		margin-left: $grid-x * 23;
 	}
-
+	
 	span.readonly {
 		padding-top: $grid-y;
 		line-height: $grid-y * 2;
@@ -93,7 +93,7 @@ form.nostyle {
 		font-style: italic;
 		margin: $grid-y/2 0 0 $grid-x*23;
 	}
-
+	
 	input.text,
 	textarea,
 	select,
@@ -107,7 +107,7 @@ form.nostyle {
 		}
 	}
 
-	input.text,
+	input.text, 
 	textarea,
 	.TreeDropdownField {
 		background: #fff;
@@ -120,14 +120,14 @@ form.nostyle {
 		@include transition(0.2s border ease-in);
 		@include border-radius(4px);
 		@include background-image(linear-gradient(#EAEAEA, #fff 10%));
-
+	
 		&:focus {
 			border: 1px solid lighten($color-medium-separator, 10%);
 			border-top-color: $color-medium-separator;
 			@include box-shadow(0 1px 3px rgba(0,0,0,0.2) inset);
 		}
 	}
-
+	
 	input[disabled], input.disabled,
 	textarea[disabled], textarea.disabled,
 	select[disabled], select.disabled {
@@ -147,7 +147,7 @@ form.stacked .field, .field.stacked {
 		float: none;
 		padding-bottom: 10px;
 	}
-
+	
 	.middleColumn {
 		margin-left: 0px;
 		clear: left;
@@ -160,7 +160,7 @@ form.small .field, .field.small {
 			width: $grid-x * 14;
 		}
 	}
-
+	
 	.middleColumn {
 		margin-left: $grid-x * 15;
 	}
@@ -173,19 +173,19 @@ form.small .field, .field.small {
 	}
 }
 
-.field {
+.field {	
 	/* TreeDropdowns */
 	.TreeDropdownField {
 		padding: 0;
-
+		
 		.treedropdownfield-panel {
 			border: 1px solid lighten($color-medium-separator, 20%);
 			border-top: none;
-
+			
 			@include border-bottom-left-radius(4px);
 			@include border-bottom-right-radius(4px);
 		}
-
+		
 		&.treedropdownfield-open-tree {
 			@include border-bottom-left-radius(0);
 			@include border-bottom-right-radius(0);
@@ -197,18 +197,18 @@ form.small .field, .field.small {
 			display: none;
 		}
 	}
-
+	
 	/* dropdowns */
 	.dropdown {
 		select {
 			margin-top: $grid-y;
 		}
 	}
-
+	
 	/* chzn override */
 	.chzn-container {
 		.chzn-results {
-
+			
 			li {
 				font-size: 11px;
 				line-height: $grid-y * 2;
@@ -221,38 +221,38 @@ form.small .field, .field.small {
 	  		border: 1px solid lighten($color-medium-separator, 10%);
 		}
 	}
-
+	
 	.chzn-container-single .chzn-single  {
 		height: 26px;
 		line-height: 26px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
-
+		
 		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
-
-
+		
+		
 		&:hover, &:focus, &:active {
 			text-decoration: none;
 			outline: none;
 		}
-
+	
 		div {
 			width: 24px;
-
+	
 			b {
 				background-position: 4px 0px;
 			}
 		}
 	}
-
+	
 	/* Date Fields */
-	input.month, input.day, input.year {
-		width: ($grid-x * 7);
+	input.month, input.day, input.year { 
+		width: ($grid-x * 7); 
 	}
 
-	input.time {
+	input.time { 
 		width: ($grid-x * 8); // smaller time field, since input is restricted
 	}
-
+	
 	/* Hides borders in settings/access. Activated from JS */
 	&.remove-splitter {
 		border-bottom: none;
@@ -284,7 +284,7 @@ form.small .field, .field.small {
 	}
 
 	input.loading, button.loading,
-	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading,
+	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
 	.ui-widget-header input.ui-state-default.loading {
 		.ui-icon {
 			background: transparent url(../../images/network-save.gif) no-repeat 0 0;
@@ -314,7 +314,6 @@ form.small .field, .field.small {
 		cursor: pointer;
 		background-color: $color-button-generic;
 		white-space: nowrap;
-		margin-right: 0;
 
 		@include background(
 			linear-gradient(color-stops(
@@ -348,14 +347,14 @@ form.small .field, .field.small {
 			);
 			@include box-shadow(0 0 5px darken($color-button-generic, 20%) inset);
 		}
-
+		
 		/* constructive */
 		&.ss-ui-action-constructive {
 			text-shadow:none;
 			font-weight: bold;
 			color: $color-text-light;
 			border-color: $color-button-constructive-border;
-			border-bottom-color: darken($color-button-constructive-border, 10%);
+			border-bottom-color: darken($color-button-constructive-border, 10%);			
 			background-color: $color-button-constructive;
 			@include background(
 				linear-gradient(color-stops(
@@ -364,7 +363,7 @@ form.small .field, .field.small {
 				))
 			);
 			@include text-shadow(darken($color-button-constructive, 3%) 0 -1px -1px);
-
+	
 			&.ui-state-hover, &:hover {
 				border-color: darken($color-button-constructive-border, 10%);
 				background-color: $color-button-constructive;
@@ -380,7 +379,7 @@ form.small .field, .field.small {
 				@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
 			}
 		}
-
+		
 		/* destructive */
 		&.ss-ui-action-destructive {
 			color: $color-button-destructive;
@@ -393,7 +392,7 @@ form.small .field, .field.small {
 				font-size: $font-base-size - 2;
 			}
 		}
-
+			
 		&.ui-state-highlight {
 			background-color: $color-button-highlight;
 			border: 1px solid $color-button-highlight-border;
@@ -404,9 +403,9 @@ form.small .field, .field.small {
 			border: 0;
 			color: lighten($color-text-dark, 10%);
 			text-decoration: underline;
-
+			
 			@include box-shadow(none);
-
+			
 			&:hover {
 				text-decoration: none;
 				color: $color-text-dark;
@@ -417,7 +416,7 @@ form.small .field, .field.small {
 				color: lighten($color-text-dark, 20%);
 			}
 		}
-
+		
 		&.ss-ui-button-loading {
 			opacity: 0.8;
 		}
@@ -432,7 +431,7 @@ form.small .field, .field.small {
 	.ss-ui-buttonset {
 		margin-left: 1px;
 	}
-
+	
 	.ss-ui-loading-icon {
 		background: url(../../images/network-save.gif) no-repeat;
 		display: block;
@@ -451,13 +450,13 @@ form.small .field, .field.small {
 		padding: $grid-y 0 0 $grid-x;
 
 		&.odd {
-
+			
 		}
-
+		
 		&.even {
-
+			
 		}
-
+		
 		.field {
 			border: none;
 			padding-bottom: 0;
@@ -534,7 +533,7 @@ input.radio {
  * ---------------------------------------------------- */
 .optionset {
 	padding-bottom: 8px;
-
+	
 	li {
 		float: left;
 		display: block;
@@ -548,7 +547,7 @@ input.radio {
 			padding-right: 0;
 			margin-right: 0;
 		}
-
+		
 		label {
 			display: inline;
 			cursor: pointer;
@@ -556,16 +555,16 @@ input.radio {
 		}
 
 	}
-
+	
 }
 
 
 /** ----------------------------------------------------
- * HTML Text
+ * HTML Text 
  * ---------------------------------------------------- */
 
 .htmleditor {
-
+	
 	textarea {
 		visibility: hidden; // enabled by JS
 	}
@@ -573,7 +572,7 @@ input.radio {
 	.mceEditor {
 		input, select {
 			width: auto;
-		}
+		}	
 	}
 	label.left {
 		padding-bottom: $grid-y/2;
