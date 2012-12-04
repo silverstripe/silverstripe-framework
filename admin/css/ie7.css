@@ -41,6 +41,17 @@
 
 .filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
 
+/* Alternative styles for the switch in old IE */
+fieldset.switch-states { padding: 0; }
+fieldset.switch-states .switch { padding: 0 10px 0 0; }
+fieldset.switch-states .switch label { overflow: visible; text-overflow: visible; white-space: normal; padding: 0; }
+fieldset.switch-states .switch label.active { color: #fff; background-color: #2b9c32; }
+fieldset.switch-states .switch label span { display: inline; padding: 0 10px; overflow: visible; text-overflow: visible; white-space: wrap; }
+fieldset.switch-states .switch .slide-button { display: none; }
+
+/* Hide size controls in IE - they won't work as intended */
+.cms-content-controls .preview-size-selector { display: none; }
+
 html { overflow: hidden; }
 
 .field input.text, .field textarea, .field .TreeDropdownField { padding-left: 0; padding-right: 0; }
@@ -101,6 +112,10 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .cms-content-header .cms-content-header-tabs { position: absolute; right: 0; }
 
 .ss-ui-button.ss-gridfield-button-filter { border: none !important; }
+
+.cms-content-controls .preview-mode-selector.dropdown { display: none !important; }
+
+.cms-content-controls .cms-preview-toggle-link { display: block !important; }
 
 .cms-panel-content-collapsed { position: relative; width: 40px; }
 .cms-panel-content-collapsed h2.cms-panel-header, .cms-panel-content-collapsed h3.cms-panel-header { zoom: 1; position: absolute; top: 10px; right: 10px; writing-mode: tb-rl; float: right; z-index: 5000; }

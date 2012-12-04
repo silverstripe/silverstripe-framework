@@ -110,7 +110,7 @@ jQuery.noConflict();
 			LayoutOptions: {
 				minContentWidth: 820,
 				minPreviewWidth: 400,
-				mode: 'split'
+				mode: 'content'
 			},
 
 			/**
