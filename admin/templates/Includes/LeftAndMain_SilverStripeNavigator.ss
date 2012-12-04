@@ -25,7 +25,7 @@
 			<div class="switch">
 				<% loop Items %>					
 					<input id="$Title" data-name="$Name" class="state-name $FirstLast" data-link="$Link" name="view" type="radio" <% if First %>checked<% end_if %>>
-					<label for="$Title"><span>$Title</span></label>					
+					<label for="$Title"<% if First %> class="active"<% end_if %>><span>$Title</span></label>					
 				<% end_loop %>	
 				<span class="slide-button"></span>	
 			</div>			

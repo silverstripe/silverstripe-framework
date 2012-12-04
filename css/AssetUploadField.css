@@ -1,5 +1,7 @@
 /** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
 /** ----------------------------------------------- Colours ------------------------------------------------ */
+/* Keep as solid colours transparent borders wont work in ie */
+/* Only for use as shadows as they wont work in older browsers */
 /*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */

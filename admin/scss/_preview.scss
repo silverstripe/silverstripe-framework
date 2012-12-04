@@ -2,6 +2,10 @@
 /* -------------------------- */
 .cms-content-controls{
 
+	.cms-preview-toggle-link{
+		display:none;
+	}
+
 	/* Styling the background, controls sit on */
 	&.cms-preview-controls {
 		z-index: 1;
