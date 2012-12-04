@@ -9,6 +9,8 @@
  * @subpackage fields-structural
  */
 class SelectionGroup extends CompositeField {
+
+	protected $labels = array();
 	
 	/**
 	 * Create a new selection group.
@@ -22,6 +24,7 @@ class SelectionGroup extends CompositeField {
 	 */
 	public function __construct($name, $items) {
 		$this->name = $name;
+		$this->labels = array_keys($items);
 		
 		parent::__construct($items);
 		
@@ -40,12 +43,13 @@ class SelectionGroup extends CompositeField {
 		$newItems = array();
 		
 		foreach($items as $key => $item) {
-			if(strpos($key,'//') !== false) {
-				list($key,$title) = explode('//', $key,2);
+			$label = $this->labels[$key];
+			if(strpos($label,'//') !== false) {
+				list($label,$title) = explode('//', $label,2);
 			} else {
-				$title = $key;
+				$title = $label;
 			}
-			if($this->value == $key) {
+			if($this->value == $label) {
 				$firstSelected = " class=\"selected\"";
 				$checked = " checked=\"checked\"";
 			}
@@ -53,7 +57,7 @@ class SelectionGroup extends CompositeField {
 			$itemID = $this->ID() . '_' . (++$count);
 			$extra = array(
 				"RadioButton" => "<input class=\"selector\" type=\"radio\" id=\"$itemID\" name=\"$this->name\""
-					. " value=\"$key\"$checked />",
+					. " value=\"$label\"$checked />",
 				"RadioLabel" => "<label for=\"$itemID\">$title</label>",
 				"Selected" => $firstSelected,
 			);
