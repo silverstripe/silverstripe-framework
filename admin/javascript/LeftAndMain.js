@@ -951,6 +951,7 @@ jQuery.noConflict();
 			 */
 			rewriteHashlinks: function() {
 				$(this).find('ul a').each(function() {
+					if (!$(this).attr('href')) return;
 					var matches = $(this).attr('href').match(/#.*/);
 					if(!matches) return;
 					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);
