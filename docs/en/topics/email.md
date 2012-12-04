@@ -46,12 +46,10 @@ The default HTML template is located in `framework/templates/email/GenericEmail.
 	// You can call this multiple times or bundle everything into an array, including DataSetObjects
 	$email->populateTemplate(Member::currentUser());
 	
-	$welcomeMsg = 'Thank you for joining on '.date('Y-m-d'.'!';
-	$email->populateTemplate(
-				array(
-					'WelcomeMessage' => $welcomeMsg, // Accessible in template via $WelcomeMessage
-				)
-			);
+	$welcomeMsg = 'Thank you for joining on '.date('Y-m-d'.'!');
+	$email->populateTemplate(array(
+		'WelcomeMessage' => $welcomeMsg, // Accessible in template via $WelcomeMessage
+	));
 	
 	$email->send();
 
