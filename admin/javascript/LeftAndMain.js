@@ -572,7 +572,7 @@ jQuery.noConflict();
 				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage == null) return;
 
 				var selectedTabs = [], url = this._tabStateUrl();
-				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {
+				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {					
 					var id = $(el).attr('id');
 					if(!id) return; // we need a unique reference
 					if(!$(el).data('tabs')) return; // don't act on uninit'ed controls
