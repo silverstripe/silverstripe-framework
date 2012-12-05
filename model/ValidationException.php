@@ -17,6 +17,7 @@ class ValidationException extends Exception {
 	public function __construct($result = null, $message = null, $code = 0) {
 		if($result instanceof ValidationResult) {
 			$this->result = $result;
+			$message = $result->message();
 		} else {
 			$code = $message;
 			$message = $result;
