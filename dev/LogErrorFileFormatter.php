@@ -30,7 +30,7 @@ class SS_LogErrorFileFormatter implements Zend_Log_Formatter_Interface {
 
 		$urlSuffix = '';
 		$relfile = Director::makeRelative($errfile);
-		if($relfile[0] == '/') $relfile = substr($relfile, 1);
+		if(strlen($relfile) && $relfile[0] == '/') $relfile = substr($relfile, 1);
 		if(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] && isset($_SERVER['REQUEST_URI'])) {
 			$urlSuffix = " (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])";
 		}
