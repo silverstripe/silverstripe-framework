@@ -59,7 +59,13 @@
 				var $field = $(e.target);
 				var origVal = $field.data('changetracker.origVal');
 				if(origVal === null || e.target.value != origVal) {
-					// TODO Also add class to radiobutton/checkbox siblings
+					$field.addClass(options.changedCssClass);
+					self.addClass(options.changedCssClass);
+				}
+
+				// check for radio and checkboxes
+				var elementType = $field.attr('type') ? $field.attr('type').toUpperCase() : '';
+				if (elementType && (elementType == 'CHECKBOX' || (elementType == 'RADIO' && origVal != e.target.value))) {
 					$field.addClass(options.changedCssClass);
 					self.addClass(options.changedCssClass);
 				}
