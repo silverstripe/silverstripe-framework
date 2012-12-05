@@ -86,7 +86,7 @@ ja_JP:
     SUCCESSADD2: '{name}を追加しました'
     SUCCESSEDIT: '更新日時 %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: '%sを追加する'
+    ADDITEM: '%sを追加'
     NOITEMSFOUND: 項目が見つかりませんでした
     SORTASC: 昇順
     SORTDESC: ソート（下順）

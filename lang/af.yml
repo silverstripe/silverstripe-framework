@@ -86,7 +86,7 @@ af:
     SUCCESSADD2: '{name} bygesit'
     SUCCESSEDIT: 'Gestoor %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Voeg %s  by'
+    ADDITEM: 'Byvoeg %s'
     NOITEMSFOUND: 'Geen item gevind nie'
     SORTASC: 'Sorteer in stygende orde'
     SORTDESC: 'Sorteer in dalende orde'
