@@ -81,7 +81,7 @@ class Requirements {
 	 * See {@link Requirements_Backend::javascript()} for more info
 	 *
 	 */
-	static function javascript($file, $attributes) {
+	static function javascript($file, $attributes = null) {
 		self::backend()->javascript($file, $attributes);
 	}
 
