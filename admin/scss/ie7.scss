@@ -219,10 +219,7 @@ table.ss-gridfield-table {
 		display:none !important;
 	} 
 }
-
-.cms-content-controls{
-	.cms-preview-toggle-link{
-		display:block !important;
-	}
+.cms .Actions > .cms-preview-toggle-link{
+	display:block;
 }
 @include IEVerticalPanelText;

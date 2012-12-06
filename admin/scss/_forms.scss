@@ -84,6 +84,10 @@ form.nostyle {
 		display: block;
 	}
 
+	.fieldgroup .fieldgroup-field.last {  /* This is used on page/settings/visibility */
+    	padding-bottom: 8px; /* replicates li item spacing */
+    }
+
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
 	.help {
@@ -164,20 +168,6 @@ form.stacked .field, .field.stacked {
 		margin-left: 0px;
 		clear: left;
 	}
-}
-
-form .fieldgroup {
-	border-bottom: 1px solid rgba(201, 205, 206, 0.8);
-    box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8);
-    display: block;
-    margin: 0 0 8px;
-    padding: 0 0 7px;
-    .fieldgroup {
-    	border-bottom: none;
-    	box-shadow: none;
-    	padding-bottom: 0;
-    	margin-bottom: 0;
-    }
 }
 
 form.small .field, .field.small {
@@ -311,7 +301,7 @@ form.small .field, .field.small {
 	.Actions {
 		min-height: 30px;
 		overflow: visible;
-		padding: 8px 12px;
+		padding: $grid-x $grid-y * 1.5;
 	}
 	.south .Actions, .ui-tabs-panel .Actions,  .ui-tabs-panel iframe .Actions {
 		padding: 0;
@@ -654,6 +644,8 @@ input.radio {
 ****************************************************************/
 fieldset.switch-states{	
 	padding:0 20px 0 0;	
+	margin-right: 5px;
+
 	.switch{
 		@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1));
 		@include border-radius(3px);
@@ -736,12 +728,12 @@ fieldset.switch-states{
 	*/
 	@for $i from 1 through 5 {
 		&.size_#{$i} {
-			label span, .slide-button { 
+			label, .slide-button { 
 				width:  100% / $i;				
 			}	  			
 			@if $i == 1{
 				label span{
-					padding-right:25px; //even up the padding for a single item
+					padding-right:0; //even up the padding for a single item
 				}
 			}
 			input:checked:nth-of-type(2) ~ .slide-button {	

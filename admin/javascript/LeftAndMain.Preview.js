@@ -57,9 +57,9 @@
 			changeMode: function(modeName) {				
 				var container = $('.cms-container');
 
-				if (modeName == 'split') {
+				if (modeName === 'split') {
 					container.entwine('.ss').splitViewMode();
-				} else if (modeName == 'content') {
+				} else if (modeName === 'content') {
 					container.entwine('.ss').contentViewMode();
 				} else {
 					container.entwine('.ss').previewMode();
@@ -164,8 +164,7 @@
 				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
 				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
-				this.find('.cms-preview-overlay-light').hide();
-				$('.cms-preview-toggle-link')[this.getIsPreviewEnabled() ? 'show' : 'hide']();
+				this.find('.cms-preview-overlay-light').hide();			
 
 				this.disablePreview();
 
