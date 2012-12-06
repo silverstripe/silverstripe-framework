@@ -164,9 +164,10 @@ $gf_grid_x:	16px;
 				// The last column (buttons) should always shrink to fit.
 				// Overwritten for IE7, which doesn't support this.			
 				&.col-buttons {
-					width: 40px;
+					width: auto;
 					padding:0 $gf_grid_x/2;
-					text-align: left;
+					text-align: right;
+					white-space: nowrap;
 				}
 				&.col-listChildrenLink {
 					width:$gf_grid_x;
@@ -254,7 +255,8 @@ $gf_grid_x:	16px;
 					display:inline-block;
 					width:20px;
 					height:20px; //min height to fit the edit icon
-					text-indent:9999em;
+					text-align: left;
+					text-indent:-9999em;
 					overflow: hidden;
 					vertical-align: middle;
 				}
