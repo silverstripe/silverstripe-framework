@@ -107,6 +107,7 @@ form.nostyle {
 	textarea,
 	select,
 	.TreeDropdownField {
+		margin-left: 10px;
 		width: 100%;
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);

@@ -58,17 +58,18 @@
 	}
 
 	/* Preview selectors. Overrides default chosen styles and applies its own */
-	.preview-selector{
+	.preview-selector {
 		float:right;
 		border-bottom:none;
 		position:relative;
 		@include box-shadow(none);
 		margin: 3px 0 0 4px;
 		padding: 0;
+		height: 28px;
 
 		a.chzn-single {						
 			width: 20px;
-			padding: 6px 5px;
+			padding: 6px 5px 5px;
 			height: 18px;
 			margin: -3px 0 0;
 			filter: none;	/* remove ie background */
@@ -77,9 +78,9 @@
 			@include box-shadow(none);
 			@include border-radius(3px);
 
-
-			&:hover, &:focus, &.chzn-single-with-drop  {
+			&:hover, &.chzn-single-with-drop  {
 				background-color: darken($color-widget-bg,6%);
+				@include box-shadow(0 0 3px rgba(0, 0, 0, 0.05) inset, 0 1px 0 $box-shadow-shine);
 			}
 			&.chzn-single-with-drop {
 				@include border-radius(0 0 3px 3px);
@@ -157,6 +158,15 @@
 							border-bottom: none;
 							@include border-radius(0 0 0 3px);
 						}
+						&.restricted { /* disable option (eg.split mode for smaller screen sizes) */
+							color: #CCC;
+							background-color: #EEE;
+							pointer-events: none;
+							/*text-decoration: line-through;*/
+							&:before {
+								opacity: 0.2;
+							}
+						}
 
 						/* Description styling */
 						span { 
@@ -202,6 +212,143 @@
 			}
 		}
 	}
-
 }
+
+.cms-preview {
+	background-color: $tab-panel-texture-color;
+	height: 100%;
+	width: 100%;
+
+	.preview-note {
+		font-weight: 18px;
+		display: block;
+		position: absolute;
+		text-align: center;
+		width: 300px;
+		height: 82px;
+		left: 50%;
+		top: 50%;
+		margin-top: -50px; 				
+		margin-left: -150px;				/* half of width */
+		color: #CDD7DC;
+		font-weight: bold;
+		font-size: 22px;
+		text-shadow: 0 1px 0 #fff;
+		span {
+			background: sprite($sprites64, preview) no-repeat;
+			width: 50px;
+			height: 41px;
+			margin: 0 auto 20px;
+			display: block;
+		}
+	}
+
+	.preview-scroll {
+		height: 100%;
+		width: 100%;
+		overflow: auto;
+		position: relative;
+
+		.preview-device-outer {
+			height: 100%;
+			width: 100%;
+
+			.preview-device-inner {
+				height: 100%;
+				width: 100%;
+
+				iframe {
+					height: 100%;
+					width: 100%;
+					overflow-y: auto;
+				}
+			}
+		}
+	}
+	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape, &.desktop {
+		.preview-scroll {
+			background-color: $tab-panel-texture-color; 		/* hide website preview icon */
+			.preview-device-outer {
+				padding: 0 16px 16px;
+				background-color: #414141;
+			}
+		}
+	}
+
+	&.mobile {
+		.preview-scroll .preview-device-outer {
+			width: 335px; 										/* add 15px for desktop scrollbar */
+			height: 568px;
+			margin: 20px auto 20px;
+			padding-top: 16px;
+			overflow:hidden;
+			@include rotate(0deg);
+			@include transition(all 0.3s ease-out 1s);
+			.preview-device-inner {
+				width: 335px;
+				@include transition(all 0.3s ease-in 1s);
+				@include rotate(0deg);
+			}
+			&.rotate {				
+				width: 320px; 
+				height: 583px;
+				margin: 0px auto 0px;
+				@include rotate(-90deg); 
+				@include transition(all 0.3s ease-in 1s);
+				.preview-device-inner {
+					width: 583px;
+					height: 320px; 
+					@include rotate(90deg);
+					@include transition(all 0.3s ease-out 1s); 
+					@include apply-origin(160px 160px, false);					
+				}
+
+			}
+		}
+	}
+	&.mobileLandscape .preview-scroll .preview-device-outer {
+		width: 583px;							/* add 15px for desktop scrollbar */
+		height: 320px;
+		margin: 12% auto;
+		padding-top: 16px;
+		@include transition(all 0.3s ease-out 1s);
+		.preview-device-inner {
+			width: 583px;
+			@include transition(all 0.3s ease-out 1s);
+		}
+	}
+	&.tablet .preview-scroll .preview-device-outer { 
+		width: 783px;								/* add 15px for desktop scrollbar */
+		height: 1024px;
+		margin: 0 auto;
+		@include transition(all 0.3s ease-out 1s);
+		.preview-device-inner {
+			width: 783px;
+			@include transition(all 0.3s ease-out 1s);
+		}
+	}
+	&.tabletLandscape .preview-scroll .preview-device-outer {
+		width: 1039px;								/* add 15px for desktop scrollbar */
+		height: 768px;
+		margin: 0 auto;
+		@include transition(all 0.3s ease-out 1s);
+
+		.preview-device-inner {
+			width: 1039px;
+			@include transition(all 0.3s ease-out 1s);
+		}
+	}
+	&.desktop .preview-scroll .preview-device-outer {
+		width: 1024px;
+		height: 800px;
+		margin: 0 auto;
+		@include transition(all 0.3s ease-out 1s);
+	}
+}
+
+
+
+
+
+
 

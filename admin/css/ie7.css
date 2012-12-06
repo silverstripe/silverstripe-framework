@@ -54,7 +54,9 @@ fieldset.switch-states .switch .slide-button { display: none; }
 
 html { overflow: hidden; }
 
-.field input.text, .field textarea, .field .TreeDropdownField { padding-left: 0; padding-right: 0; }
+.field input.text, .field textarea, .field .TreeDropdownField { width: 94%; }
+
+select { padding: 10px 0; height: 30px; }
 
 .ss-uploadfield-item-name { display: block; }
 
@@ -101,12 +103,9 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form { overflow: hidden; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form input { width: 160px; }
 
-.cms .cms-content-tools { border-right: 1px solid #CCC; }
-
 .cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; }
 .cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 4px -4px; display: block; }
 
-.cms-content-header { min-height: 40px; }
 .cms-content-header h2 { float: left; }
 .cms-content-header h2 .section-icon { display: none; }
 .cms-content-header .cms-content-header-tabs { position: absolute; right: 0; }

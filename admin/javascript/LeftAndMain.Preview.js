@@ -636,5 +636,15 @@
 
 		});
 
+		/**
+		 * Rotate preview to landscape
+		 */
+		$('.preview-device-outer').click(function() {
+			if(!$('.preview-device-outer').hasClass('rotate')) {
+				$('.preview-device-outer').addClass('rotate');
+			} else {
+				$('.preview-device-outer').removeClass('rotate');
+			}
+		});
 	});
 }(jQuery));
