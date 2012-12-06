@@ -25,7 +25,8 @@ class DevelopmentAdmin extends Controller {
         'viewmodel', 
         'build', 
         'reset', 
-        'viewcode' 
+        'viewcode',
+        'generatesecuretoken',
  	);
 	
 	public function init() {
@@ -170,6 +171,25 @@ class DevelopmentAdmin extends Controller {
 			echo "</div>";
 			$renderer->writeFooter();
 		}
+	}
+
+	/**
+	 * Generate a secure token which can be used as a crypto key.
+	 * Returns the token and suggests PHP configuration to set it.
+	 */
+	public function generatesecuretoken() {
+		$generator = Injector::inst()->create('RandomGenerator');
+		$token = $generator->randomToken('sha1');
+
+		echo <<<TXT
+
+Token: $token
+
+Please add this to your mysite/_config.php with the following code:
+Config::inst()->update('Security', 'token', '$token');
+
+
+TXT;
 	}
 
 	public function reset() {
