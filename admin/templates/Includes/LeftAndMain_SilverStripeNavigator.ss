@@ -3,7 +3,7 @@
 	<% include LeftAndMain_ViewModeSelector SelectID="preview-mode-dropdown-in-preview" %>
 	
     <span id="preview-size-dropdown" class="preview-size-selector preview-selector field dropdown">
-		<select title="<% _t('SilverStripeNavigator.ViewDeviceWidth', 'View at device width') %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown nolabel" autocomplete="off" name="Action">
+		<select title="<% _t('SilverStripeNavigator.ViewDeviceWidth', 'Select a preview width') %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown nolabel" autocomplete="off" name="Action">
 			<option data-icon="icon-auto" data-description="<% _t('SilverStripeNavigator.Responsive', 'Responsive') %>" class="icon-auto icon-view first" value="auto">
 				<% _t('SilverStripeNavigator.Auto', 'Auto') %>
 			</option>

@@ -9,10 +9,12 @@ html {
 	input.text, 
 	textarea,
 	.TreeDropdownField {
-		// Left/right padding conflicts with 100% width on the element unless box-sizing is respected, so disable padding for IE
-		padding-left: 0;
-		padding-right: 0;
+		width: 94%;	// Disable 100% width on IE7 because box-sizing is not respected
 	}
+}
+select {
+	padding: 10px 0;
+	height: 30px;
 }
 
 .ss-uploadfield-item-name {
@@ -178,10 +180,6 @@ table.ss-gridfield-table {
 		}
 	}
 }
-.cms .cms-content-tools {
-	// Visual aid for IE as there are no box-shadows
-	border-right: 1px solid #CCC;
-}
 
 //fix for view children arrow in pages list view 
 .cms .ss-gridfield table.ss-gridfield-table tbody {
@@ -198,16 +196,13 @@ table.ss-gridfield-table {
 
 // CMS Content header & tab fix
 .cms-content-header {
-	// Line-height doesn't correctly apply.
-	// TODO Fix vertical alignment of headline vs. tab labels
-	min-height: 40px;
-
 	h2 {
 		float: left;	
 		.section-icon {
 			display: none;
 		}
 	}
+	
 	.cms-content-header-tabs {
 		position: absolute;
 		right: 0;

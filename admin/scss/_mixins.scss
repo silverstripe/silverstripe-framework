@@ -29,6 +29,20 @@
 }
 
 
+//**----------------------------------------------------
+//Clearfix mixin clears the float of it's parent element
+//----------------------------------------------------**/
+@mixin clearfix{
+	&:after{
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+	}
+	*:first-child &{ zoom:1;}
+}
+
 
 
 //** ----------------------------------------------------
@@ -87,19 +101,16 @@
 }
 
 
-//**----------------------------------------------------
-//Clearfix mixin clears the float of it's parent element
-//----------------------------------------------------**/
-@mixin clearfix{
-	&:after{
-		content: ".";
-		display: block;
-		height: 0;
-		clear: both;
-		visibility: hidden;
-	}
-	*:first-child &{ zoom:1;}
+@mixin delay($time, $webkit:true){
+  @if($webkit){
+    -webkit-transition-delay: $time;
+  }
+  -moz-transition-delay: $time;
+  -o-transition-delay: $time;
+    
 }
+
+
 
 @mixin transition($properties: margin 0.3s ease-in 0s){
    	-moz-transition: $properties; 
@@ -107,3 +118,93 @@
 	-o-transition: $properties; 
 	transition: $properties;
 }
+
+
+@mixin animateNone{
+  animation-name:none;
+  -moz-animation-name:none; /* Firefox */
+  -webkit-animation-name:none; /* Safari and Chrome */
+  -o-animation-name:none; /* Opera */
+  -ms-animation-name:none;
+}
+
+
+@mixin keyframeSettings($name){
+  @if($name == "rotate"){
+    0% {
+    	-webkit-transform-origin: center center;
+    	margin-top:20px;   
+		@include rotate(90deg);
+    } 
+	100% {   
+		width: 583px;
+		height: 320px;    
+	    @include rotate(0deg);	   
+    }
+  }@else if($name == "rotate_secondary"){
+    0% {
+    	 
+    	@include delay(0.5s);    		
+    } 
+    1%{
+    	 
+    }
+    50%{
+		-webkit-transform-origin: center center;
+    	margin-top:20px;   
+		//@include rotate(-90deg);
+    }
+	100% {   
+	    @include rotate(0deg);	   
+    }
+  }
+}
+
+
+@mixin keyframes($name){
+//Animation keyframes
+  @-webkit-keyframes $name {
+    @include keyframeSettings($name);
+  }
+  @-moz-keyframes $name {
+    @include keyframeSettings($name);
+  }
+  @-ms-keyframes $name {
+    @include keyframeSettings($name);
+  }
+  @-o-keyframes $name {
+    @include keyframeSettings($name);
+  }
+  @keyframes $name {
+    @include keyframeSettings($name);
+  }
+}
+
+
+
+// $effect needs a corrosponding keyframe, (such as rotate) 
+// with corrosponding keyframeSettings. Called below this mixin
+// eg @include keyframes(grow); 
+@mixin animateOptions($effect, $time:0.2s, $function:linear) {
+  -moz-animation-fill-mode: both;
+  -ms-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  -webkit-animation:$effect $time $function both; //webkit supports this short-hand, moz doesn't yet
+  -moz-animation:$effect $time $function;
+  -ms-animation:$effect $time $function;
+  -o-animation:$effect $time $function;
+  animation:$effect $time $function both;
+}
+
+// Shorthand call to animateOptions
+// $effect needs a corrosponding keyframe, (such as rotate)  
+// with corrosponding keyframeSettings. Called below this mixin
+// eg @include keyframes(grow); 
+@mixin animateEffect($effect) {
+   @include animateOptions($effect);
+}
+
+@include keyframes(rotate);
+@include keyframes(rotate_secondary);    
+
+

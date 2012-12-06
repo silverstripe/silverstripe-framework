@@ -120,7 +120,7 @@ body.cms {
 
 	.cms-content-header-info {
 		float:left;
-		line-height: 34px; 
+		padding-top: 6px;
 	}
 	
 	// Reset to default styles
@@ -430,7 +430,7 @@ body.cms {
 
 .cms-content-actions, .cms-preview-controls {
 	margin: 0;
-	padding: $grid-y*1.5 $grid-y*2;
+	padding: $grid-y*1.5 $grid-y*1.5;
 	z-index: 0;
 	border-top: 1px solid lighten($color-separator, 4%);
 	@include box-shadow(
@@ -905,122 +905,6 @@ p.message {
 	}
 }
 
-/* Necessary because when chosen is initialised the selects are not part of cms-preview
-   and so the sizes are wrong. */
-select.preview-dropdown {
-	display: inline;
-	width: auto;
-	padding-right: 20px;
-}
-
-.cms-preview {
-	background-color: $tab-panel-texture-color;
-	height: 100%;
-	width: 100%;
-
-	.preview-note {
-		font-weight: 18px;
-		display: block;
-		position: absolute;
-		text-align: center;
-		width: 300px;
-		height: 82px;
-		left: 50%;
-		top: 50%;
-		margin-top: -50px; 				
-		margin-left: -150px;				/* half of width */
-		color: #CDD7DC;
-		font-weight: bold;
-		font-size: 22px;
-		text-shadow: 0 1px 0 #fff;
-		span {
-			background: sprite($sprites64, preview) no-repeat;
-			width: 50px;
-			height: 41px;
-			margin: 0 auto 20px;
-			display: block;
-		}
-	}
-
-	.preview-scroll {
-		height: 100%;
-		width: 100%;
-		overflow: auto;
-		position: relative;
-
-		.preview-device-outer {
-			height: 100%;
-			width: 100%;
-
-			.preview-device-inner {
-				height: 100%;
-				width: 100%;
-
-				iframe {
-					height: 100%;
-					width: 100%;
-					overflow-y: auto;
-				}
-			}
-		}
-	}
-	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape, &.desktop {
-		.preview-scroll {
-			background-color: $tab-panel-texture-color; 		/* hide website preview icon */
-			.preview-device-outer {
-				padding: 0 16px 16px;
-				background-color: #414141;
-			}
-		}
-	}
-	&.mobile {
-		.preview-scroll .preview-device-outer {
-			width: 335px; 										/* add 15px for desktop scrollbar */
-			height: 568px;
-			margin: 30px auto 30px;
-			padding-top: 16px;
-
-			.preview-device-inner {
-				width: 335px;
-			}
-		}
-	}
-	&.mobileLandscape .preview-scroll .preview-device-outer {
-		width: 583px;											/* add 15px for desktop scrollbar */
-		height: 320px;
-		margin: 12% auto;
-		padding-top: 16px;
-
-		.preview-device-inner {
-			width: 583px;
-		}
-	}
-	&.tablet .preview-scroll .preview-device-outer { 
-		width: 783px;											/* add 15px for desktop scrollbar */
-		height: 1024px;
-		margin: 0 auto;
-
-		.preview-device-inner {
-			width: 783px;
-		}
-	}
-	&.tabletLandscape .preview-scroll .preview-device-outer {
-		width: 1039px;											/* add 15px for desktop scrollbar */
-		height: 768px;
-		margin: 0 auto;
-
-		.preview-device-inner {
-			width: 1039px;
-		}
-	}
-	&.desktop .preview-scroll .preview-device-outer {
-		width: 1024px;
-		height: 800px;
-		margin: 0 auto;
-	}
-}
-
-
 /** --------------------------------------------
  * Member Profile
  * -------------------------------------------- */
@@ -1111,9 +995,8 @@ form.member-profile-form {
 
 .cms {
 	.cms-content {
-		@include box-shadow(1px 0 0 #BBB);
+		border-right: 1px solid #BBB;
 		@include border-radius(0);
-		/*background: $tab-panel-texture-background;*/
 		background: $tab-panel-texture-color;
 		width: 800px;
 		z-index: 40;
