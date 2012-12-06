@@ -114,8 +114,8 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 		"description": "The SilverStripe Framework Installer",
 		"require": {
 			"php": ">=5.3.2",
-			"silverstripe/cms": "3.0.*@stable",
-			"silverstripe/framework": "3.0.*@stable",
+			"silverstripe/cms": "3.0.*",
+			"silverstripe/framework": "3.0.*",
 			"silverstripe-themes/simple": "*"
 		},
 		"require-dev": {
@@ -147,29 +147,6 @@ the latest unstable silverstripe/installer
 Or for the latest development version in the 3.0.x series
 
 	composer create-project silverstripe/installer ./my/website/folder 3.0.x-dev
-
-You then remove any references to @stable in the created `composer.json`. For instance
-if your `composer.json` contained this:
-
-	"require": {
-		"php": ">=5.3.2",
-		"silverstripe/cms": "3.0.*@stable",
-		"silverstripe/framework": "3.0.*@stable",
-		"silverstripe-themes/simple": "*"
-	},
-
-You would change it to read
-
-	"require": {
-		"php": ">=5.3.2",
-		"silverstripe/cms": "3.0.*",
-		"silverstripe/framework": "3.0.*",
-		"silverstripe-themes/simple": "*"
-	},
-	
-And then run
-
-	composer update
 
 ## Working with project forks and unreleased modules
 
@@ -256,7 +233,6 @@ The `--dev` flag will add a couple modules which are useful for SilverStripe dev
 
  * The `compass` module will regenerate CSS if you update the SCSS files
  * The `docsviewer` module will let you preview changes to the project documentation
+ * The `buildtools` module which adds [phing](http://phing.info) tasks for creating SilverStripe releases
 
 Note that you can also include those into an existing project by running `composer update --dev`.
-
-You will then need to edit your `composer.json` file as explained above in [Using development versions](#using-development-versions)
