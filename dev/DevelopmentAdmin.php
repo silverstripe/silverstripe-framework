@@ -18,15 +18,16 @@ class DevelopmentAdmin extends Controller {
 	);
 	
 	static $allowed_actions = array( 
-		'index', 
-		'tests', 
-		'jstests', 
-		'tasks', 
-		'viewmodel', 
-		'build', 
-		'reset', 
-		'viewcode' 
-	);
+        'index', 
+        'tests', 
+        'jstests', 
+        'tasks', 
+        'viewmodel', 
+        'build', 
+        'reset', 
+        'viewcode',
+        'generatesecuretoken',
+ 	);
 	
 	public function init() {
 		parent::init();
@@ -56,7 +57,7 @@ class DevelopmentAdmin extends Controller {
 					$matched = false;
 					if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
 						$matched = true;
-						break;
+					    break;
 					}
 					$testPath = dirname($testPath);
 				}
@@ -170,6 +171,25 @@ class DevelopmentAdmin extends Controller {
 			echo "</div>";
 			$renderer->writeFooter();
 		}
+	}
+
+	/**
+	 * Generate a secure token which can be used as a crypto key.
+	 * Returns the token and suggests PHP configuration to set it.
+	 */
+	public function generatesecuretoken() {
+		$generator = Injector::inst()->create('RandomGenerator');
+		$token = $generator->randomToken('sha1');
+
+		echo <<<TXT
+
+Token: $token
+
+Please add this to your mysite/_config.php with the following code:
+Config::inst()->update('Security', 'token', '$token');
+
+
+TXT;
 	}
 
 	public function reset() {

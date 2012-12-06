@@ -349,6 +349,9 @@ class TestRunner extends Controller {
 	 * See {@link setdb()} for an alternative approach which just sets a database
 	 * name, and is used for more advanced use cases like interacting with test databases
 	 * directly during functional tests.
+	 *
+	 * Requires PHP's mycrypt extension in order to set the database name
+	 * as an encrypted cookie.
 	 */
 	public function startsession() {
 		if(!Director::isLive()) {
@@ -420,7 +423,7 @@ HTML;
 	}
 
 	/**
-	 * Set an alternative database name in the current browser session.
+	 * Set an alternative database name in the current browser session as a cookie.
 	 * Useful for functional testing libraries like behat to create a "clean slate". 
 	 * Does not actually create the database, that's usually handled
 	 * by {@link SapphireTest::create_temp_db()}.
@@ -432,33 +435,33 @@ HTML;
 	 *
 	 * See {@link startsession()} for a different approach which actually creates
 	 * the DB and loads a fixture file instead.
+	 *
+	 * Requires PHP's mycrypt extension in order to set the database name
+	 * as an encrypted cookie.
 	 */
 	public function setdb() {
 		if(Director::isLive()) {
-			return $this->permissionFailure("dev/tests/setdb can only be used on dev and test sites");
+			return $this->httpError(403, "dev/tests/setdb can only be used on dev and test sites");
 		}
-		
 		if(!isset($_GET['database'])) {
-			return $this->permissionFailure("dev/tests/setdb must be used with a 'database' parameter");
+			return $this->httpError(400, "dev/tests/setdb must be used with a 'database' parameter");
 		}
 		
-		$database_name = $_GET['database'];
+		$name = $_GET['database'];
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 		$pattern = strtolower(sprintf('#^%stmpdb\d{7}#', $prefix));
-		if(!preg_match($pattern, $database_name)) {
-			return $this->permissionFailure("Invalid database name format");
+		if($name && !preg_match($pattern, $name)) {
+			return $this->httpError(400, "Invalid database name format");
 		}
 
-		DB::set_alternative_database_name($database_name);
+		DB::set_alternative_database_name($name);
 
-		return "<p>Set database session to '$database_name'.  Time to start testing; where would you like to start?</p>
-			<ul>
-				<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
-				<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
-				<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
-				<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">
-					End your test session</a></li>
-			</ul>";
+		if($name) {
+			return "<p>Set database session to '$name'.</p>";
+		} else {
+			return "<p>Unset database session.</p>";
+		}
+		
 	}
 	
 	public function emptydb() {

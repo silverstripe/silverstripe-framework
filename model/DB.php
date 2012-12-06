@@ -60,19 +60,89 @@ class DB {
 	}
 	
 	/**
-	 * Set an alternative database to use for this browser session.
-	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set an alternative database in a browser cookie, 
+	 * with the cookie lifetime set to the browser session.
+	 * This is useful for integration testing on temporary databases.
+	 *
+	 * There is a strict naming convention for temporary databases to avoid abuse: 
+	 * <prefix> (default: 'ss_') + tmpdb + <7 digits>
+	 * As an additional security measure, temporary databases will
+	 * be ignored in "live" mode.
+	 * 
+	 * Note that the database will be set on the next request.
 	 * Set it to null to revert to the main database.
 	 */
-	public static function set_alternative_database_name($dbname) {
-		Session::set("alternativeDatabaseName", $dbname);
+	public static function set_alternative_database_name($name = null) {
+		if($name) {
+			if(!self::valid_alternative_database_name($name)) {
+				throw new InvalidArgumentException(sprintf(
+					'Invalid alternative database name: "%s"',
+					$name
+				));
+			}
+
+			$key = Config::inst()->get('Security', 'token');
+			if(!$key) {
+				throw new LogicException('"Security.token" not found, run "sake dev/generatesecuretoken"');
+			}
+			if(!function_exists('mcrypt_encrypt')) {
+				throw new LogicException('DB::set_alternative_database_name() requires the mcrypt PHP extension');
+			}
+
+			$key = md5($key); // Ensure key is correct length for chosen cypher
+			$ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CFB);
+	    $iv = mcrypt_create_iv($ivSize);
+			$encrypted = mcrypt_encrypt(
+				MCRYPT_RIJNDAEL_256, $key, $name, MCRYPT_MODE_CFB, $iv
+			);
+
+			// Set to browser session lifetime, and restricted to HTTP access only
+			Cookie::set("alternativeDatabaseName", base64_encode($encrypted), 0, null, null, false, true);
+			Cookie::set("alternativeDatabaseNameIv", base64_encode($iv), 0, null, null, false, true);
+		} else {
+			Cookie::set("alternativeDatabaseName", null, 0, null, null, false, true);
+			Cookie::set("alternativeDatabaseNameIv", null, 0, null, null, false, true);
+		}
 	}
 	
 	/**
 	 * Get the name of the database in use
 	 */
 	public static function get_alternative_database_name() {
-		return Session::get("alternativeDatabaseName");	
+		$name = Cookie::get("alternativeDatabaseName");
+		$iv = Cookie::get("alternativeDatabaseNameIv");
+
+		if($name) {
+			$key = Config::inst()->get('Security', 'token');
+			if(!$key) {
+				throw new LogicException('"Security.token" not found, run "sake dev/generatesecuretoken"');
+			}
+			if(!function_exists('mcrypt_encrypt')) {
+				throw new LogicException('DB::set_alternative_database_name() requires the mcrypt PHP extension');
+			}
+			$key = md5($key); // Ensure key is correct length for chosen cypher
+			$decrypted = mcrypt_decrypt(
+				MCRYPT_RIJNDAEL_256, $key, base64_decode($name), MCRYPT_MODE_CFB, base64_decode($iv)
+			);
+			return (self::valid_alternative_database_name($decrypted)) ? $decrypted : false;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Determines if the name is valid, as a security
+	 * measure against setting arbitrary databases.
+	 * 
+	 * @param  String $name
+	 * @return Boolean
+	 */
+	public static function valid_alternative_database_name($name) {
+		if(Director::isLive()) return false;
+
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		$pattern = strtolower(sprintf('/^%stmpdb\d{7}$/', $prefix));
+		return (bool)preg_match($pattern, $name);
 	}
 
 	/**
@@ -84,7 +154,7 @@ class DB {
 	 */
 	public static function connect($databaseConfig) {
 		// This is used by TestRunner::startsession() to test up a test session using an alt
-		if($name = Session::get('alternativeDatabaseName')) {
+		if($name = self::get_alternative_database_name()) {
 			$databaseConfig['database'] = $name;
 		}
 
