@@ -41,7 +41,7 @@ $gf_grid_x:	16px;
 		& > div {
 			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
-				margin: 0 0 $gf_grid_y 0;
+				margin-bottom:$gf_grid_y;
 				@include clearfix;
 			}
 		}
@@ -161,7 +161,7 @@ $gf_grid_x:	16px;
 				word-wrap:break-word;
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
-				// Overwritten for IE7, which doesn't support this.			
+				// Overwritten for IE7, which doesnt support this.			
 				&.col-buttons {
 					width: 40px;
 					padding:0 $gf_grid_x/2;
@@ -244,9 +244,6 @@ $gf_grid_x:	16px;
 					&.gridfield-button-delete {
 						width: 20px;
 						margin: 0;
-						.ui-icon {
-							left: 0;
-						}
 						span.btn-icon-decline {
 							left: 2px;
 						}
@@ -257,10 +254,9 @@ $gf_grid_x:	16px;
 					float: left;
 					width:20px;
 					height:20px; //min height to fit the edit icon
-					text-indent:-9999em;
+					text-indent:9999em;
 					overflow: hidden;
 					vertical-align: middle;
-					margin-right: 8px;
 				}
 				a.view-link {
 					background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px;
@@ -345,7 +341,7 @@ $gf_grid_x:	16px;
 						min-width: $gf_grid_x*12.5;
 						padding-right:0;
 						&.filter-buttons{
-							min-width:50px;
+							min-width:0;
 							box-shadow: none;
 							border: none;
 							div{
@@ -417,7 +413,7 @@ $gf_grid_x:	16px;
 						@include box-shadow-none; 
 					}
 					&.ss-gridfield-sort {
-						background: transparent url(../images/arrows.png) no-repeat right 2px;
+						background: transparent url(../images/arrows.png) no-repeat right 6px;
 						border:none;	
 						width:100%;
 						text-align: left;
@@ -426,13 +422,13 @@ $gf_grid_x:	16px;
 						color: #fff;
 						@include border-radius(0);
 						&:hover {
-							background-position: right -38px;
+							background-position: right -34px;
 						}
 						&.ss-gridfield-sorted-desc {
-							background-position: right -76px;
+							background-position: right -72px;
 						}
 						&.ss-gridfield-sorted-asc {
-							background-position: right -120px;
+							background-position: right -116px;
 						}
 					}
 

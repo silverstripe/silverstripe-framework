@@ -19,16 +19,15 @@
 		</select>
 	</span>
 
-
 	<% if Items.Count < 5 %>
 		<fieldset id="preview-states" class="cms-preview-states switch-states size_{$Items.Count}"> 			
 			<div class="switch">
 				<% loop Items %>					
 					<input id="$Title" data-name="$Name" class="state-name $FirstLast" data-link="$Link" name="view" type="radio" <% if First %>checked<% end_if %>>
-					<label for="$Title"<% if First %> class="active"<% end_if %>><span>$Title</span></label>					
-				<% end_loop %>	
-				<span class="slide-button"></span>	
-			</div>			
+					<label for="$Title"<% if First %> class="active"<% end_if %>><span>$Title</span></label>
+				<% end_loop %>
+				<span class="slide-button"></span>
+			</div>
 		</fieldset>
 	<% else %>
 		<span id="preview-state-dropdown" class="cms-preview-states field dropdown">
@@ -41,9 +40,4 @@
 			</select>
 		</span>
 	<% end_if %>
-
-
-
-	
-
 </div>

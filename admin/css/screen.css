@@ -32,41 +32,6 @@ If more variables exist in the future, consider creating a variables file.*/
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 /** ----------------------------- Custom mixins ------------------------------ */
-@-webkit-keyframes rotate { 0% { -webkit-transform-origin: center center; margin-top: 20px; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); }
-  100% { width: 583px; height: 320px; -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@-moz-keyframes rotate { 0% { -webkit-transform-origin: center center; margin-top: 20px; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); }
-  100% { width: 583px; height: 320px; -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@-ms-keyframes rotate { 0% { -webkit-transform-origin: center center; margin-top: 20px; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); }
-  100% { width: 583px; height: 320px; -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@-o-keyframes rotate { 0% { -webkit-transform-origin: center center; margin-top: 20px; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); }
-  100% { width: 583px; height: 320px; -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@keyframes rotate { 0% { -webkit-transform-origin: center center; margin-top: 20px; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); }
-  100% { width: 583px; height: 320px; -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@-webkit-keyframes rotate_secondary { 0% { -webkit-transition-delay: 0.5s; -moz-transition-delay: 0.5s; -o-transition-delay: 0.5s; }
-  50% { -webkit-transform-origin: center center; margin-top: 20px; }
-  100% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@-moz-keyframes rotate_secondary { 0% { -webkit-transition-delay: 0.5s; -moz-transition-delay: 0.5s; -o-transition-delay: 0.5s; }
-  50% { -webkit-transform-origin: center center; margin-top: 20px; }
-  100% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@-ms-keyframes rotate_secondary { 0% { -webkit-transition-delay: 0.5s; -moz-transition-delay: 0.5s; -o-transition-delay: 0.5s; }
-  50% { -webkit-transform-origin: center center; margin-top: 20px; }
-  100% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@-o-keyframes rotate_secondary { 0% { -webkit-transition-delay: 0.5s; -moz-transition-delay: 0.5s; -o-transition-delay: 0.5s; }
-  50% { -webkit-transform-origin: center center; margin-top: 20px; }
-  100% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
-@keyframes rotate_secondary { 0% { -webkit-transition-delay: 0.5s; -moz-transition-delay: 0.5s; -o-transition-delay: 0.5s; }
-  50% { -webkit-transform-origin: center center; margin-top: 20px; }
-  100% { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); } }
-
 /** ----------------------------- Sprite images ----------------------------- */
 /** Helper SCSS file for generating sprites for the interface. */
 .btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-widget-content .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-widget-content .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-widget-content .btn-icon-add, .ui-state-default .btn-icon-addMedia, .ui-widget-content .btn-icon-addMedia, .ui-state-default .btn-icon-add_disabled, .ui-widget-content .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-widget-content .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-widget-content .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-widget-content .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-arrow-circle-double, .ui-widget-content .btn-icon-arrow-circle-double, .ui-state-default .btn-icon-back, .ui-widget-content .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-widget-content .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-widget-content .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-widget-content .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-widget-content .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-widget-content .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-widget-content .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-widget-content .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-widget-content .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-widget-content .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-widget-content .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-widget-content .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-cross, .ui-widget-content .btn-icon-cross, .ui-state-default .btn-icon-decline, .ui-widget-content .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-widget-content .btn-icon-decline_disabled, .ui-state-default .btn-icon-delete, .ui-widget-content .btn-icon-delete, .ui-state-default .btn-icon-deleteLight, .ui-widget-content .btn-icon-deleteLight, .ui-state-default .btn-icon-document--pencil, .ui-widget-content .btn-icon-document--pencil, .ui-state-default .btn-icon-download-csv, .ui-widget-content .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-widget-content .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-widget-content .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-grid_print, .ui-widget-content .btn-icon-grid_print, .ui-state-default .btn-icon-magnifier, .ui-widget-content .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-widget-content .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-widget-content .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-widget-content .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-widget-content .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-widget-content .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-widget-content .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-widget-content .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-widget-content .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-widget-content .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-widget-content .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-widget-content .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-widget-content .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-widget-content .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-widget-content .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-widget-content .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled, .ui-widget-content .btn-icon-unpublish_disabled { background: url('../images/btn-icon-s37c6548b54.png') no-repeat; }
@@ -190,6 +155,7 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field label.right { cursor: pointer; clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
+.field .fieldgroup .fieldgroup-field.last { /* This is used on page/settings/visibility */ padding-bottom: 8px; /* replicates li item spacing */ }
 .field .help { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
 .field.help label.right { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { margin-left: 10px; width: 100%; max-width: 512px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
@@ -202,9 +168,6 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 
 form.stacked .field label, .field.stacked label { display: block; float: none; padding-bottom: 10px; }
 form.stacked .field .middleColumn, .field.stacked .middleColumn { margin-left: 0px; clear: left; }
-
-form .fieldgroup { border-bottom: 1px solid rgba(201, 205, 206, 0.8); box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8); display: block; margin: 0 0 8px; padding: 0 0 7px; }
-form .fieldgroup .fieldgroup { border-bottom: none; box-shadow: none; padding-bottom: 0; margin-bottom: 0; }
 
 form.small .field label.left, .field.small label.left { width: 112px; }
 form.small .field .middleColumn, .field.small .middleColumn { margin-left: 120px; }
@@ -309,7 +272,7 @@ input.radio { margin-left: 0; }
 *		</div>			
 *	</fieldset>
 ****************************************************************/
-fieldset.switch-states { padding: 0 20px 0 0; 	/*	
+fieldset.switch-states { padding: 0 20px 0 0; margin-right: 5px; 	/*	
 		Produce css for up to 5 states.
 
 		Note: with a little adjustment the switch can take more than 5 items, 
@@ -322,28 +285,28 @@ fieldset.switch-states .switch label span { -webkit-box-sizing: border-box; -moz
 fieldset.switch-states .switch input { opacity: 0; filter: alpha(opacity=0); visibility: none; position: absolute; }
 fieldset.switch-states .switch input:checked + label { -moz-transition: all 0.3s ease-out 0s; -webkit-transition: all 0.3s ease-out 0s; -o-transition: all 0.3s ease-out 0s; transition: all 0.3s ease-out 0s; color: #fff; text-shadow: 0 -1px 0 #287099; }
 fieldset.switch-states .switch .slide-button { background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJiOWMzMiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzY0YWIzNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #2b9c32), color-stop(100%, #64ab36)); background-image: -webkit-linear-gradient(#2b9c32, #64ab36); background-image: -moz-linear-gradient(#2b9c32, #64ab36); background-image: -o-linear-gradient(#2b9c32, #64ab36); background-image: linear-gradient(#2b9c32, #64ab36); -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); -moz-box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); -moz-transition: all 0.3s ease-out 0s; -webkit-transition: all 0.3s ease-out 0s; -o-transition: all 0.3s ease-out 0s; transition: all 0.3s ease-out 0s; background-color: #2b9c32; display: block; height: 100%; left: 0; padding: 0; position: absolute; top: 0; z-index: 1; }
-fieldset.switch-states.size_1 label span, fieldset.switch-states.size_1 .slide-button { width: 100%; }
-fieldset.switch-states.size_1 label span { padding-right: 25px; }
+fieldset.switch-states.size_1 label, fieldset.switch-states.size_1 .slide-button { width: 100%; }
+fieldset.switch-states.size_1 label span { padding-right: 0; }
 fieldset.switch-states.size_1 input:checked:nth-of-type(2) ~ .slide-button { left: 100%; }
 fieldset.switch-states.size_1 input:checked:nth-of-type(3) ~ .slide-button { left: 200%; }
 fieldset.switch-states.size_1 input:checked:nth-of-type(4) ~ .slide-button { left: 300%; }
 fieldset.switch-states.size_1 input:checked:nth-of-type(5) ~ .slide-button { left: 400%; }
-fieldset.switch-states.size_2 label span, fieldset.switch-states.size_2 .slide-button { width: 50%; }
+fieldset.switch-states.size_2 label, fieldset.switch-states.size_2 .slide-button { width: 50%; }
 fieldset.switch-states.size_2 input:checked:nth-of-type(2) ~ .slide-button { left: 50%; }
 fieldset.switch-states.size_2 input:checked:nth-of-type(3) ~ .slide-button { left: 100%; }
 fieldset.switch-states.size_2 input:checked:nth-of-type(4) ~ .slide-button { left: 150%; }
 fieldset.switch-states.size_2 input:checked:nth-of-type(5) ~ .slide-button { left: 200%; }
-fieldset.switch-states.size_3 label span, fieldset.switch-states.size_3 .slide-button { width: 33.33333%; }
+fieldset.switch-states.size_3 label, fieldset.switch-states.size_3 .slide-button { width: 33.33333%; }
 fieldset.switch-states.size_3 input:checked:nth-of-type(2) ~ .slide-button { left: 33.33333%; }
 fieldset.switch-states.size_3 input:checked:nth-of-type(3) ~ .slide-button { left: 66.66667%; }
 fieldset.switch-states.size_3 input:checked:nth-of-type(4) ~ .slide-button { left: 100%; }
 fieldset.switch-states.size_3 input:checked:nth-of-type(5) ~ .slide-button { left: 133.33333%; }
-fieldset.switch-states.size_4 label span, fieldset.switch-states.size_4 .slide-button { width: 25%; }
+fieldset.switch-states.size_4 label, fieldset.switch-states.size_4 .slide-button { width: 25%; }
 fieldset.switch-states.size_4 input:checked:nth-of-type(2) ~ .slide-button { left: 25%; }
 fieldset.switch-states.size_4 input:checked:nth-of-type(3) ~ .slide-button { left: 50%; }
 fieldset.switch-states.size_4 input:checked:nth-of-type(4) ~ .slide-button { left: 75%; }
 fieldset.switch-states.size_4 input:checked:nth-of-type(5) ~ .slide-button { left: 100%; }
-fieldset.switch-states.size_5 label span, fieldset.switch-states.size_5 .slide-button { width: 20%; }
+fieldset.switch-states.size_5 label, fieldset.switch-states.size_5 .slide-button { width: 20%; }
 fieldset.switch-states.size_5 input:checked:nth-of-type(2) ~ .slide-button { left: 20%; }
 fieldset.switch-states.size_5 input:checked:nth-of-type(3) ~ .slide-button { left: 40%; }
 fieldset.switch-states.size_5 input:checked:nth-of-type(4) ~ .slide-button { left: 60%; }
@@ -737,6 +700,9 @@ form.import-form label.left { width: 250px; }
 .toggle-details-icon.opened { background: url('../images/sprites-32x32-se93fc83bf9.png') 0 -1121px no-repeat; }
 .ss-uploadfield-item-edit-all .toggle-details-icon.opened { background: url('../images/sprites-32x32-se93fc83bf9.png') 0 -359px no-repeat; }
 
+/** -------------------------------------------- Hide preview toggle link by default. May be shown  in IE7 stylesheet and forced to show with js if needed -------------------------------------------- */
+.cms .Actions > .cms-preview-toggle-link, .cms .cms-navigator > .cms-preview-toggle-link { display: none; }
+
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree > ul > li, .TreeDropdownField .treedropdownfield-panel .jstree > ul > li { margin-left: 0px; }
 .cms .jstree ul, .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree li { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
@@ -933,7 +899,6 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 
 /* -------------------------- */
 .cms-content-controls { /* Styling the background, controls sit on */ /* Styling for icons in controls */ /* Preview selectors. Overrides default chosen styles and applies its own */ }
-.cms-content-controls .cms-preview-toggle-link { display: none; }
 .cms-content-controls.cms-preview-controls { z-index: 1; background: #eceff1; height: 30px; /* should be set in js Layout to match page actions */ padding: 12px 12px; }
 .cms-content-controls .icon-view, .cms-content-controls .preview-selector.dropdown a.chzn-single { white-space: nowrap; }
 .cms-content-controls .icon-view:before, .cms-content-controls .preview-selector.dropdown a.chzn-single:before { display: inline-block; float: left; content: ''; width: 23px; height: 17px; overflow: hidden; }
@@ -956,7 +921,7 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls .preview-selector .chzn-drop { -webkit-border-radius: 3px 3px 0 3px; -moz-border-radius: 3px 3px 0 3px; -ms-border-radius: 3px 3px 0 3px; -o-border-radius: 3px 3px 0 3px; border-radius: 3px 3px 0 3px; -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); box-shadow: 0 0 3px rgba(0, 0, 0, 0.1); }
 .cms-content-controls .preview-selector .chzn-drop .chzn-results { width: 135px; }
 .cms-content-controls .preview-selector .chzn-drop .chzn-results .result-selected { background: #eceff1; }
-.cms-content-controls .preview-selector .chzn-container.chzn-with-rise { width: auto !important; }
+.cms-content-controls .preview-selector .chzn-container { width: auto !important; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop { padding: 0; border-bottom: 1px solid #aaa; margin-top: -5px; width: auto !important; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop .chzn-search { display: none; }
 .cms-content-controls .preview-selector .chzn-container.chzn-with-rise .chzn-drop ul { padding: 0; margin: 0; }
@@ -979,26 +944,28 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 .cms-content-controls .cms-preview-states.dropdown a.chzn-single span { margin: 0; }
 .cms-content-controls .cms-preview-states.dropdown .chzn-container { max-width: 150px; }
 
+/* Styling for the preview screen sizes */
 .cms-preview { background-color: #eceff1; height: 100%; width: 100%; }
-.cms-preview .preview-note { font-weight: 18px; display: block; position: absolute; text-align: center; width: 300px; height: 82px; left: 50%; top: 50%; margin-top: -50px; margin-left: -150px; /* half of width */ color: #CDD7DC; font-weight: bold; font-size: 22px; text-shadow: 0 1px 0 #fff; }
-.cms-preview .preview-note span { background: url('../images/sprites-64x64-s88957ee578.png') 0 0 no-repeat; width: 50px; height: 41px; margin: 0 auto 20px; display: block; }
-.cms-preview .preview-scroll { height: 100%; width: 100%; overflow: auto; position: relative; }
+.cms-preview .preview-note { color: #CDD7DC; display: block; font-size: 22px; font-weight: bold; height: 82px; margin-top: -50px; margin-left: -150px; /* half of width */ position: absolute; text-align: center; text-shadow: 0 1px 0 #fff; top: 50%; width: 300px; }
+.cms-preview .preview-note span { background: url('../images/sprites-64x64-s88957ee578.png') 0 0 no-repeat; display: block; height: 41px; margin: 0 auto 20px; width: 50px; }
+.cms-preview .preview-scroll { height: 100%; overflow: auto; position: relative; width: 100%; }
 .cms-preview .preview-scroll .preview-device-outer { height: 100%; width: 100%; }
-.cms-preview .preview-scroll .preview-device-outer .preview-device-inner { height: 100%; width: 100%; }
-.cms-preview .preview-scroll .preview-device-outer .preview-device-inner iframe { height: 100%; width: 100%; overflow-y: auto; }
-.cms-preview.mobile .preview-scroll, .cms-preview.mobileLandscape .preview-scroll, .cms-preview.tablet .preview-scroll, .cms-preview.tabletLandscape .preview-scroll, .cms-preview.desktop .preview-scroll { background-color: #eceff1; /* hide website preview icon */ }
-.cms-preview.mobile .preview-scroll .preview-device-outer, .cms-preview.mobileLandscape .preview-scroll .preview-device-outer, .cms-preview.tablet .preview-scroll .preview-device-outer, .cms-preview.tabletLandscape .preview-scroll .preview-device-outer, .cms-preview.desktop .preview-scroll .preview-device-outer { padding: 0 16px 16px; background-color: #414141; }
-.cms-preview.mobile .preview-scroll .preview-device-outer { width: 335px; /* add 15px for desktop scrollbar */ height: 568px; margin: 20px auto 20px; padding-top: 16px; overflow: hidden; -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
-.cms-preview.mobile .preview-scroll .preview-device-outer .preview-device-inner { width: 335px; -webkit-transition: all 0.3s ease-in; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-in 1s; -o-transition: all 0.3s ease-in 1s; transition: all 0.3s ease-in 1s; -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); }
-.cms-preview.mobile .preview-scroll .preview-device-outer.rotate { width: 320px; height: 583px; margin: 0px auto 0px; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg); transform: rotate(-90deg); -webkit-transition: all 0.3s ease-in; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-in 1s; -o-transition: all 0.3s ease-in 1s; transition: all 0.3s ease-in 1s; }
-.cms-preview.mobile .preview-scroll .preview-device-outer.rotate .preview-device-inner { width: 583px; height: 320px; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; -webkit-transform-origin: 160px 160px; -moz-transform-origin: 160px 160px; -ms-transform-origin: 160px 160px; -o-transform-origin: 160px 160px; transform-origin: 160px 160px; }
-.cms-preview.mobileLandscape .preview-scroll .preview-device-outer { width: 583px; /* add 15px for desktop scrollbar */ height: 320px; margin: 12% auto; padding-top: 16px; -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
-.cms-preview.mobileLandscape .preview-scroll .preview-device-outer .preview-device-inner { width: 583px; -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
-.cms-preview.tablet .preview-scroll .preview-device-outer { width: 783px; /* add 15px for desktop scrollbar */ height: 1024px; margin: 0 auto; -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
-.cms-preview.tablet .preview-scroll .preview-device-outer .preview-device-inner { width: 783px; -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
-.cms-preview.tabletLandscape .preview-scroll .preview-device-outer { width: 1039px; /* add 15px for desktop scrollbar */ height: 768px; margin: 0 auto; -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
-.cms-preview.tabletLandscape .preview-scroll .preview-device-outer .preview-device-inner { width: 1039px; -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
-.cms-preview.desktop .preview-scroll .preview-device-outer { width: 1024px; height: 800px; margin: 0 auto; -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; }
+.cms-preview .preview-scroll .preview-device-outer .preview-device-inner { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 100%; }
+.cms-preview .preview-scroll .preview-device-outer .preview-device-inner iframe { height: 100%; overflow-y: auto; width: 100%; }
+.cms-preview.mobile .preview-scroll, .cms-preview.mobileLandscape .preview-scroll, .cms-preview.tablet .preview-scroll, .cms-preview.tabletLandscape .preview-scroll, .cms-preview.desktop .preview-scroll { background-color: #eceff1; /* cover website preview icon */ }
+.cms-preview.mobile .preview-scroll .preview-device-outer, .cms-preview.mobileLandscape .preview-scroll .preview-device-outer, .cms-preview.tablet .preview-scroll .preview-device-outer, .cms-preview.tabletLandscape .preview-scroll .preview-device-outer, .cms-preview.desktop .preview-scroll .preview-device-outer { -webkit-border-radius: 7px; -moz-border-radius: 7px; -ms-border-radius: 7px; -o-border-radius: 7px; border-radius: 7px; background: #d5dde2; border: 1px solid transparent; border-left: 1px solid #cfd9de; padding: 0 16px 16px; }
+.cms-preview.mobile .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.mobileLandscape .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.tablet .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.tabletLandscape .preview-scroll .preview-device-outer .preview-device-inner, .cms-preview.desktop .preview-scroll .preview-device-outer .preview-device-inner { border-top: 2px solid #e1e7ea; border-right: 1px solid transparent; border-bottom: 1px solid #e1e7ea; border-left: 1px solid #c3cfd6; }
+.cms-preview.mobile .preview-scroll .preview-device-outer { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); -webkit-transition: all 0.3s ease-in; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-in 1s; -o-transition: all 0.3s ease-in 1s; transition: all 0.3s ease-in 1s; height: 568px; margin: 20px auto 20px; overflow: hidden; padding-top: 16px; width: 335px; }
+.cms-preview.mobile .preview-scroll .preview-device-outer .preview-device-inner { -webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; width: 335px; }
+.cms-preview.mobile .preview-scroll .preview-device-outer.rotate { -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg); transform: rotate(-90deg); -webkit-transition: all 0.3s ease-in; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-in 1s; -o-transition: all 0.3s ease-in 1s; transition: all 0.3s ease-in 1s; height: 583px; margin: 0px auto 0px; width: 320px; }
+.cms-preview.mobile .preview-scroll .preview-device-outer.rotate .preview-device-inner { -webkit-transform-origin: 160px 160px; -moz-transform-origin: 160px 160px; -ms-transform-origin: 160px 160px; -o-transform-origin: 160px 160px; transform-origin: 160px 160px; -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); transform: rotate(90deg); -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; height: 320px; width: 583px; }
+.cms-preview.mobileLandscape .preview-scroll .preview-device-outer { -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; height: 320px; margin: 12% auto; padding-top: 16px; width: 583px; }
+.cms-preview.mobileLandscape .preview-scroll .preview-device-outer .preview-device-inner { -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; width: 583px; }
+.cms-preview.tablet .preview-scroll .preview-device-outer { -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; height: 1024px; margin: 0 auto; width: 783px; }
+.cms-preview.tablet .preview-scroll .preview-device-outer .preview-device-inner { -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; width: 783px; }
+.cms-preview.tabletLandscape .preview-scroll .preview-device-outer { -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; height: 768px; margin: 0 auto; width: 1039px; }
+.cms-preview.tabletLandscape .preview-scroll .preview-device-outer .preview-device-inner { -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; width: 1039px; }
+.cms-preview.desktop .preview-scroll .preview-device-outer { -webkit-transition: all 0.3s ease-out; -webkit-transition-delay: 1s; -moz-transition: all 0.3s ease-out 1s; -o-transition: all 0.3s ease-out 1s; transition: all 0.3s ease-out 1s; height: 800px; margin: 0 auto; width: 1024px; }
 
 .ModelAdmin .cms-content-fields { overflow: hidden; }
 .ModelAdmin .cms-content-fields .cms-edit-form { overflow-y: auto; overflow-x: hidden; }
