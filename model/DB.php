@@ -60,19 +60,51 @@ class DB {
 	}
 	
 	/**
-	 * Set an alternative database to use for this browser session.
-	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set an alternative database in a browser cookie, 
+	 * with the cookie lifetime set to the browser session.
+	 * This is useful for integration testing on temporary databases.
+	 *
+	 * There is a strict naming convention for temporary databases to avoid abuse: 
+	 * <prefix> (default: 'ss_') + tmpdb + <7 digits>
+	 * As an additional security measure, temporary databases will
+	 * be ignored in "live" mode.
+	 * 
+	 * Note that the database will be set on the next request.
 	 * Set it to null to revert to the main database.
 	 */
-	public static function set_alternative_database_name($dbname) {
-		Session::set("alternativeDatabaseName", $dbname);
+	public static function set_alternative_database_name($name) {
+		if($name && !self::valid_alternative_database_name($name)) {
+			throw new InvalidArgumentException(sprintf(
+				'Invalid alternative database name: "%s"',
+				$name
+			));
+		}
+
+		// Set to browser session lifetime, and restricted to HTTP access only
+		Cookie::set("alternativeDatabaseName", $name, 0, null, null, false, true);
 	}
 	
 	/**
 	 * Get the name of the database in use
 	 */
 	public static function get_alternative_database_name() {
-		return Session::get("alternativeDatabaseName");	
+		$name = Cookie::get("alternativeDatabaseName");
+		return (self::valid_alternative_database_name($name)) ? $name : false;
+	}
+
+	/**
+	 * Determines if the name is valid, as a security
+	 * measure against setting arbitrary databases.
+	 * 
+	 * @param  String $name
+	 * @return Boolean
+	 */
+	public static function valid_alternative_database_name($name) {
+		if(Director::isLive()) return false;
+
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		$pattern = strtolower(sprintf('/^%stmpdb\d{7}$/', $prefix));
+		return (bool)preg_match($pattern, $name);
 	}
 
 	/**
@@ -84,7 +116,7 @@ class DB {
 	 */
 	public static function connect($databaseConfig) {
 		// This is used by TestRunner::startsession() to test up a test session using an alt
-		if($name = Session::get('alternativeDatabaseName')) {
+		if($name = self::get_alternative_database_name()) {
 			$databaseConfig['database'] = $name;
 		}
 
