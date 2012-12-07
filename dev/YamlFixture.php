@@ -66,11 +66,9 @@ require_once 'thirdparty/spyc/spyc.php';
  * @subpackage core
  * 
  * @see http://code.google.com/p/spyc/
- * 
- * @todo Write unit test for YamlFixture
  */
 class YamlFixture extends Object {
-	
+
 	/**
 	 * Absolute path to the .yml fixture file
 	 *
@@ -79,18 +77,17 @@ class YamlFixture extends Object {
 	protected $fixtureFile;
 
 	/**
-	 * Array of fixture items
-	 * 
-	 * @var array
-	 */
-	protected $fixtureDictionary;
-
-	/**
 	 * String containing fixture
 	 *
 	 * @var String
 	 */
 	protected $fixtureString;
+
+	/**
+	 * @var FixtureFactory
+	 * @deprecated 3.1 Use writeInto() and FixtureFactory instead
+	 */
+	protected $factory;
 
 	/**
 	 * @param String Absolute file path, or relative path to {@link Director::baseFolder()}
@@ -125,44 +122,50 @@ class YamlFixture extends Object {
 	public function getFixtureString() {
 		return $this->fixtureString;
 	}
-	
+
 	/**
 	 * Get the ID of an object from the fixture.
+	 *
+	 * @deprecated 3.1 Use writeInto() and FixtureFactory accessors instead
+	 * 
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	public function idFromFixture($className, $identifier) {
-		if(isset($this->fixtureDictionary[$className][$identifier])) {
-			return $this->fixtureDictionary[$className][$identifier];
-		} else {
-			return false;
-		}
+		Deprecation::notice('3.1', 'Use writeInto() and FixtureFactory accessors instead');
+
+		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
+		return $this->factory->getId($className, $identifier);
 		
 	}
 	
 	/**
 	 * Return all of the IDs in the fixture of a particular class name.
+	 *
+	 * @deprecated 3.1 Use writeInto() and FixtureFactory accessors instead
 	 * 
 	 * @return A map of fixture-identifier => object-id
 	 */
 	public function allFixtureIDs($className) {
-		if(isset($this->fixtureDictionary[$className])) {
-			return $this->fixtureDictionary[$className];
-		} else {
-			return false;
-		}
-		
+		Deprecation::notice('3.1', 'Use writeInto() and FixtureFactory accessors instead');
+
+		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
+		return $this->factory->getIds($className);
 	}
 
 	/**
 	 * Get an object from the fixture.
+	 *
+	 * @deprecated 3.1 Use writeInto() and FixtureFactory accessors instead
 	 * 
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	public function objFromFixture($className, $identifier) {
-		$id = $this->idFromFixture($className, $identifier);
-		if($id) return DataObject::get_by_id($className, $id);
+		Deprecation::notice('3.1', 'Use writeInto() and FixtureFactory accessors instead');
+
+		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
+		return $this->factory->get($className, $identifier);
 	}
 	
 	/**
@@ -172,14 +175,24 @@ class YamlFixture extends Object {
 	 * Caution: In order to support reflexive relations which need a valid object ID,
 	 * the record is written twice: first after populating all non-relational fields,
 	 * then again after populating all relations (has_one, has_many, many_many).
+	 *
+	 * @deprecated 3.1 Use writeInto() and FixtureFactory instance instead
 	 */
 	public function saveIntoDatabase(DataModel $model) {
-		// We have to disable validation while we import the fixtures, as the order in
-		// which they are imported doesnt guarantee valid relations until after the
-		// import is complete.
-		$validationenabled = DataObject::get_validation_enabled();
-		DataObject::set_validation_enabled(false);
-		
+		Deprecation::notice('3.1', 'Use writeInto() and FixtureFactory instance instead');
+
+		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
+		$this->writeInto($this->factory);
+	}
+
+	/**
+	 * Persists the YAML data in a FixtureFactory,
+	 * which in turn saves them into the database.
+	 * Please use the passed in factory to access the fixtures afterwards.
+	 * 
+	 * @param  FixtureFactory $factory
+	 */
+	public function writeInto(FixtureFactory $factory) {
 		$parser = new Spyc();
 		if (isset($this->fixtureString)) {
 			$fixtureContent = $parser->load($this->fixtureString);
@@ -187,112 +200,15 @@ class YamlFixture extends Object {
 			$fixtureContent = $parser->loadFile($this->fixtureFile);
 		}
 
-		$this->fixtureDictionary = array();
-		foreach($fixtureContent as $dataClass => $items) {
-			if(ClassInfo::exists($dataClass)) {
-				$this->writeDataObject($model, $dataClass, $items);
-			} else {
-				$this->writeSQL($dataClass, $items);
-			}
-		}
-		
-		DataObject::set_validation_enabled($validationenabled);
-	}
-	
-	/**
-	 * Writes the fixture into the database using DataObjects
-	 *
-	 * @param string $dataClass
-	 * @param array $items
-	 */
-	protected function writeDataObject($model, $dataClass, $items) {
-		foreach($items as $identifier => $fields) {
-			$obj = $model->$dataClass->newObject();
-			
-			// If an ID is explicitly passed, then we'll sort out the initial write straight away
-			// This is just in case field setters triggered by the population code in the next block
-			// Call $this->write().  (For example, in FileTest)
-			if(isset($fields['ID'])) {
-				$obj->ID = $fields['ID'];
-				
-				// The database needs to allow inserting values into the foreign key column (ID in our case)
-				$conn = DB::getConn();
-				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
-					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($dataClass), true);
+		foreach($fixtureContent as $class => $items) {
+			foreach($items as $identifier => $data) {
+				if(ClassInfo::exists($class)) {
+					$factory->createObject($class, $identifier, $data);
+				} else {
+					$factory->createRaw($class, $identifier, $data);
 				}
-				$obj->write(false, true);
-				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
-					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($dataClass), false);
-				}
-			}
-			
-			// Populate the dictionary with the ID
-			if($fields) foreach($fields as $fieldName => $fieldVal) {
-				if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) continue;
-				$obj->$fieldName = $this->parseFixtureVal($fieldVal);
-			}
-			$obj->write();
-			
-			// has to happen before relations in case a class is referring to itself
-			$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
-			
-			// Populate all relations
-			if($fields) foreach($fields as $fieldName => $fieldVal) {
-				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
-					$parsedItems = array();
-					$items = preg_split('/ *, */',trim($fieldVal));
-					foreach($items as $item) {
-						$parsedItems[] = $this->parseFixtureVal($item);
-					}
-					$obj->write();
-					if($obj->has_many($fieldName)) {
-						$obj->getComponents($fieldName)->setByIDList($parsedItems);
-					} elseif($obj->many_many($fieldName)) {
-						$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
-					}
-				} elseif($obj->has_one($fieldName)) {
-					$obj->{$fieldName . 'ID'} = $this->parseFixtureVal($fieldVal);
-				}
-			}
-			$obj->write();
-			//If LastEdited was set in the fixture, set it here
-			if (array_key_exists('LastEdited', $fields)) {
-				$manip = array($dataClass => array("command" => "update", "id" => $obj->id,
-					"fields" => array("LastEdited" => "'".$this->parseFixtureVal($fields['LastEdited'])."'")));
-				DB::manipulate($manip);
 			}
 		}
 	}
-	
-	/**
-	 * Writes the fixture into the database directly using a database manipulation
-	 *
-	 * @param string $table
-	 * @param array $items
-	 */
-	protected function writeSQL($table, $items) {
-		foreach($items as $identifier => $fields) {
-			$manipulation = array($table => array("fields" => array(), "command" => "insert")); 
-			foreach($fields as $fieldName=> $fieldVal) { 
-				$manipulation[$table]["fields"][$fieldName] = "'".$this->parseFixtureVal($fieldVal)."'"; 
-			}
-			DB::manipulate($manipulation);
-			$this->fixtureDictionary[$table][$identifier] = DB::getGeneratedID($table);
-		}
-	}
-	
-	/**
-	 * Parse a value from a fixture file.  If it starts with => it will get an ID from the fixture dictionary
-	 */
-	protected function parseFixtureVal($fieldVal) {
-		// Parse a dictionary reference - used to set foreign keys
-		if(substr($fieldVal,0,2) == '=>') {
-			list($a, $b) = explode('.', substr($fieldVal,2), 2);
-			return $this->fixtureDictionary[$a][$b];
 
-		// Regular field value setting
-		} else {
-			return $fieldVal;
-		}
-	}
 }
