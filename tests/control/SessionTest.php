@@ -82,4 +82,36 @@ class SessionTest extends SapphireTest {
 
 		$this->assertEquals(Session::get_session_store_path(), '');
 	}
+
+	public function testBasicBackend() {
+		Session::set_backend_class('SessionTest_DummyBackend');
+		Controller::curr()->setSession(new Session(array()));
+
+		$this->assertEquals('SessionTest_DummyBackend', Session::get_backend_class());
+		$this->assertEquals('Dummy', Session::get('Anything'));
+		Session::set_backend_class('Session_Backend_Standard');
+	}
+}
+
+class SessionTest_DummyBackend implements TestOnly, Session_Backend {
+	public function __construct($data) {}
+	public static function start($sid = null) {
+		$_SESSION = array();
+	}
+
+	public static function destroy($removeCookie = true) {
+		unset($_SESSION);
+	}
+
+	public function set($name, $val) {}
+	public function addToArray($name, $val) {}
+	public function get($name) {
+		return 'Dummy';
+	}
+	public function getAll() {
+		return array();
+	}
+	public function save() {}
+	public function clear($name) { }
+	public function clearAll() { }
 }
