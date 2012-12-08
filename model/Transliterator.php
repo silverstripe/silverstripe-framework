@@ -53,6 +53,6 @@ class SS_Transliterator extends Object {
 	 * Transliteration using iconv()
 	 */
 	protected function useIconv($source) {
- 		return iconv("utf-8", "us-ascii//IGNORE//TRANSLIT", $source);
+		return iconv("utf-8", "us-ascii//IGNORE//TRANSLIT", $source);
 	}
 }

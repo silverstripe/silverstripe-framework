@@ -37,19 +37,19 @@ chdir(dirname($_SERVER['SCRIPT_FILENAME']));
  *   fourth => val
  */
 if(isset($_SERVER['argv'][2])) {
-    $args = array_slice($_SERVER['argv'],2);
-    if(!isset($_GET)) $_GET = array();
-    if(!isset($_REQUEST)) $_REQUEST = array();
-    foreach($args as $arg) {
-       if(strpos($arg,'=') == false) {
-           $_GET['args'][] = $arg;
-       } else {
-           $newItems = array();
-           parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg, $newItems );
-           $_GET = array_merge($_GET, $newItems);
-       }
-    }
-  $_REQUEST = array_merge($_REQUEST, $_GET);
+	$args = array_slice($_SERVER['argv'],2);
+	if(!isset($_GET)) $_GET = array();
+	if(!isset($_REQUEST)) $_REQUEST = array();
+	foreach($args as $arg) {
+		if(strpos($arg,'=') == false) {
+			$_GET['args'][] = $arg;
+		} else {
+			$newItems = array();
+			parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg, $newItems );
+			$_GET = array_merge($_GET, $newItems);
+		}
+	}
+	$_REQUEST = array_merge($_REQUEST, $_GET);
 }
 
 // Set 'url' GET parameter
@@ -76,7 +76,7 @@ DB::connect($databaseConfig);
 $url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
 if(!$url) {
 	echo 'Please specify an argument to cli-script.php/sake. For more information, visit'
-    . ' http://doc.silverstripe.org/framework/en/topics/commandline';
+		. ' http://doc.silverstripe.org/framework/en/topics/commandline';
 	die();
 }
 

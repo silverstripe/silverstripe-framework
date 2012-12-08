@@ -35,11 +35,11 @@ class PhpUnitWrapper_3_5 extends PhpUnitWrapper {
 	protected function beforeRunTests() {
 		
 		if($this->getCoverageStatus()) {			
-            $this->coverage = new PHP_CodeCoverage();
+			$this->coverage = new PHP_CodeCoverage();
 			$coverage = $this->coverage;
 
-            $filter = $coverage->filter();
-            $modules = $this->moduleDirectories();
+			$filter = $coverage->filter();
+			$modules = $this->moduleDirectories();
 
 			foreach(TestRunner::$coverage_filter_dirs as $dir) {
 				if($dir[0] == '*') {

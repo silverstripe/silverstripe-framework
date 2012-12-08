@@ -36,7 +36,7 @@ TableListField.prototype = {
 		
 		rules['#'+this.id+' table.data tr td.markingcheckbox'] = {
 			onclick : function(e) {
-			    // do nothing for clicks in marking box cells (e.g. if checkbox is missed)
+				// do nothing for clicks in marking box cells (e.g. if checkbox is missed)
 			}
 		};
 		
@@ -176,15 +176,15 @@ TableListField.prototype = {
 		}
 		
 		if(el.getAttribute('href')) {
-    		jQuery.ajax({
+			jQuery.ajax({
 					'url': el.getAttribute('href'),
 					'data': {'update': 1},
-  				'success': function(response) {
+				'success': function(response) {
 						jQuery('#' + self.id).replaceWith(response)
 					// reapply behaviour and reattach methods to TF container node
 					// e.g. <div class="TableListField">
-  					Behaviour.apply(jQuery('#' + self.id)[0], true);
-  				}
+					Behaviour.apply(jQuery('#' + self.id)[0], true);
+				}
 				});
 		}
 		

@@ -37,7 +37,7 @@ class RestfulServiceTest extends SapphireTest {
 		$service->setQueryString($params);
 		$responseBody = $service->request($url)->getBody();
 		foreach ($params as $key => $value) {
- 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
+			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
 			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
 	}
@@ -52,7 +52,7 @@ class RestfulServiceTest extends SapphireTest {
 		$service->setQueryString($params);
 		$responseBody = $service->request($url)->getBody();
 		foreach ($params as $key => $value) {
- 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
+			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
 			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
 	}
@@ -67,7 +67,7 @@ class RestfulServiceTest extends SapphireTest {
 		$url .= '?' . http_build_query($params);
 		$responseBody = $service->request($url)->getBody();
 		foreach ($params as $key => $value) {
- 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
+			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
 			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
 	}

@@ -7,18 +7,18 @@
 class Security extends Controller {
 	
 	static $allowed_actions = array( 
-	    'index', 
-	    'login', 
-	    'logout', 
-	    'basicauthlogin', 
-	    'lostpassword', 
-	    'passwordsent', 
-	    'changepassword', 
+		'index', 
+		'login', 
+		'logout', 
+		'basicauthlogin', 
+		'lostpassword', 
+		'passwordsent', 
+		'changepassword', 
 		'ping',
 		'LoginForm',
 		'ChangePasswordForm',
 		'LostPasswordForm',
- 	);
+	);
 
 	/**
 	 * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}
@@ -138,22 +138,22 @@ class Security extends Controller {
 	 * If you don't provide a messageSet, a default will be used.
 	 *
 	 * @param Controller $controller The controller that you were on to cause the permission
-	 *              failure.
+	 *                               failure.
 	 * @param string|array $messageSet The message to show to the user. This
-	 *                                  can be a string, or a map of different
-	 *                                  messages for different contexts.
-	 *                                  If you pass an array, you can use the
-	 *                                  following keys:
-	 *                                    - default: The default message
-	 *                                    - logInAgain: The message to show
-	 *                                                  if the user has just
-	 *                                                  logged out and the
-	 *                                    - alreadyLoggedIn: The message to
-	 *                                                       show if the user
-	 *                                                       is already logged
-	 *                                                       in and lacks the
-	 *                                                       permission to
-	 *                                                       access the item.
+	 *                                 can be a string, or a map of different
+	 *                                 messages for different contexts.
+	 *                                 If you pass an array, you can use the
+	 *                                 following keys:
+	 *                                   - default: The default message
+	 *                                   - logInAgain: The message to show
+	 *                                                 if the user has just
+	 *                                                 logged out and the
+	 *                                   - alreadyLoggedIn: The message to
+	 *                                                      show if the user
+	 *                                                      is already logged
+	 *                                                      in and lacks the
+	 *                                                      permission to
+	 *                                                      access the item.
 	 *
 	 * The alreadyLoggedIn value can contain a '%s' placeholder that will be replaced with a link
 	 * to log in.
@@ -240,7 +240,7 @@ class Security extends Controller {
 	}
 
 
-  /**
+	/**
 	 * Get the login form to process according to the submitted data
 	 */
 	protected function LoginForm() {
@@ -262,7 +262,7 @@ class Security extends Controller {
 	}
 
 
-  /**
+	/**
 	 * Get the login forms for all available authentication methods
 	 *
 	 * @return array Returns an array of available login forms (array of Form
@@ -276,8 +276,8 @@ class Security extends Controller {
 
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
-		  array_push($forms,
-								 call_user_func(array($authenticator, 'get_login_form'),
+			array_push($forms,
+						call_user_func(array($authenticator, 'get_login_form'),
 																$this));
 		}
 
@@ -307,9 +307,9 @@ class Security extends Controller {
 	 * Log the currently logged in user out
 	 *
 	 * @param bool $redirect Redirect the user back to where they came.
-	 *                         - If it's false, the code calling logout() is
-	 *                           responsible for sending the user where-ever
-	 *                           they should go.
+	 *                       - If it's false, the code calling logout() is
+	 *                         responsible for sending the user where-ever
+	 *                         they should go.
 	 */
 	public function logout($redirect = true) {
 		$member = Member::currentUser();
@@ -675,7 +675,7 @@ class Security extends Controller {
 		}
 		
 		if ($adminGroup) {
-		    $member = $adminGroup->Members()->First();
+			$member = $adminGroup->Members()->First();
 		}
 
 		if(!$adminGroup) {

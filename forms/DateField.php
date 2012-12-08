@@ -43,9 +43,9 @@ require_once 'Zend/Date.php';
  * 
  * ## Example: German dates with separate fields for day, month, year
  * 
- * 	$f = new DateField('MyDate');
- * 	$f->setLocale('de_DE');
- * 	$f->setConfig('dmyfields');
+ *   $f = new DateField('MyDate');
+ *   $f->setLocale('de_DE');
+ *   $f->setConfig('dmyfields');
  * 
  * # Validation
  * 
@@ -306,11 +306,11 @@ class DateField extends TextField {
 	 * @return boolean
 	 */
 	public static function set_default_config($k, $v) {
-	  if (array_key_exists($k,self::$default_config)) {
-		self::$default_config[$k]=$v;
-		return true;
-	  }
-	  return false;
+		if (array_key_exists($k,self::$default_config)) {
+			self::$default_config[$k]=$v;
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -559,7 +559,7 @@ class DateField_View_JQuery extends Object {
 			// Include language files (if required)
 			if ($this->jqueryLocaleFile){
 				Requirements::javascript($this->jqueryLocaleFile);
- 			}
+			}
 			
 			Requirements::javascript(FRAMEWORK_DIR . "/javascript/DateField.js");
 		}
@@ -601,51 +601,51 @@ class DateField_View_JQuery extends Object {
 	public static function convert_iso_to_jquery_format($format) {
 		$convert = array(
 			'/([^d])d([^d])/' => '$1d$2',
-		  '/^d([^d])/' => 'd$1',
-		  '/([^d])d$/' => '$1d',
-		  '/dd/' => 'dd',
-		  '/SS/' => '',
-		  '/eee/' => 'd',
-		  '/e/' => 'N',
-		  '/D/' => '',
-		  '/EEEE/' => 'DD',
-		  '/EEE/' => 'D', 
-		  '/w/' => '',
+			'/^d([^d])/' => 'd$1',
+			'/([^d])d$/' => '$1d',
+			'/dd/' => 'dd',
+			'/SS/' => '',
+			'/eee/' => 'd',
+			'/e/' => 'N',
+			'/D/' => '',
+			'/EEEE/' => 'DD',
+			'/EEE/' => 'D', 
+			'/w/' => '',
 			// make single "M" lowercase
-		  '/([^M])M([^M])/' => '$1m$2',
+			'/([^M])M([^M])/' => '$1m$2',
 			// make single "M" at start of line lowercase
-		  '/^M([^M])/' => 'm$1',
+			'/^M([^M])/' => 'm$1',
 				// make single "M" at end of line lowercase
-		  '/([^M])M$/' => '$1m',
+			'/([^M])M$/' => '$1m',
 			// match exactly three capital Ms not preceeded or followed by an M
-		  '/(?<!M)MMM(?!M)/' => 'M',
+			'/(?<!M)MMM(?!M)/' => 'M',
 			// match exactly two capital Ms not preceeded or followed by an M
-		  '/(?<!M)MM(?!M)/' => 'mm',
+			'/(?<!M)MM(?!M)/' => 'mm',
 			// match four capital Ms (maximum allowed)
-		  '/MMMM/' => 'MM',
-		  '/l/' => '',
-		  '/YYYY/' => 'yy',
-		  '/yyyy/' => 'yy',
-		  // See http://open.silverstripe.org/ticket/7669
-		  '/y{1,3}/' => 'yy',
-		  '/a/' => '',
-		  '/B/' => '',
-		  '/hh/' => '',
-		  '/h/' => '',
-		  '/([^H])H([^H])/' => '',
-		  '/^H([^H])/' => '',
-		  '/([^H])H$/' => '',
-		  '/HH/' => '',
-		  // '/mm/' => '',
-		  '/ss/' => '',
-		  '/zzzz/' => '',
-		  '/I/' => '',
-		  '/ZZZZ/' => '',
-		  '/Z/' => '',
-		  '/z/' => '',
-		  '/X/' => '',
-		  '/r/' => '',
-		  '/U/' => '',
+			'/MMMM/' => 'MM',
+			'/l/' => '',
+			'/YYYY/' => 'yy',
+			'/yyyy/' => 'yy',
+			// See http://open.silverstripe.org/ticket/7669
+			'/y{1,3}/' => 'yy',
+			'/a/' => '',
+			'/B/' => '',
+			'/hh/' => '',
+			'/h/' => '',
+			'/([^H])H([^H])/' => '',
+			'/^H([^H])/' => '',
+			'/([^H])H$/' => '',
+			'/HH/' => '',
+			// '/mm/' => '',
+			'/ss/' => '',
+			'/zzzz/' => '',
+			'/I/' => '',
+			'/ZZZZ/' => '',
+			'/Z/' => '',
+			'/z/' => '',
+			'/X/' => '',
+			'/r/' => '',
+			'/U/' => '',
 		);
 		$patterns = array_keys($convert);
 		$replacements = array_values($convert);

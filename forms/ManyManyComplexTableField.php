@@ -59,7 +59,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 				break;
 			}
 			$belongsManyManyRelations = $singleton->uninherited( 'belongs_many_many', true );
-			 if( isset( $belongsManyManyRelations ) && array_key_exists( $this->name, $belongsManyManyRelations ) ) {
+			if( isset( $belongsManyManyRelations ) && array_key_exists( $this->name, $belongsManyManyRelations ) ) {
 				$this->manyManyParentClass = $class;
 				$manyManyTable = $belongsManyManyRelations[$this->name] . '_' . $this->name;
 				break;

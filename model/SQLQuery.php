@@ -915,11 +915,11 @@ class SQLQuery {
 	 * @return string
 	 */
 	public function __toString() {
-	    try {
-		    return $this->sql();
-	    } catch(Exception $e) {
-	        return "<sql query>";
-	    }
+		try {
+			return $this->sql();
+		} catch(Exception $e) {
+			return "<sql query>";
+		}
 	}
 	
 	/**

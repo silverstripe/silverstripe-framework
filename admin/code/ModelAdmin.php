@@ -296,7 +296,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 *
 	 * @return array Map of model class names to importer instances
 	 */
-	 public function getModelImporters() {
+	public function getModelImporters() {
 		$importerClasses = $this->stat('model_importers');
 
 		// fallback to all defined models if not explicitly defined

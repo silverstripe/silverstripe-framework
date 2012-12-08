@@ -27,7 +27,7 @@ class BBCodeParser extends TextParser {
 	 * @var Boolean
 	 */
 	protected static $allowSimilies = false;
-	 
+	
 	/**
 	 * Set the location of the smiles folder. By default use the ones in framework
 	 * but this can be overridden by setting  BBCodeParser::set_icon_folder('themes/yourtheme/images/');
@@ -165,7 +165,7 @@ class BBCodeParser extends TextParser {
 				'#(?<!\w):\((?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/sad.gif'> ", // :(
 				'#(?<!\w):-\((?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/sad.gif'> ", // :-(
 				'#(?<!\w):p(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/tongue.gif'> ", // :p
-			 	'#(?<!\w)8-\)(?!\w)#i'     => " <img src='".BBCodeParser::smilies_location(). "/cool.gif'> ", // 8-)
+				'#(?<!\w)8-\)(?!\w)#i'     => " <img src='".BBCodeParser::smilies_location(). "/cool.gif'> ", // 8-)
 				'#(?<!\w):\^\)(?!\w)#i' => " <img src='".BBCodeParser::smilies_location(). "/confused.gif'> " // :^)
 			);
 			$this->content = preg_replace(array_keys($smilies), array_values($smilies), $this->content);

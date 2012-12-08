@@ -33,11 +33,11 @@ class PhoneNumberField extends FormField {
 		list($countryCode, $areaCode, $phoneNumber, $extension) = $this->parseValue();
 		$hasTitle = false;
 
-    if ($this->value=="") {
-      $countryCode=$this->countryCode;
-      $areaCode=$this->areaCode;
-      $extension=$this->ext;
-    }
+		if ($this->value=="") {
+			$countryCode=$this->countryCode;
+			$areaCode=$this->areaCode;
+			$extension=$this->ext;
+		}
 		
 		if($this->countryCode !== null) {
 			$fields->push(new NumericField($this->name.'[Country]', '+', $countryCode, 4));
@@ -94,7 +94,7 @@ class PhoneNumberField extends FormField {
 			preg_match( '/^(?:(?:\+(\d+))?\s*\((\d+)\))?\s*([0-9A-Za-z]*)\s*(?:[#]\s*(\d+))?$/', $this->value, $parts);
 		else
 			return array( '', '', $this->value, '' );
-            
+
 		if(is_array($parts)) array_shift( $parts );
 
 		for ($x=0;$x<=3;$x++) {

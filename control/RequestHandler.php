@@ -94,7 +94,7 @@ class RequestHandler extends ViewableData {
 	 * or by defining $allowed_actions in your {@link Form} class.
 	 */
 	static $allowed_actions = null;
-	 
+	
 	public function __construct() {
 		$this->brokenOnConstruct = false;
 

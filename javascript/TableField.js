@@ -126,7 +126,7 @@ TableField.prototype = {
 			var tbody = table.tBodies[0];
 			var numRows = tbody.rows.length;
 			var newRow = tbody.rows[0].cloneNode(true);
-			   
+
 			// Get the input elements in this new row
 			var inputs = newRow.getElementsByTagName('input');
 			// For every input, set it's value to blank if it is not hidden

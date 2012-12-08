@@ -41,40 +41,40 @@ class SearchContextTest extends SapphireTest {
 	}
 	
 	public function testPartialMatchUsedByDefaultWhenNotExplicitlySet() {
-		 $person = singleton('SearchContextTest_Person');
-		 $context = $person->getDefaultSearchContext();
-		 
-		 $this->assertEquals(
-		 	array(
-		 		"Name" => new PartialMatchFilter("Name"),
-		 		"HairColor" => new PartialMatchFilter("HairColor"),
-		 		"EyeColor" => new PartialMatchFilter("EyeColor")
-		 	),
-		 	$context->getFilters()
-		 );
+		$person = singleton('SearchContextTest_Person');
+		$context = $person->getDefaultSearchContext();
+		
+		$this->assertEquals(
+			array(
+				"Name" => new PartialMatchFilter("Name"),
+				"HairColor" => new PartialMatchFilter("HairColor"),
+				"EyeColor" => new PartialMatchFilter("EyeColor")
+			),
+			$context->getFilters()
+		);
 	}
 	
 	public function testDefaultFiltersDefinedWhenNotSetInDataObject() {
 		$book = singleton('SearchContextTest_Book');
 		$context = $book->getDefaultSearchContext();
 		
-		 $this->assertEquals(
-		 	array(
-		 		"Title" => new PartialMatchFilter("Title")
-		 	),
-		 	$context->getFilters()
-		 );	 
+		$this->assertEquals(
+			array(
+				"Title" => new PartialMatchFilter("Title")
+			),
+			$context->getFilters()
+		);
 	}
 	
 	public function testUserDefinedFiltersAppearInSearchContext() {
 		$company = singleton('SearchContextTest_Company');
 		$context = $company->getDefaultSearchContext();
-				 
+
 		$this->assertEquals(
 			array(
 				"Name" => new PartialMatchFilter("Name"),
-		 		"Industry" => new PartialMatchFilter("Industry"),
-		 		"AnnualProfit" => new PartialMatchFilter("AnnualProfit")
+				"Industry" => new PartialMatchFilter("Industry"),
+				"AnnualProfit" => new PartialMatchFilter("AnnualProfit")
 			),
 			$context->getFilters()
 		);
@@ -87,8 +87,8 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals(
 			new FieldList(
 				new TextField("Name", 'Name'),
-		 		new TextareaField("Industry", 'Industry'),
-		 		new NumericField("AnnualProfit", 'The Almighty Annual Profit')
+				new TextareaField("Industry", 'Industry'),
+				new NumericField("AnnualProfit", 'The Almighty Annual Profit')
 			),
 			$context->getFields()
 		);

@@ -218,7 +218,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return boolean
 	 */
 	public function canSortBy($fieldName) {
-	    return $this->dataQuery()->query()->canSortBy($fieldName);
+		return $this->dataQuery()->query()->canSortBy($fieldName);
 	}
 	
 	/**
@@ -673,7 +673,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return mixed
 	 */
 	public function max($fieldName) {
-	    return $this->dataQuery->max($fieldName);
+		return $this->dataQuery->max($fieldName);
 	}
 
 	/**
@@ -683,7 +683,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return mixed
 	 */
 	public function min($fieldName) {
-	    return $this->dataQuery->min($fieldName);
+		return $this->dataQuery->min($fieldName);
 	}
 	
 	/**
@@ -693,7 +693,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return mixed
 	 */
 	public function avg($fieldName) {
-	    return $this->dataQuery->avg($fieldName);
+		return $this->dataQuery->avg($fieldName);
 	}
 
 	/**
@@ -703,7 +703,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return mixed
 	 */
 	public function sum($fieldName) {
-	    return $this->dataQuery->sum($fieldName);
+		return $this->dataQuery->sum($fieldName);
 	}
 	
 	
@@ -833,7 +833,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		
 		// Index current data
 		foreach($this->column() as $id) {
-		   $has[$id] = true;
+			$has[$id] = true;
 		}
 		
 		// Keep track of items to delete
@@ -951,7 +951,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function newObject($initialFields = null) {
 		$class = $this->dataClass;
- 		return Injector::inst()->create($class, $initialFields, false, $this->model);
+		return Injector::inst()->create($class, $initialFields, false, $this->model);
 	}
 	
 	/**
@@ -967,14 +967,14 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 	}
 
-    /**
-     * Remove an item from this DataList by ID
+	/**
+	 * Remove an item from this DataList by ID
 	 * 
 	 * @param int $itemID - The primary ID
-     */
+	 */
 	public function removeByID($itemID) {
-	    $item = $this->byID($itemID);
-	    if($item) return $item->delete();
+		$item = $this->byID($itemID);
+		if($item) return $item->delete();
 	}
 	
 	/**
@@ -1046,7 +1046,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return bool
 	 */
 	public function offsetExists($key) {
-	    return ($this->limit(1,$key)->First() != null);
+		return ($this->limit(1,$key)->First() != null);
 	}
 
 	/**
@@ -1056,7 +1056,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataObject
 	 */
 	public function offsetGet($key) {
-	    return $this->limit(1, $key)->First();
+		return $this->limit(1, $key)->First();
 	}
 	
 	/**
@@ -1066,7 +1066,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param mixed $value
 	 */
 	public function offsetSet($key, $value) {
-	    user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+		user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
 	}
 
 	/**
@@ -1075,7 +1075,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param mixed $key
 	 */
 	public function offsetUnset($key) {
-	    user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+		user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
 	}
 
 }
