@@ -6,15 +6,15 @@
  * ajax / iframe submissions
  */
 
- var ss = ss || {};
+var ss = ss || {};
 /**
  * Wrapper for HTML WYSIWYG libraries, which abstracts library internals
  * from interface concerns like inserting and editing links.
  * Caution: Incomplete and unstable API.
  */
- ss.editorWrappers = {};
- ss.editorWrappers.initial
- ss.editorWrappers.tinyMCE = (function() {
+ss.editorWrappers = {};
+ss.editorWrappers.initial
+ss.editorWrappers.tinyMCE = (function() {
 	return {
 		init: function(config) {
 			if(!ss.editorWrappers.tinyMCE.initialized) {
@@ -807,7 +807,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				if(header) header[(hasItems) ? 'show' : 'hide']();
 
 				// Disable "insert" button if no files are selected
-				 this.find('.Actions :submit')
+				this.find('.Actions :submit')
 					.button(hasItems ? 'enable' : 'disable')
 					.toggleClass('ui-state-disabled', !hasItems); 
 					

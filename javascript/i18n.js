@@ -108,7 +108,7 @@ ss.i18n = {
 	 * @return string result : Stripped string
 	 *
 	 */
-	 	stripStr: function(str) {
+		stripStr: function(str) {
 			return str.replace(/^\s*/, "").replace(/\s*$/, "");
 		},
 	

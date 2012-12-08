@@ -13,46 +13,46 @@
  * 
  * <code>
  * class Article extends DataObject implements PermissionProvider {
- * 	static $api_access = true;
- * 	
- * 	function canView($member = false) {
- * 		return Permission::check('ARTICLE_VIEW');
- * 	}
- * 	function canEdit($member = false) {
- * 		return Permission::check('ARTICLE_EDIT');
- * 	}
- * 	function canDelete() {
- * 		return Permission::check('ARTICLE_DELETE');
- * 	}
- * 	function canCreate() {
- * 		return Permission::check('ARTICLE_CREATE');
- * 	}
- * 	function providePermissions() {
- * 		return array(
- * 			'ARTICLE_VIEW' => 'Read an article object',
- * 			'ARTICLE_EDIT' => 'Edit an article object',
- * 			'ARTICLE_DELETE' => 'Delete an article object',
- * 			'ARTICLE_CREATE' => 'Create an article object',
- * 		);
- * 	}
+ *  static $api_access = true;
+ *  
+ *  function canView($member = false) {
+ *    return Permission::check('ARTICLE_VIEW');
+ *  }
+ *  function canEdit($member = false) {
+ *    return Permission::check('ARTICLE_EDIT');
+ *  }
+ *  function canDelete() {
+ *    return Permission::check('ARTICLE_DELETE');
+ *  }
+ *  function canCreate() {
+ *    return Permission::check('ARTICLE_CREATE');
+ *  }
+ *  function providePermissions() {
+ *    return array(
+ *      'ARTICLE_VIEW' => 'Read an article object',
+ *      'ARTICLE_EDIT' => 'Edit an article object',
+ *      'ARTICLE_DELETE' => 'Delete an article object',
+ *      'ARTICLE_CREATE' => 'Create an article object',
+ *    );
+ *  }
  * }
  * </code> 
  *
  * Object-level access control by {@link Group} membership: 
  * <code>
  * class Article extends DataObject {
- * 	static $api_access = true;
- * 	
- * 	function canView($member = false) {
- * 		if(!$member) $member = Member::currentUser();
- *		return $member->inGroup('Subscribers');
- * 	}
- * 	function canEdit($member = false) {
- * 		if(!$member) $member = Member::currentUser();
- *		return $member->inGroup('Editors');
- * 	}
- * 	
- * 	// ...
+ *   static $api_access = true;
+ *   
+ *   function canView($member = false) {
+ *     if(!$member) $member = Member::currentUser();
+ *     return $member->inGroup('Subscribers');
+ *   }
+ *   function canEdit($member = false) {
+ *     if(!$member) $member = Member::currentUser();
+ *     return $member->inGroup('Editors');
+ *   }
+ *   
+ *   // ...
  * }
  * </code>
  * 
@@ -818,7 +818,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param $priority String left|right Determines who wins in case of a conflict (optional)
 	 * @param $includeRelations Boolean Merge any existing relations (optional)
 	 * @param $overwriteWithEmpty Boolean Overwrite existing left values with empty right values.
-	 * 	Only applicable with $priority='right'. (optional)
+	 *                            Only applicable with $priority='right'. (optional)
 	 * @return Boolean
 	 */
 	public function merge($rightObj, $priority = 'right', $includeRelations = true, $overwriteWithEmpty = false) {
@@ -997,7 +997,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			
 			if($defaults && !is_array($defaults)) {
 				user_error("Bad '$this->class' defaults given: " . var_export($defaults, true),
-				 	E_USER_WARNING);
+					E_USER_WARNING);
 				$defaults = null;
 			}
 			
@@ -1258,8 +1258,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				. " Make sure that you call parent::onBeforeDelete().", E_USER_ERROR);
 		}
 		
-        // Deleting a record without an ID shouldn't do anything
-        if(!$this->ID) throw new LogicException("DataObject::delete() called on a DataObject without an ID");
+		// Deleting a record without an ID shouldn't do anything
+		if(!$this->ID) throw new LogicException("DataObject::delete() called on a DataObject without an ID");
 
 		// TODO: This is quite ugly.  To improve:
 		//  - move the details of the delete code in the DataQuery system
@@ -1868,8 +1868,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Used by {@link SearchContext}.
 	 * 
 	 * @param array $_params
-	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
-	 * 	'restrictFields': Numeric array of a field name whitelist
+	 *   'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 *   'restrictFields': Numeric array of a field name whitelist
 	 * @return FieldList
 	 */
 	public function scaffoldSearchFields($_params = null) {
@@ -1960,14 +1960,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * or extended onto it by using {@link DataExtension->updateCMSFields()}.
 	 *
 	 * <code>
-	 * klass MyCustomClass extends DataObject {
-	 * 	static $db = array('CustomProperty'=>'Boolean');
+	 * class MyCustomClass extends DataObject {
+	 *  static $db = array('CustomProperty'=>'Boolean');
 	 *
-	 * 	function getCMSFields() {
-	 * 		$fields = parent::getCMSFields();
-	 * 		$fields->addFieldToTab('Root.Content',new CheckboxField('CustomProperty'));
-	 *		return $fields;
-	 *	}
+	 *  function getCMSFields() {
+	 *    $fields = parent::getCMSFields();
+	 *    $fields->addFieldToTab('Root.Content',new CheckboxField('CustomProperty'));
+	 *    return $fields;
+	 *  }
 	 * }
 	 * </code>
 	 *
@@ -3130,8 +3130,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						// var_dump("{$ancestorClass}.{$type}_{$name}");
 						$autoLabels[$name] = _t("{$ancestorClass}.{$type}_{$name}",FormField::name_to_label($name));
 					}
-	 			}
-	 		}
+				}
+			}
 
 			$labels = array_merge((array)$autoLabels, (array)$customLabels);
 			$this->extend('updateFieldLabels', $labels);	
@@ -3278,7 +3278,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * <code>
 	 * array(
-	 * 	'MySQLDatabase' => 'ENGINE=MyISAM'
+	 *  'MySQLDatabase' => 'ENGINE=MyISAM'
 	 * )
 	 * </code>
 	 *
@@ -3321,8 +3321,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * Example:
 	 * array(
-	 * 	array('Title' => "DefaultPage1", 'PageTitle' => 'page1'),
-	 * 	array('Title' => "DefaultPage2")
+	 *  array('Title' => "DefaultPage1", 'PageTitle' => 'page1'),
+	 *  array('Title' => "DefaultPage2")
 	 * ).
 	 *
 	 * @var array
@@ -3378,7 +3378,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Example code:
 	 * <code>
 	 * public static $many_many_extraFields = array(
-	 * 	'Members' => array(
+	 *  'Members' => array(
 	 *			'Role' => 'Varchar(100)'
 	 *		)
 	 * );
@@ -3408,8 +3408,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * Overriding the default filter, with a custom defined filter:
 	 * <code>
-	 * 	static $searchable_fields = array(
-	 * 	   "Name" => "PartialMatchFilter"
+	 *  static $searchable_fields = array(
+	 *     "Name" => "PartialMatchFilter"
 	 *  );
 	 * </code>
 	 * 
@@ -3417,21 +3417,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * The 'filter' parameter will be generated from {@link DBField::$default_search_filter_class}.
 	 * The 'title' parameter will be generated from {@link DataObject->fieldLabels()}.
 	 * <code>
-	 * 	static $searchable_fields = array(
-	 * 	   "Name" => array(
-	 * 			"field" => "TextField"
-	 * 		)
+	 *  static $searchable_fields = array(
+	 *    "Name" => array(
+	 *      "field" => "TextField"
+	 *    )
 	 *  );
 	 * </code>
 	 *
 	 * Overriding the default form field, filter and title:
 	 * <code>
-	 * 	static $searchable_fields = array(
-	 * 	   "Organisation.ZipCode" => array(
-	 * 			"field" => "TextField", 
-	 * 			"filter" => "PartialMatchFilter",
-	 * 			"title" => 'Organisation ZIP'
-	 * 		)
+	 *  static $searchable_fields = array(
+	 *    "Organisation.ZipCode" => array(
+	 *      "field" => "TextField", 
+	 *      "filter" => "PartialMatchFilter",
+	 *      "title" => 'Organisation ZIP'
+	 *    )
 	 *  );
 	 * </code>
 	 */
@@ -3483,21 +3483,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
- 	 * Returns true if the given method/parameter has a value
- 	 * (Uses the DBField::hasValue if the parameter is a database field)
- 	 * 
+	 * Returns true if the given method/parameter has a value
+	 * (Uses the DBField::hasValue if the parameter is a database field)
+	 * 
 	 * @param string $field The field name
 	 * @param array $arguments
 	 * @param bool $cache
- 	 * @return boolean
- 	 */
- 	public function hasValue($field, $arguments = null, $cache = true) {
- 		$obj = $this->dbObject($field);
- 		if($obj) {
- 			return $obj->exists();
- 		} else {
- 			return parent::hasValue($field, $arguments, $cache);
- 		}
- 	}
+	 * @return boolean
+	 */
+	public function hasValue($field, $arguments = null, $cache = true) {
+		$obj = $this->dbObject($field);
+		if($obj) {
+			return $obj->exists();
+		} else {
+			return parent::hasValue($field, $arguments, $cache);
+		}
+	}
 
 }

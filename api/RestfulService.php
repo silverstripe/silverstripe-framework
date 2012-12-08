@@ -65,7 +65,7 @@ class RestfulService extends ViewableData {
 	 * @param string $password The proxy auth password
 	 * @param boolean $socks Set true to use socks5 proxy instead of http
 	 */
-	 public function setProxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
+	public function setProxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
 		$this->proxy = array(
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
@@ -337,14 +337,14 @@ class RestfulService extends ViewableData {
 			$child_count++;    
 			$k = ($parent == "") ? (string)$key : $parent . "_" . (string)$key;
 			if($this->getRecurseValues($value,$data,$k) == 0){  // no childern, aka "leaf node"
-				   $conv_value = Convert::raw2xml($value);
+				$conv_value = Convert::raw2xml($value);
 			}  
 			//Review the fix for similar node names overriding it's predecessor
 			if(array_key_exists($k, $data) == true) {	
 				$data[$k] = $data[$k] . ",". $conv_value;		
 			}
 			else {
-				 $data[$k] = $conv_value;
+				$data[$k] = $conv_value;
 			}
 			
 			

@@ -29,7 +29,7 @@ class AjaxUniqueTextField extends TextField {
 		
 		parent::__construct($name, $title, $value);	
 	}
-	 
+	
 	public function Field($properties = array()) {
 		$url = Convert::raw2att( $this->validateURL );
 		

@@ -8,14 +8,14 @@
  * 
  * <code>
  *   public function testMyForm() {
- *     // Visit a URL
- *     $this->get("your/url");
+ *   // Visit a URL
+ *   $this->get("your/url");
  * 
- *     // Submit a form on the page that you get in response
- *     $this->submitForm("MyForm_ID",  array("Email" => "invalid email ^&*&^"));
+ *   // Submit a form on the page that you get in response
+ *   $this->submitForm("MyForm_ID",  array("Email" => "invalid email ^&*&^"));
  *
- *     // Validate the content that is returned
- *     $this->assertExactMatchBySelector("#MyForm_ID p.error", array("That email address is invalid."));
+ *   // Validate the content that is returned
+ *   $this->assertExactMatchBySelector("#MyForm_ID p.error", array("That email address is invalid."));
  *  }	
  * </code>
  * 
@@ -70,10 +70,10 @@ class FunctionalTest extends SapphireTest {
 		if($this->stat('use_draft_site')) {
 			$this->useDraftSite();
 		}
-        
-        // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
-        // basis.
-        BasicAuth::protect_entire_site(false);
+		
+		// Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
+		// basis.
+		BasicAuth::protect_entire_site(false);
 		
 		SecurityToken::disable();
 	}
@@ -193,8 +193,8 @@ class FunctionalTest extends SapphireTest {
 		foreach($expectedMatches as $match) {
 			$this->assertTrue(
 				isset($actuals[$match]),
-        "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
-        	. implode("'\n'", $expectedMatches) . "'\n\n" 
+		"Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+			. implode("'\n'", $expectedMatches) . "'\n\n" 
 					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 			);
 			return false;
