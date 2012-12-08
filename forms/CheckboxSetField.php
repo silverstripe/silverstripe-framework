@@ -79,7 +79,7 @@ class CheckboxSetField extends OptionsetField {
 						if(is_a($object, 'DataObject')) {
 							$items[] = $object->ID;
 						}
-				   }
+					}
 				} elseif($values && is_string($values)) {
 					$items = explode(',', $values);
 					$items = str_replace('{comma}', ',', $items);

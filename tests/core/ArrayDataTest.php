@@ -11,7 +11,7 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals("Varchar", get_class($arrayData->A));
 		$this->assertEquals("ArrayData", get_class($arrayData->B));
 	}
-      
+
 	public function testWrappingANonEmptyObjectWorks() {
 		$object = new ArrayDataTest_NonEmptyObject();
 		$this->assertTrue(is_object($object));

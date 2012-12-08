@@ -561,7 +561,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * It should return fields that are editable by the admin and the logged-in user. 
 	 *
 	 * @return FieldList Returns a {@link FieldList} containing the fields for
-	 *                  the member form.
+	 *                   the member form.
 	 */
 	public function getMemberFormFields() {
 		$fields = parent::getFrontendFields();
@@ -658,10 +658,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 			return $word . $number;
 		} else {
-	    	$random = rand();
-		    $string = md5($random);
-    		$output = substr($string, 0, 6);
-	    	return $output;
+			$random = rand();
+			$string = md5($random);
+			$output = substr($string, 0, 6);
+			return $output;
 		}
 	}
 
@@ -1149,7 +1149,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 *
 	 * @param array $groupList An array of group code names.
 	 * @param array $memberGroups A component set of groups (if set to NULL,
-	 * 														$this->groups() will be used)
+	 *                            $this->groups() will be used)
 	 * @return array Groups in which the member is NOT in.
 	 */
 	public function memberNotInGroups($groupList, $memberGroups = null){
@@ -1171,7 +1171,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * this member.
 	 *
 	 * @return FieldList Return a FieldList of fields that would appropriate for
-	 *                  editing this member.
+	 *                   editing this member.
 	 */
 	public function getCMSFields() {
 		require_once('Zend/Date.php');
@@ -1535,14 +1535,14 @@ class Member_GroupSet extends ManyManyList {
  * @subpackage security
  */
 class Member_ChangePasswordEmail extends Email {
-    protected $from = '';   // setting a blank from address uses the site's default administrator email
-    protected $subject = '';
-    protected $ss_template = 'ChangePasswordEmail';
-    
-    public function __construct() {
+	protected $from = '';   // setting a blank from address uses the site's default administrator email
+	protected $subject = '';
+	protected $ss_template = 'ChangePasswordEmail';
+	
+	public function __construct() {
 		parent::__construct();
-    	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
-    }
+	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
+	}
 }
 
 
@@ -1553,14 +1553,14 @@ class Member_ChangePasswordEmail extends Email {
  * @subpackage security
  */
 class Member_ForgotPasswordEmail extends Email {
-    protected $from = '';  // setting a blank from address uses the site's default administrator email
-    protected $subject = '';
-    protected $ss_template = 'ForgotPasswordEmail';
-    
-    public function __construct() {
+	protected $from = '';  // setting a blank from address uses the site's default administrator email
+	protected $subject = '';
+	protected $ss_template = 'ForgotPasswordEmail';
+	
+	public function __construct() {
 		parent::__construct();
-    	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
-    }
+	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
+	}
 }
 
 /**
