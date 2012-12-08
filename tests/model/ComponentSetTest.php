@@ -60,7 +60,6 @@ class ComponentSetTest_Player extends Member implements TestOnly {
 	static $belongs_many_many = array(
 		'Teams' => 'ComponentSetTest_Team'
 	);
-   
 }
 
 class ComponentSetTest_Team extends DataObject implements TestOnly {

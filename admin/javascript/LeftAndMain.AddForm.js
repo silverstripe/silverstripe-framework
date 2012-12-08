@@ -123,7 +123,7 @@
 			refresh: function(selectedNode) {
 				
 				var tree = this.getTree(),
-				 	selectedNode = selectedNode || $(tree).jstree('get_selected')
+					selectedNode = selectedNode || $(tree).jstree('get_selected')
 					origOptions = this.getOrigOptions(), 
 					dropdown = this.find('select[name=PageType]'),
 					disallowed = [],
@@ -142,10 +142,10 @@
 				}
 				
 				$.each(origOptions, function(i, optProps) { 
-				  if ($.inArray(i, disallowed) === -1 && optProps) {
-					  dropdown.append($('<option value="' + optProps.value + '">' + optProps.html + '</option>'));
-					  disableDropDown = false;
-				  }
+					if ($.inArray(i, disallowed) === -1 && optProps) {
+						dropdown.append($('<option value="' + optProps.value + '">' + optProps.html + '</option>'));
+						disableDropDown = false;
+					}
 				});
 				
 				// Disable dropdown if no elements are selectable

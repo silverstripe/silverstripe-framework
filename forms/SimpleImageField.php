@@ -51,7 +51,7 @@
  * function doform($data, $form) {
  *    $file = new File();
  *    $file->loadUploaded($_FILES['FileTypeID']);
- * 		
+ *    
  *    // Redirect to a page thanking people for registering
  *    $this->redirect('thanks-for-your-submission/');
  * }
@@ -85,19 +85,19 @@ class SimpleImageField extends FileField {
 	}
 
 	public function Field($properties = array()) {
-	    if($this->form) $record = $this->form->getRecord();
-	    $fieldName = $this->name;
-	    if(isset($record)&&$record) {
-	    	$imageField = $record->$fieldName();
-	    } else {
-	    	$imageField = "";
-	    }
-	    	
+		if($this->form) $record = $this->form->getRecord();
+		$fieldName = $this->name;
+		if(isset($record)&&$record) {
+			$imageField = $record->$fieldName();
+		} else {
+			$imageField = "";
+		}
+			
 		$html = "<div class=\"simpleimage\">";
 		if($imageField && $imageField->exists()) {
 			$html .= '<div class="thumbnail">';
 			if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) {
-	      		$html .= "<img src=\"".$imageField->Thumbnail()->getURL()."\" />";
+				$html .= "<img src=\"".$imageField->Thumbnail()->getURL()."\" />";
 			} else if($imageField->CMSThumbnail()) {
 				$html .= "<img src=\"".$imageField->CMSThumbnail()->getURL()."\" />";
 			}
@@ -124,7 +124,7 @@ class SimpleImageField extends FileField {
 		
 		return $html;
 	}
-  
+
 	/**
 	 * Returns a readonly version of this field
 	 */
@@ -149,25 +149,25 @@ class SimpleImageField_Disabled extends FormField {
 	
 	public function Field($properties = array()) {
 		$record = $this->form->getRecord();
-	    $fieldName = $this->name;
+		$fieldName = $this->name;
 			
-	    $field = "<div class=\"simpleimage\">";
+		$field = "<div class=\"simpleimage\">";
 			if($this->value) {
 				// Only the case for DataDifferencer
 				$field .= $this->value;
 			} else {
 				if($record) $imageField = $record->$fieldName();
 				if($imageField && $imageField->exists()) {
-		      if($imageField->hasMethod('Thumbnail')) $field .= "<img src=\"".$imageField->Thumbnail()->URL."\" />";
-		      elseif($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL."\" />";
-		      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
-		    }else{
-		    	$field .= "<label>" . _t('SimpleImageField.NOUPLOAD', 'No Image Uploaded') . "</label>";
-		    }
+				if($imageField->hasMethod('Thumbnail')) $field .= "<img src=\"".$imageField->Thumbnail()->URL."\" />";
+				elseif($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL."\" />";
+				else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
+			}else{
+				$field .= "<label>" . _t('SimpleImageField.NOUPLOAD', 'No Image Uploaded') . "</label>";
 			}
-	    $field .= "</div>";
+		}
+		$field .= "</div>";
 	
-	    return $field;
+		return $field;
 	}
 
 }

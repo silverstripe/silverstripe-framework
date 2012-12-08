@@ -10,8 +10,8 @@ class HTTPTest extends SapphireTest {
 	/**
 	 * Tests {@link HTTP::getLinksIn()}
 	 */
- 	public function testGetLinksIn() {
- 		$content = '
+	public function testGetLinksIn() {
+		$content = '
 			<h2><a href="/">My Cool Site</a></h2>
 			
 			<p>
@@ -26,13 +26,13 @@ class HTTPTest extends SapphireTest {
 				played a part in his <a href=journey"extra id="JourneyLink">journey</a>. HE ALSO DISCOVERED THE
 				<A HREF="CAPS LOCK">KEY</a>. Later he got his <a href="quotes \'mixed\' up">mixed up</a>.
 			</p>
- 		';
- 		
+		';
+		
 		$expected = array (
 			'/', 'home/', 'mother/', '$Journey', 'space travel', 'unquoted', 'single quote', '/father', 'attributes',
 			'journey', 'CAPS LOCK', 'quotes \'mixed\' up'
 		);
- 		
+		
 		$result = HTTP::getLinksIn($content);
 		
 		// Results don't neccesarily come out in the order they are in the $content param.
@@ -41,7 +41,7 @@ class HTTPTest extends SapphireTest {
 		
 		$this->assertTrue(is_array($result));
 		$this->assertEquals($expected, $result, 'Test that all links within the content are found.');
- 	}
+	}
 	
 	/**
 	 * Tests {@link HTTP::setGetVar()}

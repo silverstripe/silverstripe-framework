@@ -102,12 +102,12 @@ class TableListField extends FormField {
 	 * Actions can be disabled through $permissions.
 	 * Format (key is used for the methodname and CSS-class): 
 	 * array(
-	 * 	'delete' => array(
-	 * 		'label' => 'Delete', 
-	 * 		'icon' => 'framework/images/delete.gif',
-	 * 		'icon_disabled' => 'framework/images/delete_disabled.gif',
-	 * 		'class' => 'deletelink',
-	 * 	)
+	 *  'delete' => array(
+	 *    'label' => 'Delete', 
+	 *    'icon' => 'framework/images/delete.gif',
+	 *    'icon_disabled' => 'framework/images/delete_disabled.gif',
+	 *    'class' => 'deletelink',
+	 *  )
 	 * )
 	 */
 	public $actions = array(
@@ -178,14 +178,14 @@ class TableListField extends FormField {
 	 *  
 	 * Example:
 	 * array(
-	 * 	array(
-	 * 		"rule" => '$Flag == "red"',
-	 *	 	"class" => "red"
-	 * 	),
-	 * 	array(
-	 * 		"rule" => '$Flag == "orange"',
-	 * 		"class" => "orange"
-	 * 	)
+	 *  array(
+	 *    "rule" => '$Flag == "red"',
+	 *    "class" => "red"
+	 *  ),
+	 *  array(
+	 *    "rule" => '$Flag == "orange"',
+	 *    "class" => "orange"
+	 *  )
 	 * )
 	 */
 	public $highlightConditions = array();
@@ -269,10 +269,10 @@ class TableListField extends FormField {
 	);
 
 	public function sourceClass() {
-	    $list = $this->getDataList();
-	    if(method_exists($list, 'dataClass')) return $list->dataClass();
-	    // Failover for SS_List
-	    else return get_class($list->First());
+		$list = $this->getDataList();
+		if(method_exists($list, 'dataClass')) return $list->dataClass();
+		// Failover for SS_List
+		else return get_class($list->First());
 	}
 	
 	public function handleItem($request) {
@@ -423,7 +423,7 @@ JS
 
 		// The type-hinting above doesn't seem to work consistently
 		if($items instanceof SS_List) {
-		    $this->dataList = $items;
+			$this->dataList = $items;
 		} else {
 			user_error('TableList::setCustomSourceItems() should be passed a SS_List', E_USER_WARNING);
 		}
@@ -440,29 +440,29 @@ JS
 
 		// TODO: Sorting could be implemented on regular SS_Lists.
 		if(method_exists($items,'canSortBy') && isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
-    		$sort = $_REQUEST['ctf'][$this->getName()]['sort'];
-		    // TODO: sort direction
+			$sort = $_REQUEST['ctf'][$this->getName()]['sort'];
+			// TODO: sort direction
 			if($items->canSortBy($sort)) $items = $items->sort($sort);
 		}
 
 		// Determine pagination limit, offset
 		// To disable pagination, set $this->showPagination to false.
 		if($this->showPagination && $this->pageSize) {
-		    $SQL_limit = (int)$this->pageSize;
-		    if(isset($_REQUEST['ctf'][$this->getName()]['start'])
-		    		&& is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
+			$SQL_limit = (int)$this->pageSize;
+			if(isset($_REQUEST['ctf'][$this->getName()]['start'])
+					&& is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
 
-			    if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
+				if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
 					$SQL_start = intval($_REQUEST['ctf'][$this->getName()]['start']);
 				} else {
 					$SQL_start = "0";
 				}
-		    } else {
-			    $SQL_start = 0;
-		    }
+			} else {
+				$SQL_start = 0;
+			}
 		
-		    $items = $items->limit($SQL_limit, $SQL_start);
-	    }
+			$items = $items->limit($SQL_limit, $SQL_start);
+		}
 
 		return $items;
 	}
@@ -484,7 +484,7 @@ JS
 	public function getDataList() {
 		// If we weren't passed in a DataList to begin with, try and get the datalist from the form
 		if($this->form && $this->getDataListFromForm) {
-		    $this->getDataListFromForm = false;
+			$this->getDataListFromForm = false;
 			$relation = $this->name;
 			if($record = $this->form->getRecord()) {
 				if($record->hasMethod($relation)) $this->dataList = $record->$relation();
@@ -508,10 +508,10 @@ JS
 	 */
 	public function getQuery() {
 		Deprecation::notice('3.0', 'Use getDataList() instead.');
-	    $list = $this->getDataList();
-	    if(method_exists($list,'dataQuery')) {
-		    return $this->getDataList()->dataQuery()->query();
-	    }
+		$list = $this->getDataList();
+		if(method_exists($list,'dataQuery')) {
+			return $this->getDataList()->dataQuery()->query();
+		}
 	}
 
 	/**
@@ -519,10 +519,10 @@ JS
 	 */
 	public function getCsvQuery() {
 		Deprecation::notice('3.0', 'Use getCsvDataList() instead.');
-	    $list = $this->getCsvDataList();
-	    if(method_exists($list,'dataQuery')) {
-            return $list->dataQuery()->query();
-        }
+		$list = $this->getCsvDataList();
+		if(method_exists($list,'dataQuery')) {
+			return $list->dataQuery()->query();
+		}
 	}
 		
 	public function FieldList() {
@@ -581,20 +581,20 @@ JS
 		$childId = Convert::raw2sql($_REQUEST['ctf']['childID']);
 
 		if (is_numeric($childId)) {
-		    $this->getDataList()->removeById($childId);
+			$this->getDataList()->removeById($childId);
 		}
 
 		// TODO return status in JSON etc.
 		//return $this->renderWith($this->template);
 	}
-	 
-	 
+	
+	
 	/**
 	 * #################################
 	 *           Summary-Row
 	 * #################################
 	 */
-	 
+	
 	/**
 	 * Can utilize some built-in summary-functions, with optional casting. 
 	 * Currently supported:
@@ -710,7 +710,7 @@ JS
 		return array_sum($values)/count($values);
 	}
 	
-	 
+	
 	/**
 	 * #################################
 	 *           Permissions
@@ -770,14 +770,14 @@ JS
 	}
 	
 	public function setPageSize($pageSize) {
-	 	$this->pageSize = $pageSize;
-	 	return $this;
+		$this->pageSize = $pageSize;
+		return $this;
 	}
-	 
-	 public function PageSize() {
+	
+	public function PageSize() {
 		return $this->pageSize;
 	}
-	 
+	
 	public function ListStart() {
 		return $_REQUEST['ctf'][$this->getName()]['start'];
 	}
@@ -937,9 +937,9 @@ JS
 	 * Return the total number of items in the source DataList
 	 */
 	public function TotalCount() {
-	    if($this->_cache_TotalCount === null) {
-	        $this->_cache_TotalCount = $this->getDataList()->Count();
-	    }
+		if($this->_cache_TotalCount === null) {
+			$this->_cache_TotalCount = $this->getDataList()->Count();
+		}
 		return $this->_cache_TotalCount;
 	}
 	
@@ -951,13 +951,13 @@ JS
 	 * 
 	 * @todo Not fully implemented at the moment
 	 */
-	 
-	 /**
-	  * Compile all request-parameters for search and pagination
-	  * (except the actual list-positions) as a query-string.
-	  * 
-	  * @return String URL-parameters
-	  */
+	
+	/**
+	 * Compile all request-parameters for search and pagination
+	 * (except the actual list-positions) as a query-string.
+	 * 
+	 * @return String URL-parameters
+	 */
 	public function filterString() {
 		
 	}
@@ -969,10 +969,10 @@ JS
 	 *           CSV Export
 	 * #################################
 	 */
-	 public function setFieldListCsv($fields) {
-	 	$this->fieldListCsv = $fields;
-	 	return $this;
-	 }
+	public function setFieldListCsv($fields) {
+		$this->fieldListCsv = $fields;
+		return $this;
+	}
 	
 	/**
 	 * Set the CSV separator character.  Defaults to ,
@@ -996,7 +996,7 @@ JS
 		$this->csvHasHeader = false;
 		return $this;
 	}
-	 
+	
 	/**
 	 * Exports a given set of comma-separated IDs (from a previous search-query, stored in a HiddenField).
 	 * Uses {$csv_columns} if present, and falls back to {$result_columns}.
@@ -1181,24 +1181,24 @@ JS
 	}
 	
 	public function Title() {
-	  // adding translating functionality
-	  // this is a bit complicated, because this parameter is passed to this class
-	  // and should come here translated already
-	  // adding this to TODO probably add a method to the classes
-	  // to return they're translated string
-	  // added by ruibarreiros @ 27/11/2007
+		// adding translating functionality
+		// this is a bit complicated, because this parameter is passed to this class
+		// and should come here translated already
+		// adding this to TODO probably add a method to the classes
+		// to return they're translated string
+		// added by ruibarreiros @ 27/11/2007
 		return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 	
 	public function NameSingular() {
-	  // same as Title()
-	  // added by ruibarreiros @ 27/11/2007
-	  return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
+		// same as Title()
+		// added by ruibarreiros @ 27/11/2007
+		return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 
 	public function NamePlural() {
-	  // same as Title()
-	  // added by ruibarreiros @ 27/11/2007
+		// same as Title()
+		// added by ruibarreiros @ 27/11/2007
 		return $this->sourceClass() ? singleton($this->sourceClass())->plural_name() : $this->getName();
 	} 
 	
@@ -1232,7 +1232,7 @@ JS
 	 */
 	public function Link($action = null) {
 		$form = $this->getForm();
- 		if($form) {
+		if($form) {
 			$token = $form->getSecurityToken();
 			$parentUrlParts = parse_url(parent::Link($action));
 			$queryPart = (isset($parentUrlParts['query'])) ? '?' . $parentUrlParts['query'] : null;
@@ -1302,7 +1302,7 @@ JS
 		
 		return $value;
 	}	 
-	 
+	
 	public function setHighlightConditions($conditions) {
 		$this->highlightConditions = $conditions;
 		return $this;
@@ -1476,7 +1476,7 @@ class TableListField_Item extends ViewableData {
 	
 	public function Link($action = null) {
 		$form = $this->parent->getForm();
- 		if($form) {
+		if($form) {
 			$token = $form->getSecurityToken();
 			$parentUrlParts = parse_url($this->parent->Link());
 			$queryPart = (isset($parentUrlParts['query'])) ? '?' . $parentUrlParts['query'] : null;
@@ -1516,7 +1516,7 @@ class TableListField_Item extends ViewableData {
 		
 		return $allowedActions;
 	}
-   
+
 	public function BaseLink() {
 		user_error("TableListField_Item::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link();
@@ -1567,7 +1567,7 @@ class TableListField_Item extends ViewableData {
 				if(isset($condition['exclusive']) && $condition['exclusive']) {
 					return $condition['class'];
 				} else {
-					$classes[] = $condition['class']; 					
+					$classes[] = $condition['class'];
 				}
 			}
 		}
@@ -1628,8 +1628,8 @@ class TableListField_ItemRequest extends RequestHandler {
 	public function dataObj() {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
- 			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			return $this->ctf->getDataList()->byId($this->itemID);
+			// we have to use the basedataclass, otherwise we might exclude other subclasses 
+			return $this->ctf->getDataList()->byId($this->itemID);
 		}
 		
 	}

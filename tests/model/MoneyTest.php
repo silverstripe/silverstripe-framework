@@ -71,12 +71,12 @@ class MoneyTest extends SapphireTest {
 	}
 	
 	/**
-     * Write a Money object to the database, then re-read it to ensure it
-     * is re-read properly.
-     */
-    public function testGettingWrittenDataObject() {
-	    $local = i18n::get_locale();
-	    //make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
+	 * Write a Money object to the database, then re-read it to ensure it
+	 * is re-read properly.
+	 */
+	public function testGettingWrittenDataObject() {
+		$local = i18n::get_locale();
+		//make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
 		i18n::set_locale('en_US'); 
 
 		$obj = new MoneyTest_DataObject();
@@ -99,8 +99,8 @@ class MoneyTest extends SapphireTest {
 			"Money field not added to data object properly when read."
 		);
 
-	    i18n::set_locale($local);
-    }
+		i18n::set_locale($local);
+	}
 	
 	public function testToCurrency() {
 		$USD = new Money();

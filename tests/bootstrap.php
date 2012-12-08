@@ -27,18 +27,18 @@ if(!defined('BASE_PATH')) define('BASE_PATH', dirname($frameworkPath));
 
 // Copied from cli-script.php, to enable same behaviour through phpunit runner.
 if(isset($_SERVER['argv'][2])) {
-    $args = array_slice($_SERVER['argv'],2);
-    if(!isset($_GET)) $_GET = array();
-    if(!isset($_REQUEST)) $_REQUEST = array();
-    foreach($args as $arg) {
-       if(strpos($arg,'=') == false) {
-           $_GET['args'][] = $arg;
-       } else {
-           $newItems = array();
-           parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg, $newItems );
-           $_GET = array_merge($_GET, $newItems);
-       }
-    }
+	$args = array_slice($_SERVER['argv'],2);
+	if(!isset($_GET)) $_GET = array();
+	if(!isset($_REQUEST)) $_REQUEST = array();
+	foreach($args as $arg) {
+		if(strpos($arg,'=') == false) {
+			$_GET['args'][] = $arg;
+		} else {
+			$newItems = array();
+			parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg, $newItems );
+			$_GET = array_merge($_GET, $newItems);
+		}
+	}
 	$_REQUEST = array_merge($_REQUEST, $_GET);
 }
 

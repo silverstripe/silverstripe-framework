@@ -116,9 +116,9 @@ class GD extends Object {
 	 * @todo This method isn't very efficent
 	 */
 	public function fittedResize($width, $height) {
-	    $gd = $this->resizeByHeight($height);
-	    if($gd->width > $width) $gd = $gd->resizeByWidth($width);
-	    return $gd;
+		$gd = $this->resizeByHeight($height);
+		if($gd->width > $width) $gd = $gd->resizeByWidth($width);
+		return $gd;
 	}
 	
 	public function hasGD() {
@@ -169,9 +169,9 @@ class GD extends Object {
 		if(!$this->gd) return;
 		
 		if(function_exists("imagerotate")) {
-		    $newGD = imagerotate($this->gd, $angle,0);
+			$newGD = imagerotate($this->gd, $angle,0);
 		} else {
-		    //imagerotate is not included in PHP included in Ubuntu
+			//imagerotate is not included in PHP included in Ubuntu
 			$newGD = $this->rotatePixelByPixel($angle);	
 		}
 		$output = clone $this;
@@ -180,45 +180,45 @@ class GD extends Object {
 	}
 	
 	/**
-     * Rotates image by given angle. It's slow because makes it pixel by pixel rather than
-     * using built-in function. Used when imagerotate function is not available(i.e. Ubuntu)
-     * 
-     * @param angle 
-     *
-     * @return GD 
-    */ 
+	 * Rotates image by given angle. It's slow because makes it pixel by pixel rather than
+	 * using built-in function. Used when imagerotate function is not available(i.e. Ubuntu)
+	 * 
+	 * @param angle 
+	 *
+	 * @return GD 
+	*/ 
 	
-    public function rotatePixelByPixel($angle) {
-        $sourceWidth = imagesx($this->gd);
-        $sourceHeight = imagesy($this->gd);
-        if ($angle == 180) {
-            $destWidth = $sourceWidth;
-            $destHeight = $sourceHeight;
-        } else {
-            $destWidth = $sourceHeight;
-            $destHeight = $sourceWidth;
-        }
-        $rotate=imagecreatetruecolor($destWidth,$destHeight);
-        imagealphablending($rotate, false);
-        for ($x = 0; $x < ($sourceWidth); $x++) {
-            for ($y = 0; $y < ($sourceHeight); $y++) {
-                $color = imagecolorat($this->gd, $x, $y);
-                switch ($angle) {
-                    case 90:
-                        imagesetpixel($rotate, $y, $destHeight - $x - 1, $color);
-                    break;
-                    case 180:
-                        imagesetpixel($rotate, $destWidth - $x - 1, $destHeight - $y - 1, $color);
-                    break;
-                    case 270:                    
-                        imagesetpixel($rotate, $destWidth - $y - 1, $x, $color);
-                    break;
-                    default: $rotate = $this->gd;
-                };
-            }
-        }
-        return $rotate;
-    }
+	public function rotatePixelByPixel($angle) {
+		$sourceWidth = imagesx($this->gd);
+		$sourceHeight = imagesy($this->gd);
+		if ($angle == 180) {
+			$destWidth = $sourceWidth;
+			$destHeight = $sourceHeight;
+		} else {
+			$destWidth = $sourceHeight;
+			$destHeight = $sourceWidth;
+		}
+		$rotate=imagecreatetruecolor($destWidth,$destHeight);
+		imagealphablending($rotate, false);
+		for ($x = 0; $x < ($sourceWidth); $x++) {
+			for ($y = 0; $y < ($sourceHeight); $y++) {
+				$color = imagecolorat($this->gd, $x, $y);
+				switch ($angle) {
+					case 90:
+						imagesetpixel($rotate, $y, $destHeight - $x - 1, $color);
+					break;
+					case 180:
+						imagesetpixel($rotate, $destWidth - $x - 1, $destHeight - $y - 1, $color);
+					break;
+					case 270:
+						imagesetpixel($rotate, $destWidth - $y - 1, $x, $color);
+					break;
+					default: $rotate = $this->gd;
+				};
+			}
+		}
+		return $rotate;
+	}
 	
 	
 	/**
@@ -241,7 +241,7 @@ class GD extends Object {
 		return $output;
 	}
 	
-    /**
+	/**
 	 * Method return width of image.
 	 *
 	 * @return integer width.
@@ -304,9 +304,9 @@ class GD extends Object {
 	/**
 	 * Resize to fit fully within the given box, without resizing.  Extra space left around
 	 * the image will be padded with the background color.
-     * @param width
-     * @param height
-     * @param backgroundColour
+	 * @param width
+	 * @param height
+	 * @param backgroundColour
 	 */
 	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
 		if(!$this->gd) return;

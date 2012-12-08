@@ -171,8 +171,8 @@ class CompositeField extends FormField {
 						$formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
 						if(isset($list[$name])) {
 							user_error("collateDataFields() I noticed that a field called '$name' appears twice in"
-								 . " your form: '{$formName}'.  One is a '{$field->class}' and the other is a"
-								 . " '{$list[$name]->class}'", E_USER_ERROR);
+								. " your form: '{$formName}'.  One is a '{$field->class}' and the other is a"
+								. " '{$list[$name]->class}'", E_USER_ERROR);
 						}
 						$list[$name] = $field;
 					}

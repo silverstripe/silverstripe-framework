@@ -65,7 +65,7 @@ class ArrayData extends ViewableData {
 			return new ArrayData($value);
 		} elseif (ArrayLib::is_associative($value)) {
 			return new ArrayData($value);
-	    } else {
+		} else {
 			return $value;
 		}
 	}

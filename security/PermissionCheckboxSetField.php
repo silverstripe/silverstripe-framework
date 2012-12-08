@@ -157,7 +157,7 @@ class PermissionCheckboxSetField extends FormField {
 				}
 			}
 		}
-		 
+		
 		$odd = 0;
 		$options = '';
 		if($this->source) {
@@ -256,7 +256,7 @@ class PermissionCheckboxSetField extends FormField {
 			
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
-			   if($bool) {
+				if($bool) {
 					$perm = new $managedClass();
 					$perm->{$this->filterField} = $record->ID;
 					$perm->Code = $id;
