@@ -58,8 +58,7 @@
 			var onchange = function(e) {
 				var $field = $(e.target);
 				var origVal = $field.data('changetracker.origVal');
-				if(origVal === null || e.target.value != origVal) {
-					// TODO Also add class to radiobutton/checkbox siblings
+				if(origVal === null || e.target.value != origVal || $field.is(':checkbox')) {
 					$field.addClass(options.changedCssClass);
 					self.addClass(options.changedCssClass);
 				}
