@@ -100,12 +100,9 @@ class Session {
 
 	protected static $cookie_secure = false;
 
-	/**
-	 * Session data
-	 */
-	protected $data = array();
-	
-	protected $changedData = array();
+    protected static $backend_class = 'Session_Backend_Standard';
+
+    protected $backend = null;
 
 	/**
 	 * Start PHP session, then create a new Session object with the given start data.
@@ -113,9 +110,14 @@ class Session {
 	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
 	 */
 	public function __construct($data) {
-		if($data instanceof Session) $data = $data->inst_getAll();
+        if($data instanceof Session) {
+            $this->backend = $data->backend;
+        }
 
-		$this->data = $data;
+        if ($this->backend === null) {
+            $backend = self::$backend_class;
+            $this->backend = new $backend($data);
+        }
 	}
 
 	/**
@@ -206,6 +208,8 @@ class Session {
 	 * Session::set_timeout is used to set the timeout value for any users whose address is not in the given IP range.
 	 * 
 	 * @param array $session_ips Array of IPv4 rules.
+     *
+     * @todo implement this properly
 	 */
 	public static function set_timeout_ips($session_ips) {
 		if(!is_array($session_ips)) {
@@ -215,6 +219,21 @@ class Session {
 			self::$session_ips = $session_ips;
 		}
 	}
+
+    /**
+     * Sets the backend class.
+     *
+     * The class given should implement Session_Backend
+     *
+     * @param string $class Class name.
+     */
+    public static function set_backend_class($class) {
+        self::$backend_class = $class;
+    }
+
+    public static function get_backend_class() {
+        return self::$backend_class;
+    }
 	
 	/**
 	 * Add a value to a specific key in the session array
@@ -288,225 +307,364 @@ class Session {
 		}
 	}
 
-	public function inst_set($name, $val) {
-		// Quicker execution path for "."-free names
-		if(strpos($name,'.') === false) {
-			$this->data[$name] = $val;
-			$this->changedData[$name] = $val;
+    public function inst_set($name, $val) {
+        $this->backend->set($name, $val);
+    }
 
-		} else {
-			$names = explode('.', $name);
-		
-			// We still want to do this even if we have strict path checking for legacy code
-			$var = &$this->data;
-			$diffVar = &$this->changedData;
+    public function inst_addToArray($name, $val) {
+        $this->backend->addToArray($name, $val);
+    }
 
-			// Iterate twice over the names - once to see if the value needs to be changed,
-			// and secondly to get the changed data value. This is done to solve a problem
-			// where iterating over the diff var would create empty arrays, and the value
-			// would then not be set, inadvertently clearing session values.
-			foreach($names as $n) {
-				$var = &$var[$n];
-			}
+    public function inst_get($name) {
+        return $this->backend->get($name);
+    }
 
-			if($var !== $val) {
-				foreach($names as $n) {
-					$diffVar = &$diffVar[$n];
-				}
+    public function inst_clear($name) {
+        $this->backend->clear($name);
+    }
 
-				$var = $val;
-				$diffVar = $val;
-			}
-		}
-	}
+    public function inst_clearAll() {
+        $this->backend->clearAll();
+    }
 
-	public function inst_addToArray($name, $val) {
-		$names = explode('.', $name);
-		
-		// We still want to do this even if we have strict path checking for legacy code
-		$var = &$this->data;
-		$diffVar = &$this->changedData;
-			
-		foreach($names as $n) {
-			$var = &$var[$n];
-			$diffVar = &$diffVar[$n];
-		}
-			
-		$var[] = $val;
-		$diffVar[sizeof($var)-1] = $val;
-	}
-	
-	public function inst_get($name) {
-		// Quicker execution path for "."-free names
-		if(strpos($name,'.') === false) {
-			if(isset($this->data[$name])) return $this->data[$name];
-			
-		} else {
-			$names = explode('.', $name);
-		
-			if(!isset($this->data)) {
-				return null;
-			}
-		
-			$var = $this->data;
+    public function inst_getAll() {
+        return $this->backend->getAll();
+    }
 
-			foreach($names as $n) {
-				if(!isset($var[$n])) {
-					return null;
-				}
-				$var = $var[$n];
-			}
+    /**
+     * Save data to session
+     */ 
+    public function inst_save() {
+        $this->backend->save();
+    }
 
-			return $var;
-		}
-	}
+    /**
+     * Return the changed data, for debugging purposes.
+     * @return array
+     */
+    public function inst_changedData() {
+        if (method_exists($this->backend, 'changedData'))
+            return $this->backend->changedData();
+        else
+            return array();
+    }
 
-	public function inst_clear($name) {
-		$names = explode('.', $name);
+    /**
+     * Sets the appropriate form message in session, with type. This will be shown once,
+     * for the form specified.
+     *
+     * @param formname the form name you wish to use ( usually $form->FormName() )
+     * @param messsage the message you wish to add to it
+     * @param type the type of message
+     */
+    public static function setFormMessage($formname,$message,$type){
+        Session::set("FormInfo.$formname.message", $message);
+        Session::set("FormInfo.$formname.type", $type);
+    }
 
-		// We still want to do this even if we have strict path checking for legacy code
-		$var = &$this->data;
-		$diffVar = &$this->changedData;
-			
-		foreach($names as $n) {
-			// don't clear a record that doesn't exist
-			if(!isset($var[$n])) return;
-			$var = &$var[$n];
-		}
+    /**
+     * Initialize session.
+     *
+     * @param string $sid Start the session with a specific ID
+     */
+    public static function start($sid = null) {
+        $backend = self::$backend_class;
+        $backend::start($sid);
+    }
 
-		// only loop to find data within diffVar if var is proven to exist in the above loop
-		foreach($names as $n) {
-			$diffVar = &$diffVar[$n];
-		}
+    /**
+     * Destroy the active session.
+     *
+     * @param bool $removeCookie If set to TRUE, removes the user's cookie, FALSE does not remove
+     */
+    public static function destroy($removeCookie = true) {
+        $backend = self::$backend_class;
+        $backend::destroy($removeCookie);
+    }
 
-		if($var !== null) {
-			$var = null;
-			$diffVar = null;
-		}
-	}
+    /**
+     * Set the timeout of a Session value
+     *
+     * @param int $timeout Time until a session expires in seconds. Defaults to expire when browser is closed.
+     */
+    public static function set_timeout($timeout) {
+        self::$timeout = intval($timeout);
+    }
 
-	public function inst_clearAll() {
-		if($this->data && is_array($this->data)) {
-			foreach(array_keys($this->data) as $key) {
-				$this->inst_clear($key);
-			}
-		}
-	}
+    public static function get_timeout() {
+        return self::$timeout;
+    }
+}
 
-	public function inst_getAll() {
-		return $this->data;
-	}
-	
-	/**
-	 * Save data to session
-	 * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
-	 */ 
-	public function inst_save() {
-		if($this->changedData) {
-			if(!isset($_SESSION)) Session::start();
-			$this->recursivelyApply($this->changedData, $_SESSION);
-		}
-	}
-	
-	/**
-	 * Recursively apply the changes represented in $data to $dest.
-	 * Used to update $_SESSION
-	 */	
-	protected function recursivelyApply($data, &$dest) {
-		foreach($data as $k => $v) {
-			if(is_array($v)) {
-				if(!isset($dest[$k])) $dest[$k] = array();
-				$this->recursivelyApply($v, $dest[$k]);
-			} else {
-				$dest[$k] = $v;
-			}
-		}
-	}
+interface Session_Backend {
+    /**
+     * @param array $data Session data
+     */
+    public function __construct($data);
 
-	/**
-	 * Return the changed data, for debugging purposes.
-	 * @return array
-	 */
-	public function inst_changedData() {
-		return $this->changedData;
-	}
+    /**
+     * Starts the actual session. Must set
+     * $_SESSION.
+     *
+     * @param mixed $sid The session id.
+     */
+    public static function start($sid = null);
 
-	/**
-	* Sets the appropriate form message in session, with type. This will be shown once,
-	* for the form specified.
-	*
-	* @param formname the form name you wish to use ( usually $form->FormName() )
-	* @param messsage the message you wish to add to it
-	* @param type the type of message
-	*/
-	public static function setFormMessage($formname,$message,$type){
-		Session::set("FormInfo.$formname.message", $message);
-		Session::set("FormInfo.$formname.type", $type);
-	}
+    /**
+     * Destroy the session. Removes all session data
+     *
+     * @param bool $removeCookie
+     */
+    public static function destroy($removeCookie = true);
 
-	/**
-	 * Initialize session.
-	 *
-	 * @param string $sid Start the session with a specific ID
-	 */
-	public static function start($sid = null) {
-		$path = self::get_cookie_path();
-		$domain = self::get_cookie_domain();
-		$secure = self::get_cookie_secure();
-		$session_path = self::get_session_store_path();
+    /**
+     * Sets the value of $name to $val
+     */
+    public function set($name, $val);
 
-		if(!session_id() && !headers_sent()) {
-			if($domain) {
-				session_set_cookie_params(self::$timeout, $path, $domain, $secure /* secure */, true /* httponly */);
-			} else {
-				session_set_cookie_params(self::$timeout, $path, null, $secure /* secure */, true /* httponly */);
-			}
+    /**
+     * Adds $val to the array stored in $name
+     */
+    public function addToArray($name, $val);
 
-			// Allow storing the session in a non standard location
-			if($session_path) session_save_path($session_path);
+    /**
+     * Gets the value of $name
+     *
+     * @return mixed
+     */
+    public function get($name);
 
-			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
-			// There's nothing we can do about this, because it's an operating system function!
-			if($sid) session_id($sid);
-			@session_start();
-		}
-	}
+    /**
+     * Gets all of the session values
+     *
+     * @return array
+     */
+    public function getAll();
 
-	/**
-	 * Destroy the active session.
-	 *
-	 * @param bool $removeCookie If set to TRUE, removes the user's cookie, FALSE does not remove
-	 */
-	public static function destroy($removeCookie = true) {
-		if(session_id()) {
-			if($removeCookie) {
-				$path = self::get_cookie_path();
-				$domain = self::get_cookie_domain();
-				$secure = self::get_cookie_secure(); 
-				
-				if($domain) {
-					setcookie(session_name(), '', null, $path, $domain, $secure, true); 
-				}
-				else { 
-					setcookie(session_name(), '', null, $path, null, $secure, true); 
-				}
-				
-				unset($_COOKIE[session_name()]);
-			}
-			session_destroy();
-		}
-	}
-	
-	/**
-	 * Set the timeout of a Session value
-	 *
-	 * @param int $timeout Time until a session expires in seconds. Defaults to expire when browser is closed.
-	 */
-	public static function set_timeout($timeout) {
-		self::$timeout = intval($timeout);
-	}
-	
-	public static function get_timeout() {
-		return self::$timeout;
-	}
+    /**
+     * Saves the session data
+     */
+    public function save();
+
+    /**
+     * Clears the data at $name
+     */
+    public function clear($name);
+
+    /**
+     * Clears all of the data in this session.
+     * Note, this does not destroy the session.
+     */
+    public function clearAll();
+}
+
+/**
+ * The standard Session handling class.
+ *
+ * This class wraps the basic standard PHP session system.
+ *
+ */
+class Session_Backend_Standard implements Session_Backend {
+
+    /**
+     * Session data
+     */
+    protected $data = array();
+
+    protected $changedData = array();
+
+    public function __construct($data) {
+        $this->data = $data;
+    }
+
+    /**
+     * Starts the session using `session_start`.
+     *
+     * session_start populates $_SESSION for us.
+     */
+    public static function start($sid = null) {
+        $path = Session::get_cookie_path();
+        $domain = Session::get_cookie_domain();
+        $secure = Session::get_cookie_secure();
+        $session_path = Session::get_session_store_path();
+
+        if(!session_id() && !headers_sent()) {
+            if($domain) {
+                session_set_cookie_params(Session::get_timeout(), $path, $domain, $secure, true /* httponly */);
+            } else {
+                session_set_cookie_params(Session::get_timeout(), $path, null, $secure, true /* httponly */);
+            }
+
+            // Allow storing the session in a non standard location
+            if($session_path) session_save_path($session_path);
+
+            // @ is to supress win32 warnings/notices when session wasn't cleaned up properly
+            // There's nothing we can do about this, because it's an operating system function!
+            if($sid) session_id($sid);
+            @session_start();
+        }
+    }
+
+    public static function destroy($removeCookie = true) {
+        if(session_id()) {
+            if($removeCookie) {
+                $path = Session::get_cookie_path();
+                $domain = Session::get_cookie_domain();
+                $secure = Session::get_cookie_secure();
+
+                if($domain) {
+                    setcookie(session_name(), '', null, $path, $domain, $secure, true);
+                }
+                else {
+                    setcookie(session_name(), '', null, $path, null, $secure, true);
+                }
+
+                unset($_COOKIE[session_name()]);
+            }
+            session_destroy();
+        }
+    }
+
+    public function set($name, $val) {
+        // Quicker execution path for "."-free names
+        if(strpos($name,'.') === false) {
+            $this->data[$name] = $val;
+            $this->changedData[$name] = $val;
+
+        } else {
+            $names = explode('.', $name);
+
+            // We still want to do this even if we have strict path checking for legacy code
+            $var = &$this->data;
+            $diffVar = &$this->changedData;
+
+            // Iterate twice over the names - once to see if the value needs to be changed,
+            // and secondly to get the changed data value. This is done to solve a problem
+            // where iterating over the diff var would create empty arrays, and the value
+            // would then not be set, inadvertently clearing session values.
+            foreach($names as $n) {
+                $var = &$var[$n];
+            }
+
+            if($var !== $val) {
+                foreach($names as $n) {
+                    $diffVar = &$diffVar[$n];
+                }
+
+                $var = $val;
+                $diffVar = $val;
+            }
+        }
+    }
+
+    public function addToArray($name, $val) {
+        $names = explode('.', $name);
+
+        // We still want to do this even if we have strict path checking for legacy code
+        $var = &$this->data;
+        $diffVar = &$this->changedData;
+
+        foreach($names as $n) {
+            $var = &$var[$n];
+            $diffVar = &$diffVar[$n];
+        }
+
+        $var[] = $val;
+        $diffVar[sizeof($var)-1] = $val;
+    }
+
+    public function get($name) {
+        // Quicker execution path for "."-free names
+        if(strpos($name,'.') === false) {
+            if(isset($this->data[$name])) return $this->data[$name];
+
+        } else {
+            $names = explode('.', $name);
+
+            if(!isset($this->data)) {
+                return null;
+            }
+
+            $var = $this->data;
+
+            foreach($names as $n) {
+                if(!isset($var[$n])) {
+                    return null;
+                }
+                $var = $var[$n];
+            }
+
+            return $var;
+        }
+    }
+
+    public function getAll() {
+        return $this->data;
+    }
+
+    /**
+     * Saves the data to the session. Only saves changed values
+     */
+    public function save() {
+        if($this->changedData) {
+            if(!isset($_SESSION)) self::start();
+            $this->recursivelyApply($this->changedData, $_SESSION);
+        }
+    }
+
+    /**
+     * Recursively apply the changes represented in $data to $dest.
+     * Used to update $_SESSION
+     */
+    protected function recursivelyApply($data, &$dest) {
+        foreach($data as $k => $v) {
+            if(is_array($v)) {
+                if(!isset($dest[$k])) $dest[$k] = array();
+                $this->recursivelyApply($v, $dest[$k]);
+            } else {
+                $dest[$k] = $v;
+            }
+        }
+    }
+
+    public function clear($name) {
+        $names = explode('.', $name);
+
+        // We still want to do this even if we have strict path checking for legacy code
+        $var = &$this->data;
+        $diffVar = &$this->changedData;
+
+        foreach($names as $n) {
+            // don't clear a record that doesn't exist
+            if(!isset($var[$n])) return;
+            $var = &$var[$n];
+        }
+
+        // only loop to find data within diffVar if var is proven to exist in the above loop
+        foreach($names as $n) {
+            $diffVar = &$diffVar[$n];
+        }
+
+        if($var !== null) {
+            $var = null;
+            $diffVar = null;
+        }
+    }
+
+    public function clearAll() {
+        if($this->data && is_array($this->data)) {
+            foreach(array_keys($this->data) as $key) {
+                $this->clear($key);
+            }
+        }
+    }
+
+    /**
+     * Return the changed data, for debugging purposes.
+     * @return array
+     */
+    public function changedData() {
+        return $this->changedData;
+    }
+
 }
