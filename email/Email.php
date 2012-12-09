@@ -360,7 +360,7 @@ class Email extends ViewableData {
 	}
 	
 	/**
-	 * @desc Validates the email address. Returns true of false
+	 * Validates the email address. Returns true of false
 	 */
 	public static function validEmailAddress($address) {
         if (function_exists('filter_var')) {
