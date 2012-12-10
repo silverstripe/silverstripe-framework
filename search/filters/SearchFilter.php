@@ -55,7 +55,7 @@ abstract class SearchFilter extends Object {
 		// sets $this->name and $this->relation
 		$this->addRelation($fullName);
 		$this->value = $value;
-		$this->modifiers = array_map('strtolower', $modifiers);
+		$this->setModifiers($modifiers);
 	}
 	
 	/**
@@ -278,5 +278,17 @@ abstract class SearchFilter extends Object {
 	public function isEmpty() {
 		return false;
 	}
-	
+
+	/**
+	 * Determines case sensitivity based on {@link getModifiers()}.
+	 * 
+	 * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
+	 */
+	protected function getCaseSensitive() {
+		$modifiers = $this->getModifiers();
+		if(in_array('case', $modifiers)) return true;
+		else if(in_array('nocase', $modifiers)) return false;
+		else return null;
+	}
+
 }

@@ -14,33 +14,14 @@
  * @subpackage search
  */
 class ExactMatchFilter extends SearchFilter {
-	protected function comparison($exclude = false) {
-		$modifiers = $this->getModifiers();
+
+	public function setModifiers(array $modifiers) {
 		if(($extras = array_diff($modifiers, array('not', 'nocase', 'case'))) != array()) {
 			throw new InvalidArgumentException(
 				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
 		}
-		if(!in_array('case', $modifiers) && !in_array('nocase', $modifiers)) {
-			if($exclude) {
-				return '!=';
-			} else {
-				return '=';
-			}
-		} elseif(DB::getConn() instanceof PostgreSQLDatabase) {
-			if(in_array('case', $modifiers)) {
-				$comparison = 'LIKE';
-			} else {
-				$comparison = 'ILIKE';
-			}
-		} elseif(in_array('case', $modifiers)) {
-			$comparison = 'LIKE BINARY';
-		} else {
-			$comparison = 'LIKE';
-		}
-		if($exclude) {
-			$comparison = 'NOT ' . $comparison;
-		}
-		return $comparison;
+
+		parent::setModifiers($modifiers);
 	}
 
 	/**
@@ -50,12 +31,15 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		return $query->where(sprintf(
-			"%s %s '%s'",
+		$modifiers = $this->getModifiers();
+		$where = DB::getConn()->comparisonClause(
 			$this->getDbName(),
-			$this->comparison(false),
-			Convert::raw2sql($this->getValue())
-		));
+			Convert::raw2sql($this->getValue()),
+			true, // exact?
+			false, // negate?
+			$this->getCaseSensitive()
+		);
+		return $query->where($where);
 	}
 
 	/**
@@ -66,12 +50,12 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	protected function applyMany(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
+		$modifiers = $this->getModifiers();
 		$values = array();
 		foreach($this->getValue() as $value) {
 			$values[] = Convert::raw2sql($value);
 		}
-		if($this->comparison(false) == '=') {
-			// Neither :case nor :nocase
+		if(!in_array('case', $modifiers) && !in_array('nocase', $modifiers)) {
 			$valueStr = "'" . implode("', '", $values) . "'";
 			return $query->where(sprintf(
 				'%s IN (%s)',
@@ -80,11 +64,12 @@ class ExactMatchFilter extends SearchFilter {
 			));
 		} else {
 			foreach($values as &$v) {
-				$v = sprintf(
-					"%s %s '%s'",
+				$v = DB::getConn()->comparisonClause(
 					$this->getDbName(),
-					$this->comparison(false),
-					$v
+					$v,
+					true, // exact?
+					false, // negate?
+					$this->getCaseSensitive()
 				);
 			}
 			$where = implode(' OR ', $values);
@@ -99,12 +84,15 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		return $query->where(sprintf(
-			"%s %s '%s'",
+		$modifiers = $this->getModifiers();
+		$where = DB::getConn()->comparisonClause(
 			$this->getDbName(),
-			$this->comparison(true),
-			Convert::raw2sql($this->getValue())
-		));
+			Convert::raw2sql($this->getValue()),
+			true, // exact?
+			true, // negate?
+			$this->getCaseSensitive()
+		);
+		return $query->where($where);
 	}
 
 	/**
@@ -115,12 +103,12 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	protected function excludeMany(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
+		$modifiers = $this->getModifiers();
 		$values = array();
 		foreach($this->getValue() as $value) {
 			$values[] = Convert::raw2sql($value);
 		}
-		if($this->comparison(false) == '=') {
-			// Neither :case nor :nocase
+		if(!in_array('case', $modifiers) && !in_array('nocase', $modifiers)) {
 			$valueStr = "'" . implode("', '", $values) . "'";
 			return $query->where(sprintf(
 				'%s NOT IN (%s)',
@@ -129,11 +117,12 @@ class ExactMatchFilter extends SearchFilter {
 			));
 		} else {
 			foreach($values as &$v) {
-				$v = sprintf(
-					"%s %s '%s'",
+				$v = DB::getConn()->comparisonClause(
 					$this->getDbName(),
-					$this->comparison(true),
-					$v
+					$v,
+					true, // exact?
+					true, // negate?
+					$this->getCaseSensitive()
 				);
 			}
 			$where = implode(' OR ', $values);

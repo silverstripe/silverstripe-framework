@@ -1057,6 +1057,28 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
+	 * Generate a WHERE clause for text matching.
+	 * 
+	 * @param String $field Quoted field name
+	 * @param String $value Escaped search. Can include percentage wildcards.
+	 * @param boolean $exact Exact matches or wildcard support.
+	 * @param boolean $negate Negate the clause.
+	 * @param boolean $caseSensitive Enforce case sensitivity if TRUE or FALSE.
+	 *                               Stick with default collation if set to NULL.
+	 * @return String SQL
+	 */
+	public function comparisonClause($field, $value, $exact = false, $negate = false, $caseSensitive = null) {
+		if($exact && $caseSensitive === null) {
+			$comp = ($negate) ? '!=' : '=';
+		} else {
+			$comp = ($caseSensitive) ? 'LIKE BINARY' : 'LIKE';
+			if($negate) $comp = 'NOT ' . $comp;
+		}
+		
+		return sprintf("%s %s '%s'", $field, $comp, $value);
+	}
+
+	/**
 	 * function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime in a certain format
 	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or
