@@ -17,17 +17,24 @@ class PartialMatchFilter extends SearchFilter {
 			throw new InvalidArgumentException(
 				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
 		}
+
 		if(DB::getConn() instanceof PostgreSQLDatabase) {
-			if(in_array('case', $modifiers)) {
-				$comparison = 'LIKE';
-			} else {
-				$comparison = 'ILIKE';
-			}
-		} elseif(in_array('case', $modifiers)) {
-			$comparison = 'LIKE BINARY';
+			$nocaseComp = 'ILIKE';
+			$caseComp = 'LIKE';
+		} elseif(DB::getConn() instanceof SQLite3Database) {
+			$nocaseComp = 'LIKE';
+			$caseComp = 'GLOB';
 		} else {
-			$comparison = 'LIKE';
+			$nocaseComp = 'LIKE';
+			$caseComp = 'LIKE BINARY';
 		}
+
+		if(in_array('case', $modifiers)) {
+			$comparison = $caseComp;
+		} else {
+			$comparison = $nocaseComp;
+		}
+
 		if($exclude) {
 			$comparison = 'NOT ' . $comparison;
 		}
@@ -37,7 +44,13 @@ class PartialMatchFilter extends SearchFilter {
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$comparison = $this->comparison(false);
-		$where = sprintf("%s %s '%%%s%%'", $this->getDbName(), $comparison, Convert::raw2sql($this->getValue()));
+		$wildcard = $this->getWildcard();
+		$where = sprintf(
+			"%s %s '%s'", 
+			$this->getDbName(), 
+			$comparison, 
+			$wildcard . Convert::raw2sql($this->getValue()) . $wildcard
+		);
 
 		return $query->where($where);
 	}
@@ -46,8 +59,14 @@ class PartialMatchFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 		$where = array();
 		$comparison = $this->comparison(false);
+		$wildcard = $this->getWildcard();
 		foreach($this->getValue() as $value) {
-			$where[]= sprintf("%s %s '%%%s%%'", $this->getDbName(), $comparison, Convert::raw2sql($value));
+			$where[]= sprintf(
+				"%s %s '%s'", 
+				$this->getDbName(), 
+				$comparison, 
+				$wildcard . Convert::raw2sql($value) . $wildcard
+			);
 		}
 
 		return $query->where(implode(' OR ', $where));
@@ -56,7 +75,13 @@ class PartialMatchFilter extends SearchFilter {
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$comparison = $this->comparison(true);
-		$where = sprintf("%s %s '%%%s%%'", $this->getDbName(), $comparison, Convert::raw2sql($this->getValue()));
+		$wildcard = $this->getWildcard();
+		$where = sprintf(
+			"%s %s '%s'", 
+			$this->getDbName(), 
+			$comparison, 
+			$wildcard . Convert::raw2sql($this->getValue()) . $wildcard
+		);
 		
 		return $query->where($where);
 	}
@@ -65,8 +90,14 @@ class PartialMatchFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 		$where = array();
 		$comparison = $this->comparison(true);
+		$wildcard = $this->getWildcard();
 		foreach($this->getValue() as $value) {
-			$where[]= sprintf("%s %s '%%%s%%'", $this->getDbName(), $comparison, Convert::raw2sql($value));
+			$where[]= sprintf(
+				"%s %s '%s'", 
+				$this->getDbName(), 
+				$comparison, 
+				$wildcard . Convert::raw2sql($this->getValue()) . $wildcard
+			);
 		}
 
 		return $query->where(implode(' AND ', $where));

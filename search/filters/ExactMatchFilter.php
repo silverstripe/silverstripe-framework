@@ -20,23 +20,30 @@ class ExactMatchFilter extends SearchFilter {
 			throw new InvalidArgumentException(
 				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
 		}
+
+		if(DB::getConn() instanceof PostgreSQLDatabase) {
+			$nocaseComp = 'ILIKE';
+			$caseComp = 'LIKE';
+		} elseif(DB::getConn() instanceof SQLite3Database) {
+			$nocaseComp = 'LIKE';
+			$caseComp = 'GLOB';
+		} else {
+			$nocaseComp = 'LIKE';
+			$caseComp = 'LIKE BINARY';
+		}
+
 		if(!in_array('case', $modifiers) && !in_array('nocase', $modifiers)) {
 			if($exclude) {
 				return '!=';
 			} else {
 				return '=';
 			}
-		} elseif(DB::getConn() instanceof PostgreSQLDatabase) {
-			if(in_array('case', $modifiers)) {
-				$comparison = 'LIKE';
-			} else {
-				$comparison = 'ILIKE';
-			}
 		} elseif(in_array('case', $modifiers)) {
-			$comparison = 'LIKE BINARY';
+			$comparison = $caseComp;
 		} else {
-			$comparison = 'LIKE';
+			$comparison = $nocaseComp;
 		}
+
 		if($exclude) {
 			$comparison = 'NOT ' . $comparison;
 		}

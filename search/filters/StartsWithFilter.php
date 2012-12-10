@@ -23,17 +23,24 @@ class StartsWithFilter extends SearchFilter {
 			throw new InvalidArgumentException(
 				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
 		}
+		
 		if(DB::getConn() instanceof PostgreSQLDatabase) {
-			if(in_array('case', $modifiers)) {
-				$comparison = 'LIKE';
-			} else {
-				$comparison = 'ILIKE';
-			}
-		} elseif(in_array('case', $modifiers)) {
-			$comparison = 'LIKE BINARY';
+			$nocaseComp = 'ILIKE';
+			$caseComp = 'LIKE';
+		} elseif(DB::getConn() instanceof SQLite3Database) {
+			$nocaseComp = 'LIKE';
+			$caseComp = 'GLOB';
 		} else {
-			$comparison = 'LIKE';
+			$nocaseComp = 'LIKE';
+			$caseComp = 'LIKE BINARY';
 		}
+
+		if(in_array('case', $modifiers)) {
+			$comparison = $caseComp;
+		} else {
+			$comparison = $nocaseComp;
+		}
+
 		if($exclude) {
 			$comparison = 'NOT ' . $comparison;
 		}
@@ -48,10 +55,11 @@ class StartsWithFilter extends SearchFilter {
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		return $query->where(sprintf(
-			"%s %s '%s%%'",
+			"%s %s '%s%s'",
 			$this->getDbName(),
 			$this->comparison(false),
-			Convert::raw2sql($this->getValue())
+			Convert::raw2sql($this->getValue()),
+			$this->getWildcard()
 		));
 	}
 
@@ -66,10 +74,11 @@ class StartsWithFilter extends SearchFilter {
 		$connectives = array();
 		foreach($this->getValue() as $value) {
 			$connectives[] = sprintf(
-				"%s %s '%s%%'",
+				"%s %s '%s%s'",
 				$this->getDbName(),
 				$this->comparison(false),
-				Convert::raw2sql($value)
+				Convert::raw2sql($value),
+				$this->getWildcard()
 			);
 		}
 		$whereClause = implode(' OR ', $connectives);

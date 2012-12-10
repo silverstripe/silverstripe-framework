@@ -23,17 +23,24 @@ class EndsWithFilter extends SearchFilter {
 			throw new InvalidArgumentException(
 				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
 		}
+
 		if(DB::getConn() instanceof PostgreSQLDatabase) {
-			if(in_array('case', $modifiers)) {
-				$comparison = 'LIKE';
-			} else {
-				$comparison = 'ILIKE';
-			}
-		} elseif(in_array('case', $modifiers)) {
-			$comparison = 'LIKE BINARY';
+			$nocaseComp = 'ILIKE';
+			$caseComp = 'LIKE';
+		} elseif(DB::getConn() instanceof SQLite3Database) {
+			$nocaseComp = 'LIKE';
+			$caseComp = 'GLOB';
 		} else {
-			$comparison = 'LIKE';
+			$nocaseComp = 'LIKE';
+			$caseComp = 'LIKE BINARY';
 		}
+
+		if(in_array('case', $modifiers)) {
+			$comparison = $caseComp;
+		} else {
+			$comparison = $nocaseComp;
+		}
+
 		if($exclude) {
 			$comparison = 'NOT ' . $comparison;
 		}
@@ -47,11 +54,12 @@ class EndsWithFilter extends SearchFilter {
 	 */
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
+		$wildcard = $this->getWildcard();
 		return $query->where(sprintf(
-			"%s %s '%%%s'",
+			"%s %s '%s'",
 			$this->getDbName(),
 			$this->comparison(false),
-			Convert::raw2sql($this->getValue())
+			$wildcard . Convert::raw2sql($this->getValue())
 		));
 	}
 
@@ -64,12 +72,13 @@ class EndsWithFilter extends SearchFilter {
 	protected function applyMany(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$connectives = array();
+		$wildcard = $this->getWildcard();
 		foreach($this->getValue() as $value) {
 			$connectives[] = sprintf(
-				"%s %s '%%%s'",
+				"%s %s '%s'",
 				$this->getDbName(),
 				$this->comparison(false),
-				Convert::raw2sql($value)
+				$wildcard . Convert::raw2sql($value)
 			);
 		}
 		$whereClause = implode(' OR ', $connectives);
@@ -83,11 +92,12 @@ class EndsWithFilter extends SearchFilter {
 	 */
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
+		$wildcard = $this->getWildcard();
 		return $query->where(sprintf(
-			"%s NOT %s '%%%s'",
+			"%s NOT %s '%s'",
 			$this->getDbName(),
 			$this->comparison(true),
-			Convert::raw2sql($this->getValue())
+			$wildcard . Convert::raw2sql($this->getValue())
 		));
 	}
 
@@ -99,13 +109,14 @@ class EndsWithFilter extends SearchFilter {
 	 */
 	protected function excludeMany(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
+		$wildcard = $this->getWildcard();
 		$connectives = array();
 		foreach($this->getValue() as $value) {
 			$connectives[] = sprintf(
-				"%s NOT %s '%%%s'",
+				"%s NOT %s '%s'",
 				$this->getDbName(),
 				$this->comparison(true),
-				Convert::raw2sql($value)
+				$wildcard . Convert::raw2sql($value)
 			);
 		}
 		$whereClause = implode(' AND ', $connectives);

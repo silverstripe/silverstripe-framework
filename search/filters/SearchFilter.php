@@ -278,5 +278,21 @@ abstract class SearchFilter extends Object {
 	public function isEmpty() {
 		return false;
 	}
+
+	/**
+	 * Return wildcard for partial searches. Depends on modifier state
+	 * and used database driver.
+	 * 
+	 * @return String
+	 */
+	protected function getWildcard() {
+		$modifiers = $this->getModifiers();
+		if(in_array('case', $modifiers) && DB::getConn() instanceof SQLite3Database) {
+			$wildcard = '*';
+		} else {
+			$wildcard = '%';
+		}
+		return $wildcard;
+	}
 	
 }
