@@ -393,7 +393,7 @@ nl:
     DATEFORMATBAD: 'Datum is niet correct opgegeven'
     DAYNOLEADING: 'Dag van de maand zonder voorloop-nul'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
+    FOURDIGITYEAR: 'jaar (yyyy)'
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
