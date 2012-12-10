@@ -4,6 +4,8 @@
 		 * Lightweight wrapper around jQuery UI tabs for generic tab set-up
 		 */
 		$('.ss-tabset').entwine({
+			IgnoreTabState: false,
+
 			onadd: function() {
 				// Can't name redraw() as it clashes with other CMS entwine classes
 				this.redrawTabs();

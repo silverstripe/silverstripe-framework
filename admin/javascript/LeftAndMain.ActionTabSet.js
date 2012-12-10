@@ -14,6 +14,8 @@
 		 * * SiteTree ActionTabs
 		 */
 		$('.ss-tabset.ss-ui-action-tabset').entwine({
+			// Ignore tab state so it will not be reopened on form submission.
+			IgnoreTabState: true,
 
 			onadd: function() {
 				// Make sure the .ss-tabset is already initialised to apply our modifications on top.
