@@ -160,6 +160,8 @@
 					// Load edit view for new page, but only if the preview is activated at the moment.
 					// This avoids e.g. force-redirections of the edit view on RedirectorPage instances.
 					self._loadCurrentPage();
+					
+					$(this).removeClass('loading');
 				});
 				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
@@ -226,7 +228,7 @@
 			 * Change the URL of the preview iframe.
 			 */
 			_loadUrl: function(url) {
-				this.find('iframe').attr('src', url);
+				this.find('iframe').addClass('loading').attr('src', url);
 				return this;
 			},
 
