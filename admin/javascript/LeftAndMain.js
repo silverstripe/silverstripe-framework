@@ -576,7 +576,10 @@ jQuery.noConflict();
 					var id = $(el).attr('id');
 					if(!id) return; // we need a unique reference
 					if(!$(el).data('tabs')) return; // don't act on uninit'ed controls
-					if($(el).data('ignoreTabState')) return; // allow opt-out
+
+					// Allow opt-out via data element or entwine property.
+					if($(el).data('ignoreTabState') || $(el).getIgnoreTabState()) return;
+
 					selectedTabs.push({id:id, selected:$(el).tabs('option', 'selected')});
 				});
 
