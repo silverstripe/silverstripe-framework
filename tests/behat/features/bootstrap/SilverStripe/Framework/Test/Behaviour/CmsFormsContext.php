@@ -55,18 +55,47 @@ class CmsFormsContext extends BehatContext
     }
 
     /**
-     * @When /^I fill in the content form with "([^"]*)"$/
+     * @When /^I fill in the "(?P<field>([^"]*))" HTML field with "(?P<value>([^"]*))"$/
+     * @When /^I fill in "(?P<value>([^"]*))" for the "(?P<field>([^"]*))" HTML field$/
      */
-    public function stepIFillInTheContentFormWith($content)
+    public function stepIFillInTheHtmlFieldWith($field, $value)
     {
-        $this->getSession()->evaluateScript("tinyMCE.get('Form_EditForm_Content').setContent('$content')");
+        $page = $this->getSession()->getPage();
+        $inputField = $page->findField($field);
+        assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+
+        $this->getSession()->evaluateScript(sprintf(
+            "jQuery('#%s').entwine('ss').getEditor().setContent('%s')",
+            $inputField->getAttribute('id'),
+            addcslashes($value, "'")
+        ));
     }
 
     /**
-     * @Then /^the content form should contain "([^"]*)"$/
+     * @When /^I append "(?P<value>([^"]*))" to the "(?P<field>([^"]*))" HTML field$/
      */
-    public function theContentFormShouldContain($content)
+    public function stepIAppendTotheHtmlField($field, $value)
     {
-        $this->getMainContext()->assertElementContains('#Form_EditForm_Content', $content);
+        $page = $this->getSession()->getPage();
+        $inputField = $page->findField($field);
+        assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+
+        $this->getSession()->evaluateScript(sprintf(
+            "jQuery('#%s').entwine('ss').getEditor().insertContent('%s')",
+            $inputField->getAttribute('id'),
+            addcslashes($value, "'")
+        ));
+    }
+
+    /**
+     * @Then /^the "(?P<field>([^"]*))" HTML field should contain "(?P<value>([^"]*))"$/
+     */
+    public function theHtmlFieldShouldContain($field, $value)
+    {
+        $page = $this->getSession()->getPage();
+        $inputField = $page->findField($field);
+        assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+
+        $this->getMainContext()->assertElementContains('#' . $inputField->getAttribute('id'), $value);
     }
 }
