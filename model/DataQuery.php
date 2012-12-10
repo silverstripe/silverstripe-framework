@@ -190,7 +190,7 @@ class DataQuery {
 			}
 
 			if ($joinTable) {
-				$query->addLeftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"") ;
+				$query->addLeftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"", $tableClass, 10) ;
 			}
 		}
 		

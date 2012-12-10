@@ -292,6 +292,7 @@ class SQLQueryTest extends SapphireTest {
 			$query->sql()
 		);
 	}
+	
 
 	public function testSetWhereAny() {
 		$query = new SQLQuery();
@@ -376,4 +377,17 @@ class SQLQueryTest_DO extends DataObject implements TestOnly {
 	);
 }
 
+class SQLQueryTestBase extends DataObject implements TestOnly {
+	static $db = array(
+		"Title" => "Varchar",
+	);
+}
 
+class SQLQueryTestChild extends SQLQueryTestBase {
+	static $db = array(
+		"Name" => "Varchar",
+	);
+
+	static $has_one = array(
+	);
+}
