@@ -161,7 +161,7 @@ $gf_grid_x:	16px;
 				word-wrap:break-word;
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
-				// Overwritten for IE7, which doesn't support this.			
+				// Overwritten for IE7, which doesnt support this.			
 				&.col-buttons {
 					width: 40px;
 					padding:0 $gf_grid_x/2;
@@ -251,6 +251,7 @@ $gf_grid_x:	16px;
 				}
 				a.view-link, a.edit-link {
 					display:inline-block;
+					float: left;
 					width:20px;
 					height:20px; //min height to fit the edit icon
 					text-indent:9999em;
@@ -341,6 +342,8 @@ $gf_grid_x:	16px;
 						padding-right:0;
 						&.filter-buttons{
 							min-width:0;
+							box-shadow: none;
+							border: none;
 							div{
 								width:auto;
 								display:inline;

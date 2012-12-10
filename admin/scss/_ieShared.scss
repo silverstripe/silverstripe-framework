@@ -36,11 +36,6 @@
 	}
 }
 
-.cms-content-toolbar{
-	//add border below the content toolbar
-	border-bottom:1px solid rgb(201, 205, 206);
-}
-
 //fix for background color on default tabs
 .ui-state-default, 
 .ui-widget-content .ui-state-default, 
@@ -142,5 +137,40 @@
 		&.ss-gridfield-button-filter{
 			background-position: -18px 4px !important;
 		}		
+	}
+}
+
+/* Alternative styles for the switch in old IE */
+fieldset.switch-states{
+	padding:0;
+	.switch{
+		padding:0 10px 0 0;
+		label{
+			overflow:visible;
+			text-overflow:visible;
+			white-space:normal;
+			padding:0;
+			&.active{
+				color:#fff;
+				background-color: #2b9c32; 
+			}
+			span{
+				display:inline;
+				padding:0 10px;
+				padding-right:15px;
+				overflow:visible;
+				text-overflow:visible;
+				white-space:wrap;
+			}
+		}
+		.slide-button{
+			display:none;
+		}
+	}
+}
+/* Hide size controls in IE - they won't work as intended */
+.cms-content-controls{
+	.preview-size-selector{
+		display:none;
 	}
 }

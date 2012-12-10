@@ -294,6 +294,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'leftandmain.js',
 			array_unique(array_merge(
 				array(
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
@@ -1043,7 +1044,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$fields->push(new HiddenField('ParentID'));
 			}
 
-			// Added in-line to the form, but plucked into different view by LeftAndMain.Preview.js upon load
+			// Added in-line to the form, but plucked into different view by frontend scripts.
 			if(in_array('CMSPreviewable', class_implements($record))) {
 				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
 				$navField->setAllowHTML(true);
@@ -1080,7 +1081,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
-			
+
+			// Announce the capability so the frontend can decide whether to allow preview or not.
+			if(in_array('CMSPreviewable', class_implements($record))) {
+				$form->addExtraClass('cms-previewable');
+			}
+
 			// Set this if you want to split up tabs into a separate header row
 			// if($form->Fields()->hasTabset()) {
 			// 	$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
@@ -1462,10 +1468,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return $this->CSSClasses('Controller');
 	}
 	
-	public function IsPreviewExpanded() {
-		return ($this->request->getVar('cms-preview-expanded'));
-	}
-
 	/**
 	 * @return String
 	 */

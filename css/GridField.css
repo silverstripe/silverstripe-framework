@@ -1,6 +1,9 @@
 /** Core styles for the basic GridField form field without any specific style.  @package framework @subpackage scss @todo Add radial gradient to default delete button state @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins? */
 /** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
 /** ----------------------------------------------- Colours ------------------------------------------------ */
+/* Keep as solid colours transparent borders wont work in ie */
+/* Only for use as shadows as they wont work in older browsers */
+/*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
@@ -50,7 +53,7 @@
 .cms table.ss-gridfield-table tbody td button.ui-state-active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.gridfield-button-delete { width: 20px; margin: 0; }
 .cms table.ss-gridfield-table tbody td button.gridfield-button-delete span.btn-icon-decline { left: 2px; }
-.cms table.ss-gridfield-table tbody td a.view-link, .cms table.ss-gridfield-table tbody td a.edit-link { display: inline-block; width: 20px; height: 20px; text-indent: 9999em; overflow: hidden; vertical-align: middle; }
+.cms table.ss-gridfield-table tbody td a.view-link, .cms table.ss-gridfield-table tbody td a.edit-link { display: inline-block; float: left; width: 20px; height: 20px; text-indent: 9999em; overflow: hidden; vertical-align: middle; }
 .cms table.ss-gridfield-table tbody td a.view-link { background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px; }
 .cms table.ss-gridfield-table tbody td a.edit-link { background: url(../admin/images/btn-icon/document--pencil.png) no-repeat 2px 0px; }
 .cms table.ss-gridfield-table tfoot { color: #323e46; }
@@ -68,7 +71,7 @@
 .cms table.ss-gridfield-table tr th { font-weight: bold; font-size: 12px; color: #FFF; padding: 5px; border-right: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th div.fieldgroup, .cms table.ss-gridfield-table tr th div.fieldgroup-field { width: 100%; position: relative; }
 .cms table.ss-gridfield-table tr th div.fieldgroup { min-width: 200px; padding-right: 0; }
-.cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 0; }
+.cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 0; box-shadow: none; border: none; }
 .cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons div { width: auto; display: inline; }
 .cms table.ss-gridfield-table tr th.main { white-space: nowrap; border-top: 1px solid #a4b4bf; border-left: 1px solid #a4b4bf; color: #fff; background: #98aab6; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th.main span { text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); padding-left: 8px; padding-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; margin-right: 8px; }
