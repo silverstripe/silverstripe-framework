@@ -39,7 +39,13 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 				$itemID, $this->name, $checked)
 			. sprintf('<label for="%s_custom">%s:</label>',
 				$itemID, _t('MemberDatetimeOptionsetField.Custom', 'Custom'))
-			. sprintf("<input class=\"customFormat\" name=\"%s_custom\" value=\"%s\" />\n", $this->name, $value)
+			. sprintf(
+					"<input class=\"customFormat cms-help cms-help-tooltip\" name=\"%s_custom\""
+						 ." value=\"%s\" title=\"%s\" />\n", 
+					$this->name, 
+					$value,
+					$this->getDescription()
+				)
 			. sprintf("<input type=\"hidden\" class=\"formatValidationURL\" value=\"%s\" />",
 				$this->Link() . '/validate');
 		$options .= ($value) ? sprintf(
@@ -47,15 +53,6 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
 			Zend_Date::now()->toString($value)
 		) : '';
-		$options .= sprintf(
-			'<a class="cms-help-toggle" href="#%s">%s</a>',
-			$this->id() . '_Help',
-			_t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help')
-		);
-		$options .= "<div id=\"" . $this->id() . "_Help\">";
-		$options .= $this->getFormattingHelpText();
-		$options .= "</div>";
-		$options .= "</li>\n";
 
 		$id = $this->id();
 		return "<ul id=\"$id\" class=\"optionset {$this->extraClass()}\">\n$options</ul>\n";
@@ -64,7 +61,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	/**
 	 * @todo Put this text into a template?
 	 */
-	public function getFormattingHelpText() {
+	public function getDescription() {
 		$output = '<ul>';
 		$output .= '<li>YYYY = ' . _t('MemberDatetimeOptionsetField.FOURDIGITYEAR', 'Four-digit year',
 			40, 'Help text describing what "YYYY" means in ISO date formatting') . '</li>';
@@ -100,7 +97,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		$output .= '<li>a = ' . _t('MemberDatetimeOptionsetField.AMORPM', 'AM (Ante meridiem) or PM (Post meridiem)',
 			40, 'Help text describing what "a" means in ISO date formatting') . '</li>';
 		$output .= '</ul>';
-		return $output;
+		return Convert::raw2xml($output);
 	}
 
 	public function setValue($value) {
