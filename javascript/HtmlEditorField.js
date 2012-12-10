@@ -123,6 +123,15 @@
 			this.getInstance().selection.select(node);
 		},
 		/**
+		 * Replace entire content
+		 * 
+		 * @param String HTML
+		 * @param Object opts
+		 */
+		setContent: function(html, opts) {
+			this.getInstance().execCommand('mceSetContent', false, html, opts);
+		},
+		/**
 		 * Insert content at the current caret position
 		 * 
 		 * @param String HTML

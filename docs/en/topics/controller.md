@@ -28,8 +28,8 @@ your own routes since the cms module handles these routes.
 	After: framework/routes#coreroutes
 	---
 	Director:
-  		rules:
-    		'fastfood/$Action/$ID/$Name': 'FastFood_Controller'
+	  rules:
+	    'fastfood/$Action/$ID/$Name': 'FastFood_Controller'
 
 
 Request for `/fastfood/order/24/cheesefries` would result in the following to 

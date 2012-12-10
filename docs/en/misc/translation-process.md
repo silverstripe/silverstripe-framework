@@ -46,9 +46,10 @@ as they run some additional sanity checks. They require the "phing" tool.
 Create a 'translation-staging' branch in your module before starting,
 and merge it back manually to your 'master' as required.
 
-	pear install phing/phing
-	cp build.properties.default
-	cp build.properties # Add your own getlocalization config to 'build.properties'
+Install the [buildtools](https://github.com/silverstripe/silverstripe-buildtools) project.
+
+	# Add your own getlocalization config to 'build.properties'
+	cp buildtools/build.properties.default build.properties
 	phing -Dmodule=<yourmodule> -propertyfile build.properties translations-sync
 
 ### Merge back existing translations

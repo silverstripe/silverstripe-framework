@@ -39,6 +39,8 @@ The default HTML template is located in `framework/templates/email/GenericEmail.
 *  Choose your template with **setTemplate()**
 *  Populate any custom data into the template before sending with **populateTemplate()**
 
+Example:
+
 	:::php
 	$email = new Email($from, $to, $subject, $body);
 	$email->setTemplate('MyEmail');
@@ -46,15 +48,13 @@ The default HTML template is located in `framework/templates/email/GenericEmail.
 	// You can call this multiple times or bundle everything into an array, including DataSetObjects
 	$email->populateTemplate(Member::currentUser());
 	
-	$welcomeMsg = 'Thank you for joining on '.date('Y-m-d'.'!';
-	$email->populateTemplate(
-				array(
-					'WelcomeMessage' => $welcomeMsg, // Accessible in template via $WelcomeMessage
-				)
-			);
+	$welcomeMsg = 'Thank you for joining on '.date('Y-m-d'.'!');
+	
+	$email->populateTemplate(array(
+		'WelcomeMessage' => $welcomeMsg, // Accessible in template via $WelcomeMessage
+	));
 	
 	$email->send();
-
 
 
 ### Subclassing
@@ -69,7 +69,6 @@ Class definition:
 	    $from = 'email@email.com',
 	    $ss_template = 'MyEmail';
 	}
-	?>
 
 
 Usage:
@@ -79,7 +78,6 @@ Usage:
 	$email = new MyEmail();
 	$email->populateTemplate(Member::currentUser()); // This will populate the template, $to, $from etc variables if they exist
 	$email->send(); // Will immediately send an HTML email with appropriate plain-text content
-	?>
 
 
 ### Administrator Emails
