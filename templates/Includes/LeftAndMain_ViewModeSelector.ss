@@ -1,5 +1,5 @@
 <span id="$SelectID" class="preview-mode-selector preview-selector field dropdown">
-	<select title="<% _t('SilverStripeNavigator.ChangeViewMode', 'Change view mode') %>" id="$SelectID-select" class="preview-dropdown dropdown nolabel" autocomplete="off" name="Action">
+	<select title="<% _t('SilverStripeNavigator.ChangeViewMode', 'Change view mode') %>" id="$SelectID-select" class="preview-dropdown dropdown nolabel no-change-track" autocomplete="off" name="Action">
 
 		<option data-icon="icon-split" class="icon-split icon-view first" value="split"><% _t('SilverStripeNavigator.SplitView', 'Split mode') %></option>
 		<option data-icon="icon-preview" class="icon-preview icon-view" value="preview"><% _t('SilverStripeNavigator.PreviewView', 'Preview mode') %></option>
