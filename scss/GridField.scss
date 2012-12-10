@@ -39,7 +39,6 @@ $gf_grid_x:	16px;
 .cms {
 	.ss-gridfield {
 		& > div {
-			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
 				margin-bottom:$gf_grid_y;
 				@include clearfix;
@@ -61,13 +60,9 @@ $gf_grid_x:	16px;
 	 	}
 
 	 	p button#action_export {
-			margin-top:$gf_grid_y;
 			span.btn-icon-download-csv {
 				height:17px; //exact height of icon
 			}
-			.ui-button-text {
-				padding-left:26px; //to accomodate wider export icon
-			} 
 	 	}
 	 	.right {
 	 		float:right;
@@ -91,7 +86,6 @@ $gf_grid_x:	16px;
 			& > * {
 				margin-right:5px;
 				float: left;
-				font-size: $gf_grid_y*1.2;
 			}
 		}
 	}
@@ -106,10 +100,12 @@ $gf_grid_x:	16px;
 			margin-bottom: 6px;
 		}
 		.add-existing-autocompleter {
-			input.relation-search {
-				width: 380px;
+			span {
+				display: inline-block;
 			}
-			width: 500px;
+			input.relation-search {
+				min-width: 270px;
+			}
 		}
 		.grid-print-button{
 			display: inline-block;

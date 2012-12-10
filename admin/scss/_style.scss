@@ -54,15 +54,17 @@ body.cms {
  * Helpers
  * -------------------------------------------- */
 
-.cms-helper-hide-actions {
-	.Actions {
-		display: none;
-	}
-}
-
 .hide {
 	display: none;
 }
+
+.cms-helper-hide-actions {
+	.Actions {
+		@extend .hide;
+	}
+}
+
+
 
 /** --------------------------------------------
  * Panels Styles
@@ -236,12 +238,18 @@ body.cms {
 		}
 	}
 
-	.cms-edit-form {
-		padding: $grid-x $grid-y*2 0 $grid-y*2;
-
-		.ui-tabs-panel {
-			padding-left: 0;
-			padding-right: 0;
+	.cms-edit-form, .cms-content-fields { /*not sure if .cms-content-fields effects other areas*/
+		.cms-panel-padded { /* Has padded area inside it */
+			padding: 0;
+			margin: 0;	
+		}
+		.ui-tabs-panel, .ss-gridfield  {
+			margin: 12px;
+			padding: 0 0 12px;
+			.ss-gridfield { 						/* Files area & inside second level tabs */
+				padding: 0; 
+				margin: 0 0 12px;
+			}
 		}
 
 		.ui-tabs-nav {
@@ -260,15 +268,6 @@ body.cms {
 
 	&.ss-tabset-tabshidden .ui-tabs-panel {
 		border-top: none;
-	}
-
-	// Reset to default styles
-	.ss-ui-button {
-		line-height: $grid-x*3;
-
-		.ui-button-text {
-			line-height: 1.4;
-		}
 	}
 }
  
@@ -307,7 +306,7 @@ body.cms {
 	.ui-state-active {
 		@include box-shadow(none);
 		background: darken($color-widget-bg, 2%);
-		background: $tab-panel-texture-background;
+		background: $tab-panel-texture-color;
 		border-top: none;
 		border: {
 			right-color: darken($color-tab, 15%); // same color as divider between header and body, needed for IE
@@ -410,7 +409,8 @@ body.cms {
 	z-index: 0;
 	border-top: 1px solid $color-light-separator;
 	border-top: 1px solid #FAFAFA;
-	@include box-shadow(#CCC 0 -1px 1px);
+	@include box-shadow(1px 0 0 $tab-panel-texture-color, #CCC 0 -1px 1px);
+	height: 28px;
 }
 
 /** --------------------------------------------
@@ -509,67 +509,67 @@ body.cms {
 	.parent-mode {
 		padding: $grid-x;
 		overflow: auto;
-	}
-
-	#PageType {
-		ul {
-			padding-left: 20px;
-			li {
-				float: none;
-				width: 100%;
-				padding: 9px 0 9px 15px;
-				overflow: hidden;
-				border-bottom-width: 2px;
-				border-bottom: 2px groove lighten($color-shadow-light, 95%);
-				-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-				border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-
-				&:last-child {
-					border-bottom: none;
-				}
-						
-				&:hover, &.selected {
-					background-color: $color-highlight-opacity;
-				}
-
-				&.disabled {
-					color: $color-text-disabled;
-					&:hover {
-						background: none;
-					}
-				}
-
-				input {
-					margin: inherit;
-				}
-
-				label {
-					padding-left: 0;
-					padding-bottom: 0;
-				}
-				
-				input, label, .page-icon, .title {
-					float: left;
-					line-height: 1.3em;
-				}
-				
-				.page-icon {
-					margin: 0 4px;
-				}
-				
-				.title {
-					width: 120px;
-					font-weight: bold;
-					padding-right: 10px;
-				}
-				
-				.description {
-					font-style: italic;
-				}
-			}
-		}	
 	}	
 }
+
+#PageType {
+	ul {
+		padding-left: 20px;
+		li {
+			float: none;
+			width: 100%;
+			padding: 9px 0 9px 15px;
+			overflow: hidden;
+			border-bottom-width: 2px;
+			border-bottom: 2px groove lighten($color-shadow-light, 95%);
+			-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+			border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+
+			&:last-child {
+				border-bottom: none;
+			}
+					
+			&:hover, &.selected {
+				background-color: $color-highlight-opacity;
+			}
+
+			&.disabled {
+				color: $color-text-disabled;
+				&:hover {
+					background: none;
+				}
+			}
+
+			input {
+				margin: inherit;
+			}
+
+			label {
+				padding-left: 0;
+				padding-bottom: 0;
+			}
+			
+			input, label, .page-icon, .title {
+				float: left;
+				line-height: 1.3em;
+			}
+			
+			.page-icon {
+				margin: 0 4px;
+			}
+			
+			.title {
+				width: 120px;
+				font-weight: bold;
+				padding-right: 10px;
+			}
+			
+			.description {
+				font-style: italic;
+			}
+		}
+	}	
+}	
 
 /** --------------------------------------------
  * Content toolbar
@@ -579,6 +579,7 @@ body.cms {
 	min-height:35px;
 	display: block;
 	margin: 0 0 15px 0;
+	padding-bottom: 9px;
 	
 	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
 	@include legacy-pie-clearfix();
@@ -1676,13 +1677,9 @@ form.small {
  		display:none; //hides find button - redundant functionality
  	}
  	p button#action_export {
-		margin-top:$grid-y*2;
 		span.btn-icon-download-csv {
 			height:17px; //exact height of icon
 		}
-		.ui-button-text {
-			padding-left:26px; //to accomodate wider export icon
-		} 
  	}
 }
 
