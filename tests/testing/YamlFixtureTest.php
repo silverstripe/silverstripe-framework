@@ -2,8 +2,6 @@
 
 class YamlFixtureTest extends SapphireTest {
 
-	static $fixture_file = 'YamlFixtureTest.yml';
-
 	protected $extraDataObjects = array(
 		'YamlFixtureTest_DataObject',
 		'YamlFixtureTest_DataObjectRelation',
@@ -11,14 +9,14 @@ class YamlFixtureTest extends SapphireTest {
 	
 	public function testAbsoluteFixturePath() {
 		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
-		$obj = new YamlFixture($absPath);
+		$obj = Injector::inst()->create('YamlFixture', $absPath);
 		$this->assertEquals($absPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
 	}
 	
 	public function testRelativeFixturePath() {
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
-		$obj = new YamlFixture($relPath);
+		$obj = Injector::inst()->create('YamlFixture', $relPath);
 		$this->assertEquals(Director::baseFolder() . '/' . $relPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
 	}
@@ -26,7 +24,7 @@ class YamlFixtureTest extends SapphireTest {
 	public function testStringFixture() {
 		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
 		$string = file_get_contents($absPath);
-		$obj = new YamlFixture($string);
+		$obj = Injector::inst()->create('YamlFixture', $string);
 		$this->assertEquals($string, $obj->getFixtureString());
 		$this->assertNull($obj->getFixtureFile());
 	}
@@ -36,16 +34,42 @@ class YamlFixtureTest extends SapphireTest {
 	 */
 	public function testFailsWithInvalidFixturePath() {
 		$invalidPath = FRAMEWORK_DIR . '/tests/testing/invalid.yml';
-		$obj = new YamlFixture($invalidPath);
+		$obj = Injector::inst()->create('YamlFixture', $invalidPath);
 	}
 	
 	public function testSQLInsert() {
-		$object1 = DataObject::get_by_id("YamlFixtureTest_DataObject",
-			$this->idFromFixture("YamlFixtureTest_DataObject", "testobject1"));
-		$this->assertTrue($object1->ManyMany()->Count() == 2, "Should be 2 items in this manymany relationship");
-		$object2 = DataObject::get_by_id("YamlFixtureTest_DataObject",
-			$this->idFromFixture("YamlFixtureTest_DataObject", "testobject2"));
-		$this->assertTrue($object2->ManyMany()->Count() == 2, "Should be 2 items in this manymany relationship");
+		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
+		$fixture = Injector::inst()->create('YamlFixture', $relPath);
+		$fixture->saveIntoDatabase(DataModel::inst());
+
+		$this->assertGreaterThan(0, $fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject1"));
+		$object1 = DataObject::get_by_id(
+			"YamlFixtureTest_DataObject",
+			$fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject1")
+		);
+		$this->assertTrue(
+			$object1->ManyMany()->Count() == 2, 
+			"Should be two items in this relationship"
+		);
+		$this->assertGreaterThan(0, $fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject2"));
+		$object2 = DataObject::get_by_id(
+			"YamlFixtureTest_DataObject",
+			$fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject2")
+		);
+		$this->assertTrue(
+			$object2->ManyMany()->Count() == 1, 
+			"Should be one item in this relationship"
+		);
+	}
+
+	public function testWriteInto() {
+		$factory = Injector::inst()->create('FixtureFactory');
+
+		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
+		$fixture = Injector::inst()->create('YamlFixture', $relPath);
+		$fixture->writeInto($factory);
+
+		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject1"));
 	}
 }
 

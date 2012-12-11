@@ -62,76 +62,8 @@ specific to the framework, e.g. `[assertEmailSent](api:SapphireTest->assertEmail
 which can simulate sending emails through the `Email->send()` API without actually
 using a mail server (see the [testing emails](email-sending)) guide.
 
-## The Database YAML file
+## Fixtures
 
-The main feature of `[api:SapphireTest]` over the raw PHPUnit classes is that SapphireTest will prepare a temporary database for
-you.  The content of that database is provided in a special YAML file.  YAML is a simple markup languages that uses tabs
-and colons instead of the more verbose XML tags, and because of this much better for developers creating files by hand.
-
-We will begin with a sample file and talk our way through it.
-
-	Page:
-	    home:
-	        Title: Home
-	    about:
-	        Title: About Us
-	    staff:
-	        Title: Staff
-	        URLSegment: my-staff
-	        Parent: =>Page.about
-	    staffduplicate:
-	        Title: Staff
-	        URLSegment: my-staff
-	        Parent: =>Page.about
-	    products:
-	        Title: Products
-	    product1:
-	        Title: 1.1 Test Product
-	    product2:
-	        Title: Another Product
-	    product3:
-	        Title: Another Product
-	    product4:
-	        Title: Another Product
-	    contact:
-	        Title: Contact Us
-	        
-	ErrorPage:
-	    404:
-	        Title: Page not Found
-	        ErrorCode: 404
-
-
-The contents of the YAML file are broken into three levels.
-
-*  **Top level: class names** - Page and ErrorPage.  This is the name of the dataobject class that should be created. 
-The fact that ErrorPage is actually a subclass is irrelevant to the system populating the database.  It just
-instantiates the object you specify.
-*  **Second level: identifiers** - home, about, staff, staffduplicate, etc.  These are the identifiers that you pass as
-the second argument of SapphireTest::objFromFixture().  Each identifier you specify delimits a new database record. 
-This means that every record needs to have an identifier, whether you use it or not.
-*  **Third level: fields** - each field for the record is listed as a 3rd level entry.  In most cases, the field's raw
-content is provided.  However, if you want to define a relationship, you can do so using "=>".
-
-There are a couple of lines like this:
-
-	Parent: =>Page.about
-
-This will tell the system to set the ParentID database field to the ID of the Page object with the identifier "about". 
-This can be used on any has-one or many-many relationship.  Note that we use the name of the relationship (Parent), and
-not the name of the database field (ParentID)
-
-On many-many relationships, you should specify a comma separated list of values.
-
-	MyRelation: =>Class.inst1,=>Class.inst2,=>Class.inst3
-
-An crucial thing to note is that **the YAML file specifies DataObjects, not database records**.  The database is
-populated by instantiating DataObject objects, setting the fields listed, and calling write().  This means that any
-onBeforeWrite() or default value logic will be executed as part of the test.  This forms the basis of our
-testURLGeneration() test above.
-
-For example, the URLSegment value of Page.staffduplicate is the same as the URLSegment value of Page.staff.  When the
-fixture is set up, the URLSegment value of Page.staffduplicate will actually be my-staff-2.
-
-Finally, be aware that requireDefaultRecords() is **not** called by the database populator - so you will need to specify
-standard pages such as 404 and home in your YAML file.
+Often you need to test your functionality with some existing data, so called "fixtures".
+These records are inserted on a fresh test database automatically. 
+[Read more about fixtures](fixtures).

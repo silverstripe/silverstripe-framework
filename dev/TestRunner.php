@@ -392,7 +392,7 @@ HTML;
 				
 				// Fixture
 				if($fixtureFile) {
-					$fixture = new YamlFixture($fixtureFile);
+					$fixture = Injector::inst()->create('YamlFixture', $fixtureFile);
 					$fixture->saveIntoDatabase();
 					
 				// If no fixture, then use defaults
@@ -466,7 +466,7 @@ HTML;
 			SapphireTest::empty_temp_db();
 
 			if(isset($_GET['fixture']) && ($fixtureFile = $_GET['fixture'])) {
-				$fixture = new YamlFixture($fixtureFile);
+				$fixture = Injector::inst()->create('YamlFixture', $fixtureFile);
 				$fixture->saveIntoDatabase();
 				return "<p>Re-test the test database with fixture '$fixtureFile'.  Time to start testing; where would"
 					. " you like to start?</p>";
@@ -530,7 +530,7 @@ HTML;
 		}
 
 		// Fixture
-		$fixture = new YamlFixture($fixtureFile);
+		$fixture = Injector::inst()->create('YamlFixture', $fixtureFile);
 		$fixture->saveIntoDatabase();
 
 		return "<p>Loaded fixture '$fixtureFile' into session</p>";

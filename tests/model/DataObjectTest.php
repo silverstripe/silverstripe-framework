@@ -241,8 +241,8 @@ class DataObjectTest extends SapphireTest {
 		$team->Comments()->add($newComment);
 		$this->assertEquals($team->ID, $newComment->TeamID);
 
-		$comment1 = $this->fixture->objFromFixture('DataObjectTest_TeamComment', 'comment1');
-		$comment2 = $this->fixture->objFromFixture('DataObjectTest_TeamComment', 'comment2');
+		$comment1 = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
+		$comment2 = $this->objFromFixture('DataObjectTest_TeamComment', 'comment2');
 		$team->Comments()->remove($comment2);
 
 		$commentIDs = $team->Comments()->sort('ID')->column('ID');

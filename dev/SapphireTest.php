@@ -10,6 +10,11 @@ require_once 'TestRunner.php';
  * @subpackage testing
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {
+	
+	static $dependencies = array(
+		'fixtureFactory' => '%$FixtureFactory',
+	);
+
 	/**
 	 * Path to fixture data for this test run.
 	 * If passed as an array, multiple fixture files will be loaded.
@@ -19,11 +24,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @var string|array
 	 */
 	static $fixture_file = null;
+
+	/**
+	 * @var FixtureFactory
+	 */
+	protected $fixtureFactory;
 	
 	/**
-	 * Set whether to include this test in the TestRunner or to skip this.
-	 *
-	 * @var bool
+	 * @var bool Set whether to include this test in the TestRunner or to skip this.
 	 */
 	protected $skipTest = false;
 	
@@ -140,8 +148,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @var array $fixtures Array of {@link YamlFixture} instances
+	 * @deprecated 3.1 Use $fixtureFactory instad
 	 */
-	protected $fixtures; 
+	protected $fixtures = array(); 
 	
 	protected $model;
 	
@@ -234,8 +243,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 						if($resolvedPath) $fixtureFilePath = $resolvedPath;
 					}
 					
-					$fixture = new YamlFixture($fixtureFilePath);
-					$fixture->saveIntoDatabase($this->model);
+					$fixture = Injector::inst()->create('YamlFixture', $fixtureFilePath);
+					$fixture->writeInto($this->getFixtureFactory());
 					$this->fixtures[] = $fixture;
 
 					// backwards compatibility: Load first fixture into $this->fixture
@@ -339,38 +348,37 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Array
+	 * @return FixtureFactory
 	 */
-	protected $fixtureDictionary;
-	
+	public function getFixtureFactory() {
+		if(!$this->fixtureFactory) $this->fixtureFactory = Injector::inst()->create('FixtureFactory');
+		return $this->fixtureFactory;
+	}
+
+	public function setFixtureFactory(FixtureFactory $factory) {
+		$this->fixtureFactory = $factory;
+		return $this;
+	}
 	
 	/**
 	 * Get the ID of an object from the fixture.
+	 * 
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 * @return int
 	 */
 	protected function idFromFixture($className, $identifier) {
-		if(!$this->fixtures) {
-			user_error("You've called idFromFixture() but you haven't specified static \$fixture_file.\n",
-				E_USER_WARNING);
-			return;
-		}
-		
-		foreach($this->fixtures as $fixture) {
-			$match = $fixture->idFromFixture($className, $identifier);
-			if($match) return $match;
+		$id = $this->getFixtureFactory()->getId($className, $identifier);
+
+		if(!$id) {
+			user_error(sprintf(
+				"Couldn't find object '%s' (class: %s)",
+				$identifier,
+				$className
+			), E_USER_ERROR);
 		}
 
-		$fixtureFiles = Config::inst()->get(get_class($this), 'fixture_file', Config::FIRST_SET);
-		user_error(sprintf(
-			"Couldn't find object '%s' (class: %s) in files %s",
-			$identifier,
-			$className,
-			(is_array($fixtureFiles)) ? implode(',', $fixtureFiles) : $fixtureFiles
-		), E_USER_ERROR);
-		
-		return false;
+		return $id;
 	}
 	
 	/**
@@ -381,46 +389,27 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @return A map of fixture-identifier => object-id
 	 */
 	protected function allFixtureIDs($className) {
-		if(!$this->fixtures) {
-			user_error("You've called allFixtureIDs() but you haven't specified static \$fixture_file.\n",
-				E_USER_WARNING);
-			return;
-		}
-		
-		$ids = array();
-		foreach($this->fixtures as $fixture) {
-			$ids += $fixture->allFixtureIDs($className);
-		}
-		
-		return $ids;
+		return $this->getFixtureFactory()->getIds($className);
 	}
 
 	/**
 	 * Get an object from the fixture.
+	 * 
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	protected function objFromFixture($className, $identifier) {
-		if(!$this->fixtures) {
-			user_error("You've called objFromFixture() but you haven't specified static \$fixture_file.\n",
-				E_USER_WARNING);
-			return;
-		}
-		
-		foreach($this->fixtures as $fixture) {
-			$match = $fixture->objFromFixture($className, $identifier);
-			if($match) return $match;
-		}
+		$obj = $this->getFixtureFactory()->get($className, $identifier);
 
-		$fixtureFiles = Config::inst()->get(get_class($this), 'fixture_file', Config::FIRST_SET);
-		user_error(sprintf(
-			"Couldn't find object '%s' (class: %s) in files %s",
-			$identifier,
-			$className,
-			(is_array($fixtureFiles)) ? implode(',', $fixtureFiles) : $fixtureFiles
-		), E_USER_ERROR);
+		if(!$obj) {
+			user_error(sprintf(
+				"Couldn't find object '%s' (class: %s)",
+				$identifier,
+				$className
+			), E_USER_ERROR);	
+		}
 		
-		return false;
+		return $obj;
 	}
 	
 	/**
@@ -431,20 +420,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $fixtureFile The location of the .yml fixture file, relative to the site base dir
 	 */
 	public function loadFixture($fixtureFile) {
-		$parser = new Spyc();
-		$fixtureContent = $parser->load(Director::baseFolder().'/'.$fixtureFile);
-		
-		$fixture = new YamlFixture($fixtureFile);
-		$fixture->saveIntoDatabase($this->model);
+		$fixture = Injector::inst()->create('YamlFixture', $fixtureFile);
+		$fixture->writeInto($this->getFixtureFactory());
 		$this->fixtures[] = $fixture;
 	}
 	
 	/**
 	 * Clear all fixtures which were previously loaded through
-	 * {@link loadFixture()}.
+	 * {@link loadFixture()} 
 	 */
 	public function clearFixtures() {
 		$this->fixtures = array();
+		$this->getFixtureFactory()->clear();
 	}
 	
 	/**
@@ -765,7 +752,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$dbConn->selectDatabase($dbname);
 		$dbConn->createDatabase();
 
-		$st = new SapphireTest();
+		$st = Injector::inst()->create('SapphireTest');
 		$st->resetDBSchema();
 		
 		// Reinstate PHPUnit error handling
