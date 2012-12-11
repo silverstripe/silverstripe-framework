@@ -6,7 +6,7 @@
  */
 class Permission extends DataObject implements TemplateGlobalProvider {
 
-  // the (1) after Type specifies the DB default value which is needed for
+	// the (1) after Type specifies the DB default value which is needed for
 	// upgrades from older SilverStripe versions
 	static $db = array(
 		"Code" => "Varchar",
@@ -55,7 +55,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 */
 	static $declared_permissions = null;
 
-  /**
+	/**
 	 * Linear list of declared permissions in the system.
 	 *
 	 * @var array

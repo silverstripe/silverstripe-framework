@@ -230,7 +230,7 @@ jQuery.noConflict();
 			 */
 			submitForm: function(form, button, callback, ajaxOptions) {
 				var self = this;
-		  
+		
 				// look for save button
 				if(!button) button = this.find('.Actions :submit[name=action_save]');
 				// default to first button if none given - simulates browser behaviour

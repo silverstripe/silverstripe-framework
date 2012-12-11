@@ -164,7 +164,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 					Debug::message("Request handler $body->class object to $this->class controller;"
 						. "rendering with template returned by $body->class::getViewer()");
 				}
-			   $body = $body->getViewer($request->latestParam('Action'))->process($body);
+				$body = $body->getViewer($request->latestParam('Action'))->process($body);
 			}
 			
 			$this->response->setBody($body);
@@ -367,7 +367,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		
 		return $template->process($obj);
 	}
-  
+
 	/**
 	 * Call this to disable site-wide basic authentication for a specific contoller.
 	 * This must be called before Controller::init().  That is, you must call it in your controller's

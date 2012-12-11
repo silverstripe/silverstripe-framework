@@ -664,10 +664,10 @@ class SSViewer {
 		}
 
 		if(!$this->chosenTemplates) {
-		  $templateList = (is_array($templateList)) ? $templateList : array($templateList);
-		  
-		  user_error("None of these templates can be found in theme '"
-			. self::current_theme() . "': ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
+			$templateList = (is_array($templateList)) ? $templateList : array($templateList);
+
+			user_error("None of these templates can be found in theme '"
+				. self::current_theme() . "': ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
 		}
 	}
 	
@@ -717,7 +717,7 @@ class SSViewer {
 	protected static $options = array(
 		'rewriteHashlinks' => true,
 	);
-    
+
 	protected static $topLevel = array();
 
 	public static function topLevel() {

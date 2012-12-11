@@ -16,7 +16,7 @@
  * @package forms
  * @subpackage fields-relational
  */
- 
+
 class TableField extends TableListField {
 	
 	protected $fieldList;
@@ -244,9 +244,9 @@ class TableField extends TableListField {
 			$dataObjects = $this->sortData($value, $record->ID);
 			
 			// New fields are nested in their own sub-array, and need to be sorted separately
- 			if(isset($dataObjects['new']) && $dataObjects['new']) {
- 				$newFields = $this->sortData($dataObjects['new'], $record->ID);
- 			}
+			if(isset($dataObjects['new']) && $dataObjects['new']) {
+				$newFields = $this->sortData($dataObjects['new'], $record->ID);
+			}
 
 			// Update existing fields
 			// @todo Should this be in an else{} statement?
@@ -255,7 +255,7 @@ class TableField extends TableListField {
 			// Save newly added record
 			if($savedObjIds || $newFields) {
 				$savedObjIds = $this->saveData($newFields,false);
- 			}
+			}
 
 			// Add the new records to the DataList
 			if($savedObjIds) foreach($savedObjIds as $id => $status) {
@@ -416,7 +416,7 @@ class TableField extends TableListField {
 		}
 
 		return $savedObjIds;
-   }
+	}
 	
 	/** 
 	 * Organises the data in the appropriate manner for saving
@@ -444,8 +444,7 @@ class TableField extends TableListField {
 			
 			// TODO ADD stuff for removing rows with incomplete data
 		}
-		
-    	return $sortedData;
+		return $sortedData;
 	}
 	
 	/**

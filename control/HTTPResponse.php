@@ -277,28 +277,28 @@ class SS_HTTPResponse_Exception extends Exception {
 	/**
 	 * @see SS_HTTPResponse::__construct();
 	 */
-	 public function __construct($body = null, $statusCode = null, $statusDescription = null) {
-	 	if($body instanceof SS_HTTPResponse) {
-	 		$this->setResponse($body);
-	 	} else {
-	 		$this->setResponse(new SS_HTTPResponse($body, $statusCode, $statusDescription));
-	 	}
-	 	
-	 	parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
-	 }
-	 
-	 /**
-	  * @return SS_HTTPResponse
-	  */
-	 public function getResponse() {
-	 	return $this->response;
-	 }
-	 
-	 /**
-	  * @param SS_HTTPResponse $response
-	  */
-	 public function setResponse(SS_HTTPResponse $response) {
-	 	$this->response = $response;
-	 }
+	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
+		if($body instanceof SS_HTTPResponse) {
+			$this->setResponse($body);
+		} else {
+			$this->setResponse(new SS_HTTPResponse($body, $statusCode, $statusDescription));
+		}
+		
+		parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
+	}
+	
+	/**
+	 * @return SS_HTTPResponse
+	 */
+	public function getResponse() {
+		return $this->response;
+	}
+	
+	/**
+	 * @param SS_HTTPResponse $response
+	 */
+	public function setResponse(SS_HTTPResponse $response) {
+		$this->response = $response;
+	}
 	
 }

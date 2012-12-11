@@ -244,7 +244,6 @@
 				this._super();
 				this.selectable('destroy');
 			}
-			 
 		});
 		
 		/**

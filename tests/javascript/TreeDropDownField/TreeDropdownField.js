@@ -49,7 +49,7 @@
 					'<input type="hidden" name="testfield" value="1" />' +
 					'</div>'
 				);
-		  });
+			});
 
 			afterEach(function() {
 				$('#testfield').remove();
@@ -114,7 +114,7 @@
 					'<input type="hidden" name="testfield" value="1" />' +
 					'</div>'
 				);
-		  });
+			});
 
 			afterEach(function() {
 				$('#testfield').remove();
@@ -146,7 +146,7 @@
 					'<input type="hidden" name="testfield" value="4,5" />' +
 					'</div>'
 				);
-		  });
+			});
 
 			afterEach(function() {
 				$('#testfield').remove();
@@ -222,7 +222,7 @@
 					'<input type="hidden" name="MyFormValue" value="foo" />' +
 					'</form>'
 				);
-		  });
+			});
 		
 			afterEach(function() {
 				$('#testfield').remove();

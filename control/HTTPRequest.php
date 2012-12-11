@@ -252,21 +252,21 @@ class SS_HTTPRequest implements ArrayAccess {
 	public function getURL($includeGetVars = false) {
 		$url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
 
-		 if ($includeGetVars) { 
-		 	// if we don't unset $vars['url'] we end up with /my/url?url=my/url&foo=bar etc 
- 			
- 			$vars = $this->getVars();
- 			unset($vars['url']);
+		if ($includeGetVars) { 
+			// if we don't unset $vars['url'] we end up with /my/url?url=my/url&foo=bar etc 
+			
+			$vars = $this->getVars();
+			unset($vars['url']);
 
- 			if (count($vars)) {
- 				$url .= '?' . http_build_query($vars);
- 			}
- 		}
- 		else if(strpos($url, "?") !== false) {
- 			$url = substr($url, 0, strpos($url, "?"));
- 		}
+			if (count($vars)) {
+				$url .= '?' . http_build_query($vars);
+			}
+		}
+		else if(strpos($url, "?") !== false) {
+			$url = substr($url, 0, strpos($url, "?"));
+		}
 
- 		return $url; 
+		return $url; 
 	}
 
 	/**
@@ -444,9 +444,9 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return string
 	 */
 	public function shiftAllParams() {
-		$keys     = array_keys($this->allParams);
-		$values   = array_values($this->allParams);
-		$value    = array_shift($values);
+		$keys    = array_keys($this->allParams);
+		$values  = array_values($this->allParams);
+		$value   = array_shift($values);
 
 		// push additional unparsed URL parts onto the parameter stack
 		if(array_key_exists($this->unshiftedButParsedParts, $this->dirParts)) {
@@ -558,10 +558,10 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public function getIP() {
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-	  		//check ip from share internet
+			//check ip from share internet
 			return $_SERVER['HTTP_CLIENT_IP'];
 		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-	  		//to check ip is pass from proxy
+			//to check ip is pass from proxy
 			return  $_SERVER['HTTP_X_FORWARDED_FOR'];
 		} elseif(isset($_SERVER['REMOTE_ADDR'])) {
 			return $_SERVER['REMOTE_ADDR'];
@@ -577,12 +577,12 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return array
 	 */
 	public function getAcceptMimetypes($includeQuality = false) {
-	   $mimetypes = array();
-	   $mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
-	   foreach($mimetypesWithQuality as $mimetypeWithQuality) {
-	      $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
-	   }
-	   return $mimetypes;
+		$mimetypes = array();
+		$mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
+		foreach($mimetypesWithQuality as $mimetypeWithQuality) {
+			$mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
+		}
+		return $mimetypes;
 	}
 	
 	/**

@@ -100,8 +100,8 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 	}
 
 	// For schema enabled drivers: 
- 	if(defined('SS_DATABASE_SCHEMA')) 
- 		$databaseConfig["schema"] = SS_DATABASE_SCHEMA; 
+	if(defined('SS_DATABASE_SCHEMA')) 
+		$databaseConfig["schema"] = SS_DATABASE_SCHEMA; 
 }
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {
