@@ -18,7 +18,7 @@ To install Composer, run the following commands from your command-line.
 	curl -s https://getcomposer.org/installer | php
 
 	# Move to your path
-	sudo mv composer.phar /usr/bin/composer
+	sudo mv composer.phar /usr/local/bin/composer
 
 Or [download composer.phar](http://getcomposer.org/composer.phar) manually, and rename `composer.phar` as `composer`, and put it in your path.  On Windows, you should call the file `composer.bat`.
 
