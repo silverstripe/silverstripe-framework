@@ -772,6 +772,7 @@ class Injector {
 			$this->load(array($name => $config));
 			if (isset($this->specs[$name])) {
 				$spec = $this->specs[$name];
+				$this->updateSpecConstructor($spec);
 				return $this->instantiate($spec, $name);
 			}
 		}
