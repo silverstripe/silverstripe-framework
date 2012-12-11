@@ -3,7 +3,7 @@
 	<channel>
 		<title>$Title</title>
 		<link>$Link</link>
-		<atom:link href="$Link" rel="self" type="application/rss+xml" />
+		<atom:link href="$Link" rel="self" type="application/rss+xml"></atom:link>
 		<description>$Description.XML</description>
 
 		<% loop Entries %>
