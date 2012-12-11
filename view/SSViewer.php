@@ -141,7 +141,7 @@ class SSViewer_Scope {
 	
 	public function __call($name, $arguments) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-		$retval = call_user_func_array(array($on, $name), $arguments);
+		$retval = $on ? call_user_func_array(array($on, $name), $arguments) : null;
 		
 		$this->resetLocalScope();
 		return $retval;
