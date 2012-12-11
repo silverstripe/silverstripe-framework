@@ -26,8 +26,8 @@ class SelectionGroupTest extends SapphireTest {
 		$this->assertEquals('one title', $listElOne->label[0]);
 		$this->assertEquals('two title', $listElTwo->label[0]);
 
-		$this->assertContains('one view', (string)$listElOne);
-		$this->assertContains('two view', (string)$listElTwo);
+		$this->assertContains('one view', (string)$listElOne->div);
+		$this->assertContains('two view', (string)$listElTwo->div);
 	}
 	
 	function testLegacyItemsFieldHolder() {
