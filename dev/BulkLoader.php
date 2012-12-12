@@ -140,7 +140,7 @@ abstract class BulkLoader extends ViewableData {
 		
 		//get all instances of the to be imported data object 
 		if($this->deleteExistingRecords) { 
-		    DataObject::get($this->objectClass)->removeAll();
+			DataObject::get($this->objectClass)->removeAll();
 		} 
 		
 		return $this->processAll($filepath);
@@ -273,12 +273,12 @@ class BulkLoader_Result extends Object {
 	 * </code>
 	 */   
 	protected $created = array();
-   
+
 	/**
 	 * @var array (see {@link $created})
 	 */
 	protected $updated = array();
-   
+
 	/**
 	 * @var array (see {@link $created})
 	 */
@@ -290,7 +290,7 @@ class BulkLoader_Result extends Object {
 	 * one of 3 strings: "created", "updated", or "deleted"
 	 */
 	protected $lastChange = array();
-   
+
 	/**
 	 * Returns the count of all objects which were
 	 * created or updated.
@@ -408,5 +408,4 @@ class BulkLoader_Result extends Object {
 		
 		return $set;
 	}
-   
 }

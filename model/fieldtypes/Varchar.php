@@ -17,8 +17,8 @@ class Varchar extends StringField {
 	);
 	
 	protected $size;
-	 
- 	/**
+	
+	/**
  	 * Construct a new short text field
  	 * 
  	 * @param $name string The name of the field
@@ -27,12 +27,12 @@ class Varchar extends StringField {
  	 *                       See {@link StringField::setOptions()} for information on the available options
  	 * @return unknown_type
  	 */
- 	public function __construct($name = null, $size = 50, $options = array()) {
+	public function __construct($name = null, $size = 50, $options = array()) {
 		$this->size = $size ? $size : 50;
 		parent::__construct($name, $options);
 	}
 	
- 	/**
+	/**
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()
  	 */

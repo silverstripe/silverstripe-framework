@@ -106,9 +106,9 @@ class RSSFeed extends ViewableData {
 	 *                         every time the representation does
 	 */
 	public function __construct(SS_List $entries, $link, $title,
-											 $description = null, $titleField = "Title",
-											 $descriptionField = "Content", $authorField = null,
-											 $lastModified = null, $etag = null) {
+											$description = null, $titleField = "Title",
+											$descriptionField = "Content", $authorField = null,
+											$lastModified = null, $etag = null) {
 		$this->entries = $entries;
 		$this->link = $link;
 		$this->description = $description;
@@ -270,7 +270,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * Create a new RSSFeed entry.
 	 */
 	public function __construct($entry, $titleField, $descriptionField,
-											 $authorField) {
+											$authorField) {
 		$this->failover = $entry;
 		$this->titleField = $titleField;
 		$this->descriptionField = $descriptionField;

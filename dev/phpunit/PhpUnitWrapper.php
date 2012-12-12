@@ -138,14 +138,14 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	public static function inst() {
 		
 		if (self::$phpunit_wrapper == null) {
-			 if (fileExistsInIncludePath("/PHPUnit/Autoload.php")) {
-			 	self::$phpunit_wrapper = new PhpUnitWrapper_3_5();
-			 } else 
-			 if (fileExistsInIncludePath("/PHPUnit/Framework.php")) {
-			 	self::$phpunit_wrapper = new PhpUnitWrapper_3_4();
-			 } else {
-			 	self::$phpunit_wrapper = new PhpUnitWrapper();
-			 } 
+			if (fileExistsInIncludePath("/PHPUnit/Autoload.php")) {
+				self::$phpunit_wrapper = new PhpUnitWrapper_3_5();
+			} else 
+			if (fileExistsInIncludePath("/PHPUnit/Framework.php")) {
+				self::$phpunit_wrapper = new PhpUnitWrapper_3_4();
+			} else {
+				self::$phpunit_wrapper = new PhpUnitWrapper();
+			} 
 			self::$phpunit_wrapper->init();
 
 		}		

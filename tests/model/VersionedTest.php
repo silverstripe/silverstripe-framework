@@ -254,12 +254,12 @@ class VersionedTest extends SapphireTest {
 	 * Test that SQLQuery::queriedTables() applies the version-suffixes properly.
 	 */
 	public function testQueriedTables() {
-	    Versioned::reading_stage('Live');
+		Versioned::reading_stage('Live');
 
-	    $this->assertEquals(array(
-	        'VersionedTest_DataObject_Live',
-	        'VersionedTest_Subclass_Live',
-	    ), DataObject::get('VersionedTest_Subclass')->dataQuery()->query()->queriedTables());
+		$this->assertEquals(array(
+			'VersionedTest_DataObject_Live',
+			'VersionedTest_Subclass_Live',
+		), DataObject::get('VersionedTest_Subclass')->dataQuery()->query()->queriedTables());
 	}
 	
 	public function testGetVersionWhenClassnameChanged() {

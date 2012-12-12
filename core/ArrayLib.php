@@ -69,18 +69,18 @@ class ArrayLib {
 	 * @todo Improve documentation
 	 */
 	public static function array_values_recursive($arr) {
-	   $lst = array();
-	   foreach(array_keys($arr) as $k){
-	     $v = $arr[$k];
-	     if (is_scalar($v)) {
-	         $lst[] = $v;
-	     } elseif (is_array($v)) {
-	         $lst = array_merge( $lst,
-	           self::array_values_recursive($v)
-	         );
-	     }
-	   }
-	   return $lst;
+		$lst = array();
+		foreach(array_keys($arr) as $k){
+			$v = $arr[$k];
+			if (is_scalar($v)) {
+				$lst[] = $v;
+			} elseif (is_array($v)) {
+				$lst = array_merge( $lst,
+					self::array_values_recursive($v)
+				);
+			}
+		}
+		return $lst;
 	}
 	
 	/**
@@ -110,12 +110,12 @@ class ArrayLib {
 	 */
 	public static function is_associative($arr) {
 		if(is_array($arr) && ! empty($arr)) {
-	        for($iterator = count($arr) - 1; $iterator; $iterator--) {
-	            if (!array_key_exists($iterator, $arr)) return true;
-	        }
-	        return !array_key_exists(0, $arr);
-	    }
-    	return false;
+			for($iterator = count($arr) - 1; $iterator; $iterator--) {
+				if (!array_key_exists($iterator, $arr)) return true;
+			}
+			return !array_key_exists(0, $arr);
+		}
+		return false;
 	}
 
 	/**

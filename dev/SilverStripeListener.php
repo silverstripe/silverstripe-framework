@@ -27,13 +27,13 @@ class SilverStripeListener implements PHPUnit_Framework_TestListener {
 	
 	public function startTest(PHPUnit_Framework_Test $test) {
 	}
- 
+
 	public function endTest(PHPUnit_Framework_Test $test, $time) {
 	}
 
 	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time) {
 	}
- 
+
 	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time) {
 	}
 

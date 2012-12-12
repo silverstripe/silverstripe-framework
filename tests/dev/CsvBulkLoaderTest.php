@@ -55,7 +55,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	
 		$this->assertEquals(4, $resultDataObject->Count(),
 			'Test if existing data is deleted before new data is added'); 
-	 	}
+		}
 	
 	/**
 	 * Test import with manual column mapping

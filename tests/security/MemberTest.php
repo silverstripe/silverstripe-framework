@@ -29,8 +29,8 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function __destruct() {
-        i18n::set_default_locale($this->local);
-    }
+		i18n::set_default_locale($this->local);
+	}
 
 	public function setUp() {
 		parent::setUp();
