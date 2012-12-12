@@ -874,7 +874,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					//get the uploaded file ID when this event triggers, signaling the upload has compeleted successfully
 					editFieldIDs.push($(this).data('id'));
 				});
-				var uploadedFiles = $('.ss-uploadfield-files').children('.ss-uploadfield-item');
+				var uploadedFiles = form.find('.ss-uploadfield-files').children('.ss-uploadfield-item');
 				uploadedFiles.each(function(){
 					var uploadedID = $(this).data('fileid');
 					if ($.inArray(uploadedID, editFieldIDs) == -1) {
