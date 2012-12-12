@@ -381,8 +381,12 @@ class Controller extends RequestHandler {
 	 * in user.
 	 * @return boolean
 	 */
-	function can($perm, $member = null) {
+	public function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
+		if(is_array($perm)) {
+			$perm = array_map(array($this, 'can'), $perm, array_fill(0, count($perm), $member));
+			return min($perm);
+		}
 		if($this->hasMethod($methodName = 'can' . $perm)) {
 			return $this->$methodName($member);
 		} else {
