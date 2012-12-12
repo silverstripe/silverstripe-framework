@@ -42,12 +42,13 @@
 .filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
 
 /* Alternative styles for the switch in old IE */
-fieldset.switch-states { padding: 0; }
-fieldset.switch-states .switch { padding: 0 10px 0 0; }
+fieldset.switch-states { padding-right: 5px; }
+fieldset.switch-states .switch { padding: 0; width: 132%; left: -32px; }
 fieldset.switch-states .switch label { overflow: visible; text-overflow: visible; white-space: normal; padding: 0; }
 fieldset.switch-states .switch label.active { color: #fff; background-color: #2b9c32; }
-fieldset.switch-states .switch label span { display: inline; padding: 0 10px; padding-right: 15px; overflow: visible; text-overflow: visible; white-space: wrap; }
+fieldset.switch-states .switch label span { display: inline; padding: 0 8px; overflow: visible; text-overflow: visible; white-space: wrap; }
 fieldset.switch-states .switch .slide-button { display: none; }
+fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 
 /* Hide size controls in IE - they won't work as intended */
 .cms-content-controls .preview-size-selector { display: none; }
