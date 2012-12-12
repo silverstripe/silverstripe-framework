@@ -39,6 +39,7 @@ $gf_grid_x:	16px;
 .cms {
 	.ss-gridfield {
 		& > div {
+			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
 				margin-bottom:$gf_grid_y;
 				@include clearfix;
@@ -86,6 +87,7 @@ $gf_grid_x:	16px;
 			& > * {
 				margin-right:5px;
 				float: left;
+				font-size: $gf_grid_y*1.2;
 			}
 		}
 	}
@@ -99,13 +101,11 @@ $gf_grid_x:	16px;
 			}
 			margin-bottom: 6px;
 		}
-		.add-existing-autocompleter {
-			span {
-				display: inline-block;
-			}
+		.add-existing-autocompleter {															/*Paul new*/
 			input.relation-search {
-				min-width: 270px;
+				width: 380px;
 			}
+			width: 500px;
 		}
 		.grid-print-button{
 			display: inline-block;

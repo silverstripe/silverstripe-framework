@@ -11,6 +11,7 @@
 /*Mixin used to generate slightly smaller text and forms
 Used in side panels and action tabs
 */
+.cms .ss-gridfield > div { margin-bottom: 36px; }
 .cms .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 12px; }
 .cms .ss-gridfield > div.addNewGridFieldButton:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
 *:first-child .cms .ss-gridfield > div.addNewGridFieldButton { zoom: 1; }
@@ -22,11 +23,11 @@ Used in side panels and action tabs
 .cms .ss-gridfield .right > * { float: right; margin-left: 5px; font-size: 14.4px; }
 .cms .ss-gridfield .right .pagination-records-number { font-size: 1.0em; padding: 6px 3px 6px 0; color: white; text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); font-weight: normal; }
 .cms .ss-gridfield .left { float: left; }
-.cms .ss-gridfield .left > * { margin-right: 5px; float: left; }
+.cms .ss-gridfield .left > * { margin-right: 5px; float: left; font-size: 14.4px; }
 .cms .ss-gridfield .grid-levelup { text-indent: -9999em; margin-bottom: 6px; }
 .cms .ss-gridfield .grid-levelup a.list-parent-link { background: transparent url(../images/gridfield-level-up.png) no-repeat 0 0; display: block; }
-.cms .ss-gridfield .add-existing-autocompleter span { display: inline-block; }
-.cms .ss-gridfield .add-existing-autocompleter input.relation-search { min-width: 270px; }
+.cms .ss-gridfield .add-existing-autocompleter { /*Paul new*/ width: 500px; }
+.cms .ss-gridfield .add-existing-autocompleter input.relation-search { width: 380px; }
 .cms .ss-gridfield .grid-print-button { display: inline-block; }
 .cms .ss-gridfield .grid-csv-button { display: inline-block; }
 .cms table.ss-gridfield-table { display: table; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; padding: 0; border-collapse: separate; border-bottom: 0 none; width: 100%; margin-bottom: 12px; }
