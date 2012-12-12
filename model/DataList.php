@@ -978,9 +978,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function remove($item) {
 		// By default, we remove an item from a DataList by deleting it.
-		if($item instanceof $this->dataClass) $item->delete();
-
-	}
+		$this->removeByID($item->ID);
+		}
 
 	/**
 	 * Remove an item from this DataList by ID
