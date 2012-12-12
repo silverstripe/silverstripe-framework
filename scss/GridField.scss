@@ -39,6 +39,7 @@ $gf_grid_x:	16px;
 .cms {
 	.ss-gridfield {
 		& > div {
+			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
 				margin-bottom: 0;
 				.action {
@@ -86,12 +87,13 @@ $gf_grid_x:	16px;
 			& > * {
 				margin-right:$gf_grid_x/2;
 				float: left;
+				font-size: $gf_grid_y*1.2;
 			}
 		}
 
 		.ss-gridfield-buttonrow {
 			font-size: $gf_grid_y*1.2;
-			}
+	}
 		}
 	
 	.ss-gridfield {
@@ -111,6 +113,7 @@ $gf_grid_x:	16px;
 				width: 270px;
 				margin-bottom: $gf_grid_y;
 			}
+			width: 500px;
 		}
 		.grid-csv-button, .grid-print-button {
 			margin-bottom: $gf_grid_y;

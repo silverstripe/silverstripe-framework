@@ -509,18 +509,6 @@ form.small .field, .field.small {
 		width: 16px;
 		height: 16px;
 	}
-
-	/* Tempory fix: Overide default icon & text styles as the order of the icon and text are mixed up */
-	.south .Actions .ss-ui-button.ss-ui-action-constructive {
-		.ui-button-text-alternate {
-			margin-left: 22px;
-		}
-		.ui-icon {
-			position: absolute;
-			left: 10px;
-			top: 5px;
-		}
-	}
 }
 
 /** ----------------------------------------------------

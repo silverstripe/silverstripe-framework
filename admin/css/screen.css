@@ -196,7 +196,6 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .field.remove-splitter { border-bottom: none; box-shadow: none; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
-.cms { /* Tempory fix: Overide default icon & text styles as the order of the icon and text are mixed up */ }
 .cms .button-no-style button, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button { -webkit-border-radius: 0; -moz-border-radius: 0; -ms-border-radius: 0; -o-border-radius: 0; border-radius: 0; background: none; border: none; color: #0073c1; display: block; font-weight: normal; margin: 0; outline: none; padding-left: 10px; padding-right: 10px; text-align: left; text-shadow: none; white-space: normal; }
 .cms .button-no-style button.ss-ui-action-destructive, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-action-destructive { color: #c22730; }
 .cms .button-no-style button span, .cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button span { padding-left: 0; padding-right: 0; }
@@ -226,8 +225,6 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-buttonset .ui-button { margin-left: -1px; }
 .cms .ss-ui-buttonset { margin-left: 1px; }
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
-.cms .south .Actions .ss-ui-button.ss-ui-action-constructive .ui-button-text-alternate { margin-left: 22px; }
-.cms .south .Actions .ss-ui-button.ss-ui-action-constructive .ui-icon { position: absolute; left: 10px; top: 5px; }
 
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
 .fieldgroup .fieldgroup-field { float: left; display: block; padding: 8px 0 0 8px; }
@@ -919,7 +916,7 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 
 /* Styling for the preview screen sizes */
 .cms-preview { background-color: #eceff1; height: 100%; width: 100%; }
-.cms-preview .preview-note { color: #CDD7DC; display: block; font-size: 22px; font-weight: bold; height: 82px; margin-top: -50px; margin-left: -150px; /* half of width */ position: absolute; text-align: center; text-shadow: 0 1px 0 #fff; top: 50%; width: 300px; }
+.cms-preview .preview-note { color: #CDD7DC; display: block; font-size: 22px; font-weight: bold; height: 82px; margin-top: -50px; margin-left: -150px; /* half of width */ position: absolute; text-align: center; text-shadow: 0 1px 0 #fff; top: 50%; left: 50%; width: 300px; }
 .cms-preview .preview-note span { background: url('../images/sprites-64x64-s88957ee578.png') 0 0 no-repeat; display: block; height: 41px; margin: 0 auto 20px; width: 50px; }
 .cms-preview .preview-scroll { height: 100%; overflow: auto; position: relative; width: 100%; }
 .cms-preview .preview-scroll .preview-device-outer { height: 100%; width: 100%; }
