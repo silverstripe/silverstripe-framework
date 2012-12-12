@@ -155,9 +155,9 @@ class ViewableDataTest_Castable extends ViewableData {
 		return $this->unsafeXML();
 	}
 
-    	public function forTemplate() {
-        	return 'castable';
-    	}
+	public function forTemplate() {
+		return 'castable';
+	}
 }
 
 class ViewableDataTest_RequiresCasting extends ViewableData {

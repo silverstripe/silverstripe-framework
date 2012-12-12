@@ -18,11 +18,11 @@ class FileFieldTest extends FunctionalTest {
 			new FieldList()
 		);
 		$fileFieldValue = array(
-		      'name' => 'aCV.txt',
-		      'type' => 'application/octet-stream',
-		      'tmp_name' => '/private/var/tmp/phpzTQbqP',
-		      'error' => 0,
-		      'size' => 3471
+			'name' => 'aCV.txt',
+			'type' => 'application/octet-stream',
+			'tmp_name' => '/private/var/tmp/phpzTQbqP',
+			'error' => 0,
+			'size' => 3471
 		);
 		$fileField->setValue($fileFieldValue);
 	
@@ -46,11 +46,11 @@ class FileFieldTest extends FunctionalTest {
 		);
 		// All fields are filled but for some reason an error occured when uploading the file => fails
 		$fileFieldValue = array(
-		      'name' => 'aCV.txt',
-		      'type' => 'application/octet-stream',
-		      'tmp_name' => '/private/var/tmp/phpzTQbqP',
-		      'error' => 1,
-		      'size' => 3471
+			'name' => 'aCV.txt',
+			'type' => 'application/octet-stream',
+			'tmp_name' => '/private/var/tmp/phpzTQbqP',
+			'error' => 1,
+			'size' => 3471
 		);
 		$fileField->setValue($fileFieldValue);
 	

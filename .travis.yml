@@ -22,7 +22,8 @@ before_script:
 
 script: 
  - phpunit -c phpunit.xml.dist 
- - phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs -np framework
+ - phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml -np framework
+ - phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml -np framework
 
 branches:
   except:

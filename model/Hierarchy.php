@@ -434,14 +434,14 @@ class Hierarchy extends DataExtension {
 	public function Children() {
 		if(!(isset($this->_cache_children) && $this->_cache_children)) { 
 			$result = $this->owner->stageChildren(false); 
-		 	if(isset($result)) { 
-		 		$this->_cache_children = new ArrayList(); 
-		 		foreach($result as $child) { 
-		 			if($child->canView()) { 
-		 				$this->_cache_children->push($child); 
-		 			} 
-		 		} 
-		 	} 
+			if(isset($result)) { 
+				$this->_cache_children = new ArrayList(); 
+				foreach($result as $child) { 
+					if($child->canView()) { 
+						$this->_cache_children->push($child); 
+					} 
+				} 
+			} 
 		} 
 		return $this->_cache_children;
 	}
@@ -487,10 +487,10 @@ class Hierarchy extends DataExtension {
 				// Next, go through the live children.  Only some of these will be listed					
 				$liveChildren = $this->owner->liveChildren(true, true);
 				if($liveChildren) {
-				    $merged = new ArrayList();
-				    $merged->merge($stageChildren);
-				    $merged->merge($liveChildren);
-				    $stageChildren = $merged;
+					$merged = new ArrayList();
+					$merged->merge($stageChildren);
+					$merged->merge($liveChildren);
+					$stageChildren = $merged;
 				}
 			}
 
@@ -526,7 +526,7 @@ class Hierarchy extends DataExtension {
 			throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
 		}
 
-	    return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
+		return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
 			"\"ParentID\" = " . (int)$this->owner->ID)->count();
 	}
 

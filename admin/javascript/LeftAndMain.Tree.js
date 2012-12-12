@@ -153,8 +153,8 @@
 						"select_limit" : 1,
 						'initially_select': [this.find('.current').attr('id')]
 					},
-					 "crrm": {
-						 'move': {
+					"crrm": {
+						'move': {
 							// Check if a node is allowed to be moved.
 							// Caution: Runs on every drag over a new node
 							'check_move': function(data) {

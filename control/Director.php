@@ -348,8 +348,8 @@ class Director implements TemplateGlobalProvider {
 			$url = dirname($_SERVER['REQUEST_URI'] . 'x') . '/' . $url;
 		}
 
-	 	if(substr($url,0,4) != "http") {
-	 		if($url[0] != "/") $url = Director::baseURL()  . $url;
+		if(substr($url,0,4) != "http") {
+			if($url[0] != "/") $url = Director::baseURL()  . $url;
 			// Sometimes baseURL() can return a full URL instead of just a path
 			if(substr($url,0,4) != "http") $url = self::protocolAndHost() . $url;
 		}
@@ -630,21 +630,21 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * Returns the Absolute URL of the site root.
 	 */
-	 public static function absoluteBaseURL() {
-	 	return Director::absoluteURL(Director::baseURL());
-	 }
-	 
+	public static function absoluteBaseURL() {
+		return Director::absoluteURL(Director::baseURL());
+	}
+	
 	/**
 	 * Returns the Absolute URL of the site root, embedding the current basic-auth credentials into the URL.
 	 */
-	 public static function absoluteBaseURLWithAuth() {
+	public static function absoluteBaseURLWithAuth() {
 		$s = "";
 		$login = "";
 		
-	 	if(isset($_SERVER['PHP_AUTH_USER'])) $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
+		if(isset($_SERVER['PHP_AUTH_USER'])) $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
 
-	 	return Director::protocol() . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
-	 }
+		return Director::protocol() . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
+	}
 
 	/**
 	 * Force the site to run on SSL.
@@ -843,7 +843,7 @@ class Director implements TemplateGlobalProvider {
 				$result = $_GET['isDev'];
 			} else {
 				if($firstTimeCheckingGetVar && DB::connection_attempted()) {
-	 				echo "<p style=\"padding: 3px; margin: 3px; background-color: orange; 
+					echo "<p style=\"padding: 3px; margin: 3px; background-color: orange; 
 						color: white; font-weight: bold\">Sorry, you can't use ?isDev=1 until your
 						Member and Group tables database are available.  Perhaps your database
 						connection is failing?</p>";
