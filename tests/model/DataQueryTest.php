@@ -1,6 +1,13 @@
 <?php
 
 class DataQueryTest extends SapphireTest {
+
+	protected $extraDataObjects = array(
+		'DataQueryTest_A',
+		'DataQueryTest_B',
+		'DataQueryTest_D',
+	);
+
 	/**
 	 * Test the leftJoin() and innerJoin method of the DataQuery object
 	 */
@@ -32,6 +39,12 @@ class DataQueryTest extends SapphireTest {
 		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'),
 			'DataQuery::applyRelation should return the name of the related object.');
 	}
+
+	public function testRelationOrderWithCustomJoin() {
+		$dataQuery = new DataQuery('DataQueryTest_B');
+		$dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
+		$dataQuery->execute();
+	}
 }
 
 
@@ -56,6 +69,7 @@ class DataQueryTest_B extends DataQueryTest_A {
 }
 
 class DataQueryTest_C extends DataObject implements TestOnly {
+
 	public static $has_one = array(
 		'TestA' => 'DataQueryTest_A',
 		'TestB' => 'DataQueryTest_B',
@@ -69,5 +83,12 @@ class DataQueryTest_C extends DataObject implements TestOnly {
 	public static $many_many = array(
 		'ManyTestAs' => 'DataQueryTest_A',
 		'ManyTestBs' => 'DataQueryTest_B',
+	);
+}
+
+class DataQueryTest_D extends DataObject implements TestOnly {
+
+	public static $has_one = array(
+		'Relation' => 'DataQueryTest_B',
 	);
 }
