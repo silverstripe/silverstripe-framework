@@ -794,7 +794,7 @@ class Requirements_Backend {
 			$mtimesuffix = "";
 			$suffix = '';
 			if(strpos($fileOrUrl, '?') !== false) {
-				$suffix = '&' . substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
+				$suffix = '?' . substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
 				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
 			}
 			if($this->suffix_requirements) {
