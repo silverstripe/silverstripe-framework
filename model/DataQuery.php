@@ -338,7 +338,7 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function max($field) {
-	    return $this->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)));
+		return $this->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)));
 	}
 
 	/**
@@ -347,7 +347,7 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function min($field) {
-	    return $this->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)));
+		return $this->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)));
 	}
 	
 	/**
@@ -356,7 +356,7 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function avg($field) {
-	    return $this->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)));
+		return $this->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)));
 	}
 
 	/**
@@ -365,14 +365,14 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	public function sum($field) {
-	    return $this->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)));
+		return $this->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)));
 	}
 	
 	/**
 	 * Runs a raw aggregate expression.  Please handle escaping yourself
 	 */
 	public function aggregate($expression) {
-	    return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
+		return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
 	}
 
 	/**
@@ -567,74 +567,74 @@ class DataQuery {
 	 * @return The model class of the related item
 	 */
 	public function applyRelation($relation) {
-	    // NO-OP
-	    if(!$relation) return $this->dataClass;
-	    
-	    if(is_string($relation)) $relation = explode(".", $relation);
-	   
-	    $modelClass = $this->dataClass;
-	    
-    	foreach($relation as $rel) {
-    		$model = singleton($modelClass);
-    		if ($component = $model->has_one($rel)) {	
-    			if(!$this->query->isJoinedTo($component)) {
-    				$foreignKey = $model->getReverseAssociation($component);
-    				$this->query->addLeftJoin($component,
-    					"\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
+		// NO-OP
+		if(!$relation) return $this->dataClass;
+		
+		if(is_string($relation)) $relation = explode(".", $relation);
+
+		$modelClass = $this->dataClass;
+		
+		foreach($relation as $rel) {
+			$model = singleton($modelClass);
+			if ($component = $model->has_one($rel)) {
+				if(!$this->query->isJoinedTo($component)) {
+					$foreignKey = $model->getReverseAssociation($component);
+					$this->query->addLeftJoin($component,
+						"\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
 				
-    				/**
-    				 * add join clause to the component's ancestry classes so that the search filter could search on
-    				 * its ancestor fields.
-    				 */
-    				$ancestry = ClassInfo::ancestry($component, true);
-    				if(!empty($ancestry)){
-    					$ancestry = array_reverse($ancestry);
-    					foreach($ancestry as $ancestor){
-    						if($ancestor != $component){
-    							$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-    						}
-    					}
-    				}
-    			}
-    			$modelClass = $component;
+					/**
+					 * add join clause to the component's ancestry classes so that the search filter could search on
+					 * its ancestor fields.
+					 */
+					$ancestry = ClassInfo::ancestry($component, true);
+					if(!empty($ancestry)){
+						$ancestry = array_reverse($ancestry);
+						foreach($ancestry as $ancestor){
+							if($ancestor != $component){
+								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+							}
+						}
+					}
+				}
+				$modelClass = $component;
 
-    		} elseif ($component = $model->has_many($rel)) {
-    			if(!$this->query->isJoinedTo($component)) {
-    			 	$ancestry = $model->getClassAncestry();
-    				$foreignKey = $model->getRemoteJoinField($rel);
-    				$this->query->addLeftJoin($component,
-    					"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
-    				/**
-    				 * add join clause to the component's ancestry classes so that the search filter could search on
-    				 * its ancestor fields.
-    				 */
-    				$ancestry = ClassInfo::ancestry($component, true);
-    				if(!empty($ancestry)){
-    					$ancestry = array_reverse($ancestry);
-    					foreach($ancestry as $ancestor){
-    						if($ancestor != $component){
-    							$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-    						}
-    					}
-    				}
-    			}
-    			$modelClass = $component;
+			} elseif ($component = $model->has_many($rel)) {
+				if(!$this->query->isJoinedTo($component)) {
+					$ancestry = $model->getClassAncestry();
+					$foreignKey = $model->getRemoteJoinField($rel);
+					$this->query->addLeftJoin($component,
+						"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+					/**
+					 * add join clause to the component's ancestry classes so that the search filter could search on
+					 * its ancestor fields.
+					 */
+					$ancestry = ClassInfo::ancestry($component, true);
+					if(!empty($ancestry)){
+						$ancestry = array_reverse($ancestry);
+						foreach($ancestry as $ancestor){
+							if($ancestor != $component){
+								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+							}
+						}
+					}
+				}
+				$modelClass = $component;
 
-    		} elseif ($component = $model->many_many($rel)) {
-    			list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
-    			$parentBaseClass = ClassInfo::baseDataClass($parentClass);
-    			$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-    			$this->query->addInnerJoin($relationTable,
-    				"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-    			$this->query->addLeftJoin($componentBaseClass,
-    				"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
-    			if(ClassInfo::hasTable($componentClass)) {
-    				$this->query->addLeftJoin($componentClass,
-    					"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
-    			}
-    			$modelClass = $componentClass;
+			} elseif ($component = $model->many_many($rel)) {
+				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
+				$parentBaseClass = ClassInfo::baseDataClass($parentClass);
+				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+				$this->query->addInnerJoin($relationTable,
+					"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
+				$this->query->addLeftJoin($componentBaseClass,
+					"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+				if(ClassInfo::hasTable($componentClass)) {
+					$this->query->addLeftJoin($componentClass,
+						"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+				}
+				$modelClass = $componentClass;
 
-    		}
+			}
 		}
 		
 		return $modelClass;

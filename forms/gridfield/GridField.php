@@ -211,7 +211,7 @@ class GridField extends FormField {
 	public function getManipulatedList() {
 		$list = $this->getList();
 		foreach($this->getComponents() as $item) {
- 			if($item instanceof GridField_DataManipulator) {
+			if($item instanceof GridField_DataManipulator) {
 				$list = $item->getManipulatedData($this, $list);
 			}
 		}

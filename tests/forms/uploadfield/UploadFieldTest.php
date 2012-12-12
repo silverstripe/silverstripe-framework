@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 
- class UploadFieldTest extends FunctionalTest {
+class UploadFieldTest extends FunctionalTest {
 
 	static $fixture_file = 'UploadFieldTest.yml';
 

@@ -2,7 +2,7 @@
 
 class SampleService
 {
-    public $constructorVarOne;
+	public $constructorVarOne;
 	public $constructorVarTwo;
 	
 	public function __construct($v1 = null, $v2 = null) {

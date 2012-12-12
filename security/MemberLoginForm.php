@@ -33,7 +33,7 @@ class MemberLoginForm extends LoginForm {
 	 * @param string $authenticatorClassName Name of the authenticator class that this form uses.
 	 */
 	public function __construct($controller, $name, $fields = null, $actions = null,
-											 $checkCurrentUser = true) {
+								$checkCurrentUser = true) {
 
 		// This is now set on the class directly to make it easier to create subclasses
 		// $this->authenticator_class = $authenticatorClassName;
@@ -226,13 +226,13 @@ JS
 	}
 
 
-  /**
-   * Try to authenticate the user
-   *
-   * @param array Submitted data
-   * @return Member Returns the member object on successful authentication
-   *                or NULL on failure.
-   */
+	/**
+	 * Try to authenticate the user
+	 *
+	 * @param array Submitted data
+	 * @return Member Returns the member object on successful authentication
+	 *                or NULL on failure.
+	 */
 	public function performLogin($data) {
 		$member = call_user_func_array(array($this->authenticator_class, 'authenticate'), array($data, $this));
 		if($member) {

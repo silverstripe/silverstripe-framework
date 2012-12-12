@@ -30,9 +30,9 @@ class FormEncodedDataFormatter extends XMLDataFormatter {
 	}
 	
 	public function convertStringToArray($strData) {
-        $postArray = array();
-        parse_str($strData, $postArray);
-        return $postArray;
+		$postArray = array();
+		parse_str($strData, $postArray);
+		return $postArray;
 		//TODO: It would be nice to implement this function in Convert.php
 		//return Convert::querystr2array($strData);
 	}

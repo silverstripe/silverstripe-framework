@@ -624,11 +624,11 @@ class DataListTest extends SapphireTest {
 	 */
 	public function testExcludeOnFilter() {
 		$list = DataObjectTest_TeamComment::get();
- 		$list = $list->filter('Comment', 'Phil is a unique guy, and comments on team2');
+		$list = $list->filter('Comment', 'Phil is a unique guy, and comments on team2');
 		$list = $list->exclude('Name', 'Bob');
 		
 		$this->assertContains(
-			  'WHERE ("DataObjectTest_TeamComment"."Comment" = '
+			'WHERE ("DataObjectTest_TeamComment"."Comment" = '
 			. '\'Phil is a unique guy, and comments on team2\') '
 			. 'AND (("DataObjectTest_TeamComment"."Name" != \'Bob\'))',
 			$list->sql());

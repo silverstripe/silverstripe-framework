@@ -26,15 +26,15 @@ class CMSProfileController extends LeftAndMain {
 		$form->Fields()->push(new HiddenField('ID', null, Member::currentUserID()));
 		$form->Actions()->push(
 			FormAction::create('save',_t('CMSMain.SAVE', 'Save'))
- 				->addExtraClass('ss-ui-button ss-ui-action-constructive')
- 				->setAttribute('data-icon', 'accept')
- 				->setUseButtonTag(true)
- 		);
- 		$form->Actions()->removeByName('delete');
- 		$form->setValidator(new Member_Validator());
- 		$form->setTemplate('Form');
- 		$form->setAttribute('data-pjax-fragment', null);
- 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+				->addExtraClass('ss-ui-button ss-ui-action-constructive')
+				->setAttribute('data-icon', 'accept')
+				->setUseButtonTag(true)
+		);
+		$form->Actions()->removeByName('delete');
+		$form->setValidator(new Member_Validator());
+		$form->setTemplate('Form');
+		$form->setAttribute('data-pjax-fragment', null);
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 		$form->addExtraClass('member-profile-form root-form cms-edit-form cms-panel-padded center');
 		
 		return $form;

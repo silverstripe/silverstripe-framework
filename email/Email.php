@@ -363,12 +363,12 @@ class Email extends ViewableData {
 	 * Validates the email address. Returns true of false
 	 */
 	public static function validEmailAddress($address) {
-        if (function_exists('filter_var')) {
-            return filter_var($address, FILTER_VALIDATE_EMAIL);
-        } else {
-            return preg_match('#^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)'
-            	. '|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$#', $address);
-        }
+		if (function_exists('filter_var')) {
+			return filter_var($address, FILTER_VALIDATE_EMAIL);
+		} else {
+			return preg_match('#^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)'
+				. '|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$#', $address);
+		}
 	}
 
 	/**

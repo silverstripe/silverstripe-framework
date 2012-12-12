@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="SilverStripe.Tabs">
+	<description>CodeSniffer ruleset for SilverStripe indentation conventions.</description>
+	
+	<!-- exclude SCSS-generated CSS files -->
+	<exclude-pattern>*/css/*</exclude-pattern>
+	<exclude-pattern>css/*</exclude-pattern>
+	
+	<!-- exclude thirdparty content -->
+	<exclude-pattern>thirdparty/*</exclude-pattern>
+	<exclude-pattern>*/jquery-changetracker/*</exclude-pattern>
+	<exclude-pattern>parsers/HTML/BBCodeParser/*</exclude-pattern>
+	
+	<!-- PHP-PEG generated file not intended for human consumption -->
+	<exclude-pattern>*/SSTemplateParser.php$</exclude-pattern>
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+</ruleset>
+

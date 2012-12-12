@@ -18,15 +18,15 @@ class DevelopmentAdmin extends Controller {
 	);
 	
 	static $allowed_actions = array( 
-        'index', 
-        'tests', 
-        'jstests', 
-        'tasks', 
-        'viewmodel', 
-        'build', 
-        'reset', 
-        'viewcode' 
- 	);
+		'index', 
+		'tests', 
+		'jstests', 
+		'tasks', 
+		'viewmodel', 
+		'build', 
+		'reset', 
+		'viewcode' 
+	);
 	
 	public function init() {
 		parent::init();
@@ -56,7 +56,7 @@ class DevelopmentAdmin extends Controller {
 					$matched = false;
 					if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
 						$matched = true;
-					    break;
+						break;
 					}
 					$testPath = dirname($testPath);
 				}

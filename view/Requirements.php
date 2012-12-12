@@ -22,7 +22,7 @@ class Requirements {
 	 * @return boolean
 	 */
 	public static function get_combined_files_enabled() {
-	  return self::backend()->get_combined_files_enabled();
+		return self::backend()->get_combined_files_enabled();
 	}
 
 	/**
@@ -656,7 +656,7 @@ class Requirements_Backend {
 			$jsRequirements = '';
 			
 			// Combine files - updates $this->javascript and $this->css 
- 			$this->process_combined_files(); 
+			$this->process_combined_files(); 
 	
 			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
 				$path = $this->path_for_file($file);
@@ -1022,9 +1022,9 @@ class Requirements_Backend {
 				// file exists, check modification date of every contained file
 				$srcLastMod = 0;
 				foreach($fileList as $file) {
-				    if(file_exists($base . $file)) {
-				        $srcLastMod = max(filemtime($base . $file), $srcLastMod);
-				    }
+					if(file_exists($base . $file)) {
+						$srcLastMod = max(filemtime($base . $file), $srcLastMod);
+					}
 				}
 				$refresh = $srcLastMod > filemtime($combinedFilePath);
 			} else {
@@ -1070,9 +1070,9 @@ class Requirements_Backend {
 		// method repeatedly - it will behave different on the second call!
 		$this->javascript = $newJSRequirements;
 		$this->css = $newCSSRequirements;
-  }
-  
-  public function get_custom_scripts() {
+	}
+
+	public function get_custom_scripts() {
 		$requirements = "";
 		
 		if($this->customScript) {

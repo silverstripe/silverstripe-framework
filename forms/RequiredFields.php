@@ -42,15 +42,15 @@ class RequiredFields extends Validator {
 	 * Debug helper
 	 */
 	public function debug() {
-	 if(!is_array($this->required)) return false;
+		if(!is_array($this->required)) return false;
 
-	 $result = "<ul>";
-	 foreach( $this->required as $name ){
-	 	$result .= "<li>$name</li>";
-	 }
+		$result = "<ul>";
+		foreach( $this->required as $name ){
+			$result .= "<li>$name</li>";
+		}
 
-	 $result .= "</ul>";
-	 return $result;
+		$result .= "</ul>";
+		return $result;
 	}
 
 	/**

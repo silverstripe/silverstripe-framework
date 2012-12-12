@@ -66,10 +66,10 @@ class HasManyList extends RelationList {
 	 * @param $itemID The ID of the item to be removed
 	 */
 	public function removeByID($itemID) {
-        $item = $this->byID($itemID);
-        return $this->remove($item);
-    }
-    
+		$item = $this->byID($itemID);
+		return $this->remove($item);
+	}
+	
 	/**
 	 * Remove an item from this relation.
 	 * Doesn't actually remove the item, it just clears the foreign key value.
@@ -77,10 +77,10 @@ class HasManyList extends RelationList {
 	 * @todo Maybe we should delete the object instead? 
 	 */
 	public function remove($item) {
-        if(!($item instanceof $this->dataClass)) {
-        	throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID",
-        		E_USER_ERROR);
-        }
+		if(!($item instanceof $this->dataClass)) {
+			throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID",
+				E_USER_ERROR);
+		}
 
 		$fk = $this->foreignKey;
 		$item->$fk = null;
