@@ -45,7 +45,7 @@ class ContentNegotiator {
 	 * that need to specify the character set make use of this function.
 	 */
 	public static function get_encoding() {
-	    return self::$encoding;
+		return self::$encoding;
 	}
 
 	/**
@@ -96,7 +96,7 @@ class ContentNegotiator {
 		} else {
 			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml.  We put this special
 			// case in here so that designers don't get worried that their templates are HTML4.
- 			if(isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
+			if(isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
 				$chosenFormat = "xhtml";
 	
 			} else {

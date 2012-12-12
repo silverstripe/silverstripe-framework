@@ -303,37 +303,37 @@ class SS_HTTPResponse_Exception extends Exception {
 	 *                                     $statusDescription will be the HTTP status of the resulting response.
 	 * @see SS_HTTPResponse::__construct();
 	 */
-	 public function __construct($body = null, $statusCode = null, $statusDescription = null) {
-	 	if($body instanceof SS_HTTPResponse) {
-	 		// statusCode and statusDescription should override whatever is passed in the body
-	 		if($statusCode) $body->setStatusCode($statusCode);
+	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
+		if($body instanceof SS_HTTPResponse) {
+			// statusCode and statusDescription should override whatever is passed in the body
+			if($statusCode) $body->setStatusCode($statusCode);
 			if($statusDescription) $body->setStatusDescription($statusDescription);
 
 			$this->setResponse($body);
-	 	} else {
+		} else {
 			$response = new SS_HTTPResponse($body, $statusCode, $statusDescription);
 
 			// Error responses should always be considered plaintext, for security reasons
 			$response->addHeader('Content-Type', 'text/plain');
 
-	 		$this->setResponse($response);
-	 	}
-	 	
-	 	parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
-	 }
-	 
-	 /**
-	  * @return SS_HTTPResponse
-	  */
-	 public function getResponse() {
-	 	return $this->response;
-	 }
-	 
-	 /**
-	  * @param SS_HTTPResponse $response
-	  */
-	 public function setResponse(SS_HTTPResponse $response) {
-	 	$this->response = $response;
-	 }
+			$this->setResponse($response);
+		}
+		
+		parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
+	}
+	
+	/**
+	 * @return SS_HTTPResponse
+	 */
+	public function getResponse() {
+		return $this->response;
+	}
+	
+	/**
+	 * @param SS_HTTPResponse $response
+	 */
+	public function setResponse(SS_HTTPResponse $response) {
+		$this->response = $response;
+	}
 	
 }

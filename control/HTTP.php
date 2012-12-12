@@ -171,8 +171,8 @@ class HTTP {
 		if($regexes) foreach($regexes as $regex) {
 			if(preg_match_all($regex, $content, $matches)) {
 				$result = array_merge_recursive($result, (isset($matches[2]) ? $matches[2] : $matches[1]));
- 			}
- 		}
+			}
+		}
 		
 		return count($result) ? $result : null;
 	}

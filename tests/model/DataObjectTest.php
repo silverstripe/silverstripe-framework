@@ -1125,7 +1125,6 @@ class DataObjectTest_Player extends Member implements TestOnly {
 	static $belongs_many_many = array(
 		'Teams' => 'DataObjectTest_Team'
 	);
-   
 }
 
 class DataObjectTest_Team extends DataObject implements TestOnly {

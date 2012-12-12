@@ -120,9 +120,9 @@ class Mailer {
 			dieprintr($customheaders);
 		}
 
-	    
+		
 		$bodyIsUnicode = (strpos($htmlContent,"&#") !== false);
-	    $plainEncoding = "";
+		$plainEncoding = "";
 		
 		// We generate plaintext content by default, but you can pass custom stuff
 		$plainEncoding = '';
@@ -146,7 +146,7 @@ class Mailer {
 
 		// Make the HTML part
 		$headers["Content-Type"] = "text/html; charset=utf-8";
-	        
+		
 		
 		// Add basic wrapper tags if the body tag hasn't been given
 		if(stripos($htmlContent, '<body') === false) {
@@ -199,14 +199,14 @@ class Mailer {
 		$headers["From"] = $this->validEmailAddr($from);
 
 		// Messages with the X-SilverStripeMessageID header can be tracked
-	    if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
-	            $bounceAddress = BOUNCE_EMAIL;
-	    } else {
-	            $bounceAddress = $from;
-	    }
+		if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
+				$bounceAddress = BOUNCE_EMAIL;
+		} else {
+				$bounceAddress = $from;
+		}
 
-	    // Strip the human name from the bounce address
-	    if(preg_match('/^([^<>]*)<([^<>]+)> *$/', $bounceAddress, $parts)) $bounceAddress = $parts[2];	
+		// Strip the human name from the bounce address
+		if(preg_match('/^([^<>]*)<([^<>]+)> *$/', $bounceAddress, $parts)) $bounceAddress = $parts[2];	
 
 		// $headers["Sender"] 		= $from;
 		$headers["X-Mailer"]	= X_MAILER;
@@ -350,9 +350,9 @@ class Mailer {
 			$file['contents'] = $this->QuotedPrintable_encode($file['contents']);		
 		}
 
-		$headers = "Content-type: $mimeType;\n\tname=\"$base\"\n".
-		           "Content-Transfer-Encoding: $encoding\n".
-		           "Content-Disposition: $disposition;\n\tfilename=\"$base\"\n" ;
+		$headers =	"Content-type: $mimeType;\n\tname=\"$base\"\n".
+					"Content-Transfer-Encoding: $encoding\n".
+					"Content-Disposition: $disposition;\n\tfilename=\"$base\"\n" ;
 		
 		if ( isset($file['contentLocation']) ) $headers .= 'Content-Location: ' . $file['contentLocation'] . "\n" ;
 		

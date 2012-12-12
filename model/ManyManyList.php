@@ -117,11 +117,11 @@ class ManyManyList extends RelationList {
 	 * @param $itemID The ID of the item to remove.
 	 */
 	public function remove($item) {
-        if(!($item instanceof $this->dataClass)) {
-        	throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
-        }
-        
-        return $this->removeByID($item->ID);
+		if(!($item instanceof $this->dataClass)) {
+			throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
+		}
+		
+		return $this->removeByID($item->ID);
 	}
 
 	/**
@@ -130,7 +130,7 @@ class ManyManyList extends RelationList {
 	 * @param $itemID The item it
 	 */
 	public function removeByID($itemID) {
-	    if(!is_numeric($itemID)) throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
+		if(!is_numeric($itemID)) throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
 
 		$query = new SQLQuery("*", array("\"$this->joinTable\""));
 		$query->setDelete(true);
@@ -145,16 +145,16 @@ class ManyManyList extends RelationList {
 		$query->execute();
 	}
 
-    /**
-     * Remove all items from this many-many join.  To remove a subset of items, filter it first.
-     */
-    public function removeAll() {
+	/**
+	 * Remove all items from this many-many join.  To remove a subset of items, filter it first.
+	 */
+	public function removeAll() {
 		$query = $this->dataQuery()->query();
 		$query->setDelete(true);
 		$query->setSelect(array('*'));
 		$query->setFrom("\"$this->joinTable\"");
 		$query->execute();
-    }
+	}
 
 	/**
 	 * Find the extra field data for a single row of the relationship

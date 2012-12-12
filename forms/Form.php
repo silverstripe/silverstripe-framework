@@ -999,7 +999,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return boolean
 	 */
-	 public function validate(){
+	public function validate(){
 		if($this->validator){
 			$errors = $this->validator->validate();
 
@@ -1420,7 +1420,7 @@ class Form extends RequestHandler {
 		$result .= "</ul>";
 
 		if( $this->validator )
-		        $result .= '<h3>'._t('Form.VALIDATOR', 'Validator').'</h3>' . $this->validator->debug();
+			$result .= '<h3>'._t('Form.VALIDATOR', 'Validator').'</h3>' . $this->validator->debug();
 
 		return $result;
 	}
@@ -1437,8 +1437,8 @@ class Form extends RequestHandler {
 	 */
 	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
-        
-        return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
+
+		return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
 		
 		//$response = $this->controller->run($data);
 		//return $response;
