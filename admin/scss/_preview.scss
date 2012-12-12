@@ -11,21 +11,16 @@
 	}
 
 	/* Styling for icons in controls */
-	.icon-view, .preview-selector.dropdown {
-		.preview-dropdown {
-			display: none;
-		}
-		a.chzn-single {
-			white-space: nowrap;
-			&:before {
-				display:block;
-				float:left;
-				content: '';
-				width: 23px;
-				height:17px;
-				overflow: hidden;
-			} 
-		}
+	.icon-view, .preview-selector.dropdown a.chzn-single {
+		white-space: nowrap;
+		&:before {
+			display:inline-block;
+			float:left;
+			content: '';
+			width: 23px;
+			height:17px;
+			overflow: hidden;
+		} 
 	}
 	.icon-auto:before {
 		background: sprite($sprites32, preview_auto) no-repeat;	
@@ -71,7 +66,6 @@
 		a.chzn-single {						
 			width: 20px;
 			padding: 6px 5px 5px;
-			display: block;
 			height: 18px;
 			margin: -3px 0 0;
 			filter: none;	/* remove ie background */
@@ -87,7 +81,7 @@
 			&.chzn-single-with-drop {
 				@include border-radius(0 0 3px 3px);
 			}
-			div, span {
+			div {
 				display: none;
 			}
 		}
@@ -232,7 +226,6 @@
 		text-align: center;
 		text-shadow: 0 1px 0 #fff;
 		top: 50%;
-		left: 50%;
 		width: 300px;			
 		span {
 			background: sprite($sprites64, preview) no-repeat;

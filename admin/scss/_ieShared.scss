@@ -142,23 +142,22 @@
 
 /* Alternative styles for the switch in old IE */
 fieldset.switch-states{
-	padding-right:5px;
+	padding:0;
 	.switch{
-		padding: 0;
-		width: 100%+32;
-		left: -32px;
+		padding:0 10px 0 0;
 		label{
 			overflow:visible;
 			text-overflow:visible;
 			white-space:normal;
-			padding: 0px;
+			padding:0;
 			&.active{
 				color:#fff;
 				background-color: #2b9c32; 
 			}
 			span{
 				display:inline;
-				padding:0 8px;
+				padding:0 10px;
+				padding-right:15px;
 				overflow:visible;
 				text-overflow:visible;
 				white-space:wrap;
@@ -166,9 +165,6 @@ fieldset.switch-states{
 		}
 		.slide-button{
 			display:none;
-		}
-		input.state-name {
-			margin-left: -20px;
 		}
 	}
 }
