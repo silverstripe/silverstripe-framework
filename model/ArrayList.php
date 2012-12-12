@@ -130,7 +130,9 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return ArrayList 
 	 */
 	public function limit($length, $offset = 0) {
-		return new ArrayList(array_slice($this->items, $offset, $length));
+		$list = clone $this;
+		$list->items = array_slice($this->items, $offset, $length);
+		return $list;
 	}
 
 	/**
