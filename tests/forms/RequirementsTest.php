@@ -368,7 +368,7 @@ class RequirementsTest extends SapphireTest {
 			);
 		}
 	}
-  	
+
 	public function assertFileNotIncluded($backend, $type, $files) {
 		$type = strtolower($type);
 		switch ($type) {

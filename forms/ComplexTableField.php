@@ -35,7 +35,7 @@ class ComplexTableField extends TableListField {
 	 *  - A method name, eg, 'getCMSFields': Call that method on the child object to get the fields.
 	 */
 	protected $addTitle;
-    
+	
 	protected $detailFormFields;
 	
 	protected $viewAction;
@@ -176,7 +176,7 @@ class ComplexTableField extends TableListField {
 	public function PopupWidth() {
 		return $this->popupWidth;
 	}
-	       
+
 	public function PopupHeight() {
 		return $this->popupHeight;
 	}
@@ -286,13 +286,13 @@ JS;
 	public function setDetailFormValidator( Validator $validator ) {
 		$this->detailFormValidator = $validator;
 	}
-    
-    public function setAddTitle($addTitle) {
+	
+	public function setAddTitle($addTitle) {
 		if(is_string($addTitle))
 			$this->addTitle = $addTitle;
 	}
-    
-    public function Title() {
+	
+	public function Title() {
 		return $this->addTitle ? $this->addTitle : parent::Title();
 	}
 
@@ -326,8 +326,8 @@ JS;
 		// this is a workaround for a bug where each subsequent popup-call didn't have ID
 		// of the parent set, and so didn't properly save the relation
 		return ($idField) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
- 	} 
-	 
+	} 
+	
 
 
 	public function AddLink() {
@@ -397,7 +397,7 @@ JS;
 			$detailFields->push(new HiddenField('ctf[childID]', '', $childData->ID));
 		}
 		
-        /* TODO: Figure out how to implement this
+		/* TODO: Figure out how to implement this
 		if($this->getParentClass()) {
 			$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
 			
@@ -591,9 +591,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	public function dataObj() {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
- 			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			return DataObject::get_by_id(
- 				ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
+			// we have to use the basedataclass, otherwise we might exclude other subclasses 
+		return DataObject::get_by_id(
+			ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $tis->itemID); 
 		}
 		
 	}
@@ -723,31 +723,31 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	}
 	
 	/**
-     * Method handles pagination in asset popup.
-     *
-     * @return Object SS_List
-     */
+	 * Method handles pagination in asset popup.
+	 *
+	 * @return Object SS_List
+	 */
 	
 	public function Pagination() {
 		$this->pageSize = 9;
 		$currentItem  = $this->PopupCurrentItem();
 		$result = new ArrayList();
-        if($currentItem < 6) {
-        	$offset = 1;
-        } elseif($this->TotalCount() - $currentItem <= 4) {
-        	$offset = $currentItem - (10 - ($this->TotalCount() - $currentItem));
-        	$offset = $offset <= 0 ? 1 : $offset;
-        } else {
-        	$offset = $currentItem  - 5; 
-        }
-		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->TotalCount();$i++) {
-            $start = $i - 1;
-			$links['link'] = Controller::join_links($this->Link() . "$this->methodName?ctf[start]={$start}");
-            $links['number'] = $i;
-            $links['active'] = $i == $currentItem ? false : true;
-            $result->push(new ArrayData($links));
+		if($currentItem < 6) {
+			$offset = 1;
+		} elseif($this->TotalCount() - $currentItem <= 4) {
+			$offset = $currentItem - (10 - ($this->TotalCount() - $currentItem));
+			$offset = $offset <= 0 ? 1 : $offset;
+		} else {
+			$offset = $currentItem  - 5; 
 		}
-        return $result;
+		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->TotalCount();$i++) {
+			$start = $i - 1;
+			$links['link'] = Controller::join_links($this->Link() . "$this->methodName?ctf[start]={$start}");
+			$links['number'] = $i;
+			$links['active'] = $i == $currentItem ? false : true;
+			$result->push(new ArrayData($links));
+		}
+		return $result;
 	}
 
 	public function ShowPagination() {
@@ -768,7 +768,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 * @param String $str Example: FamilyID (when one Individual has_one Family)
 	 */
 	public function setParentIdName($str) {
-	    throw new Exception("setParentIdName is no longer necessary");
+		throw new Exception("setParentIdName is no longer necessary");
 	}
 	
 	public function setTemplatePopup($template) {

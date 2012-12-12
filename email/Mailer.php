@@ -41,7 +41,7 @@ class Mailer extends Object {
 /*
  * Sends an email as a both HTML and plaintext
  *   $attachedFiles should be an array of file names
- *    - if you pass the entire $_FILES entry, the user-uploaded filename will be preserved
+ *   - if you pass the entire $_FILES entry, the user-uploaded filename will be preserved
  *   use $plainContent to override default plain-content generation
  * 
  * @return bool
@@ -54,9 +54,9 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 		dieprintr($customheaders);
 	}
 
-    
+	
 	$bodyIsUnicode = (strpos($htmlContent,"&#") !== false);
-    $plainEncoding = "";
+	$plainEncoding = "";
 	
 	// We generate plaintext content by default, but you can pass custom stuff
 	$plainEncoding = '';
@@ -80,7 +80,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 
 	// Make the HTML part
 	$headers["Content-Type"] = "text/html; charset=utf-8";
-        
+	
 	
 	// Add basic wrapper tags if the body tag hasn't been given
 	if(stripos($htmlContent, '<body') === false) {
@@ -134,14 +134,14 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["From"] = validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
-    if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
-            $bounceAddress = BOUNCE_EMAIL;
-    } else {
-            $bounceAddress = $from;
-    }
+	if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
+		$bounceAddress = BOUNCE_EMAIL;
+	} else {
+		$bounceAddress = $from;
+	}
 
-    // Strip the human name from the bounce address
-    if(preg_match('/^([^<>]*)<([^<>]+)> *$/', $bounceAddress, $parts)) $bounceAddress = $parts[2];	
+	// Strip the human name from the bounce address
+	if(preg_match('/^([^<>]*)<([^<>]+)> *$/', $bounceAddress, $parts)) $bounceAddress = $parts[2];	
 
 	// $headers["Sender"] 		= $from;
 	$headers["X-Mailer"]	= X_MAILER;
@@ -406,9 +406,9 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 		$file['contents'] = QuotedPrintable_encode($file['contents']);		
 	}
 
-	$headers = "Content-type: $mimeType;\n\tname=\"$base\"\n".
-	           "Content-Transfer-Encoding: $encoding\n".
-	           "Content-Disposition: $disposition;\n\tfilename=\"$base\"\n" ;
+	$headers =	"Content-type: $mimeType;\n\tname=\"$base\"\n".
+				"Content-Transfer-Encoding: $encoding\n".
+				"Content-Disposition: $disposition;\n\tfilename=\"$base\"\n";
 	
 	if ( isset($file['contentLocation']) ) $headers .= 'Content-Location: ' . $file['contentLocation'] . "\n" ;
 	

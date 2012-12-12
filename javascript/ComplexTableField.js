@@ -151,6 +151,6 @@ ComplexTableField.applyTo('div.ComplexTableField');
  * Get first letter as uppercase
  */
 String.prototype.ucfirst = function () {
-   var firstLetter = this.substr(0,1).toUpperCase()
-   return this.substr(0,1).toUpperCase() + this.substr(1,this.length);
+	var firstLetter = this.substr(0,1).toUpperCase()
+	return this.substr(0,1).toUpperCase() + this.substr(1,this.length);
 }

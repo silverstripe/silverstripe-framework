@@ -27,7 +27,7 @@ class TeamCityListener implements PHPUnit_Framework_TestListener {
 		$class = get_class($test);
 		echo "##teamcity[testStarted name='{$class}.{$test->getName()}']\n";
 	}
- 
+
 	public function endTest(PHPUnit_Framework_Test $test, $time) {
 		$class = get_class($test);
 		echo "##teamcity[testFinished name='{$class}.{$test->getName()}' duration='$time']\n";
@@ -40,7 +40,7 @@ class TeamCityListener implements PHPUnit_Framework_TestListener {
 		echo "##teamcity[testFailed type='exception' name='{$class}.{$test->getName()}' message='$message'"
 			. " details='$trace']\n";
 	}
- 
+
 	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time) {
 		$class = get_class($test);
 		$message = $this->escape($e->getMessage());

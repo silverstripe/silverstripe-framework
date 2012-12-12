@@ -169,11 +169,11 @@ class TableListFieldTest extends SapphireTest {
 		$ajaxResponse = Director::test($table->Link())->getBody();
 
 		// Check that the column headings have been rendered
-        $this->assertRegExp('/<th[^>]*>.*Col A.*<\/th>/si', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>.*Col B.*<\/th>/si', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>.*Col C.*<\/th>/si', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>.*Col D.*<\/th>/si', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>.*Col E.*<\/th>/si', $ajaxResponse);
+		$this->assertRegExp('/<th[^>]*>.*Col A.*<\/th>/si', $ajaxResponse);
+		$this->assertRegExp('/<th[^>]*>.*Col B.*<\/th>/si', $ajaxResponse);
+		$this->assertRegExp('/<th[^>]*>.*Col C.*<\/th>/si', $ajaxResponse);
+		$this->assertRegExp('/<th[^>]*>.*Col D.*<\/th>/si', $ajaxResponse);
+		$this->assertRegExp('/<th[^>]*>.*Col E.*<\/th>/si', $ajaxResponse);
 	}
 	
 	public function testCsvExport() {
@@ -294,19 +294,19 @@ class TableListFieldTest extends SapphireTest {
 		unset($_REQUEST['ctf']);
 	}
 
-    /**
-     * Check that a SS_List can be passed to TableListField
-     */
+	/**
+	 * Check that a SS_List can be passed to TableListField
+	 */
 	public function testDataObjectSet() {
-	    $one = new TableListFieldTest_Obj;
-	    $one->A = "A-one";
-	    $two = new TableListFieldTest_Obj;
-	    $two->A = "A-two";
-	    $three = new TableListFieldTest_Obj;
-	    $three->A = "A-three";
-	    
-	    $list = new ArrayList(array($one, $two, $three));
-	    
+		$one = new TableListFieldTest_Obj;
+		$one->A = "A-one";
+		$two = new TableListFieldTest_Obj;
+		$two->A = "A-two";
+		$three = new TableListFieldTest_Obj;
+		$three->A = "A-three";
+		
+		$list = new ArrayList(array($one, $two, $three));
+		
 		// A TableListField must be inside a form for its links to be generated
 		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			new TableListField("Tester", $list, array(

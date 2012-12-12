@@ -422,7 +422,7 @@ abstract class SS_Database {
 		//Indexes specified as arrays cannot be checked with this line: (it flattens out the array)
 		if(!is_array($spec)) {
 			$spec = preg_replace('/\s*,\s*/', ',', $spec);
-        }
+		}
 
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
 
@@ -1136,7 +1136,7 @@ abstract class SS_Query implements Iterator {
 				$result .= "<tr>";
 				foreach($record as $k => $v) {
 					$result .= "<th>" . Convert::raw2xml($k) . "</th> ";
- 				}
+				}
 				$result .= "</tr> \n";
 			}
 
@@ -1213,7 +1213,7 @@ abstract class SS_Query implements Iterator {
 	 */
 	public function valid() {
 		if(!$this->queryHasBegun) $this->next();
-	 	return $this->currentRecord !== false;
+		return $this->currentRecord !== false;
 	}
 
 	/**

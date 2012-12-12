@@ -269,8 +269,8 @@ class MySQLDatabase extends SS_Database {
 		if($alteredIndexes) foreach($alteredIndexes as $k => $v) {
 			$alterList[] .= "DROP INDEX \"$k\"";
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
- 		}
- 		
+		}
+		
 		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
 			if(!isset($this->indexList[$tableName])) {
 				$this->indexList[$tableName] = $this->indexList($tableName);
@@ -298,7 +298,7 @@ class MySQLDatabase extends SS_Database {
 			}
 		}
 
- 		$alterations = implode(",\n", $alterList);
+		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE \"$tableName\" $alterations");
 	}
 	
@@ -467,9 +467,9 @@ class MySQLDatabase extends SS_Database {
 
 		$indexSpec = trim($indexSpec);
 		if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
-	    else $indexFields = $indexSpec;
+		else $indexFields = $indexSpec;
 
-	    if(!isset($indexType))
+		if(!isset($indexType))
 			$indexType = "index";
 
 		if($indexType=='using')
@@ -499,15 +499,15 @@ class MySQLDatabase extends SS_Database {
 		$indexSpec=$this->convertIndexSpec($indexSpec);
 
 		$indexSpec = trim($indexSpec);
-	    if($indexSpec[0] != '(') {
-	    	list($indexType, $indexFields) = explode(' ',$indexSpec,2);
-	    } else {
-	    	$indexFields = $indexSpec;
-	    }
+		if($indexSpec[0] != '(') {
+			list($indexType, $indexFields) = explode(' ',$indexSpec,2);
+		} else {
+			$indexFields = $indexSpec;
+		}
 
-	    if(!$indexType) {
-	    	$indexType = "index";
-	    }
+		if(!$indexType) {
+			$indexType = "index";
+		}
 
 		$this->query("ALTER TABLE \"$tableName\" DROP INDEX \"$indexName\"");
 		$this->query("ALTER TABLE \"$tableName\" ADD $indexType \"$indexName\" $indexFields");
@@ -822,19 +822,19 @@ class MySQLDatabase extends SS_Database {
 		if(!class_exists('File')) throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
 		
 		$fileFilter = '';
-	 	$keywords = Convert::raw2sql($keywords);
+		$keywords = Convert::raw2sql($keywords);
 		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
 
 		$extraFilters = array('SiteTree' => '', 'File' => '');
 
-	 	if($booleanSearch) $boolean = "IN BOOLEAN MODE";
+		if($booleanSearch) $boolean = "IN BOOLEAN MODE";
 
-	 	if($extraFilter) {
-	 		$extraFilters['SiteTree'] = " AND $extraFilter";
+		if($extraFilter) {
+			$extraFilters['SiteTree'] = " AND $extraFilter";
 
-	 		if($alternativeFileFilter) $extraFilters['File'] = " AND $alternativeFileFilter";
-	 		else $extraFilters['File'] = $extraFilters['SiteTree'];
-	 	}
+			if($alternativeFileFilter) $extraFilters['File'] = " AND $alternativeFileFilter";
+			else $extraFilters['File'] = $extraFilters['SiteTree'];
+		}
 
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
@@ -984,7 +984,7 @@ class MySQLDatabase extends SS_Database {
 		$boolean = $booleanSearch ? "IN BOOLEAN MODE" : "";
 		$fieldNames = '"' . implode('", "', $fields) . '"';
 
-	 	$SQL_keywords = Convert::raw2sql($keywords);
+		$SQL_keywords = Convert::raw2sql($keywords);
 		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords, ENT_NOQUOTES, 'UTF-8'));
 
 		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames)"
@@ -1131,7 +1131,7 @@ class MySQLDatabase extends SS_Database {
 	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like
 	 *                      '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which
-	 *                is the result of the substraction
+	 *                    is the result of the substraction
 	 */
 	public function datetimeDifferenceClause($date1, $date2) {
 

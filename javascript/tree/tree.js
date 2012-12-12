@@ -212,7 +212,7 @@ Tree.prototype = {
 		}
 
 		// Update the helper classes accordingly
- 		if(!hasChildren) this.removeNodeClass('children');
+		if(!hasChildren) this.removeNodeClass('children');
 		else this.lastTreeNode().addNodeClass('last');
 		
 		// Update the helper variables
@@ -303,8 +303,8 @@ TreeNode.prototype = {
 		
 		// Move all the nodes up until that point into spanC
 		for(j=startingPoint;j<stoppingPoint;j++) {
-		 /* Use [startingPoint] every time, because the appentChild
-                   removes the node, so it then points to the next one. */
+			/* Use [startingPoint] every time, because the appentChild
+				removes the node, so it then points to the next one. */
 			spanC.appendChild(li.childNodes[startingPoint]);
 		}
 		
@@ -527,7 +527,7 @@ TreeNode.prototype = {
 		}
 
 		// Update the helper classes accordingly
- 		if(!hasChildren) this.removeNodeClass('children');
+		if(!hasChildren) this.removeNodeClass('children');
 		else this.lastTreeNode().addNodeClass('last');
 		
 		// Update the helper variables
@@ -599,27 +599,27 @@ TreeNode.prototype = {
 
 /* Close or Open all the trees, at beginning or on request. sjd. */
 function treeCloseAll() {
-    var candidates = document.getElementsByTagName('li');
-    for (var i=0;i<candidates.length;i++) {
-        var aSpan = candidates[i].childNodes[0];
-        if(aSpan.childNodes[0] && aSpan.childNodes[0].className == "b") {
-           if (!aSpan.className.match(/spanClosed/) && candidates[i].id != 'record-0' ) {
-               aSpan.childNodes[0].onclick();
-           }
-        }
-    }
+	var candidates = document.getElementsByTagName('li');
+	for (var i=0;i<candidates.length;i++) {
+		var aSpan = candidates[i].childNodes[0];
+		if(aSpan.childNodes[0] && aSpan.childNodes[0].className == "b") {
+			if (!aSpan.className.match(/spanClosed/) && candidates[i].id != 'record-0' ) {
+				aSpan.childNodes[0].onclick();
+			}
+		}
+	}
 }
 
 function treeOpenAll() {
-    var candidates = document.getElementsByTagName('li');
-    for (var i=0;i<candidates.length;i++) {
-        var aSpan = candidates[i].childNodes[0];
-        if(aSpan.childNodes[0] && aSpan.childNodes[0].className == "b") {
-           if (aSpan.className.match(/spanClosed/)) {
-               aSpan.childNodes[0].onclick();
-           }
-        }
-    }
+	var candidates = document.getElementsByTagName('li');
+	for (var i=0;i<candidates.length;i++) {
+		var aSpan = candidates[i].childNodes[0];
+		if(aSpan.childNodes[0] && aSpan.childNodes[0].className == "b") {
+			if (aSpan.className.match(/spanClosed/)) {
+				aSpan.childNodes[0].onclick();
+			}
+		}
+	}
 }
 
 

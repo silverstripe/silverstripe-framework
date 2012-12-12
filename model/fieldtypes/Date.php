@@ -330,23 +330,23 @@ class Date extends DBField {
 	
 	
 	public function days_between($fyear, $fmonth, $fday, $tyear, $tmonth, $tday){
-	  return abs((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, $tmonth, $tday, $tyear))/(60*60*24));
+		return abs((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, $tmonth, $tday, $tyear))/(60*60*24));
 	}
 	
 	public function day_before($fyear, $fmonth, $fday){
-	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-1,$fyear));
+		return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-1,$fyear));
 	}
 	
 	public function next_day($fyear, $fmonth, $fday){
-	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday+1,$fyear));
+		return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday+1,$fyear));
 	}
 	
 	public function weekday($fyear, $fmonth, $fday){ // 0 is a Monday
-	  return (((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, 7, 17, 2006))/(60*60*24))+700000) % 7;
+		return (((mktime ( 0, 0, 0, $fmonth, $fday, $fyear) - mktime ( 0, 0, 0, 7, 17, 2006))/(60*60*24))+700000) % 7;
 	}
 	
 	public function prior_monday($fyear, $fmonth, $fday){
-	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-$this->weekday($fyear, $fmonth, $fday),$fyear)); 
+		return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-$this->weekday($fyear, $fmonth, $fday),$fyear)); 
 	}
 	
 	/**

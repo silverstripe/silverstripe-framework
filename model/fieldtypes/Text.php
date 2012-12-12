@@ -33,7 +33,7 @@ class Text extends StringField {
 		'NoHTML' => 'Text',
 	);
 	
- 	/**
+	/**
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()
  	 */

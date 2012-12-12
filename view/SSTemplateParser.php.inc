@@ -453,7 +453,7 @@ class SSTemplateParser extends Parser {
 	function Require_Call(&$res, $sub) {
 		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
 	}
-   
+
 	
 	/*!*
 	
@@ -617,7 +617,7 @@ class SSTemplateParser extends Parser {
 	function OldTTag_OldTPart(&$res, $sub) {
 		$res['php'] = $sub['php'];
 	}
-	 	  
+
 	/*!*
 	 
 	# This is the old <% sprintf(_t()) %> tag

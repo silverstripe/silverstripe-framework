@@ -85,7 +85,7 @@ class FormField extends RequestHandler {
 	protected 
 		$template,
 		$fieldHolderTemplate,
- 		$smallFieldHolderTemplate;
+		$smallFieldHolderTemplate;
 		
 	/**
 	 * @var array All attributes on the form field (not the field holder).
@@ -597,14 +597,14 @@ class FormField extends RequestHandler {
 		return $obj->renderWith($this->getFieldHolderTemplates());
 	}
 
-   /**
-    * Returns a restricted field holder used within things like FieldGroups.
-	*
-	* @param array $properties
-	*
-	* @return string
-    */
-   public function SmallFieldHolder($properties = array()) {
+	/**
+	 * Returns a restricted field holder used within things like FieldGroups.
+	 *
+	 * @param array $properties
+	 *
+	 * @return string
+	 */
+	public function SmallFieldHolder($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
 
 		return $obj->renderWith($this->getSmallFieldHolderTemplates());
