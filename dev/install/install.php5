@@ -1249,6 +1249,18 @@ HTML;
 		$start = "### SILVERSTRIPE START ###\n";
 		$end = "\n### SILVERSTRIPE END ###";
 
+		// what version of Apache are we using
+		$matches = array();
+		if (function_exists('apache_get_version')) {
+			preg_match("/\bApache\/\b\d+(?:\.\d+)*/i", apache_get_version(), $matches);
+		} elseif (isset($_SERVER['SERVER_SOFTWARE'])) {
+			preg_match("/\bApache\/\b\d+(?:\.\d+)*/i", $_SERVER['SERVER_SOFTWARE'], $matches);
+		}
+		$apacheVersion = (isset($matches[0])) ? str_replace('apache/', '', strtolower($matches[0])) : 0;
+
+		// AcceptPathInfo is only applicable for Apache versions 2.0.30 and later
+		$acceptPath = (version_compare($apacheVersion, '2.0.30') >= 0) ? 'AcceptPathInfo Default' : '';
+
 		$base = dirname($_SERVER['SCRIPT_NAME']);
 		if(defined('DIRECTORY_SEPARATOR')) $base = str_replace(DIRECTORY_SEPARATOR, '/', $base);
 		else $base = str_replace("\\", '/', $base);
@@ -1256,6 +1268,7 @@ HTML;
 		if($base != '.') $baseClause = "RewriteBase '$base'\n";
 		else $baseClause = "";
 		$modulePath = FRAMEWORK_NAME;
+
 		$rewrite = <<<TEXT
 <Files *.ss>
 	Order deny,allow
@@ -1271,17 +1284,18 @@ HTML;
 ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
-<IfModule mod_alias.c>
-	RedirectMatch 403 /silverstripe-cache(/|$)
-</IfModule>
+RedirectMatch 403 /silverstripe-cache(/|$)
 
+$acceptPath
 <IfModule mod_rewrite.c>
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
+
 	$baseClause
-	RewriteCond %{REQUEST_URI} ^(.*)$
+
+	RewriteCond %{REQUEST_URI} ^/?(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* $modulePath/main.php/%1 [QSA,L]
 </IfModule>
 TEXT;
 
@@ -1320,12 +1334,21 @@ TEXT;
 		</security>
 		<rewrite>
 			<rules>
-				<rule name="SilverStripe Clean URLs" stopProcessing="true">
-					<match url="^(.*)$" />
-					<conditions>
-						<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+				<rule name="SilverStripe URL Rewrite">
+					<match url=".*" ignoreCase="false" />
+					<conditions logicalGrouping="MatchAll">
+						<add input="{URL}" pattern="^/?(.*)$" ignoreCase="false" />
+						<add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
 					</conditions>
-					<action type="Rewrite" url="$modulePath/main.php?url={R:1}" appendQueryString="true" />
+					<action type="Rewrite" url="$modulePath/main.php/{C:1}" appendQueryString="true" />
+				</rule>
+				<rule name="SilverStripe Clean URLs" stopProcessing="true">
+					<match url="." ignoreCase="false" />
+					<conditions logicalGrouping="MatchAll">
+						<add input="{URL}" pattern="^(.*)/framework/main.php$" ignoreCase="false" />
+						<add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+					</conditions>
+					<action type="Redirect" url="{C:1}/install.php?" appendQueryString="false" redirectType="Found" />
 				</rule>
 			</rules>
 		</rewrite>

@@ -39,3 +39,7 @@ How easy will it be to update my project? It's a fair question, and sometimes a 
 *  [Release Announcements](http://groups.google.com/group/silverstripe-announce/)
 *  [Blog posts about releases on silverstripe.org](http://silverstripe.org/blog/tag/release)
 * [/misc/release-process](Release Process)
+
+## Lightttpd
+
+* Lighthttpd specific code to parse get variables into $_GET has been removed as it was a possible security hole and could affect performance
