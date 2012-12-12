@@ -442,7 +442,7 @@ class InjectorTest extends SapphireTest {
 
 	public function testCustomObjectCreator() {
 		$injector = new Injector();
-		$injector->setObjectCreator(new SSObjectCreator());
+		$injector->setObjectCreator(new SSObjectCreator($injector));
 		$config = array(
 			'OriginalRequirementsBackend',
 			'DummyRequirements' => array(
@@ -485,9 +485,39 @@ class InjectorTest extends SapphireTest {
 		$again = $injector->get('NeedsBothCirculars');
 		$this->assertEquals($again->var, 'One');
 	}
+	
+	public function testConvertServicePropertyOnCreate() {
+		// make sure convert service property is not called on direct calls to create, only on configured 
+		// declarations to avoid un-needed function calls
+		$injector = new Injector();
+		$item = $injector->create('ConstructableObject', '%$TestObject');
+		$this->assertEquals('%$TestObject', $item->property);
+		
+		// do it again but have test object configured as a constructor dependency
+		$injector = new Injector();
+		$config = array(
+			'ConstructableObject' => array(
+				'constructor' => array(
+					'%$TestObject'
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('ConstructableObject');
+		$this->assertTrue($item->property instanceof TestObject);
+	}
 }
 
-class TestObject {
+class ConstructableObject implements TestOnly {
+	public $property;
+	
+	public function __construct($prop) {
+		$this->property = $prop;
+	}
+}
+
+class TestObject implements TestOnly {
 
 	public $sampleService;
 
@@ -497,7 +527,7 @@ class TestObject {
 
 }
 
-class OtherTestObject {
+class OtherTestObject implements TestOnly {
 
 	private $sampleService;
 
@@ -511,13 +541,13 @@ class OtherTestObject {
 
 }
 
-class CircularOne {
+class CircularOne implements TestOnly {
 
 	public $circularTwo;
 
 }
 
-class CircularTwo {
+class CircularTwo implements TestOnly {
 
 	public $circularOne;
 
@@ -528,7 +558,7 @@ class CircularTwo {
 	}
 }
 
-class NeedsBothCirculars {
+class NeedsBothCirculars implements TestOnly{
 
 	public $circularOne;
 	public $circularTwo;
@@ -536,15 +566,15 @@ class NeedsBothCirculars {
 
 }
 
-class MyParentClass {
+class MyParentClass implements TestOnly {
 	public $one;
 }
 
-class MyChildClass extends MyParentClass {
+class MyChildClass extends MyParentClass implements TestOnly {
 	
 }
 
-class DummyRequirements {
+class DummyRequirements implements TestOnly {
 
 	public $backend;
 
@@ -558,15 +588,15 @@ class DummyRequirements {
 
 }
 
-class OriginalRequirementsBackend {
+class OriginalRequirementsBackend implements TestOnly {
 
 }
 
-class NewRequirementsBackend {
+class NewRequirementsBackend implements TestOnly {
 
 }
 
-class TestStaticInjections {
+class TestStaticInjections implements TestOnly {
 
 	public $backend;
 	static $dependencies = array(
@@ -582,13 +612,19 @@ class TestStaticInjections {
  * @see https://github.com/silverstripe/sapphire
  */
 class SSObjectCreator extends InjectionCreator {
+	private $injector;
+	
+	public function __construct($injector) {
+		$this->injector = $injector;
+	}
 
-	public function create(Injector $injector, $class, $params = array()) {
+	public function create($class, $params = array()) {
 		if (strpos($class, '(') === false) {
-			return parent::create($injector, $class, $params);
+			return parent::create($class, $params);
 		} else {
 			list($class, $params) = self::parse_class_spec($class);
-			return parent::create($injector, $class, $params);
+			$params = $this->injector->convertServiceProperty($params);
+			return parent::create($class, $params);
 		}
 	}
 
