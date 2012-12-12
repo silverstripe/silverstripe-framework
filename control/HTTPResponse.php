@@ -123,7 +123,7 @@ class SS_HTTPResponse {
 	 * The text to be given alongside the status code ("reason phrase").
 	 * Caution: Will be overwritten by {@link setStatusCode()}.
 	 * 
-	 * @param String $description
+	 * @param String $description 
 	 * @return SS_HTTPRequest $this
 	 */
 	public function setStatusDescription($description) {
@@ -153,7 +153,7 @@ class SS_HTTPResponse {
 	public function isError() {
 		return $this->statusCode && ($this->statusCode < 200 || $this->statusCode > 399);
 	}
-
+	
 	/**
 	 * @param string $body
 	 * @return SS_HTTPRequest $this
@@ -161,7 +161,7 @@ class SS_HTTPResponse {
 	public function setBody($body) {
 		$this->body = $body;
 	}
-
+	
 	/**
 	 * @return null|string
 	 */
@@ -173,7 +173,7 @@ class SS_HTTPResponse {
 	 * Add a HTTP header to the response, replacing any header of the same name.
 	 * 
 	 * @param string $header Example: "Content-Type"
-	 * @param string $value Example: "text/xml"
+	 * @param string $value Example: "text/xml" 
 	 * @return SS_HTTPRequest $this
 	 */
 	public function addHeader($header, $value) {
@@ -189,9 +189,9 @@ class SS_HTTPResponse {
 	 */
 	public function getHeader($header) {
 		if(isset($this->headers[$header]))
-			return $this->headers[$header];
-		return null;
-	}
+			return $this->headers[$header];			
+			return null;
+		}
 	
 	/**
 	 * @return array
@@ -211,7 +211,7 @@ class SS_HTTPResponse {
 		if(isset($this->headers[$header])) unset($this->headers[$header]);
 		return $this;
 	}
-
+	
 	/**
 	 * @param string $dest
 	 * @param int $code

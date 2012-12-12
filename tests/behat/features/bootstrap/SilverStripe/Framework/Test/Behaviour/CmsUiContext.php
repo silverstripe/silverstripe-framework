@@ -339,9 +339,9 @@ class CmsUiContext extends BehatContext
 		}
 
 		assertGreaterThan(0, count($formFields), sprintf(
-			'Chosen.js dropdown named "%s" not found',
-			$field
-		));
+				'Chosen.js dropdown named "%s" not found',
+				$field
+			));
 
 		$containers = array();
 		foreach($formFields as $formField) {
@@ -357,11 +357,11 @@ class CmsUiContext extends BehatContext
 				&& preg_match('/field/', $containerCandidate->getAttribute('class'))
 			) {
 				$containers[] = $containerCandidate;
-			}
 		}
-		
-		assertGreaterThan(0, count($containers), 'Chosen.js field container not found');
+		}
 
+		assertGreaterThan(0, count($containers), 'Chosen.js field container not found');
+		
 		// Default to first visible container
 		$container = $containers[0];
 		
@@ -373,9 +373,9 @@ class CmsUiContext extends BehatContext
 
 		$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
 		assertNotNull($listEl, sprintf(
-			'Chosen.js list element with title "%s" not found',
-			$value
-		));
+				'Chosen.js list element with title "%s" not found',
+				$value
+			));
 
 		// Dropdown flyout might be animated
 		// $this->getSession()->wait(1000, 'jQuery(":animated").length == 0');

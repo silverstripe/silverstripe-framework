@@ -362,6 +362,7 @@ class Injector {
 			// EXCEPT when there's already an existing instance at this id.
 			// if so, we need to instantiate and replace immediately
 			if (isset($this->serviceCache[$id])) {
+				$this->updateSpecConstructor($spec);
 				$this->instantiate($spec, $id);
 			}
 		}
@@ -401,6 +402,20 @@ class Injector {
 			if (isset($this->serviceCache[$id])) {
 				$this->instantiate($spec, $id);
 			}
+		}
+	}
+	
+	/**
+	 * Update a class specification to convert constructor configuration information if needed
+	 * 
+	 * We do this as a separate process to avoid unneeded calls to convertServiceProperty 
+	 * 
+	 * @param array $spec
+	 *			The class specification to update
+	 */
+	protected function updateSpecConstructor(&$spec) {
+		if (isset($spec['constructor'])) {
+			$spec['constructor'] = $this->convertServiceProperty($spec['constructor']);
 		}
 	}
 
@@ -468,7 +483,7 @@ class Injector {
 			$constructorParams = $spec['constructor'];
 		}
 
-		$object = $this->objectCreator->create($this, $class, $constructorParams);
+		$object = $this->objectCreator->create($class, $constructorParams);
 		
 		// figure out if we have a specific id set or not. In some cases, we might be instantiating objects
 		// that we don't manage directly; we don't want to store these in the service cache below
@@ -730,15 +745,22 @@ class Injector {
 			// we don't want to return the singleton version of it.
 			$spec = $this->specs[$serviceName];
 			$type = isset($spec['type']) ? $spec['type'] : null;
-
+			
 			// if we're explicitly a prototype OR we're not wanting a singleton
 			if (($type && $type == 'prototype') || !$asSingleton) {
 				if ($spec && $constructorArgs) {
 					$spec['constructor'] = $constructorArgs;
+				} else {
+					// convert any _configured_ constructor args. 
+					// we don't call this for get() calls where someone passes in 
+					// constructor args, otherwise we end up calling convertServiceParams
+					// way too often
+					$this->updateSpecConstructor($spec);
 				}
 				return $this->instantiate($spec, $serviceName, !$type ? 'prototype' : $type);
 			} else {
 				if (!isset($this->serviceCache[$serviceName])) {
+					$this->updateSpecConstructor($spec);
 					$this->instantiate($spec, $serviceName);
 				}
 				return $this->serviceCache[$serviceName];
@@ -750,6 +772,7 @@ class Injector {
 			$this->load(array($name => $config));
 			if (isset($this->specs[$name])) {
 				$spec = $this->specs[$name];
+				$this->updateSpecConstructor($spec);
 				return $this->instantiate($spec, $name);
 			}
 		}
@@ -816,10 +839,10 @@ class InjectionCreator {
 	 * @param array $params
 	 *					An array of parameters to be passed to the constructor
 	 */
-	public function create(Injector $injector, $class, $params = array()) {
+	public function create($class, $params = array()) {
 		$reflector = new ReflectionClass($class);
 		if (count($params)) {
-			return $reflector->newInstanceArgs($injector->convertServiceProperty($params));
+			return $reflector->newInstanceArgs($params); 
 		}
 		return $reflector->newInstance();
 	}
@@ -833,10 +856,10 @@ class SilverStripeInjectionCreator {
 	 * @param array $params
 	 *					An array of parameters to be passed to the constructor
 	 */
-	public function create(Injector $injector, $class, $params = array()) {
+	public function create($class, $params = array()) {
 		$class = Object::getCustomClass($class);
 		$reflector = new ReflectionClass($class);
-		return $reflector->newInstanceArgs($injector->convertServiceProperty($params));
+		return $reflector->newInstanceArgs($params);
 	}
 }
 
