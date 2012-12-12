@@ -2722,9 +2722,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if($limit && strpos($limit, ',') !== false) {
 			$limitArguments = explode(',', $limit);
-			$result->limit($limitArguments[1],$limitArguments[0]);
+			$result = $result->limit($limitArguments[1],$limitArguments[0]);
 		} elseif($limit) {
-			$result->limit($limit);
+			$result = $result->limit($limit);
 		}
 
 		if($join) $result = $result->join($join);

@@ -1420,14 +1420,12 @@ class Member_GroupSet extends ManyManyList {
 	/**
 	 * Link this group set to a specific member.
 	 */
-	public function setForeignID($id) {
-		// Turn a 1-element array into a simple value
-		if(is_array($id) && sizeof($id) == 1) $id = reset($id);
-		$this->foreignID = $id;
-		
+	public function foreignIDFilter($id = null) {
+		if ($id === null) $id = $this->getForeignID();
+
 		// Find directly applied groups
-		$manymanyFilter = $this->foreignIDFilter();
-		$groupIDs = DB::query('SELECT "GroupID" FROM "Group_Members" WHERE ' . $manymanyFilter)->column();
+		$manyManyFilter = parent::foreignIDFilter($id);
+		$groupIDs = DB::query('SELECT "GroupID" FROM "Group_Members" WHERE ' . $manyManyFilter)->column();
 
 		// Get all ancestors
 		$allGroupIDs = array();
@@ -1438,8 +1436,16 @@ class Member_GroupSet extends ManyManyList {
 		}
 		
 		// Add a filter to this DataList
-		if($allGroupIDs) $this->byIDs($allGroupIDs);
-		else $this->byIDs(array(0));
+		if($allGroupIDs) {
+			return "\"Group\".\"ID\" IN (" . implode(',', $allGroupIDs) .")";
+		}
+		else {
+			return "\"Group\".\"ID\" = 0";
+		}
+	}
+
+	public function foreignIDWriteFilter($id = null) {
+		return parent::foreignIDFilter($id);
 	}
 }
 

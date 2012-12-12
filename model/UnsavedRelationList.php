@@ -240,24 +240,13 @@ class UnsavedRelationList extends ArrayList {
 	}
 
 	/**
-	 * Set the ID of the record that this RelationList is linking.
-	 *
-	 * Adds the 
-	 *
-	 * @param $id A single ID, or an array of IDs
-	 */
-	public function setForeignID($id) {
-		$class = singleton($this->baseClass);
-		$class->ID = 1;
-		return $class->{$this->relationName}()->setForeignID($id);
-	}
-	
-	/**
 	 * Returns a copy of this list with the relationship linked to the given foreign ID.
 	 * @param $id An ID or an array of IDs.
 	 */
 	public function forForeignID($id) {
-		return $this->setForeignID($id);
+		$class = singleton($this->baseClass);
+		$class->ID = 1;
+		return $class->{$this->relationName}()->forForeignID($id);
 	}
 
 	/**
