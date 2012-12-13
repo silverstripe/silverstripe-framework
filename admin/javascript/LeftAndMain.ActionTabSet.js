@@ -24,6 +24,19 @@
 				this.tabs({'collapsible': true, 'active': false});
 			},
 
+			onremove: function() {
+				// Remove all bound events.
+				// This guards against an edge case where the click handlers are not unbound
+				// because the panel is still open when the ajax edit form reloads.
+				var frame = $('.cms').find('iframe');
+				frame.each(function(index, iframe){
+					$(iframe).contents().off('click.ss-ui-action-tabset');
+				});
+				$(document).off('click.ss-ui-action-tabset');
+
+				this._super();
+			},
+
 			/**
 			 * Deal with available vertical space
 			 */
@@ -53,27 +66,29 @@
 					var panel, frame;
 					panel = $(event.target).closest('.ss-ui-action-tabset .ui-tabs-panel');
 
-					// If anything except the ui-nav button is clicked,
-					// close panel and remove handler
-					if (!$(event.target).closest(that).length || $(panel).length) {
+					// If anything except the ui-nav button or panel is clicked,
+					// close panel and remove handler. We can't close if click was
+					// within panel, as it might've caused a button action,
+					// and we need to show its loading indicator.
+					if (!$(event.target).closest(that).length && !panel.length) {
 						that.tabs('option', 'active', false); // close tabs
 
 						// remove click event from objects it is bound to (iframe's and document)
 						frame = $('.cms').find('iframe');
 						frame.each(function(index, iframe){
-							$(iframe).contents().off('click', closeHandler);
+							$(iframe).contents().off('click.ss-ui-action-tabset', closeHandler);
 						});
-						$(document).off('click', closeHandler);
+						$(document).off('click.ss-ui-action-tabset', closeHandler);
 					}
 				};
 
 				// Bind click event to document, and use closeHandler to handle the event
-				$(document).on('click', closeHandler);
+				$(document).on('click.ss-ui-action-tabset', closeHandler);
 				// Make sure iframe click also closes tab
 				// iframe needs a special case, else the click event will not register here
 				if(frame.length > 0){
 					frame.each(function(index, iframe) {
-						$(iframe).contents().on('click', closeHandler);
+						$(iframe).contents().on('click.ss-ui-action-tabset', closeHandler);
 					});
 				}
 			},
@@ -131,7 +146,7 @@
 			 */
 			'ontabsbeforeactivate': function(event, ui) {
 				this._super(event, ui);
-			 	//Set the position of the opening tab (if it exists)
+				//Set the position of the opening tab (if it exists)
 				if($(ui.newPanel).length > 0){
 					$(ui.newPanel).css('left', ui.newTab.position().left+"px");
 				}
@@ -211,7 +226,7 @@
 				this._super(event, ui);
 				// Reset position of tabs, else anyone going between the large
 				// and the small sitetree will see broken tabs
-		 		// Apply styles with .css, to avoid overriding currently applied styles
+				// Apply styles with .css, to avoid overriding currently applied styles
 				$(ui.newPanel).css({'left': 'auto', 'right': 'auto'});
 
 				if($(ui.newPanel).length > 0){

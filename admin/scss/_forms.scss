@@ -313,6 +313,14 @@ form.small .field, .field.small {
 				background:none;				
 				border:none;
 			}
+			&.loading {
+				background: transparent url(../../images/network-save.gif) no-repeat $grid-x center;
+				.ui-button-text {
+					padding-left: 16px /* icon */ + ($grid-x/2);
+				}
+				
+				
+			}
 		}
 	}
 

@@ -302,7 +302,7 @@ $border: 1px solid darken(#D9D9D9, 15%);
 					}
 				}
 				button.ss-ui-button{
-					width:100%;
+					width: 100%;
 					&:hover, &:focus, &:active{
 						@include box-shadow(none);
 						background-color: darken($tab-panel-texture-color,4%);
