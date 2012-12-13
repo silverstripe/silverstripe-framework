@@ -159,6 +159,7 @@ body.cms {
 	.ui-tabs-panel {
 		padding: $grid-x 0;
 		background: transparent; // default it's white
+		border: 0; // suppress default borders
 		&.cms-edit-form {
 			padding: 0;
 		}
