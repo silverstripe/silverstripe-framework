@@ -669,7 +669,6 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 
 /** -------------------------------------------- Users Members Admin -------------------------------------------- */
 .members_grid span button#action_gridfield_relationfind { display: none; }
-.members_grid p button#action_export { margin-top: 16px; }
 .members_grid p button#action_export span.btn-icon-download-csv { height: 17px; }
 .members_grid p button#action_export .ui-button-text { padding-left: 26px; }
 
