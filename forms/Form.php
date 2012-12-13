@@ -1030,6 +1030,8 @@ class Form extends RequestHandler {
 		$this->message  = null;
 		Session::clear("FormInfo.{$this->FormName()}.errors");
 		Session::clear("FormInfo.{$this->FormName()}.formError");
+		Session::clear("FormInfo.{$this->FormName()}.message");
+		Session::clear("FormInfo.{$this->FormName()}.type");
 	}
 	public function resetValidation() {
 		Session::clear("FormInfo.{$this->FormName()}.errors");
