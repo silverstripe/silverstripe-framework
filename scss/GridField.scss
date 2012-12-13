@@ -41,8 +41,12 @@ $gf_grid_x:	16px;
 		& > div {
 			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
-				margin-bottom:$gf_grid_y;
-				@include clearfix;
+				/*margin-bottom:$gf_grid_y;
+				@include clearfix;*/ /* stops multiple buttons appearing inline*/
+				margin-bottom: 0;
+				.action {
+					margin-bottom: $gf_grid_y;
+				}
 			}
 		}
 
@@ -61,7 +65,6 @@ $gf_grid_x:	16px;
 	 	}
 
 	 	p button#action_export {
-			margin-top:$gf_grid_y;
 			span.btn-icon-download-csv {
 				height:17px; //exact height of icon
 			}
@@ -74,11 +77,10 @@ $gf_grid_x:	16px;
 			& > * {
 				float: right;
 				margin-left:5px;			
-				font-size: $gf_grid_y*1.2;
+				font-size: $gf_grid_y*1.2; /* This should be removed and use default button sizes, don't see what it effects though */
 			}
 
-			.pagination-records-number
-			{
+			.pagination-records-number {
 				font-size: 1.0em;
 				padding: 6px 3px 6px 0;
 				color: $color-text-light;
@@ -91,7 +93,6 @@ $gf_grid_x:	16px;
 			& > * {
 				margin-right:5px;
 				float: left;
-				font-size: $gf_grid_y*1.2;
 			}
 		}
 	}
@@ -106,15 +107,15 @@ $gf_grid_x:	16px;
 			margin-bottom: 6px;
 		}
 		.add-existing-autocompleter {
-			input.relation-search {
-				width: 380px;
+			span {															
+				display: inline-block;
 			}
-			width: 500px;
+			input.relation-search {
+				width: 270px;
+			}
 		}
-		.grid-print-button{
-			display: inline-block;
-		}
-		.grid-csv-button{
+		.grid-csv-button, .grid-print-button {
+			margin-bottom: 12px;
 			display: inline-block;
 		}
 	}
@@ -160,10 +161,11 @@ $gf_grid_x:	16px;
 				max-width: 500px; //This number is semi-arbitary. It is acting as a percentage limit, rather than actually constricting the width to 500px.
 				word-wrap:break-word;
 				// Give browser some hints on which cols take priority:
-				// The last column (buttons) should always shrink to fit.
+				// The last column (buttons) should always shrink to fit. REPLY: does not shrink to fit
 				// Overwritten for IE7, which doesnt support this.			
 				&.col-buttons {
-					width: auto;
+					/* width: auto; this doesnt shrink to fit */
+					width: 40px;
 					padding:0 $gf_grid_x/2;
 					text-align: right;
 					white-space: nowrap;
