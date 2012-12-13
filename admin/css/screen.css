@@ -971,7 +971,9 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form .resetformaction { margin-right: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm { overflow: hidden; }
 
-.SecurityAdmin .permissioncheckboxset .optionset li, .SecurityAdmin .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; }
+.permissioncheckboxset h5, .permissioncheckboxsetfield_readonly h5 { margin: 0; }
+.permissioncheckboxset .optionset, .permissioncheckboxsetfield_readonly .optionset { overflow: auto; }
+.permissioncheckboxset .optionset li, .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; clear: both; }
 
 /* For user permissions the readonly checkboxes are set as display none and are replaced with a <span> that has a 
 green tick icon as a background this is created using compass generated classes and hardcoded in the php */
