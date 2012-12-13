@@ -41,7 +41,7 @@
 .cms table.ss-gridfield-table tbody td.col-buttons { width: auto; padding: 0 8px; text-align: right; white-space: nowrap; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; border-right: none; text-indent: -9999em; padding: 0; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 3px -4px; display: block; }
-.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #1556b2; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #0073c1; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 10px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; border-radius: 2px / 2px; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
@@ -53,7 +53,7 @@
 .cms table.ss-gridfield-table tbody td button.ui-state-active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.gridfield-button-delete { width: 20px; margin: 0; }
 .cms table.ss-gridfield-table tbody td button.gridfield-button-delete span.btn-icon-decline { left: 2px; }
-.cms table.ss-gridfield-table tbody td a.view-link, .cms table.ss-gridfield-table tbody td a.edit-link { display: inline-block; float: left; width: 20px; height: 20px; text-indent: 9999em; overflow: hidden; vertical-align: middle; }
+.cms table.ss-gridfield-table tbody td a.view-link, .cms table.ss-gridfield-table tbody td a.edit-link { display: inline-block; width: 20px; height: 20px; text-indent: 9999em; overflow: hidden; vertical-align: middle; }
 .cms table.ss-gridfield-table tbody td a.view-link { background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px; }
 .cms table.ss-gridfield-table tbody td a.edit-link { background: url(../admin/images/btn-icon/document--pencil.png) no-repeat 2px 0px; }
 .cms table.ss-gridfield-table tfoot { color: #323e46; }
