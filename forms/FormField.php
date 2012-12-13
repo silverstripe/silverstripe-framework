@@ -356,7 +356,6 @@ class FormField extends RequestHandler {
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
-			'title' => $this->getDescription(),
 		);
 		
 		return array_merge($attrs, $this->attributes);
