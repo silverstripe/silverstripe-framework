@@ -239,10 +239,10 @@ class DropdownField extends FormField {
 	}
 
 	public function performReadonlyTransformation() {
-		$field = new LookupField($this->name, $this->title, $this->getSource());
-		$field->setValue($this->value);
-		$field->setForm($this->form);
+		$field = $this->castedCopy('LookupField');
+		$field->setSource($this->getSource());
 		$field->setReadonly(true);
+		
 		return $field;
 	}
 }

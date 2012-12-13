@@ -283,8 +283,22 @@ class DatetimeField extends FormField {
 	}
 	
 	public function performReadonlyTransformation() {
-		$field = new DatetimeField_Readonly($this->name, $this->title, $this->dataValue());
-		$field->setForm($this->form);
+		$field = $this->castedCopy('DatetimeField_Readonly');
+		$field->setValue($this->dataValue());
+		
+		$dateFieldConfig = $this->getDateField()->getConfig();
+		if($dateFieldConfig) {
+			foreach($dateFieldConfig as $k => $v) {
+				$field->getDateField()->setConfig($k, $v);
+			}
+		}
+
+		$timeFieldConfig = $this->getTimeField()->getConfig();
+		if($timeFieldConfig) {
+			foreach($timeFieldConfig as $k => $v) {
+				$field->getTimeField()->setConfig($k, $v);
+			}
+		}
 		
 		return $field;
 	}

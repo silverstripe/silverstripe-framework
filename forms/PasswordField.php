@@ -31,11 +31,9 @@ class PasswordField extends TextField {
 	 * Makes a pretty readonly field with some stars in it
 	 */
 	public function performReadonlyTransformation() {
-		$stars = '*****';
-
-		$field = new ReadonlyField($this->name, $this->title ? $this->title : '', $stars);
-		$field->setForm($this->form);
-		$field->setReadonly(true);
+		$field = $this->castedCopy('ReadonlyField');
+		$field->setValue('*****');
+		
 		return $field;
 	}
 
