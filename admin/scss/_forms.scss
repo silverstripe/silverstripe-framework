@@ -42,7 +42,7 @@ form.nostyle {
 		.middleColumn {
 			margin-left: 0;
 		}
-		.help {
+		.description {
 			margin-left: 0;
 		}
 	}
@@ -90,23 +90,15 @@ form.nostyle {
 
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
-	.help {
+	.description {
 		clear: both;
 		color: lighten($color-text, 20%);
 		display: block;
 		font-style: italic;
-		margin: $grid-y/2 0 0 $grid-x*23;
+		margin: $grid-y/2 0 0 $grid-x*23; // left align with .middleColumn
 	}
-	&.help {
-		label.right {
-			clear: both;
-			color: lighten($color-text, 20%);
-			display: block;
-			font-style: italic;
-			margin: $grid-y/2 0 0 $grid-x*23;
-		}
-	}
-	&.checkbox .help, &.ss-gridfield .help {
+	
+	&.checkbox .description, &.ss-gridfield .description {
 		margin-left: 0;
 	}
 	
@@ -118,10 +110,10 @@ form.nostyle {
 		width: 100%;
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
-		&.help {
+		&.description {
 			margin:0; //overrides help class adding left margin to the textarea input.
 		}
-		.help {
+		.description {
 			max-width: $grid-x * 64;
 		}
 	}
@@ -588,7 +580,7 @@ form.small .field, .field.small {
 				float: none;
 				margin-left: 0;
 			}
-			.help {
+			.description {
 				margin-left: 0;
 			}
 		}

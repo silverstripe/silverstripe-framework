@@ -397,6 +397,13 @@ class GridField extends FormField {
 			'cellspacing' => '0'	
 		);
 
+		if($this->getDescription()) {
+			$content['after'] .= FormField::create_tag(
+				'span', 
+				array('class' => 'description'), 
+				$this->getDescription()
+			);
+		}
 
 		return
 			FormField::create_tag('fieldset', $attrs, 
