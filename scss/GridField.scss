@@ -109,15 +109,16 @@ $gf_grid_x:	16px;
 		}
 		.add-existing-autocompleter {
 			span {															
-				display: inline-block;
+				@include inline-block(top);
 			}
 			input.relation-search {
 				width: 270px;
+				margin-bottom: $gf_grid_y;
 			}
 		}
 		.grid-csv-button, .grid-print-button {
 			margin-bottom: $gf_grid_y;
-			display: inline-block;
+			@include inline-block();
 		}
 	}
 	table.ss-gridfield-table {
