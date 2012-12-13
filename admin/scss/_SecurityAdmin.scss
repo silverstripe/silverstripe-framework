@@ -5,8 +5,17 @@
 			li {
 				float: none;
 				width: auto;
+				clear: both;
 			}	
 		}
+	}
+}
+
+.permissioncheckboxset {
+	.optionset {
+		li {
+			clear: both;
+		}	
 	}
 }
 
