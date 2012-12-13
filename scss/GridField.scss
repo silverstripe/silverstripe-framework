@@ -74,8 +74,7 @@ $gf_grid_x:	16px;
 	 		float:right;
 			& > * {
 				float: right;
-				margin-left:5px;			
-				font-size: $gf_grid_y*1.2;
+				margin-left:$gf_grid_x/2;			
 			}
 
 			.pagination-records-number {
@@ -89,10 +88,13 @@ $gf_grid_x:	16px;
 		.left { 
 			float:left;
 			& > * {
-				margin-right:5px;
+				margin-right:$gf_grid_x/2;
 				float: left;
-				font-size: $gf_grid_y*1.2;
 			}
+		}
+
+		.ss-gridfield-buttonrow {
+			font-size: $gf_grid_y*1.2;
 		}
 	}
 	
