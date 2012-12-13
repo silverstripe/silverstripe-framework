@@ -61,13 +61,9 @@ $gf_grid_x:	16px;
 	 	}
 
 	 	p button#action_export {
-			margin-top:$gf_grid_y;
 			span.btn-icon-download-csv {
 				height:17px; //exact height of icon
 			}
-			.ui-button-text {
-				padding-left:26px; //to accomodate wider export icon
-			} 
 	 	}
 	 	.right {
 	 		float:right;
@@ -105,7 +101,7 @@ $gf_grid_x:	16px;
 			}
 			margin-bottom: 6px;
 		}
-		.add-existing-autocompleter {
+		.add-existing-autocompleter {															/*Paul new*/
 			input.relation-search {
 				width: 380px;
 			}

@@ -22,8 +22,8 @@ We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
 Copy the template markup of the base implementation at `framework/admin/templates/LeftAndMain.ss` into
-`mysite/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after
-the `$Content` tag:
+`mysite/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after the
+`$Content` tag:
 	
 	:::ss
 	...
@@ -125,6 +125,55 @@ and replace it with the following:
 		<% end_loop %>
 	</ul>
 
+## Extending the CMS actions
+
+CMS actions follow a principle similar to the CMS fields: they are built in the backend with the help of `FormFields`
+and `FormActions`, and the frontend is responsible for applying a consistent styling.
+
+The following conventions apply:
+
+* New actions can be added by redefining `getCMSActions`, or adding an extension with `updateCMSActions`.
+* It is required the actions are contained in a `FieldSet` (`getCMSActions` returns this already).
+* Standalone buttons are created by adding a top-level `FormAction` (no such button is added by default).
+* Button groups are created by adding a top-level `CompositeField` with `FormActions` in it.
+* A `MajorActions` button group is already provided as a default.
+* Drop ups with additional actions that appear as links are created via a `TabSet` and `Tabs` with `FormActions` inside.
+* A `ActionMenus.MoreOptions` tab is already provided as a default and contains some minor actions.
+* You can override the actions completely by providing your own `getAllCMSFields`.
+
+Let's walk through a couple of examples of adding new CMS actions in `getCMSActions`.
+
+First of all we can add a regular standalone button anywhere in the set. Here we are inserting it in the front of all
+other actions. We could also add a button group (`CompositeField`) in a similar fashion.
+
+	:::php
+	$fields->unshift(FormAction::create('normal', 'Normal button'));
+
+We can affect the existing button group by manipulating the `CompositeField` already present in the `FieldList`.
+
+	:::php
+	$fields->fieldByName('MajorActions')->push(FormAction::create('grouped', 'New group button'));
+
+Another option is adding actions into the drop-up - best place for placing infrequently used minor actions.
+
+	:::php
+	$fields->addFieldToTab('ActionMenus.MoreOptions', FormAction::create('minor', 'Minor action'));
+
+We can also easily create new drop-up menus by defining new tabs within the `TabSet`.
+
+	:::php
+	$fields->addFieldToTab('ActionMenus.MyDropUp', FormAction::create('minor', 'Minor action in a new drop-up'));
+
+<div class="hint" markdown='1'>
+Empty tabs will be automatically removed from the `FieldList` to prevent clutter.
+</div>
+
+New actions will need associated controller handlers to work. You can use a `LeftAndMainExtension` to provide one. Refer
+to [Controller documentation](../topics/controller) for instructions on setting up handlers.
+
+To make the actions more user-friendly you can also use alternating buttons as detailed in the [CMS Alternating
+Button](../reference/cms-alternating-button) how-to.
+
 ## Summary
 
 In a few lines of code, we've customized the look and feel of the CMS.
@@ -136,3 +185,4 @@ blocks and concepts for more complex extensions as well.
  * [Reference: CMS Architecture](../reference/cms-architecture)
  * [Reference: Layout](../reference/layout)
  * [Topics: Rich Text Editing](../topics/rich-text-editing)
+ * [CMS Alternating Button](../reference/cms-alternating-button)

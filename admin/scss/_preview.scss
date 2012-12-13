@@ -220,12 +220,13 @@
 		font-size: 22px;
 		font-weight: bold;
 		height: 82px;
-		margin-top: -50px; 				
+		margin-top: -50px; 	
 		margin-left: -150px;	/* half of width */
 		position: absolute;
 		text-align: center;
 		text-shadow: 0 1px 0 #fff;
 		top: 50%;
+		left: 50%;
 		width: 300px;			
 		span {
 			background: sprite($sprites64, preview) no-repeat;

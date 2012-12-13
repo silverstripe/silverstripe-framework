@@ -205,14 +205,18 @@
 		});
 
 		/**
-		 * Hide tabs when only one is available
+		 * Hide tabs when only one is available.
+		 * Special case is actiontabs - tabs between buttons, where we want to have
+		 * extra options hidden within a tab (even if only one) by default.
 		 */
 		$('.cms-edit-form .ss-tabset').entwine({
 			onmatch: function() {
-				var tabs = this.find("> ul:first");
+				if (!this.hasClass('ss-ui-action-tabset')) {
+					var tabs = this.find("> ul:first");
 
-				if(tabs.children("li").length == 1) {
-					tabs.hide().parent().addClass("ss-tabset-tabshidden");
+					if(tabs.children("li").length == 1) {
+						tabs.hide().parent().addClass("ss-tabset-tabshidden");
+					}
 				}
 
 				this._super();

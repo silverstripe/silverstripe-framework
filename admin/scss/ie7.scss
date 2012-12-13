@@ -1,10 +1,58 @@
 @import 'themes/default';
 @import 'ieShared';
+@import "compass/utilities/sprites/sprite-img";
+@import "sprites.scss";
 
 html {
 	overflow: hidden;
 }
  
+//add line below the cms-content-toolbar
+.cms-content-toolbar {
+	padding-bottom:5px;
+}
+
+.cms-menu-list{
+	li{
+		list-style-type: none;      
+	    width: 100%;
+	    float: left;    
+	    margin: 0px;
+	    padding: 0px;  
+	}
+}
+
+
+/* Site tree 
+------------------------- */
+
+//fix for the tree view modes not displaying inline
+.cms-tree-view-modes {
+	div {
+		float:left;
+	}
+	span {
+		float:left;
+		padding-top:5px;
+	}
+}
+.cms-panel-content .cms-tree{
+ 	li{
+ 		width:200px;
+ 		overflow:hidden;
+ 		float:left;
+ 		display:inline;
+ 	}
+}
+
+// fix jstree themeroller plugin bug: tree disappear in IE7
+.jstree li a .ui-icon {
+	text-indent: 0px !important;
+}
+
+
+/* Forms and files area
+-----------------------------*/
 .field {
 	input.text, 
 	textarea,
@@ -40,7 +88,6 @@ select {
 .ss-ui-button.cms-page-add-button {
 	float:left;
 }
-
 
 //fix for the tree view modes not displaying inline
 .cms-tree-view-modes {
@@ -84,6 +131,9 @@ select {
 	text-indent: 0px !important;
 }
 
+/* Gridfield 
+------------------------- */
+
 .cms table.ss-gridfield-table {
 	tbody td {
 		// Overrule width: 100% setting to trigger "shrink fit"
@@ -103,8 +153,6 @@ select {
 .ss-gridfield-button-reset.ss-ui-button {
 	margin: -1px -5px;
 }
-
-
 
 //fix for edit and delete icons
 .cms .ss-gridfield table.ss-gridfield-table tbody {
@@ -171,16 +219,6 @@ table.ss-gridfield-table {
 	}	
 }	
 
-//fix for model admin filter styling 
-.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content {
-	.cms-search-form {
-		overflow:hidden;
-		input {
-			width:160px;
-		}
-	}
-}
-
 //fix for view children arrow in pages list view 
 .cms .ss-gridfield table.ss-gridfield-table tbody {
 	td {
@@ -192,7 +230,26 @@ table.ss-gridfield-table {
 			}
 		}
 	}
-}	
+}
+
+.ss-ui-button{
+	&.ss-gridfield-button-filter{		
+			border:none !important;
+	}
+}
+
+
+
+//fix for model admin filter styling 
+.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content {
+	.cms-search-form {
+		overflow:hidden;
+		input {
+			width:160px;
+		}
+	}
+}
+
 
 // CMS Content header & tab fix
 .cms-content-header {
@@ -222,4 +279,41 @@ table.ss-gridfield-table {
 .cms .Actions > .cms-preview-toggle-link{
 	display:block;
 }
+
 @include IEVerticalPanelText;
+
+//IE7 can't use before and after. Compromise 
+.cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset {
+	width: 190px;
+	ul.ui-tabs-nav {
+		a.ui-tabs-anchor{
+			background: transparent url(../images/sprites-32x32/arrow_down_lighter.png) no-repeat right top;
+			&:hover {
+				background: transparent url(../images/sprites-32x32/arrow_down_darker.png) no-repeat right top;
+			}
+		}
+		.ui-state-active a.ui-tabs-anchor {
+			background: transparent url(../images/sprites-32x32/arrow_up_lighter.png) no-repeat right top;
+			&:hover {
+				background: transparent url(../images/sprites-32x32/arrow_up_darker.png) no-repeat right top;
+			}		
+		}
+	}
+	.ui-tabs-panel button.ss-ui-button {
+	    width: 190px; /* Width 100% not calculating by ie7 */
+	}
+}
+
+
+/* Tempory fix as jquery loads too slow to add icons */
+button.ui-button-text-icon-primary {
+	padding-left: 30px !important;
+	span.ui-button-icon-primary {
+		position: absolute !important;
+		top: 5px !important;
+		left: 8px !important;
+	}
+	.ui-button-text {
+		margin-left: 0 !important;
+	}
+}

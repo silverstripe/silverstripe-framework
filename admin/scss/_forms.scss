@@ -285,6 +285,36 @@ form.small .field, .field.small {
  * ---------------------------------------------------- */
 
 .cms {
+	.button-no-style{
+		button{
+			@include border-radius(0);
+			background: none;
+			border: none;
+			color: $color-text-blue-link;
+			display: block;
+			font-weight:normal;	
+			margin:0;
+			outline:none;
+			padding-left:10px;
+			padding-right:10px;	
+			text-align: left;			
+			text-shadow: none;	
+			white-space:normal;		
+			&.ss-ui-action-destructive{
+				color: darken($color-error,25%);
+			}
+			span{
+				padding-left:0;
+				padding-right:0;
+			}
+			&:hover, &:focus, &:active{	
+				@include box-shadow(none);		
+				outline:none;
+				background:none;				
+				border:none;
+			}
+		}
+	}
 
 	.Actions, .cms-actions-row {
 		> * {
@@ -300,7 +330,7 @@ form.small .field, .field.small {
 
 	.Actions {
 		min-height: 30px;
-		overflow: visible;
+		overflow: auto;
 		padding: $grid-x $grid-y * 1.5;
 	}
 	.south .Actions, .ui-tabs-panel .Actions,  .ui-tabs-panel iframe .Actions {
@@ -328,7 +358,9 @@ form.small .field, .field.small {
 	}
 
 	.ss-ui-button {
+		font-size: 12px;
 		margin-top:0px;
+		padding: 5px 10px;
 		font-weight: bold;
 		text-decoration: none;
 		line-height: $grid-y * 2;
@@ -338,6 +370,22 @@ form.small .field, .field.small {
 		cursor: pointer;
 		background-color: $color-button-generic;
 		white-space: nowrap;
+
+		.ui-icon, .ui-button-text {
+			display: inline-block;
+			line-height: $grid-x*2;
+			padding: 0;
+		}
+		.ui-icon {
+			width: 16px;
+			padding: 0 2px;
+			position: relative;
+			left: -2px;
+			margin-top: 0;
+			top: 0;
+			height: 16px;
+			float: left;
+		}
 
 		@include background(
 			linear-gradient(color-stops(
@@ -412,7 +460,6 @@ form.small .field, .field.small {
 
 		&.ss-ui-button-small {
 			.ui-button-text {
-				padding: ($grid-y/4) ($grid-x/4);
 				font-size: $font-base-size - 2;
 			}
 		}
@@ -753,4 +800,3 @@ fieldset.switch-states{
 } 
 //old web-kit browser fix	
 @-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
-
