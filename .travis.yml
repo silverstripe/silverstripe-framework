@@ -13,6 +13,8 @@ matrix:
       env: TESTDB=PGSQL
     - php: 5.4
       env: TESTDB=SQLITE
+  allow_failures:
+    - env: TESTDB=PGSQL
 
 before_script:
  - pear install pear/PHP_CodeSniffer
