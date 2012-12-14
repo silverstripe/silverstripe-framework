@@ -14,7 +14,6 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Emails](email): Configuring and sending emails
  * [Environment management](environment-management): Sharing configuration details (e.g. database login, passwords) with multiple websites via a `_ss_environment.php` file
  * [Error Handling](error-handling): Error messages and filesystem logs
- * [Extending the CMS](extending-the-cms): Introduction to changing the default CMS editor
  * [Files and Images](files): File and Image management in the database and how to manipulate images
  * [Form Validation](form-validation): Built-in validation on form fields, and how to extend it
  * [Forms](forms): Create your own form, add fields and create your own form template using the existing `Form` class
