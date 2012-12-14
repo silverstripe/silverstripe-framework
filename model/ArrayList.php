@@ -2,6 +2,17 @@
 /**
  * A list object that wraps around an array of objects or arrays.
  *
+ * Note that (like DataLists), the implementations of the methods from SS_Filterable, SS_Sortable and
+ * SS_Limitable return a new instance of ArrayList, rather than modifying the existing instance.
+ *
+ * For easy reference, methods that operate in this way are:
+ *
+ *   - limit
+ *   - reverse
+ *   - sort
+ *   - filter
+ *   - exclude
+ *
  * @package framework
  * @subpackage model
  */
@@ -119,7 +130,9 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return ArrayList 
 	 */
 	public function limit($length, $offset = 0) {
-		return new ArrayList(array_slice($this->items, $offset, $length));
+		$list = clone $this;
+		$list->items = array_slice($this->items, $offset, $length);
+		return $list;
 	}
 
 	/**
@@ -309,8 +322,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return ArrayList
 	 */
 	public function reverse() {
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
+		$list = clone $this;
 		$list->items = array_reverse($this->items);
 		
 		return $list;
@@ -376,8 +388,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			$multisortArgs[] = &$sortDirection[$column];
 		}
 
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
+		$list = clone $this;
 		// As the last argument we pass in a reference to the items that all the sorting will be applied upon
 		$multisortArgs[] = &$list->items;
 		call_user_func_array('array_multisort', $multisortArgs);
@@ -440,8 +451,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
+		$list = clone $this;
 		$list->items = $itemsToKeep;
 		return $list;
 	}
@@ -504,8 +514,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
+		$list = clone $this;
 		$list->items = $itemsToKeep;
 		return $list;
 	}
