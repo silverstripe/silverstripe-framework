@@ -33,9 +33,7 @@
 		</div>
 	<% end_if %>
 <% else %>
-	<div class="ss-uploadfield-item ss-uploadfield-addfile<% if $Items && $displayInput %> borderTop<% end_if %>" <% if not $displayInput %>style="display: none;"<% end_if %> <% if Description %>title="$Description"
-	
-	<% end_if %>>
+	<div class="ss-uploadfield-item ss-uploadfield-addfile<% if $Items && $displayInput %> borderTop<% end_if %>" <% if not $displayInput %>style="display: none;"<% end_if %>>
 		<div class="ss-uploadfield-item-preview ss-uploadfield-dropzone ui-corner-all">
 				<% if $multiple %>
 					<% _t('UploadField.DROPFILES', 'drop files') %>
@@ -64,3 +62,4 @@
 		<div class="clear"><!-- --></div>
 	</div>
 <% end_if %>
+<% if Description %><span class="description">$Description</span><% end_if %>
