@@ -460,22 +460,30 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);
 
 		// Restore email configuration
-		Email::set_mailer($this->originalMailer);
-		$this->originalMailer = null;
-		$this->mailer = null;
+		if($this->originalMailer) {
+			Email::set_mailer($this->originalMailer);
+			$this->originalMailer = null;
+		}
+		$this->mailer = null;	
 
 		// Restore password validation
-		Member::set_password_validator($this->originalMemberPasswordValidator);
+		if($this->originalMemberPasswordValidator) {
+			Member::set_password_validator($this->originalMemberPasswordValidator);	
+		}
 		
 		// Restore requirements
-		Requirements::set_backend($this->originalRequirements);
+		if($this->originalRequirements) {
+			Requirements::set_backend($this->originalRequirements);	
+		}
 
 		// Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
 		self::$is_running_test = $this->originalIsRunningTest;
 		$this->originalIsRunningTest = null;
 
 		// Reset theme setting
-		SSViewer::set_theme($this->originalTheme);
+		if($this->originalTheme) {
+			SSViewer::set_theme($this->originalTheme);	
+		}
 
 		// Reset mocked datetime
 		SS_Datetime::clear_mock_now();
