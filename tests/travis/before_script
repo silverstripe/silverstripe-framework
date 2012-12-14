@@ -4,6 +4,14 @@
 
 BUILD_DIR=$1
 
+# Environment info
+echo "# Environment info"
+echo " - `php --version`"
+echo " - `mysql --version`"
+echo " - `pg_config --version`"
+echo " - SQLite3 `sqlite3 -version`"
+echo ""
+
 # Fetch all dependencies
 # TODO Replace with different composer.json variations
 
