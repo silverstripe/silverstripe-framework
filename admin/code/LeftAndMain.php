@@ -296,6 +296,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				array(
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',

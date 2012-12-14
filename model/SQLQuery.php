@@ -276,18 +276,28 @@ class SQLQuery {
 	 * Add a LEFT JOIN criteria to the FROM clause.
 	 *
 	 * @param string $table Unquoted table name
-	 * @param string $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement,
-	 *  Needs to be valid (quoted) SQL.
+	 * @param string $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement, Needs to be valid 
+	 *                            (quoted) SQL.
 	 * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
+	 * @param int $order A numerical index to control the order that joins are added to the query; lower order values 
+	 *                   will cause the query to appear first. The default is 20, and joins created automatically by the
+	 *                   ORM have a value of 10.
 	 * @return SQLQuery
 	 */
-	public function addLeftJoin($table, $onPredicate, $tableAlias = null) {
-		if(!$tableAlias) $tableAlias = $table;
-		$this->from[$tableAlias] = array('type' => 'LEFT', 'table' => $table, 'filter' => array($onPredicate));
+	public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20) {
+		if(!$tableAlias) {
+			$tableAlias = $table;
+		}
+		$this->from[$tableAlias] = array(
+			'type' => 'LEFT',
+			'table' => $table,
+			'filter' => array($onPredicate), 
+			'order' => $order
+		);
 		return $this;
 	}
 
-	public function leftjoin($table, $onPredicate, $tableAlias = null) {
+	public function leftjoin($table, $onPredicate, $tableAlias = null, $order = 20) {
 		Deprecation::notice('3.0', 'Please use addLeftJoin() instead!');
 		$this->addLeftJoin($table, $onPredicate, $tableAlias);
 	}
@@ -296,20 +306,28 @@ class SQLQuery {
 	 * Add an INNER JOIN criteria to the FROM clause.
 	 *
 	 * @param string $table Unquoted table name
-	 * @param string $onPredicate The "ON" SQL fragment in an "INNER JOIN ... AS ... ON ..." statement.
-	 *  Needs to be valid (quoted) SQL.
+	 * @param string $onPredicate The "ON" SQL fragment in an "INNER JOIN ... AS ... ON ..." statement. Needs to be 
+	 *                            valid (quoted) SQL.
 	 * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
+	 * @param int $order A numerical index to control the order that joins are added to the query; lower order values 
+	 *                   will cause the query to appear first. The default is 20, and joins created automatically by the
+	 *                   ORM have a value of 10.
 	 * @return SQLQuery
 	 */
-	public function addInnerJoin($table, $onPredicate, $tableAlias = null) {
+	public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20) {
 		if(!$tableAlias) $tableAlias = $table;
-		$this->from[$tableAlias] = array('type' => 'INNER', 'table' => $table, 'filter' => array($onPredicate));
+		$this->from[$tableAlias] = array(
+			'type' => 'INNER',
+			'table' => $table,
+			'filter' => array($onPredicate),
+			'order' => $order
+		);
 		return $this;
 	}
 
-	public function innerjoin($table, $onPredicate, $tableAlias = null) {
+	public function innerjoin($table, $onPredicate, $tableAlias = null, $order = 20) {
 		Deprecation::notice('3.0', 'Please use addInnerJoin() instead!');
-		return $this->addInnerJoin($table, $onPredicate, $tableAlias);
+		return $this->addInnerJoin($table, $onPredicate, $tableAlias, $order);
 	}
 
 	/**
@@ -869,12 +887,13 @@ class SQLQuery {
 		// TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new
 		// syntax
 		$origFrom = $this->from;
-
+		// Sort the joins
+		$this->from = $this->getOrderedJoins($this->from);
 		// Build from clauses
 		foreach($this->from as $alias => $join) {
 			// $join can be something like this array structure
 			// array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1", 
-			// "Status = 'approved'"))
+			// "Status = 'approved'", 'order' => 20))
 			if(is_array($join)) {
 				if(is_string($join['filter'])) $filter = $join['filter'];
 				else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
@@ -895,10 +914,9 @@ class SQLQuery {
 		$this->from = $origFrom;
 
 		// The query was most likely just created and then exectued.
-		if($sql === 'SELECT *') {
+		if(trim($sql) === 'SELECT * FROM') {
 			return '';
 		}
-
 		return $sql;
 	}
 	
@@ -1079,6 +1097,81 @@ class SQLQuery {
 		$query->setLimit(1, $index);
 		return $query;
 	}
+	
+	/**
+	 * Ensure that framework "auto-generated" table JOINs are first in the finalised SQL query.
+	 * This prevents issues where developer-initiated JOINs attempt to JOIN using relations that haven't actually 
+	 * yet been scaffolded by the framework. Demonstrated by PostGres in errors like: 
+	 *"...ERROR: missing FROM-clause..."
+	 * 
+	 * @param $from array - in the format of $this->select
+	 * @return array - and reorderded list of selects
+	 */
+	protected function getOrderedJoins($from) {
+		// shift the first FROM table out from so we only deal with the JOINs
+		$baseFrom = array_shift($from);
+		$this->mergesort($from, function($firstJoin, $secondJoin) {
+			if($firstJoin['order'] == $secondJoin['order']) {
+				return 0;
+			}
+			return ($firstJoin['order'] < $secondJoin['order']) ?  -1 : 1;
+		});
+		
+		// Put the first FROM table back into the results 
+		array_unshift($from, $baseFrom);
+		return $from;
+	}
 
+	/**
+	 * Since uasort don't preserve the order of an array if the comparison is equal
+	 * we have to resort to a merge sort. It's quick and stable: O(n*log(n)).
+	 *
+	 * @see http://stackoverflow.com/q/4353739/139301
+	 * 
+	 * @param array &$array - the array to sort
+	 * @param callable $cmpFunction - the function to use for comparison
+	 */ 
+	protected function mergesort(&$array, $cmpFunction = 'strcmp') {
+		// Arrays of size < 2 require no action.
+		if (count($array) < 2) {
+			return;
+		}
+		// Split the array in half
+		$halfway = count($array) / 2;
+		$array1 = array_slice($array, 0, $halfway);
+		$array2 = array_slice($array, $halfway);
+		// Recurse to sort the two halves
+		$this->mergesort($array1, $cmpFunction);
+		$this->mergesort($array2, $cmpFunction);
+		// If all of $array1 is <= all of $array2, just append them.
+		if(call_user_func($cmpFunction, end($array1), reset($array2)) < 1) {
+			$array = array_merge($array1, $array2);
+			return;
+		}
+		// Merge the two sorted arrays into a single sorted array
+		$array = array();
+		$val1 = reset($array1);
+		$val2 = reset($array2);
+		do {
+			if (call_user_func($cmpFunction, $val1, $val2) < 1) {
+				$array[key($array1)] = $val1;
+				$val1 = next($array1);
+			} else {
+				$array[key($array2)] = $val2;
+				$val2 = next($array2);
+			}
+		} while($val1 && $val2);
+		
+		// Merge the remainder
+		while($val1) {
+			$array[key($array1)] = $val1;
+			$val1 = next($array1);
+		}
+		while($val2) {
+			$array[key($array2)] = $val2;
+			$val2 = next($array2);
+		}
+		return;
+	}
 }
 

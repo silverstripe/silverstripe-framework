@@ -141,18 +141,18 @@ class Director implements TemplateGlobalProvider {
 			
 			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 			if ($res !== false) {
-				// Set content length (according to RFC2616)
-				if(
-					!headers_sent()
-					&& $response->getBody() 
-					&& $req->httpMethod() != 'HEAD' 
-					&& $response->getStatusCode() >= 200
-					&& !in_array($response->getStatusCode(), array(204, 304))
-				) {
-					$response->fixContentLength();
-				}
+					// Set content length (according to RFC2616)
+					if(
+						!headers_sent()
+						&& $response->getBody() 
+						&& $req->httpMethod() != 'HEAD' 
+						&& $response->getStatusCode() >= 200
+						&& !in_array($response->getStatusCode(), array(204, 304))
+					) {
+						$response->fixContentLength();
+					}
 
-				$response->output();
+					$response->output();
 			} else {
 				// @TODO Proper response here.
 				throw new SS_HTTPResponse_Exception("Invalid response");
@@ -308,7 +308,7 @@ class Director implements TemplateGlobalProvider {
 			}
 		}
 	}
-
+	
 	/**
 	 * Set url parameters (should only be called internally by RequestHandler->handleRequest()).
 	 * 
@@ -454,7 +454,7 @@ class Director implements TemplateGlobalProvider {
 		// Allow for the accidental inclusion whitespace and // in the URL
 		$url = trim(preg_replace('#([^:])//#', '\\1/', $url));
 
-		$base1 = self::absoluteBaseURL();
+			$base1 = self::absoluteBaseURL();
 		$baseDomain = substr($base1, strlen(self::protocol()));
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
@@ -470,10 +470,10 @@ class Director implements TemplateGlobalProvider {
 				return substr($url,strlen($base1));
 			}
 			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) {
-				// Convert http://www.mydomain.com/mysitedir to ''
+			// Convert http://www.mydomain.com/mysitedir to ''
 				return "";
-			}
-
+		}
+		
 			if(substr($urlWithoutProtocol,0,strlen($baseDomain)) == $baseDomain) {
 				return substr($urlWithoutProtocol,strlen($baseDomain));
 			}
@@ -488,7 +488,7 @@ class Director implements TemplateGlobalProvider {
 		if(substr($url,0,strlen($base3)) == $base3) {
 			return substr($url,strlen($base3));
 		}
-
+		
 		// Test for relative base url, e.g mywebsite/ if the full url is localhost/myswebsite
 		if(substr($url,0,strlen($baseDomain)) == $baseDomain) {
 			return substr($url, strlen($baseDomain));
@@ -539,8 +539,8 @@ class Director implements TemplateGlobalProvider {
 			// Base check for existence of a host on a compliant URL
 			parse_url($url, PHP_URL_HOST)
 			// Check for more than one leading slash without a protocol.
-			// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
-			// and hence a potential security risk. Single leading slashes are not an issue though.
+				// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
+				// and hence a potential security risk. Single leading slashes are not an issue though.
 			|| preg_match('/\s*[\/]{2,}/', $url)
 			|| (
 				// If a colon is found, check if it's part of a valid scheme definition

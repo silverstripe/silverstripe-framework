@@ -26,29 +26,6 @@ abstract class PasswordEncryptor {
 	}
 	
 	/**
-	 * Add a new encryptor implementation.
-	 * 
-	 * Note: Due to portability concerns, its not advisable to 
-	 * override an existing $code mapping with different behaviour.
-	 * 
-	 * @param String $code This value will be stored stored in the 
-	 * 	{@link Member->PasswordEncryption} property.
-	 * @param String $class Classname of a {@link PasswordEncryptor} subclass
-	 */
-	public static function register($code, $class) {
-		Deprecation::notice('3.0', 'Use the Config system to register Password encryptors');
-		self::$encryptors[$code] = $class;
-	}
-	
-	/**
-	 * @param String $code Unique lookup.
-	 */
-	public static function unregister($code) {
-		Deprecation::notice('3.0', 'Use the Config system to unregister Password encryptors');
-		if(isset(self::$encryptors[$code])) unset(self::$encryptors[$code]);
-	}
-	
-	/**
 	 * @param String $algorithm
 	 * @return PasswordEncryptor
 	 * @throws PasswordEncryptor_NotFoundException

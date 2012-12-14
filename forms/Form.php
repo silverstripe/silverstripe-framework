@@ -865,14 +865,6 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * @return string
-	 */
-	public function Name() {
-		Deprecation::notice('3.0', 'Use getName() instead.');
-		return $this->getName();
-	}
-
-	/**
 	 * Get the name of the form.
 	 * @return string
 	 */

@@ -279,11 +279,23 @@ class DateField extends TextField {
 	}
 	
 	public function performReadonlyTransformation() {
-		$field = new DateField_Disabled($this->name, $this->title, $this->dataValue());
-		$field->setForm($this->form);
+		$field = $this->castedCopy('DateField_Disabled');
+		$field->setValue($this->dataValue());
 		$field->readonly = true;
 		
 		return $field;
+	}
+
+	public function castedCopy($class) {
+		$copy = new $class($this->name);
+		if($copy->hasMethod('setConfig')) {
+			$config = $this->getConfig();
+			foreach($config as $k => $v) {
+				$copy->setConfig($k, $v);
+			}
+		}
+
+		return parent::castedCopy($copy);
 	}
 
 	/**

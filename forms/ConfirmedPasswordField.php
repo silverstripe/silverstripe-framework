@@ -122,6 +122,11 @@ class ConfirmedPasswordField extends FormField {
 		foreach($this->children as $field) {
 			$field->setDisabled($this->isDisabled()); 
 			$field->setReadonly($this->isReadonly());
+			if(count($this->attributes)) {
+				foreach($this->attributes as $name => $value) {
+					$field->setAttribute($name, $value);
+				}
+			}
 			$content .= $field->FieldHolder();
 		}
 
@@ -315,10 +320,10 @@ class ConfirmedPasswordField extends FormField {
 	 * Makes a pretty readonly field with some stars in it
 	 */
 	public function performReadonlyTransformation() {
-		$stars = '*****';
+		$field = $this->castedCopy('ReadonlyField')
+			->setTitle($this->title ? $this->title : _t('Member.PASSWORD'))
+			->setValue('*****');
 
-		$field = new ReadonlyField($this->name, $this->title ? $this->title : _t('Member.PASSWORD'), $stars);
-		$field->setForm($this->form);
 		return $field;
 	}
 }

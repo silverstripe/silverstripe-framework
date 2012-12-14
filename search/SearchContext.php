@@ -153,7 +153,7 @@ class SearchContext extends Object {
 				$filter->setModel($this->modelClass);
 				$filter->setValue($value);
 				if(! $filter->isEmpty()) {
-					$filter->apply($query->dataQuery());
+					$query = $query->alterDataQuery(array($filter, 'apply'));
 				}
 			}
 		}

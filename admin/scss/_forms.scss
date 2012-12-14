@@ -42,7 +42,7 @@ form.nostyle {
 		.middleColumn {
 			margin-left: 0;
 		}
-		.help {
+		.description {
 			margin-left: 0;
 		}
 	}
@@ -90,21 +90,16 @@ form.nostyle {
 
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
-	.help {
+	.description {
 		clear: both;
 		color: lighten($color-text, 20%);
 		display: block;
 		font-style: italic;
-		margin: $grid-y/2 0 0 $grid-x*23;
+		margin: $grid-y/2 0 0 $grid-x*23; // left align with .middleColumn
 	}
-	&.help {
-		label.right {
-			clear: both;
-			color: lighten($color-text, 20%);
-			display: block;
-			font-style: italic;
-			margin: $grid-y/2 0 0 $grid-x*23;
-		}
+	
+	&.checkbox .description, &.ss-gridfield .description {
+		margin-left: 0;
 	}
 	
 	input.text,
@@ -115,10 +110,10 @@ form.nostyle {
 		width: 100%;
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
-		&.help {
+		&.description {
 			margin:0; //overrides help class adding left margin to the textarea input.
 		}
-		.help {
+		.description {
 			max-width: $grid-x * 64;
 		}
 	}
@@ -285,6 +280,44 @@ form.small .field, .field.small {
  * ---------------------------------------------------- */
 
 .cms {
+	.button-no-style{
+		button{
+			@include border-radius(0);
+			background: none;
+			border: none;
+			color: $color-text-blue-link;
+			display: block;
+			font-weight:normal;	
+			margin:0;
+			outline:none;
+			padding-left:10px;
+			padding-right:10px;	
+			text-align: left;			
+			text-shadow: none;	
+			white-space:normal;		
+			&.ss-ui-action-destructive{
+				color: darken($color-error,25%);
+			}
+			span{
+				padding-left:0;
+				padding-right:0;
+			}
+			&:hover, &:focus, &:active{	
+				@include box-shadow(none);		
+				outline:none;
+				background:none;				
+				border:none;
+			}
+			&.loading {
+				background: transparent url(../../images/network-save.gif) no-repeat $grid-x center;
+				.ui-button-text {
+					padding-left: 16px /* icon */ + ($grid-x/2);
+				}
+				
+				
+			}
+		}
+	}
 
 	.Actions, .cms-actions-row {
 		> * {
@@ -300,7 +333,7 @@ form.small .field, .field.small {
 
 	.Actions {
 		min-height: 30px;
-		overflow: visible;
+		overflow: auto;
 		padding: $grid-x $grid-y * 1.5;
 	}
 	.south .Actions, .ui-tabs-panel .Actions,  .ui-tabs-panel iframe .Actions {
@@ -328,7 +361,9 @@ form.small .field, .field.small {
 	}
 
 	.ss-ui-button {
+		font-size: 12px;
 		margin-top:0px;
+		padding: 5px 10px;
 		font-weight: bold;
 		text-decoration: none;
 		line-height: $grid-y * 2;
@@ -338,6 +373,22 @@ form.small .field, .field.small {
 		cursor: pointer;
 		background-color: $color-button-generic;
 		white-space: nowrap;
+
+		.ui-icon, .ui-button-text {
+			display: inline-block;
+			line-height: $grid-x*2;
+			padding: 0;
+		}
+		.ui-icon {
+			width: 16px;
+			padding: 0 2px;
+			position: relative;
+			left: -2px;
+			margin-top: 0;
+			top: 0;
+			height: 16px;
+			float: left;
+		}
 
 		@include background(
 			linear-gradient(color-stops(
@@ -412,7 +463,6 @@ form.small .field, .field.small {
 
 		&.ss-ui-button-small {
 			.ui-button-text {
-				padding: ($grid-y/4) ($grid-x/4);
 				font-size: $font-base-size - 2;
 			}
 		}
@@ -530,7 +580,7 @@ form.small .field, .field.small {
 				float: none;
 				margin-left: 0;
 			}
-			.help {
+			.description {
 				margin-left: 0;
 			}
 		}
@@ -753,4 +803,3 @@ fieldset.switch-states{
 } 
 //old web-kit browser fix	
 @-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
-
