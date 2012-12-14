@@ -473,23 +473,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * @deprecated 3.0
-	 */
-	public function generateAutologinHash($lifetime = 2) {
-		Deprecation::notice('3.0', 
-			'Member::generateAutologinHash is deprecated - tokens are no longer saved directly into the database '.
-			'in plaintext. Use the return value of the Member::generateAutologinTokenAndHash to get the token '.
-			'instead.',
-			Deprecation::SCOPE_METHOD);
-
-		user_error(
-			'Member::generateAutologinHash is deprecated - tokens are no longer saved directly into the database '.
-			'in plaintext. Use the return value of the Member::generateAutologinTokenAndHash to get the token '.
-			'instead.', 
-			E_USER_ERROR);
-	}
-
-	/**
 	 * Check the token against the member.
 	 *
 	 * @param string $autologinToken
@@ -524,35 +507,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$member->logIn();
 
 		return $member;
-	}
-
-	/**
-	 * Send signup, change password or forgot password informations to an user
-	 *
-	 * @param string $type Information type to send ("signup", "changePassword" or "forgotPassword")
-	 * @param array $data Additional data to pass to the email (can be used in the template)
-	 */
-	public function sendInfo($type = 'signup', $data = null) {
-		Deprecation::notice('3.0',
-			'Please use Member_ChangePasswordEmail or Member_ForgotPasswordEmail directly instead');
-
-		switch($type) {
-			case "changePassword":
-				$e = Member_ChangePasswordEmail::create();
-				break;
-			case "forgotPassword":
-				$e = Member_ForgotPasswordEmail::create();
-				break;
-		}
-
-		if(is_array($data)) {
-			foreach($data as $key => $value)
-				$e->$key = $value;
-		}
-
-		$e->populateTemplate($this);
-		$e->setTo($this->Email);
-		$e->send();
 	}
 
 	/**
@@ -1009,42 +963,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function DirectGroups() {
 		return $this->getManyManyComponents('Groups');
-	}
-
-
-	/**
-	 * Get member SQLMap
-	 *
-	 * @param string $filter Filter for the SQL statement (WHERE clause)
-	 * @param string $sort Sorting function (ORDER clause)
-	 * @param string $blank Shift a blank member in the items
-	 * @return SQLMap Returns an SQLMap that returns all Member data.
-	 *
-	 * @todo Improve documentation of this function! (Markus)
-	 */
-	public static function map($filter = "", $sort = "", $blank="") {
-		Deprecation::notice('3.0', 'Use DataList::("Member")->map()');
-
-		$list = Member::get()->where($filter)->sort($sort);
-		$map = $list->map();
-		
-		if($blank) $map->unshift(0, $blank);
-
-		return $map;
-	}
-
-	/**
-	 * Get a member SQLMap of members in specific groups
-	 * 
-	 * If no $groups is passed, all members will be returned
-	 * 
-	 * @param mixed $groups - takes a SS_List, an array or a single Group.ID
-	 * @return SQLMap Returns an SQLMap that returns all Member data.
-	 * @see map()
-	 */
-	public static function mapInGroups($groups = null) {
-		Deprecation::notice('3.0', 'Use Member::map_in_groups() instead');
-		return self::map_in_groups();
 	}
 	
 	/**

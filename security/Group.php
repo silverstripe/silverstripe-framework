@@ -251,18 +251,7 @@ class Group extends DataObject {
 	public function DirectMembers() {
 		return $this->getManyManyComponents('Members');
 	}
-	
-	public static function map($filter = "", $sort = "", $blank="") {
-		Deprecation::notice('3.0', 'Use DataList::("Group")->map()');
-
-		$list = Group::get()->where($filter)->sort($sort);
-		$map = $list->map();
-
-		if($blank) $map->unshift(0, $blank);
 		
-		return $map;
-	}
-	
 	/**
 	 * Return a set of this record's "family" of IDs - the IDs of
 	 * this record and all its descendants.

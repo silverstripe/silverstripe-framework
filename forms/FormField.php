@@ -814,11 +814,6 @@ class FormField extends RequestHandler {
 		}
 	}
 
-	public function setContainerFieldSet($list) {
-		Deprecation::notice('3.0', 'Use setContainerFieldList() instead.');
-		return $this->setContainerFieldList($list);
-	}
-
 	/**
 	 * Set the FieldList that contains this field.
 	 *
@@ -828,11 +823,6 @@ class FormField extends RequestHandler {
 	public function setContainerFieldList($list) {
 		$this->containerFieldList = $list;
 		return $this;
-	}
-
-	public function rootFieldSet() {
-		Deprecation::notice('3.0', 'Use rootFieldList() instead.');
-		return $this->rootFieldList();
 	}
 
 	public function rootFieldList() {
