@@ -276,10 +276,8 @@ class CheckboxSetField extends OptionsetField {
 			}
 		}
 		
-		$title = ($this->title) ? $this->title : '';
-		
-		$field = new ReadonlyField($this->name, $title, $values);
-		$field->setForm($this->form);
+		$field = $this->castedCopy('ReadonlyField');
+		$field->setValue($values);
 		
 		return $field;
 	}

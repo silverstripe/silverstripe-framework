@@ -356,9 +356,8 @@ class FormField extends RequestHandler {
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
-			'title' => $this->getDescription(),
 		);
-		
+
 		return array_merge($attrs, $this->attributes);
 	}
 
@@ -710,10 +709,9 @@ class FormField extends RequestHandler {
 	 * Returns a readonly version of this field
 	 */
 	public function performReadonlyTransformation() {
-		$field = new ReadonlyField($this->name, $this->title, $this->value);
-		$field->addExtraClass($this->extraClass());
-		$field->setForm($this->form);
-		return $field;
+		$copy = $this->castedCopy('ReadonlyField');
+		$copy->setReadonly(true);
+		return $copy;
 	}
 	
 	/**
@@ -724,14 +722,15 @@ class FormField extends RequestHandler {
 	 * @return FormField
 	 */
 	public function performDisabledTransformation() {
-		$clone = clone $this;
-		$disabledClassName = $clone->class . '_Disabled';
+		$disabledClassName = $this->class . '_Disabled';
 		if(ClassInfo::exists($disabledClassName)) {
-			return new $disabledClassName($this->name, $this->title, $this->value);
+			$clone = $this->castedCopy($disabledClassName);
 		} else {
+			$clone = clone $this;
 			$clone->setDisabled(true);
-			return $clone;
 		}
+
+		return $clone;
 	}
 
 	public function transform(FormTransformation $trans) {
@@ -775,7 +774,8 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Describe this field, provide help text for it.
-	 * By default, renders as a "title" attribute on the form field.
+	 * By default, renders as a <span class="description"> 
+	 * underneath the form field.
 	 * 
 	 * @return string Description
 	 */
@@ -838,6 +838,44 @@ class FormField extends RequestHandler {
 	public function rootFieldList() {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else user_error("rootFieldList() called on $this->class object without a containerFieldList", E_USER_ERROR);
+	}
+
+	/**
+	 * Returns another instance of this field, but "cast" to a different class.
+	 * The logic tries to retain all of the instance properties,
+	 * and may be overloaded by subclasses to set additional ones.
+	 *
+	 * Assumes the standard FormField parameter signature with
+	 * its name as the only mandatory argument. Mainly geared towards
+	 * creating *_Readonly or *_Disabled subclasses of the same type,
+	 * or casting to a {@link ReadonlyField}.
+	 *
+	 * Does not copy custom field templates, since they probably won't apply to
+	 * the new instance. 
+	 * 
+	 * @param  String $classOrCopy Class name for copy, or existing copy instance to update
+	 * @return FormField
+	 */
+	public function castedCopy($classOrCopy) {
+		$field = (is_object($classOrCopy)) ? $classOrCopy : new $classOrCopy($this->name);
+		$field
+			->setValue($this->value) // get value directly from property, avoid any conversions
+			->setForm($this->form)
+			->setTitle($this->Title())
+			->setLeftTitle($this->LeftTitle())
+			->setRightTitle($this->RightTitle())
+			->addExtraClass($this->extraClass())
+			->setDescription($this->getDescription());
+			
+		// Only include built-in attributes, ignore anything
+		// set through getAttributes(), since those might change important characteristics
+		// of the field, e.g. its "type" attribute.
+		foreach($this->attributes as $k => $v) {
+			$field->setAttribute($k, $v);
+		}
+		$field->dontEscape = $this->dontEscape;
+
+		return $field;
 	}
 	
 }

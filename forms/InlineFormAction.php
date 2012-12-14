@@ -24,7 +24,7 @@ class InlineFormAction extends FormField {
 	}
 	
 	public function performReadonlyTransformation() {
-		return new InlineFormAction_ReadOnly( $this->name, $this->title );
+		return $this->castedCopy('InlineFormAction_ReadOnly');
 	}
 	
 	public function Field($properties = array()) {

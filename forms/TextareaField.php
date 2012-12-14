@@ -44,20 +44,6 @@ class TextareaField extends FormField {
 		);
 	}
 
-	/**
-	 * Performs a disabled transformation on this field. You shouldn't be able to
-	 * copy from this field, and it should not send any data when you submit the
-	 * form it's attached to.
-	 *
-	 * The element shouldn't be both disabled and readonly at the same time.
-	 */
-	public function performDisabledTransformation() {
-		$clone = clone $this;
-		$clone->setDisabled(true);
-		$clone->setReadonly(false);
-		return $clone;
-	}
-
 	public function Type() {
 		return parent::Type() . ($this->readonly ? ' readonly' : '');
 	}
