@@ -135,8 +135,8 @@ class SS_DatetimeTest extends SapphireTest {
 		SS_Datetime::set_mock_now('2000-12-31 00:00:00');
 
 		$this->assertEquals(
-			'in 100 years', 
-			DBField::create_field('SS_Datetime', '2100-12-31 12:00:00')->Ago(),
+			'in 10 years', 
+			DBField::create_field('SS_Datetime', '2010-12-31 12:00:00')->Ago(),
 			'Exact past match on years'
 		);
 
