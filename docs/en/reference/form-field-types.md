@@ -1,6 +1,6 @@
 # Form Field Types
 
-This is a highlevel overview of available `[api:apiFormField]` subclasses. An automatically generated list is available through our [API]
+This is a highlevel overview of available `[api:FormField]` subclasses. An automatically generated list is available through our [API]
 
 ## Basic
 
