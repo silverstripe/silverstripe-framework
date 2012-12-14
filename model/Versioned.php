@@ -1003,10 +1003,10 @@ class Versioned extends DataExtension {
 			$containerClass = 'DataList') {
 
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
-		$dq = $result->dataQuery();
-		$dq->setQueryParam('Versioned.mode', 'stage');
-		$dq->setQueryParam('Versioned.stage', $stage);
-		return $result;
+		return $result->setDataQueryParam(array(
+			'Versioned.mode' => 'stage',
+			'Versioned.stage' => $stage
+		));
 	}
 	
 	public function deleteFromStage($stage) {
@@ -1049,8 +1049,10 @@ class Versioned extends DataExtension {
 	 */
 	public static function get_latest_version($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($baseClass)->where("\"$baseClass\".\"RecordID\" = $id");
-		$list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
+		$list = DataList::create($baseClass)
+			->where("\"$baseClass\".\"RecordID\" = $id")
+			->setDataQueryParam("Versioned.mode", "latest_versions");
+
 		return $list->First();
 	}
 	
@@ -1077,8 +1079,11 @@ class Versioned extends DataExtension {
 	 * In particular, this will query deleted records as well as active ones.
 	 */
 	public static function get_including_deleted($class, $filter = "", $sort = "") {
-		$list = DataList::create($class)->where($filter)->sort($sort);
-		$list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
+		$list = DataList::create($class)
+			->where($filter)
+			->sort($sort)
+			->setDataQueryParam("Versioned.mode", "latest_versions");
+
 		return $list;
 	}
 	
@@ -1093,8 +1098,9 @@ class Versioned extends DataExtension {
 		$baseClass = ClassInfo::baseDataClass($class);
 		$list = DataList::create($baseClass)
 			->where("\"$baseClass\".\"RecordID\" = $id")
-			->where("\"$baseClass\".\"Version\" = " . (int)$version);
-		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
+			->where("\"$baseClass\".\"Version\" = " . (int)$version)
+			->setDataQueryParam("Versioned.mode", 'all_versions');
+
 		return $list->First();
 	}
 
@@ -1104,8 +1110,10 @@ class Versioned extends DataExtension {
 	 */
 	public static function get_all_versions($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
-		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
+		$list = DataList::create($class)
+			->where("\"$baseClass\".\"RecordID\" = $id")
+			->setDataQueryParam('Versioned.mode', 'all_versions');
+
 		return $list;
 	}
 	

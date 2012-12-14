@@ -591,12 +591,13 @@ class Hierarchy extends DataExtension {
 		$id = $this->owner->ID;
 		
 		$children = DataObject::get($baseClass)
-			->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
-		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
+			->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id")
+			->setDataQueryParam(array(
+				'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
+				'Versioned.stage' => 'Live'
+			));
 
-		// Query the live site
-		$children->dataQuery()->setQueryParam('Versioned.mode', $onlyDeletedFromStage ? 'stage_unique' : 'stage');
-		$children->dataQuery()->setQueryParam('Versioned.stage', 'Live');
+		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
 
 		return $children;
 	}
