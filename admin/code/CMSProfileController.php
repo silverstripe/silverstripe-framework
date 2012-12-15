@@ -30,7 +30,7 @@ class CMSProfileController extends LeftAndMain {
 				->setAttribute('data-icon', 'accept')
 				->setUseButtonTag(true)
 		);
-		$form->Actions()->removeByName('delete');
+		$form->Actions()->removeByName('action_delete');
 		$form->setValidator(new Member_Validator());
 		$form->setTemplate('Form');
 		$form->setAttribute('data-pjax-fragment', null);
