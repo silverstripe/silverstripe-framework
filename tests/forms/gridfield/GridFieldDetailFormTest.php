@@ -192,6 +192,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	}
 
 	public function testCustomItemRequestClass() {
+		$this->logInWithPermission('ADMIN');
+
 		$component = new GridFieldDetailForm();
 		$this->assertEquals('GridFieldDetailForm_ItemRequest', $component->getItemRequestClass());
 		$component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
@@ -199,6 +201,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	}
 
 	public function testItemEditFormCallback() {
+		$this->logInWithPermission('ADMIN');
+		
 		$category = new GridFieldDetailFormTest_Category();
 		$component = new GridFieldDetailForm();
 		$component->setItemEditFormCallback(function($form, $component) {
