@@ -424,6 +424,7 @@
 			 * Reacts to the user changing the preview mode.
 			 */
 			onchange: function(e) {				
+				this._super(e);
 				e.preventDefault();
 
 				var targetStateName = $(this).val();
@@ -523,37 +524,35 @@
 			'onliszt:showing_dropdown': function() {
 				this.siblings().find('.chzn-drop').addClass('open')._alignRight();
 			},
+
 			'onliszt:hiding_dropdown': function() {
 				this.siblings().find('.chzn-drop').removeClass('open')._removeRightAlign();
-			},			
+			},
+
+			/**
+			 * Trigger additional initial icon update when the control is fully loaded.
+			 * Solves an IE8 timing issue.
+			 */
+			'onliszt:ready': function() {
+				this._super();
+				this._addIcon();
+			},
+
 			_addIcon: function(){
 				var selected = this.find(':selected');				
 				var iconClass = selected.attr('data-icon');	
 								
 				var target = this.parent().find('.chzn-container a.chzn-single');
 				var oldIcon = target.attr('data-icon');
-				if(oldIcon != undefined){
+				if(typeof oldIcon !== 'undefined'){
 					target.removeClass(oldIcon);
 				}
 				target.addClass(iconClass);
 				target.attr('data-icon', iconClass);				
+
+				return this;
 			}
 		});
-
-		/*
-		* When chzn initiated run select addIcon
-		* Apply description text if applicable
-		*/
-		$('.preview-selector a.chzn-single').entwine({
-			onmatch: function() {								
-				this.closest('.preview-selector').find('select')._addIcon();
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
-			}
-		});
-
 
 		$('.preview-selector .chzn-drop').entwine({
 			_alignRight: function(){
