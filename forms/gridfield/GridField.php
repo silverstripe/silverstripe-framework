@@ -12,6 +12,11 @@
  * <code>
  * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'));
  * </code>
+ *
+ * Caution: By default, a GridField does NOT check for model permissions like
+ * {@link DataObject->canEdit()}, but rather relies on being placed in a secured
+ * controller in order to restrict user actions. For more granular permission control,
+ * use {@link setCheckModelPermissions()}.
  * 
  * @see SS_List
  * 
@@ -72,6 +77,14 @@ class GridField extends FormField {
 	protected $customDataFields = array();
 
 	protected $name = '';
+
+	/**
+	 * @var boolean Enforce {@link DataObject->canView()}, {@link DataObject->canEdit()},
+	 * {@link DataObject->canDelete()} and {@link DataObject->canCreate()}.
+	 * By default, the field relies on being embedded in a secured controller,
+	 * which usually checks permissions through {@link Controller->init()}.
+	 */
+	protected $checkModelPermissions = false;
 
 	/**
 	 * Creates a new GridField field
@@ -330,7 +343,7 @@ class GridField extends FormField {
 		if($total > 0) {
 			$rows = array();
 			foreach($list as $idx => $record) {
-				if(!$record->canView()) {
+				if($this->getCheckModelPermissions() && !$record->canView()) {
 					continue;
 				}
 				$rowContent = '';
@@ -726,6 +739,21 @@ class GridField extends FormField {
 		}
 		
 		return parent::handleRequest($request, $model);
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getCheckModelPermissions() {
+		return $this->checkModelPermissions;
+	}
+
+	/**
+	 * @param $bool boolean
+	 */
+	public function setCheckModelPermissions($bool) {
+		$this->checkModelPermissions = $bool;
+		return $this;
 	}
 }
 

@@ -73,7 +73,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			Member::get(),
 			$memberListConfig = GridFieldConfig_RecordEditor::create()
 				->addComponent(new GridFieldExportButton())
-		)->addExtraClass("members_grid");
+		)->addExtraClass("members_grid")->setCheckModelPermissions(true);
 		$memberListConfig->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
 
 		$groupList = GridField::create(
@@ -81,7 +81,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			false,
 			Group::get(),
 			GridFieldConfig_RecordEditor::create()
-		);
+		)->setCheckModelPermissions(true);
 		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
 		$columns->setDisplayFields(array(
 			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
@@ -137,7 +137,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 				false,
 				PermissionRole::get(),
 				GridFieldConfig_RecordEditor::create()
-			);
+			)->setCheckModelPermissions(true);
 
 			$rolesTab = $fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.TABROLES', 'Roles'));
 			$rolesTab->push($rolesField);
