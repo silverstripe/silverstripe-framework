@@ -5,6 +5,11 @@ jQuery.noConflict();
  */
 (function($) {
 
+	window.onresize = function(e) {
+		// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
+		$('.cms-container').trigger('windowresize');
+	}
+
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
@@ -145,7 +150,10 @@ jQuery.noConflict();
 
 			fromWindow: {
 				onstatechange: function(){ this.handleStateChange(); },
-				onresize: function(){ this.redraw(); }
+			},
+
+			'onwindowresize': function() {
+				this.redraw();
 			},
 
 			'from .cms-panel': {
