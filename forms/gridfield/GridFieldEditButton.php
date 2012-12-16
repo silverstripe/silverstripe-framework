@@ -72,9 +72,9 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		if(!$record->canEdit()){
-			return;
-		}
+		// No permission checks, handled through GridFieldDetailForm,
+		// which can make the form readonly if no edit permissions are available.
+
 		$data = new ArrayData(array(
 			'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
 		));

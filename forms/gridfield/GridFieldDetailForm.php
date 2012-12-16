@@ -248,7 +248,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	public function view($request) {
-		if(!$this->record->canView()) {
+		if($this->gridField->getCheckModelPermissions() && !$this->record->canView()) {
 			$this->httpError(403);
 		}
 
@@ -358,6 +358,15 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		if($list instanceof ManyManyList) {
 			$extraData = $list->getExtraData('', $this->record->ID);
 			$form->loadDataFrom(array('ManyMany' => $extraData));
+		}
+
+		$check = $this->gridField->getCheckModelPermissions();
+		if($this->record->ID && $check && !$this->record->canEdit()) {
+			// Restrict editing of existing records
+			$form->makeReadonly();
+		} elseif(!$this->record->ID && $check && !$this->record->canCreate()) {
+			// Restrict creation of new records
+			$form->makeReadonly();
 		}
 		
 		// TODO Coupling with CMS
@@ -477,7 +486,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	public function doDelete($data, $form) {
 		$title = $this->record->Title;
 		try {
-			if (!$this->record->canDelete()) {
+			if($this->gridField->getCheckModelPermissions() && !$this->record->canDelete()) {
 				throw new ValidationException(
 					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
 			}

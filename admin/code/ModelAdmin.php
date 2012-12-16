@@ -54,6 +54,14 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @var array|string
 	 */
 	public static $managed_models = null;
+
+	/**
+	 * @var boolean Enforce {@link DataObject->canView()}, {@link DataObject->canEdit()},
+	 * {@link DataObject->canDelete()} and {@link DataObject->canCreate()}.
+	 * By default, the controller is only secured by its "CMS_ACCESS_<classname>" permission
+	 * code checks.
+	 */
+	public static $check_model_permissions = false;
 	
 	public static $allowed_actions = array(
 		'ImportForm',
@@ -135,7 +143,7 @@ abstract class ModelAdmin extends LeftAndMain {
 				->addComponent($exportButton)
 				->removeComponentsByType('GridFieldFilterHeader')
 				->addComponents(new GridFieldPrintButton('before'))
-		);
+		)->setCheckModelPermissions(Config::inst()->get(get_class($this), 'check_model_permissions'));
 
 		// Validation
 		if(singleton($this->modelClass)->hasMethod('getCMSValidator')) {
@@ -330,7 +338,12 @@ abstract class ModelAdmin extends LeftAndMain {
 		$importers = $this->getModelImporters();
 		if(!$importers || !isset($importers[$modelName])) return false;
 		
-		if(!singleton($modelName)->canCreate(Member::currentUser())) return false;
+		if(
+			self::$check_model_permissions 
+			&& !singleton($modelName)->canCreate(Member::currentUser())
+		) {
+			return false;
+		} 
 
 		$fields = new FieldList(
 			new HiddenField('ClassName', _t('ModelAdmin.CLASSTYPE'), $modelName),

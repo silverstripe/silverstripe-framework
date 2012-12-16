@@ -44,6 +44,44 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 This will automatically add a new menu entry to the CMS, and you're ready to go!
 Try opening http://localhost/admin/products/?flush=all.
 
+## Permissions
+
+Each new `ModelAdmin` subclass creates its own [permission code](/reference/permission),
+for the example above this would be `CMS_ACCESS_MyAdmin`. Users with access to the CMS
+need to have this permission assigned through `admin/security/` in order to gain
+access to the controller (unless they're admins).
+
+**Important**: The `DataObject` API has more granular permission control,
+which is not enforced in ModelAdmin by default. In order to respect the
+`canEdit()`, `canCreate()`, `canView()` and `canDelete()` permissions set to the model,
+you need to explicitly configure it:
+
+	:::php
+	class MyAdmin extends ModelAdmin {
+		// ...
+		public static $check_model_permissions = true;
+	}
+
+Models check for administrator permissions by default. For most cases,
+less restrictive checks make sense, e.g. checking for general CMS access rights.
+
+	:::php
+	class Category extends DataObject {
+	  // ...
+		public function canView($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canEdit($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canDelete($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canCreate($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+	}
+
 ## Search Fields
 
 ModelAdmin uses the `[SearchContext](/reference/searchcontext)` class to provide

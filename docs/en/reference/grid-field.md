@@ -145,7 +145,20 @@ The relations can be:
 	:::php
 	$gridField = new GridField('images', 'Linked images', $this->Images(), GridFieldConfig_RelationEditor::create());
 
-The fields displayed in the edit form are from `DataObject::getCMSFields()`
+The fields displayed in the edit form are from `DataObject::getCMSFields()`.
+
+## Permissions
+
+Since GridField is mostly used in the CMS, the controller managing a GridField instance
+will already do some permission checks for you, and can decline display or executing
+any logic on your field. 
+
+If you need more granular control, e.g. to consistently deny non-admins from deleting
+records, use the `DataObject->can...()` methods 
+(see [DataObject permissions](/reference/dataobject#permissions)).
+You'll need to tell GridField that this extra layer of checks is required,
+through `$myGridField->setCheckModelPermissions(true)`.
+This also applies to using GridField instances through `[ModelAdmin](/reference/modeladmin)`.
 
 ## Customizing Detail Forms
 
