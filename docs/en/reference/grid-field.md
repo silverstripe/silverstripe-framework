@@ -310,6 +310,16 @@ transfered between page requests by being inserted as a hidden field in the form
 
 A GridFieldComponent sets and gets data from the GridState.
 
+## Permissions
+
+Since GridField is mostly used in the CMS, the controller managing a GridField instance
+will already do some permission checks for you, and can decline display or executing
+any logic on your field. 
+
+If you need more granular control, e.g. to consistently deny non-admins from deleting
+records, use the `DataObject->can...()` methods 
+(see [DataObject permissions](/reference/dataobject#permissions)).
+
 ## Related
 
  * [ModelAdmin: A UI driven by GridField](/reference/modeladmin)

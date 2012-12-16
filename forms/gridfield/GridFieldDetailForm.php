@@ -310,16 +310,31 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			return $controller->redirect($noActionURL, 302);
 		}
 
+		$canView = $this->record->canView();
+		$canEdit = $this->record->canEdit();
+		$canDelete = $this->record->canDelete();
+		$canCreate = $this->record->canCreate();
+
+		if(!$canView) {
+			$controller = Controller::curr();
+			// TODO More friendly error
+			return $controller->httpError(403);
+		}
+
 		$actions = new FieldList();
 		if($this->record->ID !== 0) {
-			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-				->setUseButtonTag(true)
-				->addExtraClass('ss-ui-action-constructive')
-				->setAttribute('data-icon', 'accept'));
+			if($canEdit) {
+				$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
+					->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-constructive')
+					->setAttribute('data-icon', 'accept'));
+			}
 
-			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-				->setUseButtonTag(true)
-				->addExtraClass('ss-ui-action-destructive'));
+			if($canDelete) {
+				$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+					->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-destructive'));
+			}
 
 		}else{ // adding new record
 			//Change the Save label to 'Create'
@@ -352,6 +367,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		);
 		
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
+
+		if($this->record->ID && !$canEdit) {
+		  // Restrict editing of existing records
+		  $form->makeReadonly();
+		} elseif(!$this->record->ID && !$canCreate) {
+		  // Restrict creation of new records
+		  $form->makeReadonly();
+		}
 
 		// Load many_many extraData for record.
 		// Fields with the correct 'ManyMany' namespace need to be added manually through getCMSFields().
@@ -427,6 +450,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$extraData = (isset($data['ManyMany'])) ? $data['ManyMany'] : null;
 		} else {
 			$extraData = null;
+		}
+
+		if(!$this->record->canEdit()) {
+			return $controller->httpError(403);
 		}
 
 		try {
