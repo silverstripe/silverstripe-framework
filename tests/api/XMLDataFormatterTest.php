@@ -39,7 +39,7 @@ class XMLDataFormatterTest extends SapphireTest {
 		$this->assertEquals(
 			'<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.'
 				. ' <![CDATA[this is some nested CDATA]]>',
-			(string) $xml->Content
+			(string)$xml->Content
 		);
 	}
 
@@ -50,16 +50,16 @@ class XMLDataFormatterTest extends SapphireTest {
 		$page->Content = 'This is some test content [test_shortcode]test[/test_shortcode]';
 
 		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page));
-		$this->assertEquals('This is some test content test', $xml->Content);
+		$this->assertEquals('This is some test content test', (string)$xml->Content);
 
 		$page->Content = '[test_shortcode,id=-1]';
 		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page));
-		$this->assertEmpty('', $xml->Content);
+		$this->assertEmpty('', (string)$xml->Content);
 
 		$page->Content = '[bad_code,id=1]';
 
 		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page));
-		$this->assertContains('[bad_code,id=1]', $xml->Content);
+		$this->assertContains('[bad_code,id=1]', (string)$xml->Content);
 	}
 
 	/**
