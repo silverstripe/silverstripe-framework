@@ -203,6 +203,7 @@ class Versioned extends DataExtension {
 			// below)
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$this->augmentSQL($query, $dataQuery);
+			$dataQuery->setQueryParam('Versioned.mode', 'stage_unique');
 
 			// Now exclude any ID from any other stage. Note that we double rename to avoid the regular stage rename
 			// renaming all subquery references to be Versioned.stage
