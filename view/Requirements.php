@@ -793,12 +793,16 @@ class Requirements_Backend {
 			$prefix = Director::baseURL();
 			$mtimesuffix = "";
 			$suffix = '';
-			if(strpos($fileOrUrl, '?') !== false) {
-				$suffix = '&' . substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
-				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
-			}
 			if($this->suffix_requirements) {
 				$mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $fileOrUrl);
+				$suffix = '&';
+			}
+			if(strpos($fileOrUrl, '?') !== false) {
+				if (strlen($suffix) == 0) {
+					$suffix = '?';
+				}
+				$suffix .= substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
+				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
 			}
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
 		} else {
