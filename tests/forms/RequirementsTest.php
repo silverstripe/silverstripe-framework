@@ -325,6 +325,34 @@ class RequirementsTest extends SapphireTest {
 		$this->assertContains('</script></body>', $html);
 	}
 
+	public function testSuffix() {
+		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
+		$basePath = $this->getCurrentRelativePath();
+		$basePath = 'framework' . substr($basePath, strlen(FRAMEWORK_DIR));
+
+		$backend = new Requirements_Backend;
+
+		$backend->javascript($basePath .'/RequirementsTest_a.js');
+		$backend->javascript($basePath .'/RequirementsTest_b.js?foo=bar&bla=blubb');
+		$backend->css($basePath .'/RequirementsTest_a.css');
+		$backend->css($basePath .'/RequirementsTest_b.css?foo=bar&bla=blubb');
+
+		$backend->set_suffix_requirements(true);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertRegexp('/RequirementsTest_a\.js\?m=[\d]*/', $html);
+		$this->assertRegexp('/RequirementsTest_b\.js\?m=[\d]*&foo=bar&bla=blubb/', $html);
+		$this->assertRegexp('/RequirementsTest_a\.css\?m=[\d]*/', $html);
+		$this->assertRegexp('/RequirementsTest_b\.css\?m=[\d]*&foo=bar&bla=blubb/', $html);
+
+		$backend->set_suffix_requirements(false);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertNotContains('RequirementsTest_a.js=', $html);
+		$this->assertNotRegexp('/RequirementsTest_a\.js\?m=[\d]*/', $html);
+		$this->assertNotRegexp('/RequirementsTest_b\.js\?m=[\d]*&foo=bar&bla=blubb/', $html);
+		$this->assertNotRegexp('/RequirementsTest_a\.css\?m=[\d]*/', $html);
+		$this->assertNotRegexp('/RequirementsTest_b\.css\?m=[\d]*&foo=bar&bla=blubb/', $html);
+	}
+
 	public function assertFileIncluded($backend, $type, $files) {
 		$type = strtolower($type);
 		switch (strtolower($type)) {
