@@ -11,13 +11,9 @@ configuration settings:
 
 	server {
 		listen 80;
-		listen 443 ssl;
 		
-		ssl_certificate server.crt;
-		ssl_certificate_key server.key;
-		ssl_session_timeout 5m;
-		ssl_protocols SSLv3 TLSv1;
-		ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
+		# SSL configuration (optional, but recommended for security)
+		include ssl
 		
 		root /var/www/example.com;
 		index index.php index.html index.htm;
@@ -82,6 +78,15 @@ Here is the include file `htaccess`:
 	location ~ ^/framework/.*(main|static-main|rpc|tiny_mce_gzip)\.php$ {
 		allow all;
 	}
+
+Here is the optional include file `ssl`:
+
+	listen 443 ssl;
+	ssl_certificate server.crt;
+	ssl_certificate_key server.key;
+	ssl_session_timeout 5m;
+	ssl_protocols SSLv3 TLSv1;
+	ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
 
 The above configuration sets up a virtual host `example.com` with
 rewrite rules suited for SilverStripe. The location block named
