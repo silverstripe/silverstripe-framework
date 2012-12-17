@@ -129,8 +129,9 @@ class FixtureBlueprint {
 					$parsedItems = array();
 					$items = preg_split('/ *, */',trim($fieldVal));
 					foreach($items as $item) {
-						// Check for correct format: =><relationname>.<identifier>
-						if(!preg_match('/^=>[^\.]+\.[^\.]+/', $item)) {
+						// Check for correct format: =><relationname>.<identifier>.
+						// Ignore if the item has already been replaced with a numeric DB identifier
+						if(!is_numeric($item) && !preg_match('/^=>[^\.]+\.[^\.]+/', $item)) {
 							throw new InvalidArgumentException(sprintf(
 								'Invalid format for relation "%s" on class "%s" ("%s")',
 								$fieldName,
