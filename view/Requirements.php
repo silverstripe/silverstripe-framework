@@ -790,15 +790,20 @@ class Requirements_Backend {
 		if(preg_match('{^//|http[s]?}', $fileOrUrl)) {
 			return $fileOrUrl;
 		} elseif(Director::fileExists($fileOrUrl)) {
+			$filePath = preg_replace('/\?.*/', '', Director::baseFolder() . '/' . $fileOrUrl);
 			$prefix = Director::baseURL();
 			$mtimesuffix = "";
 			$suffix = '';
-			if(strpos($fileOrUrl, '?') !== false) {
-				$suffix = '?' . substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
-				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
-			}
 			if($this->suffix_requirements) {
-				$mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $fileOrUrl);
+				$mtimesuffix = "?m=" . filemtime($filePath);
+				$suffix = '&';
+			}
+			if(strpos($fileOrUrl, '?') !== false) {
+				if (strlen($suffix) == 0) {
+					$suffix = '?';
+				}
+				$suffix .= substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
+				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
 			}
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
 		} else {
