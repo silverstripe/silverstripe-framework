@@ -1,6 +1,6 @@
 cs:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
+    ALLOWEDEXTS: 'Povolené extenze'
     NEWFOLDER: 'Nová složka'
   AssetTableField:
     CREATED: 'Poprvé nahráno'
@@ -119,7 +119,7 @@ cs:
     MONTHS: měsíce
     SEC: sekunda
     SECS: sekundy
-    TIMEDIFFAGO: '{difference} před'
+    TIMEDIFFAGO: 'před {difference}'
     TIMEDIFFIN: 'v {difference}'
     YEAR: rok
     YEARS: roky
@@ -149,14 +149,14 @@ cs:
     DmgType: 'Apple obraz disku'
     DocType: 'Word dokument'
     Filename: 'Jméno souboru'
-    GifType: 'GIF obrázke - vhodné pro diagramy'
+    GifType: 'GIF obrázek - vhodné pro diagramy'
     GzType: 'GZIP komprimační soubor'
     HtlType: 'HTML soubor'
     HtmlType: 'HTML soubor'
     INVALIDEXTENSION: 'Extenze není povolena (platné: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extenze není povolena'
-    IcoType: 'Icon obrázkek'
-    JpgType: 'JPEG obrázke - vhodné pro fotografie'
+    IcoType: 'Ikona obrázek'
+    JpgType: 'JPEG obrázek - vhodné pro fotografie'
     JsType: 'Javascript soubor'
     Mp3Type: 'MP3 audio soubor'
     MpgType: 'MPEG video soubor'
@@ -503,7 +503,7 @@ cs:
     IMPORTGROUPS: 'Importovat skupiny'
     IMPORTUSERS: 'Importovat uživaté'
     MEMBERS: Členové
-    MENUTITLE: Bezbečnost
+    MENUTITLE: Bezpečnost
     MemberListCaution: 'Varování: Odstranění členů z tohoto seznamu způsobí, že členové budou odtraněni ze všech skupin a databáze'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Práva

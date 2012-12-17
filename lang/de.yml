@@ -7,7 +7,7 @@ de:
     DIM: Dimensionen
     FILENAME: Dateiname
     FOLDER: Ordner
-    LASTEDIT: 'Letzte Änderung'
+    LASTEDIT: 'Letztmals geändert'
     OWNER: Eigentümer
     SIZE: Größe
     TITLE: Titel
@@ -73,7 +73,7 @@ de:
   CMSProfileController:
     MENUTITLE: 'Mein Profil'
   ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort geändert für'
+    CHANGEPASSWORDTEXT1: 'Sie haben ihr Passwort geändert für'
     CHANGEPASSWORDTEXT2: 'Sie können nun folgende Angaben benutzen um sich einzuloggen'
     EMAIL: E-Mail
     HELLO: Hi
@@ -424,7 +424,7 @@ de:
     EMPTYBEFOREIMPORT: 'Datenbank vor Import leeren'
     IMPORT: 'CSV Import'
     IMPORTEDRECORDS: '{count} Datensätze wurden importiert.'
-    NOCSVFILE: 'Wählen Sie eine CSV-Datei zum Importieren'
+    NOCSVFILE: 'Wählen sie eine CSV-Datei zum Importieren'
     NOIMPORT: 'Kein Import notwendig.'
     RESET: Zurücksetzen
     Title: Datenmodelle
@@ -526,7 +526,7 @@ de:
     ADD: 'Eine neue Zeile hinzufügen'
     ADDITEM: '%s hinzufügen'
   TableListField:
-    CSVEXPORT: 'Als CSV-Datei exportieren'
+    CSVEXPORT: 'Exportieren zu CSV'
     PRINT: drucken
     Print: Drucken
     SELECT: 'Auswählen:'

@@ -380,7 +380,7 @@ ro:
     belongs_many_many_Groups: Grupuri
     db_LastVisited: 'Data ultimei vizite'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Blocat pana la'
+    db_LockedOutUntil: 'Blocat pana cand'
     db_NumVisit: 'Numarul de vizite'
     db_Password: Parola
     db_PasswordExpiry: 'Data de Expirare a Parolei'
