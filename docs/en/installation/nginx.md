@@ -36,8 +36,12 @@ Here is the include file `silverstripe3`:
  
 	location @silverstripe {
 		include fastcgi_params;
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		
+		# Defend against arbitrary PHP code execution
 		# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+		# More info:
+		# https://nealpoole.com/blog/2011/04/setting-up-php-fastcgi-and-nginx-dont-trust-the-tutorials-check-your-configuration/
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
 		
 		fastcgi_param SCRIPT_FILENAME $document_root/framework/main.php;
 		fastcgi_param SCRIPT_NAME /framework/main.php;
