@@ -357,7 +357,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$response = parent::handleRequest($request, $model);
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
-		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
+		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
 		
 		return $response;
 	}
