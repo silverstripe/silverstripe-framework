@@ -91,8 +91,8 @@ body.cms {
 	z-index: 60;
 	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
 	background: {
-		image:url(../images/textures/cms_content_header.png);
-		repeat:repeat;
+		image: url(../images/textures/cms_content_header.png);
+		repeat: repeat;
 	}
 
 	.cms-content-header-info *,
@@ -136,35 +136,35 @@ body.cms {
 					font-weight: bold;
 					margin: 0;
 					padding: 0 $grid-x*2;
-				}
-			}
-			
+		}
+	}
+
 			.ui-state-default, 
 			.ui-widget-content .ui-state-default, 
 			.ui-widget-header .ui-state-default {
 				border: {
 					top:none;
-				}
+}
 				@include box-shadow($color-shadow-light 0 0 2px);
 			}
-			
+
 			.ui-state-active, 
 			.ui-widget-content .ui-state-active, 
 			.ui-widget-header .ui-state-active {
 				border: {
 					top:none;
-				}
+	}
 				padding-bottom:0px;
 				@include box-shadow(none);
-			}
+}
 			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
 				border-radius:0;
-			}
+	}
 
 			.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
 				border-radius:0;
-			}
 		}
+	}
 	}
 
 	// Reset to default styles
@@ -176,14 +176,14 @@ body.cms {
 		}
 	}
 }
-
+		
 .cms-edit-form {
 	.cms-content-header-tabs {
 		.ui-tabs-nav {
-			li {
-				a {
+		li {
+			a {
 					text-indent:0;
-				}
+			}
 			}
 		}
 	}		
@@ -195,13 +195,13 @@ body.cms {
 .cms-content-header .ui-tabs-nav, .cms-dialog .ui-tabs-nav {
 	li {
 		margin:0;
-		a {
+			a {
 			font-weight: bold;
 			line-height: $grid-y * 2;
 			padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+			}
 		}
-	}
-	
+
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
@@ -210,18 +210,18 @@ body.cms {
 		@include background-image(
 			linear-gradient($color-base, darken($color-base, 12%))
 			);
-		
+
 		border: {
 			right-color: darken($color-base, 15%);
 			left-color: lighten($color-base, 10%);
 		}
 
-		a {
+			a {
 			color: #FFF;
 			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+			}
 		}
-	}
-	
+		
 	.ui-state-active, 
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
@@ -233,14 +233,14 @@ body.cms {
 		margin-right:-1px;
 		margin-left:-1px;
 		z-index:2;
-		
-		a {
+
+			a {
 			border-bottom: none;
 			color: $color-text;
 			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+			}
 		}
 	}
-}
 
 .CMSPagesController {
 	.cms-content-header-tabs {
@@ -254,46 +254,46 @@ body.cms {
 					text-indent: -9999em;
 					display: block;
 					background: url(../images/content-header-tabs-sprite.png) no-repeat;
-				}
+		}
 
 				&.content-treeview a {
 					background-position: 2px 0px;
-				}
+		}
 				&.content-galleryview a {
 					background-position: -87px 0px;
-				}
+			}
 				&.content-listview a {
 					background-position: -38px 0px;
-				}
-			}
+		}
+	}
 			
 			.ui-state-active, 
 			.ui-widget-content .ui-state-active, 
 			.ui-widget-header .ui-state-active {
 				border: {
 					top:none;
-				}
+	}
 				padding-bottom:1px;
-		
+
 				&.content-treeview a {
 					background-position: 2px -40px;
-				}
+	}
 				&.content-galleryview a {
 					background-position: -87px -40px;
-				}
+}
 				&.content-listview a {
 					background-position: -38px -40px;
-				}
-			}
 		}
 	}
-}
+	}
+		}
+	}
 
 .CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 	.cms-content-header-tabs .ui-tabs-nav .ui-state-active {
 		background: darken($color-widget-bg, 2%);
-	}
-}
+		}
+		}
 
 /** -------------------------------------------------------
  * Loading Interface
@@ -358,7 +358,7 @@ body.cms {
 			@include border-radius(5px);
 			display: inline-block;
 			zoom: 1;
-      *display: inline;
+      		*display: inline;
 		}
 	}
 	
@@ -393,16 +393,16 @@ body.cms {
 	margin: 0 0 $grid-y 0;
 	padding: $grid-y - 1 $grid-x - 1;
 	font-weight: bold;
-	
+
 	border: 1px black solid;
 	
-	&.notice {
+	&.notice {		
 		background-color: lighten($color-notice, 20%);
-		border-color: $color-notice;
+		border-color: $color-notice;	
 		
 		a {
 			color: #999;
-		}
+	}
 	}
 	
 	&.warning {
@@ -412,7 +412,7 @@ body.cms {
 	&.error, &.bad, &.required, &.validation {
 		background-color: lighten($color-error, 20%);
 		border-color: $color-error;
-	}
+	}	
 	
 	&.good {
 		background-color: $color-good;//for browsers that don't understand rgba
@@ -474,7 +474,7 @@ body.cms {
 			padding-top:5px; //aligns label with point of arrow
 			font-weight:bold; //to match pagetype label
 			@include text-shadow(1px 1px 0 $color-text-shadow);
-		}
+		}		
 	}
 	ul.SelectionGroup {
 		padding-left:28px;
@@ -482,66 +482,66 @@ body.cms {
 	.parent-mode {
 		padding: $grid-x;
 		overflow: auto;
-	}
+	}	
 
-	#PageType {
-		ul {
-			padding-left: 20px;
-			li {
-				float: none;
-				width: 100%;
-				padding: 9px 0 9px 15px;
-				overflow: hidden;
-				border-bottom-width: 2px;
-				border-bottom: 2px groove lighten($color-shadow-light, 95%);
-				-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-				border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+#PageType {
+	ul {
+		padding-left: 20px;
+		li {
+			float: none;
+			width: 100%;
+			padding: 9px 0 9px 15px;
+			overflow: hidden;
+			border-bottom-width: 2px;
+			border-bottom: 2px groove lighten($color-shadow-light, 95%);
+			-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+			border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
 
-				&:last-child {
-					border-bottom: none;
-				}
-						
-				&:hover, &.selected {
-					background-color: $color-highlight-opacity;
-				}
+			&:last-child {
+				border-bottom: none;
+			}
+					
+			&:hover, &.selected {
+				background-color: $color-highlight-opacity;
+			}
 
-				&.disabled {
-					color: $color-text-disabled;
-					&:hover {
-						background: none;
-					}
-				}
-
-				input {
-					margin: inherit;
-				}
-
-				label {
-					padding-left: 0;
-					padding-bottom: 0;
-				}
-				
-				input, label, .page-icon, .title {
-					float: left;
-					line-height: 1.3em;
-				}
-				
-				.page-icon {
-					margin: 0 4px;
-				}
-				
-				.title {
-					width: 120px;
-					font-weight: bold;
-					padding-right: 10px;
-				}
-				
-				.description {
-					font-style: italic;
+			&.disabled {
+				color: $color-text-disabled;
+				&:hover {
+					background: none;
 				}
 			}
-		}	
+
+			input {
+				margin: inherit;
+			}
+
+			label {
+				padding-left: 0;
+				padding-bottom: 0;
+			}
+			
+			input, label, .page-icon, .title {
+				float: left;
+				line-height: 1.3em;
+			}
+			
+			.page-icon {
+				margin: 0 4px;
+			}
+			
+			.title {
+				width: 120px;
+				font-weight: bold;
+				padding-right: 10px;
+			}
+			
+			.description {
+				font-style: italic;
+			}
+		}
 	}	
+}	
 }
 
 /** --------------------------------------------
@@ -551,7 +551,7 @@ body.cms {
 .cms-content-toolbar {
 	min-height:35px;
 	display: block;
-	margin: 0 0 15px 0;
+	margin: 0 0 $grid-y 0;
 	
 	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
 	@include legacy-pie-clearfix();
@@ -567,7 +567,7 @@ body.cms {
 		}
 	}
 
-/* smaller treedropdown */
+	/* smaller treedropdown */
 	.chzn-container-single .chzn-single  {
 		height: 26px;
 		line-height: 26px;
@@ -609,7 +609,7 @@ body.cms {
 			width:24px;
 		}	
 	}
-}
+	}
 
 
 /* --------------------------------------------------------
@@ -619,7 +619,7 @@ body.cms {
 .cms-content-tools {
 	background-color: #F1F4F5;
 	background: $tab-panel-texture-background; // Pages bg panel look like same as pages view
-	width: $grid-x * 24;
+	width: $grid-x * 25;
 	border-right: 1px solid darken($color-widget-bg, 15%);
 	overflow-y: auto;	
 	overflow-x: hidden;
@@ -775,7 +775,6 @@ body.cms {
 	float: left;
 	position:  relative;
 	display: block;
-	margin-left: 8px;
 
 	.view-mode-batchactions-wrapper {
 		float: left;
@@ -850,7 +849,7 @@ body.cms {
 	display: none;
 	width: 1px; // collapsed by default
 	z-index: 100;
-		
+
 	.cms-preview-toggle {
 		width: 10px;
 		cursor: pointer;
@@ -1023,7 +1022,7 @@ form.member-profile-form {
 	.Actions {
 		text-align: left;
 		border: 0;
-	}
+	}	
 	
 	input.customFormat {
 		width: $grid-x * 10;
@@ -1076,14 +1075,14 @@ form.member-profile-form {
 	.ui-tabs-nav {
 		li {
 			margin:0 0 -1px 0;
-		}
+}
 		.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
 			border-radius:0;
 		}
 
 		.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
 			border-radius:0;
-		}
+	}
 	}
 }
 
@@ -1119,7 +1118,7 @@ form.member-profile-form {
 			ul.optionset li {
 				float:none;
 			}
-		}	
+		}			
 		
 		.field {
 			.fieldholder-small { // Small fields have a second set of headers
@@ -1136,8 +1135,8 @@ form.member-profile-form {
 			}
 		}
 	}
-}
-
+		}
+		
 /** --------------------------------------------
  * "Settings" Form
  * -------------------------------------------- */
@@ -1191,20 +1190,20 @@ form.member-profile-form {
 		&.south {
 			border-top: 1px solid #FFF;
 		}
-	}
+	}	
 	
 	&.collapsed {
 
 		cursor: pointer;
 
 		.cms-panel-header * {
-			display: none;
+			display:none;
 		}
 		
 		.cms-panel-content {
 			display: none;
 		}
-		
+
 		//.cms-panel-header {
 		//	@include rotate(-90deg);
 		//	position: relative;
@@ -1326,13 +1325,13 @@ form.member-profile-form {
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
-  background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-  border: 3px solid #000 !important;
+	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+	border: 3px solid #000 !important;
 	border-radius: $grid-y;
-  overflow: visible;
-  padding: 0;
+	overflow: visible;
+	padding: 0;
  
-  // Titlebar for pop-up dialog.
+  	// Titlebar for pop-up dialog.
 	.ui-dialog-titlebar.ui-widget-header {
 	  	font-size: $font-base-size+2;
 		padding: 0;
@@ -1371,7 +1370,7 @@ form.member-profile-form {
 			&.ui-tabs {
 				background: none;
 
-				.ui-tabs-nav {
+			.ui-tabs-nav {
 					border: none;
 					padding: 0 $grid-x*5 0 0; //allows for 40px gap to the right of tabs to match the tabs on main CMS
 					float:right;
@@ -1381,7 +1380,7 @@ form.member-profile-form {
 						&.ui-tabs-selected {
 							margin-bottom: -1px;
 							padding-bottom:11px;
-						}
+			}
 
 						&:first-child {
 							margin-left: 15px;
@@ -1443,13 +1442,13 @@ form.member-profile-form {
 				}
 				
 
-				.ui-tabs-panel {
+			.ui-tabs-panel {
 					background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
 					overflow-x:hidden;
 					clear:both;
 					border-top: 1px solid darken($color-tab, 20%);
-				}
 			}
+		}
 		}
 		.clear {
 			clear: both;
@@ -1492,10 +1491,10 @@ body.cms-dialog {
 			position: relative;
 
       label {
-				position: absolute;
-				left: 8px;
-				top: 13px;
-				font-weight: normal; color: #888;
+			position: absolute;
+			left: 8px;
+			top: 13px;
+			font-weight: normal; color: #888;
 			}
 
 			.middleColumn {
@@ -1663,7 +1662,7 @@ body.cms-dialog {
 	.filter &{
 		margin-bottom:0;
 	}
-}
+	}
 
 /** --------------------------------------------
  * Step labels
@@ -1698,7 +1697,7 @@ body.cms-dialog {
 	.title {
 		height: 26px - 2*4px; // minus padding
 		padding: 4px;
-	}
+	}	
 	
 }
 
@@ -1783,8 +1782,8 @@ form.small {
 		}
 		.ui-button-text {
 			padding-left:26px; //to accomodate wider export icon
-		} 
  	}
+}
 }
 
 /**
@@ -1831,7 +1830,7 @@ form.import-form {
 						font-weight: bold;
 						line-height: $grid-y * 2;
 						padding: $grid-y $grid-x*2.5 $grid-y;
-					}
+	}
 				}
 				.ui-state-default,
 				.ui-widget-content .ui-state-default,
@@ -1896,7 +1895,7 @@ form.import-form {
 .ss-uploadfield-item-edit-all .ui-button-text{
 	padding-right:0;
 }
-
+	
  
 	
 .toggle-details-icon {
