@@ -414,7 +414,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$message = sprintf(
 			_t('GridFieldDetailForm.Saved', 'Saved %s %s'),
-			$this->record->singular_name(),
+			$this->record->i18n_singular_name(),
 			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
 		);
 		
@@ -451,7 +451,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$message = sprintf(
 			_t('GridFieldDetailForm.Deleted', 'Deleted %s %s'),
-			$this->record->singular_name(),
+			$this->record->i18n_singular_name(),
 			htmlspecialchars($title, ENT_QUOTES)
 		);
 		
