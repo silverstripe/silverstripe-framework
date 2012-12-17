@@ -1,7 +1,7 @@
 bg:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: NewFolder
+    NEWFOLDER: НоваПапка
   AssetTableField:
     CREATED: Създаден
     DIM: Размери
@@ -10,18 +10,18 @@ bg:
     LASTEDIT: 'Последна промяна'
     OWNER: Собственик
     SIZE: 'Големина на файла'
-    TITLE: Title
+    TITLE: Заглавие
     TYPE: 'Тип на файла'
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Избери файлове'
     DRAGFILESHERE: 'Завлечете файловете тук'
-    DROPAREA: 'Drop Area'
+    DROPAREA: 'Зона за пускане'
     EDITALL: 'Редакция на всички'
     EDITANDORGANIZE: 'Редактиране и подреждане'
     EDITINFO: 'Edit files'
     FILES: Файлове
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Избери файлове от компютъра'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Общо
     TOUPLOAD: 'Choose files to upload...'
@@ -66,12 +66,12 @@ bg:
     LOADING: 'Зареждане ...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
+    ACCESS: 'Достъп до секция ''{title}'''
     ACCESSALLINTERFACES: 'Достъп до всички секции на CMS'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Запис
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'Моят профил'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
     CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
@@ -79,10 +79,10 @@ bg:
     HELLO: Здравей!
     PASSWORD: Парола
   CheckboxField:
-    - 'False'
-    - 'True'
+    - 'не е чекнато'
+    - чекнато
   ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
+    CLOSEPOPUP: 'Затвори прозореца'
     SUCCESSADD2: 'Беше добавен {name}'
     SUCCESSEDIT: 'Съхранено %s %s %s'
   ComplexTableField.ss:
@@ -94,9 +94,9 @@ bg:
     NEXT: Следващо
     PREVIOUS: Предишно
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    ATLEAST: 'Паролата трябва да е дълга мин. {min} символа.'
+    BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
+    MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
     SHOWONCLICKTITLE: 'Промяна на парола'
   CreditCardField:
     FIRST: първи
@@ -138,10 +138,10 @@ bg:
   EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
   Email_BounceRecord:
-    PLURALNAME: 'Email Bounce Records'
-    SINGULARNAME: 'Email Bounce Record'
+    PLURALNAME: 'Изпращане на отпадналите записи'
+    SINGULARNAME: 'Изпращане на отпаднал запис'
   Enum:
-    ANY: Any
+    ANY: Някой
   File:
     AviType: 'AVI video file'
     Content: Съдържание
@@ -153,38 +153,38 @@ bg:
     GzType: 'GZIP compressed file'
     HtlType: 'HTML file'
     HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSION: 'Това разширение не е разрешено (разрешени са: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Това разширение не е разрешено'
     IcoType: 'Icon image'
     JpgType: 'JPEG image - good for photos'
     JsType: 'Javascript file'
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Размер на файла е нула байта.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
+    NOVALIDUPLOAD: 'Невалиден файл за качване'
     Name: Име
     PLURALNAME: Файлове
     PdfType: 'Adobe Acrobat PDF file'
     PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Файл
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGE: 'Много голям файл, разрешено е до {size}'
+    TOOLARGESHORT: 'Големината на файла надхвърля {size}'
     TiffType: 'Tagged image format'
-    Title: Title
+    Title: Заглавие
     WavType: 'WAV audo file'
     XlsType: 'Excel spreadsheet'
     ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    ATTACH: 'Прикачи {type}'
+    ATTACHONCESAVED: '{type} може да бъде прикачен след като записът се съхрани за първи път.'
+    ATTACHONCESAVED2: 'Файлове могат да бъдат прикачвани след като записът се съхрани за първи път.'
+    DELETE: 'Изтрий {type}'
     DISALLOWEDFILETYPE: 'Не може да бъде качен файл от този тип'
     FILE: Файл
     FROMCOMPUTER: 'От компютъра'
     FROMFILESTORE: 'От Файлове и Изображения'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
+    NOSOURCE: 'Избери файл за прикачване'
+    REPLACE: 'Замести {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe за качване на изображение'
   Filesystem:
@@ -204,30 +204,30 @@ bg:
     VALIDATIONNOTUNIQUE: 'Въведената стойност не е уникална'
     VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролите не може да бъдат празни'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONSTRONGPASSWORD: 'Паролите трябва да съдържат поне една цифра и една буква.'
     VALIDATOR: Валидатор
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: 'Моля, въведете коректна валута.'
   FormField:
-    NONE: нищо
+    NONE: никой
   GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
+    DELETE_DESCRIPTION: Изтриване
+    Delete: Изтрий
     UnlinkRelation: Откачане
   GridField:
     Add: 'Добави {name}'
     Filter: Филтър
     FilterBy: 'Филтриране по'
-    Find: Find
+    Find: Търси
     LEVELUP: 'Ниво нагоре'
-    LinkExisting: 'Link Existing'
+    LinkExisting: 'Свържи към съществуващ'
     NewRecord: 'Нов %s'
     NoItemsFound: 'Няма намерени елементи'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    PRINTEDAT: 'Отпечатано на'
+    PRINTEDBY: 'Отпечатано от'
     PlaceHolder: 'Намери {type}'
     PlaceHolderWithLabels: 'Намери {type} по {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    RelationSearch: 'Търсене на връзка'
+    ResetFilter: Изчистване
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Изтриването не е разрешено'
   GridFieldDetailForm:
@@ -241,26 +241,26 @@ bg:
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Добавяне на роля към групата'
-    Code: 'Group Code'
+    Code: 'Код на група'
     DefaultGroupTitleAdministrators: Администратори
     DefaultGroupTitleContentAuthors: 'Редактори на съдържание'
     Description: Описание
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Ако изберете родителска група, тази група ще наследи всички нейни роли'
     Locked: 'Заключена?'
     NoRoles: 'Няма намерени роли'
     PLURALNAME: Groups
-    Parent: 'Parent Group'
+    Parent: 'Група източник'
     RolesAddEditLink: 'Управление на ролите'
     SINGULARNAME: Group
     Sort: Сортиране
     has_many_Permissions: Разрешения
-    many_many_Members: Потребители
+    many_many_Members: Членове
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Внасяне на една или повече групи в <em>CSV формат</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Покажи начин на употреба</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
+    ResultCreated: 'Бяха създадени {count} група/и'
+    ResultDeleted: 'Бяха изтрити %d групи'
+    ResultUpdated: 'Бяха обновени %d групи'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
@@ -277,7 +277,7 @@ bg:
     CSSCLASSLEFT: 'В ляво, с текст който да се нанася около него'
     CSSCLASSLEFTALONE: 'В ляво, самостоятелно.'
     CSSCLASSRIGHT: 'В дясно, с текст който да се нанася около него'
-    DETAILS: Details
+    DETAILS: Детайли
     EMAIL: 'email адрес'
     FILE: Файл
     FOLDER: Папка
@@ -287,7 +287,7 @@ bg:
     FindInFolder: 'Прегледай папка'
     IMAGEALT: 'Алтернативен текст (alt)'
     IMAGEALTTEXT: 'Алтернативен текст (alt) - показва се ако изображението не е заредено'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Вижда се на екранните четци или ако картинката не може да бъде показана'
     IMAGEDIMENSIONS: Размери
     IMAGEHEIGHTPX: Височина
     IMAGETITLE: 'Описание (tooltip) - за допълнителна информация към изображението'
@@ -306,48 +306,48 @@ bg:
     LINKTO: 'Препратка към'
     PAGE: Страница
     URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    URLNOTANOEMBEDRESOURCE: 'URL адресът ''{url}'' не може да бъде превърнат в медиен ресурс.'
     UpdateMEDIA: 'Актуализация на медиа'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
   ImageField:
-    IMAGE: Image
+    IMAGE: Изображение
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
   Image_iframe.ss:
-    TITLE: 'Iframe за качване на изображение'
+    TITLE: 'Качване на изображението Iрамка'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    CANT_REORGANISE: 'Нямаш права да променяш страници от най-горно ниво. Твоите промени не бяха записани.'
     DELETED: Изтрит
     DropdownBatchActionsDefault: Действия
-    HELP: Help
-    PAGETYPE: 'Page type: '
+    HELP: Помощ
+    PAGETYPE: 'Тип на страницата'
     PERMAGAIN: 'Вие излязохте от CMS. Ако искате да влезете отново, моля, въведете потребителско име и парола.'
     PERMALREADY: 'Съжалявам, но нямате достъп до тази част от CMS. Ако искате да влезете с друго потребителско име, моля, направете го по-долу'
     PERMDEFAULT: 'Въведете имейл адреса и паролата си, за да влезете в CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PLEASESAVE: 'Съхрани страницата: Тази страница не може да бъде обновена, защото още не е записана.'
     PreviewButton: Преглед
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    REORGANISATIONSUCCESSFUL: 'Реорганизацията на дървото на сайта беше успешна.'
     SAVEDUP: Записано
     VersionUnknown: непозната
   LeftAndMain_Menu.ss:
     Hello: Здравей
-    LOGOUT: 'Log out'
+    LOGOUT: Излизане
   LoginAttempt:
-    Email: 'Email Address'
+    Email: 'Email адрес'
     IP: 'IP адрес'
     PLURALNAME: 'Login Attempts'
     SINGULARNAME: 'Login Attempt'
-    Status: Status
+    Status: Статус
   Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
     BUTTONLOGIN: Влез
     BUTTONLOGINOTHER: 'Влез като някой друг'
     BUTTONLOSTPASSWORD: 'Загубих си паролата'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Нямаш права за това действие'
     CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
     CONFIRMPASSWORD: 'Потвърдете паролата'
     DATEFORMAT: 'Date format'
@@ -355,14 +355,14 @@ bg:
     DefaultDateTime: 'по подразбиране'
     EMAIL: Еmail
     EMPTYNEWPASSWORD: 'Не е въведена нова парола'
-    ENTEREMAIL: 'Връзка за анулиране на парола'
+    ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
     ERRORLOCKEDOUT: 'Вашата сметка бе изключена временно защото имаше много неуспешни опити за влизане. Моля опитайте отново след 20 минути.'
     ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
     ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
     ERRORWRONGCRED: 'Това не изглежда да е правилен email адрес или парола. Моля опитайте отново.'
     FIRSTNAME: Име
     INTERFACELANG: Език
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    INVALIDNEWPASSWORD: 'Не може да бъде приета паролата: {password}'
     LOGGEDINAS: 'Вие сте влезли като {name}.'
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
@@ -389,10 +389,10 @@ bg:
   MemberDatetimeOptionsetField:
     AMORPM: 'АМ (преди обед) или РМ (следобед)'
     'APPLY FILTER': 'Приложи филтър'
-    Custom: Custom
+    Custom: Произволно
     DATEFORMATBAD: 'Невалиден формат на датата'
     DAYNOLEADING: 'Ден от месеца без водеща нула'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
     FOURDIGITYEAR: 'Четирицифрена година'
     FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
     HOURNOLEADING: 'Час без водеща нула'
@@ -408,11 +408,11 @@ bg:
     TWODIGITSECOND: 'Секунди с водеща нула (00 до 59)'
     TWODIGITYEAR: 'Двуцифрена година'
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p>Внасяне на потебители в <em>CSV формат</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Покажи начин на употреба</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Бяха добавени {count} потребители'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultDeleted: 'Бяха изтрити %d членове'
+    ResultNone: 'Нямаше промени'
     ResultUpdated: 'Бяха актуализирани {count} потребители'
   MemberPassword:
     PLURALNAME: 'Member Passwords'
@@ -420,15 +420,15 @@ bg:
   MemberTableField: null
   ModelAdmin:
     DELETE: Изтрий
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: 'Бяха изтрити {count} записа.'
     EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORT: 'Внасяне от CSV'
+    IMPORTEDRECORDS: 'Бяха внесени {count} записа.'
     NOCSVFILE: 'Преглед на CSV файл за внасяне'
     NOIMPORT: 'Нищо за внасяне'
-    RESET: Reset
+    RESET: Нулиране
     Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    UPDATEDRECORDS: 'Бяха обновени {count} записа.'
   ModelAdmin_ImportSpec.ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'
@@ -486,13 +486,13 @@ bg:
     CHANGEPASSWORDHEADER: 'Сменете вашата парола'
     ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
     ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
-    LOGGEDOUT: 'Вие излязохте. Ако искате да влезете отново, въведете вашите данни по-долу.'
+    LOGGEDOUT: 'Вие излязохте. Ако искате да влезнете отново, въведете вашите данни по-долу.'
     LOGIN: 'Влезте в системата'
-    NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    NOTEPAGESECURED: 'Тази страница е защитена. Вкарайте вашите данни по-долу и ще ви препратим по-нататък.'
+    NOTERESETLINKINVALID: '<p>Връзката за нулиране на парола не е вярна или е просрочена.</p><p>Можете да заявите нова <a href="{link1}">тук</a> или да промените паролата си след като <a href="{link2}">влезете</a>.</p>'
+    NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк с който ще можете да смените паролата си'
+    PASSWORDSENTHEADER: 'Връзка за нулиране на парола беше изпратена на ''{email}'''
+    PASSWORDSENTTEXT: 'Благодарим ви! Връзка за нулиране на паролата беше изпратен на ''{email}'', ако съществува акаунт с този имейл адрес.'
   SecurityAdmin:
     ACCESS_HELP: 'Позволява преглед, добавяне и редактиране на потребители, както и задаване на разрешения и роли за тях.'
     APPLY_ROLES: 'Задаване роли на групи'
@@ -503,7 +503,7 @@ bg:
     IMPORTGROUPS: 'Внасяне на файл с групи'
     IMPORTUSERS: 'Внасяне на файл с потребители'
     MEMBERS: Потребители
-    MENUTITLE: Security
+    MENUTITLE: Сигурност
     MemberListCaution: 'Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни.'
     NEWGROUP: 'Нова група'
     PERMISSIONS: Разрешения
@@ -521,7 +521,7 @@ bg:
   SiteTree:
     TABMAIN: Главно
   TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED: 'В %s е необходимо ''%s'''
   TableField.ss:
     ADD: 'Добави нов ред'
     ADDITEM: 'Add %s'
@@ -532,8 +532,8 @@ bg:
     SELECT: 'Избери:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
+    SORTASC: 'Сортирай възходящо'
+    SORTDESC: 'Сортирай низходящо'
   TableListField_PageControls.ss:
     DISPLAYING: Displaying
     OF: of
@@ -554,22 +554,22 @@ bg:
     DELETE: 'Delete from files'
     DELETEINFO: 'Изтрий файла от сървъра'
     DOEDIT: Запис
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DROPFILE: 'пуснете файл'
+    DROPFILES: 'пускане на файлове'
     Dimensions: Размери
     EDIT: Edit
     EDITINFO: 'Редактирай този файл'
-    FIELDNOTSET: 'File information not found'
+    FIELDNOTSET: 'Информация за файла не беше намерена'
     FROMCOMPUTER: 'От компютъра'
     FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
+    FROMFILES: 'От файлове'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
     MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
     REMOVE: Премахни
     REMOVEERROR: 'Грешка при премахване на файл'
     REMOVEINFO: 'Премахни файла без да го изтриваш'
-    STARTALL: 'Start all'
+    STARTALL: 'Старт на всички'
     STARTALLINFO: 'Start all uploads'
     Saved: Записано
   Versioned:

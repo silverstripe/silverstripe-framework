@@ -4,14 +4,14 @@ mi_NZ:
     NEWFOLDER: KōpakiHōu
   AssetTableField:
     CREATED: 'Tukuatu tuatahi'
-    DIM: 'Ngā Rahinga'
+    DIM: Nuinga
     FILENAME: 'Ingoa Kōnae'
     FOLDER: Kōpaki
     LASTEDIT: 'Hurihanga tōmuri'
     OWNER: Kaiūmanga
     SIZE: Nuinga
-    TITLE: Taitara
-    TYPE: 'Momo kōnae'
+    TITLE: 'Ingoa '
+    TYPE: 'Tūmomo '
     URL: PRO
   AssetUploadField:
     ChooseFiles: 'Kōwhiri kōnae'
@@ -69,7 +69,7 @@ mi_NZ:
     ACCESS: 'Uru ki te wāhanga ''{title}'''
     ACCESSALLINTERFACES: 'Uru ki ngā wāhanga CMS katoa'
     ACCESSALLINTERFACESHELP: 'Ka takahi i ngā tautuhinga uru tauwhāiti ake'
-    SAVE: Tiaki
+    SAVE: tiakina
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
@@ -505,7 +505,7 @@ mi_NZ:
     MEMBERS: 'Ngā Mema'
     MENUTITLE: Haumarutanga
     MemberListCaution: 'Whakatūpato: Mā te tango mema i tēnei rārangi, ka tangohia i ngā rōpū katoa me te pātengi raraunga'
-    NEWGROUP: 'Rōpū Hōu'
+    NEWGROUP: 'Roopu hou'
     PERMISSIONS: 'Ngā Whakaaetanga'
     ROLES: 'Ngā Tūnga'
     ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'
