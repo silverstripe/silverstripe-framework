@@ -303,17 +303,3 @@ table.ss-gridfield-table {
 	    width: 190px; /* Width 100% not calculating by ie7 */
 	}
 }
-
-
-/* Tempory fix as jquery loads too slow to add icons */
-button.ui-button-text-icon-primary {
-	padding-left: 30px !important;
-	span.ui-button-icon-primary {
-		position: absolute !important;
-		top: 5px !important;
-		left: 8px !important;
-	}
-	.ui-button-text {
-		margin-left: 0 !important;
-	}
-}
