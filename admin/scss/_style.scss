@@ -609,8 +609,7 @@ p.message {
 .cms-content-toolbar {
 	min-height: 29px;
 	display: block;
-	margin: 0 0 15px 0;
-	padding-bottom: 9px;
+	margin: 0 0 $grid-y 0;
 	
 	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	@include legacy-pie-clearfix();
@@ -681,7 +680,7 @@ p.message {
  */
 .cms-content-tools {
 	background: $tab-panel-texture-color;
-	width: $grid-x * 24;
+	width: $grid-x * 25;
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
@@ -837,7 +836,6 @@ p.message {
 	float: left;
 	position:  relative;
 	display: block;
-	margin-left: 8px;
 
 	.view-mode-batchactions-wrapper {
 		float: left;
