@@ -8,7 +8,7 @@ jQuery.noConflict();
 	window.onresize = function(e) {
 		// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
 		$('.cms-container').trigger('windowresize');
-	}
+	};
 
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
@@ -33,7 +33,7 @@ jQuery.noConflict();
 					disable_search_threshold: 20
 				});
 
-				var title = el.prop('title')
+				var title = el.prop('title');
 
 				if(title) {
 					el.siblings('.chzn-container').prop('title', title);
@@ -149,7 +149,7 @@ jQuery.noConflict();
 			},
 
 			fromWindow: {
-				onstatechange: function(){ this.handleStateChange(); },
+				onstatechange: function(){ this.handleStateChange(); }
 			},
 
 			'onwindowresize': function() {
@@ -577,7 +577,7 @@ jQuery.noConflict();
 			 * Requires HTML5 sessionStorage support.
 			 */
 			saveTabState: function() {
-				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage == null) return;
+				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
 
 				var selectedTabs = [], url = this._tabStateUrl();
 				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {					
@@ -613,7 +613,7 @@ jQuery.noConflict();
 			 * Requires HTML5 sessionStorage support.
 			 */
 			restoreTabState: function() {
-				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage == null) return;
+				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
 
 				var self = this, url = this._tabStateUrl(),
 					data = window.sessionStorage.getItem('tabs-' + url),
@@ -735,7 +735,7 @@ jQuery.noConflict();
 						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
 						
 						try {
-							if (typeof msg != "undefined" && msg != null) eval(msg);
+							if (typeof msg != "undefined" && msg !== null) eval(msg);
 						}
 						catch(e) {}
 						
