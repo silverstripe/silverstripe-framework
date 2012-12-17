@@ -19,10 +19,10 @@ configuration settings:
 		ssl_protocols SSLv3 TLSv1;
 		ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
 		
-		root /var/www/silverstripe3;
+		root /var/www/example.com;
 		index index.php index.html index.htm;
 		
-		server_name nginx3.example.com;
+		server_name example.com;
 
 		include silverstripe3;
 		include htaccess;
@@ -79,7 +79,7 @@ Here is the include file `htaccess`:
 		allow all;
 	}
 
-The above configuration sets up a virtual host `nginx3.example.com` with
+The above configuration sets up a virtual host `example.com` with
 rewrite rules suited for SilverStripe. The location block named
 `@silverstripe` passes all php scripts to the FastCGI-wrapper via a Unix
 socket. This example is from a site running Ubuntu with the php5-fpm
