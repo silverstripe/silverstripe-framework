@@ -462,7 +462,7 @@ jQuery.noConflict();
 
 				// Update title
 				var title = xhr.getResponseHeader('X-Title');
-				if(title) document.title = title;
+				if(title) document.title = decodeURIComponent(title.replace(/\+/g, ' '));
 
 				var newFragments = {}, newContentEls;
 				// If content type is text/json (ignoring charset and other parameters)
