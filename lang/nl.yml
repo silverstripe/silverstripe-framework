@@ -17,15 +17,15 @@ nl:
     ChooseFiles: 'Selecteer bestanden'
     DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
     DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
+    EDITALL: 'Alle bewerken'
     EDITANDORGANIZE: 'Bewerk en beheer'
     EDITINFO: 'Edit files'
-    FILES: Files
+    FILES: Bestanden
     FROMCOMPUTER: 'Choose files from your computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
+    TOTAL: Totaal
     TOUPLOAD: 'Choose files to upload...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Even geduld... bezig met uploaden'
     UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Uitlijning
@@ -63,7 +63,7 @@ nl:
     ANY: Elke
     1: Ja
   CMSLoadingScreen.ss:
-    LOADING: Loading...
+    LOADING: 'Bezig met laden...'
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
     ACCESS: 'Toegang tot het ''{title}'' gedeelte'
@@ -119,7 +119,7 @@ nl:
     MONTHS: maanden
     SEC: seconde
     SECS: seconden
-    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFAGO: '{difference} geleden'
     TIMEDIFFIN: 'in {difference}'
     YEAR: jaar
     YEARS: jaren
@@ -338,8 +338,8 @@ nl:
   LoginAttempt:
     Email: 'Email adres '
     IP: 'IP Adres'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    PLURALNAME: 'Pogingen om in te loggen'
+    SINGULARNAME: 'Poging om in te loggen'
     Status: Status
   Member:
     ADDGROUP: 'Add group'
@@ -393,7 +393,7 @@ nl:
     DATEFORMATBAD: 'Datum is niet correct opgegeven'
     DAYNOLEADING: 'Dag van de maand zonder voorloop-nul'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
+    FOURDIGITYEAR: 'jaar (yyyy)'
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
@@ -446,7 +446,7 @@ nl:
   NullableField:
     IsNullLabel: 'is nul'
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}'' is geen getal. Dit velt accepteert alleen getallen.'
   Pagination:
     Page: Page
     View: View
@@ -458,7 +458,7 @@ nl:
     PLURALNAME: Permissions
     SINGULARNAME: Permission
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
+    AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'inherited from group "{title}"'
     FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
@@ -466,7 +466,7 @@ nl:
     OnlyAdminCanApply: 'Only admin can apply'
     PLURALNAME: Roles
     SINGULARNAME: Role
-    Title: Title
+    Title: Titel
   PermissionRoleCode:
     PLURALNAME: 'Permission Role Cods'
     SINGULARNAME: 'Permission Role Code'
@@ -528,7 +528,7 @@ nl:
   TableListField:
     CSVEXPORT: 'Exporteer naar CSV'
     PRINT: Afdrukken
-    Print: Print
+    Print: Afdrukken
     SELECT: 'Selecteer:'
   TableListField.ss:
     NOITEMSFOUND: 'No items found'

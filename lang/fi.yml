@@ -1,6 +1,6 @@
 fi:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
+    ALLOWEDEXTS: 'Sallitut laajennukset'
     NEWFOLDER: 'Uusi kansio'
   AssetTableField:
     CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
@@ -347,7 +347,7 @@ fi:
     BUTTONLOGIN: 'Kirjaudu sisään'
     BUTTONLOGINOTHER: 'Kirjaudu jonain muuna'
     BUTTONLOSTPASSWORD: 'Kadotin salasanani'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Sinulla ei ole oikeuksia tähän toimintoon.'
     CONFIRMNEWPASSWORD: 'Syötä uusi salasana uudelleen'
     CONFIRMPASSWORD: 'Syötä salasana uudelleen'
     DATEFORMAT: Päivämäärämuoto
@@ -472,7 +472,7 @@ fi:
     SINGULARNAME: 'Käyttöoikeiden roolin koodi'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+    UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
   PhoneNumberField:
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
   RelationComplexTableField.ss:

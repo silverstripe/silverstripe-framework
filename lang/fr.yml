@@ -74,7 +74,7 @@ fr:
     MENUTITLE: 'Mon profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
-    CHANGEPASSWORDTEXT2: 'Vous pouvez maintenant utiliser les identifiants suivants pour vous connecter&nbsp;:'
+    CHANGEPASSWORDTEXT2: 'Vous pouvez maintenant utiliser les détails suivants pour vous connecter :'
     EMAIL: Email
     HELLO: Salut
     PASSWORD: 'Mot de passe'
@@ -253,7 +253,7 @@ fr:
     RolesAddEditLink: 'Ajouter/éditer les rôles'
     SINGULARNAME: Groupe
     Sort: 'Ordre de tri'
-    has_many_Permissions: Autorisations
+    has_many_Permissions: Permissions
     many_many_Members: Membres
   GroupImportForm:
     Help1: '<p>Importer un ou plusieurs groupe(s) au format <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Montrer l''usage avancé</a></small></p>'
@@ -323,11 +323,11 @@ fr:
     DELETED: Supprimé.
     DropdownBatchActionsDefault: Actions
     HELP: Aide
-    PAGETYPE: 'Type de page&nbsp;:'
+    PAGETYPE: 'Type de page :'
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
     PERMALREADY: 'Désolé, mais vous ne pouvez pas accéder à cette partie du CMS. Si vous voulez changer d''identité, faites le ci-dessous'
     PERMDEFAULT: 'Saisissez votre adresse de courriel et votre mot de passe pour accéder au CMS.'
-    PLEASESAVE: 'Enregistrez la page s’il vous plaît&nbsp;: elle ne pouvait pas être mise à jour car elle n’avait pas encore été sauvegardée.'
+    PLEASESAVE: 'Enregistez la page s''il vous plaît : Cette page ne pouvait pas être actualisée, car elle n''a pas encore été enregistrée.'
     PreviewButton: Aperçu
     REORGANISATIONSUCCESSFUL: 'L’arbre du site a été bien réorganisé.'
     SAVEDUP: Enregistré.
@@ -454,7 +454,7 @@ fr:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'Accès au CMS'
     FULLADMINRIGHTS: 'Droits d''administration complets'
-    FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
+    FULLADMINRIGHTS_HELP: 'Implique et écrase toute les autres permissions assignées.'
     PLURALNAME: Autorisations
     SINGULARNAME: Autorisation
   PermissionCheckboxSetField:
@@ -494,26 +494,26 @@ fr:
     PASSWORDSENTHEADER: 'Lien de réinitialisation de mot de passe envoyé  à « {email} »'
     PASSWORDSENTTEXT: 'Merci ! Un lien de réinitialisation vient d’être envoyé à « {email} », à condition que cette adresse existe.'
   SecurityAdmin:
-    ACCESS_HELP: 'Permet de consulter, d’ajouter et d’éditer les utilisateurs, aussi bien que de leur assigner des autorisations et des rôles.'
+    ACCESS_HELP: 'Permettre la visualisation, l''addition et l''édition des utilisateurs, aussi bien que leur assigner des permissions et des rôles.'
     APPLY_ROLES: 'Appliquer des rôles aux groupes'
-    APPLY_ROLES_HELP: 'Possibilité d''éditer les rôle assignés à un groupe. Nécessite l’autorisation « Accès à la section “Utilisateurs” ».'
-    EDITPERMISSIONS: 'Gérer les autorisations des groupes'
-    EDITPERMISSIONS_HELP: 'Possibilité d''éditer les autorisations et les adresses IP pour un groupe. Nécessite l’autorisation « Accès à la section “Securité” ».'
+    APPLY_ROLES_HELP: 'Possibilité d''éditer les rôles assignés à un groupe. Nécessite "Access to ''Security'' section".'
+    EDITPERMISSIONS: 'Gérer les permissions des groupes'
+    EDITPERMISSIONS_HELP: 'Possibilité d''éditer les permissions et les l''adresses IP pour un groupe. Nécessite "Access to ''Security'' section".'
     GROUPNAME: 'Nom du group'
     IMPORTGROUPS: 'Importer groupes'
     IMPORTUSERS: 'Importer utilisateurs'
     MEMBERS: Membres
     MENUTITLE: Sécurité
-    MemberListCaution: 'Attention&nbsp;: en supprimant des membres de cette liste vous les enlèverez de tous les groupes ainsi que de la base de données'
-    NEWGROUP: 'Nouveau groupe'
-    PERMISSIONS: Autorisations
+    MemberListCaution: 'Attention : Enlever des membres de cette liste va les enlever de tous les groupes et de la base de donnée'
+    NEWGROUP: 'Nouveau Groupe'
+    PERMISSIONS: Permissions
     ROLES: Rôles
-    ROLESDESCRIPTION: 'Les rôles sont des regroupements logiques d’autorisations qui peuvent être assignés à des groupes.<br />Ils peuvent être hérités de groupes parents, si nécessaire.'
+    ROLESDESCRIPTION: 'Cette section vous permet d''ajouter des rôles à ce groupe. Les rôles sont des regroupements logiques d''autorisations, qui peuvent être modifiés dans l''onglet Rôles'
     TABROLES: Rôles
     Users: Utilisateurs
   SecurityAdmin_MemberImportForm:
     BtnImport: Importer
-    FileFieldLabel: 'Fichier CSV <small>(extension autorisée&nbsp;: *.csv)</small>'
+    FileFieldLabel: 'Fichier CSV <small>(Extension permise: *.csv)</small>'
   SilverStripeNavigator:
     Edit: 'Tout modifier'
   SimpleImageField:
@@ -529,7 +529,7 @@ fr:
     CSVEXPORT: 'Exporter vers un fichier CSV'
     PRINT: Imprimer
     Print: Imprimer
-    SELECT: 'Sélectionner&nbsp;:'
+    SELECT: 'Sélectionner:'
   TableListField.ss:
     NOITEMSFOUND: 'Aucun élément n’a été trouvé'
     SORTASC: 'Classer en ordre croissant'
