@@ -302,7 +302,8 @@ body.cms {
 .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary, 
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
 	border-left: 1px solid darken($color-tab, 15%);
-	
+	float: none; // parent container is already right floated
+
 	li {
 		margin-right: 0; // tabs are directly adjacent
 		margin-top: 0;
