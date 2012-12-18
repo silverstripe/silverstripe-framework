@@ -168,7 +168,8 @@ jQuery.noConflict();
 			 * Ensure the user can see the requested section - restore the default view.
 			 */
 			'from .cms-menu-list li a': {
-				onclick: function() {
+				onclick: function(e) {
+					if(e.which > 1) return;
 					this.splitViewMode();
 				}
 			},
