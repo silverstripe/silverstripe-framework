@@ -30,7 +30,7 @@
 	@include border-radius(0);
 		
 	& .ui-dialog-title {
-		padding: 6px 0;
+		padding: 6px 10px;
 		text-shadow: lighten($color-base, 10%) 1px 1px 0;
 	}
 	
