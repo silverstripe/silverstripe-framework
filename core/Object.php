@@ -164,12 +164,19 @@ abstract class Object {
 		// Keep track of the current bucket that we're putting data into
 		$bucket = &$args;
 		$bucketStack = array();
+		$had_ns = false;
 		
 		foreach($tokens as $token) {
 			$tName = is_array($token) ? $token[0] : $token;
 			// Get the class naem
 			if($class == null && is_array($token) && $token[0] == T_STRING) {
 				$class = $token[1];
+			} elseif(is_array($token) && $token[0] == T_NS_SEPARATOR) {
+				$class .= $token[1];
+				$had_ns = true;
+			} elseif ($had_ns && is_array($token) && $token[0] == T_STRING) {
+				$class .= $token[1];
+				$had_ns = false;
 			// Get arguments
 			} else if(is_array($token)) {
 				switch($token[0]) {
