@@ -22,7 +22,15 @@ class URLSegmentFilterTest extends SapphireTest {
 			$f->filter('Brötchen')
 		);
 	}
-	
+
+	public function testReplacesCommonNonAsciiCharacters() {
+		$f = new URLSegmentFilter();
+		$this->assertEquals(
+			urlencode('aa1-.'),
+			$f->filter('Aa1~!@#$%^*()_+`-=;\':"[]\{}|,./<>?')
+		);
+	}
+
 	public function testRetainsNonAsciiUrlsWithAllowMultiByteOption() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(true);
