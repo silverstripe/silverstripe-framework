@@ -136,8 +136,8 @@ class Versioned extends DataExtension {
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
 	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
-		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
-
+	    $baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
+		
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Noop
 		case '':
@@ -203,6 +203,7 @@ class Versioned extends DataExtension {
 			// below)
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$this->augmentSQL($query, $dataQuery);
+			$dataQuery->setQueryParam('Versioned.mode', 'stage_unique');
 
 			// Now exclude any ID from any other stage. Note that we double rename to avoid the regular stage rename
 			// renaming all subquery references to be Versioned.stage
@@ -232,8 +233,19 @@ class Versioned extends DataExtension {
 			foreach(self::$db_for_versions_table as $name => $type) {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
+			
+			// Alias the record ID as the row ID
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
-			$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
+			
+			// Ensure that any sort order referring to this ID is correctly aliased
+			$orders = $query->getOrderBy();
+			foreach($orders as $order => $dir) {
+				if($order === "\"$baseTable\".\"ID\"") {
+					unset($orders[$order]);
+					$orders["\"{$baseTable}_versions\".\"RecordID\""] = $dir;
+				}
+			}
+			$query->setOrderBy($orders);
 			
 			// latest_version has one more step
 			// Return latest version instances, regardless of whether they are on a particular stage
@@ -250,6 +262,9 @@ class Versioned extends DataExtension {
 						) AS \"{$alias}_versions_latest\"
 						WHERE \"{$alias}_versions_latest\".\"RecordID\" = \"{$alias}_versions\".\"RecordID\"
 					)");
+			} else {
+				// If all versions are requested, ensure that records are sorted by this field
+				$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
 			}
 			break;
 		default:
@@ -266,8 +281,8 @@ class Versioned extends DataExtension {
 	 */
 	function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $record) {
 		$dataClass = $dataQuery->dataClass();
-		if (isset($record['Version'])){
-			$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $record['ID']);
+	    if (isset($record['Version'])){
+	    	$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $record['ID']);
 			$dataQuery->where("\"$dataClass\".\"Version\" = " . $record['Version']);
 			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
 		}

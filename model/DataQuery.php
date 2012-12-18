@@ -647,12 +647,12 @@ class DataQuery {
 	 * @param string $field 
 	 */
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
-		$subSelect= $subtractQuery->getFinalisedQuery();
-		$fieldExpression = $this->expressionForField($field, $subSelect);
+		$fieldExpression = $subtractQuery->expressionForField($field);
+		$subSelect = $subtractQuery->getFinalisedQuery();
 		$subSelect->setSelect(array());
 		$subSelect->selectField($fieldExpression, $field);
 		$subSelect->setOrderBy(null);
-		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
+		$this->where($this->expressionForField($field).' NOT IN ('.$subSelect->sql().')');
 
 		return $this;
 	}
@@ -679,9 +679,9 @@ class DataQuery {
 	 * @param String $field See {@link expressionForField()}.
 	 */
 	public function column($field = 'ID') {
+		$fieldExpression = $this->expressionForField($field);
 		$query = $this->getFinalisedQuery(array($field));
 		$originalSelect = $query->getSelect();
-		$fieldExpression = $this->expressionForField($field, $query);
 		$query->setSelect(array());
 		$query->selectField($fieldExpression, $field);
 		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
@@ -692,17 +692,21 @@ class DataQuery {
 	/**
 	 * @param  String $field Select statement identifier, either the unquoted column name,
 	 * the full composite SQL statement, or the alias set through {@link SQLQuery->selectField()}.
-	 * @param  SQLQuery $query
-	 * @return String
+	 * @return String The expression used to query this field via this DataQuery
 	 */
-	protected function expressionForField($field, $query) {
-		// Special case for ID
-		if($field == 'ID') {
+	protected function expressionForField($field) {
+		
+		// Prepare query object for selecting this field
+		$query = $this->getFinalisedQuery(array($field));
+		
+		// Allow query to define the expression for this field
+		$expression = $query->expressionForField($field);
+		if(!empty($expression)) return $expression;
+		
+		// Special case for ID, if not provided
+		if($field === 'ID') {
 			$baseClass = ClassInfo::baseDataClass($this->dataClass);
-			return "\"$baseClass\".\"ID\"";
-
-		} else {
-			return $query->expressionForField($field);
+			return "\"$baseClass\".\"ID\"";	
 		}
 	}
 
