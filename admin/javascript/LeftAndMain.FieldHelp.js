@@ -13,7 +13,7 @@
 				if(title && title.length && field.has('.help').length == 0) {
 					var span = $("<span></span>", {
 						"class": "help",
-						"text":  title
+						"html":  title
 					});
 
 					field.append(span);
