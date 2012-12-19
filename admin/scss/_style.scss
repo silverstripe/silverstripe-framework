@@ -278,15 +278,15 @@ body.cms {
 		}
 		.ui-tabs-panel {
 			margin: 0;
-			padding: 12px 12px 12px;
+			padding: $grid-y $grid-x*1.5 0 $grid-x*1.5;
 
 			.ui-tabs-panel {
-				padding: $grid-x 0 0 0;
+				padding: $grid-y 0 0 0;
 			}
 		}
 	}
 	.ui-tabs .ui-tabs-panel {						/* second level tabs */
-		padding-top: 8px;
+		padding-top: $grid-y;
 	}
 
 	&.ss-tabset-tabshidden .ui-tabs-panel {
@@ -452,7 +452,7 @@ body.cms {
 .message {												// White
 	display: block;
 	clear: both;
-	margin: $grid-y 0;
+	margin: 0 0 $grid-y;
 	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
 	font-weight: normal;	
 	border: 1px #ccc solid;
@@ -609,8 +609,8 @@ p.message {
 .cms-content-toolbar {
 	min-height: 29px;
 	display: block;
-	margin: 0 0 15px 0;
-	padding-bottom: 9px;
+	margin: 0 0 $grid-y*1.5 0;
+	padding-bottom: 0;
 	
 	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	@include legacy-pie-clearfix();
@@ -696,7 +696,8 @@ p.message {
 	
 	.cms-panel-header {
 		clear: both;
-		margin: 0 0 $grid-y - 1;
+		margin: 10px 0 $grid-y - 1;
+		padding-bottom: 2px;
 		line-height: $grid-y * 3;
 		
 		@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
@@ -829,6 +830,23 @@ p.message {
 	}
 }
 
+/** ------------------------------------------------------------------
+ * Filter message - should be generic and not nesacerly just for tree
+ * ----------------------------------------------------------------- */
+
+.cms-tree-filtered {
+	display: block;
+	margin: 0 0 8px;
+	padding: 10px 12px;
+	font-weight: normal;	
+	border: 1px $color-light-separator solid;
+	background: #fff;									// for browsers that don't understand rgba
+	background: rgba(#fff,0.5);
+	text-shadow: none;
+	@include border-radius(3px);
+}
+
+
 /** 
  * CMS Batch actions
  */
@@ -855,6 +873,10 @@ p.message {
 
 		fieldset, .Actions {
 			display: inline-block;
+		}
+
+		#view-mode-batchactions {
+			margin-top: 2px;
 		}
 	}
 
@@ -885,14 +907,22 @@ p.message {
 		@include background-image(linear-gradient(top, #fff, #D9D9D9));
 	}
 
-	.cms-batch-actions .Actions .ss-ui-button {
-		margin-left: -1px;
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
+	.cms-batch-actions {
+		.dropdown {
+			margin: 0;
+			.chzn-single {
+				padding-left: 8px; /* use default size without icon */
+			}
+		}
+		.Actions .ss-ui-button {
+			margin-left: -1px;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
 
-		&.ui-state-disabled {
-			opacity: 1;
-			color: #ccc;
+			&.ui-state-disabled {
+				opacity: 1;
+				color: #ccc;
+			}
 		}
 	}
 }
