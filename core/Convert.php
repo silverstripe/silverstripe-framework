@@ -74,7 +74,7 @@ class Convert {
 			foreach($val as $k => $v) $val[$k] = self::raw2xml($v);
 			return $val;
 		} else {
-			return htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+			return nl2br(htmlspecialchars($val, ENT_QUOTES, 'UTF-8'));
 		}
 	}
 	
