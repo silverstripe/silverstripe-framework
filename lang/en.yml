@@ -1,6 +1,7 @@
 en:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
