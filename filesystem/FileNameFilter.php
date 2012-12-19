@@ -39,7 +39,7 @@ class FileNameFilter extends Object {
 	static $default_replacements = array(
 		'/\s/' => '-', // remove whitespace
 		'/_/' => '-', // underscores to dashes
-		'/[^A-Za-z0-9+.-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
+		'/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
 		'/[\-]{2,}/' => '-', // remove duplicate dashes
 		'/^[\.\-_]+/' => '', // Remove all leading dots, dashes or underscores
 	);
