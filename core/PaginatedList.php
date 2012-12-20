@@ -328,7 +328,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return int
 	 */
 	public function TotalPages() {
-		return ceil($this->getTotalItems() / $this->pageLength);
+		return max(array(ceil($this->getTotalItems() / $this->pageLength), 1));
 	}
 
 	/**
