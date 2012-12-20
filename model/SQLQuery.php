@@ -566,6 +566,7 @@ class SQLQuery {
 		if($this->orderby) {
 			$i = 0;
 			foreach($this->orderby as $clause => $dir) {
+
 				// public function calls and multi-word columns like "CASE WHEN ..."
 				if(strpos($clause, '(') !== false || strpos($clause, " ") !== false ) {
 					// remove the old orderby
