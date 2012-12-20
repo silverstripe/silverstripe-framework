@@ -64,11 +64,11 @@ class FileField extends FormField {
 
 	/**
 	 * Partial filesystem path relative to /assets directory.
-	 * Defaults to 'Uploads'.
+	 * Defaults to Upload::$uploads_folder.
 	 *
 	 * @var string
 	 */
-	protected $folderName = 'Uploads';
+	protected $folderName = false;
 	
 	/**
 	 * Create a new file field.
@@ -111,7 +111,7 @@ class FileField extends FormField {
 			$file = new $fileClass();
 		}
 		
-		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->folderName);
+		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->getFolderName());
 		if($this->upload->isError()) return false;
 		
 		$file = $this->upload->getFile();
@@ -160,7 +160,7 @@ class FileField extends FormField {
 	 * @return string
 	 */
 	public function getFolderName() {
-		return $this->folderName;
+		return ($this->folderName !== false) ? $this->folderName : Upload::$uploads_folder;
 	}
 	
 	public function validate($validator) {
