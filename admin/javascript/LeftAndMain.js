@@ -575,7 +575,7 @@ jQuery.noConflict();
 				this._super();
 			},
 			onremove: function() {
-				this.button('destroy');
+				if(this.data('button')) this.button('destroy');
 				this._super();
 			}
 		});
