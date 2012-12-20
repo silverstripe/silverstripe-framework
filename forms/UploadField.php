@@ -431,7 +431,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleSelect(SS_HTTPRequest $request) {
-		return UploadField_SelectHandler::create($this, $this->folderName);
+		return UploadField_SelectHandler::create($this, $this->getFolderName());
 	}
 
 	/**
@@ -500,7 +500,7 @@ class UploadField extends FileField {
 
 			// Get the uploaded file into a new file object.
 			try {
-				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->folderName);
+				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->getFolderName());
 			} catch (Exception $e) {
 				// we shouldn't get an error here, but just in case
 				$return['error'] = $e->getMessage();
