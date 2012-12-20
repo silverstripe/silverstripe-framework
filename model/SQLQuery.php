@@ -1060,18 +1060,22 @@ class SQLQuery {
 
 	/**
 	 * Return a new SQLQuery that calls the given aggregate functions on this data.
+	 * 
 	 * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them (as an escaped SQL statement)
+	 * @param $alias An optional alias for the aggregate column.
 	 */
-	public function aggregate($column) {
-		if($this->groupby || $this->limit) {
-			throw new Exception("SQLQuery::aggregate() doesn't work with groupby or limit, yet");
-		}
-
+	public function aggregate($column, $alias = null) {
+		
 		$clone = clone $this;
-		$clone->setLimit(array());
-		$clone->setOrderBy(array());
-		$clone->setGroupBy(array());
-		$clone->setSelect($column);
+		$clone->setLimit($this->limit);
+		$clone->setOrderBy($this->orderby);
+		$clone->setGroupBy($this->groupby);
+		if($alias) {
+			$clone->selectField($column, $alias);
+		} else {
+			$clone->setSelect($column);
+		}
+		
 
 		return $clone;
 	}
