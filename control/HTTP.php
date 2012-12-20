@@ -60,20 +60,25 @@ class HTTP {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
 			else $tagPrefix = "";
 
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *\")([^\"]*)(\")/ie";
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *')([^']*)(')/ie";
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/ie";
+			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *\")([^\"]*)(\")/i";
+			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *')([^']*)(')/i";
+			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/i";
 		}
-		$regExps[] = '/(background-image:[^;]*url *\()([^)]+)(\))/ie';
-		$regExps[] = '/(background:[^;]*url *\()([^)]+)(\))/ie';
-		$regExps[] = '/(list-style-image:[^;]*url *\()([^)]+)(\))/ie';
-		$regExps[] = '/(list-style:[^;]*url *\()([^)]+)(\))/ie';
+		$regExps[] = '/(background-image:[^;]*url *\()([^)]+)(\))/i';
+		$regExps[] = '/(background:[^;]*url *\()([^)]+)(\))/i';
+		$regExps[] = '/(list-style-image:[^;]*url *\()([^)]+)(\))/i';
+		$regExps[] = '/(list-style:[^;]*url *\()([^)]+)(\))/i';
 
 		// Make
-		$code = 'stripslashes("$1") . (' . str_replace('$URL', 'stripslashes("$2")', $code) . ') . stripslashes("$3")';
-
+		$callback = function($matches) use($code) {
+			return
+				stripslashes($matches[1]) .
+				str_replace('$URL', stripslashes($matches[2]), $code) .
+				stripslashes($matches[3]);
+		};
+		
 		foreach($regExps as $regExp) {
-			$content = preg_replace($regExp, $code, $content);
+			$content = preg_replace_callback($regExp, $callback, $content);
 		}
 
 		return $content;

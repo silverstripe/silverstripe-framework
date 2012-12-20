@@ -244,9 +244,12 @@ class Convert {
 		
 		// Expand hyperlinks
 		if(!$preserveLinks && !$config['PreserveLinks']) {
-			$data = preg_replace('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'",
-				$data);
-			$data = preg_replace('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
+			$data = preg_replace_callback('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/i', function($matches) {
+				return Convert::html2raw($matches[2]) . "[$matches[1]]";
+			}, $data);
+			$data = preg_replace_callback('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/i', function($matches) {
+				return Convert::html2raw($matches[2]) . "[$matches[1]]";
+			}, $data);
 		}
 	
 		// Replace images with their alt tags
