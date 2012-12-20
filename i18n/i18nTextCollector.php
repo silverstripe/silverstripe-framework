@@ -289,7 +289,7 @@ class i18nTextCollector extends Object {
 	 * 
 	 * @todo Why the type juggling for $this->collectFromTemplate()? It always returns an array.
 	 */	
-	public function collectFromTemplate($content, $fileName, $module) {
+	public function collectFromTemplate($content, $fileName, $module, &$parsedFiles = array()) {
 		$entities = array();
 		
 		// Search for included templates
@@ -299,11 +299,12 @@ class i18nTextCollector extends Object {
 			$includeFileName = "{$includeName}.ss";
 			$filePath = SSViewer::getTemplateFileByType($includeName, 'Includes');
 			if(!$filePath) $filePath = SSViewer::getTemplateFileByType($includeName, 'main');
-			if($filePath) {
+			if($filePath && !in_array($filePath, $parsedFiles)) {
+				$parsedFiles[] = $filePath;
 				$includeContent = file_get_contents($filePath);
 				$entities = array_merge(
 					$entities,
-					(array)$this->collectFromTemplate($includeContent, $module, $includeFileName)
+					(array)$this->collectFromTemplate($includeContent, $module, $includeFileName, $parsedFiles)
 				);
 			}
 			// @todo Will get massively confused if you include the includer -> infinite loop
