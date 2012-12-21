@@ -1062,14 +1062,11 @@ class SQLQuery {
 	 * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them (as an escaped SQL statement)
 	 */
 	public function aggregate($column) {
-		if($this->groupby || $this->limit) {
-			throw new Exception("SQLQuery::aggregate() doesn't work with groupby or limit, yet");
-		}
-
+		
 		$clone = clone $this;
-		$clone->setLimit(array());
-		$clone->setOrderBy(array());
-		$clone->setGroupBy(array());
+		$clone->setLimit($this->limit);
+		$clone->setOrderBy($this->orderby);
+		$clone->setGroupBy($this->groupby);
 		$clone->setSelect($column);
 
 		return $clone;
