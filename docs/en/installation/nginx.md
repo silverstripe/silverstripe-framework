@@ -68,7 +68,7 @@ Here is the include file `htaccess`:
 		try_files $uri $uri/ =404;
 	}
 	
-	# cms & framework htaccess rules
+	# cms & framework .htaccess rules
 	location ~ ^/(cms|framework|mysite)/.*\.(php|php[345]|phtml|inc)$ {
 		deny all;
 	}
