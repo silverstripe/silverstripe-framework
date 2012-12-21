@@ -68,7 +68,7 @@ Here is the include file `htaccess`:
 		try_files $uri $uri/ =404;
 	}
 	
-	# cms & sapphire htaccess rules
+	# cms & sapphire .htaccess rules
 	location ~ ^/(cms|sapphire|mysite)/.*\.(php|php[345]|phtml|inc)$ {
 		deny all;
 	}
