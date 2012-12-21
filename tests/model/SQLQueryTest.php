@@ -378,11 +378,12 @@ class SQLQueryTest extends SapphireTest {
 		$query->setGroupBy("SUBSTRING_INDEX('Name', ' ', 1)");
 		$query->setLimit(2);
 		
-		$queryClone = $query->aggregate(array('COUNT(*) AS cnt'));
+		$queryClone = $query->aggregate(array('COUNT(*)'));
 		$result = $queryClone->execute();
 		
 		foreach($result as $row) {
-			$this->assertEquals('2', $row['cnt']);
+			print_r($row);
+			$this->assertEquals('2', $row['COUNT(*)']);
 		}
 	}
 
