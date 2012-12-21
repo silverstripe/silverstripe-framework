@@ -16,29 +16,32 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 ## Step-by-step: From forking to sending the pull request
 
- 1. Follow the [Installation for contributions](../../installation/from-source#option-2-installation-for-contributions) instructions, which explain how to fork the core modules and add the correct "upstream" remote.
+1. Follow the [Installation through Composer](../../installation/composer#contributing) instructions, 
+which explain how to fork the core modules and add the correct "upstream" remote. In short:
 
- 1. [Branch for new issue and develop on issue branch](code#branch-for-new-issue-and-develop-on-issue-branch)
+ 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
 
-        $ git branch ###-description
-        $ git checkout ###-description
+2. [Branch for new issue and develop on issue branch](code#branch-for-new-issue-and-develop-on-issue-branch)
 
- 1. As time passes, the upstream repository accumulates new commits. Keep your working copy's master branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
+		git branch ###-description
+		git checkout ###-description
 
-        # [make sure all your changes are committed as necessary in branch]
-        $ git fetch upstream
-        $ git rebase upstream/master
+3. As time passes, the upstream repository accumulates new commits. Keep your working copy's master branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
 
- 1. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
+		# [make sure all your changes are committed as necessary in branch]
+		git fetch upstream
+		git rebase upstream/master
 
-        $ git fetch upstream
-        $ git rebase -i upstream/master
+4. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
 
- 1. Push release candidate branch to GitHub 
+		git fetch upstream
+		git rebase -i upstream/master
 
-        $ git push origin ###-description
+5. Push release candidate branch to GitHub 
 
- 1. Issue pull request on GitHub.  Visit your forked respoistory on GitHub.com and click the "Create Pull Request" button nex tot the new branch.
+		git push origin ###-description
+
+6. Issue pull request on GitHub.  Visit your forked respoistory on GitHub.com and click the "Create Pull Request" button nex tot the new branch.
 
 The core team is then responsible for reviewing patches and deciding if they will make it into core.  If
 there are any problems they will follow up with you, so please ensure they have a way to contact you! 
@@ -61,7 +64,10 @@ If you're familiar with it, here's the short version of what you need to know. O
 
   * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
 
-
+  * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
+  Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
+  against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
+  the pull request should go against `master` (read more about our [release process](/misc/release-process)).
 
 ### Editing files directly on GitHub.com
 
