@@ -58,8 +58,8 @@ Here is the include file `htaccess`:
 		deny all;
 	}
 	
-	# Deny access to silverstripe-cache & logs
-	location ~ ^/(silverstripe-cache|silverstripe\.log|debug\.log) {
+	# Deny access to silverstripe-cache
+	location ~ ^/silverstripe-cache {
 		deny all;
 	}
 	
