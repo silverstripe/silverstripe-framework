@@ -451,10 +451,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		// TODO Save this item into the given relationship
 
-		$message = sprintf(
-			_t('GridFieldDetailForm.Saved', 'Saved %s %s'),
-			$this->record->singular_name(),
-			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
+		$link = '<a href="' . $this->Link('edit') . '">"' 
+			. htmlspecialchars($this->record->Title, ENT_QUOTES) 
+			. '"</a>';
+		$message = _t(
+			'GridFieldDetailForm.Saved', 
+			'Saved {name} {link}',
+			array(
+				'name' => $this->record->singular_name(),
+				'link' => $link
+			)
 		);
 		
 		$form->sessionMessage($message, 'good');
