@@ -367,6 +367,25 @@ class SQLQueryTest extends SapphireTest {
 			$this->assertEquals('Object 1', $row['Name']);
 		}
 	}
+	
+	/**
+	 * Tests aggregate() function
+	 */
+	public function testAggregate() {
+		$query = new SQLQuery();
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setOrderBy('"Name"');
+		$query->setGroupBy("SUBSTRING_INDEX('Name', ' ', 1)");
+		$query->setLimit(2);
+		
+		$queryClone = $query->aggregate(array('COUNT(*)'));
+		$result = $queryClone->execute();
+		
+		foreach($result as $row) {
+			print_r($row);
+			$this->assertEquals('2', $row['COUNT(*)']);
+		}
+	}
 
 }
 
