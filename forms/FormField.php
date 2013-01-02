@@ -125,7 +125,7 @@ class FormField extends RequestHandler {
 		foreach($attributes as $k => $v) {
 			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes
 			// can sometimes get finicky
-			if(!empty($v) || $v === '0' || $k == 'value') {
+			if(!empty($v) || $v === '0' || ($k == 'value' && $v !== null) ) {
 				$preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
 			}
 		}
