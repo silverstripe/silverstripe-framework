@@ -58,7 +58,7 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 			foreach($extras as $k => $v) {
 				if(is_array($v)) $v = var_export($v, true);
 				$data .= sprintf(
-					"<tr><td><strong>%s</strong></td><td><pre>%s</pre></td></tr>\n", $k, $v);
+					"<tr><td><strong>%s</strong></td><td><pre>%s</pre></td></tr>\n", Convert::raw2xml($k), Convert::raw2xml($v));
 			}
 			$data .= "</table>\n";			
 		}

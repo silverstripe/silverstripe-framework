@@ -101,7 +101,7 @@ class SS_LogTest extends SapphireTest {
 		$this->assertContains('my-array', $extraRows[count($extraRows)-1]->td[0]->asXML(), 'Contains extra data key');
 		$this->assertContains(
 			"array('one'=&gt;1,)", 
-			str_replace(array("\r", "\n", " "), '', $extraRows[count($extraRows)-1]->td[1]->asXML()), 
+			str_replace(array("\r", "\n", " ", '<br/>'), '', $extraRows[count($extraRows)-1]->td[1]->asXML()), 
 			'Serializes arrays correctly'
 		);
 	}
