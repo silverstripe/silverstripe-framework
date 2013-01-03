@@ -370,6 +370,12 @@ jQuery.noConflict();
 			handleAjaxResponse: function(data, status, xhr) {
 				var self = this, url, activeTabs, guessFragment;
 
+				// Support a full reload
+				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
+					document.location.href = xhr.getResponseHeader('X-ControllerURL');
+					return;
+				}
+
 				// Pseudo-redirects via X-ControllerURL might return empty data, in which
 				// case we'll ignore the response
 				if(!data) return;
