@@ -35,17 +35,27 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		$value = ($this->value && !array_key_exists($this->value, $this->source)) ? $this->value : null;
 		$checked = ($value) ? " checked=\"checked\"" : '';
 		$options .= "<li class=\"valCustom\">"
-			. sprintf("<input id=\"%s_custom\" name=\"%s\" type=\"radio\" value=\"__custom__\" class=\"radio\" %s />",
-				$itemID, $this->name, $checked)
-			. sprintf('<label for="%s_custom">%s:</label>',
-				$itemID, _t('MemberDatetimeOptionsetField.Custom', 'Custom'))
-			. sprintf("<input class=\"customFormat\" name=\"%s_custom\" value=\"%s\" />\n", $this->name, $value)
-			. sprintf("<input type=\"hidden\" class=\"formatValidationURL\" value=\"%s\" />",
-				$this->Link() . '/validate');
+			. sprintf(
+					"<input id=\"%s_custom\" name=\"%s\" type=\"radio\" value=\"__custom__\" class=\"radio\" %s />",
+					$itemID, $this->name, 
+					$checked
+				)
+			. sprintf(
+					'<label for="%s_custom">%s:</label>',
+					$itemID, _t('MemberDatetimeOptionsetField.Custom', 'Custom')
+				)
+			. sprintf(
+				"<input class=\"customFormat\" name=\"%s_custom\" value=\"%s\" />\n", 
+				$this->name, Convert::raw2xml($value)
+			)
+			. sprintf(
+				"<input type=\"hidden\" class=\"formatValidationURL\" value=\"%s\" />",
+				$this->Link() . '/validate'
+			);
 		$options .= ($value) ? sprintf(
 			'<span class="preview">(%s: "%s")</span>',
 			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
-			Zend_Date::now()->toString($value)
+			Convert::raw2xml(Zend_Date::now()->toString($value))
 		) : '';
 		$options .= sprintf(
 			'<a class="cms-help-toggle" href="#%s">%s</a>',
