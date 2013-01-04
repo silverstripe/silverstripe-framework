@@ -99,7 +99,32 @@ So, your deployment process, as it relates to Composer, should be as follows:
  * Check `composer.lock` into your repository.
  * Deploy your project code base, using the deployment tool of your choice.
  * Run `composer install` on your production version.
- 	
+
+# Setting up an environment for contributing to SilverStripe {#contributing}
+
+So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
+You have to tell composer three things in order to be able to do this:
+
+  - Keep the full git repository information
+  - Include dependancies marked as "developer" requirements
+  - Use the development version, not the latest stable version
+
+The first two steps are done as part of the initial create project using additional arguments. For instance:
+
+	composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
+
+The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
+
+The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
+
+The `--dev` flag will add a couple modules which are useful for SilverStripe development:
+
+ * The `docsviewer` module will let you preview changes to the project documentation
+ * The `buildtools` module which adds [phing](http://phing.info) tasks for creating SilverStripe releases
+
+Note that you can also include those into an existing project by running `composer update --dev`.
+Please read the ["Contributing Code"](/misc/contributing/code) documentation to find out how to
+create forks and send pull requests.
 
 # Advanced usage
 
@@ -210,28 +235,3 @@ Both the version and the alias are specified as Composer versions, not branch na
 
 This is not the only way to set things up in Composer. For more information on this topic, read the ["Aliases" chapter of the Composer documentation](http://getcomposer.org/doc/articles/aliases.md).
 
-## Setting up an environment for contributing to SilverStripe {#contributing}
-
-So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
-You have to tell composer three things in order to be able to do this:
-
-  - Keep the full git repository information
-  - Include dependancies marked as "developer" requirements
-  - Use the development version, not the latest stable version
-
-The first two steps are done as part of the initial create project using additional arguments. For instance:
-
-	composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
-
-The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
-
-The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
-
-The `--dev` flag will add a couple modules which are useful for SilverStripe development:
-
- * The `docsviewer` module will let you preview changes to the project documentation
- * The `buildtools` module which adds [phing](http://phing.info) tasks for creating SilverStripe releases
-
-Note that you can also include those into an existing project by running `composer update --dev`.
-Please read the ["Contributing Code"](/misc/contributing/code) documentation to find out how to
-create forks and send pull requests.
