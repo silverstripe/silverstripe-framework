@@ -44,18 +44,20 @@ Composer can create a new site for you, using the installer as a template.  To d
 
 	composer create-project silverstripe/installer ./my/website/folder
 
-`./my/website/folder` should be the root directory where your site will live.  For example, on OS X, you might use a subdirectory of `~/Sites`.
-
+`./my/website/folder` should be the root directory where your site will live.  
+For example, on OS X, you might use a subdirectory of `~/Sites`.
 As long as your web server is up and running, this will get all the code that you need. 
-
 Now visit the site in your web browser, and the installation process will be completed.
-
-#### Selecting a version
 
 By default composer will download the latest stable version. You can also specify
 a version to download that version explicitly, i.e. this will download 3.0.3:
 
 	composer create-project silverstripe/installer ./my/website/folder 3.0.3
+	
+When `create-project` is used with a release version like above,
+it will try to get the code from archives instead of creating
+git repositories. If you're planning to contribute to SilverStripe,
+see [Using development versions](#using-development-versions).
 
 ## Adding modules to your project
 
@@ -94,14 +96,10 @@ The `composer.lock` file helps with this.  It references the specific commits th
 So, your deployment process, as it relates to Composer, should be as follows:
 
  * Run `composer update` on your development version before you start whatever testing you have planned.  Perform all the necessary testing.
-
  * Check `composer.lock` into your repository.
-
  * Deploy your project code base, using the deployment tool of your choice.
-
- * Run the following command on your production version.
-
- 	composer install
+ * Run `composer install` on your production version.
+ 	
 
 # Advanced usage
 
