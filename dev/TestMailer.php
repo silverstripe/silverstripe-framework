@@ -82,5 +82,11 @@ class TestMailer extends Mailer {
 		}
 	}
 
+	/**
+	 * @return Array Array with a key-value map for each email.
+	 */
+	function getEmailsSent() {
+		return $this->emailsSent;
+	}
 
 }
