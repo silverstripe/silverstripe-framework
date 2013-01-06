@@ -829,17 +829,8 @@ class Security extends Controller {
 	 * @see set_password_encryption_algorithm()
 	 */
 	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
-		if(
-			// if the password is empty, don't encrypt
-			strlen(trim($password)) == 0  
-			// if no algorithm is provided and no default is set, don't encrypt
-			|| (!$algorithm)
-		) {
-			$algorithm = 'none';
-		} else {
-			// Fall back to the default encryption algorithm
-			if(!$algorithm) $algorithm = self::$encryptionAlgorithm;
-		} 
+		// Fall back to the default encryption algorithm
+		if(!$algorithm) $algorithm = self::$encryptionAlgorithm;
 		
 		$e = PasswordEncryptor::create_for_algorithm($algorithm);
 
