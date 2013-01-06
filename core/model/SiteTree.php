@@ -695,7 +695,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * This function should return true if the current user can execute this action. 
 	 * It can be overloaded to customise the security model for an application.
-	 * 
+	 *
 	 * Slightly altered from parent behaviour in {@link DataObject->can()}:
 	 * - Checks for existence of a method named "can<$perm>()" on the object
 	 * - Calls decorators and only returns for FALSE "vetoes"
@@ -706,7 +706,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
 	 * @param Member $member The member whose permissions need checking.
-	 *        Defaults to the currently logged in user.
+	 *                       Defaults to the currently logged in user.
 	 * @return boolean True if the the member is allowed to do the given action.
 	 */
 	function can($perm, $member = null) {
@@ -841,7 +841,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Standard mechanism for accepting permission changes from decorators
 		$extended = $this->extendedCan('canDelete', $memberID);
 		if($extended !== null) return $extended;
-				
+		
 		// Regular canEdit logic is handled by can_edit_multiple
 		$results = self::can_delete_multiple(array($this->ID), $memberID);
 		
@@ -1126,7 +1126,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
  			if(empty(self::$cache_permissions[$cacheKey])) self::$cache_permissions[$cacheKey] = array();
  			self::$cache_permissions[$cacheKey] = $combinedStageResult + self::$cache_permissions[$cacheKey];
  
-  		return $combinedStageResult;
+			return $combinedStageResult;
 		} else {
 			return array();
 		}
@@ -1151,7 +1151,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	static function can_delete_multiple($ids, $memberID, $useCached = true) {
 		$deletable = array();
-		$result = array_fill_keys($ids, false);
+		$result = array_fill_keys($ids, false); 
 		$cacheKey = "delete-$memberID";
 		
 		// Look in the cache for values
@@ -1207,7 +1207,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// value
 		return array_fill_keys($deletable, true) + array_fill_keys($ids, false);
 	}
-		
+
 
 	/**
 	 * Collate selected descendants of this page.
@@ -1365,8 +1365,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$this->URLSegment = $filter->filter($this->URLSegment);
 			// If after sanitising there is no URLSegment, give it a reasonable default
 			if(!$this->URLSegment) $this->URLSegment = "page-$this->ID";
-		}
-
+			}
+		
 		DataObject::set_context_obj($this);
 		
 		// Ensure that this object has a non-conflicting URLSegment value.
@@ -1434,10 +1434,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$previous = ($this->Version > 1) ? Versioned::get_version($this->class, $this->ID, $this->Version-1) : null;
 			$withoutVersion = $this->getExtensionInstance('Versioned')->_nextWriteWithoutVersion;
 			foreach($linkedPages as $page) {
-				$page->copyFrom($page->CopyContentFrom());
+			$page->copyFrom($page->CopyContentFrom());
 				if($withoutVersion) $page->writeWithoutVersion();
 				else $page->write();
-			}
+		}
 		}
 		
 		parent::onAfterWrite();
@@ -2298,7 +2298,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		foreach($classes as $class) {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate())) continue;
-			
+
 			if($perms = $instance->stat('need_permission')) {
 				if(!$this->can($perms)) continue;
 			} 
@@ -2374,8 +2374,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 		
-		return $allowedChildren;
-	}
+			return $allowedChildren;
+		}
 
 	/**
 	 * Returns the class name of the default class for children of this page.
@@ -2654,10 +2654,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static function reset() {
 		self::$cache_permissions = array();
 	}
-	
+
 	static function on_db_reset() {
 		self::$cache_permissions = array();
-	}
+}
 
 }
 

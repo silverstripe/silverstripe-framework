@@ -19,8 +19,6 @@ function silverstripe_test_autoload($className) {
 }
 spl_autoload_register('silverstripe_test_autoload');
 
-require_once(getcwd()."/sapphire/core/Core.php");
-
 // Copied from cli-script.php, to enable same behaviour through phpunit runner.
 if(isset($_SERVER['argv'][2])) {
     $args = array_slice($_SERVER['argv'],2);
@@ -36,6 +34,8 @@ if(isset($_SERVER['argv'][2])) {
     }
 	$_REQUEST = $_GET;
 }
+
+require_once(getcwd()."/sapphire/core/Core.php");
 
 // Now set a fake REQUEST_URI
 $_SERVER['REQUEST_URI'] = BASE_URL . '/dev/tests/all';

@@ -9,7 +9,8 @@ class DateTest extends SapphireTest {
 	
 	function setUp() {
 		// Set timezone to support timestamp->date conversion.
-		$this->originalTZ = ini_get('date.timezone');
+		// We can't use date_default_timezone_set() as its not supported prior to PHP 5.2
+		$this->originalTZ = date_default_timezone_get();
 		date_default_timezone_set('Pacific/Auckland');
 		
 		parent::setUp();

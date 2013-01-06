@@ -9,6 +9,10 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Stable Releases
 
+ * [2.4.9](2.4.9) - 2012-12-04
+ * [2.4.8](2.4.8) - 2012-10-30
+ * [2.4.7](2.4.7) - 2012-02-01
+ * [2.4.6](2.4.6) - 2011-10-17
  * [2.4.5](2.4.5) - 2 February 2011
  * [2.4.4](2.4.4) - 21 December 2010
  * [2.4.3](2.4.3) - 11 November 2010
