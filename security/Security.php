@@ -5,7 +5,7 @@
  * @subpackage security
  */
 class Security extends Controller {
-
+	
 	/**
 	 * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}
 	 * 
@@ -82,7 +82,7 @@ class Security extends Controller {
 	 * @var array|string
 	 */
 	protected static $default_message_set = '';
-	
+
 	/**
 	 * Get location of word list file
 	 */
@@ -130,22 +130,22 @@ class Security extends Controller {
 	 * If you don't provide a messageSet, a default will be used.
 	 *
 	 * @param Controller $controller The controller that you were on to cause the permission
-	 *              failure.
+	 *                               failure.
 	 * @param string|array $messageSet The message to show to the user. This
-	 *                                  can be a string, or a map of different
-	 *                                  messages for different contexts.
-	 *                                  If you pass an array, you can use the
-	 *                                  following keys:
-	 *                                    - default: The default message
-	 *                                    - logInAgain: The message to show
-	 *                                                  if the user has just
-	 *                                                  logged out and the
-	 *                                    - alreadyLoggedIn: The message to
-	 *                                                       show if the user
-	 *                                                       is already logged
-	 *                                                       in and lacks the
-	 *                                                       permission to
-	 *                                                       access the item.
+	 *                                 can be a string, or a map of different
+	 *                                 messages for different contexts.
+	 *                                 If you pass an array, you can use the
+	 *                                 following keys:
+	 *                                   - default: The default message
+	 *                                   - logInAgain: The message to show
+	 *                                                 if the user has just
+	 *                                                 logged out and the
+	 *                                   - alreadyLoggedIn: The message to
+	 *                                                      show if the user
+	 *                                                      is already logged
+	 *                                                      in and lacks the
+	 *                                                      permission to
+	 *                                                      access the item.
 	 *
 	 * The alreadyLoggedIn value can contain a '%s' placeholder that will be replaced with a link
 	 * to log in.
@@ -233,7 +233,7 @@ class Security extends Controller {
 	}
 
 
-  /**
+	/**
 	 * Get the login form to process according to the submitted data
 	 */
 	protected function LoginForm() {
@@ -255,7 +255,7 @@ class Security extends Controller {
 	}
 
 
-  /**
+	/**
 	 * Get the login forms for all available authentication methods
 	 *
 	 * @return array Returns an array of available login forms (array of Form
@@ -269,8 +269,8 @@ class Security extends Controller {
 
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
-		  array_push($forms,
-								 call_user_func(array($authenticator, 'get_login_form'),
+			array_push($forms,
+						call_user_func(array($authenticator, 'get_login_form'),
 																$this));
 		}
 
@@ -293,9 +293,9 @@ class Security extends Controller {
 	 * Log the currently logged in user out
 	 *
 	 * @param bool $redirect Redirect the user back to where they came.
-	 *                         - If it's false, the code calling logout() is
-	 *                           responsible for sending the user where-ever
-	 *                           they should go.
+	 *                       - If it's false, the code calling logout() is
+	 *                         responsible for sending the user where-ever
+	 *                         they should go.
 	 */
 	public function logout($redirect = true) {
 		$member = Member::currentUser();
@@ -328,15 +328,15 @@ class Security extends Controller {
 			Requirements::css($customCSS);
 		}
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOGIN', 'Log in');
-		$tmpPage->URLSegment = "Security";
-		// Disable ID-based caching  of the log-in page by making it a random number
-		$tmpPage->ID = -1 * rand(1,10000000);
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOGIN', 'Log in');
+			$tmpPage->URLSegment = "Security";
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 
 		$controller = new Page_Controller($tmpPage);
-		$controller->init();
-		//Controller::$currentController = $controller;
+			$controller->init();
+			//Controller::$currentController = $controller;
 
 		$content = '';
 		$forms = $this->GetLoginForms();
@@ -418,12 +418,12 @@ class Security extends Controller {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+			$controller->init();
 
 		$customisedController = $controller->customise(array(
 			'Content' => 
@@ -478,15 +478,15 @@ class Security extends Controller {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+			$controller->init();
 
 		$email = Convert::raw2xml($request->param('ID') . '.' . $request->getExtension());
-		
+
 		$customisedController = $controller->customise(array(
 			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
 			'Content' =>
@@ -529,12 +529,12 @@ class Security extends Controller {
 	 * @return string Returns the "change password" page as HTML code.
 	 */
 	public function changepassword() {
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+			$controller->init();
 
 		// Extract the member from the URL.
 		$member = null;
@@ -673,8 +673,8 @@ class Security extends Controller {
 			$adminGroup = $adminGroup->First();
 
 			if($adminGroup->Members()->First()) {
-				$member = $adminGroup->Members()->First();
-			}
+			$member = $adminGroup->Members()->First();
+		}
 		}
 
 		if(!$adminGroup) {
@@ -835,18 +835,9 @@ class Security extends Controller {
 	 * @see encrypt_passwords()
 	 * @see set_password_encryption_algorithm()
 	 */
-	static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
-		if(
-			// if the password is empty, don't encrypt
-			strlen(trim($password)) == 0  
-			// if no algorithm is provided and no default is set, don't encrypt
-			|| (!$algorithm && self::$encryptPasswords == false)
-		) {
-			$algorithm = 'none';
-		} else {
-			// Fall back to the default encryption algorithm
-			if(!$algorithm) $algorithm = self::$encryptionAlgorithm;
-		} 
+	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
+		// Fall back to the default encryption algorithm
+		if(!$algorithm) $algorithm = self::$encryptionAlgorithm;
 		
 		$e = PasswordEncryptor::create_for_algorithm($algorithm);
 
@@ -870,7 +861,7 @@ class Security extends Controller {
 	public static function database_is_ready() {
 		// Used for unit tests
 		if(self::$force_database_is_ready !== NULL) return self::$force_database_is_ready;
-		
+
 		$requiredTables = ClassInfo::dataClassesFor('Member');
 		$requiredTables[] = 'Group';
 		$requiredTables[] = 'Permission';
@@ -878,7 +869,7 @@ class Security extends Controller {
 		foreach($requiredTables as $table) {
 			// if any of the tables aren't created in the database
 			if(!ClassInfo::hasTable($table)) return false;
-		
+
 			// if any of the tables don't have all fields mapped as table columns
 			$dbFields = DB::fieldList($table);
 			if(!$dbFields) return false;
@@ -929,5 +920,5 @@ class Security extends Controller {
 		return self::$default_login_dest;
 	}
 
-}
+	}
 ?>
