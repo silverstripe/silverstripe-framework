@@ -386,7 +386,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$fieldArgs = explode(':',$field);
 				$field = array_shift($fieldArgs);
 				foreach($fieldArgs as $fieldArg){
-					$comparisor = $this->applyFilterContext($field, $fieldArg, $value);
+					$this->applyFilterContext($field, $fieldArg, $value);
 				}
 			} else {
 				if($field == 'ID') {
@@ -455,23 +455,23 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Translates the comparisator to the sql query
+	 * Translates a filter type to a SQL query.
 	 *
 	 * @param string $field - the fieldname in the db
-	 * @param string $comparisators - example StartsWith, relates to a filtercontext
+	 * @param string $filter - a {@link SearchFilter} class, e.g. PartialMatch or StartsWith
 	 * @param string $value - the value that the filtercontext will use for matching
 	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
 	 */
-	private function applyFilterContext($field, $comparisators, $value) {
+	private function applyFilterContext($field, $filter, $value) {
 		$t = singleton($this->dataClass())->dbObject($field);
-		$className = "{$comparisators}Filter";
-		if(!class_exists($className)){
-			throw new InvalidArgumentException('There are no '.$comparisators.' comparisator');
+		$className = sprintf('%sFilter', $filter);
+		if(!class_exists($className)) {
+			throw new InvalidArgumentException(sprintf('Filter class "%s" does not exist', $className));
 		}
-		$t = new $className($field,$value);
+		$t = new $className($field, $value);
 		$t->apply($this->dataQuery());
 	}
-	
+
 	/**
 	 * Return a copy of this list which does not contain any items with these charactaristics
 	 *
