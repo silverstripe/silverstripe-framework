@@ -308,7 +308,7 @@ The following example runs an if statement, and a loop on *Children*, checking t
 		          	</a>
 		          </li>
 		        <% end_loop %>
-		      <ul>
+		      </ul>
 	      <% end_if %>
 	    </li>
 	  <% end_loop %>
