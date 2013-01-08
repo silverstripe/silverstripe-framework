@@ -159,6 +159,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setChildrenMethod($method) {
 		$this->childrenMethod = $method;
+		return $this;
 	}
 
 	/**
@@ -296,6 +297,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setLabelField($field) {
 		$this->labelField = $field;
+		return $this;
 	}
 
 	/**
@@ -310,6 +312,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setKeyField($field) {
 		$this->keyField = $field;
+		return $this;
 	}
 
 	/**
@@ -324,6 +327,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setSourceObject($class) {
 		$this->sourceObject = $class;
+		return $this;
 	}
 
 	/**
