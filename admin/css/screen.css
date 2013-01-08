@@ -713,11 +713,9 @@ form.import-form label.left { width: 250px; }
 .cms .jstree > ul > li, .TreeDropdownField .treedropdownfield-panel .jstree > ul > li { margin-left: 0px; }
 .cms .jstree ul, .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree li { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
 .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { min-height: 18px; line-height: 25px; white-space: nowrap; margin-left: 18px; min-width: 18px; }
-.cms .jstree li ins.jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree li ins.jstree-icon { display: none; }
 .cms .jstree li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-open > ul { display: block; }
 .cms .jstree li.jstree-closed > ul, .TreeDropdownField .treedropdownfield-panel .jstree li.jstree-closed > ul { display: none; }
 .cms .jstree li.disabled > a, .TreeDropdownField .treedropdownfield-panel .jstree li.disabled > a { color: #aaaaaa; }
-.cms .jstree li ul ins.jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree li ul ins.jstree-icon { display: block; }
 .cms .jstree ins, .TreeDropdownField .treedropdownfield-panel .jstree ins { display: inline-block; text-decoration: none; width: 18px; height: 18px; margin: 0 0 0 0; padding: 0; float: left; }
 .cms .jstree a, .TreeDropdownField .treedropdownfield-panel .jstree a { display: inline-block; line-height: 16px; height: 16px; color: black; white-space: nowrap; text-decoration: none; padding: 1px 2px; margin: 0; border: 1px solid #fff; }
 .cms .jstree a:focus, .cms .jstree a:active, .cms .jstree a:hover, .TreeDropdownField .treedropdownfield-panel .jstree a:focus, .TreeDropdownField .treedropdownfield-panel .jstree a:active, .TreeDropdownField .treedropdownfield-panel .jstree a:hover { outline: none; text-decoration: none; cursor: pointer; text-shadow: none; }
@@ -738,7 +736,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree-apple.jstree-focused .jstree-apple > ul, .TreeDropdownField .treedropdownfield-panel .jstree-apple.jstree-focused .jstree-apple > ul { background: none; }
 .cms a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel a > .jstree-icon { display: none; }
 .cms .draggable a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .draggable a > .jstree-icon { display: block; }
-.cms li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul { display: block; margin-left: -18px; }
+.cms li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul { display: block; margin-left: -13px; }
 .cms li.jstree-open > ul li ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul li ul { margin-left: 2px; }
 .cms li.jstree-closed > ul, .TreeDropdownField .treedropdownfield-panel li.jstree-closed > ul { display: none; }
 .cms .jstree-rtl a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree-rtl a > .jstree-icon { margin-left: 3px; margin-right: 0; }
