@@ -229,8 +229,7 @@ class TreeDropdownField extends FormField {
 			? (int)$request->latestparam('ID')
 			: (int)$request->requestVar('ID');
 
-		$forceFullTree = $request->requestVar('forceFullTree')?$request->requestVar('forceFullTree'):false;
-		if($ID && !$forceFullTree) {
+		if($ID && !$request->requestVar('forceFullTree')) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
 			$isSubTree = true;
 			if(!$obj) {

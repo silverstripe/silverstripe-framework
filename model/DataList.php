@@ -376,15 +376,15 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			$whereArguments = func_get_arg(0);
 		} elseif($numberFuncArgs == 2) {
 			$whereArguments[func_get_arg(0)] = func_get_arg(1);
-		} else {
+			} else {
 			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
-		}
-
+			}
+			
 		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
 			$subquery = $query->disjunctiveGroup();
 
 			foreach($whereArguments as $field => $value) {
-				$fieldArgs = explode(':', $field);
+				$fieldArgs = explode(':',$field);
 				$field = array_shift($fieldArgs);
 				$filterType = array_shift($fieldArgs);
 				$modifiers = $fieldArgs;
@@ -393,16 +393,16 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$t = singleton($list->dataClass())->dbObject($field);
 				if($filterType) {
 					$className = "{$filterType}Filter";
-				} else {
+			} else {
 					$className = 'ExactMatchFilter';
 				}
 				if(!class_exists($className)){
 					$className = 'ExactMatchFilter';
 					array_unshift($modifiers, $filterType);
-				}
+			}
 				$t = new $className($field, $value, $modifiers);
 				$t->apply($subquery);
-			}
+		}
 		});
 	}
 
@@ -453,29 +453,29 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Translates the comparisator to the sql query
+	 * Translates a filter type to a SQL query.
 	 *
 	 * @param string $field - the fieldname in the db
-	 * @param string $comparisators - example StartsWith, relates to a filtercontext
+	 * @param string $filter - example StartsWith, relates to a filtercontext
 	 * @param array $modifiers - Modifiers to pass to the filter, ie not,nocase
 	 * @param string $value - the value that the filtercontext will use for matching
 	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
 	 */
-	private function applyFilterContext($field, $comparisators, $modifiers, $value) {
-		if($comparisators) {
-			$className = "{$comparisators}Filter";
+	private function applyFilterContext($field, $filter, $modifiers, $value) {
+		if($filter) {
+			$className = "{$filter}Filter";
 		} else {
 			$className = 'ExactMatchFilter';
 		}
-		if(!class_exists($className)){
+		if(!class_exists($className)) {
 			$className = 'ExactMatchFilter';
-			array_unshift($modifiers, $comparisators);
+			array_unshift($modifiers, $filter);
 		}
 		$t = new $className($field, $value, $modifiers);
 
 		return $this->alterDataQuery(array($t, 'apply'));
 	}
-	
+
 	/**
 	 * Return a copy of this list which does not contain any items with these charactaristics
 	 *
@@ -517,13 +517,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$t = singleton($list->dataClass())->dbObject($field);
 				if($filterType) {
 					$className = "{$filterType}Filter";
-				} else {
+			} else {
 					$className = 'ExactMatchFilter';
-				}
+			}
 				if(!class_exists($className)){
 					$className = 'ExactMatchFilter';
 					array_unshift($modifiers, $filterType);
-				}
+		}
 				$t = new $className($field, $value, $modifiers);
 				$t->exclude($subquery);
 			}
@@ -609,7 +609,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		return $result;
 	}
-	
+
 	/**
 	 * Walks the list using the specified callback
 	 *
@@ -979,7 +979,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	public function remove($item) {
 		// By default, we remove an item from a DataList by deleting it.
 		$this->removeByID($item->ID);
-		}
+	}
 
 	/**
 	 * Remove an item from this DataList by ID
