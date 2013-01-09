@@ -19,25 +19,27 @@
 		</select>
 	</span>
 
-	<% if Items.Count < 5 %>
-		<fieldset id="preview-states" class="cms-preview-states switch-states size_{$Items.Count}"> 			
-			<div class="switch">
-				<% loop Items %>					
-					<input id="$Title" data-name="$Name" class="state-name $FirstLast" data-link="$Link" name="view" type="radio" <% if First %>checked<% end_if %>>
-					<label for="$Title"<% if First %> class="active"<% end_if %>><span>$Title</span></label>
-				<% end_loop %>
-				<span class="slide-button"></span>
-			</div>
-		</fieldset>
-	<% else %>
-		<span id="preview-state-dropdown" class="cms-preview-states field dropdown">
-			<select title="<% _t('SilverStripeNavigator.PreviewState', 'Preview State') %>" id="preview-states" class="preview-state dropdown nolabel" autocomplete="off" name="preview-state">
-				<% loop Items %>	
-				<option name="$Name" data-name="$Name" data-link="$Link" class="state-name $FirstLast" value="$Link" >
-					$Title
-				</option>
-				<% end_loop %>	
-			</select>
-		</span>
+	<% if Items %>
+		<% if Items.Count < 5 %>
+			<fieldset id="preview-states" class="cms-preview-states switch-states size_{$Items.Count}"> 			
+				<div class="switch">
+					<% loop Items %>					
+						<input id="$Title" data-name="$Name" class="state-name $FirstLast" data-link="$Link" name="view" type="radio" <% if First %>checked<% end_if %>>
+						<label for="$Title"<% if First %> class="active"<% end_if %>><span>$Title</span></label>
+					<% end_loop %>
+					<span class="slide-button"></span>
+				</div>
+			</fieldset>
+		<% else %>
+			<span id="preview-state-dropdown" class="cms-preview-states field dropdown">
+				<select title="<% _t('SilverStripeNavigator.PreviewState', 'Preview State') %>" id="preview-states" class="preview-state dropdown nolabel" autocomplete="off" name="preview-state">
+					<% loop Items %>	
+					<option name="$Name" data-name="$Name" data-link="$Link" class="state-name $FirstLast" value="$Link" >
+						$Title
+					</option>
+					<% end_loop %>	
+				</select>
+			</span>
+		<% end_if %>
 	<% end_if %>
 </div>
