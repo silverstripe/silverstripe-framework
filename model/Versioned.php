@@ -754,13 +754,25 @@ class Versioned extends DataExtension {
 		return !$stagesAreEqual;
 	}
 	
+	/**
+	 * @param string $filter 
+	 * @param string $sort   
+	 * @param string $limit  
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
+	 * @param string $having 
+	 */
 	public function Versions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		return $this->allVersions($filter, $sort, $limit, $join, $having);
 	}
 	
 	/**
 	 * Return a list of all the versions available.
-	 * @param string $filter
+	 * 
+	 * @param  string $filter 
+	 * @param  string $sort   
+	 * @param  string $limit  
+	 * @param  string $join   Deprecated, use leftJoin($table, $joinClause) instead
+	 * @param  string $having 
 	 */
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)
@@ -1009,7 +1021,7 @@ class Versioned extends DataExtension {
 	 * @param string $stage The name of the stage.
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
-	 * @param string $join A join expression, such as LEFT JOIN or INNER JOIN
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param int $limit A limit on the number of records returned from the database.
 	 * @param string $containerClass The container class for the result set (default is DataList)
 	 * @return SS_List
