@@ -82,6 +82,10 @@ class UploadField extends FileField {
 		 */
 		'allowedMaxFileNumber' => null,
 		/**
+		 * @var boolean Can the user upload new files, or just select from existing files.
+		 */
+		'canUpload' => true,
+		/**
 		 * @var int
 		 */
 		'previewMaxWidth' => 80,
@@ -441,7 +445,9 @@ class UploadField extends FileField {
 	 * @return string json
 	 */
 	public function upload(SS_HTTPRequest $request) {
-		if($this->isDisabled() || $this->isReadonly()) return $this->httpError(403);
+		if($this->isDisabled() || $this->isReadonly() || !$this->canUpload()) {
+			return $this->httpError(403);
+		}
 
 		// Protect against CSRF on destructive action
 		$token = $this->getForm()->getSecurityToken();
@@ -629,6 +635,12 @@ class UploadField extends FileField {
 		// Don't allow upload or edit of a relation when the underlying record hasn't been persisted yet
 		return (!$record || !$this->managesRelation() || $record->exists());
 	}
+
+	public function canUpload() {
+		$can = $this->getConfig('canUpload');
+		return (is_bool($can)) ? $can : Permission::check($can);
+	}
+
 }
 
 /**
