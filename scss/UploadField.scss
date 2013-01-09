@@ -47,11 +47,12 @@
 				border: 2px dashed $color-medium-separator;
 				background: $color-light-separator;
 				display: none;
+				margin-right: 15px;
 			}
 		}
 		.ss-uploadfield-item-info {
-			margin: 0 0 0 100px;
-		
+			float: left;
+			
 			.ss-uploadfield-item-name {
 				display: block;
 				line-height: 13px;
