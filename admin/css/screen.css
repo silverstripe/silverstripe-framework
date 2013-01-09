@@ -914,6 +914,7 @@ li.class-ErrorPage > a a .jstree-pageicon { background-position: 0 -112px; }
 
 /* Styling for the preview screen sizes */
 .cms-preview { background-color: #eceff1; height: 100%; width: 100%; }
+.cms-preview .cms-preview-overlay { width: 100%; height: 100%; }
 .cms-preview .preview-note { color: #CDD7DC; display: block; font-size: 22px; font-weight: bold; height: 82px; margin-top: -50px; margin-left: -150px; /* half of width */ position: absolute; text-align: center; text-shadow: 0 1px 0 #fff; top: 50%; left: 50%; width: 300px; }
 .cms-preview .preview-note span { background: url('../images/sprites-64x64-s88957ee578.png') 0 0 no-repeat; display: block; height: 41px; margin: 0 auto 20px; width: 50px; }
 .cms-preview .preview-scroll { height: 100%; overflow: auto; position: relative; width: 100%; }
