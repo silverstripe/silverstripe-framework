@@ -1,0 +1,14 @@
+name: uploadfield
+---
+UploadField:
+  defaultConfig:
+    autoUpload: true
+    allowedMaxFileNumber:
+    canUpload: true
+    previewMaxWidth: 80
+    previewMaxHeight: 60
+    uploadTemplateName: 'ss-uploadfield-uploadtemplate'
+    downloadTemplateName: 'ss-uploadfield-downloadtemplate'
+    fileEditFields: 
+    fileEditActions: 
+    fileEditValidator: 

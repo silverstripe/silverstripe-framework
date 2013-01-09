@@ -13,6 +13,8 @@
  * - Edit file
  * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the value of min(upload_max_filesize,
  * post_max_size) from php.ini
+ *
+ * <>Usage</b>
  * 
  * @example <code>
  * $UploadField = new UploadField('myFiles', 'Please upload some images <span>(max. 5 files)</span>');
@@ -66,9 +68,9 @@ class UploadField extends FileField {
 	protected $items;
 
 	/**
-	 * Config for this field used in both, php and javascript (will be merged into the config of the javascript file
-	 * upload plugin)
-	 * @var array
+	 * @var array Config for this field used in both, php and javascript 
+	 * (will be merged into the config of the javascript file upload plugin).
+	 * See framework/_config/uploadfield.yml for configuration defaults and documentation.
 	 */
 	protected $ufConfig = array(
 		/**
@@ -136,6 +138,8 @@ class UploadField extends FileField {
 		// TODO thats the first thing that came to my head, feel free to change it
 		$this->addExtraClass('ss-upload'); // class, used by js
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
+
+		$this->ufConfig = array_merge($this->ufConfig, Config::inst()->get('UploadField', 'defaultConfig'));
 
 		parent::__construct($name, $title);
 
