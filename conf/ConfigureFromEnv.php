@@ -105,7 +105,7 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 }
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {
-	Email::send_all_emails_to(SS_SEND_ALL_EMAILS_TO);
+	Config::inst()->update("Email","send_all_emails_to", SS_SEND_ALL_EMAILS_TO);
 }
 
 if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
