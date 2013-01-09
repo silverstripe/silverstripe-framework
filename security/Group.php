@@ -221,7 +221,9 @@ class Group extends DataObject {
 	 * including all members which are "inherited" from children groups of this record.
 	 * See {@link DirectMembers()} for retrieving members without any inheritance.
 	 * 
-	 * @param String
+	 * @param String $filter
+	 * @param  String $sort
+	 * @param  String $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @return ManyManyList
 	 */
 	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
@@ -229,6 +231,12 @@ class Group extends DataObject {
 			Deprecation::notice('3.0',
 				"The sort, join, and limit arguments are deprcated, use sort(), join() and limit() on the resulting"
 				. " DataList instead.");
+		}
+
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
 		}
 
 		// First get direct members as a base result
@@ -242,7 +250,6 @@ class Group extends DataObject {
 		// Now set all children groups as a new foreign key
 		$groups = Group::get()->byIDs($this->collateFamilyIDs());
 		$result = $result->forForeignID($groups->column('ID'))->where($filter)->sort($sort)->limit($limit);
-		if($join) $result = $result->join($join);
 
 		return $result;
 	}
