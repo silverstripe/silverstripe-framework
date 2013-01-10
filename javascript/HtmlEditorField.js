@@ -520,7 +520,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find('.field#AnchorRefresh').show();
 				}
 			},
-			insertLink: function() {
+			/**
+			 * @return Object Keys: 'href', 'target', 'title'
+			 */
+			getLinkAttributes: function() {
 				var href, target = null, anchor = this.find(':input[name=Anchor]').val();
 				
 				// Determine target
@@ -555,22 +558,22 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						break;
 				}
 
-				var attributes = {
+				return {
 					href : href, 
 					target : target, 
 					title : this.find(':input[name=Description]').val()
 				};
-
+			},
+			insertLink: function() {
 				this.modifySelection(function(ed){
-					ed.insertLink(attributes);
-				})
-
+					ed.insertLink(this.getLinkAttributes());
+				});
 				this.updateFromEditor();
 			},
 			removeLink: function() {
 				this.modifySelection(function(ed){
 					ed.removeLink();
-				})
+				});
 				this.close();
 			},
 			addAnchorSelector: function() {
