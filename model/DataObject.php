@@ -1365,8 +1365,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static
 	 *                           field $default_sort on the component class will be used.
-	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject
-	 *                     will be returned.
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause
 	 *
 	 * @return HasManyList The components of the one-to-many relationship.
@@ -1377,6 +1376,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!$componentClass = $this->has_many($componentName)) {
 			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName'"
 				. " on class '$this->class'", E_USER_ERROR);
+		}
+
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
 		}
 
 		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
@@ -1395,7 +1400,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$result = $result->forForeignID($this->ID);
 
 		$result = $result->where($filter)->limit($limit)->sort($sort);
-		if($join) $result = $result->join($join);
 
 		return $result;
 	}
@@ -1406,7 +1410,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $componentName
 	 * @param string $filter
 	 * @param string|array $sort
-	 * @param string $join
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param string|array $limit
 	 * @return SQLQuery
 	 */
@@ -1414,6 +1418,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!$componentClass = $this->has_many($componentName)) {
 			user_error("DataObject::getComponentsQuery(): Unknown 1-to-many component '$componentName'"
 				. " on class '$this->class'", E_USER_ERROR);
+		}
+
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
 		}
 
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
@@ -2692,8 +2702,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause.  If omitted,
 	 *                           self::$default_sort will be used.
-	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject
-	 *                     will be returned.
+	 * @param string $join Deprecated 3.0 Join clause. Use leftJoin($table, $joinClause) instead.
 	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
 	 *
@@ -2717,6 +2726,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$result->setDataModel(DataModel::inst());
 			return $result;
 		}
+
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
+		}
 		
 		$result = DataList::create($callerClass)->where($filter)->sort($sort);
 
@@ -2726,8 +2741,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} elseif($limit) {
 			$result = $result->limit($limit);
 		}
-
-		if($join) $result = $result->join($join);
 
 		$result->setDataModel(DataModel::inst());
 		return $result;
@@ -2748,7 +2761,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$list = new DataList(get_class($this));
 			$list->setDataModel($this->model);
 		} else {
-			throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed"
+			throw new \InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed"
 				. " a classname");
 		}
 		return $list;
