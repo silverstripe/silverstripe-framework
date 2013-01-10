@@ -1,5 +1,5 @@
 {
-	"name": "silverstripe/framework",
+	"name": "silverstripe/sapphire",
 	"description": "The SilverStripe Framework",
 	"type": "silverstripe-module",
 	"keywords": ["silverstripe", "framework"],
