@@ -190,13 +190,13 @@ nl:
     NEXT: Volgende
     PREVIOUS: Vorige
   GridFieldDetailForm:
-    Create: Create
+    Create: Toevoegen
     Delete: Verwijder
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
+    Deleted: '%s %s verwijderd'
     HELLO: Hallo
     Save: Opslaan
-    Saved: '%s %s %s Opgeslagen'
+    Saved: '%s %s opgeslagen'
     TEXT1: 'Hier is uw'
     TEXT2: 'wachtwoord reset link'
     TEXT3: voor
