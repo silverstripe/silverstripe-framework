@@ -72,7 +72,6 @@ Now that we have a contact form, we need some way of collecting the data submitt
 			 
 			$messageBody = " 
 				<p><strong>Name:</strong> {$data['Name']}</p> 
-				<p><strong>Website:</strong> {$data['Website']}</p> 
 				<p><strong>Message:</strong> {$data['Message']}</p> 
 			"; 
 			$email->setBody($messageBody); 

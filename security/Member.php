@@ -1294,16 +1294,20 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
+
 		// extended access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
 			else return true;
 		}
-		
+
 		// No member found
 		if(!($member && $member->exists())) return false;
+
+		// Members are not allowed to remove themselves,
+		// since it would create inconsistencies in the admin UIs.
+		if($this->ID && $member->ID == $this->ID) return false;
 		
 		return $this->canEdit($member);
 	}

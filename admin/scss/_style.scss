@@ -159,7 +159,7 @@ body.cms {
 	}
 
 	.ui-tabs-panel {
-		padding: $grid-x 0;
+		padding: $grid-x*2;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
 		&.cms-edit-form {
@@ -174,7 +174,7 @@ body.cms {
 
 	.ui-tabs-nav {
 		float: right;
-		margin: 0 0 -1px 0;
+		margin: $grid-x*2 0 -1px 0;
 		padding: 0 $grid-x*1.5 0 0;
 		border-bottom: none;
 
@@ -250,43 +250,17 @@ body.cms {
 		}
 	}
 
-	.cms-edit-form, .cms-content-fields { /*not sure if .cms-content-fields effects other areas*/
-		.cms-panel-padded { /* Has padded area inside it */
-			padding: 0;
-			margin: 0;	
-		}
-		.ui-tabs-panel, .ss-gridfield  {
-			margin: 12px;
-			padding: 0 0 12px;
-			.ss-gridfield { 						/* Files area & inside second level tabs */
-				padding: 0; 						/* should be zero ideally */
-				margin: 0 0 12px;
-			}
-		}
-		.ui-tabs-nav {
-			margin: 10px 12px 0;
-			padding: 0 8px 0 0;						/* second set of tabs */
-		}
-		#tree_actions .ui-tabs-nav{
-			margin: 0;
-		}
-	}
-
 	.cms-panel-padded {
-		h3 {
-			margin-left: 12px;						/* reports headers, probably too specific */
-		}
 		.ui-tabs-panel {
-			margin: 0;
-			padding: 12px 12px 12px;
+			padding: 0; // Avoid double padding with parent
 
 			.ui-tabs-panel {
 				padding: $grid-x 0 0 0;
 			}
 		}
-	}
-	.ui-tabs .ui-tabs-panel {						/* second level tabs */
-		padding-top: 8px;
+		.Actions {
+			padding: 0; // Avoid double padding with parent
+		}
 	}
 
 	&.ss-tabset-tabshidden .ui-tabs-panel {
@@ -301,8 +275,10 @@ body.cms {
 .ui-tabs.cms-tabset-primary .ui-tabs-nav, 
 .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary, 
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
+	margin-top: 0;
 	border-left: 1px solid darken($color-tab, 15%);
-	
+	float: none; // parent container is already right floated
+
 	li {
 		margin-right: 0; // tabs are directly adjacent
 		margin-top: 0;
@@ -482,8 +458,17 @@ body.cms {
 		margin: 0;
 	}
 }
-p.message {
-	margin-bottom: $grid-y*1.5;
+
+
+.cms-edit-form {
+	.message {
+		margin: $grid-x*2; // TODO Remove double padding when adjacent to a padded tabs panel
+	}
+	.ui-tabs-panel {
+		.message {
+			margin: 0 0 $grid-x*2 0; // gets padding from tab panel
+		}	
+	}
 }
 
 /** --------------------------------------------
@@ -609,8 +594,7 @@ p.message {
 .cms-content-toolbar {
 	min-height: 29px;
 	display: block;
-	margin: 0 0 15px 0;
-	padding-bottom: 9px;
+	margin: 0 0 $grid-y 0;
 	
 	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	@include legacy-pie-clearfix();
@@ -681,7 +665,7 @@ p.message {
  */
 .cms-content-tools {
 	background: $tab-panel-texture-color;
-	width: $grid-x * 24;
+	width: $grid-x * 25;
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
@@ -703,8 +687,8 @@ p.message {
 	}
 	
 	.cms-panel-content {
-		width: ($grid-x * 22);
-		padding: $grid-x $grid-x 0;
+		width: ($grid-x * 23);
+		padding: $grid-x*2 $grid-x 0; // smaller left/right padding to use space efficiently
 		overflow: auto;
 		height:100%;
 
@@ -837,7 +821,6 @@ p.message {
 	float: left;
 	position:  relative;
 	display: block;
-	margin-left: 8px;
 
 	.view-mode-batchactions-wrapper {
 		float: left;
@@ -925,7 +908,6 @@ form.member-profile-form {
 	#Root_Main {
 		clear:both;
 		border-top: 1px solid darken($color-tab, 20%);
-		padding-top:$grid-y*2;
 		.cms-help-toggle {
 			text-indent: -9999em;
 			display: inline-block;
@@ -1208,6 +1190,13 @@ form.member-profile-form {
 		li a span {
 		   display: block !important;
 		}
+	}
+}
+
+.cms {
+	.cms-panel-padded {
+		padding: $grid-y*2 $grid-x*2;
+		margin:0;
 	}
 }
 

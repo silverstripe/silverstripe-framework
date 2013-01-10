@@ -311,6 +311,7 @@ without affecting the response body.
 
 Built-in headers are:
 
+  * `X-Title`: Set window title (requires URL encoding)
 	* `X-Controller`: PHP class name matching a menu entry, which is marked active
 	* `X-ControllerURL`: Alternative URL to record in the HTML5 browser history
 	* `X-Status`: Extended status information, used for an information popover.

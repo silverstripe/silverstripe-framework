@@ -142,9 +142,11 @@
 
 /* Alternative styles for the switch in old IE */
 fieldset.switch-states{
-	padding:0;
+	padding-right: 5px;
 	.switch{
-		padding:0 10px 0 0;
+		padding: 0;
+		width: 100%+32;
+		left: -32px;
 		label{
 			overflow:visible;
 			text-overflow:visible;
@@ -156,8 +158,7 @@ fieldset.switch-states{
 			}
 			span{
 				display:inline;
-				padding:0 10px;
-				padding-right:15px;
+				padding:0 8px;
 				overflow:visible;
 				text-overflow:visible;
 				white-space:wrap;
@@ -165,6 +166,9 @@ fieldset.switch-states{
 		}
 		.slide-button{
 			display:none;
+		}
+		input.state-name {
+			margin-left: -20px;
 		}
 	}
 }

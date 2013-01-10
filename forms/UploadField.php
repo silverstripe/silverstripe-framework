@@ -13,6 +13,8 @@
  * - Edit file
  * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the value of min(upload_max_filesize,
  * post_max_size) from php.ini
+ *
+ * <>Usage</b>
  * 
  * @example <code>
  * $UploadField = new UploadField('myFiles', 'Please upload some images <span>(max. 5 files)</span>');
@@ -66,9 +68,9 @@ class UploadField extends FileField {
 	protected $items;
 
 	/**
-	 * Config for this field used in both, php and javascript (will be merged into the config of the javascript file
-	 * upload plugin)
-	 * @var array
+	 * @var array Config for this field used in both, php and javascript 
+	 * (will be merged into the config of the javascript file upload plugin).
+	 * See framework/_config/uploadfield.yml for configuration defaults and documentation.
 	 */
 	protected $ufConfig = array(
 		/**
@@ -81,6 +83,11 @@ class UploadField extends FileField {
 		 * @var int
 		 */
 		'allowedMaxFileNumber' => null,
+		/**
+		 * @var boolean|string Can the user upload new files, or just select from existing files.
+		 * String values are interpreted as permission codes.
+		 */
+		'canUpload' => true,
 		/**
 		 * @var int
 		 */
@@ -132,6 +139,8 @@ class UploadField extends FileField {
 		// TODO thats the first thing that came to my head, feel free to change it
 		$this->addExtraClass('ss-upload'); // class, used by js
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
+
+		$this->ufConfig = array_merge($this->ufConfig, Config::inst()->get('UploadField', 'defaultConfig'));
 
 		parent::__construct($name, $title);
 
@@ -431,7 +440,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleSelect(SS_HTTPRequest $request) {
-		return UploadField_SelectHandler::create($this, $this->folderName);
+		return UploadField_SelectHandler::create($this, $this->getFolderName());
 	}
 
 	/**
@@ -441,7 +450,9 @@ class UploadField extends FileField {
 	 * @return string json
 	 */
 	public function upload(SS_HTTPRequest $request) {
-		if($this->isDisabled() || $this->isReadonly()) return $this->httpError(403);
+		if($this->isDisabled() || $this->isReadonly() || !$this->canUpload()) {
+			return $this->httpError(403);
+		}
 
 		// Protect against CSRF on destructive action
 		$token = $this->getForm()->getSecurityToken();
@@ -500,7 +511,7 @@ class UploadField extends FileField {
 
 			// Get the uploaded file into a new file object.
 			try {
-				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->folderName);
+				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->getFolderName());
 			} catch (Exception $e) {
 				// we shouldn't get an error here, but just in case
 				$return['error'] = $e->getMessage();
@@ -629,6 +640,12 @@ class UploadField extends FileField {
 		// Don't allow upload or edit of a relation when the underlying record hasn't been persisted yet
 		return (!$record || !$this->managesRelation() || $record->exists());
 	}
+
+	public function canUpload() {
+		$can = $this->getConfig('canUpload');
+		return (is_bool($can)) ? $can : Permission::check($can);
+	}
+
 }
 
 /**

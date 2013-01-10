@@ -28,9 +28,11 @@
 	</div>
 	
 	<span class="ss-uploadfield-view-allowed-extensions"> 
+		<span class="description">
 
-		<em><% _t('AssetAdmin.ALLOWEDEXTS', 'Allowed extensions') %></em>
-		$Extensions
+			<a href="#" class="toggle"><% _t('AssetAdmin.SHOWALLOWEDEXTS', 'Show allowed extensions') %></a>
+			<p class="toggle-content">$Extensions</p>
+		</span>	
 	</span>	
 
 	<div class="clear"><!-- --></div>

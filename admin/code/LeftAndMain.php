@@ -357,7 +357,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$response = parent::handleRequest($request, $model);
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
-		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
+		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
 		
 		return $response;
 	}
@@ -645,13 +645,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$ancestors->push($record);
 				foreach($ancestors as $ancestor) {
 					$items->push(new ArrayData(array(
-						'Title' => $ancestor->Title,
+						'Title' => ($ancestor->MenuTitle) ? $ancestor->MenuTitle : $ancestor->Title,
 						'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $ancestor->ID)
 					)));		
 				}
 			} else {
 				$items->push(new ArrayData(array(
-					'Title' => $record->Title,
+					'Title' => ($record->MenuTitle) ? $record->MenuTitle : $record->Title,
 					'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $record->ID)
 				)));	
 			}

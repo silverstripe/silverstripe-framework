@@ -9,6 +9,8 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Stable Releases
 
+ * [3.1.0](3.1.0) - Unreleased
+
  * [3.0.2](3.0.2) - 17 September 2012
  * [3.0.1](3.0.1) - 31 July 2012
  * [3.0.0](3.0.0) - 28 June 2012
@@ -64,6 +66,8 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
  * 2.0.0 - 3 February 2007 (initial release)
 
 ## Alpha/beta/release candidate ##
+
+ * [3.1.0-beta1](beta/3.1.0-beta1) - 17 December 2012
 
  * [3.0.3-rc1](rc/3.0.3-rc1) - 6 November 2012
  * [3.0.2-rc2](rc/3.0.2-rc2) - 12 September 2012

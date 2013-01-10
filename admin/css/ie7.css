@@ -42,12 +42,13 @@
 .filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
 
 /* Alternative styles for the switch in old IE */
-fieldset.switch-states { padding: 0; }
-fieldset.switch-states .switch { padding: 0 10px 0 0; }
+fieldset.switch-states { padding-right: 5px; }
+fieldset.switch-states .switch { padding: 0; width: 132%; left: -32px; }
 fieldset.switch-states .switch label { overflow: visible; text-overflow: visible; white-space: normal; padding: 0; }
 fieldset.switch-states .switch label.active { color: #fff; background-color: #2b9c32; }
-fieldset.switch-states .switch label span { display: inline; padding: 0 10px; padding-right: 15px; overflow: visible; text-overflow: visible; white-space: wrap; }
+fieldset.switch-states .switch label span { display: inline; padding: 0 8px; overflow: visible; text-overflow: visible; white-space: wrap; }
 fieldset.switch-states .switch .slide-button { display: none; }
+fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 
 /* Hide size controls in IE - they won't work as intended */
 .cms-content-controls .preview-size-selector { display: none; }
@@ -217,8 +218,3 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav .ui-state-active a.ui-tabs-anchor { background: transparent url(../images/sprites-32x32/arrow_up_lighter.png) no-repeat right top; }
 .cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav .ui-state-active a.ui-tabs-anchor:hover { background: transparent url(../images/sprites-32x32/arrow_up_darker.png) no-repeat right top; }
 .cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button { width: 190px; /* Width 100% not calculating by ie7 */ }
-
-/* Tempory fix as jquery loads too slow to add icons */
-button.ui-button-text-icon-primary { padding-left: 30px !important; }
-button.ui-button-text-icon-primary span.ui-button-icon-primary { position: absolute !important; top: 5px !important; left: 8px !important; }
-button.ui-button-text-icon-primary .ui-button-text { margin-left: 0 !important; }

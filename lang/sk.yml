@@ -1,7 +1,7 @@
 sk:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: 'Nový priečinok'
+    ALLOWEDEXTS: 'Povolené extenzie'
+    NEWFOLDER: 'Nový Adresár'
   AssetTableField:
     CREATED: 'Prvýkrát nahrané'
     DIM: Rozmery
@@ -155,7 +155,7 @@ sk:
     HtmlType: 'HTML súbor'
     INVALIDEXTENSION: 'Extenzia nie je povolená (platné: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extenzia nie je povolená'
-    IcoType: 'Icon obrázok'
+    IcoType: 'Ikona obrázok'
     JpgType: 'JPEG obrázok - vhodné pre fotografie'
     JsType: 'Javascript súbor'
     Mp3Type: 'MP3 audio súbor'
@@ -240,21 +240,21 @@ sk:
     Saved: 'Uložené %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Pridať úlohu pre túto skupinu'
+    AddRole: 'Pridať novú úlohu pre túto skupinu'
     Code: 'Kód skupiny'
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Autori obsahu'
     Description: Popis
     GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky úlohy'
     Locked: 'Zamknuté?'
-    NoRoles: 'Nenašli sa úlohy'
+    NoRoles: 'Nenašli sa žiadne úlohy'
     PLURALNAME: Skupiny
     Parent: 'Nadradená skupina'
-    RolesAddEditLink: 'Spravovať úlohy'
+    RolesAddEditLink: 'Pridať/upraviť úlohy'
     SINGULARNAME: Skupina
-    Sort: 'Poradie zoradenia'
+    Sort: 'Zoradiť podľa'
     has_many_Permissions: Právomoci
-    many_many_Members: Členovia
+    many_many_Members: Uživatelia
   GroupImportForm:
     Help1: 'Importovať jednu alebo viac skupín v CSV formáte (čiarkov oddelené hodnoty). Zobraziť pokročilé použitie'
     Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použitie</h4>\\n<ul>\\n<li>Povolené stĺpce: <em>%s</em></li>\\n<li>Existujúce skupiny sú porovnávané ich unikátnou vlastnostou <em>Code</em>, a aktualizované s novými hodnotami z\\nimportovaného súboru.</li>\\n<li>Hierarchia skupín môže byť tvorená použitím stĺpce <em>ParentCode</em>.</li>\\n<li>Kódy oprávnení môžu byť priradené stĺpcom <em>PermissionCode</em>. Existujúce oprávnenia nie sú smazáné.</li>\\n</ul>\\n</div>"
@@ -366,9 +366,9 @@ sk:
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo
-    PLURALNAME: Členovia
+    PLURALNAME: Uživatelia
     REMEMBERME: 'Pamätať si ma nabudúce?'
-    SINGULARNAME: Člen
+    SINGULARNAME: Uživatel
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bolo zmenené'
     SUBJECTPASSWORDRESET: 'Odkaz na resetovanie hesla'
     SURNAME: Priezvisko
@@ -419,7 +419,7 @@ sk:
     SINGULARNAME: 'Heslo člena'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Zmazať
+    DELETE: Vymazať
     DELETEDRECORDS: 'Zmazaných {count} záznamov.'
     EMPTYBEFOREIMPORT: 'Vyčistiť databázu pred importovaním'
     IMPORT: 'Importovať z CSV'
@@ -503,7 +503,7 @@ sk:
     IMPORTGROUPS: 'Importovať skupiny'
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
-    MENUTITLE: Zabezpečenie
+    MENUTITLE: Bezpečnosť
     MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstáni zo všetkých skupín a databázy.'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Právomoci
@@ -532,8 +532,8 @@ sk:
     SELECT: 'Vyberte:'
   TableListField.ss:
     NOITEMSFOUND: 'Žiadne položky'
-    SORTASC: 'Triedit v vzostupnom poradí'
-    SORTDESC: 'Triediť v zostupnom poradí'
+    SORTASC: 'Zoradiť vzostupne'
+    SORTDESC: 'Zoradiť zostupne'
   TableListField_PageControls.ss:
     DISPLAYING: Zobrazujem
     OF: z

@@ -361,9 +361,7 @@ form.small .field, .field.small {
 	}
 
 	.ss-ui-button {
-		font-size: 12px;
 		margin-top:0px;
-		padding: 5px 10px;
 		font-weight: bold;
 		text-decoration: none;
 		line-height: $grid-y * 2;
@@ -373,22 +371,6 @@ form.small .field, .field.small {
 		cursor: pointer;
 		background-color: $color-button-generic;
 		white-space: nowrap;
-
-		.ui-icon, .ui-button-text {
-			display: inline-block;
-			line-height: $grid-x*2;
-			padding: 0;
-		}
-		.ui-icon {
-			width: 16px;
-			padding: 0 2px;
-			position: relative;
-			left: -2px;
-			margin-top: 0;
-			top: 0;
-			height: 16px;
-			float: left;
-		}
 
 		@include background(
 			linear-gradient(color-stops(

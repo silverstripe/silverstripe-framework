@@ -45,7 +45,7 @@ require_once 'Zend/Date.php';
  * 
  *   $f = new DateField('MyDate');
  *   $f->setLocale('de_DE');
- *   $f->setConfig('dmyfields');
+ *   $f->setConfig('dmyfields', true);
  * 
  * # Validation
  * 

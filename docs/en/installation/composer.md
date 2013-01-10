@@ -44,18 +44,20 @@ Composer can create a new site for you, using the installer as a template.  To d
 
 	composer create-project silverstripe/installer ./my/website/folder
 
-`./my/website/folder` should be the root directory where your site will live.  For example, on OS X, you might use a subdirectory of `~/Sites`.
-
+`./my/website/folder` should be the root directory where your site will live.  
+For example, on OS X, you might use a subdirectory of `~/Sites`.
 As long as your web server is up and running, this will get all the code that you need. 
-
 Now visit the site in your web browser, and the installation process will be completed.
-
-#### Selecting a version
 
 By default composer will download the latest stable version. You can also specify
 a version to download that version explicitly, i.e. this will download 3.0.3:
 
 	composer create-project silverstripe/installer ./my/website/folder 3.0.3
+	
+When `create-project` is used with a release version like above,
+it will try to get the code from archives instead of creating
+git repositories. If you're planning to contribute to SilverStripe,
+see [Using development versions](#using-development-versions).
 
 ## Adding modules to your project
 
@@ -94,14 +96,35 @@ The `composer.lock` file helps with this.  It references the specific commits th
 So, your deployment process, as it relates to Composer, should be as follows:
 
  * Run `composer update` on your development version before you start whatever testing you have planned.  Perform all the necessary testing.
-
  * Check `composer.lock` into your repository.
-
  * Deploy your project code base, using the deployment tool of your choice.
+ * Run `composer install` on your production version.
 
- * Run the following command on your production version.
+# Setting up an environment for contributing to SilverStripe {#contributing}
 
- 	composer install
+So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
+You have to tell composer three things in order to be able to do this:
+
+  - Keep the full git repository information
+  - Include dependancies marked as "developer" requirements
+  - Use the development version, not the latest stable version
+
+The first two steps are done as part of the initial create project using additional arguments. For instance:
+
+	composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
+
+The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
+
+The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
+
+The `--dev` flag will add a couple modules which are useful for SilverStripe development:
+
+ * The `docsviewer` module will let you preview changes to the project documentation
+ * The `buildtools` module which adds [phing](http://phing.info) tasks for creating SilverStripe releases
+
+Note that you can also include those into an existing project by running `composer update --dev`.
+Please read the ["Contributing Code"](/misc/contributing/code) documentation to find out how to
+create forks and send pull requests.
 
 # Advanced usage
 
@@ -212,27 +235,3 @@ Both the version and the alias are specified as Composer versions, not branch na
 
 This is not the only way to set things up in Composer. For more information on this topic, read the ["Aliases" chapter of the Composer documentation](http://getcomposer.org/doc/articles/aliases.md).
 
-## Setting up an environment for contributing to SilverStripe
-
-So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
-You have to tell composer three things in order to be able to do this:
-
-  - Keep the full git repository information
-  - Include dependancies marked as "developer" requirements
-  - Use the development version, not the latest stable version
-
-The first two steps are done as part of the initial create project using additional arguments. For instance:
-
-	composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
-
-The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
-
-The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
-
-The `--dev` flag will add a couple modules which are useful for SilverStripe development:
-
- * The `compass` module will regenerate CSS if you update the SCSS files
- * The `docsviewer` module will let you preview changes to the project documentation
- * The `buildtools` module which adds [phing](http://phing.info) tasks for creating SilverStripe releases
-
-Note that you can also include those into an existing project by running `composer update --dev`.

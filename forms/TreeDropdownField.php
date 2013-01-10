@@ -85,7 +85,7 @@ class TreeDropdownField extends FormField {
 	 * @param bool $showSearch enable the ability to search the tree by 
 	 *		entering the text in the input field.
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title',
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'TreeTitle',
 			$showSearch = false) {
 
 		$this->sourceObject = $sourceObject;
@@ -159,6 +159,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setChildrenMethod($method) {
 		$this->childrenMethod = $method;
+		return $this;
 	}
 
 	/**
@@ -229,8 +230,7 @@ class TreeDropdownField extends FormField {
 			? (int)$request->latestparam('ID')
 			: (int)$request->requestVar('ID');
 
-		$forceFullTree = $request->requestVar('forceFullTree')?$request->requestVar('forceFullTree'):false;
-		if($ID && !$forceFullTree) {
+		if($ID && !$request->requestVar('forceFullTree')) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
 			$isSubTree = true;
 			if(!$obj) {
@@ -297,6 +297,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setLabelField($field) {
 		$this->labelField = $field;
+		return $this;
 	}
 
 	/**
@@ -311,6 +312,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setKeyField($field) {
 		$this->keyField = $field;
+		return $this;
 	}
 
 	/**
@@ -325,6 +327,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setSourceObject($class) {
 		$this->sourceObject = $class;
+		return $this;
 	}
 
 	/**

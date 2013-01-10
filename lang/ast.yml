@@ -480,7 +480,7 @@ ast:
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes <a href="%s">volver conectate</a>.'
+    ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, pues <a href="%s">volver a coneutate</a>.'
     BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'

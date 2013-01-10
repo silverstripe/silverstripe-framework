@@ -20,7 +20,7 @@
 					descriptionEl.remove();
 				}
 			}
-		});
+					});
 
 		$(".cms .field.cms-description-tooltip :input").entwine({
 			onfocusin: function(e) {
@@ -28,8 +28,8 @@
 			},
 			onfocusout: function(e) {
 				this.closest('.field').tooltip('close');
-			}
+				}
 		});
 
-	});
+		});
 }(jQuery));

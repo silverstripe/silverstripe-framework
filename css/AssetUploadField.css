@@ -11,8 +11,9 @@
 Used in side panels and action tabs
 */
 .ss-uploadfield-view-allowed-extensions { padding-top: 20px; clear: both; max-width: 750px; display: block; }
+.ss-uploadfield-view-allowed-extensions .toggle { font-style: normal; font-size: 11px; }
 
-#AssetUploadField { border-bottom: 0; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; padding: 12px; }
+#AssetUploadField { border-bottom: 0; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 
 .backlink { padding-left: 12px; }
 
@@ -68,9 +69,7 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { float: left; margin: 34px 0 0; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { margin: 15px 0px 0 20px; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info label { font-size: 16px; line-height: 30px; padding: 5px 16px; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { /*position: relative;
-overflow: hidden;
-display: block;*/ }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { /*position: relative; */ overflow: hidden; display: block; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { float: left; font-weight: bold; font-size: 22px; padding: 0 20px; line-height: 70px; margin-top: 16px; display: none; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { font-size: 18px; margin-top: 0; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { margin-top: 9px; -webkit-border-radius: 13px; -moz-border-radius: 13px; -ms-border-radius: 13px; -o-border-radius: 13px; border-radius: 13px; -webkit-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; -moz-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; border: 2px dashed gray; background: #d4dbe0; display: none; height: 82px; width: 360px; float: left; }

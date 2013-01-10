@@ -1,7 +1,7 @@
 en:
   AssetAdmin:
-    ADDFILES: 'Add files'
-    EditOrgMenu: 'Edit &amp; organize'
+    ALLOWEDEXTS: 'Allowed extensions'
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -176,7 +176,7 @@ en:
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s is required'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
@@ -215,7 +215,7 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
-    Saved: 'Saved %s %s'
+    Saved: 'Saved {name} {link}'
   GridFieldEditButton.ss:
     EDIT: Edit
   GridFieldItemEditView.ss:

@@ -136,8 +136,8 @@ class Versioned extends DataExtension {
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
 	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
-		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
-
+	    $baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
+		
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Noop
 		case '':
@@ -203,6 +203,7 @@ class Versioned extends DataExtension {
 			// below)
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$this->augmentSQL($query, $dataQuery);
+			$dataQuery->setQueryParam('Versioned.mode', 'stage_unique');
 
 			// Now exclude any ID from any other stage. Note that we double rename to avoid the regular stage rename
 			// renaming all subquery references to be Versioned.stage
@@ -232,8 +233,19 @@ class Versioned extends DataExtension {
 			foreach(self::$db_for_versions_table as $name => $type) {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
+			
+			// Alias the record ID as the row ID
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
-			$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
+			
+			// Ensure that any sort order referring to this ID is correctly aliased
+			$orders = $query->getOrderBy();
+			foreach($orders as $order => $dir) {
+				if($order === "\"$baseTable\".\"ID\"") {
+					unset($orders[$order]);
+					$orders["\"{$baseTable}_versions\".\"RecordID\""] = $dir;
+				}
+			}
+			$query->setOrderBy($orders);
 			
 			// latest_version has one more step
 			// Return latest version instances, regardless of whether they are on a particular stage
@@ -250,6 +262,9 @@ class Versioned extends DataExtension {
 						) AS \"{$alias}_versions_latest\"
 						WHERE \"{$alias}_versions_latest\".\"RecordID\" = \"{$alias}_versions\".\"RecordID\"
 					)");
+			} else {
+				// If all versions are requested, ensure that records are sorted by this field
+				$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
 			}
 			break;
 		default:
@@ -266,8 +281,8 @@ class Versioned extends DataExtension {
 	 */
 	function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $record) {
 		$dataClass = $dataQuery->dataClass();
-		if (isset($record['Version'])){
-			$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $record['ID']);
+	    if (isset($record['Version'])){
+	    	$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $record['ID']);
 			$dataQuery->where("\"$dataClass\".\"Version\" = " . $record['Version']);
 			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
 		}
@@ -739,13 +754,25 @@ class Versioned extends DataExtension {
 		return !$stagesAreEqual;
 	}
 	
+	/**
+	 * @param string $filter 
+	 * @param string $sort   
+	 * @param string $limit  
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
+	 * @param string $having 
+	 */
 	public function Versions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		return $this->allVersions($filter, $sort, $limit, $join, $having);
 	}
 	
 	/**
 	 * Return a list of all the versions available.
-	 * @param string $filter
+	 * 
+	 * @param  string $filter 
+	 * @param  string $sort   
+	 * @param  string $limit  
+	 * @param  string $join   Deprecated, use leftJoin($table, $joinClause) instead
+	 * @param  string $having 
 	 */
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)
@@ -994,7 +1021,7 @@ class Versioned extends DataExtension {
 	 * @param string $stage The name of the stage.
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
-	 * @param string $join A join expression, such as LEFT JOIN or INNER JOIN
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param int $limit A limit on the number of records returned from the database.
 	 * @param string $containerClass The container class for the result set (default is DataList)
 	 * @return SS_List

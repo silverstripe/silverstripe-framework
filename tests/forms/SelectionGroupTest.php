@@ -23,8 +23,8 @@ class SelectionGroupTest extends SapphireTest {
 		$this->assertEquals('one', (string)$listElOne->input[0]['value']);
 		$this->assertEquals('two', (string)$listElTwo->input[0]['value']);
 
-		$this->assertEquals('one title', $listElOne->label[0]);
-		$this->assertEquals('two title', $listElTwo->label[0]);
+		$this->assertEquals('one title', (string)$listElOne->label[0]);
+		$this->assertEquals('two title', (string)$listElTwo->label[0]);
 
 		$this->assertContains('one view', (string)$listElOne->div);
 		$this->assertContains('two view', (string)$listElTwo->div);
@@ -44,8 +44,8 @@ class SelectionGroupTest extends SapphireTest {
 		$this->assertEquals('one', (string)$listElOne->input[0]['value']);
 		$this->assertEquals('two', (string)$listElTwo->input[0]['value']);
 
-		$this->assertEquals('one', $listElOne->label[0]);
-		$this->assertEquals('two', $listElTwo->label[0]);
+		$this->assertEquals('one', (string)$listElOne->label[0]);
+		$this->assertEquals('two', (string)$listElTwo->label[0]);
 	}
 
 	function testLegacyItemsFieldHolderWithTitle() {
@@ -62,8 +62,8 @@ class SelectionGroupTest extends SapphireTest {
 		$this->assertEquals('one', (string)$listElOne->input[0]['value']);
 		$this->assertEquals('two', (string)$listElTwo->input[0]['value']);
 
-		$this->assertEquals('one title', $listElOne->label[0]);
-		$this->assertEquals('two title', $listElTwo->label[0]);
+		$this->assertEquals('one title', (string)$listElOne->label[0]);
+		$this->assertEquals('two title', (string)$listElTwo->label[0]);
 	}
 
 }

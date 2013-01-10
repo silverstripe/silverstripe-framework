@@ -432,7 +432,7 @@ class MemberTest extends FunctionalTest {
 		/* Logged in users can edit their own record */
 		$this->session()->inst_set('loggedInAs', $member->ID);
 		$this->assertTrue($member->canView());
-		$this->assertTrue($member->canDelete());
+		$this->assertFalse($member->canDelete());
 		$this->assertTrue($member->canEdit());
 		
 		/* Other uses cannot view, delete or edit others records */
@@ -651,6 +651,34 @@ class MemberTest extends FunctionalTest {
 		
 		$this->assertTrue($m1->validateAutoLoginToken($m1Token), 'Passes token validity test against matching member.');
 		$this->assertFalse($m2->validateAutoLoginToken($m1Token), 'Fails token validity test against other member.');
+	}
+
+	public function testCanDelete() {
+		$admin1 = $this->objFromFixture('Member', 'admin');
+		$admin2 = $this->objFromFixture('Member', 'other-admin');
+		$member1 = $this->objFromFixture('Member', 'grouplessmember');
+		$member2 = $this->objFromFixture('Member', 'noformatmember');
+
+		$this->assertTrue(
+			$admin1->canDelete($admin2),
+			'Admins can delete other admins'
+		);
+		$this->assertTrue(
+			$member1->canDelete($admin2),
+			'Admins can delete non-admins'
+		);
+		$this->assertFalse(
+			$admin1->canDelete($admin1),
+			'Admins can not delete themselves'
+		);
+		$this->assertFalse(
+			$member1->canDelete($member2),
+			'Non-admins can not delete other non-admins'
+		);
+		$this->assertFalse(
+			$member1->canDelete($member1),
+			'Non-admins can not delete themselves'
+		);
 	}
 
 }

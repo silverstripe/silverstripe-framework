@@ -12,12 +12,16 @@
 	clear:both;
 	max-width:750px;
 	display:block;
+
+	.toggle {
+		font-style: normal;
+		font-size: $font-base-size;
+	}
 }
 
 #AssetUploadField {
 	border-bottom: 0;
 	@include box-shadow(none);
-	padding: 12px;
 }
 .backlink {
 	padding-left: 12px;
@@ -274,9 +278,9 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			}
 		}
 		.ss-uploadfield-fromcomputer {
-			/*position: relative;
+			/*position: relative; */
 			overflow: hidden;
-			display: block;*/
+			display: block;
 		}
 		.ss-uploadfield-item-uploador {
 			float: left;

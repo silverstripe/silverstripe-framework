@@ -301,6 +301,15 @@ class i18nTest extends SapphireTest {
 		);
 
 		$translated = i18n::_t(
+			'i18nTestModule.INJECTIONSLEGACY', // has %s placeholders
+			array("Cat", "meow"/*, "meow" */) // remove third arg
+		);
+		$this->assertContains(
+			"TRANS Hello Cat meow. But it is late, ",
+			$translated, "Testing sprintf placeholders with unnamed injections and too few args"
+		);
+
+		$translated = i18n::_t(
 			'i18nTestModule.INJECTIONS', // has {name} placeholders
 			array("Cat", "meow", "meow")
 		);

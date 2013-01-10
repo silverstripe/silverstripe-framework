@@ -9,7 +9,9 @@ as well. That makes it flexible enough to sometimes even replace the Gridfield,
 like for instance in creating and managing a simple gallery.
  
 ## Usage
-The UploadField can be used in two ways:
+
+The field can be used in two ways: To upload a single file into a `has_one` relationship,
+or allow multiple files into a fixed folder (or relationship).
 
 ### Single fileupload
 
@@ -76,7 +78,23 @@ UploadField will detect the relation based on its $name property value:
 	
 WARNING: Currently the UploadField doesn't fully support has_many relations, so use a many_many relation instead! 	
 
-## Set a custom folder
+## Configuration
+
+### Overview
+
+The field can either be configured on an instance level through `setConfig(<key>, <value>)`,
+or globally by overriding the YAML defaults.
+
+Example: mysite/_config/uploadfield.yml
+
+	after: framework#uploadfield
+	---
+	UploadField:
+	  defaultConfig:
+	    canUpload: false
+
+
+### Set a custom folder
 
 This example will save all uploads in the `/assets/customfolder/` folder. If 
 the folder doesn't exist, it will be created. 
@@ -98,7 +116,7 @@ the folder doesn't exist, it will be created.
 	$uploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
 
 
-## Limit the maximum file size
+### Limit the maximum file size
 
 `AllowedMaxFileSize` is by default set to the lower value of the 2 php.ini configurations: `upload_max_filesize` and `post_max_size`
 The value is set as bytes.
@@ -109,8 +127,6 @@ NOTE: this only sets the configuration for your UploadField, this does NOT chang
 	$sizeMB = 2; // 2 MB
 	$size = $sizeMB * 1024 * 1024; // 2 MB in bytes
 	$this->getValidator()->setAllowedMaxFileSize($size);
-
-## Other configuration settings
 
 ### Preview dimensions
 
@@ -182,6 +198,27 @@ Then, in your GalleryPage, tell the UploadField to use this function:
 
 In a similar fashion you can use 'fileEditActions' to set the actions for the 
 editform, or 'fileEditValidator' to determine the validator (eg RequiredFields). 
+
+### Configuration Reference
+
+ - `autoUpload`: (boolean)
+ - `allowedMaxFileNumber`: (int) php validation of allowedMaxFileNumber 
+   only works when a db relation is available, set to null to allow
+   unlimited if record has a has_one and allowedMaxFileNumber is null, it will be set to 1
+ - `canUpload`: (boolean) Can the user upload new files, or just select from existing files.
+   String values are interpreted as permission codes.
+ - `previewMaxWidth`: (int)
+ - `previewMaxHeight`: (int)
+ - `uploadTemplateName`: (string) javascript template used to display uploading 
+   files, see javascript/UploadField_uploadtemplate.js
+ - `downloadTemplateName`: (string) javascript template used to display already 
+   uploaded files, see javascript/UploadField_downloadtemplate.js
+ - `fileEditFields`: (FieldList|string) FieldList $fields or string $name 
+   (of a method on File to provide a fields) for the EditForm (Example: 'getCMSFields')
+ - `fileEditActions`: (FieldList|string) FieldList $actions or string $name 
+   (of a method on File to provide a actions) for the EditForm (Example: 'getCMSActions')
+ - `fileEditValidator`: (string) Validator (eg RequiredFields) or string $name 
+   (of a method on File to provide a Validator) for the EditForm (Example: 'getCMSValidator')
   
 ## TODO: Using the UploadField in a frontend form
 
