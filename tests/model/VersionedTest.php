@@ -75,7 +75,10 @@ class VersionedTest extends SapphireTest {
 	 */
 	public function testGetIncludingDeleted() {
 		// Get all ids of pages
-		$allPageIDs = DataObject::get('VersionedTest_DataObject', "\"ParentID\" = 0", "\"VersionedTest_DataObject\".\"ID\" ASC")->column('ID');
+		$allPageIDs = DataObject::get(
+			'VersionedTest_DataObject', 
+			"\"ParentID\" = 0", "\"VersionedTest_DataObject\".\"ID\" ASC"
+		)->column('ID');
 		
 		// Modify a page, ensuring that the Version ID and Record ID will differ,
 		// and then subsequently delete it

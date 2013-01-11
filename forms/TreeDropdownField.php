@@ -85,8 +85,9 @@ class TreeDropdownField extends FormField {
 	 * @param bool $showSearch enable the ability to search the tree by 
 	 *		entering the text in the input field.
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'TreeTitle',
-			$showSearch = false) {
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', 
+		$labelField = 'TreeTitle', $showSearch = false
+	) {
 
 		$this->sourceObject = $sourceObject;
 		$this->keyField     = $keyField;
