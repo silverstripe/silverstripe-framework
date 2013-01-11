@@ -242,6 +242,7 @@ class Security extends Controller {
 			// Audit logging hook
 			$controller->extend('permissionDenied', $member);
 
+			Session::clear('readingMode');
 			$controller->redirect("Security/login?BackURL=" . urlencode($_SERVER['REQUEST_URI']));
 		}
 		return;
@@ -360,11 +361,17 @@ class Security extends Controller {
 			$controller = Page_Controller::create($tmpPage);
 			$controller->setDataModel($this->model);
 			$controller->init();
+
+			// if the controller calls Director::redirect(), this will break early
+			if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
+
 			//Controller::$currentController = $controller;
 		} else {
 			$controller = $this;
 		}
 
+		// if the controller calls Director::redirect(), this will break early
+		if($this->response->isFinished()) return;
 
 		$content = '';
 		$forms = $this->GetLoginForms();
@@ -454,9 +461,16 @@ class Security extends Controller {
 			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 			$controller = Page_Controller::create($tmpPage);
 			$controller->init();
+
+			// if the controller calls Director::redirect(), this will break early
+			if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
+
 		} else {
 			$controller = $this;
 		}
+
+		// if the controller calls Director::redirect(), this will break early
+		if($this->response->isFinished()) return;
 
 		$customisedController = $controller->customise(array(
 			'Content' => 
@@ -513,9 +527,16 @@ class Security extends Controller {
 			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 			$controller = Page_Controller::create($tmpPage);
 			$controller->init();
+
+			// if the controller calls Director::redirect(), this will break early
+			if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
+
 		} else {
 			$controller = $this;
 		}
+
+		// if the controller calls Director::redirect(), this will break early
+		if($this->response->isFinished()) return;
 
 		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
@@ -576,6 +597,10 @@ class Security extends Controller {
 			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 			$controller = Page_Controller::create($tmpPage);
 			$controller->init();
+
+			// if the controller calls Director::redirect(), this will break early
+			if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
+
 		} else {
 			$controller = $this;
 		}

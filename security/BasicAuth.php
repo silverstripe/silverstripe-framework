@@ -31,6 +31,50 @@ class BasicAuth {
 	private static $entire_site_protected_message = "SilverStripe test website. Use your CMS login.";
 
 	/**
+	 * Getter.
+	 */
+	static function is_entire_site_protected() {
+		return self::$entire_site_protected;
+	}
+
+	/**
+	 * Require basic authentication that is not mapped to any specific users.
+	 *
+	 * @return bool Returns true if logged in successfuly
+	 */
+	static function require_fixed_login($realm, $username, $password){
+		// Do not apply second basic auth on top of the one we already have
+		if (self::is_entire_site_protected()) return true;
+
+		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
+		if(!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) return true;
+
+		$loggedIn = false;
+		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+			$loggedIn = ($_SERVER['PHP_AUTH_USER']==$username && $_SERVER['PHP_AUTH_PW']==$password);
+		}
+
+		// If we've failed the authentication mechanism, then show the login form
+		if(!$loggedIn) {
+			$response = new SS_HTTPResponse(null, 401);
+			$response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
+
+			if(isset($_SERVER['PHP_AUTH_USER'])) {
+				$response->setBody(_t('BasicAuth.ERRORNOTREC', "That username / password isn't recognised"));
+			} else {
+				$response->setBody(_t('BasicAuth.ENTERINFO', "Please enter a username and password."));
+			}
+
+			// Exception is caught by RequestHandler->handleRequest() and will halt further execution
+			$e = new SS_HTTPResponse_Exception(null, 401);
+			$e->setResponse($response);
+			throw $e;
+		}
+
+		return $loggedIn;
+	}
+
+	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
 	 * 
 	 * Used by {@link Controller::init()}.
