@@ -11,7 +11,7 @@
 .ss-uploadfield .ss-uploadfield-item { margin: 0; padding: 15px; overflow: auto; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview { height: 60px; line-height: 60px; width: 80px; text-align: center; font-weight: bold; float: left; overflow: hidden; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -webkit-box-shadow: #9a9a9a 0 0 3px 3px inset; -moz-box-shadow: #9a9a9a 0 0 3px 3px inset; box-shadow: #9a9a9a 0 0 3px 3px inset; border: 2px dashed gray; background: rgba(201, 205, 206, 0.8); display: none; }
-.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info { margin: 0 0 0 100px; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info { float: left; margin-left: 15px; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name { display: block; line-height: 13px; height: 26px; margin: 0; text-align: left; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name b { font-weight: bold; padding: 0 5px 0 0; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .name { font-size: 11px; color: #848484; width: 290px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; display: inline; float: left; }

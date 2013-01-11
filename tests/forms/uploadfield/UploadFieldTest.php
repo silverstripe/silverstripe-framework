@@ -476,6 +476,42 @@ class UploadFieldTest extends FunctionalTest {
 		
 	}
 
+	public function testCanUpload() {
+		$this->loginWithPermission('ADMIN');
+		$response = $this->get('UploadFieldTest_Controller');
+		$this->assertFalse($response->isError());
+
+		$parser = new CSSContentParser($response->getBody());
+		$this->assertFalse(
+			(bool)$parser->getBySelector('#CanUploadFalseField .ss-uploadfield-fromcomputer-fileinput'),
+			'Removes input file control'
+		);
+		$this->assertFalse((bool)$parser->getBySelector('#CanUploadFalseField .ss-uploadfield-dropzone'),
+			'Removes dropzone');
+		$this->assertTrue(
+			(bool)$parser->getBySelector('#CanUploadFalseField .ss-uploadfield-fromfiles'),
+			'Keeps "From files" button'
+		);
+	}	
+
+	public function testCanUploadWithPermissionCode() {
+		$field = new UploadField('MyField');
+
+		$field->setConfig('canUpload', true);
+		$this->assertTrue($field->canUpload());
+
+		$field->setConfig('canUpload', false);
+		$this->assertFalse($field->canUpload());
+
+		$this->loginWithPermission('ADMIN');
+
+		$field->setConfig('canUpload', false);
+		$this->assertFalse($field->canUpload());
+
+		$field->setConfig('canUpload', 'ADMIN');
+		$this->assertTrue($field->canUpload());
+	}
+
 	public function testIsSaveable() {
 		$form = $this->getMockForm();
 
@@ -775,6 +811,10 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		$fieldSubfolder->setFolderName('UploadFieldTest/subfolder1');
 		$fieldSubfolder->setRecord($record);
 
+		$fieldCanUploadFalse = new UploadField('CanUploadFalseField');
+		$fieldCanUploadFalse->setConfig('canUpload', false);
+		$fieldCanUploadFalse->setRecord($record);
+
 		$form = new Form(
 			$this,
 			'Form',
@@ -789,7 +829,8 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				$fieldManyMany,
 				$fieldReadonly,
 				$fieldDisabled,
-				$fieldSubfolder
+				$fieldSubfolder,
+				$fieldCanUploadFalse
 			),
 			new FieldList(
 				new FormAction('submit')
@@ -805,7 +846,8 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				'ManyManyFiles',
 				'ReadonlyField',
 				'DisabledField',
-				'SubfolderField'
+				'SubfolderField',
+				'CanUploadFalseField'
 			)
 		);
 		return $form;
