@@ -348,7 +348,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$cb = $this->component->getItemEditFormCallback();
 		if($cb) $cb($form, $this);
-
+		$this->extend("updateItemEditForm", $form);
 		return $form;
 	}
 
