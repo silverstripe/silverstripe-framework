@@ -132,7 +132,7 @@ For example, we might want to exclude all products without prices in our sample 
 			$list = parent::getList();
 			// Always limit by model class, in case you're managing multiple
 			if($this->modelClass == 'Product') {
-				$list->exclude('Price', '0');
+				$list = $list->exclude('Price', '0');
 			}
 			return $list;
 		}
