@@ -2850,12 +2850,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				&& DataObject::$_cache_get_one[$callerClass][$cacheKey] instanceof DataObject 
 				&& DataObject::$_cache_get_one[$callerClass][$cacheKey]->destroyed) {
 
-			DataObject::$_cache_get_one[$callerClass][$cacheKey
-			] = false;
+			DataObject::$_cache_get_one[$callerClass][$cacheKey] = false;
 		}
 		if(!$cache || !isset(DataObject::$_cache_get_one[$callerClass][$cacheKey])) {
-			$dl = DataList::create($callerClass)->where($filter)->sort($orderby);
-			$dl->setDataModel(DataModel::inst());
+			$dl = $callerClass::get()->where($filter)->sort($orderby);
 			$item = $dl->First();
 
 			if($cache) {

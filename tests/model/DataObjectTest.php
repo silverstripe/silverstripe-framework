@@ -171,6 +171,10 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Bob', $comment->Name);
 		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', true, '"Name" DESC');
 		$this->assertEquals('Phil', $comment->Name);
+
+		// Test get_one() with bad case on the classname
+		$subteam1 = DataObject::get_one('dataobjecttest_subteam', "\"Title\" = 'Subteam 1'", true);
+		$this->assertEquals($subteam1->Title, "Subteam 1");
 	}
 
 	public function testGetSubclassFields() {
