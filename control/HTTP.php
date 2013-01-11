@@ -262,7 +262,7 @@ class HTTP {
 			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
 			$body = null;
 		}
-		
+
 		// Development sites have frequently changing templates; this can get stuffed up by the code
 		// below.
 		if(Director::isDev()) return;
@@ -270,8 +270,8 @@ class HTTP {
 		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) return;
-		
-		// Popuplate $responseHeaders with all the headers that we want to build 
+
+		// Popuplate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
 		if(function_exists('apache_request_headers')) {
 			$requestHeaders = apache_request_headers();
@@ -285,19 +285,43 @@ class HTTP {
 		}
 
 		if(self::$cache_age > 0) {
-			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate";
+			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate, no-transform";
 			$responseHeaders["Pragma"] = "";
+
+			// To do: User-Agent should only be added in situations where you *are* actually varying according to user-agent.
+			$responseHeaders['Vary'] = 'Cookie, X-Forwarded-Protocol, User-Agent, Accept';
+
 		} else {
-			$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate";
+			$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-transform";
 		}
 
 		if(self::$modification_date && self::$cache_age > 0) {
-			$responseHeaders["Last-Modified"] =self::gmt_date(self::$modification_date);
+			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
+
+			/* Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
+			which means that if you log out, you get redirected back to a page which Chrome then checks against last-modified (which passes, getting a 304)
+			when it shouldn't be trying to use that page at all because it's the "logged in" version.
+
+			By also using and etag that includes both the modification date and all the varies values which we also check against we can catch
+			this and not return a 304
+			*/
+			$etagParts = array(self::$modification_date, serialize($_COOKIE));
+			if (isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) $etagParts[] = $_SERVER['HTTP_X_FORWARDED_PROTOCOL'];
+			if (isset($_SERVER['HTTP_USER_AGENT'])) $etagParts[] = $_SERVER['HTTP_USER_AGENT'];
+			if (isset($_SERVER['HTTP_ACCEPT'])) $etagParts[] = $_SERVER['HTTP_ACCEPT'];
+
+			$etag = sha1(implode(':', $etagParts));
+			$responseHeaders["ETag"] = $etag;
 
 			// 304 response detection
 			if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
 				$ifModifiedSince = strtotime(stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']));
-				if($ifModifiedSince >= self::$modification_date) {
+
+				// As above, only 304 if the last request had all the same varies values
+				// (or the etag isn't passed as part of the request - but with chrome it always is)
+				$matchesEtag = !isset($_SERVER['HTTP_IF_NONE_MATCH']) || $_SERVER['HTTP_IF_NONE_MATCH'] == $etag;
+
+				if($ifModifiedSince >= self::$modification_date && $matchesEtag) {
 					if($body) {
 						$body->setStatusCode(304);
 						$body->setBody('');

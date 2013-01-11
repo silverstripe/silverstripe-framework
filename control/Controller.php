@@ -477,6 +477,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * @uses redirect()
 	 */
 	public function redirectBack() {
+		// Don't cache the redirect back ever
+		HTTP::set_cache_age(0);
+
 		$url = null;
 		
 		// In edge-cases, this will be called outside of a handleRequest() context; in that case,
