@@ -47,11 +47,11 @@
 				border: 2px dashed $color-medium-separator;
 				background: $color-light-separator;
 				display: none;
-				margin-right: 15px;
 			}
 		}
 		.ss-uploadfield-item-info {
 			float: left;
+			margin-left: 15px;
 			
 			.ss-uploadfield-item-name {
 				display: block;
