@@ -867,7 +867,6 @@ class UploadField_ItemHandler extends RequestHandler {
 		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
-		if(!$item->canEdit()) return $this->httpError(403);
 
 		// Only allow actions on files in the managed relation (if one exists)
 		$items = $this->parent->getItems();
