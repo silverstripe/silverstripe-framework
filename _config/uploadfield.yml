@@ -5,6 +5,7 @@ UploadField:
     autoUpload: true
     allowedMaxFileNumber:
     canUpload: true
+    canAttachExisting: 'CMS_ACCESS_AssetAdmin'
     previewMaxWidth: 80
     previewMaxHeight: 60
     uploadTemplateName: 'ss-uploadfield-uploadtemplate'

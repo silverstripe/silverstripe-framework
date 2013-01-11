@@ -89,6 +89,10 @@ class UploadField extends FileField {
 		 */
 		'canUpload' => true,
 		/**
+		 * @var boolean|string Can the user attach files from the assets archive on the site?
+		 * String values are interpreted as permission codes.
+		 */
+		'canAttachExisting' => "CMS_ACCESS_AssetAdmin",
 		 * @var int
 		 */
 		'previewMaxWidth' => 80,
@@ -553,6 +557,7 @@ class UploadField extends FileField {
 	public function attach($request) {
 		if(!$request->isPOST()) return $this->httpError(403);
 		if(!$this->managesRelation()) return $this->httpError(403);
+		if(!$this->canAttachExisting()) return $this->httpError(403);
 
 		$return = array();
 
@@ -643,6 +648,11 @@ class UploadField extends FileField {
 
 	public function canUpload() {
 		$can = $this->getConfig('canUpload');
+		return (is_bool($can)) ? $can : Permission::check($can);
+	}
+
+	public function canAttachExisting() {
+		$can = $this->getConfig('canAttachExisting');
 		return (is_bool($can)) ? $can : Permission::check($can);
 	}
 

@@ -512,6 +512,22 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertTrue($field->canUpload());
 	}
 
+	public function testCanAttachExisting() {
+		$this->loginWithPermission('ADMIN');
+		$response = $this->get('UploadFieldTest_Controller');
+		$this->assertFalse($response->isError());
+
+		$parser = new CSSContentParser($response->getBody());
+		$this->assertTrue(
+			(bool)$parser->getBySelector('#CanAttachExistingFalseField .ss-uploadfield-fromcomputer-fileinput'),
+			'Keeps input file control'
+		);
+		$this->assertFalse(
+			(bool)$parser->getBySelector('#CanAttachExistingFalseField .ss-uploadfield-fromfiles'),
+			'Removes "From files" button'
+		);
+	}	
+
 	public function testIsSaveable() {
 		$form = $this->getMockForm();
 
@@ -815,6 +831,10 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		$fieldCanUploadFalse->setConfig('canUpload', false);
 		$fieldCanUploadFalse->setRecord($record);
 
+		$fieldCanAttachExisting = new UploadField('CanAttachExistingFalseField');
+		$fieldCanAttachExisting->setConfig('canAttachExisting', false);
+		$fieldCanAttachExisting->setRecord($record);
+
 		$form = new Form(
 			$this,
 			'Form',
@@ -830,7 +850,8 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				$fieldReadonly,
 				$fieldDisabled,
 				$fieldSubfolder,
-				$fieldCanUploadFalse
+				$fieldCanUploadFalse,
+				$fieldCanAttachExisting
 			),
 			new FieldList(
 				new FormAction('submit')
@@ -847,7 +868,8 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				'ReadonlyField',
 				'DisabledField',
 				'SubfolderField',
-				'CanUploadFalseField'
+				'CanUploadFalseField',
+				'CanAttachExistingField'
 			)
 		);
 		return $form;
