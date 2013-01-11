@@ -93,6 +93,11 @@ class UploadField extends FileField {
 		 * String values are interpreted as permission codes.
 		 */
 		'canAttachExisting' => "CMS_ACCESS_AssetAdmin",
+		/**
+		 * @var boolean If a 2nd file is uploaded, should it replace the existing one rather than throwing an errror?
+		 */
+		'replaceExistingFile' => false,
+		/**
 		 * @var int
 		 */
 		'previewMaxWidth' => 80,
@@ -487,6 +492,10 @@ class UploadField extends FileField {
 				$tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
 			// has_one only allows one file at any given time.
 			} elseif($record->has_one($name)) {
+				// If we're allowed to replace an existing file, clear out the old one
+				if($record->AvatarID && $this->getConfig('replaceExistingFile')) {
+					$record->AvatarID = null;
+				}
 				$tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
 
