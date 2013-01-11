@@ -208,4 +208,12 @@ class ManyManyList extends RelationList {
 		
 		return $result;
 	}
+
+	/**
+	 * @return Array Map of field => fieldtype
+	 */
+	function getExtraFields() {
+		return $this->extraFields;
+	}
+
 }

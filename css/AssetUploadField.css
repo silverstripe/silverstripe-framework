@@ -11,7 +11,7 @@
 Used in side panels and action tabs
 */
 .ss-uploadfield-view-allowed-extensions { padding-top: 20px; clear: both; max-width: 750px; display: block; }
-.ss-uploadfield-view-allowed-extensions .toggle { font-style: normal; font-size: 11px; }
+.ss-uploadfield-view-allowed-extensions .toggle { font-style: normal; font-size: 12px; }
 
 #AssetUploadField { border-bottom: 0; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 

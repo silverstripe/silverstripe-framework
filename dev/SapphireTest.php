@@ -131,6 +131,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		return self::$is_running_test;
 	}
 
+	public static function set_is_running_test($bool) {
+		self::$is_running_test = $bool;	
+	}
 
 	/**
 	 * Set the manifest to be used to look up test classes by helper functions

@@ -89,6 +89,17 @@ class UploadField extends FileField {
 		 */
 		'canUpload' => true,
 		/**
+		 * @var boolean|string Can the user attach files from the assets archive on the site?
+		 * String values are interpreted as permission codes.
+		 */
+		'canAttachExisting' => "CMS_ACCESS_AssetAdmin",
+		/**
+		 * @var boolean If a second file is uploaded, should it replace the existing one rather than throwing an errror?
+		 * This only applies for has_one relationships, and only replaces the association
+		 * rather than the actual file database record or filesystem entry.
+		 */
+		'replaceExistingFile' => false,
+		/**
 		 * @var int
 		 */
 		'previewMaxWidth' => 80,
@@ -483,6 +494,10 @@ class UploadField extends FileField {
 				$tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
 			// has_one only allows one file at any given time.
 			} elseif($record->has_one($name)) {
+				// If we're allowed to replace an existing file, clear out the old one
+				if($record->$name && $this->getConfig('replaceExistingFile')) {
+					$record->$name = null;
+				}
 				$tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
 
@@ -553,6 +568,7 @@ class UploadField extends FileField {
 	public function attach($request) {
 		if(!$request->isPOST()) return $this->httpError(403);
 		if(!$this->managesRelation()) return $this->httpError(403);
+		if(!$this->canAttachExisting()) return $this->httpError(403);
 
 		$return = array();
 
@@ -643,6 +659,11 @@ class UploadField extends FileField {
 
 	public function canUpload() {
 		$can = $this->getConfig('canUpload');
+		return (is_bool($can)) ? $can : Permission::check($can);
+	}
+
+	public function canAttachExisting() {
+		$can = $this->getConfig('canAttachExisting');
 		return (is_bool($can)) ? $can : Permission::check($can);
 	}
 
@@ -867,7 +888,6 @@ class UploadField_ItemHandler extends RequestHandler {
 		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
-		if(!$item->canEdit()) return $this->httpError(403);
 
 		// Only allow actions on files in the managed relation (if one exists)
 		$items = $this->parent->getItems();
