@@ -982,9 +982,7 @@ class Form extends RequestHandler {
 	 */
 	public function Message() {
 		$this->getMessageFromSession();
-		$message = $this->message;
-		$this->clearMessage();
-		return $message;
+		return $this->message;
 	}
 	
 	/**
@@ -1001,8 +999,6 @@ class Form extends RequestHandler {
 		}else{
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
-
-			Session::clear("FormInfo.{$this->FormName()}");
 		}
 	}
 
@@ -1038,9 +1034,11 @@ class Form extends RequestHandler {
 		$this->message  = null;
 		Session::clear("FormInfo.{$this->FormName()}.errors");
 		Session::clear("FormInfo.{$this->FormName()}.formError");
+		Session::clear("FormInfo.{$this->FormName()}.data");
 	}
 	public function resetValidation() {
 		Session::clear("FormInfo.{$this->FormName()}.errors");
+		Session::clear("FormInfo.{$this->FormName()}.data");
 	}
 
 	/**
@@ -1325,6 +1323,13 @@ class Form extends RequestHandler {
 			(array)$this->getTemplate(),
 			array('Form')
 		));
+
+		// Now that we're rendered, clear message
+		Session::clear("FormInfo.{$this->FormName()}.errors");
+		Session::clear("FormInfo.{$this->FormName()}.formError");
+		Session::clear("FormInfo.{$this->FormName()}.data");
+		
+		return $result;
 	}
 
 	/**
