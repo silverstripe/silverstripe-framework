@@ -1095,6 +1095,9 @@ class DataObjectTest extends SapphireTest {
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
 		// Test that we can traverse more than once, and that arbitrary methods are okay
 		$this->assertEquals("Team 1", $player->relField('Teams.First.Title'));
+		
+		$newPlayer = new DataObjectTest_Player();
+		$this->assertNull($newPlayer->relField('Teams.First.Title'));
 	}
 
 	public function testRelObject() {
