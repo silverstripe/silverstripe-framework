@@ -290,7 +290,7 @@ $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigManifest($configManifest);
 
 SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-	BASE_PATH, false, isset($_GET['flush'])
+	BASE_PATH, project(), false, isset($_GET['flush'])
 ));
 
 // If in live mode, ensure deprecation, strict and notices are not reported
@@ -309,19 +309,6 @@ Debug::loadErrorHandlers();
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
-
-function getSysTempDir() {
-	Deprecation::notice(3.0, 'Please use PHP function get_sys_temp_dir() instead.');
-	return sys_get_temp_dir();
-}
-
-/**
- * @deprecated 3.0 Please use {@link SS_ClassManifest::getItemPath()}.
- */
-function getClassFile($className) {
-	Deprecation::notice('3.0', 'Use SS_ClassManifest::getItemPath() instead.');
-	return SS_ClassLoader::instance()->getManifest()->getItemPath($className);
-}
 
 /**
  * Creates a class instance by the "singleton" design pattern.

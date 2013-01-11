@@ -6,9 +6,12 @@
 
 class DataObjectLazyLoadingTest extends SapphireTest {
 
-	static $fixture_file = 'DataObjectTest.yml';
+	static $fixture_file = array(
+		'DataObjectTest.yml',
+		'VersionedTest.yml'
+	);
 
-	// These are all defined in DataObjectTest.php
+	// These are all defined in DataObjectTest.php and VersionedTest.php
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
@@ -18,7 +21,9 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'VersionedTest_DataObject',
+		'VersionedTest_Subclass'
 	);
 
 	public function testQueriedColumnsID() {
@@ -243,5 +248,33 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$subteam1Lazy = $teams->find('ID', $subteam1->ID);
 		$this->assertArrayNotHasKey('SubclassDatabaseField_Lazy', $subteam1Lazy->toMap());
 		$this->assertArrayHasKey('SubclassDatabaseField', $subteam1Lazy->toMap());
+	}
+
+	public function testLazyLoadedFieldsOnVersionedRecords() {
+		// Save another record, sanity check that we're getting the right one
+		$obj2 = new VersionedTest_Subclass();
+		$obj2->Name = "test2";
+		$obj2->ExtraField = "foo2";
+		$obj2->write();
+
+		// Save the actual inspected record
+		$obj1 = new VersionedTest_Subclass();
+		$obj1->Name = "test";
+		$obj1->ExtraField = "foo";
+		$obj1->write();
+		$version1 = $obj1->Version;
+		$obj1->Name = "test2";
+		$obj1->ExtraField = "baz";
+		$obj1->write();
+		$version2 = $obj1->Version;
+
+		$reloaded = Versioned::get_version('VersionedTest_Subclass', $obj1->ID, $version1);
+		$this->assertEquals($reloaded->Name, 'test');
+		$this->assertEquals($reloaded->ExtraField, 'foo');
+		
+		$reloaded = Versioned::get_version('VersionedTest_Subclass', $obj1->ID, $version2);
+		$this->assertEquals($reloaded->Name, 'test2');
+		$this->assertEquals($reloaded->ExtraField, 'baz');
+		$obj1->delete();
 	}
 }

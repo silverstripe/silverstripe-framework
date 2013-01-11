@@ -34,18 +34,6 @@ define('MCE_ROOT', FRAMEWORK_DIR . '/thirdparty/tinymce/');
 ShortcodeParser::get('default')->register('file_link', array('File', 'link_shortcode_handler'));
 ShortcodeParser::get('default')->register('embed', array('Oembed', 'handle_shortcode'));
 
-/**
- * The secret key that needs to be sent along with pings to /Email_BounceHandler
- *
- * Change this to something different for increase security (you can
- * override it in mysite/_config.php to ease upgrades).
- * For more information see:
- * {@link http://doc.silverstripe.org/doku.php?id=email_bouncehandler}
- */
-if(!defined('EMAIL_BOUNCEHANDLER_KEY')) {
-	define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
-}
-
 // Zend_Cache temp directory setting
 $_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix
 $_ENV['TMP'] = TEMP_FOLDER; // for Windows

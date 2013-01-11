@@ -75,7 +75,7 @@ class DataExtensionTest extends SapphireTest {
 	 */
 	public function testAddExtensionLoadsStatics() {
 		// Object::add_extension() will load DOD statics directly, so let's try adding a extension on the fly
-		Object::add_extension('DataExtensionTest_Player', 'DataExtensionTest_PlayerExtension');
+		DataExtensionTest_Player::add_extension('DataExtensionTest_PlayerExtension');
 		
 		// Now that we've just added the extension, we need to rebuild the database
 		$this->resetDBSchema(true);
@@ -226,7 +226,7 @@ class DataExtensionTest_RelatedObject extends DataObject implements TestOnly {
 	
 }
 
-DataObject::add_extension('DataExtensionTest_Member', 'DataExtensionTest_ContactRole');
+DataExtensionTest_Member::add_extension('DataExtensionTest_ContactRole');
 
 class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 	
@@ -305,7 +305,7 @@ class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly {
 
 }
 
-DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext1');
-DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext2');
-DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Faves');
+DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext1');
+DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext2');
+DataExtensionTest_MyObject::add_extension('DataExtensionTest_Faves');
 

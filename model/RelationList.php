@@ -7,44 +7,44 @@
  * @todo Is this additional class really necessary?
  */
 abstract class RelationList extends DataList {
-	protected $foreignID;
-	
-	/**
-	 * Set the ID of the record that this ManyManyList is linking *from*.
-	 *
-	 * This is the mutatable version of this function, and will be protected only
-	 * from 3.1. Use forForeignID instead
-	 *
-	 * @param $id A single ID, or an array of IDs
-	 */
-	public function setForeignID($id) {
-		// If already filtered on foreign ID, remove that first
-		if($this->foreignID !== null) {
-			$oldFilter = $this->foreignIDFilter();
-			try {
-				$this->dataQuery->removeFilterOn($oldFilter);	
-			}
-			catch(InvalidArgumentException $e) { /* NOP */ }
-		}
 
-		// Turn a 1-element array into a simple value
-		if(is_array($id) && sizeof($id) == 1) $id = reset($id);
-		$this->foreignID = $id;
-		
-		$this->dataQuery->where($this->foreignIDFilter());
-
-		return $this;
+	public function getForeignID() {
+		return $this->dataQuery->getQueryParam('Foreign.ID');
 	}
-	
+
 	/**
 	 * Returns a copy of this list with the ManyMany relationship linked to the given foreign ID.
 	 * @param $id An ID or an array of IDs.
 	 */
 	public function forForeignID($id) {
-		return $this->alterDataQuery_30(function($query, $list) use ($id){
-			$list->setForeignID($id);
+		// Turn a 1-element array into a simple value
+		if(is_array($id) && sizeof($id) == 1) $id = reset($id);
+
+		// Calculate the new filter
+		$filter = $this->foreignIDFilter($id);
+
+		$list = $this->alterDataQuery(function($query, $list) use ($id, $filter){
+			// Check if there is an existing filter, remove if there is
+			$currentFilter = $query->getQueryParam('Foreign.Filter');
+			if($currentFilter) {
+				try {
+					$query->removeFilterOn($currentFilter);
+				}
+				catch (Exception $e) { /* NOP */ }
+			}
+
+			// Add the new filter
+			$query->setQueryParam('Foreign.ID', $id);
+			$query->setQueryParam('Foreign.Filter', $filter);
+			$query->where($filter);
 		});
+
+		return $list;
 	}
-	
-	abstract protected function foreignIDFilter();
+
+	/**
+	 * Returns a where clause that filters the members of this relationship to just the related items
+	 * @param $id (optional) An ID or an array of IDs - if not provided, will use the current ids as per getForeignID
+	 */
+	abstract protected function foreignIDFilter($id = null);
 }

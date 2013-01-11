@@ -64,10 +64,11 @@
 			<button class="ss-uploadfield-fromfiles ss-ui-button ui-corner-all" title="<% _t('UploadField.FROMCOMPUTERINFO', 'Select from files') %>" data-icon="network-cloud"><% _t('UploadField.FROMFILES', 'From files') %></button>
 			<% end_if %>
 			<% if not $autoUpload %>
-				<button class="ss-uploadfield-startall ss-ui-button ui-corner-all" title="<% _t('UploadField.STARTALLINFO', 'Start all uploads') %>" data-icon="navigation"><% _t('UploadField.STARTALL', 'Start all') %></button>
+				<button class="ss-uploadfield-startall ss-ui-button ui-corner-all" data-icon="navigation"><% _t('UploadField.STARTALL', 'Start all') %></button>
 			<% end_if %>
 			<div class="clear"><!-- --></div>
 		</div>
 		<div class="clear"><!-- --></div>
 	</div>
 <% end_if %>
+<% if Description %><span class="description">$Description</span><% end_if %>

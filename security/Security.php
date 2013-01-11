@@ -251,7 +251,7 @@ class Security extends Controller {
 	/**
 	 * Get the login form to process according to the submitted data
 	 */
-	protected function LoginForm() {
+	public function LoginForm() {
 		if(isset($this->requestParams['AuthenticationMethod'])) {
 			$authenticator = trim($_REQUEST['AuthenticationMethod']);
 
@@ -278,7 +278,7 @@ class Security extends Controller {
 	 *
 	 * @todo Check how to activate/deactivate authentication methods
 	 */
-	protected function GetLoginForms()
+	public function GetLoginForms()
 	{
 		$forms = array();
 
