@@ -220,11 +220,17 @@ class SS_HTTPResponse {
 			<meta http-equiv=\"refresh\" content=\"1; url=$url\" />
 			<script type=\"text/javascript\">setTimeout('window.location.href = \"$url\"', 50);</script>";
 		} else {
-			if(!headers_sent()) {
+		    $line = $file = null;
+			if(!headers_sent($file, $line)) {
 				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
 				foreach($this->headers as $header => $value) {
 					header("$header: $value", true, $this->statusCode);
 				}
+			} else {
+			    // It's critical that these status codes are sent; we need to report a failure if not.
+			    if($this->statusCode >= 300) {
+			        user_error("Couldn't set response type to $this->statusCode because of output on line $line of $file", E_USER_WARNING);
+			    }
 			}
 			
 			// Only show error pages or generic "friendly" errors if the status code signifies

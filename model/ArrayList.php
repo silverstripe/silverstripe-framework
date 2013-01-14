@@ -55,6 +55,9 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return ArrayIterator 
 	 */
 	public function getIterator() {
+		foreach($this->items as $i => $item) {
+			if(is_array($item)) $this->items[$i] = new ArrayData($item);
+		}
 		return new ArrayIterator($this->items);
 	}
 
