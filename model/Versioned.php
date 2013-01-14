@@ -1210,4 +1210,32 @@ class Versioned_Version extends ViewableData {
 	public function Published() {
 		return !empty( $this->record['WasPublished'] );
 	}
+
+	/**
+	 * Copied from DataObject to allow access via dot notation.
+	 */
+	public function relField($fieldName) {
+		$component = $this;
+
+		if(strpos($fieldName, '.') !== false) {
+			$parts = explode('.', $fieldName);
+			$fieldName = array_pop($parts);
+
+			// Traverse dot syntax
+			foreach($parts as $relation) {
+				if($component instanceof SS_List) {
+					if(method_exists($component,$relation)) $component = $component->$relation();
+					else $component = $component->relation($relation);
+				} else {
+					$component = $component->$relation();
+				}
+			}
+		}
+
+		// Unlike has-one's, these "relations" can return false
+		if($component) {
+			if ($component->hasMethod($fieldName)) return $component->$fieldName();
+			return $component->$fieldName;
+		}
+	}
 }
