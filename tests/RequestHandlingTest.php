@@ -139,9 +139,9 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals('This page does not exist.', $response->getBody());
 	}
 	
-	function testMethodsOnParentClassesOfRequestHandlerDeclined() {
-		$response = Director::test('testGoodBase1/getSecurityID');
-		$this->assertEquals(403, $response->getStatusCode());
+	public function testMethodsOnParentClassesOfRequestHandlerDeclined() {
+		$response = Director::test('testGoodBase1/getIterator');
+		$this->assertEquals(404, $response->getStatusCode());
 	}
 	
 	function testFormActionsCanBypassAllowedActions() {
@@ -229,8 +229,8 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertContains('not allowed on form', $response->getBody());
 	}
 	
-}
-
+	}
+	
 /**
  * Director rules for the test
  */
@@ -260,7 +260,18 @@ Director::addRules(50, array(
 /**
  * Controller for the test
  */
-class RequestHandlingTest_Controller extends Controller {
+class RequestHandlingTest_Controller extends Controller implements TestOnly {
+	
+	static $allowed_actions = array(
+		'method',
+		'legacymethod',
+		'virtualfile',
+		'TestForm',
+		'throwexception',
+		'throwresponseexception',
+		'throwhttperror',
+	);
+
 	static $url_handlers = array(
 		// The double-slash is need here to ensure that 
 		'$Action//$ID/$OtherID' => "handleAction",
@@ -312,8 +323,8 @@ class RequestHandlingTest_Controller extends Controller {
 	public function throwhttperror() {
 		$this->httpError(404, 'This page does not exist.');
 	}
-	
-}
+
+	}
 
 class RequestHandlingTest_FormActionController extends Controller {
 	
@@ -364,7 +375,7 @@ class RequestHandlingTest_FormActionController extends Controller {
 	function formactionInAllowedActions($data, $form = null) {
 		return 'formactionInAllowedActions';
 	}
-}
+	}
 
 /**
  * Simple extension for the test controller

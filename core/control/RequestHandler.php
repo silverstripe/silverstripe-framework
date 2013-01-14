@@ -68,7 +68,7 @@ class RequestHandler extends ViewableData {
 	 * </code>
 	 * 
 	 * Form getters count as URL actions as well, and should be included in allowed_actions.
-	 * Form actions on the other handed (first argument to {@link FormAction()} shoudl NOT be included,
+	 * Form actions on the other handed (first argument to {@link FormAction()} should NOT be included,
 	 * these are handled separately through {@link Form->httpSubmission}. You can control access on form actions
 	 * either by conditionally removing {@link FormAction} in the form construction,
 	 * or by defining $allowed_actions in your {@link Form} class.
@@ -114,7 +114,7 @@ class RequestHandler extends ViewableData {
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {
 			$urlHandlers = Object::get_static($handlerClass, 'url_handlers');
-			
+
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
 				if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 				if($params = $request->match($rule, true)) {
@@ -193,13 +193,13 @@ class RequestHandler extends ViewableData {
 	 */
 	public function allowedActions() {
 		$actions = Object::combined_static(get_class($this), 'allowed_actions', 'RequestHandler');
-		
+
 		foreach($this->extension_instances as $extension) {
 			if($extensionActions = Object::get_static(get_class($extension), 'allowed_actions')) {
 				$actions = array_merge($actions, $extensionActions);
 			}
 		}
-		
+
 		if($actions) {
 			// convert all keys and values to lowercase to 
 			// allow for easier comparison, unless it is a permission code
@@ -208,7 +208,7 @@ class RequestHandler extends ViewableData {
 			foreach($actions as $key => $value) {
 				if(is_numeric($key)) $actions[$key] = strtolower($value);
 			}
-			
+
 			return $actions;
 		}
 	}
@@ -224,18 +224,18 @@ class RequestHandler extends ViewableData {
 		
 		$action  = strtolower($action);
 		$actions = $this->allowedActions();
-		
+
 		// Check if the action is defined in the allowed actions as either a
 		// key or value. Note that if the action is numeric, then keys are not
 		// searched for actions to prevent actual array keys being recognised
 		// as actions.
 		if(is_array($actions)) {
 			$isKey   = !is_numeric($action) && array_key_exists($action, $actions);
-			$isValue = in_array($action, $actions);
-
-			if($isKey || $isValue) return true;
+			$isValue = in_array($action, $actions, true);
+			$isWildcard = (in_array('*', $actions) && $this->checkAccessAction($action));
+			if($isKey || $isValue || $isWildcard) return true;
 		}
-		
+
 		if(!is_array($actions) || !$this->uninherited('allowed_actions')) {
 			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
 		}
@@ -279,19 +279,30 @@ class RequestHandler extends ViewableData {
 		// If we get here an the action is 'index', then it hasn't been specified, which means that
 		// it should be allowed.
 		if($action == 'index' || empty($action)) return true;
-		
-		if($allowedActions === null || !$this->uninherited('allowed_actions')) {
-			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
-			// we test this by calling the unmagic method_exists. 
+
+		// Get actions defined for this specific class
+		$relevantActions = null;
+		if($allowedActions !== null && method_exists($this, $action)) {
+			$r = new ReflectionClass(get_class($this));
+			$m = $r->getMethod($actionOrigCasing);
+			$relevantActions = Object::uninherited_static(
+				$m->getDeclaringClass()->getName(), 
+				'allowed_actions'
+			);
+		}
+
+		// If no allowed_actions are provided on in the whole inheritance chain,
+		// or they aren't provided on the specific class...
+		if($allowedActions === null || $relevantActions === null) {
+			// ... only let through actions that aren't handled by
+			// magic methods we test this by calling the unmagic method_exists. 
 			if(method_exists($this, $action)) {
-				// Disallow any methods which aren't defined on RequestHandler or subclasses
-				// (e.g. ViewableData->getSecurityID())
 				$r = new ReflectionClass(get_class($this));
 				if($r->hasMethod($actionOrigCasing)) {
 					$m = $r->getMethod($actionOrigCasing);
 					return ($m && is_subclass_of($m->getDeclaringClass()->getName(), 'RequestHandler'));
 				} else {
-					throw new Exception("method_exists() true but ReflectionClass can't find method - PHP is b0kred");
+					throw new Exception("method_exists() true but ReflectionClass can't find method");
 				}
 			} else if(!$this->hasMethod($action)){
 				// Return true so that a template can handle this action
@@ -318,7 +329,7 @@ class RequestHandler extends ViewableData {
 
 		throw $e;
 	}
-	
+
 	/**
 	 * Returns the SS_HTTPRequest object that this controller is using.
 	 *
@@ -327,4 +338,4 @@ class RequestHandler extends ViewableData {
 	function getRequest() {
 		return $this->request;
 	}
-}
+	}
