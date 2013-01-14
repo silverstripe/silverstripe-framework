@@ -679,6 +679,8 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .members_grid p button#action_export span.btn-icon-download-csv { height: 17px; }
 
 /** Import forms */
+body.SecurityAdmin { background-color: #eceff1; }
+
 form.import-form ul { list-style: disc; }
 form.import-form ul li { margin-left: 20px; }
 form.import-form p { margin-bottom: 5px; }

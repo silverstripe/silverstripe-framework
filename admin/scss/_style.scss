@@ -1573,6 +1573,11 @@ form.small {
 /**
  * Import forms
  */
+
+body.SecurityAdmin {
+	background-color: $tab-panel-texture-color; //adds background to import members/groups iframe
+}
+
 form.import-form {
 	ul {
 		list-style: disc;
