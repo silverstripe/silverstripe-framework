@@ -556,9 +556,6 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .cms .cms-content-fields #Root_Main .customFormat { max-width: 80px; }
 .cms .cms-content-fields #Root_Main .cms-help-toggle { text-indent: -9999em; display: inline-block; width: 20px; background: url(../images/question.png) no-repeat 0px 0px; }
 .cms .cms-content-fields #Root_Permissions ul.optionset li { float: none; }
-.cms .cms-content-fields .field .fieldholder-small { margin-top: 8px; }
-.cms .cms-content-fields .field .fieldholder-small label { padding-top: 8px; width: 64px; float: left; margin-left: -64px; }
-.cms .cms-content-fields .field table .fieldholder-small { margin-top: 0; }
 .cms form.member-profile-form #Root .ui-tabs-nav { display: none; }
 .cms form.member-profile-form #Root_Main, .cms form.member-profile-form #Root_Permissions { border: none; }
 

@@ -1025,20 +1025,6 @@ form.member-profile-form {
 				float:none;
 			}
 		}			
-		.field {
-			.fieldholder-small { // Small fields have a second set of headers
-				margin-top: $grid-y;
-				label {
-					padding-top: $grid-x;
-					width: $grid-x * 8;
-					float: left;
-					margin-left: $grid-x * -8;
-				}
-			}
-			table .fieldholder-small {
-				margin-top: 0;
-			}
-		}
 	}
 	form.member-profile-form {
 		#Root .ui-tabs-nav {
