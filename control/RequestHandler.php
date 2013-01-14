@@ -88,7 +88,7 @@ class RequestHandler extends ViewableData {
 	 * </code>
 	 * 
 	 * Form getters count as URL actions as well, and should be included in allowed_actions.
-	 * Form actions on the other handed (first argument to {@link FormAction()} shoudl NOT be included,
+	 * Form actions on the other handed (first argument to {@link FormAction()} should NOT be included,
 	 * these are handled separately through {@link Form->httpSubmission}. You can control access on form actions
 	 * either by conditionally removing {@link FormAction} in the form construction,
 	 * or by defining $allowed_actions in your {@link Form} class.
@@ -321,21 +321,30 @@ class RequestHandler extends ViewableData {
 		// If we get here an the action is 'index', then it hasn't been specified, which means that
 		// it should be allowed.
 		if($action == 'index' || empty($action)) return true;
-		
-		if($allowedActions === null || !$this->config()->get('allowed_actions',
-				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
-			
-			// If no allowed_actions are provided, then we should only let through actions that aren't handled by
+
+		// Get actions defined for this specific class
+		$relevantActions = null;
+		if($allowedActions !== null && method_exists($this, $action)) {
+			$r = new ReflectionClass(get_class($this));
+			$m = $r->getMethod($actionOrigCasing);
+			$relevantActions = Object::uninherited_static(
+				$m->getDeclaringClass()->getName(), 
+				'allowed_actions'
+			);
+		}
+
+		// If no allowed_actions are provided on in the whole inheritance chain,
+		// or they aren't provided on the specific class...
+		if($allowedActions === null || $relevantActions === null) {
+			// ... only let through actions that aren't handled by
 			// magic methods we test this by calling the unmagic method_exists. 
 			if(method_exists($this, $action)) {
-				// Disallow any methods which aren't defined on RequestHandler or subclasses
-				// (e.g. ViewableData->getSecurityID())
 				$r = new ReflectionClass(get_class($this));
 				if($r->hasMethod($actionOrigCasing)) {
 					$m = $r->getMethod($actionOrigCasing);
 					return ($m && is_subclass_of($m->getDeclaringClass()->getName(), 'RequestHandler'));
 				} else {
-					throw new Exception("method_exists() true but ReflectionClass can't find method - PHP is b0kred");
+					throw new Exception("method_exists() true but ReflectionClass can't find method");
 				}
 			} else if(!$this->hasMethod($action)){
 				// Return true so that a template can handle this action
