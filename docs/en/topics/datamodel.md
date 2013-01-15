@@ -253,6 +253,17 @@ offset, if not provided as an argument, will default to 0.
 	// Return 5 members starting from the 5th result
 	$members = Member::get()->sort('Surname')->limit(5, 4);
 
+CAUTION: Limit and Offset are in the opposite sort order from what their order in MySQL. This can be confusing.
+For example 
+
+	:::sql
+	SELECT * FROM tbl LIMIT 5,10;  # Retrieve rows 6-15
+
+needs to be set like this: 
+
+	:::php
+	$obj->limit($limit = 10, $offset = 5); 
+
 ### Raw SQL options for advanced users
 
 Occasionally, the system described above won't let you do exactly what you need to do.  In these situtations, we have 
