@@ -148,7 +148,7 @@
 							.jstree(self.getTreeConfig())
 							.bind('select_node.jstree', function(e, data) {
 								var node = data.rslt.obj, id = $(node).data('id');
-								if(!firstLoad && !self.getValue() === id) {
+								if(!firstLoad && self.getValue() == id) {
 									// Value is already selected, unselect it (for lack of a better UI to do this)
 									self.data('metadata', null);
 									self.setTitle(null);
