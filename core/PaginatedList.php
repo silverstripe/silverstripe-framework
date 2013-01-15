@@ -438,7 +438,7 @@ class PaginatedList extends SS_ListDecorator {
 		Deprecation::notice('3.0', 'Use setPageStart, setPageLength, or setTotalItems instead.');
 		$this->setPageStart($pageStart);
 		$this->setPageLength($pageLength);
-		$this->setTotalSize($totalSize);
+		$this->setTotalItems($totalSize);
 		return $this;
 	}
 
