@@ -1319,17 +1319,15 @@ class Form extends RequestHandler {
 	 * than <% control FormObject %>
 	 */
 	public function forTemplate() {
-		return $this->renderWith(array_merge(
-			(array)$this->getTemplate(),
-			array('Form')
-		));
-
 		// Now that we're rendered, clear message
 		Session::clear("FormInfo.{$this->FormName()}.errors");
 		Session::clear("FormInfo.{$this->FormName()}.formError");
 		Session::clear("FormInfo.{$this->FormName()}.data");
-		
-		return $result;
+
+		return $this->renderWith(array_merge(
+			(array)$this->getTemplate(),
+			array('Form')
+		));
 	}
 
 	/**
