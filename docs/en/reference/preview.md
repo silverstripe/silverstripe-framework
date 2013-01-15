@@ -22,6 +22,57 @@ _Versioned_.  They are not general enough for using on any other DataObject. Tha
 of the feature.
 </div>
 
+## Configuration and Defaults
+
+Like most of the CMS, the preview UI is powered by 
+[jQuery entwine](https://github.com/hafriedlander/jquery.entwine).
+This means its defaults are configured through JavaScript, by setting entwine properties.
+In order to achieve this, create a new file `mysite/javascript/MyLeftAndMain.Preview.js`.
+
+In the following example we configure three aspects:
+ 
+ * Set the default mode from "split view" to a full "edit view"
+ * Make a wider mobile preview
+ * Increase minimum space required by preview before auto-hiding
+
+Note how the configuration happens in different entwine namespaces
+("ss.preview" and "ss"), as well as applies to different selectors
+(".cms-preview" and ".cms-container").
+
+	:::js
+	(function($) {
+		$.entwine('ss.preview', function($){
+			$('.cms-preview').entwine({
+				DefaultMode: 'content',
+				getSizes: function() {
+					var sizes = this._super();
+					sizes.mobile.width = '400px';
+					return sizes;
+				}
+			});
+		});
+		$.entwine('ss', function($){
+			$('.cms-container').entwine({
+				getLayoutOptions: function() {
+					var opts = this._super();
+					opts.minPreviewWidth = 600;
+					return opts;
+				}
+			});
+		});
+	});
+	}(jQuery));
+
+Load the file in the CMS via an addition to `mysite/_config.php`:
+
+	:::php
+	LeftAndMain::require_javascript('mysite/javascript/MyLeftAndMain.Preview.js');
+
+In order to find out which configuration values are available, the source code
+is your best reference at the moment - have a look in `framework/admin/javascript/LeftAndMain.Preview.js`.
+To understand how layouts are handled in the CMS UI, have a look at the
+[CMS Architecture](/reference/cms-architecture) guide.
+
 ## Enabling preview
 
 The frontend decides on the preview being enabled or disabled based on the presnce of the `.cms-previewable` class. If
