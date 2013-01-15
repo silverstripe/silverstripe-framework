@@ -19,9 +19,9 @@
 		 */
 		$('.importSpec').entwine({
 			onmatch: function() {
-				this.hide();
+				this.find('div.details').hide();
 				this.find('a.detailsLink').click(function() {
-					$('#' + $(this).attr('href').replace(/.*#/,'')).toggle();
+					$('#' + $(this).attr('href').replace(/.*#/,'')).slideToggle();
 					return false;
 				});
 				
