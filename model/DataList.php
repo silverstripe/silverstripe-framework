@@ -250,6 +250,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Return a new DataList instance with the records returned in this query restricted by a limit clause
 	 * 
+	 * CAUTION: Limit and Offset are in the opposite sort order from what their order in MySQL
+	 * This can be confusing
+	 * e.g. MYSQL: SELECT * FROM tbl LIMIT 5,10;  # Retrieve rows 6-15
+	 * needs to be set like this: $obj->limit($limit = 10, $offset = 5); 
+	 * 
 	 * @param int $limit
 	 * @param int $offset
 	 */
