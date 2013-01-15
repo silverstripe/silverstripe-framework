@@ -439,7 +439,7 @@ class DataListTest extends SapphireTest {
 		$list = $list->filter(array('Name'=>'Bob', 'Comment'=>'Phil is a unique guy, and comments on team2'));
 		$this->assertEquals(0, $list->count());
 	}
-	
+
 	/**
 	 *  $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
 	 */
@@ -464,6 +464,15 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(2, $list->count(), 'There should be two comments');
 		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+
+	public function testFilterMultipleWithArrayFilterAndModifiers() {
+		$list = DataObjectTest_TeamComment::get();
+		$list = $list->filter(array('Name:StartsWith'=>array('Bo', 'Jo')));
+		$list = $list->sort('Name', 'ASC');
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name);
+		$this->assertEquals('Joe', $list->last()->Name);
 	}
 	
 	/**
