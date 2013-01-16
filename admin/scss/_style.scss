@@ -1027,12 +1027,20 @@ form.member-profile-form {
 		}			
 		.field {
 			.fieldholder-small { // Small fields have a second set of headers
-				margin-top: $grid-y;
+				margin: 0 $grid-y $grid-y *2;
 				label {
-					padding-top: $grid-x;
-					width: $grid-x * 8;
 					float: left;
-					margin-left: $grid-x * -8;
+					padding-top: 0;
+					margin: 0;
+					width: auto;
+				}
+				input.text {
+					width: 100px;
+					margin: -$grid-x 0 0 $grid-x;
+				}
+				select {
+					width: 150px;
+					margin: 0 0 0 $grid-x;
 				}
 			}
 			table .fieldholder-small {
