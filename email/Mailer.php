@@ -70,12 +70,12 @@ class Mailer {
 		// Messages with the X-SilverStripeMessageID header can be tracked
 		if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {		
 			$bounceAddress = BOUNCE_EMAIL;
-			// Get the human name from the from address, if there is one
-			if(preg_match('/^([^<>]+)<([^<>])> *$/', $from, $parts))
-				$bounceAddress = "$parts[1]<$bounceAddress>";
 		} else {
 			$bounceAddress = $from;
 		}
+		
+		// Strip the human name from the bounce address
+		if(preg_match('/^([^<>]*)<([^<>]+)> *$/', $bounceAddress, $parts)) $bounceAddress = $parts[2];
 		
 		// $headers["Sender"] 		= $from;
 		$headers["X-Mailer"]	= X_MAILER;
