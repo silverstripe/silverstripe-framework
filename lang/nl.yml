@@ -237,7 +237,7 @@ nl:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Opslaan
-    Saved: '%s %s %s Opgeslagen'
+    Saved: '%s %s Opgeslagen'
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Voeg een rol toe aan deze groep'
