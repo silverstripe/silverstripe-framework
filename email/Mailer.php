@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailer objects are responsible for actually sending emails.
  * The default Mailer class will use PHP's mail() function.
@@ -163,7 +164,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$to = validEmailAddr($to);
 	
 	// Try it without the -f option if it fails
-	if(!($result = @mail($to, $subject, $fullBody, $headers, "-f$bounceAddress"))) {
+	if(!($result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress")))) {
 		$result = mail($to, $subject, $fullBody, $headers);
 	}
 	
@@ -248,8 +249,9 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	$to = validEmailAddr($to);
 
 	// Try it without the -f option if it fails
-	if(!$result = @mail($to, $subject, $fullBody, $headers, "-f$bounceAddress"))
+	if(!$result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress"))) {
 		$result = mail($to, $subject, $fullBody, $headers);
+	}
 	
 	if($result)
 		return array($to,$subject,$fullBody,$headers);
