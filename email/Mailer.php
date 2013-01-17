@@ -13,7 +13,7 @@ class Mailer {
 	 *  
 	 * @param string $to
 	 * @param string $from
-	 * @param string §subject
+	 * @param string $subject
 	 * @param string $plainContent
 	 * @param bool $attachedFiles
 	 * @param array $customheaders
