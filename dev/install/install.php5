@@ -34,7 +34,7 @@ $envFileExists = false;
 //define the name of the environment file
 $envFile = '_ss_environment.php';
 //define the dir to start scanning from
-$dir = '.'
+$dir = '.';
 //check this dir and every parent dir (until we hit the base of the drive)
 do {
 	$dir = realpath($dir) . '/';
