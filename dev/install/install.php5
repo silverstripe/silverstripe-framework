@@ -42,8 +42,7 @@ do {
 	if (file_exists($dir . $envFile)) {
 		include_once($dir . $envFile);
 		$envFileExists = true;
-		//not sure why this is set because it is overridden below anyway, but I
-		// left it just because it's already here
+		//legacy variable assignment
 		$usingEnv = true;
 		break;
 	}
