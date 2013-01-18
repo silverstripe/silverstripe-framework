@@ -46,19 +46,22 @@ error_reporting(E_ALL | E_STRICT);
 /**
  * Include _ss_environment.php files
  */
-$envFiles = array(
-	'_ss_environment.php',
-	'../_ss_environment.php',
-	'../../_ss_environment.php',
-	'../../../_ss_environment.php');
-
-foreach($envFiles as $envFile) {
-	if(@file_exists($envFile)) {
-		define('SS_ENVIRONMENT_FILE', $envFile);
-		include_once($envFile);
+//define the name of the environment file
+$envFile = '_ss_environment.php';
+//define the dir to start scanning from (have to add the trailing slash)
+$dir = '.';
+//check this dir and every parent dir (until we hit the base of the drive)
+do {
+	$dir = realpath($dir) . '/';
+	//if the file exists, then we include it, set relevant vars and break out
+	if (file_exists($dir . $envFile)) {
+		define('SS_ENVIRONMENT_FILE', $dir . $envFile);
+		include_once(SS_ENVIRONMENT_FILE);
 		break;
 	}
-}
+//here we need to check that the real path of the last dir and the next one are
+// not the same, if they are, we have hit the root of the drive
+} while (realpath($dir) != realpath($dir .= '../'));
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBALS AND DEFINE SETTING
