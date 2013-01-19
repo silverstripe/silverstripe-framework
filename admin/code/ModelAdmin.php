@@ -357,7 +357,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
 		$fields->push(
-			new CheckboxField('EmptyBeforeImport', _t('ModelAdmin.EMPTYBEFOREIMPORT', 'Clear Database before import'),
+			new CheckboxField('EmptyBeforeImport', _t('ModelAdmin.EMPTYBEFOREIMPORT', 'Replace data'),
 				false)
 		); 
 		
