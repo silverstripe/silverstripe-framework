@@ -417,4 +417,4 @@ class PaginatedList extends SS_ListDecorator {
 		}
 	}
 
-}
+	}

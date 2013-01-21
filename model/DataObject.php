@@ -2647,27 +2647,33 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * The path to the related field is specified with dot separated syntax (eg: Parent.Child.Child.FieldName)
 	 *
 	 * @param $fieldPath string
-	 * @return string
+	 * @return string | null - will return null on a missing value
 	 */
 	public function relField($fieldName) {
 		$component = $this;
 
+		// We're dealing with relations here so we traverse the dot syntax
 		if(strpos($fieldName, '.') !== false) {
-			$parts = explode('.', $fieldName);
-			$fieldName = array_pop($parts);
-
-			// Traverse dot syntax
-			foreach($parts as $relation) {
-				if($component instanceof SS_List) {
-					if(method_exists($component,$relation)) $component = $component->$relation();
-					else $component = $component->relation($relation);
-				} else {
+			$relations = explode('.', $fieldName);
+			$fieldName = array_pop($relations);
+			foreach($relations as $relation) {
+				// Bail if any of the below sets a $component to a null object
+				if($component instanceof SS_List && !method_exists($component, $relation)) {
+					$component = $component->relation($relation);
+				// Just call the method and hope for the best
+				} else { 
 					$component = $component->$relation();
 				}
 			}
 		}
-
-		if ($component->hasMethod($fieldName)) return $component->$fieldName();
+		
+		// Bail if the component is null
+		if(!$component) {
+			return null;
+		}
+		if($component->hasMethod($fieldName)) {
+			return $component->$fieldName();
+		}
 		return $component->$fieldName;
 	}
 
@@ -2801,12 +2807,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				&& DataObject::$_cache_get_one[$callerClass][$cacheKey] instanceof DataObject 
 				&& DataObject::$_cache_get_one[$callerClass][$cacheKey]->destroyed) {
 
-			DataObject::$_cache_get_one[$callerClass][$cacheKey
-			] = false;
+			DataObject::$_cache_get_one[$callerClass][$cacheKey] = false;
 		}
 		if(!$cache || !isset(DataObject::$_cache_get_one[$callerClass][$cacheKey])) {
-			$dl = DataList::create($callerClass)->where($filter)->sort($orderby);
-			$dl->setDataModel(DataModel::inst());
+			$dl = $callerClass::get()->where($filter)->sort($orderby);
 			$item = $dl->First();
 
 			if($cache) {

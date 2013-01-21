@@ -649,8 +649,16 @@ class Form extends RequestHandler {
 
 		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
 
-		// Forms shouldn't be cached, cos their error messages won't be shown
-		HTTP::set_cache_age(0);
+		// Figure out if we can cache this form
+		// - forms with validation shouldn't be cached, cos their error messages won't be shown
+		// - forms with security tokens shouldn't be cached because security tokens expire
+		$needsCacheDisabled = false;
+		if ($this->getSecurityToken()->isEnabled()) $needsCacheDisabled = true;
+		if ($this->FormMethod() != 'get') $needsCacheDisabled = true;
+		if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) $needsCacheDisabled = true;
+
+		// If we need to disable cache, do it
+		if ($needsCacheDisabled) HTTP::set_cache_age(0);
 
 		$attrs = $this->getAttributes();
 
@@ -900,9 +908,7 @@ class Form extends RequestHandler {
 	 */
 	public function Message() {
 		$this->getMessageFromSession();
-		$message = $this->message;
-		$this->clearMessage();
-		return $message;
+		return $this->message;
 	}
 	
 	/**
@@ -919,8 +925,6 @@ class Form extends RequestHandler {
 		}else{
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
-
-			Session::clear("FormInfo.{$this->FormName()}");
 		}
 	}
 
@@ -956,9 +960,11 @@ class Form extends RequestHandler {
 		$this->message  = null;
 		Session::clear("FormInfo.{$this->FormName()}.errors");
 		Session::clear("FormInfo.{$this->FormName()}.formError");
+		Session::clear("FormInfo.{$this->FormName()}.data");
 	}
 	public function resetValidation() {
 		Session::clear("FormInfo.{$this->FormName()}.errors");
+		Session::clear("FormInfo.{$this->FormName()}.data");
 	}
 
 	/**
@@ -1220,6 +1226,11 @@ class Form extends RequestHandler {
 	 * than <% control FormObject %>
 	 */
 	public function forTemplate() {
+		// Now that we're rendered, clear message
+		Session::clear("FormInfo.{$this->FormName()}.errors");
+		Session::clear("FormInfo.{$this->FormName()}.formError");
+		Session::clear("FormInfo.{$this->FormName()}.data");
+
 		return $this->renderWith(array_merge(
 			(array)$this->getTemplate(),
 			array('Form')

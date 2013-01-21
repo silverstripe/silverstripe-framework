@@ -8,7 +8,7 @@ This is a highlevel overview of available `[api:FormField]` subclasses. An autom
  * `[api:DropdownField]`: A `<select>` tag. Can optionally save into has-one relationships.
  * `[api:ReadonlyField]`: Read-only field to display a non-editable value with a label.
  * `[api:TextareaField]`: Multi-line text field.
- * `[api:TextField]`: Multi-line text field.
+ * `[api:TextField]`: Single-line text field.
  * `[api:PasswordField]`: Masked input field
 
  ## Actions
@@ -19,7 +19,6 @@ This is a highlevel overview of available `[api:FormField]` subclasses. An autom
 ## Formatted Input
 
  * `[api:AjaxUniqueTextField]`: Text field that automatically checks that the value entered is unique for the given set of fields in a given set of tables
- 
  * `[api:ConfirmedPasswordField]`: Two masked input fields, checks for matching passwords.
  * `[api:CountryDropdownField]`: A simple extension to dropdown field, pre-configured to list countries.
  * `[api:CreditCardField]`: Allows input of credit card numbers via four separate form fields, including generic validation of its numeric values.

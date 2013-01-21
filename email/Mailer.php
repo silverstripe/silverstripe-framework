@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailer objects are responsible for actually sending emails.
  * The default Mailer class will use PHP's mail() function.
@@ -228,7 +229,7 @@ class Mailer {
 		$to = $this->validEmailAddr($to);
 	
 	// Try it without the -f option if it fails
-	if(!($result = @mail($to, $subject, $fullBody, $headers, "-f$bounceAddress"))) {
+	if(!($result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress")))) {
 		$result = mail($to, $subject, $fullBody, $headers);
 	}
 	

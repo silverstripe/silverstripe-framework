@@ -11,8 +11,6 @@
  * new TextareaField(
  *    $name = "description",
  *    $title = "Description",
- *    $rows = 8,
- *    $cols = 3,
  *    $value = "This is the default description"
  * );
  * </code>
