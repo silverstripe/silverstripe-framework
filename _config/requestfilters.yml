@@ -1,0 +1,16 @@
+---
+name: requirements
+---
+Injector:
+  RequestProcessor:
+    properties:
+      filters:
+        - '%$RequirementsRequestFilter'
+---
+name: debug
+---
+Injector:
+  RequestProcessor:
+    properties:
+      filters:
+        - '%$DebugRequestFilter'

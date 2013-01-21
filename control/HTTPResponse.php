@@ -231,11 +231,6 @@ class SS_HTTPResponse {
 	 * Send this HTTPReponse to the browser
 	 */
 	public function output() {
-		// Attach appropriate X-Include-JavaScript and X-Include-CSS headers
-		if(Director::is_ajax()) {
-			Requirements::include_in_response($this);
-		}
-
 		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
 			$url = $this->headers['Location'];
 			echo
@@ -256,16 +251,8 @@ class SS_HTTPResponse {
 			        user_error("Couldn't set response type to $this->statusCode because of output on line $line of $file", E_USER_WARNING);
 			    }
 			}
-			
-			// Only show error pages or generic "friendly" errors if the status code signifies
-			// an error, and the response doesn't have any body yet that might contain
-			// a more specific error description.
-			if(Director::isLive() && $this->isError() && !$this->body) {
-				Debug::friendlyError($this->statusCode, $this->getStatusDescription());
-			} else {
-				echo $this->body;
-			}
-			
+
+			echo $this->getBody();
 		}
 	}
 	
