@@ -940,14 +940,14 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'nn_NO' => 'nn',
 		'pl_PL' => 'pl',
 		'pl_UA' => 'pl',
-		'pt_AO' => 'pt_br',
-		'pt_BR' => 'pt_br',
-		'pt_CV' => 'pt_br',
-		'pt_GW' => 'pt_br',
-		'pt_MZ' => 'pt_br',
-		'pt_PT' => 'pt_br',
-		'pt_ST' => 'pt_br',
-		'pt_TL' => 'pt_br',
+		'pt_AO' => 'pt',
+		'pt_BR' => 'pt',
+		'pt_CV' => 'pt',
+		'pt_GW' => 'pt',
+		'pt_MZ' => 'pt',
+		'pt_PT' => 'pt',
+		'pt_ST' => 'pt',
+		'pt_TL' => 'pt',
 		'ro_MD' => 'ro',
 		'ro_RO' => 'ro',
 		'ro_RS' => 'ro',
@@ -1948,7 +1948,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		
 		// Sort modules by inclusion priority, then alphabetically
 		// TODO Should be handled by priority flags within modules
-		$prios = array('sapphire' => 10, 'framework' => 10, 'admin' => 11, 'cms' => 12, 'mysite' => 90);
+		$prios = array('sapphire' => 10, 'framework' => 10, 'admin' => 11, 'cms' => 12, project() => 90);
 		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
 		ksort($modules);
 		uksort(

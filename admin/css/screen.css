@@ -227,8 +227,10 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
 
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
-.fieldgroup .fieldgroup-field { float: left; display: block; padding: 8px 0 0 8px; }
+.fieldgroup .fieldgroup-field { float: left; display: block; padding: 8px 8px 0 0; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
+.fieldgroup .fieldgroup-field label { margin-left: 0; margin-right: 1em; width: auto; }
+.fieldgroup .fieldgroup-field input, .fieldgroup .fieldgroup-field textarea { float: right; }
 .fieldgroup.stacked .fieldgroup-field { float: none; }
 
 .ss-toggle { margin: 8px 0; }
@@ -556,9 +558,6 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .cms .cms-content-fields #Root_Main .customFormat { max-width: 80px; }
 .cms .cms-content-fields #Root_Main .cms-help-toggle { text-indent: -9999em; display: inline-block; width: 20px; background: url(../images/question.png) no-repeat 0px 0px; }
 .cms .cms-content-fields #Root_Permissions ul.optionset li { float: none; }
-.cms .cms-content-fields .field .fieldholder-small { margin-top: 8px; }
-.cms .cms-content-fields .field .fieldholder-small label { padding-top: 8px; width: 64px; float: left; margin-left: -64px; }
-.cms .cms-content-fields .field table .fieldholder-small { margin-top: 0; }
 .cms form.member-profile-form #Root .ui-tabs-nav { display: none; }
 .cms form.member-profile-form #Root_Main, .cms form.member-profile-form #Root_Permissions { border: none; }
 
@@ -680,6 +679,8 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .members_grid p button#action_export span.btn-icon-download-csv { height: 17px; }
 
 /** Import forms */
+body.SecurityAdmin { background-color: #eceff1; }
+
 form.import-form ul { list-style: disc; }
 form.import-form ul li { margin-left: 20px; }
 form.import-form p { margin-bottom: 5px; }

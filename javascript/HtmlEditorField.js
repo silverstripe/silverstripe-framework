@@ -520,7 +520,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find('.field#AnchorRefresh').show();
 				}
 			},
-			insertLink: function() {
+			/**
+			 * @return Object Keys: 'href', 'target', 'title'
+			 */
+			getLinkAttributes: function() {
 				var href, target = null, anchor = this.find(':input[name=Anchor]').val();
 				
 				// Determine target
@@ -555,22 +558,22 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						break;
 				}
 
-				var attributes = {
+				return {
 					href : href, 
 					target : target, 
 					title : this.find(':input[name=Description]').val()
 				};
-
+			},
+			insertLink: function() {
 				this.modifySelection(function(ed){
-					ed.insertLink(attributes);
-				})
-
+					ed.insertLink(this.getLinkAttributes());
+				});
 				this.updateFromEditor();
 			},
 			removeLink: function() {
 				this.modifySelection(function(ed){
 					ed.removeLink();
-				})
+				});
 				this.close();
 			},
 			addAnchorSelector: function() {
@@ -1314,6 +1317,17 @@ function sapphiremce_cleanup(type, value) {
 			this.removeAttribute('onresizestart');
 			this.removeAttribute('onresizeend');
 		});
+	}
+
+	// if we are inserting from a popup back into the editor
+	// add the changed class and update the Content value
+	if(type == 'insert_to_editor') {
+		var field = jQuery('#' + tinyMCE.selectedInstance.editorId);
+		var original = field.val();
+		if (original != value) {
+			field.val(value).addClass('changed');
+			field.closest('form').addClass('changed');
+		}
 	}
 
 	return value;

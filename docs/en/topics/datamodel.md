@@ -273,8 +273,9 @@ parameter to specify the offset, which allows you to tell the system where to st
 offset, if not provided as an argument, will default to 0.
 
 	:::php
-	// Return 5 members starting from the 5th result
-	$members = Member::get()->sort('Surname')->limit(5, 4);
+	// Return 10 members with an offset of 4 (starting from the 5th result).
+	// Note that the argument order is different from a MySQL LIMIT clause
+	$members = Member::get()->sort('Surname')->limit(10, 4);
 
 ### Raw SQL options for advanced users
 

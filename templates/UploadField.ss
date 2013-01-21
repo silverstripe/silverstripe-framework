@@ -52,12 +52,17 @@
 				<% end_if %>
 			</b></label>
 			<% if canUpload %>
-				<label class="ss-uploadfield-fromcomputer ss-ui-button ui-corner-all" data-icon="drive-upload">
-					<% _t('UploadField.FROMCOMPUTER', 'From your computer') %>
-					<input id="$id" name="$getName" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %> />
-				</label>			
+			<label class="ss-uploadfield-fromcomputer ss-ui-button ui-corner-all" title="<% _t('UploadField.FROMCOMPUTERINFO', 'Upload from your computer') %>" data-icon="drive-upload">
+				<% _t('UploadField.FROMCOMPUTER', 'From your computer') %>
+				<input id="$id" name="$getName" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %> />
+			</label>
+			<% else %>	
+				<input style="display: none" id="$id" name="$getName" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %> />
 			<% end_if %>
-			<button class="ss-uploadfield-fromfiles ss-ui-button ui-corner-all" data-icon="network-cloud"><% _t('UploadField.FROMFILES', 'From files') %></button>
+
+			<% if canAttachExisting %>
+			<button class="ss-uploadfield-fromfiles ss-ui-button ui-corner-all" title="<% _t('UploadField.FROMCOMPUTERINFO', 'Select from files') %>" data-icon="network-cloud"><% _t('UploadField.FROMFILES', 'From files') %></button>
+			<% end_if %>
 			<% if not $autoUpload %>
 				<button class="ss-uploadfield-startall ss-ui-button ui-corner-all" data-icon="navigation"><% _t('UploadField.STARTALL', 'Start all') %></button>
 			<% end_if %>

@@ -4,7 +4,7 @@
 			onadd: function() {
 				this.accordion({
 					collapsible: true,
-					active: !this.hasClass("ss-toggle-start-closed")
+					active: (this.hasClass("ss-toggle-start-closed")) ? false : 0
 				});
 
 				this._super();

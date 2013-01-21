@@ -303,6 +303,12 @@ This object is used for creating actions buttons, for example a delete button. W
 a FormAction, the gridfield finds a `GridField_ActionProvider` that listens on that action. 
 `GridFieldDeleteAction` have a pretty basic implementation of how to use a Form action.
 
+## GridField_SaveHandler
+
+This is used to create a handler that is called when a form containing the grid
+field is saved into a record. This is useful for performing actions when saving
+the record.
+
 ### GridState
 
 Gridstate is a class that is used to contain the current state and actions on the gridfield. It's 
