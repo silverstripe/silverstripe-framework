@@ -86,6 +86,11 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$columns->setDisplayFields(array(
 			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
 		));
+		$columns->setFieldFormatting(array(
+			'Breadcrumbs' => function($val, $item) {
+				return $item->getBreadcrumbs(' > ');
+			}
+		));
 		
 		$fields = new FieldList(
 			$root = new TabSet(
