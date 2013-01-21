@@ -1,4 +1,5 @@
 <?php
+include '../xhprof/_includes/header.php';
 
 /************************************************************************************
  ************************************************************************************
@@ -131,3 +132,4 @@ if (isset($_GET['debug_profile'])) {
 		Profiler::show(isset($_GET['profile_trace']));
 	}
 }
+include '../xhprof/_includes/footer.php';
