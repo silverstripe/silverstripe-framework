@@ -293,7 +293,7 @@ hr:
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Širina
+    IMAGEWIDTHPX: 'Širina'
     INSERTMEDIA: 'Insert Media'
     LINK: 'Ubaci/editiraj link za označeni tekst'
     LINKANCHOR: 'Anchor on this page'

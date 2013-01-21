@@ -25,7 +25,7 @@ af:
     FROMCOMPUTERINFO: 'Laai op van jou rekenaar af'
     TOTAL: Totaal
     TOUPLOAD: 'Kies lêers om op te laai...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Wag asseblief... ons is besig om op te laai'
     UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Belyning
@@ -86,7 +86,7 @@ af:
     SUCCESSADD2: '{name} bygesit'
     SUCCESSEDIT: 'Gestoor %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Byvoeg %s'
+    ADDITEM: 'Voeg %s  by'
     NOITEMSFOUND: 'Geen item gevind nie'
     SORTASC: 'Sorteer in stygende orde'
     SORTDESC: 'Sorteer in dalende orde'
@@ -124,11 +124,11 @@ af:
     YEAR: jaar
     YEARS: jare
   DateField:
-    NOTSET: 'nier gestel'
+    NOTSET: 'Nie gestel nie'
     TODAY: vandag
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+    VALIDDATEFORMAT2: 'Sleutel asseblief ''n geldige datum formaat in ({format})'
+    VALIDDATEMAXDATE: 'Jou datum moet gelykstaande of ouer wees as die maksimum toelaatbare datum ({date})'
+    VALIDDATEMINDATE: 'Jou datum moet net so out of nuwer wees as die minimum toelaatbare datum ({date})'
   DatetimeField:
     NOTSET: 'Nie gestel nie'
   Director:
@@ -177,7 +177,7 @@ af:
   FileIFrameField:
     ATTACH: 'Heg {type} aan'
     ATTACHONCESAVED: '{type}e kan aangeheg word sodra jy die rekord vir die eerste keer gestoor het'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Lêers kan aangeheg word wanneer jy die rekord vir die eerste keer gestoor het.'
     DELETE: 'Verwyder {type}'
     DISALLOWEDFILETYPE: 'Dit word nie toegelaat om hierde lêer tipe op te laai nie'
     FILE: Lêer
@@ -188,7 +188,7 @@ af:
   FileIFrameField_iframe.ss:
     TITLE: 'Prentjie oplaaiende ''Iframe'''
   Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS: 'Sinchronisasie voltooi:{createdcount} ietems geskep, {deletedcount} ietems verwyder'
   Folder:
     PLURALNAME: Dossiers
     SINGULARNAME: Dossier
@@ -225,7 +225,7 @@ af:
     PRINTEDAT: 'Gedruk te'
     PRINTEDBY: 'Gedruk deur'
     PlaceHolder: 'Vind {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolderWithLabels: 'Vind {type} by {name}'
     RelationSearch: 'Soek vir verwantskap'
     ResetFilter: Herstel
   GridFieldAction_Delete:
@@ -264,7 +264,7 @@ af:
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
+    ADDURL: 'Voeg URL by'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anker
     BUTTONINSERT: 'Plaas in'
@@ -283,16 +283,16 @@ af:
     FOLDER: Dossier
     FROMCMS: 'Van die IBS'
     FROMCOMPUTER: 'Van you rekenaar'
-    FROMWEB: 'From the web'
+    FROMWEB: 'Van die web af'
     FindInFolder: 'Find in dossier'
-    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALT: 'Alternatiewe teks (alt) '
     IMAGEALTTEXT: 'Alternatiewe teks (alt) - word gewys as prentjie nie beskikbaar is nie'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXTDESC: 'Gewys vir skerm lesers of as die beeld nie vertoon kan word nie'
     IMAGEDIMENSIONS: Afmetings
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Titel teks (leidraad) - vir addisionele informasie oor die prentjie'
     IMAGETITLETEXT: 'Titel teks (leidraad)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGETITLETEXTDESC: 'Vir meer inligting oor die prentjie'
     IMAGEWIDTHPX: Wydte
     INSERTMEDIA: 'Voeg Media In'
     LINK: 'Sit skakel in'
@@ -319,17 +319,17 @@ af:
   Image_iframe.ss:
     TITLE: 'Iframe wat fotos laai'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    CANT_REORGANISE: 'Jy het nie toestemming om Top vlak bladsye te verander nie. Jou verandering is nie gestoor nie.'
     DELETED: 'Was verwyder'
     DropdownBatchActionsDefault: Aksies
     HELP: Help
     PAGETYPE: 'Bladsy tipe:'
     PERMAGAIN: 'Jy is uit die IBS uitgeteken. As jy weer wil inteken, moet jy ''n gebruikersnaam en wagwoord onder in tik'
     PERMALREADY: 'Ek is jammer, maar jy het nie toestemming om dié gedeelte van die IBS te besugtig nie. As jy as iemand anders wil inteken doen so hieronder'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PERMDEFAULT: 'Kies asseblief ''n kontroleer metode en sleutel jou sekuriteit''s besonderhede in'
     PLEASESAVE: 'Stoor asseblief die bladsy: Die bladsy kon nie opgedateer word nie omdat dit nog nie gestoor is nie'
     PreviewButton: Beskou
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    REORGANISATIONSUCCESSFUL: 'Die ''site tree'' is suksesvol geheorganiseer'
     SAVEDUP: Gestoor
     VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
@@ -362,7 +362,7 @@ af:
     ERRORWRONGCRED: 'Dit blyk nie of dit die regte e-pos adres of wagwoord is nie. Probeer asseblief weer.'
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Koppelvlak Taal'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    INVALIDNEWPASSWORD: 'Ons kon nie daai wagwoord aanvaar nie ({password})'
     LOGGEDINAS: 'Jy is ingeteken as {name}'
     NEWPASSWORD: 'Nuwe wagwoord'
     PASSWORD: Wagwoord
@@ -374,12 +374,12 @@ af:
     SURNAME: Van
     TIMEFORMAT: 'Tyd formaat'
     VALIDATIONMEMBEREXISTS: '''n Ander lid bestaan al klaar met dieselfde %s'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    ValidationIdentifierFailed: 'Kan nie bestaande lid #{id} met identiese identiteit ({name}={value})) oorskryf nie'
     WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'U ou wagwoord'
     belongs_many_many_Groups: Groepe
     db_LastVisited: 'Laaste datum besoek'
-    db_Locale: 'Interface Locale'
+    db_Locale: 'Plaaslike koppelvalk'
     db_LockedOutUntil: 'Utgesluit tot en met'
     db_NumVisit: 'Aantal besoeke'
     db_Password: Wagwoord
@@ -392,23 +392,23 @@ af:
     Custom: 'Maak pas'
     DATEFORMATBAD: 'Die datum formaat is ongeldig'
     DAYNOLEADING: 'Dag van die maand sonder ''n zero vooraan'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    DIGITSDECFRACTIONSECOND: 'Een of meer syfers wat ''n desimale fraksie van ''n sekonde aan dui'
     FOURDIGITYEAR: 'View syfer jaar'
     FULLNAMEMONTH: 'Volle naam van maand (bv Junie)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
+    HOURNOLEADING: 'Uur sonder die aanvangs nul'
+    MINUTENOLEADING: 'Minuut sonder die aanvangs nul'
+    MONTHNOLEADING: 'Maand syfers sonder aanvangs-zero'
     Preview: Voorskou
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    SHORTMONTH: 'Kort naam van die maan (bv Jun)'
     TOGGLEHELP: 'Skakel formateringshelp aan'
     TWODIGITDAY: 'Twee syfer dag van die maand'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITHOUR: 'Twee syfers van uur (00 tot 23)'
+    TWODIGITMINUTE: 'Two syfers van minute (00 tot 59)'
+    TWODIGITMONTH: 'Twee syfer maand (01=Januarie etc)'
+    TWODIGITSECOND: 'Twee syfers van sekondes (00 to 59)'
     TWODIGITYEAR: 'Twee syfer jaar'
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help1: '<p> Voer gebruikers in <em>CSV</em>formaat (komma geskeide waardes).<small> <a href="#" class="toggle-advanced">Wys gevorderde gebruike</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Het %d lede verwyder'
@@ -424,7 +424,7 @@ af:
     EMPTYBEFOREIMPORT: 'Maak databasis skoon voordat data ingevoer word'
     IMPORT: 'Voer in van CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOCSVFILE: 'Soek asseblief vir ''n CSV lêer om in the voer'
     NOIMPORT: 'Niks om in te voer nie'
     RESET: Herstel
     Title: 'Data modelle'
@@ -446,7 +446,7 @@ af:
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
   Pagination:
     Page: Bladsy
     View: Wys
@@ -458,9 +458,9 @@ af:
     PLURALNAME: Toestemmings
     SINGULARNAME: Toestemming
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    AssignedTo: 'toegeken aan "{title}"'
+    FromGroup: 'geërf van groep "{title}"'
+    FromRole: 'geërf van rol"{title}"'
     FromRoleOnGroup: 'oorgeërf van rol "%s" op groep "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Slegs administrateur daarvoor aansoek doen'

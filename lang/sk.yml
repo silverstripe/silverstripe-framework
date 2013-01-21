@@ -1,7 +1,7 @@
 sk:
   AssetAdmin:
     ALLOWEDEXTS: 'Povolené extenzie'
-    NEWFOLDER: 'Nový Adresár'
+    NEWFOLDER: 'Nový priečinok'
   AssetTableField:
     CREATED: 'Prvýkrát nahrané'
     DIM: Rozmery
@@ -240,26 +240,26 @@ sk:
     Saved: 'Uložené %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Pridať novú úlohu pre túto skupinu'
+    AddRole: 'Pridať úlohu pre túto skupinu'
     Code: 'Kód skupiny'
     DefaultGroupTitleAdministrators: Administratori
     DefaultGroupTitleContentAuthors: 'Autori obsahu'
     Description: Popis
     GroupReminder: 'Ak vyberiete nadriadenú skupinu, bude táto skupina mať všetky úlohy'
     Locked: 'Zamknuté?'
-    NoRoles: 'Nenašli sa žiadne úlohy'
+    NoRoles: 'Nenašli sa úlohy'
     PLURALNAME: Skupiny
     Parent: 'Nadradená skupina'
-    RolesAddEditLink: 'Pridať/upraviť úlohy'
+    RolesAddEditLink: 'Spravovať úlohy'
     SINGULARNAME: Skupina
-    Sort: 'Zoradiť podľa'
+    Sort: 'Poradie zoradenia'
     has_many_Permissions: Právomoci
-    many_many_Members: Uživatelia
+    many_many_Members: Členovia
   GroupImportForm:
     Help1: 'Importovať jednu alebo viac skupín v CSV formáte (čiarkov oddelené hodnoty). Zobraziť pokročilé použitie'
     Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použitie</h4>\\n<ul>\\n<li>Povolené stĺpce: <em>%s</em></li>\\n<li>Existujúce skupiny sú porovnávané ich unikátnou vlastnostou <em>Code</em>, a aktualizované s novými hodnotami z\\nimportovaného súboru.</li>\\n<li>Hierarchia skupín môže byť tvorená použitím stĺpce <em>ParentCode</em>.</li>\\n<li>Kódy oprávnení môžu byť priradené stĺpcom <em>PermissionCode</em>. Existujúce oprávnenia nie sú smazáné.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Vytvorených {count} skupín'
-    ResultDeleted: 'Vymazané %d skupiny'
+    ResultDeleted: 'Zmazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Nekonečná smyčka sa nachádza v {type} hierarchii. Prosím zmeňte rodiča pre vyriešenie tohto problému'
@@ -286,14 +286,14 @@ sk:
     FROMWEB: 'Z webu'
     FindInFolder: 'Vyhľadať v priečinku'
     IMAGEALT: 'Atlernatívny text (alt)'
-    IMAGEALTTEXT: 'Atlernatívni text (alt) - vypísaní pokiaľ nemože byť zobrazení obrázok'
+    IMAGEALTTEXT: 'Atlernatívny text (alt) - vypísaný pokiaľ nemože byť zobrazený obrázok'
     IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, keď obrázok nemôže byť zobrazený'
     IMAGEDIMENSIONS: Rozmery
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Text titulky (tooltip)'
     IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
-    IMAGEWIDTHPX: Šírka
+    IMAGEWIDTHPX: 'Šírka'
     INSERTMEDIA: 'Vložiť média'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
     LINKANCHOR: 'Odkaz na tejto stranke'
@@ -366,9 +366,9 @@ sk:
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
     NEWPASSWORD: 'Nové heslo'
     PASSWORD: Heslo
-    PLURALNAME: Uživatelia
+    PLURALNAME: Členovia
     REMEMBERME: 'Pamätať si ma nabudúce?'
-    SINGULARNAME: Uživatel
+    SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bolo zmenené'
     SUBJECTPASSWORDRESET: 'Odkaz na resetovanie hesla'
     SURNAME: Priezvisko
@@ -419,7 +419,7 @@ sk:
     SINGULARNAME: 'Heslo člena'
   MemberTableField: null
   ModelAdmin:
-    DELETE: Vymazať
+    DELETE: Zmazať
     DELETEDRECORDS: 'Zmazaných {count} záznamov.'
     EMPTYBEFOREIMPORT: 'Vyčistiť databázu pred importovaním'
     IMPORT: 'Importovať z CSV'
@@ -461,7 +461,7 @@ sk:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
     FromRole: 'zdedené z úlohy "{title}"'
-    FromRoleOnGroup: 'zdediť z úlohy "%s" v skupine "%s"'
+    FromRoleOnGroup: 'zdedené z úlohy "%s" v skupine "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Iba administrátor môže použiť'
     PLURALNAME: Úlohy
@@ -494,9 +494,9 @@ sk:
     PASSWORDSENTHEADER: 'Odkaz na resetovanie hesla bol odoslaný na ''{email}'''
     PASSWORDSENTTEXT: 'Ďakujeme! Resetovací odkaz bol odoslaný na ''''{email}'''', pokiaľ účet existuje pre túto emailovú adresu.'
   SecurityAdmin:
-    ACCESS_HELP: 'Povoliť prezeranie, pridávanie a úpravu uživaťeľov, ako aj pridelovanie právomoci pre nich.'
+    ACCESS_HELP: 'Povoliť prezeranie, pridávanie a editovanie uživaťeľov, ako aj pridelovanie ich právomoci.'
     APPLY_ROLES: 'Aplikovať úlohy skupinám'
-    APPLY_ROLES_HELP: 'Schopnosť upravovať úlohy pridelené skupine. Vyžaduje prístup do sekcie "Bezpečnosť".'
+    APPLY_ROLES_HELP: 'Schopnosť editovať úlohy pridelené k skupine. Vyžaduje "Prístup k ''Užívatelia'' sekcii".'
     EDITPERMISSIONS: 'Spravovať právomoci pre skupiny'
     EDITPERMISSIONS_HELP: 'Schopnosť upravovať právomoci a IP adresi pre skupinu. Vyžaduje prístup do sekcie "Bezpečnosť".'
     GROUPNAME: 'Názov skupiny'
@@ -504,11 +504,11 @@ sk:
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
     MENUTITLE: Bezpečnosť
-    MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstáni zo všetkých skupín a databázy.'
+    MemberListCaution: 'Upozornenie: Odstánenie členov z tohto zoznamu ich odstráni zo všetkých skupín a databázy.'
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Právomoci
     ROLES: Úlohy
-    ROLESDESCRIPTION: 'Táto sekcia umožnuje pridať úlohy skupine. Úlohy sú logické zoskupenia právomocí, ktoré môžu byť zmenené v záložke Úloh'
+    ROLESDESCRIPTION: 'Úlohy sú logické zoskupenia právomocí a môžu byť pridelené k skupinám.<br />Sú zdedené z nadradených skupín, ak je to požadované.'
     TABROLES: Úlohy
     Users: Bezpečnosť
   SecurityAdmin_MemberImportForm:
@@ -532,8 +532,8 @@ sk:
     SELECT: 'Vyberte:'
   TableListField.ss:
     NOITEMSFOUND: 'Žiadne položky'
-    SORTASC: 'Zoradiť vzostupne'
-    SORTDESC: 'Zoradiť zostupne'
+    SORTASC: 'Triedit v vzostupnom poradí'
+    SORTDESC: 'Triediť v zostupnom poradí'
   TableListField_PageControls.ss:
     DISPLAYING: Zobrazujem
     OF: z

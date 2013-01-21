@@ -1,5 +1,6 @@
 en:
   AssetAdmin:
+    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: NewFolder
   AssetTableField:
     CREATED: 'First uploaded'
@@ -197,7 +198,7 @@ en:
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '{name} is required'
+    FIELDISREQUIRED: '%s is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
@@ -236,9 +237,7 @@ en:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
-    Saved: 'Saved {name} {link}'
-  GridFieldEditButton.ss:
-    EDIT: Edit
+    Saved: 'Saved %s %s'
   GridFieldItemEditView.ss:
     'Go back': 'Go back'
   Group:
@@ -369,7 +368,6 @@ en:
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
     PLURALNAME: Members
-    PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'

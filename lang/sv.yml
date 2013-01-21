@@ -321,7 +321,7 @@ sv:
   LeftAndMain:
     CANT_REORGANISE: 'Du har inte tillstånd att ändra sidor på toppnivå. Dina ändringar har inte sparats.'
     DELETED: Raderad
-    DropdownBatchActionsDefault: Åtgärder
+    DropdownBatchActionsDefault: 'Åtgärder'
     HELP: Hjälp
     PAGETYPE: Sidtyp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
@@ -408,7 +408,7 @@ sv:
     TWODIGITSECOND: 'Två siffror för sekund (00 till 59)'
     TWODIGITYEAR: 'Två siffror för år'
   MemberImportForm:
-    Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small>a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
+    Help1: '<p>Importera användare i <em>CSV-format</em> (kommaseparerade värden). <small><a href="#" class="toggle-advanced">Visa avancerat</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Avancerat </h4>\\n<ul>\\n<li>Tillåtna kolumner: <em>%s</em></li>\\n<li>Existerade användare matchas av deras unika <em>kod</em>-attribut och uppdateras med alla nya värden från den importerade filen</li>\\n<li>Grupper kan anges i <em>Grupp</em>-kolumnen. Grupper identiferas av deras <em>Code</em>-attribut. Anges flera grupper separeras dessa med kommatecken. Existerande användarrättigheter till grupperna tas inte bort.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Skapade {count} medlemmar'
     ResultDeleted: 'Raderade %d medlemmar'

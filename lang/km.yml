@@ -246,10 +246,10 @@ km:
     DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Description
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    Locked: មិនអាចប្រើ
+    Locked: 'មិនអាចប្រើ'
     NoRoles: 'No roles found'
     PLURALNAME: Groups
-    Parent: ចំណាត់ក្រុមដើម
+    Parent: 'ចំណាត់ក្រុមដើម'
     RolesAddEditLink: 'Manage roles'
     SINGULARNAME: Group
     Sort: 'Sort Order'
@@ -377,13 +377,13 @@ km:
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: ចំណាត់ក្រុម
+    belongs_many_many_Groups: 'ចំណាត់ក្រុម'
     db_LastVisited: 'Last Visited Date'
     db_Locale: 'Interface Locale'
-    db_LockedOutUntil: ដោះចេញរហូតដល់
+    db_LockedOutUntil: 'ដោះចេញរហូតដល់'
     db_NumVisit: 'Number of Visits'
     db_Password: Password
-    db_PasswordExpiry: កាលបរិច្ឆេទផុតកំណត់ពាក្យសំងាត់
+    db_PasswordExpiry: 'កាលបរិច្ឆេទផុតកំណត់ពាក្យសំងាត់'
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Password'
   MemberDatetimeOptionsetField:

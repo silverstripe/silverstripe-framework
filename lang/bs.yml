@@ -293,7 +293,7 @@ bs:
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Širina
+    IMAGEWIDTHPX: 'Širina'
     INSERTMEDIA: 'Insert Media'
     LINK: Link
     LINKANCHOR: 'Sidro na ovoj stranici'
@@ -365,7 +365,7 @@ bs:
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'Nova šifra'
-    PASSWORD: Šifra
+    PASSWORD: 'Šifra'
     PLURALNAME: Members
     REMEMBERME: 'Zapamti me slijedeći put'
     SINGULARNAME: Member
@@ -527,7 +527,7 @@ bs:
     ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Izvezi u CSV'
-    PRINT: Štampaj
+    PRINT: 'Štampaj'
     Print: Print
     SELECT: 'Select:'
   TableListField.ss:
