@@ -591,35 +591,26 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$thumbnailURL = FRAMEWORK_DIR . '/images/default_media.png';
 		}
 		
-		$previewField = new LiteralField("ImageFull",
-			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnailURL}?r=" . rand(1,100000)
-			. "' alt='{$file->Name}' />\n"
-		);
-
-		if($file->Width != null){
-			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
-				$heightField = new TextField('Height', _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
-			);
-		}
-
-		
 		$fields = new FieldList(
 			$filePreview = CompositeField::create(
 				CompositeField::create(
-					$previewField
+					new LiteralField(
+						"ImageFull",
+						"<img id='thumbnailImage' class='thumbnail-preview' "
+							. "src='{$thumbnailURL}?r=" . rand(1,100000) . "' alt='{$file->Name}' />\n"
+					)
 				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
 				CompositeField::create(
 					CompositeField::create(
 						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->Type),
-						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
+						$urlField = ReadonlyField::create('ClickableURL', _t('AssetTableField.URL','URL'),
 							sprintf('<a href="%s" target="_blank" class="file">%s</a>', $url, $url)
-						)
+						)->addExtraClass('text-wrap')
 					)
 				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
 			)->setName("FilePreview")->addExtraClass('cms-file-info'),
 			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-			$alignment = new DropdownField(
+			DropdownField::create(
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
@@ -628,19 +619,26 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 				)
-			),
-			$dimensionsField
+			)->addExtraClass('last')
 		);
-		$urlField->addExtraClass('text-wrap');
-		$urlField->dontEscape = true;
-		if($dimensionsField){
-			$dimensionsField->addExtraClass('dimensions last');
-			$widthField->setMaxLength(5);
-			$heightField->setMaxLength(5);
-		}else{
-			$alignment->addExtraClass('last');
+		if($file->Width != null){
+			$fields->push(
+				FieldGroup::create(
+					_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+					TextField::create(
+						'Width', 
+						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
+						$file->Width
+					)->setMaxLength(5),
+					TextField::create(
+						'Height', 
+						_t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 
+						$file->Height
+					)->setMaxLength(5)
+				)->addExtraClass('dimensions last')
+			);
 		}
-
+		$urlField->dontEscape = true;
 
 		if($file->Type == 'photo') {
 			$filePreview->FieldList()->insertBefore(new TextField(
@@ -665,15 +663,20 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	protected function getFieldsForFlash($url, $file) {
 		$fields = new FieldList(
-			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
-				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-					$file->Height)
-			)
+			FieldGroup::create(
+				_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+				TextField::create(
+					'Width', 
+					_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
+					$file->Width
+				)->setMaxLength(5),
+				TextField::create(
+					'Height', 
+					" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
+					$file->Height
+				)->setMaxLength(5)
+			)->addExtraClass('dimensions')
 		);
-		$dimensionsField->addExtraClass('dimensions');
-		$widthField->setMaxLength(5);
-		$heightField->setMaxLength(5);
 
 		$this->extend('updateFieldsForFlash', $fields, $url, $file);
 
@@ -691,23 +694,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$thumbnailURL = $url;
 		}
 		
-		$previewField = new LiteralField("ImageFull",
-			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnailURL}?r=" . rand(1,100000)
-			. "' alt='{$file->Name}' />\n"
-		);
-
-		if($file->Width != null){
-			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
-				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-					$file->Height)
-			);
-		}
-
 		$fields = new FieldList(
-			$filePreview = CompositeField::create(
+			CompositeField::create(
 				CompositeField::create(
-					$previewField
+					LiteralField::create(
+						"ImageFull",
+						"<img id='thumbnailImage' class='thumbnail-preview' " 
+							. "src='{$thumbnailURL}?r=" . rand(1,100000) . "' alt='{$file->Name}' />\n"
+					)
 				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
 				CompositeField::create(
 					CompositeField::create(
@@ -740,7 +734,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				_t('HtmlEditorField.IMAGETITLETEXTDESC', 'For additional information about the image')),
 
 			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-			$alignment = new DropdownField(
+			DropdownField::create(
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
@@ -749,18 +743,25 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 				)
-			),
-			$dimensionsField			
+			)->addExtraClass('last')
 		);
-		$urlField->dontEscape = true;
-		if($dimensionsField){
-			$dimensionsField->addExtraClass('dimensions last');			
-			$widthField->setMaxLength(5);
-			$heightField->setMaxLength(5);
-		}else{
-			$alignment->addExtraClass('last');
+		if($file->Width != null){
+			$fields->push(
+				FieldGroup::create(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+					TextField::create(
+						'Width', 
+						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
+						$file->Width
+					)->setMaxLength(5),
+					TextField::create(
+						'Height', 
+						" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
+						$file->Height
+					)->setMaxLength(5)
+				)->addExtraClass('dimensions last')
+			);
 		}
-		
+		$urlField->dontEscape = true;
 
 		$this->extend('updateFieldsForImage', $fields, $url, $file);
 
