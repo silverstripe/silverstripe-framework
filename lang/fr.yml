@@ -181,9 +181,9 @@ fr:
     DELETE: 'Supprimer {type}'
     DISALLOWEDFILETYPE: 'Ce type de fichier n’est pas autorisé'
     FILE: Fichier
-    FROMCOMPUTER: 'À partir de votre ordinateur'
-    FROMFILESTORE: 'Depuis le magasin de fichier'
-    NOSOURCE: 'Choisir un fichier à attacher'
+    FROMCOMPUTER: 'Depuis votre ordinateur'
+    FROMFILESTORE: 'Depuis les archives'
+    NOSOURCE: 'Choisir un fichier à joindre'
     REPLACE: 'Remplacer {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Iframe de chargement d’images'
@@ -327,7 +327,7 @@ fr:
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
     PERMALREADY: 'Désolé, mais vous ne pouvez pas accéder à cette partie du CMS. Si vous voulez changer d''identité, faites le ci-dessous'
     PERMDEFAULT: 'Saisissez votre adresse de courriel et votre mot de passe pour accéder au CMS.'
-    PLEASESAVE: 'Enregistez la page s''il vous plaît : Cette page ne pouvait pas être actualisée, car elle n''a pas encore été enregistrée.'
+    PLEASESAVE: 'Enregistrez la page s’il vous plaît&nbsp;: elle ne pouvait pas être mise à jour car elle n’avait pas encore été sauvegardée.'
     PreviewButton: Aperçu
     REORGANISATIONSUCCESSFUL: 'L’arbre du site a été bien réorganisé.'
     SAVEDUP: Enregistré.
@@ -454,14 +454,14 @@ fr:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'Accès au CMS'
     FULLADMINRIGHTS: 'Droits d''administration complets'
-    FULLADMINRIGHTS_HELP: 'Implique et écrase toute les autres permissions assignées.'
+    FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
     PLURALNAME: Autorisations
     SINGULARNAME: Autorisation
   PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
     FromGroup: 'hérité du groupe « {title} »'
     FromRole: 'héritée du rôle « {title} »'
-    FromRoleOnGroup: 'hérité du rôle "%s" du groupe "%s"'
+    FromRoleOnGroup: 'hérité du rôle « %s » du groupe « %s »'
   PermissionRole:
     OnlyAdminCanApply: 'Limité aux administrateurs'
     PLURALNAME: Rôles
@@ -529,7 +529,7 @@ fr:
     CSVEXPORT: 'Exporter vers un fichier CSV'
     PRINT: Imprimer
     Print: Imprimer
-    SELECT: 'Sélectionner:'
+    SELECT: 'Sélectionner&nbsp;:'
   TableListField.ss:
     NOITEMSFOUND: 'Aucun élément n’a été trouvé'
     SORTASC: 'Classer en ordre croissant'
@@ -537,7 +537,7 @@ fr:
   TableListField_PageControls.ss:
     DISPLAYING: 'Affichage de'
     OF: de
-    TO: à
+    TO: 'à'
     VIEWFIRST: 'Voir premier'
     VIEWLAST: 'Voir dernier'
     VIEWNEXT: 'Voir suivant'

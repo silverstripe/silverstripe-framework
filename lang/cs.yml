@@ -250,7 +250,7 @@ cs:
     NoRoles: 'Žádné role'
     PLURALNAME: Skupiny
     Parent: 'Rodičovská skupina'
-    RolesAddEditLink: 'Přidat/editovat role'
+    RolesAddEditLink: 'Spravovat role'
     SINGULARNAME: Skupina
     Sort: Řazení
     has_many_Permissions: Oprávnění
@@ -293,7 +293,7 @@ cs:
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
     IMAGETITLETEXT: 'Titulek textu (tooltip)'
     IMAGETITLETEXTDESC: 'Pro další informace o obrázku'
-    IMAGEWIDTHPX: Šířka
+    IMAGEWIDTHPX: 'Šířka'
     INSERTMEDIA: 'Vložit média'
     LINK: 'Vložit nebo upravit odkaz'
     LINKANCHOR: 'Záložka (kotva) na stránce'
@@ -494,9 +494,9 @@ cs:
     PASSWORDSENTHEADER: 'Odkaz na resetování hesla byl odeslán na ''{email}'''
     PASSWORDSENTTEXT: 'Děkujeme! Resetovací odkaz byl odeslán na ''{email}'', pokud účet existuje pro tuto emailovou adresu.'
   SecurityAdmin:
-    ACCESS_HELP: 'Povolit prohlížení, přidávání a úpravu uživatelů, jako i přidělování oprávnění pro ně.'
+    ACCESS_HELP: 'Povolit prohlížení, přidávání a editování uživatelů, jako i jejich přidělování oprávnění.'
     APPLY_ROLES: 'Použít role na skupiny'
-    APPLY_ROLES_HELP: 'Možnost editovat role přiřazené ke skupině. Vyžaduje oprávnění  pro "Přístup do sekce ''Bezpečnost''".'
+    APPLY_ROLES_HELP: 'Možnost editovat role přiřazené ke skupině. Vyžaduje "Přístup do sekce ''Uživatelé''" oprávnění.'
     EDITPERMISSIONS: 'Upravit oprávnění pro skupiny'
     EDITPERMISSIONS_HELP: 'Možnost editovat oprávnění a IP adresy pro skupinu. Vyžaduje oprávnění  pro "Přístup do sekce ''Bezpečnost''".'
     GROUPNAME: 'Jméno skupiny'
@@ -508,7 +508,7 @@ cs:
     NEWGROUP: 'Nová skupina'
     PERMISSIONS: Práva
     ROLES: Role
-    ROLESDESCRIPTION: 'Tato sekce umožňuje přidat role této skupině. Role jsou logické seskupení oprávnění, které mohou být změněné v záložce Role'
+    ROLESDESCRIPTION: 'Role jsou předdefinované seskupení oprávnění, které mohou být přidělené k skupinám. Jsou dědené z nadřazených skupin, když je požadováno.'
     TABROLES: Role
     Users: Uživatelé
   SecurityAdmin_MemberImportForm:

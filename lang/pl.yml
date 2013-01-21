@@ -35,7 +35,7 @@ pl:
     CODE: 'Blok kodu'
     CODEDESCRIPTION: 'Nieformatowany blok kodu'
     CODEEXAMPLE: 'Blok kodu'
-    COLORED: 'Kolorowy tekst'
+    COLORED: 'Kolorowany tekst'
     COLOREDEXAMPLE: 'niebieski tekst'
     EMAILLINK: 'Link e-mail'
     EMAILLINKDESCRIPTION: 'Stwórz link do adresu e-mail'
@@ -115,8 +115,8 @@ pl:
     HOURS: godziny
     MIN: min
     MINS: minuty
-    MONTH: miesiąc
-    MONTHS: miesiące
+    MONTH: 'miesiąc'
+    MONTHS: 'miesiące'
     SEC: sekunda
     SECS: sekundy
     TIMEDIFFAGO: '{difference} temu'
@@ -328,7 +328,7 @@ pl:
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
     PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
-    PreviewButton: Podgląd
+    PreviewButton: 'Podgląd'
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
@@ -355,18 +355,18 @@ pl:
     DefaultDateTime: domyślny
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nowe hasło nie może być puste, spróbuj ponownie.'
-    ENTEREMAIL: 'Wpisz adres e-mail aby otrzymać instrukcje dotyczące odzyskiwania hasła.'
+    ENTEREMAIL: 'Wpisz adres e-mail aby otrzymać link do zmiany hasła.'
     ERRORLOCKEDOUT: 'Twoje konto zostało tymczasowo zablokowane z powodu zbyt wielu błędnych prób logowania. Spróbuj ponownie w ciągu 20 minut.'
     ERRORNEWPASSWORD: 'Wprowadziłeś niepoprawnie nowe hasło, spróbuj ponownie'
     ERRORPASSWORDNOTMATCH: 'Twoje hasło nie zgadza się, spróbuj ponownie'
-    ERRORWRONGCRED: 'E-mail lub hasło są nieprawidłowe, Spróbuj ponownie'
+    ERRORWRONGCRED: 'E-mail lub hasło są nieprawidłowe. Spróbuj ponownie.'
     FIRSTNAME: Imię
     INTERFACELANG: 'Język interfejsu'
     INVALIDNEWPASSWORD: 'Nie możesz użyć takiego hasła: {password}'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
     PASSWORD: Hasło
-    PLURALNAME: Członkowie
+    PLURALNAME: Użytkownicy
     REMEMBERME: 'Zapamiętaj mnie?'
     SINGULARNAME: Członek
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
@@ -378,10 +378,10 @@ pl:
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'
     belongs_many_many_Groups: Grupy
-    db_LastVisited: 'Data Ostatniej Wizyty'
+    db_LastVisited: 'Data ostatniej wizyty'
     db_Locale: 'Język Interfejsu'
     db_LockedOutUntil: 'Zablokowany do'
-    db_NumVisit: 'Ilość Odwiedzin'
+    db_NumVisit: 'Ilość odwiedzin'
     db_Password: Hasło
     db_PasswordExpiry: 'Data wygaśnięcia hasła'
   MemberAuthenticator:
@@ -398,7 +398,7 @@ pl:
     HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
-    Preview: Podgląd
+    Preview: 'Podgląd'
     SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
     TOGGLEHELP: 'Przełącz pomoc formatowania'
     TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
@@ -471,7 +471,7 @@ pl:
     PLURALNAME: 'Kod roli uprawnień'
     SINGULARNAME: 'Kod roli uprawnienia'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
+    PERMISSIONS_CATEGORY: 'Role i uprawnienia dostępu'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Wprowadź poprawny numer telefonu'

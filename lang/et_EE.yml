@@ -15,7 +15,7 @@ et_EE:
     URL: Aadress
   AssetUploadField:
     ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
+    DRAGFILESHERE: 'Lohista failid siia'
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
@@ -190,7 +190,7 @@ et_EE:
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
-    PLURALNAME: Folders
+    PLURALNAME: Kataloogid
     SINGULARNAME: Folder
   ForgotPasswordEmail.ss:
     HELLO: Tere
@@ -221,7 +221,7 @@ et_EE:
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
+    NoItemsFound: 'Ei leitud ühtegi kannet'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
     PlaceHolder: 'Find {type}'
@@ -231,7 +231,7 @@ et_EE:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Katkesta
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
@@ -442,13 +442,13 @@ et_EE:
     SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
+    FIELDLABELCURRENCY: Valuuta
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Pagination:
-    Page: Page
+    Page: Lehekülg
     View: View
   Permission:
     AdminGroup: Administrator

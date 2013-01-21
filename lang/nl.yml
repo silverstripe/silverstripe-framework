@@ -6,7 +6,7 @@ nl:
     CREATED: 'Eerste upload'
     DIM: Dimensies
     FILENAME: Bestandsnaam
-    FOLDER: Folder
+    FOLDER: Map
     LASTEDIT: 'Laatste wijziging'
     OWNER: Eigenaar
     SIZE: Grootte
@@ -16,12 +16,12 @@ nl:
   AssetUploadField:
     ChooseFiles: 'Selecteer bestanden'
     DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
-    DROPAREA: 'Drop Area'
+    DROPAREA: 'Hierheen slepen'
     EDITALL: 'Alle bewerken'
     EDITANDORGANIZE: 'Bewerk en beheer'
     EDITINFO: 'Edit files'
     FILES: Bestanden
-    FROMCOMPUTER: 'Choose files from your computer'
+    FROMCOMPUTER: 'Selecteer bestand op computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
     TOTAL: Totaal
     TOUPLOAD: 'Choose files to upload...'
@@ -71,7 +71,7 @@ nl:
     ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
     SAVE: Bewaar
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'Mijn Profiel'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
     CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
@@ -84,19 +84,19 @@ nl:
   ComplexTableField:
     CLOSEPOPUP: 'Sluit Popup'
     SUCCESSADD2: 'Toegevoegd {name}'
-    SUCCESSEDIT: '%s %s %s Opgeslagen'
+    SUCCESSEDIT: '%s %s %s opgeslagen'
   ComplexTableField.ss:
     ADDITEM: 'Voeg %s toe'
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Geen items gevonden.'
     SORTASC: 'Sorteer oplopend'
     SORTDESC: 'Sorteer aflopend'
   ComplexTableField_popup.ss:
     NEXT: Volgende
     PREVIOUS: Vorige
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    ATLEAST: 'Een wachtwoord moet tenminste {min} karakters hebben.'
+    BETWEEN: 'Een wachtwoord moet tussen de {min} en {max} karakters hebben'
+    MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
   CreditCardField:
     FIRST: eerste
@@ -143,37 +143,37 @@ nl:
   Enum:
     ANY: Elke
   File:
-    AviType: 'AVI video file'
+    AviType: 'AVI video bestand'
     Content: Inhoud
     CssType: 'CSS file'
     DmgType: 'Apple disk image'
     DocType: 'Word document'
     Filename: 'Bestandsnaam '
-    GifType: 'GIF image - good for diagrams'
+    GifType: 'GIF afbeelding - voor diagrammen'
     GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
+    HtlType: 'HTML bestand'
+    HtmlType: 'HTML bestand'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
+    IcoType: 'Icoon bestand'
+    JpgType: 'JPG afbeelding - voor foto'
+    JsType: 'Javascript bestand'
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Bestandsgrootte is nul bytes.'
     NOVALIDUPLOAD: 'Geen geldig bestand'
     Name: Naam
     PLURALNAME: Bestanden
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
+    PdfType: 'Adobe Acrobat PDF bestand'
+    PngType: 'PNG adbeelding - voor allerlei afbeeldingen'
     SINGULARNAME: Bestand
     TOOLARGE: 'Filesize is too large, maximum {size} allowed'
     TOOLARGESHORT: 'Filesize exceeds {size}'
     TiffType: 'Tagged image format'
     Title: 'Titel '
     WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
+    XlsType: 'Excel document'
+    ZipType: 'ZIP bestand'
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
@@ -219,7 +219,7 @@ nl:
     FilterBy: Filteren
     Find: Zoek
     LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
+    LinkExisting: 'Verwijs naar'
     NewRecord: 'Nieuw %s'
     NoItemsFound: 'Geen items gevonden.'
     PRINTEDAT: 'Geprint om'
@@ -231,11 +231,11 @@ nl:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
   GridFieldDetailForm:
-    CancelBtn: Cancel
+    CancelBtn: Annuleren
     Create: Create
     Delete: Verwijder
     DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    Deleted: '%s %s verwijderd'
     Save: Opslaan
     Saved: '%s %s %s Opgeslagen'
   GridFieldItemEditView.ss: null
@@ -258,7 +258,7 @@ nl:
   GroupImportForm:
     Help1: '<p>Importeer en of meerdere groepen in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
+    ResultCreated: '{count} groepen aangemaakt'
     ResultDeleted: '%d groepen verwijderd'
     ResultUpdated: '%d groepen aangepast'
   Hierarchy:
@@ -347,7 +347,7 @@ nl:
     BUTTONLOGIN: Inloggen
     BUTTONLOGINOTHER: 'Als iemand anders inloggen'
     BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten...'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Je hebt geen rechten hiervoor'
     CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
     CONFIRMPASSWORD: 'Bevestig wachtwoord'
     DATEFORMAT: 'Date format'
@@ -362,8 +362,8 @@ nl:
     ERRORWRONGCRED: 'Dat is niet het juiste email adres of wachtwoord. Probeert U het a.u.b. opnieuw.'
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface Taal'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Dit is geen goed wachtwoord: {password}'
+    LOGGEDINAS: 'Je bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw Wachtwoord'
     PASSWORD: Wachtwoord
     PLURALNAME: Leden
@@ -375,7 +375,7 @@ nl:
     TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Er bestaat reeds een gebruiker met dit emailadres'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Welkom terug {firstname}'
     YOUROLDPASSWORD: 'Uw oude wachtwoord'
     belongs_many_many_Groups: Groepen
     db_LastVisited: 'Datum van het laatste bezoek'
@@ -397,13 +397,13 @@ nl:
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
+    MONTHNOLEADING: 'Dag van de maand zonder voorloop-nul'
     Preview: Voorbeeld
     SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
+    TOGGLEHELP: 'Hulp weergeven / verbergen'
+    TWODIGITDAY: 'Dag van de maand (met voorloop-nul)'
     TWODIGITHOUR: 'Twee cijfer van het uur (00 tot 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMINUTE: 'Minuten met voorloop-nul (00 tot 59)'
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
     TWODIGITYEAR: 'Twee-cijferig jaar'
@@ -421,12 +421,12 @@ nl:
   ModelAdmin:
     DELETE: Verwijderen
     DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Database legen voor importeren'
     IMPORT: 'Importeren vanuit CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Selecteer een CSV bestand op uw computer om te importeren'
     NOIMPORT: 'Niks om te importeren'
-    RESET: Reset
+    RESET: Herstel
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   ModelAdmin_ImportSpec.ss:
@@ -478,7 +478,7 @@ nl:
   RelationComplexTableField.ss:
     ADD: Toevoegen
     CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
+    NOTFOUND: 'Geen items gevonden.'
   Security:
     ALREADYLOGGEDIN: 'Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier <a href="%s">opnieuw inloggen</a>.'
     BUTTONSEND: 'Zend mij de link om mijn wachtwoord opnieuw aan te maken'
@@ -531,7 +531,7 @@ nl:
     Print: Afdrukken
     SELECT: 'Selecteer:'
   TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    NOITEMSFOUND: 'Geen items gevonden.'
     SORTASC: 'Sorteer in oplopende volgorde'
     SORTDESC: 'Sorteer in aflopende volgorde'
   TableListField_PageControls.ss:
@@ -564,9 +564,9 @@ nl:
     FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Bestaande bestanden'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILES: 'Maximale aantal van {count} bestand(en) overschreden.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    REMOVE: Verwijder
     REMOVEERROR: 'Fout bij verwijderen'
     REMOVEINFO: 'Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website.'
     STARTALL: 'Start alles'

@@ -92,7 +92,7 @@ sr:
     SORTDESC: 'Сортирају у опадајућем поретку'
   ComplexTableField_popup.ss:
     NEXT: Следеће
-    PREVIOUS: Претходно
+    PREVIOUS: 'Претходно'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
