@@ -59,9 +59,9 @@ es_MX:
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   Boolean:
-    0: No
+    0: Falso
     ANY: Cualquiera
-    1: Sí
+    1: Verdadero
   CMSLoadingScreen.ss:
     LOADING: Cargando...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -79,8 +79,8 @@ es_MX:
     HELLO: Hey
     PASSWORD: Contraseña
   CheckboxField:
-    - No
-    - Sí
+    - Falso
+    - Verdadero
   ComplexTableField:
     CLOSEPOPUP: 'Cerrar Mensaje Emergente'
     SUCCESSADD2: 'Added {name}'
@@ -148,7 +148,7 @@ es_MX:
     CssType: 'CSS file'
     DmgType: 'Apple disk image'
     DocType: 'Word document'
-    Filename: 'Nombre de Archivo'
+    Filename: 'Nombre del archivo'
     GifType: 'GIF image - good for diagrams'
     GzType: 'GZIP compressed file'
     HtlType: 'HTML file'
@@ -160,8 +160,8 @@ es_MX:
     JsType: 'Javascript file'
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
-    NOFILESIZE: 'El tamaño del archivo es de cero bytes.'
-    NOVALIDUPLOAD: 'El archivo no es válido para subirlo'
+    NOFILESIZE: 'El tamaño del archivo es 0 bits'
+    NOVALIDUPLOAD: 'No es un archivo válido'
     Name: Nombre
     PLURALNAME: Archivos
     PdfType: 'Adobe Acrobat PDF file'
@@ -208,7 +208,7 @@ es_MX:
     VALIDATOR: Verificador
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE: ninguno
+    NONE: Ninguno
   GridAction:
     DELETE_DESCRIPTION: Delete
     Delete: Eliminar

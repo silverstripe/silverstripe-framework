@@ -99,7 +99,7 @@ si:
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'මුර පදය වෙනස් කිරීම'
   CreditCardField:
-    FIRST: පළමු
+    FIRST: 'පළමු'
     FOURTH: fourth
     SECOND: දෙවන
     THIRD: third
@@ -121,8 +121,8 @@ si:
     SECS: 'තත්පර '
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: අවුරුද්ද
-    YEARS: අවුරුදු
+    YEAR: 'අවුරුද්ද'
+    YEARS: 'අවුරුදු'
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -253,7 +253,7 @@ si:
     RolesAddEditLink: 'Manage roles'
     SINGULARNAME: Group
     Sort: 'Sort Order'
-    has_many_Permissions: අවසර
+    has_many_Permissions: 'අවසර'
     many_many_Members: සාමාජිකයින්
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -545,7 +545,7 @@ si:
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: අඩු
+    LESS: 'අඩු'
     MORE: වැඩි
   UploadField:
     ATTACHFILE: 'Attach a file'

@@ -497,7 +497,7 @@ tr:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Rolleri grup için uygula'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Herbir gruptaki izinleri ve IP adreslerini düzenle'
+    EDITPERMISSIONS: 'Gruplardaki izinleri düzenle'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Grup adı'
     IMPORTGROUPS: 'Grupları içeri aktar'

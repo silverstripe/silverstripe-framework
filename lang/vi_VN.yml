@@ -109,8 +109,8 @@ vi_VN:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: ngày
-    DAYS: ngày
+    DAY: 'ngày'
+    DAYS: 'ngày'
     HOUR: giờ
     HOURS: giờ
     MIN: phút

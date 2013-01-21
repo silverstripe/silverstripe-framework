@@ -249,7 +249,7 @@ nb:
     Locked: 'Låst?'
     NoRoles: 'Ingen roller funnet'
     PLURALNAME: Grupper
-    Parent: 'Foreldre Gruppe'
+    Parent: 'Overordnet gruppe'
     RolesAddEditLink: 'Administrer roller'
     SINGULARNAME: Gruppe
     Sort: Sorteringsrekkefølge
