@@ -398,7 +398,7 @@ et_EE:
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
     MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
+    Preview: Eelvaade
     SHORTMONTH: 'Short name of month (e.g. Jun)'
     TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Two-digit day of month'
@@ -455,8 +455,8 @@ et_EE:
     CMS_ACCESS_CATEGORY: CMS-juurdepääs
     FULLADMINRIGHTS: 'Täis administraatori õigused'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
+    PLURALNAME: Õigused
+    SINGULARNAME: Õigus
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'

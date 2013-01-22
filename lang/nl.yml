@@ -237,7 +237,7 @@ nl:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: '%s %s verwijderd'
     Save: Opslaan
-    Saved: '%s %s %s Opgeslagen'
+    Saved: '%s %s opgeslagen'
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Voeg een rol toe aan deze groep'
@@ -503,7 +503,7 @@ nl:
     IMPORTGROUPS: Groepen
     IMPORTUSERS: 'Importeer gebruikers'
     MEMBERS: Leden
-    MENUTITLE: Security
+    MENUTITLE: Beveiliging
     MemberListCaution: 'Let op: Verwijderen van leden van deze lijst heeft als gevolg dat deze uit alle groepen en de database worden verwijderd'
     NEWGROUP: 'Nieuwe Groep'
     PERMISSIONS: Rechten
