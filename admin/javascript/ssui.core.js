@@ -1,17 +1,114 @@
 (function($) {
 
 	/**
-	 * Allows icon definition via HTML5 data attrs for easier handling in PHP
+	 * Allows icon definition via HTML5 data attrs for easier handling in PHP.
+	 *
+	 * Adds an alternative appearance so we can toggle back and forth between them
+	 * and register event handlers to add custom styling and behaviour. Example use
+	 * is in the CMS with the saving buttons - depending on the page's state one of
+	 * them will either say "Save draft" or "Saved", and will have different colour.
 	 */
 	$.widget('ssui.button', $.ui.button, {
+		options: {
+			alternate: {
+				icon: null,
+				text: null
+			},
+			showingAlternate: false
+		},
+
+		/**
+		 * Switch between the alternate appearances.
+		 */
+		toggleAlternate: function() {
+			if (this._trigger('ontogglealternate')===false) return;
+
+			// Only switch to alternate if it has been enabled through options. 
+			if (!this.options.alternate.icon && !this.options.alternate.text) return;
+
+			this.options.showingAlternate = !this.options.showingAlternate;
+			this.refresh();
+		},
+
+		/**
+		 * Adjust the appearance to fit with the current settings.
+		 */
+		_refreshAlternate: function() {
+			this._trigger('beforerefreshalternate');
+
+			// Only switch to alternate if it has been enabled through options. 
+			if (!this.options.alternate.icon && !this.options.alternate.text) return;
+
+			if (this.options.showingAlternate) {
+				this.element.find('.ui-button-icon-primary').hide();
+				this.element.find('.ui-button-text').hide();
+				this.element.find('.ui-button-icon-alternate').show();
+				this.element.find('.ui-button-text-alternate').show();
+			}
+			else {
+				this.element.find('.ui-button-icon-primary').show();
+				this.element.find('.ui-button-text').show();
+				this.element.find('.ui-button-icon-alternate').hide();
+				this.element.find('.ui-button-text-alternate').hide();
+			}
+
+			this._trigger('afterrefreshalternate');
+		},
+
+		/**
+		 * Construct button - pulls in options from data attributes.
+		 * Injects new elements for alternate appearance (if requested via options).
+		 */
 		_resetButton: function() {
-			var iconPrimary = this.element.data('iconPrimary') ? this.element.data('iconPrimary') : this.element.data('icon'),
-				iconSecondary = this.element.data('iconSecondary');
+			var iconPrimary = this.element.data('icon-primary'),
+				iconSecondary = this.element.data('icon-secondary');
+
+			if (!iconPrimary) iconPrimary = this.element.data('icon');
+
 			// TODO Move prefix out of this method, without requriing it for every icon definition in a data attr
 			if(iconPrimary) this.options.icons.primary = 'btn-icon-' + iconPrimary;
 			if(iconSecondary) this.options.icons.secondary = 'btn-icon-' + iconSecondary;
 
 			$.ui.button.prototype._resetButton.call(this);
+
+			// Pull options from data attributes. Overriden by explicit options given on widget creation.
+			if (!this.options.alternate.text) {
+				this.options.alternate.text = this.element.data('text-alternate');
+			}
+			if (!this.options.alternate.icon) {
+				this.options.alternate.icon = this.element.data('icon-alternate');
+			}
+			if (!this.options.showingAlternate) {
+				this.options.showingAlternate = this.element.hasClass('ss-ui-alternate');
+			}
+
+			// Create missing elements.
+			if (this.options.alternate.icon) {
+				this.buttonElement.append(
+					"<span class='ui-button-icon-alternate ui-button-icon-primary ui-icon btn-icon-" 
+					+ this.options.alternate.icon + "'></span>"
+				);
+			}
+			if (this.options.alternate.text) {
+				this.buttonElement.append(
+					"<span class='ui-button-text-alternate ui-button-text'>" + this.options.alternate.text + "</span>"
+				);
+			}
+
+			this._refreshAlternate();
+		},
+
+		refresh: function() {
+			$.ui.button.prototype.refresh.call(this);
+
+			this._refreshAlternate();
+		},
+
+		destroy: function() {
+			this.element.find('.ui-button-text-alternate').remove();
+			this.element.find('.ui-button-icon-alternate').remove();
+
+			$.ui.button.prototype.destroy.call( this );
 		}
 	});
 

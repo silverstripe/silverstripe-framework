@@ -79,8 +79,6 @@
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
 				
 				this.width(newWidth); // the content panel width always stays in "expanded state" to avoid floating elements
-				this.find('.toggle-collapse')[bool ? 'show' : 'hide']();
-				this.find('.toggle-expand')[bool ? 'hide' : 'show']();
 				
 				// If an alternative collapsed view exists, toggle it as well
 				var collapsedContent = this.find('.cms-panel-content-collapsed');

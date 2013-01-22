@@ -77,4 +77,12 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 * @return array
 	 */
 	public function column($colName = "ID");
+	
+	/**
+	 * Walks the list using the specified callback
+	 *
+	 * @param callable $callback
+	 * @return mixed
+	 */
+	public function each($callback);
 }

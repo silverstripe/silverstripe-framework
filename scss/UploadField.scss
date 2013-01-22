@@ -43,10 +43,11 @@
 			float: left;
 			overflow: hidden;
 			&.ss-uploadfield-dropzone {
-				@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
+				@include box-shadow($color-medium-separator 0 0 4px 0 inset);
 				border: 2px dashed $color-medium-separator;
 				background: $color-light-separator;
 				display: none;
+				margin-right: 15px;
 			}
 		}
 		.ss-uploadfield-item-info {

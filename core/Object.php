@@ -164,12 +164,19 @@ abstract class Object {
 		// Keep track of the current bucket that we're putting data into
 		$bucket = &$args;
 		$bucketStack = array();
+		$had_ns = false;
 		
 		foreach($tokens as $token) {
 			$tName = is_array($token) ? $token[0] : $token;
 			// Get the class naem
 			if($class == null && is_array($token) && $token[0] == T_STRING) {
 				$class = $token[1];
+			} elseif(is_array($token) && $token[0] == T_NS_SEPARATOR) {
+				$class .= $token[1];
+				$had_ns = true;
+			} elseif ($had_ns && is_array($token) && $token[0] == T_STRING) {
+				$class .= $token[1];
+				$had_ns = false;
 			// Get arguments
 			} else if(is_array($token)) {
 				switch($token[0]) {
@@ -422,10 +429,17 @@ abstract class Object {
 	/**
 	 * Return TRUE if a class has a specified extension
 	 *
-	 * @param string $class
 	 * @param string $requiredExtension the class name of the extension to check for.
 	 */
-	public static function has_extension($class, $requiredExtension) {
+	public static function has_extension($requiredExtension) {
+		$class = get_called_class();
+
+		if(func_num_args() > 1) {
+			Deprecation::notice('3.1.0', "Object::has_extension() deprecated. Call has_extension() on the class");
+			$class = func_get_arg(0);
+			$extension = func_get_arg(1);
+		}
+
 		$requiredExtension = strtolower($requiredExtension);
 		$extensions = Config::inst()->get($class, 'extensions');
 
@@ -450,7 +464,15 @@ abstract class Object {
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
-	public static function add_extension($class, $extension) {
+	public static function add_extension($extension) {
+		$class = get_called_class();
+
+		if(func_num_args() > 1) {
+			Deprecation::notice('3.1.0', "Object::add_extension() deprecated. Call add_extension() on the class");
+			$class = func_get_arg(0);
+			$extension = func_get_arg(1);
+		}
+
 		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
 		}
@@ -500,10 +522,17 @@ abstract class Object {
 	 * 
 	 * @todo Add support for removing extensions with parameters
 	 *
-	 * @param string $class
 	 * @param string $extension Classname of an {@link Extension} subclass, without parameters
 	 */
-	public static function remove_extension($class, $extension) {
+	public static function remove_extension($extension) {
+		$class = get_called_class();
+
+		if(func_num_args() > 1) {
+			Deprecation::notice('3.1.0', "Object::remove_extension() deprecated. Call remove_extension() on the class");
+			$class = func_get_arg(0);
+			$extension = func_get_arg(1);
+		}
+
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
 
 		// unset singletons to avoid side-effects
@@ -825,14 +854,7 @@ abstract class Object {
 	public function uninherited($name) {
 		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::UNINHERITED);
 	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function set_uninherited() {
-		Deprecation::notice('2.4', 'Use a custom static on your object instead.');
-	}
-	
+
 	// --------------------------------------------------------------------------------------------------------------
 	
 	/**

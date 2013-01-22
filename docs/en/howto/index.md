@@ -12,6 +12,7 @@ the language and functions which are used in the guides.
 * [PHPUnit Configuration](phpunit-configuration). How to setup your testing environment with PHPUnit
 * [Extend the CMS Interface](extend-cms-interface). 
 * [How to customize CMS Tree](customize-cms-tree).
+* [How to Show Help Text on CMS Form Fields](cms-formfield-help-text).
 * [Cache control](cache-control). Override the default PHP cache-control settings.
 * [Howto customize the CMS menu](customize-cms-menu).
 * [How to create a navigation menu](navigation-menu). Create primary navigation for your website.

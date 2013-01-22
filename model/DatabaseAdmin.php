@@ -18,7 +18,6 @@ class DatabaseAdmin extends Controller {
 		'index',
 		'build',
 		'cleanup',
-		'testinstall',
 		'import'
 	);
 	
@@ -263,15 +262,6 @@ class DatabaseAdmin extends Controller {
 			else DB::query("TRUNCATE \"$table\"");
 		}
 	}
-
-
-	/**
-	 * Method used to check mod_rewrite is working correctly in the installer.
-	 */
-	public function testinstall() {
-		echo "OK";
-	}
-
 
 	/**
 	 * Remove invalid records from tables - that is, records that don't have

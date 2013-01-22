@@ -115,7 +115,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		} 
 		
-		return $this->createTag (
+		return FormField::create_tag(
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
@@ -125,7 +125,7 @@ class TreeMultiselectField extends TreeDropdownField {
 				'data-title' => $title,
 				'title' => $this->getDescription()
 			),
-			$this->createTag (
+			FormField::create_tag(
 				'input',
 				array (
 					'id'    => $this->id(),
@@ -175,14 +175,12 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * Changes this field to the readonly field.
 	 */
 	public function performReadonlyTransformation() {
-		$field = new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject,
-			$this->keyField, $this->labelField);
+		$copy = $this->castedCopy('TreeMultiselectField_Readonly');
+		$copy->setKeyField($this->keyField);
+		$copy->setLabelField($this->labelField);
+		$copy->setSourceObject($this->sourceObject);
 
-		$field->addExtraClass($this->extraClass());
-		$field->setForm($this->form);
-		$field->setValue($this->value);
-		
-		return $field;
+		return $copy;
 	}
 }
 

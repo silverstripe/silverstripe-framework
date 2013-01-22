@@ -122,6 +122,7 @@ class CheckboxFieldTest extends SapphireTest {
 		// Test 1: a checked checkbox goes to "Yes"
 		$field1 = new CheckboxField('IsChecked', 'Checked');
 		$field1->setValue('on');
+		$copy = $field1->performReadonlyTransformation();
 		$this->assertEquals(_t('CheckboxField.YES', 'Yes'),
 			trim(strip_tags($field1->performReadonlyTransformation()->Field())));
 

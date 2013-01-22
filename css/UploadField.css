@@ -1,23 +1,29 @@
 /** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
 /** ----------------------------------------------- Colours ------------------------------------------------ */
+/* Keep as solid colours transparent borders wont work in ie */
+/* Only for use as shadows as they wont work in older browsers */
+/*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
+/*Mixin used to generate slightly smaller text and forms
+Used in side panels and action tabs
+*/
 .ss-uploadfield .clear { clear: both; }
 .ss-insert-media .ss-uploadfield { margin-top: 20px; }
 .ss-insert-media .ss-uploadfield h4 { float: left; }
 .ss-uploadfield .middleColumn { width: 526px; padding: 0; background: #fff; border: 1px solid #b3b3b3; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
 .ss-uploadfield .ss-uploadfield-item { margin: 0; padding: 15px; overflow: auto; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview { height: 60px; line-height: 60px; width: 80px; text-align: center; font-weight: bold; float: left; overflow: hidden; }
-.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -webkit-box-shadow: #9a9a9a 0 0 3px 3px inset; -moz-box-shadow: #9a9a9a 0 0 3px 3px inset; box-shadow: #9a9a9a 0 0 3px 3px inset; border: 2px dashed gray; background: rgba(201, 205, 206, 0.8); display: none; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -webkit-box-shadow: gray 0 0 4px 0 inset; -moz-box-shadow: gray 0 0 4px 0 inset; box-shadow: gray 0 0 4px 0 inset; border: 2px dashed gray; background: #d0d3d5; display: none; margin-right: 15px; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info { float: left; margin-left: 15px; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name { display: block; line-height: 13px; height: 26px; margin: 0; text-align: left; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name b { font-weight: bold; padding: 0 5px 0 0; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .name { font-size: 11px; color: #848484; width: 290px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; display: inline; float: left; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status { float: right; padding: 0 0 0 5px; width: 100px; text-align: right; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-error-text { color: red; font-weight: bold; }
-.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-warning-text { color: #cc7600; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-warning-text { color: #b7a403; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-success-text { color: #1f9433; }
 .ss-uploadfield .ss-ui-button { display: block; float: left; margin: 0 10px 0 0; }
 .ss-uploadfield .ss-ui-button.ss-uploadfield-fromcomputer { position: relative; overflow: hidden; }
@@ -35,7 +41,7 @@
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button span.ui-button-text, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start button span.ui-button-text { display: none; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start { right: 20px; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-editform { /* don't use display none, for it will break jQuery('iframe').contents().height() */ height: 0; overflow: hidden; clear: both; }
-.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(201, 205, 206, 0.8); width: 100%; }
+.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { margin-top: 8px; padding-top: 8px; border-top: 1px solid #d0d3d5; width: 100%; }
 .ss-uploadfield .ss-uploadfield-addfile.borderTop { border-top: 1px solid #b3b3b3; }
 
 .ss-upload .clear { clear: both; }
