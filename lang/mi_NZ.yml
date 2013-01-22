@@ -4,14 +4,14 @@ mi_NZ:
     NEWFOLDER: KōpakiHōu
   AssetTableField:
     CREATED: 'Tukuatu tuatahi'
-    DIM: Nuinga
+    DIM: 'Ngā Rahinga'
     FILENAME: 'Ingoa Kōnae'
     FOLDER: Kōpaki
     LASTEDIT: 'Hurihanga tōmuri'
-    OWNER: Kaiūmanga
-    SIZE: Nuinga
-    TITLE: 'Ingoa '
-    TYPE: 'Tūmomo '
+    OWNER: Kaipupuri
+    SIZE: 'Rahi kōnae'
+    TITLE: Taitara
+    TYPE: 'Momo kōnae'
     URL: PRO
   AssetUploadField:
     ChooseFiles: 'Kōwhiri kōnae'
@@ -69,7 +69,7 @@ mi_NZ:
     ACCESS: 'Uru ki te wāhanga ''{title}'''
     ACCESSALLINTERFACES: 'Uru ki ngā wāhanga CMS katoa'
     ACCESSALLINTERFACESHELP: 'Ka takahi i ngā tautuhinga uru tauwhāiti ake'
-    SAVE: tiakina
+    SAVE: Tiaki
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
@@ -86,7 +86,7 @@ mi_NZ:
     SUCCESSADD2: 'Kua tāpiritia a  {name}'
     SUCCESSEDIT: 'I tiakina a %s %s %s'
   ComplexTableField.ss:
-    ADDITEM: 'Tāpiri %s'
+    ADDITEM: Whakaurunga
     NOITEMSFOUND: 'Kāore i kitea he tūemi'
     SORTASC: 'Kōmaka aupiki'
     SORTDESC: 'Kōmaka auheke'
@@ -324,9 +324,9 @@ mi_NZ:
     DropdownBatchActionsDefault: 'Ngā Mahi'
     HELP: Āwhina
     PAGETYPE: 'Momo whārangi:'
-    PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa. '
+    PERMAGAIN: 'Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa i raro.'
     PERMALREADY: 'Aroha mai, kāore e taea te whakauru i tērā wāhanga o te CMS. Ki te pīrangi koe ki te takiuru atu mā tētahi atu ingoa, whakamahia ki raro nei.'
-    PERMDEFAULT: 'Whiriwhiria koa tētahi aratuka motuhēhēnga me te tāuru i ō pūkenga ki te whakauru i te CMS.'
+    PERMDEFAULT: 'Whiriwhiria tētahi aratuka motuhēhēnga me te tāuru i ō taipitopito tuakiri ki te uru ki te CMS.'
     PLEASESAVE: 'Tiaki Whārangi: Kāore i taea tēnei whārangi te whakahōu nā te mea kāore anō kia tiakina.'
     PreviewButton: Arokite
     REORGANISATIONSUCCESSFUL: 'Kua momoho te whakaraupapa anō i te rākau pae'
@@ -505,7 +505,7 @@ mi_NZ:
     MEMBERS: 'Ngā Mema'
     MENUTITLE: Haumarutanga
     MemberListCaution: 'Whakatūpato: Mā te tango mema i tēnei rārangi, ka tangohia i ngā rōpū katoa me te pātengi raraunga'
-    NEWGROUP: 'Roopu hou'
+    NEWGROUP: 'Rōpū Hōu'
     PERMISSIONS: 'Ngā Whakaaetanga'
     ROLES: 'Ngā Tūnga'
     ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'

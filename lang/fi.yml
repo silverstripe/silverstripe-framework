@@ -147,33 +147,33 @@ fi:
     Content: Sisältö
     CssType: 'CSS tiedosto'
     DmgType: 'Apple levykuva'
-    DocType: 'Word tiedosto'
+    DocType: Word-tiedosto
     Filename: Tiedostonimi
     GifType: 'GIF kuva - hyvä kaaviolle'
     GzType: 'GZIP pakattu tiedosto'
-    HtlType: 'HTML tiedosto'
-    HtmlType: 'HTML tiedosto'
+    HtlType: HTML-tiedosto
+    HtmlType: HTML-tiedosto
     INVALIDEXTENSION: 'Tiedostopääte ei ole sallittu (sallitut muodot: {extensions})'
     INVALIDEXTENSIONSHORT: 'Tiedostopääte ei ole sallittu'
     IcoType: 'Icon kuva'
     JpgType: 'JPEG kuva - hyvä valokuville'
-    JsType: 'Javascript tiedosto'
+    JsType: Javascript-tiedosto
     Mp3Type: 'MP3 äänitiedosto'
     MpgType: 'MPEG videotiedosto'
     NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
-    PdfType: 'Adobe Acrobat PDF tiedosto'
+    PdfType: 'Adobe Acrobat PDF -tiedosto'
     PngType: 'PNG kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
     TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
     TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
-    TiffType: 'Tiff kuva'
+    TiffType: Tiff-kuva
     Title: Otsikko
     WavType: 'WAV äänitiedosto'
     XlsType: 'Excel tiedosto'
-    ZipType: 'ZIP pakattu tiedosto'
+    ZipType: 'ZIP-pakattu tiedosto'
   FileIFrameField:
     ATTACH: 'Liitä {type}'
     ATTACHONCESAVED: '{type} voidaan liittää, kun olet tallentanut tietueen ensimmäistä kertaa.'
@@ -563,7 +563,7 @@ fi:
     FROMCOMPUTER: 'Omalta tietokoneeltasi'
     FROMCOMPUTERINFO: 'Valitse tiedostoista'
     FROMFILES: Tiedostoista
-    HOTLINKINFO: 'Info: Kuvalle tulee suora linkki. Varmista sivun omistajalta että sinulla on oikeus linkitä kuva.'
+    HOTLINKINFO: 'Info: Kuvalle tulee suora linkki. Varmista sivun omistajalta, että sinulla on oikeus suoraan linkitykseen.'
     MAXNUMBEROFFILES: 'Suurin sallittu määrä ({count}) tiedostoja ylitetty.'
     MAXNUMBEROFFILESSHORT: 'Voidaan siirtää vain {count} tiedostoa'
     REMOVE: Poista

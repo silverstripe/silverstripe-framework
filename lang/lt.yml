@@ -111,7 +111,7 @@ lt:
   Date:
     DAY: diena
     DAYS: dienas
-    HOUR: valandą
+    HOUR: 'valandą'
     HOURS: valandas
     MIN: minutę
     MINS: minutes

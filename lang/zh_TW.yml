@@ -8,7 +8,7 @@ zh_TW:
     FILENAME: 檔案名稱
     FOLDER: Folder
     LASTEDIT: 最後一次更新
-    OWNER: 擁有者
+    OWNER: '擁有者'
     SIZE: 大小
     TITLE: 標題
     TYPE: 類型
@@ -55,8 +55,8 @@ zh_TW:
   BackLink_Button.ss:
     Back: Back
   BasicAuth:
-    ENTERINFO: 請輸入帳號密碼。
-    ERRORNOTADMIN: 那個使用者不是管理員。
+    ENTERINFO: '請輸入帳號密碼。'
+    ERRORNOTADMIN: '那個使用者不是管理員。'
     ERRORNOTREC: 那組帳號密碼不對。
   Boolean:
     0: 'False'
@@ -74,7 +74,7 @@ zh_TW:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
-    CHANGEPASSWORDTEXT2: 您可以用下列的帳號密碼登入：
+    CHANGEPASSWORDTEXT2: '您可以用下列的帳號密碼登入：'
     EMAIL: Email
     HELLO: 您好
     PASSWORD: Password
@@ -201,8 +201,8 @@ zh_TW:
     FIELDISREQUIRED: '必須要填 %s'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONNOTUNIQUE: 您輸入的數值並不是獨特的。
-    VALIDATIONPASSWORDSDONTMATCH: 密碼不相配
+    VALIDATIONNOTUNIQUE: '您輸入的數值並不是獨特的。'
+    VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
     VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
@@ -268,15 +268,15 @@ zh_TW:
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
-    BUTTONINSERTLINK: 插入連結
+    BUTTONINSERTLINK: '插入連結'
     BUTTONREMOVELINK: 移除連結
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 對齊/樣式
     CSSCLASSCENTER: 獨立置中
-    CSSCLASSLEFT: 靠左被字包圍。
+    CSSCLASSLEFT: '靠左被字包圍。'
     CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 靠右被字包圍。
+    CSSCLASSRIGHT: '靠右被字包圍。'
     DETAILS: Details
     EMAIL: 電子郵件地址
     FILE: 檔案
@@ -295,7 +295,7 @@ zh_TW:
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: 寬
     INSERTMEDIA: 'Insert Media'
-    LINK: 插入或編輯選取的連結
+    LINK: '插入或編輯選取的連結'
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 連結敘述
     LINKEMAIL: 電子郵件地址
@@ -304,7 +304,7 @@ zh_TW:
     LINKINTERNAL: 此網站
     LINKOPENNEWWIN: 在新視窗打開連結
     LINKTO: 連結至
-    PAGE: 網頁
+    PAGE: '網頁'
     URL: 網址
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
@@ -323,11 +323,11 @@ zh_TW:
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: 說明
-    PAGETYPE: 網頁類型：
-    PERMAGAIN: 您已被登出，請在下面重新登入。
-    PERMALREADY: 抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。
-    PERMDEFAULT: 請選擇一個認證方法並登入。
-    PLEASESAVE: 請儲存：這個網頁沒有被更新因為尚未被儲存。
+    PAGETYPE: '網頁類型：'
+    PERMAGAIN: '您已被登出，請在下面重新登入。'
+    PERMALREADY: '抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。'
+    PERMDEFAULT: '請選擇一個認證方法並登入。'
+    PLEASESAVE: '請儲存：這個網頁沒有被更新因為尚未被儲存。'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -344,8 +344,8 @@ zh_TW:
   Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 更改密碼
-    BUTTONLOGIN: 登入
-    BUTTONLOGINOTHER: 用別的帳戶登入
+    BUTTONLOGIN: '登入'
+    BUTTONLOGINOTHER: '用別的帳戶登入'
     BUTTONLOSTPASSWORD: 忘記密碼
     CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 確認新密碼
@@ -357,7 +357,7 @@ zh_TW:
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 新密碼不相配，請再試一次。
+    ERRORNEWPASSWORD: '新密碼不相配，請再試一次。'
     ERRORPASSWORDNOTMATCH: 舊密碼不對，請再試一次。
     ERRORWRONGCRED: 密碼或電子郵件地址錯誤。請再是一次。
     FIRSTNAME: 名
@@ -474,23 +474,23 @@ zh_TW:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
-    VALIDATION: 請輸入有效的電話號碼
+    VALIDATION: '請輸入有效的電話號碼'
   RelationComplexTableField.ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 你不能瀏覽此頁。請用別的帳戶登入。
+    ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
     BUTTONSEND: 寄給我密碼重設網址。
     CHANGEPASSWORDBELOW: 請在下面更改密碼。
     CHANGEPASSWORDHEADER: 更改密碼
-    ENTERNEWPASSWORD: 請輸入新的密碼。
-    ERRORPASSWORDPERMISSION: 你必須先登入才能改密碼！
-    LOGGEDOUT: 你已登出。您在下面再登入一次。
+    ENTERNEWPASSWORD: '請輸入新的密碼。'
+    ERRORPASSWORDPERMISSION: '你必須先登入才能改密碼！'
+    LOGGEDOUT: '你已登出。您在下面再登入一次。'
     LOGIN: 'Log in'
-    NOTEPAGESECURED: 那的網頁是被保護的。請先登入。
+    NOTEPAGESECURED: '那的網頁是被保護的。請先登入。'
     NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 請輸入您的電子郵件。我們將寄給你重設密媽的網址。
+    NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
