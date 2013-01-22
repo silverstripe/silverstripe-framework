@@ -23,7 +23,8 @@ The SilverStripe database-schema is generated automatically by visiting the URL.
 `http://<mysite>/dev/build`
 
 <div class="notice" markdown='1'>
-Note: You need to be logged in as an administrator to perform this command.
+Note: You need to be logged in as an administrator to perform this command,
+unless your site is in "[dev mode](/topics/debugging)", or the command is run through CLI.
 </div>
 
 ## Querying Data
