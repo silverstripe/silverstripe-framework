@@ -419,7 +419,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new LogicException("DataList::filterByCallback() must be passed something callable.");
 		}
 		
-		$output = new ArrayList;
+		$output = new ArrayList();
 		foreach($this as $item) {
 			if($callback($item)) $output->push($item);
 		}
