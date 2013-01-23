@@ -34,6 +34,22 @@
  * )
  * </code>
  * 
+ * <b>Disabling individual items</b>
+ * 
+ * <code>
+ * $groupedDrDownField->setDisabledItems( 
+ *    array(
+ *       "numbers" => array(
+ *       		"1" => "1",
+ *       		"3" => "3"
+ *    		),
+ *       "letters" => array(
+ *       		"3" => "C"
+ *    		)
+ *    )
+ * )
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-basic
  */
@@ -45,17 +61,27 @@ class GroupedDropdownField extends DropdownField {
 			if(is_array($title)) {
 				$options .= "<optgroup label=\"$value\">";
 				foreach($title as $value2 => $title2) {
+					$disabled = '';
+					if( array_key_exists($value, $this->disabledItems)
+							&& is_array($this->disabledItems[$value]) 
+							&& in_array($value2, $this->disabledItems[$value]) ){
+						$disabled = 'disabled="disabled"';
+					}
 					$selected = $value2 == $this->value ? " selected=\"selected\"" : "";
-					$options .= "<option$selected value=\"$value2\">$title2</option>";
+					$options .= "<option$selected value=\"$value2\" $disabled>$title2</option>";
 				}
 				$options .= "</optgroup>";
 			} else { // Fall back to the standard dropdown field
+				$disabled = '';
+				if( in_array($value, $this->disabledItems) ){
+					$disabled = 'disabled="disabled"';
+				}
 				$selected = $value == $this->value ? " selected=\"selected\"" : "";
-				$options .= "<option$selected value=\"$value\">$title</option>";
+				$options .= "<option$selected value=\"$value\" $disabled>$title</option>";
 			}
 		}
 
-		return $this->createTag('select', $this->getAttributes(), $options);
+		return FormField::create_tag('select', $this->getAttributes(), $options);
 	}
 
 	public function Type() {

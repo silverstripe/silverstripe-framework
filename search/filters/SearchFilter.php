@@ -31,6 +31,11 @@ abstract class SearchFilter extends Object {
 	protected $value;
 	
 	/**
+	 * @var array
+	 */
+	protected $modifiers;
+
+	/**
 	 * @var string Name of a has-one, has-many or many-many relation (not the classname).
 	 * Set in the constructor as part of the name in dot-notation, and used in 
 	 * {@link applyRelation()}.
@@ -43,12 +48,14 @@ abstract class SearchFilter extends Object {
 	 *  the necessary tables (e.g. "Comments.Name" to join the "Comments" has-many relationship and
 	 *  search the "Name" column when applying this filter to a SiteTree class).
 	 * @param mixed $value
+	 * @param array $modifiers
 	 */
-	public function __construct($fullName, $value = false) {
+	public function __construct($fullName, $value = false, array $modifiers = array()) {
 		$this->fullName = $fullName;
 		// sets $this->name and $this->relation
 		$this->addRelation($fullName);
 		$this->value = $value;
+		$this->setModifiers($modifiers);
 	}
 	
 	/**
@@ -94,6 +101,24 @@ abstract class SearchFilter extends Object {
 	 */
 	public function getValue() {
 		return $this->value;
+	}
+
+	/**
+	 * Set the current modifiers to apply to the filter
+	 *
+	 * @param array $modifiers
+	 */
+	public function setModifiers(array $modifiers) {
+		$this->modifiers = array_map('strtolower', $modifiers);
+	}
+
+	/**
+	 * Accessor for the current modifiers to apply to the filter.
+	 *
+	 * @return array
+	 */
+	public function getModifiers() {
+		return $this->modifiers;
 	}
 	
 	/**
@@ -173,10 +198,74 @@ abstract class SearchFilter extends Object {
 	/**
 	 * Apply filter criteria to a SQL query.
 	 *
-	 * @param SQLQuery $query
-	 * @return SQLQuery
+	 * @param DataQuery $query
+	 * @return DataQuery
 	 */
-	abstract public function apply(DataQuery $query);
+	public function apply(DataQuery $query) {
+		if(($key = array_search('not', $this->modifiers)) !== false) {
+			unset($this->modifiers[$key]);
+			return $this->exclude($query);
+		}
+		if(is_array($this->value)) {
+			return $this->applyMany($query);
+		} else {
+			return $this->applyOne($query);
+		}
+	}
+
+	/**
+	 * Apply filter criteria to a SQL query with a single value.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	abstract protected function applyOne(DataQuery $query);
+
+	/**
+	 * Apply filter criteria to a SQL query with an array of values.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	protected function applyMany(DataQuery $query) {
+		throw new InvalidArgumentException(get_class($this) . "can't be used to filter by a list of items.");
+	}
+
+	/**
+	 * Exclude filter criteria from a SQL query.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	public function exclude(DataQuery $query) {
+		if(($key = array_search('not', $this->modifiers)) !== false) {
+			unset($this->modifiers[$key]);
+			return $this->apply($query);
+		}
+		if(is_array($this->value)) {
+			return $this->excludeMany($query);
+		} else {
+			return $this->excludeOne($query);
+		}
+	}
+
+	/**
+	 * Exclude filter criteria from a SQL query with a single value.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	abstract protected function excludeOne(DataQuery $query);
+
+	/**
+	 * Exclude filter criteria from a SQL query with an array of values.
+	 *
+	 * @param DataQuery $query
+	 * @return DataQuery
+	 */
+	protected function excludeMany(DataQuery $query) {
+		throw new InvalidArgumentException(get_class($this) . "can't be used to filter by a list of items.");
+	}
 	
 	/**
 	 * Determines if a field has a value,
@@ -189,5 +278,17 @@ abstract class SearchFilter extends Object {
 	public function isEmpty() {
 		return false;
 	}
-	
+
+	/**
+	 * Determines case sensitivity based on {@link getModifiers()}.
+	 * 
+	 * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
+	 */
+	protected function getCaseSensitive() {
+		$modifiers = $this->getModifiers();
+		if(in_array('case', $modifiers)) return true;
+		else if(in_array('nocase', $modifiers)) return false;
+		else return null;
+	}
+
 }

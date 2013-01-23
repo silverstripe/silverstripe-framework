@@ -21,14 +21,16 @@ class HasManyList extends RelationList {
 		$this->foreignKey = $foreignKey;
 	}
 	
-	protected function foreignIDFilter() {
+	protected function foreignIDFilter($id = null) {
+		if ($id === null) $id = $this->getForeignID();
+
 		// Apply relation filter
-		if(is_array($this->foreignID)) {
-			return "\"$this->foreignKey\" IN ('" . 
-				implode("', '", array_map('Convert::raw2sql', $this->foreignID)) . "')";
-		} else if($this->foreignID !== null){
+		if(is_array($id)) {
+			return "\"$this->foreignKey\" IN ('" .
+				implode("', '", array_map('Convert::raw2sql', $id)) . "')";
+		} else if($id !== null){
 			return "\"$this->foreignKey\" = '" . 
-				Convert::raw2sql($this->foreignID) . "'";
+				Convert::raw2sql($id) . "'";
 		}
 	}
 
@@ -44,18 +46,20 @@ class HasManyList extends RelationList {
 			user_error("HasManyList::add() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
 		}
 
+		$foreignID = $this->getForeignID();
+
 		// Validate foreignID
-		if(!$this->foreignID) {
+		if(!$foreignID) {
 			user_error("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
 			return;
 		}
-		if(is_array($this->foreignID)) {
+		if(is_array($foreignID)) {
 			user_error("ManyManyList::add() can't be called on a list linked to mulitple foreign IDs", E_USER_WARNING);
 			return;
 		}
 
 		$fk = $this->foreignKey;
-		$item->$fk = $this->foreignID;
+		$item->$fk = $foreignID;
 
 		$item->write();
 	}

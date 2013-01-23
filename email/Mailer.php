@@ -7,7 +7,8 @@
  * @package framework
  * @subpackage email
  */
-class Mailer extends Object {
+class Mailer {
+	
 	/**
 	 * Send a plain-text email.
 	 *  
@@ -20,35 +21,100 @@ class Mailer extends Object {
 	 * @return bool
 	 */
 	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
-		return plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders);
+		// Not ensurely where this is supposed to be set, but defined it false for now to remove php notices
+		$plainEncoding = false; 
+
+		if ($customheaders && is_array($customheaders) == false) {
+			echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
+			dieprintr($customheaders);
 	}
 	
-	/**
-	 * Send a multi-part HTML email.
-	 * 
-	 * @return bool
-	 */
-	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
-			$plainContent = false, $inlineImages = false) {
+		// If the subject line contains extended characters, we must encode it
+		$subject = Convert::xml2raw($subject);
+		$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
-		return htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles, $customheaders,
-			$plainContent, $inlineImages);
+		// Make the plain text part
+		$headers["Content-Type"] = "text/plain; charset=utf-8";
+		$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
+
+		$plainContent = ($plainEncoding == "base64") 
+			? chunk_split(base64_encode($plainContent),60)
+			: $this->QuotedPrintable_encode($plainContent);
+
+		// Messages with attachments are handled differently
+		if($attachedFiles) {
+			// The first part is the message itself
+			$fullMessage = $this->processHeaders($headers, $plainContent);
+			$messageParts = array($fullMessage);
+
+			// Include any specified attachments as additional parts
+			foreach($attachedFiles as $file) {
+				if(isset($file['tmp_name']) && isset($file['name'])) {
+					$messageParts[] = $this->encodeFileForEmail($file['tmp_name'], $file['name']);
+				} else {
+					$messageParts[] = $this->encodeFileForEmail($file);
 	}
 }
 
-// TO DO: Clean this code up, make it more OO.
-// For now, we've just put a clean interface around this dirty code :)
 
-/*
+			// We further wrap all of this into another multipart block
+			list($fullBody, $headers) = $this->encodeMultipart($messageParts, "multipart/mixed");
+
+		// Messages without attachments do not require such treatment
+		} else {
+			$fullBody = $plainContent;
+		}
+
+		// Email headers
+		$headers["From"] 		= $this->validEmailAddr($from);
+
+		// Messages with the X-SilverStripeMessageID header can be tracked
+		if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {		
+			$bounceAddress = BOUNCE_EMAIL;
+			// Get the human name from the from address, if there is one
+			if(preg_match('/^([^<>]+)<([^<>])> *$/', $from, $parts))
+				$bounceAddress = "$parts[1]<$bounceAddress>";
+		} else {
+			$bounceAddress = $from;
+		}
+		
+		// $headers["Sender"] 		= $from;
+		$headers["X-Mailer"]	= X_MAILER;
+		if(!isset($customheaders["X-Priority"])) {
+			$headers["X-Priority"]	= 3;
+		}
+		
+		$headers = array_merge((array)$headers, (array)$customheaders);
+
+		// the carbon copy header has to be 'Cc', not 'CC' or 'cc' -- ensure this.
+		if (isset($headers['CC'])) { $headers['Cc'] = $headers['CC']; unset($headers['CC']); }
+		if (isset($headers['cc'])) { $headers['Cc'] = $headers['cc']; unset($headers['cc']); }
+			
+		// Send the email
+		$headers = $this->processHeaders($headers);
+		$to = $this->validEmailAddr($to);
+
+		// Try it without the -f option if it fails
+		if(!$result = @mail($to, $subject, $fullBody, $headers, "-f$bounceAddress"))
+			$result = mail($to, $subject, $fullBody, $headers);
+		
+		if($result)
+			return array($to,$subject,$fullBody,$headers);
+			
+		return false;
+	}
+	
+	/**
  * Sends an email as a both HTML and plaintext
+	 *   
  *   $attachedFiles should be an array of file names
  *   - if you pass the entire $_FILES entry, the user-uploaded filename will be preserved
  *   use $plainContent to override default plain-content generation
  * 
  * @return bool
  */
-function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
-		$plainContent = false, $inlineImages = false) {
+	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
+			$plainContent = false) {
 
 	if ($customheaders && is_array($customheaders) == false) {
 		echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
@@ -75,9 +141,9 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["Content-Type"] = "text/plain; charset=utf-8";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
-	$plainPart = processHeaders($headers, ($plainEncoding == "base64") 
+		$plainPart = $this->processHeaders($headers, ($plainEncoding == "base64") 
 		? chunk_split(base64_encode($plainContent),60) 
-		: wordwrap(QuotedPrintable_encode($plainContent),75));
+			: wordwrap($this->QuotedPrintable_encode($plainContent),75));
 
 	// Make the HTML part
 	$headers["Content-Type"] = "text/html; charset=utf-8";
@@ -97,33 +163,32 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 			"</HTML>";
 	}
 
-	if($inlineImages) {
-		$htmlPart = wrapImagesInline($htmlContent);
-	} else {
 		$headers["Content-Transfer-Encoding"] = "quoted-printable";
-		$htmlPart = processHeaders($headers, wordwrap(QuotedPrintable_encode($htmlContent),75));
-	}
+		$htmlPart = $this->processHeaders($headers, wordwrap($this->QuotedPrintable_encode($htmlContent),75));
 	
-	list($messageBody, $messageHeaders) = encodeMultipart(array($plainPart,$htmlPart), "multipart/alternative");
+		list($messageBody, $messageHeaders) = $this->encodeMultipart(
+			array($plainPart,$htmlPart), 
+			"multipart/alternative"
+		);
 
 	// Messages with attachments are handled differently
 	if($attachedFiles && is_array($attachedFiles)) {
 		
 		// The first part is the message itself
-		$fullMessage = processHeaders($messageHeaders, $messageBody);
+			$fullMessage = $this->processHeaders($messageHeaders, $messageBody);
 		$messageParts = array($fullMessage);
 
 		// Include any specified attachments as additional parts
 		foreach($attachedFiles as $file) {
 			if(isset($file['tmp_name']) && isset($file['name'])) {
-				$messageParts[] = encodeFileForEmail($file['tmp_name'], $file['name']);
+					$messageParts[] = $this->encodeFileForEmail($file['tmp_name'], $file['name']);
 			} else {
-				$messageParts[] = encodeFileForEmail($file);
+					$messageParts[] = $this->encodeFileForEmail($file);
 			}
 		}
 			
 		// We further wrap all of this into another multipart block
-		list($fullBody, $headers) = encodeMultipart($messageParts, "multipart/mixed");
+			list($fullBody, $headers) = $this->encodeMultipart($messageParts, "multipart/mixed");
 
 	// Messages without attachments do not require such treatment
 	} else {
@@ -132,7 +197,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	}
 
 	// Email headers
-	$headers["From"] = validEmailAddr($from);
+		$headers["From"] = $this->validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
 	if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
@@ -160,8 +225,8 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 		
 	
 	// Send the email
-	$headers = processHeaders($headers);
-	$to = validEmailAddr($to);
+		$headers = $this->processHeaders($headers);
+		$to = $this->validEmailAddr($to);
 	
 	// Try it without the -f option if it fails
 	if(!($result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress")))) {
@@ -171,95 +236,9 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	return $result;
 }
 
-/*
- * Send a plain text e-mail
+	/**
+	 * @todo Make visibility protected in 3.2
  */
-function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false) {
-	// Not ensurely where this is supposed to be set, but defined it false for now to remove php notices
-	$plainEncoding = false; 
-
-	if ($customheaders && is_array($customheaders) == false) {
-		echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
-		dieprintr($customheaders);
-	}
-
-	// If the subject line contains extended characters, we must encode it
-	$subject = Convert::xml2raw($subject);
-	$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
-
-	// Make the plain text part
-	$headers["Content-Type"] = "text/plain; charset=utf-8";
-	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
-
-	$plainContent = ($plainEncoding == "base64") 
-		? chunk_split(base64_encode($plainContent),60)
-		: QuotedPrintable_encode($plainContent);
-
-	// Messages with attachments are handled differently
-	if($attachedFiles) {
-		// The first part is the message itself
-		$fullMessage = processHeaders($headers, $plainContent);
-		$messageParts = array($fullMessage);
-
-		// Include any specified attachments as additional parts
-		foreach($attachedFiles as $file) {
-			if(isset($file['tmp_name']) && isset($file['name'])) {
-				$messageParts[] = encodeFileForEmail($file['tmp_name'], $file['name']);
-			} else {
-				$messageParts[] = encodeFileForEmail($file);
-			}
-		}
-		
-
-		// We further wrap all of this into another multipart block
-		list($fullBody, $headers) = encodeMultipart($messageParts, "multipart/mixed");
-
-	// Messages without attachments do not require such treatment
-	} else {
-		$fullBody = $plainContent;
-	}
-
-	// Email headers
-	$headers["From"] 		= validEmailAddr($from);
-
-	// Messages with the X-SilverStripeMessageID header can be tracked
-	if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {		
-		$bounceAddress = BOUNCE_EMAIL;
-		// Get the human name from the from address, if there is one
-		if(preg_match('/^([^<>]+)<([^<>])> *$/', $from, $parts))
-			$bounceAddress = "$parts[1]<$bounceAddress>";
-	} else {
-		$bounceAddress = $from;
-	}
-	
-	// $headers["Sender"] 		= $from;
-	$headers["X-Mailer"]	= X_MAILER;
-	if(!isset($customheaders["X-Priority"])) {
-		$headers["X-Priority"]	= 3;
-	}
-	
-	$headers = array_merge((array)$headers, (array)$customheaders);
-
-	// the carbon copy header has to be 'Cc', not 'CC' or 'cc' -- ensure this.
-	if (isset($headers['CC'])) { $headers['Cc'] = $headers['CC']; unset($headers['CC']); }
-	if (isset($headers['cc'])) { $headers['Cc'] = $headers['cc']; unset($headers['cc']); }
-		
-	// Send the email
-	$headers = processHeaders($headers);
-	$to = validEmailAddr($to);
-
-	// Try it without the -f option if it fails
-	if(!$result = @mail($to, $subject, $fullBody, $headers, escapeshellarg("-f$bounceAddress"))) {
-		$result = mail($to, $subject, $fullBody, $headers);
-	}
-	
-	if($result)
-		return array($to,$subject,$fullBody,$headers);
-		
-	return false;
-}
-
-
 function encodeMultipart($parts, $contentType, $headers = false) {
 	$separator = "----=_NextPart_" . preg_replace('/[^0-9]/', '', rand() * 10000000000);
 
@@ -285,46 +264,8 @@ function encodeMultipart($parts, $contentType, $headers = false) {
 	return array($body, $headers);
 }
 
-/*
- * Return a multipart/related e-mail chunk for the given HTML message and its linked images
- * Decodes absolute URLs, accessing the appropriate local images
- */
-function wrapImagesInline($htmlContent) {
-	global $_INLINED_IMAGES;
-	$_INLINED_IMAGES = null;
-	
-	$replacedContent = imageRewriter($htmlContent, 'wrapImagesInline_rewriter($URL)');
-	
-	
-	// Make the HTML part
-	$headers["Content-Type"] = "text/html; charset=utf-8";
-	$headers["Content-Transfer-Encoding"] = "quoted-printable";
-	$multiparts[] = processHeaders($headers, QuotedPrintable_encode($replacedContent));
-	
-	// Make all the image parts		
-	global $_INLINED_IMAGES;
-	foreach($_INLINED_IMAGES as $url => $cid) {
-		$multiparts[] = encodeFileForEmail($url, false, "inline", "Content-ID: <$cid>\n");		
-	}
-
-	// Merge together in a multipart
-	list($body, $headers) = encodeMultipart($multiparts, "multipart/related");
-	return processHeaders($headers, $body);
-}
-function wrapImagesInline_rewriter($url) {
-	$url = relativiseURL($url);
-	
-	global $_INLINED_IMAGES;
-	if(!$_INLINED_IMAGES[$url]) {
-		$identifier = "automatedmessage." . rand(1000,1000000000) . "@silverstripe.com";
-		$_INLINED_IMAGES[$url] = $identifier;
-	}
-	return "cid:" . $_INLINED_IMAGES[$url];
-	
-}
-
-/*
- * Combine headers w/ the body into a single string.
+	/**
+	 * @todo Make visibility protected in 3.2
  */
 function processHeaders($headers, $body = false) {
 	$res = '';
@@ -348,19 +289,20 @@ function processHeaders($headers, $body = false) {
  * 
  * h5. contentLocation
  * 
- * Content Location is one of the two methods allowed for embedding images into an html email. It's also the simplest,
- * and best supported.
+	 * Content Location is one of the two methods allowed for embedding images into an html email. 
+	 * It's also the simplest, and best supported.
  * 
  * Assume we have an email with this in the body:
  * 
  *   <img src="http://example.com/image.gif" />
  * 
- * To display the image, an email viewer would have to download the image from the web every time it is displayed. Due
- * to privacy issues, most viewers will not display any images unless the user clicks 'Show images in this email'. Not
- * optimal.
+	 * To display the image, an email viewer would have to download the image from the web every time 
+	 * it is displayed. Due to privacy issues, most viewers will not display any images unless 
+	 * the user clicks 'Show images in this email'. Not optimal.
  * 
- * However, we can also include a copy of this image as an attached file in the email. By giving it a contentLocation
- * of "http://example.com/image.gif" most email viewers will use this attached copy instead of downloading it. Better,
+	 * However, we can also include a copy of this image as an attached file in the email. 
+	 * By giving it a contentLocation of "http://example.com/image.gif" most email viewers 
+	 * will use this attached copy instead of downloading it. Better,
  * most viewers will show it without a 'Show images in this email' conformation.
  * 
  * Here is an example of passing this information through Email.php:
@@ -373,6 +315,7 @@ function processHeaders($headers, $body = false) {
  *     'contentLocation' => Director::absoluteBaseURL() . "/themes/mytheme/images/header.gif"
  *   );
  * 
+	 * @todo Make visibility protected in 3.2
  */
 function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
 	if(!$file) {
@@ -405,7 +348,7 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 		// This mime type is needed, otherwise some clients will show it as an inline attachment
 		$mimeType = 'application/octet-stream';
 		$encoding = "quoted-printable";		
-		$file['contents'] = QuotedPrintable_encode($file['contents']);		
+			$file['contents'] = $this->QuotedPrintable_encode($file['contents']);		
 	}
 
 	$headers =	"Content-type: $mimeType;\n\tname=\"$base\"\n".
@@ -420,10 +363,15 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 	return $headers . $file['contents'];
 }
 
+	/**
+	 * @todo Make visibility protected in 3.2
+	 */
 function QuotedPrintable_encode($quotprint) {
 		$quotprint = (string)str_replace('\r\n',chr(13).chr(10),$quotprint);
 		$quotprint = (string)str_replace('\n',  chr(13).chr(10),$quotprint);
-		$quotprint = (string)preg_replace("~([\x01-\x1F\x3D\x7F-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $quotprint);
+		$quotprint = (string)preg_replace_callback("~([\x01-\x1F\x3D\x7F-\xFF])~", function($matches) {
+			return sprintf('=%02X', ord($matches[1]));
+		}, $quotprint);
 		//$quotprint = (string)str_replace('\=0D=0A',"=0D=0A",$quotprint);
 		$quotprint = (string)str_replace('=0D=0A',"\n",$quotprint);	
 		$quotprint = (string)str_replace('=0A=0D',"\n",$quotprint);	
@@ -432,6 +380,9 @@ function QuotedPrintable_encode($quotprint) {
 		return (string) $quotprint;
 }
 
+	/**
+	 * @todo Make visibility protected in 3.2
+	 */
 function validEmailAddr($emailAddress) {
 	$emailAddress = trim($emailAddress);
 	$angBrack = strpos($emailAddress, '<');
@@ -445,4 +396,98 @@ function validEmailAddr($emailAddress) {
 	}
 	
 	return $emailAddress;
+}
+}
+
+/**
+ * @deprecated 3.1
+ */
+function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false,
+	$plainContent = false) {
+
+	Deprecation::notice('3.1', 'Use Email->sendHTML() instead');
+	
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->sendHTML($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false);
+}
+
+/**
+ * @deprecated 3.1
+ */
+function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false) {
+	Deprecation::notice('3.1', 'Use Email->sendPlain() instead');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->sendPlain($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false);
+}
+
+/**
+ * @deprecated 3.1
+ */
+function encodeMultipart($parts, $contentType, $headers = false) {
+	Deprecation::notice('3.1', 'Use Email->$this->encodeMultipart() instead');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->encodeMultipart($parts, $contentType, $headers = false);
+}
+
+/**
+ * @deprecated 3.1
+ */
+function wrapImagesInline($htmlContent) {
+	Deprecation::notice('3.1', 'Functionality removed from core');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->wrapImagesInline($htmlContent);
+}
+
+/**
+ * @deprecated 3.1
+ */
+function wrapImagesInline_rewriter($url) {
+	Deprecation::notice('3.1', 'Functionality removed from core');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->wrapImagesInline_rewriter($url);
+	
+}
+
+/**
+ * @deprecated 3.1
+ */
+function processHeaders($headers, $body = false) {
+	Deprecation::notice('3.1', 'Set headers through Email->addCustomHeader()');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->processHeaders($headers, $url);
+}
+
+/**
+ * @deprecated 3.1
+ */
+function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
+	Deprecation::notice('3.1', 'Please add files through Email->attachFile()');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->encodeFileForEmail($file, $destFileName, $disposition, $extraHeaders);	
+}
+
+/**
+ * @deprecated 3.1
+ */
+function QuotedPrintable_encode($quotprint) {
+	Deprecation::notice('3.1', 'No longer available, handled internally');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->QuotedPrintable_encode($quotprint);	
+}
+
+/**
+ * @deprecated 3.1
+ */
+function validEmailAddr($emailAddress) {
+	Deprecation::notice('3.1', 'Use Email->validEmailAddr() instead');
+
+	$mailer = Injector::inst()->create('Mailer');
+	return $mailer->validEmailAddr($emailAddress);	
 }

@@ -91,7 +91,7 @@ Using inheritance to add extra behaviour or data fields to a member is limiting,
 class.  A better way is to use role extensions to add this behaviour.
 
 	:::php
-	Object::add_extension('Member', 'ForumRole');
+	Member::add_extension('ForumRole');
 	// OR
 	Member::add_role('ForumRole');
 

@@ -69,14 +69,6 @@ class CompositeField extends FormField {
 		return $this->children;
 	}
 
-	/**
-	 * @deprecated 3.0 Please use {@link FieldList()}.
-	 */
-	public function FieldSet() {
-		Deprecation::notice('3.0', 'Use FieldList() instead.');
-		return $this->FieldList();
-	}
-
 	public function setID($id) {
 		$this->id = $id;
 		return $this;
@@ -273,6 +265,8 @@ class CompositeField extends FormField {
 
 		$clone->children = $newChildren;
 		$clone->readonly = true;
+		$clone->addExtraClass($this->extraClass());
+		$clone->setDescription($this->getDescription());
 
 		return $clone;
 	}
@@ -293,6 +287,11 @@ class CompositeField extends FormField {
 
 		$clone->children = $newChildren;
 		$clone->readonly = true;
+		$clone->addExtraClass($this->extraClass());
+		$clone->setDescription($this->getDescription());
+		foreach($this->attributes as $k => $v) {
+			$clone->setAttribute($k, $v);
+		}
 
 		return $clone;
 	}

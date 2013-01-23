@@ -45,6 +45,76 @@ class DataQueryTest extends SapphireTest {
 		$dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
 		$dataQuery->execute();
 	}
+
+	public function testDisjunctiveGroup() {
+		$dq = new DataQuery('DataQueryTest_A');
+
+		$dq->where('DataQueryTest_A.ID = 2');
+		$subDq = $dq->disjunctiveGroup();
+		$subDq->where('DataQueryTest_A.Name = \'John\'');
+		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
+
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR (DataQueryTest_A.Name = 'Bob'))", 
+			$dq->sql()
+		);
+	}
+
+	public function testConjunctiveGroup() {
+		$dq = new DataQuery('DataQueryTest_A');
+
+		$dq->where('DataQueryTest_A.ID = 2');
+		$subDq = $dq->conjunctiveGroup();
+		$subDq->where('DataQueryTest_A.Name = \'John\'');
+		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
+
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') AND (DataQueryTest_A.Name = 'Bob'))", 
+			$dq->sql()
+		);
+	}
+
+	public function testNestedGroups() {
+		$dq = new DataQuery('DataQueryTest_A');
+
+		$dq->where('DataQueryTest_A.ID = 2');
+		$subDq = $dq->disjunctiveGroup();
+		$subDq->where('DataQueryTest_A.Name = \'John\'');
+		$subSubDq = $subDq->conjunctiveGroup();
+		$subSubDq->where('DataQueryTest_A.Age = 18');
+		$subSubDq->where('DataQueryTest_A.Age = 50');
+		$subDq->where('DataQueryTest_A.Name = \'Bob\'');
+
+		$this->assertContains(
+			"WHERE (DataQueryTest_A.ID = 2) AND ((DataQueryTest_A.Name = 'John') OR ((DataQueryTest_A.Age = 18) "
+				. "AND (DataQueryTest_A.Age = 50)) OR (DataQueryTest_A.Name = 'Bob'))", 
+			$dq->sql()
+		);
+	}
+
+	public function testEmptySubgroup() {
+		$dq = new DataQuery('DataQueryTest_A');
+		$dq->conjunctiveGroup();
+
+		$this->assertContains('WHERE (1=1)', $dq->sql());
+	}
+
+	public function testSubgroupHandoff() {
+		$dq = new DataQuery('DataQueryTest_A');
+		$subDq = $dq->disjunctiveGroup();
+
+		$orgDq = clone $dq;
+
+		$subDq->sort('"DataQueryTest_A"."Name"');
+		$orgDq->sort('"DataQueryTest_A"."Name"');
+
+		$this->assertEquals($dq->sql(), $orgDq->sql());
+
+		$subDq->limit(5, 7);
+		$orgDq->limit(5, 7);
+
+		$this->assertEquals($dq->sql(), $orgDq->sql());
+	}
 }
 
 

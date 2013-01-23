@@ -139,7 +139,7 @@ class XMLDataFormatter extends DataFormatter {
 		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		$xml .= (is_numeric($this->totalSize)) ? "<$className totalSize=\"{$this->totalSize}\">\n" : "<$className>\n";
 		foreach($set as $item) {
-			if($item->canView()) $xml .= $this->convertDataObjectWithoutHeader($item, $fields);
+			$xml .= $this->convertDataObjectWithoutHeader($item, $fields);
 		}
 		$xml .= "</$className>";
 	

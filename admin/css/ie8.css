@@ -1,5 +1,8 @@
 /** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
 /** ----------------------------------------------- Colours ------------------------------------------------ */
+/* Keep as solid colours transparent borders wont work in ie */
+/* Only for use as shadows as they wont work in older browsers */
+/*$color-optional: #a1d2eb !default; */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
@@ -9,8 +12,6 @@
 .cms .ss-ui-button.ss-ui-action-constructive { background-color: #1f9433; }
 .cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #23a93a; }
 .cms .ss-ui-button.ss-gridfield-button-filter { background: #55a4d2 url(../../images/icons/filter-icons.png) no-repeat -14px 4px; }
-
-.cms-content-toolbar { border-bottom: 1px solid #c9cdce; }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-image: none; }
 
@@ -40,12 +41,23 @@
 
 .filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
 
+/* Alternative styles for the switch in old IE */
+fieldset.switch-states { padding-right: 5px; }
+fieldset.switch-states .switch { padding: 0; width: 132%; left: -32px; }
+fieldset.switch-states .switch label { overflow: visible; text-overflow: visible; white-space: normal; padding: 0; }
+fieldset.switch-states .switch label.active { color: #fff; background-color: #2b9c32; }
+fieldset.switch-states .switch label span { display: inline; padding: 0 8px; overflow: visible; text-overflow: visible; white-space: wrap; }
+fieldset.switch-states .switch .slide-button { display: none; }
+fieldset.switch-states .switch input.state-name { margin-left: -20px; }
+
+/* Hide size controls in IE - they won't work as intended */
+.cms-content-controls .preview-size-selector { display: none; }
+
 .cms-panel .cms-panel-content-collapsed { position: relative; width: 40px; }
 .cms-panel .cms-panel-content-collapsed h2.cms-panel-header, .cms-panel .cms-panel-content-collapsed h3.cms-panel-header { zoom: 1; position: absolute; top: 10px; right: 10px; writing-mode: tb-rl; float: right; z-index: 5000; }
 
 .cms-content-toolbar .cms-tree-view-modes .checkboxAboveTree { margin-right: 1px; }
 
-.cms .cms-content-tools { border-right: 1px solid #CCC; }
 .cms .cms-content-tools .cms-panel-content .dropdown select { width: 152px; }
 
 .filter-buttons button { width: 23px !important; height: 23px !important; }

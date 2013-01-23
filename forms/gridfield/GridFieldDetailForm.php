@@ -29,6 +29,11 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	protected $validator;
 
 	/**
+	 * @var FieldList Falls back to {@link DataObject->getCMSFields()} if not defined.
+	 */
+	protected $fields;
+
+	/**
 	 * @var String
 	 */
 	protected $itemRequestClass;
@@ -125,6 +130,21 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	public function getValidator() {
 		return $this->validator;
+	}
+
+	/**
+	 * @param FieldList $fields
+	 */
+	public function setFields(FieldList $fields) {
+		$this->fields = $fields;
+		return $this;
+	}
+
+	/**
+	 * @return FieldList
+	 */
+	public function getFields() {
+		return $this->fields;
 	}
 
 	/**
@@ -281,6 +301,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * @return Form 
 	 */
 	public function ItemEditForm() {
+		$list = $this->gridField->getList();
+
 		if (empty($this->record)) {
 			$controller = Controller::curr();
 			$noActionURL = $controller->removeAction($_REQUEST['url']);
@@ -288,16 +310,31 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			return $controller->redirect($noActionURL, 302);
 		}
 
+		$canView = $this->record->canView();
+		$canEdit = $this->record->canEdit();
+		$canDelete = $this->record->canDelete();
+		$canCreate = $this->record->canCreate();
+
+		if(!$canView) {
+			$controller = Controller::curr();
+			// TODO More friendly error
+			return $controller->httpError(403);
+		}
+
 		$actions = new FieldList();
 		if($this->record->ID !== 0) {
-			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-				->setUseButtonTag(true)
-				->addExtraClass('ss-ui-action-constructive')
-				->setAttribute('data-icon', 'accept'));
+			if($canEdit) {
+				$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
+					->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-constructive')
+					->setAttribute('data-icon', 'accept'));
+			}
 
-			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-				->setUseButtonTag(true)
-				->addExtraClass('ss-ui-action-destructive'));
+			if($canDelete) {
+				$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+					->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-destructive'));
+			}
 
 		}else{ // adding new record
 			//Change the Save label to 'Create'
@@ -319,16 +356,33 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 				$actions->push(new LiteralField('cancelbutton', $text));
 			}
 		}
+		$fields = $this->component->getFields();
+		if(!$fields) $fields = $this->record->getCMSFields();
 		$form = new Form(
 			$this,
 			'ItemEditForm',
-			$this->record->getCMSFields(),
+			$fields,
 			$actions,
 			$this->component->getValidator()
 		);
-
+		
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
+		if($this->record->ID && !$canEdit) {
+		  // Restrict editing of existing records
+		  $form->makeReadonly();
+		} elseif(!$this->record->ID && !$canCreate) {
+		  // Restrict creation of new records
+		  $form->makeReadonly();
+		}
+
+		// Load many_many extraData for record.
+		// Fields with the correct 'ManyMany' namespace need to be added manually through getCMSFields().
+		if($list instanceof ManyManyList) {
+			$extraData = $list->getExtraData('', $this->record->ID);
+			$form->loadDataFrom(array('ManyMany' => $extraData));
+		}
+		
 		// TODO Coupling with CMS
 		$toplevelController = $this->getToplevelController();
 		if($toplevelController && $toplevelController instanceof LeftAndMain) {
@@ -389,11 +443,23 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	public function doSave($data, $form) {
 		$new_record = $this->record->ID == 0;
 		$controller = Controller::curr();
+		$list = $this->gridField->getList();
+		
+		if($list instanceof ManyManyList) {
+			// Data is escaped in ManyManyList->add()
+			$extraData = (isset($data['ManyMany'])) ? $data['ManyMany'] : null;
+		} else {
+			$extraData = null;
+		}
+
+		if(!$this->record->canEdit()) {
+			return $controller->httpError(403);
+		}
 
 		try {
 			$form->saveInto($this->record);
 			$this->record->write();
-			$this->gridField->getList()->add($this->record);
+			$list->add($this->record, $extraData);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			$responseNegotiator = new PjaxResponseNegotiator(array(
