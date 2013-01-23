@@ -110,22 +110,20 @@ simple example of a plugin that adds a button to the editor:
 	:::js
 	(function() {
 		tinymce.create('tinymce.plugins.myplugin', {
-
+			
 			init : function(ed, url) {
 				var self = this;
-
+				
 				ed.addButton ('myplugin', {
 					'title' : 'My plugin',
-
 					'image' : url+'/myplugin.png',
-
 					'onclick' : function () {
 						alert('Congratulations! Your plugin works!');
 					}
 				});
-
+				
 			},
-
+			
 			getInfo : function() {
 				return {
 					longname  : 'myplugin',
@@ -136,7 +134,7 @@ simple example of a plugin that adds a button to the editor:
 				};
 			}
 		});
-
+		
 		tinymce.PluginManager.add('myplugin', tinymce.plugins.myplugin);
 	})();
 
