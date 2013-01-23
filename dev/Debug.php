@@ -543,13 +543,13 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_ERROR:
 		case E_CORE_ERROR:
 		case E_USER_ERROR:
-			Debug::fatalHandler($errno, $errstr, $errfile, $errline, null);
+			Debug::fatalHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
 			break;
 
 		case E_WARNING:
 		case E_CORE_WARNING:
 		case E_USER_WARNING:
-			Debug::warningHandler($errno, $errstr, $errfile, $errline, null);
+			Debug::warningHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
 			break;
 
 		case E_NOTICE:
@@ -557,7 +557,7 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
 		case E_STRICT:
-			Debug::noticeHandler($errno, $errstr, $errfile, $errline, null);
+			Debug::noticeHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
 			break;
 	}
 }
