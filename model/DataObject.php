@@ -1434,7 +1434,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$combinedFilter = "\"$joinField\" = '$id'";
 		if(!empty($filter)) $combinedFilter .= " AND ({$filter})";
 			
-		return singleton($componentClass)->extendedSQL($combinedFilter, $sort, $limit, $join);
+		return DataList::create($componentClass)
+			->where($combinedFilter)
+			->canSortBy($sort)
+			->limit($limit);
 	}
 
 	/**
