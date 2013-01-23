@@ -41,11 +41,8 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 		$data .= "<p style=\"color: white; background-color: $colour; margin: 0\">"
 			. "[$errorType] $errstr<br />$errfile:$errline\n<br />\n<br />\n</p>\n";
 
-		// Get a backtrace, filtering out debug method calls
-		$data .= SS_Backtrace::backtrace(true, false, array(
-			'SS_LogErrorEmailFormatter->format',
-			'SS_LogEmailWriter->_write'
-		));
+		// Render the provided backtrace
+		$data .= SS_Backtrace::get_rendered_backtrace($errcontext);
 
 		// Compile extra data
 		$blacklist = array('message', 'timestamp', 'priority', 'priorityName');
