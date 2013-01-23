@@ -76,8 +76,7 @@ class Aggregate extends ViewableData {
 	 * @return SQLQuery
 	 */
 	protected function query($attr) {
-		$singleton = singleton($this->type);
-		$query = $singleton->buildSQL($this->filter);
+		$query = DataList::create($this->type)->where($this->filter);
 		$query->setSelect($attr);
 		$query->setOrderBy(array()); 
 		$singleton->extend('augmentSQL', $query);
