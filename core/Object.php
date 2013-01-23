@@ -207,6 +207,7 @@ abstract class Object {
 					switch($token[1]) {
 						case 'true': $args[] = true; break;
 						case 'false': $args[] = false; break;
+						case 'null': $args[] = null; break;
 						default: throw new Exception("Bad T_STRING arg '{$token[1]}'");
 					}
 				
