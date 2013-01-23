@@ -150,6 +150,9 @@ class SS_HTTPResponse {
 	
 	public function setBody($body) {
 		$this->body = $body;
+		
+		// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
+		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
 	}
 	
 	public function getBody() {
@@ -245,14 +248,6 @@ class SS_HTTPResponse {
 	 */
 	public function isFinished() {
 		return in_array($this->statusCode, array(301, 302, 401, 403));
-	}
-
-	/**
-	 * Set content-length in bytes. Should be called right before {@link output()}.
-	 */
-	public function fixContentLength() {
-		// Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
-		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');	
 	}
 	
 }
