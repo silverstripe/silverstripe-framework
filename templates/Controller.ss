@@ -23,7 +23,7 @@
 				<p>To get started with the SilverStripe framework:</p>
 				<ol>
 					<li>Create a <code>Controller</code> subclass (<a href="http://doc.silverstripe.org/framework/en/topics/controller">doc.silverstripe.org/framework/en/topics/controller</a>)</li>
-					<li>Setup the routes.yml f to your <code>Controller</code> (<a href="http://doc.silverstripe.org/framework/en/reference/director#routing">doc.silverstripe.org/framework/en/reference/director#routing</a>).</li>
+					<li>Setup the routes.yml to your <code>Controller</code> (<a href="http://doc.silverstripe.org/framework/en/reference/director#routing">doc.silverstripe.org/framework/en/reference/director#routing</a>).</li>
 					<li>Create a template for your <code>Controller</code> (<a href="http://doc.silverstripe.org/framework/en/reference/templates">doc.silverstripe.org/framework/en/reference/templates</a>)</li>
 				</ol>
 
