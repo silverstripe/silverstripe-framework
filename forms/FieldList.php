@@ -518,6 +518,47 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
+	 * Callback comparison function for usort in sortByWeight()
+	 * @param FormField $f1
+	 * @param FormField $f2
+	 * @return int
+	 */
+	private static function compareWeight($f1, $f2) {
+    if ($f1->getWeight() == $f2->getWeight()) {
+			return ($f1->position < $f2->position) ? -1 : 1;
+    }
+    return ($f1->getWeight() < $f2->getWeight()) ? -1 : 1;
+	}
+	
+	/**
+	 * Sort FieldList by Weight
+	 * Change the order of fields in this FieldList looking for optional field's weight .
+	 * 
+	 * Default weight is 0, so CMS default positin will not be changed. Is also possible from
+	 * userland to set default field's weight, but right now is a little bit triky.
+	 */
+	public function sortByWeight() {
+		// Build a map of fields, with the addition of theirs actual position
+		$fieldMap = array();
+		foreach($this->dataFields() as $field) {
+			$field->position = $this->fieldPosition($field);
+			$fieldMap[] = $field;
+		}
+		
+		// Sort the map using the compareWeight function
+		usort($fieldMap, array('FieldList','compareWeight'));
+		$fields = array();
+		foreach ($fieldMap as $f) {
+			$fields[] = $f;
+		}
+		
+		// Update our internal $this->items parameter.
+		$this->items = $fields;
+		
+		$this->flushFieldsCache();
+	}
+	
+	/**
 	 * Change the order of fields in this FieldList by specifying an ordered list of field names.
 	 * This works well in conjunction with SilverStripe's scaffolding functions: take the scaffold, and
 	 * shuffle the fields around to the order that you want.

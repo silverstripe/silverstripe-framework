@@ -94,6 +94,12 @@ class FormField extends RequestHandler {
 	protected $attributes = array();
 
 	/**
+	 * @var int Field weight. The heavier (high number) field will be placed at the bottom, 
+	 * while the lightest (low number) will be placed at the top. Default is 0
+	 */
+	protected $weight;
+	
+	/**
 	 * Takes a fieldname and converts camelcase to spaced
 	 * words. Also resolves combined fieldnames with dot syntax
 	 * to spaced words.
@@ -143,6 +149,8 @@ class FormField extends RequestHandler {
 	public function __construct($name, $title = null, $value = null) {
 		$this->name = $name;
 		$this->title = ($title === null) ? self::name_to_label($name) : $title;
+		// Default weight is 0
+		$this->setWeight(0);
 
 		if($value !== NULL) $this->setValue($value);
 
@@ -174,6 +182,23 @@ class FormField extends RequestHandler {
 	 */
 	public function getName() {
 		return $this->name;
+	}
+	
+	/**
+	 * Returns the field weight - used for sorting
+	 * 
+	 * @return int
+	 */
+	public function getWeight() {
+		return $this->weight;
+	}
+	
+	/**
+	 * Set the field weight
+	 * @param int $weight
+	 */
+	public function setWeight($weight=0) {
+		$this->weight = intval($weight);
 	}
 
 	/** 

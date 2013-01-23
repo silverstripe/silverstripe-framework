@@ -1031,12 +1031,25 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				);
 			}
 			
+			// Sort the FieldList using optional weight 
+			if ($fields->hasTabSet()) {
+				// get the tabSet
+				$tabSet = $fields->first();
+				// get the tabs
+				$tabs = $tabSet->Tabs();
+				foreach ($tabs as $tab) {
+					// get tab's fields
+					$tabFields = $tab->Fields();
+					$tabFields->sortByWeight();
+				}
+			}
+			
 			// Add hidden fields which are required for saving the record
 			// and loading the UI state
 			if(!$fields->dataFieldByName('ClassName')) {
 				$fields->push(new HiddenField('ClassName'));
 			}
-
+			
 			$tree_class = $this->stat('tree_class');
 			if(
 				$tree_class::has_extension('Hierarchy') 
