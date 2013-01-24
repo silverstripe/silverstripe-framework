@@ -655,7 +655,9 @@ class Form extends RequestHandler {
 		$needsCacheDisabled = false;
 		if ($this->getSecurityToken()->isEnabled()) $needsCacheDisabled = true;
 		if ($this->FormMethod() != 'get') $needsCacheDisabled = true;
-		if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) $needsCacheDisabled = true;
+		if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) {
+			$needsCacheDisabled = true;
+		}
 
 		// If we need to disable cache, do it
 		if ($needsCacheDisabled) HTTP::set_cache_age(0);

@@ -136,7 +136,7 @@ class Versioned extends DataExtension {
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
 	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
-	    $baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
+		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
 		
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Noop
@@ -281,8 +281,8 @@ class Versioned extends DataExtension {
 	 */
 	function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $record) {
 		$dataClass = $dataQuery->dataClass();
-	    if (isset($record['Version'])){
-	    	$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $record['ID']);
+		if (isset($record['Version'])){
+			$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $record['ID']);
 			$dataQuery->where("\"$dataClass\".\"Version\" = " . $record['Version']);
 			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
 		}

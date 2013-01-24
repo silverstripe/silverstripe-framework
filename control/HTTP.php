@@ -282,7 +282,7 @@ class HTTP {
 			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate, no-transform";
 			$responseHeaders["Pragma"] = "";
 
-			// To do: User-Agent should only be added in situations where you *are* actually varying according to user-agent.
+			// To do: User-Agent should only be added in situations where you *are* actually varying according to it.
 			$responseHeaders['Vary'] = 'Cookie, X-Forwarded-Protocol, User-Agent, Accept';
 
 		} else {
@@ -293,11 +293,12 @@ class HTTP {
 			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
 
 			/* Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
-			which means that if you log out, you get redirected back to a page which Chrome then checks against last-modified (which passes, getting a 304)
-			when it shouldn't be trying to use that page at all because it's the "logged in" version.
+			which means that if you log out, you get redirected back to a page which Chrome then checks against
+			last-modified (which passes, getting a 304) when it shouldn't be trying to use that page at all because
+			it's the "logged in" version.
 
-			By also using and etag that includes both the modification date and all the varies values which we also check against we can catch
-			this and not return a 304
+			By also using and etag that includes both the modification date and all the varies values which we also
+			check against we can catch this and not return a 304
 			*/
 			$etagParts = array(self::$modification_date, serialize($_COOKIE));
 			if (isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) $etagParts[] = $_SERVER['HTTP_X_FORWARDED_PROTOCOL'];
