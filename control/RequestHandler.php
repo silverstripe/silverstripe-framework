@@ -145,89 +145,141 @@ class RequestHandler extends ViewableData {
 	
 		$this->request = $request;
 		$this->setDataModel($model);
+
+		$match = $this->findAction($request);
+
+		// If nothing matches, return this object
+		if (!$match) return $this;
+
+		// Start to find what action to call. Start by using what findAction returned
+		$action = $match['action'];
+
+		// We used to put "handleAction" as the action on controllers, but (a) this could only be called when
+		// you had $Action in your rule, and (b) RequestHandler didn't have one. $Action is better
+		if ($action == 'handleAction') {
+			Deprecation::notice('3.2.0', 'Calling handleAction directly is deprecated - use $Action instead');
+			$action = '$Action';
+		}
+
+		// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
+		if($action[0] == '$') {
+			$action = str_replace("-", "_", $request->latestParam(substr($action,1)));
+		}
+
+		if(!$action) {
+			if(isset($_REQUEST['debug_request'])) {
+				Debug::message("Action not set; using default action method name 'index'");
+			}
+			$action = "index";
+		} else if(!is_string($action)) {
+			user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
+		}
+
+		$className = get_class($this);
+
+		if(!$this->hasAction($action)) {
+			return new SS_HTTPResponse("Action '$action' isn't available on class $className.", 404);
+		}
+
+		if(!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'init'))) {
+			return new SS_HTTPResponse("Action '$action' isn't allowed on class $className.", 403);
+		}
+
+		try {
+			$result = $this->handleAction($request, $action);
+		}
+		catch (SS_HTTPResponse_Exception $e) {
+			return $e->getResponse();
+		}
+		catch(PermissionFailureException $e) {
+			$result = Security::permissionFailure(null, $e->getMessage());
+		}
+
+		if($result instanceof SS_HTTPResponse && $result->isError()) {
+			if(isset($_REQUEST['debug_request'])) Debug::message("Rule resulted in HTTP error; breaking");
+			return $result;
+		}
+
+		// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to
+		// parse. It might have its own handler. However, we only do this if we haven't just parsed an
+		// empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
+		// actions which return themselves to avoid infinite loops.
+		$matchedRuleWasEmpty = $request->isEmptyPattern($match['rule']);
+		$resultIsRequestHandler = is_object($result) && $result instanceof RequestHandler;
 		
+		if($this !== $result && !$matchedRuleWasEmpty && $resultIsRequestHandler) {
+			$returnValue = $result->handleRequest($request, $model);
+
+			// Array results can be used to handle
+			if(is_array($returnValue)) $returnValue = $this->customise($returnValue);
+
+			return $returnValue;
+
+		// If we return some other data, and all the URL is parsed, then return that
+		} else if($request->allParsed()) {
+			return $result;
+
+		// But if we have more content on the URL and we don't know what to do with it, return an error.
+		} else {
+			return $this->httpError(404, "I can't handle sub-URLs of a $this->class object.");
+		}
+
+		return $this;
+	}
+
+	protected function findAction($request) {
+		$handlerClass = ($this->class) ? $this->class : get_class($this);
+
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {
-			$urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::FIRST_SET);
+			$urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::UNINHERITED);
 
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
 				if(isset($_REQUEST['debug_request'])) {
 					Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 				}
-				if($params = $request->match($rule, true)) {
-					// Backwards compatible setting of url parameters, please use SS_HTTPRequest->latestParam() instead
-					//Director::setUrlParams($request->latestParams());
-				
+
+				if($request->match($rule, true)) {
 					if(isset($_REQUEST['debug_request'])) {
-						Debug::message("Rule '$rule' matched to action '$action' on $this->class."
-							. " Latest request params: " . var_export($request->latestParams(), true));
+						Debug::message(
+							"Rule '$rule' matched to action '$action' on $this->class. ".
+							"Latest request params: " . var_export($request->latestParams(), true)
+						);
 					}
-				
-					// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
-					if($action[0] == '$') $action = $params[substr($action,1)];
-				
-					if($this->checkAccessAction($action)) {
-						if(!$action) {
-							if(isset($_REQUEST['debug_request'])) {
-								Debug::message("Action not set; using default action method name 'index'");
-							}
-							$action = "index";
-						} else if(!is_string($action)) {
-							user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
-						}
-						
-						try {
-							if(!$this->hasMethod($action)) {
-								return $this->httpError(404, "Action '$action' isn't available on class "
-									. get_class($this) . ".");
-							}
-							$result = $this->$action($request);
-						} catch(SS_HTTPResponse_Exception $responseException) {
-							$result = $responseException->getResponse();
-						} catch(PermissionFailureException $e) {
-							$result = Security::permissionFailure(null, $e->getMessage());
-						}
-					} else {
-						return $this->httpError(403, "Action '$action' isn't allowed on class " . get_class($this));
-					}
-				
-					if($result instanceof SS_HTTPResponse && $result->isError()) {
-						if(isset($_REQUEST['debug_request'])) Debug::message("Rule resulted in HTTP error; breaking");
-						return $result;
-					}
-				
-					// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to
-					// parse. It might have its own handler. However, we only do this if we haven't just parsed an
-					// empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
-					// actions which return themselves to avoid infinite loops.
-					if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) 
-							&& $result instanceof RequestHandler) {
 
-						$returnValue = $result->handleRequest($request, $model);
-
-						// Array results can be used to handle 
-						if(is_array($returnValue)) $returnValue = $this->customise($returnValue);
-					
-						return $returnValue;
-						
-					// If we return some other data, and all the URL is parsed, then return that
-					} else if($request->allParsed()) {
-						return $result;
-					
-					// But if we have more content on the URL and we don't know what to do with it, return an error.
-					} else {
-						return $this->httpError(404, "I can't handle sub-URLs of a $this->class object.");
-					}
-				
-					return $this;
+					return array('rule' => $rule, 'action' => $action);
 				}
 			}
-			
+
 			$handlerClass = get_parent_class($handlerClass);
 		}
-		
-		// If nothing matches, return this object
-		return $this;
+	}
+
+	/**
+	 * Given a request, and an action name, call that action name on this RequestHandler
+	 *
+	 * Must not raise SS_HTTPResponse_Exceptions - instead it should return
+	 *
+	 * @param $request
+	 * @param $action
+	 * @return SS_HTTPResponse
+	 */
+	protected function handleAction($request, $action) {
+		$className = get_class($this);
+
+		if(!$this->hasMethod($action)) {
+			return new SS_HTTPResponse("Action '$action' isn't available on class $className.", 404);
+		}
+
+		$res = $this->extend('beforeCallActionHandler', $request, $action);
+		if ($res) return reset($res);
+
+		$actionRes = $this->$action($request);
+
+		$res = $this->extend('afterCallActionHandler', $request, $action);
+		if ($res) return reset($res);
+
+		return $actionRes;
 	}
 	
 	/**

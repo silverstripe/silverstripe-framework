@@ -239,7 +239,7 @@ class GridFieldTest extends SapphireTest {
 	public function testHandleActionBadArgument() {
 		$this->setExpectedException('InvalidArgumentException');
 		$obj = new GridField('testfield', 'testfield');
-		$obj->handleAction('prft', array(), array());
+		$obj->handleAlterAction('prft', array(), array());
 	}
 	
 	/**
@@ -248,7 +248,7 @@ class GridFieldTest extends SapphireTest {
 	public function testHandleAction() {
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
 		$obj = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-		$this->assertEquals('handledAction is executed', $obj->handleAction('jump', array(), array()));
+		$this->assertEquals('handledAction is executed', $obj->handleAlterAction('jump', array(), array()));
 	}
 
 	/**

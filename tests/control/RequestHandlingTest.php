@@ -65,17 +65,13 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 		
 	public function testBadBase() {
-		/* Without a double-slash indicator in the URL, the entire URL is popped off the stack.  The controller's
-		 * default action handlers have been designed for this to an extend: simple actions can still be called.
-		 * This is the set-up of URL rules written before this new request handler. */
+		/* We no longer support using hacky attempting to handle URL parsing with broken rules */
 		$response = Director::test("testBadBase/method/1/2");
-		$this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
+		$this->assertNotEquals("This is a method on the controller: 1, 2", $response->getBody());
 
 		$response = Director::test("testBadBase/TestForm", array("MyField" => 3), null, "POST");
-		$this->assertEquals("Form posted", $response->getBody());
+		$this->assertNotEquals("Form posted", $response->getBody());
 		
-		/* It won't, however, let you chain requests to access methods on forms, or form fields.  In order to do that,
-		 * you need to have a // marker in your URL parsing rule */
 		$response = Director::test("testBadBase/TestForm/fields/MyField");
 		$this->assertNotEquals("MyField requested", $response->getBody());
 	}

@@ -610,7 +610,7 @@ class SS_HTTPRequest implements ArrayAccess {
 		for($i=0;$i<$count;$i++) {
 			$value = array_shift($this->dirParts);
 			
-			if(!$value) break;
+			if($value === null) break;
 			
 			$return[] = $value;
 		}

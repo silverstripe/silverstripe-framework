@@ -13,7 +13,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	static $url_handlers = array(
 		'$BatchAction/applicablepages' => 'handleApplicablePages',
 		'$BatchAction/confirmation' => 'handleConfirmation',
-		'$BatchAction' => 'handleAction',
+		'$BatchAction' => 'handleBatchAction',
 	);
 	
 	protected $parentController;
@@ -66,7 +66,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		return Controller::join_links($this->parentController->Link(), $this->urlSegment);
 	}
 
-	public function handleAction($request) {
+	public function handleBatchAction($request) {
 		// This method can't be called without ajax.
 		if(!$request->isAjax()) {
 			$this->parentController->redirectBack();
