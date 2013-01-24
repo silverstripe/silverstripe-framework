@@ -44,7 +44,6 @@ class HTTP {
 		return HTTP::urlRewriter($html, function($url) {
 			return Director::absoluteURL($url, true);
 		});
-		
 	}
 
 	/**
@@ -74,6 +73,10 @@ class HTTP {
 	 * @return The content with all links rewritten as per the logic specified in $code
 	 */
 	public static function urlRewriter($content, $code) {
+		if(!is_callable($code)) {
+			Deprecation::notice(3.1, 'HTTP::urlRewriter expects a callable as the second parameter');
+		}
+		
 		// Replace attributes
 		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
@@ -95,14 +98,14 @@ class HTTP {
 
 		// Callback for regexp replacement
 		$callback = function($matches) use($code) {
-			$URL = stripslashes($matches[2]);
 			if(is_callable($code)) {
-				$rewritten = $code($URL);
+				$rewritten = $code($matches[2]);
 			} else {
-				Deprecation::notice(3.2, 'HTTP::urlRewriter expects a callable as the second parameter');
+				// Expose the $URL variable to be used by the $code expression
+				$URL = $matches[2];
 				$rewritten = eval("return ($code);");
 			}
-			return stripslashes($matches[1]) . $rewritten . stripslashes($matches[3]);
+			return $matches[1] . $rewritten . $matches[3];
 		};
 		
 		// Execute each expression
