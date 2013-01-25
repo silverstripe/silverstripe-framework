@@ -17,7 +17,7 @@
 			 * The order is significant - if the state is not available, preview will start searching the list
 			 * from the beginning.
 			 */
-			AllowedStates: ['StageLink', 'LiveLink'],
+			AllowedStates: ['StageLink', 'LiveLink','ArchiveLink'],
 
 			/**
 			 * API
@@ -240,7 +240,15 @@
 				// Walk through available states and get the URLs.
 				var urlMap = $.map(this.getAllowedStates(), function(name) {
 					var stateLink = $('.cms-preview-states .state-name[data-name=' + name + ']');
-					return stateLink.length ? {name: name, url: stateLink.attr('data-link')} : null;
+					if(stateLink.length) {
+						return {
+							name: name, 
+							url: stateLink.attr('data-link'),
+							active: stateLink.is(':radio') ? stateLink.is(':checked') : stateLink.is(':selected')
+						};
+					} else {
+						return null;
+					}
 				});
 
 				return urlMap;
@@ -263,7 +271,10 @@
 				// Find current state within currently available states.
 				if (states) {
 					currentState = $.grep(states, function(state, index) {
-						return currentStateName===state.name;
+						return (
+							currentStateName === state.name ||
+							(!currentStateName && state.active)
+						);
 					});
 				}
 
