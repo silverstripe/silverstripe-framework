@@ -823,6 +823,7 @@ body.cms {
 	display: block;
 
 	.view-mode-batchactions-wrapper {
+		height: 18px;
 		float: left;
 		padding: 4px 6px;
 		border: 1px solid #aaa;
@@ -830,9 +831,14 @@ body.cms {
 		background-color: #D9D9D9;
 		@include background-image(linear-gradient(top, #fff, #D9D9D9));
 		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;	
+		border-bottom-left-radius: 4px;
+
+		input {
+			vertical-align: middle;
+		}
 
 		label {
+			vertical-align: middle;
 			display: none;
 		}
 
@@ -842,18 +848,18 @@ body.cms {
 	}
 
 		&.inactive .view-mode-batchactions-wrapper {
-			border-radius: 4px;		
+			border-radius: 4px;
 
 			label {
 				display: inline;
 			}
 		}
-	
+
 	form > * {
 		display: block;
 		float: left;
 	}
-	
+
 	form.cms-batch-actions {
 		float:  left;
 	}
@@ -862,13 +868,24 @@ body.cms {
 		display: none;
 	}
 
-	.chzn-container-single .chzn-single {
-		margin-left: -1px;
-		border-radius: 0;
-		@include background-image(linear-gradient(top, #fff, #D9D9D9));
+	.chzn-container-single {
+		display: block;
+
+		.chzn-single {
+			margin-left: -1px;
+			border-radius: 0;
+			@include background-image(linear-gradient(top, #fff, #D9D9D9));
+
+			span {
+				padding-top: 0;
+			}
+		}
 	}
 
 	.cms-batch-actions .Actions .ss-ui-button {
+		padding-top: 4px;
+		padding-bottom: 4px;
+		height: 28px;
 		margin-left: -1px;
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
