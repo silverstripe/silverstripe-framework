@@ -228,6 +228,11 @@
 			 * Change the URL of the preview iframe.
 			 */
 			_loadUrl: function(url) {
+				// do we need to be showing a older version of the preview
+				var archive = $('#cms-page-history-versions').find('tr.active td.last-edited').attr('value');
+				if (archive) {
+					url += ((url.match(/\?/)) ? '&' : '?') + 'archiveDate=' + archive.replace(/\/s/g, "%20");
+				}
 				this.find('iframe').addClass('loading').attr('src', url);
 				return this;
 			},
