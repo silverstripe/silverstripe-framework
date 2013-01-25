@@ -14,8 +14,6 @@ Our web-based [PHP installer](/installation) can check if you meet the requireme
  * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysql (or other database driver), session, simplexml, tokenizer, xml.
  * Recommended configuration
 
-		safe_mode = Off
-		magic_quotes_gpc = Off
 		memory_limit = 48M
 
  * See [phpinfo()](http://php.net/manual/en/function.phpinfo.php) for more information about your environment
