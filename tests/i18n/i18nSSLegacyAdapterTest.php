@@ -15,13 +15,13 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		Director::setBaseFolder($this->alternateBasePath);
 
 		// Push a template loader running from the fake webroot onto the stack.
-		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
 		$templateManifest->regenerate(false);
 		SS_TemplateLoader::instance()->pushManifest($templateManifest);
 		$this->_oldTheme = SSViewer::current_theme();
 		SSViewer::set_theme('testtheme1');
 		
-		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
+		$classManifest = new SS_ClassManifest($this->alternateBasePath, null, true, true, false);
 		SS_ClassLoader::instance()->pushManifest($classManifest);
 
 		$this->originalLocale = i18n::get_locale();

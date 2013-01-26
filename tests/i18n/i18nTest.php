@@ -34,7 +34,7 @@ class i18nTest extends SapphireTest {
 		Director::setBaseFolder($this->alternateBasePath);
 
 		// Push a template loader running from the fake webroot onto the stack.
-		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
 		$templateManifest->regenerate(false);
 		SS_TemplateLoader::instance()->pushManifest($templateManifest);
 		$this->_oldTheme = SSViewer::current_theme();

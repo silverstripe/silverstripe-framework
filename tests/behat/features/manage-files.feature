@@ -82,3 +82,8 @@ Feature: Manage files
     And I go to "/admin/assets/show/0"
     And I click on "folder2" in the "Files" table
     And the "folder2" table should contain "file1"
+
+  Scenario: I can see allowed extensions help
+    When I go to "/admin/assets/add"
+    And I follow "Show allowed extensions"
+    Then I should see "png,"

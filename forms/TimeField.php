@@ -191,7 +191,19 @@ class TimeField extends TextField {
 	 * Creates a new readonly field specified below
 	 */
 	public function performReadonlyTransformation() {
-		return new TimeField_Readonly($this->name, $this->title, $this->dataValue(), $this->getConfig('timeformat'));
+		return $this->castedCopy('TimeField_Readonly');
+	}
+
+	public function castedCopy($class) {
+		$copy = parent::castedCopy($class);
+		if($copy->hasMethod('setConfig')) {
+			$config = $this->getConfig();
+			foreach($config as $k => $v) {
+				$copy->setConfig($k, $v);
+			}
+		}
+
+		return $copy;
 	}
 	
 }

@@ -44,6 +44,34 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 This will automatically add a new menu entry to the CMS, and you're ready to go!
 Try opening http://localhost/admin/products/?flush=all.
 
+## Permissions
+
+Each new `ModelAdmin` subclass creates its own [permission code](/reference/permission),
+for the example above this would be `CMS_ACCESS_MyAdmin`. Users with access to the CMS
+need to have this permission assigned through `admin/security/` in order to gain
+access to the controller (unless they're admins).
+
+The `DataObject` API has more granular permission control, which is enforced in ModelAdmin by default. 
+Available checks are `canEdit()`, `canCreate()`, `canView()` and `canDelete()`.
+Models check for administrator permissions by default. For most cases,
+less restrictive checks make sense, e.g. checking for general CMS access rights.
+
+	:::php
+	class Category extends DataObject {
+	  // ...
+		public function canView($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canEdit($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canDelete($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canCreate($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+
 ## Search Fields
 
 ModelAdmin uses the `[SearchContext](/reference/searchcontext)` class to provide
@@ -155,6 +183,10 @@ Consider replacing it with a more powerful interface in case you have many recor
 Has-many and many-many relationships are usually handled via the `[GridField](/reference/grid-field)` class,
 more specifically the `[api:GridFieldAddExistingAutocompleter]` and `[api:GridFieldRelationDelete]` components.
 They provide a list/detail interface within a single record edited in your ModelAdmin.
+The `[GridField](/reference/grid-field)` docs also explain how to manage 
+extra relation fields on join tables through its detail forms.
+The autocompleter can also search attributes on relations,
+based on the search fields defined through `[api:DataObject::searchableFields()]`.
 
 ## Permissions
 
@@ -214,7 +246,7 @@ also another tool at your disposal: The `[api:Extension]` API.
 	}
 
 	// mysite/_config.php
-	Object::add_extension('MyAdmin', 'MyAdminExtension');
+	MyAdmin::add_extension('MyAdminExtension');
 
 The following extension points are available: `updateEditForm()`, `updateSearchContext()`,
 `updateSearchForm()`, `updateList()`, `updateImportForm`.

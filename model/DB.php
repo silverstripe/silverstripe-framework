@@ -91,7 +91,7 @@ class DB {
 
 			$key = md5($key); // Ensure key is correct length for chosen cypher
 			$ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CFB);
-	    $iv = mcrypt_create_iv($ivSize);
+			$iv = mcrypt_create_iv($ivSize);
 			$encrypted = mcrypt_encrypt(
 				MCRYPT_RIJNDAEL_256, $key, $name, MCRYPT_MODE_CFB, $iv
 			);
@@ -153,7 +153,7 @@ class DB {
 	 *                        rest of the options, see the specific class.
 	 */
 	public static function connect($databaseConfig) {
-		// This is used by TestRunner::startsession() to test up a test session using an alt
+		// This is used by the "testsession" module to test up a test session using an alternative name
 		if($name = self::get_alternative_database_name()) {
 			$databaseConfig['database'] = $name;
 		}

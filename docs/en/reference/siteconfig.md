@@ -51,7 +51,7 @@ Create a mysite/code/CustomSiteConfig.php file.
 
 Then add a link to your extension in the _config.php file like below.
 
-	Object::add_extension('SiteConfig', 'CustomSiteConfig');
+	SiteConfig::add_extension('CustomSiteConfig');
 
 
 This tells SilverStripe to add the CustomSiteConfig extension to the `[api:SiteConfig]` class. 

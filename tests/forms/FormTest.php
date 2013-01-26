@@ -239,7 +239,7 @@ class FormTest extends FunctionalTest {
 		$this->assertPartialMatchBySelector(
 			'#SomeRequiredField span.required',
 			array(
-				'"SomeRequiredField" is required'
+				'"Some Required Field" is required'
 			),
 			'Required fields show a notification on field when left blank'
 		);

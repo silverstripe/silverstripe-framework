@@ -849,19 +849,17 @@ class MySQLDatabase extends SS_Database {
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
 			$match['SiteTree'] = "
-				MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)
-				AGAINST ('$keywords' $boolean)
-				+ MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)
-				AGAINST ('$htmlEntityKeywords' $boolean)
+				MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$keywords' $boolean)
+				+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityKeywords' $boolean)
 			";
 			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*','+','-'),'',$keywords);
 			$htmlEntityRelevanceKeywords = str_replace(array('*','+','-'),'',$htmlEntityKeywords);
-			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)"
-				. " AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription,"
-				. " MetaKeywords) AGAINST ('$htmlEntityRelevanceKeywords')";
+			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
+				. "AGAINST ('$relevanceKeywords') "
+				. "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
 			$relevance['File'] = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
 		} else {
 			$relevance['SiteTree'] = $relevance['File'] = 1;
@@ -1056,6 +1054,28 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function transactionEnd($chain = false){
 		$this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN;');
+	}
+
+	/**
+	 * Generate a WHERE clause for text matching.
+	 * 
+	 * @param String $field Quoted field name
+	 * @param String $value Escaped search. Can include percentage wildcards.
+	 * @param boolean $exact Exact matches or wildcard support.
+	 * @param boolean $negate Negate the clause.
+	 * @param boolean $caseSensitive Enforce case sensitivity if TRUE or FALSE.
+	 *                               Stick with default collation if set to NULL.
+	 * @return String SQL
+	 */
+	public function comparisonClause($field, $value, $exact = false, $negate = false, $caseSensitive = null) {
+		if($exact && $caseSensitive === null) {
+			$comp = ($negate) ? '!=' : '=';
+		} else {
+			$comp = ($caseSensitive) ? 'LIKE BINARY' : 'LIKE';
+			if($negate) $comp = 'NOT ' . $comp;
+		}
+		
+		return sprintf("%s %s '%s'", $field, $comp, $value);
 	}
 
 	/**

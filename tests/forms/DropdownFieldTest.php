@@ -83,6 +83,8 @@ class DropdownFieldTest extends SapphireTest {
 	public function testNumberOfSelectOptionsAvailable() {
 		/* Create a field with a blank value */
 		$field = $this->createDropdownField('(Any)');
+		
+		/* 3 options are available */
 		$this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		$this->assertEquals(count($selectedOptions), 1,
@@ -90,6 +92,8 @@ class DropdownFieldTest extends SapphireTest {
 		
 		/* Create a field without a blank value */
 		$field = $this->createDropdownField();
+		
+		/* 2 options are available */
 		$this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		$this->assertEquals(count($selectedOptions), 0, 'There are no selected options');
@@ -125,6 +129,39 @@ class DropdownFieldTest extends SapphireTest {
 		$selectedOptions = $this->findSelectedOptionElements($field->Field());
 		$this->assertEquals((string) $selectedOptions[0], 'Cats and Kittens',
 			'The selected option is "Cats and Kittens"');
+	}
+	
+	public function testNumberOfDisabledOptions() {
+		/* Create a field with a blank value & set 0 & 1 to disabled */
+		$field = $this->createDropdownField('(Any)');
+		$field->setDisabledItems(array(0,1));
+		
+		/* 3 options are available */
+		$this->assertEquals(count($this->findOptionElements($field->Field())), 3, '3 options are available');
+		
+		/* There are 2 disabled options */
+		$disabledOptions = $this->findDisabledOptionElements($field->Field());
+		$this->assertEquals(count($disabledOptions), 2, 'We have 2 disabled options');
+		
+		/* Create a field without a blank value & set 1 to disabled, then set none to disabled (unset) */
+		$field = $this->createDropdownField();
+		$field->setDisabledItems(array(1));
+		
+		/* 2 options are available */
+		$this->assertEquals(count($this->findOptionElements($field->Field())), 2, '2 options are available');
+		
+		/* get disabled items returns an array of one */
+		$this->assertEquals(
+			$field->getDisabledItems(),
+			array( 1 )
+		);
+		
+		/* unset disabled items */
+		$field->setDisabledItems(array());
+		
+		/* There are no disabled options anymore */
+		$disabledOptions = $this->findDisabledOptionElements($field->Field());
+		$this->assertEquals(count($disabledOptions), 0, 'There are no disabled options');
 	}
 	
 	/**
@@ -184,6 +221,31 @@ class DropdownFieldTest extends SapphireTest {
 		}
 
 		return $foundSelected;
+	}
+	
+	/**
+	 * Find all the <OPTION> elements from a
+	 * string of HTML that have the "disabled"
+	 * attribute.
+	 * 
+	 * @param string $html HTML to parse for elements
+	 * @return array of SimpleXMLElement objects
+	 */
+	public function findDisabledOptionElements($html) {
+		$options = $this->findOptionElements($html);
+		
+		/* Find any elements that have the "disabled" attribute and put them into a list */
+		$foundDisabled = array();
+		foreach($options as $option) {
+			$attributes = $option->attributes();
+			if($attributes) foreach($attributes as $attribute => $value) {
+				if($attribute == 'disabled') {
+					$foundDisabled[] = $option;
+				}
+			}
+		}
+
+		return $foundDisabled;
 	}
 	
 }
