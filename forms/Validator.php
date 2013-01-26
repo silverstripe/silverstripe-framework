@@ -23,37 +23,6 @@ abstract class Validator extends Object {
 	protected $errors;
 
 	/**
-	 * @deprecated 3.0 Use custom javascript validation instead
-	 */
-	public static function set_javascript_validation_handler($handler) {
-		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
-	}
-
-	/**
-	 * @deprecated 3.0 Use custom javascript validation instead
-	 */
-	public static function get_javascript_validator_handler() {
-		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
-	}
-
-	/**
-	 * @deprecated 3.0 Use custom javascript validation instead
-	 */
-	public function setJavascriptValidationHandler($handler) {
-		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
-	}
-
-	/**
-	 * Gets the current javascript validation handler for this form.
-	 * If not set, falls back to the global static {@link self::$javascript_validation_handler}.
-	 * 
-	 * @return string
-	 */
-	public function getJavascriptValidationHandler() {
-		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
-	}
-
-	/**
 	 * @param Form $form
 	 */
 	public function setForm($form) {

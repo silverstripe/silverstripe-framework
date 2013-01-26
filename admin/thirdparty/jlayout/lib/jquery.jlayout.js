@@ -12,8 +12,14 @@ if (jQuery && jLayout) {
 		 * This wraps jQuery objects in another object that supplies
 		 * the methods required for the layout algorithms.
 		 */
-		function wrap(item, resize) {
+		// CUSTOM hfriedlander 2012-10-26 for side-by-side editing.
+		// function wrap(item, resize) {
+		var wrap = $.jLayoutWrap = function(item, resize) {
+		// CUSTOM END
 			var that = {};
+			// CUSTOM hfriedlander 2012-10-26 for side-by-side editing.
+			that.item = item;
+			// CUSTOM END
 
 			$.each(['min', 'max'], function (i, name) {
 				that[name + 'imumSize'] = function (value) {
@@ -29,11 +35,20 @@ if (jQuery && jLayout) {
 
 			$.extend(that, {
 				doLayout: function () {
-                    var l = item.data('jlayout');
-                    
-					if (l) {
-                        l.layout(that);
+					// CUSTOM hfriedlander 2012-10-26 for side-by-side editing.
+					//var l = item.data('jlayout');
+					//
+					//if (l) {
+					//	l.layout(that);
+					//}
+					//
+					var l = item.data('jlayout');
+					if (l) l.layout(that);
+					else if (item.is('[data-layout-type]')) {
+						item.layout({resize: false});
 					}
+					// CUSTOM END
+
 					item.css({position: 'absolute'});
 				},
 				isVisible: function () {

@@ -89,4 +89,64 @@ class SS_DatetimeTest extends SapphireTest {
 		$this->assertEquals('2001-12-31%2022:10:59', $date->URLDateTime());
 	}
 
+	public function testAgoInPast() {
+		SS_Datetime::set_mock_now('2000-12-31 12:00:00');
+
+		$this->assertEquals(
+			'10 years ago', 
+			DBField::create_field('SS_Datetime', '1990-12-31 12:00:00')->Ago(),
+			'Exact past match on years'
+		);
+
+		$this->assertEquals(
+			'10 years ago', 
+			DBField::create_field('SS_Datetime', '1990-12-30 12:00:00')->Ago(),
+			'Approximate past match on years'
+		);
+
+		$this->assertEquals(
+			'1 year ago', 
+			DBField::create_field('SS_Datetime', '1999-12-30 12:00:12')->Ago(),
+			'Approximate past match in singular'
+		);
+
+		$this->assertEquals(
+			'50 mins ago', 
+			DBField::create_field('SS_Datetime', '2000-12-31 11:10:11')->Ago(),
+			'Approximate past match on minutes'
+		);
+
+		$this->assertEquals(
+			'59 secs ago', 
+			DBField::create_field('SS_Datetime', '2000-12-31 11:59:01')->Ago(),
+			'Approximate past match on seconds'
+		);
+
+		$this->assertEquals(
+			'less than a minute ago', 
+			DBField::create_field('SS_Datetime', '2000-12-31 11:59:01')->Ago(false),
+			'Approximate past match on seconds with $includeSeconds=false'
+		);
+
+		SS_Datetime::clear_mock_now();
+	}
+
+	public function testAgoInFuture() {
+		SS_Datetime::set_mock_now('2000-12-31 00:00:00');
+
+		$this->assertEquals(
+			'in 10 years', 
+			DBField::create_field('SS_Datetime', '2010-12-31 12:00:00')->Ago(),
+			'Exact past match on years'
+		);
+
+		$this->assertEquals(
+			'in 1 hour', 
+			DBField::create_field('SS_Datetime', '2000-12-31 1:01:05')->Ago(),
+			'Approximate past match on minutes'
+		);
+
+		SS_Datetime::clear_mock_now();
+	}
+
 }

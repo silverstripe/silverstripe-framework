@@ -10,18 +10,23 @@
 $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
-$color-dark-bg: #003050 !default;
+/* Keep as solid colours transparent borders wont work in ie */
+$color-dark-bg: #142136 !default;
 $color-dark-separator: #19435c !default;
 $color-medium-separator: #808080 !default;
-$color-light-separator: rgba(201, 205, 206, 0.8) !default;
+$color-separator: #C0C0C2 !default;
+$color-light-separator: #d0d3d5 !default; 
 
 $color-tab: #d9d9d9 !default;
 $color-dark-grey: #7B8C91 !default;
 
+/* Only for use as shadows as they wont work in older browsers */
 $color-shadow-light: rgba(201, 205, 206, 0.8) !default;
 $color-shadow-dark: rgba(107, 120, 123, 0.5) !default;
 $color-shadow-black: rgba(0, 0, 0, 0.6) !default;
 $color-shadow-blacker: rgba(0, 0, 0, 0.9) !default;
+$box-shadow-shine: rgba(248, 248, 248, 0.9);
+$box-shadow-shine-minimal: rgba(245, 245, 245, 0.8);
 
 $color-highlight: #FFFF66 !default;
 $color-highlight-opacity: rgba(255, 255, 102, 0.3) !default;
@@ -37,7 +42,7 @@ $color-text-light-link: white !default;
 $color-text-disabled: #aaa !default;
 $color-text-dark: #1f1f1f !default;
 $color-text-dark-link: #3EBAE0 !default;
-$color-text-blue-link:#1556B2 !default;
+$color-text-blue-link:#0073C1 !default;
 $color-text-shadow: white !default;
 
 
@@ -54,10 +59,11 @@ $color-button-destructive: #f00 !default;
 
 $color-button-disabled: #eeeded !default;
 
-$color-warning: #FF9300 !default;
-$color-error: #FF9300 !default;
-$color-notice: #FF9300 !default;
-$color-good: #65A839 !default;
+$color-notice: #93CDE8 !default;		// blue
+$color-warning: #E9D104 !default;		// yellow
+$color-error: #e68288 !default;			// red
+$color-good: #72c34b !default;			// green
+/*$color-optional: #a1d2eb !default; */	// orange
 
 $color-cms-batchactions-menu-background: #f5f5f5 !default;
 $color-cms-batchactions-menu-selected-background: #efe999 !default;
@@ -65,7 +71,7 @@ $color-cms-batchactions-menu-selected-background: #efe999 !default;
 /** -----------------------------------------------
  * Textures
  * ----------------------------------------------- */
-$tab-panel-texture-color: #f0f3f4 !default;
+$tab-panel-texture-color: #ECEFF1 !default;
 $tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left !default;
 
 /** -----------------------------------------------

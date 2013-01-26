@@ -158,6 +158,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $components;
 
 	/**
+	 * Non-static cache of has_many and many_many relations that can't be written until this object is saved.
+	 */
+	protected $unsavedRelations;
+
+	/**
 	 * Returns when validation on DataObjects is enabled.
 	 * @return bool
 	 */
@@ -333,7 +338,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			);
 		}
 
-		if(!is_array($record)) {
+		if(!is_array($record) && !is_a($record, "stdClass")) {
 			if(is_object($record)) $passed = "an object of type '$record->class'";
 			else $passed = "The value '$record'";
 
@@ -1157,7 +1162,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						if($idx == 0) {
 							$manipulation[$class]['fields']["LastEdited"] = "'".SS_Datetime::now()->Rfc2822()."'";
 							if($dbCommand == 'insert') {
-								$manipulation[$class]['fields']["Created"] = "'".SS_Datetime::now()->Rfc2822()."'";
+								if(!empty($this->record["Created"])) {
+									$manipulation[$class]['fields']["Created"]
+										= DB::getConn()->prepStringForDB($this->record["Created"]);
+								} else {
+									$manipulation[$class]['fields']["Created"]
+										= DB::getConn()->prepStringForDB(SS_Datetime::now()->Rfc2822());
+								}
 								//echo "<li>$this->class - " .get_class($this);
 								$manipulation[$class]['fields']["ClassName"]
 									= DB::getConn()->prepStringForDB($this->class);
@@ -1182,6 +1193,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				
 				DB::manipulate($manipulation);
+
+				// If there's any relations that couldn't be saved before, save them now (we have an ID here)
+				if($this->unsavedRelations) {
+					foreach($this->unsavedRelations as $name => $list) {
+						$list->changeToList($this->$name());
+					}
+					$this->unsavedRelations = array();
+				}
+
 				$this->onAfterWrite();
 
 				$this->changed = null;
@@ -1345,8 +1365,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static
 	 *                           field $default_sort on the component class will be used.
-	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject
-	 *                     will be returned.
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause
 	 *
 	 * @return HasManyList The components of the one-to-many relationship.
@@ -1359,6 +1378,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				. " on class '$this->class'", E_USER_ERROR);
 		}
 
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
+		}
+
+		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
+		if(!$this->ID) {
+			if(!isset($this->unsavedRelations[$componentName])) {
+				$this->unsavedRelations[$componentName] =
+					new UnsavedRelationList($this->class, $componentName, $componentClass); 
+			}
+			return $this->unsavedRelations[$componentName];
+		}
+
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 		
 		$result = new HasManyList($componentClass, $joinField);
@@ -1366,7 +1400,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$result = $result->forForeignID($this->ID);
 
 		$result = $result->where($filter)->limit($limit)->sort($sort);
-		if($join) $result = $result->join($join);
 
 		return $result;
 	}
@@ -1377,7 +1410,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $componentName
 	 * @param string $filter
 	 * @param string|array $sort
-	 * @param string $join
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param string|array $limit
 	 * @return SQLQuery
 	 */
@@ -1385,6 +1418,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!$componentClass = $this->has_many($componentName)) {
 			user_error("DataObject::getComponentsQuery(): Unknown 1-to-many component '$componentName'"
 				. " on class '$this->class'", E_USER_ERROR);
+		}
+
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
 		}
 
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
@@ -1395,7 +1434,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$combinedFilter = "\"$joinField\" = '$id'";
 		if(!empty($filter)) $combinedFilter .= " AND ({$filter})";
 			
-		return singleton($componentClass)->extendedSQL($combinedFilter, $sort, $limit, $join);
+		return DataList::create($componentClass)
+			->where($combinedFilter)
+			->canSortBy($sort)
+			->limit($limit);
 	}
 
 	/**
@@ -1459,20 +1501,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * Sets the component of a relationship.
-	 * This should only need to be called internally,
-	 * and is mainly due to the caching logic in {@link getComponents()}
-	 * and {@link getManyManyComponents()}.
-	 *
-	 * @param string $componentName Name of the component
-	 * @param DataObject|HasManyList|ManyManyList $componentValue Value of the component
-	 * @deprecated 3.0 Not used internally anymore.
-	 */
-	public function setComponent($componentName, $componentValue) {
-		Deprecation::notice('3.0', 'Not used internally anymore.');
-	}
-
-	/**
 	 * Returns a many-to-many component, as a ManyManyList.
 	 * @param string $componentName Name of the many-many component
 	 * @return ManyManyList The set of components
@@ -1481,6 +1509,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
+
+		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
+		if(!$this->ID) {
+			if(!isset($this->unsavedRelations[$componentName])) {
+				$this->unsavedRelations[$componentName] =
+					new UnsavedRelationList($parentClass, $componentName, $componentClass); 
+			}
+			return $this->unsavedRelations[$componentName];
+		}
 		
 		$result = Injector::inst()->create('ManyManyList', $componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
@@ -2040,17 +2077,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Return a map of all the fields for this record
-	 * @deprecated 2.4 Use toMap()
-	 *
-	 * @return array A map of field names to field values.
-	 */
-	public function getAllFields() {
-		Deprecation::notice('3.0', 'Use toMap() instead.');
-		return $this->toMap();
-	}
-
-	/**
 	 * Loads all the stub fields that an initial lazy load didn't load fully.
 	 *
 	 * @param tableClass Base table to load the values from. Others are joined as required.
@@ -2075,7 +2101,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
 		if(!is_numeric($this->record['ID'])) return false;
 
-		$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
+		// Limit query to the current record, unless it has the Versioned extension,
+		// in which case it requires special handling through augmentLoadLazyFields()
+		if (!isset($this->record['Version'])){
+			$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
+		}
 		$columns = array();
 
 		// Add SQL for fields, both simple & multi-value
@@ -2088,7 +2118,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if ($columns) {
-			$query = $dataQuery->query(); // eh?
+			$query = $dataQuery->query();
+			$this->extend('augmentLoadLazyFields', $query, $dataQuery, $this->record);
 			$this->extend('augmentSQL', $query, $dataQuery);
 
 			$dataQuery->setQueriedColumns($columns);
@@ -2673,23 +2704,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
-	 */
-	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having="") {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
-		return $this->extendedSQL($filter, $sort, $limit, $join, $having);
-	}
-
-	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
-	 */
-	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = ""){
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
-		$dataList = DataObject::get($this->class, $filter, $sort, $join, $limit);
-		return $dataList->dataQuery()->query();
-	}
-
-	/**
 	 * Return all objects matching the filter
 	 * sub-classes are automatically selected and included
 	 *
@@ -2697,8 +2711,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause.  If omitted,
 	 *                           self::$default_sort will be used.
-	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject
-	 *                     will be returned.
+	 * @param string $join Deprecated 3.0 Join clause. Use leftJoin($table, $joinClause) instead.
 	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
 	 *
@@ -2722,34 +2735,31 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$result->setDataModel(DataModel::inst());
 			return $result;
 		}
-		
-		// Todo: Determine if we can deprecate for 3.0.0 and use DI or something instead
-		// Todo: Make the $containerClass method redundant
-		if($containerClass != 'DataList') {
-			Deprecation::notice('3.0', 'DataObject::get() - $containerClass argument is deprecated.',
-				Deprecation::SCOPE_GLOBAL);
-		}
 
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
+		}
+		
 		$result = DataList::create($callerClass)->where($filter)->sort($sort);
 
 		if($limit && strpos($limit, ',') !== false) {
 			$limitArguments = explode(',', $limit);
-			$result->limit($limitArguments[1],$limitArguments[0]);
+			$result = $result->limit($limitArguments[1],$limitArguments[0]);
 		} elseif($limit) {
-			$result->limit($limit);
+			$result = $result->limit($limit);
 		}
-
-		if($join) $result = $result->join($join);
 
 		$result->setDataModel(DataModel::inst());
 		return $result;
 	}
 	
 	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
+	 * @deprecated 3.1 Use DataList::create and DataList to do your querying
 	 */
 	public function Aggregate($class = null) {
-		Deprecation::notice('3.0', 'Call aggregate methods on a DataList directly instead. In templates'
+		Deprecation::notice('3.1', 'Call aggregate methods on a DataList directly instead. In templates'
 			. ' an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead'
 			. ' (check partial-caching.md documentation for more details.)');
 
@@ -2760,75 +2770,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$list = new DataList(get_class($this));
 			$list->setDataModel($this->model);
 		} else {
-			throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed"
+			throw new \InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed"
 				. " a classname");
 		}
 		return $list;
 	}
 
 	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
+	 * @deprecated 3.1 Use DataList::create and DataList to do your querying
 	 */
 	public function RelationshipAggregate($relationship) {
-		Deprecation::notice('3.0', 'Call aggregate methods on a relationship directly instead.');
+		Deprecation::notice('3.1', 'Call aggregate methods on a relationship directly instead.');
 
 		return $this->$relationship();
-	}
-
-	/**
-	 * DataList::create("Table")->where("filter") is the same as singleton("Table")->instance_get("filter")
-	 *
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
-	 *
-	 * @param string $filter A filter to be inserted into the WHERE clause.
-	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.  If omitted, self::$default_sort
-	 *                     will be used.
-	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject
-	 *                     will be returned.
-	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
-	 * @param string $containerClass The container class to return the results in.
-	 *
-	 * @return mixed The objects matching the filter, in the class specified by $containerClass
-	 */
-	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet") {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
-		return self::get($this->class, $filter, $sort, $join, $limit, $containerClass);
-	}
-
-	/**
-	 * Take a database {@link SS_Query} and instanciate an object for each record.
-	 * 
-	 * @deprecated 3.0 Replaced by DataList
-	 *
-	 * @param SS_Query|array $records The database records, a {@link SS_Query} object or an array of maps.
-	 * @param string $containerClass The class to place all of the objects into.
-	 *
-	 * @return mixed The new objects in an object of type $containerClass
-	 */
-	public function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
-		Deprecation::notice('3.0', 'Use DataList instead.');
-
-		foreach($records as $record) {
-			if(empty($record['RecordClassName'])) {
-				$record['RecordClassName'] = $record['ClassName'];
-			}
-			if(class_exists($record['RecordClassName'])) {
-				$results[] = new $record['RecordClassName']($record);
-			} else {
-				if(!$baseClass) {
-					user_error("Bad RecordClassName '{$record['RecordClassName']}' and "
-						. "\$baseClass not set", E_USER_ERROR);
-				} else if(!is_string($baseClass) || !class_exists($baseClass)) {
-					user_error("Bad RecordClassName '{$record['RecordClassName']}' and bad "
-						. "\$baseClass '$baseClass not set", E_USER_ERROR);
-				}
-				$results[] = new $baseClass($record);
-			}
-		}
-
-		if(isset($results)) {
-			return new $containerClass($results);
-		}
 	}
 
 	/**
@@ -2922,23 +2876,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		DataObject::$_cache_custom_database_fields = array();
 		DataObject::$_cache_get_class_ancestry = array();
 		DataObject::$_cache_field_labels = array();
-	}
-
-	/**
-	 * Does the hard work for get_one()
-	 *
-	 * @deprecated 3.0 Use DataList::create($this->class)->where($filter)->sort($orderby)->First() instead
-	 * 
-	 * @uses DataExtension->augmentSQL()
-	 *
-	 * @param string $filter A filter to be inserted into the WHERE clause
-	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
-	 * @return DataObject The first item matching the query
-	 */
-	public function instance_get_one($filter, $orderby = null) {
-		Deprecation::notice('3.0', 
-			'Use DataList::create($this->class)->where($filter)->sort($orderby)->First() instead.');
-		return DataObject::get_one($this->class, $filter, true, $orderby);
 	}
 
 	/**
@@ -3079,24 +3016,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// Let any extentions make their own database default data
 		$this->extend('requireDefaultRecords', $dummy);
-	}
-	
-	/**
-	 * @deprecated 3.0 Use DataObject::database_fields() instead
-	 * @see DataObject::database_fields()
-	 */
-	public function databaseFields() {
-		Deprecation::notice('3.0', 'Use DataObject::database_fields() instead.');
-		return self::database_fields($this->class);
-	}
-	
-	/**
-	 * @deprecated 3.0 Use DataObject::custom_database_fields() instead
-	 * @see DataObject::custom_database_fields()
-	 */
-	public function customDatabaseFields() {
-		Deprecation::notice('3.0', 'Use DataObject::custom_database_fields() instead.');
-		return self::custom_database_fields($this->class);
 	}
 	
 	/**
@@ -3307,14 +3226,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function defaultSearchFilters() {
 		$filters = array();
+
 		foreach($this->searchableFields() as $name => $spec) {
 			$filterClass = $spec['filter'];
-			// if $filterClass is not set a name of any subclass of SearchFilter than assing 'PartiailMatchFilter' to it
-			if (!is_subclass_of($filterClass, 'SearchFilter')) {
-				$filterClass = 'PartialMatchFilter';
+			
+			if($spec['filter'] instanceof SearchFilter) {
+				$filters[$name] = $spec['filter'];
+			} else {
+				$class = $spec['filter'];
+
+				if(!is_subclass_of($spec['filter'], 'SearchFilter')) {
+					$class = 'PartialMatchFilter';
+				}
+
+				$filters[$name] = new $class($name);
 			}
-			$filters[$name] = new $filterClass($name);
 		}
+
 		return $filters;
 	}
 

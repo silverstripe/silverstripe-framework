@@ -4,7 +4,7 @@
  * @package framework
  * @subpackage filesystem
  */
-class GD extends Object {
+class GDBackend extends Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
 	
@@ -28,29 +28,48 @@ class GD extends Object {
 			// We use getimagesize instead of extension checking, because sometimes extensions are wrong.
 			list($width, $height, $type, $attr) = getimagesize($filename);
 			switch($type) {
-				case 1: if(function_exists('imagecreatefromgif')) $this->setGD(imagecreatefromgif($filename)); break;
-				case 2: if(function_exists('imagecreatefromjpeg')) $this->setGD(imagecreatefromjpeg($filename)); break;
-				case 3: if(function_exists('imagecreatefrompng')) {
-					$img = imagecreatefrompng($filename);
-					imagesavealpha($img, true); // save alphablending setting (important)
-					$this->setGD($img);
+				case 1:
+					if(function_exists('imagecreatefromgif'))
+						$this->setImageResource(imagecreatefromgif($filename));
 					break;
-				}
+				case 2:
+					if(function_exists('imagecreatefromjpeg'))
+						$this->setImageResource(imagecreatefromjpeg($filename));
+					break;
+				case 3:
+					if(function_exists('imagecreatefrompng')) {
+						$img = imagecreatefrompng($filename);
+						imagesavealpha($img, true); // save alphablending setting (important)
+						$this->setImageResource($img);
+					}
+					break;
 			}
 		}
 		
 		$this->quality = self::$default_quality;
 		parent::__construct();
 	}
+	
+	public function setImageResource($resource) {
+		$this->gd = $resource;
+		$this->width = imagesx($resource);
+		$this->height = imagesy($resource);
+	}
 
 	public function setGD($gd) {
-		$this->gd = $gd;
-		$this->width = imagesx($gd);
-		$this->height = imagesy($gd);
+		Deprecation::notice('3.1', 'Use GD::setImageResource instead',
+			Deprecation::SCOPE_CLASS);
+		return $this->setImageResource($gd);
+	}
+	
+	public function getImageResource() {
+		return $this->gd;
 	}
 
 	public function getGD() {
-		return $this->gd;
+		Deprecation::notice('3.1', 'GD::getImageResource instead',
+			Deprecation::SCOPE_CLASS);
+		return $this->getImageResource();
 	}
 
 	/**
@@ -106,7 +125,7 @@ class GD extends Object {
 			imagecopyresampled($newGD, $this->gd, 0,0, $srcX, $srcY, $width, $height, $srcWidth, $srcHeight);
 		}
 		$output = clone $this;
-		$output->setGD($newGD);
+		$output->setImageResource($newGD);
 		return $output;
 	}
 	
@@ -121,8 +140,19 @@ class GD extends Object {
 		return $gd;
 	}
 	
-	public function hasGD() {
+	/**
+	 * hasImageResource
+	 *
+	 * @return boolean
+	 */
+	public function hasImageResource() {
 		return $this->gd ? true : false;
+	}
+	
+	public function hasGD() {
+		Deprecation::notice('3.1', 'GD::hasImageResource instead',
+			Deprecation::SCOPE_CLASS);
+		return $this->hasImageResource();
 	}
 	
 	
@@ -153,7 +183,7 @@ class GD extends Object {
 		imagecopyresampled($newGD, $this->gd, 0,0, 0, 0, $width, $height, $this->width, $this->height);
 
 		$output = clone $this;
-		$output->setGD($newGD);
+		$output->setImageResource($newGD);
 		return $output;
 	}
 	
@@ -175,7 +205,7 @@ class GD extends Object {
 			$newGD = $this->rotatePixelByPixel($angle);	
 		}
 		$output = clone $this;
-		$output->setGD($newGD);
+		$output->setImageResource($newGD);
 		return $output;
 	}
 	
@@ -237,7 +267,7 @@ class GD extends Object {
 		imagecopyresampled($newGD, $this->gd, 0, 0, $left, $top, $width, $height, $width, $height);
 		
 		$output = clone $this;
-		$output->setGD($newGD);
+		$output->setImageResource($newGD);
 		return $output;
 	}
 	
@@ -356,7 +386,7 @@ class GD extends Object {
 				$destWidth, $destHeight, $this->width, $this->height);
 		}
 		$output = clone $this;
-		$output->setGD($newGD);
+		$output->setImageResource($newGD);
 		return $output;
 	}
 
@@ -373,6 +403,10 @@ class GD extends Object {
 		$height = $this->height;
 		$newGD = imagecreatetruecolor($this->width, $this->height);
 		
+		// Preserves transparency between images
+		imagealphablending($newGD, false);
+		imagesavealpha($newGD, true);
+		
 		$rt = $rv + $bv + $gv;
 		$rr = ($rv == 0) ? 0 : 1/($rt/$rv);
 		$br = ($bv == 0) ? 0 : 1/($rt/$bv);
@@ -382,13 +416,13 @@ class GD extends Object {
 				$pxrgb = imagecolorat($this->gd, $dx, $dy);
 				$heightgb = ImageColorsforIndex($this->gd, $pxrgb);
 				$newcol = ($rr*$heightgb['red']) + ($br*$heightgb['blue']) + ($gr*$heightgb['green']);
-				$setcol = ImageColorAllocate($newGD, $newcol, $newcol, $newcol);
+				$setcol = ImageColorAllocateAlpha($newGD, $newcol, $newcol, $newcol, $heightgb['alpha']);
 				imagesetpixel($newGD, $dx, $dy, $setcol);
 			}
 		}
 		
 		$output = clone $this;
-		$output->setGD($newGD);
+		$output->setImageResource($newGD);
 		return $output;
 	}
 	
@@ -407,16 +441,16 @@ class GD extends Object {
 
 			$ext = strtolower(substr($filename, strrpos($filename,'.')+1));
 			if(!isset($type)) switch($ext) {
-				case "gif": $type = 1; break;
-				case "jpeg": case "jpg": case "jpe": $type = 2; break;
-				default: $type = 3; break;
+				case "gif": $type = IMAGETYPE_GIF; break;
+				case "jpeg": case "jpg": case "jpe": $type = IMAGETYPE_JPEG; break;
+				default: $type = IMAGETYPE_PNG; break;
 			}
 			
 			// if the extension does not exist, the file will not be created!
 			
 			switch($type) {
-				case 1: imagegif($this->gd, $filename); break;
-				case 2: imagejpeg($this->gd, $filename, $this->quality); break;
+				case IMAGETYPE_GIF: imagegif($this->gd, $filename); break;
+				case IMAGETYPE_JPEG: imagejpeg($this->gd, $filename, $this->quality); break;
 				
 				// case 3, and everything else
 				default: 
@@ -430,3 +464,16 @@ class GD extends Object {
 	
 }
 
+/**
+ * Backwards compatibility
+ */
+class GD extends GDBackend {
+	public static function set_default_quality($quality) {
+		Deprecation::notice(
+			'3.1', 
+			'GDBackend::set_default_quality instead',
+			Deprecation::SCOPE_CLASS
+		);
+		GDBackend::set_default_quality($quality);
+	}	
+}
