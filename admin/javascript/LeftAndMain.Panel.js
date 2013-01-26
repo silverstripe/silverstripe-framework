@@ -101,12 +101,15 @@
 			expandPanel: function(force) {
 				if(!force && !this.hasClass('collapsed')) return;
 
+				var newWidth = this.getWidthExpanded();
+				this.animate({'width':newWidth},'slow');
 				this.togglePanel(true);
 			},
 			
 			collapsePanel: function(force) {
 				if(!force && this.hasClass('collapsed')) return;
-
+				var newWidth = this.getWidthCollapsed();
+				this.animate({'width':newWidth},'slow');
 				this.togglePanel(false);
 			}
 		});
