@@ -17,6 +17,7 @@ class RestfulService extends ViewableData {
 	protected $customHeaders = array();
 	protected $proxy;
 	protected static $default_proxy;
+	protected static $custom_ua;
 	
 	/**
 	 * Sets default proxy settings for outbound RestfulService connections
@@ -34,6 +35,10 @@ class RestfulService extends ViewableData {
 			CURLOPT_PROXYPORT => $port,
 			CURLOPT_PROXYTYPE => ($socks ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP)
 		);
+	}
+
+	public static function set_custom_ua($userAgent) {
+		self::$custom_ua = $userAgent;
 	}
 	
 	/**
@@ -115,7 +120,20 @@ class RestfulService extends ViewableData {
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 		
 		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
-		$cache_file = md5($url);	// Encoded name of cache file
+		$cache_file_items = array(
+			$subURL,
+			$method,
+			$data,
+			array_merge((array)$this->customHeaders, (array)$headers),
+			$curlOptions,
+			$this->authUsername:$this->authPassword
+		);
+		foreach ($cache_file_items as &$cache_file_item) {
+			if (is_array($cache_file_item)) {
+				$cache_file_item = implode('-', $cache_file_item);
+			}
+		}
+		$cache_file = md5(implode('-', $cache_file_items));	// Encoded name of cache file
 		$cache_path = $cachedir."/xmlresponse_$cache_file";
 		
 		// Check for unexpired cached feed (unless flush is set)
@@ -165,8 +183,13 @@ class RestfulService extends ViewableData {
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
 		$timeout   = 5;
-		$sapphireInfo = new SapphireInfo(); 
-		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
+		if (self::$custom_ua) {
+			$useragent = self::$custom_ua;
+		}
+		else {
+			$sapphireInfo = new SapphireInfo();
+			$useragent = 'SilverStripe/' . $sapphireInfo->Version();
+		}
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -174,6 +197,9 @@ class RestfulService extends ViewableData {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+		//include headers in the response
+		//curl_setopt($ch, CURLOPT_VERBOSE, true);
+		curl_setopt($ch, CURLOPT_HEADER, true);
 
 		// Add headers
 		if($this->customHeaders) {
@@ -208,24 +234,73 @@ class RestfulService extends ViewableData {
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		$responseBody = curl_exec($ch);
+		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$rawResponse = curl_exec($ch);
 		$curlError = curl_error($ch);
-
+		$responseHeaders = array();
+		$responseBody = '';
+		$this->extractResponse($ch, $rawResponse, $responseBody, $responseHeaders);
 		// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
 		if(strpos($curlError,'14090086') !== false) {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			$responseBody = curl_exec($ch);
+			//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			$rawResponse = curl_exec($ch);
+			$curlError = curl_error($ch);
+			$this->extractResponse($ch, $rawResponse, $responseBody, $responseHeaders);
 			$curlError = curl_error($ch);
 		}
 
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 			
 		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
 
-		$response = new RestfulService_Response($responseBody, $statusCode);		
+		$response = new RestfulService_Response($responseBody, $statusCode, $responseHeaders);
 		curl_close($ch);
 
 		return $response;
+	}
+
+	/**
+	 * Extracts the response body and headers from a full curl response
+	 *
+	 * @param curl_handle $ch The curl handle for the request
+	 * @param string $rawResponse The raw response text
+	 * @param string &$body the body text
+	 * @param array &headers The header array
+	 */
+	function extractResponse($ch, $rawResponse, &$body, &$headers) {
+		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$rawHeaders = substr($rawResponse, 0, $headerLength);
+		$body = substr($rawResponse, $headerLength);
+		$headers = $this->parseRawHeaders($rawHeaders);
+	}
+
+	/**
+	 * Takes raw headers and parses them to turn them to an associative array
+	 *
+	 * Any header that we see more than once is turned into an array.
+	 *
+	 * This is meant to mimic htt_parse_headers {@link http://php.net/manual/en/function.http-parse-headers.php}
+	 * thanks to comment #77241 on that page for foundation of this
+	 *
+	 * @param string $rawHeaders The raw header string
+	 * @return array The assosiative array of headers
+	 */
+	static function parseRawHeaders($rawHeaders) {
+        $headers = array();
+        $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
+        foreach( $fields as $field ) {
+            if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
+                $match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1])));
+                if( isset($headers[$match[1]]) ) {
+					if (!is_array($headers[$match[1]])) {
+						$headers[$match[1]] = array($headers[$match[1]]);
+					}
+					$headers[$match[1]][] = $match[2];
+                } else {
+                    $headers[$match[1]] = trim($match[2]);
+                }
+            }
+        }
+        return $headers;
 	}
 
 	/** 
@@ -470,5 +545,3 @@ class RestfulService_Response extends SS_HTTPResponse {
 		return $items[0];
 	}
 }
-
-
