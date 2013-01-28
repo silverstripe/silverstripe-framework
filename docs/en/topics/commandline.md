@@ -98,6 +98,7 @@ This code provides a good template:
 
 	:::php
 	class MyProcess extends Controller {
+		public static $allowed_actions = array('index');
 	  function index() {
 	    set_time_limit(0);
 	    while(memory_get_usage() < 32*1024*1024) {

@@ -29,6 +29,8 @@ the form in a method on *HomePage_Controller*.
 
 	:::php
 	class HomePage_Controller extends Page_Controller {
+		static $allowed_actions = array('BrowserPollForm');
+
 		// ...
 	
 		function BrowserPollForm() {
