@@ -84,7 +84,7 @@
 class DropdownField extends FormField {
 
 	/**
-	 * @var boolean $source Associative or numeric array of all dropdown items,
+	 * @var Array $source Associative or numeric array of all dropdown items,
 	 * with array key as the submitted field value, and the array value as a
 	 * natural language description shown in the interface element.
 	 */
