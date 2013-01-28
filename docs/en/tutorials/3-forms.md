@@ -21,6 +21,8 @@ The poll we will be creating on our homepage will ask the user for their name an
 
 	:::php
 	class HomePage_Controller extends Page_Controller {
+		static $allowed_actions = array('BrowserPollForm');
+
 		// ...
 	
 		public function BrowserPollForm() {

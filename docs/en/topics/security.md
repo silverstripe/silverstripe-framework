@@ -79,6 +79,7 @@ Example:
 
 	:::php
 	class MyController extends Controller {
+		static $allowed_actions = array('myurlaction');
 	  public function myurlaction($RAW_urlParams) {
 	    $SQL_urlParams = Convert::raw2sql($RAW_urlParams); // works recursively on an array
 	    $objs = Player::get()->where("Name = '{$SQL_data[OtherID]}'");
@@ -93,7 +94,6 @@ This means if you've got a chain of functions passing data through, escaping sho
 	:::php
 	class MyController extends Controller {
 	  /**
-	
 	   * @param array $RAW_data All names in an indexed array (not SQL-safe)
 	   */
 	  public function saveAllNames($RAW_data) {
@@ -220,6 +220,7 @@ PHP:
 
 	:::php
 	class MyController extends Controller {
+		static $allowed_actions = array('search');
 		public function search($request) {
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
 			return $this->customise(array(
@@ -249,6 +250,7 @@ PHP:
 
 	:::php
 	class MyController extends Controller {
+		static $allowed_actions = array('search');
 		public function search($request) {
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
 			$rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
