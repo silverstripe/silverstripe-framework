@@ -290,6 +290,16 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this._super();
 			},
 
+			/**
+			 * Make sure the editor has flushed all it's buffers before the form is submitted.
+			 */
+			'from .cms-edit-form': {
+				onbeforesubmitform: function(e) {
+					this.getEditor().save();
+					this._super();
+				}
+			},
+
 			oneditorinit: function() {
 				// Delayed show because TinyMCE calls hide() via setTimeout on removing an element,
 				// which is called in quick succession with adding a new editor after ajax loading new markup
