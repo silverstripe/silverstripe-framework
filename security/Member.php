@@ -384,9 +384,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$member = DataObject::get_one("Member", "\"Member\".\"ID\" = '$SQL_uid'");
 
 			// check if autologin token matches
-			$hash = $member->encryptWithUserSettings($token);
-			if($member && (!$member->RememberLoginToken || $member->RememberLoginToken != $hash)) {
-				$member = null;
+			if($member) {
+				$hash = $member->encryptWithUserSettings($token);
+				if(!$member->RememberLoginToken || $member->RememberLoginToken !== $hash) {
+					$member = null;
+				}
 			}
 
 			if($member) {
