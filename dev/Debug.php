@@ -213,6 +213,7 @@ class Debug {
 
 	public static function noticeHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(error_reporting() == 0) return;
+		ini_set('display_errors', 0);
 		
 		// Send out the error details to the logger for writing
 		SS_Log::log(
@@ -227,7 +228,9 @@ class Debug {
 		);
 
 		if(Director::isDev()) {
-			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
+			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
+		} else {
+		    return false;
 		}
 	}
 
@@ -242,8 +245,10 @@ class Debug {
 	 */
 	public static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(error_reporting() == 0) return;
+		ini_set('display_errors', 0);
+
 		if(self::$send_warnings_to) {
-			self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+			return self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		}
 
 		// Send out the error details to the logger for writing
@@ -263,8 +268,10 @@ class Debug {
 		}
 
 		if(Director::isDev()) {
-			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
-		}
+			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+		} else {
+		    return false;
+	    }
 	}
 
 	/**
@@ -279,6 +286,8 @@ class Debug {
 	 * @param unknown_type $errcontext
 	 */
 	public static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+		ini_set('display_errors', 0);
+
 		if(self::$send_errors_to) {
 			self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		}
@@ -300,11 +309,10 @@ class Debug {
 		}
 		
 		if(Director::isDev() || Director::is_cli()) {
-			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
+			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		} else {
-			self::friendlyError();
+			return self::friendlyError();
 		}
-		exit(1);
 	}
 	
 	/**
@@ -363,6 +371,7 @@ class Debug {
 				$renderer->writeFooter();
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -652,7 +661,7 @@ class Debug {
 		$_SESSION['Security']['Message']['type'] =  'warning';
 		$_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
 		header($_SERVER['SERVER_PROTOCOL'] . " 302 Found");
-		header("Location: " . Director::baseURL() . "Security/login");
+		header("Location: " . Director::baseURL() . Security::login_url());
 		die();
 	}
 }
@@ -679,7 +688,7 @@ function exceptionHandler($exception) {
 	$file = $exception->getFile();
 	$line = $exception->getLine();
 	$context = $exception->getTrace();
-	Debug::fatalHandler($errno, $message, $file, $line, $context);
+	return Debug::fatalHandler($errno, $message, $file, $line, $context);
 }
 
 /**
@@ -698,21 +707,18 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_ERROR:
 		case E_CORE_ERROR:
 		case E_USER_ERROR:
-			Debug::fatalHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
-			break;
+			return Debug::fatalHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
 
 		case E_WARNING:
 		case E_CORE_WARNING:
 		case E_USER_WARNING:
-			Debug::warningHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
-			break;
+			return Debug::warningHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
 
 		case E_NOTICE:
 		case E_USER_NOTICE:
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
 		case E_STRICT:
-			Debug::noticeHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
-			break;
+			return Debug::noticeHandler($errno, $errstr, $errfile, $errline, debug_backtrace());
 	}
 }
