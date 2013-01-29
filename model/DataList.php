@@ -411,15 +411,14 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * The function will be passed each record of the DataList in turn, and must return true for the record to be
 	 * included. Returns the filtered list.
 	 * 
-	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
-	 * future implementation.
+	 * @return ArrayList (this may change in future implementations)
 	 */
 	public function filterByCallback($callback) {
 		if(!is_callable($callback)) {
 			throw new LogicException("DataList::filterByCallback() must be passed something callable.");
 		}
 		
-		$output = new ArrayList;
+		$output = new ArrayList();
 		foreach($this as $item) {
 			if($callback($item)) $output->push($item);
 		}
