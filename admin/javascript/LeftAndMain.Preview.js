@@ -37,6 +37,34 @@
 			IsPreviewEnabled: false,
 
 			/**
+			 * Mode in which the preview will be enabled.
+			 */
+			DefaultMode: 'split',
+
+			Sizes: {
+				mobile: {
+					width: '335px', // add 15px for approx desktop scrollbar 
+					height: '568px' 
+				},
+				mobileLandscape: {
+					width: '583px', // add 15px for approx desktop scrollbar
+					height: '320px'
+				},
+				tablet: {
+					width: '783px', // add 15px for approx desktop scrollbar
+					height: '1024px'
+				},
+				tabletLandscape: {
+					width: '1039px', // add 15px for approx desktop scrollbar
+					height: '768px'
+				},
+				desktop: {
+					width: '1024px',
+					height: '800px'
+				}
+			},
+
+			/**
 			 * API
 			 * Switch the preview to different state.
 			 * stateName can be one of the "AllowedStates".
@@ -76,10 +104,15 @@
 			 * sizeName can be: auto, desktop, tablet, mobile.
 			 */
 			changeSize: function(sizeName) {
-				this.setCurrentSizeName(sizeName);
+				var sizes = this.getSizes();
 
-				this.removeClass('auto desktop tablet mobile')
-					.addClass(sizeName);
+				this.setCurrentSizeName(sizeName);
+				this.removeClass('auto desktop tablet mobile').addClass(sizeName);
+				this.find('.preview-device-outer')
+					.width(sizes[sizeName].width)
+					.height(sizes[sizeName].height);
+				this.find('.preview-device-inner')
+					.width(sizes[sizeName].width);
 
 				this.redraw();
 
@@ -140,7 +173,7 @@
 						// We do not support the split mode in IE < 8.
 						this.changeMode('content');
 					} else {
-						this.changeMode('split');
+						this.changeMode(this.getDefaultMode());
 					}
 				}
 				return this;
