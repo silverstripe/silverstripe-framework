@@ -63,7 +63,10 @@ below the search form on the left.
 
 ## Import through a custom controller
 
-You can have more customized logic and interface feedback through a custom controller. Let's create a simple upload form (which is used for `MyDataObject` instances). You can access it through  `http://localhost/MyController/?flush=all`.
+You can have more customized logic and interface feedback through a custom controller. 
+Let's create a simple upload form (which is used for `MyDataObject` instances). 
+You'll need to add a route to your controller to make it accessible via URL 
+(see [director](/reference/director)).
 
 	:::php
 	<?php
