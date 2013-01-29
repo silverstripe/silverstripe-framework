@@ -19,7 +19,7 @@ configuration settings:
 		index index.php index.html index.htm;
 		
 		server_name example.com;
-
+		
 		include silverstripe3;
 		include htaccess;
 	}
@@ -29,7 +29,7 @@ Here is the include file `silverstripe3`:
 	location / {
 		try_files $uri @silverstripe;
 	}
- 
+	 
 	location @silverstripe {
 		include fastcgi_params;
 		
@@ -66,6 +66,11 @@ Here is the include file `htaccess`:
 	# Don't execute scripts in the assets
 	location ^~ /assets/ {
 		try_files $uri $uri/ =404;
+	}
+	
+	# Block access to yaml files
+	location ~ \.yml$ {
+		deny all;
 	}
 	
 	# cms & framework .htaccess rules
