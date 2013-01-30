@@ -184,6 +184,8 @@ class RequestHandler extends ViewableData {
 							$result = $this->$action($request);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
+						} catch(PermissionFailureException $e) {
+							$result = Security::permissionFailure(null, $e->getMessage());
 						}
 					} else {
 						return $this->httpError(403, "Action '$action' isn't allowed on class " . get_class($this));

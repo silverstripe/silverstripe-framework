@@ -27,3 +27,17 @@ name' and the default login details. Follow the questions and select the *instal
 ## Issues?
 
 If the above steps don't work for any reason have a read of the [Common Problems](common-problems) section.
+
+## Security notes
+
+### Yaml
+
+For the reasons explained in [security](/topics/security) Yaml files are blocked by default by the .htaccess file
+provided by the SilverStripe installer module.
+
+To allow serving yaml files from a specific directory, add code like this to an .htaccess file in that directory
+
+	<Files *.yml>
+		Order allow,deny
+		Allow from all
+	</Files>

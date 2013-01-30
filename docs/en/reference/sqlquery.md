@@ -37,8 +37,8 @@ We'll explain some ways to use *SELECT* with the full power of SQL,
 but still maintain a connection to the ORM where possible.
 
 <div class="warning" markdown="1">
-	Please read our ["security" topic](/topics/security) to find out
-	how to sanitize user input before using it in SQL queries.
+Please read our ["security" topic](/topics/security) to find out
+how to sanitize user input before using it in SQL queries.
 </div>
 
 ## Usage

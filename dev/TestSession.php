@@ -96,8 +96,12 @@ class TestSession {
 				$form->setField(new SimpleByName($k), $v);
 			}
 
-			if($button) $submission = $form->submitButton(new SimpleByName($button));
-			else $submission = $form->submit();
+			if($button) {
+				$submission = $form->submitButton(new SimpleByName($button));
+				if(!$submission) throw new Exception("Can't find button '$button' to submit as part of test.");
+			} else {
+				$submission = $form->submit();
+			}
 
 			$url = Director::makeRelative($form->getAction()->asString());
 
@@ -137,6 +141,15 @@ class TestSession {
 		return $this->lastResponse;
 	}
 	
+	/**
+	 * Return the fake HTTP_REFERER; set each time get() or post() is called.
+	 * 
+	 * @return string
+	 */
+	public function lastUrl() {
+		return $this->lastUrl;
+	}
+
 	/**
 	 * Get the most recent response's content
 	 */

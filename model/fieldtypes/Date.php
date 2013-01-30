@@ -312,7 +312,7 @@ class Date extends DBField {
 	 * @return boolean
 	 */
 	public function InPast() {
-		return strtotime($this->value) < time();
+		return strtotime($this->value) < SS_Datetime::now()->Format('U');
 	}
 	
 	/**
@@ -320,7 +320,7 @@ class Date extends DBField {
 	 * @return boolean
 	 */
 	public function InFuture() {
-		return strtotime($this->value) > time();
+		return strtotime($this->value) > SS_Datetime::now()->Format('U');
 	}
 	
 	/**
@@ -328,7 +328,7 @@ class Date extends DBField {
 	 * @return boolean
 	 */
 	public function IsToday() {
-		return (date('Y-m-d', strtotime($this->value)) == date('Y-m-d', time()));
+		return (date('Y-m-d', strtotime($this->value)) == SS_Datetime::now()->Format('Y-m-d'));
 	}
 
 	/**

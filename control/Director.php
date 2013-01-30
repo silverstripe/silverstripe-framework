@@ -674,6 +674,9 @@ class Director implements TemplateGlobalProvider {
 		$matched = false;
 
 		if($patterns) {
+		    // Calling from the command-line?
+	        if(!isset($_SERVER['REQUEST_URI'])) return;
+
 			// protect portions of the site based on the pattern
 			$relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
 			foreach($patterns as $pattern) {

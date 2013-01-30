@@ -363,6 +363,16 @@ file in the assets directory.  This requires PHP to be loaded as an Apache modul
 	php_flag engine off
 	Options -ExecCGI -Includes -Indexes 
 
+### Don't allow access to .yml files
+
+Yaml files are often used to store sensitive or semi-sensitive data for use by SilverStripe framework (for instance,
+configuration and test fixtures).
+
+You should therefore block access to all yaml files (extension .yml) by default, and white list only yaml files
+you need to serve directly.
+
+See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details 
+specific to your web server
 
 ##  Related
 
