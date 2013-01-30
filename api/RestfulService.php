@@ -124,7 +124,16 @@ class RestfulService extends ViewableData {
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 		
 		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
-		$cache_file = md5($url);	// Encoded name of cache file
+		//use var export on potentially nested arrays
+		$cache_file_items = array(
+			$subURL,
+			$method,
+			var_export($data, true),
+			var_export(array_merge((array)$this->customHeaders, (array)$headers), true),
+			var_export($curlOptions, true),
+			"$this->authUsername:$this->authPassword"
+		);
+		$cache_file = md5(implode('-', $cache_file_items));	// Encoded name of cache file
 		$cache_path = $cachedir."/xmlresponse_$cache_file";
 		
 		// Check for unexpired cached feed (unless flush is set)
