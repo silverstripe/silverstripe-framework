@@ -398,6 +398,45 @@ function validEmailAddr($emailAddress) {
 	
 	return $emailAddress;
 }
+
+	/*
+	 * Return a multipart/related e-mail chunk for the given HTML message and its linked images
+	 * Decodes absolute URLs, accessing the appropriate local images
+	 */
+	function wrapImagesInline($htmlContent) {
+		global $_INLINED_IMAGES;
+		$_INLINED_IMAGES = null;
+		
+		$replacedContent = imageRewriter($htmlContent, 'wrapImagesInline_rewriter($URL)');
+		
+		
+		// Make the HTML part
+		$headers["Content-Type"] = "text/html; charset=utf-8";
+		$headers["Content-Transfer-Encoding"] = "quoted-printable";
+		$multiparts[] = processHeaders($headers, QuotedPrintable_encode($replacedContent));
+		
+		// Make all the image parts		
+		global $_INLINED_IMAGES;
+		foreach($_INLINED_IMAGES as $url => $cid) {
+			$multiparts[] = encodeFileForEmail($url, false, "inline", "Content-ID: <$cid>\n");		
+		}
+
+		// Merge together in a multipart
+		list($body, $headers) = encodeMultipart($multiparts, "multipart/related");
+		return processHeaders($headers, $body);
+	}
+	
+	function wrapImagesInline_rewriter($url) {
+		$url = relativiseURL($url);
+		
+		global $_INLINED_IMAGES;
+		if(!$_INLINED_IMAGES[$url]) {
+			$identifier = "automatedmessage." . rand(1000,1000000000) . "@silverstripe.com";
+			$_INLINED_IMAGES[$url] = $identifier;
+		}
+		return "cid:" . $_INLINED_IMAGES[$url];
+		
+	}
 }
 
 /**
