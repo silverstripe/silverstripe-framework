@@ -790,8 +790,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
-					this.showFileView(node.data('url') || node.attr('src')).complete(function() {
-						$(this).updateFromNode(node);
+					this.showFileView(node.data('url') || node.attr('src')).done(function(filefield) {
+						filefield.updateFromNode(node);
 						self.toggleCloseButton();
 						self.redraw();
 					});
@@ -834,25 +834,29 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			getFileView: function(idOrUrl) {
 				return this.find('.ss-htmleditorfield-file[data-id=' + idOrUrl + ']');
 			},
-			showFileView: function(idOrUrl, successCallback) {
-				var self = this, params = (Number(idOrUrl) == idOrUrl) ? {ID: idOrUrl} : {FileURL: idOrUrl},
-					item = $('<div class="ss-htmleditorfield-file" />');
+			showFileView: function(idOrUrl) {
+				var self = this, params = (Number(idOrUrl) == idOrUrl) ? {ID: idOrUrl} : {FileURL: idOrUrl};
 
-				item.addClass('loading');
+				var item = $('<div class="ss-htmleditorfield-file loading" />');
 				this.find('.content-edit').append(item);
-				return $.ajax({
-					// url: this.data('urlViewfile') + '?ID=' + id,
+				
+				var dfr = $.Deferred();
+				
+				$.ajax({
 					url: $.path.addSearchParams(this.attr('action').replace(/MediaForm/, 'viewfile'), params),
 					success: function(html, status, xhr) {
-						var newItem = $(html);
+						var newItem = $(html).filter('.ss-htmleditorfield-file');
 						item.replaceWith(newItem);
 						self.redraw();
-						if(successCallback) successCallback.call(newItem, html, status, xhr);
+						dfr.resolve(newItem);
 					},
 					error: function() {
 						item.remove();
+						dfr.reject();
 					}
 				});
+				
+				return dfr.promise();
 			}
 		});
 
@@ -941,7 +945,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				if (urlField.validate()) {
 					container.addClass('loading');
-					form.showFileView('http://' + urlField.val()).complete(function() {
+					form.showFileView('http://' + urlField.val()).done(function() {
 						container.removeClass('loading');
 					});
 					form.redraw();
