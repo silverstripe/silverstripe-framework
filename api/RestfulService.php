@@ -17,6 +17,7 @@ class RestfulService extends ViewableData {
 	protected $customHeaders = array();
 	protected $proxy;
 	protected static $default_proxy;
+	protected static $custom_ua;
 	
 	/**
 	 * Sets default proxy settings for outbound RestfulService connections
@@ -34,6 +35,14 @@ class RestfulService extends ViewableData {
 			CURLOPT_PROXYPORT => $port,
 			CURLOPT_PROXYTYPE => ($socks ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP)
 		);
+	}
+
+	/**
+	 * Sets a custom user agent so that you can identify your webapp. This can
+	 * sometimes be required by APIs to identify you
+	 */
+	public static function set_custom_ua($userAgent) {
+		self::$custom_ua = $userAgent;
 	}
 	
 	/**
@@ -165,8 +174,13 @@ class RestfulService extends ViewableData {
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
 		$timeout   = 5;
-		$sapphireInfo = new SapphireInfo(); 
-		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
+		if (self::$custom_ua) {
+			$useragent = self::$custom_ua;
+		}
+		else {
+			$sapphireInfo = new SapphireInfo();
+			$useragent = 'SilverStripe/' . $sapphireInfo->Version();
+		}
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -470,5 +484,3 @@ class RestfulService_Response extends SS_HTTPResponse {
 		return $items[0];
 	}
 }
-
-
