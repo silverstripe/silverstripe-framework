@@ -114,21 +114,20 @@ class RestfulService extends ViewableData {
 		
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 		
-		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
-		//use var export on potentially nested arrays
-		$cache_file_items = array(
-			$subURL,
+		$cache_path = $this->getCachePath(array(
+			$url,
 			$method,
-			var_export($data, true),
-			var_export(array_merge((array)$this->customHeaders, (array)$headers), true),
-			var_export($curlOptions, true),
-			"$this->authUsername:$this->authPassword"
-		);
-		$cache_file = md5(implode('-', $cache_file_items));	// Encoded name of cache file
-		$cache_path = $cachedir."/xmlresponse_$cache_file";
+			$data,
+			array_merge((array)$this->customHeaders, (array)$headers),
+			$curlOptions,
+			$this->getBasicAuthString()
+		));
 		
 		// Check for unexpired cached feed (unless flush is set)
-		if(!isset($_GET['flush']) && @file_exists($cache_path)
+		//assume any cache_expire that is 0 or less means that we dont want to
+		// cache
+		if($this->cache_expire > 0 && !isset($_GET['flush'])
+				&& @file_exists($cache_path)
 				&& @filemtime($cache_path) + $this->cache_expire > time()) {
 			
 			$store = file_get_contents($cache_path);
@@ -149,10 +148,10 @@ class RestfulService extends ViewableData {
 					$store = file_get_contents($cache_path);
 					$cachedResponse = unserialize($store);
 					
-					$response->setCachedBody($cachedResponse->getBody()); 
+					$response->setCachedResponse($cachedResponse);
 				}
 				else {
-					$response->setCachedBody(false); 
+					$response->setCachedResponse(false);
 				}
 			}
 		}
@@ -183,6 +182,9 @@ class RestfulService extends ViewableData {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+		//include headers in the response
+		//curl_setopt($ch, CURLOPT_VERBOSE, true);
+		curl_setopt($ch, CURLOPT_HEADER, true);
 
 		// Add headers
 		if($this->customHeaders) {
@@ -192,7 +194,7 @@ class RestfulService extends ViewableData {
 		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 		// Add authentication
-		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
+		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
 
 		// Add fields to POST and PUT requests
 		if($method == 'POST') {
@@ -217,18 +219,110 @@ class RestfulService extends ViewableData {
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		$responseBody = curl_exec($ch);
+		$rawResponse = curl_exec($ch);
 		$curlError = curl_error($ch);
+		$responseHeaders = array();
+		$responseBody = '';
+		$this->extractResponse($ch, $rawResponse, $responseBody, $responseHeaders);
 
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 			
 		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
-
-		$response = new RestfulService_Response($responseBody, $statusCode);		
 		curl_close($ch);
+
+		$response = new RestfulService_Response($responseBody, $statusCode, $responseHeaders);
 
 		return $response;
 	}
+
+	/**
+	 * A function to return the auth string. This helps consistency through the
+	 * class but also allows tests to pull it out when generating the expected
+	 * cache keys
+	 *
+	 * @see {self::getCachePath()}
+	 * @see {RestfulServiceTest::createFakeCachedResponse()}
+	 *
+	 * @return string The auth string to be base64 encoded
+	 */
+	protected function getBasicAuthString() {
+		return $this->authUsername . ':' . $this->authPassword;
+	}
+
+	/**
+	 * Generate a cache key based on any cache data sent. The cache data can be
+	 * any type
+	 *
+	 * @param mixed $cacheData The cache seed for generating the key
+	 * @param string the md5 encoded cache seed.
+	 */
+	protected function generateCacheKey($cacheData) {
+		return md5(var_export($cacheData, true));
+	}
+
+	/**
+	 * Generate the cache path
+	 *
+	 * This is mainly so that the cache path can be generated in a consistent
+	 * way in tests without having to hard code the cachekey generate function
+	 * in tests
+	 *
+	 * @param mixed $cacheData The cache seed {@see self::generateCacheKey}
+	 *
+	 * @return string The path to the cache file
+	 */
+	protected function getCachePath($cacheData) {
+		return TEMP_FOLDER . "/xmlresponse_" . $this->generateCacheKey($cacheData);
+	}
+
+	/**
+	 * Extracts the response body and headers from a full curl response
+	 *
+	 * @param curl_handle $ch The curl handle for the request
+	 * @param string $rawResponse The raw response text
+	 * @param string &$body the body text
+	 * @param array &headers The header array
+	 */
+	protected function extractResponse($ch, $rawResponse, &$body, &$headers) {
+		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$rawHeaders = substr($rawResponse, 0, $headerLength);
+		$body = substr($rawResponse, $headerLength);
+		$headers = self::parse_raw_headers($rawHeaders);
+	}
+
+	/**
+	 * Takes raw headers and parses them to turn them to an associative array
+	 *
+	 * Any header that we see more than once is turned into an array.
+	 *
+	 * This is meant to mimic htt_parse_headers {@link http://php.net/manual/en/function.http-parse-headers.php}
+	 * thanks to comment #77241 on that page for foundation of this
+	 *
+	 * @param string $rawHeaders The raw header string
+	 * @return array The assosiative array of headers
+	 */
+	protected function parseRawHeaders($rawHeaders) {
+		$headers = array();
+		$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
+		foreach( $fields as $field ) {
+			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
+				$match[1] = preg_replace_callback(
+					'/(?<=^|[\x09\x20\x2D])./e',
+					create_function('$matches', 'return strtoupper($matches[0])'),
+					strtolower(trim($match[1]))
+				);
+				if( isset($headers[$match[1]]) ) {
+					if (!is_array($headers[$match[1]])) {
+						$headers[$match[1]] = array($headers[$match[1]]);
+					}
+					$headers[$match[1]][] = $match[2];
+                } else {
+                    $headers[$match[1]] = trim($match[2]);
+                }
+            }
+        }
+        return $headers;
+	}
+
 
 	/** 
 	 * Returns a full request url
@@ -423,7 +517,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	 * @var boolean It should be populated with cached content 
 	 * when a request referring to this response was unsuccessful
 	 */
-	protected $cachedBody = false;  
+	protected $cachedResponse = false;
 	
 	public function __construct($body, $statusCode = 200, $headers = null) {
 		$this->setbody($body);
@@ -444,17 +538,30 @@ class RestfulService_Response extends SS_HTTPResponse {
 	}
 	
 	/**
+	 * get the cached response object. This allows you to access the cached
+	 * eaders, not just the cached body.
+	 *
+	 * @return RestfulSerivice_Response The cached response object
+	 */
+	public function getCachedResponse() {
+		return $this->cachedResponse;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getCachedBody() {
-		return $this->cachedBody;
+		if ($this->cachedResponse) {
+			return $this->cachedResponse->getBody();
+		}
+		return false;
 	}
 	
 	/**
 	 * @param string
 	 */
-	public function setCachedBody($content) {
-		$this->cachedBody = $content; 
+	public function setCachedResponse($response) {
+		$this->cachedResponse = $response;
 	}
 	
 	/**
@@ -469,8 +576,8 @@ class RestfulService_Response extends SS_HTTPResponse {
 	 */
 	public function xpath_one($xpath) {
 		$items = $this->xpath($xpath);
-		return $items[0];
+		if (isset($items[0])) {
+			return $items[0];
+		}
 	}
 }
-
-
