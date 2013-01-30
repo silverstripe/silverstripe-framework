@@ -235,13 +235,6 @@ class RestfulService extends ViewableData {
 		$responseBody = curl_exec($ch);
 		$curlError = curl_error($ch);
 
-		// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
-		if(strpos($curlError,'14090086') !== false) {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			$responseBody = curl_exec($ch);
-			$curlError = curl_error($ch);
-		}
-
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 			
 		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
 
