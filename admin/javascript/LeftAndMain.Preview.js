@@ -211,6 +211,7 @@
 			 */
 			_block: function() {
 				this.addClass('blocked');
+				this.find('.cms-preview-overlay').show();
 				return this;
 			},
 
@@ -219,6 +220,7 @@
 			 */
 			_unblock: function() {
 				this.removeClass('blocked');
+				this.find('.cms-preview-overlay').hide();
 				return this;
 			},
 
@@ -402,20 +404,6 @@
 		$('.cms-edit-form').entwine({
 			onadd: function() {	
 				$('.cms-preview')._initialiseFromContent();
-			}
-		});
-		
-		/**
-		 * Update the "preview unavailable" overlay according to the class.
-		 */
-		$('.cms-preview.blocked').entwine({
-			onmatch: function() {
-				this.find('.cms-preview-overlay').show();
-				this._super();
-			},
-			onunmatch: function() {
-				this.find('.cms-preview-overlay').hide();
-				this._super();
 			}
 		});
 		
