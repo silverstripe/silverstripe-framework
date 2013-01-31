@@ -191,9 +191,38 @@ class ManyManyList extends RelationList {
 	}
 
 	/**
-	 * @return Array Map of field => fieldtype
+	 * Gets the join table used for the relationship.
+	 *
+	 * @return string the name of the table
 	 */
-	function getExtraFields() {
+	public function getJoinTable() {
+		return $this->joinTable;
+	}
+
+	/**
+	 * Gets the key used to store the ID of the local/parent object.
+	 *
+	 * @return string the field name
+	 */
+	public function getLocalKey() {
+		return $this->localKey;
+	}
+
+	/**
+	 * Gets the key used to store the ID of the foreign/child object.
+	 *
+	 * @return string the field name
+	 */
+	public function getForeignKey() {
+		return $this->foreignKey;
+	}
+
+	/**
+	 * Gets the extra fields included in the relationship.
+	 *
+	 * @return array a map of field names to types
+	 */
+	public function getExtraFields() {
 		return $this->extraFields;
 	}
 
