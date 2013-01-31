@@ -68,8 +68,18 @@
 			 * API
 			 * Switch the preview to different state.
 			 * stateName can be one of the "AllowedStates".
+			 *
+			 * @param {String}
+			 * @param {Boolean} Set to FALSE to avoid persisting the state
 			 */
-			changeState: function(stateName) {				
+			changeState: function(stateName, save) {				
+				var self = this, states = this._getNavigatorStates();
+				if(save !== false) {
+					$.each(states, function(index, state) {
+						self.saveState('state', stateName);
+					});
+				}
+
 				this.setCurrentStateName(stateName);
 				this._loadCurrentState();
 				this.redraw();
@@ -82,7 +92,7 @@
 			 * Change the preview mode.
 			 * modeName can be: split, content, preview.
 			 */
-			changeMode: function(modeName) {				
+			changeMode: function(modeName, save) {				
 				var container = $('.cms-container');
 
 				if (modeName === 'split') {
@@ -92,6 +102,8 @@
 				} else {
 					container.entwine('.ss').previewMode();
 				}
+
+				if(save !== false) this.saveState('mode', modeName);
 
 				this.redraw();
 
@@ -113,6 +125,8 @@
 					.height(sizes[sizeName].height);
 				this.find('.preview-device-inner')
 					.width(sizes[sizeName].width);
+
+				this.saveState('size', sizeName);
 
 				this.redraw();
 
@@ -150,13 +164,31 @@
 			},
 
 			/**
+			 * Store the preview options for this page.
+			 */
+			saveState : function(name, value) {
+				if(!window.localStorage) return;
+				
+				window.localStorage.setItem('cms-preview-state-' + name, value);
+			},
+
+			/**
+			 * Load previously stored preferences
+			 */
+			loadState : function(name) {
+				if(!window.localStorage) return;
+				
+				return window.localStorage.getItem('cms-preview-state-' + name);
+			}, 
+
+			/**
 			 * Disable the area - it will not appear in the GUI.
 			 * Caveat: the preview will be automatically enabled when ".cms-previewable" class is detected.
 			 */
 			disablePreview: function() {
 				this._loadUrl('about:blank');
 				this._block();
-				this.changeMode('content');
+				this.changeMode('content', false);
 				this.setIsPreviewEnabled(false);
 				return this;
 			},
@@ -173,7 +205,7 @@
 						// We do not support the split mode in IE < 8.
 						this.changeMode('content');
 					} else {
-						this.changeMode(this.getDefaultMode());
+						this.changeMode(this.getDefaultMode(), false);
 					}
 				}
 				return this;
@@ -235,6 +267,13 @@
 					this._moveNavigator();
 					this._loadCurrentState();
 					this.redraw();
+
+					// now check the cookie to see if we have any preview settings that have been
+					// retained for this page from the last visit
+					var mode = this.loadState('mode');
+					if(mode) this.changeMode(mode);
+					var size = this.loadState('size');
+					if(size) this.changeSize(size);
 				}
 				return this;
 			},
