@@ -145,12 +145,21 @@ class RestfulServiceTest extends SapphireTest {
 	
 	/**
 	 * Simulate cached response file for testing error requests that are supposed to have cache files
+	 *
+	 * @todo Generate the cachepath without hardcoding the cache data
 	 */
 	private function createFakeCachedResponse($connection, $subUrl) {
 		$fullUrl = $connection->getAbsoluteRequestURL($subUrl);
-		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
-		$cache_file = md5($fullUrl);	// Encoded name of cache file
-		$cache_path = $cachedir."/xmlresponse_$cache_file";
+		//these are the defaul values that one would expect in the
+		$cache_path = $connection->getCachePath(array(
+			$fullUrl,
+			'GET',
+			null,
+			array(),
+			array(),
+			$connection->getBasicAuthString()
+		));
+
 		$cacheResponse = new RestfulService_Response("Cache response body");
 		$store = serialize($cacheResponse);
 		file_put_contents($cache_path, $store);

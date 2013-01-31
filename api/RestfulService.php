@@ -132,21 +132,20 @@ class RestfulService extends ViewableData {
 		
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 		
-		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
-		//use var export on potentially nested arrays
-		$cache_file_items = array(
-			$subURL,
+		$cache_path = $this->getCachePath(array(
+			$url,
 			$method,
-			var_export($data, true),
-			var_export(array_merge((array)$this->customHeaders, (array)$headers), true),
-			var_export($curlOptions, true),
-			"$this->authUsername:$this->authPassword"
-		);
-		$cache_file = md5(implode('-', $cache_file_items));	// Encoded name of cache file
-		$cache_path = $cachedir."/xmlresponse_$cache_file";
+			$data,
+			array_merge((array)$this->customHeaders, (array)$headers),
+			$curlOptions,
+			$this->getBasicAuthString()
+		));
 		
 		// Check for unexpired cached feed (unless flush is set)
-		if(!isset($_GET['flush']) && @file_exists($cache_path)
+		//assume any cache_expire that is 0 or less means that we dont want to
+		// cache
+		if($this->cache_expire > 0 && !isset($_GET['flush'])
+				&& @file_exists($cache_path)
 				&& @filemtime($cache_path) + $this->cache_expire > time()) {
 			
 			$store = file_get_contents($cache_path);
@@ -218,7 +217,7 @@ class RestfulService extends ViewableData {
 		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 		// Add authentication
-		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
+		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
 
 		// Add fields to POST and PUT requests
 		if($method == 'POST') {
@@ -260,6 +259,46 @@ class RestfulService extends ViewableData {
 		$response = new RestfulService_Response($responseBody, $statusCode, $responseHeaders);
 
 		return $response;
+	}
+
+	/**
+	 * A function to return the auth string. This helps consistency through the
+	 * class but also allows tests to pull it out when generating the expected
+	 * cache keys
+	 *
+	 * @see {self::getCachePath()}
+	 * @see {RestfulServiceTest::createFakeCachedResponse()}
+	 *
+	 * @return string The auth string to be base64 encoded
+	 */
+	function getBasicAuthString() {
+		return $this->authUsername . ':' . $this->authPassword;
+	}
+
+	/**
+	 * Generate a cache key based on any cache data sent. The cache data can be
+	 * any type
+	 *
+	 * @param mixed $cacheData The cache seed for generating the key
+	 * @param string the md5 encoded cache seed.
+	 */
+	function generateCacheKey($cacheData) {
+		return md5(var_export($cacheData, true));
+	}
+
+	/**
+	 * Generate the cache path
+	 *
+	 * This is mainly so that the cache path can be generated in a consistent
+	 * way in tests without having to hard code the cachekey generate function
+	 * in tests
+	 *
+	 * @param mixed $cacheData The cache seed {@see self::generateCacheKey}
+	 *
+	 * @return string The path to the cache file
+	 */
+	function getCachePath($cacheData) {
+		return TEMP_FOLDER . "/xmlresponse_" . $this->generateCacheKey($cacheData);
 	}
 
 	/**
