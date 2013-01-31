@@ -258,7 +258,7 @@ class RestfulService extends ViewableData {
 	 *
 	 * @return string The auth string to be base64 encoded
 	 */
-	function getBasicAuthString() {
+	protected function getBasicAuthString() {
 		return $this->authUsername . ':' . $this->authPassword;
 	}
 
@@ -269,7 +269,7 @@ class RestfulService extends ViewableData {
 	 * @param mixed $cacheData The cache seed for generating the key
 	 * @param string the md5 encoded cache seed.
 	 */
-	function generateCacheKey($cacheData) {
+	protected function generateCacheKey($cacheData) {
 		return md5(var_export($cacheData, true));
 	}
 
@@ -284,7 +284,7 @@ class RestfulService extends ViewableData {
 	 *
 	 * @return string The path to the cache file
 	 */
-	function getCachePath($cacheData) {
+	protected function getCachePath($cacheData) {
 		return TEMP_FOLDER . "/xmlresponse_" . $this->generateCacheKey($cacheData);
 	}
 
@@ -296,7 +296,7 @@ class RestfulService extends ViewableData {
 	 * @param string &$body the body text
 	 * @param array &headers The header array
 	 */
-	function extractResponse($ch, $rawResponse, &$body, &$headers) {
+	protected function extractResponse($ch, $rawResponse, &$body, &$headers) {
 		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$rawHeaders = substr($rawResponse, 0, $headerLength);
 		$body = substr($rawResponse, $headerLength);
@@ -314,7 +314,7 @@ class RestfulService extends ViewableData {
 	 * @param string $rawHeaders The raw header string
 	 * @return array The assosiative array of headers
 	 */
-	static function parseRawHeaders($rawHeaders) {
+	protected static function parse_raw_headers($rawHeaders) {
         $headers = array();
         $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
         foreach( $fields as $field ) {
