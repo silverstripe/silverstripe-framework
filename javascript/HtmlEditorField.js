@@ -1075,13 +1075,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						container = $('<div></div>');
 					}
 
-					container.attr('class', 'captionImage '+attrs['class']);
+					container.attr('class', 'captionImage '+attrs['class']).css('width', attrs.width);
 
 					if (!caption.length) {
 						caption = $('<p class="caption"></p>').appendTo(container);
 					}
 
-					caption.attr('class', 'caption '+attrs['class']).css('width', attrs.width).text(extraData.CaptionText);
+					caption.attr('class', 'caption '+attrs['class']).text(extraData.CaptionText);
 				}
 				// Otherwise forget they exist
 				else {
