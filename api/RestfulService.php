@@ -300,7 +300,7 @@ class RestfulService extends ViewableData {
 		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$rawHeaders = substr($rawResponse, 0, $headerLength);
 		$body = substr($rawResponse, $headerLength);
-		$headers = $this->parseRawHeaders($rawHeaders);
+		$headers = self::parse_raw_headers($rawHeaders);
 	}
 
 	/**
