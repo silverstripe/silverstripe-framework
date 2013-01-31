@@ -18,6 +18,23 @@ class RestfulService extends ViewableData {
 	protected $proxy;
 	protected static $default_proxy;
 	protected static $custom_ua;
+	protected static $default_curl_options = array();
+
+	/**
+	 * set a curl option that will be applied to all requests as default
+	 */
+	public static function set_default_curl_option($option, $value) {
+		self::$default_curl_options[$option] = $value;
+	}
+
+	/**
+	 * set many defauly curl options at once
+	 */
+	public static function set_default_curl_options($optionArray) {
+		foreach ($optionArray as $option => $value) {
+			self::set_default_curl_option($option, $value);
+		}
+	}
 	
 	/**
 	 * Sets default proxy settings for outbound RestfulService connections
@@ -128,7 +145,7 @@ class RestfulService extends ViewableData {
 			$method,
 			$data,
 			array_merge((array)$this->customHeaders, (array)$headers),
-			$curlOptions,
+			array_merge(self::$default_curl_options,$curlOptions),
 			$this->getBasicAuthString()
 		));
 		
@@ -182,6 +199,7 @@ class RestfulService extends ViewableData {
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
 		$timeout   = 5;
+		$curlOptions = array_merge(self::$default_curl_options, $curlOptions);
 		if (self::$custom_ua) {
 			$useragent = self::$custom_ua;
 		}
