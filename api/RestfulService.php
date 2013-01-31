@@ -174,10 +174,10 @@ class RestfulService extends ViewableData {
 					$store = file_get_contents($cache_path);
 					$cachedResponse = unserialize($store);
 					
-					$response->setCachedBody($cachedResponse->getBody()); 
+					$response->setCachedResponse($cachedResponse);
 				}
 				else {
-					$response->setCachedBody(false); 
+					$response->setCachedResponse(false);
 				}
 			}
 		}
@@ -545,7 +545,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	 * @var boolean It should be populated with cached content 
 	 * when a request referring to this response was unsuccessful
 	 */
-	protected $cachedBody = false;  
+	protected $cachedResponse = false;
 	
 	public function __construct($body, $statusCode = 200, $headers = null) {
 		$this->setbody($body);
@@ -566,17 +566,30 @@ class RestfulService_Response extends SS_HTTPResponse {
 	}
 	
 	/**
+	 * get the cached response object. This allows you to access the cached
+	 * eaders, not just the cached body.
+	 *
+	 * @return RestfulSerivice_Response The cached response object
+	 */
+	public function getCachedResponse() {
+		return $this->cachedResponse;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getCachedBody() {
-		return $this->cachedBody;
+		if ($this->cachedResponse) {
+			return $this->cachedResponse->getBody();
+		}
+		return false;
 	}
 	
 	/**
 	 * @param string
 	 */
-	public function setCachedBody($content) {
-		$this->cachedBody = $content; 
+	public function setCachedResponse($response) {
+		$this->cachedResponse = $response;
 	}
 	
 	/**

@@ -151,14 +151,18 @@ class RestfulServiceTest extends SapphireTest {
 	private function createFakeCachedResponse($connection, $subUrl) {
 		$fullUrl = $connection->getAbsoluteRequestURL($subUrl);
 		//these are the defaul values that one would expect in the
-		$cache_path = $connection->getCachePath(array(
+		$basicAuthStringMethod = new ReflectionMethod('RestfulServiceTest_MockErrorService', 'getBasicAuthString');
+		$basicAuthStringMethod->setAccessible(true);
+		$cachePathMethod = new ReflectionMethod('RestfulServiceTest_MockErrorService', 'getCachePath');
+		$cachePathMethod->setAccessible(true);
+		$cache_path = $cachePathMethod->invokeArgs($connection, array(array(
 			$fullUrl,
 			'GET',
 			null,
 			array(),
 			array(),
-			$connection->getBasicAuthString()
-		));
+			$basicAuthStringMethod->invoke($connection)
+		)));
 
 		$cacheResponse = new RestfulService_Response("Cache response body");
 		$store = serialize($cacheResponse);
