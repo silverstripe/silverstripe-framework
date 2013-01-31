@@ -148,17 +148,6 @@ class Director implements TemplateGlobalProvider {
 						number_format(memory_get_peak_usage(),0)
 					));
 				} else {
-					// Set content length (according to RFC2616)
-					if(
-						!headers_sent()
-						&& $response->getBody() 
-						&& $req->httpMethod() != 'HEAD' 
-						&& $response->getStatusCode() >= 200
-						&& !in_array($response->getStatusCode(), array(204, 304))
-					) {
-						$response->fixContentLength();
-					}
-
 					$response->output();
 				}
 			} else {
