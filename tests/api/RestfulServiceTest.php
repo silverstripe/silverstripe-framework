@@ -184,7 +184,7 @@ class RestfulServiceTest extends SapphireTest {
 				'bar=foo'
 			)
 		);
-		$headerFunction = new ReflectionMethod('RestfulService', 'parse_raw_headers');
+		$headerFunction = new ReflectionMethod('RestfulService', 'parseRawHeaders');
 		$headerFunction->setAccessible(true);
 		$this->assertEquals(
 			$expected,
