@@ -18,7 +18,6 @@ class RestfulService extends ViewableData {
 	protected $proxy;
 	protected static $default_proxy;
 	protected static $custom_ua;
-	protected static $disable_verifypeer = false;
 	
 	/**
 	 * Sets default proxy settings for outbound RestfulService connections
@@ -44,14 +43,6 @@ class RestfulService extends ViewableData {
 	 */
 	public static function set_custom_ua($userAgent) {
 		self::$custom_ua = $userAgent;
-	}
-
-	public static function enable_verifypeer() {
-		self::$disable_verifypeer = false;
-	}
-
-	public static function disable_verifypeer() {
-		self::$disable_verifypeer = true;
 	}
 	
 	/**
@@ -241,10 +232,6 @@ class RestfulService extends ViewableData {
 		// Set any custom options passed to the request() function
 		curl_setopt_array($ch, $curlOptions);
 
-		//if the peer SSL verification is disabled, then disable it
-		if (self::$disable_verifypeer) {
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		}
 		// Run request
 		$rawResponse = curl_exec($ch);
 		$curlError = curl_error($ch);
