@@ -1100,7 +1100,7 @@ class Requirements_Backend {
 			$this->css($path.$css, $media);
 		}
 		else if ($module) {
-			$this->css($module.$css);
+			$this->css($module.$css, $media);
 		}
 	}
 	
