@@ -13,8 +13,6 @@
  * @see Director::direct(),Director::addRules(),Director::set_environment_type()
  */
 class Director implements TemplateGlobalProvider {
-	
-	static private $urlParams;
 
 	static private $rules = array();
 	
@@ -280,7 +278,6 @@ class Director implements TemplateGlobalProvider {
 					return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
 
 				} else {
-					Director::$urlParams = $arguments;
 					$controllerObj = Injector::inst()->create($controller);
 					$controllerObj->setSession($session);
 
@@ -297,16 +294,7 @@ class Director implements TemplateGlobalProvider {
 			}
 		}
 	}
-	
-	/**
-	 * Set url parameters (should only be called internally by RequestHandler->handleRequest()).
-	 * 
-	 * @param $params array
-	 */
-	public static function setUrlParams($params) {
-		Director::$urlParams = $params;
-	}
-	
+
 	/**
 	 * Return the {@link SiteTree} object that is currently being viewed. If there is no SiteTree object to return,
 	 * then this will return the current controller.
