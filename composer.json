@@ -25,6 +25,11 @@
 		}
 	},
 	"autoload": {
-		"classmap": ["tests/behat/features/bootstrap"]	
+		"psr-0": {
+			"SilverStripe\\Framework": "src"
+		},
+		"classmap": [
+			"tests/behat/features/bootstrap"
+		]
 	}
 }
