@@ -32,7 +32,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	/**
 	 * @var string $httpMethod The HTTP method in all uppercase: GET/PUT/POST/DELETE/HEAD
 	 */
-	protected $httpMethod;
+	protected $method;
 	
 	/**
 	 * @var array $getVars Contains alls HTTP GET parameters passed into this request.
@@ -83,7 +83,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 * Construct a SS_HTTPRequest from a URL relative to the site root.
 	 */
 	public function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
-		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
+		$this->method = strtoupper(self::detect_method($httpMethod, $postVars));
 		$this->url = $url;
 
 		//Normalize URL if its relative (strictly speaking), or has leading slashes
@@ -102,36 +102,36 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	/**
 	 * @return bool
 	 */
-	public function isGET() {
-		return $this->httpMethod == 'GET';
+	public function isGet() {
+		return $this->method == 'GET';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isPOST() {
-		return $this->httpMethod == 'POST';
+	public function isPost() {
+		return $this->method == 'POST';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isPUT() {
-		return $this->httpMethod == 'PUT';
+	public function isPut() {
+		return $this->method == 'PUT';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isDELETE() {
-		return $this->httpMethod == 'DELETE';
+	public function isDelete() {
+		return $this->method == 'DELETE';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isHEAD() {
-		return $this->httpMethod == 'HEAD';
+	public function isHead() {
+		return $this->method == 'HEAD';
 	}
 
 	/**
@@ -212,7 +212,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 * @param bool $includeGetVars whether or not to include the get parameters\
 	 * @return string
 	 */
-	public function getURL($includeGetVars = false) {
+	public function getUrl($includeGetVars = false) {
 		$url = $this->url;
 
 		if ($includeGetVars) { 
@@ -328,7 +328,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 		// Check if a specific method is required
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
 			$requiredMethod = $matches[1];
-			if($requiredMethod != $this->httpMethod) return false;
+			if($requiredMethod != $this->method) return false;
 			
 			// If we get this far, we can match the URL pattern as usual.
 			$pattern = $matches[2];
@@ -548,7 +548,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 *
 	 * @return string
 	 */
-	public function getIP() {
+	public function getIp() {
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 			//check ip from share internet
 			return $_SERVER['HTTP_CLIENT_IP'];
@@ -568,7 +568,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 *                                (Default: false)
 	 * @return array
 	 */
-	public function getAcceptMimetypes($includeQuality = false) {
+	public function getAcceptMimeTypes($includeQuality = false) {
 		$mimetypes = array();
 		$mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
 		foreach($mimetypesWithQuality as $mimetypeWithQuality) {
@@ -580,8 +580,8 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	/**
 	 * @return string HTTP method (all uppercase)
 	 */
-	public function httpMethod() {
-		return $this->httpMethod;
+	public function getMethod() {
+		return $this->method;
 	}
 	
 	/**
@@ -610,4 +610,12 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 			return $origMethod;
 		}
 	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getMethod()}.
+	 */
+	public function httpMethod() {
+		return $this->getMethod();
+	}
+
 }
