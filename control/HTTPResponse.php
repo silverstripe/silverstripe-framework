@@ -151,8 +151,10 @@ class SS_HTTPResponse {
 	public function setBody($body) {
 		$this->body = $body;
 		
-		// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
-		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
+		if (Director::isLive() || !isset($_GET['debug_profile'])) {
+			// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
+			$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
+		}
 	}
 	
 	public function getBody() {
