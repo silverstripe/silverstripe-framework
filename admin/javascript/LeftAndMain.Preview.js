@@ -70,6 +70,13 @@
 			 * stateName can be one of the "AllowedStates".
 			 */
 			changeState: function(stateName) {				
+				if ($.cookie) {
+					var states = this._getNavigatorStates();
+					$.each(states, function(index, state) {
+						$('.cms-preview').setCookiePreviewSettings('state', stateName);
+					});
+				}
+
 				this.setCurrentStateName(stateName);
 				this._loadCurrentState();
 				this.redraw();
@@ -114,6 +121,10 @@
 				this.find('.preview-device-inner')
 					.width(sizes[sizeName].width);
 
+				if ($.cookie) {
+					$('.cms-preview').setCookiePreviewSettings('size', sizeName);
+				}
+
 				this.redraw();
 
 				return this;
@@ -148,6 +159,41 @@
 
 				return this;
 			},
+
+			/**
+			 * Store the preview options for this page in the cookie
+			 */
+			setCookiePreviewSettings : function(name, value) {
+					if (name && value != null) {
+						var settings = ($.cookie('preview-settings')) ? 
+							$.parseJSON($.cookie('preview-settings')) : {};
+						// update object values as per name and value
+						switch (name) {
+							case 'mode':
+								settings.mode = value;
+								break;
+							case 'size':
+								settings.size = value;
+								break;
+							case 'state':
+								settings.state = value;
+								break;
+						}
+						// set object back to json and store in cookie
+						var jsonString = JSON.stringify(settings);
+						$.cookie('preview-settings', jsonString, {path: '/', expires: 31});
+								
+					}
+			},
+
+			/**
+			 * Store the preview options for this page in the cookie
+			 */
+			getCookiePreviewSettings : function(name) {
+				var settings = $.parseJSON($.cookie('preview-settings'));
+				if (!settings) return null;
+				return settings;
+			}, 
 
 			/**
 			 * Disable the area - it will not appear in the GUI.
@@ -235,6 +281,7 @@
 					this._moveNavigator();
 					this._loadCurrentState();
 					this.redraw();
+
 				}
 				return this;
 			},
@@ -311,6 +358,23 @@
 							(!currentStateName && state.active)
 						);
 					});
+				}
+
+				// now check the cookie to see if we have any preview settings that have been
+				// retained for this page from the last visit
+				if ($.cookie) {
+					if ($.cookie('preview-settings')) {
+						var settings = $('.cms-preview').getCookiePreviewSettings();
+						currentState = $.grep(states, function(state, index) {
+							return (
+								settings.state === state.name ||
+								(!settings.state && state.active)
+							);
+						});
+						if (settings.mode) $('.cms-preview').changeMode(settings.mode);
+						if (settings.size) $('.cms-preview').changeSize(settings.size);
+						this.setCurrentStateName(settings.state);
+					}
 				}
 
 				if (currentState[0]) {
@@ -460,6 +524,7 @@
 				e.preventDefault();
 
 				var targetStateName = $(this).val();
+				$('.cms-preview').setCookiePreviewSettings('mode', targetStateName);
 				$('.cms-preview').changeMode(targetStateName);
 			}
 		});
@@ -477,7 +542,9 @@
 					var targetStateName = this.closest('.preview-mode-selector').find('select option:eq('+index+')').val();					
 													
 					//var targetStateName = $(this).val();
+					$('.cms-preview').setCookiePreviewSettings('mode', targetStateName);
 					$('.cms-preview').changeMode(targetStateName);
+					this.setCurrentStateName(targetStateName);
 				}
 			}
 		});
