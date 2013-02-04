@@ -404,6 +404,13 @@ form.small .field, .field.small {
 			);
 			@include box-shadow(0 0 5px darken($color-button-generic, 20%) inset);
 		}
+
+		&.ss-ui-action-minor {
+			span {
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
 		
 		/* constructive */
 		&.ss-ui-action-constructive {
