@@ -159,7 +159,7 @@
 				));
 
 				if (this.data('fileupload')._isXHRUpload({multipart: true})) {
-					$('.ss-uploadfield-item-uploador').show();
+					$('.ss-uploadfield-item-uploador').hide().show();
 					dropZone.hide().show();
 				}
 
