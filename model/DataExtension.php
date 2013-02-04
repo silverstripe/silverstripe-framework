@@ -58,7 +58,7 @@ abstract class DataExtension extends Extension {
 	 * @param $validationResult Local validation result
 	 * @throws ValidationException
 	 */
-	public function validate(ValidationResult $validationResult) {
+	public function validate(ValidationResult &$validationResult) {
 	}
 	
 	/**
@@ -145,7 +145,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param FieldList $fields FieldList with a contained TabSet
 	 */
-	public function updateCMSFields(FieldList &$fields) {
+	public function updateCMSFields(FieldList $fields) {
 	}
 	
 	/**
@@ -156,7 +156,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param FieldList $fields FieldList without TabSet nesting
 	 */
-	public function updateFrontEndFields(FieldList &$fields) {
+	public function updateFrontEndFields(FieldList $fields) {
 	}
 	
 	/**
@@ -165,7 +165,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param FieldList $actions FieldList
 	 */
-	public function updateCMSActions(FieldList &$actions) {
+	public function updateCMSActions(FieldList $actions) {
 	}
 	
 	/**
