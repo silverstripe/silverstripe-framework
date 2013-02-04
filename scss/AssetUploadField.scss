@@ -27,6 +27,12 @@
 	padding-left: 12px;
 }
 
+#Form_EditorToolbarMediaForm {
+	.ui-tabs-panel {
+		padding-left: 0px;
+	}
+}
+
 body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fieldset {
 	padding: $grid-x*2;
 	overflow: auto;
@@ -135,7 +141,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 		.ss-uploadfield-item-info {
 			position: relative;
 			line-height: 30px;
-			font-size: 18px;
+			font-size: 14px;
 			overflow: hidden;
 			background-color: #5db4df;
 			@include background-image(linear-gradient(top,  #5db4df 0%,#5db1dd 8%,#439bcb 50%,#3f99cd 54%,#207db6 96%,#1e7cba 100%));
@@ -227,7 +233,8 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			left: 0;
 			z-index: 0;
 			color: #f00;
-			@include ss-uploadfield-action-buttons;			
+			@include ss-uploadfield-action-buttons;
+			font-size:14px;
 		}
 		
 		.ss-uploadfield-item-progress {
@@ -267,20 +274,26 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 	
 		.ss-uploadfield-item-info {
 			float: left;
-			margin: 34px 0 0;	
+			margin: 10px 0 0;
 			.ss-insert-media &{
-				margin: 15px 0px 0 20px;
+				margin: 10px 0px 0 20px;
 			}
 			label{
-				font-size: 16px;
+				font-size: 18px;
 				line-height: 30px;
-				padding: 5px 16px;
+				padding: 8px 16px;
 			}
 		}
 		.ss-uploadfield-fromcomputer {
 			/*position: relative; */
 			overflow: hidden;
 			display: block;
+			.btn-icon-drive-upload-large {
+				background: url(../images/drive-upload-large.png) no-repeat 0px -4px;
+				width:32px;
+				height:32px;
+				margin-top:-12px;
+			}
 		}
 		.ss-uploadfield-item-uploador {
 			float: left;
@@ -288,7 +301,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			font-size: 22px;
 			padding: 0 20px;
 			line-height: 70px;
-			margin-top:16px;
+			margin-top:8px;
 			display: none;
 			.ss-insert-media &{
 				font-size: 18px;	
@@ -302,7 +315,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			border: 2px dashed $color-medium-separator;
 			background: lighten($color-base,12%);
 			display: none;
-			height: 82px;
+			height: 54px;
 			width: 360px;
 			float: left;
 
@@ -314,32 +327,33 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			div {
 				color:lighten($color-text, 10%);
 				text-shadow: 0px 1px 0px #fff;
-				background: url('../images/upload.png') 0 25px no-repeat;
+				background: url('../images/upload.png') 0 12px no-repeat;
 				width:230px;
 				z-index:1;
-				padding: 20px 0 0;
+				padding: 6px 0 0;
 				line-height: 25px;
-				font-size: 25px;
+				font-size: 20px;
 				font-weight: bold;
 				text-align: center;
 				display:block;
 				margin:0 auto;
 				span {
 					display: block;
-					font-size: 14px;
+					font-size: 12px;
 					z-index:-1;
+					margin-top:-3px;
 				}
 			}
 			.ss-insert-media &{
-				margin-top:3px;
-				height: 56px; //Design has these smaller than main upload area
-				width: 277px;
+				height: 54px;
+				width: 277px; //Design has these smaller than main upload area
 				overflow:hidden;
 
 				div{		
-					background-position:0 15px;					
+					background-position:0 13px;
+					padding-top:22px;
 					span{
-						height:30px;
+						height:38px;
 						font-size:18px;
 						line-height: 18px;
 					}
