@@ -50,7 +50,7 @@ class RequestHandlingTest extends FunctionalTest {
 	
 	public function testConstructedWithNullRequest() {
 		$r = new RequestHandler();
-		$this->assertInstanceOf('NullHTTPRequest', $r->getRequest());
+		$this->assertInstanceOf('SS_HTTPRequest', $r->getRequest());
 	}
 	
 	public function testRequestHandlerChainingAllParams() {

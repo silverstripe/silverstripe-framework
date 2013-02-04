@@ -27,7 +27,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 * and subsequently popped out of the array by {@link shift()}.
 	 * Only use this structure for internal request handling purposes.
 	 */
-	protected $dirParts;
+	protected $dirParts = array();
 
 	/**
 	 * @var string $httpMethod The HTTP method in all uppercase: GET/PUT/POST/DELETE/HEAD
@@ -78,24 +78,31 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	protected $routeParams = array();
 	
 	protected $unshiftedButParsedParts = 0;
-	
-	/**
-	 * Construct a SS_HTTPRequest from a URL relative to the site root.
-	 */
-	public function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
-		$this->method = strtoupper(self::detect_method($httpMethod, $postVars));
-		$this->url = $url;
 
-		//Normalize URL if its relative (strictly speaking), or has leading slashes
-		if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
-			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
+	/**
+	 * Constructs a new HTTP request.
+	 *
+	 * @param string $method the HTTP method
+	 * @param string $url the URL relative to the site root
+	 * @param array $getVars an array of GET vars
+	 * @param array $postVars an array of POST vars
+	 * @param string $body the request body
+	 */
+	public function __construct($method = null, $url = null, $getVars = array(), $postVars = array(), $body = null) {
+		$this->method = strtoupper(self::detect_method($method, $postVars));
+
+		if($url) {
+			// Normalize URL if its relative (strictly speaking), or has leading slashes
+			if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
+				$url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $url);
+			}
+
+			$this->url      = $url;
+			$this->dirParts = $url ? preg_split('|/+|', $url) : array();
 		}
 
-		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
-		else $this->dirParts = array();
-		
-		$this->getVars = (array)$getVars;
-		$this->postVars = (array)$postVars;
+		$this->getVars  = (array) $getVars;
+		$this->postVars = (array) $postVars;
 		$this->setBody($body);
 	}
 
