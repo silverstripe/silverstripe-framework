@@ -369,6 +369,7 @@ class TreeDropdownField_Readonly extends TreeDropdownField {
 		$field = new LookupField($this->name, $this->title, $source);
 		$field->setValue($this->value);
 		$field->setForm($this->form);
+		$field->dontEscape = true;
 		return $field->Field();
 	}
 }
