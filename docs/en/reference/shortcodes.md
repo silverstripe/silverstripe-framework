@@ -32,7 +32,7 @@ not have been parsed, and can optionally be fed back into the parser.
 * The ShortcodeParser instance used to parse the content.
 * The shortcode tag name that was matched within the parsed content.
 
-For the shortcode to work, you need to register it with the `ShortcodeParser`. Assuming that you have placed our
+For the shortcode to work, you need to register it with the `ShortcodeParser`. Assuming you've placed the
 callback function in the `Page` class, you would need to make the following call from `_config.php`:
 
 	:::php
