@@ -42,6 +42,10 @@
 			DefaultMode: 'split',
 
 			Sizes: {
+				auto: {
+					width: '100%',
+					height: '100%'
+				},
 				mobile: {
 					width: '335px', // add 15px for approx desktop scrollbar 
 					height: '568px' 
