@@ -282,6 +282,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 				font-size: 18px;
 				line-height: 30px;
 				padding: 8px 16px;
+				margin-right:0px;
 			}
 		}
 		.ss-uploadfield-fromcomputer {
@@ -301,7 +302,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			font-size: 22px;
 			padding: 0 20px;
 			line-height: 70px;
-			margin-top:8px;
+			margin-top:4px;
 			display: none;
 			.ss-insert-media &{
 				font-size: 18px;	

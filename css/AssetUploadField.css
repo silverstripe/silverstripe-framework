@@ -70,10 +70,10 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { width: 100%; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { float: left; margin: 10px 0 0; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { margin: 10px 0px 0 20px; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info label { font-size: 18px; line-height: 30px; padding: 8px 16px; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info label { font-size: 18px; line-height: 30px; padding: 8px 16px; margin-right: 0px; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { /*position: relative; */ overflow: hidden; display: block; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer .btn-icon-drive-upload-large { background: url(../images/drive-upload-large.png) no-repeat 0px -4px; width: 32px; height: 32px; margin-top: -12px; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { float: left; font-weight: bold; font-size: 22px; padding: 0 20px; line-height: 70px; margin-top: 8px; display: none; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { float: left; font-weight: bold; font-size: 22px; padding: 0 20px; line-height: 70px; margin-top: 4px; display: none; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { font-size: 18px; margin-top: 0; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { margin-top: 9px; -webkit-border-radius: 13px; -moz-border-radius: 13px; -ms-border-radius: 13px; -o-border-radius: 13px; border-radius: 13px; -webkit-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; -moz-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; border: 2px dashed gray; background: #d4dbe0; display: none; height: 54px; width: 360px; float: left; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone.active.hover { -webkit-box-shadow: rgba(255, 255, 255, 0.6) 0 0 3px 2px inset; -moz-box-shadow: rgba(255, 255, 255, 0.6) 0 0 3px 2px inset; box-shadow: rgba(255, 255, 255, 0.6) 0 0 3px 2px inset; }
