@@ -99,12 +99,19 @@
 			changeMode: function(modeName, save) {				
 				var container = $('.cms-container');
 
-				if (modeName === 'split') {
+				if (modeName == 'split') {
 					container.entwine('.ss').splitViewMode();
-				} else if (modeName === 'content') {
+					this.setIsPreviewEnabled(true);
+					this._loadCurrentState();
+				} else if (modeName == 'content') {
 					container.entwine('.ss').contentViewMode();
-				} else {
+					this.setIsPreviewEnabled(false);
+					this._loadCurrentState();
+				} else if (modeName == 'preview') {
 					container.entwine('.ss').previewMode();
+					this.setIsPreviewEnabled(true);
+				} else {
+					throw 'Invalid mode: ' + modeName;
 				}
 
 				if(save !== false) this.saveState('mode', modeName);
@@ -264,19 +271,24 @@
 			 * Update the preview according to browser and CMS section capabilities.
 			 */
 			_initialiseFromContent: function() {
+				var mode, size;
+
 				if (!$('.cms-previewable').length) {
 					this.disablePreview();
 				} else {
-					this.enablePreview();
+					mode = this.loadState('mode');
+					size = this.loadState('size');
+
 					this._moveNavigator();
-					this._loadCurrentState();
+					if(!mode || mode != 'content') {
+						this.enablePreview();
+						this._loadCurrentState();
+					}
 					this.redraw();
 
 					// now check the cookie to see if we have any preview settings that have been
 					// retained for this page from the last visit
-					var mode = this.loadState('mode');
 					if(mode) this.changeMode(mode);
-					var size = this.loadState('size');
 					if(size) this.changeSize(size);
 				}
 				return this;
@@ -303,10 +315,13 @@
 			},
 
 			/**
-			 * Change the URL of the preview iframe.
+			 * Change the URL of the preview iframe (if its not already displayed).
 			 */
 			_loadUrl: function(url) {
-				this.find('iframe').addClass('loading').attr('src', url);
+				var iframe = this.find('iframe');
+				if(iframe.attr('src') != url) {
+					iframe.addClass('loading').attr('src', url);
+				}
 				return this;
 			},
 
