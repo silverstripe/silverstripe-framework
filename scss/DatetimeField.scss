@@ -6,9 +6,12 @@
 }
 
 .datetime .date .middleColumn {
-	width: 20em;
+	// Fits a standard date, as well as most abbreviated month names
+	width: 12em;
 }
 
 .datetime .time .middleColumn {
-	width: 10em;
+	// make room to accommodate for additional modifier fields, 
+	// such as a dropdown field to preselect time
+	width: 15em; 
 }

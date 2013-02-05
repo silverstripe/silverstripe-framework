@@ -58,8 +58,10 @@ class DatetimeField extends FormField {
 	public function __construct($name, $title = null, $value = ""){
 		$this->config = self::$default_config;
 		
-		$this->dateField = DateField::create($name . '[date]', false);
-		$this->timeField = TimeField::create($name . '[time]', false);
+		$this->dateField = DateField::create($name . '[date]', false)
+			->addExtraClass('fieldgroup-field');
+		$this->timeField = TimeField::create($name . '[time]', false)
+			->addExtraClass('fieldgroup-field');
 		$this->timezoneField = new HiddenField($this->getName() . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
@@ -80,6 +82,7 @@ class DatetimeField extends FormField {
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
+		$this->addExtraClass('fieldgroup');
 		$this->addExtraClass(Convert::raw2json($config));
 
 		return parent::FieldHolder($properties);
