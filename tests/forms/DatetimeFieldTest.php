@@ -25,16 +25,9 @@ class DatetimeFieldTest extends SapphireTest {
 	}
 
 	public function testFormSaveInto() {
-		$form = new Form(
-			new Controller(), 
-			'Form',
-			new FieldList(
-				$f = new DatetimeField('MyDatetime', null)
-			),
-			new FieldList(
-				new FormAction('doSubmit')
-			)
-		);
+		$f = new DatetimeField('MyDatetime', null);
+		$form = $this->getMockForm();
+		$form->Fields()->push($f);
 		$f->setValue(array(
 			'date' => '29/03/2003',
 			'time' => '23:59:38'
@@ -169,6 +162,65 @@ class DatetimeFieldTest extends SapphireTest {
 		$this->assertEquals('2003-06-24 21:59:59', $f->dataValue(), 'Data value matches server timezone');
 		
 		date_default_timezone_set($oldTz);
+	}
+
+	public function testSetDateField() {
+		$form = $this->getMockForm();
+		$field = new DatetimeField('Datetime', 'Datetime');
+		$field->setForm($form);
+		$field->setValue(array(
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+		));
+		$dateField = new DateField('Datetime[date]');
+		$field->setDateField($dateField);
+
+		$this->assertEquals(
+			$dateField->getForm(),
+			$form,
+			'Sets form on new field'
+		);
+
+		$this->assertEquals(
+			'2003-06-24',
+			$dateField->dataValue(),
+			'Sets existing value on new field'
+		);
+	}
+
+	public function testSetTimeField() {
+		$form = $this->getMockForm();
+		$field = new DatetimeField('Datetime', 'Datetime');
+		$field->setForm($form);
+		$field->setValue(array(
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+		));
+		$timeField = new TimeField('Datetime[time]');
+		$field->setTimeField($timeField);
+
+		$this->assertEquals(
+			$timeField->getForm(),
+			$form,
+			'Sets form on new field'
+		);
+
+		$this->assertEquals(
+			'23:59:59',
+			$timeField->dataValue(),
+			'Sets existing value on new field'
+		);
+	}
+
+	protected function getMockForm() {
+		return new Form(
+			new Controller(), 
+			'Form',
+			new FieldList(),
+			new FieldList(
+				new FormAction('doSubmit')
+			)
+		);
 	}
 }
 
