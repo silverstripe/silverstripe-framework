@@ -423,12 +423,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$clone = new $className( $this->toMap(), false, $this->model );
 		$clone->ID = 0;
 		
-		$clone->extend('onBeforeDuplicate', $this, $doWrite);
+		$clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite);
 		if($doWrite) {
 			$clone->write();
 			$this->duplicateManyManyRelations($this, $clone);
 		}
-		$clone->extend('onAfterDuplicate', $this, $doWrite);
+		$clone->invokeWithExtensions('onAfterDuplicate', $this, $doWrite);
 		
 		return $clone;
 	}
@@ -1065,7 +1065,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if($writeException) {
 			// Used by DODs to clean up after themselves, eg, Versioned
-			$this->extend('onAfterSkippedWrite');
+			$this->invokeWithExtensions('onAfterSkippedWrite');
 			throw $writeException;
 			return false;
 		}
@@ -1208,7 +1208,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			} elseif ( $showDebug ) {
 				echo "<b>Debug:</b> no changes for DataObject<br />";
 				// Used by DODs to clean up after themselves, eg, Versioned
-				$this->extend('onAfterSkippedWrite');
+				$this->invokeWithExtensions('onAfterSkippedWrite');
 			}
 
 			// Clears the cache for this object so get_one returns the correct object.
@@ -1220,7 +1220,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$this->record['LastEdited'] = SS_Datetime::now()->Rfc2822();
 		} else {
 			// Used by DODs to clean up after themselves, eg, Versioned
-			$this->extend('onAfterSkippedWrite');
+			$this->invokeWithExtensions('onAfterSkippedWrite');
 		}
 
 		// Write relations as necessary
