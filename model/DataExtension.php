@@ -58,7 +58,7 @@ abstract class DataExtension extends Extension {
 	 * @param $validationResult Local validation result
 	 * @throws ValidationException
 	 */
-	public function validate(ValidationResult &$validationResult) {
+	public function validate(ValidationResult $validationResult) {
 	}
 	
 	/**
