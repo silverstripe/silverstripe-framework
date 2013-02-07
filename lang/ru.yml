@@ -378,7 +378,7 @@ ru:
     WELCOMEBACK: 'Добро пожаловать, {firstname}'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
     belongs_many_many_Groups: Группы
-    db_LastVisited: 'Дата последнего видита'
+    db_LastVisited: 'Дата последнего визита'
     db_Locale: 'Локаль интерфейса'
     db_LockedOutUntil: 'Заблокировано до'
     db_NumVisit: 'Количество посещений'
