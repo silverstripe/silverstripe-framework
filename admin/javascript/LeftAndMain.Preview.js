@@ -318,10 +318,7 @@
 			 * Change the URL of the preview iframe (if its not already displayed).
 			 */
 			_loadUrl: function(url) {
-				var iframe = this.find('iframe');
-				if(iframe.attr('src') != url) {
-					iframe.addClass('loading').attr('src', url);
-				}
+				this.find('iframe').addClass('loading').attr('src', url);
 				return this;
 			},
 
