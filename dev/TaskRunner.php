@@ -66,7 +66,7 @@ class TaskRunner extends Controller {
 			if(Director::is_cli()) echo "Running task '$title'...\n\n";
 			elseif(!Director::is_ajax()) echo "<h1>Running task '$title'...</h1>\n";
 
-			$task = new $taskName();
+			$task = Injector::inst()->create($taskName);
 			if ($task->isEnabled()) $task->run($request);
 			else echo "<p>{$title} is disabled</p>";
 		} else {
