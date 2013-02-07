@@ -39,7 +39,7 @@
  * 
  * <code>
  * # Quarter-hourly task (every hour at 25 minutes past) (remove space between first * and /15)
- * * /15 * * * *  www-data /webroot/framework/cli-script.php /QuarterlyHourlyTask > /var/log/quarterhourlytask.log
+ * * /15 * * * *  www-data /webroot/framework/cli-script.php /QuarterHourlyTask > /var/log/quarterhourlytask.log
  *
  * # HourlyTask (every hour at 25 minutes past)
  * 25 * * * *  www-data /webroot/framework/cli-script.php /HourlyTask > /var/log/hourlytask.log
