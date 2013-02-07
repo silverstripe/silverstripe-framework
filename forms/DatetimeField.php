@@ -239,15 +239,6 @@ class DatetimeField extends FormField {
 	public function getLocale() {
 		return $this->dateField->getLocale();
 	}
-
-	public function setDescription($description) {
-		parent::setDescription($description);
-
-		$this->dateField->setDescription($description);
-		$this->timeField->setDescription($description);
-
-		return $this;
-	}
 	
 	/**
 	 * Note: Use {@link getDateField()} and {@link getTimeField()}
