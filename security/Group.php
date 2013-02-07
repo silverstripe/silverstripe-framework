@@ -392,7 +392,7 @@ class Group extends DataObject {
 				// without this check, a user would be able to add himself to an administrators group
 				// with just access to the "Security" admin interface
 				Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") && 
-				!DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'")
+				!Permission::get()->filter(array('GroupID' => $this->ID, 'Code' => 'ADMIN'))->exists()
 			)
 		) {
 			return true;
