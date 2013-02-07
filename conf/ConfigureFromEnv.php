@@ -125,6 +125,8 @@ if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
 	BasicAuth::protect_entire_site();
 }
 
-if(defined('SS_ERROR_LOG')) {
+if(defined('SS_ABSOLUTE_ERROR_LOG')) {
+	SS_Log::add_writer(new SS_LogFileWriter(SS_ABSOLUTE_ERROR_LOG), SS_Log::WARN, '<=');
+} elseif(defined('SS_ERROR_LOG')) {
 	SS_Log::add_writer(new SS_LogFileWriter(BASE_PATH . '/' . SS_ERROR_LOG), SS_Log::WARN, '<=');
 }
