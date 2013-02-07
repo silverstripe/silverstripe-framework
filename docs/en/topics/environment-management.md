@@ -48,7 +48,7 @@ of `$databaseConfig` and `Director::set_dev_servers`, and instead make sure that
 	$database = '(databasename)';
 	
 	// Use _ss_environment.php file for configuration
-	require_once("conf/ConfigureFromEnv.php");
+	require_once("../framework/conf/ConfigureFromEnv.php");
 
 
 ## How it works
