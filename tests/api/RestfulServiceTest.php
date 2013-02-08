@@ -168,6 +168,32 @@ class RestfulServiceTest extends SapphireTest {
 		$store = serialize($cacheResponse);
 		file_put_contents($cache_path, $store);
 	}
+
+	public function testHttpHeaderParseing() {
+		$headers = "content-type: text/html; charset=UTF-8\r\n".
+					"Server: Funky/1.0\r\n".
+					"Set-Cookie: foo=bar\r\n".
+					"Set-Cookie: baz=quux\r\n".
+					"Set-Cookie: bar=foo\r\n";
+		$expected = array(
+			'Content-Type' => 'text/html; charset=UTF-8',
+			'Server' => 'Funky/1.0',
+			'Set-Cookie' => array(
+				'foo=bar',
+				'baz=quux',
+				'bar=foo'
+			)
+		);
+		$headerFunction = new ReflectionMethod('RestfulService', 'parse_raw_headers');
+		$headerFunction->setAccessible(true);
+		$this->assertEquals(
+			$expected,
+			$headerFunction->invoke(
+				new RestfulService(Director::absoluteBaseURL(),0), $headers
+			)
+		);
+	}
+
 }
 
 class RestfulServiceTest_Controller extends Controller implements TestOnly {
