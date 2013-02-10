@@ -239,11 +239,8 @@ class Form extends RequestHandler {
 	 * if the form is valid.
 	 */
 	public function httpSubmission($request) {
-		$vars = $request->requestVars();
-		if(isset($funcName)) {
-			Form::set_current_action($funcName);
-		}
-		
+		$vars = $request->getVars() + $request->postVars() + $request->filesVars();
+
 		// Populate the form
 		$this->loadDataFrom($vars, true);
 	
