@@ -45,6 +45,11 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	protected $postVars = array();
 
 	/**
+	 * @var array $filesVars
+	 */
+	protected $filesVars = array();
+
+	/**
 	 * @var array $allParams Contains an assiciative array of all
 	 * arguments matched in all calls to {@link RequestHandler->handleRequest()}.
 	 * It's a "historical record" that's specific to the current call of
@@ -86,9 +91,15 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 * @param string $url the URL relative to the site root - any GET vars are extracted
 	 * @param array $getVars an array of GET vars
 	 * @param array $postVars an array of POST vars
+	 * @param array $filesVars an array of FILES vars
 	 * @param string $body the request body
 	 */
-	public function __construct($method = null, $url = null, $getVars = array(), $postVars = array(), $body = null) {
+	public function __construct($method = null,
+	                            $url = null,
+	                            $getVars = array(),
+	                            $postVars = array(),
+	                            $filesVars = array(),
+	                            $body = null) {
 		$this->method = strtoupper(self::detect_method($method, $postVars));
 
 		// Normalize URL if its relative (strictly speaking), or has leading slashes
@@ -99,8 +110,10 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 		$this->url      = $url;
 		$this->dirParts = $url ? preg_split('|/+|', $url) : array();
 
-		$this->getVars  = (array) $getVars;
-		$this->postVars = (array) $postVars;
+		$this->getVars   = (array) $getVars;
+		$this->postVars  = (array) $postVars;
+		$this->filesVars = (array) $filesVars;
+
 		$this->setBody($body);
 	}
 
@@ -152,7 +165,14 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	public function postVars() {
 		return $this->postVars;
 	}
-	
+
+	/**
+	 * @return array
+	 */
+	public function filesVars() {
+		return $this->filesVars;
+	}
+
 	/**
 	 * Returns all combined HTTP GET and POST parameters
 	 * passed into this request. If a parameter with the same
@@ -178,6 +198,16 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 */
 	public function postVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
+	}
+
+	/**
+	 * Gets a files var by name.
+	 *
+	 * @param $name
+	 * @return mixed
+	 */
+	public function filesVar($name) {
+		if(isset($this->filesVars[$name])) return $this->filesVars[$name];
 	}
 
 	/**

@@ -470,7 +470,7 @@ class UploadField extends FileField {
 		if(!$token->checkRequest($request)) return $this->httpError(400);
 
 		$name = $this->getName();
-		$tmpfile = $request->postVar($name);
+		$tmpfile = $request->filesVar($name);
 		$record = $this->getRecord();
 		
 		// Check if the file has been uploaded into the temporary storage.

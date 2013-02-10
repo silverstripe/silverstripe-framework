@@ -69,7 +69,7 @@ class Director implements TemplateGlobalProvider {
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
 	public static function direct($url, DataModel $model) {
-		// Validate $_FILES array before merging it with $_POST
+		// Validate the $_FILES array.
 		foreach($_FILES as $k => $v) {
 			if(is_array($v['tmp_name'])) {
 				$v = ArrayLib::array_values_recursive($v['tmp_name']);
@@ -91,7 +91,8 @@ class Director implements TemplateGlobalProvider {
 				: $_SERVER['REQUEST_METHOD'],
 			$url, 
 			$_GET, 
-			ArrayLib::array_merge_recursive((array)$_POST, (array)$_FILES),
+			$_POST,
+			$_FILES,
 			@file_get_contents('php://input')
 		);
 
