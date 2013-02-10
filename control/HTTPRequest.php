@@ -28,12 +28,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Only use this structure for internal request handling purposes.
 	 */
 	protected $dirParts;
-	
-	/**
-	 * @var string $extension The URL extension (if present)
-	 */
-	protected $extension;
-	
+
 	/**
 	 * @var string $httpMethod The HTTP method in all uppercase: GET/PUT/POST/DELETE/HEAD
 	 */
@@ -124,14 +119,11 @@ class SS_HTTPRequest implements ArrayAccess {
 	public function setUrl($url) {
 		$this->url = $url;
 
-		// Normalize URL if its relative (strictly speaking), or has leading slashes
+		//Normalize URL if its relative (strictly speaking), or has leading slashes
 		if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
 			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
 		}
-		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
-			$this->url = $matches[1];
-			$this->extension = $matches[2];
-		}
+
 		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
 		else $this->dirParts = array();
 
@@ -238,19 +230,16 @@ class SS_HTTPRequest implements ArrayAccess {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
 	}
-	
+
 	/**
-	 * Returns a possible file extension found in parsing the URL
-	 * as denoted by a "."-character near the end of the URL.
-	 * Doesn't necessarily have to belong to an existing file,
-	 * as extensions can be also used for content-type-switching.
+	 * Gets the extension included in the request URL.
 	 * 
 	 * @return string
 	 */
 	public function getExtension() {
-		return $this->extension;
+		return pathinfo($this->getURL(), PATHINFO_EXTENSION);
 	}
-	
+
 	/**
 	 * Checks if the {@link SS_HTTPRequest->getExtension()} on this request matches one of the more common media types
 	 * embedded into a webpage - e.g. css, png.
@@ -263,7 +252,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	public function isMedia() {
 		return in_array($this->getExtension(), array('css', 'js', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'ico'));
 	}
-	
+
 	/**
 	 * Add a HTTP header to the response, replacing any header of the same name.
 	 * 
@@ -310,7 +299,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return string
 	 */
 	public function getURL($includeGetVars = false) {
-		$url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
+		$url = $this->url;
 
 		if ($includeGetVars) { 
 			// if we don't unset $vars['url'] we end up with /my/url?url=my/url&foo=bar etc 
@@ -473,11 +462,6 @@ class SS_HTTPRequest implements ArrayAccess {
 					
 					return false;
 				}
-				
-			// Literal parts with extension
-			} else if(isset($this->dirParts[$i]) && $this->dirParts[$i] . '.' . $this->extension == $part) {
-				continue;
-				
 			// Literal parts must always be there
 			} else if(!isset($this->dirParts[$i]) || $this->dirParts[$i] != $part) {
 				return false;
