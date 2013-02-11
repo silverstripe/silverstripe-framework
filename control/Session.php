@@ -440,8 +440,8 @@ class Session {
 	* @param type the type of message
 	*/
 	public static function setFormMessage($formname,$message,$type){
-		Session::set("FormInfo.$formname.message", $message);
-		Session::set("FormInfo.$formname.type", $type);
+		Session::set("FormInfo.$formname.formError.message", $message);
+		Session::set("FormInfo.$formname.formError.type", $type);
 	}
 
 	/**
