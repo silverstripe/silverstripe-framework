@@ -485,32 +485,6 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	 * @ignore
 	 */
 	public function offsetUnset($offset) {}
-	
-	/**
-	 * Construct an SS_HTTPResponse that will deliver a file to the client
-	 *
-	 * @static
-	 * @param $fileData
-	 * @param $fileName
-	 * @param null $mimeType
-	 * @return SS_HTTPResponse
-	 */
-	public static function send_file($fileData, $fileName, $mimeType = null) {
-		if(!$mimeType) {
-			$mimeType = HTTP::get_mime_type($fileName);
-		}
-		$response = new SS_HTTPResponse($fileData);
-		$response->setHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
-		$response->setHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
-		$response->setHeader("Content-Length", strlen($fileData));
-		$response->setHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
-		
-		if(strstr($_SERVER["HTTP_USER_AGENT"],"MSIE") == true) {
-			$response->setHeader('Cache-Control', 'max-age=3, must-revalidate'); // Workaround for IE6 and 7
-		}
-		
-		return $response;
-	}
 
 	/**
 	 * Returns the client IP address which
@@ -579,6 +553,14 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		} else {
 			return $origMethod;
 		}
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link HTTP::send_file()}.
+	 */
+	public static function send_file() {
+		Deprecation::notice('3.2.0', 'Use HTTP::send_file()');
+		return call_user_func_array(array('HTTP', 'send_file'), func_get_args());
 	}
 
 	/**
