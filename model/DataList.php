@@ -665,6 +665,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		} else {
 			$item = Injector::inst()->create($defaultClass, $row, false, $this->model);
 		}
+
+		//set a local variable to tell the lazy loading mechanism that this object was queried as a version
+		if ($versionedMode = $this->dataQuery()->getQueryParam('Versioned.mode')) {
+			$item->VersionedMode = $versionedMode;
+		}
 		
 		return $item;
 	}

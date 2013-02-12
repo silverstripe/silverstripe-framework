@@ -277,4 +277,54 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals($reloaded->ExtraField, 'baz');
 		$obj1->delete();
 	}
+
+	public function testLazyLoadedFieldsDoNotReferenceVersionsTable() {
+		$obj2 = new VersionedLazySub_DataObject();
+		$obj2->PageName = "old-value";
+		$obj2->ExtraField = "old-value";
+		$obj2ID = $obj2->write();
+
+		$obj2 = VersionedLazySub_DataObject::get()->byID($obj2ID);
+		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField");
+
+		$obj2 = VersionedLazy_DataObject::get()->byID($obj2ID);
+		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField");
+
+		DB::query(
+			"UPDATE VersionedLazy_DataObject_versions SET PageName = 'versioned-value' WHERE RecordID = $obj2ID");
+		DB::query(
+			"UPDATE VersionedLazySub_DataObject_versions SET ExtraField = 'versioned-value' WHERE RecordID = $obj2ID");
+
+		$obj2 = VersionedLazySub_DataObject::get()->byID($obj2ID);
+		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField");
+
+		$obj2 = VersionedLazy_DataObject::get()->byID($obj2ID);
+		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField. \n".
+			"The DB query correctly queries the DataObject even though the version table was changed");
+	}
+
+}
+
+
+/** Additional classes for versioned lazy loading testing */
+class VersionedLazy_DataObject extends DataObject {
+	static $db = array(
+		"PageName" => "Varchar"
+	);
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
+}
+
+class VersionedLazySub_DataObject extends VersionedLazy_DataObject {
+	static $db = array(
+		"ExtraField" => "Varchar",
+	);
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
 }

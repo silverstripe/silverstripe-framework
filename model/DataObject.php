@@ -2119,7 +2119,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if ($columns) {
 			$query = $dataQuery->query();
-			$this->extend('augmentLoadLazyFields', $query, $dataQuery, $this->record);
+			$this->extend('augmentLoadLazyFields', $query, $dataQuery, $this);
 			$this->extend('augmentSQL', $query, $dataQuery);
 
 			$dataQuery->setQueriedColumns($columns);
