@@ -167,6 +167,29 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
 	
+	public function testCombinedCss() {
+		$basePath = $this->getCurrentRelativePath();
+		$backend = new Requirements_Backend;
+		$backend->set_combined_files_enabled(true);
+
+		$backend->combine_files(
+			'print.css',
+			array(
+				$basePath . '/RequirementsTest_print_a.css',
+				$basePath . '/RequirementsTest_print_b.css'
+			),
+			'print'
+		);
+
+		$html = $backend->includeInHTML(false, self::$html_template);
+
+		$this->assertTrue((bool)preg_match('/href=".*\/print\.css/', $html), 'Print stylesheets have been combined.');
+		$this->assertTrue((bool)preg_match(
+			'/media="print/', $html),
+			'Combined print stylesheet retains the media parameter'
+		);
+	}
+
 	public function testBlockedCombinedJavascript() {
 		$basePath = $this->getCurrentRelativePath();
 		

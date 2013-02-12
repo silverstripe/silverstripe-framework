@@ -246,9 +246,10 @@ class Requirements {
 	 *
 	 * @param string $combinedFileName
 	 * @param array $files
+	 * @param string $media
 	 */
-	public static function combine_files($combinedFileName, $files) {
-		self::backend()->combine_files($combinedFileName, $files);
+	public static function combine_files($combinedFileName, $files, $media = null) {
+		self::backend()->combine_files($combinedFileName, $files, $media);
 	}
 
 	/**
@@ -871,8 +872,9 @@ class Requirements_Backend {
 	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()}
 	 *                                 by default)
 	 * @param array $files Array of filenames relative to the webroot
+	 * @param string $media Comma-separated list of media-types (e.g. "screen,projector").
 	 */
-	public function combine_files($combinedFileName, $files) {
+	public function combine_files($combinedFileName, $files, $media = null) {
 		// duplicate check
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
@@ -889,7 +891,7 @@ class Requirements_Backend {
 				if (isset($file['type']) && in_array($file['type'], array('css', 'javascript', 'js'))) {
 					switch ($file['type']) {
 						case 'css':
-							$this->css($file['path']);
+							$this->css($file['path'], $media);
 							break;
 						default:
 							$this->javascript($file['path']);
@@ -899,7 +901,7 @@ class Requirements_Backend {
 				} elseif (isset($file[1]) && in_array($file[1], array('css', 'javascript', 'js'))) {
 					switch ($file[1]) {
 						case 'css':
-							$this->css($file[0]);
+							$this->css($file[0], $media);
 							break;
 						default:
 							$this->javascript($file[0]);
@@ -914,7 +916,7 @@ class Requirements_Backend {
 				if(substr($file, -2) == 'js') {
 					$this->javascript($file);
 				} elseif(substr($file, -3) == 'css') {
-					$this->css($file);
+					$this->css($file, $media);
 				} else {
 					user_error("Requirements_Backend::combine_files(): Couldn't guess file type for file '$file', "
 						. "please specify by passing using an array instead.", E_USER_NOTICE);
@@ -998,7 +1000,8 @@ class Requirements_Backend {
 
 		foreach($this->css as $file => $params) {
 			if(isset($combinerCheck[$file])) {
-				$newCSSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;
+				// Inherit the parameters from the last file in the combine set.
+				$newCSSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = $params;
 				$combinedFiles[$combinerCheck[$file]] = true;
 			} else {
 				$newCSSRequirements[$file] = $params;
