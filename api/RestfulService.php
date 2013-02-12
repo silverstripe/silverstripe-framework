@@ -591,7 +591,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	public function xpath_one($xpath) {
 		$items = $this->xpath($xpath);
 		if (isset($items[0])) {
-			eturn $items[0];
+			return $items[0];
 		}
 	}
 }
