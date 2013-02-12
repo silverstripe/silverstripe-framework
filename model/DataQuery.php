@@ -743,6 +743,14 @@ class DataQuery {
 		if(isset($this->queryParams[$key])) return $this->queryParams[$key];
 		else return null;
 	}
+
+	/**
+	 * Returns all query parameters
+	 * @return array query parameters array
+	 */
+	public function getQueryParams() {
+		return $this->queryParams;
+	}
 }
 
 /**
