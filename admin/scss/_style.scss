@@ -582,6 +582,10 @@ body.cms {
 			
 			.description {
 				font-style: italic;
+				// Undo some generic styles from tooltips
+				display: inline;
+				clear: none;
+				margin: 0;
 			}
 		}
 	}	

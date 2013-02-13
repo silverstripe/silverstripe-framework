@@ -468,7 +468,7 @@ body.cms { overflow: hidden; }
 #PageType ul li input, #PageType ul li label, #PageType ul li .page-icon, #PageType ul li .title { float: left; line-height: 1.3em; }
 #PageType ul li .page-icon { margin: 0 4px; }
 #PageType ul li .title { width: 120px; font-weight: bold; padding-right: 10px; }
-#PageType ul li .description { font-style: italic; }
+#PageType ul li .description { font-style: italic; display: inline; clear: none; margin: 0; }
 
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
 .cms-content-toolbar { min-height: 29px; display: block; margin: 0 0 8px 0; border-bottom: 1px solid #d0d3d5; -webkit-box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); -moz-box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); -o-box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); *zoom: 1; /* smaller treedropdown */ }
