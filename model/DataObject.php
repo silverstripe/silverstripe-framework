@@ -2910,6 +2910,39 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return array_shift($tableClasses);
 	}
 
+	protected $sourceQueryParams;
+
+	/**
+	 * Returns all source query parameters
+	 * @return array source query parameters array
+	 */
+	public function getSourceQueryParams() {
+		return $this->sourceQueryParams;
+	}
+
+	/**
+	 * Set an array of query parameters used in the query that built this DataObject
+	 */
+	public function setSourceQueryParams($array) {
+		$this->sourceQueryParams = $array;
+	}
+
+	/**
+	 * Set the query parameters used in the query that built this DataObject
+	 */
+	public function setSourceQueryParam($key, $value) {
+		$this->sourceQueryParams[$key] = $value;
+	}
+
+	/**
+	 * Return a specific query parameter that was used to build this object.
+	 * This can be used by decorators (e.g. lazy loading) to run additional queries using the same context.
+	 */
+	public function getSourceQueryParam($key) {
+		if(isset($this->sourceQueryParams[$key])) return $this->sourceQueryParams[$key];
+		else return null;
+	}
+
 	//-------------------------------------------------------------------------------------------//
 
 	/**

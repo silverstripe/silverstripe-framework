@@ -284,9 +284,14 @@ class Versioned extends DataExtension {
 		//from the Versioned object, and have the Versioned metadata set on the query object.
 		//This prevents regular DataObject and Page queries from accidentally querying the _versions tables.
 		//See: DataObjectLazyLoadingTest->testLazyLoadedFieldsDoNotReferenceVersionsTable()
+		$versionedMode = $dataObject->getSourceQueryParam('Versioned.mode');
+		$versionedStage = $dataObject->getSourceQueryParam('Versioned.stage');  //for some reason this is always empty
+
 		$dataClass = $dataQuery->dataClass();
+		$modesToAllowVersioning = array('all_versions', 'latest_versions', 'archive');
 		//object has the versioned extension and a versioned DataObject was queried
-		if (!empty($dataObject->Version) && !empty($dataObject->VersionedMode)){
+		if (!empty($dataObject->Version) &&
+			(!empty($versionedMode) && in_array($versionedMode,$modesToAllowVersioning))) {
 			$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $dataObject->ID);
 			$dataQuery->where("\"$dataClass\".\"Version\" = " . $dataObject->Version);
 			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
