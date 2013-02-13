@@ -54,6 +54,11 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 */
 	protected $filesVars = array();
 
+	/**
+	 * @var array $serverVars
+	 */
+	protected $serverVars = array();
+
 	private $matchedParams = array();
 
 	private $latestParams = array();
@@ -63,23 +68,14 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	private $unshiftedButParsed = 0;
 
 	/**
-	 * Constructs a new HTTP request.
+	 * Connstructs a new request instance.
 	 *
-	 * @param string $method the HTTP method
-	 * @param string $url the URL relative to the site root - any GET vars are extracted
-	 * @param array $getVars an array of GET vars
-	 * @param array $postVars an array of POST vars
-	 * @param array $filesVars an array of FILES vars
-	 * @param string $body the request body
+	 * @param null $method the request method (GET, POST, ...)
+	 * @param null $url the url requested relative to the site root
+	 * @param null $body the request body
+	 * @param array $env an array of environment variables (get, post, server, ...)
 	 */
-	public function __construct($method = null,
-	                            $url = null,
-	                            $getVars = array(),
-	                            $postVars = array(),
-	                            $filesVars = array(),
-	                            $body = null) {
-		$this->method = strtoupper(self::detect_method($method, $postVars));
-
+	public function __construct($method = null, $url = null, $body = null, $env = array()) {
 		// Normalize URL if its relative (strictly speaking), or has leading slashes
 		if(Director::is_relative_url($url) || $url[0] == '/') {
 			$url = preg_replace('~/+~', '/', trim($url, '/'));
@@ -88,9 +84,12 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 		$this->url      = $url;
 		$this->urlParts = $url ? preg_split('|/+|', $url) : array();
 
-		$this->getVars   = (array) $getVars;
-		$this->postVars  = (array) $postVars;
-		$this->filesVars = (array) $filesVars;
+		$this->getVars    = isset($env['get']) ? $env['get'] : array();
+		$this->postVars   = isset($env['post']) ? $env['post'] : array();
+		$this->filesVars  = isset($env['files']) ? $env['files'] : array();
+		$this->serverVars = isset($env['server']) ? $env['server'] : array();
+
+		$this->method = strtoupper(self::detect_method($method, $this->postVars()));
 
 		$this->setBody($body);
 	}
@@ -163,6 +162,15 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	}
 
 	/**
+	 * Gets a map of all server vars.
+	 *
+	 * @return array
+	 */
+	public function serverVars() {
+		return $this->serverVars;
+	}
+
+	/**
 	 * @param string $name
 	 * @return mixed
 	 */
@@ -195,6 +203,16 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	public function requestVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
+	}
+
+	/**
+	 * Gets a server var by name.
+	 *
+	 * @param $name
+	 * @return string
+	 */
+	public function serverVar($name) {
+		if(isset($this->serverVars[$name])) return $this->serverVars[$name];
 	}
 
 	/**

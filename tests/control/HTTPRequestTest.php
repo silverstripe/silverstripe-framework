@@ -22,11 +22,9 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with no method override'
 		);
 
-		$request = new SS_HTTPRequest(
-			'GET',
-			'admin/crm',
-			array('_method' => 'DELETE')
-		);
+		$request = new SS_HTTPRequest('GET', 'admin/crm', null, array(
+			'get' => array('_method' => 'DELETE')
+		));
 		$this->assertTrue(
 			$request->isGET(),
 			'GET with invalid POST method override'
@@ -35,8 +33,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array(),
-			array('_method' => 'DELETE')
+			null,
+			array('post' => array('_method' => 'DELETE'))
 		);
 		$this->assertTrue(
 			$request->isDELETE(),
@@ -47,7 +45,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST',
 			'admin/crm',
 			array(),
-			array('_method' => 'put')
+			array('post' => array('_method' => 'put'))
 		);
 		$this->assertTrue(
 			$request->isPUT(),
@@ -58,7 +56,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST',
 			'admin/crm',
 			array(),
-			array('_method' => 'head')
+			array('post' => array('_method' => 'head'))
 		);
 		$this->assertTrue(
 			$request->isHEAD(),
@@ -69,7 +67,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST',
 			'admin/crm',
 			array(),
-			array('_method' => 'head')
+			array('post' => array('_method' => 'head'))
 		);
 		$this->assertTrue(
 			$request->isHEAD(),
@@ -79,7 +77,7 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array('_method' => 'head')
+			array('post' => array('_method' => 'head'))
 		);
 		$this->assertTrue(
 			$request->isPOST(),
@@ -105,8 +103,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -130,8 +128,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -169,8 +167,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -209,8 +207,8 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -220,10 +218,10 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testIsAjax() {
-		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 0));
+		$req = new SS_HTTPRequest('GET', '/', null, array('get' => array('ajax' => 0)));
 		$this->assertFalse($req->isAjax());
 
-		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 1));
+		$req = new SS_HTTPRequest('GET', '/', null, array('get' => array('ajax' => 1)));
 		$this->assertTrue($req->isAjax());
 
 		$req = new SS_HTTPRequest('GET', '/');

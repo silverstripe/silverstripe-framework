@@ -654,7 +654,7 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	protected function doUploadRequest($url, $files) {
-		return $this->request(new SS_HTTPRequest('POST', $url, array(), array(), $files));
+		return $this->request(new SS_HTTPRequest('POST', $url, null, array('files' => $files)));
 	}
 
 	protected function getMockForm() {

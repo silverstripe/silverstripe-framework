@@ -166,12 +166,9 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
-		$request = new SS_HTTPRequest(
-			'POST',
-			'errorpage?somekey=sometestgetvalue',
-			array(),
-			array('somekey' => 'sometestpostvalue')
-		);
+		$request = new SS_HTTPRequest('POST', 'errorpage', null, array(
+			'get' => array('somekey' => 'sometestpostvalue')
+		));
 
 		Director::test($request, null, array('somekey' => 'sometestcookievalue'));
 
@@ -193,9 +190,11 @@ class DirectorTest extends SapphireTest {
 					Controller::join_links(
 						'DirectorTestRequest_Controller', sprintf($testfunction, ucfirst($method))
 					),
-					$fixture,
-					$fixture,
-					$fixture
+					null,
+					array(
+						'get'  => $fixture,
+						'post' => $fixture
+					)
 				);
 
 				$response = Director::test($request, null, $fixture);

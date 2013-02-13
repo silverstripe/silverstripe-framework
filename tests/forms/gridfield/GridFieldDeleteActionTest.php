@@ -49,8 +49,9 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$stateID = 'testGridStateActionField';
 		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
 			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', array(),
-			array('action_gridFieldAlterAction?StateID='.$stateID=>true));
+		$request = new SS_HTTPRequest('POST', 'url', null, array(
+			'post' => array('action_gridFieldAlterAction?StateID='.$stateID=>true)
+		));
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(3, $this->list->count(),
 			'User should\'t be able to delete records without correct permissions.');
@@ -61,8 +62,9 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$stateID = 'testGridStateActionField';
 		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
 			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', array(),
-			array('action_gridFieldAlterAction?StateID='.$stateID=>true));
+		$request = new SS_HTTPRequest('POST', 'url', null, array(
+			'post' => array('action_gridFieldAlterAction?StateID='.$stateID=>true)
+		));
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
 	}
@@ -78,8 +80,9 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$stateID = 'testGridStateActionField';
 		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
 			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', array(),
-			array('action_gridFieldAlterAction?StateID='.$stateID=>true));
+		$request = new SS_HTTPRequest('POST', 'url', null, array(
+			'post' => array('action_gridFieldAlterAction?StateID='.$stateID=>true)
+		));
 		
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');

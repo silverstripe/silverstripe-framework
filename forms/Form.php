@@ -1441,7 +1441,9 @@ class Form extends RequestHandler {
 	 */
 	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
-		$request = new SS_HTTPRequest('POST', $this->FormAction(), array(), $data);
+		$request = new SS_HTTPRequest('POST', $this->FormAction(), null, array(
+			'post' => $data
+		));
 
 		return Director::test($request, Controller::curr()->getSession());
 	}
