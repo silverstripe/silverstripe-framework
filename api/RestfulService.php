@@ -21,6 +21,10 @@ class RestfulService extends ViewableData {
 
 	/**
 	 * set a curl option that will be applied to all requests as default
+	 * {@see http://php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters}
+	 *
+	 * @param int $option The cURL opt Constant
+	 * @param mixed $value The cURL opt value
 	 */
 	public static function set_default_curl_option($option, $value) {
 		self::$default_curl_options[$option] = $value;
@@ -201,7 +205,6 @@ class RestfulService extends ViewableData {
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 		//include headers in the response
-		//curl_setopt($ch, CURLOPT_VERBOSE, true);
 		curl_setopt($ch, CURLOPT_HEADER, true);
 
 		// Add headers
@@ -238,16 +241,8 @@ class RestfulService extends ViewableData {
 
 		// Run request
 		$rawResponse = curl_exec($ch);
-		$curlError = curl_error($ch);
-		$responseHeaders = array();
-		$responseBody = '';
-		$this->extractResponse($ch, $rawResponse, $responseBody, $responseHeaders);
-
-		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 			
-		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
+		$response = $this->extractResponse($ch, $rawResponse);
 		curl_close($ch);
-
-		$response = new RestfulService_Response($responseBody, $statusCode, $responseHeaders);
 
 		return $response;
 	}
@@ -297,14 +292,23 @@ class RestfulService extends ViewableData {
 	 *
 	 * @param curl_handle $ch The curl handle for the request
 	 * @param string $rawResponse The raw response text
-	 * @param string &$body the body text
-	 * @param array &headers The header array
+	 *
+	 * @return RestfulService_Response The response object
 	 */
-	protected function extractResponse($ch, $rawResponse, &$body, &$headers) {
+	protected function extractResponse($ch, $rawResponse) {
+		//get the status code
+		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		//normalise the status code
+		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
+		//calculate the length of the header and extract it
 		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$rawHeaders = substr($rawResponse, 0, $headerLength);
+		//extract the body
 		$body = substr($rawResponse, $headerLength);
-		$headers = self::parse_raw_headers($rawHeaders);
+		//parse the headers
+		$headers = $this->parseRawHeaders($rawHeaders);
+		//return the response object
+		return new RestfulService_Response($body, $statusCode, $headers);
 	}
 
 	/**
@@ -312,29 +316,29 @@ class RestfulService extends ViewableData {
 	 *
 	 * Any header that we see more than once is turned into an array.
 	 *
-	 * This is meant to mimic htt_parse_headers {@link http://php.net/manual/en/function.http-parse-headers.php}
+	 * This is meant to mimic http_parse_headers {@link http://php.net/manual/en/function.http-parse-headers.php}
 	 * thanks to comment #77241 on that page for foundation of this
 	 *
 	 * @param string $rawHeaders The raw header string
 	 * @return array The assosiative array of headers
 	 */
-	protected static function parse_raw_headers($rawHeaders) {
-        $headers = array();
-        $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
-        foreach( $fields as $field ) {
-            if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
-                $match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1])));
-                if( isset($headers[$match[1]]) ) {
+	protected function parseRawHeaders($rawHeaders) {
+		$headers = array();
+		$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
+		foreach( $fields as $field ) {
+			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
+				$match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1])));
+				if( isset($headers[$match[1]]) ) {
 					if (!is_array($headers[$match[1]])) {
 						$headers[$match[1]] = array($headers[$match[1]]);
 					}
 					$headers[$match[1]][] = $match[2];
-                } else {
-                    $headers[$match[1]] = trim($match[2]);
-                }
-            }
-        }
-        return $headers;
+				} else {
+					$headers[$match[1]] = trim($match[2]);
+				}
+			}
+		}
+		return $headers;
 	}
 
 
@@ -528,7 +532,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	protected $simpleXML;
 	
 	/**
-	 * @var boolean It should be populated with cached content 
+	 * @var boolean It should be populated with cached request
 	 * when a request referring to this response was unsuccessful
 	 */
 	protected $cachedResponse = false;
@@ -569,6 +573,19 @@ class RestfulService_Response extends SS_HTTPResponse {
 			return $this->cachedResponse->getBody();
 		}
 		return false;
+	}
+
+	/**
+	 * @param string
+	 */
+	public function setCachedBody($content) {
+		Deprecation::notice('3.1', 'Setting the response body is now deprecated, set the cached request instead');
+		if (!$this->cachedResponse) {
+			$this->cachedResponse = new RestfulService_Response($content);
+		}
+		else {
+			$this->cachedResponse->setBody = $content;
+		}
 	}
 	
 	/**
