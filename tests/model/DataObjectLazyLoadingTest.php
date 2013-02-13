@@ -279,43 +279,43 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 	}
 
 	public function testLazyLoadedFieldsDoNotReferenceVersionsTable() {
-		$obj2 = new VersionedLazySub_DataObject();
-		$obj2->PageName = "old-value";
-		$obj2->ExtraField = "old-value";
-		$obj2ID = $obj2->write();
+		$obj1 = new VersionedLazySub_DataObject();
+		$obj1->PageName = "old-value";
+		$obj1->ExtraField = "old-value";
+		$obj1ID = $obj1->write();
 
-		$obj2 = VersionedLazySub_DataObject::get()->byID($obj2ID);
-		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
-		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField");
+		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField");
 
-		$obj2 = VersionedLazy_DataObject::get()->byID($obj2ID);
-		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
-		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField");
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField");
 
 		DB::query(
-			"UPDATE VersionedLazy_DataObject_versions SET PageName = 'versioned-value' WHERE RecordID = $obj2ID");
+			"UPDATE VersionedLazy_DataObject_versions SET PageName = 'versioned-value' WHERE RecordID = $obj1ID");
 		DB::query(
-			"UPDATE VersionedLazySub_DataObject_versions SET ExtraField = 'versioned-value' WHERE RecordID = $obj2ID");
+			"UPDATE VersionedLazySub_DataObject_versions SET ExtraField = 'versioned-value' WHERE RecordID = $obj1ID");
 
-		$obj2 = VersionedLazySub_DataObject::get()->byID($obj2ID);
-		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
-		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField");
+		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField");
 
-		$obj2 = VersionedLazy_DataObject::get()->byID($obj2ID);
-		$this->assertEquals('old-value',$obj2->PageName,"Correct value from object PageName");
-		$this->assertEquals('old-value',$obj2->ExtraField,"Correct value from object ExtraField. \n".
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField. \n".
 			"The DB query correctly queries the DataObject even though the version table was changed");
 
 		DB::query(
-			"UPDATE VersionedLazy_DataObject_live SET PageName = 'live-value' WHERE ID = $obj2ID");
+			"UPDATE VersionedLazy_DataObject_live SET PageName = 'live-value' WHERE ID = $obj1ID");
 		DB::query(
-			"UPDATE VersionedLazySub_DataObject_live SET ExtraField = 'live-value' WHERE ID = $obj2ID");
+			"UPDATE VersionedLazySub_DataObject_live SET ExtraField = 'live-value' WHERE ID = $obj1ID");
 
 		Versioned::reading_stage('Live');
-		$obj2 = VersionedLazy_DataObject::get()->byID($obj2ID);
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
 		//TODO: fix these unit tests for a fully complete solution
-		//$this->assertEquals('live-value',$obj2->PageName,"Correct value from object PageName");
-		//$this->assertEquals('live-value',$obj2->ExtraField,"Correct value from object ExtraField");
+		//$this->assertEquals('live-value',$obj1->PageName,"Correct value from object PageName");
+		//$this->assertEquals('live-value',$obj1->ExtraField,"Correct value from object ExtraField");
 	}
 
 }
