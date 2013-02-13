@@ -292,10 +292,10 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
 		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField");
 
-		DB::query(
-			"UPDATE VersionedLazy_DataObject_versions SET PageName = 'versioned-value' WHERE RecordID = $obj1ID");
-		DB::query(
-			"UPDATE VersionedLazySub_DataObject_versions SET ExtraField = 'versioned-value' WHERE RecordID = $obj1ID");
+		DB::query("UPDATE \"VersionedLazy_DataObject_versions\" SET \"PageName\" = 'versioned-value' ".
+				"WHERE \"RecordID\" = $obj1ID");
+		DB::query("UPDATE \"VersionedLazySub_DataObject_versions\" SET \"ExtraField\" = 'versioned-value' ".
+				"WHERE \"RecordID\" = $obj1ID");
 
 		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
 		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
@@ -307,9 +307,9 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 			"The DB query correctly queries the DataObject even though the version table was changed");
 
 		DB::query(
-			"UPDATE VersionedLazy_DataObject_live SET PageName = 'live-value' WHERE ID = $obj1ID");
+			"UPDATE \"VersionedLazy_DataObject_live\" SET \"PageName\" = 'live-value' WHERE \"ID\" = $obj1ID");
 		DB::query(
-			"UPDATE VersionedLazySub_DataObject_live SET ExtraField = 'live-value' WHERE ID = $obj1ID");
+			"UPDATE \"VersionedLazySub_DataObject_live\" SET \"ExtraField\" = 'live-value' WHERE \"ID\" = $obj1ID");
 
 		Versioned::reading_stage('Live');
 		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
