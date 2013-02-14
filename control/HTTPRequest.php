@@ -218,6 +218,17 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	}
 
 	/**
+	 * Overrides the request superglobals with values from this request.
+	 */
+	public function setGlobals() {
+		$_GET     = $this->getVars();
+		$_POST    = $this->postVars();
+		$_REQUEST = $this->requestVars();
+		$_FILES   = $this->filesVars();
+		$_SERVER  = $this->serverVars();
+	}
+
+	/**
 	 * Gets the extension included in the request URL.
 	 * 
 	 * @return string

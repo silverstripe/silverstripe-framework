@@ -366,4 +366,33 @@ class HTTPRequestTest extends SapphireTest {
 		}
 	}
 
+	/**
+	 * @covers SS_HTTPRequest::setGlobals()
+	 */
+	public function testSetGlobals() {
+		$get    = $_GET;
+		$post   = $_POST;
+		$files  = $_FILES;
+		$server = $_SERVER;
+
+		$req = new SS_HTTPRequest('GET', '', null, array(
+			'get'    => array('get'),
+			'post'   => array('post'),
+			'files'  => array('files'),
+			'server' => array('server')
+		));
+		$req->setGlobals();
+
+		$this->assertEquals(array('get'), $_GET);
+		$this->assertEquals(array('post'), $_POST);
+		$this->assertEquals(array('files'), $_FILES);
+		$this->assertEquals(array('server'), $_SERVER);
+
+		$_GET    = $get;
+		$_POST   = $post;
+		$_FILES  = $files;
+		$_SERVER = $server;
+	}
+
+
 }
