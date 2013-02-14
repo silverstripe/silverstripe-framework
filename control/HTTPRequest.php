@@ -89,6 +89,10 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 
 		$this->setUrl($url);
 		$this->setBody($body);
+
+		if($this->serverVars) {
+			$this->extractHeaders();
+		}
 	}
 
 	/**
@@ -557,7 +561,26 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	public function getMethod() {
 		return $this->method;
 	}
-	
+
+	/**
+	 * Extracts headers from the server variables.
+	 */
+	private function extractHeaders() {
+		$server = $this->serverVars();
+
+		foreach($server as $key => $value) {
+			if(substr($key, 0, 5) == 'HTTP_') {
+				$key = substr($key, 5);
+				$key = str_replace('_', '-', $key);
+
+				$this->setHeader($key, $value);
+			}
+		}
+
+		if(isset($server['CONTENT_TYPE']))   $this->setHeader('Content-Type', $server['CONTENT_TYPE']);
+		if(isset($server['CONTENT_LENGTH'])) $this->setHeader('Content-Length', $server['CONTENT_LENGTH']);
+	}
+
 	/**
 	 * Gets the "real" HTTP method for a request.
 	 * 

@@ -100,11 +100,6 @@ class Director implements TemplateGlobalProvider {
 			)
 		);
 
-		$headers = self::extract_request_headers($_SERVER);
-		foreach ($headers as $header => $value) {
-			$req->setHeader($header, $value);
-		}
-
 		// Only resume a session if its not started already, and a session identifier exists
 		if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) {
 			Session::start();
@@ -532,30 +527,6 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Takes a $_SERVER data array and extracts HTTP request headers.
-	 *
-	 * @param  array $data
-	 * @return array
-	 */
-	public static function extract_request_headers(array $server) {
-		$headers = array();
-	
-		foreach($server as $key => $value) {
-			if(substr($key, 0, 5) == 'HTTP_') {
-				$key = substr($key, 5);
-				$key = strtolower(str_replace('_', ' ', $key));
-				$key = str_replace(' ', '-', ucwords($key));
-				$headers[$key] = $value;
-			}
-		}
-	
-		if(isset($server['CONTENT_TYPE'])) $headers['Content-Type'] = $server['CONTENT_TYPE'];
-		if(isset($server['CONTENT_LENGTH'])) $headers['Content-Length'] = $server['CONTENT_LENGTH'];
-	
-		return $headers;
-	}
-
-	/**
 	 * Given a filesystem reference relative to the site root, return the full file-system path.
 	 * 
 	 * @param string $file
@@ -847,4 +818,12 @@ class Director implements TemplateGlobalProvider {
 			'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
 		);
 	}
+
+	/**
+	 * @deprecated 3.2 The headers are now extracted in the {@link SS_HTTPRequest} object.
+	 */
+	public static function extract_request_headers() {
+		throw new Exception('Header extraction is now performed in the SS_HTTPRequest class');
+	}
+
 }
