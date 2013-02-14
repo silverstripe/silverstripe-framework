@@ -250,6 +250,24 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	}
 
 	/**
+	 * Getst the basic auth user.
+	 *
+	 * @return string|null
+	 */
+	public function getUser() {
+		return $this->serverVar('PHP_AUTH_USER');
+	}
+
+	/**
+	 * Gets the basic auth password.
+	 *
+	 * @return string|null
+	 */
+	public function getPassword() {
+		return $this->serverVar('PHP_AUTH_PW');
+	}
+
+	/**
 	 * Gets the extension included in the request URL.
 	 * 
 	 * @return string
