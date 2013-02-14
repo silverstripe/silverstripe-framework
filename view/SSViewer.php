@@ -96,7 +96,19 @@ class SSViewer_Scope {
 			$this->upIndex, $this->currentIndex);
 		return $this;
 	}
-	
+
+	/**
+	 * Gets the current object and resets the scope.
+	 *
+	 * @return object
+	 */
+	public function self() {
+		$result = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+		$this->resetLocalScope();
+
+		return $result;
+	}
+
 	public function pushScope(){
 		$newLocalIndex = count($this->itemStack)-1;
 		

@@ -646,7 +646,8 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? < (InjectionVariables)? > "%>" */
+	/* Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? <
+	(InjectionVariables)? > "%>" */
 	protected $match_Translate_typestack = array('Translate');
 	function match_Translate ($stack = array()) {
 		$matchrule = "Translate"; $result = $this->construct($matchrule, $matchrule, null);
@@ -1671,7 +1672,7 @@ class SSTemplateParser extends Parser {
 	function Require_Call(&$res, $sub) {
 		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
 	}
-   
+
 	
 	/* CacheBlockArgument:
    !( "if " | "unless " )
@@ -2914,7 +2915,7 @@ class SSTemplateParser extends Parser {
 	function OldTTag_OldTPart(&$res, $sub) {
 		$res['php'] = $sub['php'];
 	}
-	 	  
+
 	/* OldSprintfTag: "<%" < "sprintf" < "(" < OldTPart < "," < CallArguments > ")" > "%>"  */
 	protected $match_OldSprintfTag_typestack = array('OldSprintfTag');
 	function match_OldSprintfTag ($stack = array()) {
@@ -3052,8 +3053,19 @@ class SSTemplateParser extends Parser {
 	}
 
 	function NamedArgument_Value(&$res, $sub) {
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] 
-			: str_replace('$$FINAL', 'XML_val', $sub['php']);
+		switch($sub['ArgumentMode']) {
+			case 'string':
+				$res['php'] .= $sub['php'];
+				break;
+
+			case 'default':
+				$res['php'] .= $sub['string_php'];
+				break;
+
+			default:
+				$res['php'] .= str_replace('$$FINAL', 'obj', $sub['php']) . '->self()';
+				break;
+		}
 	}
 
 	/* Include: "<%" < "include" < Template:Word < (NamedArgument ( < "," < NamedArgument )*)? > "%>" */
@@ -3642,7 +3654,8 @@ class SSTemplateParser extends Parser {
 		$method = 'OpenBlock_Handle_'.$blockname;
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
 		else {
-			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed the closing tag or have mis-spelled it?', $this);
+			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed ' .
+				' the closing tag or have mis-spelled it?', $this);
 		}
 	}
 
@@ -3711,7 +3724,8 @@ class SSTemplateParser extends Parser {
 
 	function MismatchedEndBlock__finalise(&$res) {
 		$blockname = $res['Word']['text'];
-		throw new SSTemplateParseException('Unexpected close tag end_'.$blockname.' encountered. Perhaps you have mis-nested blocks, or have mis-spelled a tag?', $this);
+		throw new SSTemplateParseException('Unexpected close tag end_' . $blockname . 
+			' encountered. Perhaps you have mis-nested blocks, or have mis-spelled a tag?', $this);
 	}
 
 	/* MalformedOpenTag: '<%' < !NotBlockTag Tag:Word  !( ( [ :BlockArguments ] )? > '%>' ) */
@@ -3796,7 +3810,8 @@ class SSTemplateParser extends Parser {
 
 	function MalformedOpenTag__finalise(&$res) {
 		$tag = $res['Tag']['text'];
-		throw new SSTemplateParseException("Malformed opening block tag $tag. Perhaps you have tried to use operators?", $this);
+		throw new SSTemplateParseException("Malformed opening block tag $tag. Perhaps you have tried to use operators?"
+			, $this);
 	}
 	
 	/* MalformedCloseTag: '<%' < Tag:('end_' :Word ) !( > '%>' ) */
@@ -3860,7 +3875,8 @@ class SSTemplateParser extends Parser {
 
 	function MalformedCloseTag__finalise(&$res) {
 		$tag = $res['Tag']['text'];
-		throw new SSTemplateParseException("Malformed closing block tag $tag. Perhaps you have tried to pass an argument to one?", $this);
+		throw new SSTemplateParseException("Malformed closing block tag $tag. Perhaps you have tried to pass an " .
+			"argument to one?", $this);
 	}
 	
 	/* MalformedBlock: MalformedOpenTag | MalformedCloseTag */
@@ -4448,10 +4464,12 @@ class SSTemplateParser extends Parser {
 		$text = stripslashes($text);
 		$text = addcslashes($text, '\'\\');
 
-		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this non-dynamically calculated
+		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
+		// non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . \'#',
+			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
+				\'#',
 			$text
 		);
 
@@ -4467,10 +4485,10 @@ class SSTemplateParser extends Parser {
 	 * 
 	 * @static
 	 * @throws SSTemplateParseException
-	 * @param  $string - The source of the template
-	 * @param string $templateName - The name of the template, normally the filename the template source was loaded from
-	 * @param bool $includeDebuggingComments - True is debugging comments should be included in the output
-	 * @return mixed|string - The php that, when executed (via include or exec) will behave as per the template source
+	 * @param  $string The source of the template
+	 * @param string $templateName The name of the template, normally the filename the template source was loaded from
+	 * @param bool $includeDebuggingComments True is debugging comments should be included in the output
+	 * @return mixed|string The php that, when executed (via include or exec) will behave as per the template source
 	 */
 	static function compileString($string, $templateName = "", $includeDebuggingComments=false) {
 		if (!trim($string)) {
@@ -4481,7 +4499,8 @@ class SSTemplateParser extends Parser {
 			$parser = new SSTemplateParser($string);
 			$parser->includeDebuggingComments = $includeDebuggingComments;
 	
-			// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF (and other encodings) properly
+			// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
+			// (and other encodings) properly
 			if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
 			
 			// Match the source against the parser
@@ -4494,12 +4513,14 @@ class SSTemplateParser extends Parser {
 		
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
-			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
+			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE 
+			// glitches
 			if(stripos($code, "<html") !== false) {
 				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
 				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
 			} else {
-				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName . ' -->\';' . "\n", $code);
+				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
+					' -->\';' . "\n", $code);
 				$code .= "\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 			}
 		}	
