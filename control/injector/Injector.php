@@ -773,6 +773,9 @@ class Injector {
 			if (isset($this->specs[$name])) {
 				$spec = $this->specs[$name];
 				$this->updateSpecConstructor($spec);
+				if ($constructorArgs) {
+					$spec['constructor'] = $constructorArgs;
+				}
 				return $this->instantiate($spec, $name);
 			}
 		}
