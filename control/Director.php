@@ -169,9 +169,8 @@ class Director implements TemplateGlobalProvider {
 		Requirements::set_backend(new Requirements_Backend());
 
 		// Replace the superglobals with values from the request.
-		$_REQUEST = $request->requestVars();
-		$_GET = $request->getVars();
-		$_POST = $request->postVars();
+		$request->setGlobals();
+
 		$_SESSION = $session->inst_getAll();
 		$_COOKIE = $cookies;
 
