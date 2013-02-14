@@ -67,7 +67,11 @@ abstract class SS_HTTPMessage {
 	 * @return string
 	 */
 	public function getHeader($name) {
-		if(isset($this->headers[$name])) return $this->headers[$name];
+		$name = strtolower($name);
+
+		if(isset($this->headers[$name])) {
+			return $this->headers[$name];
+		}
 	}
 
 	/**
@@ -78,7 +82,7 @@ abstract class SS_HTTPMessage {
 	 * @return $this
 	 */
 	public function setHeader($name, $value) {
-		$this->headers[$name] = $value;
+		$this->headers[strtolower($name)] = $value;
 		return $this;
 	}
 
@@ -89,7 +93,12 @@ abstract class SS_HTTPMessage {
 	 * @return $this
 	 */
 	public function unsetHeader($name) {
-		if(isset($this->headers[$name])) unset($this->headers[$name]);
+		$name = strtolower($name);
+
+		if(isset($this->headers[$name])) {
+			unset($this->headers[$name]);
+		}
+
 		return $this;
 	}
 
