@@ -215,12 +215,48 @@ class DatetimeField extends FormField {
 	public function getDateField() {
 		return $this->dateField;
 	}
+
+	/**
+	 * @param FormField
+	 */
+	public function setDateField($field) {
+		$expected = $this->getName() . '[date]';
+		if($field->getName() != $expected) {
+			throw new InvalidArgumentException(sprintf(
+				'Wrong name format for date field: "%s" (expected "%s")',
+				$field->getName(),
+				$expected
+			));
+		}
+
+		$field->setForm($this->getForm());
+		$this->dateField = $field;
+		$this->setValue($this->value); // update value
+	}
 	
 	/**
 	 * @return TimeField
 	 */
 	public function getTimeField() {
 		return $this->timeField;
+	}
+
+	/**
+	 * @param FormField
+	 */
+	public function setTimeField($field) {
+		$expected = $this->getName() . '[time]';
+		if($field->getName() != $expected) {
+			throw new InvalidArgumentException(sprintf(
+				'Wrong name format for time field: "%s" (expected "%s")',
+				$field->getName(),
+				$expected
+			));
+		}
+
+		$field->setForm($this->getForm());
+		$this->timeField = $field;
+		$this->setValue($this->value); // update value
 	}
 	
 	/**
