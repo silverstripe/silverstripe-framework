@@ -277,4 +277,65 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$this->assertEquals($reloaded->ExtraField, 'baz');
 		$obj1->delete();
 	}
+
+	public function testLazyLoadedFieldsDoNotReferenceVersionsTable() {
+		$obj1 = new VersionedLazySub_DataObject();
+		$obj1->PageName = "old-value";
+		$obj1->ExtraField = "old-value";
+		$obj1ID = $obj1->write();
+
+		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField");
+
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField");
+
+		DB::query("UPDATE \"VersionedLazy_DataObject_versions\" SET \"PageName\" = 'versioned-value' ".
+				"WHERE \"RecordID\" = $obj1ID");
+		DB::query("UPDATE \"VersionedLazySub_DataObject_versions\" SET \"ExtraField\" = 'versioned-value' ".
+				"WHERE \"RecordID\" = $obj1ID");
+
+		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField");
+
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		$this->assertEquals('old-value',$obj1->PageName,"Correct value from object PageName");
+		$this->assertEquals('old-value',$obj1->ExtraField,"Correct value from object ExtraField. \n".
+			"The DB query correctly queries the DataObject even though the version table was changed");
+
+		DB::query(
+			"UPDATE \"VersionedLazy_DataObject_live\" SET \"PageName\" = 'live-value' WHERE \"ID\" = $obj1ID");
+		DB::query(
+			"UPDATE \"VersionedLazySub_DataObject_live\" SET \"ExtraField\" = 'live-value' WHERE \"ID\" = $obj1ID");
+
+		Versioned::reading_stage('Live');
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		//TODO: fix these unit tests for a fully complete solution
+		//$this->assertEquals('live-value',$obj1->PageName,"Correct value from object PageName");
+		//$this->assertEquals('live-value',$obj1->ExtraField,"Correct value from object ExtraField");
+	}
+
+}
+
+
+/** Additional classes for versioned lazy loading testing */
+class VersionedLazy_DataObject extends DataObject {
+	static $db = array(
+		"PageName" => "Varchar"
+	);
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
+}
+
+class VersionedLazySub_DataObject extends VersionedLazy_DataObject {
+	static $db = array(
+		"ExtraField" => "Varchar",
+	);
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
 }
