@@ -394,5 +394,18 @@ class HTTPRequestTest extends SapphireTest {
 		$_SERVER = $server;
 	}
 
+	public function testCredentials() {
+		$request = new SS_HTTPRequest();
+		$this->assertNull($request->getUser());
+		$this->assertNull($request->getPassword());
+
+		$request = new SS_HTTPRequest(null, null, null, array(
+			'server' => array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'pass')
+		));
+		$this->assertEquals('user', $request->getUser());
+		$this->assertEquals('pass', $request->getPassword());
+	}
+
+
 
 }
