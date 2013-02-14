@@ -508,6 +508,17 @@ after')
 				new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))),
 			'<p>A</p><p>Bar</p>'
 		);
+
+		$data = new ArrayData(array(
+			'Nested' => new ArrayData(array(
+				'Object' => new ArrayData(array('Key' => 'A'))
+			)),
+			'Object' => new ArrayData(array('Key' => 'B'))
+		));
+
+		$tmpl = SSViewer::fromString('<% include SSViewerTestIncludeObjectArguments A=$Nested.Object, B=$Object %>');
+		$res  = $tmpl->process($data);
+		$this->assertEqualIgnoringWhitespace('A B', $res, 'Objects can be passed as named arguments');
 	}
 
 	
