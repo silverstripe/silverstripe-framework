@@ -305,6 +305,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			height: 82px;
 			width: 360px;
 			float: left;
+			text-align: center;
 
 			&.active{
 				&.hover{
@@ -315,14 +316,12 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 				color:lighten($color-text, 10%);
 				text-shadow: 0px 1px 0px #fff;
 				background: url('../images/upload.png') 0 25px no-repeat;
-				width:230px;
 				z-index:1;
-				padding: 20px 0 0;
+				padding: 20px 38px 0;
 				line-height: 25px;
 				font-size: 25px;
 				font-weight: bold;
-				text-align: center;
-				display:block;
+				display: inline-block;
 				margin:0 auto;
 				span {
 					display: block;
