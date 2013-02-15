@@ -62,6 +62,11 @@ Here is the include file `htaccess`:
 	location ~ ^/silverstripe-cache {
 		deny all;
 	}
+
+	# Deny access to composer
+	location ~ ^/(vendor|composer.json|composer.lock) {
+		deny all;
+	}
 	
 	# Don't execute scripts in the assets
 	location ^~ /assets/ {
