@@ -306,7 +306,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		if (empty($this->record)) {
 			$controller = Controller::curr();
 			$noActionURL = $controller->removeAction($_REQUEST['url']);
-			$controller->getResponse()->removeHeader('Location');   //clear the existing redirect
+			$controller->getResponse()->unsetHeader('Location');   //clear the existing redirect
 			return $controller->redirect($noActionURL, 302);
 		}
 
@@ -471,7 +471,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 				}
 			));
 			if($controller->getRequest()->isAjax()){
-				$controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
+				$controller->getRequest()->setHeader('X-Pjax', 'CurrentForm');
 			}
 			return $responseNegotiator->respond($controller->getRequest());
 		}
@@ -502,7 +502,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// Changes to the record properties might've excluded the record from
 			// a filtered list, so return back to the main view if it can't be found
 			$noActionURL = $controller->removeAction($data['url']);
-			$controller->getRequest()->addHeader('X-Pjax', 'Content'); 
+			$controller->getRequest()->setHeader('X-Pjax', 'Content');
 			return $controller->redirect($noActionURL, 302); 
 		}
 	}
@@ -537,7 +537,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		//when an item is deleted, redirect to the parent controller
 		$controller = Controller::curr();
-		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
+		$controller->getRequest()->setHeader('X-Pjax', 'Content'); // Force a content refresh
 
 		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
 	}

@@ -558,7 +558,7 @@ class UploadField extends FileField {
 			}
 		}
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
-		$response->addHeader('Content-Type', 'text/plain');
+		$response->setHeader('Content-Type', 'text/plain');
 		return $response;
 	}
 
@@ -587,7 +587,7 @@ class UploadField extends FileField {
 			);
 		}
 		$response = new SS_HTTPResponse(Convert::raw2json($return));
-		$response->addHeader('Content-Type', 'application/json');
+		$response->setHeader('Content-Type', 'application/json');
 		return $response;
 	}
 

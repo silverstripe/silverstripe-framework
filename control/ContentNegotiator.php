@@ -137,8 +137,8 @@ class ContentNegotiator {
 		
 		// Only serve "pure" XHTML if the XML header is present
 		if(substr($content,0,5) == '<' . '?xml' ) {
-			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
-			$response->addHeader("Vary" , "Accept");
+			$response->setHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
+			$response->setHeader("Vary" , "Accept");
 
 			// Fix base tag
 			$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
@@ -163,8 +163,8 @@ class ContentNegotiator {
 	 * Removes "xmlns" attributes and any <?xml> Pragmas.
 	 */
 	public function html(SS_HTTPResponse $response) {
-		$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
-		$response->addHeader("Vary", "Accept");
+		$response->setHeader("Content-Type", "text/html; charset=" . self::$encoding);
+		$response->setHeader("Vary", "Accept");
 
 		$content = $response->getBody();
 		$hasXMLHeader = (substr($content,0,5) == '<' . '?xml' );

@@ -239,7 +239,7 @@ class HTTPRequestTest extends SapphireTest {
 		$this->assertTrue($req->isAjax());
 
 		$req = new SS_HTTPRequest('GET', '/');
-		$req->addHeader('X-Requested-With', 'XMLHttpRequest');
+		$req->setHeader('X-Requested-With', 'XMLHttpRequest');
 		$this->assertTrue($req->isAjax());
 	}
 
