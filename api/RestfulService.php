@@ -327,7 +327,11 @@ class RestfulService extends ViewableData {
 		$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
 		foreach( $fields as $field ) {
 			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
-				$match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1])));
+				$match[1] = preg_replace_callback(
+					'/(?<=^|[\x09\x20\x2D])./e',
+					create_function('$matches', 'return strtoupper($matches[0])'),
+					strtolower(trim($match[1]))
+				);
 				if( isset($headers[$match[1]]) ) {
 					if (!is_array($headers[$match[1]])) {
 						$headers[$match[1]] = array($headers[$match[1]]);
