@@ -523,6 +523,15 @@ class InjectorTest extends SapphireTest {
 		
 		$this->assertInstanceOf('OtherTestObject', $item->property->property);
 	}
+
+	public function testNamedServices() {
+		$injector = new Injector();
+		$service  = new stdClass();
+
+		$injector->registerNamedService('NamedService', $service);
+		$this->assertEquals($service, $injector->get('NamedService'));
+	}
+
 }
 
 class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator implements TestOnly {
