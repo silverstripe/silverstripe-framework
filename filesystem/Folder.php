@@ -191,10 +191,10 @@ class Folder extends File {
 		return DB::getGeneratedID("File");
 	}
 
-	/**
+/**
 	 * Take a file uploaded via a POST form, and save it inside this folder.
-	 * File names are filtered through {@link FileNameFilter}, see class documentation
-	 * on how to influence this behaviour.
+	 * @param array $tmpFile -- Uploaded file array as found in $_FILES['inputname']
+	 *   (see PHP docs http://www.php.net/manual/en/features.file-upload.post-method.php)
 	 */
 	function addUploadToFolder($tmpFile) {
 		if(!is_array($tmpFile)) {
@@ -231,16 +231,25 @@ class Folder extends File {
 		}
 		$origFile = $file;
 
+		// Try to find a unique filename to save under
+		// We will start at "$file$ext" and then "$file$ext_1" and then keep
+		// incrementing the counter and trying "$file$ext_$counter" until the filename
+		// doesn't clash.
 		$i = 1;
 		while(file_exists("$base/$file$ext")) {
 			$i++;
 			$oldFile = $file;
 			
+			// If there is a period in the filename (without extension part), then
+			// try using our counter before the dot.
 			if(strpos($file, '.') !== false) {
 				$file = ereg_replace('[0-9]*(\.[^.]+$)', $i . '\\1', $file);
-			} elseif(strpos($file, '_') !== false) {
-				$file = ereg_replace('_([^_]+$)', '_' . $i, $file);
+			// Otherwise, if the file ends with underscore and digits,
+			// then replace these final digits with our counter.
+			} elseif(preg_match('/_\d+$/', $file)) {
+				$file = preg_replace('/_(\d+$)/', '_' . $i, $file);
 			} else {
+			// Finally, just try appending the counter.
 				$file .= "_$i";
 			}
 			
