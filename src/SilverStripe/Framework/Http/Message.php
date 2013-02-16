@@ -1,11 +1,13 @@
 <?php
+
+namespace SilverStripe\Framework\Http;
+
+use Deprecation;
+
 /**
  * A base class for HTTP requests and responses.
-
- * @package framework
- * @subpackage control
  */
-abstract class SS_HttpMessage {
+abstract class Message {
 
 	/**
 	 * @var string

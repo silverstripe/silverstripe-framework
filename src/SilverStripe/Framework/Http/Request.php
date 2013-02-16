@@ -1,5 +1,12 @@
 <?php
 
+namespace SilverStripe\Framework\Http;
+
+use ArrayAccess;
+use ArrayLib;
+use Deprecation;
+use Director;
+
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
  * (GET/POST/PUT/DELETE). This is used by {@link RequestHandler} objects to decide what to do.
@@ -7,14 +14,8 @@
  * The intention is that a single SS_HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandler::handleRequest()}.
- * 
- * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for
- *       webclients not supporting PUT and DELETE)
- * 
- * @package framework
- * @subpackage control
  */
-class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
+class Request extends Message implements ArrayAccess {
 
 	/**
 	 * @var string $url
@@ -602,7 +603,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 			$method = strtoupper($method);
 
 			if(!in_array($method, $valid)) {
-				throw new SS_HTTPResponse_Exception('Invalid HTTP "_method" parameter', 400);
+				throw new ResponseException('Invalid HTTP "_method" parameter', 400);
 			}
 
 			$this->method = $method;
