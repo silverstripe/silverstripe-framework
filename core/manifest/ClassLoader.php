@@ -14,7 +14,8 @@ class SS_ClassLoader {
 	 * @var array
 	 */
 	public static $legacy_classes = array(
-		'http' => 'SilverStripe\\Framework\\Http\\Http'
+		'cookie' => 'SilverStripe\\Framework\\Http\\Cookie',
+		'http'   => 'SilverStripe\\Framework\\Http\\Http'
 	);
 
 	/**

@@ -1,9 +1,15 @@
 <?php
+
+namespace SilverStripe\Framework\Http;
+
+use Deprecation;
+use Director;
+
 /**
  * A set of static methods for manipulating cookies.
  *
  * @package framework
- * @subpackage misc
+ * @subpackage http
  */
 class Cookie {
 
@@ -15,7 +21,7 @@ class Cookie {
 	/**
 	 * @var string cookie class
 	 */
-	static $cookie_class = 'Cookie';
+	static $cookie_class = __CLASS__;
 
 	private static $inst = null;
 

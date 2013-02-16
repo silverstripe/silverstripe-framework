@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Framework\Http\Cookie;
 use SilverStripe\Framework\Http\Http;
 
 /**

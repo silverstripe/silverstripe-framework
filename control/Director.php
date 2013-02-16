@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Framework\Control\Router;
+use SilverStripe\Framework\Http\Cookie;
 
 /**
  * Director is responsible for processing URLs, and providing environment information.
