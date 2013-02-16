@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Response;
+
 class SSViewerTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
@@ -466,12 +468,12 @@ after')
 		// Check that the content negotiator converts to the equally legal formats
 		$negotiator = new ContentNegotiator();
 		
-		$response = new SS_HTTPResponse($this->render($tmpl1));
+		$response = new Response($this->render($tmpl1));
 		$negotiator->html($response);
 		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
 			$response->getBody());
 
-		$response = new SS_HTTPResponse($this->render($tmpl1));
+		$response = new Response($this->render($tmpl1));
 		$negotiator->xhtml($response);
 		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}

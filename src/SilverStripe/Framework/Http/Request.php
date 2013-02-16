@@ -11,7 +11,7 @@ use Director;
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
  * (GET/POST/PUT/DELETE). This is used by {@link RequestHandler} objects to decide what to do.
  * 
- * The intention is that a single SS_HTTPRequest object can be passed from one object to another, each object calling
+ * The intention is that a single request object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandler::handleRequest()}.
  */
@@ -257,7 +257,7 @@ class Request extends Message implements ArrayAccess {
 	}
 
 	/**
-	 * Checks if the {@link SS_HTTPRequest->getExtension()} on this request matches one of the more common media types
+	 * Checks if the {@link Request::getExtension()} on this request matches one of the more common media types
 	 * embedded into a webpage - e.g. css, png.
 	 *
 	 * This is useful for things like determining wether to display a fully rendered error page or not. Note that the
@@ -592,7 +592,7 @@ class Request extends Message implements ArrayAccess {
 			$method = strtoupper($method);
 
 			if(!in_array($method, $valid)) {
-				throw new SS_HTTPResponse_Exception('Invalid HTTP method header', 400);
+				throw new ResponseException('Invalid HTTP method header', 400);
 			}
 
 			$this->method = $method;
@@ -646,7 +646,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link getParams()}
 	 */
 	public function allParams() {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getParams()');
+		Deprecation::notice('3.2.0', 'Use Request->getParams()');
 		return $this->getParams();
 	}
 
@@ -654,7 +654,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link getParam()}
 	 */
 	public function param($name) {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getParam()');
+		Deprecation::notice('3.2.0', 'Use Request->getParam()');
 		return $this->getParam($name);
 	}
 
@@ -662,7 +662,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link getParams()}
 	 */
 	public function params() {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getParams()');
+		Deprecation::notice('3.2.0', 'Use Request->getParams()');
 		return $this->getParams();
 	}
 
@@ -670,7 +670,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link getLatestParams()}
 	 */
 	public function latestParams() {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getLatestParams()');
+		Deprecation::notice('3.2.0', 'Use Request->getLatestParams()');
 		return $this->getLatestParams();
 	}
 
@@ -678,7 +678,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link getLatestParam()}
 	 */
 	public function latestParam($name) {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getLatestParam()');
+		Deprecation::notice('3.2.0', 'Use Request->getLatestParam()');
 		return $this->getLatestParam($name);
 	}
 
@@ -686,7 +686,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link shiftParams()}
 	 */
 	public function shiftAllParams() {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->shiftParams()');
+		Deprecation::notice('3.2.0', 'Use Request->shiftParams()');
 		return $this->shiftParams();
 	}
 
@@ -694,7 +694,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link isAllRouted()}
 	 */
 	public function allParsed() {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->isAllRouted()');
+		Deprecation::notice('3.2.0', 'Use Request->isAllRouted()');
 		return $this->isAllRouted();
 	}
 
@@ -702,7 +702,7 @@ class Request extends Message implements ArrayAccess {
 	 * @deprecated 3.2 Use {@link getRemainingUrl()}
 	 */
 	public function remaining() {
-		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getRemainingUrl()');
+		Deprecation::notice('3.2.0', 'Use Request->getRemainingUrl()');
 		return $this->getRemainingUrl();
 	}
 

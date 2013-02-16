@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Represents a test usage session of a web-app
  * It will maintain session-state from request to request
@@ -49,7 +53,7 @@ class TestSession {
 			parse_str($raw, $get);
 		}
 
-		$request = new SS_HTTPRequest('GET', $url, null, array(
+		$request = new Request('GET', $url, null, array(
 			'get' => $get
 		));
 		if($headers) $request->setHeaders($headers);
@@ -69,7 +73,7 @@ class TestSession {
 			parse_str($raw, $get);
 		}
 
-		$request = new SS_HTTPRequest('POST', $url, null, array(
+		$request = new Request('POST', $url, null, array(
 			'get'  => $get,
 			'post' => $data
 		));
@@ -82,12 +86,12 @@ class TestSession {
 	/**
 	 * Performs a test request, and returns the response.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @param null $session
 	 * @param array $cookies
-	 * @return SS_HTTPResponse
+	 * @return Response
 	 */
-	public function request(SS_HTTPRequest $request, $session = null, $cookies = array()) {
+	public function request(Request $request, $session = null, $cookies = array()) {
 		if($this->lastUrl && !$request->getHeader('Referer')) {
 			$request->setHeader('Referer', $this->lastUrl);
 		}
@@ -119,7 +123,7 @@ class TestSession {
 	 * @param String $formID HTML 'id' attribute of a form (loaded through a previous response)
 	 * @param String $button HTML 'name' attribute of the button (NOT the 'id' attribute)
 	 * @param Array $data Map of GET/POST data. 
-	 * @return SS_HTTPResponse
+	 * @return Response
 	 */
 	public function submitForm($formID, $button = null, $data = array()) {
 		$page = $this->lastPage();
@@ -172,7 +176,7 @@ class TestSession {
 	}
 	
 	/**
-	 * Get the most recent response, as an SS_HTTPResponse object
+	 * Get the most recent response, as an response object
 	 */
 	public function lastResponse() {
 		return $this->lastResponse;
@@ -227,7 +231,7 @@ class TestSession {
 }
 
 /**
- * Wrapper around SS_HTTPResponse to make it look like a SimpleHTTPResposne
+ * Wrapper around response to make it look like a SimpleHTTPResposne
  * 
  * @package framework
  * @subpackage testing
@@ -235,7 +239,7 @@ class TestSession {
 class TestSession_STResponseWrapper {
 	private $response;
 
-	public function __construct(SS_HTTPResponse $response) {
+	public function __construct(Response $response) {
 		$this->response = $response;
 	}
 	

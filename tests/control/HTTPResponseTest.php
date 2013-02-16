@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\ResponseException;
+
 /**
  * @package framework
  * @subpackage tests
@@ -6,7 +10,7 @@
 class HTTPResponseTest extends SapphireTest {
 	
 	public function testStatusDescriptionStripsNewlines() {
-		$r = new SS_HTTPResponse('my body', 200, "my description \nwith newlines \rand carriage returns");
+		$r = new Response('my body', 200, "my description \nwith newlines \rand carriage returns");
 		$this->assertEquals(
 			"my description with newlines and carriage returns",
 			$r->getStatusDescription()
@@ -31,13 +35,13 @@ class HTTPResponseTest extends SapphireTest {
 	}
 	
 	public function testHTTPResponseException() {
-		$response = new SS_HTTPResponse("Test", 200, 'OK');
+		$response = new Response("Test", 200, 'OK');
 
 		// Confirm that the exception's statusCode and statusDescription take precedence
 		try {
-			throw new SS_HTTPResponse_Exception($response, 404, 'not even found');
+			throw new ResponseException($response, 404, 'not even found');
 
-		} catch(SS_HTTPResponse_Exception $e) {
+		} catch(ResponseException $e) {
 			$this->assertEquals(404, $e->getResponse()->getStatusCode());
 			$this->assertEquals('not even found', $e->getResponse()->getStatusDescription());
 			return;
@@ -51,9 +55,9 @@ class HTTPResponseTest extends SapphireTest {
 
 		// Confirm that the exception's statusCode and statusDescription take precedence
 		try {
-			throw new SS_HTTPResponse_Exception("Some content that may be from a hacker", 404, 'not even found');
+			throw new ResponseException("Some content that may be from a hacker", 404, 'not even found');
 
-		} catch(SS_HTTPResponse_Exception $e) {
+		} catch(ResponseException $e) {
 			$this->assertEquals("text/plain", $e->getResponse()->getHeader("Content-Type"));
 			return;
 		}
@@ -63,7 +67,7 @@ class HTTPResponseTest extends SapphireTest {
 	}
 
 	public function testIsRedirect() {
-		$response = new SS_HTTPResponse();
+		$response = new Response();
 		$this->assertFalse($response->isRedirect());
 		$this->assertTrue($response->isRedirect(301));
 

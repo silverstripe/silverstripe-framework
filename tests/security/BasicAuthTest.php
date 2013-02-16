@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 /**
  * @package framework
  * @subpackage tests
@@ -77,7 +80,7 @@ class BasicAuthTest extends FunctionalTest {
 	}
 
 	private function getBasicAuthRequest($url, $username, $password) {
-		return new SS_HTTPRequest('GET', $url, null, array(
+		return new Request('GET', $url, null, array(
 			'server' => array('PHP_AUTH_USER' => $username, 'PHP_AUTH_PW' => $password)
 		));
 	}

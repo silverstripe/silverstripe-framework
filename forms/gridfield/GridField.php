@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\Framework\Control\Router;
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\ResponseException;
 
 /**
  * Displays a {@link SS_List} in a grid format.
@@ -599,7 +602,7 @@ class GridField extends FormField {
 	 * @param array $data
 	 * @return string 
 	 */
-	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
+	public function gridFieldAlterAction($data, $form, Request $request) {
 		$html = '';
 		$data = $request->requestVars();
 		$fieldData = @$data[$this->getName()];
@@ -664,7 +667,7 @@ class GridField extends FormField {
 	 * 
 	 * @todo There is too much code copied from RequestHandler here.
 	 */
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(Request $request, DataModel $model) {
 		if($this->brokenOnConstruct) {
 			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
 		}
@@ -703,11 +706,11 @@ class GridField extends FormField {
 
 					try {
 						$result = $component->$action($this, $request);
-					} catch(SS_HTTPResponse_Exception $ex) {
+					} catch(ResponseException $ex) {
 						$result = $ex->getResponse();
 					}
 
-					if($result instanceof SS_HTTPResponse && $result->isError()) {
+					if($result instanceof Response && $result->isError()) {
 						return $result;
 					}
 

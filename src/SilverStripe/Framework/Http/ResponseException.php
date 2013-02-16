@@ -11,7 +11,7 @@ use Exception;
  * Example Usage:
  * <code>
  * throw new ResponseException('This request was invalid.', 400);
- * throw new ResponseException(new SS_HTTPResponse('There was an internal server error.', 500));
+ * throw new ResponseException(new Response('There was an internal server error.', 500));
  * </code>
  */
 class ResponseException extends Exception {
@@ -19,7 +19,7 @@ class ResponseException extends Exception {
 	protected $response;
 
 	/**
-	 * @param  string|Response body Either the plaintext content of the error message, or an SS_HTTPResponse
+	 * @param  string|Response body Either the plaintext content of the error message, or a response
 	 *                                     object representing it.  In either case, the $statusCode and
 	 *                                     $statusDescription will be the HTTP status of the resulting response.
 	 * @see Response::__construct();

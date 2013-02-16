@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Includes requirements headers in the response.
  *
@@ -11,7 +15,7 @@ class RequirementsRequestFilter implements PostRequestFilter {
 	 * {@inheritDoc}
 	 */
 	public function postRequest(
-		SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model
+		Request $request, Response $response, DataModel $model
 	) {
 		// Attach appropriate X-Include-JavaScript and X-Include-CSS headers.
 		if($request->isAjax()) {

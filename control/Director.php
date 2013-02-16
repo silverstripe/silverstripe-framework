@@ -2,6 +2,9 @@
 
 use SilverStripe\Framework\Control\Router;
 use SilverStripe\Framework\Http\Cookie;
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\ResponseException;
 
 /**
  * Director is responsible for processing URLs, and providing environment information.
@@ -57,7 +60,7 @@ class Director implements TemplateGlobalProvider {
 	 * Process the given URL, creating the appropriate controller and executing it.
 	 * 
 	 * Request processing is handled as follows:
-	 *  - Director::direct() creates a new SS_HTTPResponse object and passes this to Director::handleRequest().
+	 *  - Director::direct() creates a new response object and passes this to Director::handleRequest().
 	 *  - Director::handleRequest($request) checks each of the Director rules and identifies a controller to handle
 	 *    this request.
 	 *  - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL, and call the
@@ -89,7 +92,7 @@ class Director implements TemplateGlobalProvider {
 			}
 		}
 		
-		$req = new SS_HTTPRequest(
+		$req = new Request(
 			null,
 			$url,
 			@file_get_contents('php://input'),
@@ -112,7 +115,7 @@ class Director implements TemplateGlobalProvider {
 		
 		if ($output === false) {
 			// @TODO Need to NOT proceed with the request in an elegant manner
-			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
+			throw new ResponseException(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
 		}
 
 		$result = self::handleRequest($req, $session, $model);
@@ -120,8 +123,8 @@ class Director implements TemplateGlobalProvider {
 		// Save session data (and start/resume it if required)
 		$session->inst_save();
 
-		if(!($result instanceof SS_HTTPResponse)) {
-			$result = new SS_HTTPResponse($result);
+		if(!($result instanceof Response)) {
+			$result = new Response($result);
 		}
 
 		$post = Injector::inst()->get('RequestProcessor')->postRequest($req, $result, $model);
@@ -140,10 +143,10 @@ class Director implements TemplateGlobalProvider {
 	 * information from the request into the global scope, executes the request,
 	 * and then returns to the original application state.
 	 *
-	 * @param string|SS_HTTPRequest $request
+	 * @param string|Request $request
 	 * @param array|Session $session
 	 * @param array $cookies
-	 * @return SS_HTTPResponse
+	 * @return Response
 	 */
 	public static function test($request, $session = array(), array $cookies = array()) {
 		$existingGet = isset($_GET) ? $_GET : array();
@@ -153,8 +156,8 @@ class Director implements TemplateGlobalProvider {
 		$existingCookie = isset($_COOKIE) ? $_COOKIE : array();
 		$existingServer = isset($_SERVER) ? $_SERVER : array();
 
-		if (!$request instanceof SS_HTTPRequest) {
-			$request = new SS_HTTPRequest('GET', self::makeRelative($request));
+		if (!$request instanceof Request) {
+			$request = new Request('GET', self::makeRelative($request));
 		}
 
 		if (!$session instanceof Session) {
@@ -206,11 +209,11 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Handle an HTTP request, defined with a SS_HTTPRequest object.
+	 * Handle an HTTP request, defined with a request object.
 	 *
-	 * @return SS_HTTPResponse|string
+	 * @return Request|string
 	 */
-	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
+	protected static function handleRequest(Request $request, Session $session, DataModel $model) {
 		$router = new Router();
 		$router->setRules(Config::inst()->get('Director', 'rules'));
 
@@ -230,7 +233,7 @@ class Director implements TemplateGlobalProvider {
 			$opts = array_merge($opts, $request->getLatestParams());
 
 			if(isset($opts['Redirect'])) {
-				$response = new SS_HTTPResponse();
+				$response = new Response();
 				$response->redirect($opts['Redirect']);
 				return $response;
 			}
@@ -244,11 +247,11 @@ class Director implements TemplateGlobalProvider {
 
 			try {
 				$result = $controller->handleRequest($request, $model);
-			} catch(SS_HTTPResponse_Exception $ex) {
+			} catch(ResponseException $ex) {
 				$result = $ex->getResponse();
 			}
 
-			if(is_object($result) && !($result instanceof SS_HTTPResponse)) {
+			if(is_object($result) && !($result instanceof Response)) {
 				throw new Exception('Invalid result returned from handler');
 			}
 

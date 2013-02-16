@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\Framework\Control\Router;
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\ResponseException;
 
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
@@ -8,7 +11,7 @@ use SilverStripe\Framework\Control\Router;
  * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
  * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters
- * that it parsed from the URL, and the {@link SS_HTTPRequest} that contains the remainder of the URL to be parsed.
+ * that it parsed from the URL, and the {@link Request} that contains the remainder of the URL to be parsed.
  *
  * You can use ?debug_request=1 to view information about the different components and rule matches for a specific URL.
  *
@@ -38,7 +41,7 @@ use SilverStripe\Framework\Control\Router;
 class RequestHandler extends ViewableData {
 	
 	/**
-	 * @var SS_HTTPRequest $request The request object that the controller was called with.
+	 * @var Request $request The request object that the controller was called with.
 	 * Set in {@link handleRequest()}. Useful to generate the {}
 	 */
 	protected $request = null;
@@ -61,7 +64,7 @@ class RequestHandler extends ViewableData {
 	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
 	 * be called on this RequestHandlingData object.
 	 *
-	 * The keys of this array are parse rules.  See {@link SS_HTTPRequest::match()} for a description of the rules
+	 * The keys of this array are parse rules.  See {@link Request::match()} for a description of the rules
 	 * available.
 	 * 
 	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
@@ -99,7 +102,7 @@ class RequestHandler extends ViewableData {
 	
 	public function __construct() {
 		$this->brokenOnConstruct = false;
-		$this->request = new SS_HTTPRequest();
+		$this->request = new Request();
 
 		// This will prevent bugs if setDataModel() isn't called.
 		$this->model = DataModel::inst();
@@ -130,12 +133,11 @@ class RequestHandler extends ViewableData {
 	 * action will return an array of data with which to
 	 * customise the controller.
 	 * 
-	 * @param $request The {@link SS_HTTPRequest} object that is reponsible for distributing URL parsing
-	 * @uses SS_HTTPRequest
-	 * @uses SS_HTTPRequest->match()
-	 * @return SS_HTTPResponse|RequestHandler|string|array
+	 * @param $request The {@link Request} object that is reponsible for distributing URL parsing
+	 * @uses Request
+	 * @return Response|RequestHandler|string|array
 	 */
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(Request $request, DataModel $model) {
 		$class = get_class($this);
 
 		if($this->brokenOnConstruct) {
@@ -423,12 +425,12 @@ class RequestHandler extends ViewableData {
 	}
 	
 	/**
-	 * Throws a HTTP error response encased in a {@link SS_HTTPResponse_Exception}, which is later caught in
+	 * Throws a HTTP error response encased in a {@link ResponseException}, which is later caught in
 	 * {@link RequestHandler::handleAction()} and returned to the user.
 	 *
 	 * @param int $errorCode
 	 * @param string $errorMessage Plaintext error message
-	 * @uses SS_HTTPResponse_Exception
+	 * @uses ResponseException
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
 		// Call a handler method such as onBeforeHTTPError404
@@ -438,13 +440,13 @@ class RequestHandler extends ViewableData {
 		$this->extend('onBeforeHTTPError', $errorCode, $this->request);
 
 		// Throw a new exception
-		throw new SS_HTTPResponse_Exception($errorMessage, $errorCode);
+		throw new ResponseException($errorMessage, $errorCode);
 	}
 
 	/**
-	 * Returns the SS_HTTPRequest object that this controller is using.
+	 * Returns the request object that this controller is using.
 	 *
-	 * @return SS_HTTPRequest
+	 * @return Request
 	 */
 	public function getRequest() {
 		return $this->request;
@@ -454,7 +456,7 @@ class RequestHandler extends ViewableData {
 	 * Typically the request is set through {@link handleAction()}
 	 * or {@link handleRequest()}, but in some based we want to set it manually.
 	 * 
-	 * @param SS_HTTPRequest
+	 * @param Request
 	 */
 	public function setRequest($request) {
 		$this->request = $request;

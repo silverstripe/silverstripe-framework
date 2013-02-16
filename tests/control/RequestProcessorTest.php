@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Tests for the {@link RequestProcessor} class.
  *
@@ -18,7 +22,7 @@ class RequestProcessorTest extends SapphireTest {
 		$processor->setFilters(array($first, $second));
 
 		$this->assertTrue($processor->preRequest(
-			new SS_HTTPRequest('GET', ''),
+			new Request('GET', ''),
 			new Session(null),
 			new DataModel()
 		));
@@ -37,7 +41,7 @@ class RequestProcessorTest extends SapphireTest {
 		$processor->setFilters(array($first, $second));
 
 		$this->assertFalse($processor->preRequest(
-			new SS_HTTPRequest('GET', ''),
+			new Request('GET', ''),
 			new Session(null),
 			new DataModel()
 		));
@@ -54,8 +58,8 @@ class RequestProcessorTest extends SapphireTest {
 		$processor->setFilters(array($first, $second));
 
 		$this->assertTrue($processor->postRequest(
-			new SS_HTTPRequest('GET', ''),
-			new SS_HTTPResponse(),
+			new Request('GET', ''),
+			new Response(),
 			new DataModel()
 		));
 	}
@@ -73,8 +77,8 @@ class RequestProcessorTest extends SapphireTest {
 		$processor->setFilters(array($first, $second));
 
 		$this->assertFalse($processor->postRequest(
-			new SS_HTTPRequest('GET', ''),
-			new SS_HTTPResponse(),
+			new Request('GET', ''),
+			new Response(),
 			new DataModel()
 		));
 	}

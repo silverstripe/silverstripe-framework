@@ -389,7 +389,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 *
 	 * @param array $data
 	 * @param Form $form
-	 * @param SS_HTTPRequest $request
+	 * @param \SilverStripe\Framework\Http\Request $request
 	 */
 	public function import($data, $form, $request) {
 		if(!$this->showImportForm || (is_array($this->showImportForm) 

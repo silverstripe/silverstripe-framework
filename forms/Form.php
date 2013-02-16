@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Framework\Http\Http;
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
 
 /**
  * Base class for all forms.
@@ -333,12 +335,12 @@ class Form extends RequestHandler {
 				$acceptType = $request->getHeader('Accept');
 				if(strpos($acceptType, 'application/json') !== FALSE) {
 					// Send validation errors back as JSON with a flag at the start
-					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
+					$response = new Response(Convert::array2json($this->validator->getErrors()));
 					$response->setHeader('Content-Type', 'application/json');
 				} else {
 					$this->setupFormErrors();
 					// Send the newly rendered form tag as HTML
-					$response = new SS_HTTPResponse($this->forTemplate());
+					$response = new Response($this->forTemplate());
 					$response->setHeader('Content-Type', 'text/html');
 				}
 				
@@ -395,7 +397,7 @@ class Form extends RequestHandler {
 	 * formfield with the same name, this method gives priority
 	 * to the formfield.
 	 * 
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return FormField
 	 */
 	public function handleField($request) {
@@ -1439,12 +1441,12 @@ class Form extends RequestHandler {
 	
 	/**
 	 * Test a submission of this form.
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * @return Response the response object that the handling controller produces.  You can interrogate this in
 	 * your unit test.
 	 */
 	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
-		$request = new SS_HTTPRequest('POST', $this->FormAction(), null, array(
+		$request = new Request('POST', $this->FormAction(), null, array(
 			'post' => $data
 		));
 
@@ -1453,7 +1455,7 @@ class Form extends RequestHandler {
 	
 	/**
 	 * Test an ajax submission of this form.
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * @return Response the response object that the handling controller produces.  You can interrogate this in
 	 * your unit test.
 	 */
 	public function testAjaxSubmission($action, $data) {

@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Request;
+
 /**
  * SilverStripe-specific testing object designed to support functional testing of your web app.  It simulates get/post
  * requests, form submission, and can validate resulting HTML, looking up content by CSS selector.
@@ -114,7 +116,7 @@ class FunctionalTest extends SapphireTest {
 	/**
 	 * @see TestSession::request()
 	 */
-	public function request(SS_HTTPRequest $request, $session = null, $cookies = array()) {
+	public function request(Request $request, $session = null, $cookies = array()) {
 		$this->cssParser = null;
 		$response = $this->mainSession->request($request, $session, $cookies);
 

@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 /**
  * @package framework
  * @subpackage tests
@@ -166,7 +169,7 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
-		$request = new SS_HTTPRequest('POST', 'errorpage', null, array(
+		$request = new Request('POST', 'errorpage', null, array(
 			'get' => array('somekey' => 'sometestpostvalue')
 		));
 
@@ -185,7 +188,7 @@ class DirectorTest extends SapphireTest {
 
 		foreach(array('get', 'post') as $method) {
 			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
-				$request = new SS_HTTPRequest(
+				$request = new Request(
 					strtoupper($method),
 					Controller::join_links(
 						'DirectorTestRequest_Controller', sprintf($testfunction, ucfirst($method))
@@ -199,7 +202,7 @@ class DirectorTest extends SapphireTest {
 
 				$response = Director::test($request, null, $fixture);
 
-				$this->assertInstanceOf('SS_HTTPResponse', $response, 'Director::test() returns SS_HTTPResponse');
+				$this->assertInstanceOf('SilverStripe\\Framework\\Http\\Response', $response, 'Director::test() returns response');
 				$this->assertEquals($fixture['somekey'], $response->getBody(), 'Director::test() ' . $testfunction);
 			}
 		}
@@ -210,7 +213,7 @@ class DirectorTest extends SapphireTest {
 	 * saved in the request 
 	 */
 	public function testRouteParams() {
-		Director::test($request = new SS_HTTPRequest(
+		Director::test($request = new Request(
 			'GET', 'en-nz/myaction/myid/myotherid'
 		));
 

@@ -3,7 +3,7 @@
 namespace SilverStripe\Framework\Control;
 
 use ClassInfo;
-use SS_HTTPRequest;
+use SilverStripe\Framework\Http\Request;
 
 /**
  * Matches URL patterns to controllers.
@@ -44,17 +44,17 @@ class Router {
 	}
 
 	/**
-	 * @return SS_HTTPRequest
+	 * @return Request
 	 */
 	public function getRequest() {
 		return $this->request;
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return $this
 	 */
-	public function setRequest(SS_HTTPRequest $request) {
+	public function setRequest(Request $request) {
 		$this->request = $request;
 		return $this;
 	}
@@ -63,11 +63,11 @@ class Router {
 	 * Routes a request against a set of rules, and returns the corresponding rule's value. The
 	 * request is updated with any extracted parameters.
 	 *
-	 * @param SS_HTTPRequest $request the request to route, updated with parameters
+	 * @param Request $request the request to route, updated with parameters
 	 * @param array $rules rules to consider
 	 * @return mixed
 	 */
-	public function route(SS_HTTPRequest $request = null, array $rules = null) {
+	public function route(Request $request = null, array $rules = null) {
 		$request = $request ?: $this->getRequest();
 		$rules = $rules ?: $this->getRules();
 		$urlParts = $request->getUrlParts();

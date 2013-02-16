@@ -1,11 +1,11 @@
 <?php
 /**
- * Tests for the {@link SS_HttpMessage} class.
+ * Tests for the message class.
  */
 class HttpMessageTest extends SapphireTest {
 
 	public function testHeadersCaseInsensitive() {
-		$message = $this->getMockForAbstractClass('SS_HttpRequest');
+		$message = $this->getMockForAbstractClass('SilverStripe\\Framework\\Http\\Message');
 		$message->setHeader('X-HTTP-Header', 'value');
 
 		$this->assertEquals('value', $message->getHeader('X-HTTP-Header'));

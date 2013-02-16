@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 /**
  * @package framework
  * @subpackage tests
@@ -654,7 +657,7 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	protected function doUploadRequest($url, $files) {
-		return $this->request(new SS_HTTPRequest('POST', $url, null, array('files' => $files)));
+		return $this->request(new Request('POST', $url, null, array('files' => $files)));
 	}
 
 	protected function getMockForm() {

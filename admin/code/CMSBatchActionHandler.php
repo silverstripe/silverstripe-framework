@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Special request handler for admin/batchaction
  *  
@@ -150,7 +152,7 @@ class CMSBatchActionHandler extends RequestHandler {
 			$applicableIDs = $ids;
 		}
 		
-		$response = new SS_HTTPResponse(json_encode($applicableIDs));
+		$response = new Response(json_encode($applicableIDs));
 		$response->setHeader("Content-type", "application/json");
 		return $response;
 	}
@@ -167,9 +169,9 @@ class CMSBatchActionHandler extends RequestHandler {
 		$ids = array_filter($ids);
 		
 		if($actionHandler->hasMethod('confirmationDialog')) {
-			$response = new SS_HTTPResponse(json_encode($actionHandler->confirmationDialog($ids)));
+			$response = new Response(json_encode($actionHandler->confirmationDialog($ids)));
 		} else {
-			$response = new SS_HTTPResponse(json_encode(array('alert' => false)));
+			$response = new Response(json_encode(array('alert' => false)));
 		}
 		
 		$response->setHeader("Content-type", "application/json");

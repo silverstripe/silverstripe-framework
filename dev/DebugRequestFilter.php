@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Outputs an error message if an error response has no body.
  *
@@ -11,7 +15,7 @@ class DebugRequestFilter implements PostRequestFilter {
 	 * {@inheritDoc}
 	 */
 	public function postRequest(
-		SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model
+		Request $request, Response $response, DataModel $model
 	) {
 		// If we're in live mode and an error is generated without a body, then
 		// output a nicer error.

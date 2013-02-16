@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Request;
+
 /**
  * @package framework
  * @subpackage tests
@@ -335,12 +337,12 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 
 		// Perform the request.
 		if($method == 'POST') {
-			$request = new SS_HTTPRequest('POST', $url, null, array(
+			$request = new Request('POST', $url, null, array(
 				'get'  => $get,
 				'post' => $data
 			));
 		} else {
-			$request = new SS_HTTPRequest('GET', $url, $data, array('get' => $get));
+			$request = new Request('GET', $url, $data, array('get' => $get));
 		}
 
 		if($headers) {

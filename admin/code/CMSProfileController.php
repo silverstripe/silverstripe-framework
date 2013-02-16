@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Response;
+
 class CMSProfileController extends LeftAndMain {
 
 	static $url_segment = 'myprofile';
@@ -21,7 +24,7 @@ class CMSProfileController extends LeftAndMain {
 		$this->setCurrentPageID(Member::currentUserID());
 
 		$form = parent::getEditForm($id, $fields);
-		if($form instanceof SS_HTTPResponse) return $form;
+		if($form instanceof Response) return $form;
 		
 		$form->Fields()->push(new HiddenField('ID', null, Member::currentUserID()));
 		$form->Actions()->push(

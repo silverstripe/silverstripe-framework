@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Framework\Control\Router;
+use SilverStripe\Framework\Http\Request;
 
 /**
  * Tests for the {@link SilverStripe\Framework\Control\Router} class.
@@ -11,9 +12,9 @@ class RouterTest extends SapphireTest {
 		$router = new Router();
 		$router->setRules(array('GET ' => 'get', 'POST ' => 'post'));
 
-		$get = new SS_HTTPRequest('GET', '');
-		$post = new SS_HTTPRequest('POST', '');
-		$del = new SS_HTTPRequest('DELETE', '');
+		$get = new Request('GET', '');
+		$post = new Request('POST', '');
+		$del = new Request('DELETE', '');
 
 		$this->assertEquals('get', $router->route($get));
 		$this->assertEquals('post', $router->route($post));
@@ -24,8 +25,8 @@ class RouterTest extends SapphireTest {
 		$router = new Router();
 		$router->setRules(array('' => 'root'));
 
-		$root = new SS_HTTPRequest('GET', '/');
-		$page = new SS_HTTPRequest('POST', '/page');
+		$root = new Request('GET', '/');
+		$page = new Request('POST', '/page');
 
 		$this->assertEquals('root', $router->route($root));
 		$this->assertFalse($router->route($page));
@@ -35,8 +36,8 @@ class RouterTest extends SapphireTest {
 		$router = new Router();
 		$router->setRules(array('$Action//$ID!' => '$Action'));
 
-		$meth = new SS_HTTPRequest('GET', 'method');
-		$id = new SS_HTTPRequest('GET', 'method/1');
+		$meth = new Request('GET', 'method');
+		$id = new Request('GET', 'method/1');
 
 		$this->assertFalse($router->route($meth));
 		$this->assertEquals('$Action', $router->route($id));
@@ -48,7 +49,7 @@ class RouterTest extends SapphireTest {
 
 	public function testRepeatRouting() {
 		$router = new Router();
-		$request = new SS_HTTPRequest('GET', 'page/Form/field/Name/action');
+		$request = new Request('GET', 'page/Form/field/Name/action');
 		$router->setRequest($request);
 
 		$this->assertEquals('$Action', $router->route(null, array(
@@ -90,7 +91,7 @@ class RouterTest extends SapphireTest {
 
 	public function testRouteParams() {
 		$router = new Router();
-		$request = new SS_HTTPRequest('GET', 'en/page');
+		$request = new Request('GET', 'en/page');
 
 		$router->route($request, array(
 			'en/$URLSegment' => array(
@@ -102,7 +103,7 @@ class RouterTest extends SapphireTest {
 		$this->assertEquals('en_US', $request->getParam('Language'));
 		$this->assertEquals('page', $request->getParam('URLSegment'));
 
-		$request = new SS_HTTPRequest('GET', 'lang/en_AU/page');
+		$request = new Request('GET', 'lang/en_AU/page');
 		$router->route($request, array(
 			'lang/$Language/$URLSegment' => array(
 				'Language' => 'en_US'

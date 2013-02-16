@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.
  * If you are wanting to add more areas to the CMS, you can do it by subclassing LeftAndMain.
@@ -353,7 +357,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		SSViewer::set_theme(null);
 	}
 	
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
+	public function handleRequest(Request $request, DataModel $model = null) {
 		$response = parent::handleRequest($request, $model);
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->setHeader('X-Controller', $this->class);
@@ -881,7 +885,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * - 'SiblingIDs': Array of all sibling nodes to the moved node (incl. the node itself).
 	 *   In case of a 'ParentID' change, relates to the new siblings under the new parent.
 	 * 
-	 * @return SS_HTTPResponse JSON string with a 
+	 * @return Response JSON string with a
 	 */
 	public function savetreenode($request) {
 		if (!Permission::check('SITETREE_REORGANISE') && !Permission::check('ADMIN')) {
@@ -1617,7 +1621,7 @@ class LeftAndMainMarkingFilter {
 /**
  * Allow overriding finished state for faux redirects.
  */
-class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
+class LeftAndMain_HTTPResponse extends Response {
 
 	protected $isFinished = false;
 

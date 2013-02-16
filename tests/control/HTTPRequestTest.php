@@ -1,10 +1,12 @@
 <?php
 
+use SilverStripe\Framework\Http\Request;
+
 class HTTPRequestTest extends SapphireTest {
 	static $fixture_file = null;
 
 	public function testHttpMethodOverrides() {
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'GET',
 			'admin/crm'
 		);
@@ -13,7 +15,7 @@ class HTTPRequestTest extends SapphireTest {
 			'GET with no method override'
 		);
 
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm'
 		);
@@ -22,7 +24,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with no method override'
 		);
 
-		$request = new SS_HTTPRequest('GET', 'admin/crm', null, array(
+		$request = new Request('GET', 'admin/crm', null, array(
 			'get' => array('_method' => 'DELETE')
 		));
 		$this->assertTrue(
@@ -30,7 +32,7 @@ class HTTPRequestTest extends SapphireTest {
 			'GET with invalid POST method override'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			null,
@@ -41,7 +43,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to DELETE'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			array(),
@@ -52,7 +54,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to PUT'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			array(),
@@ -63,7 +65,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to HEAD '
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			array(),
@@ -74,7 +76,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to HEAD'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			array(),
@@ -85,22 +87,22 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with invalid method override by GET parameters to HEAD'
 		);
 
-		$this->setExpectedException('SS_HTTPResponse_Exception');
-		$request = new SS_HTTPRequest('POST', null, null, array(
+		$this->setExpectedException('SilverStripe\\Framework\\Http\\ResponseException');
+		$request = new Request('POST', null, null, array(
 			'post' => array('_method' => 'invalid')
 		));
 
-		$request = new SS_HTTPRequest('POST', null, null, array(
+		$request = new Request('POST', null, null, array(
 			'server' => array('X_HTTP_METHOD_OVERRIDE' => 'put')
 		));
 		$this->assertTrue($request->isPut(), 'The can can be overriden with a header');
 
-		$this->setExpectedException('SS_HTTPResponse_Exception');
-		$request = new SS_HTTPRequest('POST', null, null, array(
+		$this->setExpectedException('SilverStripe\\Framework\\Http\\ResponseException');
+		$request = new Request('POST', null, null, array(
 			'server' => array('X_HTTP_METHOD_OVERRIDE' => 'invalid')
 		));
 
-		$request = new SS_HTTPRequest(null, null, null, array(
+		$request = new Request(null, null, null, array(
 			'server' => array('REQUEST_METHOD' => 'POST')
 		));
 		$this->assertTrue($request->isPost(), 'The method defaults to the request method');
@@ -121,7 +123,7 @@ class HTTPRequestTest extends SapphireTest {
 			'third' => 'c',
 			'fourth' => 'd',
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			null,
@@ -146,7 +148,7 @@ class HTTPRequestTest extends SapphireTest {
 			'second' => 'b',
 			'third' => 'd',
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			null,
@@ -185,7 +187,7 @@ class HTTPRequestTest extends SapphireTest {
 				'third' => 'd',
 			),
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			null,
@@ -225,7 +227,7 @@ class HTTPRequestTest extends SapphireTest {
 				'third' => 'd',
 			),
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			null,
@@ -239,42 +241,42 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testIsAjax() {
-		$req = new SS_HTTPRequest('GET', '/', null, array('get' => array('ajax' => 0)));
+		$req = new Request('GET', '/', null, array('get' => array('ajax' => 0)));
 		$this->assertFalse($req->isAjax());
 
-		$req = new SS_HTTPRequest('GET', '/', null, array('get' => array('ajax' => 1)));
+		$req = new Request('GET', '/', null, array('get' => array('ajax' => 1)));
 		$this->assertTrue($req->isAjax());
 
-		$req = new SS_HTTPRequest('GET', '/');
+		$req = new Request('GET', '/');
 		$req->setHeader('X-Requested-With', 'XMLHttpRequest');
 		$this->assertTrue($req->isAjax());
 	}
 
 	public function testGetURL() {
-		$req = new SS_HTTPRequest('GET', '/');
+		$req = new Request('GET', '/');
 		$this->assertEquals('', $req->getURL());
 
-		$req = new SS_HTTPRequest('GET', '/assets/somefile.gif');
+		$req = new Request('GET', '/assets/somefile.gif');
 		$this->assertEquals('assets/somefile.gif', $req->getURL());
 
-		$req = new SS_HTTPRequest('GET', '/home?test=1');
+		$req = new Request('GET', '/home?test=1');
 		$this->assertEquals('home?test=1', $req->getURL(true));
 		$this->assertEquals('home', $req->getURL());
 	}
 
 	public function testGetExtension() {
-		$request = new SS_HTTPRequest('GET', '/path');
+		$request = new Request('GET', '/path');
 		$this->assertEquals('', $request->getExtension());
 
-		$request = new SS_HTTPRequest('GET', '/path.extension');
+		$request = new Request('GET', '/path.extension');
 		$this->assertEquals('extension', $request->getExtension());
 
-		$request = new SS_HTTPRequest('GET', '/path.extension?get=value');
+		$request = new Request('GET', '/path.extension?get=value');
 		$this->assertEquals('extension', $request->getExtension());
 	}
 
 	public function testShifting() {
-		$request = new SS_HTTPRequest('GET', '/first/second/third');
+		$request = new Request('GET', '/first/second/third');
 		$this->assertEquals(array('first', 'second', 'third'), $request->getUrlParts());
 		$this->assertEquals('first/second/third', $request->getRemainingUrl());
 		$this->assertFalse($request->isAllRouted());
@@ -291,7 +293,7 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testParams() {
-		$request = new SS_HTTPRequest('GET', '');
+		$request = new Request('GET', '');
 
 		$first = array('a' => '1');
 		$second = array('a' => '', 'b' => '2');
@@ -318,7 +320,7 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testIsAllRouted() {
-		$request = new SS_HTTPRequest('GET', 'first/second');
+		$request = new Request('GET', 'first/second');
 		$this->assertFalse($request->isAllRouted());
 
 		$request->setUnshiftedButParsed(1);
@@ -329,7 +331,7 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers SS_HTTPRequest::extractHeaders()
+	 * @covers Request::extractHeaders()
 	 */
 	public function testExtractRequestHeaders() {
 		$request = array(
@@ -357,7 +359,7 @@ class HTTPRequestTest extends SapphireTest {
 			'Content-Length'  => '10'
 		);
 
-		$request = new SS_HTTPRequest(null, null, null, array(
+		$request = new Request(null, null, null, array(
 			'server' => $request
 		));
 
@@ -367,7 +369,7 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers SS_HTTPRequest::setGlobals()
+	 * @covers Request::setGlobals()
 	 */
 	public function testSetGlobals() {
 		$get    = $_GET;
@@ -375,7 +377,7 @@ class HTTPRequestTest extends SapphireTest {
 		$files  = $_FILES;
 		$server = $_SERVER;
 
-		$req = new SS_HTTPRequest('GET', '', null, array(
+		$req = new Request('GET', '', null, array(
 			'get'    => array('get'),
 			'post'   => array('post'),
 			'files'  => array('files'),
@@ -395,11 +397,11 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testCredentials() {
-		$request = new SS_HTTPRequest();
+		$request = new Request();
 		$this->assertNull($request->getUser());
 		$this->assertNull($request->getPassword());
 
-		$request = new SS_HTTPRequest(null, null, null, array(
+		$request = new Request(null, null, null, array(
 			'server' => array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'pass')
 		));
 		$this->assertEquals('user', $request->getUser());

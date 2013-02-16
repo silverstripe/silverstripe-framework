@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\ResponseException;
+
 /**
  * Provides an interface to HTTP basic authentication.
  * 
@@ -35,7 +39,7 @@ class BasicAuth {
 	 * 
 	 * Used by {@link Controller::init()}.
 	 * 
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws ResponseException
 	 * 
 	 * @param string $realm
 	 * @param string|array $permissionCode Optional
@@ -59,7 +63,7 @@ class BasicAuth {
 		
 		// If we've failed the authentication mechanism, then show the login form
 		if(!$member) {
-			$response = new SS_HTTPResponse(null, 401);
+			$response = new Response(null, 401);
 			$response->setHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
@@ -69,13 +73,13 @@ class BasicAuth {
 			}
 			
 			// Exception is caught by RequestHandler->handleRequest() and will halt further execution
-			$e = new SS_HTTPResponse_Exception(null, 401);
+			$e = new ResponseException(null, 401);
 			$e->setResponse($response);
 			throw $e;
 		}
 		
 		if($permissionCode && !Permission::checkMember($member->ID, $permissionCode)) {
-			$response = new SS_HTTPResponse(null, 401);
+			$response = new Response(null, 401);
 			$response->setHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
@@ -83,7 +87,7 @@ class BasicAuth {
 			}
 			
 			// Exception is caught by RequestHandler->handleRequest() and will halt further execution
-			$e = new SS_HTTPResponse_Exception(null, 401);
+			$e = new ResponseException(null, 401);
 			$e->setResponse($response);
 			throw $e;
 		}

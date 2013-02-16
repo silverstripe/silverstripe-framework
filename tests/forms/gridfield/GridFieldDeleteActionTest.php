@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Request;
+
 class GridFieldDeleteActionTest extends SapphireTest {
 
 	/** @var ArrayList */
@@ -49,7 +51,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$stateID = 'testGridStateActionField';
 		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
 			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', null, array(
+		$request = new Request('POST', 'url', null, array(
 			'post' => array('action_gridFieldAlterAction?StateID='.$stateID=>true)
 		));
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
@@ -62,7 +64,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$stateID = 'testGridStateActionField';
 		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
 			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', null, array(
+		$request = new Request('POST', 'url', null, array(
 			'post' => array('action_gridFieldAlterAction?StateID='.$stateID=>true)
 		));
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
@@ -80,7 +82,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$stateID = 'testGridStateActionField';
 		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord',
 			'args'=>array('RecordID'=>$this->idFromFixture('GridFieldAction_Delete_Team', 'team1'))));
-		$request = new SS_HTTPRequest('POST', 'url', null, array(
+		$request = new Request('POST', 'url', null, array(
 			'post' => array('action_gridFieldAlterAction?StateID='.$stateID=>true)
 		));
 		

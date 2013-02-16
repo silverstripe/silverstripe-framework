@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 /**
  * A filter which is run before a request is handled.
  *
@@ -11,13 +14,13 @@ interface PreRequestFilter {
 	/**
 	 * The main filter method, which is run before a request is handled.
 	 *
-	 * @param SS_HTTPRequest $request the incoming request
+	 * @param Request $request the incoming request
 	 * @param Session $session the session
 	 * @param DataModel $model the data model
 	 * @return bool if the result is FALSE, a 400 error is thrown
 	 */
 	public function preRequest(
-		SS_HTTPRequest $request, Session $session, DataModel $model
+		Request $request, Session $session, DataModel $model
 	);
 
 }

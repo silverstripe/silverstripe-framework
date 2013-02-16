@@ -9,7 +9,6 @@ use Exception;
 use File;
 use finfo;
 use InvalidArgumentException;
-use SS_HTTPResponse;
 
 /**
  * A collection of HTTP utility functions.
@@ -291,12 +290,12 @@ class Http {
 	/**
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
 	 *
-	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
+	 * @param Response $body The response object to augment.  Omitted the argument or passing a string is
 	 *                            deprecated; in these cases, the headers are output directly.
 	 */
 	public static function add_cache_headers($body = null) {
 		// Validate argument
-		if($body && !($body instanceof SS_HTTPResponse)) {
+		if($body && !($body instanceof Response)) {
 			throw new Exception('The body must be a response object');
 		}
 
@@ -304,7 +303,7 @@ class Http {
 		// below.
 		if(Director::isDev()) return;
 		
-		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
+		// The headers have been sent and we don't have an response object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) return;
 
@@ -378,7 +377,7 @@ class Http {
 			$responseHeaders['ETag'] = self::$etag;
 		}
 		
-		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
+		// Now that we've generated them, either output them or attach them to the response as appropriate
 		foreach($responseHeaders as $k => $v) {
 			if($body) $body->setHeader($k, $v);
 			else if(!headers_sent()) header("$k: $v");
@@ -387,19 +386,19 @@ class Http {
 
 
 	/**
-	 * Construct an SS_HTTPResponse that will deliver a file to the client
+	 * Construct an response that will deliver a file to the client
 	 *
 	 * @static
 	 * @param $fileData
 	 * @param $fileName
 	 * @param null $mimeType
-	 * @return SS_HTTPResponse
+	 * @return Response
 	 */
 	public static function send_file($fileData, $fileName, $mimeType = null) {
 		if(!$mimeType) {
 			$mimeType = self::get_mime_type($fileName);
 		}
-		$response = new SS_HTTPResponse($fileData);
+		$response = new Response($fileData);
 		$response->setHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
 		$response->setHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
 		$response->setHeader("Content-Length", strlen($fileData));

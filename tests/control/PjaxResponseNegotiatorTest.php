@@ -1,11 +1,14 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 class PjaxResponseNegotiatorTest extends SapphireTest {
 	
 	public function testDefaultCallbacks() {
 		$negotiator = new PjaxResponseNegotiator(array(
 			'default' => function() {return 'default response';},
 		));
-		$request = new SS_HTTPRequest('GET', '/'); // not setting pjax header
+		$request = new Request('GET', '/'); // not setting pjax header
 		$response = $negotiator->respond($request);
 		$this->assertEquals('default response', $response->getBody());
 	}
@@ -15,7 +18,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 			'default' => function() {return 'default response';},
 			'myfragment' => function() {return 'myfragment response';},
 		));
-		$request = new SS_HTTPRequest('GET', '/');
+		$request = new Request('GET', '/');
 		$request->setHeader('X-Pjax', 'myfragment');
 		$response = $negotiator->respond($request);
 		$this->assertEquals('{"myfragment":"myfragment response"}', $response->getBody());
@@ -27,7 +30,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 			'myfragment' => function() {return 'myfragment response';},
 			'otherfragment' => function() {return 'otherfragment response';},
 		));
-		$request = new SS_HTTPRequest('GET', '/');
+		$request = new Request('GET', '/');
 		$request->setHeader('X-Pjax', 'myfragment,otherfragment');
 		$request->setHeader('Accept', 'text/json');
 		$response = $negotiator->respond($request);
@@ -44,7 +47,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 			'beta' => function() {return 'beta response';}
 		));
 
-		$request = new SS_HTTPRequest('GET', '/');
+		$request = new Request('GET', '/');
 		$request->setHeader('X-Pjax', 'alpha');
 		$request->setHeader('Accept', 'text/json');
 

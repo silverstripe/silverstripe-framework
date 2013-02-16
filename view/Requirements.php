@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Requirements tracker, for javascript and css.
  * @todo Document the requirements tracker, and discuss it with the others.
@@ -223,7 +225,7 @@ class Requirements {
 		return self::backend()->includeInHTML($templateFile, $content);
 	}
 
-	public static function include_in_response(SS_HTTPResponse $response) {
+	public static function include_in_response(Response $response) {
 		return self::backend()->include_in_response($response);
 	}
 
@@ -723,7 +725,7 @@ class Requirements_Backend {
 	/**
 	 * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the HTTP response
 	 */
-	public function include_in_response(SS_HTTPResponse $response) {
+	public function include_in_response(Response $response) {
 		$this->process_combined_files();
 		$jsRequirements = array();
 		$cssRequirements = array();

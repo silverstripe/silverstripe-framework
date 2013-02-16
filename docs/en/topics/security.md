@@ -57,7 +57,7 @@ your data.
 *  `DB::query()`
 *  `Director::urlParams()`
 *  `Controller->requestParams`, `Controller->urlParams`
-*  `SS_HTTPRequest` data
+*  `Request` data
 *  GET/POST data passed to a form method
 
 Example:

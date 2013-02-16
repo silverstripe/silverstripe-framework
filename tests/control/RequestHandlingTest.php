@@ -1,7 +1,11 @@
 <?php
 
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\ResponseException;
+
 /**
- * Tests for RequestHandler and SS_HTTPRequest.
+ * Tests for RequestHandler and request.
  * We've set up a simple URL handling model based on 
  */
 class RequestHandlingTest extends FunctionalTest {
@@ -50,7 +54,7 @@ class RequestHandlingTest extends FunctionalTest {
 	
 	public function testConstructedWithNullRequest() {
 		$r = new RequestHandler();
-		$this->assertInstanceOf('SS_HTTPRequest', $r->getRequest());
+		$this->assertInstanceOf('SilverStripe\\Framework\\Http\\Request', $r->getRequest());
 	}
 	
 	public function testRequestHandlerChainingAllParams() {
@@ -74,7 +78,7 @@ class RequestHandlingTest extends FunctionalTest {
 		
 	public function testPostRequests() {
 		/* The HTTP Request handler can trigger special behaviour for GET and POST. */
-		$response = Director::test(new SS_HTTPRequest(
+		$response = Director::test(new Request(
 			'POST', 'testGoodBase1/TestForm', null, array('post' => array("MyField" => 3))
 		));
 		$this->assertEquals("Form posted", $response->getBody());
@@ -90,7 +94,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("MyField requested", $response->getBody());
 		
 		/* We can also make a POST request on a form field, which could be used for in-place editing, for example. */
-		$response = Director::test(new SS_HTTPRequest(
+		$response = Director::test(new Request(
 			'POST', 'testGoodBase1/TestForm/fields/MyField', null, array('post' => array("MyField" => 5))
 		));
 		$this->assertEquals("MyField posted, update to 5", $response->getBody());
@@ -101,7 +105,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$response = Director::test("testBadBase/method/1/2");
 		$this->assertNotEquals("This is a method on the controller: 1, 2", $response->getBody());
 
-		$response = Director::test(new SS_HTTPRequest(
+		$response = Director::test(new Request(
 			'POST', 'testBadBase/TestForm', null, array('post' => array("MyField" => 3))
 		));
 		$this->assertNotEquals("Form posted", $response->getBody());
@@ -352,11 +356,11 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 	
 	public function throwexception() {
-		throw new SS_HTTPResponse_Exception('This request was invalid.', 400);
+		throw new ResponseException('This request was invalid.', 400);
 	}
 	
 	public function throwresponseexception() {
-		throw new SS_HTTPResponse_Exception(new SS_HTTPResponse('There was an internal server error.', 500));
+		throw new ResponseException(new Response('There was an internal server error.', 500));
 	}
 	
 	public function throwhttperror() {

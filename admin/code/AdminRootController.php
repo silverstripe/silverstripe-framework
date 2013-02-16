@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Framework\Control\Router;
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
 
 class AdminRootController extends Controller {
 
@@ -69,13 +71,13 @@ class AdminRootController extends Controller {
 		}
 	}
 
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(Request $request, DataModel $model) {
 		// If this is the final portion of the request (i.e. the URL is just /admin), direct to the default panel
 		if ($request->allParsed()) {
 			$base = $this->config()->url_base;
 			$segment = Config::inst()->get($this->config()->default_panel, 'url_segment');
 
-			$this->response = new SS_HTTPResponse();
+			$this->response = new Response();
 			$this->redirect(Controller::join_links($base, $segment));
 			return $this->response;
 		}

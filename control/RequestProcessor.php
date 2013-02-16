@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Handles registering and executing pre- and post-request filters, which allow
  * hooking into the overall request process.
@@ -43,13 +47,13 @@ class RequestProcessor {
 	 * If any of the filters return FALSE, then method stops further executing
 	 * and returns FALSE.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @param Session $session
 	 * @param DataModel $model
 	 * @return bool
 	 */
 	public function preRequest(
-		SS_HTTPRequest $request, Session $session, DataModel $model
+		Request $request, Session $session, DataModel $model
 	) {
 		foreach($this->filters as $filter) {
 			if($filter instanceof PreRequestFilter) {
@@ -68,13 +72,13 @@ class RequestProcessor {
 	 * If any of the filters return FALSE, the method stops executing further
 	 * filters and returns FALSE.
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @param SS_HTTPResponse $response
+	 * @param Request $request
+	 * @param Response $response
 	 * @param DataModel $model
 	 * @return bool
 	 */
 	public function postRequest(
-		SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model
+		Request $request, Response $response, DataModel $model
 	) {
 		foreach($this->filters as $filter) {
 			if($filter instanceof PostRequestFilter) {
