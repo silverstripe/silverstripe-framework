@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Http;
+
 /**
  * Base controller class.
  * Controllers are the cornerstone of all site functionality in SilverStripe.  The {@link Director}

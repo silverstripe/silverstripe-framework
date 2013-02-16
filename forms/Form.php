@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Http;
+
 /**
  * Base class for all forms.
  * The form class is an extensible base for all forms on a SilverStripe application.  It can be used

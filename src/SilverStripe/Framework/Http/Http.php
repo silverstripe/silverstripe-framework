@@ -1,12 +1,23 @@
 <?php
+
+namespace SilverStripe\Framework\Http;
+
+use Config;
+use Convert;
+use Director;
+use Exception;
+use File;
+use finfo;
+use InvalidArgumentException;
+use SS_HTTPResponse;
+
 /**
- * A class with HTTP-related helpers.
- * Like Debug, this is more a bundle of methods than a class ;-)
- * 
+ * A collection of HTTP utility functions.
+ *
  * @package framework
- * @subpackage misc
+ * @subpackage http
  */
-class HTTP {
+class Http {
 
 	protected static $cache_age = 0;
 
@@ -41,7 +52,8 @@ class HTTP {
 	 */
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
-		return HTTP::urlRewriter($html, function($url) {
+
+		return self::urlRewriter($html, function($url) {
 			return Director::absoluteURL($url, true);
 		});
 	}
@@ -285,8 +297,7 @@ class HTTP {
 	public static function add_cache_headers($body = null) {
 		// Validate argument
 		if($body && !($body instanceof SS_HTTPResponse)) {
-			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
-			$body = null;
+			throw new Exception('The body must be a response object');
 		}
 
 		// Development sites have frequently changing templates; this can get stuffed up by the code

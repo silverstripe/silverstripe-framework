@@ -13,7 +13,9 @@ class SS_ClassLoader {
 	 *
 	 * @var array
 	 */
-	public static $legacy_classes = array();
+	public static $legacy_classes = array(
+		'http' => 'SilverStripe\\Framework\\Http\\Http'
+	);
 
 	/**
 	 * @var SS_ClassLoader

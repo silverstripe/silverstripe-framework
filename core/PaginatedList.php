@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Http;
+
 /**
  * A decorator that wraps around a data list in order to provide pagination.
  *

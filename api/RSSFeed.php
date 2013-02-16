@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Http;
+
 /**
  * RSSFeed class
  *

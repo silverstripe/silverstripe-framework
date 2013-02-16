@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Http;
+
 /**
  * Standard Change Password Form
  * @package framework
