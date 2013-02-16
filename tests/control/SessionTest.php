@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Tests to cover the {@link Session} class
  *

@@ -2,6 +2,7 @@
 
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Represents a test usage session of a web-app

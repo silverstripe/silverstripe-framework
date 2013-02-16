@@ -2,6 +2,7 @@
 
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.

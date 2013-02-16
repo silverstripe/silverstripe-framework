@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Framework\Http\Http;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Standard Change Password Form

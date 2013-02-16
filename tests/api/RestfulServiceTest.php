@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * @package framework

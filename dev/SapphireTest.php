@@ -2,6 +2,7 @@
 require_once 'TestRunner.php';
 
 use SilverStripe\Framework\Http\Cookie;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Test case class for the Sapphire framework.

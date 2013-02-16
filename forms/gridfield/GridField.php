@@ -4,6 +4,7 @@ use SilverStripe\Framework\Control\Router;
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
 use SilverStripe\Framework\Http\ResponseException;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Displays a {@link SS_List} in a grid format.

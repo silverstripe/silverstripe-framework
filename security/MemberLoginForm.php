@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Log-in form for the "member" authentication method
  * @package framework

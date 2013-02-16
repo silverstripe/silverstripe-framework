@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Implements a basic security model

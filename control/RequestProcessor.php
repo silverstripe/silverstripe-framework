@@ -2,6 +2,7 @@
 
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Handles registering and executing pre- and post-request filters, which allow

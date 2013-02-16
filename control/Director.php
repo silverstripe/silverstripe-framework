@@ -5,6 +5,7 @@ use SilverStripe\Framework\Http\Cookie;
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
 use SilverStripe\Framework\Http\ResponseException;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Director is responsible for processing URLs, and providing environment information.

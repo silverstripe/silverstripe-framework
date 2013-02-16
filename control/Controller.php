@@ -4,6 +4,7 @@ use SilverStripe\Framework\Http\Cookie;
 use SilverStripe\Framework\Http\Http;
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Base controller class.

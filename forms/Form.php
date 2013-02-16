@@ -3,6 +3,7 @@
 use SilverStripe\Framework\Http\Http;
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * Base class for all forms.

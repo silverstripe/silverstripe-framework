@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Session;
 
 /**
  * A filter which is run before a request is handled.
