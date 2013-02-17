@@ -29,6 +29,7 @@ class ContentController extends Controller {
 	public static $allowed_actions = array (
 		'PageComments',
 		'successfullyinstalled',
+		'handleWidget',
 		'deleteinstallfiles' // secured through custom code
 	);
 	
