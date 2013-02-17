@@ -250,7 +250,7 @@ form.small .field, .field.small {
 	}
 
 	input.time { 
-		width: ($grid-x * 8); // smaller time field, since input is restricted
+		width: ($grid-x * 11); // smaller time field, since input is restricted
 	}
 	
 	/* Hides borders in settings/access. Activated from JS */
