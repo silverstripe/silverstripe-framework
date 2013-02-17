@@ -1280,6 +1280,8 @@ ErrorDocument 500 /assets/error-500.html
 
 <IfModule mod_alias.c>
 	RedirectMatch 403 /silverstripe-cache(/|$)
+	RedirectMatch 403 /vendor(/|$)
+	RedirectMatch 403 /composer\.(json|lock)
 </IfModule>
 
 <IfModule mod_rewrite.c>
