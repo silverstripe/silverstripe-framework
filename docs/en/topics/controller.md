@@ -83,16 +83,20 @@ way to perform checks against permission codes or custom logic.
 
 There's a couple of rules guiding these checks:
 
- * Each controller is only responsible for access control on the methods it defines
+ * Each class is only responsible for access control on the methods it defines
+ * If `$allowed_actions` is defined as an empty array, no actions are allowed
+ * If `$allowed_actions` is undefined, all public methods on the specific class are allowed 
+   (not recommended)
+ * Access checks on parent classes need to be overwritten via the Config API
+ * Only public methods can be made accessible
  * If a method on a parent class is overwritten, access control for it has to be redefined as well
- * An action named "index" is whitelisted by default
- * A wildcard (`*`) can be used to define access control for all methods (incl. methods on parent classes)
- * Specific method entries in `$allowed_actions` overrule any `*` settings
+ * An action named "index" is whitelisted by default, 
+   unless allowed_actions is defined as an empty array,
+   or the action is specifically restricted in there.
  * Methods returning forms also count as actions which need to be defined
  * Form action methods (targets of `FormAction`) should NOT be included in `$allowed_actions`,
    they're handled separately through the form routing (see the ["forms" topic](/topics/forms))
  * `$allowed_actions` can be defined on `Extension` classes applying to the controller.
-
 
 If the permission check fails, SilverStripe will return a "403 Forbidden" HTTP status.
 
@@ -157,6 +161,21 @@ through `/fastfood/drivethrough/` to use the same order function.
 	    public static $url_handlers = array(
 	        'drivethrough/$Action/$ID/$Name' => 'order'
 	    );
+
+## Access Control
+
+### Through $allowed_actions
+
+ * If `$allowed_actions` is undefined, `null` or `array()`, no actions are accessible
+ * Each class is only responsible for access control on the methods it defines
+ * Access checks on parent classes need to be overwritten via the Config API
+ * Only public methods can be made accessible
+ * If a method on a parent class is overwritten, access control for it has to be redefined as well
+ * An action named "index" is whitelisted by default
+ * Methods returning forms also count as actions which need to be defined
+ * Form action methods (targets of `FormAction`) should NOT be included in `$allowed_actions`,
+   they're handled separately through the form routing (see the ["forms" topic](/topics/forms))
+ * `$allowed_actions` can be defined on `Extension` classes applying to the controller.
 
 ## URL Patterns
 

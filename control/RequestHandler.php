@@ -231,16 +231,37 @@ class RequestHandler extends ViewableData {
 	}
 	
 	/**
-	 * Get a unified array of allowed actions on this controller (if such data is available) from both the controller
-	 * ancestry and any extensions.
+	 * Get a array of allowed actions defined on this controller,
+	 * any parent classes or extensions.
+	 * 
+	 * Caution: Since 3.1, allowed_actions definitions only apply
+	 * to methods on the controller they're defined on,
+	 * so it is recommended to use the $class argument
+	 * when invoking this method.
 	 *
+	 * @param String $limitToClass
 	 * @return array|null
 	 */
-	public function allowedActions() {
+	public function allowedActions($limitToClass = null) {
+		if($limitToClass) {
+			$actions = Config::inst()->get(
+				$limitToClass, 
+				'allowed_actions', 
+				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+			);
+		} else {
+			$actions = Config::inst()->get(get_class($this), 'allowed_actions');
+		}
 
-		$actions = Config::inst()->get(get_class($this), 'allowed_actions');
+		if(is_array($actions)) {
+			if(array_key_exists('*', $actions)) {
+				Deprecation::notice(
+					'3.0', 
+					'Wildcards (*) are no longer valid in $allowed_actions due their ambiguous '
+					. ' and potentially insecure behaviour. Please define all methods explicitly instead.'
+				);
+			}
 
-		if($actions) {
 			// convert all keys and values to lowercase to 
 			// allow for easier comparison, unless it is a permission code
 			$actions = array_change_key_case($actions, CASE_LOWER);
@@ -250,35 +271,48 @@ class RequestHandler extends ViewableData {
 			}
 
 			return $actions;
+		} else {
+			return null;
 		}
 	}
 	
 	/**
-	 * Checks if this request handler has a specific action (even if the current user cannot access it).
+	 * Checks if this request handler has a specific action, 
+	 * even if the current user cannot access it.
+	 * Includes class ancestry and extensions in the checks.
 	 *
 	 * @param string $action
 	 * @return bool
 	 */
 	public function hasAction($action) {
 		if($action == 'index') return true;
+
+		// Don't allow access to any non-public methods (inspect instance plus all extensions)
+		$insts = array_merge(array($this), (array)$this->getExtensionInstances());
+		foreach($insts as $inst) {
+			if(!method_exists($inst, $action)) continue;
+			$r = new ReflectionClass(get_class($inst));
+			$m = $r->getMethod($action);
+			if(!$m || !$m->isPublic()) return false;
+		}
 		
 		$action  = strtolower($action);
 		$actions = $this->allowedActions();
 
-		// Check if the action is defined in the allowed actions as either a
-		// key or value. Note that if the action is numeric, then keys are not
-		// searched for actions to prevent actual array keys being recognised
-		// as actions.
+		// Check if the action is defined in the allowed actions of any ancestry class
+		// as either a key or value. Note that if the action is numeric, then keys are not
+		// searched for actions to prevent actual array keys being recognised as actions.
 		if(is_array($actions)) {
 			$isKey   = !is_numeric($action) && array_key_exists($action, $actions);
 			$isValue = in_array($action, $actions, true);
-			$isWildcard = (in_array('*', $actions) && $this->checkAccessAction($action));
-			if($isKey || $isValue || $isWildcard) return true;
+			if($isKey || $isValue) return true;
 		}
 
-		if(!is_array($actions) || !$this->config()->get('allowed_actions',
-				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
-
+		$actionsWithoutExtra = $this->config()->get(
+			'allowed_actions',
+			Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+		);
+		if(!is_array($actions) || !$actionsWithoutExtra) {
 			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
 		}
 		
@@ -291,69 +325,66 @@ class RequestHandler extends ViewableData {
 	 */
 	public function checkAccessAction($action) {
 		$actionOrigCasing = $action;
-		$action            = strtolower($action);
-		$allowedActions    = $this->allowedActions();
+		$action = strtolower($action);
 
-		if($allowedActions)  {
-			// check for specific action rules first, and fall back to global rules defined by asterisk
-			foreach(array($action,'*') as $actionOrAll) {
-				// check if specific action is set
-				if(isset($allowedActions[$actionOrAll])) {
-					$test = $allowedActions[$actionOrAll];
-					if($test === true || $test === 1 || $test === '1') {
-						// Case 1: TRUE should always allow access
-						return true;
-					} elseif(substr($test, 0, 2) == '->') {
-						// Case 2: Determined by custom method with "->" prefix
-						list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
-						return call_user_func_array(array($this, $method), $arguments);
-					} else {
-						// Case 3: Value is a permission code to check the current member against
-						return Permission::check($test);
-					}
-					
-				} elseif((($key = array_search($actionOrAll, $allowedActions, true)) !== false) && is_numeric($key)) {
-					// Case 4: Allow numeric array notation (search for array value as action instead of key)
-					return true;
-				}
+		$isAllowed = false;
+		$isDefined = false;
+		if($this->hasMethod($actionOrigCasing) || !$action || $action == 'index') {
+			// Get actions for this specific class (without inheritance)
+			$definingClass = null;
+			$insts = array_merge(array($this), (array)$this->getExtensionInstances());
+			foreach($insts as $inst) {
+				if(!method_exists($inst, $action)) continue;
+				$r = new ReflectionClass(get_class($inst));
+				$m = $r->getMethod($actionOrigCasing);
+				$definingClass = $m->getDeclaringClass()->getName();	
 			}
-		}
-		
-		// If we get here an the action is 'index', then it hasn't been specified, which means that
-		// it should be allowed.
-		if($action == 'index' || empty($action)) return true;
 
-		// Get actions defined for this specific class
-		$relevantActions = null;
-		if($allowedActions !== null && method_exists($this, $action)) {
-			$r = new ReflectionClass(get_class($this));
-			$m = $r->getMethod($actionOrigCasing);
-			$relevantActions = Object::uninherited_static(
-				$m->getDeclaringClass()->getName(), 
-				'allowed_actions'
-			);
-		}
+			$allowedActions = $this->allowedActions($definingClass);	
 
-		// If no allowed_actions are provided on in the whole inheritance chain,
-		// or they aren't provided on the specific class...
-		if($allowedActions === null || $relevantActions === null) {
-			// ... only let through actions that aren't handled by
-			// magic methods we test this by calling the unmagic method_exists. 
-			if(method_exists($this, $action)) {
-				$r = new ReflectionClass(get_class($this));
-				if($r->hasMethod($actionOrigCasing)) {
-					$m = $r->getMethod($actionOrigCasing);
-					return ($m && is_subclass_of($m->getDeclaringClass()->getName(), 'RequestHandler'));
+			// check if specific action is set
+			if(isset($allowedActions[$action])) {
+				$isDefined = true;
+				$test = $allowedActions[$action];
+				if($test === true || $test === 1 || $test === '1') {
+					// TRUE should always allow access
+					$isAllowed = true;
+				} elseif(substr($test, 0, 2) == '->') {
+					// Determined by custom method with "->" prefix
+					list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
+					$definingClassInst = Injector::inst()->get($definingClass);
+					$isAllowed = call_user_func_array(array($definingClassInst, $method), $arguments);
 				} else {
-					throw new Exception("method_exists() true but ReflectionClass can't find method");
+					// Value is a permission code to check the current member against
+					$isAllowed = Permission::check($test);
 				}
-			} else if(!$this->hasMethod($action)){
-				// Return true so that a template can handle this action
-				return true;
+			} elseif(
+				is_array($allowedActions) 
+				&& (($key = array_search($action, $allowedActions, true)) !== false) 
+				&& is_numeric($key)
+			) {
+				// Allow numeric array notation (search for array value as action instead of key)
+				$isDefined = true;
+				$isAllowed = true;
+			} elseif(is_array($allowedActions) && !count($allowedActions)) {
+				// If defined as empty array, deny action
+				$isAllowed = false;
+			} elseif($allowedActions === null) {
+				// If undefined, allow action
+				$isAllowed = true;
 			}
+
+			// If we don't have a match in allowed_actions,
+			// whitelist the 'index' action as well as undefined actions.
+			if(!$isDefined && ($action == 'index' || empty($action))) {
+				$isAllowed = true;
+			}
+		} else {
+			// Doesn't have method, set to true so that a template can handle this action
+			$isAllowed = true;
 		}
-		
-		return false;
+
+		return $isAllowed;
 	}
 	
 	/**
