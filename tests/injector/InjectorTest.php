@@ -523,12 +523,25 @@ class InjectorTest extends SapphireTest {
 		
 		$this->assertInstanceOf('OtherTestObject', $item->property->property);
 	}
+	
+	public function testCreateConfiggedObjectWithCustomConstructorArgs() {
+		// need to make sure that even if the config defines some constructor params, 
+		// that we take our passed in constructor args instead
+		$injector = new Injector(array('locator' => 'InjectorTestConfigLocator'));
+		
+		$item = $injector->create('ConfigConstructor', 'othervalue');
+		$this->assertEquals($item->property, 'othervalue');
+	}
 }
 
 class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator implements TestOnly {
 	public function locateConfigFor($name) {
 		if ($name == 'TestObject') {
 			return array('class' => 'ConstructableObject', 'constructor' => array('%$OtherTestObject'));
+		}
+
+		if ($name == 'ConfigConstructor') {
+			return array('class' => 'ConstructableObject', 'constructor' => array('value'));
 		}
 
 		return parent::locateConfigFor($name);
