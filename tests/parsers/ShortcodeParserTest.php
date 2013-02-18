@@ -18,6 +18,19 @@ class ShortcodeParserTest extends SapphireTest {
 	 * Tests that valid short codes that have not been registered are not replaced.
 	 */
 	public function testNotRegisteredShortcode() {
+		ShortcodeParser::$error_behavior = ShortcodeParser::STRIP;
+		$this->assertEquals(
+			'',
+			$this->parser->parse('[not_shortcode]')
+		);
+
+		ShortcodeParser::$error_behavior = ShortcodeParser::WARN;
+		$this->assertEquals(
+			'<strong class="warning">[not_shortcode]</strong>',
+			$this->parser->parse('[not_shortcode]')
+		);
+		
+		ShortcodeParser::$error_behavior = ShortcodeParser::LEAVE;
 		$this->assertEquals('[not_shortcode]',
 			$this->parser->parse('[not_shortcode]'));
 		$this->assertEquals('[not_shortcode /]',
@@ -26,11 +39,16 @@ class ShortcodeParserTest extends SapphireTest {
 			$this->parser->parse('[not_shortcode,foo="bar"]'));
 		$this->assertEquals('[not_shortcode]a[/not_shortcode]',
 			$this->parser->parse('[not_shortcode]a[/not_shortcode]'));
+		$this->assertEquals('[/not_shortcode]',
+			$this->parser->parse('[/not_shortcode]'));
 	}
 	
 	public function testSimpleTag() {
-		$tests = array('[test_shortcode]', '[test_shortcode ]', '[test_shortcode,]', '[test_shortcode/]',
-			'[test_shortcode /]');
+		$tests = array(
+			'[test_shortcode]', 
+			'[test_shortcode ]', '[test_shortcode,]', '[test_shortcode, ]'.
+			'[test_shortcode/]', '[test_shortcode /]', '[test_shortcode,/]', '[test_shortcode, /]'
+		);
 		
 		foreach($tests as $test) {
 			$this->parser->parse($test);
@@ -43,9 +61,9 @@ class ShortcodeParserTest extends SapphireTest {
 	
 	public function testOneArgument() {
 		$tests = array (
-			'[test_shortcode,foo="bar"]',
-			"[test_shortcode,foo='bar']",
-			'[test_shortcode,foo  =  "bar"  /]'
+			'[test_shortcode foo="bar"]', '[test_shortcode,foo="bar"]',
+			"[test_shortcode foo='bar']", "[test_shortcode,foo='bar']",
+			'[test_shortcode  foo  =  "bar"  /]', '[test_shortcode,  foo  =  "bar"  /]'
 		);
 		
 		foreach($tests as $test) {
@@ -58,7 +76,7 @@ class ShortcodeParserTest extends SapphireTest {
 	}
 	
 	public function testMultipleArguments() {
-		$this->parser->parse('[test_shortcode,foo = "bar",bar=\'foo\',baz="buz"]');
+		$this->parser->parse('[test_shortcode foo = "bar",bar=\'foo\', baz="buz"]');
 		
 		$this->assertEquals(array('foo' => 'bar', 'bar' => 'foo', 'baz' => 'buz'), $this->arguments);
 		$this->assertEquals('', $this->contents);
@@ -86,7 +104,7 @@ class ShortcodeParserTest extends SapphireTest {
 		$this->assertEquals('[test_shortcode]content[/test_shortcode]',
 			$this->parser->parse('[[test_shortcode]content[/test_shortcode]]'));
 	}
-	
+
 	public function testUnquotedArguments() {
 		$this->assertEquals('', $this->parser->parse('[test_shortcode,foo=bar,baz = buz]'));
 		$this->assertEquals(array('foo' => 'bar', 'baz' => 'buz'), $this->arguments);
@@ -111,6 +129,42 @@ class ShortcodeParserTest extends SapphireTest {
 		$this->assertEquals('', $this->parser->parse('[test_shortcode][test_shortcode]'));
 	}
 	
+	protected function assertEqualsIgnoringWhitespace($a, $b, $message = null) {
+		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
+	}
+	
+	public function testtExtract() {
+		// Left extracts to before the current block
+		$this->assertEqualsIgnoringWhitespace(
+			'Code<div>FooBar</div>', 
+			$this->parser->parse('<div>Foo[test_shortcode class=left]Code[/test_shortcode]Bar</div>')
+		);
+
+		// Even if the immediate parent isn't a the current block
+		$this->assertEqualsIgnoringWhitespace(
+			'Code<div>Foo<b>BarBaz</b>Qux</div>',
+			$this->parser->parse('<div>Foo<b>Bar[test_shortcode class=left]Code[/test_shortcode]Baz</b>Qux</div>')
+		);
+
+		// Center splits the current block
+		$this->assertEqualsIgnoringWhitespace(
+			'<div>Foo</div>Code<div>Bar</div>', 
+			$this->parser->parse('<div>Foo[test_shortcode class=center]Code[/test_shortcode]Bar</div>')
+		);
+
+		// Even if the immediate parent isn't a the current block
+		$this->assertEqualsIgnoringWhitespace(
+			'<div>Foo<b>Bar</b></div>Code<div><b>Baz</b>Qux</div>', 
+			$this->parser->parse('<div>Foo<b>Bar[test_shortcode class=center]Code[/test_shortcode]Baz</b>Qux</div>')
+		);
+		
+		// No class means don't extract
+		$this->assertEqualsIgnoringWhitespace(
+			'<div>FooCodeBar</div>',
+			$this->parser->parse('<div>Foo[test_shortcode]Code[/test_shortcode]Bar</div>')
+		);
+	}
+
 	// -----------------------------------------------------------------------------------------------------------------
 	
 	/**
