@@ -151,7 +151,8 @@ class SS_HTTPResponse {
 	public function setBody($body) {
 		$this->body = $body;
 		
-		// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
+		// Set content-length in bytes. Use mbstring to avoid problems with 
+		// mb_internal_encoding() and mbstring.func_overload
 		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
 	}
 	
@@ -232,7 +233,11 @@ class SS_HTTPResponse {
 			} else {
 			    // It's critical that these status codes are sent; we need to report a failure if not.
 			    if($this->statusCode >= 300) {
-			        user_error("Couldn't set response type to $this->statusCode because of output on line $line of $file", E_USER_WARNING);
+			        user_error(
+			        	"Couldn't set response type to $this->statusCode because " .
+			        	"of output on line $line of $file", 
+			        	E_USER_WARNING
+			        );
 			    }
 			}
 			

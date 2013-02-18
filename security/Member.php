@@ -426,7 +426,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
 		Cookie::forceExpiry('alc_enc');
 
-		// Switch back to live in order to avoid infinite loops when redirecting to the login screen (if this login screen is versioned)
+		// Switch back to live in order to avoid infinite loops when 
+		// redirecting to the login screen (if this login screen is versioned)
 		Session::clear('readingMode');
 
 		$this->write();
