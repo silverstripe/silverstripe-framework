@@ -230,7 +230,7 @@ class Debug {
 		if(Director::isDev()) {
 			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
 		} else {
-		    return false;
+			return false;
 		}
 	}
 
@@ -278,8 +278,8 @@ class Debug {
 		if(Director::isDev()) {
 			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		} else {
-		    return false;
-	    }
+			return false;
+		}
 	}
 
 	/**
