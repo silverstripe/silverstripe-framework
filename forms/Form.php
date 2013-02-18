@@ -289,7 +289,7 @@ class Form extends RequestHandler {
 			$this->controller->hasMethod($funcName)
 			&& !$this->controller->checkAccessAction($funcName)
 			// If a button exists, allow it on the controller
-			&& !$this->actions->fieldByName('action_' . $funcName)
+			&& !$this->actions->dataFieldByName('action_' . $funcName)
 		) {
 			return $this->httpError(
 				403, 
