@@ -588,7 +588,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 			$this->cachedResponse = new RestfulService_Response($content);
 		}
 		else {
-			$this->cachedResponse->setBody = $content;
+			$this->cachedResponse->setBody($content);
 		}
 	}
 	
