@@ -146,9 +146,10 @@ class ShortcodeParser {
 	);
 
 	private static $tagrx = '/
-		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>             | # HTML Tag - skip attribute scoped tags
-		(?<!\[) \[   (?<open>\w+) (?<attrs>.*?) (?<selfclosed>\/?) \] (?!\])  | # Opening tag
-		(?<!\[) \[\/ (?<close>\w+) \] (?!\])                                    # Closing tag
+		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>    |   # HTML Tag - skip attribute scoped tags
+		\[   (?<escaped>\[.*?\]) \]                                  |   # Escaped block
+		\[   (?<open>\w+) (?<attrs>.*?) (?<selfclosed>\/?) \]        |   # Opening tag
+		\[\/ (?<close>\w+) \]                                            # Closing tag
 /x';
 
 	private static $attrrx = '/
@@ -180,11 +181,21 @@ class ShortcodeParser {
 	 * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
 	 * with "content" set to the text between the tags
 	 */
-	protected function extractTags($content) {
+	protected function extractTags(&$content) {
 		$tags = array();
+		$escapes = array();
 
 		if(preg_match_all(self::$tagrx, $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
 			foreach($matches as $match) {
+				// Record escaped tags
+				if (!empty($match['escaped'][0])) {
+					$escapes[] = array(
+						's' => $match[0][1],
+						'e' => $match[0][1] + strlen($match[0][0]),
+						'content' => $match['escaped']
+					);
+				}
+				
 				// Ignore any elements
 				if (empty($match['open'][0]) && empty($match['close'][0])) continue;
 				
@@ -242,6 +253,12 @@ class ShortcodeParser {
 			}
 		}
 		
+		$i = count($escapes);
+		while($i--) {
+			$escape = $escapes[$i];
+			$content = substr_replace($content, $escape['content'], $escape['s'], $escape['e'] - $escape['s']);
+		}
+
 		return array_values($tags);
 	}
 
@@ -446,18 +463,31 @@ class ShortcodeParser {
 	 * @return string
 	 */
 	public function parse($content) {
+		// If no shortcodes defined, don't try and parse any
 		if(!$this->shortcodes) return $content;
-		
+
+		// If no content, don't try and parse it
+		if (!trim($content)) return $content;
+
 		// First we operate in text mode, replacing any shortcodes with marker elements so that later we can
 		// use a proper DOM
 		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
-		
+
 		// Now parse the result into a DOM
 		require_once(THIRDPARTY_PATH.'/html5lib/HTML5/Parser.php');
+		$bases = HTML5_Parser::parseFragment(trim($content), 'div');
+
+		// If we couldn't parse the HTML, error out
+		if (!$bases || !$bases->length) {
+			if(self::$error_behavior == self::ERROR) {
+				user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERRROR);
+			}
+			else {
+				return $content;
+			}
+		}
 
 		$res = '';
-		
-		$bases = HTML5_Parser::parseFragment(trim($content), 'div');
 		$html = $bases->item(0)->parentNode;
 		$doc = $html->ownerDocument;
 
@@ -497,8 +527,8 @@ class ShortcodeParser {
 		}
 		
 		foreach($html->childNodes as $child) $res .= $doc->saveHTML($child);
-		
-		return preg_replace('/\[\[/', '[', preg_replace('/\]\]/', ']', $res));
+
+		return $res;
 	}
 	
 	
