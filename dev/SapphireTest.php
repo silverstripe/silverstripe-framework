@@ -197,6 +197,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Security::$database_is_ready = null;
 		
 		$this->originalTheme = SSViewer::current_theme();
+
+		// Add controller-name auto-routing
+		Config::inst()->update('Director', 'rules', array(
+			'$Controller//$Action/$ID/$OtherID' => '*'
+		));
 		
 		if(class_exists('SiteTree')) {
 			// Save nested_urls state, so we can restore it later

@@ -327,7 +327,7 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 
 class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
-
+	
 	public function Form() {
 		$field = new GridField('testfield', 'testfield', GridFieldDetailFormTest_PeopleGroup::get()->sort('Name'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
