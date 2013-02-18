@@ -8,7 +8,7 @@
 
 // Temporary. To be hidden and replaced with javascript tooltip
 .ss-uploadfield-view-allowed-extensions{
-	padding-top:20px;
+	padding-top:5px;
 	clear:both;
 	max-width:750px;
 	display:block;
@@ -319,7 +319,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			height: 54px;
 			width: 360px;
 			float: left;
-			text-align: center;
+			text-align: left;
 
 			&.active{
 				&.hover{
@@ -329,14 +329,14 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			div {
 				color:lighten($color-text, 10%);
 				text-shadow: 0px 1px 0px #fff;
-				background: url('../images/upload.png') 0 12px no-repeat;
+				background: url('../images/upload.png') 0 10px no-repeat;
 				z-index:1;
-				padding: 20px 38px 0;
+				padding: 6px 48px 0;
 				line-height: 25px;
 				font-size: 20px;
 				font-weight: bold;
 				display: inline-block;
-				margin:0 auto;
+				margin-left: 83px;
 				span {
 					display: block;
 					font-size: 12px;
