@@ -15,8 +15,8 @@ echo ""
 # Fetch all dependencies
 # TODO Replace with different composer.json variations
 
-echo "Checking out installer@3.1"
-git clone --depth=100 --quiet -b 3.1 git://github.com/silverstripe/silverstripe-installer.git $BUILD_DIR
+echo "Checking out installer@master"
+git clone --depth=100 --quiet -b master git://github.com/silverstripe/silverstripe-installer.git $BUILD_DIR
 
 echo "Checking out sqlite3@master"
 git clone --depth=100 --quiet git://github.com/silverstripe-labs/silverstripe-sqlite3.git $BUILD_DIR/sqlite3
