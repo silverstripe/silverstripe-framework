@@ -11,6 +11,14 @@ class FormTest extends FunctionalTest {
 		'FormTest_Player',
 		'FormTest_Team',
 	);
+
+	function setUp() {
+		parent::setUp();
+
+		Config::inst()->update('Director', 'rules', array(
+			'FormTest_Controller' => 'FormTest_Controller'
+		));
+	}
 	
 	public function testLoadDataFromRequest() {
 		$form = new Form(
@@ -537,8 +545,3 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 		return new SSViewer('BlankPage');
 	}
 }
-
-Config::inst()->update('Director', 'rules', array(
-	'FormTest_Controller' => 'FormTest_Controller'
-));
-
