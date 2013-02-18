@@ -80,5 +80,5 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div { color: #5e5e5e; text-shadow: 0px 1px 0px #fff; background: url("../images/upload.png") 0 10px no-repeat; z-index: 1; padding: 6px 48px 0; line-height: 25px; font-size: 20px; font-weight: bold; display: inline-block; margin-left: 83px; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div span { display: block; font-size: 12px; z-index: -1; margin-top: -3px; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { height: 54px; width: 277px; overflow: hidden; }
-.ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div { background-position: 0 13px; padding-top: 22px; }
+.ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div { background-position: 0 11px; padding-top: 21px; margin-left: 33px; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div span { height: 38px; font-size: 18px; line-height: 18px; }
