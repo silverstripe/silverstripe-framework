@@ -9,6 +9,10 @@
  */
 class ShortcodeParser {
 	
+	public function img_shortcode($attrs) {
+		return "<img src='".$attrs['src']."'>";
+	}
+	
 	private static $instances = array();
 	
 	private static $active_instance = 'default';
@@ -96,8 +100,345 @@ class ShortcodeParser {
 		$this->shortcodes = array();
 	}
 	
+	public function callShortcode($tag, $attributes, $content) {
+		if (!isset($this->shortcodes[$tag])) return false;
+		return call_user_func($this->shortcodes[$tag], $attributes, $content, $this, $tag);
+	}
+	
 	// --------------------------------------------------------------------------------------------------------------
 	
+	protected function removeNode($node) {
+		$node->parentNode->removeChild($node);
+	}
+	
+	protected function insertAfter($new, $after) {
+		$parent = $after->parentNode; $next = $after->nextSibling;
+		
+		if ($next) {
+			$parent->insertBefore($new, $next);
+		}
+		else {
+			$parent->appendChild($new);
+		}
+	}
+	
+	protected function insertListAfter($new, $after) {
+		$doc = $after->ownerDocument; $parent = $after->parentNode; $next = $after->nextSibling;
+
+		for ($i = 0; $i < $new->length; $i++) {
+			$imported = $doc->importNode($new->item($i), true);
+
+			if ($next) {
+				$parent->insertBefore($imported, $next);	
+			} 
+			else {
+				$parent->appendChild($imported);
+			}
+		}
+	}
+
+	private static $marker_class = '--ss-shortcode-marker';
+
+	private static $block_level_elements = array(
+		'address', 'article', 'aside', 'audio', 'blockquote', 'canvas', 'dd', 'div', 'dl', 'fieldset', 'figcaption',
+		'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
+		'pre', 'section', 'table', 'ul'
+	);
+
+	private static $tagrx = '/
+		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>             | # HTML Tag - skip attribute scoped tags
+		(?<!\[) \[   (?<open>\w+) (?<attrs>.*?) (?<selfclosed>\/?) \] (?!\])  | # Opening tag
+		(?<!\[) \[\/ (?<close>\w+) \] (?!\])                                    # Closing tag
+/x';
+
+	private static $attrrx = '/
+		([^\s\/\'"=,]+)       # Name  
+		\s* = \s*
+		(?:
+			(?:\'([^\']+)\') | # Value surrounded by \'
+			(?:"([^"]+)")    | # Value surrounded by "
+			(\w+)              # Bare value
+		)
+/x';
+
+
+	const WARN = 'warn';
+	const STRIP = 'strip';
+	const LEAVE = 'leave';
+	const ERROR = 'error';
+
+	public static $error_behavior = self::LEAVE;
+
+
+	/**
+	 * Look through a string that contains shortcode tags and pull out the locations and details
+	 * of those tags
+	 * 
+	 * Doesn't support nested shortcode tags
+	 * 
+	 * @param string $content
+	 * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
+	 * with "content" set to the text between the tags
+	 */
+	protected function extractTags($content) {
+		$tags = array();
+
+		if(preg_match_all(self::$tagrx, $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+			foreach($matches as $match) {
+				// Ignore any elements
+				if (empty($match['open'][0]) && empty($match['close'][0])) continue;
+				
+				// Pull the attributes out into a key/value hash
+				$attrs = array();
+				
+				if (!empty($match['attrs'][0])) {
+					preg_match_all(self::$attrrx, $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
+
+					foreach ($attrmatches as $attr) {
+						list($whole, $name, $value) = array_values(array_filter($attr));
+						$attrs[$name] = $value;
+					}
+				}
+				
+				// And store the indexes, tag details, etc
+				$tags[] = array(
+					'text' => $match[0][0],
+					's' => $match[0][1],
+					'e' => $match[0][1] + strlen($match[0][0]),
+					'open' =>  @$match['open'][0],
+					'close' => @$match['close'][0],
+					'attrs' => $attrs,
+					'content' => ''
+				);
+			}
+		}
+
+		$i = count($tags);
+		while($i--) {
+			if($tags[$i]['close']) {
+				// If the tag just before this one isn't the related opening tag, throw an error
+				$err = null;
+				
+				if ($i == 0) {
+					$err = 'Close tag "'.$tags[$i]['close'].'" is the first found tag, so has no related open tag';
+				}
+				else if (!$tags[$i-1]['open']) {
+					$err = 'Close tag "'.$tags[$i]['close'].'" preceded by another close tag "'.$tags[$i-1]['close'].'"';
+				}
+				else if ($tags[$i]['close'] != $tags[$i-1]['open']) {
+					$err = 'Close tag "'.$tags[$i]['close'].'" doesn\'t match preceding open tag "'.$tags[$i-1]['open'].'"';
+				}
+
+				if($err) {
+					if(self::$error_behavior == self::ERROR) user_error($err, E_USER_ERRROR);	
+				} 
+				else {
+					// Otherwise, grab content between tags, save in opening tag & delete the closing one
+					$tags[$i-1]['text'] = substr($content, $tags[$i-1]['s'], $tags[$i]['e'] - $tags[$i-1]['s']);
+					$tags[$i-1]['content'] = substr($content, $tags[$i-1]['e'], $tags[$i]['s'] - $tags[$i-1]['e']);
+					$tags[$i-1]['e'] = $tags[$i]['e'];
+					unset($tags[$i]);
+				}
+			}
+		}
+		
+		return array_values($tags);
+	}
+
+	/**
+	 * Replaces the shortcode tags extracted by extractTags with HTML element "markers", so that
+	 * we can parse the resulting string as HTML and easily mutate the shortcodes in the DOM
+	 *
+	 * @param string $content - The HTML string with [tag] style shortcodes embedded
+	 * @param array $tags - The tags extracted by extractTags
+	 * @return string - The HTML string with [tag] style shortcodes replaced by markers
+	 */
+	protected function replaceTagsWithText($content, $tags, $generator) {
+		// The string with tags replaced with markers
+		$str = '';
+		// The start index of the next tag, remembered as we step backwards through the list
+		$li = null;
+
+		$i = count($tags);
+		while($i--) {
+			if ($li === null) $tail = substr($content, $tags[$i]['e']);
+			else $tail = substr($content, $tags[$i]['e'], $li - $tags[$i]['e']);
+
+			$str = $generator($i, $tags[$i]). $tail . $str;
+			$li = $tags[$i]['s'];
+		}
+
+		return substr($content, 0, $tags[0]['s']) . $str;
+	}
+
+	/**
+	 * Replace the shortcodes in attribute values with the calculated content
+	 *
+	 * We don't use markers with attributes because there's no point, it's easier to do all the matching
+	 * in-DOM after the XML parse
+	 *
+	 * @param DOMDocument $doc
+	 */
+	protected function replaceAttributeTagsWithContent($doc) {
+		$xp = new DOMXPath($doc);
+		$attributes = $xp->query('//@*[contains(.,"[")][contains(.,"]")]');
+		$parser = $this;
+
+		for($i = 0; $i < $attributes->length; $i++) {
+			$node = $attributes->item($i);
+			$tags = $this->extractTags($node->nodeValue);
+
+			if($tags) {
+				$node->nodeValue = $this->replaceTagsWithText($node->nodeValue, $tags, function($idx, $tag) use ($parser){
+					return $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
+				});
+			}
+		}
+	}
+
+	/**
+	 * Replace the element-scoped tags with markers
+	 *
+	 * @param string $content
+	 */
+	protected function replaceElementTagsWithMarkers($content) {
+		$tags = $this->extractTags($content);
+		
+		if($tags) {
+			$markerClass = self::$marker_class;
+			
+			$content = $this->replaceTagsWithText($content, $tags, function($idx, $tag) use ($markerClass) {
+				return '<img class="'.$markerClass.'" data-tagid="'.$idx.'" />';
+			});
+		}
+		
+		return array($content, $tags);
+	}
+
+	protected function findParentsForMarkers($nodes) {
+		$parents = array();
+		
+		foreach($nodes as $node) {
+			$parent = $node;
+
+			do {
+				$parent = $parent->parentNode;
+			}
+			while($parent instanceof DOMElement && !in_array(strtolower($parent->tagName), self::$block_level_elements));
+
+			$node->setAttribute('data-parentid', count($parents));
+			$parents[] = $parent;
+		}
+		
+		return $parents;
+	}
+	
+	const BEFORE = 'before';
+	const AFTER = 'after';
+	const SPLIT = 'split';
+	const INLINE = 'inline';
+	
+	/**
+	 * Given a node with represents a shortcode marker and a location string, mutates the DOM to put the
+	 * marker in the compliant location
+	 * 
+	 * For shortcodes inserted BEFORE, that location is just before the block container that
+	 * the marker is in
+	 * 
+	 * For shortcodes inserted AFTER, that location is just after the block container that
+	 * the marker is in
+	 * 
+	 * For shortcodes inserted SPLIT, that location is where the marker is, but the DOM
+	 * is split around it up to the block container the marker is in - for instance,
+	 * 
+	 *   <p>A<span>B<marker />C</span>D</p>
+	 * 
+	 * becomes 
+	 * 
+	 *   <p>A<span>B</span></p><marker /><p><span>C</span>D</p>
+	 * 
+	 * For shortcodes inserted INLINE, no modification is needed (but in that case the shortcode handler needs to
+	 * generate only inline blocks)
+	 *
+	 * @param DOMElement $node
+	 * @param int $location - ShortcodeParser::BEFORE, ShortcodeParser::SPLIT or ShortcodeParser::INLINE
+	 */
+	protected function moveMarkerToCompliantHome($node, $parent, $location) {
+		// Move before block parent
+		if($location == self::BEFORE) {
+			$parent->parentNode->insertBefore($node, $parent);
+		}
+		// Move after block parent
+		else if($location == self::AFTER) {
+			$this->insertAfter($node, $parent);
+		}
+		// Split parent at node
+		else if($location == self::SPLIT) {
+			$at = $node; $splitee = $node->parentNode;
+
+			while($splitee !== $parent->parentNode) {
+				$spliter = $splitee->cloneNode(false);
+
+				$this->insertAfter($spliter, $splitee);
+
+				while($at->nextSibling) {
+					$spliter->appendChild($at->nextSibling);
+				}
+
+				$at = $splitee; $splitee = $splitee->parentNode;
+			}
+
+			$this->insertAfter($node, $parent);
+		}
+		// Do nothing
+		else if($location == self::INLINE) {
+			if(in_array(strtolower($node->tagName), self::$block_level_elements)) {
+				user_error(
+					'Requested to insert block tag '.$node->tagName.' inline - probably this will break HTML compliance', 
+					E_USER_WARNING
+				);
+			}
+			// NOP
+		}
+		else {
+			user_error('Unknown value for $location argument '.$location, E_USER_ERROR);
+		}
+	}
+ 
+	/**
+	 * Given a node with represents a shortcode marker and some informationabout the shortcode, call the 
+	 * shortcode handler & replace the marker with the actual content
+	 * 
+	 * @param DOMElement $node
+	 * @param array $tag
+	 */
+	protected function replaceMarkerWithContent($node, $tag) {
+		$content = false;
+		if($tag['open']) $content = $this->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
+
+		if ($content === false) {
+			if(self::$error_behavior == self::ERROR) {
+				user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERRROR);
+			}
+			if (self::$error_behavior == self::WARN) {
+				$content = '<strong class="warning">'.$tag['text'].'</strong>';
+			}
+			else if (self::$error_behavior == self::LEAVE) {
+				$content = $tag['text'];
+			}
+			else {
+ 				// self::$error_behavior == self::STRIP - NOP
+			}
+		}
+		
+		if ($content) {
+			$parsed = HTML5_Parser::parseFragment($content, 'div');
+			$this->insertListAfter($parsed, $node);
+		}
+		
+		$this->removeNode($node);
+	}
+
 	/**
 	 * Parse a string, and replace any registered shortcodes within it with the result of the mapped callback.
 	 *
@@ -107,54 +448,58 @@ class ShortcodeParser {
 	public function parse($content) {
 		if(!$this->shortcodes) return $content;
 		
-		$shortcodes = implode('|', array_map('preg_quote', array_keys($this->shortcodes)));
-		$pattern    = "/\[($shortcodes)(.*?)(\/\]|\](?(4)|(?:(.+?)\[\/\s*\\1\s*\]))|\])/s";
+		// First we operate in text mode, replacing any shortcodes with marker elements so that later we can
+		// use a proper DOM
+		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
+		
+		// Now parse the result into a DOM
+		require_once(THIRDPARTY_PATH.'/html5lib/HTML5/Parser.php');
 
-		if(preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
-			$replacements = array();
-			foreach($matches as $match) {
-				$prefix = $match[0][1] ? $content[$match[0][1]-1] : '';
-				if(strlen($match[0][0]) + $match[0][1] < strlen($content)) {
-					$suffix = $content[strlen($match[0][0]) + $match[0][1]];
-				} else {
-					$suffix = '';
-				}
-				if($prefix == '[' && $suffix == ']') {
-					$replacements[] = array($match[0][0], $match[0][1]-1, strlen($match[0][0]) + 2);
-				} else {
-					$replacements[] = array($this->handleShortcode($match), $match[0][1], strlen($match[0][0]));
+		$res = '';
+		
+		$bases = HTML5_Parser::parseFragment(trim($content), 'div');
+		$html = $bases->item(0)->parentNode;
+		$doc = $html->ownerDocument;
+
+		$xp = new DOMXPath($doc);
+
+		// First, replace any shortcodes that are in attributes
+		$this->replaceAttributeTagsWithContent($doc);
+
+		// Find all the element scoped shortcode markers
+		$shortcodes = $xp->query('//img[@class="'.self::$marker_class.'"]');
+
+		// Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
+		$parents = $this->findParentsForMarkers($shortcodes);
+		
+		foreach($shortcodes as $shortcode) {
+			$tag = $tags[$shortcode->getAttribute('data-tagid')];
+			$parent = $parents[$shortcode->getAttribute('data-parentid')];
+			
+			$class = null;
+			if(!empty($tag['attrs']['location'])) $class = $tag['attrs']['location']; 
+			else if(!empty($tag['attrs']['class'])) $class = $tag['attrs']['class'];
+			
+			$location = self::INLINE;
+			if($class == 'left' || $class == 'right') $location = self::BEFORE;
+			if($class == 'center' || $class == 'leftALone') $location = self::SPLIT;
+
+			if(!$parent) {
+				if($location !== self::INLINE) {
+					user_error("Parent block for shortcode couldn't be found, but location wasn't INLINE", E_USER_ERROR);
 				}
 			}
-			// We reverse this so that replacements don't break offsets
-			foreach(array_reverse($replacements) as $replace) {
-				$content = substr_replace($content, $replace[0], $replace[1], $replace[2]);
+			else {
+				$this->moveMarkerToCompliantHome($shortcode, $parent, $location);
 			}
+
+			$this->replaceMarkerWithContent($shortcode, $tag);
 		}
 		
-		return $content;
+		foreach($html->childNodes as $child) $res .= $doc->saveHTML($child);
+		
+		return preg_replace('/\[\[/', '[', preg_replace('/\]\]/', ']', $res));
 	}
 	
-	/**
-	 * @ignore
-	 */
-	protected function handleShortcode($matches) {
-		$shortcode = $matches[1][0];
-		
-		$attributes = array(); // Parse attributes into into this array.
-		
-		if(preg_match_all('/(\w+) *= *(?:([\'"])(.*?)\\2|([^ ,"\'>]+))/', $matches[2][0], $match, PREG_SET_ORDER)) {
-			foreach($match as $attribute) {
-				if(!empty($attribute[4])) {
-					$attributes[strtolower($attribute[1])] = $attribute[4];
-				} elseif(!empty($attribute[3])) {
-					$attributes[strtolower($attribute[1])] = $attribute[3];
-				}
-			}
-		}
-
-		return call_user_func(
-			$this->shortcodes[$shortcode], 
-			$attributes, isset($matches[4][0]) ? $matches[4][0] : '', $this, $shortcode);
-	}
 	
 }

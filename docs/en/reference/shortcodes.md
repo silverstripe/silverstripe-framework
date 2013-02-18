@@ -1,17 +1,87 @@
 # Shortcodes
 
-The Shortcode API (new in 2.4) is a simple regex based parser that allows you to replace simple bbcode-like tags within
-a HTMLText or HTMLVarchar field when rendered into a template. It is inspired by and very similar to the [Wordpress
-implementation](http://codex.wordpress.org/Shortcode_API) of shortcodes.
+The Shortcode API is a way to replace simple bbcode-like tags within HTML. It is inspired by and very similar to 
+the [Wordpress implementation](http://codex.wordpress.org/Shortcode_API) of shortcodes.
 
-Here are all variants of the acceptable shortcode tags:
+A guide to syntax
 
-	[shortcode]
-	[shortcode/]
-	[shortcode,parameter="value"]
-	[shortcode,parameter="value"]Enclosed Content[/shortcode]
+	Unclosed - [shortcode]
+	Explicitly closed - [shortcode/]
+	With parameters, mixed quoting - [shortcode parameter=value parameter2='value2' parameter3="value3"]
+	Old style parameter separation - [shortcode,parameter=value,parameter2='value2',parameter3="value3"]
+	With contained content & closing tag - [shortcode]Enclosed Content[/shortcode]
+	Escaped (will output [just] [text] in response) - [[just] [[text]]
 
-Note the usage of `,` to delimit the parameters.
+Shortcode parsing is already hooked into HTMLText and HTMLVarchar fields when rendered into a template
+
+## Attribute and element scope
+
+HTML with unprocessed shortcodes in it is still valid HTML. As a result, shortcodes can be in two places in HTML:
+
+ - In an attribute value, like so:
+
+	<a title="[title]">link</a>
+	
+ - In an element's text, like so:
+
+	<p>
+		Some text [shortcode] more text
+	</p>
+
+The first is called "element scope" use, the second "attribute scope"
+
+You may not use shortcodes in any other location. Specifically, you can not use shortcodes to generate attributes or 
+change the name of a tag. These usages are forbidden:
+
+	<[paragraph]>Some test</[paragraph]>
+
+	<a [titleattribute]>link</a>
+
+Also note:
+
+  - you may need to escape text inside attributes `>` becomes `&gt;` etc
+  
+  - you can include HTML tags inside a shortcode tag, but you need to be careful of nesting to ensure you don't
+    break the output
+    
+Good:
+
+	<div>
+		[shortcode]
+			<p>Caption</p>
+		[/shortcode]
+	</div>
+
+Bad:
+
+	<div>
+		[shortcode]
+	</div>
+	<p>
+		[/shortcode]
+	</p>
+
+## Location
+
+Element scoped shortcodes have a special ability to move the location they are inserted at to comply with
+HTML lexical rules. Take for example this basic paragraph tag:
+
+	<p><a href="#">Head [figure src="assets/a.jpg" caption="caption"] Tail</a></p>
+	
+When converted naively would become
+
+	<p><a href="#">Head <figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure> Tail</a></p>
+
+However this is not valid HTML - P elements can not contain other block level elements.
+
+To fix this you can specify a "location" attribute on a shortcode. When the location attribute is "left" or "right"
+the inserted content will be moved to immediately before the block tag. The result is this:
+
+	<figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#">Head  Tail</a></p>
+
+When the location attribute is "leftAlone" or "center" then the DOM is split around the element. The result is this:
+
+	<p><a href="#">Head </a></p><figure><img src="assets/a.jpg" /><figcaption>caption</figcaption></figure><p><a href="#"> Tail</a></p>
 
 ## Defining Custom Shortcodes
 
@@ -90,8 +160,4 @@ example the below code will not work as expected:
 	[shortcode][/shortcode]
 	[/shortcode]
 
-The parser will recognise this as:
-
-	[shortcode]
-	[shortcode]
-	[/shortcode]
+The parser will raise an error if it can not find a matching opening tag for any particular closing tag
