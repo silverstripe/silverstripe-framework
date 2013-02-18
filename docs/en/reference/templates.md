@@ -568,6 +568,8 @@ default if it exists and there is no action in the url parameters.
 
 	:::php
 	class MyPage_Controller extends Page_Controller {
+
+		static $allowed_actions = array('index');
 	
 		public function init(){
 			parent::init();  

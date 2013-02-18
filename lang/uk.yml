@@ -77,7 +77,7 @@ uk:
     CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
     EMAIL: Email
     HELLO: Привіт
-    PASSWORD: Password
+    PASSWORD: Пароль
   CheckboxField:
     - 'False'
     - 'True'
@@ -240,7 +240,7 @@ uk:
     Saved: 'Saved %s %s'
   GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Додати роль до цієї групи'
     Code: 'Код групи'
     DefaultGroupTitleAdministrators: Адміністратори
     DefaultGroupTitleContentAuthors: 'Content Authors'
@@ -250,7 +250,7 @@ uk:
     NoRoles: 'Ролі не знайдені'
     PLURALNAME: Groups
     Parent: 'Батьківська група'
-    RolesAddEditLink: 'Manage roles'
+    RolesAddEditLink: 'Керувати ролями'
     SINGULARNAME: Group
     Sort: 'Порядок сортування'
     has_many_Permissions: Права
@@ -501,7 +501,7 @@ uk:
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Назва групи'
     IMPORTGROUPS: 'Імпортувати групи'
-    IMPORTUSERS: 'Import users'
+    IMPORTUSERS: 'Імпортувати користувачів'
     MEMBERS: Члени
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'

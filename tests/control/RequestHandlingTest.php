@@ -162,7 +162,7 @@ class RequestHandlingTest extends FunctionalTest {
 	
 	public function testMethodsOnParentClassesOfRequestHandlerDeclined() {
 		$response = Director::test('testGoodBase1/getIterator');
-		$this->assertEquals(403, $response->getStatusCode());
+		$this->assertEquals(404, $response->getStatusCode());
 	}
 	
 	public function testFormActionsCanBypassAllowedActions() {
@@ -295,6 +295,17 @@ Config::inst()->update('Director', 'rules', array(
  * Controller for the test
  */
 class RequestHandlingTest_Controller extends Controller implements TestOnly {
+	
+	static $allowed_actions = array(
+		'method',
+		'legacymethod',
+		'virtualfile',
+		'TestForm',
+		'throwexception',
+		'throwresponseexception',
+		'throwhttperror',
+	);
+
 	static $url_handlers = array(
 		// The double-slash is need here to ensure that 
 		'$Action//$ID/$OtherID' => "handleAction",

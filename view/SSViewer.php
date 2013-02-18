@@ -833,7 +833,7 @@ class SSViewer {
 	 * @return string - The result of executing the template
 	 */
 	protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay) {
-		if(isset($_GET['showtemplate']) && $_GET['showtemplate']) {
+		if(isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
 			$lines = file($cacheFile);
 			echo "<h2>Template: $cacheFile</h2>";
 			echo "<pre>";

@@ -192,7 +192,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .field .chzn-container-single .chzn-single div b { background-position: 4px 0px; }
 .field .chzn-choices { -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; }
 .field input.month, .field input.day, .field input.year { width: 56px; }
-.field input.time { width: 64px; }
+.field input.time { width: 88px; }
 .field.remove-splitter { border-bottom: none; box-shadow: none; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
