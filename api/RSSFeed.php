@@ -190,17 +190,19 @@ class RSSFeed extends ViewableData {
 		SSViewer::set_source_file_comments(false);
 		$response = Controller::curr()->getResponse();
 
+		$response = Controller::curr()->getResponse();
+
 		if(is_int($this->lastModified)) {
 			HTTP::register_modification_timestamp($this->lastModified);
-			$response->addHeader('Last-Modified', gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
+			$response->addHeader("Last-Modified", gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
 		}
 		if(!empty($this->etag)) {
 			HTTP::register_etag($this->etag);
 		}
 
 		if(!headers_sent()) {
-			HTTP::add_cache_headers($response);
-			$response->addHeader('Content-Type', 'text/xml');
+			HTTP::add_cache_headers();
+			$response->addHeader("Content-Type", "application/rss+xml");
 		}
 
 		SSViewer::set_source_file_comments($prevState);
@@ -294,7 +296,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the description of the entry.
 	 */
 	public function Description() {
-		return $this->rssField($this->descriptionField, 'Text');
+		return $this->rssField($this->descriptionField, 'HTMLText');
 	}
 
 	/**

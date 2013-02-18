@@ -108,7 +108,10 @@
 				// specifically opt-out of this behaviour via "data-skip-autofocus".
 				// This opt-out is useful if the first visible field is shown far down a scrollable area,
 				// for example for the pagination input field after a long GridField listing.
-				this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+				// Skip if an element in the form is already focused.
+				if(!this.find(document.activeElement).length) {
+					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+				}
 			},
 			onunmatch: function() {
 				this._super();

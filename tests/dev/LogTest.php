@@ -65,6 +65,49 @@ class SS_LogTest extends SapphireTest {
 		);
 	}
 	
+	protected function exceptionGeneratorThrower() {
+		throw new Exception("thrown from SS_LogTest::testExceptionGeneratorTop");
+	}
+	
+	protected function exceptionGenerator() {
+		$this->exceptionGeneratorThrower();
+	}
+	
+	public function testEmailException() {
+		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
+		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
+		
+		// Trigger exception handling mechanism
+		try {
+			$this->exceptionGenerator();
+		} catch(Exception $exception) {
+			// Mimics exceptionHandler, but without the exit(1)
+			SS_Log::log(
+				array(
+					'errno' => E_USER_ERROR,
+					'errstr' => ("Uncaught " . get_class($exception) . ": " . $exception->getMessage()),
+					'errfile' => $exception->getFile(),
+					'errline' => $exception->getLine(),
+					'errcontext' => $exception->getTrace()
+				),
+				SS_Log::ERR
+			);
+		}
+		
+		// Ensure email is sent
+		$this->assertEmailSent('test@test.com');
+		
+		// Begin parsing of email body
+		$email = $this->findEmail('test@test.com');
+		$parser = new CSSContentParser($email['htmlContent']);
+		
+		// Check that the first three lines of the stacktrace are correct
+		$stacktrace = $parser->getByXpath('//body/div[1]/ul[1]');
+		$this->assertContains('<b>SS_LogTest-&gt;exceptionGeneratorThrower()</b>', $stacktrace[0]->li[0]->asXML());
+		$this->assertContains('<b>SS_LogTest-&gt;exceptionGenerator()</b>', $stacktrace[0]->li[1]->asXML());
+		$this->assertContains('<b>SS_LogTest-&gt;testEmailException()</b>', $stacktrace[0]->li[2]->asXML());
+	}
+	
 	public function testSubclassedLogger() {
 		$this->assertTrue(SS_Log::get_logger() !== SS_LogTest_NewLogger::get_logger());
 	}

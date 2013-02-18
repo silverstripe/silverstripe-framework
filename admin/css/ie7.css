@@ -218,3 +218,9 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav .ui-state-active a.ui-tabs-anchor { background: transparent url(../images/sprites-32x32/arrow_up_lighter.png) no-repeat right top; }
 .cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset ul.ui-tabs-nav .ui-state-active a.ui-tabs-anchor:hover { background: transparent url(../images/sprites-32x32/arrow_up_darker.png) no-repeat right top; }
 .cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset .ui-tabs-panel button.ss-ui-button { width: 190px; /* Width 100% not calculating by ie7 */ }
+
+/* Insert Media Area */
+.ui-dialog-titlebar { z-index: 100000; }
+
+.ss-uploadfield-item-info .dimensions input { float: left; width: 150px; }
+.ss-uploadfield-item-info .dimensions .fieldgroup-field.last { margin-left: 16px; }

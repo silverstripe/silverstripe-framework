@@ -73,14 +73,12 @@ class DatabaseAdmin extends Controller {
 
 
 	/**
-	 * Display a simple HTML menu of database admin helpers.
+	 * When we're called as /dev/build, that's actually the index. Do the same
+	 * as /dev/build/build.
 	 */
 	public function index() {
-		echo "<h2>Database Administration Helpers</h2>";
-		echo "<p><a href=\"build\">Add missing database fields (similar to sanity check).</a></p>";
-		echo "<p><a href=\"../images/flush\">Flush <b>all</b> of the generated images.</a></p>";
+		return $this->build();
 	}
-
 
 	/**
 	 * Updates the database schema, creating tables & fields as necessary.

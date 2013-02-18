@@ -395,9 +395,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	
 	/**
 	 * Set the DataModel
+	 * @param DataModel $model
+	 * @return DataObject $this
 	 */
 	public function setDataModel(DataModel $model) {
 		$this->model = $model;
+		return $this;
 	}
 
 	/**
@@ -423,12 +426,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$clone = new $className( $this->toMap(), false, $this->model );
 		$clone->ID = 0;
 		
-		$clone->extend('onBeforeDuplicate', $this, $doWrite);
+		$clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite);
 		if($doWrite) {
 			$clone->write();
 			$this->duplicateManyManyRelations($this, $clone);
 		}
-		$clone->extend('onAfterDuplicate', $this, $doWrite);
+		$clone->invokeWithExtensions('onAfterDuplicate', $this, $doWrite);
 		
 		return $clone;
 	}
@@ -503,6 +506,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * or destroy and reinstanciate the record.
 	 *
 	 * @param string $className The new ClassName attribute (a subclass of {@link DataObject})
+	 * @return DataObject $this
 	 */
 	public function setClassName($className) {
 		$className = trim($className);
@@ -510,6 +514,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$this->class = $className;
 		$this->setField("ClassName", $className);
+		return $this;
 	}
 
 	/**
@@ -745,6 +750,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * the related objects that it alters.
 	 *
 	 * @param array $data A map of field name to data values to update.
+	 * @return DataObject $this
 	 */
 	public function update($data) {
 		foreach($data as $k => $v) {
@@ -784,6 +790,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$this->$k = $v;
 			}
 		}
+		return $this;
 	}
 	
 	/**
@@ -793,11 +800,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * use the write() method.
 	 *
 	 * @param array $data A map of field name to data values to update.
+	 * @return DataObject $this
 	 */
 	public function castedUpdate($data) {
 		foreach($data as $k => $v) {
 			$this->setCastedField($k,$v);
 		}
+		return $this;
 	}
 
 	/**
@@ -895,6 +904,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Forces the record to think that all its data has changed.
 	 * Doesn't write to the database. Only sets fields as changed
 	 * if they are not already marked as changed.
+	 * 
+	 * @return DataObject $this
 	 */
 	public function forceChange() {
 		// Ensure lazy fields loaded
@@ -913,6 +924,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// @todo Find better way to allow versioned to write a new version after forceChange
 		if($this->isChanged('Version')) unset($this->changed['Version']);
+		return $this;
 	}
 	
 	/**
@@ -987,7 +999,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Will traverse the defaults of the current class and all its parent classes.
 	 * Called by the constructor when creating new records.
 	 * 
-	 *  @uses DataExtension->populateDefaults()
+	 * @uses DataExtension->populateDefaults()
+	 * @return DataObject $this
 	 */
 	public function populateDefaults() {
 		$classes = array_reverse(ClassInfo::ancestry($this));
@@ -1018,6 +1031,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		
 		$this->extend('populateDefaults');
+		return $this;
 	}
 
 	/**
@@ -1065,7 +1079,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if($writeException) {
 			// Used by DODs to clean up after themselves, eg, Versioned
-			$this->extend('onAfterSkippedWrite');
+			$this->invokeWithExtensions('onAfterSkippedWrite');
 			throw $writeException;
 			return false;
 		}
@@ -1208,7 +1222,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			} elseif ( $showDebug ) {
 				echo "<b>Debug:</b> no changes for DataObject<br />";
 				// Used by DODs to clean up after themselves, eg, Versioned
-				$this->extend('onAfterSkippedWrite');
+				$this->invokeWithExtensions('onAfterSkippedWrite');
 			}
 
 			// Clears the cache for this object so get_one returns the correct object.
@@ -1220,7 +1234,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$this->record['LastEdited'] = SS_Datetime::now()->Rfc2822();
 		} else {
 			// Used by DODs to clean up after themselves, eg, Versioned
-			$this->extend('onAfterSkippedWrite');
+			$this->invokeWithExtensions('onAfterSkippedWrite');
 		}
 
 		// Write relations as necessary
@@ -1235,13 +1249,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * same record.
 	 *
 	 * @param $recursive Recursively write components
+	 * @return DataObject $this
 	 */
 	public function writeComponents($recursive = false) {
-		if(!$this->components) return;
+		if(!$this->components) return $this;
 		
 		foreach($this->components as $component) {
 			$component->write(false, false, false, $recursive);
 		}
+		return $this;
 	}
 	
 	/**
@@ -1434,7 +1450,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$combinedFilter = "\"$joinField\" = '$id'";
 		if(!empty($filter)) $combinedFilter .= " AND ({$filter})";
 			
-		return singleton($componentClass)->extendedSQL($combinedFilter, $sort, $limit, $join);
+		return DataList::create($componentClass)
+			->where($combinedFilter)
+			->canSortBy($sort)
+			->limit($limit);
 	}
 
 	/**
@@ -2100,9 +2119,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Limit query to the current record, unless it has the Versioned extension,
 		// in which case it requires special handling through augmentLoadLazyFields()
-		if (!isset($this->record['Version'])){
+		if(!$this->hasExtension('Versioned')) {
 			$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
 		}
+
 		$columns = array();
 
 		// Add SQL for fields, both simple & multi-value
@@ -2116,7 +2136,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if ($columns) {
 			$query = $dataQuery->query();
-			$this->extend('augmentLoadLazyFields', $query, $dataQuery, $this->record);
+			$this->extend('augmentLoadLazyFields', $query, $dataQuery, $this);
 			$this->extend('augmentSQL', $query, $dataQuery);
 
 			$dataQuery->setQueriedColumns($columns);
@@ -2227,6 +2247,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $fieldName Name of the field
 	 * @param mixed $val New field value
+	 * @return DataObject $this
 	 */
 	public function setField($fieldName, $val) {
 		// Situation 1: Passing an DBField
@@ -2270,6 +2291,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$this->record[$fieldName] = $val;
 			}
 		}
+		return $this;
 	}
 
 	/**
@@ -2280,6 +2302,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $fieldName Name of the field
 	 * @param mixed $value New field value
+	 * @return DataObject $this
 	 */
 	public function setCastedField($fieldName, $val) {
 		if(!$fieldName) {
@@ -2293,6 +2316,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else {
 			$this->$fieldName = $val;
 		}
+		return $this;
 	}
 
 	/**
@@ -2829,14 +2853,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
 	 *                            When false will just clear session-local cached data 
-	 *
+	 * @return DataObject $this
 	 */
 	public function flushCache($persistent = true) {
 		if($persistent) Aggregate::flushCache($this->class);
 		
 		if($this->class == 'DataObject') {
 			DataObject::$_cache_get_one = array();
-			return;
+			return $this;
 		}
 
 		$classes = ClassInfo::ancestry($this->class);
@@ -2847,6 +2871,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$this->extend('flushCache');
 		
 		$this->components = array();
+		return $this;
 	}
 
 	/**
@@ -2905,6 +2930,46 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function baseTable() {
 		$tableClasses = ClassInfo::dataClassesFor($this->class);
 		return array_shift($tableClasses);
+	}
+
+	/**
+	 * @var Array Parameters used in the query that built this object.
+	 * This can be used by decorators (e.g. lazy loading) to 
+	 * run additional queries using the same context.
+	 */
+	protected $sourceQueryParams;
+
+	/**
+	 * @see $sourceQueryParams
+	 * @return array
+	 */
+	public function getSourceQueryParams() {
+		return $this->sourceQueryParams;
+	}
+
+	/**
+	 * @see $sourceQueryParams
+	 * @param array
+	 */
+	public function setSourceQueryParams($array) {
+		$this->sourceQueryParams = $array;
+	}
+
+	/**
+	 * @see $sourceQueryParams
+	 * @param array
+	 */
+	public function setSourceQueryParam($key, $value) {
+		$this->sourceQueryParams[$key] = $value;
+	}
+
+	/**
+	 * @see $sourceQueryParams
+	 * @return Mixed
+	 */
+	public function getSourceQueryParam($key) {
+		if(isset($this->sourceQueryParams[$key])) return $this->sourceQueryParams[$key];
+		else return null;
 	}
 
 	//-------------------------------------------------------------------------------------------//

@@ -612,7 +612,7 @@ class GridField extends FormField {
 				$stateChange = Session::get($id);
 				$actionName = $stateChange['actionName'];
 				$args = isset($stateChange['args']) ? $stateChange['args'] : array();
-				$html = $this->handleAction($actionName, $args, $data);
+				$html = $this->handleAlterAction($actionName, $args, $data);
 				// A field can optionally return its own HTML
 				if($html) return $html;
 			}
@@ -642,7 +642,7 @@ class GridField extends FormField {
 	 * @return type
 	 * @throws InvalidArgumentException
 	 */
-	public function handleAction($actionName, $args, $data) {
+	public function handleAlterAction($actionName, $args, $data) {
 		$actionName = strtolower($actionName);
 		foreach($this->getComponents() as $component) {
 			if(!($component instanceof GridField_ActionProvider)) {

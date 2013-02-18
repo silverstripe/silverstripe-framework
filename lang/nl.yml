@@ -19,7 +19,7 @@ nl:
     DROPAREA: 'Hierheen slepen'
     EDITALL: 'Alle bewerken'
     EDITANDORGANIZE: 'Bewerk en beheer'
-    EDITINFO: 'Edit files'
+    EDITINFO: 'Bewerk alle bestanden'
     FILES: Bestanden
     FROMCOMPUTER: 'Selecteer bestand op computer'
     FROMCOMPUTERINFO: 'Upload from your computer'
@@ -175,16 +175,16 @@ nl:
     XlsType: 'Excel document'
     ZipType: 'ZIP bestand'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    ATTACH: 'Toevoegen {type}'
+    ATTACHONCESAVED: '{type}en kunnen worden toegevoegd na het voor het eerst opslaan.'
+    ATTACHONCESAVED2: 'Bestanden kunnen worden toegevoegd na het voor het eerst opslaan.'
+    DELETE: 'Verwijderen {type}'
     DISALLOWEDFILETYPE: 'Dit type bestand mag niet worden opgeslagen'
     FILE: Bestand
     FROMCOMPUTER: 'Vanaf computer'
     FROMFILESTORE: 'Vanaf de website''s bestandsopslag'
     NOSOURCE: 'Selecteer een bron bestand om toe te voegen'
-    REPLACE: 'Replace {type}'
+    REPLACE: 'Vervang {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Afbeelding uploaden'
   Filesystem:
@@ -232,7 +232,7 @@ nl:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
   GridFieldDetailForm:
     CancelBtn: Annuleren
-    Create: Create
+    Create: Creëren
     Delete: Verwijder
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: '%s %s verwijderd'
@@ -334,7 +334,7 @@ nl:
     VersionUnknown: onbekend
   LeftAndMain_Menu.ss:
     Hello: Hi
-    LOGOUT: 'Log out'
+    LOGOUT: Uitloggen
   LoginAttempt:
     Email: 'Email adres '
     IP: 'IP Adres'
@@ -410,7 +410,7 @@ nl:
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
+    ResultCreated: '{count} leden aangemaakt'
     ResultDeleted: '%d leden verwijderd'
     ResultNone: 'Geen wijzingen'
     ResultUpdated: 'Updated {count} members'
@@ -551,13 +551,13 @@ nl:
     ATTACHFILE: 'Voeg een bestand toe'
     ATTACHFILES: 'Voeg bestanden toe'
     AttachFile: 'Voeg bestanden toe'
-    DELETE: 'Delete from files'
+    DELETE: 'Volledig verwijderen'
     DELETEINFO: 'Verwijder dit bestand uit bestandsopslag van de website.'
     DOEDIT: Bewaar
     DROPFILE: 'Bestand hiernaar toe slepen'
     DROPFILES: 'Sleep hier je bestanden'
     Dimensions: Dimensions
-    EDIT: Edit
+    EDIT: Bewerken
     EDITINFO: 'Bewerk dit bestand'
     FIELDNOTSET: 'Bestandsinformatie niet gevonden'
     FROMCOMPUTER: 'Vanaf computer'

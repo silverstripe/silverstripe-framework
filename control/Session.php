@@ -415,7 +415,7 @@ class Session {
 	protected function recursivelyApply($data, &$dest) {
 		foreach($data as $k => $v) {
 			if(is_array($v)) {
-				if(!isset($dest[$k])) $dest[$k] = array();
+				if(!isset($dest[$k]) || !is_array($dest[$k])) $dest[$k] = array();
 				$this->recursivelyApply($v, $dest[$k]);
 			} else {
 				$dest[$k] = $v;
@@ -440,8 +440,8 @@ class Session {
 	* @param type the type of message
 	*/
 	public static function setFormMessage($formname,$message,$type){
-		Session::set("FormInfo.$formname.message", $message);
-		Session::set("FormInfo.$formname.type", $type);
+		Session::set("FormInfo.$formname.formError.message", $message);
+		Session::set("FormInfo.$formname.formError.type", $type);
 	}
 
 	/**

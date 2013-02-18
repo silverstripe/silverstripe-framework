@@ -1277,11 +1277,20 @@ HTML;
 	Deny from all
 </Files>
 
+# This denies access to all yml files, since developers might include sensitive
+# information in them. See the docs for work-arounds to serve some yaml files
+<Files *.yml>
+	Order allow,deny
+	Deny from all
+</Files>
+
 ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
 <IfModule mod_alias.c>
 	RedirectMatch 403 /silverstripe-cache(/|$)
+	RedirectMatch 403 /vendor(/|$)
+	RedirectMatch 403 /composer\.(json|lock)
 </IfModule>
 
 <IfModule mod_rewrite.c>

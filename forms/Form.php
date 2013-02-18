@@ -250,7 +250,9 @@ class Form extends RequestHandler {
 		// Protection against CSRF attacks
 		$token = $this->getSecurityToken();
 		if(!$token->checkRequest($request)) {
-			$this->httpError(400, "Sorry, your session has timed out.");
+			$this->httpError(400, _t("Form.CSRF_FAILED_MESSAGE",
+				"There seems to have been a technical problem. Please click the back button,"
+				. " refresh your browser, and try again."));
 		}
 		
 		// Determine the action button clicked
@@ -655,7 +657,9 @@ class Form extends RequestHandler {
 		$needsCacheDisabled = false;
 		if ($this->getSecurityToken()->isEnabled()) $needsCacheDisabled = true;
 		if ($this->FormMethod() != 'get') $needsCacheDisabled = true;
-		if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) $needsCacheDisabled = true;
+		if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) {
+			$needsCacheDisabled = true;
+		}
 
 		// If we need to disable cache, do it
 		if ($needsCacheDisabled) HTTP::set_cache_age(0);

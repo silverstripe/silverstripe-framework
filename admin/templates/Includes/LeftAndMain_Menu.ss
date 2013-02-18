@@ -27,7 +27,7 @@
 				<a href="$Link" <% if Code == 'Help' %>target="_blank"<% end_if%>>
 					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
 					<span class="text">$Title</span>
-				</a>			
+				</a>
 			</li>
 		<% end_loop %>
 		</ul>

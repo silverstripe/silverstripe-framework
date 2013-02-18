@@ -290,6 +290,16 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this._super();
 			},
 
+			/**
+			 * Make sure the editor has flushed all it's buffers before the form is submitted.
+			 */
+			'from .cms-edit-form': {
+				onbeforesubmitform: function(e) {
+					this.getEditor().save();
+					this._super();
+				}
+			},
+
 			oneditorinit: function() {
 				// Delayed show because TinyMCE calls hide() via setTimeout on removing an element,
 				// which is called in quick succession with adding a new editor after ajax loading new markup
@@ -790,8 +800,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
-					this.showFileView(node.data('url') || node.attr('src')).complete(function() {
-						$(this).updateFromNode(node);
+					this.showFileView(node.data('url') || node.attr('src')).done(function(filefield) {
+						filefield.updateFromNode(node);
 						self.toggleCloseButton();
 						self.redraw();
 					});
@@ -834,25 +844,29 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			getFileView: function(idOrUrl) {
 				return this.find('.ss-htmleditorfield-file[data-id=' + idOrUrl + ']');
 			},
-			showFileView: function(idOrUrl, successCallback) {
-				var self = this, params = (Number(idOrUrl) == idOrUrl) ? {ID: idOrUrl} : {FileURL: idOrUrl},
-					item = $('<div class="ss-htmleditorfield-file" />');
+			showFileView: function(idOrUrl) {
+				var self = this, params = (Number(idOrUrl) == idOrUrl) ? {ID: idOrUrl} : {FileURL: idOrUrl};
 
-				item.addClass('loading');
+				var item = $('<div class="ss-htmleditorfield-file loading" />');
 				this.find('.content-edit').append(item);
-				return $.ajax({
-					// url: this.data('urlViewfile') + '?ID=' + id,
+				
+				var dfr = $.Deferred();
+				
+				$.ajax({
 					url: $.path.addSearchParams(this.attr('action').replace(/MediaForm/, 'viewfile'), params),
 					success: function(html, status, xhr) {
-						var newItem = $(html);
+						var newItem = $(html).filter('.ss-htmleditorfield-file');
 						item.replaceWith(newItem);
 						self.redraw();
-						if(successCallback) successCallback.call(newItem, html, status, xhr);
+						dfr.resolve(newItem);
 					},
 					error: function() {
 						item.remove();
+						dfr.reject();
 					}
 				});
+				
+				return dfr.promise();
 			}
 		});
 
@@ -941,7 +955,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				if (urlField.validate()) {
 					container.addClass('loading');
-					form.showFileView('http://' + urlField.val()).complete(function() {
+					form.showFileView('http://' + urlField.val()).done(function() {
 						container.removeClass('loading');
 					});
 					form.redraw();
@@ -1043,44 +1057,69 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				};
 			},
 			getHTML: function() {
-				var el,
-					attrs = this.getAttributes(),
-					extraData = this.getExtraData(),
-					// imgEl = $('<img id="_ss_tmp_img" />');
-					imgEl = $('<img />').attr(attrs);
-					
-				if(extraData.CaptionText) {
-					el = $('<div style="width: ' + attrs['width'] + 'px;" class="captionImage ' + attrs['class'] + '"><p class="caption">' + extraData.CaptionText + '</p></div>').prepend(imgEl);
-				} else {
-					el = imgEl;
-				}
-				return $('<div />').append(el).html(); // Little hack to get outerHTML string
+				/* NOP */
 			},
 			/**
 			 * Logic similar to TinyMCE 'advimage' plugin, insertAndClose() method.
 			 */
 			insertHTML: function(ed) {
-				var form = this.closest('form'),
-				node = form.getSelection(), captionNode = node.closest('.captionImage');
+				var form = this.closest('form'), node = form.getSelection(), ed = form.getEditor();
 
-				if(node && node.is('img')) {
-					// If the image exists, update it to avoid complications with inserting TinyMCE HTML content
-					var attrs = this.getAttributes(), extraData = this.getExtraData();
-					node.attr(attrs);
-					// TODO Doesn't allow adding a caption to image after it was first added
-					if(captionNode.length) {
-						captionNode.find('.caption').text(extraData.CaptionText);
-						captionNode.css({width: attrs.width, height: attrs.height}).attr('class', attrs['class']);
+				// Get the attributes & extra data
+				var attrs = this.getAttributes(), extraData = this.getExtraData();
+
+				// Find the element we are replacing - either the img, it's wrapper parent, or nothing (if creating)
+				var replacee = (node && node.is('img')) ? node : null;
+				if (replacee && replacee.parent().is('.captionImage')) replacee = replacee.parent();
+
+				// Find the img node - either the existing img or a new one, and update it
+				var img = (node && node.is('img')) ? node : $('<img />');
+				img.attr(attrs);
+
+				// Any existing figure or caption node
+				var container = img.parent('.captionImage'), caption = container.find('.caption');
+
+				// If we've got caption text, we need a wrapping div.captionImage and sibling p.caption
+				if (extraData.CaptionText) {
+					if (!container.length) {
+						container = $('<div></div>');
 					}
-					// Undo needs to be added manually as we're doing direct DOM changes
-					ed.addUndo();
-				} else {
-					// Otherwise insert the whole HTML content
-					ed.repaint();
-					ed.insertContent(this.getHTML(), {skip_undo : 1});	
-					ed.addUndo(); // Not sure why undo is separate here, replicating TinyMCE logic
+
+					container.attr('class', 'captionImage '+attrs['class']).css('width', attrs.width);
+
+					if (!caption.length) {
+						caption = $('<p class="caption"></p>').appendTo(container);
+					}
+
+					caption.attr('class', 'caption '+attrs['class']).text(extraData.CaptionText);
+				}
+				// Otherwise forget they exist
+				else {
+					container = caption = null;
 				}
 
+				// The element we are replacing the replacee with
+				var replacer = container ? container : img;
+
+				// If we're replacing something, and it's not with itself, do so
+				if (replacee && replacee.not(replacer).length) {
+					replacee.replaceWith(replacer);
+				}
+
+				// If we have a wrapper element, make sure the img is the first child - img might be the
+				// replacee, and the wrapper the replacer, and we can't do this till after the replace has happened
+				if (container) {
+					container.prepend(img);
+				}
+
+				// If we don't have a replacee, then we need to insert the whole HTML
+				if (!replacee) {
+					// Otherwise insert the whole HTML content
+					ed.repaint();
+					ed.insertContent($('<div />').append(replacer).html(), {skip_undo : 1});
+				}
+
+				ed.addUndo();
 				ed.repaint();
 			},
 			updateFromNode: function(node) {

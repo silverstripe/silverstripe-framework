@@ -265,7 +265,7 @@ form.small .field, .field.small {
 	}
 
 	input.time { 
-		width: ($grid-x * 8); // smaller time field, since input is restricted
+		width: ($grid-x * 11); // smaller time field, since input is restricted
 	}
 	
 	/* Hides borders in settings/access. Activated from JS */
@@ -404,6 +404,13 @@ form.small .field, .field.small {
 			);
 			@include box-shadow(0 0 5px darken($color-button-generic, 20%) inset);
 		}
+
+		&.ss-ui-action-minor {
+			span {
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
 		
 		/* constructive */
 		&.ss-ui-action-constructive {
@@ -514,10 +521,6 @@ form.small .field, .field.small {
 			margin-left: 0;
 			margin-right: 1em;
 			width: auto;
-		}
-
-		input, textarea {
-			float: right;
 		}
 	}
 

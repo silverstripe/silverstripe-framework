@@ -7,7 +7,7 @@
 
 //*Mixin generates the generic button styling for the gridfield*/
 @mixin gridFieldButtons{
-	border:none;			
+	border:none;
 	display:block;
 	text-indent:-9999em;
 	width:30px; 
@@ -32,7 +32,7 @@
 		&.ss-uploadfield-item-cancel{
 			@include border-radius(0);
 			border-left:1px solid rgba(#fff, 0.2);
-			margin-top:3px;			
+			margin-top:0px;
 			cursor: pointer;
 			opacity:0.9;
 			&:hover{
@@ -42,9 +42,9 @@
 			  display: block;
 			  margin: 0;
 			  position:realtive;
-			  top:4px;
-			}	
-		}				
+			  top:8px;
+			}
+		}
 		@include ss-uploadfield-editButton;
 	}
 }
@@ -57,12 +57,12 @@
 @mixin ss-uploadfield-editButton{
 	&.ss-uploadfield-item-edit {
 		opacity:0.9;
-		padding-top: 3px;
+		padding-top: 1px;
 		padding-bottom: 0;
 		height:100%;
 		@include border-radius(0);
 		&.ui-state-hover{
-			background:none;		
+			background:none;
 			opacity:1;
 			span.toggle-details{
 				opacity:1;
@@ -81,7 +81,7 @@
 				width: 8px;
 				height: 8px;
 				vertical-align: middle;
-				&.opened {	
+				&.opened {
 					margin-top:0;
 				}
 			}
@@ -90,5 +90,5 @@
 
 	.ui-icon {
 		display: none;
-	}	
+	}
 }

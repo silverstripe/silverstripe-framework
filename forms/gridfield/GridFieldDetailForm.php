@@ -369,11 +369,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
 		if($this->record->ID && !$canEdit) {
-		  // Restrict editing of existing records
-		  $form->makeReadonly();
+			// Restrict editing of existing records
+			$form->makeReadonly();
 		} elseif(!$this->record->ID && !$canCreate) {
-		  // Restrict creation of new records
-		  $form->makeReadonly();
+			// Restrict creation of new records
+			$form->makeReadonly();
 		}
 
 		// Load many_many extraData for record.

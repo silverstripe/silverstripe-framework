@@ -268,6 +268,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$obj1->write();
 		$version2 = $obj1->Version;
 
+		
 		$reloaded = Versioned::get_version('VersionedTest_Subclass', $obj1->ID, $version1);
 		$this->assertEquals($reloaded->Name, 'test');
 		$this->assertEquals($reloaded->ExtraField, 'foo');
@@ -275,6 +276,138 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$reloaded = Versioned::get_version('VersionedTest_Subclass', $obj1->ID, $version2);
 		$this->assertEquals($reloaded->Name, 'test2');
 		$this->assertEquals($reloaded->ExtraField, 'baz');
+
+		$reloaded = Versioned::get_latest_version('VersionedTest_Subclass', $obj1->ID);
+		$this->assertEquals($reloaded->Version, $version2);
+		$this->assertEquals($reloaded->Name, 'test2');
+		$this->assertEquals($reloaded->ExtraField, 'baz');
+
+		$allVersions = Versioned::get_all_versions('VersionedTest_Subclass', $obj1->ID);
+		$this->assertEquals(2, $allVersions->Count());
+		$this->assertEquals($allVersions->First()->Version, $version1);
+		$this->assertEquals($allVersions->First()->Name, 'test');
+		$this->assertEquals($allVersions->First()->ExtraField, 'foo');
+		$this->assertEquals($allVersions->Last()->Version, $version2);
+		$this->assertEquals($allVersions->Last()->Name, 'test2');
+		$this->assertEquals($allVersions->Last()->ExtraField, 'baz');
+		
 		$obj1->delete();
 	}
+
+	public function testLazyLoadedFieldsDoNotReferenceVersionsTable() {
+		// Save another record, sanity check that we're getting the right one
+		$obj2 = new VersionedTest_Subclass();
+		$obj2->Name = "test2";
+		$obj2->ExtraField = "foo2";
+		$obj2->write();
+
+		$obj1 = new VersionedLazySub_DataObject();
+		$obj1->PageName = "old-value";
+		$obj1->ExtraField = "old-value";
+		$obj1ID = $obj1->write();
+		$obj1->publish('Stage', 'Live');
+
+		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
+		$this->assertEquals(
+			'old-value',
+			$obj1->PageName,
+			"Correct value on base table when fetching base class"
+		);
+		$this->assertEquals(
+			'old-value',
+			$obj1->ExtraField,
+			"Correct value on sub table when fetching base class"
+		);
+
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		$this->assertEquals(
+			'old-value',
+			$obj1->PageName,
+			"Correct value on base table when fetching sub class"
+		);
+		$this->assertEquals(
+			'old-value',
+			$obj1->ExtraField,
+			"Correct value on sub table when fetching sub class"
+		);
+
+		// Force inconsistent state to test behaviour (shouldn't select from *_versions)
+		DB::query(sprintf(
+			"UPDATE \"VersionedLazy_DataObject_versions\" SET \"PageName\" = 'versioned-value' " .
+			"WHERE \"RecordID\" = %d",
+			$obj1ID
+		));
+		DB::query(sprintf(
+			"UPDATE \"VersionedLazySub_DataObject_versions\" SET \"ExtraField\" = 'versioned-value' " .
+			"WHERE \"RecordID\" = %d",
+			$obj1ID
+		));
+
+		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
+		$this->assertEquals(
+			'old-value',
+			$obj1->PageName,
+			"Correct value on base table when fetching base class"
+		);
+		$this->assertEquals(
+			'old-value',
+			$obj1->ExtraField,
+			"Correct value on sub table when fetching base class"
+		);
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		$this->assertEquals(
+			'old-value',
+			$obj1->PageName,
+			"Correct value on base table when fetching sub class"
+		);
+		$this->assertEquals(
+			'old-value',
+			$obj1->ExtraField,
+			"Correct value on sub table when fetching sub class"
+		);
+
+		// Update live table only to test behaviour (shouldn't select from *_versions or stage)
+		DB::query(sprintf(
+			'UPDATE "VersionedLazy_DataObject_Live" SET "PageName" = \'live-value\' WHERE "ID" = %d',
+			$obj1ID
+		));
+		DB::query(sprintf(
+			'UPDATE "VersionedLazySub_DataObject_Live" SET "ExtraField" = \'live-value\' WHERE "ID" = %d',
+			$obj1ID
+		));
+
+		Versioned::reading_stage('Live');
+		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
+		$this->assertEquals(
+			'live-value',
+			$obj1->PageName,
+			"Correct value from base table when fetching base class on live stage"
+		);
+		$this->assertEquals(
+			'live-value',
+			$obj1->ExtraField,
+			"Correct value from sub table when fetching base class on live stage"
+		);
+	}
+
+}
+
+
+/** Additional classes for versioned lazy loading testing */
+class VersionedLazy_DataObject extends DataObject {
+	static $db = array(
+		"PageName" => "Varchar"
+	);
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
+}
+
+class VersionedLazySub_DataObject extends VersionedLazy_DataObject {
+	static $db = array(
+		"ExtraField" => "Varchar",
+	);
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
 }

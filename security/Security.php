@@ -242,7 +242,10 @@ class Security extends Controller {
 			// Audit logging hook
 			$controller->extend('permissionDenied', $member);
 
-			$controller->redirect("Security/login?BackURL=" . urlencode($_SERVER['REQUEST_URI']));
+			$controller->redirect(
+				Config::inst()->get('Security', 'login_url')
+			 . "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
+			);
 		}
 		return;
 	}
@@ -344,7 +347,6 @@ class Security extends Controller {
 			}
 		}
 		
-		
 		$customCSS = project() . '/css/tabs.css';
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);
@@ -360,11 +362,12 @@ class Security extends Controller {
 			$controller = Page_Controller::create($tmpPage);
 			$controller->setDataModel($this->model);
 			$controller->init();
-			//Controller::$currentController = $controller;
 		} else {
 			$controller = $this;
 		}
 
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		$content = '';
 		$forms = $this->GetLoginForms();
@@ -458,6 +461,9 @@ class Security extends Controller {
 			$controller = $this;
 		}
 
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
+
 		$customisedController = $controller->customise(array(
 			'Content' => 
 				'<p>' . 
@@ -516,6 +522,9 @@ class Security extends Controller {
 		} else {
 			$controller = $this;
 		}
+
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
@@ -579,6 +588,9 @@ class Security extends Controller {
 		} else {
 			$controller = $this;
 		}
+
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		// Extract the member from the URL.
 		$member = null;
@@ -817,17 +829,8 @@ class Security extends Controller {
 	 * @see set_password_encryption_algorithm()
 	 */
 	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
-		if(
-			// if the password is empty, don't encrypt
-			strlen(trim($password)) == 0  
-			// if no algorithm is provided and no default is set, don't encrypt
-			|| (!$algorithm)
-		) {
-			$algorithm = 'none';
-		} else {
-			// Fall back to the default encryption algorithm
-			if(!$algorithm) $algorithm = self::$encryptionAlgorithm;
-		} 
+		// Fall back to the default encryption algorithm
+		if(!$algorithm) $algorithm = self::$encryptionAlgorithm;
 		
 		$e = PasswordEncryptor::create_for_algorithm($algorithm);
 
@@ -927,8 +930,25 @@ class Security extends Controller {
 	public static function set_ignore_disallowed_actions($flag) {
 		self::$ignore_disallowed_actions = $flag;
 	}
+
 	public static function ignore_disallowed_actions() {
 		return self::$ignore_disallowed_actions;
+	}
+
+	protected static $login_url = "Security/login";
+
+	/**
+	 * Set a custom log-in URL if you have built your own log-in page.
+	 */
+	public static function set_login_url($loginUrl) {
+	    self::$login_url = $loginUrl;
+}
+	/**
+	 * Get the URL of the log-in page.
+	 * Defaults to Security/login but can be re-set with {@link set_login_url()}
+	 */
+	public static function login_url() {
+	    return self::$login_url;
 	}
 
 }

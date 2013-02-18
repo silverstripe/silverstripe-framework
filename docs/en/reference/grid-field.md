@@ -41,6 +41,8 @@ Here is an example where we display a basic gridfield with the default settings:
 
 	:::php
 	class GridController extends Page_Controller {
+
+		static $allowed_actions = array('index');
 		
 		public function index(SS_HTTPRequest $request) {
 			$this->Content = $this->AllPages();

@@ -303,3 +303,21 @@ table.ss-gridfield-table {
 	    width: 190px; /* Width 100% not calculating by ie7 */
 	}
 }
+
+/* Insert Media Area */
+
+.ui-dialog-titlebar {
+	z-index: 100000;
+}
+
+.ss-uploadfield-item-info {
+	.dimensions {
+		input {
+			float:left;
+			width:150px;
+		}
+		.fieldgroup-field.last {
+			margin-left:16px;
+		}
+	}
+}

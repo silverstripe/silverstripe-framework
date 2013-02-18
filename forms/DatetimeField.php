@@ -58,8 +58,10 @@ class DatetimeField extends FormField {
 	public function __construct($name, $title = null, $value = ""){
 		$this->config = self::$default_config;
 		
-		$this->dateField = DateField::create($name . '[date]', false);
-		$this->timeField = TimeField::create($name . '[time]', false);
+		$this->dateField = DateField::create($name . '[date]', false)
+			->addExtraClass('fieldgroup-field');
+		$this->timeField = TimeField::create($name . '[time]', false)
+			->addExtraClass('fieldgroup-field');
 		$this->timezoneField = new HiddenField($this->getName() . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
@@ -80,6 +82,7 @@ class DatetimeField extends FormField {
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
+		$this->addExtraClass('fieldgroup');
 		$this->addExtraClass(Convert::raw2json($config));
 
 		return parent::FieldHolder($properties);
@@ -212,12 +215,48 @@ class DatetimeField extends FormField {
 	public function getDateField() {
 		return $this->dateField;
 	}
+
+	/**
+	 * @param FormField
+	 */
+	public function setDateField($field) {
+		$expected = $this->getName() . '[date]';
+		if($field->getName() != $expected) {
+			throw new InvalidArgumentException(sprintf(
+				'Wrong name format for date field: "%s" (expected "%s")',
+				$field->getName(),
+				$expected
+			));
+		}
+
+		$field->setForm($this->getForm());
+		$this->dateField = $field;
+		$this->setValue($this->value); // update value
+	}
 	
 	/**
 	 * @return TimeField
 	 */
 	public function getTimeField() {
 		return $this->timeField;
+	}
+
+	/**
+	 * @param FormField
+	 */
+	public function setTimeField($field) {
+		$expected = $this->getName() . '[time]';
+		if($field->getName() != $expected) {
+			throw new InvalidArgumentException(sprintf(
+				'Wrong name format for time field: "%s" (expected "%s")',
+				$field->getName(),
+				$expected
+			));
+		}
+
+		$field->setForm($this->getForm());
+		$this->timeField = $field;
+		$this->setValue($this->value); // update value
 	}
 	
 	/**
@@ -235,15 +274,6 @@ class DatetimeField extends FormField {
 	
 	public function getLocale() {
 		return $this->dateField->getLocale();
-	}
-
-	public function setDescription($description) {
-		parent::setDescription($description);
-
-		$this->dateField->setDescription($description);
-		$this->timeField->setDescription($description);
-
-		return $this;
 	}
 	
 	/**

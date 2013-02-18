@@ -25,9 +25,7 @@ Forms start at the controller. Here is an simple example on how to set up a form
 	:::php
 	class Page_Controller extends ContentController {
 		
-		public static $allowed_actions = array(
-			'HelloForm',
-		);
+		public static $allowed_actions = array('HelloForm');
 		
 		// Template method
 		public function HelloForm() {
@@ -41,11 +39,24 @@ Forms start at the controller. Here is an simple example on how to set up a form
 			return $form;
 		}
 		
-		public function doSayHello(array $data, Form $form) {
+		public function doSayHello($data, Form $form) {
 			// Do something with $data
 			return $this->render();
 		}
 	}
+
+The name of the form ("HelloForm") is passed into the `Form`
+constructor as a second argument. It needs to match the method name.
+
+Since forms need a URL, the `HelloForm()` method needs to be handled
+like any other controller action. In order to whitelist its access through
+URLs, we add it to the `$allowed_actions` array. 
+Form actions ("doSayHello") on the other hand should NOT be included here,
+these are handled separately through `Form->httpSubmission()`. 
+You can control access on form actions either by conditionally removing 
+a `FormAction` from the form construction,
+or by defining `$allowed_actions` in your own `Form` class
+(more information in the ["controllers" topic](/topics/controllers)).
 	
 **Page.ss**
 

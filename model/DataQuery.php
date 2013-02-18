@@ -111,7 +111,7 @@ class DataQuery {
 				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not"
 					. " querying the database in _config.php.", E_USER_ERROR);
 			} else {
-				user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for"
+				user_error("DataList::create Can't find data classes (classes linked to tables) for"
 					. " $this->dataClass. Please ensure you run dev/build after creating a new DataObject.",
 					E_USER_ERROR);
 			}
@@ -742,6 +742,14 @@ class DataQuery {
 	public function getQueryParam($key) {
 		if(isset($this->queryParams[$key])) return $this->queryParams[$key];
 		else return null;
+	}
+
+	/**
+	 * Returns all query parameters
+	 * @return array query parameters array
+	 */
+	public function getQueryParams() {
+		return $this->queryParams;
 	}
 }
 

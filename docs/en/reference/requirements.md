@@ -56,6 +56,16 @@ By default it stores the generated file in the assets/ folder but you can config
 If SilverStripe doesn't have permissions on your server to write these files it will default back to including them
 individually .
 
+You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
+the third paramter of the `combine_files` function:
+
+	:::php
+	$printStylesheets = array(
+		"$themeDir/css/print_HomePage.css",
+		"$themeDir/css/print_Page.css",
+	);
+	Requirements::combine_files('print.css', $printStylesheets, 'print');
+
 ## Custom Inline Scripts
 
 You can also quote custom script directly.  This may seem a bit ugly, but is useful when you need to transfer some kind

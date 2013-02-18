@@ -141,18 +141,7 @@ class Director implements TemplateGlobalProvider {
 			
 			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 			if ($res !== false) {
-					// Set content length (according to RFC2616)
-					if(
-						!headers_sent()
-						&& $response->getBody() 
-						&& $req->httpMethod() != 'HEAD' 
-						&& $response->getStatusCode() >= 200
-						&& !in_array($response->getStatusCode(), array(204, 304))
-					) {
-						$response->fixContentLength();
-					}
-
-					$response->output();
+				$response->output();
 			} else {
 				// @TODO Proper response here.
 				throw new SS_HTTPResponse_Exception("Invalid response");
@@ -674,6 +663,9 @@ class Director implements TemplateGlobalProvider {
 		$matched = false;
 
 		if($patterns) {
+		    // Calling from the command-line?
+	        if(!isset($_SERVER['REQUEST_URI'])) return;
+
 			// protect portions of the site based on the pattern
 			$relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
 			foreach($patterns as $pattern) {

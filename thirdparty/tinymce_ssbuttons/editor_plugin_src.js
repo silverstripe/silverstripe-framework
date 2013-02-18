@@ -38,7 +38,20 @@
 			ed.addCommand('ssmedia', function(ed) {
 				jQuery('#' + this.id).entwine('ss').openMediaDialog();
 			});
-			
+
+			// Replace the mceAdvLink and mceLink commands with the sslink command, and
+			// the mceAdvImage and mceImage commands with the ssmedia command
+			ed.onBeforeExecCommand.add(function(ed, cmd, ui, val, a){
+				if (cmd == 'mceAdvLink' || cmd == 'mceLink'){
+					ed.execCommand('sslink', ui, val, a);
+					a.terminate = true;
+				}
+				else if (cmd == 'mceAdvImage' || cmd == 'mceImage'){
+					ed.execCommand('ssmedia', ui, val, a);
+					a.terminate = true;
+				}
+			});
+
 			// Disable link button when no link is selected
 			ed.onNodeChange.add(function(ed, cm, n, co) {
 				cm.setDisabled('sslink', co && n.nodeName != 'A');

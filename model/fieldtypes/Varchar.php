@@ -33,6 +33,19 @@ class Varchar extends StringField {
 	}
 	
 	/**
+	 * Allow the ability to access the size of the field programatically. This
+	 * can be useful if you want to have text fields with a length limit that
+	 * is dictated by the DB field.
+	 *
+	 * TextField::create('Title')->setMaxLength(singleton('SiteTree')->dbObject('Title')->getSize())
+	 *
+	 * @return int The size of the field
+	 */
+	public function getSize() {
+		return $this->size;
+	}
+	
+	/**
  	 * (non-PHPdoc)
  	 * @see DBField::requireField()
  	 */

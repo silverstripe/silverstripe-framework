@@ -437,7 +437,7 @@ abstract class Object {
 		if(func_num_args() > 1) {
 			Deprecation::notice('3.1.0', "Object::has_extension() deprecated. Call has_extension() on the class");
 			$class = func_get_arg(0);
-			$extension = func_get_arg(1);
+			$requiredExtension = func_get_arg(1);
 		}
 
 		$requiredExtension = strtolower($requiredExtension);

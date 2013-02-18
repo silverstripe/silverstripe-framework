@@ -662,8 +662,19 @@ class SSTemplateParser extends Parser {
 	}
 
 	function NamedArgument_Value(&$res, $sub) {
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] 
-			: str_replace('$$FINAL', 'XML_val', $sub['php']);
+		switch($sub['ArgumentMode']) {
+			case 'string':
+				$res['php'] .= $sub['php'];
+				break;
+
+			case 'default':
+				$res['php'] .= $sub['string_php'];
+				break;
+
+			default:
+				$res['php'] .= str_replace('$$FINAL', 'obj', $sub['php']) . '->self()';
+				break;
+		}
 	}
 
 	/*!*

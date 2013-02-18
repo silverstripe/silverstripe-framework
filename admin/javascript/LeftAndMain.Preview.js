@@ -17,7 +17,7 @@
 			 * The order is significant - if the state is not available, preview will start searching the list
 			 * from the beginning.
 			 */
-			AllowedStates: ['StageLink', 'LiveLink'],
+			AllowedStates: ['StageLink', 'LiveLink','ArchiveLink'],
 
 			/**
 			 * API
@@ -37,11 +37,53 @@
 			IsPreviewEnabled: false,
 
 			/**
+			 * Mode in which the preview will be enabled.
+			 */
+			DefaultMode: 'split',
+
+			Sizes: {
+				auto: {
+					width: '100%',
+					height: '100%'
+				},
+				mobile: {
+					width: '335px', // add 15px for approx desktop scrollbar 
+					height: '568px' 
+				},
+				mobileLandscape: {
+					width: '583px', // add 15px for approx desktop scrollbar
+					height: '320px'
+				},
+				tablet: {
+					width: '783px', // add 15px for approx desktop scrollbar
+					height: '1024px'
+				},
+				tabletLandscape: {
+					width: '1039px', // add 15px for approx desktop scrollbar
+					height: '768px'
+				},
+				desktop: {
+					width: '1024px',
+					height: '800px'
+				}
+			},
+
+			/**
 			 * API
 			 * Switch the preview to different state.
 			 * stateName can be one of the "AllowedStates".
+			 *
+			 * @param {String}
+			 * @param {Boolean} Set to FALSE to avoid persisting the state
 			 */
-			changeState: function(stateName) {				
+			changeState: function(stateName, save) {				
+				var self = this, states = this._getNavigatorStates();
+				if(save !== false) {
+					$.each(states, function(index, state) {
+						self.saveState('state', stateName);
+					});
+				}
+
 				this.setCurrentStateName(stateName);
 				this._loadCurrentState();
 				this.redraw();
@@ -54,16 +96,25 @@
 			 * Change the preview mode.
 			 * modeName can be: split, content, preview.
 			 */
-			changeMode: function(modeName) {				
+			changeMode: function(modeName, save) {				
 				var container = $('.cms-container');
 
-				if (modeName === 'split') {
+				if (modeName == 'split') {
 					container.entwine('.ss').splitViewMode();
-				} else if (modeName === 'content') {
+					this.setIsPreviewEnabled(true);
+					this._loadCurrentState();
+				} else if (modeName == 'content') {
 					container.entwine('.ss').contentViewMode();
-				} else {
+					this.setIsPreviewEnabled(false);
+					this._loadCurrentState();
+				} else if (modeName == 'preview') {
 					container.entwine('.ss').previewMode();
+					this.setIsPreviewEnabled(true);
+				} else {
+					throw 'Invalid mode: ' + modeName;
 				}
+
+				if(save !== false) this.saveState('mode', modeName);
 
 				this.redraw();
 
@@ -76,10 +127,17 @@
 			 * sizeName can be: auto, desktop, tablet, mobile.
 			 */
 			changeSize: function(sizeName) {
-				this.setCurrentSizeName(sizeName);
+				var sizes = this.getSizes();
 
-				this.removeClass('auto desktop tablet mobile')
-					.addClass(sizeName);
+				this.setCurrentSizeName(sizeName);
+				this.removeClass('auto desktop tablet mobile').addClass(sizeName);
+				this.find('.preview-device-outer')
+					.width(sizes[sizeName].width)
+					.height(sizes[sizeName].height);
+				this.find('.preview-device-inner')
+					.width(sizes[sizeName].width);
+
+				this.saveState('size', sizeName);
 
 				this.redraw();
 
@@ -117,13 +175,31 @@
 			},
 
 			/**
+			 * Store the preview options for this page.
+			 */
+			saveState : function(name, value) {
+				if(!window.localStorage) return;
+				
+				window.localStorage.setItem('cms-preview-state-' + name, value);
+			},
+
+			/**
+			 * Load previously stored preferences
+			 */
+			loadState : function(name) {
+				if(!window.localStorage) return;
+				
+				return window.localStorage.getItem('cms-preview-state-' + name);
+			}, 
+
+			/**
 			 * Disable the area - it will not appear in the GUI.
 			 * Caveat: the preview will be automatically enabled when ".cms-previewable" class is detected.
 			 */
 			disablePreview: function() {
 				this._loadUrl('about:blank');
 				this._block();
-				this.changeMode('content');
+				this.changeMode('content', false);
 				this.setIsPreviewEnabled(false);
 				return this;
 			},
@@ -140,7 +216,7 @@
 						// We do not support the split mode in IE < 8.
 						this.changeMode('content');
 					} else {
-						this.changeMode('split');
+						this.changeMode(this.getDefaultMode(), false);
 					}
 				}
 				return this;
@@ -178,6 +254,7 @@
 			 */
 			_block: function() {
 				this.addClass('blocked');
+				this.find('.cms-preview-overlay').show();
 				return this;
 			},
 
@@ -186,6 +263,7 @@
 			 */
 			_unblock: function() {
 				this.removeClass('blocked');
+				this.find('.cms-preview-overlay').hide();
 				return this;
 			},
 
@@ -193,13 +271,25 @@
 			 * Update the preview according to browser and CMS section capabilities.
 			 */
 			_initialiseFromContent: function() {
+				var mode, size;
+
 				if (!$('.cms-previewable').length) {
 					this.disablePreview();
 				} else {
-					this.enablePreview();
+					mode = this.loadState('mode');
+					size = this.loadState('size');
+
 					this._moveNavigator();
-					this._loadCurrentState();
+					if(!mode || mode != 'content') {
+						this.enablePreview();
+						this._loadCurrentState();
+					}
 					this.redraw();
+
+					// now check the cookie to see if we have any preview settings that have been
+					// retained for this page from the last visit
+					if(mode) this.changeMode(mode);
+					if(size) this.changeSize(size);
 				}
 				return this;
 			},
@@ -225,7 +315,7 @@
 			},
 
 			/**
-			 * Change the URL of the preview iframe.
+			 * Change the URL of the preview iframe (if its not already displayed).
 			 */
 			_loadUrl: function(url) {
 				this.find('iframe').addClass('loading').attr('src', url);
@@ -240,7 +330,15 @@
 				// Walk through available states and get the URLs.
 				var urlMap = $.map(this.getAllowedStates(), function(name) {
 					var stateLink = $('.cms-preview-states .state-name[data-name=' + name + ']');
-					return stateLink.length ? {name: name, url: stateLink.attr('data-link')} : null;
+					if(stateLink.length) {
+						return {
+							name: name, 
+							url: stateLink.attr('data-link'),
+							active: stateLink.is(':radio') ? stateLink.is(':checked') : stateLink.is(':selected')
+						};
+					} else {
+						return null;
+					}
 				});
 
 				return urlMap;
@@ -263,7 +361,10 @@
 				// Find current state within currently available states.
 				if (states) {
 					currentState = $.grep(states, function(state, index) {
-						return currentStateName===state.name;
+						return (
+							currentStateName === state.name ||
+							(!currentStateName && state.active)
+						);
 					});
 				}
 
@@ -358,20 +459,6 @@
 		$('.cms-edit-form').entwine({
 			onadd: function() {	
 				$('.cms-preview')._initialiseFromContent();
-			}
-		});
-		
-		/**
-		 * Update the "preview unavailable" overlay according to the class.
-		 */
-		$('.cms-preview.blocked').entwine({
-			onmatch: function() {
-				this.find('.cms-preview-overlay').show();
-				this._super();
-			},
-			onunmatch: function() {
-				this.find('.cms-preview-overlay').hide();
-				this._super();
 			}
 		});
 		

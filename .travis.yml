@@ -5,7 +5,6 @@ php:
 
 env:
  - TESTDB=MYSQL
- - TESTDB=PGSQL
  - TESTDB=SQLITE
 
 matrix:

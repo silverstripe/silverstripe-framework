@@ -284,15 +284,12 @@
 		.preview-scroll .preview-device-outer {
 			@include rotate(0deg);
 			@include transition(all 0.3s ease-in 1s);
-			height: 568px;
 			margin: 20px auto 20px;
 			overflow:hidden;
 			padding-top: 16px;			
-			width: 335px; // add 15px for approx desktop scrollbar 
 			.preview-device-inner {
 				@include rotate(0deg);
 				@include transition(all 0.3s ease-out 1s);				
-				width: 335px;
 			}
 			&.rotate {				
 				@include rotate(-90deg); 
@@ -312,39 +309,28 @@
 	}
 	&.mobileLandscape .preview-scroll .preview-device-outer {
 		@include transition(all 0.3s ease-out 1s);
-		height: 320px;
 		margin: 12% auto;
 		padding-top: 16px;
-		width: 583px; // add 15px for approx desktop scrollbar 		
 		.preview-device-inner {			
 			@include transition(all 0.3s ease-out 1s);
-			width: 583px;
 		}
 	}
 	&.tablet .preview-scroll .preview-device-outer { 
 		@include transition(all 0.3s ease-out 1s);			
-		height: 1024px;
 		margin: 0 auto;
-		width: 783px; // add 15px for approx desktop scrollbar 
 		.preview-device-inner {			
 			@include transition(all 0.3s ease-out 1s);
-			width: 783px;
 		}
 	}
 	&.tabletLandscape .preview-scroll .preview-device-outer {
 		@include transition(all 0.3s ease-out 1s);	
-		height: 768px;
 		margin: 0 auto;
-		width: 1039px;// add 15px for approx desktop scrollbar 	
 		.preview-device-inner {			
 			@include transition(all 0.3s ease-out 1s);
-			width: 1039px;
 		}
 	}
 	&.desktop .preview-scroll .preview-device-outer {
 		@include transition(all 0.3s ease-out 1s);		
-		height: 800px;
 		margin: 0 auto;
-		width: 1024px;
 	}
 }
