@@ -161,7 +161,7 @@ class Form extends RequestHandler {
 			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
 		}
 		if(!$actions instanceof FieldList) {
-			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
+			throw new InvalidArgumentException('$actions must be a valid FieldList instance');
 		}
 		if($validator && !$validator instanceof Validator) {
 			throw new InvalidArgumentException('$validator must be a Valdidator instance');
