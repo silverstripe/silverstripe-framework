@@ -303,6 +303,21 @@ class DataQuery {
 						$query->selectField($qualCol);
 					}
 				}
+				//we need to ensure that we're joined onto the table that has
+				// the sort column
+				$sortCol = array_pop($parts);
+				foreach ($tableClasses as $class) {
+					if (
+						singleton($class)->hasOwnTableDatabaseField($sortCol)
+						&& !$this->query->isJoinedTo($class)
+					) {
+						$this->query->addLeftJoin(
+							$class,
+							"\"$baseClass\".\"ID\" = \"$class\".\"ID\""
+						);
+						break;
+					}
+				}
 			}
 
 			$query->setOrderBy($orderby);
