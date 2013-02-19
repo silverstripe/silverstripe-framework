@@ -33,7 +33,7 @@ class HtmlEditorField extends TextareaField {
 				'languages' => $configObj->getOption('language')
 			), true);
 			preg_match('/src="([^"]*)"/', $tag, $matches);
-			Requirements::javascript($matches[1]);
+			Requirements::javascript(htmlspecialchars_decode($matches[1]));
 
 		} else {
 			Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
