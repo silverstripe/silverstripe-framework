@@ -264,7 +264,7 @@ class RequestHandler extends ViewableData {
 	 * @param $action
 	 * @return SS_HTTPResponse
 	 */
-	protected function handleAction($request, $action) {
+	public function handleAction($request, $action) {
 		$className = get_class($this);
 
 		if(!$this->hasMethod($action)) {
