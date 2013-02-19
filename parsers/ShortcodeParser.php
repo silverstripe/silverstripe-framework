@@ -456,6 +456,31 @@ class ShortcodeParser {
 		$this->removeNode($node);
 	}
 
+	protected function loadHTML($html) {
+		require_once(THIRDPARTY_PATH.'/html5lib/HTML5/Parser.php');
+
+		// Convert any errors to exceptions
+		set_error_handler(
+			function($no, $str){
+				throw new Exception("HTML Parse Error: ".$str);
+			},
+			error_reporting()
+		);
+		
+		// Use HTML5lib to parse the HTML fragment
+		try {
+			$bases = HTML5_Parser::parseFragment(trim($html), 'div');
+		}
+		catch (Exception $e) {
+			$bases = null;
+		}
+		
+		// Disable our error handler (restoring to previous value)
+		restore_error_handler();
+		
+		return $bases;
+	}
+	
 	/**
 	 * Parse a string, and replace any registered shortcodes within it with the result of the mapped callback.
 	 *
@@ -474,9 +499,8 @@ class ShortcodeParser {
 		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
 		// Now parse the result into a DOM
-		require_once(THIRDPARTY_PATH.'/html5lib/HTML5/Parser.php');
-		$bases = HTML5_Parser::parseFragment(trim($content), 'div');
-
+		$bases = $this->loadHTML($content);
+		
 		// If we couldn't parse the HTML, error out
 		if (!$bases || !$bases->length) {
 			if(self::$error_behavior == self::ERROR) {
@@ -488,8 +512,8 @@ class ShortcodeParser {
 		}
 
 		$res = '';
-		$html = $bases->item(0)->parentNode;
-		$doc = $html->ownerDocument;
+		$container = $bases->item(0)->parentNode;
+		$doc = $container->ownerDocument;
 
 		$xp = new DOMXPath($doc);
 
@@ -526,7 +550,7 @@ class ShortcodeParser {
 			$this->replaceMarkerWithContent($shortcode, $tag);
 		}
 		
-		foreach($html->childNodes as $child) $res .= $doc->saveHTML($child);
+		foreach($container->childNodes as $child) $res .= $doc->saveHTML($child);
 
 		return $res;
 	}
