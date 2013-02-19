@@ -1051,7 +1051,7 @@ jQuery.noConflict();
 }(jQuery));
 
 var statusMessage = function(text, type) {
-	text = $('<div/>').text(text).html(); // Escape HTML entities in text
+	text = jQuery('<div/>').text(text).html(); // Escape HTML entities in text
 	jQuery.noticeAdd({text: text, type: type});
 };
 
