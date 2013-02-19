@@ -481,6 +481,25 @@ class ShortcodeParser {
 		return $bases;
 	}
 	
+	protected function saveHTML($doc) {
+		if (version_compare(PHP_VERSION, '5.3.6', '>=')){
+			$res = '';
+			foreach($doc->firstChild->childNodes as $child) $res .= $doc->saveHTML($child);
+		}
+		else {
+			$res = preg_replace(
+				array(
+					'/^(.*?)<html>/is',
+					'/<\/html>(.*?)$/is',
+				),
+				'',
+				$doc->saveHTML()
+			);
+		}
+
+		return $res;
+	}
+
 	/**
 	 * Parse a string, and replace any registered shortcodes within it with the result of the mapped callback.
 	 *
@@ -511,9 +530,7 @@ class ShortcodeParser {
 			}
 		}
 
-		$res = '';
-		$container = $bases->item(0)->parentNode;
-		$doc = $container->ownerDocument;
+		$doc = $bases->item(0)->ownerDocument;
 
 		$xp = new DOMXPath($doc);
 
@@ -550,9 +567,7 @@ class ShortcodeParser {
 			$this->replaceMarkerWithContent($shortcode, $tag);
 		}
 		
-		foreach($container->childNodes as $child) $res .= $doc->saveHTML($child);
-
-		return $res;
+		return $this->saveHTML($doc);
 	}
 	
 	
