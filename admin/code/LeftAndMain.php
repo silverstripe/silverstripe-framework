@@ -254,6 +254,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// but overall the unified minification into a single file brings more performance benefits
 		// than a couple of saved bytes (after gzip) in individual files.
 		// We also re-compress already compressed files through JSMin as this causes weird runtime bugs.
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TinyMceWrapper.js');
 		Requirements::combine_files(
 			'lib.js',
 			array(
