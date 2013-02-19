@@ -49,7 +49,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		$button->addExtraClass('gridfield-button-print');
 		//$button->addExtraClass('no-ajax');
 		return array(
-			$this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>', 
+			$this->targetFragment => $button->Field(), 
 		);
 	}
 
