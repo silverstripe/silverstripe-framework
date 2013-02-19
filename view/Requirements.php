@@ -791,7 +791,7 @@ class Requirements_Backend {
 		if(preg_match('{^//|http[s]?}', $fileOrUrl)) {
 			return $fileOrUrl;
 		} elseif(Director::fileExists($fileOrUrl)) {
-			$parts = preg_split('/\?/', $fileOrUrl, 2);
+			$parts = explode('?', $fileOrUrl, 2);
 			$path = $parts[0];
 			if(count($parts) > 1) {
 				parse_str($parts[1], $params);
