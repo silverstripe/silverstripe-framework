@@ -209,7 +209,7 @@ class SS_Cache {
 		
 		$backend = self::$backends[$backend_name];
 
-		$basicOptions = array('cache_id_prefix' => $for);
+		$basicOptions = array('cache_id_prefix' => md5($for.BASE_PATH));
 		
 		if ($cache_lifetime >= 0) $basicOptions['lifetime'] = $cache_lifetime;
 		else $basicOptions['caching'] = false;
