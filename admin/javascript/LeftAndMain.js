@@ -841,16 +841,26 @@ jQuery.noConflict();
 		 * in the href attribute (which doubles as an anchor link to that element).
 		 */
 		$('.cms .cms-help-toggle').entwine({
+			ToggleElement: null,
 			onmatch: function() {
 				this._super();
 
-				$(this.attr('href')).hide();
+				var id=this.attr('href');
+				if(id.indexOf('#')!=0) {
+					id=id.split('#');
+					id='#'+id[1];
+				}
+
+				var element = jQuery(id);
+				$(this).setToggleElement(element);
+				element.hide();
 			},
 			onunmatch: function() {
 				this._super();
+				$(this).setToggleElement(null);
 			},
 			onclick: function(e) {
-				$(this.attr('href')).toggle();
+				$(this).getToggleElement().toggle();
 				e.preventDefault();
 			}
 		});
