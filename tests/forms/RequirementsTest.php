@@ -226,18 +226,18 @@ class RequirementsTest extends SapphireTest {
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 
-		$backend->javascript($basePath . '/RequirementsTest_a.js?test=1&test=2&test=3');
-		$backend->css($basePath . '/RequirementsTest_a.css?test=1&test=2&test=3');
+		$backend->javascript($basePath . '/RequirementsTest_a.js?test1=1&test2=2&test3=3');
+		$backend->css($basePath . '/RequirementsTest_a.css?test1=1&test2=2&test3=3');
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 
 		$html = $backend->includeInHTML(false, self::$html_template);
 
 		/* Javascript has correct path */
-		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&test=1&test=2&test=3/', $html),
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?test1=1&test2=2&test3=3&m=\d+/', $html),
 			'javascript has correct path'); 
 
 		/* CSS has correct path */
-		$this->assertTrue((bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&test=1&test=2&test=3/',$html),
+		$this->assertTrue((bool)preg_match('/href=".*\/RequirementsTest_a\.css\?test1=1&test2=2&test3=3&m=\d+/',$html),
 			'css has correct path'); 
 	}
 	
