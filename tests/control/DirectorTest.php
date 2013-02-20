@@ -166,8 +166,14 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
-		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'),
-			null, null, null, null, array('somekey' => 'sometestcookievalue'));
+		$request = new SS_HTTPRequest(
+			'POST',
+			'errorpage?somekey=sometestgetvalue',
+			array(),
+			array('somekey' => 'sometestpostvalue')
+		);
+
+		Director::test($request, null, array('somekey' => 'sometestcookievalue'));
 
 		$this->assertEquals('getvalue', $_GET['somekey'],
 			'$_GET reset to original value after Director::test()');
@@ -179,14 +185,23 @@ class DirectorTest extends SapphireTest {
 	
 	public function testTestRequestCarriesGlobals() {
 		$fixture = array('somekey' => 'sometestvalue');
+
 		foreach(array('get', 'post') as $method) {
 			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
-				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method))
-					. '?' . http_build_query($fixture);
-				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
+				$request = new SS_HTTPRequest(
+					strtoupper($method),
+					Controller::join_links(
+						'DirectorTestRequest_Controller', sprintf($testfunction, ucfirst($method))
+					),
+					$fixture,
+					$fixture,
+					$fixture
+				);
 
-				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
-				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
+				$response = Director::test($request, null, $fixture);
+
+				$this->assertInstanceOf('SS_HTTPResponse', $response, 'Director::test() returns SS_HTTPResponse');
+				$this->assertEquals($fixture['somekey'], $response->getBody(), 'Director::test() ' . $testfunction);
 			}
 		}
 	}
@@ -196,18 +211,17 @@ class DirectorTest extends SapphireTest {
 	 * saved in the request 
 	 */
 	public function testRouteParams() {
-		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
-		
-		$this->assertEquals(
-			$request->params(), 
-			array(
-				'Controller' => 'DirectorTestRequest_Controller',
-				'Action' => 'myaction', 
-				'ID' => 'myid', 
-				'OtherID' => 'myotherid',
-				'Locale' => 'en_NZ'
-			)
-		);
+		Director::test($request = new SS_HTTPRequest(
+			'GET', 'en-nz/myaction/myid/myotherid'
+		));
+
+		$this->assertEquals($request->params(), array(
+			'Controller' => 'DirectorTestRequest_Controller',
+			'Action' => 'myaction',
+			'ID' => 'myid',
+			'OtherID' => 'myotherid',
+			'Locale' => 'en_NZ'
+		));
 	}
 
 	public function testForceSSLProtectsEntireSite() {

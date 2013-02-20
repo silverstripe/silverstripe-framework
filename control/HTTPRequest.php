@@ -83,7 +83,7 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	 * Constructs a new HTTP request.
 	 *
 	 * @param string $method the HTTP method
-	 * @param string $url the URL relative to the site root
+	 * @param string $url the URL relative to the site root - any GET vars are extracted
 	 * @param array $getVars an array of GET vars
 	 * @param array $postVars an array of POST vars
 	 * @param string $body the request body
@@ -91,15 +91,13 @@ class SS_HTTPRequest extends SS_HttpMessage implements ArrayAccess {
 	public function __construct($method = null, $url = null, $getVars = array(), $postVars = array(), $body = null) {
 		$this->method = strtoupper(self::detect_method($method, $postVars));
 
-		if($url) {
-			// Normalize URL if its relative (strictly speaking), or has leading slashes
-			if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
-				$url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $url);
-			}
-
-			$this->url      = $url;
-			$this->dirParts = $url ? preg_split('|/+|', $url) : array();
+		// Normalize URL if its relative (strictly speaking), or has leading slashes
+		if(Director::is_relative_url($url) || $url[0] == '/') {
+			$url = preg_replace('~/+~', '/', trim($url, '/'));
 		}
+
+		$this->url      = $url;
+		$this->dirParts = $url ? preg_split('|/+|', $url) : array();
 
 		$this->getVars  = (array) $getVars;
 		$this->postVars = (array) $postVars;
