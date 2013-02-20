@@ -2,6 +2,7 @@
 
 use SilverStripe\Framework\Http\Request;
 use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
 
 // Fake a current controller. Way harder than it should be
 class FakeController extends Controller {
