@@ -40,7 +40,7 @@ Composer updates regularly, so you should run this command fairly often. These i
 
 ## Create a new site
 
-Composer can create a new site for you, using the installer as a template.  To do so, run this:
+Composer can create a new site for you, using the installer as a template:
 
 	composer create-project silverstripe/installer ./my/website/folder
 
@@ -50,7 +50,7 @@ As long as your web server is up and running, this will get all the code that yo
 Now visit the site in your web browser, and the installation process will be completed.
 
 By default composer will download the latest stable version. You can also specify
-a version to download that version explicitly, i.e. this will download 3.0.3:
+a version to download that version explicitly, i.e. this will download the older `3.0.3` release:
 
 	composer create-project silverstripe/installer ./my/website/folder 3.0.3
 	
@@ -109,20 +109,28 @@ You have to tell composer three things in order to be able to do this:
   - Include dependancies marked as "developer" requirements
   - Use the development version, not the latest stable version
 
-The first two steps are done as part of the initial create project using additional arguments. For instance:
+The first two steps are done as part of the initial create project using additional arguments.
+
 
 	composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
 
-The process will take a bit longer, since all modules are checked out as full git repositories which you can work on.
+The process will take a bit longer, since all modules are checked out as full git repositories which you can work on. The command checks out from the 3.0 release line. To check out from master instead,
+replace `3.0.x-dev` with `dev-master` (more info on [composer version naming](http://getcomposer.org/doc/02-libraries.md#specifying-the-version)).
 
 The `--keep-vcs` flag will make sure you have access to the git history of the installer and the requirements
 
-The `--dev` flag will add a couple modules which are useful for SilverStripe development:
+The `--dev` flag is optional, and can be used to add a couple modules which are useful for 
+SilverStripe development:
 
+ * The `behat-extension` module allows running [Behat](http://behat.org) integration tests
  * The `docsviewer` module will let you preview changes to the project documentation
  * The `buildtools` module which adds [phing](http://phing.info) tasks for creating SilverStripe releases
 
-Note that you can also include those into an existing project by running `composer update --dev`.
+Once the `create-project` command completes, you need to edit the `composer.json` in the project root
+and remove the `@stable` markers from the `silverstripe/cms` and `silverstripe/framework` version entries.
+Another `composer update --dev` call will now fetch from the development branch instead.
+Note that you can also convert an existing composer project with these steps.
+
 Please read the ["Contributing Code"](/misc/contributing/code) documentation to find out how to
 create forks and send pull requests.
 
