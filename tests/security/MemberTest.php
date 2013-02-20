@@ -114,6 +114,23 @@ class MemberTest extends FunctionalTest {
 		
 		Security::set_password_encryption_algorithm($origAlgo);
 	}
+
+	public function testKeepsEncryptionOnEmptyPasswords() {
+		$member = new Member();
+		$member->Password = 'mypassword';
+		$member->PasswordEncryption = 'sha1_v2.4';
+		$member->write();
+		
+		$member->Password = '';
+		$member->write();
+		
+		$this->assertEquals(
+			$member->PasswordEncryption, 
+			'sha1_v2.4'
+		);
+		$result = $member->checkPassword('');
+		$this->assertTrue($result->valid());
+	}
 	
 	function testSetPassword() {
 		$member = $this->objFromFixture('Member', 'test');

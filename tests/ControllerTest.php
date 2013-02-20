@@ -2,7 +2,7 @@
 
 class ControllerTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/ControllerTest.yml';
-
+	
 	protected $autoFollowRedirection = false;
 	
 	function testDefaultAction() {
@@ -29,49 +29,83 @@ class ControllerTest extends FunctionalTest {
 	}
 	
 	public function testUndefinedActions() {
-		$response = Director::test('ControllerTest_UnsecuredController/undefinedaction');
+		$response = Director::test('ControllerTest_AccessUnsecuredSubController/undefinedaction');
 		$this->assertEquals(404, $response->getStatusCode(), 'Undefined actions return a not found response.');
 	}
 	
 	function testAllowedActions() {
 		$adminUser = $this->objFromFixture('Member', 'admin');
 		
-		$response = $this->get("ControllerTest_SecuredController/methodaction");
-		$this->assertEquals(200, $response->getStatusCode());
-		
-		$response = $this->get("ControllerTest_SecuredController/stringaction");
-		$this->assertEquals(404, $response->getStatusCode());
+		$response = $this->get("ControllerTest_AccessBaseController/unsecuredaction");
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Access granted on action without $allowed_actions on defining controller'
+		);
 
-		$response = $this->get("ControllerTest_SecuredController/adminonly");
-		$this->assertEquals(403, $response->getStatusCode());
-		
-		$response = $this->get('ControllerTest_UnsecuredController/stringaction');
-		$this->assertEquals(200, $response->getStatusCode(), 
-			"test that a controller without a specified allowed_actions allows actions through"
+		$response = $this->get("ControllerTest_AccessBaseController/onlysecuredinsubclassaction");
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Access granted on action without $allowed_actions on defining controller, ' .
+			'even when action is secured in subclasses'
 		);
 		
-		$response = $this->get("ControllerTest_FullSecuredController/index");
+		$response = $this->get("ControllerTest_AccessSecuredController/onlysecuredinsubclassaction");
+		$this->assertEquals(403, $response->getStatusCode(),
+			'Access denied on action with $allowed_actions on defining controller, ' .
+			'even if action is unsecured on parent class'
+		);
+
+		$response = $this->get("ControllerTest_AccessSecuredController/adminonly");
+		$this->assertEquals(403, $response->getStatusCode(),
+			'Access denied on action with $allowed_actions on defining controller, ' .
+			'when action is not defined on any parent classes'
+		);
+
+		$response = $this->get("ControllerTest_AccessSecuredController/aDmiNOnlY");
+		$this->assertEquals(403, $response->getStatusCode(),
+			'Access denied on action with $allowed_actions on defining controller, ' .
+			'regardless of capitalization'
+		);
+		
+		// TODO Change this API
+		$response = $this->get('ControllerTest_AccessUnsecuredSubController/unsecuredaction');
+		$this->assertEquals(200, $response->getStatusCode(), 
+			"Controller without a specified allowed_actions allows its own actions through"
+		);
+
+		$response = $this->get('ControllerTest_AccessUnsecuredSubController/adminonly');
+		$this->assertEquals(403, $response->getStatusCode(), 
+			"Controller without a specified allowed_actions still disallows actions defined on parents"
+		);
+		
+		$response = $this->get("ControllerTest_AccessAsteriskSecuredController/index");
 		$this->assertEquals(403, $response->getStatusCode(),
 			"Actions can be globally disallowed by using asterisk (*) for index method"
 		);
 		
-		$response = $this->get("ControllerTest_FullSecuredController/adminonly");
-		$this->assertEquals(403, $response->getStatusCode(),
-			"Actions can be globally disallowed by using asterisk (*) instead of a method name"
+		$response = $this->get("ControllerTest_AccessAsteriskSecuredController/onlysecuredinsubclassaction");
+		$this->assertEquals(404, $response->getStatusCode(),
+			"Actions can be globally disallowed by using asterisk (*) instead of a method name, " .
+			"in which case they'll be marked as 'not found'"
 		);
 		
-		$response = $this->get("ControllerTest_FullSecuredController/unsecuredaction");
+		$response = $this->get("ControllerTest_AccessAsteriskSecuredController/unsecuredaction");
 		$this->assertEquals(200, $response->getStatusCode(),
 			"Actions can be overridden to be allowed if globally disallowed by using asterisk (*)"
 		);
 		
 		$this->session()->inst_set('loggedInAs', $adminUser->ID);
-		$response = $this->get("ControllerTest_SecuredController/adminonly");
+		$response = $this->get("ControllerTest_AccessSecuredController/adminonly");
 		$this->assertEquals(
 			200, 
 			$response->getStatusCode(), 
 			"Permission codes are respected when set in \$allowed_actions"
 		);
+
+		$response = $this->get("ControllerTest_AccessUnsecuredSubController/adminonly");
+		$this->assertEquals(200, $response->getStatusCode(),
+			"Actions can be globally disallowed by using asterisk (*) instead of a method name"
+		);
+
+		$this->session()->inst_set('loggedInAs', null);
 	}
 	
 	/**
@@ -206,48 +240,111 @@ class ControllerTest_Controller extends Controller {
 }
 
 /**
- * Controller with an $allowed_actions value
+ * Allowed actions flattened:
+ * - unsecuredaction: *
+ * - onlysecuredinsubclassaction: *
+ * - unsecuredinparentclassaction: *
+ * - unsecuredinsubclassaction: *
  */
-class ControllerTest_SecuredController extends Controller {
-	static $allowed_actions = array(
-		"methodaction",
-		"adminonly" => "ADMIN",
-	);
-	
-	public $Content = "default content";
-	
-	function methodaction() {
-		return array(
-			"Content" => "methodaction content"
-		);
-	}
-	
-	function stringaction() {
-		return "stringaction was called.";
+class ControllerTest_AccessBaseController extends Controller implements TestOnly {
+	// Accessible by all
+	public function unsecuredaction() {
+		return 'unsecuredaction was called.';
 	}
 
-	function adminonly() {
+	// Accessible by all
+	public function onlysecuredinsubclassaction() {
+		return 'onlysecuredinsubclass was called.';
+	}
+
+	// Accessible by all
+	public function unsecuredinparentclassaction() {
+		return 'unsecuredinparentclassaction was called.';
+	}
+
+	// Accessible by all
+	public function unsecuredinsubclassaction() {
+		return 'unsecuredinsubclass was called.';
+	}
+}
+
+/**
+ * Allowed actions flattened:
+ * - unsecuredaction: *
+ * - onlysecuredinsubclassaction: ADMIN (parent: *)
+ * - unsecuredinparentclassaction: *
+ * - unsecuredinsubclassaction: (none) (parent: *)
+ * - adminonly: ADMIN
+ */
+class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
+	
+	static $allowed_actions = array(
+		"onlysecuredinsubclassaction" => 'ADMIN',
+		"adminonly" => "ADMIN",
+	);
+		
+	// Accessible by ADMIN only
+	public function onlysecuredinsubclassaction() {
+		return 'onlysecuredinsubclass was called.';
+	}
+
+	// Not accessible, since overloaded but not mentioned in $allowed_actions
+	public function unsecuredinsubclassaction() {
+		return 'unsecuredinsubclass was called.';
+	}
+
+	// Accessible by all, since only defined in parent class
+	//public function unsecuredinparentclassaction() {
+
+	// Accessible by ADMIN only
+	public function adminonly() {
 		return "You must be an admin!";
 	}
 }
 
-class ControllerTest_FullSecuredController extends Controller {
+/**
+ * Allowed actions flattened:
+ * - unsecuredaction: *
+ * - onlysecuredinsubclassaction: ADMIN (parent: *)
+ * - unsecuredinparentclassaction: ADMIN (parent: *)
+ * - unsecuredinsubclassaction: (none) (parent: *)
+ * - adminonly: ADMIN (parent: ADMIN)
+ */
+class ControllerTest_AccessAsteriskSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 	
 	static $allowed_actions = array(
 		"*" => "ADMIN",
 		'unsecuredaction' => true,
 	);
 	
-	function adminonly() {
+	// Accessible by ADMIN only
+	public function adminonly() {
 		return "You must be an admin!";
 	}
 	
-	function unsecuredaction() {
+	// Accessible by all
+	public function unsecuredaction() {
 		return "Allowed for everybody";
 	}
 }
 
-class ControllerTest_UnsecuredController extends ControllerTest_SecuredController {}
+/**
+ * Allowed actions flattened:
+ * - unsecuredaction: *
+ * - onlysecuredinsubclassaction: ADMIN (parent: *)
+ * - unsecuredinparentclassaction: *
+ * - unsecuredinsubclassaction: (none) (parent: *)
+ * - adminonly: ADMIN
+ */
+class ControllerTest_AccessUnsecuredSubController extends ControllerTest_AccessSecuredController implements TestOnly {
+	
+	// No $allowed_actions defined here
+
+	// Accessible by ADMIN only, defined in parent class
+	public function onlysecuredinsubclassaction() {
+		return 'onlysecuredinsubclass was called.';
+	}
+}
 
 class ControllerTest_HasAction extends Controller {
 	

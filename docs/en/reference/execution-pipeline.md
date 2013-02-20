@@ -83,7 +83,8 @@ You can access the following controller-method with /team/signup
 	class Team extends DataObject {}
 	
 	class Team_Controller extends Controller {
-	  function signup($id, $otherId) {
+	  static $allowed_actions = array('signup');
+	  public function signup($id, $otherId) {
 	    return $this->renderWith('MyTemplate');
 	  }
 	}

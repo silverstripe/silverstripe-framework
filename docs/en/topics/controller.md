@@ -3,8 +3,7 @@
 Base controller class.  You will extend this to take granular control over the actions and url handling of aspects of
 your SilverStripe site.
 
-
-## Example
+## Usage
 
 `mysite/code/Controllers/FastFood.php`
 
@@ -12,11 +11,12 @@ your SilverStripe site.
 	<?php
 	
 	class FastFood_Controller extends Controller {
-	    function order($arguments) {
+		public static $allowed_actions = array('order');
+	    public function order(SS_HTTPRequest $request) {
 	        print_r($arguments);
 	    }
 	}
-	
+
 	?>
 
 
@@ -37,6 +37,96 @@ Request for `/fastfood/order/24/cheesefries` would result in the following to th
 	    [Name] => cheesefries
 	)
 
+<div class="warning" markdown='1'>
+	SilverStripe automatically adds a URL routing entry based on the controller's class name,
+	so a `MyController` class is accessible through `http://yourdomain.com/MyController`.
+</div>
+
+## Access Control
+
+### Through $allowed_actions
+
+All public methods on a controller are accessible by their name through the `$Action`
+part of the URL routing, so a `MyController->mymethod()` is accessible at
+`http://yourdomain.com/MyController/mymethod`. This is not always desireable,
+since methods can return internal information, or change state in a way
+that's not intended to be used through a URL endpoint.
+
+SilverStripe strongly recommends securing your controllers
+through defining a `$allowed_actions` array on the class,
+which allows whitelisting of methods, as well as a concise
+way to perform checks against permission codes or custom logic.
+
+	:::php
+	class MyController extends Controller {
+		public static $allowed_actions = array(
+			// someaction can be accessed by anyone, any time
+			'someaction', 
+			// So can otheraction
+			'otheraction' => true, 
+			// restrictedaction can only be people with ADMIN privilege
+			'restrictedaction' => 'ADMIN', 
+			// complexaction can only be accessed if $this->canComplexAction() returns true
+			'complexaction' '->canComplexAction' 
+		);
+	}
+
+There's a couple of rules guiding these checks:
+
+ * Each controller is only responsible for access control on the methods it defines
+ * If a method on a parent class is overwritten, access control for it has to be redefined as well
+ * An action named "index" is whitelisted by default
+ * A wildcard (`*`) can be used to define access control for all methods (incl. methods on parent classes)
+ * Specific method entries in `$allowed_actions` overrule any `*` settings
+ * Methods returning forms also count as actions which need to be defined
+ * Form action methods (targets of `FormAction`) should NOT be included in `$allowed_actions`,
+   they're handled separately through the form routing (see the ["forms" topic](/topics/forms))
+ * `$allowed_actions` can be defined on `Extension` classes applying to the controller.
+
+
+If the permission check fails, SilverStripe will return a "403 Forbidden" HTTP status.
+
+### Through the action
+
+Each method responding to a URL can also implement custom permission checks,
+e.g. to handle responses conditionally on the passed request data.
+
+	:::php
+	class MyController extends Controller {
+		public static $allowed_actions = array('myaction');
+		public function myaction($request) {
+			if(!$request->getVar('apikey')) {
+				return $this->httpError(403, 'No API key provided');
+			} 
+				
+			return 'valid';
+		}
+	}
+
+Unless you transform the response later in the request processing,
+it'll look pretty ugly to the user. Alternatively, you can use
+`ErrorPage::response_for(<status-code>)` to return a more specialized layout.
+
+Note: This is recommended as an addition for `$allowed_actions`, in order to handle
+more complex checks, rather than a replacement.
+
+### Through the init() method
+
+After checking for allowed_actions, each controller invokes its `init()` method,
+which is typically used to set up common state in the controller, and 
+include JavaScript and CSS files in the output which are used for any action.
+If an `init()` method returns a `SS_HTTPResponse` with either a 3xx or 4xx HTTP
+status code, it'll abort execution. This behaviour can be used to implement
+permission checks.
+
+	:::php
+	class MyController extends Controller {
+		public static $allowed_actions = array();
+		public function init() {
+			parent::init();
+			if(!Permission::check('ADMIN')) return $this->httpError(403);
+		}
+	}
 
 ## URL Handling
 
@@ -51,9 +141,10 @@ the case below we also want any orders coming through `/fastfood/drivethrough/` 
 
 	:::php
 	class FastFood_Controller extends Controller {
+	    static $allowed_actions = array('drivethrough');
 	    public static $url_handlers = array(
-	            'drivethrough/$Action/$ID/$Name' => 'order'
-	            );
+	        'drivethrough/$Action/$ID/$Name' => 'order'
+	    );
 
 
 

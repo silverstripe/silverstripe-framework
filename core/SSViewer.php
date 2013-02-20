@@ -401,7 +401,7 @@ class SSViewer {
 		}
 	
 		
-		if(isset($_GET['showtemplate']) && !Director::isLive()) {
+		if(isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
 			$lines = file($cacheFile);
 			echo "<h2>Template: $cacheFile</h2>";
 			echo "<pre>";
@@ -680,7 +680,7 @@ class SSViewer_FromString extends SSViewer {
 		fwrite($fh, $template);
 		fclose($fh);
 
-		if(isset($_GET['showtemplate']) && $_GET['showtemplate']) {
+		if(isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
 			$lines = file($tmpFile);
 			echo "<h2>Template: $tmpFile</h2>";
 			echo "<pre>";

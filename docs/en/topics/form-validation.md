@@ -45,16 +45,16 @@ TODO Describe behaviour.js solution easily, how to disable it
 Setting fieldEl.requiredErrorMsg or formEl.requiredErrorMsg will override the default error message.  Both can include
 the string '$FieldLabel', which will be replaced with the field's label. Otherwise, the message is "Please fill out
 "$FieldLabel", it is required".
-
+			
 You can use Behaviour to load in the appropriate value:
-
+			
 	:::js
 	Behaviour.register({
 	'#Form_Form' : {
 	   requiredErrorMsg: "Please complete this question before moving on.",
-	}
+			}
 	});
-
+			
 ### Other validation libraries
 
 By default, SilverStripe forms with an attached Validator instance use the custom Validator.js clientside logic. It is
@@ -65,12 +65,12 @@ Disable for all forms (in `mysite/_config.php`):
 
 	:::php
 	Validator::set_javascript_validation_handler('none');
-
+	
 Disable for a specific form:
 
 	:::php
 	$myForm->getValidator()->setJavascriptValidationHandler('none');
-
+	
 
 ## Related
 

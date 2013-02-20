@@ -68,6 +68,9 @@ You can have more customized logic and interface feedback through a custom contr
 	:::php
 	<?php
 	class MyController extends Controller {
+
+		static $allowed_actions = array('Form');
+		
 		protected $template = "BlankPage";
 		
 		function Link($action = null) {

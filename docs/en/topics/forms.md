@@ -7,7 +7,7 @@ instantiating the Form class itself, or by subclassing it.
 
 ## Instantiating a form
 
-Creating a form is a matter of defining a method to represent that form.  This method should return a form object.  The
+Creating a form is a matter of defining a method to represent that form. This method should return a form object. The
 constructor takes the following arguments:
 
 *  `$controller`: This must be the controller that contains the form.
@@ -59,9 +59,9 @@ The real difference, however, is that you can then define your controller method
 
 
 ## Form Field Types
-
+		
 There are many classes extending `[api:FormField]`. Some examples:
-
+		
 *  `[api:TextField]`
 *  `[api:EmailField]`
 *  `[api:NumericField]`
@@ -73,12 +73,12 @@ There are many classes extending `[api:FormField]`. Some examples:
 
 Full overview at [form-field-types](/reference/form-field-types)
 
-
+	
 ### Using Form Fields
-
+			
 To get these fields automatically rendered into a form element, all you need to do is create a new instance of the
 class, and add it to the fieldset of the form. 
-
+		
 	:::php
 	$form = new Form(
 	        $controller = $this,
@@ -114,7 +114,7 @@ Implementing the more complex fields requires extra arguments.
 	            new TextField(
 	                $name = "FirstName", 
 	                $title = "First name"
-	            ),
+		), 
 	            new TextField("Surname"),
 	            new EmailField("Email", "Email address")
 	            new DropdownField(
@@ -122,7 +122,7 @@ Implementing the more complex fields requires extra arguments.
 	                 $title = "Country (if outside nz)",
 	                 $source = Geoip::getCountryDropDown(),
 	                 $value = Geoip::visitor_country()
-	            )
+		)
 	        ), new FieldSet(
 	            // List the action buttons here
 	            new FormAction("signup", "Sign up")
@@ -173,28 +173,28 @@ First of all, you need to create your form on it's own class, that way you can d
 	      $fields = new FieldSet(
 	         new TextField('FirstName', 'First name'),
 	         new EmailField('Email', 'Email address')
-	      );
+			);
 	
 	      $actions = new FieldSet(
 	         new FormAction('submit', 'Submit')
 	      );
 	
-	      parent::__construct($controller, $name, $fields, $actions);
-	   }
-	
+			parent::__construct($controller, $name, $fields, $actions);
+		}
+		
 	   function forTemplate() {
 	      return $this->renderWith(array(
 	         $this->class,
 	         'Form'
 	      ));
-	   }
-	
+		}
+		
 	   function submit($data, $form) {
 	      // do stuff here
-	   }
+		}
 	
 	}
-
+	
 `forTemplate()` tells the `[api:Form]` class to render with a template of return value of `$this->class`, which in this case
 is *MyForm*, the name of the class. If the template doesn't exist, then it falls back to using Form.ss.
 
@@ -203,36 +203,36 @@ basic customisation:
 
 	:::ss
 	<form $FormAttributes>
-	   <% if Message %>
-	      <p id="{$FormName}_error" class="message $MessageType">$Message</p>
-	   <% else %>
-	      <p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
-	   <% end_if %>
-	   
-	   <fieldset>
+		<% if Message %>
+			<p id="{$FormName}_error" class="message $MessageType">$Message</p>
+		<% else %>
+			<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
+		<% end_if %>
+		
+		<fieldset>
 	      <div id="FirstName" class="field text">
 	         <label class="left" for="$FormName_FirstName">First name</label>
 	         $dataFieldByName(FirstName)
-	      </div>
-	
+			</div>
+			
 	      <div id="Email" class="field email">
 	         <label class="left" for="$FormName_Email">Email</label>
 	         $dataFieldByName(Email)
-	      </div>
-	
+			</div>
+			
 	      $dataFieldByName(SecurityID)
-	   </fieldset>
-	
-	   <% if Actions %>
-	      <div class="Actions">
+		</fieldset>
+		
+		<% if Actions %>
+		<div class="Actions">
 	         <% control Actions %>$Field<% end_control %>
-	      </div>
-	   <% end_if %>
+		</div>
+		<% end_if %>
 	</form>
 
  `$dataFieldByName(FirstName)` will return the form control contents of `Field()` for the particular field object, in
 this case `TextField->Field()` or `EmailField->Field()` which returns an `<input>` element with specific markup
-for the type of field. Pass in the name of the field as the first parameter, as done above, to render it into the
+for the type of field. Pass in the name of the field as the first parameter, as done above, to render it into the 
 template.
 
 To find more methods, have a look at the `[api:Form]` class, as there is a lot of different methods of customising the form
