@@ -63,7 +63,7 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 	}
 	
 	public function handleItem($gridField, $request) {
-		$id = $request->param("ID");
+		$id = $request->getParam("ID");
 		return new GridField_URLHandlerTest_Component_ItemRequest(
 				$gridField, $id,
 				Controller::join_links($gridField->Link(), 'item/' . $id));

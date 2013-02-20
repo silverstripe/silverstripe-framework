@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Cookie;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * The Versioned extension allows your DataObjects to have several versions, allowing
  * you to rollback changes and view history. An example of this is the pages used in the CMS.

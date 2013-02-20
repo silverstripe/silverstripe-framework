@@ -1,4 +1,11 @@
 <?php
+
+use SilverStripe\Framework\Http\Cookie;
+use SilverStripe\Framework\Http\Http;
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Base controller class.
  * Controllers are the cornerstone of all site functionality in SilverStripe.  The {@link Director}
@@ -18,8 +25,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	
 	/**
 	 * @var array $requestParams Contains all GET and POST parameters
-	 * passed to the current {@link SS_HTTPRequest}.
-	 * @uses SS_HTTPRequest->requestVars()
+	 * passed to the current {@link Request}.
+	 * @uses Request->requestVars()
 	 */
 	protected $requestParams;
 	
@@ -46,7 +53,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	protected $basicAuthEnabled = true;
 
 	/**
-	 * @var SS_HTTPResponse $response The response object that the controller returns.
+	 * @var Response $response The response object that the controller returns.
 	 * Set in {@link handleRequest()}.
 	 */
 	protected $response;
@@ -93,7 +100,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 	
 	/**
-	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
+	 * Executes this controller, and return an {@link Response} object with the result.
 	 * 
 	 * This method first does a few set-up activities:
 	 *  - Push this controller ont to the controller stack - 
@@ -118,18 +125,18 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * and end the method with $this->popCurrent().  
 	 * Failure to do this will create weird session errors.
 	 * 
-	 * @param $request The {@link SS_HTTPRequest} object that is responsible 
+	 * @param $request The {@link Request} object that is responsible
 	 *  for distributing request parsing.
-	 * @return SS_HTTPResponse The response that this controller produces, 
+	 * @return Response The response that this controller produces,
 	 *  including HTTP headers such as redirection info
 	 */
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(Request $request, DataModel $model) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
-		$this->urlParams = $request->allParams();
+		$this->urlParams = $request->getParams();
 		$this->request = $request;
-		$this->response = new SS_HTTPResponse();
+		$this->response = new Response();
 		$this->setDataModel($model);
 		
 		$this->extend('onBeforeInit');
@@ -151,9 +158,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		}
 
 		$body = parent::handleRequest($request, $model);
-		if($body instanceof SS_HTTPResponse) {
+		if($body instanceof Response) {
 			if(isset($_REQUEST['debug_request'])) {
-				Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller;"
+				Debug::message("Request handler returned response object to $this->class controller;"
 					. "returning it without modification.");
 			}
 			$this->response = $body;
@@ -164,7 +171,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 					Debug::message("Request handler $body->class object to $this->class controller;"
 						. "rendering with template returned by $body->class::getViewer()");
 				}
-				$body = $body->getViewer($request->latestParam('Action'))->process($body);
+				$body = $body->getViewer($request->getLatestParam('Action'))->process($body);
 			}
 			
 			$this->response->setBody($body);
@@ -183,7 +190,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * If $Action isn't given, it will use "index" as a default.
 	 */
 	public function handleAction($request, $action) {
-		foreach($request->latestParams() as $k => $v) {
+		foreach($request->getLatestParams() as $k => $v) {
 			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
 		}
 
@@ -216,7 +223,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 	
 	/**
-	 * Returns the SS_HTTPResponse object that this controller is building up.
+	 * Returns the response object that this controller is building up.
 	 * Can be used to set the status code and headers
 	 */
 	public function getResponse() {
@@ -441,7 +448,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Redirect to the given URL.
 	 */
 	public function redirect($url, $code=302) {
-		if(!$this->response) $this->response = new SS_HTTPResponse();
+		if(!$this->response) $this->response = new Response();
 		
 		if($this->response->getHeader('Location') && $this->response->getHeader('Location') != $url) {
 			user_error("Already directed to " . $this->response->getHeader('Location')

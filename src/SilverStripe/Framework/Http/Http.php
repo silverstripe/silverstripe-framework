@@ -1,12 +1,22 @@
 <?php
+
+namespace SilverStripe\Framework\Http;
+
+use Config;
+use Convert;
+use Director;
+use Exception;
+use File;
+use finfo;
+use InvalidArgumentException;
+
 /**
- * A class with HTTP-related helpers.
- * Like Debug, this is more a bundle of methods than a class ;-)
- * 
+ * A collection of HTTP utility functions.
+ *
  * @package framework
- * @subpackage misc
+ * @subpackage http
  */
-class HTTP {
+class Http {
 
 	protected static $cache_age = 0;
 
@@ -41,7 +51,8 @@ class HTTP {
 	 */
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
-		return HTTP::urlRewriter($html, function($url) {
+
+		return self::urlRewriter($html, function($url) {
 			return Director::absoluteURL($url, true);
 		});
 	}
@@ -279,21 +290,20 @@ class HTTP {
 	/**
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
 	 *
-	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
+	 * @param Response $body The response object to augment.  Omitted the argument or passing a string is
 	 *                            deprecated; in these cases, the headers are output directly.
 	 */
 	public static function add_cache_headers($body = null) {
 		// Validate argument
-		if($body && !($body instanceof SS_HTTPResponse)) {
-			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
-			$body = null;
+		if($body && !($body instanceof Response)) {
+			throw new Exception('The body must be a response object');
 		}
 
 		// Development sites have frequently changing templates; this can get stuffed up by the code
 		// below.
 		if(Director::isDev()) return;
 		
-		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
+		// The headers have been sent and we don't have an response object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) return;
 
@@ -367,13 +377,39 @@ class HTTP {
 			$responseHeaders['ETag'] = self::$etag;
 		}
 		
-		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
+		// Now that we've generated them, either output them or attach them to the response as appropriate
 		foreach($responseHeaders as $k => $v) {
-			if($body) $body->addHeader($k, $v);
+			if($body) $body->setHeader($k, $v);
 			else if(!headers_sent()) header("$k: $v");
 		}
 	}
 
+
+	/**
+	 * Construct an response that will deliver a file to the client
+	 *
+	 * @static
+	 * @param $fileData
+	 * @param $fileName
+	 * @param null $mimeType
+	 * @return Response
+	 */
+	public static function send_file($fileData, $fileName, $mimeType = null) {
+		if(!$mimeType) {
+			$mimeType = self::get_mime_type($fileName);
+		}
+		$response = new Response($fileData);
+		$response->setHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
+		$response->setHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
+		$response->setHeader("Content-Length", strlen($fileData));
+		$response->setHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
+
+		if(strstr($_SERVER["HTTP_USER_AGENT"],"MSIE") == true) {
+			$response->setHeader('Cache-Control', 'max-age=3, must-revalidate'); // Workaround for IE6 and 7
+		}
+
+		return $response;
+	}
 
 	/**
 	 * Return an {@link http://www.faqs.org/rfcs/rfc2822 RFC 2822} date in the

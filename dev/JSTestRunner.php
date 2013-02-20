@@ -104,7 +104,7 @@ class JSTestRunner extends Controller {
 	 * Run only a single test class
 	 */
 	public function only($request) {
-		$test = $request->param('TestCase');
+		$test = $request->getParam('TestCase');
 		
 		if ($test == 'all') {
 			$this->all();

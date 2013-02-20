@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Response;
+
 /**
  * RestfulService class allows you to consume various RESTful APIs.
  * Through this you could connect and aggregate data of various web services.
@@ -532,7 +535,7 @@ class RestfulService extends ViewableData {
  * @package framework
  * @subpackage integration
  */
-class RestfulService_Response extends SS_HTTPResponse {
+class RestfulService_Response extends Response {
 	protected $simpleXML;
 	
 	/**
@@ -550,7 +553,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	public function simpleXML() {
 		if(!$this->simpleXML) {
 			try {
-				$this->simpleXML = new SimpleXMLElement($this->body);
+				$this->simpleXML = new SimpleXMLElement($this->getBody());
 			}
 			catch(Exception $e) {
 				user_error("String could not be parsed as XML. " . $e, E_USER_WARNING);

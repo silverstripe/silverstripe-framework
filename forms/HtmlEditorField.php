@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\ResponseException;
+
 /**
  * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
  * are created from <textarea> tags, which are then converted with JavaScript.
@@ -881,7 +884,7 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		$this->oembed = Oembed::get_oembed_from_url($url);
 		if(!$this->oembed) {
 			$controller = Controller::curr();
-			$controller->response->addHeader('X-Status',
+			$controller->response->setHeader('X-Status',
 				rawurlencode(_t(
 					'HtmlEditorField.URLNOTANOEMBEDRESOURCE',
 					"The URL '{url}' could not be turned into a media resource.",
@@ -890,7 +893,7 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 				)));
 			$controller->response->setStatusCode(404);
 
-			throw new SS_HTTPResponse_Exception($controller->response);
+			throw new ResponseException($controller->response);
 		}
 	}
 
