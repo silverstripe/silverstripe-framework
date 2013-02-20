@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Implements a basic security model
  * @package framework
@@ -172,7 +176,7 @@ class Security extends Controller {
 		if(!$controller) $controller = Controller::curr();
 		
 		if(Director::is_ajax()) {
-			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
+			$response = ($controller) ? $controller->getResponse() : new Response();
 			$response->setStatusCode(403);
 			if(!Member::currentUser()) $response->setBody('NOTLOGGEDIN:');
 			return $response;
@@ -210,7 +214,7 @@ class Security extends Controller {
 
 			// Work out the right message to show
 			if(Member::currentUser()) {
-				$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
+				$response = ($controller) ? $controller->getResponse() : new Response();
 				$response->setStatusCode(403);
 
 				//If 'alreadyLoggedIn' is not specified in the array, then use the default
@@ -340,10 +344,10 @@ class Security extends Controller {
 		$eventResults = $this->extend('onBeforeSecurityLogin');
 		// If there was a redirection, return
 		if($this->redirectedTo()) return;
-		// If there was an SS_HTTPResponse object returned, then return that
+		// If there was an response object returned, then return that
 		else if($eventResults) {
 			foreach($eventResults as $result) {
-				if($result instanceof SS_HTTPResponse) return $result;
+				if($result instanceof Response) return $result;
 			}
 		}
 		
@@ -508,7 +512,7 @@ class Security extends Controller {
 	 * Show the "password sent" page, after a user has requested
 	 * to reset their password.
 	 *
-	 * @param SS_HTTPRequest $request The SS_HTTPRequest for this action. 
+	 * @param \SilverStripe\Framework\Http\Request $request The request for this action.
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {

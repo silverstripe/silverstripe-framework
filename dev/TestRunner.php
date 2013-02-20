@@ -216,10 +216,10 @@ class TestRunner extends Controller {
 	 */
 	public function only($request, $coverage = false) {
 		self::use_test_manifest();
-		if($request->param('TestCase') == 'all') {
+		if($request->getParam('TestCase') == 'all') {
 			$this->all();
 		} else {
-			$classNames = explode(',', $request->param('TestCase'));
+			$classNames = explode(',', $request->getParam('TestCase'));
 			foreach($classNames as $className) {
 				if(!class_exists($className) || !is_subclass_of($className, 'SapphireTest')) {
 					user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class",
@@ -238,7 +238,7 @@ class TestRunner extends Controller {
 	public function module($request, $coverage = false) {
 		self::use_test_manifest();
 		$classNames = array();
-		$moduleNames = explode(',', $request->param('ModuleName'));
+		$moduleNames = explode(',', $request->getParam('ModuleName'));
 		
 		$ignored = array('functionaltest', 'phpsyntaxtest');
 

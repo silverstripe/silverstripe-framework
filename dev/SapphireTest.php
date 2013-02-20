@@ -1,6 +1,9 @@
 <?php
 require_once 'TestRunner.php';
 
+use SilverStripe\Framework\Http\Cookie;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier
@@ -512,7 +515,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$controller = Controller::has_curr() ? Controller::curr() : null;
 		if ( $controller && $controller->response && $controller->response->getHeader('Location') ) {
 			$controller->response->setStatusCode(200);
-			$controller->response->removeHeader('Location');
+			$controller->response->unsetHeader('Location');
 		}
 	}
 	/**

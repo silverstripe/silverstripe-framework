@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
+
 // Fake a current controller. Way harder than it should be
 class FakeController extends Controller {
 	
@@ -10,14 +15,14 @@ class FakeController extends Controller {
 		
 		$this->pushCurrent();
 
-		$this->request = new SS_HTTPRequest(
+		$this->request = new Request(
 			(isset($_SERVER['X-HTTP-Method-Override'])) 
 				? $_SERVER['X-HTTP-Method-Override'] 
 				: $_SERVER['REQUEST_METHOD'],
 			'/'
 		);
 
-		$this->response = new SS_HTTPResponse();
+		$this->response = new Response();
 		
 		$this->init();
 	}

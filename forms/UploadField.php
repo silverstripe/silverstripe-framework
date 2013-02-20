@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+
 /**
  * Field for uploading single or multiple files of all types, including images.
  * <b>NOTE: this Field will call write() on the supplied record</b>
@@ -431,11 +434,11 @@ class UploadField extends FileField {
 	}
 	
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return UploadField_ItemHandler
 	 */
-	public function handleItem(SS_HTTPRequest $request) {
-		return $this->getItemHandler($request->param('ID'));
+	public function handleItem(Request $request) {
+		return $this->getItemHandler($request->getParam('ID'));
 	}
 
 	/**
@@ -447,20 +450,20 @@ class UploadField extends FileField {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return UploadField_ItemHandler
 	 */
-	public function handleSelect(SS_HTTPRequest $request) {
+	public function handleSelect(Request $request) {
 		return UploadField_SelectHandler::create($this, $this->getFolderName());
 	}
 
 	/**
 	 * Action to handle upload of a single file
 	 * 
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return string json
 	 */
-	public function upload(SS_HTTPRequest $request) {
+	public function upload(Request $request) {
 		if($this->isDisabled() || $this->isReadonly() || !$this->canUpload()) {
 			return $this->httpError(403);
 		}
@@ -470,7 +473,7 @@ class UploadField extends FileField {
 		if(!$token->checkRequest($request)) return $this->httpError(400);
 
 		$name = $this->getName();
-		$tmpfile = $request->postVar($name);
+		$tmpfile = $request->filesVar($name);
 		$record = $this->getRecord();
 		
 		// Check if the file has been uploaded into the temporary storage.
@@ -557,8 +560,8 @@ class UploadField extends FileField {
 				}
 			}
 		}
-		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
-		$response->addHeader('Content-Type', 'text/plain');
+		$response = new Response(Convert::raw2json(array($return)));
+		$response->setHeader('Content-Type', 'text/plain');
 		return $response;
 	}
 
@@ -586,8 +589,8 @@ class UploadField extends FileField {
 				'buttons' => $file->UploadFieldFileButtons
 			);
 		}
-		$response = new SS_HTTPResponse(Convert::raw2json($return));
-		$response->addHeader('Content-Type', 'application/json');
+		$response = new Response(Convert::raw2json($return));
+		$response->setHeader('Content-Type', 'application/json');
 		return $response;
 	}
 
@@ -745,10 +748,10 @@ class UploadField_ItemHandler extends RequestHandler {
 	/**
 	 * Action to handle removing a single file from the db relation
 	 * 
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param Request $request
+	 * @return Response
 	 */
-	public function remove(SS_HTTPRequest $request) {
+	public function remove(Request $request) {
 		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
 
@@ -756,7 +759,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		$token = $this->parent->getForm()->getSecurityToken();
 		if(!$token->checkRequest($request)) return $this->httpError(400);
 
-		$response = new SS_HTTPResponse();
+		$response = new Response();
 		$response->setStatusCode(500);
 		$fieldName = $this->parent->getName();
 		$record = $this->parent->getRecord();
@@ -781,10 +784,10 @@ class UploadField_ItemHandler extends RequestHandler {
 	/**
 	 * Action to handle deleting of a single file
 	 * 
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param Request $request
+	 * @return Response
 	 */
-	public function delete(SS_HTTPRequest $request) {
+	public function delete(Request $request) {
 		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
 
@@ -811,10 +814,10 @@ class UploadField_ItemHandler extends RequestHandler {
 	/**
 	 * Action to handle editing of a single file
 	 * 
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return ViewableData_Customised
 	 */
-	public function edit(SS_HTTPRequest $request) {
+	public function edit(Request $request) {
 		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
 
@@ -879,9 +882,9 @@ class UploadField_ItemHandler extends RequestHandler {
 	/**
 	 * @param array $data
 	 * @param Form $form
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 */
-	public function doEdit(array $data, Form $form, SS_HTTPRequest $request) {
+	public function doEdit(array $data, Form $form, Request $request) {
 		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
 

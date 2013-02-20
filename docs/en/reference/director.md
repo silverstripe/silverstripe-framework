@@ -15,7 +15,7 @@ but in short
 
 * File uploads are first analysed to remove potentially harmful uploads (this 
 will likely change!)
-* The `[api:SS_HTTPRequest]` object is created
+* The `[api:SilverStripe\Framework\Http\Request]` object is created
 * The session object is created
 * The `[api:Injector]` is first referenced, and asks the registered `[api:RequestProcessor]` 
 to pre-process the request object. This allows for analysis of the current 

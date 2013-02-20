@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Http;
+
 /**
  * Represents a variable-length string of up to 2 megabytes, designed to store raw text
  * 

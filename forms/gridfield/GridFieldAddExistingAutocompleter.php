@@ -192,7 +192,7 @@ class GridFieldAddExistingAutocompleter
 	 * Returns a json array of a search results that can be used by for example Jquery.ui.autosuggestion
 	 *
 	 * @param GridField $gridField
-	 * @param SS_HTTPRequest $request 
+	 * @param \SilverStripe\Framework\Http\Request $request
 	 */
 	public function doSearch($gridField, $request) {
 		$dataClass = $gridField->getList()->dataClass();
