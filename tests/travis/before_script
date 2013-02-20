@@ -28,7 +28,8 @@ git clone --depth=100 --quiet git://github.com/silverstripe/silverstripe-postgre
 cp ./tests/travis/_ss_environment.php $BUILD_DIR
 cp ./tests/travis/_config.php $BUILD_DIR/mysite
 
-# Copy actual project code into build directory (checked out by travis)
+# Replace the Composer-installed framework with the actual version to build.
+rm -rf $BUILD_DIR/framework
 cp -r . $BUILD_DIR/framework
 
 cd $BUILD_DIR
