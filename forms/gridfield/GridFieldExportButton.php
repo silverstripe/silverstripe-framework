@@ -1,8 +1,6 @@
 <?php
-/**
- * @package framework
- * @subpackage gridfield
- */
+
+use SilverStripe\Framework\Http\Http;
 
 /**
  * Adds an "Export list" button to the bottom of a GridField.
@@ -87,7 +85,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		$fileName = "export-$now.csv";
 
 		if($fileData = $this->generateExportFileData($gridField)){
-			return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+			return Http::send_file($fileData, $fileName, 'text/csv');
 		}
 	}
 

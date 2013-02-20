@@ -1,22 +1,12 @@
 <?php
 
+use SilverStripe\Framework\Http\Request;
+
 class HTTPRequestTest extends SapphireTest {
 	static $fixture_file = null;
-	
-	public function testMatch() {
-		$request = new SS_HTTPRequest("GET", "admin/crm/add");
-		
-		/* When a rule matches, but has no variables, array("_matched" => true) is returned. */
-		$this->assertEquals(array("_matched" => true), $request->match('admin/crm', true));
-		
-		/* Becasue we shifted admin/crm off the stack, just "add" should be remaining */
-		$this->assertEquals("add", $request->remaining());
-		
-		$this->assertEquals(array("_matched" => true), $request->match('add', true));
-	}
-	
+
 	public function testHttpMethodOverrides() {
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'GET',
 			'admin/crm'
 		);
@@ -25,7 +15,7 @@ class HTTPRequestTest extends SapphireTest {
 			'GET with no method override'
 		);
 
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm'
 		);
@@ -34,69 +24,88 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with no method override'
 		);
 
-		$request = new SS_HTTPRequest(
-			'GET',
-			'admin/crm',
-			array('_method' => 'DELETE')
-		);
+		$request = new Request('GET', 'admin/crm', null, array(
+			'get' => array('_method' => 'DELETE')
+		));
 		$this->assertTrue(
 			$request->isGET(),
 			'GET with invalid POST method override'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
-			array(),
-			array('_method' => 'DELETE')
+			null,
+			array('post' => array('_method' => 'DELETE'))
 		);
 		$this->assertTrue(
 			$request->isDELETE(),
 			'POST with valid method override to DELETE'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			array(),
-			array('_method' => 'put')
+			array('post' => array('_method' => 'put'))
 		);
 		$this->assertTrue(
 			$request->isPUT(),
 			'POST with valid method override to PUT'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			array(),
-			array('_method' => 'head')
+			array('post' => array('_method' => 'head'))
 		);
 		$this->assertTrue(
 			$request->isHEAD(),
 			'POST with valid method override to HEAD '
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
 			array(),
-			array('_method' => 'head')
+			array('post' => array('_method' => 'head'))
 		);
 		$this->assertTrue(
 			$request->isHEAD(),
 			'POST with valid method override to HEAD'
 		);
 		
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
-			array('_method' => 'head')
+			array(),
+			array('get' => array('post' => array('_method' => 'head')))
 		);
 		$this->assertTrue(
 			$request->isPOST(),
 			'POST with invalid method override by GET parameters to HEAD'
 		);
+
+		$this->setExpectedException('SilverStripe\\Framework\\Http\\ResponseException');
+		$request = new Request('POST', null, null, array(
+			'post' => array('_method' => 'invalid')
+		));
+
+		$request = new Request('POST', null, null, array(
+			'server' => array('X_HTTP_METHOD_OVERRIDE' => 'put')
+		));
+		$this->assertTrue($request->isPut(), 'The can can be overriden with a header');
+
+		$this->setExpectedException('SilverStripe\\Framework\\Http\\ResponseException');
+		$request = new Request('POST', null, null, array(
+			'server' => array('X_HTTP_METHOD_OVERRIDE' => 'invalid')
+		));
+
+		$request = new Request(null, null, null, array(
+			'server' => array('REQUEST_METHOD' => 'POST')
+		));
+		$this->assertTrue($request->isPost(), 'The method defaults to the request method');
 	}
 	
 	public function testRequestVars() {
@@ -114,11 +123,11 @@ class HTTPRequestTest extends SapphireTest {
 			'third' => 'c',
 			'fourth' => 'd',
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -139,11 +148,11 @@ class HTTPRequestTest extends SapphireTest {
 			'second' => 'b',
 			'third' => 'd',
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -178,11 +187,11 @@ class HTTPRequestTest extends SapphireTest {
 				'third' => 'd',
 			),
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -218,11 +227,11 @@ class HTTPRequestTest extends SapphireTest {
 				'third' => 'd',
 			),
 		);
-		$request = new SS_HTTPRequest(
+		$request = new Request(
 			'POST',
 			'admin/crm',
-			$getVars,
-			$postVars
+			null,
+			array('get' => $getVars, 'post' => $postVars)
 		);
 		$this->assertEquals(
 			$requestVars,
@@ -232,26 +241,173 @@ class HTTPRequestTest extends SapphireTest {
 	}
 
 	public function testIsAjax() {
-		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 0));
+		$req = new Request('GET', '/', null, array('get' => array('ajax' => 0)));
 		$this->assertFalse($req->isAjax());
 
-		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 1));
+		$req = new Request('GET', '/', null, array('get' => array('ajax' => 1)));
 		$this->assertTrue($req->isAjax());
 
-		$req = new SS_HTTPRequest('GET', '/');
-		$req->addHeader('X-Requested-With', 'XMLHttpRequest');
+		$req = new Request('GET', '/');
+		$req->setHeader('X-Requested-With', 'XMLHttpRequest');
 		$this->assertTrue($req->isAjax());
 	}
 
 	public function testGetURL() {
-		$req = new SS_HTTPRequest('GET', '/');
+		$req = new Request('GET', '/');
 		$this->assertEquals('', $req->getURL());
 
-		$req = new SS_HTTPRequest('GET', '/assets/somefile.gif');
+		$req = new Request('GET', '/assets/somefile.gif');
 		$this->assertEquals('assets/somefile.gif', $req->getURL());
 
-		$req = new SS_HTTPRequest('GET', '/home?test=1');
+		$req = new Request('GET', '/home?test=1');
 		$this->assertEquals('home?test=1', $req->getURL(true));
 		$this->assertEquals('home', $req->getURL());
 	}
+
+	public function testGetExtension() {
+		$request = new Request('GET', '/path');
+		$this->assertEquals('', $request->getExtension());
+
+		$request = new Request('GET', '/path.extension');
+		$this->assertEquals('extension', $request->getExtension());
+
+		$request = new Request('GET', '/path.extension?get=value');
+		$this->assertEquals('extension', $request->getExtension());
+	}
+
+	public function testShifting() {
+		$request = new Request('GET', '/first/second/third');
+		$this->assertEquals(array('first', 'second', 'third'), $request->getUrlParts());
+		$this->assertEquals('first/second/third', $request->getRemainingUrl());
+		$this->assertFalse($request->isAllRouted());
+
+		$this->assertEquals('first', $request->shift());
+		$this->assertEquals(array('second', 'third'), $request->getUrlParts());
+		$this->assertEquals('second/third', $request->getRemainingUrl());
+		$this->assertFalse($request->isAllRouted());
+
+		$this->assertEquals(array('second', 'third'), $request->shift(2));
+		$this->assertEquals('', $request->getRemainingUrl());
+		$this->assertEquals(array(), $request->getUrlParts());
+		$this->assertTrue($request->isAllRouted());
+	}
+
+	public function testParams() {
+		$request = new Request('GET', '');
+
+		$first = array('a' => '1');
+		$second = array('a' => '', 'b' => '2');
+		$third = array('c' => '3', 'd' => '4');
+
+		$this->assertEquals(array(), $request->getParams());
+		$this->assertEquals(array(), $request->getLatestParams());
+
+		$request->pushParams($first);
+		$this->assertEquals($first, $request->getParams());
+		$this->assertEquals($first, $request->getLatestParams());
+
+		$request->pushParams($second);
+		$this->assertEquals(array('a' => '1', 'b' => '2'), $request->getParams());
+		$this->assertEquals($second, $request->getLatestParams());
+		$this->assertEquals('1', $request->getParam('a'));
+		$this->assertEquals('', $request->getLatestParam('a'));
+
+		$request->pushParams($third);
+		$request->shiftParams();
+		$this->assertEquals(array('a' => '2', 'b' => '3', 'c' => '4', 'd' => null), $request->getParams());
+		$request->shiftParams();
+		$this->assertEquals(array('a' => '3', 'b' => '4', 'c' => null, 'd' => null), $request->getParams());
+	}
+
+	public function testIsAllRouted() {
+		$request = new Request('GET', 'first/second');
+		$this->assertFalse($request->isAllRouted());
+
+		$request->setUnshiftedButParsed(1);
+		$this->assertFalse($request->isAllRouted());
+
+		$request->setUnshiftedButParsed(2);
+		$this->assertTrue($request->isAllRouted());
+	}
+
+	/**
+	 * @covers Request::extractHeaders()
+	 */
+	public function testExtractRequestHeaders() {
+		$request = array(
+			'REDIRECT_STATUS'      => '200',
+			'HTTP_HOST'            => 'host',
+			'HTTP_USER_AGENT'      => 'User Agent',
+			'HTTP_ACCEPT'          => 'text/html',
+			'HTTP_ACCEPT_LANGUAGE' => 'en-us',
+			'HTTP_COOKIE'          => 'PastMember=1',
+			'SERVER_PROTOCOL'      => 'HTTP/1.1',
+			'REQUEST_METHOD'       => 'GET',
+			'REQUEST_URI'          => '/',
+			'SCRIPT_NAME'          => FRAMEWORK_DIR . '/main.php',
+			'CONTENT_TYPE'         => 'text/xml',
+			'CONTENT_LENGTH'       => 10
+		);
+
+		$headers = array(
+			'Host'            => 'host',
+			'User-Agent'      => 'User Agent',
+			'Accept'          => 'text/html',
+			'Accept-Language' => 'en-us',
+			'Cookie'          => 'PastMember=1',
+			'Content-Type'    => 'text/xml',
+			'Content-Length'  => '10'
+		);
+
+		$request = new Request(null, null, null, array(
+			'server' => $request
+		));
+
+		foreach($headers as $header => $expect) {
+			$this->assertEquals($expect, $request->getHeader($header));
+		}
+	}
+
+	/**
+	 * @covers Request::setGlobals()
+	 */
+	public function testSetGlobals() {
+		$get    = $_GET;
+		$post   = $_POST;
+		$files  = $_FILES;
+		$server = $_SERVER;
+
+		$req = new Request('GET', '', null, array(
+			'get'    => array('get'),
+			'post'   => array('post'),
+			'files'  => array('files'),
+			'server' => array('server')
+		));
+		$req->setGlobals();
+
+		$this->assertEquals(array('get'), $_GET);
+		$this->assertEquals(array('post'), $_POST);
+		$this->assertEquals(array('files'), $_FILES);
+		$this->assertEquals(array('server'), $_SERVER);
+
+		$_GET    = $get;
+		$_POST   = $post;
+		$_FILES  = $files;
+		$_SERVER = $server;
+	}
+
+	public function testCredentials() {
+		$request = new Request();
+		$this->assertNull($request->getUser());
+		$this->assertNull($request->getPassword());
+
+		$request = new Request(null, null, null, array(
+			'server' => array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'pass')
+		));
+		$this->assertEquals('user', $request->getUser());
+		$this->assertEquals('pass', $request->getPassword());
+	}
+
+
+
 }

@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 /**
  * @package framework
  * @subpackage tests
@@ -166,8 +169,11 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
-		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'),
-			null, null, null, null, array('somekey' => 'sometestcookievalue'));
+		$request = new Request('POST', 'errorpage', null, array(
+			'get' => array('somekey' => 'sometestpostvalue')
+		));
+
+		Director::test($request, null, array('somekey' => 'sometestcookievalue'));
 
 		$this->assertEquals('getvalue', $_GET['somekey'],
 			'$_GET reset to original value after Director::test()');
@@ -179,14 +185,25 @@ class DirectorTest extends SapphireTest {
 	
 	public function testTestRequestCarriesGlobals() {
 		$fixture = array('somekey' => 'sometestvalue');
+
 		foreach(array('get', 'post') as $method) {
 			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
-				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method))
-					. '?' . http_build_query($fixture);
-				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
+				$request = new Request(
+					strtoupper($method),
+					Controller::join_links(
+						'DirectorTestRequest_Controller', sprintf($testfunction, ucfirst($method))
+					),
+					null,
+					array(
+						'get'  => $fixture,
+						'post' => $fixture
+					)
+				);
 
-				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
-				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
+				$response = Director::test($request, null, $fixture);
+
+				$this->assertInstanceOf('SilverStripe\\Framework\\Http\\Response', $response, 'Director::test() returns response');
+				$this->assertEquals($fixture['somekey'], $response->getBody(), 'Director::test() ' . $testfunction);
 			}
 		}
 	}
@@ -196,18 +213,17 @@ class DirectorTest extends SapphireTest {
 	 * saved in the request 
 	 */
 	public function testRouteParams() {
-		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
-		
-		$this->assertEquals(
-			$request->params(), 
-			array(
-				'Controller' => 'DirectorTestRequest_Controller',
-				'Action' => 'myaction', 
-				'ID' => 'myid', 
-				'OtherID' => 'myotherid',
-				'Locale' => 'en_NZ'
-			)
-		);
+		Director::test($request = new Request(
+			'GET', 'en-nz/myaction/myid/myotherid'
+		));
+
+		$this->assertEquals($request->getParams(), array(
+			'Controller' => 'DirectorTestRequest_Controller',
+			'Action' => 'myaction',
+			'ID' => 'myid',
+			'OtherID' => 'myotherid',
+			'Locale' => 'en_NZ'
+		));
 	}
 
 	public function testForceSSLProtectsEntireSite() {
@@ -240,38 +256,6 @@ class DirectorTest extends SapphireTest {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'just-another-page/sub-url';
 		$output = Director::forceSSL(array('/^admin/', '/^Security/'));
 		$this->assertFalse($output);
-	}
-
-	/**
-	 * @covers Director::extract_request_headers()
-	 */
-	public function testExtractRequestHeaders() {
-		$request = array(
-			'REDIRECT_STATUS'      => '200',
-			'HTTP_HOST'            => 'host',
-			'HTTP_USER_AGENT'      => 'User Agent',
-			'HTTP_ACCEPT'          => 'text/html',
-			'HTTP_ACCEPT_LANGUAGE' => 'en-us',
-			'HTTP_COOKIE'          => 'PastMember=1',
-			'SERVER_PROTOCOL'      => 'HTTP/1.1',
-			'REQUEST_METHOD'       => 'GET',
-			'REQUEST_URI'          => '/',
-			'SCRIPT_NAME'          => FRAMEWORK_DIR . '/main.php',
-			'CONTENT_TYPE'         => 'text/xml',
-			'CONTENT_LENGTH'       => 10
-		);
-		
-		$headers = array(
-			'Host'            => 'host',
-			'User-Agent'      => 'User Agent',
-			'Accept'          => 'text/html',
-			'Accept-Language' => 'en-us',
-			'Cookie'          => 'PastMember=1',
-			'Content-Type'    => 'text/xml',
-			'Content-Length'  => '10'
-		);
-		
-		$this->assertEquals($headers, Director::extract_request_headers($request));
 	}
 
 }

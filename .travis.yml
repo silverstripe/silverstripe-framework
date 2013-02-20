@@ -25,6 +25,7 @@ matrix:
 
 before_script:
  - pear install pear/PHP_CodeSniffer
+ - composer install -d ~/builds/ss
  - phpenv rehash
  - ./tests/travis/before_script ~/builds/ss 
  - cd ~/builds/ss

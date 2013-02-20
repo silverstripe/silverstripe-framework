@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Tests for the File class
  */

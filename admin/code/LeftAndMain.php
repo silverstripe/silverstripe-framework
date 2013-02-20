@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.
  * If you are wanting to add more areas to the CMS, you can do it by subclassing LeftAndMain.
@@ -353,11 +358,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		SSViewer::set_theme(null);
 	}
 	
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
+	public function handleRequest(Request $request, DataModel $model = null) {
 		$response = parent::handleRequest($request, $model);
 		$title = $this->Title();
-		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
-		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
+		if(!$response->getHeader('X-Controller')) $response->setHeader('X-Controller', $this->class);
+		if(!$response->getHeader('X-Title')) $response->setHeader('X-Title', urlencode($title));
 		
 		return $response;
 	}
@@ -372,9 +377,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function redirect($url, $code=302) {
 		if($this->request->isAjax()) {
-			$this->response->addHeader('X-ControllerURL', $url);
+			$this->response->setHeader('X-ControllerURL', $url);
 			if($this->request->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
-				$this->response->addHeader('X-Pjax', $this->request->getHeader('X-Pjax'));
+				$this->response->setHeader('X-Pjax', $this->request->getHeader('X-Pjax'));
 			}
 			$oldResponse = $this->response;
 			$newResponse = new LeftAndMain_HTTPResponse(
@@ -383,7 +388,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$oldResponse->getStatusDescription()
 			);
 			foreach($oldResponse->getHeaders() as $k => $v) {
-				$newResponse->addHeader($k, $v);
+				$newResponse->setHeader($k, $v);
 			}
 			$newResponse->setIsFinished(true);
 			$this->response = $newResponse;
@@ -460,7 +465,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
-		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
+		if($request->getParam('ID')) $this->setCurrentPageID($request->getParam('ID'));
 		return $this->getResponseNegotiator()->respond($request);
 	}
 
@@ -824,7 +829,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'PrevID' => $prev ? $prev->ID : null
 			);
 		}
-		$this->response->addHeader('Content-Type', 'text/json');
+		$this->response->setHeader('Content-Type', 'text/json');
 		return Convert::raw2json($data);
 	}
 	
@@ -851,7 +856,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 		
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
+		$this->response->setHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
 		return $this->getResponseNegotiator()->respond($this->request);
 	}
 	
@@ -864,7 +869,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		$record->delete();
 
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
+		$this->response->setHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
 		return $this->getResponseNegotiator()->respond(
 			$this->request, 
 			array('currentform' => array($this, 'EmptyForm'))
@@ -881,7 +886,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * - 'SiblingIDs': Array of all sibling nodes to the moved node (incl. the node itself).
 	 *   In case of a 'ParentID' change, relates to the new siblings under the new parent.
 	 * 
-	 * @return SS_HTTPResponse JSON string with a 
+	 * @return Response JSON string with a
 	 */
 	public function savetreenode($request) {
 		if (!Permission::check('SITETREE_REORGANISE') && !Permission::check('ADMIN')) {
@@ -947,7 +952,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status',
+			$this->response->setHeader('X-Status',
 				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 		
@@ -970,7 +975,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 			
-			$this->response->addHeader('X-Status',
+			$this->response->setHeader('X-Status',
 				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 
@@ -1617,7 +1622,7 @@ class LeftAndMainMarkingFilter {
 /**
  * Allow overriding finished state for faux redirects.
  */
-class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
+class LeftAndMain_HTTPResponse extends Response {
 
 	protected $isFinished = false;
 

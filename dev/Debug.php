@@ -327,8 +327,8 @@ class Debug {
 	
 	/**
 	 * Render a user-facing error page, using the default HTML error template
-	 * rendered by {@link ErrorPage} if it exists. Doesn't use the standard {@link SS_HTTPResponse} class
-	 * the keep dependencies minimal. 
+	 * rendered by {@link ErrorPage} if it exists. Doesn't use the standard
+	 * {@link \SilverStripe\Framework\Http\Response} class the keep dependencies minimal.
 	 * 
 	 * @uses ErrorPage
 	 *

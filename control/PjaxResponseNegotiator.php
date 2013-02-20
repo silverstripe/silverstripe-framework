@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\ResponseException;
+
 /**
  * Handle the X-Pjax header that AJAX responses may provide, returning the 
  * fragment, or, in the case of non-AJAX form submissions, redirecting back to the submitter.
@@ -29,7 +34,7 @@ class PjaxResponseNegotiator {
 
 	/**
 	 * @param RequestHandler $controller
-	 * @param SS_HTTPResponse An existing response to reuse (optional)
+	 * @param Response An existing response to reuse (optional)
 	 * @param Array $callbacks
 	 */
 	public function __construct($callbacks = array(), $response = null) {
@@ -38,7 +43,7 @@ class PjaxResponseNegotiator {
 	}
 
 	public function getResponse() {
-		if(!$this->response) $this->response = new SS_HTTPResponse();
+		if(!$this->response) $this->response = new Response();
 		return $this->response;
 	}
 
@@ -50,14 +55,14 @@ class PjaxResponseNegotiator {
 	 * Out of the box, the handler "CurrentForm" value, which will return the rendered form.  
 	 * Non-Ajax calls will redirect back.
 	 * 
-	 * @param SS_HTTPRequest $request 
+	 * @param Request $request
 	 * @param array $extraCallbacks List of anonymous functions or callables returning either a string
-	 * or SS_HTTPResponse, keyed by their fragment identifier. The 'default' key can
+	 * or response, keyed by their fragment identifier. The 'default' key can
 	 * be used as a fallback for non-ajax responses.
 	 * @param array $fragmentOverride Change the response fragments.
-	 * @return SS_HTTPResponse
+	 * @return Response
 	 */
-	public function respond(SS_HTTPRequest $request, $extraCallbacks = array()) {
+	public function respond(Request $request, $extraCallbacks = array()) {
 		// Prepare the default options and combine with the others
 		$callbacks = array_merge($this->callbacks, $extraCallbacks);
 		$response = $this->getResponse();
@@ -70,7 +75,7 @@ class PjaxResponseNegotiator {
 			$fragments = explode(',', $fragmentStr);
 		} else {
 			if($request->isAjax()) {
-				throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
+				throw new ResponseException("Ajax requests to this URL require an X-Pjax header.", 400);
 			}
 			$response->setBody(call_user_func($callbacks['default']));
 			return $response;
@@ -81,11 +86,11 @@ class PjaxResponseNegotiator {
 			if(isset($callbacks[$fragment])) {
 				$responseParts[$fragment] = call_user_func($callbacks[$fragment]);
 			} else {
-				throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+				throw new ResponseException("X-Pjax = '$fragment' not supported for this URL.", 400);
 			}
 		}
 		$response->setBody(Convert::raw2json($responseParts));
-		$response->addHeader('Content-Type', 'text/json');
+		$response->setHeader('Content-Type', 'text/json');
 
 		return $response;
 	}

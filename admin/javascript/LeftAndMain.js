@@ -49,7 +49,7 @@ jQuery.noConflict();
 
 		/**
 		 * Compare URLs, but normalize trailing slashes in 
-		 * URL to work around routing weirdnesses in SS_HTTPRequest.
+		 * URL to work around routing weirdnesses in requests.
 		 * Also normalizes relative URLs by prefixing them with the <base>.
 		 */
 		var isSameUrl = function(url1, url2) {

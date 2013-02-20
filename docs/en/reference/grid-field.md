@@ -44,7 +44,7 @@ Here is an example where we display a basic gridfield with the default settings:
 
 		static $allowed_actions = array('index');
 		
-		public function index(SS_HTTPRequest $request) {
+		public function index(Request $request) {
 			$this->Content = $this->AllPages();
 			return $this->render();
 		}

@@ -207,6 +207,14 @@ action (the shift point is set to start parsing variables and the appropriate co
 `tag/$Tag!` - Match an URL starting with `/tag/` after the controller's `URLSegment` and require it to have something
 after it.  If the URLSegment is **order** then `/order/tag/34` and `/order/tag/asdf` match but `/order/tag/` will not
 
+You can also match against the extension included in the URL. For example, the URL rule `controller/$Action.json` will
+only handle requests with the `.json` extension, whereas `controller/$Action` will only match requests with no
+extension.
+
+You can also make the extension a parameter. For example, the URL rule `action.$Format` will match any request to
+`"/action" with any extension (or no extension). The value of the extension will then be available on the `$Format`
+URL parameter. If you want to make an extension required, you can suffix the extension with a "!". The rule
+`action.$Format!` will match "action.json" or "action.xml", but not "action".
 
 You can use the `debug_request=1` switch from the [urlvariabletools](/reference/urlvariabletools) to see these in action.
 
