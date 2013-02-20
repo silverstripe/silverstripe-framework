@@ -102,11 +102,39 @@ class Router {
 			}
 
 			// Loop through each rule part to check for a match.
-			$matches = true;
 			$params = array();
 			$parts = array_map('trim', $parts);
 
 			foreach ($parts as $i => $part) {
+				$urlPart = isset($urlParts[$i]) ? $urlParts[$i] : null;
+
+				// Check if this is the last part, and the extension is a
+				// parameter.
+				if ($i == count($parts) - 1 && preg_match('/\.\$([a-zA-Z]+!?)$/', $part, $matches)) {
+					$ext = $request->getExtension();
+					$param = $matches[1];
+
+					// Check if the extension is required.
+					if (substr($param, -1) == '!') {
+						if (!$ext) {
+							continue 2;
+						}
+
+						$param = substr($param, 0, -1);
+					}
+
+					$params[$param] = $ext;
+
+					// Strip the extension off the rule as well as the part
+					// to match.
+					$pos = strrpos($part, '.');
+					$part = substr($part, 0, $pos);
+
+					if ($ext) {
+						$urlPart = substr($urlPart, 0, -strlen($ext) - 1);
+					}
+				}
+
 				// Match a variable beginning with $, and ending with ! if it
 				// is required.
 				if ($part[0] == '$') {
@@ -118,11 +146,11 @@ class Router {
 						$name = substr($part, 1);
 					}
 
-					if ($required && !isset($urlParts[$i])) {
+					if ($required && !$urlPart) {
 						continue 2;
 					}
 
-					$params[$name] = isset($urlParts[$i]) ? $urlParts[$i] : null;
+					$params[$name] = $urlPart;
 
 					if ($part == '$Controller') {
 						$controller = $params['Controller'];
@@ -132,7 +160,7 @@ class Router {
 						}
 					}
 					// Match a literal part.
-				} elseif (!isset($urlParts[$i]) || $urlParts[$i] != $part) {
+				} elseif (!$urlPart || $urlPart != $part) {
 					continue 2;
 				}
 			}
