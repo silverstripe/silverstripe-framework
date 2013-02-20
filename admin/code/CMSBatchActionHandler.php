@@ -77,7 +77,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		if(!SecurityToken::inst()->checkRequest($request)) return $this->httpError(400);
 
 		$actions = $this->batchActions();
-		$actionClass = $actions[$request->param('BatchAction')]['class'];
+		$actionClass = $actions[$request->getParam('BatchAction')]['class'];
 		$actionHandler = new $actionClass();
 		
 		// Sanitise ID list and query the database for apges
@@ -136,7 +136,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	public function handleApplicablePages($request) {
 		// Find the action handler
 		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
-		$actionClass = $actions[$request->param('BatchAction')];
+		$actionClass = $actions[$request->getParam('BatchAction')];
 		$actionHandler = new $actionClass['class']();
 
 		// Sanitise ID list and query the database for apges
@@ -158,7 +158,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	public function handleConfirmation($request) {
 		// Find the action handler
 		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
-		$actionClass = $actions[$request->param('BatchAction')];
+		$actionClass = $actions[$request->getParam('BatchAction')];
 		$actionHandler = new $actionClass();
 
 		// Sanitise ID list and query the database for apges

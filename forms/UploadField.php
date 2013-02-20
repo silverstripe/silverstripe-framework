@@ -435,7 +435,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleItem(SS_HTTPRequest $request) {
-		return $this->getItemHandler($request->param('ID'));
+		return $this->getItemHandler($request->getParam('ID'));
 	}
 
 	/**

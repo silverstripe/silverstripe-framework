@@ -16,7 +16,7 @@
  * 	protected $description = "Description"; // description of what it does
  * 	
  * 	public function run($request) {
- * 		if ($request->param('Direction') == 'down') {
+ * 		if ($request->getParam('Direction') == 'down') {
  * 			$this->down();
  * 		} else {
  * 			$this->up();
@@ -55,7 +55,7 @@ class MigrationTask extends BuildTask {
 	protected $description = "Provide atomic database changes (not implemented yet)";
 	
 	public function run($request) {
-		if ($request->param('Direction') == 'down') {
+		if ($request->getParam('Direction') == 'down') {
 			$this->down();
 		} else {
 			$this->up();

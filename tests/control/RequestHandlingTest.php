@@ -330,7 +330,7 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 
 	public function method($request) {
-		return "This is a method on the controller: " . $request->param('ID') . ', ' . $request->param('OtherID');
+		return "This is a method on the controller: " . $request->getParam('ID') . ', ' . $request->getParam('OtherID');
 	}
 
 	public function legacymethod($request) {
@@ -531,7 +531,7 @@ class RequestHandlingTest_Form extends Form {
 	);
 	
 	public function handleField($request) {
-		return $this->Fields()->dataFieldByName($request->param('FieldName'));
+		return $this->Fields()->dataFieldByName($request->getParam('FieldName'));
 	}
 	
 	public function handleSubmission($request) {

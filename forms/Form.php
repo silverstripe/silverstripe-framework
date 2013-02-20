@@ -396,13 +396,13 @@ class Form extends RequestHandler {
 	 * @return FormField
 	 */
 	public function handleField($request) {
-		$field = $this->Fields()->dataFieldByName($request->param('FieldName'));
+		$field = $this->Fields()->dataFieldByName($request->getParam('FieldName'));
 		
 		if($field) {
 			return $field;
 		} else {
 			// falling back to fieldByName, e.g. for getting tabs
-			return $this->Fields()->fieldByName($request->param('FieldName'));
+			return $this->Fields()->fieldByName($request->getParam('FieldName'));
 		}
 	}
 

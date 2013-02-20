@@ -73,8 +73,8 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	public function handleItem($gridField, $request) {
 		$controller = $gridField->getForm()->Controller();
 
-		if(is_numeric($request->param('ID'))) {
-			$record = $gridField->getList()->byId($request->param("ID"));
+		if(is_numeric($request->getParam('ID'))) {
+			$record = $gridField->getList()->byId($request->getParam("ID"));
 		} else {
 			$record = Object::create($gridField->getModelClass());	
 		}

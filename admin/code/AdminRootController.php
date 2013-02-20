@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Control\Router;
+
 class AdminRootController extends Controller {
 
 	/**
@@ -80,14 +82,11 @@ class AdminRootController extends Controller {
 
 		// Otherwise
 		else {
-			$rules = self::rules();
-			foreach($rules as $pattern => $controller) {
-				if(($arguments = $request->match($pattern, true)) !== false) {
-					$controllerObj = Injector::inst()->create($controller);
-					$controllerObj->setSession($this->session);
+			if($controller = Router::create()->route($request, self::rules())) {
+				$controller = Injector::inst()->create($controller);
+				$controller->setSession($this->session);
 
-					return $controllerObj->handleRequest($request, $model);
-				}
+				return $controller->handleRequest($request, $model);
 			}
 		}
 
