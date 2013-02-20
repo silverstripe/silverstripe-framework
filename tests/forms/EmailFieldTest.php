@@ -82,8 +82,8 @@ class EmailFieldTest_Controller extends Controller implements TestOnly {
 	function Link($action = null) {
 		return Controller::join_links(
 			'EmailFieldTest_Controller',
-			$this->request->latestParam('Action'),
-			$this->request->latestParam('ID'),
+			$this->request->getLatestParam('Action'),
+			$this->request->getLatestParam('ID'),
 			$action
 		);
 	}

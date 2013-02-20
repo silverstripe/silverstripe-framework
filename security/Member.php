@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Framework\Http\Cookie;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * The member class which represents the users of the system
  *

@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Authenticator for the default "member" method
  *

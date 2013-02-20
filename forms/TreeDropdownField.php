@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 /**
  * Dropdown-like field that allows you to select an item from a hierarchical 
  * AJAX-expandable tree.
@@ -209,10 +212,10 @@ class TreeDropdownField extends FormField {
 	/**
 	 * Get the whole tree of a part of the tree via an AJAX request.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return string
 	 */
-	public function tree(SS_HTTPRequest $request) {
+	public function tree(Request $request) {
 		// Array sourceObject is an explicit list of values - construct a "flat tree"
 		if(is_array($this->sourceObject)) {
 			$output = "<ul class=\"tree\">\n";
@@ -227,8 +230,8 @@ class TreeDropdownField extends FormField {
 		$isSubTree = false;
 
 		$this->search = Convert::Raw2SQL($request->requestVar('search'));
-		$ID = (is_numeric($request->latestparam('ID')))
-			? (int)$request->latestparam('ID')
+		$ID = (is_numeric($request->getLatestParam('ID')))
+			? (int)$request->getLatestParam('ID')
 			: (int)$request->requestVar('ID');
 
 		if($ID && !$request->requestVar('forceFullTree')) {

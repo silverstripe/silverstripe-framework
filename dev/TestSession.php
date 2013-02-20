@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Represents a test usage session of a web-app
  * It will maintain session-state from request to request
@@ -41,14 +46,20 @@ class TestSession {
 	 * Submit a get request
 	 * @uses Director::test()
 	 */
-	public function get($url, $session = null, $headers = null, $cookies = null) {
-		$headers = (array) $headers;
-		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse 
-			= Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
-		$this->lastUrl = $url;
-		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
-		return $this->lastResponse;
+	public function get($url, $session = null, $headers = null, $cookies = array()) {
+		$get = array();
+
+		if(strpos($url, '?') !== false) {
+			list($url, $raw) = explode('?', $url, 2);
+			parse_str($raw, $get);
+		}
+
+		$request = new Request('GET', $url, null, array(
+			'get' => $get
+		));
+		if($headers) $request->setHeaders($headers);
+
+		return $this->request($request, $session, $cookies);
 	}
 
 	/**
@@ -56,15 +67,46 @@ class TestSession {
 	 * @uses Director::test()
 	 */
 	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
-		$headers = (array) $headers;
-		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse
-			= Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
-		$this->lastUrl = $url;
-		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
+		$get = array();
+
+		if(strpos($url, '?') !== false) {
+			list($url, $raw) = explode('?', $url, 2);
+			parse_str($raw, $get);
+		}
+
+		$request = new Request('POST', $url, null, array(
+			'get'  => $get,
+			'post' => $data
+		));
+		if($headers) $request->setHeaders($headers);
+		if($body)    $request->setBody($body);
+
+		return $this->request($request, $session, $cookies);
+	}
+
+	/**
+	 * Performs a test request, and returns the response.
+	 *
+	 * @param Request $request
+	 * @param null $session
+	 * @param array $cookies
+	 * @return Response
+	 */
+	public function request(Request $request, $session = null, $cookies = array()) {
+		if($this->lastUrl && !$request->getHeader('Referer')) {
+			$request->setHeader('Referer', $this->lastUrl);
+		}
+
+		$this->lastResponse = Director::test($request, $session ?: $this->session, $cookies ?: array());
+		$this->lastUrl      = $request->getUrl();
+
+		if(!$this->lastResponse) {
+			throw new Exception('Director did not return a response');
+		}
+
 		return $this->lastResponse;
 	}
-	
+
 	/**
 	 * Submit the form with the given HTML ID, filling it out with the given data.
 	 * Acts on the most recent response.
@@ -82,7 +124,7 @@ class TestSession {
 	 * @param String $formID HTML 'id' attribute of a form (loaded through a previous response)
 	 * @param String $button HTML 'name' attribute of the button (NOT the 'id' attribute)
 	 * @param Array $data Map of GET/POST data. 
-	 * @return SS_HTTPResponse
+	 * @return Response
 	 */
 	public function submitForm($formID, $button = null, $data = array()) {
 		$page = $this->lastPage();
@@ -135,7 +177,7 @@ class TestSession {
 	}
 	
 	/**
-	 * Get the most recent response, as an SS_HTTPResponse object
+	 * Get the most recent response, as an response object
 	 */
 	public function lastResponse() {
 		return $this->lastResponse;
@@ -190,7 +232,7 @@ class TestSession {
 }
 
 /**
- * Wrapper around SS_HTTPResponse to make it look like a SimpleHTTPResposne
+ * Wrapper around response to make it look like a SimpleHTTPResposne
  * 
  * @package framework
  * @subpackage testing
@@ -198,7 +240,7 @@ class TestSession {
 class TestSession_STResponseWrapper {
 	private $response;
 
-	public function __construct(SS_HTTPResponse $response) {
+	public function __construct(Response $response) {
 		$this->response = $response;
 	}
 	

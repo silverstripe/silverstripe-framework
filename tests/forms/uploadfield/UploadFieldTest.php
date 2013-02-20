@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Request;
+
 /**
  * @package framework
  * @subpackage tests
@@ -21,7 +24,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		$tmpFileName = 'testUploadBasic.txt';
 		$_FILES = array('NoRelationField' => $this->getUploadFile($tmpFileName));
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/NoRelationField/upload',
 			array('NoRelationField' => $this->getUploadFile($tmpFileName))
 		);
@@ -41,7 +44,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		$tmpFileName = 'testUploadHasOneRelation.txt';
 		$_FILES = array('HasOneFile' => $this->getUploadFile($tmpFileName));
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/HasOneFile/upload',
 			array('HasOneFile' => $this->getUploadFile($tmpFileName))
 		);
@@ -65,7 +68,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		$tmpFileName = 'testUploadHasOneRelationWithExtendedFile.txt';
 		$_FILES = array('HasOneExtendedFile' => $this->getUploadFile($tmpFileName));
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/HasOneExtendedFile/upload',
 			array('HasOneExtendedFile' => $this->getUploadFile($tmpFileName))
 		);
@@ -87,7 +90,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		$tmpFileName = 'testUploadHasManyRelation.txt';
 		$_FILES = array('HasManyFiles' => $this->getUploadFile($tmpFileName));
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/HasManyFiles/upload',
 			array('HasManyFiles' => $this->getUploadFile($tmpFileName))
 		);
@@ -109,7 +112,7 @@ class UploadFieldTest extends FunctionalTest {
 
 		$tmpFileName = 'testUploadManyManyRelation.txt';
 		$_FILES = array('ManyManyFiles' => $this->getUploadFile($tmpFileName));
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/ManyManyFiles/upload',
 			array('ManyManyFiles' => $this->getUploadFile($tmpFileName))
 		);
@@ -138,7 +141,7 @@ class UploadFieldTest extends FunctionalTest {
 
 			$tmpFileName = 'testUploadHasOneRelation.txt';
 			$_FILES = array($recordName => $this->getUploadFile($tmpFileName));
-			$response = $this->post(
+			$response = $this->doUploadRequest(
 				"UploadFieldTest_Controller/Form/field/$recordName/upload",
 				array($recordName => $this->getUploadFile($tmpFileName))
 			);
@@ -146,7 +149,7 @@ class UploadFieldTest extends FunctionalTest {
 			$this->assertEquals(0, $body[0]->error);
 		
 			// Write to it again, should result in an error.
-			$response = $this->post(
+			$response = $this->doUploadRequest(
 				"UploadFieldTest_Controller/Form/field/$recordName/upload",
 				array($recordName => $this->getUploadFile($tmpFileName))
 			);
@@ -168,7 +171,7 @@ class UploadFieldTest extends FunctionalTest {
 		$_FILES = array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName));
 
 		// Write the first element, should be okay.
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/HasManyFilesMaxTwo/upload',
 			array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName))
 		);
@@ -176,7 +179,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEquals(0, $body[0]->error);
 
 		// Write the second element, should be okay.
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/HasManyFilesMaxTwo/upload',
 			array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName))
 		);
@@ -184,7 +187,7 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEquals(0, $body[0]->error);
 
 		// Write the third element, should result in error.
-		$response = $this->post(
+		$response = $this->doUploadRequest(
 			'UploadFieldTest_Controller/Form/field/HasManyFilesMaxTwo/upload',
 			array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName))
 		);
@@ -651,6 +654,10 @@ class UploadFieldTest extends FunctionalTest {
 		$field = new UploadField('ManyManyFiles');
 		$field->setRecord($record);
 		$this->assertTrue($field->managesRelation(), 'True for many_many');
+	}
+
+	protected function doUploadRequest($url, $files) {
+		return $this->request(new Request('POST', $url, null, array('files' => $files)));
 	}
 
 	protected function getMockForm() {

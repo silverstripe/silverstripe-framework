@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Cookie;
+
 /**
  * Global database interface, complete with static methods.
  * Use this class for interacting with the database.

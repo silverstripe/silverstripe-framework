@@ -1,4 +1,10 @@
 <?php
+
+namespace SilverStripe\Framework\Http;
+
+use Controller;
+use Director;
+
 /**
  * Handles all manipulation of the session.
  * 
@@ -78,9 +84,6 @@
  * 
  * @see Cookie
  * @todo This class is currently really basic and could do with a more well-thought-out implementation.
- *
- * @package framework
- * @subpackage control
  */
 
 class Session {

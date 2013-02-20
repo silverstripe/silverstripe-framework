@@ -99,7 +99,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 			$response = $this->get($link);
 			
-			$this->assertInstanceOf('SS_HTTPResponse', $response, "$link should return a response object");
+			$this->assertInstanceOf('SilverStripe\\Framework\\Http\\Response', $response, "$link should return a response object");
 			$this->assertEquals(200, $response->getStatusCode(), "$link should return 200 status code");
 			// Check that a HTML page has been returned
 			$this->assertRegExp('/<html[^>]*>/i', $response->getBody(), "$link should contain <html> tag");

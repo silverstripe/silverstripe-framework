@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Http\Session;
+
 /**
  * @package framework
  * @subpackage security
@@ -173,7 +176,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * See {@link check()}.
 	 * 
-	 * @param SS_HTTPRequest $request
+	 * @param \SilverStripe\Framework\Http\Request $request
 	 * @return Boolean
 	 */
 	public function checkRequest($request) {
@@ -253,7 +256,7 @@ class NullSecurityToken extends SecurityToken {
 	}
 	
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param \SilverStripe\Framework\Http\Request $request
 	 * @return Boolean
 	 */
 	public function checkRequest($request) {

@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Http\Http;
+
 /**
  * @package framework
  * @subpackage email

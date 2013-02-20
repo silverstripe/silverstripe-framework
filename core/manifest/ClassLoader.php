@@ -9,6 +9,19 @@
 class SS_ClassLoader {
 
 	/**
+	 * A map of legacy class names to automatically alias.
+	 *
+	 * @var array
+	 */
+	public static $legacy_classes = array(
+		'cookie'                    => 'SilverStripe\\Framework\\Http\\Cookie',
+		'http'                      => 'SilverStripe\\Framework\\Http\\Http',
+		'ss_httprequest'            => 'SilverStripe\\Framework\\Http\\Request',
+		'ss_httpresponse'           => 'SilverStripe\\Framework\\Http\\Response',
+		'ss_httpresponse_exception' => 'SilverStripe\\Framework\\Http\\ResponseException'
+	);
+
+	/**
 	 * @var SS_ClassLoader
 	 */
 	private static $instance;
@@ -75,13 +88,18 @@ class SS_ClassLoader {
 	 * manifest.
 	 *
 	 * @param string $class
-	 * @return String
 	 */
 	public function loadClass($class) {
-		if ($path = $this->getItemPath($class)) {
+		$lower = strtolower($class);
+
+		if(isset(self::$legacy_classes[$lower])) {
+			$new = self::$legacy_classes[$lower];
+
+			Deprecation::notice('3.2.0', "The '$class' class has been renamed to '$new'");
+			class_alias($new, $class);
+		} elseif($path = $this->getItemPath($class)) {
 			require_once $path;
 		}
-		return $path;
 	}
 	
 	/**

@@ -1,4 +1,10 @@
 <?php
+
+use SilverStripe\Framework\Http\Http;
+use SilverStripe\Framework\Http\Request;
+use SilverStripe\Framework\Http\Response;
+use SilverStripe\Framework\Http\Session;
+
 /**
  * Base class for all forms.
  * The form class is an extensible base for all forms on a SilverStripe application.  It can be used
@@ -239,11 +245,8 @@ class Form extends RequestHandler {
 	 * if the form is valid.
 	 */
 	public function httpSubmission($request) {
-		$vars = $request->requestVars();
-		if(isset($funcName)) {
-			Form::set_current_action($funcName);
-		}
-		
+		$vars = $request->getVars() + $request->postVars() + $request->filesVars();
+
 		// Populate the form
 		$this->loadDataFrom($vars, true);
 	
@@ -333,13 +336,13 @@ class Form extends RequestHandler {
 				$acceptType = $request->getHeader('Accept');
 				if(strpos($acceptType, 'application/json') !== FALSE) {
 					// Send validation errors back as JSON with a flag at the start
-					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
-					$response->addHeader('Content-Type', 'application/json');
+					$response = new Response(Convert::array2json($this->validator->getErrors()));
+					$response->setHeader('Content-Type', 'application/json');
 				} else {
 					$this->setupFormErrors();
 					// Send the newly rendered form tag as HTML
-					$response = new SS_HTTPResponse($this->forTemplate());
-					$response->addHeader('Content-Type', 'text/html');
+					$response = new Response($this->forTemplate());
+					$response->setHeader('Content-Type', 'text/html');
 				}
 				
 				return $response;
@@ -395,17 +398,17 @@ class Form extends RequestHandler {
 	 * formfield with the same name, this method gives priority
 	 * to the formfield.
 	 * 
-	 * @param SS_HTTPRequest $request
+	 * @param Request $request
 	 * @return FormField
 	 */
 	public function handleField($request) {
-		$field = $this->Fields()->dataFieldByName($request->param('FieldName'));
+		$field = $this->Fields()->dataFieldByName($request->getParam('FieldName'));
 		
 		if($field) {
 			return $field;
 		} else {
 			// falling back to fieldByName, e.g. for getting tabs
-			return $this->Fields()->fieldByName($request->param('FieldName'));
+			return $this->Fields()->fieldByName($request->getParam('FieldName'));
 		}
 	}
 
@@ -1439,21 +1442,21 @@ class Form extends RequestHandler {
 	
 	/**
 	 * Test a submission of this form.
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * @return Response the response object that the handling controller produces.  You can interrogate this in
 	 * your unit test.
 	 */
 	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
+		$request = new Request('POST', $this->FormAction(), null, array(
+			'post' => $data
+		));
 
-		return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
-		
-		//$response = $this->controller->run($data);
-		//return $response;
+		return Director::test($request, Controller::curr()->getSession());
 	}
 	
 	/**
 	 * Test an ajax submission of this form.
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * @return Response the response object that the handling controller produces.  You can interrogate this in
 	 * your unit test.
 	 */
 	public function testAjaxSubmission($action, $data) {
