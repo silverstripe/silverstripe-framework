@@ -438,7 +438,7 @@ body.cms { overflow: hidden; }
 .message p { margin: 0; }
 
 .cms-edit-form .message { margin: 16px; }
-.cms-edit-form .ui-tabs-panel .message { margin: 0 0 16px 0; }
+.cms-edit-form .ui-tabs-panel .message { margin: 16px 0; }
 
 /** -------------------------------------------- Page icons -------------------------------------------- */
 .page-icon, a .jstree-pageicon { display: block; width: 16px; height: 16px; background: transparent url(../images/sitetree_ss_pageclass_icons_default.png) no-repeat; }
