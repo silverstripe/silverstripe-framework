@@ -28,6 +28,7 @@ before_script:
  - phpenv rehash
  - ./tests/travis/before_script ~/builds/ss 
  - cd ~/builds/ss
+ - composer install
 
 script: 
  - sh -c "if [ '$PHPCS' != '1' ]; then phpunit -c phpunit.xml.dist; else phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml -np framework && phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml -np framework; fi"
