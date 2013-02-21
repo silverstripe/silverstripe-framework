@@ -40,7 +40,6 @@ class HTTP {
 	 * Turn all relative URLs in the content to absolute URLs
 	 */
 	public static function absoluteURLs($html) {
-		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
 		return HTTP::urlRewriter($html, function($url) {
 			return Director::absoluteURL($url, true);
 		});
