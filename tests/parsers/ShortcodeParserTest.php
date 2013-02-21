@@ -19,18 +19,26 @@ class ShortcodeParserTest extends SapphireTest {
 	 */
 	public function testNotRegisteredShortcode() {
 		ShortcodeParser::$error_behavior = ShortcodeParser::STRIP;
+
 		$this->assertEquals(
 			'',
 			$this->parser->parse('[not_shortcode]')
 		);
 
+		$this->assertEquals(
+			'<img class="">',
+			$this->parser->parse('<img class="[not_shortcode]">')
+		);
+
 		ShortcodeParser::$error_behavior = ShortcodeParser::WARN;
+
 		$this->assertEquals(
 			'<strong class="warning">[not_shortcode]</strong>',
 			$this->parser->parse('[not_shortcode]')
 		);
 		
 		ShortcodeParser::$error_behavior = ShortcodeParser::LEAVE;
+
 		$this->assertEquals('[not_shortcode]',
 			$this->parser->parse('[not_shortcode]'));
 		$this->assertEquals('[not_shortcode /]',
@@ -41,6 +49,11 @@ class ShortcodeParserTest extends SapphireTest {
 			$this->parser->parse('[not_shortcode]a[/not_shortcode]'));
 		$this->assertEquals('[/not_shortcode]',
 			$this->parser->parse('[/not_shortcode]'));
+
+		$this->assertEquals(
+			'<img class="[not_shortcode]">',
+			$this->parser->parse('<img class="[not_shortcode]">')
+		);
 	}
 	
 	public function testSimpleTag() {

@@ -332,7 +332,21 @@ class ShortcodeParser {
 
 			if($tags) {
 				$node->nodeValue = $this->replaceTagsWithText($node->nodeValue, $tags, function($idx, $tag) use ($parser){
-					return $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
+					$content = $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
+
+					if ($content === false) {
+						if(ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
+							user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERRROR);
+						}
+						else if(ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
+							return '';
+						}
+						else {
+							return $tag['text'];
+						}
+					}
+
+					return $content;
 				});
 			}
 		}
