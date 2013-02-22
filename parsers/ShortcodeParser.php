@@ -489,8 +489,8 @@ class ShortcodeParser {
 		else {
 			$res = preg_replace(
 				array(
-					'/^(.*?)<html>/is',
-					'/<\/html>(.*?)$/is',
+					'/^(.*)<html>/is',
+					'/<\/html>(.*)$/is',
 				),
 				'',
 				$doc->saveHTML()
