@@ -429,14 +429,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$tabSet = new TabSet(
 			"MediaFormInsertMediaTabs",
 			new Tab(
+				'FROMCOMPUTER',
 				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
 				$computerUploadField
 			),
 			new Tab(
+				'FROMWEB',
 				_t('HtmlEditorField.FROMWEB', 'From the web'),
 				$fromWeb
 			),
 			new Tab(
+				'FROMCMS',
 				_t('HtmlEditorField.FROMCMS','From the CMS'),
 				$fromCMS
 			)
