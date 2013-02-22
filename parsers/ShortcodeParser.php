@@ -298,7 +298,7 @@ class ShortcodeParser {
 	 */
 	protected function replaceAttributeTagsWithContent($doc) {
 		$xp = new DOMXPath($doc);
-		$attributes = $xp->query('//@*[contains(.,"[")][contains(.,"]")]');
+		$attributes = $xp->query('//@*[local-name() != "pattern" and local-name() != "name"][contains(.,"[")][contains(.,"]")]');
 		$parser = $this;
 
 		for($i = 0; $i < $attributes->length; $i++) {
