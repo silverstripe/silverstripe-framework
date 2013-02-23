@@ -140,7 +140,7 @@ class RestfulService extends ViewableData {
 			$method,
 			$data,
 			array_merge((array)$this->customHeaders, (array)$headers),
-			array_merge(self::$default_curl_options,$curlOptions),
+			$curlOptions + self::$default_curl_options,
 			$this->getBasicAuthString()
 		));
 		
@@ -196,7 +196,7 @@ class RestfulService extends ViewableData {
 		$timeout   = 5;
 		$sapphireInfo = new SapphireInfo(); 
 		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
-		$curlOptions = array_merge(self::$default_curl_options, $curlOptions);
+		$curlOptions = $curlOptions + self::$default_curl_options;
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
