@@ -299,7 +299,7 @@ class RestfulService extends ViewableData {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		//normalise the status code
-		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
+		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
 		//calculate the length of the header and extract it
 		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$rawHeaders = substr($rawResponse, 0, $headerLength);
