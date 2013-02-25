@@ -253,6 +253,13 @@ create a `composer.json`, and either commit it or send a pull request to the mod
 Look at existing modules like the ["blog" module](https://github.com/silverstripe/silverstripe-blog/blob/master/composer.json) for good examples on what this file should contain.
 Then register the module on [packagist.org](http://packagist.org).
 
+### How should I name my module?
+
+Follow the packagist.org advice on choosing a [unique name and vendor prefix](https://packagist.org/about). Please don't use the `silverstripe/<modulename>` vendor prefix, since that's reserved
+for modules produced by SilverStripe Ltd. In order to declare that your module is
+in fact a SilverStripe module, use the "silverstripe" tag in the composer.json file,
+and set the "type" to "silverstripe-module".
+
 ### What about themes?
 
 Themes are technically just "modules" which are placed in the `themes/` subdirectory.
