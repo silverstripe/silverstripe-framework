@@ -37,7 +37,8 @@ class ControllerTest extends FunctionalTest {
 	}
 	
 	public function testUndefinedActions() {
-		$response = Director::test('ControllerTest_AccessUnsecuredSubController/undefinedaction');
+		$response = $this->get('ControllerTest_IndexSecuredController/undefinedaction');
+		$this->assertInstanceOf('SS_HTTPResponse', $response);
 		$this->assertEquals(404, $response->getStatusCode(), 'Undefined actions return a not found response.');
 	}
 	

@@ -19,18 +19,26 @@ class ShortcodeParserTest extends SapphireTest {
 	 */
 	public function testNotRegisteredShortcode() {
 		ShortcodeParser::$error_behavior = ShortcodeParser::STRIP;
+
 		$this->assertEquals(
 			'',
 			$this->parser->parse('[not_shortcode]')
 		);
 
+		$this->assertEquals(
+			'<img class="">',
+			$this->parser->parse('<img class="[not_shortcode]">')
+		);
+
 		ShortcodeParser::$error_behavior = ShortcodeParser::WARN;
+
 		$this->assertEquals(
 			'<strong class="warning">[not_shortcode]</strong>',
 			$this->parser->parse('[not_shortcode]')
 		);
 		
 		ShortcodeParser::$error_behavior = ShortcodeParser::LEAVE;
+
 		$this->assertEquals('[not_shortcode]',
 			$this->parser->parse('[not_shortcode]'));
 		$this->assertEquals('[not_shortcode /]',
@@ -41,6 +49,11 @@ class ShortcodeParserTest extends SapphireTest {
 			$this->parser->parse('[not_shortcode]a[/not_shortcode]'));
 		$this->assertEquals('[/not_shortcode]',
 			$this->parser->parse('[/not_shortcode]'));
+
+		$this->assertEquals(
+			'<img class="[not_shortcode]">',
+			$this->parser->parse('<img class="[not_shortcode]">')
+		);
 	}
 	
 	public function testSimpleTag() {
@@ -100,9 +113,40 @@ class ShortcodeParserTest extends SapphireTest {
 	}
 	
 	public function testShortcodeEscaping() {
-		$this->assertEquals('[test_shortcode]', $this->parser->parse('[[test_shortcode]]'));
-		$this->assertEquals('[test_shortcode]content[/test_shortcode]',
-			$this->parser->parse('[[test_shortcode]content[/test_shortcode]]'));
+		$this->assertEquals(
+			'[test_shortcode]', 
+			$this->parser->parse('[[test_shortcode]]')
+		);
+
+		$this->assertEquals(
+			'[test_shortcode /]',
+			$this->parser->parse('[[test_shortcode /]]')
+		);
+		
+		$this->assertEquals(
+			'[test_shortcode]content[/test_shortcode]',
+			$this->parser->parse('[[test_shortcode]content[/test_shortcode]]'
+		));
+		
+		$this->assertEquals(
+			'[test_shortcode]content',
+			$this->parser->parse('[[test_shortcode]][test_shortcode]content[/test_shortcode]')
+		);
+
+		$this->assertEquals(
+			'[test_shortcode]content[/test_shortcode]content2',
+			$this->parser->parse('[[test_shortcode]content[/test_shortcode]][test_shortcode]content2[/test_shortcode]'
+		));
+		
+		$this->assertEquals(
+			'[[Doesnt strip double [ character if not a shortcode',
+			$this->parser->parse('[[Doesnt strip double [ character if not a [test_shortcode]shortcode[/test_shortcode]'
+		));
+		
+		$this->assertEquals(
+			'[[Doesnt shortcode get confused by double ]] characters',
+			$this->parser->parse('[[Doesnt [test_shortcode]shortcode[/test_shortcode] get confused by double ]] characters'
+		));
 	}
 
 	public function testUnquotedArguments() {

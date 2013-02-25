@@ -140,7 +140,7 @@ class RestfulService extends ViewableData {
 			$method,
 			$data,
 			array_merge((array)$this->customHeaders, (array)$headers),
-			array_merge(self::$default_curl_options,$curlOptions),
+			$curlOptions + self::$default_curl_options,
 			$this->getBasicAuthString()
 		));
 		
@@ -196,7 +196,7 @@ class RestfulService extends ViewableData {
 		$timeout   = 5;
 		$sapphireInfo = new SapphireInfo(); 
 		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
-		$curlOptions = array_merge(self::$default_curl_options, $curlOptions);
+		$curlOptions = $curlOptions + self::$default_curl_options;
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -299,7 +299,7 @@ class RestfulService extends ViewableData {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		//normalise the status code
-		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
+		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
 		//calculate the length of the header and extract it
 		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$rawHeaders = substr($rawResponse, 0, $headerLength);

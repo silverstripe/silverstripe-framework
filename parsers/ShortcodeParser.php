@@ -144,15 +144,8 @@ class ShortcodeParser {
 		'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'ol', 'output', 'p',
 		'pre', 'section', 'table', 'ul'
 	);
-
-	private static $tagrx = '/
-		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>    |   # HTML Tag - skip attribute scoped tags
-		\[   (?<escaped>\[.*?\]) \]                                  |   # Escaped block
-		\[   (?<open>\w+) (?<attrs>.*?) (?<selfclosed>\/?) \]        |   # Opening tag
-		\[\/ (?<close>\w+) \]                                            # Closing tag
-/x';
-
-	private static $attrrx = '/
+	
+	private static $attrrx = '
 		([^\s\/\'"=,]+)       # Name  
 		\s* = \s*
 		(?:
@@ -160,8 +153,35 @@ class ShortcodeParser {
 			(?:"([^"]+)")    | # Value surrounded by "
 			(\w+)              # Bare value
 		)
-/x';
+';
+	
+	private static function attrrx() {
+		return '/'.self::$attrrx.'/xS';
+	}
 
+	private static $tagrx = '
+		# HTML Tag
+		<(?<element>(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+)>
+		 
+		| # Opening tag
+		(?<oesc>\[?) 
+		\[ 
+			(?<open>\w+) 
+			[\s,]*
+			(?<attrs> (?: %s [\s,]*)* ) 
+		\/?\] 
+		(?<cesc1>\]?)
+		 
+		| # Closing tag
+		\[\/ 
+			(?<close>\w+) 
+		\] 
+		(?<cesc2>\]?)  
+';
+
+	private static function tagrx() {
+		return '/'.sprintf(self::$tagrx, self::$attrrx).'/xS';
+	}
 
 	const WARN = 'warn';
 	const STRIP = 'strip';
@@ -181,21 +201,11 @@ class ShortcodeParser {
 	 * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
 	 * with "content" set to the text between the tags
 	 */
-	protected function extractTags(&$content) {
+	protected function extractTags($content) {
 		$tags = array();
-		$escapes = array();
 
-		if(preg_match_all(self::$tagrx, $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+		if(preg_match_all(self::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
 			foreach($matches as $match) {
-				// Record escaped tags
-				if (!empty($match['escaped'][0])) {
-					$escapes[] = array(
-						's' => $match[0][1],
-						'e' => $match[0][1] + strlen($match[0][0]),
-						'content' => $match['escaped']
-					);
-				}
-				
 				// Ignore any elements
 				if (empty($match['open'][0]) && empty($match['close'][0])) continue;
 				
@@ -203,7 +213,7 @@ class ShortcodeParser {
 				$attrs = array();
 				
 				if (!empty($match['attrs'][0])) {
-					preg_match_all(self::$attrrx, $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
+					preg_match_all(self::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
 
 					foreach ($attrmatches as $attr) {
 						list($whole, $name, $value) = array_values(array_filter($attr));
@@ -219,14 +229,15 @@ class ShortcodeParser {
 					'open' =>  @$match['open'][0],
 					'close' => @$match['close'][0],
 					'attrs' => $attrs,
-					'content' => ''
+					'content' => '',
+					'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0])
 				);
 			}
 		}
 
 		$i = count($tags);
 		while($i--) {
-			if($tags[$i]['close']) {
+			if(!empty($tags[$i]['close'])) {
 				// If the tag just before this one isn't the related opening tag, throw an error
 				$err = null;
 				
@@ -244,21 +255,29 @@ class ShortcodeParser {
 					if(self::$error_behavior == self::ERROR) user_error($err, E_USER_ERRROR);	
 				} 
 				else {
+					if ($tags[$i]['escaped']) {
+						if (!$tags[$i-1]['escaped']) {
+							$tags[$i]['e'] -= 1;
+							$tags[$i]['escaped'] = false;
+						}
+					}
+					else {
+						if ($tags[$i-1]['escaped']) {
+							$tags[$i-1]['s'] += 1;
+							$tags[$i-1]['escaped'] = false;
+						}
+					}
+					
 					// Otherwise, grab content between tags, save in opening tag & delete the closing one
 					$tags[$i-1]['text'] = substr($content, $tags[$i-1]['s'], $tags[$i]['e'] - $tags[$i-1]['s']);
 					$tags[$i-1]['content'] = substr($content, $tags[$i-1]['e'], $tags[$i]['s'] - $tags[$i-1]['e']);
 					$tags[$i-1]['e'] = $tags[$i]['e'];
+					
 					unset($tags[$i]);
 				}
 			}
 		}
 		
-		$i = count($escapes);
-		while($i--) {
-			$escape = $escapes[$i];
-			$content = substr_replace($content, $escape['content'], $escape['s'], $escape['e'] - $escape['s']);
-		}
-
 		return array_values($tags);
 	}
 
@@ -281,7 +300,13 @@ class ShortcodeParser {
 			if ($li === null) $tail = substr($content, $tags[$i]['e']);
 			else $tail = substr($content, $tags[$i]['e'], $li - $tags[$i]['e']);
 
-			$str = $generator($i, $tags[$i]). $tail . $str;
+			if ($tags[$i]['escaped']) {
+				$str = substr($content, $tags[$i]['s']+1, $tags[$i]['e'] - $tags[$i]['s'] - 2) . $tail . $str;
+			}
+			else {
+				$str = $generator($i, $tags[$i]) . $tail . $str;
+			}
+			
 			$li = $tags[$i]['s'];
 		}
 
@@ -307,7 +332,21 @@ class ShortcodeParser {
 
 			if($tags) {
 				$node->nodeValue = $this->replaceTagsWithText($node->nodeValue, $tags, function($idx, $tag) use ($parser){
-					return $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
+					$content = $parser->callShortcode($tag['open'], $tag['attrs'], $tag['content']);
+
+					if ($content === false) {
+						if(ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
+							user_error('Unknown shortcode tag '.$tag['open'], E_USER_ERRROR);
+						}
+						else if(ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
+							return '';
+						}
+						else {
+							return $tag['text'];
+						}
+					}
+
+					return $content;
 				});
 			}
 		}
@@ -456,6 +495,50 @@ class ShortcodeParser {
 		$this->removeNode($node);
 	}
 
+	protected function loadHTML($html) {
+		require_once(THIRDPARTY_PATH.'/html5lib/HTML5/Parser.php');
+
+		// Convert any errors to exceptions
+		set_error_handler(
+			function($no, $str){
+				throw new Exception("HTML Parse Error: ".$str);
+			},
+			error_reporting()
+		);
+		
+		// Use HTML5lib to parse the HTML fragment
+		try {
+			$bases = HTML5_Parser::parseFragment(trim($html), 'div');
+		}
+		catch (Exception $e) {
+			$bases = null;
+		}
+		
+		// Disable our error handler (restoring to previous value)
+		restore_error_handler();
+		
+		return $bases;
+	}
+	
+	protected function saveHTML($doc) {
+		if (version_compare(PHP_VERSION, '5.3.6', '>=')){
+			$res = '';
+			foreach($doc->firstChild->childNodes as $child) $res .= $doc->saveHTML($child);
+		}
+		else {
+			$res = preg_replace(
+				array(
+					'/^(.*?)<html>/is',
+					'/<\/html>(.*?)$/is',
+				),
+				'',
+				$doc->saveHTML()
+			);
+		}
+
+		return $res;
+	}
+
 	/**
 	 * Parse a string, and replace any registered shortcodes within it with the result of the mapped callback.
 	 *
@@ -474,9 +557,8 @@ class ShortcodeParser {
 		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
 		// Now parse the result into a DOM
-		require_once(THIRDPARTY_PATH.'/html5lib/HTML5/Parser.php');
-		$bases = HTML5_Parser::parseFragment(trim($content), 'div');
-
+		$bases = $this->loadHTML($content);
+		
 		// If we couldn't parse the HTML, error out
 		if (!$bases || !$bases->length) {
 			if(self::$error_behavior == self::ERROR) {
@@ -487,9 +569,7 @@ class ShortcodeParser {
 			}
 		}
 
-		$res = '';
-		$html = $bases->item(0)->parentNode;
-		$doc = $html->ownerDocument;
+		$doc = $bases->item(0)->ownerDocument;
 
 		$xp = new DOMXPath($doc);
 
@@ -526,9 +606,7 @@ class ShortcodeParser {
 			$this->replaceMarkerWithContent($shortcode, $tag);
 		}
 		
-		foreach($html->childNodes as $child) $res .= $doc->saveHTML($child);
-
-		return $res;
+		return $this->saveHTML($doc);
 	}
 	
 	

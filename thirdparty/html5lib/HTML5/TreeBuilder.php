@@ -36,6 +36,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class HTML5_TreeBuilder {
     public $stack = array();
+    public $context;
     public $content_model;
 
     private $mode;
@@ -3392,7 +3393,7 @@ class HTML5_TreeBuilder {
         }
     }
 
-    private function resetInsertionMode($context = null) {
+    private function resetInsertionMode() {
         /* 1. Let last be false. */
         $last = false;
         $leng = count($this->stack);
@@ -3406,7 +3407,7 @@ class HTML5_TreeBuilder {
              * case) */
             if($this->stack[0]->isSameNode($node)) {
                 $last = true;
-                $node = $context;
+                $node = $this->context;
             }
 
             /* 4. If node is a select element, then switch the insertion mode to
@@ -3642,10 +3643,10 @@ class HTML5_TreeBuilder {
     public function setupContext($context = null) {
         $this->fragment = true;
         if ($context) {
-            $context = $this->dom->createElementNS(self::NS_HTML, $context);
+            $this->context = $this->dom->createElementNS(self::NS_HTML, $context);
             /* 4.1. Set the HTML parser's tokenization  stage's content model
              * flag according to the context element, as follows: */
-            switch ($context->tagName) {
+            switch ($this->context->tagName) {
             case 'title': case 'textarea':
                 $this->content_model = HTML5_Tokenizer::RCDATA;
                 break;
@@ -3670,12 +3671,12 @@ class HTML5_TreeBuilder {
              * contains just the single element root. */
             $this->stack = array($root);
             /* 4.5 Reset the parser's insertion mode appropriately. */
-            $this->resetInsertionMode($context);
+            $this->resetInsertionMode();
             /* 4.6 Set the parser's form element pointer  to the nearest node 
              * to the context element that is a form element (going straight up 
              * the ancestor chain, and including the element itself, if it is a 
              * form element), or, if there is no such form element, to null. */
-            $node = $context;
+            $node = $this->context;
             do {
                 if ($node->tagName === 'form') {
                     $this->form_pointer = $node;

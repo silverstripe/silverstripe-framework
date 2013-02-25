@@ -224,6 +224,17 @@ class Director implements TemplateGlobalProvider {
 		if($headers) foreach($headers as $k => $v) $request->addHeader($k, $v);
 		// TODO: Pass in the DataModel
 		$result = Director::handleRequest($request, $session, DataModel::inst());
+
+		// Ensure that the result is an SS_HTTPResponse object
+		if(is_string($result)) {
+			if(substr($result,0,9) == 'redirect:') {
+				$response = new SS_HTTPResponse();
+				$response->redirect(substr($result, 9));
+				$result = $response;
+			} else {
+				$result = new SS_HTTPResponse($result);
+			}
+		}
 		
 		// Restore the superglobals
 		$_REQUEST = $existingRequestVars; 
