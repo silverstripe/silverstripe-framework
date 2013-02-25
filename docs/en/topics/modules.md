@@ -27,67 +27,82 @@ Because of the broad definition of modules, they can be created for a number of 
 from your mysite folder.  "cms" is an example of this.
 *  **CMS Add-ons:** A module can define an extension to the CMS, usually by defining special page types with their own
 templates and behaviour. "blog", "ecommerce", "forum", and "gallery" are examples of this.
-*  **Blog Widgets:** A module can provide 1 or more blog-widget classes.  See [widgets](/topics/widgets) for more information.
+*  **Widgets:** Small pieces of functionality such as showing the latest Comments or Flickr Photos. Since SilverStripe 3.0, they have been moved into a standalone module at [github.com/silverstripe/silverstripe-widgets](https://github.com/silverstripe/silverstripe-widgets).
 *  **Developer Tools:** A module can provide a number of classes or resource files that do nothing by themselves, but
 instead make it easier for developers to build other applications. 
 
 ## Finding Modules
 
-*  [Official module list on silverstripe.org](http://silverstripe.org/modules)
-*  [Subversion repository on open.silverstripe.org](http://open.silverstripe.org/browser/modules)
-    
+* [Official module list on silverstripe.org](http://silverstripe.org/modules)
+* [Packagist.org "silverstripe" tag](https://packagist.org/search/?tags=silverstripe)
+* [Github.com "silverstripe" search](https://github.com/search?q=silverstripe&ref=commandbar)
 
 ## Installation
 
-Modules should exist in the root folder of your SilverStripe. The root folder being the one that contains the
-*framework*, *cms* and other folders.
+Modules should exist in the root folder of your SilverStripe installation
+(the directory containing the *framework* and *cms* subdirectories).
 
 The following article explains the generic installation of a module. Individual modules have their own requirements such
 as creating folders or configuring API keys. For information about installing or configuring a specific module see the
-modules *INSTALL* (or *README*) file. Modules should adhere to the [directory-structure](/topics/directory-structure)
+modules *README* file. Modules should adhere to the [directory-structure](/topics/directory-structure)
 guidelines.
 
-### Download
+### From a Composer Package
 
-To install a module you need to download the tar.gz file from the [modules page](http://www.silverstripe.org/modules) and extract this tar.gz to the root folder mentioned
-above.
+Our preferred way to manage module dependencies is through the [Composer][http://getcomposer.org]
+package manager. It enables you to install modules from specific versions, checking for
+compatibilities between modules and even allowing to track development branches of them.
 
-Note some times the folders extracted from the tar.gz contain the version number or some other folders. You need to make
-sure the folder name is the correct name of the module.
+After [installing Composer](/installation/composer) itself, 
+you can run a simple command to install a module.
+Each module has a unique identifier, consisting of a vendor prefix and name.
+For example, the popular "blog" module has the identifier `silverstripe/blog`,
+and would be installed with the following command executed in the root folder:
 
-### Subversion
+	composer require silverstripe/blog:*@stable
 
-#### Option 1: Checkout
+This will fetch the latest compatible stable version. Every time you run
+`composer update` afterwards, Composer will check for a new stable version.
+To lock down to a specific version, branch or commit, read up on 
+[Composer "lock" files](http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file).
+You can also add modules by editing the "require" section of the `composer.json` file.
 
-	cd ~/Sites/yourSilverStripeProject/
-	svn co http://svn.silverstripe.com/open/modules/modulename/trunk modulename/
+To find modules and their identifiers, search for them on [packagist.org](http://packagist.org).
 
+<div class="notice" markdown="1">
+Older releases (<3.0.3, <2.4.9) don't come with a `composer.json` file in your root folder,
+which is required for its operation. In this case, we recommend upgrading to a newer release.
+</div>
 
-Note: Some modules are stored in subfolders.  If you want to use a module that is in a subfolder, such as widgets, put
-an _ between the subfolder name and the module name, like this:
+### From an Archive Download
 
-	cd /your/website/root
-	svn co http://svn.silverstripe.com/open/modules/widgets/twitter/trunk widgets_twitter
+Alternatively, you can download the archive file from the 
+[modules page](http://www.silverstripe.org/modules) 
+and extract it to the root folder mentioned above.
+Github also provides archive downloads which are generated automatically for every tag/version.
 
+<div class="notice" markdown="1">
+The main folder extracted from the archive
+might contain the version number or additional "container" folders above the actual module
+codebase. You need to make sure the folder name is the correct name of the module
+(e.g. "blog/" rather than "silverstripe-blog/"). This folder should contain a `_config.php` file.
+While the module might register and operate in other structures,
+paths to static files such as CSS or JavaScript won't work.
+</div>
 
+<div class="warning" markdown="1">
+Some modules might not work at all with this approach since they rely on the
+Composer [autoloader](http://getcomposer.org/doc/01-basic-usage.md#autoloading)
+or post-install hooks, so we recommend using Composer.
+</div>
 
-#### Option 2: Add to svn:externals
+### Git Submodules and Subversion Externals
 
-	cd ~/Sites/yourSilverStripeProject/
-	svn propedit svn:externals .
+Git and Subversion provide their own facilities for managing dependent repositories.
+This is essentially a variation of the "Archive Download" approach,
+and comes with the same caveats.
 
+## Related
 
-In the editor add the following line (lines if you want multiple)
-
-	modulename/ http://svn.silverstripe.com/open/modules/modulename/trunk
-
-
-Exit the editor and then run 
-
-	svn up
-
-
-**Useful Links:**
-
-*  [Modules](/topics/module-developement)
-*  [Module Release Process](/misc/module-release-process)
+* [Modules Development](/topics/module-developement)
+* [Module Release Process](/misc/module-release-process)

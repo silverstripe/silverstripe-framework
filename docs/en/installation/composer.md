@@ -7,6 +7,7 @@
 Composer is a package management tool for PHP that lets you install and upgrade SilverStripe and its modules.  Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org. This is our recommended way of downloading SilverStripe and managing your code.
 
 For more information about Composer, visit [its website](http://getcomposer.org/).
+We also have separate instructions for [installing modules with Composer](/topics/modules).
 
 # Basic usage
 
@@ -100,7 +101,7 @@ So, your deployment process, as it relates to Composer, should be as follows:
  * Deploy your project code base, using the deployment tool of your choice.
  * Run `composer install` on your production version.
 
-# Setting up an environment for contributing to SilverStripe {#contributing}
+# Dev Environments for Contributing Code {#contributing}
 
 So you want to contribute to SilverStripe? Fantastic! You can do this with composer too.
 You have to tell composer three things in order to be able to do this:
@@ -243,3 +244,49 @@ Both the version and the alias are specified as Composer versions, not branch na
 
 This is not the only way to set things up in Composer. For more information on this topic, read the ["Aliases" chapter of the Composer documentation](http://getcomposer.org/doc/articles/aliases.md).
 
+## FAQ
+
+### How do I convert an existing module to using Composer?
+
+Simply decide on a [unique name and vendor prefix](https://packagist.org/about), 
+create a `composer.json`, and either commit it or send a pull request to the module author.
+Look at existing modules like the ["blog" module](https://github.com/silverstripe/silverstripe-blog/blob/master/composer.json) for good examples on what this file should contain.
+Then register the module on [packagist.org](http://packagist.org).
+
+### What about themes?
+
+Themes are technically just "modules" which are placed in the `themes/` subdirectory.
+We denote a special type for them in the `composer.json` (`"type": "silverstripe-module"`),
+which triggers their installation into the correct path.
+
+### How do I convert an existing project to Composer?
+
+The easiest way is to follow the [/installation/upgrading] instructions
+and switch to a newer release. Alternatively, copy the `composer.json` file from 
+a newer release, and adjust the version settings in the "require" section to your needs.
+You'll also need to update your webserver configuration
+from there (`.htaccess` or `web.config` files), in order to prevent
+web access to the composer-generated files.
+
+### Do I need composer on my live server?
+
+It depends on your deployment process. If you copy or rsync files to your live server,
+the process stays the same. If the live server hosts a git repository checkout,
+which is updated to push a newer version, you'll also need to run `composer install` afterwards.
+We recommend looking into [Composer "lock" files](http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file) for this purpose.
+
+### Can I keep using Downloads, Subversion Externals or Git Submodules?
+
+Yes and no. Composer comes with additional features such as 
+[autoloading](http://getcomposer.org/doc/01-basic-usage.md#autoloading) 
+or [scripts](http://getcomposer.org/doc/articles/scripts.md) 
+which some modules will start relying on.
+Please check the module README for specific installation instructions.
+
+### I don't want to get development versions of everything!
+
+You don't have to, Composer is designed to work on the constraints you set.
+You can declare the ["minimum-stability"](http://getcomposer.org/doc/04-schema.md#minimum-stability)
+on your project as suitable, or even whitelist specific modules as tracking
+a development branch while keeping others to their stable release.
+Read up on [Composer "lock" files](http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file) on how this all fits together.
