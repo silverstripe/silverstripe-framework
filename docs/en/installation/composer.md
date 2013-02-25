@@ -251,6 +251,8 @@ This is not the only way to set things up in Composer. For more information on t
 Simply decide on a [unique name and vendor prefix](https://packagist.org/about), 
 create a `composer.json`, and either commit it or send a pull request to the module author.
 Look at existing modules like the ["blog" module](https://github.com/silverstripe/silverstripe-blog/blob/master/composer.json) for good examples on what this file should contain.
+It's important that the file contains a custom "type" to declare it as a 
+`silverstripe-module` or `silverstripe-theme` (see [custom installers](http://getcomposer.org/doc/articles/custom-installers.md)).
 Then register the module on [packagist.org](http://packagist.org).
 
 ### How should I name my module?
@@ -263,12 +265,12 @@ and set the "type" to "silverstripe-module".
 ### What about themes?
 
 Themes are technically just "modules" which are placed in the `themes/` subdirectory.
-We denote a special type for them in the `composer.json` (`"type": "silverstripe-module"`),
+We denote a special type for them in the `composer.json` (`"type": "silverstripe-theme"`),
 which triggers their installation into the correct path.
 
 ### How do I convert an existing project to Composer?
 
-The easiest way is to follow the [/installation/upgrading] instructions
+The easiest way is to follow the [upgrading](/installation/upgrading) instructions
 and switch to a newer release. Alternatively, copy the `composer.json` file from 
 a newer release, and adjust the version settings in the "require" section to your needs.
 You'll also need to update your webserver configuration
