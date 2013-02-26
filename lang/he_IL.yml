@@ -117,12 +117,12 @@ he_IL:
     MINS: דקות
     MONTH: חודש
     MONTHS: חודשים
-    SEC: 'שניה'
-    SECS: 'שניות'
+    SEC: שניה
+    SECS: שניות
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: 'שנה'
-    YEARS: 'שנים'
+    YEAR: שנה
+    YEARS: שנים
   DateField:
     NOTSET: 'not set'
     TODAY: today
@@ -272,7 +272,7 @@ he_IL:
     BUTTONREMOVELINK: 'הסר קישור'
     BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'יישור/סגנון'
+    CSSCLASS: יישור/סגנון
     CSSCLASSCENTER: 'ממורכז, ללא טקסט בצדדים.'
     CSSCLASSLEFT: 'לשמאל, עם טקסט מסודר מסביב.'
     CSSCLASSLEFTALONE: 'On the left, on its own.'

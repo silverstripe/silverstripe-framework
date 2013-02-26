@@ -120,10 +120,6 @@ class FormAction extends FormField {
 		return $this->useButtonTag;
 	}
 
-	public function extraClass() {
-		return 'action ' . parent::extraClass();
-	}
-
 	/**
 	 * Does not transform to readonly by purpose.
 	 * Globally disabled buttons would break the CMS.

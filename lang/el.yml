@@ -69,7 +69,7 @@ el:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: 'Αποθήκευση'
+    SAVE: Αποθήκευση
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:

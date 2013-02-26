@@ -293,7 +293,7 @@ sl:
     IMAGETITLE: 'Naslov (tooltip)  bo izpisan kot dopolnitev k vsebini slike'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: 'Širina'
+    IMAGEWIDTHPX: Širina
     INSERTMEDIA: 'Insert Media'
     LINK: Povezava
     LINKANCHOR: 'Sidro na tej strani'

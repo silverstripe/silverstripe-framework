@@ -4,12 +4,12 @@ ru:
     NEWFOLDER: 'Новая папка'
   AssetTableField:
     CREATED: 'Первая загрузка'
-    DIM: 'Размеры'
+    DIM: Размеры
     FILENAME: 'Имя файла'
     FOLDER: Папка
     LASTEDIT: 'Последнее изменение'
     OWNER: Владелец
-    SIZE: 'Размер'
+    SIZE: Размер
     TITLE: Название
     TYPE: Тип
     URL: URL
@@ -69,7 +69,7 @@ ru:
     ACCESS: 'Доступ к разделу ''{title}'''
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
     ACCESSALLINTERFACESHELP: 'Отменяет индивидуальные настройки прав доступа.'
-    SAVE: 'Сохранить'
+    SAVE: Сохранить
   CMSProfileController:
     MENUTITLE: 'Мой профиль'
   ChangePasswordEmail.ss:
@@ -236,7 +236,7 @@ ru:
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено %s %s'
-    Save: 'Сохранить'
+    Save: Сохранить
     Saved: 'Сохранено %s %s'
   GridFieldItemEditView.ss: null
   Group:
@@ -288,7 +288,7 @@ ru:
     IMAGEALT: 'Альтернативный текст (alt)'
     IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
     IMAGEALTTEXTDESC: 'Передается программе чтения экрана или отображается, если изображение недоступно'
-    IMAGEDIMENSIONS: 'Размеры'
+    IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
     IMAGETITLE: 'Текст (всплывающая подсказка) - для дополнительной информации об изображении'
     IMAGETITLETEXT: 'Текст (всплывающая подсказка)'
@@ -330,11 +330,11 @@ ru:
     PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
     PreviewButton: Просмотр
     REORGANISATIONSUCCESSFUL: 'Древесная структура сайта успешно реорганизована.'
-    SAVEDUP: 'Сохранено.'
+    SAVEDUP: Сохранено.
     VersionUnknown: неизвестно
   LeftAndMain_Menu.ss:
     Hello: Здравствуйте
-    LOGOUT: 'Выход'
+    LOGOUT: Выход
   LoginAttempt:
     Email: Email
     IP: IP-адрес
@@ -464,8 +464,8 @@ ru:
     FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
   PermissionRole:
     OnlyAdminCanApply: 'Может применяться только администратором'
-    PLURALNAME: 'Роли'
-    SINGULARNAME: 'Роль'
+    PLURALNAME: Роли
+    SINGULARNAME: Роль
     Title: Название
   PermissionRoleCode:
     PLURALNAME: 'Коды ролей доступа'
@@ -487,7 +487,7 @@ ru:
     ENTERNEWPASSWORD: 'Пожалуйста, введите новый пароль.'
     ERRORPASSWORDPERMISSION: 'Вы должны войти в систему, чтобы изменить Ваш пароль!'
     LOGGEDOUT: 'Вы вышли. Если Вы хотите войти снова, введите ваши учетные данные ниже.'
-    LOGIN: 'Вход'
+    LOGIN: Вход
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETLINKINVALID: '<p>Неверная ссылка переустановки пароля или время действия ссылки истекло.</p><p>Вы можете повторно запросить ссылку, щелкнув <a href="{link1}">здесь</a>, или поменять пароль, <a href="{link2}">войдя в систему</a>.</p> '
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
@@ -507,15 +507,15 @@ ru:
     MemberListCaution: 'Внимание: при удалении участников из этого списка они будут удалены из всех групп и из базы данных '
     NEWGROUP: 'Новая группа'
     PERMISSIONS: 'Права доступа'
-    ROLES: 'Роли'
+    ROLES: Роли
     ROLESDESCRIPTION: 'Роли представляют собой сочетания различных прав доступа, которые могут быть присвоены группам.<br />При необходимости они наследуются от групп более высокого уровня.'
-    TABROLES: 'Роли'
+    TABROLES: Роли
     Users: Пользователи
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Импорт из CSV'
     FileFieldLabel: 'Файл CSV <small>(Допустимые расширения: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: 'Редактировать'
+    Edit: Редактировать
   SimpleImageField:
     NOUPLOAD: 'Не загружено ни одного изображения'
   SiteTree:
@@ -553,11 +553,11 @@ ru:
     AttachFile: 'Прикрепить файл(ы)'
     DELETE: 'Удалить из файлов'
     DELETEINFO: 'Окончательно удалить этот файл с сервера'
-    DOEDIT: 'Сохранить'
+    DOEDIT: Сохранить
     DROPFILE: 'перетащите файл сюда'
     DROPFILES: 'перетащить файлы'
-    Dimensions: 'Размеры'
-    EDIT: 'Редактировать'
+    Dimensions: Размеры
+    EDIT: Редактировать
     EDITINFO: 'Редактировать этот файл'
     FIELDNOTSET: 'Информация о файле не найдена'
     FROMCOMPUTER: 'С диска'
@@ -571,6 +571,6 @@ ru:
     REMOVEINFO: 'Удалить файл отсюда, но не удалять с сервера'
     STARTALL: 'Стартовать все'
     STARTALLINFO: 'Стартовать все загрузки'
-    Saved: 'Сохранено'
+    Saved: Сохранено
   Versioned:
     has_many_Versions: Версии

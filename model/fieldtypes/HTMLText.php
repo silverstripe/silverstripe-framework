@@ -144,11 +144,21 @@ class HTMLText extends Text {
 	 */
 	public function exists() {
 		// If it's blank, it's blank
-		if(!parent::exists()) return false;
+		if(!parent::exists()) {
+			return false;
+		}
+
 		// If it's got a content tag
-		if(preg_match('/<(img|embed|object|iframe)[^>]*>/i', $this->value)) return true;
-		// If it's just one or two tags on its own (and not the above) it's empty.  This might be <p></p> or <h1></h1> or whatever.
-		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/', $this->value)) return false;
+		if(preg_match('/<(img|embed|object|iframe)[^>]*>/i', $this->value)) {
+			return true;
+		}
+		
+		// If it's just one or two tags on its own (and not the above) it's empty.  
+		// This might be <p></p> or <h1></h1> or whatever.
+		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/', $this->value)) {
+			return false;
+		}
+
 		// Otherwise its content is genuine content
 		return true;
 	}

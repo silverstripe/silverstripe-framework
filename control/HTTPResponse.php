@@ -161,7 +161,8 @@ class SS_HTTPResponse {
 	public function setBody($body) {
 		$this->body = $body;
 		
-		// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
+		// Set content-length in bytes. Use mbstring to avoid problems with 
+		// mb_internal_encoding() and mbstring.func_overload
 		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
 	}
 	
@@ -244,17 +245,21 @@ class SS_HTTPResponse {
 			<meta http-equiv=\"refresh\" content=\"1; url=$url\" />
 			<script type=\"text/javascript\">setTimeout('window.location.href = \"$url\"', 50);</script>";
 		} else {
-		    $line = $file = null;
+			$line = $file = null;
 			if(!headers_sent($file, $line)) {
 				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
 				foreach($this->headers as $header => $value) {
 					header("$header: $value", true, $this->statusCode);
 				}
 			} else {
-			    // It's critical that these status codes are sent; we need to report a failure if not.
-			    if($this->statusCode >= 300) {
-			        user_error("Couldn't set response type to $this->statusCode because of output on line $line of $file", E_USER_WARNING);
-			    }
+				// It's critical that these status codes are sent; we need to report a failure if not.
+				if($this->statusCode >= 300) {
+					user_error(
+						"Couldn't set response type to $this->statusCode because " .
+						"of output on line $line of $file", 
+						E_USER_WARNING
+					);
+				}
 			}
 			
 			// Only show error pages or generic "friendly" errors if the status code signifies

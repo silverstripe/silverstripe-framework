@@ -240,7 +240,7 @@ class Debug {
 		if(Director::isDev()) {
 			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
 		} else {
-		    return false;
+			return false;
 		}
 	}
 
@@ -258,7 +258,15 @@ class Debug {
 		ini_set('display_errors', 0);
 
 		if(self::$send_warnings_to) {
-			return self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+			return self::emailError(
+				self::$send_warnings_to, 
+				$errno, 
+				$errstr, 
+				$errfile, 
+				$errline, 
+				$errcontext, 
+				"Warning"
+			);
 		}
 
 		// Send out the error details to the logger for writing
@@ -280,8 +288,8 @@ class Debug {
 		if(Director::isDev()) {
 			return self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		} else {
-		    return false;
-	    }
+			return false;
+		}
 	}
 
 	/**
