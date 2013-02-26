@@ -153,7 +153,7 @@ class SS_HTTPResponse {
 		
 		// Set content-length in bytes. Use mbstring to avoid problems with 
 		// mb_internal_encoding() and mbstring.func_overload
-		$this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
+		if($this->body) $this->headers['Content-Length'] = mb_strlen($this->body,'8bit');
 	}
 	
 	public function getBody() {
