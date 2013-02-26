@@ -293,7 +293,7 @@ cs:
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
     IMAGETITLETEXT: 'Titulek textu (tooltip)'
     IMAGETITLETEXTDESC: 'Pro další informace o obrázku'
-    IMAGEWIDTHPX: 'Šířka'
+    IMAGEWIDTHPX: Šířka
     INSERTMEDIA: 'Vložit média'
     LINK: 'Vložit nebo upravit odkaz'
     LINKANCHOR: 'Záložka (kotva) na stránce'

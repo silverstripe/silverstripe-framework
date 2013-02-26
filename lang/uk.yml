@@ -9,7 +9,7 @@ uk:
     FOLDER: Folder
     LASTEDIT: 'Востаннє змінено'
     OWNER: Власник
-    SIZE: 'Розмір'
+    SIZE: Розмір
     TITLE: Назва
     TYPE: Тип
     URL: URL
@@ -113,8 +113,8 @@ uk:
     DAYS: дні
     HOUR: година
     HOURS: годин
-    MIN: 'хв'
-    MINS: 'хв'
+    MIN: хв
+    MINS: хв
     MONTH: місяць
     MONTHS: місяці
     SEC: сек
@@ -288,7 +288,7 @@ uk:
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Альтернативний текст (alt) - відображається якщо зображення не відображається'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    IMAGEDIMENSIONS: 'Розміри'
+    IMAGEDIMENSIONS: Розміри
     IMAGEHEIGHTPX: Висота
     IMAGETITLE: 'Текст заголовку (tooltip) - для додаткової інформації про зображення'
     IMAGETITLETEXT: 'Title text (tooltip)'
@@ -507,9 +507,9 @@ uk:
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Нова Група'
     PERMISSIONS: Дозволи
-    ROLES: 'Ролі'
+    ROLES: Ролі
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: 'Ролі'
+    TABROLES: Ролі
     Users: Користувачі
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'

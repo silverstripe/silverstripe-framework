@@ -537,7 +537,7 @@ fr:
   TableListField_PageControls.ss:
     DISPLAYING: 'Affichage de'
     OF: de
-    TO: 'à'
+    TO: à
     VIEWFIRST: 'Voir premier'
     VIEWLAST: 'Voir dernier'
     VIEWNEXT: 'Voir suivant'

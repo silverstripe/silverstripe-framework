@@ -293,7 +293,7 @@ sk:
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Text titulky (tooltip)'
     IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
-    IMAGEWIDTHPX: 'Šírka'
+    IMAGEWIDTHPX: Šírka
     INSERTMEDIA: 'Vložiť média'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
     LINKANCHOR: 'Odkaz na tejto stranke'
