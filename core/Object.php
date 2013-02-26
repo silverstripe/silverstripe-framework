@@ -483,10 +483,11 @@ abstract class Object {
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
-			unset(self::$extension_sources[$subclass]);
 		}
 
 		Config::inst()->update($class, 'extensions', array($extension));
+		Config::inst()->extraConfigSourcesChanged($class);
+
 		Injector::inst()->unregisterAllObjects();
 
 		// load statics now for DataObject classes
@@ -523,6 +524,7 @@ abstract class Object {
 		}
 
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
+		Config::inst()->extraConfigSourcesChanged($class);
 
 		// unset singletons to avoid side-effects
 		Injector::inst()->unregisterAllObjects();
@@ -533,7 +535,6 @@ abstract class Object {
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
-			unset(self::$extension_sources[$subclass]);
 		}
 	}
 	
@@ -560,9 +561,6 @@ abstract class Object {
 	
 	// --------------------------------------------------------------------------------------------------------------
 
-	private static $extension_sources = array();
-
-	// Don't bother checking some classes that should never be extended
 	private static $unextendable_classes = array('Object', 'ViewableData', 'RequestHandler');
 
 	static public function get_extra_config_sources($class = null) {
@@ -570,9 +568,6 @@ abstract class Object {
 
 		// If this class is unextendable, NOP
 		if(in_array($class, self::$unextendable_classes)) return;
-
-		// If we have a pre-cached version, use that
-		if(array_key_exists($class, self::$extension_sources)) return self::$extension_sources[$class];
 
 		// Variable to hold sources in
 		$sources = null;
@@ -604,7 +599,7 @@ abstract class Object {
 			}
 		}
 
-		return self::$extension_sources[$class] = $sources;
+		return $sources;
 	}
 
 	public function __construct() {
