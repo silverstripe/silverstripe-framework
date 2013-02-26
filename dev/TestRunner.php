@@ -88,6 +88,10 @@ class TestRunner extends Controller {
 		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 			BASE_PATH, project(), true, isset($_GET['flush'])
 		));
+
+		Config::inst()->pushConfigStaticManifest(new SS_ConfigStaticManifest(
+			BASE_PATH, true, isset($_GET['flush'])
+		));
 	}
 
 	public function init() {

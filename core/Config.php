@@ -181,6 +181,13 @@ class Config {
 	 * where value is a config value suppress from any lower priority item */
 	protected $suppresses = array();
 
+	protected $staticManifests = array();
+
+	public function pushConfigStaticManifest(SS_ConfigStaticManifest $manifest) {
+		array_unshift($this->staticManifests, $manifest);
+		$this->cache->clean();
+	}
+
 	/** @var [array] - The list of settings pulled from config files to search through */
 	protected $manifests = array();
 
@@ -190,7 +197,7 @@ class Config {
 	 * WARNING: Config manifests to not merge entries, and do not solve before/after rules inter-manifest -
 	 * instead, the last manifest to be added always wins
 	 */
-	public function pushConfigManifest(SS_ConfigManifest $manifest) {
+	public function pushConfigYamlManifest(SS_ConfigManifest $manifest) {
 		array_unshift($this->manifests, $manifest->yamlConfig);
 		$this->cache->clean();
 
@@ -384,9 +391,6 @@ class Config {
 			}
 		}
 
-		// Then look at the static variables
-		$nothing = new stdClass();
-
 		$sources = array($class);
 
 		// Include extensions only if not flagged not to, and some have been set
@@ -401,9 +405,18 @@ class Config {
 			if ($extraSources) $sources = array_merge($sources, $extraSources);
 		}
 
+		$value = $nothing = null;
+
 		foreach ($sources as $staticSource) {
-			if (is_array($staticSource)) $value = isset($staticSource[$name]) ? $staticSource[$name] : $nothing;
-			else $value = Object::static_lookup($staticSource, $name, $nothing);
+			if (is_array($staticSource)) {
+				$value = isset($staticSource[$name]) ? $staticSource[$name] : $nothing;
+			}
+			else {
+				foreach ($this->staticManifests as $i => $statics) {
+					$value = $statics->get($staticSource, $name, $nothing);
+					if ($value !== $nothing) break;
+				}
+			}
 
 			if ($value !== $nothing) {
 				self::merge_low_into_high($result, $value, $suppress);
@@ -412,8 +425,10 @@ class Config {
 		}
 
 		// Finally, merge in the values from the parent class
-		if (($sourceOptions & self::UNINHERITED) != self::UNINHERITED 
-				&& (($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)) {
+		if (
+			($sourceOptions & self::UNINHERITED) != self::UNINHERITED &&
+			(($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)
+		) {
 			$parent = get_parent_class($class);
 			if ($parent) $this->getUncached($parent, $name, $sourceOptions, $result, $suppress, $tags);
 		}
