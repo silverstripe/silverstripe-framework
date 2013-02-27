@@ -54,6 +54,13 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @var array|string
 	 */
 	public static $managed_models = null;
+
+	/**
+	 * Override menu_priority so that ModelAdmin CMSMenu objects
+	 * are grouped together directly above the Help menu item.
+	 * @var float
+	 */
+	public static $menu_priority = -0.5;
 	
 	public static $allowed_actions = array(
 		'ImportForm',
