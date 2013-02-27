@@ -39,7 +39,7 @@ class Decimal extends DBField {
 	public function saveInto($dataObject) {
 		$fieldName = $this->name;
 		if($fieldName) {
-			$dataObject->$fieldName = (float)preg_replace('/[^0-9.\-\+]/', '', $this->value);
+			$dataObject->$fieldName = Convert::raw2sql((float)preg_replace('/[^0-9.\-\+]/', '', $this->value));
 		} else {
 			user_error("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object", E_USER_ERROR);
 		}
