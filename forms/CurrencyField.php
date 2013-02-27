@@ -17,7 +17,11 @@ class CurrencyField extends TextField {
 	 */
 	public function setValue($val) {
 		if(!$val) $val = 0.00;
-		$this->value = '$' . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
+		$val = str_replace(',','.',$val);
+		$this->value =
+			Currency::getCurrencySymbol()
+			.number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2)
+			.Currency::getCurrencySymbolBack();
 		return $this;
 	}
 	/**
@@ -44,8 +48,13 @@ class CurrencyField extends TextField {
 	}
 
 	public function validate($validator) {
-		if(!empty ($this->value)
-				&& !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
+		$this->value = str_replace(
+			array(Currency::getCurrencySymbol(),Currency::getCurrencySymbolBack()),'',$this->value
+		);
+		if(
+			!empty ($this->value)
+			&& !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/',$this->value)
+		){
 
 			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency"),
 				"validation", false);
@@ -68,9 +77,16 @@ class CurrencyField_Readonly extends ReadonlyField{
 	public function Field($properties = array()) {
 		if($this->value){
 			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
-			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
+			$val =
+				Currency::getCurrencySymbol()
+				.number_format(preg_replace('/[^0-9.]/',"",$val), 2)
+				.Currency::getCurrencySymbolBack();
 		} else {
-			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
+			$val = '<i>'
+					.Currency::getCurrencySymbol()
+					.'0.00'
+					.Currency::getCurrencySymbolBack()
+					.'</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
 		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span>"
@@ -101,9 +117,16 @@ class CurrencyField_Disabled extends CurrencyField{
 	public function Field($properties = array()) {
 		if($this->value){
 			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
-			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
+			$val = 
+					Currency::getCurrencySymbol()
+					.number_format(preg_replace('/[^0-9.]/',"",$val), 2)
+					.Currency::getCurrencySymbolBack();
 		} else {
-			$val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
+			$val = '<i>'
+					.Currency::getCurrencySymbol()
+					.'0.00'
+					.Currency::getCurrencySymbolBack()
+					.'</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
 		return "<input class=\"text\" type=\"text\" disabled=\"disabled\""
