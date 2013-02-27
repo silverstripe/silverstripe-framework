@@ -30,6 +30,14 @@ class TextareaField extends FormField {
 	 */
 	protected $cols = 20;
 
+	public function FieldHolder($properties = array()) {
+		if ($this->getAttribute('maxlength')) {
+			Requirements::javascript(FRAMEWORK_DIR . '/javascript/Textarea.js');
+		}
+
+		return FormField::FieldHolder($properties);
+	}
+
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
