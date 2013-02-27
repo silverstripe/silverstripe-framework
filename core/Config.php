@@ -163,15 +163,43 @@ class Config {
 		$_SINGLETONS['Config'] = $instance;
 	}
 
+	/**
+	 * Make the newly active Config be a copy of the current active Config instance.
+	 *
+	 * You can then make changes to the configuration by calling update and remove on the new
+	 * value returned by Config::inst(), and then discard those changes later by calling unnest
+	 */
+	static public function nest() {
+		$current = self::$instance;
+
+		$new = clone $current;
+		$new->nestedFrom = $current;
+		self::set_instance($new);
+	}
+
+	/**
+	 * Change the active Config back to the Config instance the current active Config object
+	 * was copied from
+	 */
+	static public function unnest() {
+		self::set_instance(self::$instance->nestedFrom);
+	}
+
 	protected $cache;
 
 	/**
-	 * Empty construction, otherwise calling singleton('Config') (not the right way to get the current active config
-	 * instance, but people might) gives an error
+	 * Each copy of the Config object need's it's own cache, so changes don't leak through to other instances
 	 */
 	public function __construct() {
 		$this->cache = new Config_LRU();
 	}
+
+	public function __clone() {
+		$this->cache = clone $this->cache;
+	}
+
+	/** @var Config - The config instance this one was copied from when Config::nest() was called */
+	protected $nestedFrom = null;
 
 	/** @var [array] - Array of arrays. Each member is an nested array keyed as $class => $name => $value,
 	 * where value is a config value to treat as the highest priority item */
