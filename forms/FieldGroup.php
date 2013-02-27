@@ -110,7 +110,7 @@ class FieldGroup extends CompositeField {
 		$fs = $this->FieldList();
 		
 		foreach($fs as $subfield) {
-			if($m = $subfield->Message()) $message[] = $m;
+			if($m = $subfield->Message()) $message[] = rtrim($m, ".");
 		}
 		
 		return (isset($message)) ? implode(",  ", $message) . ". " : "";
