@@ -1,6 +1,6 @@
 pl:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
+    ALLOWEDEXTS: 'Dopuszczalne rozszerzenia'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
@@ -71,7 +71,7 @@ pl:
     ACCESSALLINTERFACESHELP: 'Nadpisuje bardziej specyficzne ustawienia dostępu.'
     SAVE: Zapisz
   CMSProfileController:
-    MENUTITLE: 'My Profile'
+    MENUTITLE: 'Mój profil'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT2: 'Teraz możesz używać następujących danych do logowania się:'
@@ -115,8 +115,8 @@ pl:
     HOURS: godziny
     MIN: min
     MINS: minuty
-    MONTH: 'miesiąc'
-    MONTHS: 'miesiące'
+    MONTH: miesiąc
+    MONTHS: miesiące
     SEC: sekunda
     SECS: sekundy
     TIMEDIFFAGO: '{difference} temu'
@@ -143,14 +143,14 @@ pl:
   Enum:
     ANY: Jakikolwiek
   File:
-    AviType: 'AVI video file'
+    AviType: 'Plik video AVI'
     Content: Zawartość
     CssType: 'Plik CSS'
     DmgType: 'Obraz dysku Apple'
     DocType: 'Dokument Worda'
     Filename: 'Nazwa pliku'
     GifType: 'Obrazek GIF, dobry do diagramów'
-    GzType: 'GZIP compressed file'
+    GzType: 'Plik skompresowany GZIP'
     HtlType: 'Plik HTML'
     HtmlType: 'Plik HTML'
     INVALIDEXTENSION: 'Rozszerzenie niedozwolone (dozwolone: {extensions})'
@@ -159,7 +159,7 @@ pl:
     JpgType: 'Obrazek JPEG, dobry do zdjęć'
     JsType: 'Plik JavaScript'
     Mp3Type: 'Plik MP3'
-    MpgType: 'MPEG video file'
+    MpgType: 'Plik video MPEG'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
@@ -171,8 +171,8 @@ pl:
     TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
     TiffType: 'Plik TIFF'
     Title: Tytuł
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
+    WavType: 'Plik audio WAV'
+    XlsType: 'Arkusz kalkulacyjny Excel'
     ZipType: 'Plik ZIP, skompresowany'
   FileIFrameField:
     ATTACH: 'Dołącz {type}'
@@ -328,7 +328,7 @@ pl:
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
     PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
-    PreviewButton: 'Podgląd'
+    PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
     VersionUnknown: nieznany
@@ -347,7 +347,7 @@ pl:
     BUTTONLOGIN: Zaloguj
     BUTTONLOGINOTHER: 'Zaloguj jako ktoś inny'
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
-    CANTEDIT: 'You don''t have permission to do that'
+    CANTEDIT: 'Nie posiadasz odpowiednich uprawnień.'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
     DATEFORMAT: 'Format daty'
@@ -398,7 +398,7 @@ pl:
     HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
-    Preview: 'Podgląd'
+    Preview: Podgląd
     SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
     TOGGLEHELP: 'Przełącz pomoc formatowania'
     TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
@@ -421,7 +421,7 @@ pl:
   ModelAdmin:
     DELETE: Usuń
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Wyczyść bazę danych przed importowaniem'
     IMPORT: 'Import z CSV'
     IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
     NOCSVFILE: 'Wybierz plik CSV do zaimportowania'

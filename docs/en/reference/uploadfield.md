@@ -219,6 +219,13 @@ editform, or 'fileEditValidator' to determine the validator (eg RequiredFields).
    (of a method on File to provide a actions) for the EditForm (Example: 'getCMSActions')
  - `fileEditValidator`: (string) Validator (eg RequiredFields) or string $name 
    (of a method on File to provide a Validator) for the EditForm (Example: 'getCMSValidator')
+
+You can also configure the underlying `[api:Upload]` class, by using the YAML config system.
+
+	:::yaml
+	Upload:
+	  # Globally disables automatic renaming of files
+	  replaceFile: true
   
 ## TODO: Using the UploadField in a frontend form
 

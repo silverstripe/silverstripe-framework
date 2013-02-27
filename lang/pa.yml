@@ -91,7 +91,7 @@ pa:
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'
   ComplexTableField_popup.ss:
-    NEXT: 'ਅਗਲਾ'
+    NEXT: ਅਗਲਾ
     PREVIOUS: ਪਿਛਲਾ
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'

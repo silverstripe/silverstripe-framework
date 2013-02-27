@@ -210,7 +210,7 @@ et_EE:
   FormField:
     NONE: puudub
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Kustuta
     Delete: Delete
     UnlinkRelation: Unlink
   GridField:
@@ -334,7 +334,7 @@ et_EE:
     VersionUnknown: unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
-    LOGOUT: 'Log out'
+    LOGOUT: 'Logi välja'
   LoginAttempt:
     Email: 'E-posti aadress'
     IP: 'IP Aadress'
@@ -515,7 +515,7 @@ et_EE:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Muuda
   SimpleImageField:
     NOUPLOAD: 'Pilte pole üles laaditud'
   SiteTree:

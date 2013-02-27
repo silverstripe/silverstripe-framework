@@ -4,7 +4,7 @@ bg:
     NEWFOLDER: НоваПапка
   AssetTableField:
     CREATED: Създаден
-    DIM: 'Размери'
+    DIM: Размери
     FILENAME: 'Име на файл'
     FOLDER: Папка
     LASTEDIT: 'Последна промяна'
@@ -88,8 +88,8 @@ bg:
   ComplexTableField.ss:
     ADDITEM: 'Добави %s'
     NOITEMSFOUND: 'No items found'
-    SORTASC: 'Възходящ'
-    SORTDESC: 'Низходящ'
+    SORTASC: Възходящ
+    SORTDESC: Низходящ
   ComplexTableField_popup.ss:
     NEXT: Следващо
     PREVIOUS: Предишно
@@ -253,7 +253,7 @@ bg:
     RolesAddEditLink: 'Управление на ролите'
     SINGULARNAME: Group
     Sort: Сортиране
-    has_many_Permissions: 'Разрешения'
+    has_many_Permissions: Разрешения
     many_many_Members: Потребители
   GroupImportForm:
     Help1: '<p>Внасяне на една или повече групи в <em>CSV формат</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Покажи начин на употреба</a></small></p>'
@@ -288,7 +288,7 @@ bg:
     IMAGEALT: 'Алтернативен текст (alt)'
     IMAGEALTTEXT: 'Алтернативен текст (alt) - показва се ако изображението не е заредено'
     IMAGEALTTEXTDESC: 'Вижда се на екранните четци или ако картинката не може да бъде показана'
-    IMAGEDIMENSIONS: 'Размери'
+    IMAGEDIMENSIONS: Размери
     IMAGEHEIGHTPX: Височина
     IMAGETITLE: 'Описание (tooltip) - за допълнителна информация към изображението'
     IMAGETITLETEXT: 'Описание (tooltip)'
@@ -506,16 +506,16 @@ bg:
     MENUTITLE: Сигурност
     MemberListCaution: 'Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни.'
     NEWGROUP: 'Нова група'
-    PERMISSIONS: 'Разрешения'
-    ROLES: 'Роли'
+    PERMISSIONS: Разрешения
+    ROLES: Роли
     ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
-    TABROLES: 'Роли'
+    TABROLES: Роли
     Users: Потребители
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Внасяне от CSV'
     FileFieldLabel: 'CSV файл <small>(разширение: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: 'Редакция'
+    Edit: Редакция
   SimpleImageField:
     NOUPLOAD: 'Няма качени изображения'
   SiteTree:
@@ -556,7 +556,7 @@ bg:
     DOEDIT: Запис
     DROPFILE: 'пуснете файл'
     DROPFILES: 'пускане на файлове'
-    Dimensions: 'Размери'
+    Dimensions: Размери
     EDIT: Edit
     EDITINFO: 'Редактирай този файл'
     FIELDNOTSET: 'Информация за файла не беше намерена'
@@ -566,7 +566,7 @@ bg:
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
     MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
-    REMOVE: 'Премахни'
+    REMOVE: Премахни
     REMOVEERROR: 'Грешка при премахване на файл'
     REMOVEINFO: 'Премахни файла без да го изтриваш'
     STARTALL: 'Старт на всички'

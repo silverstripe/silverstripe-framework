@@ -304,7 +304,7 @@ ca:
     LINKINTERNAL: 'Pàgina del lloc web'
     LINKOPENNEWWIN: 'Obrir l''enllaç a una nova finestra?'
     LINKTO: 'Enllaça a'
-    PAGE: 'Pàgina'
+    PAGE: Pàgina
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'

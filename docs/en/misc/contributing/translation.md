@@ -16,9 +16,19 @@ For all modules listed there, we automatically import new master strings as they
 
 ## FAQ
 
-### How do I translate substituted strings? (e.g. '%s')
+### How do I translate a module not listed on getlocalization?
 
-You don't have to - if the english master-string reads 'Hello %s', your german translation would be 'Hallo %s'. Strings prefixed by a percentage-sign are automatically replaced by silverstripe with dynamic content. See http://php.net/sprintf for details.
+At the moment, only the core modules ("framework" and "cms") are managed through 
+the getlocalization service.
+For other modules, have a look in the module README if there's any specific instructions.
+If there aren't, you'll need to translate the YAML files directly. If the module is on github,
+you can create a fork, edit the files, and send back your pull request all directly on
+the website ([instructions](https://help.github.com/articles/fork-a-repo)).
+
+### How do I translate substituted strings? (e.g. '%s' or '{my-variable}')
+
+You don't have to - if the english master-string reads 'Hello %s', your german translation would be 'Hallo %s'. Strings prefixed by a percentage-sign are automatically replaced by silverstripe with dynamic content. See http://php.net/sprintf for details. The newer `{my-variable}` format works the same way,
+but makes its intent clearer, and allows reordering of placeholders in your translation.
 
 ### Do I need to convert special characters (e.g. HTML-entities)?
 
