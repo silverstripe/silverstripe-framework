@@ -78,7 +78,7 @@ class FileField extends FormField {
 	 * @param int $value The value of the field.
 	 */
 	public function __construct($name, $title = null, $value = null) {
-		$this->upload = new Upload();
+		$this->upload = Upload::create();
 	
 		parent::__construct($name, $title, $value);
 	}
