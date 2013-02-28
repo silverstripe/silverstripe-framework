@@ -406,6 +406,37 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals('2012-05-01 09:00:00', $records['0']['_SortColumn0']);
 	}
 
+	public function testDelete() {
+		$query = new SQLQuery();
+		$query->setDelete(true);
+		$query->setFrom('table');
+		$this->assertEquals('DELETE FROM table', $query->sql());
+
+		$query = new SQLQuery();
+		$query->setDelete('joined');
+		$query->setFrom('table');
+		$query->addInnerJoin('joined', 'joined.ID = table.JoinID');
+		$this->assertEquals(
+			'DELETE joined FROM table INNER JOIN "joined" ON joined.ID = table.JoinID',
+			$query->sql()
+		);
+	}
+
+	public function testDeleteOperation() {
+		$get = new SQLQuery();
+		$get->setSelect('"ID"');
+		$get->setFrom('"SQLQueryTest_DO"');
+
+		$this->assertEquals(2, $get->execute()->numRecords());
+
+		$delete = new SQLQuery();
+		$delete->setDelete(true);
+		$delete->setFrom('"SQLQueryTest_DO"');
+		$delete->execute();
+
+		$this->assertEquals(0, $get->execute()->numRecords());
+	}
+
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {

@@ -851,8 +851,12 @@ abstract class SS_Database {
 	 * @param $query SQLQuery
 	 */
 	public function sqlQueryToString(SQLQuery $query) {
-		if($query->getDelete()) {
-			$text = 'DELETE ';
+		if ($delete = $query->getDelete()) {
+			if (is_string($delete)) {
+				$text = "DELETE $delete";
+			} else {
+				$text = 'DELETE';
+			}
 		} else {
 			$text = $this->sqlSelectToString($query->getSelect(), $query->getDistinct());
 		}

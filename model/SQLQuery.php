@@ -407,7 +407,7 @@ class SQLQuery {
 
 	/**
 	 * Set the delete property.
-	 * @param boolean $value
+	 * @param boolean|string $value
 	 */
 	public function setDelete($value) {
 		$this->delete = $value;
@@ -415,7 +415,7 @@ class SQLQuery {
 
 	/**
 	 * Get the delete property.
-	 * @return boolean
+	 * @return boolean|string
 	 */
 	public function getDelete() {
 		return $this->delete;
