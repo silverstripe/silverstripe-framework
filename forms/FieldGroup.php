@@ -113,7 +113,7 @@ class FieldGroup extends CompositeField {
 			if($m = $subfield->Message()) $message[] = rtrim($m, ".");
 		}
 		
-		return (isset($message)) ? implode(",  ", $message) . ". " : "";
+		return (isset($message)) ? implode(",  ", $message) . "." : "";
 	}	
 	
 	/**
