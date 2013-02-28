@@ -161,4 +161,29 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertEquals($teamTwoID, $teamsWithoutTheCaptain->first()->ID,
 			'The ManyManyList contains the wrong team');
 	}
+
+	public function testRemoveAllWithFilters() {
+		$parent = new DataObjectTest_Team();
+		$parent->write();
+
+		/** @var $children ManyManyList */
+		$children = $parent->Players();
+
+		$a = new DataObjectTest_Player();
+		$a->ShirtNumber = 'a';
+		$a->write();
+
+		$b = new DataObjectTest_Player();
+		$b->ShirtNumber = 'b';
+		$b->write();
+
+		$children->add($a);
+		$children->add($b);
+
+		$this->assertEquals(array('a', 'b'), $children->sort('ShirtNumber')->column('ShirtNumber'));
+
+		$children->filter('ShirtNumber', 'b')->removeAll();
+		$this->assertEquals(array('a'), $children->column('ShirtNumber'));
+	}
+
 }

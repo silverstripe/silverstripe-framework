@@ -169,9 +169,7 @@ class ManyManyList extends RelationList {
 	 */
 	public function removeAll() {
 		$query = $this->dataQuery()->query();
-		$query->setDelete(true);
-		$query->setSelect(array('*'));
-		$query->setFrom("\"$this->joinTable\"");
+		$query->setDelete("\"$this->joinTable\"");
 		$query->execute();
 	}
 
