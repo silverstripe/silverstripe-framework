@@ -919,14 +919,6 @@ class MySQLDatabase extends SS_Database {
 			return false;
 	}
 
-	/**
-	 * Forwards compatible NO-OP method for better cross release
-	 * compatibility of modules (2.x and 3.x).
-	 */
-	public function transactionStart($transaction_mode=false, $session_characteristics=false) {
-		// NO-OP
-	}
-	
 	/*
 	 * Start a prepared transaction
 	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
@@ -949,14 +941,6 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function transactionRollback($savepoint=false){
 		//Transactions not set up for MySQL yet
-	}
-
-	/**
-	 * Forwards compatible NO-OP method for better cross release
-	 * compatibility of modules (2.x and 3.x).
-	 */
-	public function transactionEnd($transaction_mode=false, $session_characteristics=false) {
-		// NO-OP
 	}
 	
 	public function transactionStart() {
