@@ -168,11 +168,27 @@ class ManyManyList extends RelationList {
 	 * Remove all items from this many-many join.  To remove a subset of items, filter it first.
 	 */
 	public function removeAll() {
-		$query = $this->dataQuery()->query();
-		$query->setDelete(true);
-		$query->setSelect(array('*'));
-		$query->setFrom("\"$this->joinTable\"");
-		$query->execute();
+		$base = ClassInfo::baseDataClass($this->dataClass());
+
+		// Remove the join to the join table to avoid MySQL row locking issues.
+		$query = $this->dataQuery();
+		$query->removeFilterOn($query->getQueryParam('Foreign.Filter'));
+
+		$query = $query->query();
+		$query->setSelect("\"$base\".\"ID\"");
+
+		$from = $query->getFrom();
+		unset($from[$this->joinTable]);
+		$query->setFrom($from);
+
+		// Use a sub-query as SQLite does not support setting delete targets in
+		// joined queries.
+		$delete = new SQLQuery();
+		$delete->setDelete(true);
+		$delete->setFrom("\"$this->joinTable\"");
+		$delete->addWhere($this->foreignIDFilter());
+		$delete->addWhere("\"$this->joinTable\".\"$this->localKey\" IN ({$query->sql()})");
+		$delete->execute();
 	}
 
 	/**
