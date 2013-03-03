@@ -493,7 +493,7 @@ class Config {
 	 */
 	public function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
 		// Have we got a cached value? Use it if so
-		$key = sha1($class.$name.$sourceOptions);
+		$key = $class.$name.$sourceOptions;
 
 		if (($result = $this->cache->get($key)) === false) {
 			$tags = array();
@@ -599,6 +599,13 @@ class Config_LRU {
 
 	public function __construct() {
 		$this->cache = new SplFixedArray(self::SIZE);
+
+		// Pre-fill with stdClass instances. By reusing we avoid object-thrashing
+		for ($i = 0; $i < self::SIZE; $i++) {
+			$this->cache[$i] = new stdClass();
+			$this->cache[$i]->key = null;
+		}
+
 		$this->indexing = array();
 	}
 
@@ -614,7 +621,7 @@ class Config_LRU {
 			if (!($i--)) $i = self::SIZE-1;
 			$item = $this->cache[$i];
 
-			if (!$item) { $replacing = null; break; }
+			if ($item->key === null) { $replacing = null; break; }
 			else if ($item->c <= $target) { $replacing = $item; break; }
 		}
 		while ($i != $stop);
@@ -622,8 +629,8 @@ class Config_LRU {
 		if ($replacing) unset($this->indexing[$replacing->key]);
 
 		$this->indexing[$key] = $this->i = $i;
-		$this->cache[$i] = $obj = new stdClass();
 
+		$obj = $this->cache[$i];
 		$obj->key = $key;
 		$obj->value = $val;
 		$obj->tags = $tags;
@@ -653,14 +660,14 @@ class Config_LRU {
 	public function clean($tag = null) {
 		if ($tag) {
 			foreach ($this->cache as $i => $v) {
-				if ($v && in_array($tag, $v->tags)) {
+				if ($v->key !== null && in_array($tag, $v->tags)) {
 					unset($this->indexing[$v->key]);
-					$this->cache[$i] = null;
+					$this->cache[$i]->key = null;
 				}
 			}
 		}
 		else {
-			$this->cache = new SplFixedArray(self::SIZE);
+			for ($i = 0; $i < self::SIZE; $i++) $this->cache[$i]->key = null;
 			$this->indexing = array();
 		}
 	}

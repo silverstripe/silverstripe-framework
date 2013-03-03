@@ -23,9 +23,7 @@ class SS_ConfigStaticManifest {
 	protected $statics;
 
 	static protected $initial_classes = array(
-		'Object', 'ViewableData', 'Injector', 'Director',
-		'RequestHandler', 'Controller', 'ContentController',
-		'DataObject', 'SiteTree', 'Extension', 'DataExtension', 'Hierarchy', 'Versioned'
+		'Object', 'ViewableData', 'Injector', 'Director'
 	);
 
 	/**
@@ -64,7 +62,10 @@ class SS_ConfigStaticManifest {
 		if (!isset($this->statics[$class])) {
 			if (isset($this->index[$class])) {
 				$info = $this->index[$class];
-				$this->statics[$class] = $this->cache->load($this->key.'_'.sha1($class));
+
+				if ($details = $this->cache->load($this->key.'_'.$info['base'])) {
+					$this->statics += $details;
+				}
 
 				if (!isset($this->statics[$class])) {
 					$this->handleFile(null, $info['path'], null);
@@ -75,16 +76,16 @@ class SS_ConfigStaticManifest {
 			}
 		}
 
-		$statics = $this->statics;
+		if (isset($this->statics[$class][$name])) {
+			$static = $this->statics[$class][$name];
 
-		if (isset($statics[$class]) && $statics[$class] && array_key_exists($name, $statics[$class])) {
-			if ($statics[$class][$name]['access'] != T_PRIVATE) {
+			if ($static['access'] != T_PRIVATE) {
 				Deprecation::notice('3.1.0', "Config static $class::\$$name must be marked as private", Deprecation::SCOPE_GLOBAL);
 				// Don't warn more than once per static
-				$this->statics[$class][$name]['access'] = T_PRIVATE;
+				$static['access'] = T_PRIVATE;
 			}
 
-			return $statics[$class][$name]['value'];
+			return $static['value'];
 		}
 
 		return $default;
@@ -106,22 +107,37 @@ class SS_ConfigStaticManifest {
 
 		$finder->find($this->base);
 
-		$index = array('$statics' => array());
-
-		foreach ($this->statics as $class => $details) {
-			$this->cache->save($details, $this->key.'_'.sha1($class));
-
-			$index[$class] = array(
-				'path' => $details['path'],
-				'mtime' => filemtime($details['path'])
-			);
-
-			if (in_array($class, self::$initial_classes)) {
-				$index['$statics'][$class] = $details;
-			}
-		}
-
 		if($cache) {
+			$index = array('$statics' => array());
+			$bases = array();
+
+			foreach ($this->statics as $class => $details) {
+				if (in_array($class, self::$initial_classes)) {
+					$index['$statics'][$class] = $details;
+				}
+				else {
+					$base = $class;
+
+					do {
+						$parent = get_parent_class($base);
+					}
+					while ($parent != 'Object' && $parent != 'ViewableData' && $parent && ($base = $parent));
+
+					$base = sha1($base);
+					$bases[$base][$class] = $details;
+
+					$index[$class] = array(
+						'base' => $base,
+						'path' => $details['path'],
+						'mtime' => filemtime($details['path']),
+					);
+				}
+			}
+
+			foreach ($bases as $base => $details) {
+				$this->cache->save($details, $this->key.'_'.$base);
+			}
+
 			$this->cache->save($index, $this->key);
 		}
 	}
