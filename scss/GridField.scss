@@ -382,9 +382,11 @@ $gf_grid_x:	16px;
 					background: rgba(#000, 0.7);		
 					padding: 5px;	
 					border-top:	$gf_colour_text_shadow;
+
 					input {
 						height:28px; //height of input field - to match design.
 					}
+
 					button.ss-ui-button {
 						padding: .3em;
 						line-height: 1;
@@ -392,7 +394,11 @@ $gf_grid_x:	16px;
 						position: relative;
 						border-bottom-width: 0;	
 						@include border-radius(2px, 2px);			
-					}				
+					}
+
+					select {
+						margin: 0;
+					}
 				}
 				&.first {
 					@include border-top-left-radius($gf_border_radius);
