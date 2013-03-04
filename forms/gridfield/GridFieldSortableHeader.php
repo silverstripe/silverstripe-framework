@@ -83,10 +83,12 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		$state = $gridField->State->GridFieldSortableHeader;
 		$columns = $gridField->getColumns();
 		$currentColumn = 0;
+
 		foreach($columns as $columnField) {
 			$currentColumn++;
 			$metadata = $gridField->getColumnMetadata($columnField);
 			$title = $metadata['title'];
+
 			if(isset($this->fieldSorting[$columnField]) && $this->fieldSorting[$columnField]) {
 				$columnField = $this->fieldSorting[$columnField];
 			}
