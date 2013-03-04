@@ -119,7 +119,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			$fileData .= "\n";
 		}
 
-		$items = $gridField->getList();
+		$items = $gridField->getManipulatedList();
 
 		// @todo should GridFieldComponents change behaviour based on whether others are available in the config?
 		foreach($gridField->getConfig()->getComponents() as $component){

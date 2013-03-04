@@ -118,6 +118,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 			}
 		}
 		
+		$items = $gridField->getManipulatedList();
 		$itemRows = new ArrayList();
 		foreach($items as $item) {
 			$itemRow = new ArrayList();
