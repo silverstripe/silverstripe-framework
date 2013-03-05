@@ -11,6 +11,7 @@ application/mac-compactpro			cpt
 application/mathematica				nb
 application/msaccess				mdb
 application/msword				doc dot
+application/vnd.openxmlformats-officedocument.wordprocessingml.document docx
 application/octet-stream			bin
 application/oda					oda
 application/ogg					ogg
