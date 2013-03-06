@@ -60,12 +60,12 @@ This will add an object with ID 12 to the cart.
 When you create a function, you can access the ID like this:
 
 	:::php
-	 public function addToCart ($request) {
-	  $param = $r->allParams();
-	  echo "my ID = ".$param["ID"];
-	  $obj = MyProduct::get()->byID($param["ID"]);
-	  $obj->addNow();
-	 }
+	public function addToCart ($request) {
+		$param = $request->allParams();
+		echo "my ID = " . $param["ID"];
+		$obj = MyProduct::get()->byID($param["ID"]);
+		$obj->addNow();
+	}
 
 ## Controllers and actions
 
@@ -79,10 +79,13 @@ You can access the following controller-method with /team/signup
 	class Team extends DataObject {}
 	
 	class Team_Controller extends Controller {
+	
 		static $allowed_actions = array('signup');
-	  public function signup($id, $otherId) {
-	    return $this->renderWith('MyTemplate');
-	  }
+		
+		public function signup($id, $otherId) {
+			return $this->renderWith('MyTemplate');
+		}
+		
 	}
 
 ## SSViewer template rendering
