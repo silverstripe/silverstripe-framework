@@ -104,6 +104,24 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
+		$this->setUrl($url);
+
+		$this->getVars = (array)$getVars;
+		$this->postVars = (array)$postVars;
+		$this->body = $body;
+	}
+
+	/**
+	 * Allow the setting of a URL
+	 *
+	 * This is here so that RootURLController can change the URL of the request
+	 * without us loosing all the other info attached (like headers)
+	 *
+	 * @param string The new URL
+	 *
+	 * @return SS_HTTPRequest The updated request
+	 */
+	public function setUrl($url) {
 		$this->url = $url;
 
 		// Normalize URL if its relative (strictly speaking), or has leading slashes
@@ -116,10 +134,8 @@ class SS_HTTPRequest implements ArrayAccess {
 		}
 		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
 		else $this->dirParts = array();
-		
-		$this->getVars = (array)$getVars;
-		$this->postVars = (array)$postVars;
-		$this->body = $body;
+
+		return $this;
 	}
 
 	/**
