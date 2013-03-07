@@ -189,7 +189,7 @@ Example: Remove field for "image captions"
 
 	:::php
 	// File: mysite/_config.php
-	HtmlEditorField::add_extension('MyToolbarExtension');
+	HtmlEditorField_Toolbar::add_extension('MyToolbarExtension');
 
 Adding functionality is a bit more advanced, you'll most likely
 need to add some fields to the PHP forms, as well as write some
