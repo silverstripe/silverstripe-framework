@@ -874,7 +874,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					//get the uploaded file ID when this event triggers, signaling the upload has compeleted successfully
 					editFieldIDs.push($(this).data('id'));
 				});
-				var uploadedFiles = form.find('.ss-uploadfield-files').children('.ss-uploadfield-item');
+				// we only want this .ss-uploadfield-files - else we get all ss-uploadfield-files wich include the ones not related to #tinymce insertmedia
+				var uploadedFiles = $('.ss-uploadfield-files', this).children('.ss-uploadfield-item');
 				uploadedFiles.each(function(){
 					var uploadedID = $(this).data('fileid');
 					if ($.inArray(uploadedID, editFieldIDs) == -1) {
