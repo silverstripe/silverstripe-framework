@@ -134,25 +134,19 @@ class ContentNegotiator {
 	 */
 	public function xhtml(SS_HTTPResponse $response) {
 		$content = $response->getBody();
-		
-		// Only serve "pure" XHTML if the XML header is present
-		if(substr($content,0,5) == '<' . '?xml' ) {
-			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
-			$response->addHeader("Vary" , "Accept");
 
-			// Fix base tag
-			$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
-				'<base href="$1" />', $content);
-			
-			$content = str_replace('&nbsp;','&#160;', $content);
-			$content = str_replace('<br>','<br />', $content);
-			$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
-			
-			$response->setBody($content);
+		$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
+		$response->addHeader("Vary" , "Accept");
 
-		} else {
-			return $this->html($response);
-		}
+		// Fix base tag
+		$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
+			'<base href="$1" />', $content);
+
+		$content = str_replace('&nbsp;','&#160;', $content);
+		$content = str_replace('<br>','<br />', $content);
+		$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
+
+		$response->setBody($content);
 	}
 	
 	/*
