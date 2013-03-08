@@ -892,11 +892,11 @@ class Director implements TemplateGlobalProvider {
 	 */
 	public static function get_template_global_variables() {
 		return array(
-			'absoluteBaseURL',
-			'baseURL',
+			'absoluteBaseURL' => array('method' => 'absoluteBaseURL', 'casting' => 'Text'),
+			'baseURL'  => array('method' => 'baseURL', 'casting' => 'Text'),
 			'is_ajax',
 			'isAjax' => 'is_ajax',
-			'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
+			'BaseHref' => array('method' => 'absoluteBaseURL', 'casting' => 'Text'),    //@deprecated 3.0
 		);
 	}
 }
