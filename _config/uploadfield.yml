@@ -13,4 +13,5 @@ UploadField:
     downloadTemplateName: 'ss-uploadfield-downloadtemplate'
     fileEditFields: 
     fileEditActions: 
-    fileEditValidator: 
+    fileEditValidator:
+    overwriteWarning: true # Warning before overwriting existing file (only relevant when Upload: replaceFile is true)
