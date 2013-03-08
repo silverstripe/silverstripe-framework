@@ -157,6 +157,32 @@ class UnsavedRelationListTest extends SapphireTest {
 			array('Name' => 'C', 'Number' => 3)
 		), $object->Siblings());
 	}
+
+	public function testGetIDList() {
+		$object = new UnsavedRelationListTest_DataObject;
+
+		$children = $object->Children();
+		$this->assertEquals($children->getIDList(), array());
+		$children->add($child1 = new UnsavedRelationListTest_DataObject(array('Name' => 'A')));
+		$children->add($child2 = new UnsavedRelationListTest_DataObject(array('Name' => 'B')));
+		$children->add($child3 = new UnsavedRelationListTest_DataObject(array('Name' => 'C')));
+		$children->add($child1);
+
+		$this->assertEquals($children->getIDList(), array());
+
+		$child1->write();
+		$this->assertEquals($children->getIDList(), array(
+			$child1->ID => $child1->ID
+		));
+
+		$child2->write();
+		$child3->write();
+		$this->assertEquals($children->getIDList(), array(
+			$child1->ID => $child1->ID,
+			$child2->ID => $child2->ID,
+			$child3->ID => $child3->ID
+		));
+	}
 }
 
 class UnsavedRelationListTest_DataObject extends DataObject implements TestOnly {
