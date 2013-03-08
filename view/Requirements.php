@@ -802,7 +802,6 @@ class Requirements_Backend {
 			$suffix = '';
 			if($this->suffix_requirements) {
 				$mtimesuffix = "?m=" . filemtime($filePath);
-				$suffix = '&';
 			}
 			if(strpos($fileOrUrl, '?') !== false) {
 				if (strlen($suffix) == 0) {
