@@ -144,6 +144,7 @@ class ContentNegotiator {
 
 		$content = str_replace('&nbsp;','&#160;', $content);
 		$content = str_replace('<br>','<br />', $content);
+		$content = str_replace('<hr>','<hr />', $content);
 		$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
 
 		$response->setBody($content);
