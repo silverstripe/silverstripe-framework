@@ -354,7 +354,18 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 	
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
-		$response = parent::handleRequest($request, $model);
+		try {
+			$response = parent::handleRequest($request, $model);
+		} catch(ValidationException $e) {
+			// Nicer presentation of model-level validation errors
+			$msgs = _t('LeftAndMain.ValidationError', 'Validation error') . ': ' 
+				. $e->getResult()->message();
+			$e = new SS_HTTPResponse_Exception($msgs, 403);
+			$e->getResponse()->addHeader('Content-Type', 'text/plain');
+			$e->getResponse()->addHeader('X-Status', rawurlencode($msgs));
+			throw $e;
+		}
+
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
