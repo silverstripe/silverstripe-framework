@@ -35,6 +35,7 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UploadField.EMPTYRESULT': 'Empty file upload result',
 		'UploadField.LOADING': 'Loading ...',
 		'UploadField.Editing': 'Editing ...',
-		'UploadField.Uploaded': 'Uploaded'
+		'UploadField.Uploaded': 'Uploaded',
+		'UploadField.OVERWRITEWARNING': 'File with the same name already exists'
 	});
 }

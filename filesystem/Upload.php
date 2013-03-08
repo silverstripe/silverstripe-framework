@@ -153,24 +153,27 @@ class Upload extends Controller {
 		
 		// if filename already exists, version the filename (e.g. test.gif to test1.gif)
 		if(!$this->replaceFile) {
-		while(file_exists("$base/$relativeFilePath")) {
-			$i = isset($i) ? ($i+1) : 2;
-			$oldFilePath = $relativeFilePath;
-			// make sure archives retain valid extensions
-			if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
-				substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
-					$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-			} else if (strpos($relativeFilePath, '.') !== false) {
-				$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-			} else if (strpos($relativeFilePath, '_') !== false) {
-				$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
-			} else {
-				$relativeFilePath .= '_'.$i;
-			}
-			if($oldFilePath == $relativeFilePath && $i > 2) {
-				user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
-			}
-		}
+			while(file_exists("$base/$relativeFilePath")) {
+				$i = isset($i) ? ($i+1) : 2;
+				$oldFilePath = $relativeFilePath;
+				// make sure archives retain valid extensions
+				if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
+					substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
+						$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
+				} else if (strpos($relativeFilePath, '.') !== false) {
+					$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
+				} else if (strpos($relativeFilePath, '_') !== false) {
+					$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
+				} else {
+					$relativeFilePath .= '_'.$i;
+				}
+				if($oldFilePath == $relativeFilePath && $i > 2) {
+					user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
+				}
+			}	
+		} else {
+			//reset the ownerID to the current member when replacing files
+			$this->file->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 		}
 
 		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$relativeFilePath")) {
@@ -178,6 +181,7 @@ class Upload extends Controller {
 			// This is to prevent it from trying to rename the file
 			$this->file->Name = basename($relativeFilePath);
 			$this->file->write();
+			$this->extend('onAfterLoad', $this->file);   //to allow extensions to e.g. create a version after an upload
 			return true;
 		} else {
 			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
