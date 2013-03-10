@@ -51,7 +51,7 @@
 		_onSend: function (e, data) {
 			//check the array of existing files to see if we are trying to upload a file that already exists
 			var that = this;
-			var config = $('#AssetUploadField').entwine('ss').getConfig();
+			var config = $('div.ss-upload').entwine('ss').getConfig();
 			var existingFiles = [];
 			if (typeof (config.existingFiles) !== "undefined") {
 				existingFiles = config.existingFiles;
