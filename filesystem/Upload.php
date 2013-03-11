@@ -173,6 +173,9 @@ class Upload extends Controller {
 					user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
 				}
 			}	
+		} else {
+			//reset the ownerID to the current member when replacing files
+			$this->file->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 		}
 
 		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$relativeFilePath")) {
