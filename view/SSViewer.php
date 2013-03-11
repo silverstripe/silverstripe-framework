@@ -909,7 +909,12 @@ class SSViewer {
 				$subtemplateViewer->includeRequirements(false);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
-				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
+				$underlay[$subtemplate] = DBField::create_field(
+					'HTMLText',
+					$subtemplateViewer->process($item, $arguments),
+					$subtemplate,
+					array('shortcodes' => false)
+				);
 			}
 		}
 
