@@ -660,7 +660,7 @@ class Requirements_Backend {
 			$this->process_combined_files();
 
 			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
-				$path = $this->path_for_file($file);
+				$path = Convert::raw2xml($this->path_for_file($file));
 				if($path) {
 					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
 				}
@@ -677,7 +677,7 @@ class Requirements_Backend {
 			}
 
 			foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {
-				$path = $this->path_for_file($file);
+				$path = Convert::raw2xml($this->path_for_file($file));
 				if($path) {
 					$media = (isset($params['media']) && !empty($params['media']))
 						? " media=\"{$params['media']}\"" : "";
