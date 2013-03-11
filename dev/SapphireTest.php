@@ -510,6 +510,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$controller->response->removeHeader('Location');
 		}
 	}
+
+	public static function assertContains($needle, $haystack, $message = '', $ignoreCase = FALSE, $checkForObjectIdentity = TRUE) {
+		if ($haystack instanceof DBField) $haystack = (string)$haystack;
+		parent::assertContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
+	}
+
+	public static function assertNotContains($needle, $haystack, $message = '', $ignoreCase = FALSE, $checkForObjectIdentity = TRUE) {
+		if ($haystack instanceof DBField) $haystack = (string)$haystack;
+		parent::assertNotContains($needle, $haystack, $message, $ignoreCase, $checkForObjectIdentity);
+	}
+
 	/**
 	 * Clear the log of emails sent
 	 */
