@@ -321,9 +321,8 @@ class ShortcodeParser {
 	 *
 	 * @param DOMDocument $doc
 	 */
-	protected function replaceAttributeTagsWithContent($doc) {
-		$xp = new DOMXPath($doc);
-		$attributes = $xp->query('//@*[contains(.,"[")][contains(.,"]")]');
+	protected function replaceAttributeTagsWithContent($htmlvalue) {
+		$attributes = $htmlvalue->query('//@*[contains(.,"[")][contains(.,"]")]');
 		$parser = $this;
 
 		for($i = 0; $i < $attributes->length; $i++) {
@@ -462,7 +461,7 @@ class ShortcodeParser {
 	}
  
 	/**
-	 * Given a node with represents a shortcode marker and some informationabout the shortcode, call the 
+	 * Given a node with represents a shortcode marker and some information about the shortcode, call the
 	 * shortcode handler & replace the marker with the actual content
 	 * 
 	 * @param DOMElement $node
@@ -488,55 +487,12 @@ class ShortcodeParser {
 		}
 		
 		if ($content) {
-			$parsed = HTML5_Parser::parseFragment($content, 'div');
-			$this->insertListAfter($parsed, $node);
+			$parsed = Injector::inst()->create('HTMLValue', $content);
+			$body = $parsed->getBody();
+			if ($body) $this->insertListAfter($body->childNodes, $node);
 		}
 		
 		$this->removeNode($node);
-	}
-
-	protected function loadHTML($html) {
-		require_once(THIRDPARTY_PATH.'/html5lib/HTML5/Parser.php');
-
-		// Convert any errors to exceptions
-		set_error_handler(
-			function($no, $str){
-				throw new Exception("HTML Parse Error: ".$str);
-			},
-			error_reporting()
-		);
-		
-		// Use HTML5lib to parse the HTML fragment
-		try {
-			$bases = HTML5_Parser::parseFragment(trim($html), 'div');
-		}
-		catch (Exception $e) {
-			$bases = null;
-		}
-		
-		// Disable our error handler (restoring to previous value)
-		restore_error_handler();
-		
-		return $bases;
-	}
-	
-	protected function saveHTML($doc) {
-		if (version_compare(PHP_VERSION, '5.3.6', '>=')){
-			$res = '';
-			foreach($doc->firstChild->childNodes as $child) $res .= $doc->saveHTML($child);
-		}
-		else {
-			$res = preg_replace(
-				array(
-					'/^(.*?)<html>/is',
-					'/<\/html>(.*?)$/is',
-				),
-				'',
-				$doc->saveHTML()
-			);
-		}
-
-		return $res;
 	}
 
 	/**
@@ -556,11 +512,10 @@ class ShortcodeParser {
 		// use a proper DOM
 		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
+		$htmlvalue = Injector::inst()->create('HTMLValue', $content);
+
 		// Now parse the result into a DOM
-		$bases = $this->loadHTML($content);
-		
-		// If we couldn't parse the HTML, error out
-		if (!$bases || !$bases->length) {
+		if (!$htmlvalue->isValid()){
 			if(self::$error_behavior == self::ERROR) {
 				user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERRROR);
 			}
@@ -569,15 +524,11 @@ class ShortcodeParser {
 			}
 		}
 
-		$doc = $bases->item(0)->ownerDocument;
-
-		$xp = new DOMXPath($doc);
-
 		// First, replace any shortcodes that are in attributes
-		$this->replaceAttributeTagsWithContent($doc);
+		$this->replaceAttributeTagsWithContent($htmlvalue);
 
 		// Find all the element scoped shortcode markers
-		$shortcodes = $xp->query('//img[@class="'.self::$marker_class.'"]');
+		$shortcodes = $htmlvalue->query('//img[@class="'.self::$marker_class.'"]');
 
 		// Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
 		$parents = $this->findParentsForMarkers($shortcodes);
@@ -605,8 +556,8 @@ class ShortcodeParser {
 
 			$this->replaceMarkerWithContent($shortcode, $tag);
 		}
-		
-		return $this->saveHTML($doc);
+
+		return $htmlvalue->getContent();
 	}
 	
 	

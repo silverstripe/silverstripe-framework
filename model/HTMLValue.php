@@ -124,6 +124,20 @@ abstract class SS_HTMLValue extends ViewableData {
 	}
 
 	/**
+	 * Get the body element, or false if there isn't one (we haven't loaded any content
+	 * or this instance is in an invalid state)
+	 */
+	public function getBody() {
+		$doc = $this->getDocument();
+		if (!$doc) return false;
+
+		$body = $doc->getElementsByTagName('body');
+		if (!$body->length) return false;
+
+		return $body->item(0);
+	}
+
+	/**
 	 * Make an xpath query against this HTML
 	 *
 	 * @param $query string - The xpath query string
