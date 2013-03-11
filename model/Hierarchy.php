@@ -379,24 +379,6 @@ class Hierarchy extends DataExtension {
 		$id = $this->owner->ID;
 		return isset(self::$treeOpened[$baseClass][$id]) ? self::$treeOpened[$baseClass][$id] : false;
 	}
-
-	/**
-	 * Return a partial tree as an HTML UL.
-	 */
-	public function partialTreeAsUL($minCount = 50) {
-		$children = $this->owner->AllChildren();
-		if($children) {
-			if($attributes) $attributes = " $attributes";
-			$output = "<ul$attributes>\n";
-		
-			foreach($children as $child) {
-				$output .= eval("return $titleEval;") . "\n" . 
-					$child->getChildrenAsUL("", $titleEval, $extraArg) . "</li>\n";
-			}
-			$output .= "</ul>\n";
-		}
-		return $output;
-	}
 	
 	/**
 	 * Get a list of this DataObject's and all it's descendants IDs.
