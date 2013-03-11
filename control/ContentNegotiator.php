@@ -146,6 +146,9 @@ class ContentNegotiator {
 		$content = str_replace('<br>','<br />', $content);
 		$content = str_replace('<hr>','<hr />', $content);
 		$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
+		$content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
+		$content = preg_replace('#(<option[^>].*)selected(.*>)#i', '$1selected="selected"$2', $content);
+		$content = preg_replace('#(<input[^>].*)checked(.*>)#i', '$1checked="checked"$2', $content);
 
 		$response->setBody($content);
 	}
