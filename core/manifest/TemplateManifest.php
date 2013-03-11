@@ -35,7 +35,7 @@ class SS_TemplateManifest {
 
 		$this->project = $project;
 
-		$this->cacheKey   = $this->tests ? 'manifest_tests' : 'manifest';
+		$this->cacheKey   = 'manifest_' . sha1($base . $project . ($this->tests ? 'tests' : ''));
 		$this->forceRegen = $forceRegen;
 
 		$this->cache = SS_Cache::factory('SS_TemplateManifest', 'Core', array(
