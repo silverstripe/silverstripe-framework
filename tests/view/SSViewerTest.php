@@ -1218,14 +1218,14 @@ class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 
 	public static function get_template_global_variables() {
 		return array(
-			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html'),
-			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html', 'casting' => 'Varchar'),
+			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html', 'casting' => 'HTMLText'),
+			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html'),
 
 			'SSViewerTest_GlobalAutomatic',
 			'SSViewerTest_GlobalReferencedByString' => 'get_reference',
 			'SSViewerTest_GlobalReferencedInArray' => array('method' => 'get_reference'),
 
-			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix')
+			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix', 'casting' => 'HTMLText')
 
 		);
 	}
