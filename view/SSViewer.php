@@ -866,7 +866,7 @@ class SSViewer {
 	 * @param ViewableData $item
 	 * @param SS_Cache $cache Optional cache backend.
 	 *
-	 * @return String Parsed template output.
+	 * @return HTMLText Parsed template output.
 	 */
 	public function process($item, $arguments = null) {
 		SSViewer::$topLevel[] = $item;
@@ -909,12 +909,7 @@ class SSViewer {
 				$subtemplateViewer->includeRequirements(false);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
-				$underlay[$subtemplate] = DBField::create_field(
-					'HTMLText',
-					$subtemplateViewer->process($item, $arguments),
-					$subtemplate,
-					array('shortcodes' => false)
-				);
+				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
 		}
 
@@ -939,7 +934,7 @@ class SSViewer {
 			}
 		}
 
-		return $output;
+		return DBField::create_field('HTMLText', $output, null, array('shortcodes' => false));
 	}
 
 	/**

@@ -318,7 +318,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string|array|SSViewer $template the template to render into
 	 * @param array $customFields fields to customise() the object with before rendering
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function renderWith($template, $customFields = null) {
 		if(!is_object($template)) {
