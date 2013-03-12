@@ -268,6 +268,9 @@ class SS_ConfigStaticManifest_Parser {
 			else if($type == ';' || $type == ',' || $type == '=') {
 				break;
 			}
+			else if($type == T_COMMENT) {
+				// NOP
+			}
 			else {
 				user_error('Unexpected token when building static manifest: '.print_r($token, true), E_USER_ERROR);
 			}
@@ -317,7 +320,7 @@ class SS_ConfigStaticManifest_Parser {
 
 		$this->statics[$class][$variable] = array(
 			'access' => $access,
-			'value' => eval('return '.$value.';')
+			'value' => eval('return '.trim($value).";\n")
 		);
 
 		if($token == ',') $this->parseStatic($access, $class);
