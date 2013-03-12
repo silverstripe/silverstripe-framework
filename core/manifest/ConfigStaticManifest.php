@@ -63,7 +63,7 @@ class SS_ConfigStaticManifest {
 			if (isset($this->index[$class])) {
 				$info = $this->index[$class];
 
-				if ($details = $this->cache->load($this->key.'_'.$info['base'])) {
+				if ($details = $this->cache->load($this->key.'_'.$info['key'])) {
 					$this->statics += $details;
 				}
 
@@ -109,33 +109,26 @@ class SS_ConfigStaticManifest {
 
 		if($cache) {
 			$index = array('$statics' => array());
-			$bases = array();
+			$keysets = array();
 
 			foreach ($this->statics as $class => $details) {
 				if (in_array($class, self::$initial_classes)) {
 					$index['$statics'][$class] = $details;
 				}
 				else {
-					$base = $class;
-
-					do {
-						$parent = get_parent_class($base);
-					}
-					while ($parent != 'Object' && $parent != 'ViewableData' && $parent && ($base = $parent));
-
-					$base = sha1($base);
-					$bases[$base][$class] = $details;
+					$key = sha1($class);
+					$keysets[$key][$class] = $details;
 
 					$index[$class] = array(
-						'base' => $base,
+						'key' => $key,
 						'path' => $details['path'],
 						'mtime' => filemtime($details['path']),
 					);
 				}
 			}
 
-			foreach ($bases as $base => $details) {
-				$this->cache->save($details, $this->key.'_'.$base);
+			foreach ($keysets as $key => $details) {
+				$this->cache->save($details, $this->key.'_'.$key);
 			}
 
 			$this->cache->save($index, $this->key);
