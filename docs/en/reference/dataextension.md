@@ -9,7 +9,7 @@ implementation. Have a look at `[api:Object->useCustomClass()]`.
 
 ## Usage
 
-Your extension will nee to be a subclass of `[api:DataExtension]` or the `[api:Extension]` class.
+Your extension will need to be a subclass of `[api:DataExtension]` or the `[api:Extension]` class.
 
 	:::php
 	<?php
