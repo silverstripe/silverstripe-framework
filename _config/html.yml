@@ -1,0 +1,3 @@
+Injector:
+  HTMLValue:
+    class: SS_HTML4Value
