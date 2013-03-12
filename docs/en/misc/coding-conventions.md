@@ -17,10 +17,11 @@ Always use hard tabs rather then spaces for indentation, with one tab per nestin
 
 ### Maximum Line Length
 
-The target line length is 100 characters, meaning developers should strive keep each line of their code 
-under 80 characters where possible and practical. 
+The target line length is 100 columns with tabs being treated as four columns,
+meaning developers should strive keep each line of their code 
+under 80 columns where possible and practical. 
 However, longer lines are acceptable in some circumstances. 
-The maximum length of any line of PHP code is 120 characters.
+The maximum length of any line of PHP code is 120 columns.
 
 ### Line Termination
 
@@ -40,8 +41,9 @@ Class and filenames are in `UpperCamelCase` format:
 	:::php
 	class MyClass {}
 
-If a class name is comprised of more than one word, the first letter of each new word must be capitalized. 
-Successive capitalized letters are not allowed, e.g. a class `XMLImporter` is not allowed while `XmlImporter` is acceptable.
+If a class name is comprised of more than one word, the first letter of each 
+new word must be capitalized. Successive capitalized letters are used in 
+acronyms, e.g. a class `XMLImporter` is used while `XmlImporter` is not.
 
 ### Methods
 
@@ -127,6 +129,9 @@ PHP code must always be delimited by the full-form, standard PHP tags:
 
 Short tags are never allowed. For files containing only PHP code, the closing tag must always be omitted.
 It is not required by PHP, and omitting it prevents the accidental injection of trailing white space into the response.
+
+Files must end with an empty new line. This prevents problems arising from the end-of-file marker appearing where other
+white space is expected.
 
 ### Strings
 
