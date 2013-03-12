@@ -79,7 +79,8 @@ class PjaxResponseNegotiator {
 		// Execute the fragment callbacks and build the response.
 		foreach($fragments as $fragment) {
 			if(isset($callbacks[$fragment])) {
-				$responseParts[$fragment] = call_user_func($callbacks[$fragment]);
+				$res = call_user_func($callbacks[$fragment]);
+				$responseParts[$fragment] = $res ? (string)$res : $res;
 			} else {
 				throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
 			}

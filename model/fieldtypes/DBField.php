@@ -295,5 +295,8 @@ abstract class DBField extends ViewableData {
 </ul>
 DBG;
 	}
-	
+
+	public function __toString() {
+		return $this->forTemplate();
+	}
 }

@@ -159,7 +159,7 @@ class SS_HTTPResponse {
 	 * @return SS_HTTPRequest $this
 	 */
 	public function setBody($body) {
-		$this->body = $body;
+		$this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
 	}
 	
 	/**
