@@ -268,7 +268,7 @@ class SS_ConfigStaticManifest_Parser {
 			else if($type == ';' || $type == ',' || $type == '=') {
 				break;
 			}
-			else if($type == T_COMMENT) {
+			else if($type == T_COMMENT || $type == T_DOC_COMMENT) {
 				// NOP
 			}
 			else {

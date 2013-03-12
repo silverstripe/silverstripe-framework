@@ -57,6 +57,14 @@ DOC;
 
 	static /* Has comment inline */ $commented_int = 1, /* And here */ $commented_string = 'string';
 
+	static
+		/**
+		 * Has docblock inline
+		 */
+		$docblocked_int = 1,
+		/** And here */
+		$docblocked_string = 'string';
+
 	// Should ignore static methpds
 	static function static_method() {}
 
@@ -136,8 +144,12 @@ DOC;
 
 	public function testIgnoreComments() {
 		$statics = $this->parseSelf()->getStatics();
+
 		$this->assertEquals(self::$commented_int, $statics[__CLASS__]['commented_int']['value']);
 		$this->assertEquals(self::$commented_string, $statics[__CLASS__]['commented_string']['value']);
+
+		$this->assertEquals(self::$docblocked_int, $statics[__CLASS__]['docblocked_int']['value']);
+		$this->assertEquals(self::$docblocked_string, $statics[__CLASS__]['docblocked_string']['value']);
 	}
 
 	public function testIgnoresMethodStatics() {
