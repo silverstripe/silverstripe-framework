@@ -318,9 +318,17 @@ class SS_ConfigStaticManifest_Parser {
 			$this->statics[$class] = array();
 		}
 
+		$value = trim($value);
+		if ($value) {
+			$value = eval('static $temp = '.$value.";\n".'return $temp'.";\n");
+		}
+		else {
+			$value = null;
+		}
+
 		$this->statics[$class][$variable] = array(
 			'access' => $access,
-			'value' => eval('return '.trim($value).";\n")
+			'value' => $value
 		);
 
 		if($token == ',') $this->parseStatic($access, $class);
