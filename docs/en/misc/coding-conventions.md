@@ -282,7 +282,7 @@ apart from the last argument.
 #### if/else/elseif
 
 No control structure is allowed to have spaces directly
-before or after the opening parathesis, as well as no space before the closing parenthesis.
+before or after the opening parenthesis, as well as no space before the closing parenthesis.
 
 The opening brace and closing brace are written on the same line as the conditional statement. 
 Any content within the braces must be indented using a tab.
