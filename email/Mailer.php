@@ -7,7 +7,7 @@
  * @package framework
  * @subpackage email
  */
-class Mailer {
+class Mailer extends Object {
 	
 	/**
 	 * Send a plain-text email.
