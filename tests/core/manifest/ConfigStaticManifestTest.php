@@ -20,9 +20,20 @@ class ConfigStaticManifestTest extends SapphireTest {
 	static $sfloat = 2.5;
 	static $sstring = 'string';
 	static $sarray = array(1, 2, array(3, 4), 5);
+	static $sheredoc = <<<DOC
+heredoc
+DOC;
+	static $snowdoc = <<<'DOC'
+nowdoc
+DOC;
 
 	// Assigning multiple values
-	static $onone, $onull = null, $oint = 1, $ofloat = 2.5, $ostring = 'string', $oarray = array(1, 2, array(3, 4), 5);
+	static $onone, $onull = null, $oint = 1, $ofloat = 2.5, $ostring = 'string', $oarray = array(1, 2, array(3, 4), 5), $oheredoc = <<<DOC
+heredoc
+DOC
+, $onowdoc = <<<'DOC'
+nowdoc
+DOC;
 
 	static
 		$mnone,
@@ -34,7 +45,25 @@ class ConfigStaticManifestTest extends SapphireTest {
 			1, 2,
 			array(3, 4),
 			5
-		);
+		),
+		$mheredoc = <<<DOC
+heredoc
+DOC
+		,
+		$mnowdoc = <<<'DOC'
+nowdoc
+DOC;
+
+
+	static /* Has comment inline */ $commented_int = 1, /* And here */ $commented_string = 'string';
+
+	static
+		/**
+		 * Has docblock inline
+		 */
+		$docblocked_int = 1,
+		/** And here */
+		$docblocked_string = 'string';
 
 	// Should ignore static methpds
 	static function static_method() {}
@@ -90,6 +119,8 @@ class ConfigStaticManifestTest extends SapphireTest {
 			'float',
 			'string',
 			'array',
+			'heredoc',
+			'nowdoc'
 		);
 
 		$prepends = array(
@@ -109,6 +140,16 @@ class ConfigStaticManifestTest extends SapphireTest {
 				);
 			}
 		}
+	}
+
+	public function testIgnoreComments() {
+		$statics = $this->parseSelf()->getStatics();
+
+		$this->assertEquals(self::$commented_int, $statics[__CLASS__]['commented_int']['value']);
+		$this->assertEquals(self::$commented_string, $statics[__CLASS__]['commented_string']['value']);
+
+		$this->assertEquals(self::$docblocked_int, $statics[__CLASS__]['docblocked_int']['value']);
+		$this->assertEquals(self::$docblocked_string, $statics[__CLASS__]['docblocked_string']['value']);
 	}
 
 	public function testIgnoresMethodStatics() {
