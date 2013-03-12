@@ -63,7 +63,7 @@ class SS_ConfigStaticManifest {
 			if (isset($this->index[$class])) {
 				$info = $this->index[$class];
 
-				if ($details = $this->cache->load($this->key.'_'.$info['key'])) {
+				if (isset($info['key']) && $details = $this->cache->load($this->key.'_'.$info['key'])) {
 					$this->statics += $details;
 				}
 
@@ -95,6 +95,7 @@ class SS_ConfigStaticManifest {
 	 * Completely regenerates the manifest file.
 	 */
 	public function regenerate($cache = true) {
+		$this->index = array('$statics' => array());
 		$this->statics = array();
 
 		$finder = new ManifestFileFinder();
@@ -108,22 +109,17 @@ class SS_ConfigStaticManifest {
 		$finder->find($this->base);
 
 		if($cache) {
-			$index = array('$statics' => array());
 			$keysets = array();
 
 			foreach ($this->statics as $class => $details) {
 				if (in_array($class, self::$initial_classes)) {
-					$index['$statics'][$class] = $details;
+					$this->index['$statics'][$class] = $details;
 				}
 				else {
 					$key = sha1($class);
-					$keysets[$key][$class] = $details;
+					$this->index[$class]['key'] = $key;
 
-					$index[$class] = array(
-						'key' => $key,
-						'path' => $details['path'],
-						'mtime' => filemtime($details['path']),
-					);
+					$keysets[$key][$class] = $details;
 				}
 			}
 
@@ -131,13 +127,16 @@ class SS_ConfigStaticManifest {
 				$this->cache->save($details, $this->key.'_'.$key);
 			}
 
-			$this->cache->save($index, $this->key);
+			$this->cache->save($this->index, $this->key);
 		}
 	}
 
 	public function handleFile($basename, $pathname, $depth) {
 		$parser = new SS_ConfigStaticManifest_Parser($pathname);
-		$this->statics = array_merge($this->statics, $parser->parse());
+		$parser->parse();
+
+		$this->index = array_merge($this->index, $parser->getInfo());
+		$this->statics = array_merge($this->statics, $parser->getStatics());
 	}
 
 	public function getStatics() {
@@ -155,6 +154,7 @@ class SS_ConfigStaticManifest {
  */
 class SS_ConfigStaticManifest_Parser {
 
+	protected $info = array();
 	protected $statics = array();
 
 	protected $path;
@@ -169,6 +169,14 @@ class SS_ConfigStaticManifest_Parser {
 		$this->tokens = token_get_all($file);
 		$this->length = count($this->tokens);
 		$this->pos = 0;
+	}
+
+	function getInfo() {
+		return $this->info;
+	}
+
+	function getStatics() {
+		return $this->statics;
 	}
 
 	/**
@@ -198,7 +206,6 @@ class SS_ConfigStaticManifest_Parser {
 
 			if($type == T_CLASS) {
 				$next = $this->next();
-
 				if($next[0] != T_STRING) {
 					user_error("Couldn\'t parse {$this->path} when building config static manifest", E_USER_ERROR);
 				}
@@ -233,8 +240,6 @@ class SS_ConfigStaticManifest_Parser {
 				$access = '';
 			}
 		}
-
-		return $this->statics;
 	}
 
 	/**
@@ -299,11 +304,15 @@ class SS_ConfigStaticManifest_Parser {
 			}
 		}
 
-		if(!isset($this->statics[$class])) {
-			$this->statics[$class] = array(
+		if (!isset($this->info[$class])) {
+			$this->info[$class] = array(
 				'path' => $this->path,
-				'statics' => array()
+				'mtime' => filemtime($this->path),
 			);
+		}
+
+		if(!isset($this->statics[$class])) {
+			$this->statics[$class] = array();
 		}
 
 		$this->statics[$class][$variable] = array(

@@ -51,14 +51,14 @@ class ConfigStaticManifestTest extends SapphireTest {
 
 		if ($statics === null) {
 			$parser = new SS_ConfigStaticManifest_Parser(__FILE__);
-			$statics = $parser->parse();
+			$parser->parse();
 		}
 
-		return $statics;
+		return $parser;
 	}
 
 	public function testParsingAccessLevels() {
-		$statics = $this->parseSelf();
+		$statics = $this->parseSelf()->getStatics();
 
 		$levels = array(
 			'nolevel' => null,
@@ -80,7 +80,7 @@ class ConfigStaticManifestTest extends SapphireTest {
 	}
 
 	public function testParsingValues() {
-		$statics = $this->parseSelf();
+		$statics = $this->parseSelf()->getStatics();
 
 		// Check assigning values
 		$values = array(
@@ -112,12 +112,12 @@ class ConfigStaticManifestTest extends SapphireTest {
 	}
 
 	public function testIgnoresMethodStatics() {
-		$statics = $this->parseSelf();
+		$statics = $this->parseSelf()->getStatics();
 		$this->assertNull(@$statics[__CLASS__]['method_static']);
 	}
 
 	public function testIgnoresStaticMethods() {
-		$statics = $this->parseSelf();
+		$statics = $this->parseSelf()->getStatics();
 		$this->assertNull(@$statics[__CLASS__]['static_method']);
 	}
 }
