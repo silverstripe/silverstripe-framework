@@ -159,7 +159,7 @@ body.cms {
 	}
 
 	.ui-tabs-panel {
-		padding: $grid-x*2;
+		padding: $grid-x*3;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
 		&.cms-edit-form {
@@ -309,8 +309,7 @@ body.cms {
 		
 	.ui-state-active {
 		@include box-shadow(none);
-		background: darken($color-widget-bg, 2%);
-		background: $tab-panel-texture-color;
+		background:darken($tab-panel-texture-color,2%);	
 		border-top: none;
 		border: {
 			right-color: darken($color-tab, 15%); // same color as divider between header and body, needed for IE
@@ -692,7 +691,7 @@ body.cms {
 	
 	.cms-panel-content {
 		width: ($grid-x * 23);
-		padding: $grid-x*2 $grid-x 0; // smaller left/right padding to use space efficiently
+		padding: $grid-x*1.1 $grid-x 0; // smaller left/right padding to use space efficiently
 		overflow: auto;
 		height:100%;
 
@@ -1024,7 +1023,7 @@ form.member-profile-form {
 		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
 		overflow-y: auto;
 		overflow-x: auto;
-		background: none;
+		background:darken($tab-panel-texture-color,2%);	
 		width:100%;
 		#Root_Main {
 			.confirmedpassword {
@@ -1596,7 +1595,7 @@ form.small {
  */
 
 body.SecurityAdmin {
-	background-color: $tab-panel-texture-color; //adds background to import members/groups iframe
+	background-color: darken($tab-panel-texture-color,2%); //adds background to import members/groups iframe
 }
 
 form.import-form {
