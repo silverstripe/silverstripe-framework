@@ -91,6 +91,8 @@ All letters used in a constant name must be capitalized,
 while all words in a constant name must be separated by underscore characters.
 
 	:::php
+	const INTEREST_RATE = 0.19;
+	
 	define('INTEREST_RATE', 0.19);
 
 Constants must be defined as class members with the `const` modifier. 
@@ -286,7 +288,7 @@ The opening brace and closing brace are written on the same line as the conditio
 Any content within the braces must be indented using a tab.
 
 	:::php
-	if ($a != 2) {
+	if($a != 2) {
 	    $a = 2;
 	}
 
@@ -297,7 +299,7 @@ The closing paren in the conditional will then be placed on a line with the open
 with one space separating the two, at an indentation level equivalent to the opening control statement.
 
 	:::php
-	if (($a == $b)
+	if(($a == $b)
 	    && ($b == $c)
 	    || (Foo::CONST == $d)
 	) {
@@ -310,9 +312,9 @@ the formatting conventions are similar to the `if` construct.
 The following examples demonstrate proper formatting for `if` statements with `else` and/or `elseif` constructs:
 
 	:::php
-	if ($a != 2) {
+	if($a != 2) {
 	    $a = 2;
-	} elseif ($a == 3) {
+	} elseif($a == 3) {
 	    $a = 4;
 	} else {
 	    $a = 7;
