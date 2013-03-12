@@ -289,8 +289,12 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 }
 
 // Now that the class manifest is up, load the configuration
+$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+Config::inst()->pushConfigStaticManifest($configManifest);
+
+// Now that the class manifest is up, load the configuration
 $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
-Config::inst()->pushConfigManifest($configManifest);
+Config::inst()->pushConfigYamlManifest($configManifest);
 
 SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 	BASE_PATH, project(), false, isset($_GET['flush'])

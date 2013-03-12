@@ -43,9 +43,11 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 		
 		// Let's insert a new field here
-		$oldDB = DataObjectSchemaGenerationTest_DO::$db;
-		DataObjectSchemaGenerationTest_DO::$db['SecretField'] = 'Varchar(100)';
-		
+		Config::nest();
+		Config::inst()->update('DataObjectSchemaGenerationTest_DO', 'db', array(
+			'SecretField' => 'Varchar(100)'
+		));
+
 		// Verify that the above extra field triggered a schema update
 		$db->beginSchemaUpdate();
 		$obj = new DataObjectSchemaGenerationTest_DO();
@@ -55,7 +57,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertTrue($needsUpdating);
 		
 		// Restore db configuration
-		DataObjectSchemaGenerationTest_DO::$db = $oldDB;
+		Config::unnest();
 	}
 	
 	/**
@@ -76,9 +78,12 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertFalse($needsUpdating);
 		
 		// Test with alternate index format, although these indexes are the same
-		$oldIndexes = DataObjectSchemaGenerationTest_IndexDO::$indexes;
-		DataObjectSchemaGenerationTest_IndexDO::$indexes = DataObjectSchemaGenerationTest_IndexDO::$indexes_alt;
-				
+		Config::nest();
+		Config::inst()->remove('DataObjectSchemaGenerationTest_IndexDO', 'indexes');
+		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes',
+			Config::inst()->get('DataObjectSchemaGenerationTest_IndexDO', 'indexes_alt')
+		);
+
 		// Verify that it still doesn't need to be recreated
 		$db->beginSchemaUpdate();
 		$obj2 = new DataObjectSchemaGenerationTest_IndexDO();
@@ -88,7 +93,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertFalse($needsUpdating);
 		
 		// Restore old index format
-		DataObjectSchemaGenerationTest_IndexDO::$indexes = $oldIndexes;
+		Config::unnest();
 	}
 	
 	/**
@@ -101,9 +106,13 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 		
 		// Update the SearchFields index here
-		$oldIndexes = DataObjectSchemaGenerationTest_IndexDO::$indexes;
-		DataObjectSchemaGenerationTest_IndexDO::$indexes['SearchFields']['value'] = '"Title"';
-		
+		Config::nest();
+		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes', array(
+			'SearchFields' => array(
+				'value' => 'Title'
+			)
+		));
+
 		// Verify that the above index change triggered a schema update
 		$db->beginSchemaUpdate();
 		$obj = new DataObjectSchemaGenerationTest_IndexDO();
@@ -113,7 +122,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertTrue($needsUpdating);
 		
 		// Restore old indexes
-		DataObjectSchemaGenerationTest_IndexDO::$indexes = $oldIndexes;
+		Config::unnest();
 	}
 }
 
