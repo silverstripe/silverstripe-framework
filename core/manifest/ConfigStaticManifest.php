@@ -268,6 +268,9 @@ class SS_ConfigStaticManifest_Parser {
 			else if($type == ';' || $type == ',' || $type == '=') {
 				break;
 			}
+			else if ($type == T_DOC_COMMENT || $type == T_COMMENT) {
+				continue;
+			}
 			else {
 				user_error('Unexpected token when building static manifest: '.print_r($token, true), E_USER_ERROR);
 			}
