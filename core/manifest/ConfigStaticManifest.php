@@ -271,9 +271,7 @@ class SS_ConfigStaticManifest_Parser {
 				break;
 			}
 			else {
-				echo "What's this?\n";
-				print_r($token);
-				return;
+				user_error('Unexpected token when building static manifest: '.print_r($token, true), E_USER_ERROR);
 			}
 		}
 
