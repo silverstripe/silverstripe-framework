@@ -264,6 +264,11 @@ class GDBackend extends Object implements Image_Backend {
 	
 	public function crop($top, $left, $width, $height) {
 		$newGD = imagecreatetruecolor($width, $height);
+
+		// Preserve alpha channel between images
+		imagealphablending($newGD, false);
+		imagesavealpha($newGD, true);
+
 		imagecopyresampled($newGD, $this->gd, 0, 0, $left, $top, $width, $height, $width, $height);
 		
 		$output = clone $this;
