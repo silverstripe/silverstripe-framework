@@ -576,7 +576,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .cms-panel .cms-panel-toggle a { display: block; text-align: right; padding: 4px 0; width: 100%; text-decoration: none; }
 .cms-panel .cms-panel-toggle a span { display: inline-block; margin: 0 5px; color: #1f1f1f; font-size: 16px; }
 .cms-panel .cms-panel-toggle a.toggle-expand { width: 40px; display: none; }
-.cms-panel.cms-content-tools .cms-panel-toggle.south { border-top: 1px solid #cfd6db; -webkit-box-shadow: rgba(248, 248, 248, 0.9) 0 1px 0px inset; -moz-box-shadow: rgba(248, 248, 248, 0.9) 0 1px 0px inset; box-shadow: rgba(248, 248, 248, 0.9) 0 1px 0px inset; }
+.cms-panel.cms-content-tools .cms-panel-toggle.south { border-top: 1px solid #cfd6db; -webkit-box-shadow: rgba(248, 248, 248, 0.9) 0 1px 0px inset; -moz-box-shadow: rgba(248, 248, 248, 0.9) 0 1px 0px inset; box-shadow: rgba(248, 248, 248, 0.9) 0 1px 0px inset; min-height: 25px;}
 .cms-panel.collapsed { cursor: pointer; }
 .cms-panel.collapsed .cms-panel-header *, .cms-panel.collapsed .cms-panel-content, .cms-panel.collapsed .cms-panel-toggle a.toggle-collapse { display: none; }
 .cms-panel.collapsed .cms-panel-toggle a.toggle-expand { display: block; }
