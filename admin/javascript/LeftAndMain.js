@@ -127,6 +127,7 @@ jQuery.noConflict();
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
+				this.restoreTabState();
 				
 				this._super();
 			},
