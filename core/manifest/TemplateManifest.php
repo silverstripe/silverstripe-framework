@@ -35,13 +35,12 @@ class SS_TemplateManifest {
 
 		$this->project = $project;
 
-		$this->cacheKey   = 'manifest_' . sha1($base . $project . ($this->tests ? 'tests' : ''));
-		$this->forceRegen = $forceRegen;
+		$cacheClass = defined('SS_MANIFESTCACHE') ? SS_MANIFESTCACHE : 'ManifestCache_File';
 
-		$this->cache = SS_Cache::factory('SS_TemplateManifest', 'Core', array(
-			'automatic_serialization' => true,
-			'lifetime' => null
-		));
+		$this->cache = new $cacheClass('templatemanifest'.($includeTests ? '_tests' : ''));
+		$this->cacheKey = 'manifest';
+
+		$this->forceRegen = $forceRegen;
 	}
 
 	/**

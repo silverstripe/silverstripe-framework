@@ -39,12 +39,10 @@ class SS_ConfigStaticManifest {
 		$this->base  = $base;
 		$this->tests = $includeTests;
 
-		$this->cache = SS_Cache::factory('SS_ConfigStatics', 'Core', array(
-			'automatic_serialization' => true,
-			'lifetime' => null
-		));
+		$cacheClass = defined('SS_MANIFESTCACHE') ? SS_MANIFESTCACHE : 'ManifestCache_File';
 
-		$this->key = 'sc_'.sha1($base . ($includeTests ? '!tests' : ''));
+		$this->cache = new $cacheClass('staticmanifest'.($includeTests ? '_tests' : ''));
+		$this->key = sha1($base);
 
 		if(!$forceRegen) {
 			$this->index = $this->cache->load($this->key);
