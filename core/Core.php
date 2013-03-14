@@ -256,6 +256,8 @@ require_once 'dev/Log.php';
 require_once 'filesystem/FileFinder.php';
 require_once 'core/manifest/ManifestCache.php';
 require_once 'core/manifest/ClassLoader.php';
+require_once 'core/manifest/ConfigManifest.php';
+require_once 'core/manifest/ConfigStaticManifest.php';
 require_once 'core/manifest/ClassManifest.php';
 require_once 'core/manifest/ManifestFileFinder.php';
 require_once 'core/manifest/TemplateLoader.php';
