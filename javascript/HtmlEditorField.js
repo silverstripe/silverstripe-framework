@@ -13,7 +13,6 @@ var ss = ss || {};
  * Caution: Incomplete and unstable API.
  */
 ss.editorWrappers = {};
-ss.editorWrappers.initial
 ss.editorWrappers.tinyMCE = (function() {
 	return {
 		init: function(config) {
