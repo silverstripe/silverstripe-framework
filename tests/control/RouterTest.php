@@ -116,4 +116,79 @@ class RouterTest extends SapphireTest {
 		$this->assertEquals('page', $request->getParam('URLSegment'));
 	}
 
+	public function testExtensionRouting() {
+		$router = new Router();
+
+		$result = $router->route(new SS_HTTPRequest('GET', '/controller/action'), array(
+			'controller/action.json' => 'handleActionJson'
+		));
+		$this->assertFalse($result);
+
+		$router->setRules(array(
+			'controller/action'      => 'handleAction',
+			'controller/action.json' => 'handleActionJson'
+		));
+
+		$result = $router->route(new SS_HTTPRequest('GET', '/controller/action'));
+		$this->assertEquals('handleAction', $result);
+
+		$result = $router->route(new SS_HTTPRequest('GET', '/controller/action.json'));
+		$this->assertEquals('handleActionJson', $result);
+
+		$router->setRules(array(
+			'controller/action.$Format' => 'handleAction'
+		));
+
+		$request = new SS_HTTPRequest('GET', 'controller/action');
+		$this->assertEquals('handleAction', $router->route($request));
+		$this->assertEquals('', $request->getParam('Format'));
+
+		$request = new SS_HTTPRequest('GET', 'controller/action.json');
+		$this->assertEquals('handleAction', $router->route($request));
+		$this->assertEquals('json', $request->getParam('Format'));
+
+		$router->setRules(array(
+			'controller/action.$Format!' => 'handleAction'
+		));
+
+		$request = new SS_HTTPRequest('GET', 'controller/action');
+		$this->assertFalse($router->route($request));
+
+		$request = new SS_HTTPRequest('GET', 'controller/action.json');
+		$this->assertEquals('handleAction', $router->route($request));
+		$this->assertEquals('json', $request->getParam('Format'));
+
+		$router = Router::create()->setRules(array(
+			'controller/$Action.$Format' => 'handleAction'
+		));
+
+		$request = new SS_HTTPRequest('GET', '/controller/action');
+		$this->assertEquals('handleAction', $router->route($request));
+		$this->assertEquals('action', $request->getParam('Action'));
+		$this->assertEquals('', $request->getParam('Format'));
+
+		$request = new SS_HTTPRequest('GET', '/controller/action.json');
+		$this->assertEquals('handleAction', $router->route($request));
+		$this->assertEquals('action', $request->getParam('Action'));
+		$this->assertEquals('json', $request->getParam('Format'));
+
+		$router = Router::create()->setRules(array(
+			'controller/$Action.$Format!' => 'handleAction'
+		));
+
+		$request = new SS_HTTPRequest('GET', '/controller/action');
+		$this->assertFalse($router->route($request));
+
+		$request = new SS_HTTPRequest('GET', '/controller/action.json');
+		$this->assertEquals('handleAction', $router->route($request));
+		$this->assertEquals('action', $request->getParam('Action'));
+		$this->assertEquals('json', $request->getParam('Format'));
+
+		$request = new SS_HTTPRequest('GET', '/controller/action.json/more');
+		$this->assertEquals('handleAction', $router->route($request));
+		$this->assertEquals('action', $request->getParam('Action'));
+		$this->assertEquals('json', $request->getParam('Format'));
+		$this->assertEquals('more', $request->getRemainingUrl());
+	}
+
 }
