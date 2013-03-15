@@ -392,6 +392,32 @@ class VersionedTest extends SapphireTest {
 			'Additional version fields returned');
 		$this->assertEquals($extraFields, array('2005', '2007', '2009'), 'Additional version fields returned');
 	}
+    
+    public function testLazyLoadedField() {
+        // Creat the first version of our object
+        $testPage = new VersionedTest_Subclass();
+        $testPage->Title = "First Version";
+        $testPage->ExtraField = "First Version";
+        $testPage->write();
+
+        // Now update the fields for our second version
+        $testPage->Title = "Second Version";
+        $testPage->ExtraField = "Second Version";
+        $testPage->write();
+
+        $versions = Versioned::get_all_versions('VersionedTest_Subclass', $testPage->ID);
+        $this->assertEquals($versions->count(), 2, "2 version have been created.");
+
+        // Check our second (staged) version
+        $stage = VersionedTest_Subclass::get()->first();
+        $this->assertEquals($stage->Title, "Second Version", "Stage title correct.");
+        $this->assertEquals($stage->ExtraField, "Second Version", "Stage content correct.");
+
+        // Now go back and check our first version values
+        $version = Versioned::get_version($testPage->ClassName, $testPage->ID, 1);
+        $this->assertEquals($version->Title, "First Version", "First version title correct.");
+        $this->assertEquals($version->ExtraField, "First Version", "First version ExtraField correct."); // This is the real test.
+    }
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {
