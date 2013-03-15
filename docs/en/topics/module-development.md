@@ -3,7 +3,7 @@
 ## Introduction
 
 Creating a module is a good way to re-use abstract code and templates across multiple projects. SilverStripe already has
-certain modules included, for example "framework" and "cms". These three modules are the core functionality and
+certain modules included, for example "framework" and "cms". These two modules are the core functionality and
 templating for any initial installation. If you're wanting to add generic functionality that isn't specific to your
 project, like a forum, an ecommerce package or a blog you can do it like this;
 
