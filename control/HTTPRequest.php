@@ -32,7 +32,7 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	/**
 	 * @var string $httpMethod The HTTP method in all uppercase: GET/PUT/POST/DELETE/HEAD
 	 */
-	protected $httpMethod;
+	protected $method;
 	
 	/**
 	 * @var array $getVars Contains alls HTTP GET parameters passed into this request.
@@ -101,7 +101,7 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	 *
 	 * @return SS_HTTPRequest The updated request
 	 */
-	public function setUrl($url) {
+	public function setURL($url) {
 		$this->url = $url;
 
 		//Normalize URL if its relative (strictly speaking), or has leading slashes
@@ -118,36 +118,36 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	/**
 	 * @return bool
 	 */
-	public function isGET() {
-		return $this->httpMethod == 'GET';
+	public function isGet() {
+		return $this->method == 'GET';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isPOST() {
-		return $this->httpMethod == 'POST';
+	public function isPost() {
+		return $this->method == 'POST';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isPUT() {
-		return $this->httpMethod == 'PUT';
+	public function isPut() {
+		return $this->method == 'PUT';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isDELETE() {
-		return $this->httpMethod == 'DELETE';
+	public function isDelete() {
+		return $this->method == 'DELETE';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isHEAD() {
-		return $this->httpMethod == 'HEAD';
+	public function isHead() {
+		return $this->method == 'HEAD';
 	}
 
 	/**
@@ -255,7 +255,7 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	 * 
 	 * @return boolean
 	 */
-	public function isAjax() {
+	public function isAJAX() {
 		return (
 			$this->requestVar('ajax') ||
 			$this->getHeader('X-Requested-With') && $this->getHeader('X-Requested-With') == "XMLHttpRequest"
@@ -344,7 +344,7 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		// Check if a specific method is required
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
 			$requiredMethod = $matches[1];
-			if($requiredMethod != $this->httpMethod) return false;
+			if($requiredMethod != $this->method) return false;
 			
 			// If we get this far, we can match the URL pattern as usual.
 			$pattern = $matches[2];
@@ -584,7 +584,7 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	 *                                (Default: false)
 	 * @return array
 	 */
-	public function getAcceptMimetypes($includeQuality = false) {
+	public function getAcceptMimeTypes($includeQuality = false) {
 		$mimetypes = array();
 		$mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
 		foreach($mimetypesWithQuality as $mimetypeWithQuality) {
@@ -596,8 +596,8 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	/**
 	 * @return string HTTP method (all uppercase)
 	 */
-	public function httpMethod() {
-		return $this->httpMethod;
+	public function getMethod() {
+		return $this->method;
 	}
 	
 	/**
@@ -626,4 +626,12 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 			return $origMethod;
 		}
 	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getMethod()}.
+	 */
+	public function httpMethod() {
+		return $this->getMethod();
+	}
+
 }
