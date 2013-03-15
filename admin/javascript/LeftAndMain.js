@@ -144,6 +144,7 @@ jQuery.noConflict();
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
+				this.restoreTabState();
 				
 				this._super();
 			},
@@ -169,7 +170,8 @@ jQuery.noConflict();
 			 */
 			'from .cms-menu-list li a': {
 				onclick: function(e) {
-					if(e.which > 1) return;
+					var href = $(e.target).attr('href');
+					if(e.which > 1 || href == this._tabStateUrl()) return;
 					this.splitViewMode();
 				}
 			},

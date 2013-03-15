@@ -326,7 +326,7 @@ class GridField extends FormField {
 			}
 		}
 
-		$total = $list->count();
+		$total = count($list);
 		if($total > 0) {
 			$rows = array();
 			foreach($list as $idx => $record) {

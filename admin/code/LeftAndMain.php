@@ -354,7 +354,18 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 	
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
-		$response = parent::handleRequest($request, $model);
+		try {
+			$response = parent::handleRequest($request, $model);
+		} catch(ValidationException $e) {
+			// Nicer presentation of model-level validation errors
+			$msgs = _t('LeftAndMain.ValidationError', 'Validation error') . ': ' 
+				. $e->getResult()->message();
+			$e = new SS_HTTPResponse_Exception($msgs, 403);
+			$e->getResponse()->addHeader('Content-Type', 'text/plain');
+			$e->getResponse()->addHeader('X-Status', rawurlencode($msgs));
+			throw $e;
+		}
+
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
@@ -1346,19 +1357,67 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * Return the version number of this application.
-	 * Uses the subversion path information in <mymodule>/silverstripe_version
-	 * (automacially replaced by build scripts).
-	 * 
+	 * Uses the number in <mymodule>/silverstripe_version
+	 * (automatically replaced by build scripts).
+	 * If silverstripe_version is empty,
+	 * then attempts to get it from composer.lock
+	 *
 	 * @return string
 	 */
 	public function CMSVersion() {
-		$frameworkVersion = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
-		if(!$frameworkVersion) $frameworkVersion = _t('LeftAndMain.VersionUnknown', 'Unknown');
-		
-		return sprintf(
-			"Framework: %s",
-			$frameworkVersion
+		$versions = array();
+		$modules = array(
+			'silverstripe/framework' => array(
+				'title' => 'Framework',
+				'versionFile' => FRAMEWORK_PATH . '/silverstripe_version',
+			)
 		);
+		if(defined('CMS_PATH')) {
+			$modules['silverstripe/cms'] = array(
+				'title' => 'CMS',
+				'versionFile' => CMS_PATH . '/silverstripe_version',
+			);
+		}
+
+		// Tries to obtain version number from composer.lock if it exists
+		$composerLockPath = BASE_PATH . '/composer.lock';
+		if (file_exists($composerLockPath)) {
+			$cache = SS_Cache::factory('LeftAndMain_CMSVersion');
+			$cacheKey = filemtime($composerLockPath);
+			$versions = $cache->load($cacheKey);
+			if(!$versions) $versions = array();
+			if(!$versions && $jsonData = file_get_contents($composerLockPath)) {
+				$lockData = json_decode($jsonData);
+				if($lockData && isset($lockData->packages)) {
+					foreach ($lockData->packages as $package) {
+						if(
+							array_key_exists($package->name, $modules)
+							&& isset($package->version)
+						) {
+							$versions[$package->name] = $package->version;
+						}
+					}
+					$cache->save(json_encode($versions), $cacheKey);
+				}
+			}
+		} 
+
+		// Fall back to static version file
+		foreach($modules as $moduleName => $moduleSpec) {
+			if(!isset($versions[$moduleName])) {
+				if($staticVersion = file_get_contents($moduleSpec['versionFile'])) {
+					$versions[$moduleName] = $staticVersion;		
+				} else {
+					$versions[$moduleName] = _t('LeftAndMain.VersionUnknown', 'Unknown');		
+				}
+			}
+		}
+
+		$out = array();
+		foreach($modules as $moduleName => $moduleSpec) {
+			$out[] = $modules[$moduleName]['title'] . ': ' . $versions[$moduleName];
+		}
+		return implode(', ', $out);
 	}
 	
 	/**

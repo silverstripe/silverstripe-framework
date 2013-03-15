@@ -3,10 +3,10 @@
  * @package framework
  * @subpackage tests
  */
-class SS_HTMLValueTest extends SapphireTest {
-	
+class SS_HTML4ValueTest extends SapphireTest {
 	public function testInvalidHTMLSaving() {
-		$value = new SS_HTMLValue();
+		$value = new SS_HTML4Value();
+
 		$invalid = array (
 			'<p>Enclosed Value</p></p>'                              => '<p>Enclosed Value</p>',
 			'<meta content="text/html"></meta>'                      => '<meta content="text/html">',
@@ -22,20 +22,15 @@ class SS_HTMLValueTest extends SapphireTest {
 	}
 
 	public function testUtf8Saving() {
-		$value = new SS_HTMLValue();
+		$value = new SS_HTML4Value();
+
 		$value->setContent('<p>ö ß ā い 家</p>');
 		$this->assertEquals('<p>ö ß ā い 家</p>', $value->getContent());
 	}
 
-	public function testOutputFormatting() {
-		$value = new SS_HTMLValue();
-		$value->setOutputFormatting(true);
-		$value->setContent('<meta content="text/html">');
-		$this->assertEquals('<meta content="text/html">', $value->getContent(), 'Formatted output works');
-	}
-
 	public function testInvalidHTMLTagNames() {
-		$value = new SS_HTMLValue();
+		$value = new SS_HTML4Value();
+
 		$invalid = array(
 			'<p><div><a href="test-link"></p></div>',
 			'<html><div><a href="test-link"></a></a></html_>',
@@ -53,7 +48,8 @@ class SS_HTMLValueTest extends SapphireTest {
 	}
 	
 	public function testMixedNewlines() {
-		$value = new SS_HTMLValue();
+		$value = new SS_HTML4Value();
+
 		$value->setContent("<p>paragraph</p>\n<ul><li>1</li>\r\n</ul>");
 		$this->assertEquals(
 			"<p>paragraph</p>\n<ul><li>1</li>\n</ul>",

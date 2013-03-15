@@ -56,8 +56,8 @@ class HtmlEditorField extends TextareaField {
 	 */
 	public function Field($properties = array()) {
 		// mark up broken links
-		$value  = new SS_HTMLValue($this->value);
-		
+		$value = Injector::inst()->create('HTMLValue', $this->value);
+
 		if($links = $value->getElementsByTagName('a')) foreach($links as $link) {
 			$matches = array();
 			
@@ -103,7 +103,7 @@ class HtmlEditorField extends TextareaField {
 		$linkedPages = array();
 		$linkedFiles = array();
 		
-		$htmlValue = new SS_HTMLValue($this->value);
+		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
 		
 		if(class_exists('SiteTree')) {
 			// Populate link tracking for internal links & links to asset files.

@@ -298,6 +298,8 @@ class RestfulService extends ViewableData {
 	protected function extractResponse($ch, $rawResponse) {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		//get a curl error if there is one
+		$curlError = curl_error($ch);
 		//normalise the status code
 		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
 		//calculate the length of the header and extract it
@@ -588,7 +590,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 			$this->cachedResponse = new RestfulService_Response($content);
 		}
 		else {
-			$this->cachedResponse->setBody = $content;
+			$this->cachedResponse->setBody($content);
 		}
 	}
 	

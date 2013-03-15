@@ -59,11 +59,23 @@ class SSViewerTest extends SapphireTest {
 	public function testComments() {
 		$output = $this->render(<<<SS
 This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>Final content
+<%-- Alone multi
+	line comment --%>
+Some more content
+Mixing content and <%-- multi
+	line comment --%> Final final 
+content
 SS
 );
+		$shouldbe = <<<SS
+This is my templateThis is some contentFinal content
+
+Some more content
+Mixing content and  Final final 
+content
+SS;
 		
-		$this->assertEquals("This is my templateThis is some contentFinal content", 
-			preg_replace("/\n?<!--.*-->\n?/U",'',$output));
+		$this->assertEquals($shouldbe, $output);
 	}
 	
 	public function testBasicText() {
@@ -886,6 +898,41 @@ after')
 		);
 	}
 
+	protected function useTestTheme($theme, $callback) {
+		global $project;
+
+		$themeBaseDir = dirname(__FILE__);
+		$manifest = new SS_TemplateManifest($themeBaseDir, $project, true, true);
+
+		SS_TemplateLoader::instance()->pushManifest($manifest);
+
+		$origTheme = SSViewer::current_theme();
+		SSViewer::set_theme($theme);
+
+		$e = null;
+
+		try { $callback(); }
+		catch (Exception $e) { /* NOP for now, just save $e */ }
+
+		// Remove all the test themes we created
+		SS_TemplateLoader::instance()->popManifest();
+		SSViewer::set_theme($origTheme);
+
+		if ($e) throw $e;
+	}
+
+	public function testLayout() {
+		$self = $this;
+
+		$this->useTestTheme('layouttest', function() use ($self) {
+			$template = new SSViewer(array('Page'));
+			$self->assertEquals('Foo', $template->process(new ArrayData(array())));
+
+			$template = new SSViewer(array('Shortcodes', 'Page'));
+			$self->assertEquals('[file_link]', $template->process(new ArrayData(array())));
+		});
+	}
+
 	/**
 	 * @covers SSViewer::get_themes()
 	 */
@@ -917,7 +964,7 @@ after')
 		// Remove all the test themes we created
 		Filesystem::removeFolder($testThemeBaseDir);
 	}
-	
+
 	public function testRewriteHashlinks() {
 		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
 		SSViewer::setOption('rewriteHashlinks', true);
@@ -1171,14 +1218,14 @@ class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 
 	public static function get_template_global_variables() {
 		return array(
-			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html'),
-			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html', 'casting' => 'Varchar'),
+			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html', 'casting' => 'HTMLText'),
+			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html'),
 
 			'SSViewerTest_GlobalAutomatic',
 			'SSViewerTest_GlobalReferencedByString' => 'get_reference',
 			'SSViewerTest_GlobalReferencedInArray' => array('method' => 'get_reference'),
 
-			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix')
+			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix', 'casting' => 'HTMLText')
 
 		);
 	}

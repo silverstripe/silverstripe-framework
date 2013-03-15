@@ -254,7 +254,10 @@ require_once 'dev/Backtrace.php';
 require_once 'dev/ZendLog.php';
 require_once 'dev/Log.php';
 require_once 'filesystem/FileFinder.php';
+require_once 'core/manifest/ManifestCache.php';
 require_once 'core/manifest/ClassLoader.php';
+require_once 'core/manifest/ConfigManifest.php';
+require_once 'core/manifest/ConfigStaticManifest.php';
 require_once 'core/manifest/ClassManifest.php';
 require_once 'core/manifest/ManifestFileFinder.php';
 require_once 'core/manifest/TemplateLoader.php';
@@ -289,8 +292,12 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 }
 
 // Now that the class manifest is up, load the configuration
+$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+Config::inst()->pushConfigStaticManifest($configManifest);
+
+// Now that the class manifest is up, load the configuration
 $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
-Config::inst()->pushConfigManifest($configManifest);
+Config::inst()->pushConfigYamlManifest($configManifest);
 
 SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 	BASE_PATH, project(), false, isset($_GET['flush'])
