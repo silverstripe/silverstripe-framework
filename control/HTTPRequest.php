@@ -14,7 +14,7 @@
  * @package framework
  * @subpackage control
  */
-class SS_HTTPRequest implements ArrayAccess {
+class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 
 	/**
 	 * @var string $url
@@ -44,21 +44,6 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	protected $postVars = array();
 
-	/**
-	 * HTTP Headers like "Content-Type: text/xml"
-	 *
-	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
-	 * @var array
-	 */
-	protected $headers = array();
-	
-	/**
-	 * Raw HTTP body, used by PUT and POST requests.
-	 *
-	 * @var string
-	 */
-	protected $body;
-	
 	/**
 	 * @var array $allParams Contains an assiciative array of all
 	 * arguments matched in all calls to {@link RequestHandler->handleRequest()}.
@@ -166,22 +151,6 @@ class SS_HTTPRequest implements ArrayAccess {
 	}
 
 	/**
-	 * @param string $body
-	 * @return SS_HTTPRequest $this
-	 */
-	public function setBody($body) {
-		$this->body = $body;
-		return $this;
-	}
-
-	/**
-	 * @return null|string
-	 */
-	public function getBody() {
-		return $this->body;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function getVars() {
@@ -253,45 +222,6 @@ class SS_HTTPRequest implements ArrayAccess {
 		return in_array($this->getExtension(), array('css', 'js', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'ico'));
 	}
 
-	/**
-	 * Add a HTTP header to the response, replacing any header of the same name.
-	 * 
-	 * @param string $header Example: "Content-Type"
-	 * @param string $value Example: "text/xml" 
-	 */
-	public function addHeader($header, $value) {
-		$this->headers[$header] = $value;
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function getHeaders() {
-		return $this->headers;
-	}
-	
-	/**
-	 * Remove an existing HTTP header
-	 *
-	 * @param string $header
-	 * @return mixed
-	 */
-	public function getHeader($header) {
-		return (isset($this->headers[$header])) ? $this->headers[$header] : null;			
-	}
-	
-	/**
-	 * Remove an existing HTTP header by its name,
-	 * e.g. "Content-Type".
-	 *
-	 * @param string $header
-	 * @return SS_HTTPRequest $this
-	 */
-	public function removeHeader($header) {
-		if(isset($this->headers[$header])) unset($this->headers[$header]);
-		return $this;
-	}
-	
 	/**
 	 * Returns the URL used to generate the page
 	 *

@@ -5,7 +5,7 @@
  * @package framework
  * @subpackage control
  */
-class SS_HTTPResponse {
+class SS_HTTPResponse extends SS_HTTPMessage {
 	
 	/**
 	 * @var array
@@ -61,22 +61,7 @@ class SS_HTTPResponse {
 	 * @var String
 	 */
 	protected $statusDescription = "OK";
-	
-	/**
-	 * HTTP Headers like "Content-Type: text/xml"
-	 *
-	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
-	 * @var array
-	 */
-	protected $headers = array(
-		"Content-Type" => "text/html; charset=utf-8",
-	);
-	
-	/**
-	 * @var string
-	 */
-	protected $body = null;
-	
+
 	/**
 	 * Create a new HTTP response
 	 * 
@@ -86,7 +71,9 @@ class SS_HTTPResponse {
 	 *  See {@link setStatusCode()} for more information.
 	 */
 	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
+		$this->addHeader('Content-Type', 'text/html; charset=utf-8');
 		$this->setBody($body);
+
 		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
 	}
 	
@@ -153,64 +140,6 @@ class SS_HTTPResponse {
 	}
 
 	/**
-	 * @param string $body
-	 * @return SS_HTTPRequest $this
-	 */
-	public function setBody($body) {
-		$this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
-	}
-	
-	/**
-	 * @return null|string
-	 */
-	public function getBody() {
-		return $this->body;
-	}
-	
-	/**
-	 * Add a HTTP header to the response, replacing any header of the same name.
-	 * 
-	 * @param string $header Example: "Content-Type"
-	 * @param string $value Example: "text/xml" 
-	 * @return SS_HTTPRequest $this
-	 */
-	public function addHeader($header, $value) {
-		$this->headers[$header] = $value;
-		return $this;
-	}
-	
-	/**
-	 * Return the HTTP header of the given name.
-	 * 
-	 * @param string $header
-	 * @returns null|string
-	 */
-	public function getHeader($header) {
-		if(isset($this->headers[$header]))
-			return $this->headers[$header];			
-			return null;
-		}
-	
-	/**
-	 * @return array
-	 */
-	public function getHeaders() {
-		return $this->headers;
-	}
-	
-	/**
-	 * Remove an existing HTTP header by its name,
-	 * e.g. "Content-Type".
-	 *
-	 * @param string $header
-	 * @return SS_HTTPRequest $this
-	 */
-	public function removeHeader($header) {
-		if(isset($this->headers[$header])) unset($this->headers[$header]);
-		return $this;
-	}
-	
-	/**
 	 * @param string $dest
 	 * @param int $code
 	 * @return SS_HTTPRequest $this
@@ -231,7 +160,7 @@ class SS_HTTPResponse {
 	 */
 	public function output() {
 		if($this->isRedirect() && headers_sent($file, $line)) {
-			$url = $this->headers['Location'];
+			$url = $this->getHeader('Location');
 			echo
 			"<p>Redirecting to <a href=\"$url\" title=\"Click this link if your browser does not redirect you\">"
 				. "$url... (output started on $file, line $line)</a></p>
@@ -241,7 +170,7 @@ class SS_HTTPResponse {
 			$line = $file = null;
 			if(!headers_sent($file, $line)) {
 				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
-				foreach($this->headers as $header => $value) {
+				foreach($this->getHeaders() as $header => $value) {
 					header("$header: $value", true, $this->statusCode);
 				}
 			} else {
