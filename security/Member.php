@@ -15,7 +15,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
-		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(160)',
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
@@ -480,23 +479,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * @deprecated 3.0
-	 */
-	public function generateAutologinHash($lifetime = 2) {
-		Deprecation::notice('3.0', 
-			'Member::generateAutologinHash is deprecated - tokens are no longer saved directly into the database '.
-			'in plaintext. Use the return value of the Member::generateAutologinTokenAndHash to get the token '.
-			'instead.',
-			Deprecation::SCOPE_METHOD);
-
-		user_error(
-			'Member::generateAutologinHash is deprecated - tokens are no longer saved directly into the database '.
-			'in plaintext. Use the return value of the Member::generateAutologinTokenAndHash to get the token '.
-			'instead.', 
-			E_USER_ERROR);
-	}
-
-	/**
 	 * Check the token against the member.
 	 *
 	 * @param string $autologinToken
@@ -534,35 +516,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Send signup, change password or forgot password informations to an user
-	 *
-	 * @param string $type Information type to send ("signup", "changePassword" or "forgotPassword")
-	 * @param array $data Additional data to pass to the email (can be used in the template)
-	 */
-	public function sendInfo($type = 'signup', $data = null) {
-		Deprecation::notice('3.0',
-			'Please use Member_ChangePasswordEmail or Member_ForgotPasswordEmail directly instead');
-
-		switch($type) {
-			case "changePassword":
-				$e = Member_ChangePasswordEmail::create();
-				break;
-			case "forgotPassword":
-				$e = Member_ForgotPasswordEmail::create();
-				break;
-		}
-
-		if(is_array($data)) {
-			foreach($data as $key => $value)
-				$e->$key = $value;
-		}
-
-		$e->populateTemplate($this);
-		$e->setTo($this->Email);
-		$e->send();
-	}
-
-	/**
 	 * Returns the fields for the member form - used in the registration/profile module.
 	 * It should return fields that are editable by the admin and the logged-in user. 
 	 *
@@ -590,7 +543,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$fields->removeByName('RememberLoginToken');
 		$fields->removeByName('NumVisit');
 		$fields->removeByName('LastVisited');
-		$fields->removeByName('Bounced');
 		$fields->removeByName('AutoLoginHash');
 		$fields->removeByName('AutoLoginExpired');
 		$fields->removeByName('PasswordEncryption');
@@ -1018,42 +970,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function DirectGroups() {
 		return $this->getManyManyComponents('Groups');
 	}
-
-
-	/**
-	 * Get member SQLMap
-	 *
-	 * @param string $filter Filter for the SQL statement (WHERE clause)
-	 * @param string $sort Sorting function (ORDER clause)
-	 * @param string $blank Shift a blank member in the items
-	 * @return SQLMap Returns an SQLMap that returns all Member data.
-	 *
-	 * @todo Improve documentation of this function! (Markus)
-	 */
-	public static function map($filter = "", $sort = "", $blank="") {
-		Deprecation::notice('3.0', 'Use DataList::("Member")->map()');
-
-		$list = Member::get()->where($filter)->sort($sort);
-		$map = $list->map();
-		
-		if($blank) $map->unshift(0, $blank);
-
-		return $map;
-	}
-
-	/**
-	 * Get a member SQLMap of members in specific groups
-	 * 
-	 * If no $groups is passed, all members will be returned
-	 * 
-	 * @param mixed $groups - takes a SS_List, an array or a single Group.ID
-	 * @return SQLMap Returns an SQLMap that returns all Member data.
-	 * @see map()
-	 */
-	public static function mapInGroups($groups = null) {
-		Deprecation::notice('3.0', 'Use Member::map_in_groups() instead');
-		return self::map_in_groups();
-	}
 	
 	/**
 	 * Get a member SQLMap of members in specific groups
@@ -1203,7 +1119,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			i18n::get_existing_translations()
 		));
 
-		$mainFields->removeByName('Bounced');
 		$mainFields->removeByName('RememberLoginToken');
 		$mainFields->removeByName('AutoLoginHash');
 		$mainFields->removeByName('AutoLoginExpired');
@@ -1385,16 +1300,20 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
+
 		// extended access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
 			else return true;
 		}
-		
+
 		// No member found
 		if(!($member && $member->exists())) return false;
+
+		// Members are not allowed to remove themselves,
+		// since it would create inconsistencies in the admin UIs.
+		if($this->ID && $member->ID == $this->ID) return false;
 		
 		return $this->canEdit($member);
 	}
@@ -1511,14 +1430,12 @@ class Member_GroupSet extends ManyManyList {
 	/**
 	 * Link this group set to a specific member.
 	 */
-	public function setForeignID($id) {
-		// Turn a 1-element array into a simple value
-		if(is_array($id) && sizeof($id) == 1) $id = reset($id);
-		$this->foreignID = $id;
-		
+	public function foreignIDFilter($id = null) {
+		if ($id === null) $id = $this->getForeignID();
+
 		// Find directly applied groups
-		$manymanyFilter = $this->foreignIDFilter();
-		$groupIDs = DB::query('SELECT "GroupID" FROM "Group_Members" WHERE ' . $manymanyFilter)->column();
+		$manyManyFilter = parent::foreignIDFilter($id);
+		$groupIDs = DB::query('SELECT "GroupID" FROM "Group_Members" WHERE ' . $manyManyFilter)->column();
 
 		// Get all ancestors
 		$allGroupIDs = array();
@@ -1529,67 +1446,18 @@ class Member_GroupSet extends ManyManyList {
 		}
 		
 		// Add a filter to this DataList
-		if($allGroupIDs) $this->byIDs($allGroupIDs);
-		else $this->byIDs(array(0));
+		if($allGroupIDs) {
+			return "\"Group\".\"ID\" IN (" . implode(',', $allGroupIDs) .")";
+		}
+		else {
+			return "\"Group\".\"ID\" = 0";
+		}
+	}
+
+	public function foreignIDWriteFilter($id = null) {
+		return parent::foreignIDFilter($id);
 	}
 }
-
-/**
- * Form for editing a member profile.
- * @package framework
- * @subpackage security
- */
-class Member_ProfileForm extends Form {
-	
-	public function __construct($controller, $name, $member) {
-		Requirements::block(FRAMEWORK_DIR . '/admin/css/layout.css');
-		
-		$fields = $member->getCMSFields();
-		$fields->push(new HiddenField('ID','ID',$member->ID));
-
-		$actions = new FieldList(
-			FormAction::create('dosave',_t('CMSMain.SAVE', 'Save'))
-				->addExtraClass('ss-ui-button ss-ui-action-constructive')
-				->setAttribute('data-icon', 'accept')
-				->setUseButtonTag(true)
-		);
-		
-		$validator = new Member_Validator();
-		
-		parent::__construct($controller, $name, $fields, $actions, $validator);
-		
-		$this->addExtraClass('member-profile-form');
-		$this->loadDataFrom($member);
-	}
-	
-	public function dosave($data, $form) {
-		// don't allow ommitting or changing the ID
-		if(!isset($data['ID']) || $data['ID'] != Member::currentUserID()) {
-			return $this->controller->redirectBack();
-		}
-		$SQL_data = Convert::raw2sql($data);
-		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
-
-		if(!$member->canEdit()) {
-			$form->sessionMessage(_t('Member.CANTEDIT', 'You don\'t have permission to do that'), 'bad');
-			return $this->controller->redirectBack();
-		}
-
-		if($SQL_data['Locale'] != $member->Locale) {
-			$form->addErrorMessage("Generic", _t('Member.REFRESHLANG'),"good");
-		}
-		
-		$form->saveInto($member);
-		$member->write();
-		
-		$message = _t('Member.PROFILESAVESUCCESS', 'Successfully saved.');
-		$form->sessionMessage($message, 'good');
-		
-		$this->controller->redirectBack();
-	}
-}
-
-
 
 /**
  * Class used as template to send an email saying that the password has been

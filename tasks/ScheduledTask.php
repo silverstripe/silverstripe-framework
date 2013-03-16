@@ -39,7 +39,7 @@
  * 
  * <code>
  * # Quarter-hourly task (every hour at 25 minutes past) (remove space between first * and /15)
- * * /15 * * * *  www-data /webroot/framework/cli-script.php /QuarterlyHourlyTask > /var/log/quarterhourlytask.log
+ * * /15 * * * *  www-data /webroot/framework/cli-script.php /QuarterHourlyTask > /var/log/quarterhourlytask.log
  *
  * # HourlyTask (every hour at 25 minutes past)
  * 25 * * * *  www-data /webroot/framework/cli-script.php /HourlyTask > /var/log/hourlytask.log
@@ -50,6 +50,8 @@
  * # WeelkyTask (every Monday at 6:25am)
  * 25 6 1 * *  www-data /webroot/framework/cli-script.php /WeeklyTask > /var/log/weeklytask.log
  * </code>
+ *
+ * @deprecated 3.1
  * 
  * @todo Improve documentation
  * @package framework
@@ -57,4 +59,15 @@
  */
 abstract class ScheduledTask extends CliController {
 	// this class exists as a logical extension
+
+	public function init() {
+		Deprecation::notice(
+			'3.1', 
+			'ScheduledTask, QuarterHourlyTask, HourlyTask, DailyTask, MonthlyTask, WeeklyTask and ' .
+			'YearlyTask are deprecated, please extend from BuildTask or CliController, ' .
+			'and invoke them in self-defined frequencies through Unix cronjobs etc.'
+		);
+
+		parent::init();
+	}
 }

@@ -31,11 +31,6 @@ class AjaxUniqueTextField extends TextField {
 	}
 	
 	public function Field($properties = array()) {
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
-		Requirements::javascript(FRAMEWORK_DIR . "/javascript/UniqueFields.js");
-		
 		$url = Convert::raw2att( $this->validateURL );
 		
 		if($this->restrictedRegex)
@@ -52,7 +47,7 @@ class AjaxUniqueTextField extends TextField {
 			'maxlength' => ($this->maxLength) ? $this->maxLength : null
 		);
 		
-		return $this->createTag('input', $attributes);
+		return FormField::create_tag('input', $attributes);
 	}
 
 	public function validate( $validator ) {

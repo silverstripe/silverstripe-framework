@@ -1,0 +1,6 @@
+---
+Name: coreconfig
+---
+Upload:
+  # Replace an existing file rather than renaming the new one.
+  replaceFile: false

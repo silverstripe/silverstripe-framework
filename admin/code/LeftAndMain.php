@@ -85,7 +85,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
-		'Member_ProfileForm',
 	);
 
 	/**
@@ -295,14 +294,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'leftandmain.js',
 			array_unique(array_merge(
 				array(
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
@@ -368,7 +368,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
-		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
+		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
 		
 		return $response;
 	}
@@ -656,13 +656,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$ancestors->push($record);
 				foreach($ancestors as $ancestor) {
 					$items->push(new ArrayData(array(
-						'Title' => $ancestor->Title,
+						'Title' => ($ancestor->MenuTitle) ? $ancestor->MenuTitle : $ancestor->Title,
 						'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $ancestor->ID)
 					)));		
 				}
 			} else {
 				$items->push(new ArrayData(array(
-					'Title' => $record->Title,
+					'Title' => ($record->MenuTitle) ? $record->MenuTitle : $record->Title,
 					'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $record->ID)
 				)));	
 			}
@@ -1047,14 +1047,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if(!$fields->dataFieldByName('ClassName')) {
 				$fields->push(new HiddenField('ClassName'));
 			}
+
+			$tree_class = $this->stat('tree_class');
 			if(
-				Object::has_extension($this->stat('tree_class'), 'Hierarchy') 
+				$tree_class::has_extension('Hierarchy') 
 				&& !$fields->dataFieldByName('ParentID')
 			) {
 				$fields->push(new HiddenField('ParentID'));
 			}
 
-			// Added in-line to the form, but plucked into different view by LeftAndMain.Preview.js upon load
+			// Added in-line to the form, but plucked into different view by frontend scripts.
 			if(in_array('CMSPreviewable', class_implements($record))) {
 				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
 				$navField->setAllowHTML(true);
@@ -1091,7 +1093,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
-			
+
+			// Announce the capability so the frontend can decide whether to allow preview or not.
+			if(in_array('CMSPreviewable', class_implements($record))) {
+				$form->addExtraClass('cms-previewable');
+			}
+
 			// Set this if you want to split up tabs into a separate header row
 			// if($form->Fields()->hasTabset()) {
 			// 	$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
@@ -1521,10 +1528,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return $this->CSSClasses('Controller');
 	}
 	
-	public function IsPreviewExpanded() {
-		return ($this->request->getVar('cms-preview-expanded'));
-	}
-
 	/**
 	 * @return String
 	 */

@@ -449,7 +449,7 @@ class MemberTest extends FunctionalTest {
 		/* Logged in users can edit their own record */
 		$this->session()->inst_set('loggedInAs', $member->ID);
 		$this->assertTrue($member->canView());
-		$this->assertTrue($member->canDelete());
+		$this->assertFalse($member->canDelete());
 		$this->assertTrue($member->canEdit());
 		
 		/* Other uses cannot view, delete or edit others records */
@@ -487,7 +487,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member->canEdit());
 		
 		/* Apply a extension that allows viewing in any case (most likely the case for member profiles) */
-		Object::add_extension('Member', 'MemberTest_ViewingAllowedExtension');
+		Member::add_extension('MemberTest_ViewingAllowedExtension');
 		$member2 = $this->objFromFixture('Member', 'staffmember');
 		
 		$this->assertTrue($member2->canView());
@@ -495,8 +495,8 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member2->canEdit());
 	
 		/* Apply a extension that denies viewing of the Member */
-		Object::remove_extension('Member', 'MemberTest_ViewingAllowedExtension');
-		Object::add_extension('Member', 'MemberTest_ViewingDeniedExtension');
+		Member::remove_extension('MemberTest_ViewingAllowedExtension');
+		Member::add_extension('MemberTest_ViewingDeniedExtension');
 		$member3 = $this->objFromFixture('Member', 'managementmember');
 		
 		$this->assertFalse($member3->canView());
@@ -504,15 +504,15 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member3->canEdit());
 	
 		/* Apply a extension that allows viewing and editing but denies deletion */
-		Object::remove_extension('Member', 'MemberTest_ViewingDeniedExtension');
-		Object::add_extension('Member', 'MemberTest_EditingAllowedDeletingDeniedExtension');
+		Member::remove_extension('MemberTest_ViewingDeniedExtension');
+		Member::add_extension('MemberTest_EditingAllowedDeletingDeniedExtension');
 		$member4 = $this->objFromFixture('Member', 'accountingmember');
 		
 		$this->assertTrue($member4->canView());
 		$this->assertFalse($member4->canDelete());
 		$this->assertTrue($member4->canEdit());
 		
-		Object::remove_extension('Member', 'MemberTest_EditingAllowedDeletingDeniedExtension');
+		Member::remove_extension('MemberTest_EditingAllowedDeletingDeniedExtension');
 		$this->addExtensions($extensions);
 	}
 	
@@ -620,7 +620,7 @@ class MemberTest extends FunctionalTest {
 	 */
 	protected function addExtensions($extensions) {
 		if($extensions) foreach($extensions as $extension) {
-			Object::add_extension('Member', $extension);
+			Member::add_extension($extension);
 		}
 		return $extensions;
 	}
@@ -636,7 +636,7 @@ class MemberTest extends FunctionalTest {
 	 */
 	protected function removeExtensions($extensions) {
 		if($extensions) foreach($extensions as $extension) {
-			Object::remove_extension('Member', $extension);
+			Member::remove_extension($extension);
 		}
 		return $extensions;
 	}
@@ -668,6 +668,34 @@ class MemberTest extends FunctionalTest {
 		
 		$this->assertTrue($m1->validateAutoLoginToken($m1Token), 'Passes token validity test against matching member.');
 		$this->assertFalse($m2->validateAutoLoginToken($m1Token), 'Fails token validity test against other member.');
+	}
+
+	public function testCanDelete() {
+		$admin1 = $this->objFromFixture('Member', 'admin');
+		$admin2 = $this->objFromFixture('Member', 'other-admin');
+		$member1 = $this->objFromFixture('Member', 'grouplessmember');
+		$member2 = $this->objFromFixture('Member', 'noformatmember');
+
+		$this->assertTrue(
+			$admin1->canDelete($admin2),
+			'Admins can delete other admins'
+		);
+		$this->assertTrue(
+			$member1->canDelete($admin2),
+			'Admins can delete non-admins'
+		);
+		$this->assertFalse(
+			$admin1->canDelete($admin1),
+			'Admins can not delete themselves'
+		);
+		$this->assertFalse(
+			$member1->canDelete($member2),
+			'Non-admins can not delete other non-admins'
+		);
+		$this->assertFalse(
+			$member1->canDelete($member1),
+			'Non-admins can not delete themselves'
+		);
 	}
 
 }

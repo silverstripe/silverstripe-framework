@@ -27,7 +27,7 @@ class URLSegmentFilterTest extends SapphireTest {
 		$f = new URLSegmentFilter();
 		$this->assertEquals(
 			urlencode('aa1-.'),
-			$f->filter('Aa1~!@#$%^*()_+`-=;\':"[]\{}|,./<>?')
+			$f->filter('Aa1~!@#$%^*()_`-=;\':"[]\{}|,./<>?')
 		);
 	}
 

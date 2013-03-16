@@ -28,6 +28,8 @@
  */
 class ContentNegotiator {
 
+	protected static $content_type = '';
+	
 	protected static $encoding = 'utf-8';
 
 	protected static $enabled = false;
@@ -122,48 +124,56 @@ class ContentNegotiator {
 		$negotiator->$chosenFormat( $response );
 	}
 
-	/**
-	 * Only sends the HTTP Content-Type as "application/xhtml+xml"
-	 * if the template starts with the typical "<?xml" Pragma.
-	 * Assumes that a correct doctype is set, and doesn't change or append to it.
-	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;).
+	/** 
+	 * Check user defined content type and use it, if it's empty use the strict application/xhtml+xml.
+	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;
+	 * <input>, checked, selected).
 	 *
 	 * @param $response SS_HTTPResponse
 	 * @return string
-	 * @todo More flexible tag and entity parsing through regular expressions or tag definition lists
+	 * @todo Search for more xhtml replacement
 	 */
 	public function xhtml(SS_HTTPResponse $response) {
 		$content = $response->getBody();
-		
-		// Only serve "pure" XHTML if the XML header is present
-		if(substr($content,0,5) == '<' . '?xml' ) {
+
+		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
+		if (empty($contentType)) {
 			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
-			$response->addHeader("Vary" , "Accept");
-
-			// Fix base tag
-			$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
-				'<base href="$1" />', $content);
-			
-			$content = str_replace('&nbsp;','&#160;', $content);
-			$content = str_replace('<br>','<br />', $content);
-			$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
-			
-			$response->setBody($content);
-
 		} else {
-			return $this->html($response);
+			$response->addHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
 		}
+		$response->addHeader("Vary" , "Accept");
+
+		// Fix base tag
+		$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
+			'<base href="$1" />', $content);
+
+		$content = str_replace('&nbsp;','&#160;', $content);
+		$content = str_replace('<br>','<br />', $content);
+		$content = str_replace('<hr>','<hr />', $content);
+		$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
+		$content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
+		$content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content);
+		$content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content);
+
+		$response->setBody($content);
 	}
 	
 	/*
-	 * Sends HTTP Content-Type as "text/html", and replaces existing doctypes with
-	 * HTML4.01 Strict.
+	 * Check user defined content type and use it, if it's empty use the text/html.
+	 * If find a XML header replaces it and existing doctypes with HTML4.01 Strict.
 	 * Replaces self-closing tags like <img /> with unclosed solitary tags like <img>.
 	 * Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
 	 * Removes "xmlns" attributes and any <?xml> Pragmas.
 	 */
 	public function html(SS_HTTPResponse $response) {
-		$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
+		
+		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
+		if (empty($contentType)) {
+			$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
+		} else {
+			$response->addHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
+		}
 		$response->addHeader("Vary", "Accept");
 
 		$content = $response->getBody();

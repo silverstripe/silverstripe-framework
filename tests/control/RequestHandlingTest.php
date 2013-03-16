@@ -65,17 +65,13 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 		
 	public function testBadBase() {
-		/* Without a double-slash indicator in the URL, the entire URL is popped off the stack.  The controller's
-		 * default action handlers have been designed for this to an extend: simple actions can still be called.
-		 * This is the set-up of URL rules written before this new request handler. */
+		/* We no longer support using hacky attempting to handle URL parsing with broken rules */
 		$response = Director::test("testBadBase/method/1/2");
-		$this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
+		$this->assertNotEquals("This is a method on the controller: 1, 2", $response->getBody());
 
 		$response = Director::test("testBadBase/TestForm", array("MyField" => 3), null, "POST");
-		$this->assertEquals("Form posted", $response->getBody());
+		$this->assertNotEquals("Form posted", $response->getBody());
 		
-		/* It won't, however, let you chain requests to access methods on forms, or form fields.  In order to do that,
-		 * you need to have a // marker in your URL parsing rule */
 		$response = Director::test("testBadBase/TestForm/fields/MyField");
 		$this->assertNotEquals("MyField requested", $response->getBody());
 	}
@@ -127,6 +123,13 @@ class RequestHandlingTest extends FunctionalTest {
 		$response = Director::test("RequestHandlingTest_AllowedController/extendedMethod");
 		$this->assertEquals("extendedMethod", $response->getBody());
 		
+		/* This action has been blocked by an argument to a method */
+		$response = Director::test('RequestHandlingTest_AllowedController/blockMethod');
+		$this->assertEquals(403, $response->getStatusCode());
+
+		/* Whereas this one has been allowed by a method without an argument */
+		$response = Director::test('RequestHandlingTest_AllowedController/allowMethod');
+		$this->assertEquals('allowMethod', $response->getBody());
 	}
 	
 	public function testHTTPException() {
@@ -140,9 +143,17 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 	
 	public function testHTTPError() {
+		RequestHandlingTest_ControllerExtension::$called_error = false;
+		RequestHandlingTest_ControllerExtension::$called_404_error = false;
+
 		$response = Director::test('RequestHandlingTest_Controller/throwhttperror');
 		$this->assertEquals(404, $response->getStatusCode());
 		$this->assertEquals('This page does not exist.', $response->getBody());
+
+		// Confirm that RequestHandlingTest_ControllerExtension::onBeforeHTTPError() called
+		$this->assertTrue(RequestHandlingTest_ControllerExtension::$called_error);
+		// Confirm that RequestHandlingTest_ControllerExtension::onBeforeHTTPError404() called
+		$this->assertTrue(RequestHandlingTest_ControllerExtension::$called_404_error);
 	}
 	
 	public function testMethodsOnParentClassesOfRequestHandlerDeclined() {
@@ -409,9 +420,27 @@ class RequestHandlingTest_FormActionController extends Controller {
  * Simple extension for the test controller
  */
 class RequestHandlingTest_ControllerExtension extends Extension {
+	public static $called_error = false;
+	public static $called_404_error = false;
+
 	public function extendedMethod() {
 		return "extendedMethod";
 	}
+
+	/**
+	 * Called whenever there is an HTTP error
+	 */
+	public function onBeforeHTTPError() {
+		self::$called_error = true;
+	}
+
+	/**
+	 * Called whenever there is an 404 error
+	 */
+	public function onBeforeHTTPError404() {
+		self::$called_404_error = true;
+	}
+
 }
 
 /**
@@ -426,6 +455,8 @@ class RequestHandlingTest_AllowedController extends Controller implements TestOn
 	static $allowed_actions = array(
 		'failoverMethod', // part of the failover object
 		'extendedMethod', // part of the RequestHandlingTest_ControllerExtension object
+		'blockMethod' => '->provideAccess(false)',
+		'allowMethod' => '->provideAccess',
 	);
 
 	static $extensions = array(
@@ -440,6 +471,18 @@ class RequestHandlingTest_AllowedController extends Controller implements TestOn
 	
 	public function index($request) {
 		return "This is the controller";
+	}
+
+	function provideAccess($access = true) {
+		return $access;
+	}
+
+	function blockMethod($request) {
+		return 'blockMethod';
+	}
+
+	function allowMethod($request) {
+		return 'allowMethod';
 	}
 }
 

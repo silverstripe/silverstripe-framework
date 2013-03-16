@@ -95,8 +95,8 @@ class Group extends DataObject {
 		if($this->ID) {
 			$group = $this;
 			$config = new GridFieldConfig_RelationEditor();
-			$config->addComponents(new GridFieldExportButton('before'));
-			$config->addComponents(new GridFieldPrintButton('before'));
+			$config->addComponents(new GridFieldExportButton('after'));
+			$config->addComponents(new GridFieldPrintButton('after'));
 			$config->getComponentByType('GridFieldAddExistingAutocompleter')
 				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 			$config->getComponentByType('GridFieldDetailForm')
@@ -217,20 +217,13 @@ class Group extends DataObject {
 	}
 	
 	/**
-	 * @deprecated 2.5
-	 */
-	public static function addToGroupByName($member, $groupcode) {
-		Deprecation::notice('2.5', 'Use $member->addToGroupByCode($groupcode) instead.');
-		
-		return $member->addToGroupByCode($groupcode);
-	}
-	
-	/**
 	 * Get many-many relation to {@link Member},
 	 * including all members which are "inherited" from children groups of this record.
 	 * See {@link DirectMembers()} for retrieving members without any inheritance.
 	 * 
-	 * @param String
+	 * @param String $filter
+	 * @param  String $sort
+	 * @param  String $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @return ManyManyList
 	 */
 	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
@@ -240,16 +233,23 @@ class Group extends DataObject {
 				. " DataList instead.");
 		}
 
+		if($join) {
+			throw new \InvalidArgumentException(
+				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
+			);
+		}
+
 		// First get direct members as a base result
 		$result = $this->DirectMembers();
 		// Remove the default foreign key filter in prep for re-applying a filter containing all children groups.
 		// Filters are conjunctive in DataQuery by default, so this filter would otherwise overrule any less specific
 		// ones.
-		$result->dataQuery()->removeFilterOn('Group_Members');
+		$result = $result->alterDataQuery(function($query){
+			$query->removeFilterOn('Group_Members');
+		});
 		// Now set all children groups as a new foreign key
 		$groups = Group::get()->byIDs($this->collateFamilyIDs());
 		$result = $result->forForeignID($groups->column('ID'))->where($filter)->sort($sort)->limit($limit);
-		if($join) $result = $result->join($join);
 
 		return $result;
 	}
@@ -260,18 +260,7 @@ class Group extends DataObject {
 	public function DirectMembers() {
 		return $this->getManyManyComponents('Members');
 	}
-	
-	public static function map($filter = "", $sort = "", $blank="") {
-		Deprecation::notice('3.0', 'Use DataList::("Group")->map()');
-
-		$list = Group::get()->where($filter)->sort($sort);
-		$map = $list->map();
-
-		if($blank) $map->unshift(0, $blank);
 		
-		return $map;
-	}
-	
 	/**
 	 * Return a set of this record's "family" of IDs - the IDs of
 	 * this record and all its descendants.
@@ -321,14 +310,6 @@ class Group extends DataObject {
 			"\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID,
 			'"Sort"'
 		);
-	}
-	
-	/**
-	 * @deprecated 3.0 Use getTreeTitle()
-	 */
-	public function TreeTitle() {
-		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
-		return $this->getTreeTitle();
 	}
 	
 	public function getTreeTitle() {

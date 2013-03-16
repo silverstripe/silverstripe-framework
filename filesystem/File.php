@@ -235,14 +235,6 @@ class File extends DataObject {
 	}
 
 	/**
-	 * @deprecated 3.0 Use getTreeTitle()
-	 */
-	public function TreeTitle() {
-		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
-		return $this->getTreeTitle();
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getTreeTitle() {
@@ -293,7 +285,7 @@ class File extends DataObject {
 		$result = $this->extendedCan('canEdit', $member);
 		if($result !== null) return $result;
 		
-		return Permission::checkMember($member, 'CMS_ACCESS_AssetAdmin');
+		return true;
 	}
 	
 	/**
@@ -419,7 +411,7 @@ class File extends DataObject {
 	 * @return String
 	 */
 	public function appCategory() {
-		return self::get_app_category($this->Extension);
+		return self::get_app_category($this->getExtension());
 	}
 
 	public function CMSThumbnail() {
@@ -434,7 +426,7 @@ class File extends DataObject {
 	 * @return String 
 	 */
 	public function Icon() {
-		$ext = $this->Extension;
+		$ext = strtolower($this->getExtension());
 		if(!Director::fileExists(FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif")) {
 			$ext = $this->appCategory();
 		}

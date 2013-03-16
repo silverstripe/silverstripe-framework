@@ -45,6 +45,12 @@ class Upload extends Controller {
 	 * @var array
 	 */
 	protected $tmpFile;
+
+	/**
+	 * Replace an existing file rather than renaming the new one.
+	 * @var Boolean
+	 */
+	protected $replaceFile;
 	
 	/**
 	 * Processing errors that can be evaluated,
@@ -61,10 +67,11 @@ class Upload extends Controller {
 	 * @var string
 	 */
 	public static $uploads_folder = "Uploads"; 
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->validator = new Upload_Validator();
+		$this->replaceFile = $this->config()->get('replaceFile');
 	}
 	
 	/**
@@ -100,11 +107,6 @@ class Upload extends Controller {
 		
 		if(!$folderPath) $folderPath = self::$uploads_folder;
 		
-		if(!$this->file) {
-			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
-			$this->file = new $fileClass();
-		}
-		
 		if(!is_array($tmpFile)) {
 			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype",
 				E_USER_ERROR);
@@ -137,25 +139,40 @@ class Upload extends Controller {
 		$fileName = basename($file);
 
 		$relativeFilePath = ASSETS_DIR . "/" . $folderPath . "/$fileName";
+
+		// Create a new file record (or try to retrieve an existing one)
+		if(!$this->file) {
+			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
+			if($this->replaceFile) {
+				$this->file = File::get()
+					->filter(array(
+						'Name' => $fileName,
+						'ParentID' => $parentFolder ? $parentFolder->ID : 0
+					))->First();
+			}
+			if(!$this->file) $this->file = new $fileClass();
+		}
 		
 		// if filename already exists, version the filename (e.g. test.gif to test1.gif)
-		while(file_exists("$base/$relativeFilePath")) {
-			$i = isset($i) ? ($i+1) : 2;
-			$oldFilePath = $relativeFilePath;
-			// make sure archives retain valid extensions
-			if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
-				substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
-					$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-			} else if (strpos($relativeFilePath, '.') !== false) {
-				$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-			} else if (strpos($relativeFilePath, '_') !== false) {
-				$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
-			} else {
-				$relativeFilePath .= '_'.$i;
-			}
-			if($oldFilePath == $relativeFilePath && $i > 2) {
-				user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
-			}
+		if(!$this->replaceFile) {
+			while(file_exists("$base/$relativeFilePath")) {
+				$i = isset($i) ? ($i+1) : 2;
+				$oldFilePath = $relativeFilePath;
+				// make sure archives retain valid extensions
+				if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
+					substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
+						$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
+				} else if (strpos($relativeFilePath, '.') !== false) {
+					$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
+				} else if (strpos($relativeFilePath, '_') !== false) {
+					$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
+				} else {
+					$relativeFilePath .= '_'.$i;
+				}
+				if($oldFilePath == $relativeFilePath && $i > 2) {
+					user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
+				}
+			}	
 		}
 
 		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$relativeFilePath")) {
@@ -180,6 +197,20 @@ class Upload extends Controller {
 	public function loadIntoFile($tmpFile, $file, $folderPath = false) {
 		$this->file = $file;
 		return $this->load($tmpFile, $folderPath);
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public function setReplaceFile($bool) {
+		$this->replaceFile = $bool;
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public function getReplaceFile() {
+		return $this->replaceFile;
 	}
 	
 	/**
@@ -219,88 +250,6 @@ class Upload extends Controller {
 	 */
 	public function setFile($file) {
 		$this->file = $file;
-	}
-	
-	/**
-	 * Get maximum file size for all or specified file extension.
-	 * 
-	 * @deprecated 2.5 Please use Upload_Validator::getAllowedMaxFileSize() instead
-	 * 
-	 * @param string $ext
-	 * @return int Filesize in bytes
-	 */
-	public function getAllowedMaxFileSize($ext = null) {
-		Deprecation::notice('2.5', 'Use Upload_Validator::getAllowedMaxFileSize() instead.');
-		return $this->validator->getAllowedMaxFileSize($ext);
-	}
-	
-	/**
-	 * Set filesize maximums (in bytes).
-	 * Automatically converts extensions to lowercase
-	 * for easier matching.
-	 * 
-	 * Example: 
-	 * <code>
-	 * array('*' => 200, 'jpg' => 1000)
-	 * </code>
-	 *
-	 * @deprecated 2.5 Please use Upload_Validator::setAllowedMaxFileSize() instead
-	 *
-	 * @param array|int $rules
-	 */
-	public function setAllowedMaxFileSize($rules) {
-		Deprecation::notice('2.5', 'Use Upload_Validator::setAllowedMaxFileSize() instead.');
-		$this->validator->setAllowedMaxFileSize($rules);
-	}
-	
-	/**
-	 * @deprecated 2.5 Please use Upload_Validator::getAllowedExtensions() instead
-	 * @return array
-	 */
-	public function getAllowedExtensions() {
-		Deprecation::notice('2.5', 'Use Upload_Validator::getAllowedExtensions() instead.');
-		return $this->validator->getAllowedExtensions();
-	}
-	
-	/**
-	 * @deprecated 2.5 Please use Upload_Validator::setAllowedExtensions() instead
-	 * @param array $rules
-	 */
-	public function setAllowedExtensions($rules) {
-		Deprecation::notice('2.5', 'Use Upload_Validator::setAllowedExtensions() instead.');
-		$this->validator->setAllowedExtensions($rules);
-	}
-	
-	/**
-	 * Determines if the bytesize of an uploaded
-	 * file is valid - can be defined on an
-	 * extension-by-extension basis in {$allowedMaxFileSize}
-	 * 
-	 * @deprecated 2.5 Please use Upload_Validator::isValidExtension() instead
-	 *
-	 * @param array $tmpFile
-	 * @return boolean
-	 */
-	public function isValidSize($tmpFile) {
-		Deprecation::notice('2.5', 'Use Upload_Validator::isValidSize() instead.');
-		$validator = new Upload_Validator();
-		$validator->setTmpFile($tmpFile);
-		return $validator->isValidSize();
-	}
-	
-	/**
-	 * Determines if the temporary file has a valid extension
-	 * 
-	 * @deprecated 2.5 Please use Upload_Validator::isValidExtension() instead
-	 * 
-	 * @param array $tmpFile
-	 * @return boolean
-	 */
-	public function isValidExtension($tmpFile) {
-		Deprecation::notice('2.5', 'Use Upload_Validator::isValidExtension() instead.');
-		$validator = new Upload_Validator();
-		$validator->setTmpFile($tmpFile);
-		return $validator->isValidExtension();
 	}
 	
 	/**
