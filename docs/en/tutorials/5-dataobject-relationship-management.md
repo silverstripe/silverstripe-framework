@@ -278,7 +278,8 @@ a named list of object.
 **themes/simple/templates/Layout/ProjectsHolder.ss**
 
 	:::ss
-	<div class="content-container typography">	
+	<% include SideBar %>
+	<div class="content-container unit size3of4 lastUnit">
 		<article>
 			<h1>$Title</h1>
 			<div class="content">
@@ -314,7 +315,6 @@ a named list of object.
 			</div>
 		</article>
 	</div>
-	<% include SideBar %>
 
 Navigate to the holder page through your website navigation,
 or the "Preview" feature in the CMS. You should see a list of all projects now.
@@ -336,7 +336,8 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 **themes/simple/templates/Layout/Project.ss**
 
 	:::ss
-	<div class="content-container typography">	
+	<% include SideBar %>
+	<div class="content-container unit size3of4 lastUnit">
 		<article>
 			<h1>$Title</h1>
 			<div class="content">
@@ -364,7 +365,6 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 			</div>
 		</article>
 	</div>
-	<% include SideBar %>
 
 Follow the link to a project detail from from your holder page,
 or navigate to it through the submenu provided by the theme.
