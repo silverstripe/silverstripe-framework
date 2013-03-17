@@ -54,5 +54,4 @@ adherence to conventions, writing documentation, and releasing updates. See [con
 *  [Modules](modules)
 *  [Module Release Process](module-release-process)
 *  [Debugging methods](/topics/debugging)
-*  [URL Variable Tools](/reference/urlvariabletools) - Lists a number of ���page options��� , ���rendering tools��� or ���special
-URL variables��� that you can use to debug your SilverStripe applications
+*  [URL Variable Tools](/reference/urlvariabletools) - Lists a number of page options, rendering tools or special URL variables that you can use to debug your SilverStripe applications
