@@ -598,7 +598,13 @@ class Config_LRU {
 	protected $c = 0;
 
 	public function __construct() {
-		$this->cache = new SplFixedArray(self::SIZE);
+		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
+			// SplFixedArray causes seg faults before PHP 5.3.7
+			$this->cache = array();
+		}
+		else {
+			$this->cache = new SplFixedArray(self::SIZE);
+		}
 
 		// Pre-fill with stdClass instances. By reusing we avoid object-thrashing
 		for ($i = 0; $i < self::SIZE; $i++) {
