@@ -1114,6 +1114,7 @@ form.member-profile-form {
 		&.south {
 			border-top: 1px solid darken($tab-panel-texture-color,10%);
 			@include box-shadow($box-shadow-shine 0 1px 0px inset);
+			min-height: 25px;
 		}
 	}	
 	&.collapsed {
