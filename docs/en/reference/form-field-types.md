@@ -9,23 +9,23 @@ This is a highlevel overview of available `[api:FormField]` subclasses. An autom
  * `[api:ReadonlyField]`: Read-only field to display a non-editable value with a label.
  * `[api:TextareaField]`: Multi-line text field.
  * `[api:TextField]`: Single-line text field.
- * `[api:PasswordField]`: Masked input field
+ * `[api:PasswordField]`: Masked input field.
 
- ## Actions
+## Actions
 
  * `[api:FormAction]`: Button element for forms, both for `<input type="submit">` and `<button>`.
  * `[api:ResetFormAction]`: Action that clears all fields on a form.
 
 ## Formatted Input
 
- * `[api:AjaxUniqueTextField]`: Text field that automatically checks that the value entered is unique for the given set of fields in a given set of tables
+ * `[api:AjaxUniqueTextField]`: Text field that automatically checks that the value entered is unique for the given set of fields in a given set of tables.
  * `[api:ConfirmedPasswordField]`: Two masked input fields, checks for matching passwords.
  * `[api:CountryDropdownField]`: A simple extension to dropdown field, pre-configured to list countries.
  * `[api:CreditCardField]`: Allows input of credit card numbers via four separate form fields, including generic validation of its numeric values.
  * `[api:CurrencyField]`: Text field, validating its input as a currency. Limited to US-centric formats, including a hardcoded currency symbol and decimal separators. 
  See `[api:MoneyField]` for a more flexible implementation.
  * `[api:DateField]`: Represents a date in a single input field, or separated into day, month, and year. Can optionally use a calendar popup.
- * `[api:DatetimeField]`: Combined date- and time field
+ * `[api:DatetimeField]`: Combined date- and time field.
  * `[api:EmailField]`: Text input field with validation for correct email format according to RFC 2822.
  * `[api:GroupedDropdownField]`: Grouped dropdown, using <optgroup> tags.
  * `[api:HTMLEditorField].
@@ -43,7 +43,7 @@ doesn't necessarily have any visible styling.
  * `[api:FieldGroup] attached in CMS-context.
  * `[api:FieldList]`: Basic container for sequential fields, or nested fields through CompositeField.
  * `[api:TabSet]`: Collection of fields which is rendered as separate tabs. Can be nested.
- * `[api:Tab]`: A single tab inside a `TabSet`
+ * `[api:Tab]`: A single tab inside a `TabSet`.
  * `[api:ToggleCompositeField]`: Allows visibility of a group of fields to be toggled.
  * `[api:ToggleField]`: ReadonlyField with added toggle-capabilities - will preview the first sentence of the contained text-value, and show the full content by a javascript-switch.
 
@@ -58,7 +58,7 @@ doesn't necessarily have any visible styling.
  * `[api:TableField]`: In-place editing of tabular data.
  * `[api:TreeDropdownField]`: Dropdown-like field that allows you to select an item from a hierarchical AJAX-expandable tree.
  * `[api:TreeMultiselectField]`: Represents many-many joins using a tree selector shown in a dropdown-like element
- * `[api:GridField](/reference/grid-field)`: Displays a `[api:SS_List]` in a tabular format. Versatile base class which can be configured to allow editing, sorting, etc.
+ * `[api:GridField]`: Displays a `[api:SS_List]` in a tabular format. Versatile base class which can be configured to allow editing, sorting, etc.
  * `[api:ListboxField]`: Multi-line listbox field, through `<select multiple>`.
 
 
@@ -67,6 +67,6 @@ doesn't necessarily have any visible styling.
  * `[api:DatalessField]` - Base class for fields which add some HTML to the form but don't submit any data or
 save it to the database
  * `[api:HeaderField]`: Renders a simple HTML header element.
- * `[api:HiddenField]`
+ * `[api:HiddenField]`.
  * `[api:LabelField]`: Simple label tag. This can be used to add extra text in your forms.
  * `[api:LiteralField]`: Renders arbitrary HTML into a form.
