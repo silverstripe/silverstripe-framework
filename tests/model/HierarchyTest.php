@@ -180,6 +180,238 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals('Obj 2 &raquo; Obj 2a &raquo; Obj 2aa', $obj2aa->getBreadcrumbs());
 	}
 
+	public function testGetChildrenAsUL() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		$nodeCountThreshold = 30;
+
+		$root = new HierarchyTest_Object();
+		$root->markPartialTree($nodeCountThreshold);
+		$html = $root->getChildrenAsUL(
+			"", 
+			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
+			null, 
+			false, 
+			"AllChildrenIncludingDeleted", 
+			"numChildren", 
+			true,  // rootCall
+			$nodeCountThreshold
+		);
+		$parser = new CSSContentParser($html);
+		$node2 = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node2,
+			'Contains root elements'
+		);
+		$node2a = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]' .
+				'/ul/li[@id="' . $obj2a->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node2a,
+			'Contains child elements (in correct nesting)'
+		);
+		$node2aa = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]' .
+				'/ul/li[@id="' . $obj2a->ID . '"]' .
+				'/ul/li[@id="' . $obj2aa->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node2aa,
+			'Contains grandchild elements (in correct nesting)'
+		);
+	}
+
+	public function testGetChildrenAsULMinNodeCount() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+
+		// Set low enough that it should be fulfilled by root only elements
+		$nodeCountThreshold = 3;
+
+		$root = new HierarchyTest_Object();
+		$root->markPartialTree($nodeCountThreshold);
+		$html = $root->getChildrenAsUL(
+			"", 
+			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
+			null, 
+			false, 
+			"AllChildrenIncludingDeleted", 
+			"numChildren", 
+			true, 
+			$nodeCountThreshold
+		);
+		$parser = new CSSContentParser($html);
+		$node1 = $parser->getByXpath(
+			'//ul/li[@id="' . $obj1->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node1,
+			'Contains root elements'
+		);
+		$node2 = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node2,
+			'Contains root elements'
+		);
+		$node2a = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]' .
+				'/ul/li[@id="' . $obj2a->ID . '"]'
+		);
+		$this->assertFalse(
+			(bool)$node2a,
+			'Does not contains child elements because they exceed minNodeCount'
+		);
+	}
+
+	public function testGetChildrenAsULMinNodeCountWithMarkToExpose() {
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		// Set low enough that it should be fulfilled by root only elements
+		$nodeCountThreshold = 3;
+
+		$root = new HierarchyTest_Object();
+		$root->markPartialTree($nodeCountThreshold);
+		
+		// Mark certain node which should be included regardless of minNodeCount restrictions
+		$root->markToExpose($obj2aa);
+		
+		$html = $root->getChildrenAsUL(
+			"", 
+			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
+			null, 
+			false, 
+			"AllChildrenIncludingDeleted", 
+			"numChildren", 
+			true, 
+			$nodeCountThreshold
+		);
+		$parser = new CSSContentParser($html);
+		$node2 = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node2,
+			'Contains root elements'
+		);
+		$node2aa = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]' .
+				'/ul/li[@id="' . $obj2a->ID . '"]' .
+				'/ul/li[@id="' . $obj2aa->ID . '"]'
+		);
+		$this->assertTrue((bool)$node2aa);
+	}
+
+	public function testGetChildrenAsULMinNodeCountWithFilters() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		// Set low enough that it should fit all search matches without lazy loading
+		$nodeCountThreshold = 3;
+
+		$root = new HierarchyTest_Object();
+		
+		// Includes nodes by filter regardless of minNodeCount restrictions
+		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
+			// Results need to include parent hierarchy, even if we just want to
+			// match the innermost node.
+			// var_dump($record->Title);
+			// var_dump(in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID)));
+			return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
+		});
+		$root->markPartialTree($nodeCountThreshold);
+
+		$html = $root->getChildrenAsUL(
+			"", 
+			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
+			null, 
+			true, // limit to marked
+			"AllChildrenIncludingDeleted", 
+			"numChildren", 
+			true, 
+			$nodeCountThreshold
+		);
+		$parser = new CSSContentParser($html);
+		$node1 = $parser->getByXpath(
+			'//ul/li[@id="' . $obj1->ID . '"]'
+		);
+		$this->assertFalse(
+			(bool)$node1,
+			'Does not contain root elements which dont match the filter'
+		);
+		$node2aa = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]' .
+				'/ul/li[@id="' . $obj2a->ID . '"]' .
+				'/ul/li[@id="' . $obj2aa->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node2aa,
+			'Contains non-root elements which match the filter'
+		);
+	}
+
+	public function testGetChildrenAsULHardLimitsNodes() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		// Set low enough that it should fit all search matches without lazy loading
+		$nodeCountThreshold = 3;
+
+		$root = new HierarchyTest_Object();
+		
+		// Includes nodes by filter regardless of minNodeCount restrictions
+		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
+			// Results need to include parent hierarchy, even if we just want to
+			// match the innermost node.
+			// var_dump($record->Title);
+			// var_dump(in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID)));
+			return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
+		});
+		$root->markPartialTree($nodeCountThreshold);
+
+		$html = $root->getChildrenAsUL(
+			"", 
+			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
+			null, 
+			true, // limit to marked
+			"AllChildrenIncludingDeleted", 
+			"numChildren", 
+			true, 
+			$nodeCountThreshold
+		);
+		$parser = new CSSContentParser($html);
+		$node1 = $parser->getByXpath(
+			'//ul/li[@id="' . $obj1->ID . '"]'
+		);
+		$this->assertFalse(
+			(bool)$node1,
+			'Does not contain root elements which dont match the filter'
+		);
+		$node2aa = $parser->getByXpath(
+			'//ul/li[@id="' . $obj2->ID . '"]' .
+				'/ul/li[@id="' . $obj2a->ID . '"]' .
+				'/ul/li[@id="' . $obj2aa->ID . '"]'
+		);
+		$this->assertTrue(
+			(bool)$node2aa,
+			'Contains non-root elements which match the filter'
+		);
+	}
+
 }
 
 class HierarchyTest_Object extends DataObject implements TestOnly {

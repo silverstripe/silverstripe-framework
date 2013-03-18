@@ -691,7 +691,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String Nested unordered list with links to each page
 	 */
 	public function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null,
-			$filterFunction = null, $minNodeCount = 30) {
+			$filterFunction = null, $nodeCountThreshold = 30) {
 
 		// Filter criteria
 		$params = $this->request->getVar('q');
@@ -719,7 +719,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Mark the nodes of the tree to return
 		if ($filterFunction) $obj->setMarkingFilterFunction($filterFunction);
 
-		$obj->markPartialTree($minNodeCount, $this, $childrenMethod, $numChildrenMethod);
+		$obj->markPartialTree($nodeCountThreshold, $this, $childrenMethod, $numChildrenMethod);
 		
 		// Ensure current page is exposed
 		if($p = $this->currentPage()) $obj->markToExpose($p);
@@ -744,7 +744,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			true, 
 			$childrenMethod,
 			$numChildrenMethod,
-			$minNodeCount
+			$nodeCountThreshold
 		);
 
 		// Wrap the root if needs be.
