@@ -124,8 +124,7 @@ class SearchContextTest extends SapphireTest {
 		$params = array(
 			"ExactMatch" => "Match me exactly",
 			"PartialMatch" => "partially",
-			"Negation" => "undisclosed",
-			"CollectionMatch" => "ExistingCollectionValue,NonExistingCollectionValue,4,Inline'Quotes'",
+			"CollectionMatch" => array("ExistingCollectionValue","NonExistingCollectionValue",4,"Inline'Quotes'"),
 			"StartsWith" => "12345",
 			"EndsWith" => "ijkl",
 			"Fulltext" => "two"
@@ -266,7 +265,6 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 	static $db = array(
 		"ExactMatch" => "Varchar",
 		"PartialMatch" => "Varchar",
-		"Negation" => "Varchar",
 		"SubstringMatch" => "Varchar",
 		"CollectionMatch" => "Varchar",
 		"StartsWith" => "Varchar",
@@ -278,8 +276,7 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 	static $searchable_fields = array(
 		"ExactMatch" => "ExactMatchFilter",
 		"PartialMatch" => "PartialMatchFilter",
-		"Negation" => "NegationFilter",
-		"CollectionMatch" => "ExactMatchMultiFilter",
+		"CollectionMatch" => "ExactMatchFilter",
 		"StartsWith" => "StartsWithFilter",
 		"EndsWith" => "EndsWithFilter",
 		"FulltextField" => "FulltextFilter",
