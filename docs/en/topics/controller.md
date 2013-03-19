@@ -15,7 +15,7 @@ your own routes since the cms module handles these routes.
 	<?php
 	
 	class FastFood_Controller extends Controller {
-			public static $allowed_actions = array('order');
+		public static $allowed_actions = array('order');
 	    public function order(SS_HTTPRequest $request) {
 	        print_r($arguments);
 	    }
