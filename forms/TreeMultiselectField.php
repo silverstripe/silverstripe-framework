@@ -115,13 +115,20 @@ class TreeMultiselectField extends TreeDropdownField {
 			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		} 
 		
+		$dataUrlTree = '';
+		if ($this->form){
+			$dataUrlTree = $this->Link('tree');
+			if (isset($idArray) && count($idArray)){
+				$dataUrlTree .= '?forceValue='.implode(',',$idArray);
+			}
+		}
 		return FormField::create_tag(
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
 				'class' => 'TreeDropdownField multiple' . ($this->extraClass() ? " {$this->extraClass()}" : '')
 					. ($this->showSearch ? " searchable" : ''),
-				'data-url-tree' => $this->form ? $this->Link('tree') : "",
+				'data-url-tree' => $dataUrlTree,
 				'data-title' => $title,
 				'title' => $this->getDescription()
 			),
