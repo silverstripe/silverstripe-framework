@@ -85,14 +85,13 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		$this->filesVars = isset($env['files']) ? $env['files'] : array();
 		$this->serverVars = isset($env['server']) ? $env['server'] : array();
 
-		$this->method = strtoupper(self::detect_method($method, $this->postVars()));
-
 		$this->setUrl($url);
 		$this->setBody($body);
 
-		if($this->serverVars) {
-			$this->extractHeaders();
-		}
+		$this->method = $method;
+
+		$this->extractHeaders();
+		$this->extractMethod();
 	}
 
 	/**
@@ -554,12 +553,52 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		}
 		return $mimetypes;
 	}
-	
+
 	/**
+	 * Gets the HTTP method.
+	 *
+	 * Methods can be set in a number of ways:
+	 *   - By including a X-HTTP-Method-Override header with the request.
+	 *   - By including a _method parameter with a POST request.
+	 *   - Defaults to the server request method.
+	 *
 	 * @return string HTTP method (all uppercase)
 	 */
 	public function getMethod() {
 		return $this->method;
+	}
+
+	/**
+	 * Extracts the HTTP request method.
+	 */
+	private function extractMethod() {
+		$valid  = array('GET', 'POST', 'PUT', 'DELETE', 'HEAD');
+
+		if($method = $this->getHeader('X-HTTP-Method-Override')) {
+			$method = strtoupper($method);
+
+			if(!in_array($method, $valid)) {
+				throw new SS_HTTPResponse_Exception('Invalid HTTP method header', 400);
+			}
+
+			$this->method = $method;
+			return;
+		}
+
+		if($method = $this->postVar('_method')) {
+			$method = strtoupper($method);
+
+			if(!in_array($method, $valid)) {
+				throw new SS_HTTPResponse_Exception('Invalid HTTP "_method" parameter', 400);
+			}
+
+			$this->method = $method;
+			return;
+		}
+
+		if(!$this->method) {
+			$this->method = $this->serverVar('REQUEST_METHOD');
+		}
 	}
 
 	/**
@@ -579,33 +618,6 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 
 		if(isset($server['CONTENT_TYPE']))   $this->setHeader('Content-Type', $server['CONTENT_TYPE']);
 		if(isset($server['CONTENT_LENGTH'])) $this->setHeader('Content-Length', $server['CONTENT_LENGTH']);
-	}
-
-	/**
-	 * Gets the "real" HTTP method for a request.
-	 * 
-	 * Used to work around browser limitations of form
-	 * submissions to GET and POST, by overriding the HTTP method
-	 * with a POST parameter called "_method" for PUT, DELETE, HEAD.
-	 * Using GET for the "_method" override is not supported,
-	 * as GET should never carry out state changes.
-	 * Alternatively you can use a custom HTTP header 'X-HTTP-Method-Override'
-	 * to override the original method in {@link Director::direct()}. 
-	 * The '_method' POST parameter overrules the custom HTTP header.
-	 *
-	 * @param string $origMethod Original HTTP method from the browser request
-	 * @param array $postVars
-	 * @return string HTTP method (all uppercase)
-	 */
-	public static function detect_method($origMethod, $postVars) {
-		if(isset($postVars['_method'])) {
-			if(!in_array(strtoupper($postVars['_method']), array('GET','POST','PUT','DELETE','HEAD'))) {
-				user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
-			}
-			return strtoupper($postVars['_method']);
-		} else {
-			return $origMethod;
-		}
 	}
 
 	/**

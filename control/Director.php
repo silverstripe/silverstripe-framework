@@ -89,7 +89,7 @@ class Director implements TemplateGlobalProvider {
 		}
 		
 		$req = new SS_HTTPRequest(
-			isset($_SERVER['X-HTTP-Method-Override']) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
+			null,
 			$url,
 			@file_get_contents('php://input'),
 			array(

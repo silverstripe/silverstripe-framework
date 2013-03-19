@@ -77,12 +77,33 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
-			array('post' => array('_method' => 'head'))
+			array(),
+			array('get' => array('post' => array('_method' => 'head')))
 		);
 		$this->assertTrue(
 			$request->isPOST(),
 			'POST with invalid method override by GET parameters to HEAD'
 		);
+
+		$this->setExpectedException('SS_HTTPResponse_Exception');
+		$request = new SS_HTTPRequest('POST', null, null, array(
+			'post' => array('_method' => 'invalid')
+		));
+
+		$request = new SS_HTTPRequest('POST', null, null, array(
+			'server' => array('X_HTTP_METHOD_OVERRIDE' => 'put')
+		));
+		$this->assertTrue($request->isPut(), 'The can can be overriden with a header');
+
+		$this->setExpectedException('SS_HTTPResponse_Exception');
+		$request = new SS_HTTPRequest('POST', null, null, array(
+			'server' => array('X_HTTP_METHOD_OVERRIDE' => 'invalid')
+		));
+
+		$request = new SS_HTTPRequest(null, null, null, array(
+			'server' => array('REQUEST_METHOD' => 'POST')
+		));
+		$this->assertTrue($request->isPost(), 'The method defaults to the request method');
 	}
 	
 	public function testRequestVars() {
