@@ -55,6 +55,7 @@ $composer = json_encode(array(
 	'repositories' => array(array('type' => 'package', 'package' => $package)),
 	'require' => array(
 		'silverstripe/framework' => $version,
+		'silverstripe/cms' => $version,
 		'silverstripe/postgresql' => '*',
 		'silverstripe/sqlite3' => '*'
 	),
