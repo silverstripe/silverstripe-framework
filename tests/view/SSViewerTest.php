@@ -275,12 +275,12 @@ SS;
 		);
 	}
 	
-	public function testControlWhitespace() {
+	public function testLoopWhitespace() {
 		$this->assertEquals(
 			'before[out:SingleItem.Test]after
 				beforeTestafter',
-			$this->render('before<% control SingleItem %>$Test<% end_control %>after
-				before<% control SingleItem %>Test<% end_control %>after')
+			$this->render('before<% loop SingleItem %>$Test<% end_loop %>after
+				before<% loop SingleItem %>Test<% end_loop %>after')
 		);
 
 		// The control tags are removed from the output, but no whitespace
@@ -293,9 +293,9 @@ SS;
 
 after',
 			$this->render('before
-<% control SingleItem %>
+<% loop SingleItem %>
 $ItemOnItsOwnLine
-<% end_control %>
+<% end_loop %>
 after')
 		);
 
@@ -313,9 +313,9 @@ after')
 
 after',
 			$this->render('before
-<% control Loop3 %>
+<% loop Loop3 %>
 $ItemOnItsOwnLine
-<% end_control %>
+<% end_loop %>
 after')
 		);
 	}
@@ -328,28 +328,28 @@ after')
 				[out:Foo(Arg1).Item]
 				[out:Foo(Arg1,Arg2).Item]
 				[out:Foo(Arg1,Arg2,Arg3).Item]',
-			$this->render('<% control Foo.Bar %>a{$Item}b<% end_control %>
-				<% control Foo.Bar(Arg1) %>$Item<% end_control %>
-				<% control Foo(Arg1) %>$Item<% end_control %>
-				<% control Foo(Arg1, Arg2) %>$Item<% end_control %>
-				<% control Foo(Arg1, Arg2, Arg3) %>$Item<% end_control %>')
+			$this->render('<% with Foo.Bar %>a{$Item}b<% end_with %>
+				<% with Foo.Bar(Arg1) %>$Item<% end_with %>
+				<% with Foo(Arg1) %>$Item<% end_with %>
+				<% with Foo(Arg1, Arg2) %>$Item<% end_with %>
+				<% with Foo(Arg1, Arg2, Arg3) %>$Item<% end_with %>')
 		);
 
 		// Loop controls
 		$this->assertEquals('a[out:Foo.Loop2.Item]ba[out:Foo.Loop2.Item]b',
-			$this->render('<% control Foo.Loop2 %>a{$Item}b<% end_control %>'));
+			$this->render('<% loop Foo.Loop2 %>a{$Item}b<% end_loop %>'));
 
 		$this->assertEquals('[out:Foo.Loop2(Arg1).Item][out:Foo.Loop2(Arg1).Item]',
-			$this->render('<% control Foo.Loop2(Arg1) %>$Item<% end_control %>'));
+			$this->render('<% loop Foo.Loop2(Arg1) %>$Item<% end_loop %>'));
 
 		$this->assertEquals('[out:Loop2(Arg1).Item][out:Loop2(Arg1).Item]',
-			$this->render('<% control Loop2(Arg1) %>$Item<% end_control %>'));
+			$this->render('<% loop Loop2(Arg1) %>$Item<% end_loop %>'));
 
 		$this->assertEquals('[out:Loop2(Arg1,Arg2).Item][out:Loop2(Arg1,Arg2).Item]',
-			$this->render('<% control Loop2(Arg1, Arg2) %>$Item<% end_control %>'));
+			$this->render('<% loop Loop2(Arg1, Arg2) %>$Item<% end_loop %>'));
 
 		$this->assertEquals('[out:Loop2(Arg1,Arg2,Arg3).Item][out:Loop2(Arg1,Arg2,Arg3).Item]',
-			$this->render('<% control Loop2(Arg1, Arg2, Arg3) %>$Item<% end_control %>'));
+			$this->render('<% loop Loop2(Arg1, Arg2, Arg3) %>$Item<% end_loop %>'));
 
 	}
 

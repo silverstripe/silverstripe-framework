@@ -1227,7 +1227,7 @@ class Form extends RequestHandler {
 	 * Return a rendered version of this form.
 	 * 
 	 * This is returned when you access a form as $FormObject rather
-	 * than <% control FormObject %>
+	 * than <% with FormObject %>
 	 */
 	public function forTemplate() {
 		$return = $this->renderWith(array_merge(
