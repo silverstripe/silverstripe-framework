@@ -359,7 +359,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		} catch(ValidationException $e) {
 			// Nicer presentation of model-level validation errors
 			$msgs = _t('LeftAndMain.ValidationError', 'Validation error') . ': ' 
-				. $e->getResult()->message();
+				. $e->getMessage();
 			$e = new SS_HTTPResponse_Exception($msgs, 403);
 			$e->getResponse()->addHeader('Content-Type', 'text/plain');
 			$e->getResponse()->addHeader('X-Status', rawurlencode($msgs));
