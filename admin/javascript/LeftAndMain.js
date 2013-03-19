@@ -551,7 +551,7 @@ jQuery.noConflict();
 
 				this.redraw();
 
-				this.restoreTabState(state.data.tabState !== 'undefined' ? state.data.tabState : null);
+				this.restoreTabState(typeof state.data.tabState !== 'undefined' ? state.data.tabState : null);
 
 				return newContentEls;
 			},
