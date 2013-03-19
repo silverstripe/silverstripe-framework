@@ -149,109 +149,85 @@ class Director implements TemplateGlobalProvider {
 			//$controllerObj->getSession()->inst_save();
 		}
 	}
-	
+
 	/**
-	 * Test a URL request, returning a response object.
-	 * 
-	 * This method is the counterpart of Director::direct() that is used in functional testing.  It will execute the
-	 * URL given, and return the result as an SS_HTTPResponse object.
-	 * 
-	 * @param string $url The URL to visit
-	 * @param array $postVars The $_POST & $_FILES variables
-	 * @param Session $session The {@link Session} object representing the current session.  By passing the same
-	 *                         object to multiple  calls of Director::test(), you can simulate a persisted session.
-	 * @param string $httpMethod The HTTP method, such as GET or POST.  It will default to POST if postVars is set,
-	 *                           GET otherwise. Overwritten by $postVars['_method'] if present.
-	 * @param string $body The HTTP body
-	 * @param array $headers HTTP headers with key-value pairs
-	 * @param array $cookies to populate $_COOKIE
-	 * @param HTTP_Request $request The {@see HTTP_Request} object generated as a part of this request
+	 * Tests a request to a URL, and returns the generated response.
+	 *
+	 * This function is the counterpart of {@link Director::direct()}. It loads
+	 * information from the request into the global scope, executes the request,
+	 * and then returns to the original application state.
+	 *
+	 * @param string|SS_HTTPRequest $request
+	 * @param array|Session $session
+	 * @param array $cookies
 	 * @return SS_HTTPResponse
-	 * 
-	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
-	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	public static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null,
-			$headers = null, $cookies = null, &$request = null) {
+	public static function test($request, $session = array(), array $cookies = array()) {
+		$existingGet = isset($_GET) ? $_GET : array();
+		$existingPost = isset($_POST) ? $_POST : array();
+		$existingRequest = isset($_REQUEST) ? $_REQUEST : array();
+		$existingSession = isset($_SESSION) ? $_SESSION : array();
+		$existingCookie = isset($_COOKIE) ? $_COOKIE : array();
+		$existingServer = isset($_SERVER) ? $_SERVER : array();
 
-		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
-		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
-		$oldStage = Versioned::current_stage();
-		$getVars = array();
-		
-		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
-		
-		if(!$session) $session = new Session(null);
+		if (!$request instanceof SS_HTTPRequest) {
+			$request = new SS_HTTPRequest('GET', self::makeRelative($request));
+		}
 
-		// Back up the current values of the superglobals
-		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
-		$existingGetVars = isset($_GET) ? $_GET : array(); 
-		$existingPostVars = isset($_POST) ? $_POST : array();
-		$existingSessionVars = isset($_SESSION) ? $_SESSION : array();
-		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
-		$existingServer	= isset($_SERVER) ? $_SERVER : array();
-		
-		$existingCookieReportErrors = Cookie::report_errors();
-		$existingRequirementsBackend = Requirements::backend();
+		if (!$session instanceof Session) {
+			$session = new Session($session);
+		}
+
+		// TODO: Ideally this should be decoupled.
+		$existingStage = Versioned::current_stage();
+		$existingCookieErrors = Cookie::report_errors();
+		$existingRequirements = Requirements::backend();
 
 		Cookie::set_report_errors(false);
 		Requirements::set_backend(new Requirements_Backend());
 
-		// Handle absolute URLs
-		if (@parse_url($url, PHP_URL_HOST) != '') {
-			$bits = parse_url($url);
-			$_SERVER['HTTP_HOST'] = $bits['host'];
-			$url = Director::makeRelative($url);
-		}
+		// Replace the superglobals with values from the request.
+		$_REQUEST = $request->requestVars();
+		$_GET = $request->getVars();
+		$_POST = $request->postVars();
+		$_SESSION = $session->inst_getAll();
+		$_COOKIE = $cookies;
 
-		$urlWithQuerystring = $url;
-		if(strpos($url, '?') !== false) {
-			list($url, $getVarsEncoded) = explode('?', $url, 2);
-			parse_str($getVarsEncoded, $getVars);
-		}
-		
-		// Replace the superglobals with appropriate test values
-		$_REQUEST = ArrayLib::array_merge_recursive((array)$getVars, (array)$postVars); 
-		$_GET = (array)$getVars; 
-		$_POST = (array)$postVars; 
-		$_SESSION = $session ? $session->inst_getAll() : array();
-		$_COOKIE = (array) $cookies;
-		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
+		$_SERVER['HTTP_HOST'] = $existingServer['HTTP_HOST'];
+		$_SERVER['REQUEST_URI'] = self::baseURL() . $request->getUrl(true);
 
-		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
-		if($headers) foreach($headers as $k => $v) $request->setHeader($k, $v);
-		// TODO: Pass in the DataModel
-		$result = Director::handleRequest($request, $session, DataModel::inst());
+		// Work around the lack of a finally block by catching any exceptions,
+		// resetting the environment, and re-throwing them.
+		$exception = null;
 
-		// Ensure that the result is an SS_HTTPResponse object
-		if(is_string($result)) {
-			if(substr($result,0,9) == 'redirect:') {
-				$response = new SS_HTTPResponse();
-				$response->redirect(substr($result, 9));
-				$result = $response;
-			} else {
-				$result = new SS_HTTPResponse($result);
+		try {
+			$response = self::handleRequest($request, $session, DataModel::inst());
+
+			// Ensure that the result is always a response object.
+			if (is_string($response)) {
+				$response = new SS_HTTPResponse($response);
 			}
-		}
-		
+		} catch (Exception $exception) {}
+
 		// Restore the superglobals
-		$_REQUEST = $existingRequestVars; 
-		$_GET = $existingGetVars; 
-		$_POST = $existingPostVars; 
-		$_SESSION = $existingSessionVars;   
-		$_COOKIE = $existingCookies;
+		$_GET = $existingGet;
+		$_POST = $existingPost;
+		$_REQUEST = $existingRequest;
+		$_SESSION = $existingSession;
+		$_COOKIE = $existingCookie;
 		$_SERVER = $existingServer;
 
-		Cookie::set_report_errors($existingCookieReportErrors); 
-		Requirements::set_backend($existingRequirementsBackend);
+		Versioned::reading_stage($existingStage);
+		Cookie::set_report_errors($existingCookieErrors);
+		Requirements::set_backend($existingRequirements);
 
-		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
-		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
-		Versioned::reading_stage($oldStage);
-		
-		return $result;
+		if ($exception) {
+			throw $exception;
+		}
+
+		return $response;
 	}
-		
+
 	/**
 	 * Handle an HTTP request, defined with a SS_HTTPRequest object.
 	 *

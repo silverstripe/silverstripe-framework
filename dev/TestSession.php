@@ -41,14 +41,18 @@ class TestSession {
 	 * Submit a get request
 	 * @uses Director::test()
 	 */
-	public function get($url, $session = null, $headers = null, $cookies = null) {
-		$headers = (array) $headers;
-		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse 
-			= Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
-		$this->lastUrl = $url;
-		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
-		return $this->lastResponse;
+	public function get($url, $session = null, $headers = null, $cookies = array()) {
+		$get = array();
+
+		if(strpos($url, '?') !== false) {
+			list($url, $raw) = explode('?', $url, 2);
+			parse_str($raw, $get);
+		}
+
+		$request = new SS_HTTPRequest('GET', $url, $get);
+		if($headers) $request->setHeaders($headers);
+
+		return $this->request($request, $session, $cookies);
 	}
 
 	/**
@@ -56,15 +60,43 @@ class TestSession {
 	 * @uses Director::test()
 	 */
 	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
-		$headers = (array) $headers;
-		if($this->lastUrl && !isset($headers['Referer'])) $headers['Referer'] = $this->lastUrl;
-		$this->lastResponse
-			= Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
-		$this->lastUrl = $url;
-		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
+		$get = array();
+
+		if(strpos($url, '?') !== false) {
+			list($url, $raw) = explode('?', $url, 2);
+			parse_str($raw, $get);
+		}
+
+		$request = new SS_HTTPRequest('POST', $url, $get, $data);
+		if($headers) $request->setHeaders($headers);
+		if($body)    $request->setBody($body);
+
+		return $this->request($request, $session, $cookies);
+	}
+
+	/**
+	 * Performs a test request, and returns the response.
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @param null $session
+	 * @param array $cookies
+	 * @return SS_HTTPResponse
+	 */
+	public function request(SS_HTTPRequest $request, $session = null, $cookies = array()) {
+		if($this->lastUrl && !$request->getHeader('Referer')) {
+			$request->setHeader('Referer', $this->lastUrl);
+		}
+
+		$this->lastResponse = Director::test($request, $session ?: $this->session, $cookies ?: array());
+		$this->lastUrl      = $request->getUrl();
+
+		if(!$this->lastResponse) {
+			throw new Exception('Director did not return a response');
+		}
+
 		return $this->lastResponse;
 	}
-	
+
 	/**
 	 * Submit the form with the given HTML ID, filling it out with the given data.
 	 * Acts on the most recent response.

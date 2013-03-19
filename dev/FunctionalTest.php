@@ -110,7 +110,21 @@ class FunctionalTest extends SapphireTest {
 		}
 		return $response;
 	}
-	
+
+	/**
+	 * @see TestSession::request()
+	 */
+	public function request(SS_HTTPRequest $request, $session = null, $cookies = array()) {
+		$this->cssParser = null;
+		$response = $this->mainSession->request($request, $session, $cookies);
+
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
+			$response = $this->mainSession->followRedirection();
+		}
+
+		return $response;
+	}
+
 	/**
 	 * Submit the form with the given HTML ID, filling it out with the given data.
 	 * Acts on the most recent response.

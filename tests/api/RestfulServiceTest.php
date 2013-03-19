@@ -325,21 +325,31 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 			);
 		}
 
-		// Custom for mock implementation: Use Director::test()
-		$body = null;
-		$postVars = null;
-		
-		if($method!='POST') $body = $data;
-		else $postVars = $data;
-		
-		$responseFromDirector = Director::test($url, $postVars, $this->session, $method, $body, $headers);
-		
-		$response = new RestfulService_Response(
-			$responseFromDirector->getBody(), 
-			$responseFromDirector->getStatusCode()
-		);
+		// Extract the GET params.
+		$get = array();
 
-		return $response;
+		if(strpos($url, '?') !== false) {
+			list($url, $raw) = explode('?', $url, 2);
+			parse_str($raw, $get);
+		}
+
+		// Perform the request.
+		if($method == 'POST') {
+			$request = new SS_HTTPRequest('POST', $url, $get, $data);
+		} else {
+			$request = new SS_HTTPRequest('GET', $url, $get);
+			$request->setBody($data);
+		}
+
+		if($headers) {
+			$request->setHeaders($headers);
+		}
+
+		$response = Director::test($request, $this->session);
+
+		return new RestfulService_Response(
+			$response->getBody(), $response->getStatusCode()
+		);
 	}
 }
 
