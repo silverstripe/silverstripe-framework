@@ -22,6 +22,7 @@ matrix:
     - php: 5.4
       env:
         - PHPCS=1
+    - env: TESTDB=SQLITE
 
 before_script:
  - pear install pear/PHP_CodeSniffer
