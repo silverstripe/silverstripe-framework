@@ -46,8 +46,8 @@ class GDTest extends SapphireTest {
 		$samples = array();
 		for($y = 0; $y < $vertical; $y++) {
 			for($x = 0; $x < $horizontal; $x++) {
-				$colour = imagecolorat($gd->getGD(), $x * 5, $y * 5);
-				$samples[] = ImageColorsforIndex($gd->getGD(), $colour);
+				$colour = imagecolorat($gd->getImageResource(), $x * 5, $y * 5);
+				$samples[] = ImageColorsforIndex($gd->getImageResource(), $colour);
 			}
 		}
 		return $samples;
