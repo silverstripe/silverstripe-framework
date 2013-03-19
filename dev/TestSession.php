@@ -49,7 +49,9 @@ class TestSession {
 			parse_str($raw, $get);
 		}
 
-		$request = new SS_HTTPRequest('GET', $url, $get);
+		$request = new SS_HTTPRequest('GET', $url, null, array(
+			'get' => $get
+		));
 		if($headers) $request->setHeaders($headers);
 
 		return $this->request($request, $session, $cookies);
@@ -67,7 +69,10 @@ class TestSession {
 			parse_str($raw, $get);
 		}
 
-		$request = new SS_HTTPRequest('POST', $url, $get, $data);
+		$request = new SS_HTTPRequest('POST', $url, null, array(
+			'get'  => $get,
+			'post' => $data
+		));
 		if($headers) $request->setHeaders($headers);
 		if($body)    $request->setBody($body);
 

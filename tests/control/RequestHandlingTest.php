@@ -75,7 +75,7 @@ class RequestHandlingTest extends FunctionalTest {
 	public function testPostRequests() {
 		/* The HTTP Request handler can trigger special behaviour for GET and POST. */
 		$response = Director::test(new SS_HTTPRequest(
-			'POST', 'testGoodBase1/TestForm', array(), array("MyField" => 3)
+			'POST', 'testGoodBase1/TestForm', null, array('post' => array("MyField" => 3))
 		));
 		$this->assertEquals("Form posted", $response->getBody());
 
@@ -91,7 +91,7 @@ class RequestHandlingTest extends FunctionalTest {
 		
 		/* We can also make a POST request on a form field, which could be used for in-place editing, for example. */
 		$response = Director::test(new SS_HTTPRequest(
-			'POST', 'testGoodBase1/TestForm/fields/MyField', array(), array("MyField" => 5)
+			'POST', 'testGoodBase1/TestForm/fields/MyField', null, array('post' => array("MyField" => 5))
 		));
 		$this->assertEquals("MyField posted, update to 5", $response->getBody());
 	}
@@ -102,7 +102,7 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertNotEquals("This is a method on the controller: 1, 2", $response->getBody());
 
 		$response = Director::test(new SS_HTTPRequest(
-			'POST', 'testBadBase/TestForm', array(), array("MyField" => 3)
+			'POST', 'testBadBase/TestForm', null, array('post' => array("MyField" => 3))
 		));
 		$this->assertNotEquals("Form posted", $response->getBody());
 		
