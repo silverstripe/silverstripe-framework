@@ -177,19 +177,23 @@ class DataExtensionTest_Player extends DataObject implements TestOnly {
 
 class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnly {
 	
-	public static function add_to_class($class = null, $extensionClass = null, $args = null) {
+	public static function get_extra_config($class = null, $extensionClass = null, $args = null) {
+		$config = array();
+
 		// Only add these extensions if the $class is set to DataExtensionTest_Player, to
 		// test that the argument works.
 		if($class == 'DataExtensionTest_Player') {
-			Config::inst()->update($class, 'db', array(
+			$config['db'] = array(
 				'Address' => 'Text',
 				'DateBirth' => 'Date',
 				'Status' => "Enum('Shooter,Goalie')"
-			));
-			Config::inst()->update($class, 'defaults', array(
+			);
+			$config['defaults'] = array(
 				'Status' => 'Goalie'
-			));
+			);
 		}
+
+		return $config;
 	}
 	
 }

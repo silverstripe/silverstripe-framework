@@ -330,7 +330,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		} else {
 			$this->RememberLoginToken = null;
 			Cookie::set('alc_enc', null);
-			Cookie::forceExpiry('alc_enc');
+			Cookie::force_expiry('alc_enc');
 		}
 		
 		// Clear the incorrect log-in count
