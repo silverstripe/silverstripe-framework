@@ -215,7 +215,7 @@ class DirectorTest extends SapphireTest {
 			'GET', 'en-nz/myaction/myid/myotherid'
 		));
 
-		$this->assertEquals($request->params(), array(
+		$this->assertEquals($request->getParams(), array(
 			'Controller' => 'DirectorTestRequest_Controller',
 			'Action' => 'myaction',
 			'ID' => 'myid',

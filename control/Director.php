@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Control\Router;
+
 /**
  * Director is responsible for processing URLs, and providing environment information.
  * 
@@ -115,40 +118,22 @@ class Director implements TemplateGlobalProvider {
 			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
 		}
 
-		$result = Director::handleRequest($req, $session, $model);
+		$result = self::handleRequest($req, $session, $model);
 
 		// Save session data (and start/resume it if required)
 		$session->inst_save();
 
-		// Return code for a redirection request
-		if(is_string($result) && substr($result,0,9) == 'redirect:') {
-			$response = new SS_HTTPResponse();
-			$response->redirect(substr($result, 9));
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-			if ($res !== false) {
-				$response->output();
-			}
-		// Handle a controller
-		} else if($result) {
-			if($result instanceof SS_HTTPResponse) {
-				$response = $result;
-				
-			} else {
-				$response = new SS_HTTPResponse();
-				$response->setBody($result);
-			}
-			
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-			if ($res !== false) {
-				$response->output();
-			} else {
-				// @TODO Proper response here.
-				throw new SS_HTTPResponse_Exception("Invalid response");
-			}
-			
-
-			//$controllerObj->getSession()->inst_save();
+		if(!($result instanceof SS_HTTPResponse)) {
+			$result = new SS_HTTPResponse($result);
 		}
+
+		$post = Injector::inst()->get('RequestProcessor')->postRequest($req, $result, $model);
+
+		if($post === false) {
+			throw new Exception('Invalid response');
+		}
+
+		$result->output();
 	}
 
 	/**
@@ -235,51 +220,48 @@ class Director implements TemplateGlobalProvider {
 	 * @return SS_HTTPResponse|string
 	 */
 	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
-		$rules = Config::inst()->get('Director', 'rules');
+		$router = new Router();
+		$router->setRules(Config::inst()->get('Director', 'rules'));
 
-		if(isset($_REQUEST['debug'])) Debug::show($rules);
+		if(isset($_REQUEST['debug'])) {
+			Debug::show($router->getRules());
+		}
 
-		foreach($rules as $pattern => $controllerOptions) {
-			if(is_string($controllerOptions)) {
-				if(substr($controllerOptions,0,2) == '->') {
-					$controllerOptions = array('Redirect' => substr($controllerOptions,2));
+		if($opts = $router->route($request)) {
+			if(is_string($opts)) {
+				if(substr($opts, 0, 2) == '->') {
+					$opts = array('Redirect' => substr($opts, 2));
 				} else {
-					$controllerOptions = array('Controller' => $controllerOptions);
+					$opts = array('Controller' => $opts);
 				}
 			}
 
-			if(($arguments = $request->match($pattern, true)) !== false) {
-				$request->setRouteParams($controllerOptions);
-				// controllerOptions provide some default arguments
-				$arguments = array_merge($controllerOptions, $arguments);
+			$opts = array_merge($opts, $request->getLatestParams());
 
-				// Find the controller name
-				if(isset($arguments['Controller'])) $controller = $arguments['Controller'];
-
-				// Pop additional tokens from the tokeniser if necessary
-				if(isset($controllerOptions['_PopTokeniser'])) {
-					$request->shift($controllerOptions['_PopTokeniser']);
-				}
-
-				// Handle redirections
-				if(isset($arguments['Redirect'])) {
-					return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
-
-				} else {
-					$controllerObj = Injector::inst()->create($controller);
-					$controllerObj->setSession($session);
-
-					try {
-						$result = $controllerObj->handleRequest($request, $model);
-					} catch(SS_HTTPResponse_Exception $responseException) {
-						$result = $responseException->getResponse();
-					}
-					if(!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
-
-					user_error("Bad result from url " . $request->getURL() . " handled by " .
-						get_class($controllerObj)." controller: ".get_class($result), E_USER_WARNING);
-				}
+			if(isset($opts['Redirect'])) {
+				$response = new SS_HTTPResponse();
+				$response->redirect($opts['Redirect']);
+				return $response;
 			}
+
+			if(!isset($opts['Controller'])) {
+				throw new Exception('The matched rule did not provide a controller');
+			}
+
+			$controller = Injector::inst()->create($opts['Controller']);
+			$controller->setSession($session);
+
+			try {
+				$result = $controller->handleRequest($request, $model);
+			} catch(SS_HTTPResponse_Exception $ex) {
+				$result = $ex->getResponse();
+			}
+
+			if(is_object($result) && !($result instanceof SS_HTTPResponse)) {
+				throw new Exception('Invalid result returned from handler');
+			}
+
+			return $result;
 		}
 	}
 

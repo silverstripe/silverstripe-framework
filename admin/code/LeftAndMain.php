@@ -471,7 +471,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
-		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
+		if($request->getParam('ID')) $this->setCurrentPageID($request->getParam('ID'));
 		return $this->getResponseNegotiator()->respond($request);
 	}
 

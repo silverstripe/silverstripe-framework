@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Framework\Control\Router;
+
 /**
  * Displays a {@link SS_List} in a grid format.
  * 
@@ -671,60 +674,58 @@ class GridField extends FormField {
 
 		$fieldData = $this->request->requestVar($this->getName());
 		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);
-		
+
+		$router = new Router();
+		$router->setRequest($request);
+
 		foreach($this->getComponents() as $component) {
 			if(!($component instanceof GridField_URLHandler)) {
 				continue;
 			}
-			
-			$urlHandlers = $component->getURLHandlers($this);
-			
-			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
-				if($params = $request->match($rule, true)) {
-					// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
-					if($action[0] == '$') $action = $params[substr($action,1)];
-					if(!method_exists($component, 'checkAccessAction') || $component->checkAccessAction($action)) {
-						if(!$action) {
-							$action = "index";
-						} else if(!is_string($action)) {
-							throw new LogicException("Non-string method name: " . var_export($action, true));
-						}
 
-						try {
-							$result = $component->$action($this, $request);
-						} catch(SS_HTTPResponse_Exception $responseException) {
-							$result = $responseException->getResponse();
-						}
-
-						if($result instanceof SS_HTTPResponse && $result->isError()) {
-							return $result;
-						}
-
-						if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result)
-								&& $result instanceof RequestHandler) {
-
-							$returnValue = $result->handleRequest($request, $model);
-
-							if(is_array($returnValue)) {
-								throw new LogicException("GridField_URLHandler handlers can't return arrays");
-							}
-
-							return $returnValue;
-
-						// If we return some other data, and all the URL is parsed, then return that
-						} else if($request->allParsed()) {
-							return $result;
-
-						// But if we have more content on the URL and we don't know what to do with it, return an error
-						} else {
-							return $this->httpError(404,
-								"I can't handle sub-URLs of a " . get_class($result) . " object.");
-						}
+			if($handlers = $component->getURLHandlers($this)) {
+				if($action = $router->route(null, $handlers)) {
+					if($action[0] == '$') {
+						$action = $request->getLatestParam(substr($action, 1));
 					}
+
+					if(method_exists($component, 'checkAccessAction') && !$component->checkAccessAction($action)) {
+						$this->httpError(403, sprintf(
+							'Action "%s" is not allowed on class "%s"', $action, get_class($component)
+						));
+					}
+
+					if(!$action) {
+						$action = 'index';
+					} elseif(!is_string($action)) {
+						throw new LogicException('Non-string method name encountered');
+					}
+
+					try {
+						$result = $component->$action($this, $request);
+					} catch(SS_HTTPResponse_Exception $ex) {
+						$result = $ex->getResponse();
+					}
+
+					if($result instanceof SS_HTTPResponse && $result->isError()) {
+						return $result;
+					}
+
+					if($result instanceof RequestHandler && $this !== $result) {
+						return $result->handleRequest($request, $model);
+					}
+
+					if(!$request->isAllRouted()) {
+						$this->httpError(404, sprintf(
+							'Cannot handle sub-URLs of a %s object', get_class($result)
+						));
+					}
+
+					return $result;
 				}
 			}
 		}
-		
+
 		return parent::handleRequest($request, $model);
 	}
 

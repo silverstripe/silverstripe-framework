@@ -227,8 +227,8 @@ class TreeDropdownField extends FormField {
 		$isSubTree = false;
 
 		$this->search = Convert::Raw2SQL($request->requestVar('search'));
-		$ID = (is_numeric($request->latestparam('ID')))
-			? (int)$request->latestparam('ID')
+		$ID = (is_numeric($request->getLatestParam('ID')))
+			? (int)$request->getLatestParam('ID')
 			: (int)$request->requestVar('ID');
 
 		if($ID && !$request->requestVar('forceFullTree')) {

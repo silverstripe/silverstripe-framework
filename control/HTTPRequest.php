@@ -22,12 +22,9 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	protected $url;
 
 	/**
-	 * The non-extension parts of the passed URL as an array, originally exploded by the "/" separator.
-	 * All elements of the URL are loaded in here,
-	 * and subsequently popped out of the array by {@link shift()}.
-	 * Only use this structure for internal request handling purposes.
+	 * @var array $urlParts
 	 */
-	protected $dirParts = array();
+	private $urlParts;
 
 	/**
 	 * @var string $httpMethod The HTTP method in all uppercase: GET/PUT/POST/DELETE/HEAD
@@ -49,40 +46,13 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 	 */
 	protected $filesVars = array();
 
-	/**
-	 * @var array $allParams Contains an assiciative array of all
-	 * arguments matched in all calls to {@link RequestHandler->handleRequest()}.
-	 * It's a "historical record" that's specific to the current call of
-	 * {@link handleRequest()}, and is only complete once the "last call" to that method is made.
-	 */
-	protected $allParams = array();
-	
-	/**
-	 * @var array $latestParams Contains an associative array of all
-	 * arguments matched in the current call from {@link RequestHandler->handleRequest()},
-	 * as denoted with a "$"-prefix in the $url_handlers definitions.
-	 * Contains different states throughout its lifespan, so just useful
-	 * while processed in {@link RequestHandler} and to get the last
-	 * processes arguments.
-	 */
-	protected $latestParams = array();
-	
-	/**
-	 * @var array $routeParams Contains an associative array of all arguments
-	 * explicitly set in the route table for the current request.
-	 * Useful for passing generic arguments via custom routes.
-	 * 
-	 * E.g. The "Locale" parameter would be assigned "en_NZ" below
-	 * 
-	 * Director:
-	 *   rules:
-	 *     'en_NZ/$URLSegment!//$Action/$ID/$OtherID':
-	 *       Controller: 'ModelAsController'
-	 *       Locale: 'en_NZ'
-	 */
-	protected $routeParams = array();
-	
-	protected $unshiftedButParsedParts = 0;
+	private $matchedParams = array();
+
+	private $latestParams = array();
+
+	private $routeParams = array();
+
+	private $unshiftedButParsed = 0;
 
 	/**
 	 * Constructs a new request object.
@@ -124,12 +94,11 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		$this->url = $url;
 
 		//Normalize URL if its relative (strictly speaking), or has leading slashes
-		if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
-			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
+		if(Director::is_relative_url($url) || substr($url, 0, 1) == '/') {
+			$this->url = preg_replace('|/+|', '/', trim($this->url, '/'));
 		}
 
-		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
-		else $this->dirParts = array();
+		$this->urlParts = $this->url ? preg_split('|/+|', $this->url) : array();
 
 		return $this;
 	}
@@ -284,6 +253,192 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		return $url; 
 	}
 
+	public function getURLParts() {
+		return $this->urlParts;
+	}
+
+	/**
+	 * Gets the remaining URL that has not been routed.
+	 *
+	 * @return string
+	 */
+	public function getRemainingURL() {
+		return implode('/', $this->urlParts);
+	}
+
+	/**
+	 * Returns whether or not the entire URL has been handled.
+	 *
+	 * @return bool
+	 */
+	public function isAllRouted() {
+		return count($this->getUrlParts()) <= $this->getUnshiftedButParsed();
+	}
+
+	/**
+	 * Returns a map of all parameters included in the request.
+	 *
+	 * @return array
+	 */
+	public function getParams() {
+		return array_merge($this->getRouteParams(), $this->getMatchedParams());
+	}
+
+	/**
+	 * Gets a parameter by name, either from a matched parameter or one included in the route
+	 * definition.
+	 *
+	 * @param string $name the parameter name
+	 * @return string
+	 */
+	public function getParam($name) {
+		$params = $this->getParams();
+
+		if(isset($params[$name])) {
+			return $params[$name];
+		}
+	}
+
+	/**
+	 * Gets a map of all parameters that were matched in the URL.
+	 *
+	 * @return array
+	 */
+	public function getMatchedParams() {
+		return $this->matchedParams;
+	}
+
+	/**
+	 * Gets a parameter by name that was matched in the URL.
+	 *
+	 * @param string $name the parameter name
+	 * @return string
+	 */
+	public function getMatchedParam($name) {
+		if(isset($this->matchedParams[$name])) return $this->matchedParams[$name];
+	}
+
+	/**
+	 * Gets a map of the parameters that were matched by the most recent route match.
+	 *
+	 * @return array
+	 */
+	public function getLatestParams() {
+		return $this->latestParams;
+	}
+
+	/**
+	 * Gets a parameter by name that was matched in the most recent route match.
+	 *
+	 * @param string $name the parameter name
+	 * @return string
+	 */
+	public function getLatestParam($name) {
+		if(isset($this->latestParams[$name])) return $this->latestParams[$name];
+	}
+
+	/**
+	 * Gets a map of parameters that were include in the route definition.
+	 *
+	 * @return array
+	 */
+	public function getRouteParams() {
+		return $this->routeParams;
+	}
+
+	/**
+	 * Gets a parameter by name that was included in the route definition.
+	 *
+	 * @param string $name the parameter name
+	 * @return mixed
+	 */
+	public function getRouteParam($name) {
+		if(isset($this->routeParams[$name])) return $this->routeParams[$name];
+	}
+
+	/**
+	 * Sets the parameters that were matched in the route definition that was matched.
+	 *
+	 * @param array $params
+	 * @return $this
+	 */
+	public function setRouteParams(array $params) {
+		$this->routeParams = $params;
+		return $this;
+	}
+
+	/**
+	 * Shifts one or more parts off the start of the URL.
+	 *
+	 * @param int $count
+	 * @return array|string
+	 */
+	public function shift($count = 1) {
+		if($count == 1) {
+			return array_shift($this->urlParts);
+		} else {
+			$result = array();
+			$count = min($count, count($this->urlParts));
+
+			for($i = 0; $i < $count; $i++) {
+				$result[] = array_shift($this->urlParts);
+			}
+
+			return $result;
+		}
+	}
+
+	/**
+	 * Shifts all parameter values down a space.
+	 *
+	 * @return string
+	 */
+	public function shiftParams() {
+		$keys   = array_keys($this->getMatchedParams());
+		$values = array_values($this->getMatchedParams());
+		$value  = array_shift($values);
+
+		// push additional unparsed URL parts onto the parameter stack
+		if(array_key_exists($this->getUnshiftedButParsed(), $this->urlParts)) {
+			$values[] = $this->urlParts[$this->getUnshiftedButParsed()];
+		}
+
+		foreach($keys as $position => $key) {
+			$this->matchedParams[$key] = isset($values[$position]) ? $values[$position] : null;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Pushes an array of named parameters onto the request.
+	 *
+	 * @param array $params
+	 */
+	public function pushParams(array $params) {
+		$this->latestParams = $params;
+
+		foreach($params as $k => $v) {
+			if($v || !isset($this->matchedParams[$k])) $this->matchedParams[$k] = $v;
+		}
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getUnshiftedButParsed() {
+		return $this->unshiftedButParsed;
+	}
+
+	/**
+	 * @param int $count
+	 * @return $this
+	 */
+	public function setUnshiftedButParsed($count) {
+		$this->unshiftedButParsed = $count;
+		return $this;
+	}
+
 	/**
 	 * Returns true if this request an ajax request,
 	 * based on custom HTTP ajax added by common JavaScript libraries,
@@ -356,244 +511,7 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		
 		return $response;
 	}
-	
-	/**
-	 * Matches a URL pattern
-	 * The pattern can contain a number of segments, separated by / (and an extension indicated by a .)
-	 * 
-	 * The parts can be either literals, or, if they start with a $ they are interpreted as variables.
-	 *  - Literals must be provided in order to match
-	 *  - $Variables are optional
-	 *  - However, if you put ! at the end of a variable, then it becomes mandatory.
-	 * 
-	 * For example:
-	 *  - admin/crm/list will match admin/crm/$Action/$ID/$OtherID, but it won't match admin/crm/$Action!/$ClassName!
-	 * 
-	 * The pattern can optionally start with an HTTP method and a space.  For example, "POST $Controller/$Action".
-	 * This is used to define a rule that only matches on a specific HTTP method.
-	 *
-	 * @param $pattern
-	 * @param bool $shiftOnSuccess
-	 * @return array|bool
-	 */
-	public function match($pattern, $shiftOnSuccess = false) {
-		// Check if a specific method is required
-		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
-			$requiredMethod = $matches[1];
-			if($requiredMethod != $this->method) return false;
-			
-			// If we get this far, we can match the URL pattern as usual.
-			$pattern = $matches[2];
-		}
-		
-		// Special case for the root URL controller
-		if(!$pattern) {
-			return ($this->dirParts == array()) ? array('Matched' => true) : false;
-		}
 
-		// Check for the '//' marker that represents the "shifting point"
-		$doubleSlashPoint = strpos($pattern, '//');
-		if($doubleSlashPoint !== false) {
-			$shiftCount = substr_count(substr($pattern,0,$doubleSlashPoint), '/') + 1;
-			$pattern = str_replace('//', '/', $pattern);
-			$patternParts = explode('/', $pattern);
-			
-			
-		} else {
-			$patternParts = explode('/', $pattern);
-			$shiftCount = sizeof($patternParts);
-		}
-
-		$arguments = array();
-		foreach($patternParts as $i => $part) {
-			$part = trim($part);
-
-			// Match a variable
-			if(isset($part[0]) && $part[0] == '$') {
-				// A variable ending in ! is required
-				if(substr($part,-1) == '!') {
-					$varRequired = true;
-					$varName = substr($part,1,-1);
-				} else {
-					$varRequired = false;
-					$varName = substr($part,1);
-				}
-				
-				// Fail if a required variable isn't populated
-				if($varRequired && !isset($this->dirParts[$i])) return false;
-				
-				$arguments[$varName] = isset($this->dirParts[$i]) ? $this->dirParts[$i] : null;
-				if($part == '$Controller' && (!ClassInfo::exists($arguments['Controller'])
-						|| !is_subclass_of($arguments['Controller'], 'Controller'))) {
-					
-					return false;
-				}
-			// Literal parts must always be there
-			} else if(!isset($this->dirParts[$i]) || $this->dirParts[$i] != $part) {
-				return false;
-			}
-			
-		}
-
-		if($shiftOnSuccess) {
-			$this->shift($shiftCount);
-			// We keep track of pattern parts that we looked at but didn't shift off.
-			// This lets us say that we have *parsed* the whole URL even when we haven't *shifted* it all
-			$this->unshiftedButParsedParts = sizeof($patternParts) - $shiftCount;
-		}
-
-		$this->latestParams = $arguments;
-		
-		// Load the arguments that actually have a value into $this->allParams
-		// This ensures that previous values aren't overridden with blanks
-		foreach($arguments as $k => $v) {
-			if($v || !isset($this->allParams[$k])) $this->allParams[$k] = $v;
-		}
-
-		if($arguments === array()) $arguments['_matched'] = true;
-		return $arguments;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function allParams() {
-		return $this->allParams;
-	}
-	
-	/**
-	 * Shift all the parameter values down a key space, and return the shifted value.
-	 *
-	 * @return string
-	 */
-	public function shiftAllParams() {
-		$keys    = array_keys($this->allParams);
-		$values  = array_values($this->allParams);
-		$value   = array_shift($values);
-
-		// push additional unparsed URL parts onto the parameter stack
-		if(array_key_exists($this->unshiftedButParsedParts, $this->dirParts)) {
-			$values[] = $this->dirParts[$this->unshiftedButParsedParts];
-		}
-
-		foreach($keys as $position => $key) {
-			$this->allParams[$key] = isset($values[$position]) ? $values[$position] : null;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function latestParams() {
-		return $this->latestParams;
-	}
-
-	/**
-	 * @param string $name
-	 * @return string|null
-	 */
-	public function latestParam($name) {
-		if(isset($this->latestParams[$name])) return $this->latestParams[$name];
-		else return null;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function routeParams() {
-		return $this->routeParams;
-	}
-
-	/**
-	 * @param $params
-	 * @return SS_HTTPRequest $this
-	 */
-	public function setRouteParams($params) {
-		$this->routeParams = $params;
-		return $this;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function params() {
-		return array_merge($this->allParams, $this->routeParams);
-	}
-	
-	/**
-	 * Finds a named URL parameter (denoted by "$"-prefix in $url_handlers)
-	 * from the full URL, or a parameter specified in the route table
-	 * 
-	 * @param string $name
-	 * @return string Value of the URL parameter (if found)
-	 */
-	public function param($name) {
-		$params = $this->params();
-		if(isset($params[$name])) return $params[$name];
-		else return null;
-	}
-	
-	/**
-	 * Returns the unparsed part of the original URL
-	 * separated by commas. This is used by {@link RequestHandler->handleRequest()}
-	 * to determine if further URL processing is necessary.
-	 * 
-	 * @return string Partial URL
-	 */
-	public function remaining() {
-		return implode("/", $this->dirParts);
-	}
-	
-	/**
-	 * Returns true if this is a URL that will match without shifting off any of the URL.
-	 * This is used by the request handler to prevent infinite parsing loops.
-	 *
-	 * @param $pattern
-	 * @return bool
-	 */
-	public function isEmptyPattern($pattern) {
-		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
-			$pattern = $matches[2];
-		}
-		
-		if(trim($pattern) == "") return true;
-	}
-	
-	/**
-	 * Shift one or more parts off the beginning of the URL.
-	 * If you specify shifting more than 1 item off, then the items will be returned as an array
-	 *
-	 * @param int $count Shift Count
-	 * @return String|Array
-	 */
-	public function shift($count = 1) {
-		$return = array();
-		
-		if($count == 1) return array_shift($this->dirParts);
-		
-		for($i=0;$i<$count;$i++) {
-			$value = array_shift($this->dirParts);
-			
-			if($value === null) break;
-			
-			$return[] = $value;
-		}
-		
-		return $return;
-	}
-
-	/**
-	 * Returns true if the URL has been completely parsed.
-	 * This will respect parsed but unshifted directory parts.
-	 *
-	 * @return bool
-	 */
-	public function allParsed() {
-		return sizeof($this->dirParts) <= $this->unshiftedButParsedParts;
-	}
-	
 	/**
 	 * Returns the client IP address which
 	 * originated this request.
@@ -661,6 +579,70 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 		} else {
 			return $origMethod;
 		}
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getParams()}
+	 */
+	public function allParams() {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getParams()');
+		return $this->getParams();
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getParam()}
+	 */
+	public function param($name) {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getParam()');
+		return $this->getParam($name);
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getParams()}
+	 */
+	public function params() {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getParams()');
+		return $this->getParams();
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getLatestParams()}
+	 */
+	public function latestParams() {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getLatestParams()');
+		return $this->getLatestParams();
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getLatestParam()}
+	 */
+	public function latestParam($name) {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getLatestParam()');
+		return $this->getLatestParam($name);
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link shiftParams()}
+	 */
+	public function shiftAllParams() {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->shiftParams()');
+		return $this->shiftParams();
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link isAllRouted()}
+	 */
+	public function allParsed() {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->isAllRouted()');
+		return $this->isAllRouted();
+	}
+
+	/**
+	 * @deprecated 3.2 Use {@link getRemainingUrl()}
+	 */
+	public function remaining() {
+		Deprecation::notice('3.2.0', 'Use SS_HTTPRequest->getRemainingUrl()');
+		return $this->getRemainingUrl();
 	}
 
 	/**

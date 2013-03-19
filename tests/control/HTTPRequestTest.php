@@ -2,19 +2,7 @@
 
 class HTTPRequestTest extends SapphireTest {
 	static $fixture_file = null;
-	
-	public function testMatch() {
-		$request = new SS_HTTPRequest("GET", "admin/crm/add");
-		
-		/* When a rule matches, but has no variables, array("_matched" => true) is returned. */
-		$this->assertEquals(array("_matched" => true), $request->match('admin/crm', true));
-		
-		/* Becasue we shifted admin/crm off the stack, just "add" should be remaining */
-		$this->assertEquals("add", $request->remaining());
-		
-		$this->assertEquals(array("_matched" => true), $request->match('add', true));
-	}
-	
+
 	public function testHttpMethodOverrides() {
 		$request = new SS_HTTPRequest(
 			'GET',
@@ -265,5 +253,61 @@ class HTTPRequestTest extends SapphireTest {
 		$request = new SS_HTTPRequest('GET', '/path.extension?get=value');
 		$this->assertEquals('extension', $request->getExtension());
 	}
+
+	public function testShifting() {
+		$request = new SS_HTTPRequest('GET', '/first/second/third');
+		$this->assertEquals(array('first', 'second', 'third'), $request->getUrlParts());
+		$this->assertEquals('first/second/third', $request->getRemainingUrl());
+		$this->assertFalse($request->isAllRouted());
+
+		$this->assertEquals('first', $request->shift());
+		$this->assertEquals(array('second', 'third'), $request->getUrlParts());
+		$this->assertEquals('second/third', $request->getRemainingUrl());
+		$this->assertFalse($request->isAllRouted());
+
+		$this->assertEquals(array('second', 'third'), $request->shift(2));
+		$this->assertEquals('', $request->getRemainingUrl());
+		$this->assertEquals(array(), $request->getUrlParts());
+		$this->assertTrue($request->isAllRouted());
+	}
+
+	public function testParams() {
+		$request = new SS_HTTPRequest('GET', '');
+
+		$first = array('a' => '1');
+		$second = array('a' => '', 'b' => '2');
+		$third = array('c' => '3', 'd' => '4');
+
+		$this->assertEquals(array(), $request->getParams());
+		$this->assertEquals(array(), $request->getLatestParams());
+
+		$request->pushParams($first);
+		$this->assertEquals($first, $request->getParams());
+		$this->assertEquals($first, $request->getLatestParams());
+
+		$request->pushParams($second);
+		$this->assertEquals(array('a' => '1', 'b' => '2'), $request->getParams());
+		$this->assertEquals($second, $request->getLatestParams());
+		$this->assertEquals('1', $request->getParam('a'));
+		$this->assertEquals('', $request->getLatestParam('a'));
+
+		$request->pushParams($third);
+		$request->shiftParams();
+		$this->assertEquals(array('a' => '2', 'b' => '3', 'c' => '4', 'd' => null), $request->getParams());
+		$request->shiftParams();
+		$this->assertEquals(array('a' => '3', 'b' => '4', 'c' => null, 'd' => null), $request->getParams());
+	}
+
+	public function testIsAllRouted() {
+		$request = new SS_HTTPRequest('GET', 'first/second');
+		$this->assertFalse($request->isAllRouted());
+
+		$request->setUnshiftedButParsed(1);
+		$this->assertFalse($request->isAllRouted());
+
+		$request->setUnshiftedButParsed(2);
+		$this->assertTrue($request->isAllRouted());
+	}
+
 
 }
