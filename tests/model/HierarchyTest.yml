@@ -17,6 +17,9 @@ HierarchyTest_Object:
    obj3b:
       Parent: =>HierarchyTest_Object.obj3
       Title: Obj 3b
+   obj3c:
+      Parent: =>HierarchyTest_Object.obj3
+      Title: Obj 3c
    obj2aa:
       Parent: =>HierarchyTest_Object.obj2a
       Title: Obj 2aa

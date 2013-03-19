@@ -269,10 +269,50 @@ class TreeDropdownField extends FormField {
 			. $this->keyField . '\" class=\"class-$child->class"' 
 			. ' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 
-		if($isSubTree) {
-			return substr(trim($obj->getChildrenAsUL('', $eval, null, true, $this->childrenMethod)), 4, -5);
+		// Limit the amount of nodes shown for performance reasons.
+		// Skip the check if we're filtering the tree, since its not clear how many children will
+		// match the filter criteria until they're queried (and matched up with previously marked nodes).
+		$nodeThresholdLeaf = Config::inst()->get('Hierarchy', 'node_threshold_leaf');
+		if($nodeThresholdLeaf && !$this->filterCallback && !$this->search) {
+			$className = $this->sourceObject;
+			$nodeCountCallback = function($parent, $numChildren) use($className, $nodeThresholdLeaf) {
+				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
+					return sprintf(
+						'<ul><li><span class="item">%s</span></li></ul>',
+						_t('LeftAndMain.TooManyPages', 'Too many pages')
+					);
+				}
+			};	
 		} else {
-			return $obj->getChildrenAsUL('class="tree"', $eval, null, true, $this->childrenMethod);
+			$nodeCountCallback = null;
+		}
+
+		if($isSubTree) {
+			$html = $obj->getChildrenAsUL(
+				"",
+				$eval,
+				null,
+				true, 
+				$this->childrenMethod,
+				'numChildren',
+				true, // root call
+				null,
+				$nodeCountCallback
+			);
+			return substr(trim($html), 4, -5);
+		} else {
+			$html = $obj->getChildrenAsUL(
+				'class="tree"',
+				$eval,
+				null,
+				true, 
+				$this->childrenMethod,
+				'numChildren',
+				true, // root call
+				null,
+				$nodeCountCallback
+			);
+			return $html;
 		}
 	}
 
