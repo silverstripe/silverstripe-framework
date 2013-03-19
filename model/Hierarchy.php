@@ -74,12 +74,17 @@ class Hierarchy extends DataExtension {
 	 * @param string $childrenMethod The name of the method used to get children from each object
 	 * @param boolean $rootCall Set to true for this first call, and then to false for calls inside the recursion. You
 	 *                          should not change this.
-	 * @param int $minNodeCount
+	 * @param int $nodeCountThreshold The lower bounds for the amount of nodes to mark. If set, the logic will expand
+	 *                          nodes until it eaches at least this number, and then stops. Root nodes will always
+	 *                          show regardless of this settting. Further nodes can be lazy-loaded via ajax.
+	 *                          This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having
+	 *                          30 children, the actual node count will be 50 (all root nodes plus first expanded child).
+	 *                          
 	 * @return string
 	 */
 	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, 
 			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", 
-			$numChildrenMethod = "numChildren", $rootCall = true, $minNodeCount = 30) {
+			$numChildrenMethod = "numChildren", $rootCall = true, $nodeCountThreshold = 30) {
 
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished($numChildrenMethod);
@@ -103,9 +108,25 @@ class Hierarchy extends DataExtension {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
 					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
-					$output .= "\n" . 
-					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
-						$numChildrenMethod, false, $minNodeCount) . "</li>\n";
+					$output .= "\n";
+
+					
+					$numChildren = $child->$numChildrenMethod();
+					if(
+						// Always traverse into opened nodes (they might be exposed as parents of search results)
+						$child->isExpanded()
+						// Only traverse into children if we haven't reached the maximum node count already.
+						// Otherwise, the remaining nodes are lazy loaded via ajax.
+						&& $child->isMarked()
+					) {
+						$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
+							$numChildrenMethod, false, $nodeCountThreshold);
+					} 
+					elseif($child->isTreeOpened()) {
+						// Since we're not loading children, don't mark it as open either
+						$child->markClosed();
+					}
+					$output .= "</li>\n";
 				}
 			}
 			
@@ -125,21 +146,23 @@ class Hierarchy extends DataExtension {
 	 * This method returns the number of nodes marked.  After this method is called other methods 
 	 * can check isExpanded() and isMarked() on individual nodes.
 	 * 
-	 * @param int $minNodeCount The minimum amount of nodes to mark.
+	 * @param int $nodeCountThreshold See {@link getChildrenAsUL()}
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($minNodeCount = 30, $context = null,
+	public function markPartialTree($nodeCountThreshold = 30, $context = null,
 			$childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
 
-		if(!is_numeric($minNodeCount)) $minNodeCount = 30;
+		if(!is_numeric($nodeCountThreshold)) $nodeCountThreshold = 30;
 
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
 
 		// foreach can't handle an ever-growing $nodes list
 		while(list($id, $node) = each($this->markedNodes)) {
-			$this->markChildren($node, $context, $childrenMethod, $numChildrenMethod);
-			if($minNodeCount && sizeof($this->markedNodes) >= $minNodeCount) {
+			$children = $this->markChildren($node, $context, $childrenMethod, $numChildrenMethod);
+			if($nodeCountThreshold && sizeof($this->markedNodes) > $nodeCountThreshold) {
+				// Undo marking children as opened since they're lazy loaded
+				if($children) foreach($children as $child) $child->markClosed();
 				break;
 			}
 		}		
@@ -200,6 +223,7 @@ class Hierarchy extends DataExtension {
 	/**
 	 * Mark all children of the given node that match the marking filter.
 	 * @param DataObject $node Parent node.
+	 * @return DataList
 	 */
 	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted",
 			$numChildrenMethod = "numChildren") {
@@ -213,7 +237,13 @@ class Hierarchy extends DataExtension {
 		$node->markExpanded();
 		if($children) {
 			foreach($children as $child) {
-				if(!$this->markingFilter || $this->markingFilterMatches($child)) {
+				$markingMatches = $this->markingFilterMatches($child);
+				// Filtered results should always show opened, since actual matches
+				// might be hidden by non-matching parent nodes.
+				if($this->markingFilter && $markingMatches) {
+					$child->markOpened();
+				}
+				if(!$this->markingFilter || $markingMatches) {
 					if($child->$numChildrenMethod()) {
 						$child->markUnexpanded();
 					} else {
@@ -223,6 +253,8 @@ class Hierarchy extends DataExtension {
 				}
 			}
 		}
+
+		return $children;
 	}
 	
 	/**
@@ -349,6 +381,15 @@ class Hierarchy extends DataExtension {
 	public function markOpened() {
 		self::$marked[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
 		self::$treeOpened[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
+	}
+
+	/**
+	 * Mark this DataObject's tree as closed.
+	 */
+	public function markClosed() {
+		if(isset(self::$treeOpened[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID])) {
+			unset(self::$treeOpened[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID]);	
+		}
 	}
 	
 	/**

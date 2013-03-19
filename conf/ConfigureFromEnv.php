@@ -13,6 +13,7 @@
  *  - SS_DATABASE_SERVER:   The database server to use, defaulting to localhost
  *  - SS_DATABASE_USERNAME: The database username (mandatory)
  *  - SS_DATABASE_PASSWORD: The database password (mandatory)
+ *  - SS_DATABASE_PORT:     The database port
  *  - SS_DATABASE_SUFFIX:   A suffix to add to the database name.
  *  - SS_DATABASE_PREFIX:   A prefix to add to the database name.
  *  - SS_DATABASE_TIMEZONE: Set the database timezone to something other than the system timezone.
@@ -94,6 +95,11 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 			. $database 
 			. (defined('SS_DATABASE_SUFFIX') ? SS_DATABASE_SUFFIX : ''),
 	);
+
+	// Set the port if called for
+	if(defined('SS_DATABASE_PORT')) {
+		$databaseConfig['port'] = SS_DATABASE_PORT;
+	}
 
 	// Set the timezone if called for
 	if (defined('SS_DATABASE_TIMEZONE')) {

@@ -437,8 +437,8 @@ jQuery.noConflict();
 						contentEls.removeClass('loading');
 					},
 					success: function(data, status, xhr) {
-						var els = self.handleAjaxResponse(data, status, xhr);
-						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els});
+						var els = self.handleAjaxResponse(data, status, xhr, state);
+						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els, state: state});
 					}
 				});
 				
@@ -449,8 +449,14 @@ jQuery.noConflict();
 			 * Handles ajax responses containing plain HTML, or mulitple
 			 * PJAX fragments wrapped in JSON (see PjaxResponseNegotiator PHP class).
 			 * Can be hooked into an ajax 'success' callback.
+			 *
+			 * Parameters:
+			 * 	(Object) data
+			 * 	(String) status
+			 * 	(XMLHTTPRequest) xhr
+			 * 	(Object) state The original history state which the request was initiated with
 			 */
-			handleAjaxResponse: function(data, status, xhr) {
+			handleAjaxResponse: function(data, status, xhr, state) {
 				var self = this, url, selectedTabs, guessFragment;
 
 				// Support a full reload
@@ -545,7 +551,7 @@ jQuery.noConflict();
 
 				this.redraw();
 
-				this.restoreTabState();
+				this.restoreTabState(state.data.tabState !== 'undefined' ? state.data.tabState : null);
 
 				return newContentEls;
 			},
@@ -620,20 +626,35 @@ jQuery.noConflict();
 			/**
 			 * Re-select previously saved tabs.
 			 * Requires HTML5 sessionStorage support.
+			 *
+			 * Parameters:
+			 * 	(Object) Map of tab container selectors to tab selectors.
+			 * 	Used to mark a specific tab as active regardless of the previously saved options.
 			 */
-			restoreTabState: function() {
-				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
-
+			restoreTabState: function(overrideStates) {
 				var self = this, url = this._tabStateUrl(),
-					data = window.sessionStorage.getItem('tabs-' + url),
-					selectedTabs = data ? JSON.parse(data) : false;
-				if(selectedTabs) {
-					$.each(selectedTabs, function(i, selectedTab) {
-						var el = self.find('#' + selectedTab.id);
-						if(!el.data('tabs')) return; // don't act on uninit'ed controls
-						el.tabs('select', selectedTab.selected);
-					});
-				}
+					hasSessionStorage = (typeof(window.sessionStorage)!=="undefined" && window.sessionStorage),
+					sessionData = hasSessionStorage ? window.sessionStorage.getItem('tabs-' + url) : null,
+					sessionStates = sessionData ? JSON.parse(sessionData) : false;
+
+				this.find('.cms-tabset').each(function() {
+					var index, tabset = $(this), tabsetId = tabset.attr('id'), tab,
+						forcedTab = tabset.find('.ss-tabs-force-active');
+
+					if(!tabset.data('tabs')) return; // don't act on uninit'ed controls
+
+					if(forcedTab.length) {
+						index = forcedTab.index();
+					} else if(overrideStates && overrideStates[tabsetId]) {
+						tab = tabset.find(overrideStates[tabsetId].tabSelector);
+						if(tab.length) index = tab.index();
+					} else if(sessionStates) {
+						$.each(sessionStates, function(i, sessionState) {
+							if(tabset.is('#' + sessionState.id)) index = sessionState.selected;
+						});
+					}
+					if(index !== null) tabset.tabs('select', index);
+				});
 			},
 
 			/**

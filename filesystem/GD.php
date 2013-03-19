@@ -57,8 +57,7 @@ class GDBackend extends Object implements Image_Backend {
 	}
 
 	public function setGD($gd) {
-		Deprecation::notice('3.1', 'Use GD::setImageResource instead',
-			Deprecation::SCOPE_CLASS);
+		Deprecation::notice('3.1', 'Use GD::setImageResource instead');
 		return $this->setImageResource($gd);
 	}
 	
@@ -67,8 +66,7 @@ class GDBackend extends Object implements Image_Backend {
 	}
 
 	public function getGD() {
-		Deprecation::notice('3.1', 'GD::getImageResource instead',
-			Deprecation::SCOPE_CLASS);
+		Deprecation::notice('3.1', 'GD::getImageResource instead');
 		return $this->getImageResource();
 	}
 

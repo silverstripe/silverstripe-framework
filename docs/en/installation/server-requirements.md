@@ -42,7 +42,7 @@ A typical website page on a conservative single CPU machine (e.g., Intel 2Ghz) t
 
 ## Client side (CMS) requirements
 
-SilverStripe CMS is designed to work well with Firefox 3.0+ and Internet Explorer 7.0+. We aim to provide satisfactory experiences in Apple Safari and Google Chrome. SilverStripe CMS works well across Windows, Linux, and Mac operating systems.
+SilverStripe CMS is designed to work well with Google Chrome, Mozilla Firefox and Internet Explorer 8+. We aim to provide satisfactory experiences in Apple Safari. SilverStripe CMS works well across Windows, Linux, and Mac operating systems.
 
 ## End user requirements ##
 

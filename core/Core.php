@@ -119,6 +119,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 		if($_REQUEST) stripslashes_recursively($_REQUEST);
 		if($_GET) stripslashes_recursively($_GET);
 		if($_POST) stripslashes_recursively($_POST);
+		if($_COOKIE) stripslashes_recursively($_COOKIE);
 	}
 	
 	/**

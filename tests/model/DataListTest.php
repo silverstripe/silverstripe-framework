@@ -394,13 +394,6 @@ class DataListTest extends SapphireTest {
 	// 	$this->assertEquals('Joe', $list->Last()->Name, 'Last comment should be from Joe');
 	// }
 
-	public function testSimpleNegationFilter() {
-		$list = DataObjectTest_TeamComment::get();
-		$list = $list->filter('TeamID:Negation', $this->idFromFixture('DataObjectTest_Team', 'team1'));
-		$this->assertEquals(1, $list->count());
-		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Bob');
-	}
-
 	public function testSimplePartialMatchFilter() {
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->filter('Name:PartialMatch', 'o')->sort('Name');
