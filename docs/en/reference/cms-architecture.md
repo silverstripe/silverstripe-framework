@@ -304,7 +304,7 @@ without affecting the response body.
 	class MyController extends LeftAndMain {
 		class myaction() {
 			// ...
-			$this->response->addHeader('X-Controller', 'MyOtherController');
+			$this->response->setHeader('X-Controller', 'MyOtherController');
 			return $html;
 		}
 	}
@@ -361,7 +361,7 @@ which is picked up by the menu:
 	:::php
 	public function mycontrollermethod() {
 		// .. logic here
-		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
+		$this->getResponse()->setHeader('X-Controller', 'AssetAdmin');
 		return 'my response';
 	}
 

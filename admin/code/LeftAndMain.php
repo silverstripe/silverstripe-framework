@@ -367,8 +367,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		$title = $this->Title();
-		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
-		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
+		if(!$response->getHeader('X-Controller')) $response->setHeader('X-Controller', $this->class);
+		if(!$response->getHeader('X-Title')) $response->setHeader('X-Title', urlencode($title));
 		
 		return $response;
 	}
@@ -383,9 +383,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function redirect($url, $code=302) {
 		if($this->request->isAjax()) {
-			$this->response->addHeader('X-ControllerURL', $url);
+			$this->response->setHeader('X-ControllerURL', $url);
 			if($this->request->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
-				$this->response->addHeader('X-Pjax', $this->request->getHeader('X-Pjax'));
+				$this->response->setHeader('X-Pjax', $this->request->getHeader('X-Pjax'));
 			}
 			$oldResponse = $this->response;
 			$newResponse = new LeftAndMain_HTTPResponse(
@@ -394,7 +394,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$oldResponse->getStatusDescription()
 			);
 			foreach($oldResponse->getHeaders() as $k => $v) {
-				$newResponse->addHeader($k, $v);
+				$newResponse->setHeader($k, $v);
 			}
 			$newResponse->setIsFinished(true);
 			$this->response = $newResponse;
@@ -835,7 +835,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'PrevID' => $prev ? $prev->ID : null
 			);
 		}
-		$this->response->addHeader('Content-Type', 'text/json');
+		$this->response->setHeader('Content-Type', 'text/json');
 		return Convert::raw2json($data);
 	}
 	
@@ -862,7 +862,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 		
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
+		$this->response->setHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
 		return $this->getResponseNegotiator()->respond($this->request);
 	}
 	
@@ -875,7 +875,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		$record->delete();
 
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
+		$this->response->setHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
 		return $this->getResponseNegotiator()->respond(
 			$this->request, 
 			array('currentform' => array($this, 'EmptyForm'))
@@ -958,7 +958,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status',
+			$this->response->setHeader('X-Status',
 				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 		
@@ -981,7 +981,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 			
-			$this->response->addHeader('X-Status',
+			$this->response->setHeader('X-Status',
 				rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 

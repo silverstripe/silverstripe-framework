@@ -309,13 +309,13 @@ class SS_HTTPRequest extends SS_HTTPMessage implements ArrayAccess {
 			$mimeType = HTTP::get_mime_type($fileName);
 		}
 		$response = new SS_HTTPResponse($fileData);
-		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
-		$response->addHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
-		$response->addHeader("Content-Length", strlen($fileData));
-		$response->addHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
+		$response->setHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
+		$response->setHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
+		$response->setHeader("Content-Length", strlen($fileData));
+		$response->setHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
 		
 		if(strstr($_SERVER["HTTP_USER_AGENT"],"MSIE") == true) {
-			$response->addHeader('Cache-Control', 'max-age=3, must-revalidate'); // Workaround for IE6 and 7
+			$response->setHeader('Cache-Control', 'max-age=3, must-revalidate'); // Workaround for IE6 and 7
 		}
 		
 		return $response;

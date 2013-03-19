@@ -71,7 +71,7 @@ class SS_HTTPResponse extends SS_HTTPMessage {
 	 *  See {@link setStatusCode()} for more information.
 	 */
 	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
-		$this->addHeader('Content-Type', 'text/html; charset=utf-8');
+		$this->setHeader('Content-Type', 'text/html; charset=utf-8');
 		$this->setBody($body);
 
 		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
@@ -150,7 +150,7 @@ class SS_HTTPResponse extends SS_HTTPMessage {
 		}
 
 		$this->setStatusCode($code);
-		$this->addHeader('Location', $dest);
+		$this->setHeader('Location', $dest);
 
 		return $this;
 	}
@@ -234,7 +234,7 @@ class SS_HTTPResponse_Exception extends Exception {
 			$response = new SS_HTTPResponse($body, $statusCode, $statusDescription);
 
 			// Error responses should always be considered plaintext, for security reasons
-			$response->addHeader('Content-Type', 'text/plain');
+			$response->setHeader('Content-Type', 'text/plain');
 
 			$this->setResponse($response);
 		}

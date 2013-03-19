@@ -97,7 +97,7 @@ class Director implements TemplateGlobalProvider {
 
 		$headers = self::extract_request_headers($_SERVER);
 		foreach ($headers as $header => $value) {
-			$req->addHeader($header, $value);
+			$req->setHeader($header, $value);
 		}
 
 		// Only resume a session if its not started already, and a session identifier exists
@@ -219,7 +219,7 @@ class Director implements TemplateGlobalProvider {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
 		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
-		if($headers) foreach($headers as $k => $v) $request->addHeader($k, $v);
+		if($headers) foreach($headers as $k => $v) $request->setHeader($k, $v);
 		// TODO: Pass in the DataModel
 		$result = Director::handleRequest($request, $session, DataModel::inst());
 

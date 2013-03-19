@@ -235,7 +235,7 @@ class RestfulServiceTest_Controller extends Controller implements TestOnly {
 </test>
 XML;
 		$this->response->setBody($out);
-		$this->response->addHeader('Content-type', 'text/xml');
+		$this->response->setHeader('Content-type', 'text/xml');
 		
 		return $this->response;
 	}
@@ -261,7 +261,7 @@ XML;
 		
 		$this->response->setBody($out);
 		$this->response->setStatusCode(400); 
-		$this->response->addHeader('Content-type', 'text/xml');
+		$this->response->setHeader('Content-type', 'text/xml');
 
 		return $this->response;
 	}

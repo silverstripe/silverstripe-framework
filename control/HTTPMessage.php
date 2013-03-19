@@ -77,7 +77,7 @@ abstract class SS_HTTPMessage {
 	 * @param string $value
 	 * @return $this
 	 */
-	public function addHeader($name, $value) {
+	public function setHeader($name, $value) {
 		$this->headers[$name] = $value;
 		return $this;
 	}
@@ -88,9 +88,25 @@ abstract class SS_HTTPMessage {
 	 * @param string $name
 	 * @return $this
 	 */
-	public function removeHeader($name) {
+	public function unsetHeader($name) {
 		if(isset($this->headers[$name])) unset($this->headers[$name]);
 		return $this;
+	}
+
+	/**
+	 * @deprecated Use {@link setHeader()}.
+	 */
+	public function addHeader($name, $value) {
+		Deprecation::notice('3.2');
+		return $this->setHeader($name, $value);
+	}
+
+	/**
+	 * @deprecated Use {@link unsetHeader()}.
+	 */
+	public function removeHeader($name) {
+		Deprecation::notice('3.2');
+		return $this->unsetHeader($name);
 	}
 
 }
