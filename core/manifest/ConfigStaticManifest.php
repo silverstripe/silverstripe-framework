@@ -78,7 +78,7 @@ class SS_ConfigStaticManifest {
 			$static = $this->statics[$class][$name];
 
 			if ($static['access'] != T_PRIVATE) {
-				Deprecation::notice('3.1.0', "Config static $class::\$$name must be marked as private", Deprecation::SCOPE_GLOBAL);
+				Deprecation::notice('3.2.0', "Config static $class::\$$name must be marked as private", Deprecation::SCOPE_GLOBAL);
 				// Don't warn more than once per static
 				$static['access'] = T_PRIVATE;
 			}
