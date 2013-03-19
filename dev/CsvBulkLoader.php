@@ -32,6 +32,13 @@ class CsvBulkLoader extends BulkLoader {
 	 */
 	public $hasHeaderRow = true;
 	
+	/**
+	 * @inheritDoc
+	 */
+	public function preview($filepath) {
+		return $this->processAll($filepath, true);
+	}
+	
 	protected function processAll($filepath, $preview = false) {
 		$results = new BulkLoader_Result();
 		
