@@ -779,15 +779,53 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$link = Controller::join_links($recordController->Link("show"), $child->ID);
 			return LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child))->forTemplate();
 		};
-		$html = $obj->getChildrenAsUL(
-			"",
-			$titleFn,
-			singleton('CMSPagesController'),
-			true, 
-			$childrenMethod,
-			$numChildrenMethod,
-			$nodeCountThreshold
-		);
+		
+		// Limit the amount of nodes shown for performance reasons.
+		// Skip the check if we're filtering the tree, since its not clear how many children will
+		// match the filter criteria until they're queried (and matched up with previously marked nodes).
+		$nodeThresholdLeaf = Config::inst()->get('Hierarchy', 'node_threshold_leaf');
+		if($nodeThresholdLeaf && !$filterFunction) {
+			$nodeCountCallback = function($parent, $numChildren) use($controller, $className, $nodeThresholdLeaf) {
+				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
+					return sprintf(
+						'<ul><li class="readonly"><span class="item">'
+							. '%s (<a href="%s" class="cms-panel-link" data-pjax-target="Content">%s</a>)'
+							. '</span></li></ul>',
+						_t('LeftAndMain.TooManyPages', 'Too many pages'),
+						Controller::join_links(
+							$controller->LinkWithSearch($controller->Link()), '
+							?view=list&ParentID=' . $parent->ID
+						), 
+						_t(
+							'LeftAndMain.ShowAsList', 
+							'show as list', 
+							'Show large amount of pages in list instead of tree view'
+						)
+					);
+				}
+			};	
+		} else {
+			$nodeCountCallback = null;
+		}
+		
+		// If the amount of pages exceeds the node thresholds set, use the callback
+		if($obj->ParentID && $nodeCountCallback) {
+			$html = $nodeCountCallback($obj, $obj->$numChildrenMethod());
+		} 
+
+		// Otherwise return the actual tree (which might still filter leaf thresholds on children)
+		if(!$html) {
+			$html = $obj->getChildrenAsUL(
+				"",
+				$titleFn,
+				singleton('CMSPagesController'),
+				true, 
+				$childrenMethod,
+				$numChildrenMethod,
+				$nodeCountThreshold,
+				$nodeCountCallback
+			);
+		}
 
 		// Wrap the root if needs be.
 		if(!$rootID) {

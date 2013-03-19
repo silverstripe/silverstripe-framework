@@ -784,6 +784,9 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree-apple li.Root > a .jstree-icon, .cms-tree.jstree-apple li.Root > a .jstree-icon { background-position: -56px -36px; }
 .tree-holder.jstree-apple li.deletedonlive .text, .cms-tree.jstree-apple li.deletedonlive .text { text-decoration: line-through; }
 .tree-holder.jstree-apple li.jstree-checked > a, .tree-holder.jstree-apple li.jstree-checked > a:link, .cms-tree.jstree-apple li.jstree-checked > a, .cms-tree.jstree-apple li.jstree-checked > a:link { background-color: #efe999; }
+.tree-holder.jstree-apple li.readonly, .cms-tree.jstree-apple li.readonly { color: #aaaaaa; padding-left: 18px; }
+.tree-holder.jstree-apple li.readonly a, .tree-holder.jstree-apple li.readonly a:link, .cms-tree.jstree-apple li.readonly a, .cms-tree.jstree-apple li.readonly a:link { margin: 0; padding: 0; }
+.tree-holder.jstree-apple li.readonly .jstree-icon, .cms-tree.jstree-apple li.readonly .jstree-icon { display: none; }
 .tree-holder.jstree-apple a, .tree-holder.jstree-apple a:link, .cms-tree.jstree-apple a, .cms-tree.jstree-apple a:link { color: #0073c1; padding: 3px 6px 3px 3px; border: none; display: inline-block; margin-right: 5px; }
 .tree-holder.jstree-apple ins, .cms-tree.jstree-apple ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
 .tree-holder.jstree-apple span.badge, .cms-tree.jstree-apple span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; border-radius: 2px / 2px; }
