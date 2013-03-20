@@ -149,7 +149,12 @@ class Date extends DBField {
 	public function FormatI18N($formattingString) {
 		if($this->value) {
 			$fecfrm = strftime($formattingString, strtotime($this->value));
-			return utf8_encode($fecfrm);
+			if (ContentNegotiator::get_encoding() == 'utf-8' && !mb_check_encoding($fecfrm, 'utf-8')) {
+				return utf8_encode($fecfrm);
+			}
+			else {
+				return $fecfrm;
+			}
 		}
 	}
 	
