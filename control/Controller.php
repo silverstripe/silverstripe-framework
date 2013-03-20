@@ -169,8 +169,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			
 			// Some templates come here with shortcodes == false, so we set it 
 			// to true in order to have shortcode replaced with links
-			if ($body instanceof HTMLText || $body instanceof HTMLVarchar) {
-				$body->setOptions(array('shortcodes' => true));
+			if (strpos($request->getURL(), 'admin/') !== 0){ 
+				// Exclude CMS
+				if ($body instanceof HTMLText || $body instanceof HTMLVarchar) {
+					$body->setOptions(array('shortcodes' => true));
+				}
 			}
 			
 			$this->response->setBody($body);
