@@ -565,7 +565,7 @@ de:
     FROMFILES: 'Von "Dateien"'
     HOTLINKINFO: 'Info: Dieses Bild wird verknüpft. Bitte vergewissere dich die Erlaubnis des Inhabers der Ursprungsseite zu haben.'
     MAXNUMBEROFFILES: 'Maximale Anzahl an {count}  Datei(en) überschritten'
-    MAXNUMBEROFFILESSHORT: 'SIe können maximal {count} Datei(en) hochladen'
+    MAXNUMBEROFFILESSHORT: 'Sie können maximal {count} Datei(en) hochladen'
     REMOVE: Entfernen
     REMOVEERROR: 'Fehler beim Entfernen der Datei'
     REMOVEINFO: 'Entfernt die Datei von hier, löscht Sie aber nicht aus dem Dateisystem.'
