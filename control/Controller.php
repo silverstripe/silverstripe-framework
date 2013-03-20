@@ -167,6 +167,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 				$body = $body->getViewer($request->latestParam('Action'))->process($body);
 			}
 			
+			// Some templates come here with shortcodes == false, so we set it 
+			// to true in order to have shortcode replaced with links
+			if ($body instanceof HTMLText || $body instanceof HTMLVarchar) {
+				$body->setOptions(array('shortcodes' => true));
+			}
+			
 			$this->response->setBody($body);
 		}
 
