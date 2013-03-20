@@ -182,7 +182,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Controller's default action handler.  It will call the method named in $Action, if that method exists.
 	 * If $Action isn't given, it will use "index" as a default.
 	 */
-	public function handleAction($request, $action) {
+	protected function handleAction($request, $action) {
 		foreach($request->latestParams() as $k => $v) {
 			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
 		}
