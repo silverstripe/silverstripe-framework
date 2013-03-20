@@ -844,13 +844,25 @@ jQuery.noConflict();
 			onmatch: function() {
 				this._super();
 
-				$(this.attr('href')).hide();
+				var id=this.attr('href');
+				if(id.indexOf('#')!=0) {
+					id=id.split('#');
+					id='#'+id[1];
+				}
+
+				jQuery(id).hide();
 			},
 			onunmatch: function() {
 				this._super();
 			},
 			onclick: function(e) {
-				$(this.attr('href')).toggle();
+				var id=this.attr('href');
+				if(id.indexOf('#')!=0) {
+					id=id.split('#');
+					id='#'+id[1];
+				}
+
+				jQuery(id).toggle();
 				e.preventDefault();
 			}
 		});
