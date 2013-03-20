@@ -14,9 +14,10 @@ SilverStripe system due to three properties:
   - Configuration is normally set by a knowledgeable technical user, such as a developer, not the end user
 
 In SilverStripe 3, each class has it's configuration specified as set of named properties and associated values. The
-values at any given time are calculated by merging several sources using rules explained below. These sources are:
+values at any given time are calculated by merging several sources using rules explained below. 
+These sources are as follows (in highest -> lowest priority order):
 
-  - Values set via a call to Config#update
+  - Values set via a call to Config#update (e.g. in `_config.php`)
 
   - Values taken from YAML files in specially named directories
 
@@ -69,9 +70,9 @@ the result will be the higher priority false-ish value.
 
 The locations that configuration values are taken from in highest -> lowest priority order are:
 
-- Any values set via a call to Config#update
+- Any values set via a call to Config#update (e.g. via `_config.php`)
 
-- The configuration values taken from the YAML files in _config directories (internally sorted in before / after order, where
+- The configuration values taken from the YAML files in `_config/` directories (internally sorted in before / after order, where
   the item that is latest is highest priority)
 
 - Any static set on an "additional static source" class (such as an extension) named the same as the name of the property
