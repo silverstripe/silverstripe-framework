@@ -471,6 +471,20 @@
 		}
 	}
 
+	li.readonly {
+		color: $color-text-disabled;
+		padding-left: 18px;
+
+		// Don't show drag icons or required spacing
+		a, a:link {
+			margin: 0;
+			padding: 0;
+		}
+		.jstree-icon {
+			display: none;
+		}
+	}
+
 	span.badge {
 		clear: both;
 		text-transform: uppercase;
