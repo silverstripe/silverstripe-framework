@@ -424,7 +424,7 @@ abstract class Object {
 		$class = get_called_class();
 
 		if(func_num_args() > 1) {
-			Deprecation::notice('3.1.0', "Object::has_extension() deprecated. Call has_extension() on the class");
+			Deprecation::notice('3.2.0', "Object::has_extension() deprecated. Call has_extension() on the class");
 			$class = func_get_arg(0);
 			$requiredExtension = func_get_arg(1);
 		}
@@ -457,7 +457,7 @@ abstract class Object {
 		$class = get_called_class();
 
 		if(func_num_args() > 1) {
-			Deprecation::notice('3.1.0', "Object::add_extension() deprecated. Call add_extension() on the class");
+			Deprecation::notice('3.2.0', "Object::add_extension() deprecated. Call add_extension() on the class");
 			$class = func_get_arg(0);
 			$extension = func_get_arg(1);
 		}
@@ -518,7 +518,7 @@ abstract class Object {
 		$class = get_called_class();
 
 		if(func_num_args() > 1) {
-			Deprecation::notice('3.1.0', "Object::remove_extension() deprecated. Call remove_extension() on the class");
+			Deprecation::notice('3.2.0', "Object::remove_extension() deprecated. Call remove_extension() on the class");
 			$class = func_get_arg(0);
 			$extension = func_get_arg(1);
 		}
@@ -584,7 +584,7 @@ abstract class Object {
 				$sources[] = $extensionClass;
 
 				if(!ClassInfo::has_method_from($extensionClass, 'add_to_class', 'Extension')) {
-					Deprecation::notice('3.1.0', 
+					Deprecation::notice('3.2.0', 
 						"add_to_class deprecated on $extensionClass. Use get_extra_config instead");
 				}
 

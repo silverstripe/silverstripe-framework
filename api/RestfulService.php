@@ -585,7 +585,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	 * @param string
 	 */
 	public function setCachedBody($content) {
-		Deprecation::notice('3.1', 'Setting the response body is now deprecated, set the cached request instead');
+		Deprecation::notice('3.2', 'Setting the response body is now deprecated, set the cached request instead');
 		if (!$this->cachedResponse) {
 			$this->cachedResponse = new RestfulService_Response($content);
 		}
