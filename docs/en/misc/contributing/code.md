@@ -16,32 +16,47 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 ## Step-by-step: From forking to sending the pull request
 
-1. Follow the [Installation through Composer](../../installation/composer#contributing) instructions, 
-which explain how to fork the core modules and add the correct "upstream" remote. In short:
+1. Install the project through composer. The process is described in detail in "[Installation through Composer](../../installation/composer#contributing)".
 
  		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
 
-2. [Branch for new issue and develop on issue branch](code#branch-for-new-issue-and-develop-on-issue-branch)
+2. Edit the `composer.json`. Remove the `@stable` markers from the core modules in there. 
+   Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account 
+   (replace with your own fork URL). Run a `composer update` afterwards.
+
+		"repositories": [
+			{
+				"type": "vcs",
+				"url": "git@github.com:sminnee/silverstripe-cms.git"
+			}
+		]
+
+3. Add a new "upstream" remote so you can track the original repository for changes, and rebase/merge your fork as required.
+
+		cd cms
+		git remote add -f upstream git://github.com/silverstripe/silverstripe-cms.git
+
+4. [Branch for new issue and develop on issue branch](code#branch-for-new-issue-and-develop-on-issue-branch)
 
 		git branch ###-description
 		git checkout ###-description
 
-3. As time passes, the upstream repository accumulates new commits. Keep your working copy's master branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
+5. As time passes, the upstream repository accumulates new commits. Keep your working copy's master branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
 
 		# [make sure all your changes are committed as necessary in branch]
 		git fetch upstream
 		git rebase upstream/master
 
-4. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
+6. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
 
 		git fetch upstream
 		git rebase -i upstream/master
 
-5. Push release candidate branch to GitHub 
+7. Push release candidate branch to GitHub 
 
 		git push origin ###-description
 
-6. Issue pull request on GitHub.  Visit your forked respoistory on GitHub.com and click the "Create Pull Request" button nex tot the new branch.
+8. Issue pull request on GitHub.  Visit your forked respoistory on GitHub.com and click the "Create Pull Request" button nex tot the new branch.
 
 The core team is then responsible for reviewing patches and deciding if they will make it into core.  If
 there are any problems they will follow up with you, so please ensure they have a way to contact you! 
