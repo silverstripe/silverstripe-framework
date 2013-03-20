@@ -188,21 +188,11 @@ class Image extends File {
 	}
 	
 	public function SetWidth($width) {
-		return $this->getWidth() == $width ? $this : $this->getFormattedImage('SetWidth', $width);
+		return $this->getWidth() == $width ? $this : $this->getFormattedImage('SetWidth', $width, null, false);
 	}
 	
 	public function SetHeight($height) {
-		return $this->getHeight() == $height ? $this : $this->getFormattedImage('SetHeight', $height);
-	}
-	
-	public function SetSize($width, $height) {
-		return (($this->getWidth() == $width) &&  ($this->getHeight() == $height)) 
-			? $this 
-			: $this->getFormattedImage('SetSize', $width, $height);
-	}
-	
-	public function SetRatioSize($width, $height) {
-		return $this->getFormattedImage('SetRatioSize', $width, $height);
+		return $this->getHeight() == $height ? $this : $this->getFormattedImage('SetHeight', $height, null, false);
 	}
 	
 	public function generateSetRatioSize(Image_Backend $backend, $width, $height) {
@@ -272,6 +262,19 @@ class Image extends File {
 	public function generatePaddedImage(Image_Backend $backend, $width, $height) {
 		return $backend->paddedResize($width, $height);
 	}
+	
+	/**
+	 * Determine if this image is of the specified size
+	 * 
+	 * @param integer $width
+	 * @param integer $height
+	 * @return boolean
+	 */
+	public function isSize($width, $height) {
+		if(empty($width) || empty($height)) return false;
+		
+		return $this->getWidth() == $width && $this->getHeight() == $height;
+	}
 
 	/**
 	 * Return an image object representing the image in the given format.
@@ -280,10 +283,20 @@ class Image extends File {
 	 * @param string $format The name of the format.
 	 * @param string $arg1 An argument to pass to the generate function.
 	 * @param string $arg2 A second argument to pass to the generate function.
+	 * @param boolean $compareDimensions Determine if the $arg1 and $arg2 should
+	 * be compared to the current width and height of the image in order to
+	 * prevent unnecessary image resampling.
 	 * @return Image_Cached
 	 */
-	public function getFormattedImage($format, $arg1 = null, $arg2 = null) {
+	public function getFormattedImage($format, $arg1 = null, $arg2 = null, $compareDimensions = true) {
 		if($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
+			
+			// Determine if the image itself is already of the requested dimensions
+			if($compareDimensions && $this->isSize($arg1, $arg2)) {
+				return $this;
+			}
+			
+			// Regenerate image in the requested format
 			$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
 
 			if(!file_exists(Director::baseFolder()."/".$cacheFile) || isset($_GET['flush'])) {
