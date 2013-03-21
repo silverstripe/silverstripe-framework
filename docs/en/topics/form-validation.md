@@ -49,7 +49,7 @@ Example: Validate postcodes based on the selected country (on the controller).
 
 	:::php
 	class MyController extends Controller {
-		static $allowed_actions = array('Form');
+		private static $allowed_actions = array('Form');
 		public function Form() {
 			return Form::create($this, 'Form',
 				new FieldList(

@@ -647,7 +647,8 @@ class NewRequirementsBackend implements TestOnly {
 class TestStaticInjections implements TestOnly {
 
 	public $backend;
-	static $dependencies = array(
+	/** @config */
+	private static $dependencies = array(
 		'backend' => '%$NewRequirementsBackend'
 	);
 

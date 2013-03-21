@@ -1,12 +1,12 @@
 <?php
 class CMSProfileController extends LeftAndMain {
 
-	static $url_segment = 'myprofile';
+	private static $url_segment = 'myprofile';
 
-	static $menu_title = 'My Profile';
+	private static $menu_title = 'My Profile';
 
-	static $required_permission_codes = false;
-	static $tree_class = 'Member';
+	private static $required_permission_codes = false;
+	private static $tree_class = 'Member';
 
 	public function getResponseNegotiator() {
 		$neg = parent::getResponseNegotiator();

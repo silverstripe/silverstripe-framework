@@ -193,9 +193,9 @@ class HTTPTest extends SapphireTest {
 	 * @param callable $callback The test to run
 	 */
 	protected function withBaseURL($url, $callback) {
-		$oldBase = Director::$alternateBaseURL;
-		Director::setBaseURL($url);
+		$oldBase = Config::inst()->get('Director', 'alternate_base_url');
+		Config::inst()->update('Director', 'alternate_base_url', $url);
 		$callback($this);
-		Director::setBaseURL($oldBase);
+		Config::inst()->update('Director', 'alternate_base_url', $oldBase);
 	}
 }

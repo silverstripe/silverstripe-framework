@@ -119,38 +119,38 @@ class DataQueryTest extends SapphireTest {
 
 
 class DataQueryTest_A extends DataObject implements TestOnly {
-	public static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'TestC' => 'DataQueryTest_C',
 	);
 }
 
 class DataQueryTest_B extends DataQueryTest_A {
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'TestC' => 'DataQueryTest_C',
 	);
 }
 
 class DataQueryTest_C extends DataObject implements TestOnly {
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'TestA' => 'DataQueryTest_A',
 		'TestB' => 'DataQueryTest_B',
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'TestAs' => 'DataQueryTest_A',
 		'TestBs' => 'DataQueryTest_B',
 	);
 
-	public static $many_many = array(
+	private static $many_many = array(
 		'ManyTestAs' => 'DataQueryTest_A',
 		'ManyTestBs' => 'DataQueryTest_B',
 	);
@@ -158,7 +158,7 @@ class DataQueryTest_C extends DataObject implements TestOnly {
 
 class DataQueryTest_D extends DataObject implements TestOnly {
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'Relation' => 'DataQueryTest_B',
 	);
 }

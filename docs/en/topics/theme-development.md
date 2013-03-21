@@ -101,10 +101,12 @@ our theme in action. The code for mine is below.
 	$Form
 
 
-All you have to do now is tell your site to use your new theme - This is defined in the **mysite/_config.php** file
+All you have to do now is tell your site to use your new theme. This is defined through
+the YAML config, for example in `mysite/_config/config.yml`.
 
-	:::php
-	SSViewer::set_theme('mythemename');
+	:::yml
+	SSViewer:
+	  theme: 'mythemename'
 
 
 Go to yoursite.com/?flush=1 and check it out. You should be using your new theme! Not really that awesome or amazing is

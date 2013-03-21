@@ -5,7 +5,7 @@
  */
 class ComponentSetTest extends SapphireTest {
 	
-	static $fixture_file = 'ComponentSetTest.yml';
+	protected static $fixture_file = 'ComponentSetTest.yml';
 	
 	protected $extraDataObjects = array(
 		'ComponentSetTest_Player',
@@ -57,18 +57,18 @@ class ComponentSetTest extends SapphireTest {
 }
 
 class ComponentSetTest_Player extends Member implements TestOnly {
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'Teams' => 'ComponentSetTest_Team'
 	);
 }
 
 class ComponentSetTest_Team extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar', 
 	);
 
-	static $many_many = array(
+	private static $many_many = array(
 		'Players' => 'ComponentSetTest_Player'
 	);
 }

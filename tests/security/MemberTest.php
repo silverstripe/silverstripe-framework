@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class MemberTest extends FunctionalTest {
-	static $fixture_file = 'MemberTest.yml';
+	protected static $fixture_file = 'MemberTest.yml';
 	
 	protected $orig = array();
 	protected $local = null; 
@@ -35,13 +35,13 @@ class MemberTest extends FunctionalTest {
 	public function setUp() {
 		parent::setUp();
 		
-		$this->orig['Member_unique_identifier_field'] = Member::get_unique_identifier_field();
-		Member::set_unique_identifier_field('Email');
+		$this->orig['Member_unique_identifier_field'] = Member::config()->unique_identifier_field;
+		Member::config()->unique_identifier_field = 'Email';
 		Member::set_password_validator(null);
 	}
 	
 	public function tearDown() {
-		Member::set_unique_identifier_field($this->orig['Member_unique_identifier_field']);
+		Member::config()->unique_identifier_field = $this->orig['Member_unique_identifier_field'];
 
 		parent::tearDown();
 	}
@@ -81,7 +81,7 @@ class MemberTest extends FunctionalTest {
 		$memberWithPassword->write();
 		$this->assertEquals(
 			$memberWithPassword->PasswordEncryption, 
-			Security::get_password_encryption_algorithm(),
+			Security::config()->password_encryption_algorithm,
 			'Password encryption is set for new member records on first write (with setting "Password")'
 		);
 		
@@ -99,8 +99,8 @@ class MemberTest extends FunctionalTest {
 		$member->PasswordEncryption = 'sha1_v2.4';
 		$member->write();
 		
-		$origAlgo = Security::get_password_encryption_algorithm();
-		Security::set_password_encryption_algorithm('none');
+		$origAlgo = Security::config()->password_encryption_algorithm;
+		Security::config()->password_encryption_algorithm = 'none';
 	
 		$member->Password = 'mynewpassword';
 		$member->write();
@@ -112,7 +112,7 @@ class MemberTest extends FunctionalTest {
 		$result = $member->checkPassword('mynewpassword');
 		$this->assertTrue($result->valid());
 		
-		Security::set_password_encryption_algorithm($origAlgo);
+		Security::config()->password_encryption_algorithm = $origAlgo;
 	}
 
 	public function testKeepsEncryptionOnEmptyPasswords() {
@@ -278,7 +278,7 @@ class MemberTest extends FunctionalTest {
 	 * Test that the PasswordExpiry date is set when passwords are changed
 	 */
 	public function testPasswordExpirySetting() {
-		Member::set_password_expiry(90);
+		Member::config()->password_expiry_days = 90;
 		
 		$member = $this->objFromFixture('Member', 'test');
 		$this->assertNotNull($member);
@@ -288,7 +288,7 @@ class MemberTest extends FunctionalTest {
 		$expiryDate = date('Y-m-d', time() + 90*86400);		
 		$this->assertEquals($expiryDate, $member->PasswordExpiry);
 	
-		Member::set_password_expiry(null);
+		Member::config()->password_expiry_days = null;
 		$valid = $member->changePassword("Xx?1234235");
 		$this->assertTrue($valid->valid());
 	

@@ -14,7 +14,7 @@ require_once("model/DB.php");
 class DatabaseAdmin extends Controller {
 
 	/// SECURITY ///
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'build',
 		'cleanup',

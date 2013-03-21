@@ -2,7 +2,7 @@
 class XMLDataFormatterTest extends SapphireTest {
 	protected $arguments, $contents, $tagName;
 
-	public static $fixture_file = 'XMLDataFormatterTest.yml';
+	protected static $fixture_file = 'XMLDataFormatterTest.yml';
 
 	public function setUp() {
 		ShortcodeParser::get_active()->register('test_shortcode', array($this, 'shortcodeSaver'));
@@ -75,7 +75,7 @@ class XMLDataFormatterTest extends SapphireTest {
 }
 class XMLDataFormatterTest_DataObject extends DataObject implements TestOnly {
 
-	public static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar(50)',
 		'Company' => 'Varchar(50)',
 		'Content' => 'HTMLText'

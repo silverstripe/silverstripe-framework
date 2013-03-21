@@ -31,7 +31,7 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
  *  - Sets up error handlers with {@link Debug::loadErrorHandlers()}
  *  - Calls {@link DB::connect()}, passing it the global variable $databaseConfig that should 
  *    be defined in an _config.php
- *  - Sets up the default director rules using {@link Director::addRules()}
+ *  - Sets up the default director rules using {@link Director::$rules}
  * 
  * After that, it calls {@link Director::direct()}, which is responsible for doing most of the 
  * real work.

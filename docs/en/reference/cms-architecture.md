@@ -231,7 +231,7 @@ in a single Ajax request.
 	:::php
 	// mysite/code/MyAdmin.php
 	class MyAdmin extends LeftAndMain {
-		static $url_segment = 'myadmin';
+		private static $url_segment = 'myadmin';
 		public function getResponseNegotiator() {
 			$negotiator = parent::getResponseNegotiator();
 			$controller = $this;

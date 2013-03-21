@@ -36,7 +36,7 @@ method, we're building our own `getCustomSearchContext()` variant.
 
 	:::php
 	class MyDataObject extends DataObject {
-		static $db = array(
+		private static $db = array(
 			'PublicProperty' => 'Text'
 			'HiddenProperty' => 'Text',
 			'MyDate' => 'Date'

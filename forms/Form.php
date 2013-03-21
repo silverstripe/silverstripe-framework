@@ -197,7 +197,7 @@ class Form extends RequestHandler {
 		$this->securityToken = ($securityEnabled) ? new SecurityToken() : new NullSecurityToken();
 	}
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'field/$FieldName!' => 'handleField',
 		'POST ' => 'httpSubmission',
 		'GET ' => 'httpSubmission',

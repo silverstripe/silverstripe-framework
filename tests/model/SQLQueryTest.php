@@ -2,7 +2,7 @@
 
 class SQLQueryTest extends SapphireTest {
 	
-	public static $fixture_file = 'SQLQueryTest.yml';
+	protected static $fixture_file = 'SQLQueryTest.yml';
 
 	protected $extraDataObjects = array(
 		'SQLQueryTest_DO',
@@ -409,7 +409,7 @@ class SQLQueryTest extends SapphireTest {
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"Meta" => "Varchar",
 		"Common" => "Varchar",
@@ -418,16 +418,16 @@ class SQLQueryTest_DO extends DataObject implements TestOnly {
 }
 
 class SQLQueryTestBase extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar",
 	);
 }
 
 class SQLQueryTestChild extends SQLQueryTestBase {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 	);
 }

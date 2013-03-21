@@ -61,11 +61,8 @@ Paste the following content into a new file called `mysite/css/BookmarkedPages.c
 	.cms-bottom-bar ul li {float: left; margin-left: 1em;}
 	.cms-bottom-bar a {color: #444444;}
 
-Load the new CSS file into the CMS, by adding the following line to `mysite/_config.php`:
-
-	:::php
-	<?php
-	LeftAndMain::require_css('mysite/css/BookmarkedPages.css');
+Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requirements_css`
+[configuration value](/topics/configuration) to 'mysite/css/BookmarkedPages.css'.
 
 ## Create a "bookmark" flag on pages ##
 
@@ -76,7 +73,7 @@ Create a new file called `mysite/code/BookmarkedPageExtension.php` and insert th
 	:::php
 	<?php
 	class BookmarkedPageExtension extends DataExtension {
-		public static $db = array('IsBookmarked' => 'Boolean');
+		private static $db = array('IsBookmarked' => 'Boolean');
 		
 		public function updateCMSFields(FieldList $fields) {
 			$fields->addFieldToTab('Root.Main',

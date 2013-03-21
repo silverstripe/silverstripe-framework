@@ -24,7 +24,7 @@ class GridField extends FormField {
 	 *
 	 * @var array
 	 */
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'gridFieldAlterAction'
 	);

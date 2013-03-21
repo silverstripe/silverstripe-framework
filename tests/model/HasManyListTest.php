@@ -3,7 +3,7 @@
 class HasManyListTest extends SapphireTest {
 	
 	// Borrow the model from DataObjectTest
-	public static $fixture_file = 'DataObjectTest.yml';
+	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',

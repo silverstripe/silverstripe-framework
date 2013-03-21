@@ -12,54 +12,59 @@ class Image extends File {
 	const ORIENTATION_PORTRAIT = 1;
 	const ORIENTATION_LANDSCAPE = 2;
 	
-	static $backend = "GDBackend";
+	private static $backend = "GDBackend";
 	
-	static $casting = array(
+	private static $casting = array(
 		'Tag' => 'HTMLText',
 	);
 
 	/**
-	 * The width of an image thumbnail in a strip.
-	 * @var int
+	 * @config
+	 * @var int The width of an image thumbnail in a strip.
 	 */
-	public static $strip_thumbnail_width = 50;
+	private static $strip_thumbnail_width = 50;
 	
 	/**
-	 * The height of an image thumbnail in a strip.
-	 * @var int
+	 * @config
+	 * @var int The height of an image thumbnail in a strip.
 	 */
-	public static $strip_thumbnail_height = 50;
+	private static $strip_thumbnail_height = 50;
 	
 	/**
-	 * The width of an image thumbnail in the CMS.
-	 * @var int
+	 * @config
+	 * @var int The width of an image thumbnail in the CMS.
 	 */
-	public static $cms_thumbnail_width = 100;
+	private static $cms_thumbnail_width = 100;
 	
 	/**
-	 * The height of an image thumbnail in the CMS.
+	 * @config
+	 * @var int The height of an image thumbnail in the CMS.
 	 */
-	public static $cms_thumbnail_height = 100;
+	private static $cms_thumbnail_height = 100;
 	
 	/**
-	 * The width of an image thumbnail in the Asset section.
+	 * @config
+	 * @var int The width of an image thumbnail in the Asset section.
 	 */
-	public static $asset_thumbnail_width = 100;
+	private static $asset_thumbnail_width = 100;
 	
 	/**
-	 * The height of an image thumbnail in the Asset section.
+	 * @config
+	 * @var int The height of an image thumbnail in the Asset section.
 	 */
-	public static $asset_thumbnail_height = 100;
+	private static $asset_thumbnail_height = 100;
 	
 	/**
-	 * The width of an image preview in the Asset section.
+	 * @config
+	 * @var int The width of an image preview in the Asset section.
 	 */
-	public static $asset_preview_width = 400;
+	private static $asset_preview_width = 400;
 	
 	/**
-	 * The height of an image preview in the Asset section.
+	 * @config
+	 * @var int The height of an image preview in the Asset section.
 	 */
-	public static $asset_preview_height = 200;
+	private static $asset_preview_height = 200;
 	
 	public static function set_backend($backend) {
 		self::$backend = $backend;
@@ -158,11 +163,11 @@ class Image extends File {
 
 		// Create a folder		
 		if(!file_exists(ASSETS_PATH)) {
-			mkdir(ASSETS_PATH, Filesystem::$folder_create_mask);
+			mkdir(ASSETS_PATH, Config::inst()->get('Filesystem', 'folder_create_mask'));
 		}
 		
 		if(!file_exists(ASSETS_PATH . "/$class")) {
-			mkdir(ASSETS_PATH . "/$class", Filesystem::$folder_create_mask);
+			mkdir(ASSETS_PATH . "/$class", Config::inst()->get('Filesystem', 'folder_create_mask'));
 		}
 
 		// Generate default filename

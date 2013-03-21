@@ -6,7 +6,7 @@
  * @subpackage tests
  */
 class SecurityTest extends FunctionalTest {
-	static $fixture_file = 'MemberTest.yml';
+	protected static $fixture_file = 'MemberTest.yml';
 	
 	protected $autoFollowRedirection = false;
 	
@@ -28,8 +28,8 @@ class SecurityTest extends FunctionalTest {
 		Authenticator::set_default_authenticator('MemberAuthenticator');
 
 		// And that the unique identified field is 'Email'
-		$this->priorUniqueIdentifierField = Member::get_unique_identifier_field();
-		Member::set_unique_identifier_field('Email');
+		$this->priorUniqueIdentifierField = Member::config()->unique_identifier_field;
+		Member::config()->unique_identifier_field = 'Email';
 
 		parent::setUp();
 	}
@@ -47,7 +47,7 @@ class SecurityTest extends FunctionalTest {
 		Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);
 
 		// Restore unique identifier field
-		Member::set_unique_identifier_field($this->priorUniqueIdentifierField);
+		Member::config()->unique_identifier_field = $this->priorUniqueIdentifierField;
 		
 		parent::tearDown();
 	}
@@ -249,7 +249,7 @@ class SecurityTest extends FunctionalTest {
 		$local = i18n::get_locale();
 		i18n::set_locale('en_US');
 
-		Member::lock_out_after_incorrect_logins(5);
+		Member::config()->lock_out_after_incorrect_logins = 5;
 		
 		/* LOG IN WITH A BAD PASSWORD 7 TIMES */
 
@@ -310,7 +310,7 @@ class SecurityTest extends FunctionalTest {
 	}
 	
 	public function testAlternatingRepeatedLoginAttempts() {
-		Member::lock_out_after_incorrect_logins(3);
+		Member::config()->lock_out_after_incorrect_logins = 3;
 		
 		// ATTEMPTING LOG-IN TWICE WITH ONE ACCOUNT AND TWICE WITH ANOTHER SHOULDN'T LOCK ANYBODY OUT
 
@@ -339,7 +339,7 @@ class SecurityTest extends FunctionalTest {
 	}
 	
 	public function testUnsuccessfulLoginAttempts() {
-		Security::set_login_recording(true);
+		Security::config()->login_recording = true;
 		
 		/* UNSUCCESSFUL ATTEMPTS WITH WRONG PASSWORD FOR EXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('sam@silverstripe.com', 'wrongpassword');
@@ -362,7 +362,7 @@ class SecurityTest extends FunctionalTest {
 	}
 	
 	public function testSuccessfulLoginAttempts() {
-		Security::set_login_recording(true);
+		Security::config()->login_recording = true;
 		
 		/* SUCCESSFUL ATTEMPTS ARE LOGGED */
 		$this->doTestLoginForm('sam@silverstripe.com', '1nitialPassword');

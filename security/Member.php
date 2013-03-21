@@ -7,7 +7,7 @@
  */
 class Member extends DataObject implements TemplateGlobalProvider {
 
-	static $db = array(
+	private static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
@@ -33,27 +33,31 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TimeFormat' => 'Varchar(30)',
 	);
 
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'Groups' => 'Group',
 	);
 
-	static $has_one = array();
+	private static $has_one = array();
 	
-	static $has_many = array();
+	private static $has_many = array();
 	
-	static $many_many = array();
+	private static $many_many = array();
 	
-	static $many_many_extraFields = array();
+	private static $many_many_extraFields = array();
 
-	static $default_sort = '"Surname", "FirstName"';
+	private static $default_sort = '"Surname", "FirstName"';
 
-	static $indexes = array(
+	private static $indexes = array(
 		'Email' => true,
 		//Removed due to duplicate null values causing MSSQL problems
 		//'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true) 
 	);
 
-	static $notify_password_change = false;
+	/**
+	 * @config
+	 * @var boolean
+	 */
+	private static $notify_password_change = false;
 	
 	/**
 	 * All searchable database columns
@@ -66,50 +70,59 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * with definition for different searching algorithms
 	 * (LIKE, FULLTEXT) and default FormFields to construct a searchform.
 	 */
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'FirstName',
 		'Surname',
 		'Email',
 	);
 	
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'FirstName' => 'First Name',
 		'Surname' => 'Last Name',
 		'Email' => 'Email',
 	);
 	
 	/**
+	 * @config
 	 * @var Array See {@link set_title_columns()}
 	 */
-	static $title_format = null;
+	private static $title_format = null;
 	
 	/**
 	 * The unique field used to identify this member.
 	 * By default, it's "Email", but another common
 	 * field could be Username.
-	 * 
+	 *
+	 * @config
 	 * @var string
 	 */
-	protected static $unique_identifier_field = 'Email';
+	private static $unique_identifier_field = 'Email';
 	
 	/**
+	 * @config
 	 * {@link PasswordValidator} object for validating user's password
 	 */
-	protected static $password_validator = null;
+	private static $password_validator = null;
 	
 	/**
+	 * @config
 	 * The number of days that a password should be valid for.
 	 * By default, this is null, which means that passwords never expire
 	 */
-	protected static $password_expiry_days = null;
+	private static $password_expiry_days = null;
 
-	protected static $lock_out_after_incorrect_logins = null;
+	/**
+	 * @config
+	 * @var Int
+	 */
+	private static $lock_out_after_incorrect_logins = null;
 	
 	/**
-	 * If this is set, then a session cookie with the given name will be set on log-in,
+	 * @config
+	 * @var String If this is set, then a session cookie with the given name will be set on log-in,
 	 * and cleared on logout.
 	 */
-	protected static $login_marker_cookie = null;
+	private static $login_marker_cookie = null;
 
 	/**
 	 * Indicates that when a {@link Member} logs in, Member:session_regenerate_id()
@@ -117,13 +130,18 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * 
 	 * This doesn't always work, especially if you're trying to set session cookies
 	 * across an entire site using the domain parameter to session_set_cookie_params()
-	 * 
+	 *
+	 * @config
 	 * @var boolean
 	 */
-	protected static $session_regenerate_id = true;
+	private static $session_regenerate_id = true;
 
+	/**
+	 * @deprecated 3.2 Use the "Member.session_regenerate_id" config setting instead
+	 */
 	public static function set_session_regenerate_id($bool) {
-		self::$session_regenerate_id = $bool;
+		Deprecation::notice('3.2', 'Use the "Member.session_regenerate_id" config setting instead');
+		self::config()->session_regenerate_id = $bool;
 	}
 
 	/**
@@ -174,11 +192,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * <pre>
 	 * RewriteCond %{HTTP_COOKIE} !SS_LOGGED_IN=1
 	 * </pre>
-	 * 
+	 *
+	 * @deprecated 3.2 Use the "Member.login_marker_cookie" config setting instead
 	 * @param $cookieName string The name of the cookie to set.
 	 */
 	public static function set_login_marker_cookie($cookieName) {
-		self::$login_marker_cookie = $cookieName;
+		Deprecation::notice('3.2', 'Use the "Member.login_marker_cookie" config setting instead');
+		self::config()->login_marker_cookie = $cookieName;
 	} 
 
 	/**
@@ -254,21 +274,25 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * Get the field used for uniquely identifying a member
 	 * in the database. {@see Member::$unique_identifier_field}
-	 * 
+	 *
+	 * @deprecated 3.2 Use the "Member.unique_identifier_field" config setting instead
 	 * @return string
 	 */
 	public static function get_unique_identifier_field() {
-		return self::$unique_identifier_field;
+		Deprecation::notice('3.2', 'Use the "Member.unique_identifier_field" config setting instead');
+		return Member::config()->unique_identifier_field;
 	}
 	
 	/**
 	 * Set the field used for uniquely identifying a member
 	 * in the database. {@see Member::$unique_identifier_field}
-	 * 
+	 *
+	 * @deprecated 3.2 Use the "Member.unique_identifier_field" config setting instead
 	 * @param $field The field name to set as the unique field
 	 */
 	public static function set_unique_identifier_field($field) {
-		self::$unique_identifier_field = $field;
+		Deprecation::notice('3.2', 'Use the "Member.unique_identifier_field" config setting instead');
+		Member::config()->unique_identifier_field = $field;
 	}
 	
 	/**
@@ -288,16 +312,22 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * Set the number of days that a password should be valid for.
 	 * Set to null (the default) to have passwords never expire.
+	 *
+	 * @deprecated 3.2 Use the "Member.password_expiry_days" config setting instead
 	 */
 	public static function set_password_expiry($days) {
-		self::$password_expiry_days = $days;
+		Deprecation::notice('3.2', 'Use the "Member.password_expiry_days" config setting instead');
+		self::config()->password_expiry_days = $days;
 	}
 	
 	/**
 	 * Configure the security system to lock users out after this many incorrect logins
+	 *
+	 * @deprecated 3.2 Use the "Member.lock_out_after_incorrect_logins" config setting instead
 	 */
 	public static function lock_out_after_incorrect_logins($numLogins) {
-		self::$lock_out_after_incorrect_logins = $numLogins;
+		Deprecation::notice('3.2', 'Use the "Member.lock_out_after_incorrect_logins" config setting instead');
+		self::config()->lock_out_after_incorrect_logins = $numLogins;
 	}
 	
 	
@@ -316,7 +346,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		Session::set("loggedInAs", $this->ID);
 		// This lets apache rules detect whether the user has logged in
-		if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0);
+		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0);
 
 		$this->NumVisit++;
 
@@ -334,7 +364,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 		
 		// Clear the incorrect log-in count
-		if(self::$lock_out_after_incorrect_logins) {
+		if(self::config()->lock_out_after_incorrect_logins) {
 			$this->FailedLoginCount = 0;
 		}
 		
@@ -394,7 +424,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				self::session_regenerate_id();
 				Session::set("loggedInAs", $member->ID);
 				// This lets apache rules detect whether the user has logged in
-				if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0, null, null, false, true);
+				if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
 				
 				$generator = new RandomGenerator();
 				$token = $generator->randomToken('sha1');
@@ -416,7 +446,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function logOut() {
 		Session::clear("loggedInAs");
-		if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, null, 0);
+		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, null, 0);
 		self::session_regenerate_id();
 
 		$this->extend('memberLoggedOut');
@@ -632,7 +662,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
 		// Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form), 
 		// but rather a last line of defense against data inconsistencies.
-		$identifierField = self::$unique_identifier_field;
+		$identifierField = Member::config()->unique_identifier_field;
 		if($this->$identifierField) {
 			// Note: Same logic as Member_Validator class
 			$idClause = ($this->ID) ? sprintf(" AND \"Member\".\"ID\" <> %d", (int)$this->ID) : '';
@@ -665,7 +695,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			(Director::isLive() || Email::mailer() instanceof TestMailer) 
 			&& $this->isChanged('Password')
 			&& $this->record['Password'] 
-			&& Member::$notify_password_change
+			&& $this->config()->notify_password_change
 		) {
 			$e = Member_ChangePasswordEmail::create();
 			$e->populateTemplate($this);
@@ -681,7 +711,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
 				$this->Salt,
-				($this->PasswordEncryption) ? $this->PasswordEncryption : Security::get_password_encryption_algorithm(),
+				($this->PasswordEncryption) ? $this->PasswordEncryption : Security::config()->password_encryption_algorithm,
 				$this
 			);
 
@@ -693,8 +723,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			// If we haven't manually set a password expiry
 			if(!$this->isChanged('PasswordExpiry')) {
 				// then set it for us
-				if(self::$password_expiry_days) {
-					$this->PasswordExpiry = date('Y-m-d', time() + 86400 * self::$password_expiry_days);
+				if(self::config()->password_expiry_days) {
+					$this->PasswordExpiry = date('Y-m-d', time() + 86400 * self::config()->password_expiry_days);
 				} else {
 					$this->PasswordExpiry = null;
 				}
@@ -812,7 +842,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public static function set_title_columns($columns, $sep = ' ') {
 		if (!is_array($columns)) $columns = array($columns);
-		self::$title_format = array('columns' => $columns, 'sep' => $sep);
+		self::config()->title_format = array('columns' => $columns, 'sep' => $sep);
 	}
 
 	//------------------- HELPER METHODS -----------------------------------//
@@ -828,12 +858,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 *  of the member is equal 0, only the surname is returned.
 	 */
 	public function getTitle() {
-		if (self::$title_format) {
+		$format = $this->config()->title_format;
+		if ($format) {
 			$values = array();
-			foreach(self::$title_format['columns'] as $col) {
+			foreach($format['columns'] as $col) {
 				$values[] = $this->getField($col);
 			}
-			return join(self::$title_format['sep'], $values);
+			return join($format['sep'], $values);
 		}
 		if($this->getField('ID') === 0)
 			return $this->getField('Surname');
@@ -861,13 +892,14 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// This should be abstracted to SSDatabase concatOperator or similar.
 		$op = (DB::getConn() instanceof MSSQLDatabase) ? " + " : " || ";
 
-		if (self::$title_format) {
+		$format = self::config()->title_format;
+		if ($format) {
 			$columnsWithTablename = array();
-			foreach(self::$title_format['columns'] as $column) {
+			foreach($format['columns'] as $column) {
 				$columnsWithTablename[] = "\"$tableName\".\"$column\"";
 			}
 		
-			return "(".join(" $op '".self::$title_format['sep']."' $op ", $columnsWithTablename).")";
+			return "(".join(" $op '".$format['sep']."' $op ", $columnsWithTablename).")";
 		} else {
 			return "(\"$tableName\".\"Surname\" $op ' ' $op \"$tableName\".\"FirstName\")";
 		}
@@ -1126,7 +1158,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$mainFields->removeByName('PasswordExpiry');
 		$mainFields->removeByName('LockedOutUntil');
 		
-		if(!self::$lock_out_after_incorrect_logins) {
+		if(!self::config()->lock_out_after_incorrect_logins) {
 			$mainFields->removeByName('FailedLoginCount');
 		}
 		
@@ -1363,12 +1395,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * This can be used to lock the user out temporarily if too many failed attempts are made.
 	 */
 	public function registerFailedLogin() {
-		if(self::$lock_out_after_incorrect_logins) {
+		if(self::config()->lock_out_after_incorrect_logins) {
 			// Keep a tally of the number of failed log-ins so that we can lock people out
 			$this->FailedLoginCount = $this->FailedLoginCount + 1;
 			$this->write();
 	
-			if($this->FailedLoginCount >= self::$lock_out_after_incorrect_logins) {
+			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
 				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + 15*60);
 				$this->write();
 			}
@@ -1531,8 +1563,7 @@ class Member_Validator extends RequiredFields {
 	public function php($data) {
 		$valid = parent::php($data);
 		
-		$identifierField = Member::get_unique_identifier_field();
-		
+		$identifierField = Member::config()->unique_identifier_field;
 		$SQL_identifierField = Convert::raw2sql($data[$identifierField]);
 		$member = DataObject::get_one('Member', "\"$identifierField\" = '{$SQL_identifierField}'");
 

@@ -58,7 +58,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @param array
 	 */
-	static $composite_db = array(
+	private static $composite_db = array(
 		"Currency" => "Varchar(3)",
 		"Amount" => 'Decimal(19,4)'
 	);
@@ -112,7 +112,7 @@ class Money extends DBField implements CompositeDBField {
 			if($record[$this->name . 'Amount']) {
 				if(!empty($record[$this->name . 'Currency'])) {
 					$this->setCurrency($record[$this->name . 'Currency'], $markChanged);
-				} else if($currency = (string)$this->config()->get('default_currency')) {
+				} else if($currency = (string)$this->config()->default_currency) {
 					$this->setCurrency($currency, $markChanged);
 				}
 				

@@ -758,7 +758,7 @@ class Requirements_Backend {
 	 */
 	public function add_i18n_javascript($langDir, $return = false, $langOnly = false) {
 		$files = array();
-		if(i18n::get_js_i18n()) {
+		if(i18n::config()->js_i18n) {
 			// Include i18n.js even if no languages are found.  The fact that
 			// add_i18n_javascript() was called indicates that the methods in
 			// here are needed.

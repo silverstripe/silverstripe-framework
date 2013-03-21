@@ -2,7 +2,7 @@
 
 class DbDatetimeTest extends FunctionalTest {
 
-	static $fixture_file = 'DbDatetimeTest.yml';
+	protected static $fixture_file = 'DbDatetimeTest.yml';
 	
 	protected $extraDataObjects = array('DbDatetimeTest_Team');
 
@@ -139,7 +139,7 @@ class DbDatetimeTest extends FunctionalTest {
 }
 
 class DbDateTimeTest_Team extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar'
 	);
 }

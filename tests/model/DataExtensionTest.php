@@ -1,7 +1,7 @@
 <?php
 
 class DataExtensionTest extends SapphireTest {
-	static $fixture_file = 'DataExtensionTest.yml';
+	protected static $fixture_file = 'DataExtensionTest.yml';
 	
 	protected $extraDataObjects = array(
 		'DataExtensionTest_Member',
@@ -160,7 +160,7 @@ class DataExtensionTest extends SapphireTest {
 
 class DataExtensionTest_Member extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"Email" => "Varchar"
 	);
@@ -169,7 +169,7 @@ class DataExtensionTest_Member extends DataObject implements TestOnly {
 
 class DataExtensionTest_Player extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar'
 	);
 	
@@ -200,31 +200,31 @@ class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnl
 
 class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
 
-	public static $db = array(
+	private static $db = array(
 		'Website' => 'Varchar',
 		'Phone' => 'Varchar(255)',
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'RelatedObjects' => 'DataExtensionTest_RelatedObject'
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'Phone' => '123'
 	);
 
-	public static $api_access = true;
+	private static $api_access = true;
 
 }
 
 class DataExtensionTest_RelatedObject extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"FieldOne" => "Varchar",
 		"FieldTwo" => "Varchar"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"Contact" => "DataExtensionTest_Member"
 	);
 	
@@ -234,7 +234,7 @@ DataExtensionTest_Member::add_extension('DataExtensionTest_ContactRole');
 
 class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar', 
 	);
 	
@@ -295,7 +295,7 @@ class DataExtensionTest_Ext2 extends DataExtension implements TestOnly {
 
 class DataExtensionTest_Faves extends DataExtension implements TestOnly {
 
-	public static $many_many = array(
+	private static $many_many = array(
 		'Faves' => 'DataExtensionTest_RelatedObject'
 	);
 

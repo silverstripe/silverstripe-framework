@@ -13,7 +13,7 @@
  */
 class MoneyTest extends SapphireTest {
 	
-	static $fixture_file = 'MoneyTest.yml';
+	protected static $fixture_file = 'MoneyTest.yml';
 
 	protected $extraDataObjects = array(
 		'MoneyTest_DataObject',
@@ -271,7 +271,7 @@ class MoneyTest extends SapphireTest {
 }
 
 class MoneyTest_DataObject extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'MyMoney' => 'Money', 
 		//'MyOtherMoney' => 'Money', 
 	);

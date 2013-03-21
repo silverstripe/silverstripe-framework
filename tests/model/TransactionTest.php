@@ -57,7 +57,7 @@ class TransactionTest extends SapphireTest {
 }
 
 class TransactionTest_Object extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar(255)'
 	);
 }

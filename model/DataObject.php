@@ -71,20 +71,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Human-readable singular name.
 	 * @var string
+	 * @config
 	 */
-	public static $singular_name = null;
+	private static $singular_name = null;
 	
 	/**
 	 * Human-readable pluaral name
 	 * @var string
+	 * @config
 	 */
-	public static $plural_name = null;
+	private static $plural_name = null;
 	
 	/**
 	 * Allow API access to this object?
 	 * @todo Define the options that can be set here
+	 * @config
 	 */
-	public static $api_access = false;
+	private static $api_access = false;
 
 	/**
 	 * True if this DataObject has been destroyed.
@@ -136,7 +139,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $brokenOnWrite = false;
 	
 	/**
-	 * Should dataobjects be validated before they are written?
+	 * @config
+	 * @var boolean Should dataobjects be validated before they are written?
 	 */
 	private static $validation_enabled = true;
 
@@ -164,19 +168,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Returns when validation on DataObjects is enabled.
+	 * 
+	 * @deprecated 3.2 Use the "DataObject.validation_enabled" config setting instead
 	 * @return bool
 	 */
 	public static function get_validation_enabled() {
-		return self::$validation_enabled;
+		Deprecation::notice('3.2', 'Use the "DataObject.validation_enabled" config setting instead');
+		return Config::inst()->get('DataObject', 'validation_enabled');
 	}
 	
 	/**
 	 * Set whether DataObjects should be validated before they are written.
 	 * @param $enable bool
 	 * @see DataObject::validate()
+	 * @deprecated 3.2 Use the "DataObject.validation_enabled" config setting instead
 	 */
 	public static function set_validation_enabled($enable) {
-		self::$validation_enabled = (bool) $enable;
+		Deprecation::notice('3.2', 'Use the "DataObject.validation_enabled" config setting instead');
+		Config::inst()->update('DataObject', 'validation_enabled', (bool)$enable);
 	}
 
 	/**
@@ -1066,7 +1075,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				E_USER_WARNING
 			);
 		}
-		else if(self::get_validation_enabled()) {
+		else if(Config::inst()->get('DataObject', 'validation_enabled')) {
 			$valid = $this->validate();
 			if (!$valid->valid()) {
 				$writeException = new ValidationException(
@@ -3335,14 +3344,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 * @config
 	 */
-	public static $db = null;
+	private static $db = null;
 
 	/**
 	 * Use a casting object for a field. This is a map from
 	 * field name to class name of the casting object.
 	 * @var array
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"LastEdited" => "SS_Datetime",
 		"Created" => "SS_Datetime",
 		"Title" => 'Text',
@@ -3364,8 +3373,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * included in the next major release. Please use with care.
 	 * 
 	 * @var array
+	 * @config
 	 */
-	static $create_table_options = array(
+	private static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 
@@ -3375,8 +3385,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * See {@link SS_Database->requireIndex()} and custom subclasses for details on the array notation.
 	 * 
 	 * @var array
+	 * @config
 	 */
-	public static $indexes = null;
+	private static $indexes = null;
 
 	/**
 	 * Inserts standard column-values when a DataObject
@@ -3388,8 +3399,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *    or false in your subclass.  Setting it to null won't work.
 	 * 
 	 * @var array
+	 * @config
 	 */
-	public static $defaults = null;
+	private static $defaults = null;
 
 	/**
 	 * Multidimensional array which inserts default data into the database
@@ -3404,8 +3416,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * ).
 	 *
 	 * @var array
+	 * @config
 	 */
-	public static $default_records = null;
+	private static $default_records = null;
 
 	/**
 	 * One-to-zero relationship defintion. This is a map of component name to data type. In order to turn this into a
@@ -3414,8 +3427,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Note that you cannot have a has_one and belongs_to relationship with the same name.
 	 *
 	 *	@var array
+	 * @config
 	 */
-	public static $has_one = null;
+	private static $has_one = null;
 	
 	/**
 	 * A meta-relationship that allows you to define the reverse side of a {@link DataObject::$has_one}.
@@ -3427,8 +3441,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Note that you cannot have a has_one and belongs_to relationship with the same name.
 	 *
 	 * @var array
+	 * @config
 	 */
-	public static $belongs_to;
+	private static $belongs_to;
 	
 	/**
 	 * This defines a one-to-many relationship. It is a map of component name to the remote data class.
@@ -3439,15 +3454,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * which foreign key to use.
 	 *
 	 * @var array
+	 * @config
 	 */
-	public static $has_many = null;
+	private static $has_many = null;
 
 	/**
 	 * many-many relationship definitions.
 	 * This is a map from component name to data type.
 	 * @var array
+	 * @config
 	 */
-	public static $many_many = null;
+	private static $many_many = null;
 
 	/**
 	 * Extra fields to include on the connecting many-many table.
@@ -3463,22 +3480,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * </code>
 	 * 
 	 * @var array
+	 * @config
 	 */
-	public static $many_many_extraFields = null;
+	private static $many_many_extraFields = null;
 
 	/**
 	 * The inverse side of a many-many relationship.
 	 * This is a map from component name to data type.
 	 * @var array
+	 * @config
 	 */
-	public static $belongs_many_many = null;
+	private static $belongs_many_many = null;
 
 	/**
 	 * The default sort expression. This will be inserted in the ORDER BY
 	 * clause of a SQL query if no other sort expression is provided.
 	 * @var string
+	 * @config
 	 */
-	public static $default_sort = null;
+	private static $default_sort = null;
 
 	/**
 	 * Default list of fields that can be scaffolded by the ModelAdmin
@@ -3512,20 +3532,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *    )
 	 *  );
 	 * </code>
+	 * @config
 	 */
-	public static $searchable_fields = null;
+	private static $searchable_fields = null;
 
 	/**
 	 * User defined labels for searchable_fields, used to override
 	 * default display in the search form.
+	 * @config
 	 */
-	public static $field_labels = null;
+	private static $field_labels = null;
 
 	/**
 	 * Provides a default list of fields to be used by a 'summary'
 	 * view of this object.
+	 * @config
 	 */
-	public static $summary_fields = null;
+	private static $summary_fields = null;
 	
 	/**
 	 * Provides a list of allowed methods that can be called via RESTful api.

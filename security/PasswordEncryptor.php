@@ -15,8 +15,9 @@ abstract class PasswordEncryptor {
 	
 	/**
 	 * @var array
+	 * @config
 	 */
-	protected static $encryptors = array();
+	private static $encryptors = array();
 	
 	/**
 	 * @return Array Map of encryptor code to the used class.

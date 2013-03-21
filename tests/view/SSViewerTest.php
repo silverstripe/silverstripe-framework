@@ -3,18 +3,18 @@
 class SSViewerTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
-		SSViewer::set_source_file_comments(false);
+		Config::inst()->update('SSViewer', 'source_file_comments', false);
 	}
 	
 	/**
-	 * Tests for {@link SSViewer::current_theme()} for different behaviour
+	 * Tests for {@link Config::inst()->get('SSViewer', 'theme')} for different behaviour
 	 * of user defined themes via {@link SiteConfig} and default theme
 	 * when no user themes are defined.
 	 */
 	public function testCurrentTheme() {
 		//TODO: SiteConfig moved to CMS 
-		SSViewer::set_theme('mytheme');
-		$this->assertEquals('mytheme', SSViewer::current_theme(),
+		Config::inst()->update('SSViewer', 'theme', 'mytheme');
+		$this->assertEquals('mytheme', Config::inst()->get('SSViewer', 'theme'),
 			'Current theme is the default - user has not defined one');
 	}
 	
@@ -52,7 +52,6 @@ class SSViewerTest extends SapphireTest {
 		
 		$template = $this->render("<% require javascript($jsFile) %>
 		<% require css($cssFile) %>");
-
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
 
@@ -906,8 +905,8 @@ after')
 
 		SS_TemplateLoader::instance()->pushManifest($manifest);
 
-		$origTheme = SSViewer::current_theme();
-		SSViewer::set_theme($theme);
+		$origTheme = Config::inst()->get('SSViewer', 'theme');
+		Config::inst()->update('SSViewer', 'theme', $theme);
 
 		$e = null;
 
@@ -916,7 +915,7 @@ after')
 
 		// Remove all the test themes we created
 		SS_TemplateLoader::instance()->popManifest();
-		SSViewer::set_theme($origTheme);
+		Config::inst()->update('SSViewer', 'theme', $origTheme);
 
 		if ($e) throw $e;
 	}
@@ -966,8 +965,8 @@ after')
 	}
 
 	public function testRewriteHashlinks() {
-		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
-		SSViewer::setOption('rewriteHashlinks', true);
+		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', true); 
 		
 		// Emulate SSViewer::process()
 		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
@@ -997,13 +996,13 @@ after')
 		);
 		
 		unlink($tmplFile);
-		
-		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
+
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig); 
 	}
 	
 	public function testRewriteHashlinksInPhpMode() {
-		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
-		SSViewer::setOption('rewriteHashlinks', 'php');
+		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', 'php'); 
 		
 		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
 		
@@ -1031,14 +1030,14 @@ after')
 		// );
 		
 		unlink($tmplFile);
-		
-		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
+
+		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig); 
 	}
 	
 	public function testRenderWithSourceFileComments() {
-		$origType = Director::get_environment_type();
-		Director::set_environment_type('dev');
-		SSViewer::set_source_file_comments(true);
+		$origEnv = Config::inst()->get('Director', 'environment_type');
+		Config::inst()->update('Director', 'environment_type', 'dev');
+		Config::inst()->update('SSViewer', 'source_file_comments', true);
 		
 		$view = new SSViewer(array('SSViewerTestCommentsFullSource'));
 		$data = new ArrayData(array());
@@ -1072,9 +1071,9 @@ after')
 			. '<!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . FRAMEWORK_PATH 
 			. '/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
 		$this->assertEquals($result, $expected);
-		
-		SSViewer::set_source_file_comments(false);
-		Director::set_environment_type($origType);
+
+		Config::inst()->update('SSViewer', 'source_file_comments', false);
+		Config::inst()->update('Director', 'environment_type', $origEnv);
 	}
 
 	public function testLoopIteratorIterator() {
@@ -1173,7 +1172,7 @@ class SSViewerTestFixture extends ViewableData {
 
 class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 
-	public static $casting = array(
+	private static $casting = array(
 		'TextValue' => 'Text',
 		'HTMLValue' => 'HTMLText'
 	);

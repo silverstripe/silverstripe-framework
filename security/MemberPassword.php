@@ -5,21 +5,21 @@
  * @subpackage security
  */
 class MemberPassword extends DataObject {
-	static $db = array(
+	private static $db = array(
 		'Password' => 'Varchar(160)',
 		'Salt' => 'Varchar(50)',
 		'PasswordEncryption' => 'Varchar(50)',
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Member' => 'Member'
 	);
 	
-	static $has_many = array();
+	private static $has_many = array();
 	
-	static $many_many = array();
+	private static $many_many = array();
 	
-	static $belongs_many_many = array();
+	private static $belongs_many_many = array();
 	
 	/**
 	 * Log a password change from the given member.

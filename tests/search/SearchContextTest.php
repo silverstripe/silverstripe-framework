@@ -2,7 +2,7 @@
 
 class SearchContextTest extends SapphireTest {
 	
-	static $fixture_file = 'SearchContextTest.yml';
+	protected static $fixture_file = 'SearchContextTest.yml';
 
 	protected $extraDataObjects = array(
 		'SearchContextTest_Person',
@@ -165,14 +165,14 @@ class SearchContextTest extends SapphireTest {
 
 class SearchContextTest_Person extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"Email" => "Varchar",
 		"HairColor" => "Varchar",
 		"EyeColor" => "Varchar"
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Name", "HairColor", "EyeColor"
 	);
 	
@@ -180,7 +180,7 @@ class SearchContextTest_Person extends DataObject implements TestOnly {
 
 class SearchContextTest_Book extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar",
 		"Summary" => "Varchar"
 	);
@@ -189,17 +189,17 @@ class SearchContextTest_Book extends DataObject implements TestOnly {
 
 class SearchContextTest_Company extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"Industry" => "Varchar",
 		"AnnualProfit" => "Int"
 	);
 	
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		"Industry"
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
 		"Industry" => array(
 			'field' => "TextareaField"
@@ -215,19 +215,19 @@ class SearchContextTest_Company extends DataObject implements TestOnly {
 
 class SearchContextTest_Project extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"Deadline" => "SearchContextTest_Deadline"	
 	);
 	
-	static $has_many = array(
+	private static $has_many = array(
 		"Actions" => "SearchContextTest_Action"
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
 		"Actions.SolutionArea" => "ExactMatchFilter",
 		"Actions.Description" => "PartialMatchFilter"
@@ -237,11 +237,11 @@ class SearchContextTest_Project extends DataObject implements TestOnly {
 
 class SearchContextTest_Deadline extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"CompletionDate" => "SS_Datetime"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"Project" => "SearchContextTest_Project"	
 	);
 	
@@ -249,12 +249,12 @@ class SearchContextTest_Deadline extends DataObject implements TestOnly {
 
 class SearchContextTest_Action extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"Description" => "Text",
 		"SolutionArea" => "Varchar"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"Project" => "SearchContextTest_Project"
 	);
 	
@@ -262,7 +262,7 @@ class SearchContextTest_Action extends DataObject implements TestOnly {
 
 class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"ExactMatch" => "Varchar",
 		"PartialMatch" => "Varchar",
 		"SubstringMatch" => "Varchar",
@@ -273,7 +273,7 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		'FulltextField' => 'Text', 
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"ExactMatch" => "ExactMatchFilter",
 		"PartialMatch" => "PartialMatchFilter",
 		"CollectionMatch" => "ExactMatchFilter",

@@ -569,7 +569,7 @@ default if it exists and there is no action in the url parameters.
 	:::php
 	class MyPage_Controller extends Page_Controller {
 
-		static $allowed_actions = array('index');
+		private static $allowed_actions = array('index');
 	
 		public function init(){
 			parent::init();  
@@ -614,10 +614,8 @@ would be created:
 
 
 There are cases where this can be unhelpful.  HTML fragments created from Ajax responses are the most common.  In these
-situations, you can disable fragment link rewriting like so:
-
-	:::php
-	SSViewer::setOption('rewriteHashlinks', false);
+situations, you can disable fragment link rewriting by setting the
+`SSViewer.rewrite_hash_links` configuration value to `false`.
 
 ### More Advanced Controls
 

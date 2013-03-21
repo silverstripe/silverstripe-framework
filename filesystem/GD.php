@@ -8,15 +8,22 @@ class GDBackend extends Object implements Image_Backend {
 	protected $gd, $width, $height;
 	protected $quality;
 	
-	protected static $default_quality = 75;
+	/**
+	 * @config
+	 * @var integer
+	 */
+	private static $default_quality = 75;
 
 	/**
 	 * Set the default image quality.
+	 *
+	 * @deprecated 3.2 Use the "GDBackend.default_quality" config setting instead
 	 * @param quality int A number from 0 to 100, 100 being the best quality.
 	 */
 	public static function set_default_quality($quality) {
+		Deprecation::notice('3.2', 'Use the "GDBackend.default_quality" config setting instead');
 		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
-			self::$default_quality = (int) $quality;
+			Config::inst()->set('GDBackend', 'default_quality', (int) $quality);
 		}
 	}
 
@@ -46,8 +53,9 @@ class GDBackend extends Object implements Image_Backend {
 			}
 		}
 		
-		$this->quality = self::$default_quality;
 		parent::__construct();
+
+		$this->quality = $this->config()->default_quality;
 	}
 	
 	public function setImageResource($resource) {
@@ -431,7 +439,7 @@ class GDBackend extends Object implements Image_Backend {
 	
 	public function makeDir($dirname) {
 		if(!file_exists(dirname($dirname))) $this->makeDir(dirname($dirname));
-		if(!file_exists($dirname)) mkdir($dirname, Filesystem::$folder_create_mask);
+		if(!file_exists($dirname)) mkdir($dirname, Config::inst()->get('Filesystem', 'folder_create_mask'));
 	}
 	
 	public function writeTo($filename) {
@@ -471,12 +479,12 @@ class GDBackend extends Object implements Image_Backend {
  * Backwards compatibility
  */
 class GD extends GDBackend {
+
+	/**
+	 * @deprecated 3.2 Use the "GDBackend.default_quality" config setting instead
+	 */
 	public static function set_default_quality($quality) {
-		Deprecation::notice(
-			'3.1', 
-			'GDBackend::set_default_quality instead',
-			Deprecation::SCOPE_CLASS
-		);
+		Deprecation::notice('3.2', 'Use the "GDBackend.default_quality" config setting instead');
 		GDBackend::set_default_quality($quality);
 	}	
 }

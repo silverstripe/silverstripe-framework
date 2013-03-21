@@ -272,9 +272,8 @@ Notice that we can leave out the header in this case because there is only a sin
 ## Setting configuration via statics
 
 The final location that a property can get it's value from is a static set on the associated class.
-
-Statics should be considered immutable. Although in 3.0 the configuration system will include modified
-statics during the merge, this is not guaranteed to always be the case.
+Statics should be considered immutable, and therefore the majority of statics in SilverStripe
+are marked `private`.
 
 They should primarily be used to set the initial or default value for any given configuration property. It's also
 a handy place to hand a docblock to indicate what a property is for. However, it's worth noting that you
@@ -306,11 +305,6 @@ classes (see [common-problems](/installation/common-problems)).
 
 Some constants are user-defineable within *_ss_environment.php*.
 
- | Name  |																| Description |
- | ----  |																| ----------- |
- | *TEMP_FOLDER* |														| Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *sys_get_temp_dir()*, and falls back to *silverstripe-cache* in the webroot. See *getTempFolder()* in *framework/core/Core.php* |
-
-
 ## No GUI configuration
 
 SilverStripe framework does not provide a method to set configuration via a web panel
@@ -324,7 +318,7 @@ In addition to these principle, some settings are
  * Group-related configuration like `[api:HTMLEditorField]` settings can be found in the "Security" section (`admin/security`).
  * Site-wide settings like page titles can be set (and extended) on the root tree element in the CMS "Content" section (through the [siteconfig](/reference/siteconfig) API).
 
-## _ss_environment.php
+## Constants and the _ss_environment.php File
 
 See [environment-management](/topics/environment-management).
 

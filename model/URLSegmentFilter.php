@@ -17,14 +17,16 @@
 class URLSegmentFilter extends Object {
 	
 	/**
+	 * @config
 	 * @var Boolean
 	 */
-	static $default_use_transliterator = true;
+	private static $default_use_transliterator = true;
 	
 	/**
+	 * @config
 	 * @var Array See {@link setReplacements()}.
 	 */
-	static $default_replacements = array(
+	private static $default_replacements = array(
 		'/&amp;/u' => '-and-',
 		'/&/u' => '-and-',
 		'/\s/u' => '-', // remove whitespace
@@ -39,10 +41,11 @@ class URLSegmentFilter extends Object {
 	 * Useful for character sets that have little overlap with ASCII (e.g. far eastern),
 	 * as well as better search engine optimization for URLs.
 	 * @see http://www.ietf.org/rfc/rfc3987
-	 * 
+	 *
+	 * @config
 	 * @var boolean
 	 */
-	static $default_allow_multibyte = false;
+	private static $default_allow_multibyte = false;
 	
 	/**
 	 * @var Array See {@link setReplacements()}
@@ -92,7 +95,7 @@ class URLSegmentFilter extends Object {
 	 * @return Array
 	 */
 	public function getReplacements() {
-		return ($this->replacements) ? $this->replacements : self::$default_replacements;
+		return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
 	}
 		
 	/**
@@ -104,7 +107,7 @@ class URLSegmentFilter extends Object {
 	 * @return SS_Transliterator|NULL
 	 */
 	public function getTransliterator() {
-		if($this->transliterator === null && self::$default_use_transliterator) {
+		if($this->transliterator === null && $this->config()->default_use_transliterator) {
 			$this->transliterator = SS_Transliterator::create();
 		} 
 		return $this->transliterator;
@@ -133,6 +136,6 @@ class URLSegmentFilter extends Object {
 	 * @return boolean
 	 */
 	public function getAllowMultibyte() {
-		return ($this->allowMultibyte !== null) ? $this->allowMultibyte : self::$default_allow_multibyte;
+		return ($this->allowMultibyte !== null) ? $this->allowMultibyte : $this->config()->default_allow_multibyte;
 	}
 }

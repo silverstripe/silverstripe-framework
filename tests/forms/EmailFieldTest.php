@@ -73,7 +73,7 @@ class EmailFieldTest_Validator extends Validator {
 
 class EmailFieldTest_Controller extends Controller implements TestOnly {
 
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
 	);
 

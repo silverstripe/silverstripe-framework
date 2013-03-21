@@ -42,11 +42,11 @@
 
 class TreeDropdownField extends FormField {
 	
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action!/$ID' => '$Action'
 	);
 	
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'tree'
 	);
 	

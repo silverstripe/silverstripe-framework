@@ -42,7 +42,7 @@ Here is an example where we display a basic gridfield with the default settings:
 	:::php
 	class GridController extends Page_Controller {
 
-		static $allowed_actions = array('index');
+		private static $allowed_actions = array('index');
 		
 		public function index(SS_HTTPRequest $request) {
 			$this->Content = $this->AllPages();
@@ -171,7 +171,7 @@ Example:
 
 	:::php
 	class Player extends DataObject {
-		public static $db = array('Name' => 'Text');
+		private static $db = array('Name' => 'Text');
 		public static $many_many = array('Teams' => 'Team');
 		public static $many_many_extraFields = array(
 			'Teams' => array('Position' => 'Text')
@@ -197,7 +197,7 @@ Example:
 	}
 
 	class Team extends DataObject {
-		public static $db = array('Name' => 'Text');
+		private static $db = array('Name' => 'Text');
 		public static $many_many = array('Players' => 'Player');
 	}
 

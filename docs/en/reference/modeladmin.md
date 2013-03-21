@@ -20,12 +20,12 @@ A product can have a name, price, and a category.
 
 	:::php
 	class Product extends DataObject {
-	   static $db = array('Name' => 'Varchar', 'ProductCode' => 'Varchar', 'Price' => 'Currency');
-	   static $has_one = array('Category' => 'Category');
+	   private static $db = array('Name' => 'Varchar', 'ProductCode' => 'Varchar', 'Price' => 'Currency');
+	   private static $has_one = array('Category' => 'Category');
 	}
 	class Category extends DataObject {
-	   static $db = array('Title' => 'Text');
-	   static $has_many = array('Products' => 'Product');
+	   private static $db = array('Title' => 'Text');
+	   private static $has_many = array('Products' => 'Product');
 	}
 
 To create your own `ModelAdmin`, simply extend the base class,
@@ -36,9 +36,9 @@ We'll name it `MyAdmin`, but the class name can be anything you want.
 
 	:::php
 	class MyAdmin extends ModelAdmin {
-	  public static $managed_models = array('Product','Category'); // Can manage multiple models
-	  static $url_segment = 'products'; // Linked as /admin/products/
-	  static $menu_title = 'My Product Admin';
+	  private static $managed_models = array('Product','Category'); // Can manage multiple models
+	  private static $url_segment = 'products'; // Linked as /admin/products/
+	  private $menu_title = 'My Product Admin';
 	}
 
 This will automatically add a new menu entry to the CMS, and you're ready to go!
@@ -85,7 +85,7 @@ static on your model class (see `[SearchContext](/reference/searchcontext)` docs
 	:::php
 	class Product extends DataObject {
 	   // ...
-	   static $searchable_fields = array(
+	   private static $searchable_fields = array(
 	      'Name',
 	      'ProductCode'
 	      // leaves out the 'Price' field, removing it from the search
@@ -105,10 +105,10 @@ where you can add or remove columns. To change the title, use `[api:DataObject::
 	:::php
 	class Product extends DataObject {
 	   // ...
-	   static $field_labels = array(
+	   private static $field_labels = array(
 	      'Price' => 'Cost' // renames the column to "Cost"
 	   );
-	   static $summary_fields = array(
+	   private static $summary_fields = array(
 	      'Name',
 	      'Price',
 	      // leaves out the 'ProductCode' field, removing the column

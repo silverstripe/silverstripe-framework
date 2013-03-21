@@ -10,7 +10,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 	public function testLegacyPasswordHashMigrationUponLogin() {
 		$member = new Member();
 		
-		$field=Member::get_unique_identifier_field();
+		$field=Member::config()->unique_identifier_field;
 		
 		$member->$field = 'test1@test.com';
 		$member->PasswordEncryption = "sha1";
@@ -32,7 +32,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 	public function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
 			array('crc32'=>array('PasswordEncryptor_PHPHash'=>'crc32')));
-		$field=Member::get_unique_identifier_field();
+		$field=Member::config()->unique_identifier_field;
 		
 		$member = new Member();
 		$member->$field = 'test2@test.com';
@@ -54,13 +54,13 @@ class MemberAuthenticatorTest extends SapphireTest {
 	
 	public function testCustomIdentifierField(){
 		
-		$origField = Member::get_unique_identifier_field();
-		Member::set_unique_identifier_field('Username');
+		$origField = Member::config()->unique_identifier_field;
+		Member::config()->unique_identifier_field = 'Username';
 
-		$label=singleton('Member')->fieldLabel(Member::get_unique_identifier_field());
+		$label=singleton('Member')->fieldLabel(Member::config()->unique_identifier_field);
 		
 		$this->assertEquals($label, 'Username');
 		
-		Member::set_unique_identifier_field($origField);
+		Member::config()->unique_identifier_field = $origField;
 	}
 }

@@ -12,7 +12,7 @@ class SS_Backtrace {
 	 * PHP's debug_backtrace() doesn't allow to inspect the argument names,
 	 * so all arguments of the provided functions will be filtered out.
 	 */
-	static $ignore_function_args = array(
+	private static $ignore_function_args = array(
 		'mysql_connect',
 		'mssql_connect',
 		'pg_connect',
@@ -85,17 +85,19 @@ class SS_Backtrace {
 			array_shift($bt);
 		}
 		
+		$ignoredArgs = Config::inst()->get('SS_Backtrace', 'ignore_function_args');
+
 		// Filter out arguments
 		foreach($bt as $i => $frame) {
 			$match = false;
 			if(@$bt[$i]['class']) {
-				foreach(self::$ignore_function_args as $fnSpec) {
+				foreach($ignoredArgs as $fnSpec) {
 					if(is_array($fnSpec) && $bt[$i]['class'] == $fnSpec[0] && $bt[$i]['function'] == $fnSpec[1]) {
 						$match = true;
 					}
 				}
 			} else {
-				if(in_array($bt[$i]['function'], self::$ignore_function_args)) $match = true;
+				if(in_array($bt[$i]['function'], $ignoredArgs)) $match = true;
 			}
 			if($match) {
 				foreach($bt[$i]['args'] as $j => $arg) $bt[$i]['args'][$j] = '<filtered>';

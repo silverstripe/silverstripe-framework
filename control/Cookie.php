@@ -8,9 +8,10 @@
 class Cookie {
 
 	/**
+	 * @config
 	 * @var boolean
 	 */
-	static $report_errors = true;
+	private static $report_errors = true;
 
 	/**
 	 * @var string cookie class
@@ -74,16 +75,20 @@ class Cookie {
 	}
 
 	/**
+	 * @deprecated 3.2 Use "Cookie.report_errors" config setting instead
 	 * @param bool
 	 */
 	public static function set_report_errors($reportErrors) {
+		Deprecation::notice('3.2', 'Use "Cookie.report_errors" config setting instead');
 		self::get_inst()->inst_set_report_errors($reportErrors);
 	}
 
 	/**
+	 * @deprecated 3.2 Use "Cookie.report_errors" config setting instead
 	 * @return bool
 	 */
 	public static function report_errors() {
+		Deprecation::notice('3.2', 'Use "Cookie.report_errors" config setting instead');
 		return self::get_inst()->inst_report_errors();
 	}
 
@@ -106,7 +111,7 @@ class Cookie {
 			$path = ($path) ? $path : Director::baseURL();
 			setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
 		} else {
-			if(self::$report_errors) {
+			if(Config::inst()->get('Cookie', 'report_errors')) {
 				user_error("Cookie '$name' can't be set. The site started outputting content at line $line in $file",
 					E_USER_WARNING);
 			}
@@ -131,16 +136,20 @@ class Cookie {
 	}
 
 	/**
+	 * @deprecated 3.2 Use the "Cookie.report_errors" config setting instead
 	 * @param bool
 	 */
 	protected function inst_set_report_errors($reportErrors) {
-		self::$report_errors = $reportErrors;
+		Deprecation::notice('3.2', 'Use the "Cookie.report_errors" config setting instead');
+		Config::inst()->update('Cookie', 'report_errors', $reportErrors);
 	}
 
 	/**
+	 * @deprecated 3.2 Use the "Cookie.report_errors" config setting instead
 	 * @return bool
 	 */
 	protected function inst_report_errors() {
-		return self::$report_errors;
+		Deprecation::notice('3.2', 'Use the "Cookie.report_errors" config setting instead');
+		return Config::inst()->get('Cookie', 'report_errors');
 	}
 }

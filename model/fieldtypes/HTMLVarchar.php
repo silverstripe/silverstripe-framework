@@ -8,7 +8,7 @@
  */
 class HTMLVarchar extends Varchar {
 	
-	public static $escape_type = 'xml';
+	private static $escape_type = 'xml';
 
 	protected $processShortcodes = true;
 

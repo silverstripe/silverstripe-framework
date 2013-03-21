@@ -20,12 +20,12 @@ hypothetical `NewsPageHolder` type, which contains `NewsPage` children.
 	:::php
 	// mysite/code/NewsPageHolder.php
 	class NewsPageHolder extends Page {
-		static $allowed_children = array('NewsPage');
+		private static $allowed_children = array('NewsPage');
 	}
 
 	// mysite/code/NewsPage.php
 	class NewsPage extends Page {
-		static $has_one = array(
+		private static $has_one = array(
 			'Author' => 'Member',
 		);
 	}

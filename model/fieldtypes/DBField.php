@@ -41,15 +41,17 @@ abstract class DBField extends ViewableData {
 	 * The escape type for this field when inserted into a template - either "xml" or "raw".
 	 *
 	 * @var string
+	 * @config
 	 */
-	public static $escape_type = 'raw';
+	private static $escape_type = 'raw';
 	
 	/**
 	 * Subclass of {@link SearchFilter} for usage in {@link defaultSearchFilter()}.
 	 *
 	 * @var string
+	 * @config
 	 */
-	public static $default_search_filter_class = 'PartialMatchFilter';
+	private static $default_search_filter_class = 'PartialMatchFilter';
 	
 	/**
 	 * @var $default mixed Default-value in the database.
