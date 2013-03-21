@@ -21,6 +21,16 @@ class ConfigStaticTest_First extends Config {
 	public static $first  = array('test_1');
 	public static $second = array('test_1');
 	public static $third  = 'test_1';
+
+	public static $bool = true;
+	public static $int = 42;
+	public static $string = 'value';
+	public static $nullable = 'value';
+
+	public static $default_false = false;
+	public static $default_null = null;
+	public static $default_zero = 0;
+	public static $default_emtpy_string = '';
 }
 
 class ConfigStaticTest_Second extends ConfigStaticTest_First {
@@ -81,6 +91,44 @@ class ConfigTest extends SapphireTest {
 		Config::inst()->update('ConfigStaticTest_Third', 'second', array('test_3_2'));
 		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'second', Config::FIRST_SET),
 			array('test_3_2'));
+	}
+
+	public function testUpdateWithFalsyValues() {
+		// Booleans
+		$this->assertTrue(Config::inst()->get('ConfigStaticTest_First', 'bool'));
+		Config::inst()->update('ConfigStaticTest_First', 'bool', false);
+		$this->assertFalse(Config::inst()->get('ConfigStaticTest_First', 'bool'));
+		Config::inst()->update('ConfigStaticTest_First', 'bool', true);
+		$this->assertTrue(Config::inst()->get('ConfigStaticTest_First', 'bool'));
+
+		// Integers
+		$this->assertEquals(42, Config::inst()->get('ConfigStaticTest_First', 'int'));
+		Config::inst()->update('ConfigStaticTest_First', 'int', 0);
+		$this->assertEquals(0, Config::inst()->get('ConfigStaticTest_First', 'int'));
+		Config::inst()->update('ConfigStaticTest_First', 'int', 42);
+		$this->assertEquals(42, Config::inst()->get('ConfigStaticTest_First', 'int'));
+
+		// Strings
+		$this->assertEquals('value', Config::inst()->get('ConfigStaticTest_First', 'string'));
+		Config::inst()->update('ConfigStaticTest_First', 'string', '');
+		$this->assertEquals('', Config::inst()->get('ConfigStaticTest_First', 'string'));
+		Config::inst()->update('ConfigStaticTest_First', 'string', 'value');
+		$this->assertEquals('value', Config::inst()->get('ConfigStaticTest_First', 'string'));
+
+		// Nulls
+		$this->assertEquals('value', Config::inst()->get('ConfigStaticTest_First', 'nullable'));
+		Config::inst()->update('ConfigStaticTest_First', 'nullable', null);
+		$this->assertNull(Config::inst()->get('ConfigStaticTest_First', 'nullable'));
+		Config::inst()->update('ConfigStaticTest_First', 'nullable', 'value');
+		$this->assertEquals('value', Config::inst()->get('ConfigStaticTest_First', 'nullable'));
+	}
+
+	public function testSetsFalsyDefaults() {
+		$this->assertFalse(Config::inst()->get('ConfigStaticTest_First', 'default_false'));
+		// Technically the same as an undefined config key
+		$this->assertNull(Config::inst()->get('ConfigStaticTest_First', 'default_null'));
+		$this->assertEquals(0, Config::inst()->get('ConfigStaticTest_First', 'default_zero'));
+		$this->assertEquals('', Config::inst()->get('ConfigStaticTest_First', 'default_empty_string'));
 	}
 
 	public function testUninheritedStatic() {
