@@ -590,6 +590,8 @@ class Config {
 		if (!isset($this->suppresses[0][$class][$name])) $this->suppresses[0][$class][$name] = array();
 
 		$this->suppresses[0][$class][$name][] = $suppress;
+
+		$this->cache->clean("__{$class}__{$name}");
 	}
 
 }
