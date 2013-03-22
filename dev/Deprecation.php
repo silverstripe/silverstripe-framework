@@ -131,12 +131,13 @@ class Deprecation {
 		// Never raise deprecation notices in a live environment
 		if(Director::isLive()) return;
 
-		// If you pass #.#, assume #.#.0
-		if(preg_match('/^[0-9]+\.[0-9]+$/', $atVersion)) $atVersion .= '.0';
-
 		$checkVersion = self::$version;
 		// Getting a backtrace is slow, so we only do it if we need it
 		$backtrace = null;
+
+		// If you pass #.#, assume #.#.0
+		if(preg_match('/^[0-9]+\.[0-9]+$/', $atVersion)) $atVersion .= '.0';
+		if(preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion)) $checkVersion .= '.0';
 
 		if(self::$module_version_overrides) {
 			$module = self::get_calling_module_from_trace($backtrace = debug_backtrace(0));
