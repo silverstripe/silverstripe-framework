@@ -272,8 +272,8 @@ class DB {
 	 * @param string $database SS_Database to which to create
 	 * @return boolean Returns true if successful
 	 */
-	public static function createDatabase($connect, $username, $password, $database) {
-		return self::getConn()->createDatabase($connect, $username, $password, $database);
+	public static function createDatabase($connect, $username, $password, $database, $port) {
+		return self::getConn()->createDatabase($connect, $username, $password, $database, $port);
 	}
 
 	/**
