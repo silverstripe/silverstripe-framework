@@ -349,6 +349,17 @@ class ObjectTest extends SapphireTest {
 			array('Versioned',array('Stage\'Stage,Live\'Live', 'Live')),
 			Object::parse_class_spec("Versioned('Stage\'Stage,Live\'Live','Live')")
 		);
+
+		// True, false and null values
+		$this->assertEquals(
+			array('ClassName', array('string', true, array('string', false))),
+			Object::parse_class_spec('ClassName("string", true, array("string", false))')
+		);
+		$this->assertEquals(
+			array('ClassName', array(true, false, null)),
+			Object::parse_class_spec('ClassName(true, false, null)')
+		);
+
 		// Array
 		$this->assertEquals(
 			array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
