@@ -54,7 +54,7 @@ class MySQLDatabase extends SS_Database {
 	 *  - timezone: (optional) The timezone offset. For example: +12:00, "Pacific/Auckland", or "SYSTEM"
 	 */
 	public function __construct($parameters) {
-		$this->dbConn = new MySQLi($parameters['server'], $parameters['username'], $parameters['password']);
+		$this->dbConn = new MySQLi($parameters['server'], $parameters['username'], $parameters['password'], '', $parameters['port']);
 		
 		if($this->dbConn->connect_error) {
 			$this->databaseError("Couldn't connect to MySQL database | " . $this->dbConn->connect_error);
