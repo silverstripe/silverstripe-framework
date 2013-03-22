@@ -194,11 +194,13 @@ abstract class Object {
 			
 				case T_STRING:
 					switch($token[1]) {
-						case 'true': $args[] = true; break;
-						case 'false': $args[] = false; break;
+						case 'true': $bucket[] = true; break;
+						case 'false': $bucket[] = false; break;
+						case 'null': $bucket[] = null; break;
 						default: throw new Exception("Bad T_STRING arg '{$token[1]}'");
 					}
-				
+					break;
+
 				case T_ARRAY:
 					// Add an empty array to the bucket
 					$bucket[] = array();
