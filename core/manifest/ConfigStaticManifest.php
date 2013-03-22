@@ -80,7 +80,7 @@ class SS_ConfigStaticManifest {
 			if ($static['access'] != T_PRIVATE) {
 				Deprecation::notice('3.2.0', "Config static $class::\$$name must be marked as private", Deprecation::SCOPE_GLOBAL);
 				// Don't warn more than once per static
-				$static['access'] = T_PRIVATE;
+				$this->statics[$class][$name]['access'] = T_PRIVATE;
 			}
 
 			return $static['value'];
@@ -231,11 +231,12 @@ class SS_ConfigStaticManifest_Parser {
 			else if($type == T_PUBLIC || $type == T_PRIVATE || $type == T_PROTECTED) {
 				$access = $type;
 			}
-			else if($type == T_STATIC) {
-				if($class && $depth == $clsdepth) $this->parseStatic($access, $namespace ? $namespace.'\\'.$class : $class);
+			else if($type == T_STATIC && $class && $depth == $clsdepth) {
+				$this->parseStatic($access, $namespace ? $namespace.'\\'.$class : $class);
+				$access = 0;
 			}
 			else {
-				$access = '';
+				$access = 0;
 			}
 		}
 	}
