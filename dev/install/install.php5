@@ -1234,7 +1234,7 @@ PHP
 					}, 2000);
 				</script>
 				<noscript>
-				<li><a href="$destinationURL">Click here to access your site.</li>
+				<li><a href="$destinationURL">Click here to access your site.</a></li>
 				</noscript>
 HTML;
 			}
