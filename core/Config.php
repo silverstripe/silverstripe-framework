@@ -310,7 +310,6 @@ class Config {
 	}
 
 	public static function merge_high_into_low(&$result, $value) {
-		if (!$value) return;
 		$newType = self::get_value_type($value);
 
 		if (!$result) {
@@ -509,7 +508,7 @@ class Config {
 	 * Update a configuration value
 	 *
 	 * Configuration is modify only. The value passed is merged into the existing configuration. If you want to
-	 * replace the current value, you'll need to call remove first.
+	 * replace the current array value, you'll need to call remove first.
 	 *
 	 * @param $class string - The class to update a configuration value for
 	 * @param $name string - The configuration property name to update
@@ -522,10 +521,17 @@ class Config {
 	 * You will get an error if you try and override array values with non-array values or vice-versa
 	 */
 	public function update($class, $name, $val) {
-		if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
+		if(is_null($val)) {
+			$this->remove($class, $name);
+		} else {
+			if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
 
-		if (!isset($this->overrides[0][$class][$name])) $this->overrides[0][$class][$name] = $val;
-		else self::merge_high_into_low($this->overrides[0][$class][$name], $val);
+			if (!array_key_exists($name, $this->overrides[0][$class])) {
+				$this->overrides[0][$class][$name] = $val;
+			} else {
+				self::merge_high_into_low($this->overrides[0][$class][$name], $val);
+			}
+		}
 
 		$this->cache->clean("__{$class}__{$name}");
 	}
@@ -560,7 +566,7 @@ class Config {
 	 *
 	 * Matching is always by "==", not by "==="
 	 */
-	public function remove($class, $name) {
+	public function remove($class, $name /*,$key = null*/ /*,$value = null*/) {
 		$argc = func_num_args();
 		$key = $argc > 2 ? func_get_arg(2) : self::anything();
 		$value = $argc > 3 ? func_get_arg(3) : self::anything();
@@ -584,6 +590,8 @@ class Config {
 		if (!isset($this->suppresses[0][$class][$name])) $this->suppresses[0][$class][$name] = array();
 
 		$this->suppresses[0][$class][$name][] = $suppress;
+
+		$this->cache->clean("__{$class}__{$name}");
 	}
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 class HTTPRequestTest extends SapphireTest {
-	static $fixture_file = null;
+	protected static $fixture_file = null;
 	
 	public function testMatch() {
 		$request = new SS_HTTPRequest("GET", "admin/crm/add");

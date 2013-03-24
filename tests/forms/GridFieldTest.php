@@ -466,16 +466,16 @@ class GridFieldTest_Component2 implements GridField_DataManipulator, TestOnly {
 }
 
 class GridFieldTest_Team extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
 	);
 
-	static $many_many = array('Players' => 'GridFieldTest_Player');
+	private static $many_many = array('Players' => 'GridFieldTest_Player');
 
-	static $has_many = array('Cheerleaders' => 'GridFieldTest_Cheerleader');
+	private static $has_many = array('Cheerleaders' => 'GridFieldTest_Cheerleader');
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Name',
 		'City',
 		'Cheerleaders.Name'
@@ -483,20 +483,20 @@ class GridFieldTest_Team extends DataObject implements TestOnly {
 }
 
 class GridFieldTest_Player extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'Email' => 'Varchar',
 	);
 
-	static $belongs_many_many = array('Teams' => 'GridFieldTest_Team');
+	private static $belongs_many_many = array('Teams' => 'GridFieldTest_Team');
 }
 
 class GridFieldTest_Cheerleader extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar'
 	);
 
-	static $has_one = array('Team' => 'GridFieldTest_Team');
+	private static $has_one = array('Team' => 'GridFieldTest_Team');
 }
 
 class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
@@ -510,12 +510,12 @@ class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
 }
 
 class GridFieldTest_Permissions extends DataObject implements TestOnly {
-	public static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'Email' => 'Varchar',
 	);
 	
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'Name',
 		'Email'
 	);

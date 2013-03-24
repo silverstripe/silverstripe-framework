@@ -127,7 +127,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 }
 
 class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Enum1' => 'Enum("A, B, C, D","")',
 		'Enum2' => 'Enum("A, B, C, D","A")',
 	);
@@ -135,12 +135,12 @@ class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
 
 
 class DataObjectSchemaGenerationTest_IndexDO extends DataObjectSchemaGenerationTest_DO implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar(255)',
 		'Content' => 'Text'
 	);
 
-	static $indexes = array(
+	private static $indexes = array(
 		'NameIndex' => 'unique ("Title")',
 		'SearchFields' => array(
 			'type' => 'fulltext',
@@ -149,7 +149,8 @@ class DataObjectSchemaGenerationTest_IndexDO extends DataObjectSchemaGenerationT
 		)
 	);
 	
-	static $indexes_alt = array(
+	/** @config */
+	private static $indexes_alt = array(
 		'NameIndex' => array(
 			'type' => 'unique',
 			'name' => 'NameIndex',

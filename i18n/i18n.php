@@ -69,24 +69,28 @@ class i18n extends Object implements TemplateGlobalProvider {
 	protected static $current_locale = '';
 	
 	/**
+	 * @config
 	 * @var string
 	 */
-	protected static $default_locale = 'en_US';
+	private static $default_locale = 'en_US';
 	
 	/**
+	 * @config
 	 * @var boolean
 	 */
-	protected static $js_i18n = true;
+	private static $js_i18n = true;
 	
 	/**
+	 * @config
 	 * @var string
 	 */
-	protected static $date_format;
+	private static $date_format;
 	
 	/**
+	 * @config
 	 * @var string
 	 */
-	protected static $time_format;
+	private static $time_format;
 	
 	/**
 	 * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
@@ -107,24 +111,30 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @see Requirements::process_i18n_javascript() 
 	 *
+	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
 	 * @param bool $bool
 	 */
 	public static function set_js_i18n($bool) {
-		self::$js_i18n = $bool;
+		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
+		Config::inst()->update('i18n', 'js_i18n', $bool);
 	}
 	
 	/**
+	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
 	 * @return bool
 	 */
 	public static function get_js_i18n() {
+		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
 		return self::$js_i18n;
 	}
 	
 	/**
+	 * @deprecated 3.2 Use the "i18n.date_format" config setting instead
 	 * @param string ISO date format
 	 */
 	public static function set_date_format($format) {
-		self::$date_format = $format;
+		Deprecation::notice('3.2', 'Use the "i18n.date_format" config setting instead');
+		Config::inst()->update('i18n', 'date_format', $format);
 	}
 	
 	/**
@@ -132,14 +142,17 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_date_format() {
 		require_once 'Zend/Date.php';
-		return (self::$date_format) ? self::$date_format : Zend_Locale_Format::getDateFormat(self::get_locale());
+		$dateFormat = Config::inst()->get('i18n', 'date_format');
+		return ($dateFormat) ? $dateFormat : Zend_Locale_Format::getDateFormat(self::get_locale());
 	}
 	
 	/**
+	 * @deprecated 3.2 Use the "i18n.time_format" config setting instead
 	 * @param string ISO time format
 	 */
 	public static function set_time_format($format) {
-		self::$time_format = $format;
+		Deprecation::notice('3.2', 'Use the "i18n.time_format" config setting instead');
+		Config::inst()->update('i18n', 'time_format', $format);
 	}
 	
 	/**
@@ -147,15 +160,17 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_time_format() {
 		require_once 'Zend/Date.php';
-		return (self::$time_format) ? self::$time_format : Zend_Locale_Format::getTimeFormat(self::get_locale());
+		$timeFormat = Config::inst()->get('i18n', 'time_format');
+		return ($timeFormat) ? $timeFormat : Zend_Locale_Format::getTimeFormat(self::get_locale());
 	}
 	
 	/**
 	 * An exhaustive list of possible locales (code => language and country)
 	 *
+	 * @config
 	 * @var array
 	 */
-	public static $all_locales = array (
+	private static $all_locales = array (
 			'aa_DJ' => 'Afar (Djibouti)',
 			'ab_GE' => 'Abkhazian (Georgia)',
 			'abr_GH' => 'Abron (Ghana)',
@@ -731,11 +746,12 @@ class i18n extends Object implements TemplateGlobalProvider {
 	);
 	
 	/**
+	 * @config
 	 * @var array $common_locales
 	 * Sorted alphabtically by the common language name,
 	 * not the locale key.
 	 */
-	public static $common_locales = array(
+	private static $common_locales = array(
 		'af_ZA' => array('Afrikaans', 'Afrikaans'),
 		'sq_AL' => array('Albanian', 'shqip'),
 		'ar_EG' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
@@ -822,7 +838,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'zu_ZA' => array('Zulu', 'isiZulu'),
 	);
 	
-	static $tinymce_lang = array(
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $tinymce_lang = array(
 		'ca_AD' => 'ca',
 		'ca_ES' => 'ca',
 		'cs_CZ' => 'cs',
@@ -986,13 +1006,14 @@ class i18n extends Object implements TemplateGlobalProvider {
 	);
 	
 	/**
+	 * @config
 	 * @var array $likely_subtags Provides you "likely locales"
 	 * for a given "short" language code. This is a guess,
 	 * as we can't disambiguate from e.g. "en" to "en_US" - it
 	 * could also mean "en_UK".
 	 * @see http://www.unicode.org/cldr/data/charts/supplemental/likely_subtags.html
 	 */
-	static $likely_subtags = array(
+	private static $likely_subtags = array(
 		'aa' => 'aa_ET',
 		'ab' => 'ab_GE',
 		'ady' => 'ady_RU',
@@ -1666,7 +1687,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_common_locales($native = false) {
 		$languages = array();
-		foreach (self::$common_locales as $code => $name) {
+		foreach (Config::inst()->get('i18n', 'common_locales') as $code => $name) {
 			$languages[$code] = ($native ? $name[1] : $name[0]);
 		}
 		return $languages;
@@ -1678,7 +1699,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return list of languages in the form 'code' => 'name'
 	 */
 	public static function get_locale_list() {
-		return self::$all_locales;
+		Deprecation::notice('3.2', 'Use the "i18n.all_locales" config setting instead');
+		return (array)Config::inst()->get('i18n', 'all_locales');
 	}
 	
 	/**
@@ -1697,6 +1719,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		foreach($modules as $module) {
 			if(!file_exists("{$module}/lang/")) continue;
 			
+			$allLocales = Config::inst()->get('i18n', 'all_locales');
 			$moduleLocales = scandir("{$module}/lang/");
 			foreach($moduleLocales as $moduleLocale) {
 				preg_match('/(.*)\.[\w\d]+$/',$moduleLocale, $matches);
@@ -1704,7 +1727,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 					// Normalize locale to include likely region tag.
 					// TODO Replace with CLDR list of actually available languages/regions
 					$locale = str_replace('-', '_', self::get_locale_from_lang($locale));
-					$locales[$locale] = (@self::$all_locales[$locale]) ? self::$all_locales[$locale] : $locale;
+					$locales[$locale] = (isset($allLocales[$locale])) ? $allLocales[$locale] : $locale;
 				}
 			}
 		}
@@ -1763,8 +1786,9 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return Language
 	 */
 	public static function get_tinymce_lang() {
-		if(isset(self::$tinymce_lang[self::get_locale()])) {
-			return self::$tinymce_lang[self::get_locale()];
+		$lang = Config::inst()->get('i18n', 'tinymce_lang');
+		if(isset($lang[self::get_locale()])) {
+			return $lang[self::get_locale()];
 		}
 		
 		return 'en';
@@ -1819,10 +1843,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return string Long locale, e.g. "en_US"
 	 */
 	public static function get_locale_from_lang($lang) {
+		$subtags = Config::inst()->get('i18n', 'likely_subtags');
 		if(preg_match('/\-|_/', $lang)) {
 			return $lang;
-		} else if(isset(self::$likely_subtags[$lang])) {
-			return self::$likely_subtags[$lang];
+		} else if(isset($subtags[$lang])) {
+			return $subtags[$lang];
 		} else {
 			return $lang . '_' . strtoupper($lang);
 		}
@@ -1880,7 +1905,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function validate_locale($locale) {
 		// Convert en-US to en_US
 		$locale = str_replace('-', '_', $locale);
-		return (array_key_exists($locale, self::$all_locales));
+		return (array_key_exists($locale, Config::inst()->get('i18n', 'all_locales')));
 	}
 
 	/**
@@ -1983,7 +2008,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 				if(is_dir($themesBase)) {
 					foreach(scandir($themesBase) as $theme) {
 						if(
-							strpos($theme, SSViewer::current_theme()) === 0
+							strpos($theme, Config::inst()->get('SSViewer', 'theme')) === 0
 							&& file_exists("{$themesBase}/{$theme}/lang/")
 						) {
 							$filename = $adapter->getFilenameForLocale($locale);

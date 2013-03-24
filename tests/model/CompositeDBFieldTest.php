@@ -38,14 +38,14 @@ class CompositeDBFieldTest extends SapphireTest {
 }
 
 class CompositeDBFieldTest_DataObject extends DataObject {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Text', 
 		'MyMoney' => 'Money', 
 	);
 }
 
 class SubclassedDBFieldObject extends CompositeDBFieldTest_DataObject {
-	static $db = array(
+	private static $db = array(
 		'OtherField' => 'Text', 
 		'OtherMoney' => 'Money', 
 	);

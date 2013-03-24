@@ -24,16 +24,7 @@ interface Image_Backend {
 	 * @return void
 	 */
 	public function writeTo($path);
-	
-	/**
-	 * set_default_quality
-	 *
-	 * @static
-	 * @param int $quality
-	 * @return void
-	 */
-	public static function set_default_quality($quality);
-	
+		
 	/**
 	 * setQuality
 	 *

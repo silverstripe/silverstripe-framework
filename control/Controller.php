@@ -54,11 +54,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	/**
 	 * Default URL handlers - (Action)/(ID)/(OtherID)
 	 */
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => 'handleAction',
 	);
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'handleAction',
 		'handleIndex',
 	);

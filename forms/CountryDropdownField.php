@@ -13,13 +13,13 @@ class CountryDropdownField extends DropdownField {
 	 * Should we default the dropdown to the region determined from the user's locale?
 	 * @var bool
 	 */
-	static $default_to_locale = true;
+	private static $default_to_locale = true;
 
 	/**
 	 * The region code to default to if default_to_locale is set to false, or we can't determine a region from a locale
 	 *  @var string
 	 */
-	static $default_country = 'NZ';
+	private static $default_country = 'NZ';
 
 	protected $extraClasses = array('dropdown');
 
@@ -59,7 +59,7 @@ class CountryDropdownField extends DropdownField {
 		$source = $this->getSource();
 
 		if (!$this->value || !isset($source[$this->value])) {
-			if ($this->config()->get('default_to_locale') && $this->locale()) {
+			if ($this->config()->default_to_locale && $this->locale()) {
 				$locale = new Zend_Locale();
 				$locale->setLocale($this->locale());
 				$this->value = $locale->getRegion();
@@ -67,7 +67,7 @@ class CountryDropdownField extends DropdownField {
 		}
 
 		if (!$this->value || !isset($source[$this->value])) {
-			$this->value = $this->config()->get('default_country');
+			$this->value = $this->config()->default_country;
 		}
 
 		return parent::Field();

@@ -327,7 +327,7 @@ Data is defined in the static variable $db on each class, in the format:
 
 	:::php
 	class Player extends DataObject {
-	  public static $db = array(
+	  private static $db = array(
 	    "FirstName" => "Varchar",
 	    "Surname" => "Varchar",
 	    "Description" => "Text",
@@ -346,7 +346,7 @@ default behaviour by making a function called "get`<fieldname>`" or "set`<fieldn
 
 	:::php
 	class Player extends DataObject {
-	  public static $db = array(
+	  private static $db = array(
 	    "Status" => "Enum('Active, Injured, Retired')"
 	  );
 	
@@ -616,7 +616,7 @@ Example: Validate postcodes based on the selected country
 
 	:::php
 	class MyObject extends DataObject {
-		public static $db = array(
+		private static $db = array(
 			'Country' => 'Varchar',
 			'Postcode' => 'Varchar'
 		);

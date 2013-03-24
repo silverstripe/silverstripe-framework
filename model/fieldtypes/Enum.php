@@ -11,7 +11,7 @@ class Enum extends StringField {
 	
 	protected $enum, $default;
 	
-	public static $default_search_filter_class = 'ExactMatchFilter';
+	private static $default_search_filter_class = 'ExactMatchFilter';
 	
 	/**
 	 * Create a new Enum field.

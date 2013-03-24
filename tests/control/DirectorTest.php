@@ -57,20 +57,20 @@ class DirectorTest extends SapphireTest {
 
 	public function testAlternativeBaseURL() {
 		// relative base URLs - you should end them in a /
-		Director::setBaseURL('/relativebase/');
+		Config::inst()->update('Director', 'alternate_base_url', '/relativebase/');
 		$this->assertEquals('/relativebase/', Director::baseURL());
 		$this->assertEquals(Director::protocolAndHost() . '/relativebase/', Director::absoluteBaseURL());
 		$this->assertEquals(Director::protocolAndHost() . '/relativebase/subfolder/test',
 			Director::absoluteURL('subfolder/test'));
 
 		// absolute base URLs - you should end them in a /
-		Director::setBaseURL('http://www.example.org/');
+		Config::inst()->update('Director', 'alternate_base_url', 'http://www.example.org/');
 		$this->assertEquals('http://www.example.org/', Director::baseURL());
 		$this->assertEquals('http://www.example.org/', Director::absoluteBaseURL());
 		$this->assertEquals('http://www.example.org/subfolder/test', Director::absoluteURL('subfolder/test'));
 
 		// Setting it to false restores functionality
-		Director::setBaseURL(false);
+		Config::inst()->update('Director', 'alternate_base_url', false);
 		$this->assertEquals(BASE_URL.'/', Director::baseURL());
 		$this->assertEquals(Director::protocolAndHost().BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
 		$this->assertEquals(Director::protocolAndHost().BASE_URL . '/subfolder/test',

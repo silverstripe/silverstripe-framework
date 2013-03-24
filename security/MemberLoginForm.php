@@ -58,7 +58,7 @@ class MemberLoginForm extends LoginForm {
 			);
 		} else {
 			if(!$fields) {
-				$label=singleton('Member')->fieldLabel(Member::get_unique_identifier_field());
+				$label=singleton('Member')->fieldLabel(Member::config()->unique_identifier_field);
 				$fields = new FieldList(
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
 					// Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
@@ -66,7 +66,7 @@ class MemberLoginForm extends LoginForm {
 					new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
 					new PasswordField("Password", _t('Member.PASSWORD', 'Password'))
 				);
-				if(Security::$autologin_enabled) {
+				if(Security::config()->autologin_enabled) {
 					$fields->push(new CheckboxField(
 						"Remember", 
 						_t('Member.REMEMBERME', "Remember me next time?")
@@ -184,8 +184,8 @@ JS
 		}
 
 		// If a default login dest has been set, redirect to that.
-		if (Security::default_login_dest()) {
-			return $this->controller->redirect(Director::absoluteBaseURL() . Security::default_login_dest());
+		if (Security::config()->default_login_dest) {
+			return $this->controller->redirect(Director::absoluteBaseURL() . Security::config()->default_login_dest);
 		}
 
 		// Redirect the user to the page where he came from

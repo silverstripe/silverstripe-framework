@@ -1,7 +1,7 @@
 <?php
 
 class UnsavedRelationListTest extends SapphireTest {
-	public static $fixture_file = 'UnsavedRelationListTest.yml';
+	protected static $fixture_file = 'UnsavedRelationListTest.yml';
 
 	protected $extraDataObjects = array('UnsavedRelationListTest_DataObject');
 
@@ -186,23 +186,23 @@ class UnsavedRelationListTest extends SapphireTest {
 }
 
 class UnsavedRelationListTest_DataObject extends DataObject implements TestOnly {
-	public static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'Parent' => 'UnsavedRelationListTest_DataObject',
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'Children' => 'UnsavedRelationListTest_DataObject',
 	);
 
-	public static $many_many = array(
+	private static $many_many = array(
 		'Siblings' => 'UnsavedRelationListTest_DataObject',
 	);
 
-	public static $many_many_extraFields = array(
+	private static $many_many_extraFields = array(
 		'Siblings' => array(
 			'Number' => 'Int',
 		),

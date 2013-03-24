@@ -42,9 +42,10 @@ class DatetimeField extends FormField {
 	protected $timeField = null;
 	
 	/**
+	 * @config
 	 * @var array
 	 */
-	static $default_config = array(
+	private static $default_config = array(
 		'datavalueformat' => 'YYYY-MM-dd HH:mm:ss',
 		'usertimezone' => null,
 		'datetimeorder' => '%s %s',
@@ -56,7 +57,7 @@ class DatetimeField extends FormField {
 	protected $config;
 		
 	public function __construct($name, $title = null, $value = ""){
-		$this->config = self::$default_config;
+		$this->config = $this->config()->default_config;
 		
 		$this->dateField = DateField::create($name . '[date]', false)
 			->addExtraClass('fieldgroup-field');
@@ -302,7 +303,11 @@ class DatetimeField extends FormField {
 	 * @return mixed
 	 */
 	public function getConfig($name = null) {
-		return $name ? $this->config[$name] : $this->config;
+		if($name) {
+			return isset($this->config[$name]) ? $this->config[$name] : null;
+		} else {
+			return $this->config;
+		}
 	}
 	
 	public function validate($validator) {

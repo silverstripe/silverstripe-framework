@@ -75,19 +75,19 @@ class YamlFixtureTest extends SapphireTest {
 }
 
 class YamlFixtureTest_DataObject extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar"
 	);
-	static $many_many = array(
+	private static $many_many = array(
 		"ManyMany" => "YamlFixtureTest_DataObjectRelation"
 	);
 }
 
 class YamlFixtureTest_DataObjectRelation extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar"
 	);
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		"TestParent" => "YamlFixtureTest_DataObject"
 	); 
 }

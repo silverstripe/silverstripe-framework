@@ -10,9 +10,9 @@ class RestfulServiceTest extends SapphireTest {
 	
 	public function setUp() {
 		// backup the project unique identifier field
-		$this->member_unique_identifier_field = Member::get_unique_identifier_field();
+		$this->member_unique_identifier_field = Member::config()->unique_identifier_field;
 
-		Member::set_unique_identifier_field('Email');
+		Member::config()->unique_identifier_field = 'Email';
 
 		parent::setUp(); 
 	} 
@@ -20,9 +20,9 @@ class RestfulServiceTest extends SapphireTest {
 	public function tearDown() {
 		parent::tearDown(); 
 
-		// set old member::get_unique_identifier_field value 
+		// set old Member::config()->unique_identifier_field value 
 		if ($this->member_unique_identifier_field) { 
-			Member::set_unique_identifier_field($this->member_unique_identifier_field); 
+			Member::config()->unique_identifier_field = $this->member_unique_identifier_field; 
 		}
 	} 
 
@@ -198,7 +198,7 @@ class RestfulServiceTest extends SapphireTest {
 
 class RestfulServiceTest_Controller extends Controller implements TestOnly {
 
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'httpErrorWithoutCache',
 		'httpErrorWithCache'

@@ -58,9 +58,10 @@ require_once 'Zend/Date.php';
 class DateField extends TextField {
 	
 	/**
+	 * @config
 	 * @var array
 	 */
-	static $default_config = array(
+	private static $default_config = array(
 		'showcalendar' => false,
 		'jslocale' => null,
 		'dmyfields' => false,
@@ -94,13 +95,12 @@ class DateField extends TextField {
 			$this->locale = i18n::get_locale();
 		}
 		
-		$this->config = self::$default_config;
-		
+		$this->config = $this->config()->default_config;
 		if(!$this->getConfig('dateformat')) {
 			$this->setConfig('dateformat', i18n::get_date_format());
 		}
 		
-		foreach (self::$default_config AS $defaultK => $defaultV) {
+		foreach ($this->config()->default_config AS $defaultK => $defaultV) {
 			if ($defaultV) {
 				if ($defaultK=='locale')
 					$this->locale = $defaultV;
@@ -321,16 +321,14 @@ class DateField extends TextField {
 	}
 	
 	/**
+	 * @deprecated 3.2 Use the "DateField.default_config" config setting instead
 	 * @param String $k
 	 * @param mixed $v
 	 * @return boolean
 	 */
 	public static function set_default_config($k, $v) {
-		if (array_key_exists($k,self::$default_config)) {
-			self::$default_config[$k]=$v;
-			return true;
-		}
-		return false;
+		Deprecation::notice('3.2', 'Use the "DateField.default_config" config setting instead');
+		return Config::inst()->update('DateField', 'default_config', array($k => $v));
 	}
 
 	/**
@@ -457,7 +455,11 @@ class DateField extends TextField {
 	 * @return mixed|array
 	 */
 	public function getConfig($name = null) {
-		return $name ? $this->config[$name] : $this->config;
+		if($name) {
+			return isset($this->config[$name]) ? $this->config[$name] : null;
+		} else {
+			return $this->config;
+		}
 	}
 }
 
@@ -517,10 +519,10 @@ class DateField_View_JQuery extends Object {
 	protected $jqueryLocaleFile = '';	
 	
 	/**
-	 * @var array Maps values from {@link i18n::$all_locales()} to 
+	 * @var array Maps values from {@link i18n::$all_locales} to 
 	 * localizations existing in jQuery UI.
 	 */
-	static $locale_map = array(
+	private static $locale_map = array(
 		'en_GB' => 'en-GB',
 		'en_US' => 'en', 
 		'en_NZ' => 'en-GB', 
@@ -595,12 +597,13 @@ class DateField_View_JQuery extends Object {
 	 */
 	protected function getLang() {
 		$locale = $this->getField()->getLocale();
+		$map = $this->config()->locale_map;
 		if($this->getField()->getConfig('jslocale')) {
 			// Undocumented config property for now, might move to the jQuery view helper
 			$lang = $this->getField()->getConfig('jslocale');
-		} else if(array_key_exists($locale, self::$locale_map)) {
+		} else if(array_key_exists($locale, $map)) {
 			// Specialized mapping for combined lang properties
-			$lang = self::$locale_map[$locale];
+			$lang = $map[$locale];
 		} else {
 			// Fall back to default lang (meaning "en_US" turns into "en")
 			$lang = i18n::get_lang_from_locale($locale);

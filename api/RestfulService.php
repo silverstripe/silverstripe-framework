@@ -16,27 +16,40 @@ class RestfulService extends ViewableData {
 	protected $authUsername, $authPassword;
 	protected $customHeaders = array();
 	protected $proxy;
-	protected static $default_proxy;
-	protected static $default_curl_options = array();
+
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $default_proxy;
+
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $default_curl_options = array();
 
 	/**
 	 * set a curl option that will be applied to all requests as default
 	 * {@see http://php.net/manual/en/function.curl-setopt.php#refsect1-function.curl-setopt-parameters}
 	 *
+	 * @deprecated 3.2 Use the "RestfulService.default_curl_options" config setting instead
 	 * @param int $option The cURL opt Constant
 	 * @param mixed $value The cURL opt value
 	 */
 	public static function set_default_curl_option($option, $value) {
-		self::$default_curl_options[$option] = $value;
+		Deprecation::notice('3.2', 'Use the "RestfulService.default_curl_options" config setting instead');
+		Config::inst()->update('RestfulService', 'default_curl_options', array($option => $value));
 	}
 
 	/**
 	 * set many defauly curl options at once
+	 *
+	 * @deprecated 3.2 Use the "RestfulService.default_curl_options" config setting instead
 	 */
 	public static function set_default_curl_options($optionArray) {
-		foreach ($optionArray as $option => $value) {
-			self::set_default_curl_option($option, $value);
-		}
+		Deprecation::notice('3.2', 'Use the "RestfulService.default_curl_options" config setting instead');
+		Config::inst()->update('RestfulService', 'default_curl_options', $optionArray);
 	}
 	
 	/**
@@ -47,14 +60,21 @@ class RestfulService extends ViewableData {
 	 * @param string $user The proxy auth user name
 	 * @param string $password The proxy auth password
 	 * @param boolean $socks Set true to use socks5 proxy instead of http
+	 * @deprecated 3.2 Use the "RestfulService.default_curl_options" config setting instead,
+	 *             with direct reference to the CURL_* options
 	 */
 	public static function set_default_proxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
-		self::$default_proxy = array(
+		Deprecation::notice(
+			'3.1', 
+			'Use the "RestfulService.default_curl_options" config setting instead, ' 
+				. 'with direct reference to the CURL_* options'
+		);
+		Config::set('RestfulService', 'default_proxy', array(
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
 			CURLOPT_PROXYPORT => $port,
 			CURLOPT_PROXYTYPE => ($socks ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP)
-		);
+		));
 	}
 	
 	/**
@@ -65,8 +85,8 @@ class RestfulService extends ViewableData {
 	public function __construct($base, $expiry=3600){
 		$this->baseURL = $base;
 		$this->cache_expire = $expiry;
-		$this->proxy = self::$default_proxy;
 		parent::__construct();
+		$this->proxy = $this->config()->default_proxy;
 	}
 	
 	/**
@@ -140,7 +160,7 @@ class RestfulService extends ViewableData {
 			$method,
 			$data,
 			array_merge((array)$this->customHeaders, (array)$headers),
-			$curlOptions + self::$default_curl_options,
+			$curlOptions + (array)$this->config()->default_curl_options,
 			$this->getBasicAuthString()
 		));
 		
@@ -196,7 +216,7 @@ class RestfulService extends ViewableData {
 		$timeout   = 5;
 		$sapphireInfo = new SapphireInfo(); 
 		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
-		$curlOptions = $curlOptions + self::$default_curl_options;
+		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

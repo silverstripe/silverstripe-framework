@@ -220,7 +220,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 */
 	protected $template = 'GridFieldItemEditView';
 
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action!' => '$Action',
 		'' => 'edit',
 	);

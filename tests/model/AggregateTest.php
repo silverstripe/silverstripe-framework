@@ -10,48 +10,48 @@
  * removed from DataObject.
  */
 class AggregateTest_Foo extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Foo" => "Int"
 	);
 	
-	static $has_one = array('Bar' => 'AggregateTest_Bar');
-	static $belongs_many_many = array('Bazi' => 'AggregateTest_Baz');
+	private static $has_one = array('Bar' => 'AggregateTest_Bar');
+	private static $belongs_many_many = array('Bazi' => 'AggregateTest_Baz');
 }
 
 class AggregateTest_Fab extends AggregateTest_Foo {
-	static $db = array(
+	private static $db = array(
 		"Fab" => "Int"
 	);
 }
 
 class AggregateTest_Fac extends AggregateTest_Fab {
-	static $db = array(
+	private static $db = array(
 		"Fac" => "Int"
 	);
 }
 
 class AggregateTest_Bar extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Bar" => "Int"
 	);
 	
-	static $has_many = array(
+	private static $has_many = array(
 		"Foos" => "AggregateTest_Foo"
 	);
 }
 
 class AggregateTest_Baz extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Baz" => "Int"
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		"Foos" => "AggregateTest_Foo"
 	);
 }
 
 class AggregateTest extends SapphireTest {
-	static $fixture_file = 'AggregateTest.yml';
+	protected static $fixture_file = 'AggregateTest.yml';
 	
 	protected $extraDataObjects = array(
 		'AggregateTest_Foo',

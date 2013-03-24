@@ -11,9 +11,9 @@
  * @subpackage model
  */
 class HTMLText extends Text {
-	public static $escape_type = 'xml';
+	private static $escape_type = 'xml';
 
-	static $casting = array(
+	private static $casting = array(
 		"AbsoluteLinks" => "HTMLText",
 		"BigSummary" => "HTMLText",
 		"ContextSummary" => "HTMLText",

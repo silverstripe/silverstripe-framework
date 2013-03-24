@@ -21,7 +21,7 @@ abstract class Object {
 	 * 
 	 * Example:
 	 * <code>
-	 * public static $extensions = array (
+	 * private static $extensions = array (
 	 *   'Hierarchy',
 	 *   "Version('Stage', 'Live')"
 	 * );
@@ -33,8 +33,9 @@ abstract class Object {
 	 * Extensions are instanciated together with the object and stored in {@link $extension_instances}.
 	 *
 	 * @var array $extensions
+	 * @config
 	 */
-	public static $extensions = null;
+	private static $extensions = null;
 	
 	private static
 		$classes_constructed = array(),

@@ -9,9 +9,10 @@
 class HtmlEditorField extends TextareaField {
 
 	/**
+	 * @config
 	 * @var Boolean Use TinyMCE's GZIP compressor
 	 */
-	static $use_gzip = true;
+	private static $use_gzip = true;
 
 	protected $rows = 30;
 	
@@ -23,7 +24,7 @@ class HtmlEditorField extends TextareaField {
 
 		$configObj = HtmlEditorConfig::get_active();
 
-		if(self::$use_gzip) {
+		if(Config::inst()->get('HtmlEditorField', 'use_gzip')) {
 			$internalPlugins = array();
 			foreach($configObj->getPlugins() as $plugin => $path) if(!$path) $internalPlugins[] = $plugin;
 			$tag = TinyMCE_Compressor::renderTag(array(
@@ -241,7 +242,7 @@ class HtmlEditorField_Readonly extends ReadonlyField {
  */
 class HtmlEditorField_Toolbar extends RequestHandler {
 
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'LinkForm',
 		'MediaForm',
 		'viewfile'
@@ -424,7 +425,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->addExtraClass('ss-assetuploadfield');
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
-		$computerUploadField->setFolderName(Upload::$uploads_folder);
+		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
 
 		$tabSet = new TabSet(
 			"MediaFormInsertMediaTabs",

@@ -39,7 +39,7 @@ Create a mysite/code/CustomSiteConfig.php file.
 	
 	class CustomSiteConfig extends DataExtension {
 		
-		static $db = array(
+		private static $db = array(
 			'FooterContent' => 'HTMLText'
 		);
 	

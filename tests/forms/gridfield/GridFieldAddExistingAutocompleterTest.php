@@ -1,7 +1,7 @@
 <?php
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
-	static $fixture_file = 'GridFieldTest.yml';
+	protected static $fixture_file = 'GridFieldTest.yml';
 
 	protected $extraDataObjects = array('GridFieldTest_Team', 'GridFieldTest_Player', 'GridFieldTest_Cheerleader');
 	

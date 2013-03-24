@@ -80,7 +80,7 @@ You can access the following controller-method with /team/signup
 	
 	class Team_Controller extends Controller {
 	
-		static $allowed_actions = array('signup');
+		private static $allowed_actions = array('signup');
 		
 		public function signup($id, $otherId) {
 			return $this->renderWith('MyTemplate');

@@ -5,7 +5,7 @@
  */
 class DecimalTest extends SapphireTest {
 
-	public static $fixture_file = 'DecimalTest.yml';
+	protected static $fixture_file = 'DecimalTest.yml';
 
 	protected $testDataObject;
 	
@@ -46,7 +46,7 @@ class DecimalTest extends SapphireTest {
  */
 class DecimalTest_DataObject extends DataObject implements TestOnly {
 
-	public static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'MyDecimal1' => 'Decimal',
 		'MyDecimal2' => 'Decimal(5,3,2.5)',
@@ -54,7 +54,7 @@ class DecimalTest_DataObject extends DataObject implements TestOnly {
 		'MyDecimal4' => 'Decimal'
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'MyDecimal4' => 4
 	);
 

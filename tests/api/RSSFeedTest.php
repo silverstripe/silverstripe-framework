@@ -58,21 +58,21 @@ class RSSFeedTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		Director::setBaseURL('/');
+		Config::inst()->update('Director', 'alternate_base_url', '/');
 		if(!self::$original_host) self::$original_host = $_SERVER['HTTP_HOST'];
 		$_SERVER['HTTP_HOST'] = 'www.example.org';
 	}
 
 	public function tearDown() {
 		parent::tearDown();
-		Director::setBaseURL(null);
+		Config::inst()->update('Director', 'alternate_base_url', null);
 		$_SERVER['HTTP_HOST'] = self::$original_host;
 	}
 }
 
 class RSSFeedTest_ItemA extends ViewableData {
 	// RSS-feed items must have $casting/$db information.
-	static $casting = array(
+	private static $casting = array(
 		'Title' => 'Varchar',
 		'Content' => 'Text',
 		'AltContent' => 'Text',
@@ -117,7 +117,7 @@ class RSSFeedTest_ItemB extends ViewableData {
 
 class RSSFeedTest_ItemC extends ViewableData {
 	// ItemC tests fields - Title has casting, Content doesn't.
-	public static $casting = array(
+	private static $casting = array(
 		'Title' => 'Varchar',
 		'AltContent' => 'Text',
 	);

@@ -85,21 +85,21 @@ Example: Restrict blog entry pages to nesting underneath their blog holder
 	:::php
 	class BlogHolder extends Page {
 	  // Blog holders can only contain blog entries
-	  static $allowed_children = array("BlogEntry");
-	  static $default_child = "BlogEntry";
+	  private static $allowed_children = array("BlogEntry");
+	  private static $default_child = "BlogEntry";
 	  // ...
 	}
 	
 	class BlogEntry extends Page {
 	  // Blog entries can't contain children
-	  static $allowed_children = "none";
-	  static $can_be_root = false;
+	  private static $allowed_children = "none";
+	  private static $can_be_root = false;
 	  // ...
 	}	
 	
 	class Page extends SiteTree {
 	  // Don't let BlogEntry pages be underneath Pages.  Only underneath Blog holders.
-	  static $allowed_children = array("*Page,", "BlogHolder");
+	  private static $allowed_children = array("*Page,", "BlogHolder");
 	}
 
 
@@ -130,10 +130,10 @@ when navigating the tree or adding a new page:
 
 	:::php
 	class StaggPage extends Page {
-		static $singular_name = 'Staff Directory';
-		static $plural_name = 'Staff Directories';
-		static $description = 'Two-column layout with a list of staff members';
-		static $icon = 'mysite/images/staff-icon.png';
+		private static $singular_name = 'Staff Directory';
+		private static $plural_name = 'Staff Directories';
+		private static $description = 'Two-column layout with a list of staff members';
+		private static $icon = 'mysite/images/staff-icon.png';
 		// ...
 	}
 

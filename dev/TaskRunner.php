@@ -5,12 +5,12 @@
  */
 class TaskRunner extends Controller {
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'' => 'index',
 		'$TaskName' => 'runTask'
 	);
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'runTask',
 	);

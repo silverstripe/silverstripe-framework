@@ -9,7 +9,7 @@ Let's start by defining a new `ContactPage` page type:
 	class ContactPage extends Page {
 	}
 	class ContactPage_Controller extends Page_Controller {
-		static $allowed_actions = array('Form');
+		private static $allowed_actions = array('Form');
 		public function Form() { 
 			$fields = new FieldList( 
 				new TextField('Name'), 
@@ -61,7 +61,7 @@ Now that we have a contact form, we need some way of collecting the data submitt
 
 	:::php
 	class ContactPage_Controller extends Page_Controller {
-		static $allowed_actions = array('Form');
+		private static $allowed_actions = array('Form');
 		public function Form() {
 			// ...
 		}

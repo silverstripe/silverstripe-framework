@@ -5,7 +5,7 @@
  */
 class LeftAndMainTest extends FunctionalTest {
 
-	static $fixture_file = 'LeftAndMainTest.yml';
+	protected static $fixture_file = 'LeftAndMainTest.yml';
 	
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 	
@@ -164,18 +164,18 @@ class LeftAndMainTest extends FunctionalTest {
 class LeftAndMainTest_Controller extends LeftAndMain implements TestOnly {
 	protected $template = 'BlankPage';
 	
-	static $tree_class = 'LeftAndMainTest_Object';
+	private static $tree_class = 'LeftAndMainTest_Object';
 }
 
 class LeftAndMainTest_Object extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar',
 		'URLSegment' => 'Varchar',
 		'Sort' => 'Int',
 	);
 	
-	static $extensions = array(
+	private static $extensions = array(
 		'Hierarchy'
 	);
 	

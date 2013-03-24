@@ -9,7 +9,7 @@
 abstract class StringField extends DBField {
 	protected $nullifyEmpty = true;
 
-	static $casting = array(
+	private static $casting = array(
 		"LimitCharacters" => "Text",
 		"LowerCase" => "Text",
 		"UpperCase" => "Text",

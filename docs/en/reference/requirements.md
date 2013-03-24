@@ -45,12 +45,9 @@ reducing HTTP requests. Note that for debugging purposes combined files is disab
 	);
 
 
-By default it stores the generated file in the assets/ folder but you can configure this by setting
+By default it stores the generated file in the assets/ folder but you can configure this by pointing
+the `Requirements.combined_files_folder` configuration setting to a specific folder.
  
-
-	:::php
-	// relative from the base folder
-	Requirements::set_combined_files_folder('folder');
 
 
 If SilverStripe doesn't have permissions on your server to write these files it will default back to including them
@@ -127,13 +124,8 @@ inheritance and overlays - please be careful when messing with the order of Requ
 NOTE:
 By default, SilverStripe includes all Javascript files at the bottom of the page body. If this causes problems for you,
 for example if you're using animation that ends up showing everything until the bottom of the page loads, or shows
-buttons before pushing them will actually work, you can change this behaviour:
-
-In your controller's init() function, add:
-
-	:::php
-	Requirements::set_write_js_to_body(false);
-
+buttons before pushing them will actually work, you can change this behaviour through
+the `Requirements.write_js_to_body` configuration setting.
 
 ## CMS Requirements
 

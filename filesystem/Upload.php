@@ -21,7 +21,7 @@
  */
 class Upload extends Controller {
 	
-	static $allowed_actions = array( 
+	private static $allowed_actions = array( 
 		'index',
 		'load'
 	);
@@ -64,14 +64,15 @@ class Upload extends Controller {
 	 * A foldername relative to /assets,
 	 * where all uploaded files are stored by default.
 	 *
+	 * @config
 	 * @var string
 	 */
-	public static $uploads_folder = "Uploads"; 
+	private static $uploads_folder = "Uploads"; 
 
 	public function __construct() {
 		parent::__construct();
 		$this->validator = new Upload_Validator();
-		$this->replaceFile = $this->config()->get('replaceFile');
+		$this->replaceFile = $this->config()->replaceFile;
 	}
 	
 	/**
@@ -105,7 +106,7 @@ class Upload extends Controller {
 	public function load($tmpFile, $folderPath = false) {
 		$this->clearErrors();
 		
-		if(!$folderPath) $folderPath = self::$uploads_folder;
+		if(!$folderPath) $folderPath = $this->config()->uploads_folder;
 		
 		if(!is_array($tmpFile)) {
 			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype",
@@ -127,10 +128,10 @@ class Upload extends Controller {
 
 		// Create a folder for uploading.
 		if(!file_exists(ASSETS_PATH)){
-			mkdir(ASSETS_PATH, Filesystem::$folder_create_mask);
+			mkdir(ASSETS_PATH, Config::inst()->get('Filesystem', 'folder_create_mask'));
 		}
 		if(!file_exists(ASSETS_PATH . "/" . $folderPath)){
-			mkdir(ASSETS_PATH . "/" . $folderPath, Filesystem::$folder_create_mask);
+			mkdir(ASSETS_PATH . "/" . $folderPath, Config::inst()->get('Filesystem', 'folder_create_mask'));
 		}
 
 		// Generate default filename

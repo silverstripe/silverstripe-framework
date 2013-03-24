@@ -18,7 +18,7 @@
  */
 class Text extends StringField {
 
-	static $casting = array(
+	private static $casting = array(
 		"AbsoluteLinks" => "Text",
 		"BigSummary" => "Text",
 		"ContextSummary" => "Text",

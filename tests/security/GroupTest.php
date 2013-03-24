@@ -5,7 +5,7 @@
  */
 class GroupTest extends FunctionalTest {
 
-	static $fixture_file = 'GroupTest.yml';
+	protected static $fixture_file = 'GroupTest.yml';
 	
 	public function testGroupCodeDefaultsToTitle() {
 		$g1 = new Group();

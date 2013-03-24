@@ -64,8 +64,9 @@ class RequestHandler extends ViewableData {
 	 * 
 	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
 	 * the named parameter of the parsed URL wil be used to determine the method name.
+	 * @config
 	 */
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action' => '$Action',
 	);
 
@@ -92,8 +93,9 @@ class RequestHandler extends ViewableData {
 	 * these are handled separately through {@link Form->httpSubmission}. You can control access on form actions
 	 * either by conditionally removing {@link FormAction} in the form construction,
 	 * or by defining $allowed_actions in your {@link Form} class.
+	 * @config
 	 */
-	static $allowed_actions = null;
+	private static $allowed_actions = null;
 	
 	public function __construct() {
 		$this->brokenOnConstruct = false;
@@ -157,7 +159,8 @@ class RequestHandler extends ViewableData {
 		// We used to put "handleAction" as the action on controllers, but (a) this could only be called when
 		// you had $Action in your rule, and (b) RequestHandler didn't have one. $Action is better
 		if ($action == 'handleAction') {
-			Deprecation::notice('3.2.0', 'Calling handleAction directly is deprecated - use $Action instead');
+			// TODO Fix LeftAndMain usage
+			// Deprecation::notice('3.2.0', 'Calling handleAction directly is deprecated - use $Action instead');
 			$action = '$Action';
 		}
 

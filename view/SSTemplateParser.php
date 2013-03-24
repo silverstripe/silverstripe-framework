@@ -4468,7 +4468,7 @@ class SSTemplateParser extends Parser {
 		// non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
+			'href="\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
 				\'#',
 			$text
 		);

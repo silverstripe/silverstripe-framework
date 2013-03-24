@@ -160,13 +160,14 @@ class PermissionCheckboxSetField extends FormField {
 		
 		$odd = 0;
 		$options = '';
+		$globalHidden = (array)Config::inst()->get('Permission', 'hidden_permissions');
 		if($this->source) {
 			// loop through all available categorized permissions and see if they're assigned for the given groups
 			foreach($this->source as $categoryName => $permissions) {
 				$options .= "<li><h5>$categoryName</h5></li>";
 				foreach($permissions as $code => $permission) {
 					if(in_array($code, $this->hiddenPermissions)) continue;
-					if(in_array($code, Permission::$hidden_permissions)) continue;
+					if(in_array($code, $globalHidden)) continue;
 					
 					$value = $permission['name'];
 			

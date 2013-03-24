@@ -205,7 +205,7 @@ class Oembed_Result extends ViewableData {
 	 */
 	protected $extraClass;
 	
-	public static $casting = array(
+	private static $casting = array(
 		'html' => 'HTMLText',
 	);
 	

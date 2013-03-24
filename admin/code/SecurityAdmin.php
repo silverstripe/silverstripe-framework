@@ -6,17 +6,17 @@
  */
 class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
-	static $url_segment = 'security';
+	private static $url_segment = 'security';
 	
-	static $url_rule = '/$Action/$ID/$OtherID';
+	private static $url_rule = '/$Action/$ID/$OtherID';
 	
-	static $menu_title = 'Security';
+	private static $menu_title = 'Security';
 	
-	static $tree_class = 'Group';
+	private static $tree_class = 'Group';
 	
-	static $subitem_class = 'Member';
+	private static $subitem_class = 'Member';
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'EditForm',
 		'MemberImportForm',
 		'memberimport',
@@ -26,11 +26,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		'users',
 		'roles'
 	);
-
-	/**
-	 * @var Array
-	 */
-	static $hidden_permissions = array();
 
 	public function init() {
 		parent::init();
@@ -310,33 +305,42 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * The permissions represented in the $codes will not appearing in the form
 	 * containing {@link PermissionCheckboxSetField} so as not to be checked / unchecked.
-	 * 
+	 *
+	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
 	 * @param $codes String|Array
 	 */
 	public static function add_hidden_permission($codes){
 		if(is_string($codes)) $codes = array($codes);
-		self::$hidden_permissions = array_merge(self::$hidden_permissions, $codes);
+		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Config::inst()->update('Permission', 'hidden_permissions', $codes);
 	}
 	
 	/**
+	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
 	 * @param $codes String|Array
 	 */
 	public static function remove_hidden_permission($codes){
 		if(is_string($codes)) $codes = array($codes);
-		self::$hidden_permissions = array_diff(self::$hidden_permissions, $codes);
+		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Config::inst()->remove('Permission', 'hidden_permissions', $codes);
 	}
 	
 	/**
+	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
 	 * @return Array
 	 */
 	public static function get_hidden_permissions(){
-		return self::$hidden_permissions;
+		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Config::inst()->get('Permission', 'hidden_permissions', Config::FIRST_SET);
 	}
 	
 	/**
 	 * Clear all permissions previously hidden with {@link add_hidden_permission}
+	 * 
+	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
 	 */
 	public static function clear_hidden_permissions(){
-		self::$hidden_permissions = array();
+		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Config::inst()->remove('Permission', 'hidden_permissions', Config::anything());
 	}
 }

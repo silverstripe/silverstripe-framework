@@ -11,7 +11,8 @@ require_once 'TestRunner.php';
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {
 	
-	static $dependencies = array(
+	/** @config */
+	private static $dependencies = array(
 		'fixtureFactory' => '%$FixtureFactory',
 	);
 
@@ -23,7 +24,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * 
 	 * @var string|array
 	 */
-	static $fixture_file = null;
+	protected static $fixture_file = null;
 
 	/**
 	 * @var FixtureFactory
@@ -148,7 +149,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	public static function get_test_class_manifest() {
 		return self::$test_class_manifest;
 	}
-	
+
+	/**
+	 * @return String
+	 */
+	public static function get_fixture_file() {
+		return static::$fixture_file;
+	}
+
 	/**
 	 * @var array $fixtures Array of {@link YamlFixture} instances
 	 * @deprecated 3.1 Use $fixtureFactory instad
@@ -172,11 +180,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Mark test as being run
 		$this->originalIsRunningTest = self::$is_running_test;
 		self::$is_running_test = true;
-		
+
 		// i18n needs to be set to the defaults or tests fail
 		i18n::set_locale(i18n::default_locale());
-		i18n::set_date_format(null);
-		i18n::set_time_format(null);
+		i18n::config()->date_format = null;
+		i18n::config()->time_format = null;
 		
 		// Set default timezone consistently to avoid NZ-specific dependencies
 		date_default_timezone_set('UTC');
@@ -185,7 +193,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalMemberPasswordValidator = Member::password_validator();
 		$this->originalRequirements = Requirements::backend();
 		Member::set_password_validator(null);
-		Cookie::set_report_errors(false);
+		Config::inst()->update('Cookie', 'report_errors', false);
 		
 		if(class_exists('RootURLController')) RootURLController::reset();
 		if(class_exists('Translatable')) Translatable::reset();
@@ -196,15 +204,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
 		Security::$database_is_ready = null;
 		
-		$this->originalTheme = SSViewer::current_theme();
-		
-		if(class_exists('SiteTree')) {
-			// Save nested_urls state, so we can restore it later
-			$this->originalNestedURLsState = SiteTree::nested_urls();
-		}
-
-		$className = get_class($this);
-		$fixtureFile = eval("return {$className}::\$fixture_file;");
+		$fixtureFile = static::get_fixture_file();
 
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 
@@ -213,7 +213,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->mailer = new TestMailer();
 		Email::set_mailer($this->mailer);
 		Config::inst()->remove('Email', 'send_all_emails_to');
-		Email::send_all_emails_to(null);
 		
 		// Todo: this could be a special test model
 		$this->model = DataModel::inst();
@@ -271,7 +270,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalMemoryLimit = ini_get('memory_limit');
 		
 		// turn off template debugging
-		SSViewer::set_source_file_comments(false);
+		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		
 		// Clear requirements
 		Requirements::clear();
@@ -346,7 +345,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				}
 			}
 		}
-		
+
 		if($this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
 			$this->resetDBSchema();
 		}
@@ -485,21 +484,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		self::$is_running_test = $this->originalIsRunningTest;
 		$this->originalIsRunningTest = null;
 
-		// Reset theme setting
-		if($this->originalTheme) {
-			SSViewer::set_theme($this->originalTheme);	
-		}
-
 		// Reset mocked datetime
 		SS_Datetime::clear_mock_now();
-		
-		if(class_exists('SiteTree')) {
-			// Restore nested_urls state
-			if ( $this->originalNestedURLsState )
-				SiteTree::enable_nested_urls();
-			else
-				SiteTree::disable_nested_urls();
-		}
 		
 		// Stop the redirection that might have been requested in the test.
 		// Note: Ideally a clean Controller should be created for each test. 

@@ -157,7 +157,7 @@ through `/fastfood/drivethrough/` to use the same order function.
 
 	:::php
 	class FastFood_Controller extends Controller {
-	    static $allowed_actions = array('drivethrough');
+	    private static $allowed_actions = array('drivethrough');
 	    public static $url_handlers = array(
 	        'drivethrough/$Action/$ID/$Name' => 'order'
 	    );
@@ -230,7 +230,7 @@ either `301` for permanent redirects, or `302` for temporary redirects (default)
 You can also limit access to actions on a controller using the static `$allowed_actions` array. This allows you to always allow an action, or restrict it to a specific permission or to call a method that checks if the action is allowed.
 
 For example, the default `Controller::$allowed_actions` is
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'handleAction',
 		'handleIndex',
 	);
@@ -241,14 +241,14 @@ To allow any action on your controller to be called you can either leave your `$
 The recommended approach is to explicitly state the actions that can be called via a URL. Any action not in the `$allowed_actions` array, excluding the default `index` method, is then unable to be called.
 
 To always allow an action to be called, you can either add the name of the action to the array or add a value of `true` to the array, using the name of the method as its index. For example
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'MyAwesomeAction',
 		'MyOtherAction' => true
 	);
 
 
 To require that the current user has a certain permission before being allowed to call an action you add the action to the array as an index with the value being the permission code that user must have. For example
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'MyAwesomeAction',
 		'MyOtherAction' => true,
 		'MyLimitedAction' => 'CMS_ACCESS_CMSMain',
@@ -256,7 +256,7 @@ To require that the current user has a certain permission before being allowed t
 	);
 
 If neither of these are enough to decide if an action should be called, you can have the check use a method. The method must be on the controller class and return true if the action is allowed or false if it isn't. To do this add the action to the array as an index with the value being the name of the method to called preceded by '->'. You are able to pass static arguments to the method in much the same way as you can with extensions. Strings are enclosed in quotes, numeric values are written as numbers and true and false are written as true and false. For example
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'MyAwesomeAction',
 		'MyOtherAction' => true,
 		'MyLimitedAction' => 'CMS_ACCESS_CMSMain',
