@@ -14,6 +14,19 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	 */
 	protected $throwExceptionOnBadDataType = true;
 	
+        /**
+	 * @var
+	 */
+	protected $separator = '|';
+        
+        /**
+	 *
+	 * @param var $separator - Column filter separator
+	 */
+	public function __construct($separator=null) {
+		if($separator) $this->separator = $separator;
+	}
+	
 	/**
 	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
 	 * 
@@ -76,6 +89,25 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		}
 	}
 
+        // daterange filters
+        // use @$this->separator to separate two dates or dateTimes
+        public function DateRange ($columnName, $value) {
+            $filters = array();
+            
+            if (strpos($value, $this->separator)) {
+                $dates = explode($this->separator, $value);
+                sort($dates);
+                $filters[$columnName.':GreaterThan'] = $dates[0];
+                if (isset($dates[1])) {
+                    $filters[$columnName.':LessThan'] = $dates[1];
+                }
+            } else {
+                $filters[$columnName.':PartialMatch'] = $value;
+            }
+            
+            return $filters;
+        }
+
 
 	/**
 	 *
@@ -86,6 +118,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		if(!$this->checkDataType($dataList)) return $dataList;
 		
+                $filters = array();
+		
 		$state = $gridField->State->GridFieldFilterHeader;
 		if(!isset($state->Columns)) {
 			return $dataList;
@@ -95,9 +129,25 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		$dataListClone = null;
 		foreach($filterArguments as $columnName => $value ) {
 			if($dataList->canFilterBy($columnName) && $value) {
-				$dataListClone = $dataList->filter($columnName.':PartialMatch', $value);
+                            // daterange filters use @$this->separator to separate values
+                            switch ($columnName) {
+                                case 'Created':
+                                case 'LastEdited':
+                                case 'Date':
+                                case 'DateTime':
+                                    $filters = array_merge($this->DateRange($columnName, $value), $filters);
+                                    break;
+                                default:
+                                    // use @$this->separator to separate values 
+                                    // example: two|tree 
+                                    // query: "YourClass"."Column" LIKE '%two%' OR "YourClass"."Column" LIKE '%tree%'
+                                    $value = explode($this->separator, $value);
+                                    $filters[$columnName.':PartialMatch'] = $value;
+                            }
 			}
 		}
+                if (sizeof($filters) > 0) { $dataListClone = $dataList->filter($filters); }
+                
 		return ($dataListClone) ? $dataListClone : $dataList;
 	}
 
