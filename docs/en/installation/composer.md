@@ -217,7 +217,7 @@ Composer will scan all of the repositories you list, collect meta-data about the
 
 Now add an "upstream" remote to the original repository location so you can rebase or merge your fork as required.
 
-	cd advancedworkflow
+	cd cms
 	git remote add -f upstream git://github.com/silverstripe/silverstripe-cms.git
 
 For more information, read the ["Repositories" chapter of the Composer documentation](http://getcomposer.org/doc/05-repositories.md).
