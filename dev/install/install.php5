@@ -311,14 +311,23 @@ class InstallRequirements {
 							'Version ' . $this->getDatabaseConfigurationHelper($databaseConfig['type'])->getDatabaseVersion($databaseConfig)
 						)
 					)) {
-						$this->requireDatabaseOrCreatePermissions(
+						if($this->requireDatabaseOrCreatePermissions(
 							$databaseConfig,
 							array(
 								"Database Configuration",
 								"Can I access/create the database",
 								"I can't create new databases and the database '$databaseConfig[database]' doesn't exist"
 							)
-						);
+						)) {
+							$this->requireDatabaseAlterPermissions(
+								$databaseConfig,
+								array(
+									"Database Configuration",
+									"Can I ALTER tables",
+									"I don't have permission to ALTER tables"
+								)
+							);
+						}
 					}
 				}
 			}
@@ -910,6 +919,20 @@ class InstallRequirements {
 
 			$this->error($testDetails);
 			return false;
+		}
+	}
+
+	function requireDatabaseAlterPermissions($databaseConfig, $testDetails) {
+		$this->testing($testDetails);
+		$helper = $this->getDatabaseConfigurationHelper($databaseConfig['type']);
+		$result = $helper->requireDatabaseAlterPermissions($databaseConfig);
+		if ($result['success']) {
+			return true;
+		} else {
+			$testDetails[2] = "Silverstripe cannot alter tables. This won't prevent installation, however it may "
+					. "cause issues if you try to run a /dev/build once installed.";
+			$this->warning($testDetails);
+			return;
 		}
 	}
 
