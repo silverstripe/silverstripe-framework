@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Framework\Control\Router;
+
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
  * 
@@ -97,10 +99,8 @@ class RequestHandler extends ViewableData {
 	
 	public function __construct() {
 		$this->brokenOnConstruct = false;
+		$this->request = new SS_HTTPRequest();
 
-		// Check necessary to avoid class conflicts before manifest is rebuilt
-		if(class_exists('NullHTTPRequest')) $this->request = new NullHTTPRequest();
-		
 		// This will prevent bugs if setDataModel() isn't called.
 		$this->model = DataModel::inst();
 		
@@ -136,23 +136,19 @@ class RequestHandler extends ViewableData {
 	 * @return SS_HTTPResponse|RequestHandler|string|array
 	 */
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
-		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
-		$handlerClass = ($this->class) ? $this->class : get_class($this);
-	
+		$class = get_class($this);
+
 		if($this->brokenOnConstruct) {
-			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
+			throw new Exception("parent::__construct() needs to be called on $class::__construct()", E_USER_WARNING);
 		}
-	
+
 		$this->request = $request;
 		$this->setDataModel($model);
 
-		$match = $this->findAction($request);
+		$action = $this->findAction($request);
 
 		// If nothing matches, return this object
-		if (!$match) return $this;
-
-		// Start to find what action to call. Start by using what findAction returned
-		$action = $match['action'];
+		if (!$action) return $this;
 
 		// We used to put "handleAction" as the action on controllers, but (a) this could only be called when
 		// you had $Action in your rule, and (b) RequestHandler didn't have one. $Action is better
@@ -200,14 +196,8 @@ class RequestHandler extends ViewableData {
 			return $result;
 		}
 
-		// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to
-		// parse. It might have its own handler. However, we only do this if we haven't just parsed an
-		// empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
-		// actions which return themselves to avoid infinite loops.
-		$matchedRuleWasEmpty = $request->isEmptyPattern($match['rule']);
-		$resultIsRequestHandler = is_object($result) && $result instanceof RequestHandler;
-		
-		if($this !== $result && !$matchedRuleWasEmpty && $resultIsRequestHandler) {
+		// Don't pass control to actions which return themselves to avoid infinite loops.
+		if($result instanceof RequestHandler && $this !== $result) {
 			$returnValue = $result->handleRequest($request, $model);
 
 			// Array results can be used to handle
@@ -228,30 +218,23 @@ class RequestHandler extends ViewableData {
 	}
 
 	protected function findAction($request) {
-		$handlerClass = ($this->class) ? $this->class : get_class($this);
+		$class = get_class($this);
 
-		// We stop after RequestHandler; in other words, at ViewableData
-		while($handlerClass && $handlerClass != 'ViewableData') {
-			$urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::UNINHERITED);
+		$router = new Router();
+		$router->setRequest($request);
 
-			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
-				if(isset($_REQUEST['debug_request'])) {
-					Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
-				}
-
-				if($request->match($rule, true)) {
-					if(isset($_REQUEST['debug_request'])) {
-						Debug::message(
-							"Rule '$rule' matched to action '$action' on $this->class. ".
-							"Latest request params: " . var_export($request->latestParams(), true)
-						);
-					}
-
-					return array('rule' => $rule, 'action' => $action);
-				}
+		// Traverse up the class hierarchy, checking each set of url handlers.
+		while($class && $class != get_parent_class(__CLASS__)) {
+			if(!$handlers = Config::inst()->get($class, 'url_handlers', Config::UNINHERITED)) {
+				$class = get_parent_class($class);
+				continue;
 			}
 
-			$handlerClass = get_parent_class($handlerClass);
+			if($action = $router->route(null, $handlers)) {
+				return $action;
+			}
+
+			$class = get_parent_class($class);
 		}
 	}
 
@@ -281,7 +264,7 @@ class RequestHandler extends ViewableData {
 
 		return $actionRes;
 	}
-	
+
 	/**
 	 * Get a array of allowed actions defined on this controller,
 	 * any parent classes or extensions.
@@ -460,11 +443,8 @@ class RequestHandler extends ViewableData {
 
 	/**
 	 * Returns the SS_HTTPRequest object that this controller is using.
-	 * Returns a placeholder {@link NullHTTPRequest} object unless 
-	 * {@link handleAction()} or {@link handleRequest()} have been called,
-	 * which adds a reference to an actual {@link SS_HTTPRequest} object.
 	 *
-	 * @return SS_HTTPRequest|NullHTTPRequest
+	 * @return SS_HTTPRequest
 	 */
 	public function getRequest() {
 		return $this->request;

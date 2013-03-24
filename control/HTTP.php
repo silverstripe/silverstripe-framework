@@ -368,11 +368,37 @@ class HTTP {
 		
 		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
-			if($body) $body->addHeader($k, $v);
+			if($body) $body->setHeader($k, $v);
 			else if(!headers_sent()) header("$k: $v");
 		}
 	}
 
+
+	/**
+	 * Construct an SS_HTTPResponse that will deliver a file to the client
+	 *
+	 * @static
+	 * @param $fileData
+	 * @param $fileName
+	 * @param null $mimeType
+	 * @return SS_HTTPResponse
+	 */
+	public static function send_file($fileData, $fileName, $mimeType = null) {
+		if(!$mimeType) {
+			$mimeType = self::get_mime_type($fileName);
+		}
+		$response = new SS_HTTPResponse($fileData);
+		$response->setHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
+		$response->setHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
+		$response->setHeader("Content-Length", strlen($fileData));
+		$response->setHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
+
+		if(strstr($_SERVER["HTTP_USER_AGENT"],"MSIE") == true) {
+			$response->setHeader('Cache-Control', 'max-age=3, must-revalidate'); // Workaround for IE6 and 7
+		}
+
+		return $response;
+	}
 
 	/**
 	 * Return an {@link http://www.faqs.org/rfcs/rfc2822 RFC 2822} date in the

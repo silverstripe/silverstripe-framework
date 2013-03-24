@@ -235,7 +235,7 @@ class RestfulServiceTest_Controller extends Controller implements TestOnly {
 </test>
 XML;
 		$this->response->setBody($out);
-		$this->response->addHeader('Content-type', 'text/xml');
+		$this->response->setHeader('Content-type', 'text/xml');
 		
 		return $this->response;
 	}
@@ -261,7 +261,7 @@ XML;
 		
 		$this->response->setBody($out);
 		$this->response->setStatusCode(400); 
-		$this->response->addHeader('Content-type', 'text/xml');
+		$this->response->setHeader('Content-type', 'text/xml');
 
 		return $this->response;
 	}
@@ -325,21 +325,33 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 			);
 		}
 
-		// Custom for mock implementation: Use Director::test()
-		$body = null;
-		$postVars = null;
-		
-		if($method!='POST') $body = $data;
-		else $postVars = $data;
-		
-		$responseFromDirector = Director::test($url, $postVars, $this->session, $method, $body, $headers);
-		
-		$response = new RestfulService_Response(
-			$responseFromDirector->getBody(), 
-			$responseFromDirector->getStatusCode()
-		);
+		// Extract the GET params.
+		$get = array();
 
-		return $response;
+		if(strpos($url, '?') !== false) {
+			list($url, $raw) = explode('?', $url, 2);
+			parse_str($raw, $get);
+		}
+
+		// Perform the request.
+		if($method == 'POST') {
+			$request = new SS_HTTPRequest('POST', $url, null, array(
+				'get'  => $get,
+				'post' => $data
+			));
+		} else {
+			$request = new SS_HTTPRequest('GET', $url, $data, array('get' => $get));
+		}
+
+		if($headers) {
+			$request->setHeaders($headers);
+		}
+
+		$response = Director::test($request, $this->session);
+
+		return new RestfulService_Response(
+			$response->getBody(), $response->getStatusCode()
+		);
 	}
 }
 

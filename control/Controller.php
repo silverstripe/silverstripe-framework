@@ -127,7 +127,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
-		$this->urlParams = $request->allParams();
+		$this->urlParams = $request->getParams();
 		$this->request = $request;
 		$this->response = new SS_HTTPResponse();
 		$this->setDataModel($model);
@@ -164,7 +164,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 					Debug::message("Request handler $body->class object to $this->class controller;"
 						. "rendering with template returned by $body->class::getViewer()");
 				}
-				$body = $body->getViewer($request->latestParam('Action'))->process($body);
+				$body = $body->getViewer($request->getLatestParam('Action'))->process($body);
 			}
 			
 			$this->response->setBody($body);
@@ -183,7 +183,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * If $Action isn't given, it will use "index" as a default.
 	 */
 	public function handleAction($request, $action) {
-		foreach($request->latestParams() as $k => $v) {
+		foreach($request->getLatestParams() as $k => $v) {
 			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
 		}
 

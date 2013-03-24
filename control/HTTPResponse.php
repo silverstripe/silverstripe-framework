@@ -5,7 +5,7 @@
  * @package framework
  * @subpackage control
  */
-class SS_HTTPResponse {
+class SS_HTTPResponse extends SS_HTTPMessage {
 	
 	/**
 	 * @var array
@@ -51,19 +51,7 @@ class SS_HTTPResponse {
 		504 => 'Gateway Timeout',
 		505 => 'HTTP Version Not Supported',
 	);
-	
-	/**
-	 * @var array
-	 */
-	protected static $redirect_codes = array(
-		301,
-		302,
-		303,
-		304,
-		305,
-		307
-	);
-	
+
 	/**
 	 * @var Int
 	 */
@@ -73,22 +61,7 @@ class SS_HTTPResponse {
 	 * @var String
 	 */
 	protected $statusDescription = "OK";
-	
-	/**
-	 * HTTP Headers like "Content-Type: text/xml"
-	 *
-	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
-	 * @var array
-	 */
-	protected $headers = array(
-		"Content-Type" => "text/html; charset=utf-8",
-	);
-	
-	/**
-	 * @var string
-	 */
-	protected $body = null;
-	
+
 	/**
 	 * Create a new HTTP response
 	 * 
@@ -98,7 +71,9 @@ class SS_HTTPResponse {
 	 *  See {@link setStatusCode()} for more information.
 	 */
 	public function __construct($body = null, $statusCode = null, $statusDescription = null) {
+		$this->setHeader('Content-Type', 'text/html; charset=utf-8');
 		$this->setBody($body);
+
 		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
 	}
 	
@@ -153,74 +128,30 @@ class SS_HTTPResponse {
 	public function isError() {
 		return $this->statusCode && ($this->statusCode < 200 || $this->statusCode > 399);
 	}
-	
+
 	/**
-	 * @param string $body
-	 * @return SS_HTTPRequest $this
-	 */
-	public function setBody($body) {
-		$this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
-	}
-	
-	/**
-	 * @return null|string
-	 */
-	public function getBody() {
-		return $this->body;
-	}
-	
-	/**
-	 * Add a HTTP header to the response, replacing any header of the same name.
-	 * 
-	 * @param string $header Example: "Content-Type"
-	 * @param string $value Example: "text/xml" 
-	 * @return SS_HTTPRequest $this
-	 */
-	public function addHeader($header, $value) {
-		$this->headers[$header] = $value;
-		return $this;
-	}
-	
-	/**
-	 * Return the HTTP header of the given name.
-	 * 
-	 * @param string $header
-	 * @returns null|string
-	 */
-	public function getHeader($header) {
-		if(isset($this->headers[$header]))
-			return $this->headers[$header];			
-			return null;
-		}
-	
-	/**
-	 * @return array
-	 */
-	public function getHeaders() {
-		return $this->headers;
-	}
-	
-	/**
-	 * Remove an existing HTTP header by its name,
-	 * e.g. "Content-Type".
+	 * Returns whether the response is a redirect.
 	 *
-	 * @param string $header
-	 * @return SS_HTTPRequest $this
+	 * @param string $code an optional status code to check
+	 * @return bool
 	 */
-	public function removeHeader($header) {
-		if(isset($this->headers[$header])) unset($this->headers[$header]);
-		return $this;
+	public function isRedirect($code = null) {
+		return substr($code ?: $this->getStatusCode(), 0, 1) == '3';
 	}
-	
+
 	/**
 	 * @param string $dest
 	 * @param int $code
 	 * @return SS_HTTPRequest $this
 	 */
 	public function redirect($dest, $code=302) {
-		if(!in_array($code, self::$redirect_codes)) $code = 302;
+		if(!$this->isRedirect($code)) {
+			$code = 302;
+		}
+
 		$this->setStatusCode($code);
-		$this->headers['Location'] = $dest;
+		$this->setHeader('Location', $dest);
+
 		return $this;
 	}
 
@@ -228,13 +159,8 @@ class SS_HTTPResponse {
 	 * Send this HTTPReponse to the browser
 	 */
 	public function output() {
-		// Attach appropriate X-Include-JavaScript and X-Include-CSS headers
-		if(Director::is_ajax()) {
-			Requirements::include_in_response($this);
-		}
-
-		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
-			$url = $this->headers['Location'];
+		if($this->isRedirect() && headers_sent($file, $line)) {
+			$url = $this->getHeader('Location');
 			echo
 			"<p>Redirecting to <a href=\"$url\" title=\"Click this link if your browser does not redirect you\">"
 				. "$url... (output started on $file, line $line)</a></p>
@@ -244,7 +170,7 @@ class SS_HTTPResponse {
 			$line = $file = null;
 			if(!headers_sent($file, $line)) {
 				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
-				foreach($this->headers as $header => $value) {
+				foreach($this->getHeaders() as $header => $value) {
 					header("$header: $value", true, $this->statusCode);
 				}
 			} else {
@@ -257,16 +183,8 @@ class SS_HTTPResponse {
 					);
 				}
 			}
-			
-			// Only show error pages or generic "friendly" errors if the status code signifies
-			// an error, and the response doesn't have any body yet that might contain
-			// a more specific error description.
-			if(Director::isLive() && $this->isError() && !$this->body) {
-				Debug::friendlyError($this->statusCode, $this->getStatusDescription());
-			} else {
-				echo $this->body;
-			}
-			
+
+			echo $this->getBody();
 		}
 	}
 	
@@ -316,7 +234,7 @@ class SS_HTTPResponse_Exception extends Exception {
 			$response = new SS_HTTPResponse($body, $statusCode, $statusDescription);
 
 			// Error responses should always be considered plaintext, for security reasons
-			$response->addHeader('Content-Type', 'text/plain');
+			$response->setHeader('Content-Type', 'text/plain');
 
 			$this->setResponse($response);
 		}

@@ -239,11 +239,8 @@ class Form extends RequestHandler {
 	 * if the form is valid.
 	 */
 	public function httpSubmission($request) {
-		$vars = $request->requestVars();
-		if(isset($funcName)) {
-			Form::set_current_action($funcName);
-		}
-		
+		$vars = $request->getVars() + $request->postVars() + $request->filesVars();
+
 		// Populate the form
 		$this->loadDataFrom($vars, true);
 	
@@ -334,12 +331,12 @@ class Form extends RequestHandler {
 				if(strpos($acceptType, 'application/json') !== FALSE) {
 					// Send validation errors back as JSON with a flag at the start
 					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
-					$response->addHeader('Content-Type', 'application/json');
+					$response->setHeader('Content-Type', 'application/json');
 				} else {
 					$this->setupFormErrors();
 					// Send the newly rendered form tag as HTML
 					$response = new SS_HTTPResponse($this->forTemplate());
-					$response->addHeader('Content-Type', 'text/html');
+					$response->setHeader('Content-Type', 'text/html');
 				}
 				
 				return $response;
@@ -399,13 +396,13 @@ class Form extends RequestHandler {
 	 * @return FormField
 	 */
 	public function handleField($request) {
-		$field = $this->Fields()->dataFieldByName($request->param('FieldName'));
+		$field = $this->Fields()->dataFieldByName($request->getParam('FieldName'));
 		
 		if($field) {
 			return $field;
 		} else {
 			// falling back to fieldByName, e.g. for getting tabs
-			return $this->Fields()->fieldByName($request->param('FieldName'));
+			return $this->Fields()->fieldByName($request->getParam('FieldName'));
 		}
 	}
 
@@ -1444,11 +1441,11 @@ class Form extends RequestHandler {
 	 */
 	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
+		$request = new SS_HTTPRequest('POST', $this->FormAction(), null, array(
+			'post' => $data
+		));
 
-		return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
-		
-		//$response = $this->controller->run($data);
-		//return $response;
+		return Director::test($request, Controller::curr()->getSession());
 	}
 	
 	/**

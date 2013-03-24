@@ -735,7 +735,7 @@ class Requirements_Backend {
 			}
 		}
 
-		$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
+		$response->setHeader('X-Include-JS', implode(',', $jsRequirements));
 
 		foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {
 			$path = $this->path_for_file($file);
@@ -745,7 +745,7 @@ class Requirements_Backend {
 			}
 		}
 
-		$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
+		$response->setHeader('X-Include-CSS', implode(',', $cssRequirements));
 	}
 
 	/**

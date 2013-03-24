@@ -26,85 +26,62 @@ class BasicAuthTest extends FunctionalTest {
 	}
 
 	public function testBasicAuthEnabledWithoutLogin() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
-		
-		unset($_SERVER['PHP_AUTH_USER']);
-		unset($_SERVER['PHP_AUTH_PW']);
-		
 		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
 		$this->assertEquals(401, $response->getStatusCode());
-		
-		$_SERVER['PHP_AUTH_USER'] = $origUser;
-		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
 	
 	public function testBasicAuthDoesntCallActionOrFurtherInitOnAuthFailure() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
-		
-		unset($_SERVER['PHP_AUTH_USER']);
-		unset($_SERVER['PHP_AUTH_PW']);
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+		Director::test('BasicAuthTest_ControllerSecuredWithPermission');
 		$this->assertFalse(BasicAuthTest_ControllerSecuredWithPermission::$index_called);
 		$this->assertFalse(BasicAuthTest_ControllerSecuredWithPermission::$post_init_called);
-		
-		$_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
-		$_SERVER['PHP_AUTH_PW'] = 'test';
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+
+		Director::test($this->getBasicAuthRequest(
+			'BasicAuthTest_ControllerSecuredWithPermission', 'user-in-mygroup@test.com', 'test'
+		));
 		$this->assertTrue(BasicAuthTest_ControllerSecuredWithPermission::$index_called);
 		$this->assertTrue(BasicAuthTest_ControllerSecuredWithPermission::$post_init_called);
-		
-		$_SERVER['PHP_AUTH_USER'] = $origUser;
-		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
 
 	public function testBasicAuthEnabledWithPermission() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
-		
-		$_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
-		$_SERVER['PHP_AUTH_PW'] = 'wrongpassword';
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+		$response = Director::test($this->getBasicAuthRequest(
+			'BasicAuthTest_ControllerSecuredWithPermission', 'user-in-mygroup@test.com', 'wrongpassword'
+		));
 		$this->assertEquals(401, $response->getStatusCode(), 'Invalid users dont have access');
-		
-		$_SERVER['PHP_AUTH_USER'] = 'user-without-groups@test.com';
-		$_SERVER['PHP_AUTH_PW'] = 'test';
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+
+		$response = Director::test($this->getBasicAuthRequest(
+			'BasicAuthTest_ControllerSecuredWithPermission', 'user-without-groups@test.com', 'test'
+		));
 		$this->assertEquals(401, $response->getStatusCode(), 'Valid user without required permission has no access');
-		
-		$_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
-		$_SERVER['PHP_AUTH_PW'] = 'test';
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
+
+		$response = Director::test($this->getBasicAuthRequest(
+			'BasicAuthTest_ControllerSecuredWithPermission', 'user-in-mygroup@test.com', 'test'
+		));
 		$this->assertEquals(200, $response->getStatusCode(), 'Valid user with required permission has access');
-		
-		$_SERVER['PHP_AUTH_USER'] = $origUser;
-		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
 	
 	public function testBasicAuthEnabledWithoutPermission() {
-		$origUser = @$_SERVER['PHP_AUTH_USER'];
-		$origPw = @$_SERVER['PHP_AUTH_PW'];
-		
-		$_SERVER['PHP_AUTH_USER'] = 'user-without-groups@test.com';
-		$_SERVER['PHP_AUTH_PW'] = 'wrongpassword';
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+		$response = Director::test($this->getBasicAuthRequest(
+			'BasicAuthTest_ControllerSecuredWithoutPermission', 'user-without-groups@test.com', 'wrongpassword'
+		));
 		$this->assertEquals(401, $response->getStatusCode(), 'Invalid users dont have access');
-		
-		$_SERVER['PHP_AUTH_USER'] = 'user-without-groups@test.com';
-		$_SERVER['PHP_AUTH_PW'] = 'test';
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+
+		$response = Director::test($this->getBasicAuthRequest(
+			'BasicAuthTest_ControllerSecuredWithoutPermission', 'user-without-groups@test.com', 'test'
+		));
 		$this->assertEquals(200, $response->getStatusCode(), 'All valid users have access');
-		
-		$_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
-		$_SERVER['PHP_AUTH_PW'] = 'test';
-		$response = Director::test('BasicAuthTest_ControllerSecuredWithoutPermission');
+
+		$response = Director::test($this->getBasicAuthRequest(
+			'BasicAuthTest_ControllerSecuredWithoutPermission', 'user-in-mygroup@test.com', 'test'
+		));
 		$this->assertEquals(200, $response->getStatusCode(), 'All valid users have access');
-		
-		$_SERVER['PHP_AUTH_USER'] = $origUser;
-		$_SERVER['PHP_AUTH_PW'] = $origPw;
 	}
-	
+
+	private function getBasicAuthRequest($url, $username, $password) {
+		return new SS_HTTPRequest('GET', $url, null, array(
+			'server' => array('PHP_AUTH_USER' => $username, 'PHP_AUTH_PW' => $password)
+		));
+	}
+
 }
 
 class BasicAuthTest_ControllerSecuredWithPermission extends Controller implements TestOnly {

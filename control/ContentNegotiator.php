@@ -138,11 +138,11 @@ class ContentNegotiator {
 
 		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
 		if (empty($contentType)) {
-			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
+			$response->setHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
 		} else {
-			$response->addHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
+			$response->setHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
 		}
-		$response->addHeader("Vary" , "Accept");
+		$response->setHeader("Vary" , "Accept");
 
 		// Fix base tag
 		$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
@@ -170,11 +170,11 @@ class ContentNegotiator {
 		
 		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
 		if (empty($contentType)) {
-			$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
+			$response->setHeader("Content-Type", "text/html; charset=" . self::$encoding);
 		} else {
-			$response->addHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
+			$response->setHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
 		}
-		$response->addHeader("Vary", "Accept");
+		$response->setHeader("Vary", "Accept");
 
 		$content = $response->getBody();
 		$hasXMLHeader = (substr($content,0,5) == '<' . '?xml' );

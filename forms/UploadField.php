@@ -435,7 +435,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleItem(SS_HTTPRequest $request) {
-		return $this->getItemHandler($request->param('ID'));
+		return $this->getItemHandler($request->getParam('ID'));
 	}
 
 	/**
@@ -470,7 +470,7 @@ class UploadField extends FileField {
 		if(!$token->checkRequest($request)) return $this->httpError(400);
 
 		$name = $this->getName();
-		$tmpfile = $request->postVar($name);
+		$tmpfile = $request->filesVar($name);
 		$record = $this->getRecord();
 		
 		// Check if the file has been uploaded into the temporary storage.
@@ -558,7 +558,7 @@ class UploadField extends FileField {
 			}
 		}
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
-		$response->addHeader('Content-Type', 'text/plain');
+		$response->setHeader('Content-Type', 'text/plain');
 		return $response;
 	}
 
@@ -587,7 +587,7 @@ class UploadField extends FileField {
 			);
 		}
 		$response = new SS_HTTPResponse(Convert::raw2json($return));
-		$response->addHeader('Content-Type', 'application/json');
+		$response->setHeader('Content-Type', 'application/json');
 		return $response;
 	}
 

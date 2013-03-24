@@ -16,7 +16,7 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 			'myfragment' => function() {return 'myfragment response';},
 		));
 		$request = new SS_HTTPRequest('GET', '/');
-		$request->addHeader('X-Pjax', 'myfragment');
+		$request->setHeader('X-Pjax', 'myfragment');
 		$response = $negotiator->respond($request);
 		$this->assertEquals('{"myfragment":"myfragment response"}', $response->getBody());
 	}
@@ -28,8 +28,8 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 			'otherfragment' => function() {return 'otherfragment response';},
 		));
 		$request = new SS_HTTPRequest('GET', '/');
-		$request->addHeader('X-Pjax', 'myfragment,otherfragment');
-		$request->addHeader('Accept', 'text/json');
+		$request->setHeader('X-Pjax', 'myfragment,otherfragment');
+		$request->setHeader('Accept', 'text/json');
 		$response = $negotiator->respond($request);
 		$json = json_decode( $response->getBody());
 		$this->assertObjectHasAttribute('myfragment', $json);
@@ -45,8 +45,8 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 		));
 
 		$request = new SS_HTTPRequest('GET', '/');
-		$request->addHeader('X-Pjax', 'alpha');
-		$request->addHeader('Accept', 'text/json');
+		$request->setHeader('X-Pjax', 'alpha');
+		$request->setHeader('Accept', 'text/json');
 
 		$response = $negotiator->setFragmentOverride(array('beta'))->respond($request);
 		$json = json_decode( $response->getBody());

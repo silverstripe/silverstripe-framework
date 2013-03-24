@@ -110,8 +110,8 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		$models = $this->getManagedModels();
 
-		if($this->request->param('ModelClass')) {
-			$this->modelClass = $this->unsanitiseClassName($this->request->param('ModelClass'));
+		if($this->request->getParam('ModelClass')) {
+			$this->modelClass = $this->unsanitiseClassName($this->request->getParam('ModelClass'));
 		} else {
 			reset($models);
 			$this->modelClass = key($models);

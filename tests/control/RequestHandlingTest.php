@@ -50,7 +50,7 @@ class RequestHandlingTest extends FunctionalTest {
 	
 	public function testConstructedWithNullRequest() {
 		$r = new RequestHandler();
-		$this->assertInstanceOf('NullHTTPRequest', $r->getRequest());
+		$this->assertInstanceOf('SS_HTTPRequest', $r->getRequest());
 	}
 	
 	public function testRequestHandlerChainingAllParams() {
@@ -74,7 +74,9 @@ class RequestHandlingTest extends FunctionalTest {
 		
 	public function testPostRequests() {
 		/* The HTTP Request handler can trigger special behaviour for GET and POST. */
-		$response = Director::test("testGoodBase1/TestForm", array("MyField" => 3), null, "POST");
+		$response = Director::test(new SS_HTTPRequest(
+			'POST', 'testGoodBase1/TestForm', null, array('post' => array("MyField" => 3))
+		));
 		$this->assertEquals("Form posted", $response->getBody());
 
 		$response = Director::test("testGoodBase1/TestForm");
@@ -88,7 +90,9 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals("MyField requested", $response->getBody());
 		
 		/* We can also make a POST request on a form field, which could be used for in-place editing, for example. */
-		$response = Director::test("testGoodBase1/TestForm/fields/MyField" ,array("MyField" => 5));
+		$response = Director::test(new SS_HTTPRequest(
+			'POST', 'testGoodBase1/TestForm/fields/MyField', null, array('post' => array("MyField" => 5))
+		));
 		$this->assertEquals("MyField posted, update to 5", $response->getBody());
 	}
 		
@@ -97,7 +101,9 @@ class RequestHandlingTest extends FunctionalTest {
 		$response = Director::test("testBadBase/method/1/2");
 		$this->assertNotEquals("This is a method on the controller: 1, 2", $response->getBody());
 
-		$response = Director::test("testBadBase/TestForm", array("MyField" => 3), null, "POST");
+		$response = Director::test(new SS_HTTPRequest(
+			'POST', 'testBadBase/TestForm', null, array('post' => array("MyField" => 3))
+		));
 		$this->assertNotEquals("Form posted", $response->getBody());
 		
 		$response = Director::test("testBadBase/TestForm/fields/MyField");
@@ -324,7 +330,7 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 
 	public function method($request) {
-		return "This is a method on the controller: " . $request->param('ID') . ', ' . $request->param('OtherID');
+		return "This is a method on the controller: " . $request->getParam('ID') . ', ' . $request->getParam('OtherID');
 	}
 
 	public function legacymethod($request) {
@@ -525,7 +531,7 @@ class RequestHandlingTest_Form extends Form {
 	);
 	
 	public function handleField($request) {
-		return $this->Fields()->dataFieldByName($request->param('FieldName'));
+		return $this->Fields()->dataFieldByName($request->getParam('FieldName'));
 	}
 	
 	public function handleSubmission($request) {

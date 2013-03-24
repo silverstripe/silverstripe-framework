@@ -19,6 +19,8 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [ModelAdmin](modeladmin): Manage arbitrary data in a simple CRUD (create/read/update/delete) interface
 * [Partial Caching](partial-caching): Cache complex parts of templates for better performance
 * [Permission](permission): Database-backed permission model
+* [RequestProcessor](requestprocessor): Hook into the request process before a request is processed
+  or before a response is served
 * [Requirements](requirements): Include CSS and JavaScript files in templates and controllers
 * [RestfulService](restfulservice): Consume Restful APIs with this client
 * [RSSFeed](rssfeed): Expose any database records as an RSS feed

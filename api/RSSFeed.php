@@ -194,7 +194,7 @@ class RSSFeed extends ViewableData {
 
 		if(is_int($this->lastModified)) {
 			HTTP::register_modification_timestamp($this->lastModified);
-			$response->addHeader("Last-Modified", gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
+			$response->setHeader('Last-Modified', gmdate("D, d M Y H:i:s", $this->lastModified) . ' GMT');
 		}
 		if(!empty($this->etag)) {
 			HTTP::register_etag($this->etag);
@@ -202,7 +202,7 @@ class RSSFeed extends ViewableData {
 
 		if(!headers_sent()) {
 			HTTP::add_cache_headers();
-			$response->addHeader("Content-Type", "application/rss+xml");
+			$response->setHeader('Content-Type', 'text/xml');
 		}
 
 		SSViewer::set_source_file_comments($prevState);

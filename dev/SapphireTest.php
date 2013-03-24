@@ -512,7 +512,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$controller = Controller::has_curr() ? Controller::curr() : null;
 		if ( $controller && $controller->response && $controller->response->getHeader('Location') ) {
 			$controller->response->setStatusCode(200);
-			$controller->response->removeHeader('Location');
+			$controller->response->unsetHeader('Location');
 		}
 	}
 

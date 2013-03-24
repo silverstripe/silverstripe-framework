@@ -44,4 +44,14 @@ class HTTPResponseTest extends SapphireTest {
 		$this->assertFalse(true, 'Something went wrong with our test exception');
 
 	}
+
+	public function testIsRedirect() {
+		$response = new SS_HTTPResponse();
+		$this->assertFalse($response->isRedirect());
+		$this->assertTrue($response->isRedirect(301));
+
+		$response->setStatusCode(307);
+		$this->assertTrue($response->isRedirect());
+	}
+
 }
