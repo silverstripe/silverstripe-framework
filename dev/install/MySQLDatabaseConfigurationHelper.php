@@ -149,7 +149,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 				// Annoyingly, MySQL 'escapes' the database, so we need to do it too.
 				$db = str_replace(array('%', '_', '`'), array('\%', '\_', '``'), $databaseConfig['database']);
 				while ($row = $res->fetch_array()) {
-					if (preg_match('/^GRANT (.+) ON (.+) TO/', $row[0], $matches) && (count($matches) == 2)) {
+					if (preg_match('/^GRANT (.+) ON (.+) TO/', $row[0], $matches)) {
 						// Need to change to an array of permissions, because ALTER is contained in ALTER ROUTINES.
 						$permission = array_map('trim', explode(',', $matches[1]));
 						$on_database = $matches[2];
