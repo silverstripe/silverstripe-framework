@@ -420,24 +420,6 @@ class Hierarchy extends DataExtension {
 		$id = $this->owner->ID;
 		return isset(self::$treeOpened[$baseClass][$id]) ? self::$treeOpened[$baseClass][$id] : false;
 	}
-
-	/**
-	 * Return a partial tree as an HTML UL.
-	 */
-	public function partialTreeAsUL($minCount = 50) {
-		$children = $this->owner->AllChildren();
-		if($children) {
-			if($attributes) $attributes = " $attributes";
-			$output = "<ul$attributes>\n";
-		
-			foreach($children as $child) {
-				$output .= eval("return $titleEval;") . "\n" . 
-					$child->getChildrenAsUL("", $titleEval, $extraArg) . "</li>\n";
-			}
-			$output .= "</ul>\n";
-		}
-		return $output;
-	}
 	
 	/**
 	 * Get a list of this DataObject's and all it's descendants IDs.
@@ -470,19 +452,14 @@ class Hierarchy extends DataExtension {
 	
 	/**
 	 * Get the children for this DataObject.
-	 * @return SS_List
+	 * @return ArrayList
 	 */
 	public function Children() {
 		if(!(isset($this->_cache_children) && $this->_cache_children)) { 
 			$result = $this->owner->stageChildren(false); 
-			if(isset($result)) { 
-				$this->_cache_children = new ArrayList(); 
-				foreach($result as $child) { 
-					if($child->canView()) { 
-						$this->_cache_children->push($child); 
-					} 
-				} 
-			} 
+			$this->_cache_children = $result->filterByCallback(function($item) {	
+				return $item->canView();
+			});
 		} 
 		return $this->_cache_children;
 	}
@@ -515,9 +492,6 @@ class Hierarchy extends DataExtension {
 	 */
 	public function doAllChildrenIncludingDeleted($context = null) {
 		if(!$this->owner) user_error('Hierarchy::doAllChildrenIncludingDeleted() called without $this->owner');
-		
-		$idxStageChildren = array();
-		$idxLiveChildren = array();
 		
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		if($baseClass) {
@@ -596,21 +570,16 @@ class Hierarchy extends DataExtension {
 	 * 
 	 * @param showAll Inlcude all of the elements, even those not shown in the menus.
 	 *   (only applicable when extension is applied to {@link SiteTree}).
-	 * @return SS_List
+	 * @return DataList
 	 */
 	public function stageChildren($showAll = false) {
-		if($this->owner->db('ShowInMenus')) {
-			$extraFilter = ($showAll) ? '' : " AND \"ShowInMenus\"=1";
-		} else {
-			$extraFilter = '';
-		}
-		
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		
-		$staged = DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " 
-			. (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID
-			. $extraFilter, "");
-			
+		$staged = $baseClass::get()
+			->filter('ParentID', (int)$this->owner->ID)
+			->exclude('ID', (int)$this->owner->ID);
+		if (!$showAll && $this->owner->db('ShowInMenus')) {
+			$staged = $staged->filter('ShowInMenus', 1);
+		}	
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
 		return $staged;
 	}
@@ -629,16 +598,15 @@ class Hierarchy extends DataExtension {
 		}
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		$id = $this->owner->ID;
-		
-		$children = DataObject::get($baseClass)
-			->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id")
+		$children = $baseClass::get()
+			->filter('ParentID', (int)$this->owner->ID)
+			->exclude('ID', (int)$this->owner->ID)
 			->setDataQueryParam(array(
 				'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
 				'Versioned.stage' => 'Live'
 			));
 
-		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
+		if(!$showAll) $children = $children->filter('ShowInMenus', 1);
 
 		return $children;
 	}
@@ -717,9 +685,12 @@ class Hierarchy extends DataExtension {
 		$nextNode = null;
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		
-		$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class),
-			"\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > "
-			. sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
+		$children = $baseClass::get()
+			->filter('ParentID', (int)$this->owner->ID)
+			->sort('Sort', 'ASC');
+		if ($afterNode) {
+			$children = $children->filter('Sort:GreaterThan', $afterNode->Sort);
+		}
 		
 		// Try all the siblings of this node after the given node
 		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class), 
