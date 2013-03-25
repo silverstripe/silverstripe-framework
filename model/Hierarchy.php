@@ -15,7 +15,7 @@ class Hierarchy extends DataExtension {
 	 * @var Int
 	 */
 	protected $_cache_numChildren;
-
+	
 	/**
 	 * @config
 	 * @var integer The lower bounds for the amount of nodes to mark. If set, the logic will expand
@@ -113,7 +113,7 @@ class Hierarchy extends DataExtension {
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished($numChildrenMethod);
 		}
-
+		
 		if($nodeCountCallback) {
 			$nodeCountWarning = $nodeCountCallback($this->owner, $this->owner->$numChildrenMethod());	
 			if($nodeCountWarning) return $nodeCountWarning;
@@ -156,7 +156,7 @@ class Hierarchy extends DataExtension {
 						} else {
 							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
 								$numChildrenMethod, false, $nodeCountThreshold);	
-						}
+					} 
 					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either
 						$child->markClosed();

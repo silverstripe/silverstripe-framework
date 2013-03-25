@@ -17,10 +17,11 @@ Always use hard tabs rather then spaces for indentation, with one tab per nestin
 
 ### Maximum Line Length
 
-The target line length is 100 characters, meaning developers should strive keep each line of their code 
-under 80 characters where possible and practical. 
+The target line length is 100 columns with tabs being treated as four columns,
+meaning developers should strive keep each line of their code 
+under 80 columns where possible and practical. 
 However, longer lines are acceptable in some circumstances. 
-The maximum length of any line of PHP code is 120 characters.
+The maximum length of any line of PHP code is 120 columns.
 
 ### Line Termination
 
@@ -40,8 +41,9 @@ Class and filenames are in `UpperCamelCase` format:
 	:::php
 	class MyClass {}
 
-If a class name is comprised of more than one word, the first letter of each new word must be capitalized. 
-Successive capitalized letters are not allowed, e.g. a class `XMLImporter` is not allowed while `XmlImporter` is acceptable.
+If a class name is comprised of more than one word, the first letter of each 
+new word must be capitalized. Successive capitalized letters are used in 
+acronyms, e.g. a class `XMLImporter` is used while `XmlImporter` is not.
 
 ### Methods
 
@@ -89,6 +91,8 @@ All letters used in a constant name must be capitalized,
 while all words in a constant name must be separated by underscore characters.
 
 	:::php
+	const INTEREST_RATE = 0.19;
+	
 	define('INTEREST_RATE', 0.19);
 
 Constants must be defined as class members with the `const` modifier. 
@@ -127,6 +131,9 @@ PHP code must always be delimited by the full-form, standard PHP tags:
 
 Short tags are never allowed. For files containing only PHP code, the closing tag must always be omitted.
 It is not required by PHP, and omitting it prevents the accidental injection of trailing white space into the response.
+
+Files must end with an empty new line. This prevents problems arising from the end-of-file marker appearing where other
+white space is expected.
 
 ### Strings
 
@@ -275,13 +282,13 @@ apart from the last argument.
 #### if/else/elseif
 
 No control structure is allowed to have spaces directly
-before or after the opening parathesis, as well as no space before the closing parenthesis.
+before or after the opening parenthesis, as well as no space before the closing parenthesis.
 
 The opening brace and closing brace are written on the same line as the conditional statement. 
 Any content within the braces must be indented using a tab.
 
 	:::php
-	if ($a != 2) {
+	if($a != 2) {
 	    $a = 2;
 	}
 
@@ -292,7 +299,7 @@ The closing paren in the conditional will then be placed on a line with the open
 with one space separating the two, at an indentation level equivalent to the opening control statement.
 
 	:::php
-	if (($a == $b)
+	if(($a == $b)
 	    && ($b == $c)
 	    || (Foo::CONST == $d)
 	) {
@@ -305,9 +312,9 @@ the formatting conventions are similar to the `if` construct.
 The following examples demonstrate proper formatting for `if` statements with `else` and/or `elseif` constructs:
 
 	:::php
-	if ($a != 2) {
+	if($a != 2) {
 	    $a = 2;
-	} elseif ($a == 3) {
+	} elseif($a == 3) {
 	    $a = 4;
 	} else {
 	    $a = 7;

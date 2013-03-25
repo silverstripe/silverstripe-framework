@@ -79,7 +79,7 @@ Example:
 
 	:::php
 	class MyController extends Controller {
-		static $allowed_actions = array('myurlaction');
+	  static $allowed_actions = array('myurlaction');
 	  public function myurlaction($RAW_urlParams) {
 	    $SQL_urlParams = Convert::raw2sql($RAW_urlParams); // works recursively on an array
 	    $objs = Player::get()->where("Name = '{$SQL_data[OtherID]}'");

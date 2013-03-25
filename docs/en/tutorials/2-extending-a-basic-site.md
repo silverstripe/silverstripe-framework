@@ -245,7 +245,8 @@ First, the template for displaying a single article:
 
 
 	:::ss
-	<div class="content-container"> 
+	<% include SideBar %>
+	<div class="content-container unit size3of4 lastUnit">
 		<article>
 			<h1>$Title</h1>
 			<div class="news-details">
@@ -255,7 +256,6 @@ First, the template for displaying a single article:
 		</article>
 			$Form
 	</div>
-	<% include SideBar %>
 
 
 Most of the code is just like the regular Page.ss, we include an informational div with the date and the author of the Article.
@@ -278,7 +278,8 @@ We'll now create a template for the article holder. We want our news section to 
 **themes/simple/templates/Layout/ArticleHolder.ss**
 
 	:::ss
-	<div class="content-container">     
+	<% include SideBar %>
+	<div class="content-container unit size3of4 lastUnit">  
 		<article>
 			<h1>$Title</h1>
 			$Content        
@@ -293,7 +294,6 @@ We'll now create a template for the article holder. We want our news section to 
 		<% end_loop %>
 			$Form
 	</div>
-	<% include SideBar %>
 
 
 Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a page. In this case, the children are our news articles. The *$Link* variable will give the address of the article which we can use to create a link, and the *FirstParagraph* function of the `[api:HTMLText]` field gives us a nice summary of the article. The function strips all tags from the paragraph extracted.
@@ -482,7 +482,8 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 **themes/simple/templates/Layout/StaffHolder.ss**
 
 	:::ss
-	<div class="content-container">     
+	<% include SideBar %>
+	<div class="content-container unit size3of4 lastUnit">
 		<article>
 			<h1>$Title</h1>
 			$Content        
@@ -498,7 +499,6 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 		<% end_loop %>
 			$Form
 	</div>
-	<% include SideBar %>
 
 
 This template is very similar to the *ArticleHolder* template. The *SetWidth* method of the `[api:Image]` class
@@ -512,7 +512,8 @@ The *StaffPage* template is also very straight forward.
 **themes/simple/templates/Layout/StaffPage.ss**
 
 	:::ss
-	<div class="content-container"> 
+	<% include SideBar %>
+	<div class="content-container unit size3of4 lastUnit">
 		<article>
 			<h1>$Title</h1>
 			<div class="content">
@@ -521,7 +522,6 @@ The *StaffPage* template is also very straight forward.
 		</article>
 			$Form
 	</div>
-	<% include SideBar %>
 
 Here we use the *SetWidth* method to get a different sized image from the same source image. You should now have
 a complete staff section.
