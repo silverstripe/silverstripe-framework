@@ -69,7 +69,7 @@ class RestfulService extends ViewableData {
 			'Use the "RestfulService.default_curl_options" config setting instead, ' 
 				. 'with direct reference to the CURL_* options'
 		);
-		Config::set('RestfulService', 'default_proxy', array(
+		config::inst()->update('RestfulService', 'default_proxy', array(
 			CURLOPT_PROXY => $proxy,
 			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
 			CURLOPT_PROXYPORT => $port,

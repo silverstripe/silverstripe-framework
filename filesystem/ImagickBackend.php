@@ -50,7 +50,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	public static function set_default_quality($quality) {
 		Deprecation::notice('3.2', 'Use the "IMagickBackend.default_quality" config setting instead');
 		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
-			Config::inst()->set('IMagickBackend', 'default_quality', (int) $quality);
+			config::inst()->update('IMagickBackend', 'default_quality', (int) $quality);
 		}
 	}
 	

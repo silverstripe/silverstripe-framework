@@ -23,7 +23,7 @@ class GDBackend extends Object implements Image_Backend {
 	public static function set_default_quality($quality) {
 		Deprecation::notice('3.2', 'Use the "GDBackend.default_quality" config setting instead');
 		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
-			Config::inst()->set('GDBackend', 'default_quality', (int) $quality);
+			config::inst()->update('GDBackend', 'default_quality', (int) $quality);
 		}
 	}
 
