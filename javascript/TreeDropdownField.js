@@ -124,6 +124,7 @@
 				else this.loadTree(null, updateFn);
 			},
 			setValue: function(val) {
+				this.data('metadata', $.extend(this.data('metadata'), {id: val}));
 				this.find(':input:hidden').val(val).trigger('change');
 			},
 			getValue: function() {
