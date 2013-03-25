@@ -426,12 +426,6 @@ abstract class Object {
 	public static function has_extension($requiredExtension) {
 		$class = get_called_class();
 
-		if(func_num_args() > 1) {
-			Deprecation::notice('3.2.0', "Object::has_extension() deprecated. Call has_extension() on the class");
-			$class = func_get_arg(0);
-			$requiredExtension = func_get_arg(1);
-		}
-
 		$requiredExtension = strtolower($requiredExtension);
 		$extensions = Config::inst()->get($class, 'extensions');
 
@@ -458,12 +452,6 @@ abstract class Object {
 	 */
 	public static function add_extension($extension) {
 		$class = get_called_class();
-
-		if(func_num_args() > 1) {
-			Deprecation::notice('3.2.0', "Object::add_extension() deprecated. Call add_extension() on the class");
-			$class = func_get_arg(0);
-			$extension = func_get_arg(1);
-		}
 
 		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
@@ -519,12 +507,6 @@ abstract class Object {
 	 */
 	public static function remove_extension($extension) {
 		$class = get_called_class();
-
-		if(func_num_args() > 1) {
-			Deprecation::notice('3.2.0', "Object::remove_extension() deprecated. Call remove_extension() on the class");
-			$class = func_get_arg(0);
-			$extension = func_get_arg(1);
-		}
 
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
 		Config::inst()->extraConfigSourcesChanged($class);
