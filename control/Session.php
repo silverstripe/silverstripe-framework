@@ -497,6 +497,7 @@ class Session {
 	 */
 	public static function start($sid = null) {
 		$path = Config::inst()->get('Session', 'cookie_path');
+		if(!$path) $path = Director::baseURL();
 		$domain = Config::inst()->get('Session', 'cookie_domain');
 		$secure = Config::inst()->get('Session', 'cookie_secure');
 		$session_path = Config::inst()->get('Session', 'session_store_path');
@@ -528,6 +529,7 @@ class Session {
 		if(session_id()) {
 			if($removeCookie) {
 				$path = Config::inst()->get('cookie_path');
+				if(!$path) $path = Director::baseURL();
 				$domain = Config::inst()->get('cookie_domain');
 				$secure = Config::inst()->get('cookie_secure'); 
 				
