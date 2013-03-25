@@ -161,7 +161,9 @@
 				}
 		
 				// Set parent node (fallback to root)
-				this.find(':input[name=ParentID]').val(selectedNode ? selectedNode.data('id') : 0);
+				if(selectedNode.length) {
+					this.find(':input[name=ParentID]').val(selectedNode ? selectedNode.data('id') : 0);	
+				}
 			}
 		});
 	});
