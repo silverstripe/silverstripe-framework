@@ -275,21 +275,14 @@ Some rules of thumb:
 
 ## Cross-Site Request Forgery (CSRF)
 
-SilverStripe has built-in countermeasures against this type of identity theft for all form submissions. A form object
-will automatically contain a *SecurityID* parameter which is generated as a secure hash on the server, connected to the
+SilverStripe has built-in countermeasures against [CSRF](http://shiflett.org/articles/cross-site-request-forgeries) identity theft for all form submissions. A form object
+will automatically contain a `SecurityID` parameter which is generated as a secure hash on the server, connected to the
 currently active session of the user. If this form is submitted without this parameter, or if the parameter doesn't
 match the hash stored in the users session, the request is discarded.
+You can disable this behaviour through `[api:Form->disableSecurityToken()]`.
 
-If you know what you're doing, you can disable this behaviour:
-
-	:::php
-	$myForm->disableSecurityToken();
-
-
-See
-[http://shiflett.org/articles/cross-site-request-forgeries](http://shiflett.org/articles/cross-site-request-forgeries)
-
-
+It is also recommended to limit form submissions to the intended HTTP verb (mostly `GET` or `POST`)
+through `[api:Form->setStrictFormMethodCheck()]`.
 
 ## Casting user input
 
