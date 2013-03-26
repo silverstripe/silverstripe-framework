@@ -183,7 +183,10 @@ define('SAPPHIRE_ADMIN_PATH', FRAMEWORK_ADMIN_PATH);
 
 define('THIRDPARTY_DIR', FRAMEWORK_DIR . '/thirdparty');
 define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
-define('ASSETS_DIR', 'assets');
+
+if(!defined('ASSETS_DIR')) {
+	define('ASSETS_DIR', 'assets');
+}
 define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 
 ///////////////////////////////////////////////////////////////////////////////
