@@ -8,12 +8,12 @@
 class Group extends DataObject {
 	
 	private static $db = array(
-		"Title" => "Varchar",
+		"Title" => "Varchar(255)",
 		"Description" => "Text",
-		"Code" => "Varchar",
+		"Code" => "Varchar(255)",
 		"Locked" => "Boolean",
 		"Sort" => "Int",
-		"HtmlEditorConfig" => "Varchar"
+		"HtmlEditorConfig" => "Text"
 	);
 	
 	private static $has_one = array(
