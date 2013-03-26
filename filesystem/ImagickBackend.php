@@ -9,9 +9,10 @@ if(class_exists('Imagick')) {
 class ImagickBackend extends Imagick implements Image_Backend {
 	
 	/**
+	 * @config
 	 * @var int
 	 */
-	protected static $default_quality = 75;
+	private static $default_quality = 75;
 	
 	/**
 	 * __construct
@@ -23,7 +24,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		if(is_string($filename)) {
 			parent::__construct($filename);
 		} else {
-			self::setImageCompressionQuality(self::$default_quality);
+			self::setImageCompressionQuality($this->config()->default_quality);
 		}
 	}
 
@@ -42,12 +43,15 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	/**
 	 * set_default_quality
 	 *
-	 * @static
+	 * @deprecated 3.2 Use the "IMagickBackend.default_quality" config setting instead
 	 * @param int $quality
 	 * @return void
 	 */
 	public static function set_default_quality($quality) {
-		self::$default_quality = $quality;
+		Deprecation::notice('3.2', 'Use the "IMagickBackend.default_quality" config setting instead');
+		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
+			config::inst()->update('IMagickBackend', 'default_quality', (int) $quality);
+		}
 	}
 	
 	/**

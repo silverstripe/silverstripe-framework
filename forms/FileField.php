@@ -160,7 +160,7 @@ class FileField extends FormField {
 	 * @return string
 	 */
 	public function getFolderName() {
-		return ($this->folderName !== false) ? $this->folderName : Upload::$uploads_folder;
+		return ($this->folderName !== false) ? $this->folderName : Config::inst()->get('Upload', 'uploads_folder');
 	}
 	
 	public function validate($validator) {

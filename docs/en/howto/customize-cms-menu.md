@@ -15,7 +15,7 @@ In this case we'll place the icon in `mysite/images`, but you are free to use an
 	:::php
 	class ProductAdmin extends ModelAdmin {
 		// ...
-		static $menu_icon = 'mysite/images/product-icon.png'; 
+		private static $menu_icon = 'mysite/images/product-icon.png'; 
 	}
 
 ## Defining a Custom Title ##
@@ -27,7 +27,7 @@ removing the "Admin" bit at the end.
 	:::php
 	class ProductAdmin extends ModelAdmin {
 		// ...
-		static $menu_title = 'My Custom Admin'; 
+		private static $menu_title = 'My Custom Admin'; 
 	}
  
 In order to localize the menu title in different languages, use the `<classname>.MENUTITLE`

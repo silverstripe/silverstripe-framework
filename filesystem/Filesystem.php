@@ -7,9 +7,17 @@
  */
 class Filesystem extends Object {
 	
-	public static $file_create_mask = 02775;
+	/**
+	 * @config
+	 * @var integer Integer
+	 */
+	private static $file_create_mask = 02775;
 	
-	public static $folder_create_mask = 02775;
+	/**
+	 * @config
+	 * @var integer Integer
+	 */
+	private static $folder_create_mask = 02775;
 	
 	protected static $cache_folderModTime;
 	
@@ -23,7 +31,7 @@ class Filesystem extends Object {
 	 */
 	public static function makeFolder($folder) {
 		if(!file_exists($base = dirname($folder))) self::makeFolder($base);
-		if(!file_exists($folder)) mkdir($folder, Filesystem::$folder_create_mask);
+		if(!file_exists($folder)) mkdir($folder, Config::inst()->get('Filesystem', 'folder_create_mask'));
 	}
 	
 	/**

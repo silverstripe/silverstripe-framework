@@ -24,7 +24,7 @@ class TestRunner extends Controller {
 	/** @ignore */
 	private static $default_reporter;
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'' => 'browse',
 		'coverage/module/$ModuleName' => 'coverageModule',
 		'coverage/$TestCase!' => 'coverageOnly',
@@ -36,7 +36,7 @@ class TestRunner extends Controller {
 		'$TestCase' => 'only'
 	);
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'browse',
 		'coverage',

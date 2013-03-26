@@ -11,7 +11,7 @@
  */
 class Varchar extends StringField {
 
-	static $casting = array(
+	private static $casting = array(
 		"Initial" => "Text",
 		"URL" => "Text",
 	);

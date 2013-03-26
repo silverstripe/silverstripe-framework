@@ -36,7 +36,7 @@ will be used both for grouping and for the title in the template.
 
 	:::php
 	class Module extends DataObject {
-		public static $db = array(
+		private static $db = array(
 			'Title' => 'Text'
 		);
 	

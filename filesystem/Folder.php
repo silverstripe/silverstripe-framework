@@ -19,11 +19,11 @@
  */
 class Folder extends File {
 
-	static $singular_name = "Folder";
+	private static $singular_name = "Folder";
 
-	static $plural_name = "Folders";
+	private static $plural_name = "Folders";
 
-	static $default_sort = "\"Name\"";
+	private static $default_sort = "\"Name\"";
 	
 	/**
 	 * 

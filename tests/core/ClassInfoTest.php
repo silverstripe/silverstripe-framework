@@ -107,9 +107,9 @@ class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
 }
 
 class ClassInfoTest_BaseDataClass extends DataObject {
-	public static $db = array('Title' => 'Varchar');
+	private static $db = array('Title' => 'Varchar');
 }
 class ClassInfoTest_NoFields extends ClassInfoTest_BaseDataClass {}
 class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
-	public static $db = array('Description' => 'Varchar');
+	private static $db = array('Description' => 'Varchar');
 }

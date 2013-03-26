@@ -1,7 +1,7 @@
 <?php
 
 class VersionedTest extends SapphireTest {
-	static $fixture_file = 'VersionedTest.yml';
+	protected static $fixture_file = 'VersionedTest.yml';
 
 	protected $extraDataObjects = array(
 		'VersionedTest_DataObject',
@@ -410,27 +410,27 @@ class VersionedTest extends SapphireTest {
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		'Title' => 'Varchar',
 		'Content' => 'HTMLText'
 	);
 
-	static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Parent' => 'VersionedTest_DataObject'
 	);
 }
 
 class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"ExtraField" => "Varchar",
 	);
 	
-	static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
 }
@@ -439,5 +439,5 @@ class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnl
  * @ignore
  */
 class VersionedTest_UnversionedWithField extends DataObject implements TestOnly {
-	public static $db = array('Version' => 'Varchar(255)');
+	private static $db = array('Version' => 'Varchar(255)');
 }

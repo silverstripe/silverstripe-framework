@@ -52,7 +52,7 @@ especially useful if you know how long your source data needs to be.
 
 	:::php
 	class StaffPage extends Page {
-	   static $db = array(
+	   private static $db = array(
 	      'Author' => 'Varchar(50)'
 	   );
 	}

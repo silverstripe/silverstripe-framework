@@ -25,38 +25,38 @@
 class Debug {
 	
 	/**
-	 * @var $custom_smtp_server string Custom mailserver for sending mails.
+	 * @config
+	 * @var string Email address to send error notifications
 	 */
-	protected static $custom_smtp_server = '';
+	private static $send_errors_to;
 	
 	/**
-	 * @var $send_errors_to string Email address to send error notifications
+	 * @config
+	 * @var string Email address to send warning notifications
 	 */
-	protected static $send_errors_to;
+	private static $send_warnings_to;
 	
 	/**
-	 * @var $send_warnings_to string Email address to send warning notifications
-	 */
-	protected static $send_warnings_to;
-	
-	/**
-	 * String indicating the file where errors are logged.
+	 * @config
+	 * @var String indicating the file where errors are logged.
 	 * Filename is relative to the site root.
 	 * The named file will have a terse log sent to it, and the full log (an 
 	 * encoded file containing backtraces and things) will go to a file of a similar
 	 * name, but with the suffix ".full" added.
 	 */
-	protected static $log_errors_to = null;
+	private static $log_errors_to = null;
 
 	/**
-	 * The header of the message shown to users on the live site when a fatal error occurs.
+	 * @config
+	 * @var string The header of the message shown to users on the live site when a fatal error occurs.
 	 */
-	public static $friendly_error_header = 'There has been an error';
+	private static $friendly_error_header = 'There has been an error';
 
 	/**
-	 * The body of the message shown to users on the live site when a fatal error occurs.
+	 * @config
+	 * @var string The body of the message shown to users on the live site when a fatal error occurs.
 	 */
-	public static $friendly_error_detail = 'The website server has not been able to respond to your request.';
+	private static $friendly_error_detail = 'The website server has not been able to respond to your request.';
 	
 	/**
 	 * Show the contents of val in a debug-friendly way.
@@ -182,7 +182,7 @@ class Debug {
 	}
 	
 	// Keep track of how many headers have been sent
-	static $headerCount = 0;
+	private static $headerCount = 0;
 	
 	/**
 	 * Send a debug message in an HTTP header. Only works if you are
@@ -257,9 +257,9 @@ class Debug {
 		if(error_reporting() == 0) return;
 		ini_set('display_errors', 0);
 
-		if(self::$send_warnings_to) {
+		if(Config::inst()->get('Debug', 'send_warnings_to')) {
 			return self::emailError(
-				self::$send_warnings_to, 
+				Config::inst()->get('Debug', 'send_warnings_to'), 
 				$errno, 
 				$errstr, 
 				$errfile, 
@@ -281,7 +281,7 @@ class Debug {
 			SS_Log::WARN
 		);
 		
-		if(self::$log_errors_to) {
+		if(Config::inst()->get('Debug', 'log_errors_to')) {
 			self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		}
 
@@ -306,8 +306,11 @@ class Debug {
 	public static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		ini_set('display_errors', 0);
 
-		if(self::$send_errors_to) {
-			self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
+		if(Config::inst()->get('Debug', 'send_errors_to')) {
+			self::emailError(
+				Config::inst()->get('Debug', 'send_errors_to'), $errno, 
+				$errstr, $errfile, $errline, $errcontext, "Error"
+			);
 		}
 		
 		// Send out the error details to the logger for writing
@@ -322,7 +325,7 @@ class Debug {
 			SS_Log::ERR
 		);
 		
-		if(self::$log_errors_to) {
+		if(Config::inst()->get('Debug', 'log_errors_to')) {
 			self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		}
 		
@@ -348,8 +351,13 @@ class Debug {
 	 * @return string HTML error message for non-ajax requests, plaintext for ajax-request.
 	 */
 	public static function friendlyError($statusCode=500, $friendlyErrorMessage=null, $friendlyErrorDetail=null) {
-		if(!$friendlyErrorMessage) $friendlyErrorMessage = self::$friendly_error_header;
-		if(!$friendlyErrorDetail) $friendlyErrorDetail = self::$friendly_error_detail;
+		if(!$friendlyErrorMessage) {
+			$friendlyErrorMessage = Config::inst()->get('Debug', 'friendly_error_header');
+		}
+		
+		if(!$friendlyErrorDetail) {
+			$friendlyErrorDetail = Config::inst()->get('Debug', 'friendly_error_detail');
+		}
 
 		if(!headers_sent()) {
 			$currController = Controller::curr();
@@ -381,8 +389,8 @@ class Debug {
 				$renderer->writeHeader();
 				$renderer->writeInfo("Website Error", $friendlyErrorMessage, $friendlyErrorDetail);
 				
-				if(Email::getAdminEmail()) {
-					$mailto = Email::obfuscate(Email::getAdminEmail());
+				if(Email::config()->admin_email) {
+					$mailto = Email::obfuscate(Email::config()->admin_email);
 					$renderer->writeParagraph('Contact an administrator: ' . $mailto . '');
 				}
 

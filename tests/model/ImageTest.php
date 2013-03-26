@@ -6,7 +6,7 @@
  */
 class ImageTest extends SapphireTest {
 	
-	static $fixture_file = 'ImageTest.yml';
+	protected static $fixture_file = 'ImageTest.yml';
 	
 	protected $origBackend;
 	

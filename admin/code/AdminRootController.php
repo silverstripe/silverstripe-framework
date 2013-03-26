@@ -8,7 +8,7 @@ class AdminRootController extends Controller {
 	 * The url base that all LeftAndMain derived panels will live under
 	 * Won't automatically update the base route if you change this - that has to be done seperately
 	 */
-	static $url_base = 'admin';
+	private static $url_base = 'admin';
 
 	/**
 	 * @var string
@@ -16,7 +16,7 @@ class AdminRootController extends Controller {
 	 * The LeftAndMain child that will be used as the initial panel to display if none is selected (i.e. if you
 	 * visit /admin)
 	 */
-	static $default_panel = 'SecurityAdmin';
+	private static $default_panel = 'SecurityAdmin';
 
 	/**
 	 * @var array

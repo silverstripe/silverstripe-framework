@@ -6,7 +6,7 @@
  */
 class PermissionTest extends SapphireTest {
 
-	static $fixture_file = 'PermissionTest.yml';
+	protected static $fixture_file = 'PermissionTest.yml';
 	
 	public function testGetCodesGrouped() {
 		$codes = Permission::get_codes();
@@ -92,11 +92,11 @@ class PermissionTest extends SapphireTest {
 		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','Permission','GroupID');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 		
-		Permission::add_to_hidden_permissions('CMS_ACCESS_LeftAndMain');
+		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
 
 		$this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
-		
-		Permission::remove_from_hidden_permissions('CMS_ACCESS_LeftAndMain');
+
+		Config::inst()->remove('Permission', 'hidden_permissions');		
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 	}
 }

@@ -79,7 +79,7 @@ Let's create the *ArticleHolder* page type.
 	:::php
 	<?php
 	class ArticleHolder extends Page {
-		static $allowed_children = array('ArticlePage');
+		private static $allowed_children = array('ArticlePage');
 	}
 	class ArticleHolder_Controller extends Page_Controller {
 	}
@@ -107,7 +107,7 @@ it. Add a *$db* property definition in the *ArticlePage* class:
 	:::php
 	<?php
 	class ArticlePage extends Page {
-		static $db = array(
+		private static $db = array(
 			'Date' => 'Date',
 			'Author' => 'Text'
 		);
@@ -335,13 +335,13 @@ Let's now make a purely cosmetic change that nevertheless helps to make the info
 Add the following field to the *ArticleHolder* and *ArticlePage* classes:
 
 	:::php
-	static $icon = "framework/docs/en/tutorials/_images/treeicons/news-file.gif";
+	private static $icon = "framework/docs/en/tutorials/_images/treeicons/news-file.gif";
 
 
 And this one to the *HomePage* class:
 
 	:::php
-	static $icon = "framework/docs/en/tutorials/_images/treeicons/home-file.gif";
+	private static $icon = "framework/docs/en/tutorials/_images/treeicons/home-file.gif";
 
 
 This will change the icons for the pages in the CMS.  
@@ -422,12 +422,9 @@ Now that we have a complete news section, let's take a look at the staff section
 	<?php
 	
 	class StaffHolder extends Page {
-		static $db = array(
-		);
-		static $has_one = array(
-		);
-		
-		static $allowed_children = array('StaffPage');
+		private static $db = array();
+		private static $has_one = array();
+		private static $allowed_children = array('StaffPage');
 	}
 	
 	class StaffHolder_Controller extends Page_Controller {
@@ -442,9 +439,9 @@ Nothing here should be new. The *StaffPage* page type is more interesting though
 	:::php
 	<?php
 	class StaffPage extends Page {
-		static $db = array(
+		private static $db = array(
 		);
-		static $has_one = array(
+		private static $has_one = array(
 			'Photo' => 'Image'
 		);
 		

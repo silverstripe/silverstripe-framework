@@ -5,7 +5,7 @@
  */
 class FileTest extends SapphireTest {
 	
-	static $fixture_file = 'FileTest.yml';
+	protected static $fixture_file = 'FileTest.yml';
 	
 	protected $extraDataObjects = array('FileTest_MyCustomFile');
 
@@ -95,8 +95,9 @@ class FileTest extends SapphireTest {
 	public function testValidateExtension() {
 		Session::set('loggedInAs', null);
 		
-		$origExts = File::$allowed_extensions;
-		File::$allowed_extensions = array('txt');
+		$orig = Config::inst()->get('File', 'allowed_extensions');
+		Config::inst()->remove('File', 'allowed_extensions');
+		Config::inst()->update('File', 'allowed_extensions', array('txt'));
 		
 		$file = $this->objFromFixture('File', 'asdf'); 
 	
@@ -115,8 +116,9 @@ class FileTest extends SapphireTest {
 		$file->Name = 'asdf.TXT';
 		$v = $file->validate();
 		$this->assertTrue($v->valid());
-		
-		File::$allowed_extensions = $origExts;
+
+		Config::inst()->remove('File', 'allowed_extensions');
+		Config::inst()->update('File', 'allowed_extensions', $orig);
 	}
 	
 	public function testSetNameChangesFilesystemOnWrite() {
@@ -168,8 +170,9 @@ class FileTest extends SapphireTest {
 	 * @expectedException ValidationException
 	 */
 	public function testSetNameWithInvalidExtensionDoesntChangeFilesystem() {
-		$origExts = File::$allowed_extensions;
-		File::$allowed_extensions = array('txt');
+		$orig = Config::inst()->get('File', 'allowed_extensions');
+		Config::inst()->remove('File', 'allowed_extensions');
+		Config::inst()->update('File', 'allowed_extensions', array('txt'));
 		
 		$file = $this->objFromFixture('File', 'asdf');
 		$oldPath = $file->getFullPath();
@@ -178,7 +181,8 @@ class FileTest extends SapphireTest {
 		try {
 			$file->write();
 		} catch(ValidationException $e) {
-			File::$allowed_extensions = $origExts;
+			Config::inst()->remove('File', 'allowed_extensions');
+			Config::inst()->update('File', 'allowed_extensions', $orig);
 			throw $e;
 		}
 	}
@@ -321,9 +325,9 @@ class FileTest extends SapphireTest {
 
 	
 	public function testGetClassForFileExtension() {
-		$orig = File::$class_for_file_extension;
-		File::$class_for_file_extension['*'] = 'MyGenericFileClass';
-		File::$class_for_file_extension['foo'] = 'MyFooFileClass';
+		$orig = File::config()->class_for_file_extension;
+		File::config()->class_for_file_extension = array('*' => 'MyGenericFileClass');
+		File::config()->class_for_file_extension = array('foo' => 'MyFooFileClass');
 
 		$this->assertEquals(
 			'MyFooFileClass',
@@ -341,19 +345,19 @@ class FileTest extends SapphireTest {
 			'Falls back to generic class for unknown extensions'
 		);
 		
-		File::$class_for_file_extension = $orig;
+		File::config()->class_for_file_extension = $orig;
 	}
 	
 	public function testFolderConstructChild() {
-		$orig = File::$class_for_file_extension;
-		File::$class_for_file_extension['gif'] = 'FileTest_MyCustomFile';
+		$orig = File::config()->class_for_file_extension;
+		File::config()->class_for_file_extension = array('gif' => 'FileTest_MyCustomFile');
 		
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
 		$fileID = $folder1->constructChild('myfile.gif');
 		$file = DataObject::get_by_id('File', $fileID);
 		$this->assertEquals('FileTest_MyCustomFile', get_class($file));
 		
-		File::$class_for_file_extension = $orig;
+		File::config()->class_for_file_extension = $orig;
 	}
 
 	public function testSetsOwnerOnFirstWrite() {

@@ -10,14 +10,14 @@
  */
 class DevelopmentAdmin extends Controller {
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'' => 'index',
 		'build/defaults' => 'buildDefaults',
 		'$Action' => '$Action',
 		'$Action//$Action/$ID' => 'handleAction',
 	);
 	
-	static $allowed_actions = array( 
+	private static $allowed_actions = array( 
 		'index', 
 		'tests', 
 		'jstests', 

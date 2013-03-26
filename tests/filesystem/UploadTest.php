@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class UploadTest extends SapphireTest {
-	static $fixture_file = 'UploadTest.yml';
+	protected static $fixture_file = 'UploadTest.yml';
 
 	public function testUpload() {
 		// create tmp file
@@ -36,7 +36,13 @@ class UploadTest extends SapphireTest {
 			'File upload to standard directory in /assets'
 		);
 		$this->assertTrue(
-			(strpos($file1->getFullPath(), Director::baseFolder() . '/assets/' . Upload::$uploads_folder) !== false),	
+			(
+				strpos(
+					$file1->getFullPath(), 
+					Director::baseFolder() . '/assets/' . Config::inst()->get('Upload', 'uploads_folder')
+				) 
+				!== false
+			),	
 			'File upload to standard directory in /assets'
 		);
 		$file1->delete();
@@ -214,7 +220,7 @@ class UploadTest extends SapphireTest {
 	// @param String $namePattern	A regular expression applied to files in the directory. If the name matches
 	// the pattern, it is deleted. Directories, . and .. are excluded.
 	public function deleteTestUploadFiles($namePattern) {
-		$tmpFolder = ASSETS_PATH . "/" . Upload::$uploads_folder;
+		$tmpFolder = ASSETS_PATH . "/" . Config::inst()->get('Upload', 'uploads_folder');
 		$files = scandir($tmpFolder);
 		foreach ($files as $f) {
 			if ($f == "." || $f == ".." || is_dir("$tmpFolder/$f")) continue;

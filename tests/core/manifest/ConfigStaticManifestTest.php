@@ -12,6 +12,7 @@ class ConfigStaticManifestTest extends SapphireTest {
 	static public $public2;
 	static protected $protected2;
 	static private $private2;
+	static $nolevel_after_private;
 
 	// Assigning values
 	static $snone;
@@ -96,7 +97,8 @@ DOC;
 			'protected' => T_PROTECTED,
 			'protected2' => T_PROTECTED,
 			'private' => T_PRIVATE,
-			'private2' => T_PRIVATE
+			'private2' => T_PRIVATE,
+			'nolevel_after_private' => null
 		);
 
 		foreach($levels as $var => $level) {

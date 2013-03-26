@@ -26,42 +26,66 @@
  * devs might know what they're doing and don't want contentnegotiator messing with their HTML4 doctypes,
  * but still find it useful to have self-closing tags removed.
  */
-class ContentNegotiator {
+class ContentNegotiator extends Object {
 
-	protected static $content_type = '';
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $content_type = '';
 	
-	protected static $encoding = 'utf-8';
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $encoding = 'utf-8';
 
-	protected static $enabled = false;
+	/**
+	 * @config
+	 * @var boolean
+	 */
+	private static $enabled = false;
 
 	/**
 	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say,
 	 * windows-1252, to improve interoperability with extended characters being imported from windows excel.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.encoding" config setting instead
 	 */
 	public static function set_encoding($encoding) {
-		self::$encoding = $encoding;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.encoding" config setting instead');
+		Config::inst()->update('ContentNegotiator', 'encoding', $encoding);
 	}
 
 	/**
 	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes
 	 * that need to specify the character set make use of this function.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.encoding" config setting instead
 	 */
 	public static function get_encoding() {
-		return self::$encoding;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.encoding" config setting instead');
+		return Config::inst()->get('ContentNegotiator', 'encoding');
 	}
 
 	/**
 	 * Enable content negotiation for all templates, not just those with the xml header.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.enabled" config setting instead
 	 */
 	public static function enable() {
-		self::$enabled = true;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.enabled" config setting instead');
+		Config::inst()->update('ContentNegotiator', 'enabled', true);
 	}
 	
-	/*
+	/**
 	 * Disable content negotiation for all templates, not just those with the xml header.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.enabled" config setting instead
 	 */
 	public static function disable() {
-		self::$enabled = false;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.enabled" config setting instead');
+		Config::inst()->update('ContentNegotiator', 'enabled', false);
 	}
 
 	/**
@@ -77,7 +101,7 @@ class ContentNegotiator {
 			return false;
 		}
 
-		if(self::$enabled) return true;
+		if(Config::inst()->get('ContentNegotiator', 'enabled')) return true;
 		else return (substr($response->getBody(),0,5) == '<' . '?xml');
 	}
 
@@ -135,12 +159,13 @@ class ContentNegotiator {
 	 */
 	public function xhtml(SS_HTTPResponse $response) {
 		$content = $response->getBody();
+		$encoding = Config::inst()->get('ContentNegotiator', 'encoding');
 
 		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
 		if (empty($contentType)) {
-			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
+			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . $encoding);
 		} else {
-			$response->addHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
+			$response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
 		}
 		$response->addHeader("Vary" , "Accept");
 
@@ -167,12 +192,12 @@ class ContentNegotiator {
 	 * Removes "xmlns" attributes and any <?xml> Pragmas.
 	 */
 	public function html(SS_HTTPResponse $response) {
-		
+		$encoding = Config::inst()->get('ContentNegotiator', 'encoding');
 		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
 		if (empty($contentType)) {
-			$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
+			$response->addHeader("Content-Type", "text/html; charset=" . $encoding);
 		} else {
-			$response->addHeader("Content-Type", $contentType . "; charset=" . self::$encoding);
+			$response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
 		}
 		$response->addHeader("Vary", "Accept");
 

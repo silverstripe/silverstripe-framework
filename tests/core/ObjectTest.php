@@ -74,7 +74,7 @@ class ObjectTest extends SapphireTest {
 	public function testStaticGetterMethod() {
 		$obj = singleton('ObjectTest_MyObject');
 		$this->assertEquals(
-			ObjectTest_MyObject::$mystaticProperty,
+			'MyObject',
 			$obj->stat('mystaticProperty'),
 			'Uninherited statics through stat() on a singleton behave the same as built-in PHP statics'
 		);
@@ -349,6 +349,17 @@ class ObjectTest extends SapphireTest {
 			array('Versioned',array('Stage\'Stage,Live\'Live', 'Live')),
 			Object::parse_class_spec("Versioned('Stage\'Stage,Live\'Live','Live')")
 		);
+
+		// True, false and null values
+		$this->assertEquals(
+			array('ClassName', array('string', true, array('string', false))),
+			Object::parse_class_spec('ClassName("string", true, array("string", false))')
+		);
+		$this->assertEquals(
+			array('ClassName', array(true, false, null)),
+			Object::parse_class_spec('ClassName(true, false, null)')
+		);
+
 		// Array
 		$this->assertEquals(
 			array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
@@ -433,13 +444,14 @@ class ObjectTest_T2 extends Object {
 
 class ObjectTest_MyObject extends Object {
 	public $title = 'my object';
-	static $mystaticProperty = "MyObject";
+	/** @config */
+	private static $mystaticProperty = "MyObject";
 	static $mystaticArray = array('one');
 }
 
 class ObjectTest_MySubObject extends ObjectTest_MyObject {
 	public $title = 'my subobject';
-	static $mystaticProperty = "MySubObject";
+	private static $mystaticProperty = "MySubObject";
 	static $mystaticSubProperty = "MySubObject";
 	static $mystaticArray = array('two');
 }
@@ -460,7 +472,7 @@ class ObjectTest_CreateTest3 extends Object {}
 
 class ObjectTest_ExtensionTest extends Object {
 	
-	public static $extensions = array (
+	private static $extensions = array (
 		'oBjEcTTEST_ExtendTest1',
 		"ObjectTest_ExtendTest2('FOO', 'BAR')",
 	);
@@ -468,12 +480,12 @@ class ObjectTest_ExtensionTest extends Object {
 }
 
 class ObjectTest_ExtensionTest2 extends Object {
-	public static $extensions = array('ObjectTest_Extension');
+	private static $extensions = array('ObjectTest_Extension');
 }
 
 class ObjectTest_ExtensionRemoveTest extends Object {
 	
-	public static $extensions = array (
+	private static $extensions = array (
 		'ObjectTest_ExtendTest1',
 	);
 	
@@ -497,7 +509,7 @@ class ObjectTest_CacheTest extends Object {
 }
 
 class ObjectTest_ExtendTest extends Object {
-	public static $extensions = array('ObjectTest_ExtendTest1', 'ObjectTest_ExtendTest2');
+	private static $extensions = array('ObjectTest_ExtendTest1', 'ObjectTest_ExtendTest2');
 	public function extendableMethod($argument = null) { return "ExtendTest($argument)"; }
 }
 

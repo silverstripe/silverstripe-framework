@@ -6,7 +6,7 @@
 
 class DataDifferencerTest extends SapphireTest {
 	
-	static $fixture_file = 'DataDifferencerTest.yml';
+	protected static $fixture_file = 'DataDifferencerTest.yml';
 	
 	protected $extraDataObjects = array(
 		'DataDifferencerTest_Object',
@@ -39,12 +39,12 @@ class DataDifferencerTest extends SapphireTest {
 		// this is only really necessary to make the test pass when FRAMEWORK_DIR is not "framework"
 		$image1->Filename = FRAMEWORK_DIR . substr($image1->Filename, 9);
 		$image2->Filename = FRAMEWORK_DIR . substr($image2->Filename, 9);
-		$origUpdateFilesystem = File::$update_filesystem;
+		$origUpdateFilesystem = Config::inst()->get('File', 'update_filesystem');
 		// we don't want the filesystem being updated on write, as we're only dealing with mock files
-		File::$update_filesystem = false;
+		Config::inst()->update('File', 'update_filesystem', false);
 		$image1->write();
 		$image2->write();
-		File::$update_filesystem = $origUpdateFilesystem;
+		Config::inst()->update('File', 'update_filesystem', $origUpdateFilesystem);
 
 		// create a new version
 		$obj1->ImageID = $image2->ID;
@@ -64,13 +64,13 @@ class DataDifferencerTest extends SapphireTest {
 
 class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
-	static $extensions = array('Versioned("Stage", "Live")');
+	private static $extensions = array('Versioned("Stage", "Live")');
 
-	static $db = array(
+	private static $db = array(
 		'Choices' => "Varchar",
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Image' => 'DataDifferencerTest_MockImage',
 		'HasOneRelation' => 'DataDifferencerTest_HasOneRelationObject'
 	);
@@ -100,11 +100,11 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 class DataDifferencerTest_HasOneRelationObject extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar'
 	);
 	
-	static $has_many = array(
+	private static $has_many = array(
 		'Objects' => 'DataDifferencerTest_Object'
 	);
 }

@@ -14,7 +14,7 @@ functionality. It is usually added through the `[api:DataObject->getCMSFields()]
 
 	:::php
 	class MyObject extends DataObject {
-		static $db = array('Content' => 'HTMLText');
+		private static $db = array('Content' => 'HTMLText');
 		
 		public function getCMSFields() {
 			return new FieldList(new HTMLEditorField('Content'));

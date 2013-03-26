@@ -2,7 +2,7 @@
 
 class ControllerTest extends FunctionalTest {
 	
-	static $fixture_file = 'ControllerTest.yml';
+	protected static $fixture_file = 'ControllerTest.yml';
 
 	protected $autoFollowRedirection = false;
 
@@ -285,7 +285,7 @@ class ControllerTest extends FunctionalTest {
 	/* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this
 	 * code was supposed to test
 	public function testBaseURL() {
-		Director::setBaseURL('/baseurl/');
+		Config::inst()->update('Director', 'alternate_base_url', '/baseurl/');
 		$this->assertEquals(Controller::BaseURL(), Director::BaseURL());
 	}
 	*/
@@ -345,7 +345,7 @@ class ControllerTest_Controller extends Controller implements TestOnly {
 	
 	public $Content = "default content";
 
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'methodaction',
 		'stringaction',
 		'redirectbacktest',
@@ -380,7 +380,7 @@ class ControllerTest_UnsecuredController extends Controller implements TestOnly 
 
 class ControllerTest_AccessBaseController extends Controller implements TestOnly {
 
-	static $allowed_actions = array();
+	private static $allowed_actions = array();
 	
 	// Denied for all
 	public function method1() {}
@@ -391,7 +391,7 @@ class ControllerTest_AccessBaseController extends Controller implements TestOnly
 
 class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		"method1", // denied because only defined in parent
 		"method2" => true, // granted because its redefined
 		"adminonly" => "ADMIN",
@@ -408,7 +408,7 @@ class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseCo
 
 class ControllerTest_AccessWildcardSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		"*" => "ADMIN", // should throw exception
 	);
 	
@@ -416,7 +416,7 @@ class ControllerTest_AccessWildcardSecuredController extends ControllerTest_Acce
 
 class ControllerTest_IndexSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		"index" => "ADMIN",
 	);
 	
@@ -424,7 +424,7 @@ class ControllerTest_IndexSecuredController extends ControllerTest_AccessBaseCon
 
 class ControllerTest_AccessBaseControllerExtension extends Extension implements TestOnly {
 
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		"extensionmethod1" => true, // granted because defined on this class
 		"method1" => true, // ignored because method not defined on this class
 		"method2" => true, // ignored because method not defined on this class
@@ -446,7 +446,7 @@ class ControllerTest_AccessBaseControllerExtension extends Extension implements 
 
 class ControllerTest_HasAction extends Controller {
 	
-	public static $allowed_actions = array (
+	private static $allowed_actions = array (
 		'allowed_action',
 		//'other_action' => 'lowercase_permission'
 	);

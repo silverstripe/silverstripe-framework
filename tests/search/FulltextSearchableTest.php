@@ -36,7 +36,7 @@ class FulltextSearchableTest extends SapphireTest {
 		// TODO This shouldn't need all arguments included
 		File::remove_extension('FulltextSearchable(\'"Filename","Title","Content"\')');
 		
-		$this->assertFalse(File::has_extension('File', 'FulltextSearchable'));
+		$this->assertFalse(File::has_extension('FulltextSearchable'));
 	}
 	
 }

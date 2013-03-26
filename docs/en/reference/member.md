@@ -45,7 +45,7 @@ You can defined subclasses of `[api:Member]` to add extra fields or functionalit
 
 	:::php
 	class MyMember extends Member {
-		static $db = array(
+		private static $db = array(
 			"Age" => "Int",
 			"Address" => "Text",
 		);
@@ -113,11 +113,11 @@ things, you should add appropriate `[api:Permission::checkMember()]` calls to th
 	  }
 	
 		// define additional properties
-		static $db = array(); 
-		static $has_one = array(); 
-		static $has_many = array(); 
-		static $many_many = array(); 
-		static $belongs_many_many = array(); 
+		private static $db = array(); 
+		private static $has_one = array(); 
+		private static $has_many = array(); 
+		private static $many_many = array(); 
+		private static $belongs_many_many = array(); 
 	
 	  public function somethingElse() {
 	    // You can add any other methods you like, which you can call directly on the member object.

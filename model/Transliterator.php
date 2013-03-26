@@ -15,16 +15,17 @@
  */
 class SS_Transliterator extends Object {
 	/**
-	 * Allow the use of iconv() to perform transliteration.  Set to false to disable.
+	 * @config
+	 * @var boolean Allow the use of iconv() to perform transliteration.  Set to false to disable.
 	 * Even if this variable is true, iconv() won't be used if it's not installed.
 	 */
-	static $use_iconv = false;
+	private static $use_iconv = false;
 		
 	/**
 	 * Convert the given utf8 string to a safe ASCII source
 	 */
 	public function toASCII($source) {
-		if(function_exists('iconv') && self::$use_iconv) return $this->useIconv($source);
+		if(function_exists('iconv') && $this->config()->use_iconv) return $this->useIconv($source);
 		else return $this->useStrTr($source);
 	}
 

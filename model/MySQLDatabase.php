@@ -26,6 +26,10 @@ class MySQLDatabase extends SS_Database {
 	 */
 	private $database;
 
+	/**
+	 * @config
+	 * @var String
+	 */
 	private static $connection_charset = null;
 
 	private $supportsTransactions = true;
@@ -39,9 +43,12 @@ class MySQLDatabase extends SS_Database {
 	 * However, sites created before version 2.4.0 should leave this unset or data that isn't 7-bit
 	 * safe will be corrupted.  As such, the installer comes with this set in mysite/_config.php by
 	 * default in versions 2.4.0 and later.
+	 *
+	 * @deprecated 3.1 Use "MySQLDatabase.connection_charset" config setting instead
 	 */
 	public static function set_connection_charset($charset = 'utf8') {
-		self::$connection_charset = $charset;
+		Deprecation::notice('3.2', 'Use "MySQLDatabase.connection_charset" config setting instead');
+		Config::inst()->update('MySQLDatabase', 'connection_charset', $charset);
 	}
 
 	/**
@@ -67,8 +74,8 @@ class MySQLDatabase extends SS_Database {
 		
 		$this->query("SET sql_mode = 'ANSI'");
 
-		if(self::$connection_charset) {
-			$this->dbConn->set_charset(self::$connection_charset);
+		if(Config::inst()->get('MySQLDatabase', 'connection_charset')) {
+			$this->dbConn->set_charset(Config::inst()->get('MySQLDatabase', 'connection_charset'));
 		}
 
 		$this->active = $this->dbConn->select_db($parameters['database']);

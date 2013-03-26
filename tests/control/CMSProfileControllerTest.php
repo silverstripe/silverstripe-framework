@@ -1,7 +1,7 @@
 <?php
 class CMSProfileControllerTest extends FunctionalTest {
 
-	public static $fixture_file = 'CMSProfileControllerTest.yml';
+	protected static $fixture_file = 'CMSProfileControllerTest.yml';
 
 	public $autoFollowRedirection = false;
 

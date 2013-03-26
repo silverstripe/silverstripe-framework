@@ -79,7 +79,7 @@ Example: Simple Definition
 
 	:::php
 	class MyDataObject extends DataObject {
-	   static $searchable_fields = array(
+	   private static $searchable_fields = array(
 	      'Name',
 	      'ProductCode'
 	   );
@@ -92,7 +92,7 @@ on `$searchable_fields`:
 
 	:::php
 	class MyDataObject extends DataObject {
-	   static $searchable_fields = array(
+	   private static $searchable_fields = array(
 	       'Name' => 'PartialMatchFilter',
 	       'ProductCode' => 'NumericField'
 	   );
@@ -104,7 +104,7 @@ assign an array:
 
 	:::php
 	class MyDataObject extends DataObject {
-	   static $searchable_fields = array(
+	   private static $searchable_fields = array(
 	       'Name' => array(
 	          'field' => 'TextField',
 	          'filter' => 'PartialMatchFilter',
@@ -122,23 +122,23 @@ To include relations (''$has_one'', `$has_many` and `$many_many`) in your search
 
 	:::php
 	class Team extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Title' => 'Varchar'
 	  );
-	  static $many_many = array(
+	  private static $many_many = array(
 	    'Players' => 'Player'
 	  );
-	  static $searchable_fields = array(
+	  private static $searchable_fields = array(
 	      'Title',
 	      'Players.Name',
 	   );
 	}
 	class Player extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Name' => 'Varchar',
 	    'Birthday' => 'Date'
 	  );
-	  static $belongs_many_many = array(
+	  private static $belongs_many_many = array(
 	    'Teams' => 'Team'
 	  );
 	}
@@ -159,12 +159,12 @@ Example: Simple Definition
 
 	:::php
 	class MyDataObject extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Name' => 'Text',
 	    'OtherProperty' => 'Text',
 	    'ProductCode' => 'Int',
 	  ); 
-	  static $summary_fields = array(
+	  private static $summary_fields = array(
 	      'Name',
 	      'ProductCode'
 	   );
@@ -175,18 +175,18 @@ To include relations in your summaries, you can use a dot-notation.
 
 	:::php
 	class OtherObject extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Title' => 'Varchar'
 	  );
 	}
 	class MyDataObject extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Name' => 'Text'
 	  );
-	  static $has_one = array(
+	  private static $has_one = array(
 	    'OtherObject' => 'OtherObject'
 	  );
-	   static $summary_fields = array(
+	   private static $summary_fields = array(
 	      'Name',
 	      'OtherObject.Title'
 	   );

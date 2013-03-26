@@ -8,9 +8,10 @@
  */
 class CMSBatchActionHandler extends RequestHandler {
 	
-	static $batch_actions = array();
+	/** @config */
+	private static $batch_actions = array();
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$BatchAction/applicablepages' => 'handleApplicablePages',
 		'$BatchAction/confirmation' => 'handleConfirmation',
 		'$BatchAction' => 'handleBatchAction',
@@ -40,9 +41,8 @@ class CMSBatchActionHandler extends RequestHandler {
 	 */
 	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
 		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
-			self::$batch_actions[$urlSegment] = array(
-				'class' => $batchActionClass,
-				'recordClass' => $recordClass
+			Config::inst()->update('CMSBatchActionHandler', 'batch_actions', 
+				array($urlSegment => array('class' => $batchActionClass, 'recordClass' => $recordClass))
 			);
 		} else {
 			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);

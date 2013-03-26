@@ -5,7 +5,7 @@
  * @todo Test with columnn headers and custom mappings
  */
 class CsvBulkLoaderTest extends SapphireTest {
-	static $fixture_file = 'CsvBulkLoaderTest.yml';
+	protected static $fixture_file = 'CsvBulkLoaderTest.yml';
 
 	protected $extraDataObjects = array(
 		'CsvBulkLoaderTest_Team',
@@ -206,12 +206,12 @@ class CsvBulkLoaderTest_CustomLoader extends CsvBulkLoader implements TestOnly {
 
 class CsvBulkLoaderTest_Team extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar(255)',
 		'TeamSize' => 'Int',
 	);	
 	
-	static $has_many = array(
+	private static $has_many = array(
 		'Players' => 'CsvBulkLoaderTest_Player',
 	);
 	
@@ -219,7 +219,7 @@ class CsvBulkLoaderTest_Team extends DataObject implements TestOnly {
 
 class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'FirstName' => 'Varchar(255)',
 		'Biography' => 'HTMLText',
 		'Birthday' => 'Date',
@@ -227,7 +227,7 @@ class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 		'IsRegistered' => 'Boolean'
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Team' => 'CsvBulkLoaderTest_Team',
 		'Contract' => 'CsvBulkLoaderTest_PlayerContract'
 	);
@@ -250,7 +250,7 @@ class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 }
 
 class CsvBulkLoaderTest_PlayerContract extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Amount' => 'Currency',
 	);
 }

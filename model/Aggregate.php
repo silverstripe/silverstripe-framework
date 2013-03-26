@@ -35,7 +35,7 @@
  */
 class Aggregate extends ViewableData {
 
-	static $cache = null;
+	private static $cache = null;
 	
 	/** Build & cache the cache object */
 	protected static function cache() {

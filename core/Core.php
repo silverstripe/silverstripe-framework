@@ -13,7 +13,7 @@
  * Initialized constants:
  * - BASE_URL: Full URL to the webroot, e.g. "http://my-host.com/my-webroot" (no trailing slash).
  * - BASE_PATH: Absolute path to the webroot, e.g. "/var/www/my-webroot" (no trailing slash).
- *   See Director::baseFolder(). Can be overwritten by Director::setBaseFolder().
+ *   See Director::baseFolder(). Can be overwritten by Config::inst()->update('Director', 'alternate_base_folder', ).
  * - TEMP_FOLDER: Absolute path to temporary folder, used for manifest and template caches. Example: "/var/tmp"
  *   See getTempFolder(). No trailing slash.
  * - MODULES_DIR: Not used at the moment
@@ -247,6 +247,7 @@ gc_enable();
 require_once 'cache/Cache.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';
+require_once 'core/Config.php';
 require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';

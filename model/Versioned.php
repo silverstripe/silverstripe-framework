@@ -55,7 +55,7 @@ class Versioned extends DataExtension {
 	 * 
 	 * @var array $db_for_versions_table
 	 */
-	static $db_for_versions_table = array(
+	private static $db_for_versions_table = array(
 		"RecordID" => "Int",
 		"Version" => "Int",
 		"WasPublished" => "Boolean",
@@ -69,7 +69,7 @@ class Versioned extends DataExtension {
 	 * 
 	 * @var array $indexes_for_versions_table
 	 */
-	static $indexes_for_versions_table = array(
+	private static $indexes_for_versions_table = array(
 		'RecordID_Version' => '("RecordID","Version")',
 		'RecordID' => true,
 		'Version' => true,
@@ -103,7 +103,7 @@ class Versioned extends DataExtension {
 		$this->liveStage = array_pop($stages);
 	}
 
-	static $db = array(
+	private static $db = array(
 		'Version' => 'Int'
 	);
 
@@ -152,7 +152,7 @@ class Versioned extends DataExtension {
 				$query->replaceText("`{$table}_versions`.`ID`", "`{$table}_versions`.`RecordID`");
 				
 				// Add all <basetable>_versions columns
-				foreach(self::$db_for_versions_table as $name => $type) {
+				foreach(Config::inst()->get('Versioned', 'db_for_versions_table') as $name => $type) {
 					$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 				}
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
@@ -230,7 +230,7 @@ class Versioned extends DataExtension {
 			}
 		
 			// Add all <basetable>_versions columns
-			foreach(self::$db_for_versions_table as $name => $type) {
+			foreach(Config::inst()->get('Versioned', 'db_for_versions_table') as $name => $type) {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
 			
@@ -406,12 +406,12 @@ class Versioned extends DataExtension {
 				if($isRootClass) {
 					// Create table for all versions
 					$versionFields = array_merge(
-						self::$db_for_versions_table,
+						Config::inst()->get('Versioned', 'db_for_versions_table'),
 						(array)$fields
 					);
 				
 					$versionIndexes = array_merge(
-						self::$indexes_for_versions_table,
+						Config::inst()->get('Versioned', 'indexes_for_versions_table'),
 						(array)$indexes
 					);
 				} else {
@@ -809,7 +809,7 @@ class Versioned extends DataExtension {
 		}
 		
 		// Add all <basetable>_versions columns
-		foreach(self::$db_for_versions_table as $name => $type) {
+		foreach(Config::inst()->get('Versioned', 'db_for_versions_table') as $name => $type) {
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 		}
 		

@@ -142,7 +142,7 @@ class CheckboxFieldTest extends SapphireTest {
 }
 class CheckboxFieldTest_Article extends DataObject implements TestOnly {
 	
-	public static $db = array(
+	private static $db = array(
 		'IsChecked' => 'Boolean'
 	);
 	

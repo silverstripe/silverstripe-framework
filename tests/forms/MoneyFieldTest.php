@@ -68,7 +68,7 @@ class MoneyFieldTest extends SapphireTest {
 }
 
 class MoneyFieldTest_Object extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'MyMoney' => 'Money', 
 	);
 }
@@ -78,7 +78,7 @@ class MoneyFieldTest_Object extends DataObject implements TestOnly {
  * MyMoney.
  */
 class MoneyFieldTest_CustomSetter_Object extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'MyMoney' => 'Money', 
 	);
 	

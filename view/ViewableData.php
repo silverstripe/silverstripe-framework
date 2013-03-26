@@ -21,8 +21,9 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * </code>
 	 *
 	 * @var array
+	 * @config
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		'CSSClasses' => 'Varchar'
 	);
 	
@@ -31,8 +32,9 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * is required.
 	 *
 	 * @var string
+	 * @config
 	 */
-	public static $default_cast = 'Text';
+	private static $default_cast = 'Text';
 	
 	/**
 	 * @var array
@@ -330,7 +332,6 @@ class ViewableData extends Object implements IteratorAggregate {
 		if($customFields instanceof ViewableData) {
 			$data = $data->customise($customFields);
 		}
-		
 		if($template instanceof SSViewer) {
 			return $template->process($data, is_array($customFields) ? $customFields : null);
 		}
@@ -521,7 +522,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public function ThemeDir($subtheme = false) {
-		if($theme = SSViewer::current_theme()) {
+		if($theme = Config::inst()->get('SSViewer', 'theme')) {
 			return THEMES_DIR . "/$theme" . ($subtheme ? "_$subtheme" : null);
 		}
 		

@@ -52,10 +52,10 @@ The function should return a map where the keys are the names of the static vari
 
 	:::php
 	class CustomMember extends DataExtension {
-		static $db = array(
+		private static $db = array(
 			'AvatarURL' => 'Varchar',
 		);
-		static $has_one = array(
+		private static $has_one = array(
 			'RelatedMember' => 'Member',
 		);
 	}
@@ -127,9 +127,9 @@ extended by.
 	:::php
 	class Customer extends DataObject {
 	
-	 static $has_one = array('Account'=>'Account');
+	 private static $has_one = array('Account'=>'Account');
 	
-	 static $extensions = array(
+	 private static $extensions = array(
 	    'CustomerWorkflow'
 	 );
 	
@@ -137,11 +137,11 @@ extended by.
 	
 	class Account extends DataObject {
 	
-	 static $db = array(
+	 private static $db = array(
 	     'IsMarkedForDeletion'=>'Boolean'
 	 );
 	
-	 static $has_many = array('Customers'=>'Customer');
+	 private static $has_many = array('Customers'=>'Customer');
 	
 	}
 	

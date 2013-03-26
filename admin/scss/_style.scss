@@ -465,7 +465,7 @@ body.cms {
 	}
 	.ui-tabs-panel {
 		.message {
-			margin: 0 0 $grid-x*2 0; // gets padding from tab panel
+			margin: $grid-x*2 0; // gets padding from tab panel
 		}	
 	}
 }

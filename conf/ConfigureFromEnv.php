@@ -67,7 +67,7 @@ if(defined('SS_ENVIRONMENT_FILE')) {
 }
 
 if(defined('SS_ENVIRONMENT_TYPE')) {
-	Director::set_environment_type(SS_ENVIRONMENT_TYPE);
+	Config::inst()->update('Director', 'environment_type', SS_ENVIRONMENT_TYPE);
 }
 
 global $database;
@@ -128,7 +128,7 @@ if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
 	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 }
 if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
-	BasicAuth::protect_entire_site();
+	Config::inst()->update('BasicAuth', 'entire_site_protected', SS_USE_BASIC_AUTH);
 }
 
 if(defined('SS_ERROR_LOG')) {

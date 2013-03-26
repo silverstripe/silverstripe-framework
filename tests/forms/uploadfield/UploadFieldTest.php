@@ -6,7 +6,7 @@
 
 class UploadFieldTest extends FunctionalTest {
 
-	static $fixture_file = 'UploadFieldTest.yml';
+	protected static $fixture_file = 'UploadFieldTest.yml';
 
 	protected $extraDataObjects = array('UploadFieldTest_Record');
 
@@ -726,23 +726,23 @@ class UploadFieldTest extends FunctionalTest {
 
 class UploadFieldTest_Record extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Text',
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'HasOneFile' => 'File',
 		'HasOneFileMaxOne' => 'File',
 		'HasOneFileMaxTwo' => 'File',
 		'HasOneExtendedFile' => 'UploadFieldTest_ExtendedFile'
 	);
 
-	static $has_many = array(
+	private static $has_many = array(
 		'HasManyFiles' => 'File',
 		'HasManyFilesMaxTwo' => 'File',
 	);
 
-	static $many_many = array(
+	private static $many_many = array(
 		'ManyManyFiles' => 'File',
 	);
 
@@ -750,7 +750,7 @@ class UploadFieldTest_Record extends DataObject implements TestOnly {
 
 class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'Record' => 'UploadFieldTest_Record'
 	);
 

@@ -7,7 +7,7 @@
  */
 class Group extends DataObject {
 	
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar",
 		"Description" => "Text",
 		"Code" => "Varchar",
@@ -16,21 +16,21 @@ class Group extends DataObject {
 		"HtmlEditorConfig" => "Varchar"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"Parent" => "Group",
 	);
 	
-	static $has_many = array(
+	private static $has_many = array(
 		"Permissions" => "Permission",
 		"Groups" => "Group"
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		"Members" => "Member",
 		"Roles" => "PermissionRole",
 	);
 	
-	static $extensions = array(
+	private static $extensions = array(
 		"Hierarchy",
 	);
 	
@@ -90,7 +90,7 @@ class Group extends DataObject {
 
 		// Filter permissions
 		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldDetailForm
-		$permissionsField->setHiddenPermissions(SecurityAdmin::$hidden_permissions);
+		$permissionsField->setHiddenPermissions((array)Config::inst()->get('SecurityAdmin', 'hidden_permissions'));
 
 		if($this->ID) {
 			$group = $this;

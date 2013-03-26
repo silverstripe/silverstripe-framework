@@ -1,7 +1,7 @@
 <?php
 
 class GridFieldDetailFormTest extends FunctionalTest {
-	static $fixture_file = 'GridFieldDetailFormTest.yml';
+	protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
 	protected $extraDataObjects = array(
 		'GridFieldDetailFormTest_Person',
@@ -223,26 +223,26 @@ class GridFieldDetailFormTest extends FunctionalTest {
 }
 
 class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'Group' => 'GridFieldDetailFormTest_PeopleGroup'
 	);
 
-	static $many_many = array(
+	private static $many_many = array(
 		'Categories' => 'GridFieldDetailFormTest_Category'
 	);
 
-	static $many_many_extraFields = array(
+	private static $many_many_extraFields = array(
 		'Categories' => array(
 			'IsPublished' => 'Boolean'
 		)
 	);
 
-	static $default_sort = 'FirstName';
+	private static $default_sort = 'FirstName';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -258,15 +258,15 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 }
 
 class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar'
 	);
 
-	static $has_many = array(
+	private static $has_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
-	static $default_sort = 'Name';
+	private static $default_sort = 'Name';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -282,15 +282,15 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 }
 
 class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar'
 	);
 
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
-	static $default_sort = 'Name';
+	private static $default_sort = 'Name';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();

@@ -203,7 +203,7 @@ This is how you do it:
  			"repositories": [
  				{
  				"type": "vcs",
- 				"url": "git@github.com:sminnee/advancedworkflow.git"
+ 				"url": "git@github.com:sminnee/silverstripe-cms.git"
  				}
  			],
  			...
@@ -211,9 +211,14 @@ This is how you do it:
 
  * **Install the module as you would normally.** Use the regular composer function - there are no special flags to use a fork. Your fork will be used in place of the package version.
 
- 		composer require silverstripe/advancedworkflow
+ 		composer require silverstripe/cms
 
 Composer will scan all of the repositories you list, collect meta-data about the packages within them, and use them in favour of the packages listed on packagist.  To switch back to using the mainline version of the package, just remove your the `repositories` section from `composer.json` and run `composer update`.
+
+Now add an "upstream" remote to the original repository location so you can rebase or merge your fork as required.
+
+	cd advancedworkflow
+	git remote add -f upstream git://github.com/silverstripe/silverstripe-cms.git
 
 For more information, read the ["Repositories" chapter of the Composer documentation](http://getcomposer.org/doc/05-repositories.md).
 

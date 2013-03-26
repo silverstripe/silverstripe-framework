@@ -755,8 +755,11 @@ class FormField extends RequestHandler {
 		return strtolower(preg_replace('/Field$/', '', $this->class));	
 	}
 
+	/**
+	 * @deprecated 3.2 Use FormField::create_tag()
+	 */
 	public function createTag($tag, $attributes, $content = null) {
-		Deprecation::notice('3.1', 'Use FormField::create_tag()');
+		Deprecation::notice('3.2', 'Use FormField::create_tag()');
 		return self::create_tag($tag, $attributes, $content);
 	}
 

@@ -61,7 +61,7 @@ class CompositeField extends FormField {
 	}
 
 	/**
-	 * Returns all the sub-fields, suitable for <% control FieldList %>
+	 * Returns all the sub-fields, suitable for <% loop FieldList %>
 	 *
 	 * @return FieldList
 	 */
