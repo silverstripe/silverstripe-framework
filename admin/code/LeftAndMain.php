@@ -766,15 +766,24 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$nodeCountCallback = null;
 		}
 		
-		$html = $obj->getChildrenAsUL(
-			"",
-			$titleFn,
-			singleton('CMSPagesController'),
-			true, 
-			$childrenMethod,
-			$numChildrenMethod,
-			$nodeCountThreshold
-		);
+		$html = '';
+		// If the amount of pages exceeds the node thresholds set, use the callback
+		if($obj->ParentID && $nodeCountCallback) {
+			$html = $nodeCountCallback($obj, $obj->$numChildrenMethod());
+		} 
+		// Otherwise return the actual tree (which might still filter leaf thresholds on children)
+		if(!$html) {
+			$html = $obj->getChildrenAsUL(
+				"",
+				$titleFn,
+				singleton('CMSPagesController'),
+				true, 
+				$childrenMethod,
+				$numChildrenMethod,
+				$nodeCountThreshold,
+				$nodeCountCallback
+			);
+		}
 
 		// Wrap the root if needs be.
 		if(!$rootID) {
