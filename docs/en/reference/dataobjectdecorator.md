@@ -38,7 +38,7 @@ For example above we want to override Member with a Custom Member so we would wr
 
 	:::php
 	// add to mysite/_config.php	
-	Object::add_extension('Member', 'CustomMember');</code>
+	Object::add_extension('Member', 'CustomMember');
 
 ##  Implementation
 
