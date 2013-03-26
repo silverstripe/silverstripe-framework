@@ -71,7 +71,12 @@ class FormField extends RequestHandler {
 	 * @var string custom validation message for the Field
 	 */
 	protected $customValidationMessage = "";
-	
+
+	/**
+	 * @var string
+	 */
+	protected $placeholder = null;
+
 	/**
 	 * Name of the template used to render this form field. If not set, then
 	 * will look up the class ancestry for the first matching template where 
@@ -356,6 +361,7 @@ class FormField extends RequestHandler {
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
+			'placeholder' => $this->placeholder
 		);
 
 		return array_merge($attrs, $this->attributes);
@@ -496,6 +502,14 @@ class FormField extends RequestHandler {
 		$this->template = $template;
 		
 		return $this;
+	}
+
+	/**
+	 * Set an HTML5 placeholder to this FormField
+	 * @param $placeholder
+	 */
+	public function setPlaceholder($placeholder) {
+		$this->placeholder = $placeholder;
 	}
 	
 	/**
