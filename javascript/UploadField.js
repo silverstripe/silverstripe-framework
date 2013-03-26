@@ -169,13 +169,21 @@
 			onunmatch: function() {
 				this._super();
 			},
-			openSelectDialog: function() {
+			openSelectDialog: function(uploadedFile) {
 				// Create dialog and load iframe
 				var self = this, config = this.getConfig(), dialogId = 'ss-uploadfield-dialog-' + this.attr('id'), dialog = jQuery('#' + dialogId);
 				if(!dialog.length) dialog = jQuery('<div class="ss-uploadfield-dialog" id="' + dialogId + '" />');
-
+				
+				// If user selected 'Choose another file', we need the ID of the file to replace
+				var iframeUrl = config['urlSelectDialog'];
+				var uploadedFileId = null;
+				if (uploadedFile && uploadedFile.attr('data-fileid') > 0){
+					uploadedFileId = uploadedFile.attr('data-fileid');
+					iframeUrl = iframeUrl + '?ReplaceFileID=' + uploadedFileId;
+				}
+				
 				// Show dialog
-				dialog.ssdialog({iframeUrl: config['urlSelectDialog'], height: 550});
+				dialog.ssdialog({iframeUrl: iframeUrl, height: 550});
 
 				// TODO Allow single-select
 				dialog.find('iframe').bind('load', function(e) {
@@ -191,7 +199,7 @@
 					contents.find('input[name=action_doAttach]').unbind('click.openSelectDialog').bind('click.openSelectDialog', function() {
 						// TODO Fix entwine method calls across iframe/document boundaries
 						var ids = $.map(gridField.find('.ss-gridfield-item.ui-selected'), function(el) {return $(el).data('id');});
-						if(ids && ids.length) self.attachFiles(ids);
+						if(ids && ids.length) self.attachFiles(ids, uploadedFileId);
 
 						dialog.ssdialog('close');
 						return false;
@@ -199,14 +207,18 @@
 				});
 				dialog.ssdialog('open');
 			},
-			attachFiles: function(ids) {
+			attachFiles: function(ids, uploadedFileId) {
 				var self = this, config = this.getConfig();
 				$.post(
 					config['urlAttach'], 
-					{'ids': ids},
+					{'ids': ids, 'ReplaceFileID': uploadedFileId},
 					function(data, status, xhr) {
 						var fn = self.fileupload('option', 'downloadTemplate');
-						self.find('.ss-uploadfield-files').append(fn({
+						var container = self.find('.ss-uploadfield-files');
+						if (config['allowedMaxFileNumber'] == 1){
+							container.empty();
+						}
+						container.append(fn({
 							files: data,
 							formatFileSize: function (bytes) {
 								if (typeof bytes !== 'number') return '';
@@ -403,7 +415,7 @@
 		$('div.ss-upload .ss-uploadfield-fromfiles').entwine({
 			onclick: function(e) {
 				e.preventDefault();
-				this.getUploadField().openSelectDialog();
+				this.getUploadField().openSelectDialog(this.closest('.ss-uploadfield-item'));
 			}
 		});
 	});

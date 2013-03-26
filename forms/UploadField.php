@@ -282,7 +282,8 @@ class UploadField extends FileField {
 			'UploadFieldThumbnailURL' => $this->getThumbnailURLForFile($file),
 			'UploadFieldRemoveLink' => $this->getItemHandler($file->ID)->RemoveLink(),
 			'UploadFieldDeleteLink' => $this->getItemHandler($file->ID)->DeleteLink(),
-			'UploadFieldEditLink' => $this->getItemHandler($file->ID)->EditLink()
+			'UploadFieldEditLink' => $this->getItemHandler($file->ID)->EditLink(),
+			'UploadField' => $this
 		));
 		// we do this in a second customise to have the access to the previous customisations
 		return $file->customise(array(
@@ -602,11 +603,15 @@ class UploadField extends FileField {
 	 * @param File
 	 */
 	protected function attachFile($file) {
+		$replaceFileID = $this->getRequest()->requestVar('ReplaceFileID');
 		$record = $this->getRecord();
 		$name = $this->getName();
 		if ($record && $record->exists()) {
-			if ($record->has_many($name) || $record->many_many($name)) {
+			if (($record->has_many($name) || $record->many_many($name))) {
 				if(!$record->isInDB()) $record->write();
+				if ($replaceFileID){
+					$record->{$name}()->removebyId($replaceFileID);
+				}				
 				$record->{$name}()->add($file);
 			} elseif($record->has_one($name)) {
 				$record->{$name . 'ID'} = $file->ID;
@@ -988,6 +993,8 @@ class UploadField_SelectHandler extends RequestHandler {
 		// Generate the folder selection field.
 		$folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
 		$folderField->setValue($folderID);
+		
+		
 
 		// Generate the file list field.
 		$config = GridFieldConfig::create();
@@ -1016,6 +1023,11 @@ class UploadField_SelectHandler extends RequestHandler {
 			$folderField,
 			$fileField
 		);
+		
+		//Existing file to replace
+		if ($replaceFileID = $this->parent->getRequest()->requestVar('ReplaceFileID')) {
+			$selectComposite->push(new HiddenField('ReplaceFileID','ReplaceFileID', $replaceFileID));
+		}
 
 		return $selectComposite;
 	}
