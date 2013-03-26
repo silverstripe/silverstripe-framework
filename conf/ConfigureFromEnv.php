@@ -93,6 +93,7 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 		"database" => (defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : '')
 			. $database 
 			. (defined('SS_DATABASE_SUFFIX') ? SS_DATABASE_SUFFIX : ''),
+              	"port" => defined('SS_DATABASE_PORT') ? SS_DATABASE_PORT : ''
 	);
 
 	// Set the timezone if called for
