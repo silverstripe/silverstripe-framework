@@ -1765,7 +1765,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return Name of the locale
 	 */
 	public static function get_locale_name($code) {
-		$langs = self::get_locale_list();
+		$langs = self::config()->all_locales;
 		return isset($langs[$code]) ? $langs[$code] : false;
 	}
 	

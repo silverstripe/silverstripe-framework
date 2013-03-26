@@ -66,7 +66,7 @@ class Currency extends Decimal {
 	
 	public static function setCurrencySymbol($value) {
 		Deprecation::notice('3.2', 'Use the "Currency.currency_symbol" config setting instead');
-		$this->config()->currency_symbol = $value;
+		Currency::config()->currency_symbol = $value;
 	}
 }
 
