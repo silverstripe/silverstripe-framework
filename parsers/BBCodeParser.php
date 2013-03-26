@@ -43,7 +43,7 @@ class BBCodeParser extends TextParser {
 		if(!BBCodeParser::$smilies_location) {
 			return FRAMEWORK_DIR . '/images/smilies';
 		}
-		return $this->config()->smilies_location;
+		return static::config()->smilies_location;
 	}
 
 	/**
@@ -51,7 +51,7 @@ class BBCodeParser extends TextParser {
 	 */
 	public static function set_icon_folder($path) {
 		Deprecation::notice('3.2', 'Use the "BBCodeParser.smilies_location" config setting instead');
-		$this->config()->smilies_location = $path;
+		static::config()->smilies_location = $path;
 	} 
 	
 	/**
@@ -59,7 +59,7 @@ class BBCodeParser extends TextParser {
 	 */
 	public static function autolinkUrls() {
 		Deprecation::notice('3.2', 'Use the "BBCodeParser.autolink_urls" config setting instead');
-		return $this->config()->autolink_urls;
+		return static::config()->autolink_urls;
 	}
 	
 	/**
@@ -67,7 +67,7 @@ class BBCodeParser extends TextParser {
 	 */
 	public static function disable_autolink_urls($autolink = false) {
 		Deprecation::notice('3.2', 'Use the "BBCodeParser.autolink_urls" config setting instead');
-		$this->config()->autolink_urls = $autolink;
+		static::config()->autolink_urls = $autolink;
 	}
 	
 	/**
@@ -75,7 +75,7 @@ class BBCodeParser extends TextParser {
 	 */
 	public static function smiliesAllowed() {
 		Deprecation::notice('3.2', 'Use the "BBCodeParser.allow_smilies" config setting instead');
-		return $this->config()->allow_smilies;
+		return static::config()->allow_smilies;
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class BBCodeParser extends TextParser {
 	 */
 	public static function enable_smilies() {
 		Deprecation::notice('3.2', 'Use the "BBCodeParser.allow_smilies" config setting instead');
-		$this->config()->allow_similies = true;
+		static::config()->allow_similies = true;
 	}
 	
 	
