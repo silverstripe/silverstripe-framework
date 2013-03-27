@@ -3,10 +3,10 @@
 ## Environment Types
 
 Silverstripe knows three different environment-types (or "debug-levels"). Each of the levels gives you different tools
-and functionality. "dev", "test" and "live". You can either configure the environment of the site in the
-mysite/_config.php file or in your [environment configuration file](/topics/environment-management).
+and functionality. "dev", "test" and "live". You can either configure the environment of the site in your
+[config.yml file](/topics/configuration) or in your [environment configuration file](/topics/environment-management).
 
-The definition of setting an environment in your `mysite/_config/config.yml` looks like
+The definition of setting an environment in your `config.yml` looks like
 
 	:::yml
 	Director:
@@ -17,7 +17,7 @@ The definition of setting an environment in your `mysite/_config/config.yml` loo
 When developing your websites, adding page types or installing modules you should run your site in devmode. In this mode
 you will be able to view full error backtraces and view the development tools without logging in as admin.
 
-To set your site to dev mode set this in your `mysite/_config/config.yml` file
+To set your site to dev mode set this in your `config.yml` file
 
 	:::yml
 	Director:
@@ -37,7 +37,7 @@ not need to use test mode if you do not have a staging environment or a place fo
 In this mode error messages are hidden from the user and it includes `[api:BasicAuth]` integration if you want to password
 protect the site.
 
-To set your site to test mode set this in your `mysite/_config/config.yml` file
+To set your site to test mode set this in your `config.yml` file
 
 	:::yml
 	Director:
@@ -45,7 +45,7 @@ To set your site to test mode set this in your `mysite/_config/config.yml` file
 
 
 A common situation is to enable password protected site viewing on your test site only. 
-You can enable that but adding this to your `mysite/_config/config.yml` file:
+You can enable that but adding this to your `config.yml` file:
 
 	:::yml
 	---
@@ -61,7 +61,7 @@ Live sites should always run in live mode. Error messages are suppressed from th
 to email the developers. This enables near real time reporting of any fatal errors or warnings on the site and can help
 find any bugs users run into.
 
-To set your site to live mode set this in your `mysite/_config/config.yml` file
+To set your site to live mode set this in your `config.yml` file
 
 	:::yml
 	Director:

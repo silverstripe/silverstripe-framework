@@ -88,19 +88,20 @@ and another subclass for the same email-address in the address-database.
 ## Member Role Extension
 
 Using inheritance to add extra behaviour or data fields to a member is limiting, because you can only inherit from 1
-class.  A better way is to use role extensions to add this behaviour.
+class. A better way is to use role extensions to add this behaviour. Add the following to your
+`[config.yml](/topics/configuration)`.
 
-	:::php
-	Member::add_extension('ForumRole');
-	// OR
-	Member::add_role('ForumRole');
+	:::yml
+	Member:
+	  extensions:
+	    - MyMemberExtension
 
 A role extension is simply a subclass of `[api:DataExtension]` that is designed to be used to add behaviour to `[api:Member]`. 
 The roles affect the entire class - all members will get the additional behaviour.  However, if you want to restrict
 things, you should add appropriate `[api:Permission::checkMember()]` calls to the role's methods.
 
 	:::php
-	class ForumRole extends DataExtension {
+	class MyMemberExtension extends DataExtension {
 	  /**
 	
 	   * Modify the field set to be displayed in the CMS detail pop-up

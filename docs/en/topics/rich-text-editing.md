@@ -25,8 +25,8 @@ functionality. It is usually added through the `[api:DataObject->getCMSFields()]
 
 To keep the JavaScript editor configuration manageable and extensible,
 we've wrapped it in a PHP class called `[api:HtmlEditorConfig]`.
-The class comes with its own defaults, which are extended through the `_config.php`
-files in the framework (and the `cms` module in case you've got that installed).
+The class comes with its own defaults, which are extended through [configuration files](/topics/configuration)
+in the framework (and the `cms` module in case you've got that installed).
 There can be multiple configs, which should always be created / accessed using `[api:HtmlEditorConfig::get]`.
 You can then set  the currently active config using `set_active()`.
 By default, a config named 'cms' is used in any field created throughout the CMS interface.

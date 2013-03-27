@@ -623,6 +623,20 @@ class Config_LRU {
 		$this->indexing = array();
 	}
 
+	public function __clone() {
+		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
+			// SplFixedArray causes seg faults before PHP 5.3.7
+			$cloned = array();
+		}
+		else {
+			$cloned = new SplFixedArray(self::SIZE);
+		}
+		for ($i = 0; $i < self::SIZE; $i++) {
+			$cloned[$i] = clone $this->cache[$i];
+		}
+		$this->cache = $cloned;
+	}
+
 	public function set($key, $val, $tags = array()) {
 		// Find an index to set at
 		$replacing = null;
