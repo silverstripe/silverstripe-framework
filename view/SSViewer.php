@@ -579,7 +579,7 @@ class SSViewer {
 
 	/**
 	 * @config
-	 * @var string Use the theme. Set to FALSE in order to disable themes,
+	 * @var boolean Use the theme. Set to FALSE in order to disable themes,
 	 * which can be useful for scenarios where theme overrides are temporarily undesired,
 	 * such as an administrative interface separate from the website theme. 
 	 * It retains the theme settings to be re-enabled, for example when a website content
