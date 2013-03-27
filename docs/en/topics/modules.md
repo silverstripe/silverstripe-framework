@@ -7,8 +7,9 @@ directory.  In a default SilverStripe download, even resources in 'framework' an
 same as every other module.
 
 SilverStripe's `[api:ManifestBuilder]` will find any class, css or template files anywhere under the site's main
-directory.  The _config.php file in the module directory can be used to define director rules, calls to
-Object::useCustomClass(), and the like.  So, by unpacking a module into site's main directory and viewing the site with
+directory.  The `_config.php` file in the module directory as well as the [_config/*.yml files](/topics/configuration)
+can be used to define director rules, add
+extensions, etc.  So, by unpacking a module into site's main directory and viewing the site with
 ?flush=1 on the end of the URL, all the module's new behaviour will be incorporated to your site:
 
 *  You can create subclasses of base classes such as SiteTree to extend behaviour.
@@ -85,7 +86,7 @@ Github also provides archive downloads which are generated automatically for eve
 The main folder extracted from the archive
 might contain the version number or additional "container" folders above the actual module
 codebase. You need to make sure the folder name is the correct name of the module
-(e.g. "blog/" rather than "silverstripe-blog/"). This folder should contain a `_config.php` file.
+(e.g. "blog/" rather than "silverstripe-blog/"). This folder should contain a `_config/` directory.
 While the module might register and operate in other structures,
 paths to static files such as CSS or JavaScript won't work.
 </div>

@@ -35,7 +35,7 @@ Create a new file, `~/Sites/_ss_environment.php`.  Put the following content in 
 	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
 
 
-Now, edit each of your site's configuration file, `~/Sites/(projectname)/mysite/_config.php`.  Delete all mention
+Now, edit each of your site's configuration file, usually `mysite/_config.php`.  Delete all mention
 of `$databaseConfig` and `Director::set_dev_servers`, and instead make sure that you file starts like this.
 
 	:::php

@@ -82,10 +82,12 @@ Create a new file called `mysite/code/BookmarkedPageExtension.php` and insert th
 		}
 	}
 
-Enable the extension with the following line in `mysite/_config.php`:
+Enable the extension in your [configuration file](/topics/configuration)
 
-	:::php
-	SiteTree::add_extension('BookmarkedPageExtension');
+	:::yml
+	SiteTree:
+	  extensions:
+	    - BookmarkedPageExtension
 
 In order to add the field to the database, run a `dev/build/?flush=all`.
 Refresh the CMS, open a page for editing and you should see the new checkbox.
@@ -106,10 +108,12 @@ Add the following code to a new file `mysite/code/BookmarkedLeftAndMainExtension
 		}
 	}
 	
-Enable the extension with the following line in `mysite/_config.php`:
+Enable the extension in your [configuration file](/topics/configuration)
 
-	:::php
-	LeftAndMain::add_extension('BookmarkedPagesLeftAndMainExtension');
+	:::yml
+	LeftAndMain:
+	  extensions:
+	    - BookmarkedPagesLeftAndMainExtension
 
 As the last step, replace the hardcoded links with our list from the database.
 Find the `<ul>` you created earlier in `mysite/admin/templates/LeftAndMain.ss`

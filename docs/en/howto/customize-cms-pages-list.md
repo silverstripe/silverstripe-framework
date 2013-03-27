@@ -62,7 +62,11 @@ or across page types with common characteristics.
 		}
 	}
 
+Now you just need to enable the extension in your [configuration file](/topics/configuration).
+
 	// mysite/_config/config.yml
 	LeftAndMain:
 	  extensions:
 	    - NewsPageHolderCMSMainExtension
+
+You're all set! Don't forget to flush the caches by appending `?flush=all` to the URL.

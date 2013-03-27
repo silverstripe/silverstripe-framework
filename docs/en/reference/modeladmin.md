@@ -245,8 +245,12 @@ also another tool at your disposal: The `[api:Extension]` API.
 		}
 	}
 
-	// mysite/_config.php
-	MyAdmin::add_extension('MyAdminExtension');
+Now enable this extension through your `[config.yml](/topics/configuration)` file.
+
+	:::yml
+	MyAdmin:
+	  extensions:
+	    - MyAdminExtension
 
 The following extension points are available: `updateEditForm()`, `updateSearchContext()`,
 `updateSearchForm()`, `updateList()`, `updateImportForm`.
