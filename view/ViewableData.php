@@ -522,7 +522,10 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public function ThemeDir($subtheme = false) {
-		if($theme = Config::inst()->get('SSViewer', 'theme')) {
+		if(
+			Config::inst()->get('SSViewer', 'theme_enabled') 
+			&& $theme = Config::inst()->get('SSViewer', 'theme')
+		) {
 			return THEMES_DIR . "/$theme" . ($subtheme ? "_$subtheme" : null);
 		}
 		
