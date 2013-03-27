@@ -193,7 +193,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		CMSMenu::add_link(
 			'Help', 
 			_t('LeftAndMain.HELP', 'Help', 'Menu title'), 
-			self::$help_link
+			$this->config()->help_link
 		);
 
 		// Allow customisation of the access check by a extension
