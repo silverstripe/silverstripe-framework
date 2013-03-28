@@ -3,16 +3,17 @@ php:
  - 5.3
 
 env:
- - TESTDB=MYSQL
- - TESTDB=PGSQL
+ - TESTDB=MYSQL CORE_RELEASE=2.4
+ - TESTDB=PGSQL CORE_RELEASE=2.4
 
 before_script:
  - phpenv rehash
- - ./tests/travis/before_script ~/builds/ss 
+ - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
+ - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
  - cd ~/builds/ss
 
 script: 
- - phpunit -c phpunit.xml.dist 
+ - phpunit sapphire/tests
 
 branches:
   except:
