@@ -1,21 +1,27 @@
 language: php 
 
+php: 
+ - 5.3
+ - 5.4
+
+env:
+ - DB=MYSQL CORE_RELEASE=3.1
+ - DB=PGSQL CORE_RELEASE=3.1
+ - DB=SQLITE3 CORE_RELEASE=3.1
+ - PHPCS=1 CORE_RELEASE=3.1
+
 matrix:
-  include:
-    - php: 5.3
-      env: DB=MYSQL CORE_RELEASE=3.1
+  exclude:
     - php: 5.4
-      env: DB=MYSQL CORE_RELEASE=3.1
-    - php: 5.3
       env: DB=PGSQL CORE_RELEASE=3.1
-    - php: 5.3
+    - php: 5.4
       env: DB=SQLITE3 CORE_RELEASE=3.1
     - php: 5.4
       env: PHPCS=1 CORE_RELEASE=3.1
   allow_failures:
     - env: DB=PGSQL CORE_RELEASE=3.1
-    - env: PHPCS=1 CORE_RELEASE=3.1
     - env: DB=SQLITE3 CORE_RELEASE=3.1
+    - env: PHPCS=1 CORE_RELEASE=3.1
 
 before_script:
  - pear install pear/PHP_CodeSniffer
