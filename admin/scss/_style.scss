@@ -266,6 +266,11 @@ body.cms {
 	&.ss-tabset-tabshidden .ui-tabs-panel {
 		border-top: none;
 }
+
+.cms-content-header .ui-tabs-panel { 
+	padding: 0; 
+}
+
 }
 
 /**
