@@ -375,6 +375,7 @@ body.cms { overflow: hidden; }
 .ui-tabs .ui-tabs { position: static; }
 .ui-tabs .ui-tabs-panel { padding: 24px; background: transparent; border: 0; }
 .ui-tabs .ui-tabs-panel.cms-edit-form { padding: 0; }
+.ui-tabs .ui-tabs-panel.cms-panel-padded { padding: 16px 16px; }
 .ui-tabs .ui-widget-header { border: 0; background: none; }
 .ui-tabs .ui-tabs-nav { float: right; margin: 16px 0 -1px 0; padding: 0 12px 0 0; border-bottom: none; }
 .ui-tabs .ui-tabs-nav ~ .ui-tabs-panel { border-top: 1px solid #c0c0c2; clear: both; }

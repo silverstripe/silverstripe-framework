@@ -162,8 +162,12 @@ body.cms {
 		padding: $grid-x*3;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
+
 		&.cms-edit-form {
 			padding: 0;
+		}
+		&.cms-panel-padded {
+			padding: $grid-y*2 $grid-x*2;
 		}
 	}
 
