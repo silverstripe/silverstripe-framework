@@ -718,7 +718,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'native' => 'dansk'
 		),
 		'nl' => array(
-			'name' => 'Dutch',  'Nederlands'
+			'name' => 'Dutch',  
+			'native' => 'Nederlands'
 		),
 		'en' => array(
 			'name' => 'English', 
@@ -1023,7 +1024,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		),
 		'be_BY' => array(
 			'name' => 'Belarusian',
-			'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'
+			'native' => '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'
 		),
 		'bn_BD' => array(
 			'name' => 'Bengali',
@@ -1038,7 +1039,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'native' => 'catal&agrave;'
 		),
 		'zh_CN' => array(
-			'name' => 'Chinese','中国的'
+			'name' => 'Chinese',
+			'native' => '中国的'
 		),
 		'zh_yue' => array(
 			'name' => 'Chinese (Cantonese)',
