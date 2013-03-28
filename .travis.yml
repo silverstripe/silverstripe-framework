@@ -1,37 +1,37 @@
 language: php 
+
 php: 
  - 5.3
  - 5.4
 
 env:
- - TESTDB=MYSQL
- - TESTDB=SQLITE
+ - DB=MYSQL CORE_RELEASE=master
+ - DB=PGSQL CORE_RELEASE=master
+ - DB=SQLITE3 CORE_RELEASE=master
+ - PHPCS=1 CORE_RELEASE=master
 
 matrix:
   exclude:
     - php: 5.4
-      env: TESTDB=PGSQL
+      env: DB=PGSQL CORE_RELEASE=master
     - php: 5.4
-      env: TESTDB=SQLITE
-  include:
+      env: DB=SQLITE3 CORE_RELEASE=master
     - php: 5.4
-      env:
-        - PHPCS=1
+      env: PHPCS=1 CORE_RELEASE=master
   allow_failures:
-    - env: TESTDB=PGSQL
-    - php: 5.4
-      env:
-        - PHPCS=1
-    - env: TESTDB=SQLITE
+    - env: DB=PGSQL CORE_RELEASE=master
+    - env: DB=SQLITE3 CORE_RELEASE=master
+    - env: PHPCS=1 CORE_RELEASE=master
 
 before_script:
  - pear install pear/PHP_CodeSniffer
  - phpenv rehash
- - ./tests/travis/before.php --target ~/builds/ss --version="dev-master" --installer="master"
+ - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
+ - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
  - cd ~/builds/ss
 
 script: 
- - sh -c "if [ '$PHPCS' != '1' ]; then phpunit -c phpunit.xml.dist; else phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml -np framework && phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml -np framework; fi"
+ - sh -c "if [ '$PHPCS' != '1' ]; then phpunit framework/tests; else phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml -np framework && phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml -np framework; fi"
 
 branches:
   except:
