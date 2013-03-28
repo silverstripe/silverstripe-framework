@@ -1413,7 +1413,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$cache = SS_Cache::factory('LeftAndMain_CMSVersion');
 			$cacheKey = filemtime($composerLockPath);
 			$versions = $cache->load($cacheKey);
-			if(!$versions) $versions = array();
+			if($versions) {
+				$versions = json_decode($versions, true);
+			} else {
+				$versions = array();
+			}
 			if(!$versions && $jsonData = file_get_contents($composerLockPath)) {
 				$lockData = json_decode($jsonData);
 				if($lockData && isset($lockData->packages)) {
@@ -1429,7 +1433,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 		} 
-
+		
 		// Fall back to static version file
 		foreach($modules as $moduleName => $moduleSpec) {
 			if(!isset($versions[$moduleName])) {
