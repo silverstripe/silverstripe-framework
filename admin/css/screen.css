@@ -402,6 +402,7 @@ body.cms { overflow: hidden; }
 .ui-tabs .cms-panel-padded .ui-tabs-panel .ui-tabs-panel { padding: 8px 0 0 0; }
 .ui-tabs .cms-panel-padded .Actions { padding: 0; }
 .ui-tabs.ss-tabset-tabshidden .ui-tabs-panel { border-top: none; }
+.ui-tabs .cms-content-header .ui-tabs-panel { padding: 0; }
 
 /** Primary styles which sit on top of screen, with different tab colors. TODO Only use one "primary" selector and fix HTMLEditorField TabSet addExtraClass() */
 .ui-tabs.cms-tabset-primary .ui-tabs-nav, .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary, .ui-tabs .cms-content-header-tabs .ui-tabs-nav { margin-top: 0; border-left: 1px solid #b3b3b3; float: none; }
