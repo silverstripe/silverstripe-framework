@@ -16,7 +16,7 @@
 			<ul>
 			<% loop ManagedModelTabs %>
 				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
-					<a href="$Link" class="cms-panel-link">$Title</a>
+					<a href="$Link" class="cms-panel-link" title="Form_EditForm">$Title</a>
 				</li>
 			<% end_loop %>
 			</ul>

@@ -563,6 +563,15 @@ class i18nTest extends SapphireTest {
 		SS_ClassLoader::instance()->popManifest();
 	}
 	
+	public function testGetLanguageName() {
+		Config::inst()->update(
+			'i18n', 
+			'common_languages', 
+			array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
+		);
+		$this->assertEquals('German (Cologne)', i18n::get_language_name('de_CGN'));
+		$this->assertEquals('K&ouml;lsch', i18n::get_language_name('de_CGN', true));
+	}
 }
 
 class i18nTest_DataObject extends DataObject implements TestOnly {
