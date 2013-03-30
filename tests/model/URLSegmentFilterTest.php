@@ -26,7 +26,7 @@ class URLSegmentFilterTest extends SapphireTest {
 	public function testReplacesCommonNonAsciiCharacters() {
 		$f = new URLSegmentFilter();
 		$this->assertEquals(
-			urlencode('aa1-.'),
+			urlencode('aa1-'),
 			$f->filter('Aa1~!@#$%^*()_`-=;\':"[]\{}|,./<>?')
 		);
 	}
@@ -56,5 +56,10 @@ class URLSegmentFilterTest extends SapphireTest {
 			$f->filter('Tim&Struppi')
 		);
 	}
-	
+
+	public function testReplacesDots() {
+		$filter = new URLSegmentFilter();
+		$this->assertEquals('url-contains-dot', $filter->filter('url-contains.dot'));
+	}
+
 }
