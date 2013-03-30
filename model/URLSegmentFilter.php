@@ -30,10 +30,10 @@ class URLSegmentFilter extends Object {
 		'/&amp;/u' => '-and-',
 		'/&/u' => '-and-',
 		'/\s/u' => '-', // remove whitespace
-		'/_/u' => '-', // underscores to dashes
-		'/[^A-Za-z0-9+.\-]+/u' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
+		'/[_.]+/u' => '-', // underscores and dots to dashes
+		'/[^A-Za-z0-9+\-]+/u' => '', // remove non-ASCII chars, only allow alphanumeric and dashes
 		'/[\-]{2,}/u' => '-', // remove duplicate dashes
-		'/^[\.\-_]/u' => '', // Remove all leading dots, dashes or underscores
+		'/^[\-_]/u' => '', // Remove all leading dashes or underscores
 	);
 	
 	/**
@@ -69,8 +69,8 @@ class URLSegmentFilter extends Object {
 		$replacements = $this->getReplacements();
 		
 		// Unset automated removal of non-ASCII characters, and don't try to transliterate
-		if($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9+.\-]+/u'])) {
-			unset($replacements['/[^A-Za-z0-9+.\-]+/u']);
+		if($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9+\-]+/u'])) {
+			unset($replacements['/[^A-Za-z0-9+\-]+/u']);
 		}
 		
 		foreach($replacements as $regex => $replace) {
