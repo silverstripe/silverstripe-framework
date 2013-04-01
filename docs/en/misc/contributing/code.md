@@ -71,7 +71,7 @@ If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp do
 We also found the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/) useful.
 If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
 
-  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on [open.silverstripe.org](http://open.silverstripe.org)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
+  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
 
   * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream master.
 
