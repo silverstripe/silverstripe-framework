@@ -279,16 +279,14 @@ class DataQuery {
 				
 					if(isset($databaseFields[$parts[0]])) {
 						$qualCol = "\"$baseClass\".\"{$parts[0]}\"";
-						
-						// remove original sort
-						unset($orderby[$k]);
-						
-						// add new columns sort
-						$orderby[$qualCol] = $dir;
-							
 					} else {
 						$qualCol = "\"$parts[0]\"";
 					}
+
+					// remove original sort
+					unset($orderby[$k]);
+					// add new columns sort
+					$orderby[$qualCol] = $dir;
 					
 					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
