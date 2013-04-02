@@ -648,4 +648,3 @@ afraid to experiment with using other approaches.
 * [css](css)
 * [Unobtrusive Javascript](http://www.onlinetools.org/articles/unobtrusivejavascript/chapter1.html)
 * [Quirksmode: In-depth Javascript Resources](http://www.quirksmode.org/resources.html)
-* [behaviour.js documentation](http://open.silverstripe.org/browser/modules/sapphire/branches/2.4/thirdparty/behaviour/README.md)
