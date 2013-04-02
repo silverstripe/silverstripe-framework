@@ -13,7 +13,7 @@ class DatetimeFieldTest extends SapphireTest {
 		$this->origDateFormat = DateField::$default_config['dateformat'];
 		DateField::$default_config['dateformat'] = 'dd/MM/yyyy';
 		$this->origTimeFormat = TimeField::$default_config['timeformat'];
-		TimeField::$default_config['timeformat'] = 'HH:mm:ss';
+		TimeField::$default_config['timeformat'] = 'HH:mm:ss a';
 	}
 	
 	public function tearDown() {
