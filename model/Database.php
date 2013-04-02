@@ -750,6 +750,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the SELECT clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @param array $select Select columns
 	 * @param boolean $distinct Distinct select?
 	 * @return string
@@ -770,6 +772,8 @@ abstract class SS_Database {
 
 	/**
 	 * Return the FROM clause ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlFromToString($from) {
@@ -778,6 +782,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the WHERE clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlWhereToString($where, $connective) {
@@ -786,6 +792,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the ORDER BY clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlOrderByToString($orderby) {
@@ -800,6 +808,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the GROUP BY clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlGroupByToString($groupby) {
@@ -808,6 +818,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the HAVING clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlHavingToString($having) {
@@ -816,6 +828,8 @@ abstract class SS_Database {
 
 	/**
 	 * Return the LIMIT clause ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlLimitToString($limit) {
@@ -847,6 +861,8 @@ abstract class SS_Database {
 
 	/**
 	 * Convert a SQLQuery object into a SQL statement
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @param $query SQLQuery
 	 */
 	public function sqlQueryToString(SQLQuery $query) {

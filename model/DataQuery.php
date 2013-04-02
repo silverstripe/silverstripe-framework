@@ -139,6 +139,8 @@ class DataQuery {
 
 	/**
 	 * Ensure that the query is ready to execute.
+	 *
+	 * @return SQLQuery
 	 */
 	public function getFinalisedQuery($queriedColumns = null) {
 		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
@@ -419,7 +421,7 @@ class DataQuery {
 	}
 	
 	/**
-	 * Set the HAVING clause of this query
+	 * Set the HAVING clause of this query.
 	 * 
 	 * @param String $having Escaped SQL statement
 	 */
@@ -458,10 +460,10 @@ class DataQuery {
 	 *
 	 * <code>
 	 *  // the entire predicate as a single string
-	 *  $query->where("Column = 'Value'");
+	 *  $query->where("\"Column\" = 'Value'");
 	 *
 	 *  // multiple predicates as an array
-	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
+	 *  $query->where(array("\"Column\" = 'Value'", "\"Column\" != 'Value'"));
 	 * </code>
 	 *
 	 * @param string|array $where Predicate(s) to set, as escaped SQL statements.
@@ -476,7 +478,7 @@ class DataQuery {
 	/**
 	 * Set a WHERE with OR.
 	 * 
-	 * @example $dataQuery->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+	 * @example $dataQuery->whereAny(array("\"Monkey\" = 'Chimp'", "\"Color\" = 'Brown'"));
 	 * @see where()
 	 *
 	 * @param array $filter Escaped SQL statement.
@@ -778,10 +780,10 @@ class DataQuery_SubGroup extends DataQuery {
 	 *
 	 * <code>
 	 *  // the entire predicate as a single string
-	 *  $query->where("Column = 'Value'");
+	 *  $query->where("\"Column\" = 'Value'");
 	 *
 	 *  // multiple predicates as an array
-	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
+	 *  $query->where(array("\"Column\" = 'Value'", "\"Column\" != 'Value'"));
 	 * </code>
 	 *
 	 * @param string|array $where Predicate(s) to set, as escaped SQL statements.
@@ -796,7 +798,7 @@ class DataQuery_SubGroup extends DataQuery {
 	/**
 	 * Set a WHERE with OR.
 	 * 
-	 * @example $dataQuery->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+	 * @example $dataQuery->whereAny(array("\"Monkey\" = 'Chimp'", "\"Color\" = 'Brown'"));
 	 * @see where()
 	 *
 	 * @param array $filter Escaped SQL statement.
