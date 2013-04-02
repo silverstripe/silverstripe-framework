@@ -98,8 +98,8 @@ class TimeField extends TextField {
 			$this->valueObj = null;
 		}
 		// load ISO time from database (usually through Form->loadDataForm())
-		else if(Zend_Date::isDate($val, $this->getConfig('datavalueformat')) && $this->getConfig('timeformat') != "h:mm:ss a") {
-			$this->valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'));
+		else if(Zend_Date::isDate($val, $this->getConfig('datavalueformat'))) {
+			$this->valueObj = new Zend_Date(date('H:i:s', strtotime($val)), $this->getConfig('datavalueformat'));
 			$this->value = $this->valueObj->get($this->getConfig('timeformat'));
 		}
 		// Set in current locale (as string)
