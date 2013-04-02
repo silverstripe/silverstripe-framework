@@ -9,13 +9,13 @@ The current maintainer responsible for planning and performing releases is Ingo 
 
 ## Release Planning
 
-Our most up-to-date release plans are typically in the [roadmap](http://open.silverstripe.com/roadmap).
+Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/sapphire/issues/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/issues/milestones).
 New features and API changes are typically discussed on the [core
 mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritized by the core team as tickets on 
-[open.silverstripe.org](http://open.silverstripe.com/). 
+github.com. 
 
 Release dates are usually not published prior to the release, but you can get a good idea of the release status by
-reviewing the [release milestone](http://open.silverstripe.com/roadmap) on open.silverstripe.org. Releases will be
+reviewing the release milestone on github.com. Releases will be
 announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
 
 Releases of the *cms* and *framework* modules are coupled at the moment, they follow the same numbering scheme. Module
@@ -85,7 +85,7 @@ micro release.
 
 ## Deprecation
 
-Needs of developers (both on core framework and custom projects) might outgrow the capabilities
+Needs of developers (both on core framework and custom projects) can outgrow the capabilities
 of a certain API. Existing APIs might turn out to be hard to understand, maintain, test or stabilize.
 In these cases, it is best practice to "refactor" these APIs into something more useful.
 SilverStripe acknowledges that developers have built a lot of code on top of existing APIs,
@@ -94,33 +94,38 @@ so we strive for giving ample warning on any upcoming changes through a "depreca
 How to deprecate an API:
 
 *  Add a `@deprecated` item to the docblock tag, with a `{@link <class>}` item pointing to the new API to use.
-*  Update the deprecated code to throw an `E_USER_NOTICE` error, with a message starting with the string 'DEPRECATED:'.  
-In time, we may use that string to identify deprecation errors, so please ensure that you add this string to the notice level error.
+*  Update the deprecated code to throw a `[api:Deprecation::notice()]` error.
+*  Both the docblock and error message should contain the **target version** where the functionality is removed.
+   So if you're committing the change to a 3.1 pre-release version, the target version will either be 3.2 or 4.0,
+   depending on how disruptive the change is.
+*  Deprecations should just be committed to pre-release branches, ideally before they enter the "beta" phase.
+   If deprecations are introduced after this point, their target version needs to be increased by one.
 *  Make sure that the old deprecated function works by calling the new function - don't have duplicated code!
-*  Mark in which release the function was deprecated (find out next release in the [roadmap](http://open.silverstripe.com/roadmap)), so we can determine when to finally remove it.
+*  The commit message should contain an `API` prefix (see ["commit message format"](/misc/contributing/code#commit-messages))
+*  Deprecated APIs can be removed after developers had a chance to react to the changes. As a rule of thumb, leave the code with the deprecation warning in for at least three micro releases. Only remove code in a minor or major release. 
+
 Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::is_dev()`:
 
 	:::php
 	/**
 	 * Returns true if your are in development mode
-	 * @deprecated (since 2.2.2) Use {@link Env::is_dev()} instead.
+	 * @deprecated 3.1 Use {@link Env::is_dev()} instead.
 	 */
 	public function isDev() {
-		user_error("DEPRECATED: Use Env::is_dev() instead.", E_USER_NOTICE);
+		Deprecation::notice('3.1', 'Use Env::is_dev() instead');
 		return Env::is_dev();
 	}
-* Deprecated APIs can be removed after developers had a chance to react to the changes. As a rule of thumb, leave the code with the deprecation warning in for at least three micro releases. Only remove code in a minor or major release. For example:
-   * Deprecated as of in 2.2.2
-   * Still deprecated in 2.2.3
-   * Still deprecated in 2.2.4
-   * Removed from 2.3.0
+
+This change could be committed to a 3.1.0-alpha2 release, stays deprecated in all following minor releases
+(3.1.0-beta1, 3.1.0, 3.1.1), and gets removed from 3.2.0. If the change was introduced in an already
+released version (e.g. 3.1.1), the target version becomes 3.2 instead.
 
 ## Security Releases
 
 ### Reporting an issue
 
-Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). Please don't file security
-issues in our [bugtracker](http://open.silverstripe.org). 
+Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). 
+Please don't file security issues in our [bugtracker](/misc/contributing/issues). 
 
 ### Acknowledgement and disclosure
 
