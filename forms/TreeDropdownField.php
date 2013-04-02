@@ -42,11 +42,11 @@
 
 class TreeDropdownField extends FormField {
 	
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action!/$ID' => '$Action'
 	);
 	
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'tree'
 	);
 	
@@ -85,8 +85,9 @@ class TreeDropdownField extends FormField {
 	 * @param bool $showSearch enable the ability to search the tree by 
 	 *		entering the text in the input field.
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title',
-			$showSearch = false) {
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', 
+		$labelField = 'TreeTitle', $showSearch = false
+	) {
 
 		$this->sourceObject = $sourceObject;
 		$this->keyField     = $keyField;
@@ -159,6 +160,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setChildrenMethod($method) {
 		$this->childrenMethod = $method;
+		return $this;
 	}
 
 	/**
@@ -290,6 +292,51 @@ class TreeDropdownField extends FormField {
 		
 		return true;
 	}
+
+	/**
+	 * @param String $field
+	 */
+	public function setLabelField($field) {
+		$this->labelField = $field;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getLabelField() {
+		return $this->labelField;
+	}
+
+	/**
+	 * @param String $field
+	 */
+	public function setKeyField($field) {
+		$this->keyField = $field;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getKeyField() {
+		return $this->keyField;
+	}
+
+	/**
+	 * @param String $field
+	 */
+	public function setSourceObject($class) {
+		$this->sourceObject = $class;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getSourceObject() {
+		return $this->sourceObject;
+	}
 	
 	/**
 	 * Populate $this->searchIds with the IDs of the pages matching the searched parameter and their parents.
@@ -341,9 +388,14 @@ class TreeDropdownField extends FormField {
 	 * Changes this field to the readonly field.
 	 */
 	public function performReadonlyTransformation() {
-		return new TreeDropdownField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField,
-			$this->labelField);
+		$copy = $this->castedCopy('TreeDropdownField_Readonly');
+		$copy->setKeyField($this->keyField);
+		$copy->setLabelField($this->labelField);
+		$copy->setSourceObject($this->sourceObject);
+		
+		return $copy;
 	}
+	
 }
 
 /**

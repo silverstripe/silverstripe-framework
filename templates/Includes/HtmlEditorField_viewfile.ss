@@ -26,7 +26,7 @@
 			<div class="ss-uploadfield-item-cancel cancel">
 				<button data-icon="deleteLight" class="ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<% _t('UploadField.REMOVE', 'Remove') %>">
 					<% _t('UploadField.REMOVE', 'Remove') %>
-				</button></div>
+				</button>
 				
 				<div class="ss-uploadfield-item-edit edit">
 					<button class="ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<% _t('UploadField.EDITINFO', 'Edit this file') %>" data-icon="pencil">

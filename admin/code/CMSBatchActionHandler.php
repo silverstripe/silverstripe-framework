@@ -8,12 +8,13 @@
  */
 class CMSBatchActionHandler extends RequestHandler {
 	
-	static $batch_actions = array();
+	/** @config */
+	private static $batch_actions = array();
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$BatchAction/applicablepages' => 'handleApplicablePages',
 		'$BatchAction/confirmation' => 'handleConfirmation',
-		'$BatchAction' => 'handleAction',
+		'$BatchAction' => 'handleBatchAction',
 	);
 	
 	protected $parentController;
@@ -40,9 +41,8 @@ class CMSBatchActionHandler extends RequestHandler {
 	 */
 	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
 		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
-			self::$batch_actions[$urlSegment] = array(
-				'class' => $batchActionClass,
-				'recordClass' => $recordClass
+			Config::inst()->update('CMSBatchActionHandler', 'batch_actions', 
+				array($urlSegment => array('class' => $batchActionClass, 'recordClass' => $recordClass))
 			);
 		} else {
 			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);
@@ -66,7 +66,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		return Controller::join_links($this->parentController->Link(), $this->urlSegment);
 	}
 
-	public function handleAction($request) {
+	public function handleBatchAction($request) {
 		// This method can't be called without ajax.
 		if(!$request->isAjax()) {
 			$this->parentController->redirectBack();
@@ -85,7 +85,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		foreach($ids as $k => $v) if(!is_numeric($v)) unset($ids[$k]);
 		
 		if($ids) {
-			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) {
+			if(class_exists('Translatable') && SiteTree::has_extension('Translatable')) {
 				Translatable::disable_locale_filter();
 			}
 			
@@ -98,11 +98,12 @@ class CMSBatchActionHandler extends RequestHandler {
 				)
 			);
 			
-			if(class_exists('Translatable') && Object::has_extension('SiteTree','Translatable')) {
+			if(class_exists('Translatable') && SiteTree::has_extension('Translatable')) {
 				Translatable::enable_locale_filter();
 			}
 			
-			if(Object::has_extension($this->recordClass, 'Versioned')) {
+			$record_class = $this->recordClass;
+			if($record_class::has_extension('Versioned')) {
 				// If we didn't query all the pages, then find the rest on the live site
 				if(!$pages || $pages->Count() < sizeof($ids)) {
 					foreach($ids as $id) $idsFromLive[$id] = true;

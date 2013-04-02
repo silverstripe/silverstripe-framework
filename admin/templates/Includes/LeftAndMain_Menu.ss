@@ -1,8 +1,8 @@
 <div class="cms-menu cms-panel cms-panel-layout west" id="cms-menu" data-layout-type="border">
 	<div class="cms-logo-header north">
 		<div class="cms-logo">
-			<a href="$ApplicationLink" target="_blank" title="SilverStripe (Version - $CMSVersion)">
-				SilverStripe <% if CMSVersion %><abbr class="version">$CMSVersion</abbr><% end_if %>
+			<a href="$ApplicationLink" target="_blank" title="$ApplicationName (Version - $CMSVersion)">
+				$ApplicationName <% if CMSVersion %><abbr class="version">$CMSVersion</abbr><% end_if %>
 			</a>
 			<span><% if SiteConfig %>$SiteConfig.Title<% else %>$ApplicationName<% end_if %></span>
 		</div>
@@ -12,7 +12,7 @@
 			<% with CurrentMember %>
 				<span>
 					<% _t('LeftAndMain_Menu.ss.Hello','Hi') %>
-					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link ss-ui-dialog-link" data-popupclass="edit-profile-popup">
+					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
 				</span>
@@ -27,7 +27,7 @@
 				<a href="$Link" <% if Code == 'Help' %>target="_blank"<% end_if%>>
 					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
 					<span class="text">$Title</span>
-				</a>			
+				</a>
 			</li>
 		<% end_loop %>
 		</ul>

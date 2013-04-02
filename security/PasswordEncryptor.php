@@ -15,37 +15,15 @@ abstract class PasswordEncryptor {
 	
 	/**
 	 * @var array
+	 * @config
 	 */
-	protected static $encryptors = array();
+	private static $encryptors = array();
 	
 	/**
 	 * @return Array Map of encryptor code to the used class.
 	 */
 	public static function get_encryptors() {
 		return Config::inst()->get('PasswordEncryptor', 'encryptors');
-	}
-	
-	/**
-	 * Add a new encryptor implementation.
-	 * 
-	 * Note: Due to portability concerns, its not advisable to 
-	 * override an existing $code mapping with different behaviour.
-	 * 
-	 * @param String $code This value will be stored stored in the 
-	 * 	{@link Member->PasswordEncryption} property.
-	 * @param String $class Classname of a {@link PasswordEncryptor} subclass
-	 */
-	public static function register($code, $class) {
-		Deprecation::notice('3.0', 'Use the Config system to register Password encryptors');
-		self::$encryptors[$code] = $class;
-	}
-	
-	/**
-	 * @param String $code Unique lookup.
-	 */
-	public static function unregister($code) {
-		Deprecation::notice('3.0', 'Use the Config system to unregister Password encryptors');
-		if(isset(self::$encryptors[$code])) unset(self::$encryptors[$code]);
 	}
 	
 	/**
@@ -102,22 +80,6 @@ abstract class PasswordEncryptor {
 		return substr($generator->randomToken('sha1'), 0, 50);
 	}
 	
-	/**
-	 * This usually just returns a strict string comparison,
-	 * but is necessary for {@link PasswordEncryptor_LegacyPHPHash}.
-	 * 
-	 * @param String $hash1
-	 * @param String $hash2
-	 * @return boolean
-	 *
-	 * @deprecated 3.0 - Use PasswordEncryptor::check() instead.
-	 */
-	public function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0',
-			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
-		return ($hash1 === $hash2);
-	}
-
 	/**
 	 * This usually just returns a strict string comparison,
 	 * but is necessary for retain compatibility with password hashed
@@ -354,15 +316,6 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 		// In that way we can store also a SHA256 encrypted password in just 64
 		// letters.
 		return substr(base_convert($password, 16, 36), 0, 64);
-	}
-	
-	public function compare($hash1, $hash2) {
-		Deprecation::notice('3.0.0',
-			'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
-
-		// Due to flawed base_convert() floating poing precision, 
-		// only the first 10 characters are consistently useful for comparisons.
-		return (substr($hash1, 0, 10) === substr($hash2, 0, 10));
 	}
 
 	public function check($hash, $password, $salt = null, $member = null) {

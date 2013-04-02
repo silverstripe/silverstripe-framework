@@ -42,9 +42,10 @@ class DatetimeField extends FormField {
 	protected $timeField = null;
 	
 	/**
+	 * @config
 	 * @var array
 	 */
-	static $default_config = array(
+	private static $default_config = array(
 		'datavalueformat' => 'YYYY-MM-dd HH:mm:ss',
 		'usertimezone' => null,
 		'datetimeorder' => '%s %s',
@@ -56,10 +57,12 @@ class DatetimeField extends FormField {
 	protected $config;
 		
 	public function __construct($name, $title = null, $value = ""){
-		$this->config = self::$default_config;
+		$this->config = $this->config()->default_config;
 		
-		$this->dateField = DateField::create($name . '[date]', false);
-		$this->timeField = TimeField::create($name . '[time]', false);
+		$this->dateField = DateField::create($name . '[date]', false)
+			->addExtraClass('fieldgroup-field');
+		$this->timeField = TimeField::create($name . '[time]', false)
+			->addExtraClass('fieldgroup-field');
 		$this->timezoneField = new HiddenField($this->getName() . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
@@ -80,6 +83,7 @@ class DatetimeField extends FormField {
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
+		$this->addExtraClass('fieldgroup');
 		$this->addExtraClass(Convert::raw2json($config));
 
 		return parent::FieldHolder($properties);
@@ -87,7 +91,7 @@ class DatetimeField extends FormField {
 	
 	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
-		
+
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
 		return $this->dateField->FieldHolder() . 
 			$this->timeField->FieldHolder() . 
@@ -212,12 +216,48 @@ class DatetimeField extends FormField {
 	public function getDateField() {
 		return $this->dateField;
 	}
+
+	/**
+	 * @param FormField
+	 */
+	public function setDateField($field) {
+		$expected = $this->getName() . '[date]';
+		if($field->getName() != $expected) {
+			throw new InvalidArgumentException(sprintf(
+				'Wrong name format for date field: "%s" (expected "%s")',
+				$field->getName(),
+				$expected
+			));
+		}
+
+		$field->setForm($this->getForm());
+		$this->dateField = $field;
+		$this->setValue($this->value); // update value
+	}
 	
 	/**
 	 * @return TimeField
 	 */
 	public function getTimeField() {
 		return $this->timeField;
+	}
+
+	/**
+	 * @param FormField
+	 */
+	public function setTimeField($field) {
+		$expected = $this->getName() . '[time]';
+		if($field->getName() != $expected) {
+			throw new InvalidArgumentException(sprintf(
+				'Wrong name format for time field: "%s" (expected "%s")',
+				$field->getName(),
+				$expected
+			));
+		}
+
+		$field->setForm($this->getForm());
+		$this->timeField = $field;
+		$this->setValue($this->value); // update value
 	}
 	
 	/**
@@ -263,7 +303,11 @@ class DatetimeField extends FormField {
 	 * @return mixed
 	 */
 	public function getConfig($name = null) {
-		return $name ? $this->config[$name] : $this->config;
+		if($name) {
+			return isset($this->config[$name]) ? $this->config[$name] : null;
+		} else {
+			return $this->config;
+		}
 	}
 	
 	public function validate($validator) {
@@ -274,10 +318,29 @@ class DatetimeField extends FormField {
 	}
 	
 	public function performReadonlyTransformation() {
-		$field = new DatetimeField_Readonly($this->name, $this->title, $this->dataValue());
-		$field->setForm($this->form);
+		$field = $this->castedCopy('DatetimeField_Readonly');
+		$field->setValue($this->dataValue());
+		
+		$dateFieldConfig = $this->getDateField()->getConfig();
+		if($dateFieldConfig) {
+			foreach($dateFieldConfig as $k => $v) {
+				$field->getDateField()->setConfig($k, $v);
+			}
+		}
+
+		$timeFieldConfig = $this->getTimeField()->getConfig();
+		if($timeFieldConfig) {
+			foreach($timeFieldConfig as $k => $v) {
+				$field->getTimeField()->setConfig($k, $v);
+			}
+		}
 		
 		return $field;
+	}
+
+	public function __clone() {
+		$this->dateField = clone $this->dateField;
+		$this->timeField = clone $this->timeField;
 	}
 }
 

@@ -5,9 +5,10 @@
  */
 class JSONDataFormatter extends DataFormatter {
 	/**
+	 * @config
 	 * @todo pass this from the API to the data formatter somehow
 	 */
-	static $api_base = "api/v1/";
+	private static $api_base = "api/v1/";
 	
 	protected $outputContentType = 'application/json';
 	
@@ -70,9 +71,9 @@ class JSONDataFormatter extends DataFormatter {
 
 				$fieldName = $relName . 'ID';
 				if($obj->$fieldName) {
-					$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
+					$href = Director::absoluteURL($this->config()->api_base . "$relClass/" . $obj->$fieldName);
 				} else {
-					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+					$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName");
 				}
 				$serobj->$relName = ArrayData::array_to_object(array(
 					"className" => $relClass,
@@ -91,8 +92,8 @@ class JSONDataFormatter extends DataFormatter {
 				$innerParts = array();
 				$items = $obj->$relName();
 				foreach($items as $item) {
-					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+					//$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName/$item->ID");
+					$href = Director::absoluteURL($this->config()->api_base . "$relClass/$item->ID");
 					$innerParts[] = ArrayData::array_to_object(array(
 						"className" => $relClass,
 						"href" => "$href.json",
@@ -112,8 +113,8 @@ class JSONDataFormatter extends DataFormatter {
 				$innerParts = array();
 				$items = $obj->$relName();
 				foreach($items as $item) {
-					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+					//$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName/$item->ID");
+					$href = Director::absoluteURL($this->config()->api_base . "$relClass/$item->ID");
 					$innerParts[] = ArrayData::array_to_object(array(
 						"className" => $relClass,
 						"href" => "$href.json",

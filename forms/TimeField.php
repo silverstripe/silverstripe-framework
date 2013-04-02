@@ -24,9 +24,10 @@ require_once 'Zend/Date.php';
 class TimeField extends TextField {
 	
 	/**
+	 * @config
 	 * @var array
 	 */
-	static $default_config = array(
+	private static $default_config = array(
 		'timeformat' => null,
 		'use_strtotime' => true,
 		'datavalueformat' => 'HH:mm:ss'
@@ -54,7 +55,7 @@ class TimeField extends TextField {
 			$this->locale = i18n::get_locale();
 		}
 		
-		$this->config = self::$default_config;
+		$this->config = $this->config()->default_config;
 		
 		if(!$this->getConfig('timeformat')) {
 			$this->setConfig('timeformat', i18n::get_time_format());
@@ -184,14 +185,30 @@ class TimeField extends TextField {
 	 * @return mixed|array
 	 */
 	public function getConfig($name = null) {
-		return $name ? $this->config[$name] : $this->config;
+		if($name) {
+			return isset($this->config[$name]) ? $this->config[$name] : null;
+		} else {
+			return $this->config;
+		}
 	}
 		
 	/**
 	 * Creates a new readonly field specified below
 	 */
 	public function performReadonlyTransformation() {
-		return new TimeField_Readonly($this->name, $this->title, $this->dataValue(), $this->getConfig('timeformat'));
+		return $this->castedCopy('TimeField_Readonly');
+	}
+
+	public function castedCopy($class) {
+		$copy = parent::castedCopy($class);
+		if($copy->hasMethod('setConfig')) {
+			$config = $this->getConfig();
+			foreach($config as $k => $v) {
+				$copy->setConfig($k, $v);
+			}
+		}
+
+		return $copy;
 	}
 	
 }

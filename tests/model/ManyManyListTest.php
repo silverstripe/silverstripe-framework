@@ -3,7 +3,7 @@
 class ManyManyListTest extends SapphireTest {
 	
 	// Borrow the model from DataObjectTest
-	public static $fixture_file = 'DataObjectTest.yml';
+	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
@@ -161,4 +161,53 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertEquals($teamTwoID, $teamsWithoutTheCaptain->first()->ID,
 			'The ManyManyList contains the wrong team');
 	}
+
+	public function testRemoveAll() {
+		$first = new DataObjectTest_Team();
+		$first->write();
+
+		$second = new DataObjectTest_Team();
+		$second->write();
+
+		$firstPlayers = $first->Players();
+		$secondPlayers = $second->Players();
+
+		$a = new DataObjectTest_Player();
+		$a->ShirtNumber = 'a';
+		$a->write();
+
+		$b = new DataObjectTest_Player();
+		$b->ShirtNumber = 'b';
+		$b->write();
+
+		$firstPlayers->add($a);
+		$firstPlayers->add($b);
+
+		$secondPlayers->add($a);
+		$secondPlayers->add($b);
+
+		$this->assertEquals(array('a', 'b'), $firstPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+		$this->assertEquals(array('a', 'b'), $secondPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+
+		$firstPlayers->removeAll();
+
+		$this->assertEquals(0, count($firstPlayers));
+		$this->assertEquals(2, count($secondPlayers));
+
+		$firstPlayers->removeAll();
+
+		$firstPlayers->add($a);
+		$firstPlayers->add($b);
+
+		$this->assertEquals(array('a', 'b'), $firstPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+
+		$firstPlayers->filter('ShirtNumber', 'b')->removeAll();
+
+		$this->assertEquals(array('a'), $firstPlayers->column('ShirtNumber'));
+		$this->assertEquals(array('a', 'b'), $secondPlayers->sort('ShirtNumber')->column('ShirtNumber'));
+
+		$this->assertNotNull(DataObjectTest_Player::get()->byID($a->ID));
+		$this->assertNotNull(DataObjectTest_Player::get()->byID($b->ID));
+	}
+
 }

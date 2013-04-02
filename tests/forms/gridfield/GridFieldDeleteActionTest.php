@@ -12,7 +12,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	protected $form;
 	
 	/** @var string */
-	public static $fixture_file = 'GridFieldActionTest.yml';
+	protected static $fixture_file = 'GridFieldActionTest.yml';
 
 	/** @var array */
 	protected $extraDataObjects = array('GridFieldAction_Delete_Team', 'GridFieldAction_Edit_Team');
@@ -88,7 +88,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 }
 
 class GridFieldAction_Delete_Team extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
 	);

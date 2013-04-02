@@ -167,6 +167,29 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
 	
+	public function testCombinedCss() {
+		$basePath = $this->getCurrentRelativePath();
+		$backend = new Requirements_Backend;
+		$backend->set_combined_files_enabled(true);
+
+		$backend->combine_files(
+			'print.css',
+			array(
+				$basePath . '/RequirementsTest_print_a.css',
+				$basePath . '/RequirementsTest_print_b.css'
+			),
+			'print'
+		);
+
+		$html = $backend->includeInHTML(false, self::$html_template);
+
+		$this->assertTrue((bool)preg_match('/href=".*\/print\.css/', $html), 'Print stylesheets have been combined.');
+		$this->assertTrue((bool)preg_match(
+			'/media="print/', $html),
+			'Combined print stylesheet retains the media parameter'
+		);
+	}
+
 	public function testBlockedCombinedJavascript() {
 		$basePath = $this->getCurrentRelativePath();
 		
@@ -231,13 +254,13 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 
 		$html = $backend->includeInHTML(false, self::$html_template);
-
+		
 		/* Javascript has correct path */
-		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&test=1&test=2&test=3/', $html),
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/', $html),
 			'javascript has correct path'); 
 
 		/* CSS has correct path */
-		$this->assertTrue((bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&test=1&test=2&test=3/',$html),
+		$this->assertTrue((bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',$html),
 			'css has correct path'); 
 	}
 	
@@ -323,6 +346,34 @@ class RequirementsTest extends SapphireTest {
 		$html = $backend->includeInHTML(false, $template);
 		$this->assertNotContains('<head><script', $html);
 		$this->assertContains('</script></body>', $html);
+	}
+
+	public function testSuffix() {
+		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
+		$basePath = $this->getCurrentRelativePath();
+		$basePath = 'framework' . substr($basePath, strlen(FRAMEWORK_DIR));
+
+		$backend = new Requirements_Backend;
+
+		$backend->javascript($basePath .'/RequirementsTest_a.js');
+		$backend->javascript($basePath .'/RequirementsTest_b.js?foo=bar&bla=blubb');
+		$backend->css($basePath .'/RequirementsTest_a.css');
+		$backend->css($basePath .'/RequirementsTest_b.css?foo=bar&bla=blubb');
+
+		$backend->set_suffix_requirements(true);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertRegexp('/RequirementsTest_a\.js\?m=[\d]*/', $html);
+		$this->assertRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
+		$this->assertRegexp('/RequirementsTest_a\.css\?m=[\d]*/', $html);
+		$this->assertRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
+
+		$backend->set_suffix_requirements(false);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertNotContains('RequirementsTest_a.js=', $html);
+		$this->assertNotRegexp('/RequirementsTest_a\.js\?m=[\d]*/', $html);
+		$this->assertNotRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
+		$this->assertNotRegexp('/RequirementsTest_a\.css\?m=[\d]*/', $html);
+		$this->assertNotRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
 	}
 
 	public function assertFileIncluded($backend, $type, $files) {

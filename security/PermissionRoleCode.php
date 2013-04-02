@@ -6,11 +6,11 @@
  * @subpackage security
  */
 class PermissionRoleCode extends DataObject {
-	static $db = array(
+	private static $db = array(
 		"Code" => "Varchar",
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"Role" => "PermissionRole",
 	);
 }

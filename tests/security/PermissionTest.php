@@ -1,7 +1,12 @@
 <?php
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class PermissionTest extends SapphireTest {
-	static $fixture_file = 'PermissionTest.yml';
+
+	protected static $fixture_file = 'PermissionTest.yml';
 	
 	public function testGetCodesGrouped() {
 		$codes = Permission::get_codes();
@@ -32,6 +37,23 @@ class PermissionTest extends SapphireTest {
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "EDIT_PERMISSIONS"));
 		$this->assertFalse(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
+	}
+
+	function testPermissionsForMember() {
+		$member = $this->objFromFixture('Member', 'access');
+		$permissions = Permission::permissions_for_member($member->ID);
+		$this->assertEquals(4, count($permissions));
+		$this->assertTrue(in_array('CMS_ACCESS_MyAdmin', $permissions));
+		$this->assertTrue(in_array('CMS_ACCESS_AssetAdmin', $permissions));
+		$this->assertTrue(in_array('CMS_ACCESS_SecurityAdmin', $permissions));
+		$this->assertTrue(in_array('EDIT_PERMISSIONS', $permissions));
+
+		$group = $this->objFromFixture("Group", "access");
+
+		Permission::deny($group->ID, "CMS_ACCESS_MyAdmin");
+		$permissions = Permission::permissions_for_member($member->ID);
+		$this->assertEquals(3, count($permissions));
+		$this->assertFalse(in_array('CMS_ACCESS_MyAdmin', $permissions));
 	}
 	
 	public function testRolesAndPermissionsFromParentGroupsAreInherited() {
@@ -70,11 +92,11 @@ class PermissionTest extends SapphireTest {
 		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','Permission','GroupID');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 		
-		Permission::add_to_hidden_permissions('CMS_ACCESS_LeftAndMain');
+		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
 
 		$this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
-		
-		Permission::remove_from_hidden_permissions('CMS_ACCESS_LeftAndMain');
+
+		Config::inst()->remove('Permission', 'hidden_permissions');		
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
-	}	
+	}
 }

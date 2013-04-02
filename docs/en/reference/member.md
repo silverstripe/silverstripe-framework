@@ -45,7 +45,7 @@ You can defined subclasses of `[api:Member]` to add extra fields or functionalit
 
 	:::php
 	class MyMember extends Member {
-		static $db = array(
+		private static $db = array(
 			"Age" => "Int",
 			"Address" => "Text",
 		);
@@ -88,19 +88,20 @@ and another subclass for the same email-address in the address-database.
 ## Member Role Extension
 
 Using inheritance to add extra behaviour or data fields to a member is limiting, because you can only inherit from 1
-class.  A better way is to use role extensions to add this behaviour.
+class. A better way is to use role extensions to add this behaviour. Add the following to your
+`[config.yml](/topics/configuration)`.
 
-	:::php
-	Object::add_extension('Member', 'ForumRole');
-	// OR
-	Member::add_role('ForumRole');
+	:::yml
+	Member:
+	  extensions:
+	    - MyMemberExtension
 
 A role extension is simply a subclass of `[api:DataExtension]` that is designed to be used to add behaviour to `[api:Member]`. 
 The roles affect the entire class - all members will get the additional behaviour.  However, if you want to restrict
 things, you should add appropriate `[api:Permission::checkMember()]` calls to the role's methods.
 
 	:::php
-	class ForumRole extends DataExtension {
+	class MyMemberExtension extends DataExtension {
 	  /**
 	
 	   * Modify the field set to be displayed in the CMS detail pop-up
@@ -113,11 +114,11 @@ things, you should add appropriate `[api:Permission::checkMember()]` calls to th
 	  }
 	
 		// define additional properties
-		static $db = array(); 
-		static $has_one = array(); 
-		static $has_many = array(); 
-		static $many_many = array(); 
-		static $belongs_many_many = array(); 
+		private static $db = array(); 
+		private static $has_one = array(); 
+		private static $has_many = array(); 
+		private static $many_many = array(); 
+		private static $belongs_many_many = array(); 
 	
 	  public function somethingElse() {
 	    // You can add any other methods you like, which you can call directly on the member object.

@@ -12,7 +12,7 @@ URLs.  Here is an example from the subsites module:
 
 	:::php
 	class SubsiteAdminTest extends SapphireTest {
-		static $fixture_file = 'subsites/tests/SubsiteTest.yml';
+		private static $fixture_file = 'subsites/tests/SubsiteTest.yml';
 	
 		/**
 		 * Return a session that has a user logged in as an administrator

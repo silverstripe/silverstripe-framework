@@ -1,7 +1,7 @@
 <?php
 /**
  * Render a button that will submit the form its contained in through ajax.
- * If you want to add custom behaviour, please set {@link inlcudeDefaultJS()} to FALSE and work with behaviour.js.
+ * If you want to add custom behaviour, please set {@link inlcudeDefaultJS()} to FALSE
  * 
  * @see framework/javascript/InlineFormAction.js
  * 
@@ -24,7 +24,7 @@ class InlineFormAction extends FormField {
 	}
 	
 	public function performReadonlyTransformation() {
-		return new InlineFormAction_ReadOnly( $this->name, $this->title );
+		return $this->castedCopy('InlineFormAction_ReadOnly');
 	}
 	
 	public function Field($properties = array()) {

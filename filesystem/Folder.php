@@ -19,11 +19,11 @@
  */
 class Folder extends File {
 
-	static $singular_name = "Folder";
+	private static $singular_name = "Folder";
 
-	static $plural_name = "Folders";
+	private static $plural_name = "Folders";
 
-	static $default_sort = "\"Name\"";
+	private static $default_sort = "\"Name\"";
 	
 	/**
 	 * 
@@ -33,18 +33,7 @@ class Folder extends File {
 		
 		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
 	}
-	
-	/**
-	 * @param $folderPath string Absolute or relative path to the file.
-	 *  If path is relative, its interpreted relative to the "assets/" directory.
-	 * @return Folder
-	 * @deprecated in favor of the correct name find_or_make
-	 */
-	public static function findOrMake($folderPath) {
-		Deprecation::notice('3.0', "Use Folder::find_or_make() instead.");
-		return self::find_or_make($folderPath);
-	}
-	
+
 	/**
 	 * Find the given folder or create it both as {@link Folder} database records
 	 * and on the filesystem. If necessary, creates parent folders as well.

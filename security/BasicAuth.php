@@ -13,11 +13,13 @@
  */
 class BasicAuth {
 	/**
+	 * @config
 	 * @var Boolean Flag set by {@link self::protect_entire_site()}
 	 */
 	private static $entire_site_protected = false;
 	
 	/**
+	 * @config
 	 * @var String|array Holds a {@link Permission} code that is required
 	 * when calling {@link protect_site_if_necessary()}. Set this value through 
 	 * {@link protect_entire_site()}.
@@ -25,6 +27,7 @@ class BasicAuth {
 	private static $entire_site_protected_code = 'ADMIN';
 	
 	/**
+	 * @config
 	 * @var String Message that shows in the authentication box.
 	 * Set this value through {@link protect_entire_site()}.
 	 */
@@ -109,9 +112,9 @@ class BasicAuth {
 	 *  of the permission codes a user has.
 	 */
 	public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null) {
-		self::$entire_site_protected = $protect;
-		self::$entire_site_protected_code = $code;
-		if($message) self::$entire_site_protected_message = $message;
+		Config::inst()->update('BasicAuth', 'entire_site_protected', $protect);
+		Config::inst()->update('BasicAuth', 'entire_site_protected_code', $code);
+		Config::inst()->update('BasicAuth', 'entire_site_protected_message', $message);
 	}
 	
 	/**
@@ -122,8 +125,9 @@ class BasicAuth {
 	 * please use {@link protect_entire_site()}.
 	 */
 	public static function protect_site_if_necessary() {
-		if(self::$entire_site_protected) {
-			self::requireLogin(self::$entire_site_protected_message, self::$entire_site_protected_code, false);
+		$config = Config::inst()->forClass('BasicAuth');
+		if($config->entire_site_protected) {
+			self::requireLogin($config->entire_site_protected_message, $config->entire_site_protected_code, false);
 		}
 	}
 

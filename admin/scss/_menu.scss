@@ -8,16 +8,15 @@
  */
 
 .cms-logo-header {
-	background-color: darken($color-dark-bg, 10%);
 	position: relative !important;
 	top:auto !important;
 	height:auto !important;
-	padding: 0 8px 0 4px;
+	padding: 0 8px;
 	line-height: 24px;
-
+	background-color: lighten($color-dark-bg,10%);
 	@include background-image(
-		linear-gradient(darken($color-dark-bg, 10%), $color-dark-bg, darken($color-dark-bg, 10%)
-	));
+		linear-gradient(lighten($color-dark-bg,20%), $color-dark-bg)
+	);
 
 	span {
 		color: $color-text-light;
@@ -32,46 +31,43 @@
 }
 
 .cms-logo {
-	border-bottom: 1px solid darken($color-dark-separator, 20%);
+	border-bottom: 1px solid lighten($color-dark-bg,4%);
 	overflow: hidden;
-	padding: $grid-y 0;
+	padding: $grid-y+2 0 $grid-y+1; /* should come to 40px with border bottom and line-height */
 	position: relative;
 	vertical-align: middle;
 	font-size: $font-base-size;
+	min-height: 20px;
 
 	.collapsed &{
 		padding:0;
 	}
-
 	.version {
 		display: none; 
 	} 
-
 	a {
 		position: absolute;
 		top: $grid-y;
 		bottom: $grid-y;
-		left: 4px;
 		display: block;
 		width: 24px;
 		background: $application-logo-small no-repeat left center;
 		text-indent: -9999em;
-		padding-right: 7px;
-		border-right: 1px solid $color-dark-separator;
+		padding: 0 1px;
+		left: 0;
 	}
-
 	span {
 		font-weight: bold;
-		font-size: 14px;
-		line-height: 20px;
+		font-size: $font-base-size;
+		line-height: 16px;
 		padding: 2px 0;
-		margin-left: 44px;
+		margin-left: 30px;
 	}
 }
 
 .cms-login-status {
 	border-top: 1px solid $color-dark-separator;
-	padding: 7px 4px;
+	padding: $grid-y*1 0 $grid-y*1.2;
 	line-height: 16px;
 	font-size: $font-base-size - 1;
 
@@ -80,7 +76,7 @@
 		height: 16px;
 		width: 16px;
 		float: left;
-		margin: 0 8px 0 3px;
+		margin: 0 8px 0 5px;
 		background: sprite($sprites32, logout) no-repeat;
 		text-indent: -9999em;
 	}
@@ -89,14 +85,15 @@
 .cms-menu {
 	z-index: 80;
 	background: $color-base;
-	width: ($grid-x * 24); // Removed right border as it clashes with different blues
+	width: ($grid-x * 20);
+
 	@include box-shadow($color-shadow-blacker 0 0 3px);
 	a {
 		text-decoration: none;
 	}
 	
 	.cms-panel-content {
-		width: ($grid-x * 24) - 1; /* 8x24 - 1 */
+		width: ($grid-x * 20);
 		overflow-x: hidden;
 		overflow-y: auto;
 		position: relative !important;
@@ -140,7 +137,8 @@
 		}
 
 		.cms-logo {
-			height:24px;
+			height:20px;
+			padding: 10px 0 9px;
 		}
 
 		&.cms-panel .cms-panel-content {
@@ -242,7 +240,7 @@
 				color: $color-text-light;
 				text-shadow: darken($color-menu-button, 20%) 0 -1px 0;
 				border-top: 1px solid lighten($color-menu-button, 10%);
-				border-bottom: 1px solid darken($color-menu-button, 20%);
+				border-bottom: 1px solid darken($color-menu-button, 15%);
 				background-color: $color-menu-button;
 				@include background-image(linear-gradient(
 					$color-menu-button, 
@@ -321,44 +319,6 @@
 					line-height: 32px;
 				}
 			}
-			/* // To specific - was overriding collapsed-flyout styles
-#Menu-CMSPagesController {
-				a {
-					background-image:none;
-					font-size: 11px;
-					padding: 0 10px 0 40px;
-					height: 32px;
-					line-height: 32px;
-				}
-			}
-			#Menu-CMSPageAddController {
-				a {
-					background-image:none;
-					font-size: 11px;
-					padding: 0 10px 0 40px;
-					height: 32px;
-					line-height: 32px;
-				}
-			}
-			#Menu-AssetAdmin {
-				a {
-					background-image:none;
-					font-size: 11px;
-					padding: 0 10px 0 40px;
-					height: 32px;
-					line-height: 32px;
-				}
-			}
-			#Menu-CMSFileAddController {
-				a {
-					background-image:none;
-					font-size: 11px;
-					padding: 0 10px 0 40px;
-					height: 32px;
-					line-height: 32px;
-				}
-			}
-*/
 		}
 
 		/* Style applied to the menu flyout only when the collapsed setting */

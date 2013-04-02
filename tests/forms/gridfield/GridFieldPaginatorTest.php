@@ -7,7 +7,7 @@ class GridFieldPaginatorTest extends FunctionalTest {
 	protected $gridField;
 	
 	/** @var string */
-	static $fixture_file = 'GridFieldTest.yml';
+	protected static $fixture_file = 'GridFieldTest.yml';
 	
 	/** @var Form */
 	protected $form;

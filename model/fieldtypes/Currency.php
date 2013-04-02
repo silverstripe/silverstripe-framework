@@ -16,7 +16,12 @@
  * @subpackage model
  */
 class Currency extends Decimal {
-	protected static $currencySymbol = '$';
+	
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $currency_symbol = '$';
 	
 	public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
 		parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
@@ -27,7 +32,7 @@ class Currency extends Decimal {
 	 */
 	public function Nice() {
 		// return "<span title=\"$this->value\">$" . number_format($this->value, 2) . '</span>';
-		$val = self::$currencySymbol . number_format(abs($this->value), 2);
+		$val = $this->config()->currency_symbol . number_format(abs($this->value), 2);
 		if($this->value < 0) return "($val)";
 		else return $val;
 	}
@@ -36,7 +41,7 @@ class Currency extends Decimal {
 	 * Returns the number as a whole-number currency, eg “$1,000”.
 	 */
 	public function Whole() {
-		$val = self::$currencySymbol . number_format(abs($this->value), 0);
+		$val = $this->config()->currency_symbol . number_format(abs($this->value), 0);
 		if($this->value < 0) return "($val)";
 		else return $val;
 	}
@@ -47,15 +52,21 @@ class Currency extends Decimal {
 			$this->value = $value;
 			
 		} else if(preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value, $matches)) {
-			$this->value = str_replace(array('$',',',self::$currencySymbol),'',$matches[0]);
+			$this->value = str_replace(array('$',',',$this->config()->currency_symbol),'',$matches[0]);
 			
 		} else {
 			$this->value = 0;
 		}
 	}
 	
+	/**
+	 * @deprecated 3.2 Use the "Currency.currency_symbol" config setting instead
+	 * @param [type] $value [description]
+	 */
+	
 	public static function setCurrencySymbol($value) {
-		self::$currencySymbol = $value;
+		Deprecation::notice('3.2', 'Use the "Currency.currency_symbol" config setting instead');
+		Currency::config()->currency_symbol = $value;
 	}
 }
 

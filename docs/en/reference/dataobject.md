@@ -79,7 +79,7 @@ Example: Simple Definition
 
 	:::php
 	class MyDataObject extends DataObject {
-	   static $searchable_fields = array(
+	   private static $searchable_fields = array(
 	      'Name',
 	      'ProductCode'
 	   );
@@ -92,7 +92,7 @@ on `$searchable_fields`:
 
 	:::php
 	class MyDataObject extends DataObject {
-	   static $searchable_fields = array(
+	   private static $searchable_fields = array(
 	       'Name' => 'PartialMatchFilter',
 	       'ProductCode' => 'NumericField'
 	   );
@@ -104,7 +104,7 @@ assign an array:
 
 	:::php
 	class MyDataObject extends DataObject {
-	   static $searchable_fields = array(
+	   private static $searchable_fields = array(
 	       'Name' => array(
 	          'field' => 'TextField',
 	          'filter' => 'PartialMatchFilter',
@@ -122,23 +122,23 @@ To include relations (''$has_one'', `$has_many` and `$many_many`) in your search
 
 	:::php
 	class Team extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Title' => 'Varchar'
 	  );
-	  static $many_many = array(
+	  private static $many_many = array(
 	    'Players' => 'Player'
 	  );
-	  static $searchable_fields = array(
+	  private static $searchable_fields = array(
 	      'Title',
 	      'Players.Name',
 	   );
 	}
 	class Player extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Name' => 'Varchar',
 	    'Birthday' => 'Date'
 	  );
-	  static $belongs_many_many = array(
+	  private static $belongs_many_many = array(
 	    'Teams' => 'Team'
 	  );
 	}
@@ -159,12 +159,12 @@ Example: Simple Definition
 
 	:::php
 	class MyDataObject extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Name' => 'Text',
 	    'OtherProperty' => 'Text',
 	    'ProductCode' => 'Int',
 	  ); 
-	  static $summary_fields = array(
+	  private static $summary_fields = array(
 	      'Name',
 	      'ProductCode'
 	   );
@@ -175,23 +175,58 @@ To include relations in your summaries, you can use a dot-notation.
 
 	:::php
 	class OtherObject extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Title' => 'Varchar'
 	  );
 	}
 	class MyDataObject extends DataObject {
-	  static $db = array(
+	  private static $db = array(
 	    'Name' => 'Text'
 	  );
-	  static $has_one = array(
+	  private static $has_one = array(
 	    'OtherObject' => 'OtherObject'
 	  );
-	   static $summary_fields = array(
+	   private static $summary_fields = array(
 	      'Name',
 	      'OtherObject.Title'
 	   );
 	}
 
+## Permissions
+
+Models can be modified in a variety of controllers and user interfaces,
+all of which can implement their own security checks. But often it makes
+sense to centralize those checks on the model, regardless of the used controller.
+
+The API provides four methods for this purpose: 
+`canEdit()`, `canCreate()`, `canView()` and `canDelete()`.
+Since they're PHP methods, they can contain arbitrary logic
+matching your own requirements. They can optionally receive a `$member` argument,
+and default to the currently logged in member (through `Member::currentUser()`).
+
+Example: Check for CMS access permissions
+
+	class MyDataObject extends DataObject {
+	  // ...
+		public function canView($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canEdit($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canDelete($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+		public function canCreate($member = null) {
+			return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
+		}
+	}
+
+**Important**: These checks are not enforced on low-level ORM operations
+such as `write()` or `delete()`, but rather rely on being checked in the invoking code.
+The CMS default sections as well as custom interfaces like
+`[ModelAdmin](/reference/modeladmin)` or `[GridField](/reference/gridfield)`
+already enforce these permissions.
 
 ## API Documentation
 

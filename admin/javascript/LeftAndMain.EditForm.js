@@ -44,7 +44,7 @@
 			 * (Object)
 			 */
 			ChangeTrackerOptions: {
-				ignoreFieldSelector: '.no-change-track, .ss-upload :input'
+				ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input'
 			},
 		
 			/**
@@ -94,14 +94,6 @@
 					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
 					firstTabWithErrors.closest('.tabset').tabs('select', firstTabWithErrors.attr('id'));
 				}
-				
-				// Move navigator to preview if one is available.
-				// If not, just leave the links in the form.
-				var previewEl = $('.cms-preview');
-				if(previewEl.length) {
-					// TODO Relies on DOM element order (the second .cms-navigator is the "old" one)
-					previewEl.find('.cms-preview-controls').html(this.find('.cms-navigator').detach());
-				}
 			
 				this._super();
 			},
@@ -116,7 +108,10 @@
 				// specifically opt-out of this behaviour via "data-skip-autofocus".
 				// This opt-out is useful if the first visible field is shown far down a scrollable area,
 				// for example for the pagination input field after a long GridField listing.
-				this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+				// Skip if an element in the form is already focused.
+				if(!this.find(document.activeElement).length) {
+					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+				}
 			},
 			onunmatch: function() {
 				this._super();
@@ -127,8 +122,6 @@
 				// Force initialization of tabsets to avoid layout glitches
 				this.add(this.find('.cms-tabset')).redrawTabs();
 				this.find('.cms-content-header').redraw();
-				
-				this.layout();
 			},
 
 			/**
@@ -168,9 +161,10 @@
 				// which means the browser auto-selects the first available form button.
 				// This might be an unrelated button of the form field,
 				// or a destructive action (if "save" is not available, or not on first position).
-				if(button) this.closest('.cms-container').submitForm(this, button);
-				
-				return false;
+				if(this.prop("target") != "_blank") {
+					if(button) this.closest('.cms-container').submitForm(this, button);
+					return false;
+				}
 			},
 
 			/**
@@ -214,14 +208,18 @@
 		});
 
 		/**
-		 * Hide tabs when only one is available
+		 * Hide tabs when only one is available.
+		 * Special case is actiontabs - tabs between buttons, where we want to have
+		 * extra options hidden within a tab (even if only one) by default.
 		 */
 		$('.cms-edit-form .ss-tabset').entwine({
 			onmatch: function() {
-				var tabs = this.find("> ul:first");
+				if (!this.hasClass('ss-ui-action-tabset')) {
+					var tabs = this.find("> ul:first");
 
-				if(tabs.children("li").length == 1) {
-					tabs.hide().parent().addClass("ss-tabset-tabshidden");
+					if(tabs.children("li").length == 1) {
+						tabs.hide().parent().addClass("ss-tabset-tabshidden");
+					}
 				}
 
 				this._super();

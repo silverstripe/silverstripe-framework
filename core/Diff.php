@@ -686,7 +686,7 @@ class Diff
 			$content = $cleaner->cleanHTML($content);
 		} else {
 			// At most basic level of cleaning, use DOMDocument to save valid XML.
-			$doc = new SS_HTMLValue($content);
+			$doc = Injector::inst()->create('HTMLValue', $content);
 			$content = $doc->getContent();
 		}
 

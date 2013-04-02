@@ -1,0 +1,7 @@
+UnsavedRelationListTest_DataObject:
+    ObjectA:
+        Name: A
+    ObjectB:
+        Name: B
+    ObjectC:
+        Name: C

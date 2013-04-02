@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class CheckboxSetFieldTest extends SapphireTest {
-	static $fixture_file = 'CheckboxSetFieldTest.yml';
+	protected static $fixture_file = 'CheckboxSetFieldTest.yml';
 
 	protected $extraDataObjects = array(
 		'CheckboxSetFieldTest_Article',
@@ -125,18 +125,18 @@ class CheckboxSetFieldTest extends SapphireTest {
 }
 
 class CheckboxSetFieldTest_Article extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Content" => "Text",
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		"Tags" => "CheckboxSetFieldTest_Tag",
 	);
 	
 }
 
 class CheckboxSetFieldTest_Tag extends DataObject implements TestOnly {
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'Articles' => 'CheckboxSetFieldTest_Article'
 	);
 }

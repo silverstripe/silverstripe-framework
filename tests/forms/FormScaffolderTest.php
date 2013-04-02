@@ -9,7 +9,7 @@
  */
 class FormScaffolderTest extends SapphireTest {
 	
-	static $fixture_file = 'FormScaffolderTest.yml';
+	protected static $fixture_file = 'FormScaffolderTest.yml';
 
 	protected $extraDataObjects = array(
 		'FormScaffolderTest_Article',
@@ -106,36 +106,36 @@ class FormScaffolderTest extends SapphireTest {
 }
 
 class FormScaffolderTest_Article extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar', 
 		'Content' => 'HTMLText'
 	);
-	static $has_one = array(
+	private static $has_one = array(
 		'Author' => 'FormScaffolderTest_Author'
 	);
-	static $many_many = array(
+	private static $many_many = array(
 		'Tags' => 'FormScaffolderTest_Tag', 
 	);
 }
 
 class FormScaffolderTest_Author extends Member implements TestOnly {
-	static $has_one = array(
+	private static $has_one = array(
 		'ProfileImage' => 'Image'
 	);
-	static $has_many = array(
+	private static $has_many = array(
 		'Articles' => 'FormScaffolderTest_Article'
 	);
 }
 class FormScaffolderTest_Tag extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar', 
 	);
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'Articles' => 'FormScaffolderTest_Article'
 	);
 }
 class FormScaffolderTest_ArticleExtension extends DataExtension implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'ExtendedField' => 'Varchar'
 	);
 
@@ -147,4 +147,4 @@ class FormScaffolderTest_ArticleExtension extends DataExtension implements TestO
 
 }
 
-DataObject::add_extension('FormScaffolderTest_Article', 'FormScaffolderTest_ArticleExtension');
+FormScaffolderTest_Article::add_extension('FormScaffolderTest_ArticleExtension');

@@ -162,12 +162,30 @@ Then there is the most complex task when you want to find Sam and Sig that has e
 		'FirstName' => array('Sam', 'Sig'),
 		'Age' => array(17, 74)
 	));
+	// SQL: WHERE ("FirstName" IN ('Sam', 'Sig) AND "Age" IN ('17', '74))
 
-This would be equivalent to a SQL query of
+In case you want to match multiple criteria non-exclusively (with an "OR" disjunctive),
+use the `filterAny()` method instead:
 
-	:::
-	... WHERE ("FirstName" IN ('Sam', 'Sig) AND "Age" IN ('17', '74));
+	:::php
+	$members = Member::get()->filterAny(array(
+		'FirstName' => 'Sam',
+		'Age' => 17,
+	));
+	// SQL: WHERE ("FirstName" = 'Sam' OR "Age" = '17')
 
+You can also combine both conjunctive ("AND") and disjunctive ("OR") statements.
+
+	:::php
+	$members = Member::get()
+		->filter(array(
+			'LastName' => 'Minnée'
+		))
+		->filterAny(array(
+			'FirstName' => 'Sam',
+			'Age' => 17,
+		));
+	// SQL: WHERE ("LastName" = 'Minnée' AND ("FirstName" = 'Sam' OR "Age" = '17'))
 
 ### Exclude
 
@@ -206,12 +224,17 @@ This would be equivalent to a SQL query of
 
 ### Search Filter Modifiers
 
-The where clauses showcased in the previous two sections (filter and exclude) specify case-insensitive exact 
+The where clauses showcased in the previous two sections (filter and exclude) specify exact 
 matches by default. However, there are a number of suffixes that you can put on field names to change this 
 behaviour `":StartsWith"`, `":EndsWith"`, `":PartialMatch"`, `":GreaterThan"`, `":LessThan"`, `":Negation"`.
 
 Each of these suffixes is represented in the ORM as a subclass of `[api:SearchFilter]`. Developers can define
 their own SearchFilters if needing to extend the ORM filter and exclude behaviours.
+
+These suffixes can also take modifiers themselves. The modifiers currently supported are `":not"`, `":nocase"`
+and `":case"`. These negate the filter, make it case-insensitive and make it case-sensitive respectively. The
+default comparison uses the database's default. For MySQL and MSSQL, this is case-insensitive. For PostgreSQL,
+this is case-sensitive.
 
 The following is a query which will return everyone whose first name doesn't start with S, who has logged in 
 since 1/1/2011.
@@ -257,9 +280,12 @@ offset, if not provided as an argument, will default to 0.
 
 ### Raw SQL options for advanced users
 
-Occasionally, the system described above won't let you do exactly what you need to do.  In these situtations, we have 
+Occasionally, the system described above won't let you do exactly what you need to do.  In these situations, we have 
 methods that manipulate the SQL query at a lower level.  When using these, please ensure that all table & field names 
 are escaped with double quotes, otherwise some DB back-ends (e.g. PostgreSQL) won't work.
+
+Under the hood, query generation is handled by the `[api:DataQuery]` class. This class does provide more direct
+access to certain SQL features that `DataList` abstracts away from you.
 
 In general, we advise against using these methods unless it's absolutely necessary.  If the ORM doesn't do quite what 
 you need it to, you may also consider extending the ORM with new data types or filter modifiers (that documentation 
@@ -301,7 +327,7 @@ Data is defined in the static variable $db on each class, in the format:
 
 	:::php
 	class Player extends DataObject {
-	  public static $db = array(
+	  private static $db = array(
 	    "FirstName" => "Varchar",
 	    "Surname" => "Varchar",
 	    "Description" => "Text",
@@ -320,7 +346,7 @@ default behaviour by making a function called "get`<fieldname>`" or "set`<fieldn
 
 	:::php
 	class Player extends DataObject {
-	  public static $db = array(
+	  private static $db = array(
 	    "Status" => "Enum('Active, Injured, Retired')"
 	  );
 	
@@ -545,12 +571,24 @@ See `[api:DataObject::$has_many]` for more info on the described relations.
 	
 	  // can be accessed by $myTeam->ActivePlayers()
 	  public function ActivePlayers() {
-	    return $this->Players("Status='Active'");
+	    return $this->Players()->filter('Status', 'Active');
 	  }
 	}
 
 Note: Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the 
 filtered criteria on the added record.
+
+### Relations on Unsaved Objects
+
+You can also set *has_many* and *many_many* relations before the `DataObject` is saved. This behaviour uses the
+`[api:UnsavedRelationList]` and converts it into the correct `RelationList` when saving the `DataObject` for the
+first time.
+
+This unsaved lists will also recursively save any unsaved objects that they contain.
+
+As these lists are not backed by the database, most of the filtering methods on `DataList` cannot be used on a
+list of this type. As such, an `UnsavedRelationList` should only be used for setting a relation before saving an
+object, not for displaying the objects contained in the relation.
 
 ## Validation and Constraints
 
@@ -578,7 +616,7 @@ Example: Validate postcodes based on the selected country
 
 	:::php
 	class MyObject extends DataObject {
-		public static $db = array(
+		private static $db = array(
 			'Country' => 'Varchar',
 			'Postcode' => 'Varchar'
 		);

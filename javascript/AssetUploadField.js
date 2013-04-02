@@ -16,4 +16,17 @@
 			this.find('.ss-uploadfield-editandorganize').show();
 		}
 	});
+	$('.ss-uploadfield-view-allowed-extensions').entwine({
+		onmatch: function() {
+			this.find('.description .toggle-content').hide();
+			this._super();
+		}
+	});
+
+	$('.ss-uploadfield-view-allowed-extensions .toggle').entwine({
+		onclick: function(e) {
+			jQuery(this).closest('.description').find('.toggle-content').toggle();
+			return false;
+		}
+	});
 }(jQuery));

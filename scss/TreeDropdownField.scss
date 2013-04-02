@@ -38,6 +38,11 @@ div.TreeDropdownField {
 		-o-box-shadow     : 0 4px 5px rgba(0,0,0,.15);
 		box-shadow        : 0 4px 5px rgba(0,0,0,.15);
 
+		&.loading {
+			min-height: 16px /* icon */ + 14px /* padding */; // Ensure there's room for loading indicator
+			background: #fff url("../images/network-save.gif") 7px 7px no-repeat; 
+		}
+
 		ul.tree {
 			margin: 0;
 
@@ -84,8 +89,8 @@ div.TreeDropdownField {
 		}
 	}
 	
-	.loading,
-	.jstree-themeroller a.jstree-loading .jstree-icon { 
-		background: #fff url("../images/network-save.gif") center center no-repeat !important; 
+	a.jstree-loading .jstree-pageicon { 
+		// Apply to .jstree-pageicon since .jstree-icon is hidden
+		background: #fff url("../images/network-save.gif") center center no-repeat; 
 	}
 }

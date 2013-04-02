@@ -5,9 +5,9 @@
  */
 class HtmlEditorFieldTest extends FunctionalTest {
 	
-	public static $fixture_file = 'HtmlEditorFieldTest.yml';
+	protected static $fixture_file = 'HtmlEditorFieldTest.yml';
 	
-	public static $use_draft_site = true;
+	protected static $use_draft_site = true;
 	
 	protected $requiredExtensions = array(
 		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyMediaFormFieldExtension')
@@ -110,7 +110,7 @@ class HtmlEditorFieldTest_DummyMediaFormFieldExtension extends Extension impleme
 }
 
 class HtmlEditorFieldTest_Object extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar',
 		'Content' => 'HTMLText'
 	);

@@ -10,31 +10,26 @@ class DatetimeFieldTest extends SapphireTest {
 		
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
-		$this->origDateFormat = DateField::$default_config['dateformat'];
-		DateField::$default_config['dateformat'] = 'dd/MM/yyyy';
-		$this->origTimeFormat = TimeField::$default_config['timeformat'];
-		TimeField::$default_config['timeformat'] = 'HH:mm:ss';
+		$this->origDateConfig = Config::inst()->get('DateField', 'default_config');
+		$this->origTimeConfig = Config::inst()->get('TimeField', 'default_config');
+		Config::inst()->update('DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
+		Config::inst()->update('TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
 	}
 	
 	public function tearDown() {
 		parent::tearDown();
 		
 		i18n::set_locale($this->originalLocale);
-		DateField::$default_config['dateformat'] = $this->origDateFormat;
-		TimeField::$default_config['timeformat'] = $this->origTimeFormat;
+		Config::inst()->remove('DateField', 'default_config');
+		Config::inst()->update('DateField', 'default_config', $this->origDateConfig);
+		Config::inst()->remove('TimeField', 'default_config');
+		Config::inst()->update('TimeField', 'default_config', $this->origTimeConfig);
 	}
 
 	public function testFormSaveInto() {
-		$form = new Form(
-			new Controller(), 
-			'Form',
-			new FieldList(
-				$f = new DatetimeField('MyDatetime', null)
-			),
-			new FieldList(
-				new FormAction('doSubmit')
-			)
-		);
+		$f = new DatetimeField('MyDatetime', null);
+		$form = $this->getMockForm();
+		$form->Fields()->push($f);
 		$f->setValue(array(
 			'date' => '29/03/2003',
 			'time' => '23:59:38'
@@ -170,6 +165,65 @@ class DatetimeFieldTest extends SapphireTest {
 		
 		date_default_timezone_set($oldTz);
 	}
+
+	public function testSetDateField() {
+		$form = $this->getMockForm();
+		$field = new DatetimeField('Datetime', 'Datetime');
+		$field->setForm($form);
+		$field->setValue(array(
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+		));
+		$dateField = new DateField('Datetime[date]');
+		$field->setDateField($dateField);
+
+		$this->assertEquals(
+			$dateField->getForm(),
+			$form,
+			'Sets form on new field'
+		);
+
+		$this->assertEquals(
+			'2003-06-24',
+			$dateField->dataValue(),
+			'Sets existing value on new field'
+		);
+	}
+
+	public function testSetTimeField() {
+		$form = $this->getMockForm();
+		$field = new DatetimeField('Datetime', 'Datetime');
+		$field->setForm($form);
+		$field->setValue(array(
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+		));
+		$timeField = new TimeField('Datetime[time]');
+		$field->setTimeField($timeField);
+
+		$this->assertEquals(
+			$timeField->getForm(),
+			$form,
+			'Sets form on new field'
+		);
+
+		$this->assertEquals(
+			'23:59:59',
+			$timeField->dataValue(),
+			'Sets existing value on new field'
+		);
+	}
+
+	protected function getMockForm() {
+		return new Form(
+			new Controller(), 
+			'Form',
+			new FieldList(),
+			new FieldList(
+				new FormAction('doSubmit')
+			)
+		);
+	}
 }
 
 /**
@@ -178,7 +232,7 @@ class DatetimeFieldTest extends SapphireTest {
  */
 class DatetimeFieldTest_Model extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'MyDatetime' => 'SS_Datetime'
 	);
 	

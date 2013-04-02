@@ -10,15 +10,16 @@ class DateFieldTest extends SapphireTest {
 		
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
-		$this->origDateFormat = DateField::$default_config['dateformat'];
-		DateField::$default_config['dateformat'] = 'dd/MM/yyyy';
+		$this->origConfig = Config::inst()->get('DateField', 'default_config');
+		Config::inst()->update('DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
 	}
 	
 	public function tearDown() {
 		parent::tearDown();
 		
 		i18n::set_locale($this->originalLocale);
-		DateField::$default_config['dateformat'] = $this->origDateFormat;
+		Config::inst()->remove('DateField', 'default_config');
+		Config::inst()->update('DateField', 'default_config', $this->origConfig);
 	}
 	
 	public function testValidateMinDate() {

@@ -41,15 +41,17 @@ abstract class DBField extends ViewableData {
 	 * The escape type for this field when inserted into a template - either "xml" or "raw".
 	 *
 	 * @var string
+	 * @config
 	 */
-	public static $escape_type = 'raw';
+	private static $escape_type = 'raw';
 	
 	/**
 	 * Subclass of {@link SearchFilter} for usage in {@link defaultSearchFilter()}.
 	 *
 	 * @var string
+	 * @config
 	 */
-	public static $default_search_filter_class = 'PartialMatchFilter';
+	private static $default_search_filter_class = 'PartialMatchFilter';
 	
 	/**
 	 * @var $default mixed Default-value in the database.
@@ -64,14 +66,6 @@ abstract class DBField extends ViewableData {
 		parent::__construct();
 	}
 	
-
-	public static function create() {
-		Deprecation::notice('3.0', 'DBField::create() is deprecated as it clashes with Object::create().'
-			. 'Use DBField::create_field() instead.');
-
-		return call_user_func_array(array('DBField', 'create_field'), func_get_args());
-	}
-
 	/**
 	 * Create a DBField object that's not bound to any particular field.
 	 * Useful for accessing the classes behaviour for other parts of your code.
@@ -303,5 +297,8 @@ abstract class DBField extends ViewableData {
 </ul>
 DBG;
 	}
-	
+
+	public function __toString() {
+		return $this->forTemplate();
+	}
 }

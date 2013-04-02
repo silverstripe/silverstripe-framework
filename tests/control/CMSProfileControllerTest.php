@@ -1,7 +1,7 @@
 <?php
 class CMSProfileControllerTest extends FunctionalTest {
 
-	public static $fixture_file = 'CMSProfileControllerTest.yml';
+	protected static $fixture_file = 'CMSProfileControllerTest.yml';
 
 	public $autoFollowRedirection = false;
 
@@ -10,8 +10,8 @@ class CMSProfileControllerTest extends FunctionalTest {
 		$anotherMember = $this->objFromFixture('Member', 'user2');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
-		$response = $this->post('admin/myprofile/Member_ProfileForm', array(
-			'action_dosave' => 1,
+		$response = $this->post('admin/myprofile/EditForm', array(
+			'action_save' => 1,
 			'ID' => $anotherMember->ID,
 			'FirstName' => 'JoeEdited',
 			'Surname' => 'BloggsEdited',
@@ -30,8 +30,8 @@ class CMSProfileControllerTest extends FunctionalTest {
 		$member = $this->objFromFixture('Member', 'user1');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
-		$response = $this->post('admin/myprofile/Member_ProfileForm', array(
-			'action_dosave' => 1,
+		$response = $this->post('admin/myprofile/EditForm', array(
+			'action_save' => 1,
 			'ID' => $member->ID,
 			'FirstName' => 'JoeEdited',
 			'Surname' => 'BloggsEdited',
@@ -53,8 +53,8 @@ class CMSProfileControllerTest extends FunctionalTest {
 		$member = $this->objFromFixture('Member', 'user1');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
-		$response = $this->post('admin/myprofile/Member_ProfileForm', array(
-			'action_dosave' => 1,
+		$response = $this->post('admin/myprofile/EditForm', array(
+			'action_save' => 1,
 			'ID' => $member->ID,
 			'FirstName' => 'JoeEdited',
 			'Surname' => 'BloggsEdited',

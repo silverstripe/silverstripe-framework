@@ -45,16 +45,23 @@ reducing HTTP requests. Note that for debugging purposes combined files is disab
 	);
 
 
-By default it stores the generated file in the assets/ folder but you can configure this by setting
+By default it stores the generated file in the assets/ folder but you can configure this by pointing
+the `Requirements.combined_files_folder` configuration setting to a specific folder.
  
-
-	:::php
-	// relative from the base folder
-	Requirements::set_combined_files_folder('folder');
 
 
 If SilverStripe doesn't have permissions on your server to write these files it will default back to including them
 individually .
+
+You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
+the third paramter of the `combine_files` function:
+
+	:::php
+	$printStylesheets = array(
+		"$themeDir/css/print_HomePage.css",
+		"$themeDir/css/print_Page.css",
+	);
+	Requirements::combine_files('print.css', $printStylesheets, 'print');
 
 ## Custom Inline Scripts
 
@@ -117,12 +124,65 @@ inheritance and overlays - please be careful when messing with the order of Requ
 NOTE:
 By default, SilverStripe includes all Javascript files at the bottom of the page body. If this causes problems for you,
 for example if you're using animation that ends up showing everything until the bottom of the page loads, or shows
-buttons before pushing them will actually work, you can change this behaviour:
+buttons before pushing them will actually work, you can change this behaviour through
+the `Requirements.write_js_to_body` configuration setting.
 
-In your controller's init() function, add:
+## CMS Requirements
 
-	:::php
-	Requirements::set_write_js_to_body(false);
+The SilverStripe core includes a lot of Requirements by itself. Most of these are collated in `[api:LeftAndMain]` first.
+
+## Motivation
+
+Every page requested is made up of a number of parts, and many of those parts require their own CSS or JavaScript.  
+Rather than force the developer to put all of those requests into the template, or the header function, you can
+reference required files anywhere in your application.
+
+This lets you create very modular units of PHP+JavaScript+CSS, which a powerful concept but must be managed carefully.  
+
+## Managing Generic CSS styling
+
+One of the aims of this is to create units of functionality that can be reasonably easily deployed as-is, while still
+giving developers the option to customise them.  The logical solution to this is to create 'generic' CSS to be applied
+to these things.  However, we must take great care to keep the CSS selectors very nonspecific.  This precludes us from
+adding any CSS that would "override customisations" in the form - for example, resetting the width of a field where 100%
+width isn't appropriate.
+
+Another solution would be to include some "generic CSS" for form elements at the very high level, so that fixed widths
+on forms were applied to the generic form, and could therefore be overridden by a field's generic stylesheet.  Similar
+to this is mandating the use of "form div.field input" to style form input tags, whether it's a generic form or a custom
+one.
+
+Perhaps we could make use of a Requirements::disallowCSS() function, with which we could prevent the standard CSS from
+being included in situations where it caused problems.  But the complexity could potentially balloon, and really, it's a
+bit of an admission of defeat - we shouldn't need to have to do this if our generic CSS was well-designed.
+
+
+## Ideas/Problems
+
+### Ajax
+
+The whole "include it when you need it" thing shows some weaknesses in areas such as the CMS, where Ajax is used to load
+in large pieces of the application, which potentially require more CSS and JavaScript to be included.  At this stage,
+the only workaround is to ensure that everything you might need is included on the first page-load.
+
+One idea is to mention the CSS and JavaScript which should be included in the header of the Ajax response, so that the
+client can load up those scripts and stylesheets upon completion of the Ajax request.  This could be coded quite
+cleanly, but for best results we'd want to extend prototype.js with our own changes to their Ajax system, so that every
+script had consistent support for this.
+
+### Lots of files
+
+Because everything's quite modular, it's easy to end up with a large number of small CSS and JavaScript files.  This has
+problems with download time, and potentially maintainability.
+
+We don't have any easy answers here, but here are some ideas:
+
+*  Merging the required files into a single download on the server.  The flip side of this is that if every page has a
+slightly different JS/CSS requirements, the whole lot will be refetched.
+*  Better: "Tagging" each required file for different use-cases, and creating a small set of common functionalities
+(e.g. everything tagged "base" such as prototype.js would always be included)
+*  Do lazy fetching of scripts within an ajax-call. This seems to be possible, but very tricky due to the asynchronous
+nature of an ajax-request. Needs some more research
 
 ## API Documentation
 `[api:Requirements]`

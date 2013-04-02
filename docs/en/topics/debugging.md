@@ -3,23 +3,25 @@
 ## Environment Types
 
 Silverstripe knows three different environment-types (or "debug-levels"). Each of the levels gives you different tools
-and functionality. "dev", "test" and "live". You can either configure the environment of the site in the
-mysite/_config.php file or in your [environment configuration file](/topics/environment-management).
+and functionality. "dev", "test" and "live". You can either configure the environment of the site in your
+[config.yml file](/topics/configuration) or in your [environment configuration file](/topics/environment-management).
 
-The definition of setting an environment in your mysite/_config.php looks like
+The definition of setting an environment in your `config.yml` looks like
 
-	:::php
-	Director::set_environment_type("dev");
+	:::yml
+	Director:
+	  environment_type: 'dev'
 
 ### Dev Mode
 
 When developing your websites, adding page types or installing modules you should run your site in devmode. In this mode
 you will be able to view full error backtraces and view the development tools without logging in as admin.
 
-To set your site to dev mode set this in your mysite/_config.php file
+To set your site to dev mode set this in your `config.yml` file
 
-	:::php
-	Director::set_environment_type("dev");
+	:::yml
+	Director:
+	  environment_type: 'dev'
 
 
 Please note **devmode should not be enabled long term on live sites for security reasons**. In devmode by outputting
@@ -35,18 +37,23 @@ not need to use test mode if you do not have a staging environment or a place fo
 In this mode error messages are hidden from the user and it includes `[api:BasicAuth]` integration if you want to password
 protect the site.
 
-To set your site to test mode set this in your `mysite/_config.php` file
+To set your site to test mode set this in your `config.yml` file
 
-	:::php
-	Director::set_environment_type("test");
+	:::yml
+	Director:
+	  environment_type: 'test'
 
 
-A common situation is to enable password protected site viewing on your test site only. You can enable that but adding
-this to your `mysite/_config` file
+A common situation is to enable password protected site viewing on your test site only. 
+You can enable that but adding this to your `config.yml` file:
 
-	:::php
-	if(Director::isTest()) BasicAuth::protect_entire_site();
-
+	:::yml
+	---
+	Only:
+	  environment: 'test'
+	---
+	BasicAuth:
+	  entire_site_protected: true
 
 ### Live Mode
 
@@ -54,40 +61,37 @@ Live sites should always run in live mode. Error messages are suppressed from th
 to email the developers. This enables near real time reporting of any fatal errors or warnings on the site and can help
 find any bugs users run into.
 
-To set your site to live mode set this in your `mysite/_config.php` file
+To set your site to live mode set this in your `config.yml` file
 
-	:::php
-	Director::set_environment_type("live");
-
-
+	:::yml
+	Director:
+	  environment_type: 'live'
 
 ### Checking Environment Types
 
-Use the following methods:
+You can check for the current environment type in [config files](/topics/configuration) through the "environment" variant.
+This is useful for example when you have various API keys on your site and separate ones for dev / live or for configuring
+environment settings based on type .
+
+	---
+	Only:
+	  environment: 'test'
+	---
+	MyClass:
+		myvar: myval
+
+In addition, you can use the following methods in PHP code:
 
 	:::php
 	Director::isDev();
 	Director::isTest();
 	Director::isLive();
 
-
-This is useful when you have various API keys on your site and separate ones for dev / live or for configuring
-environment settings based on type 
-
-	:::php
-	if(Director::isDev()) {
-	// this is for dev only
-	}
-	else {
-	// this is for the live site
-	}
-
-
 ## Email Errors
 
-	:::php
-	if(Director::isLive()) Debug::send_errors_to("your@email.com");
-
+	:::yml
+	Debug:
+	  send_errors_to: 'your@email.com'
 
 ## Customizing Error-Output
 
@@ -106,14 +110,13 @@ The Debug class contains a number of static methods
 *  *Debug::show($myVariable)*: performs a kind of *print_r($myVariable)*, but shows it in a more useful format.
 *  *Debug::message("Wow, that's great")*: prints a short debugging message.
 *  *SS_Backtrace::backtrace()*: prints a calls-stack
-*  *Debug::send_errors_to("sam@silverstripe.com")*: All errors will get sent to this address.
 
 ### Error handling
 
 On development sites, we deal harshly with any warnings or errors: a full call-stack is shown and execution stops.  This
 is basically so that we deal with them promptly, since most warnings are indication that **something** is broken.
 
-On live sites, all errors are emailed to the address specified in Debug::sendLiveErrorsTo($email)
+On live sites, all errors are emailed to the address specified in the `Debug.send_errors_to` config setting.
 
 ### Debugging techniques
 
@@ -140,6 +143,9 @@ the development effort itself as "test-driven development".
 
 #### Profiling
 
-Silverstripe includes a profiling suite called [Profiler](http://www.adepteo.net/profiler/manual.html) from Carl Taylor
-at Adepteo.  You can use this withing your installation during development to find bottlenecks and more. You can enable
-the profiler by adding `?debug_profile=1` to your URL.
+Profiling is the best way to identify bottle necks and other slow moving parts of your application prime for optimization. SilverStripe 
+does not include any profiling tools out of the box, but we recommend the use of existing tools such as [XHProf](https://github.com/facebook/xhprof/)
+and [XDebug](http://xdebug.org/).
+
+* [Profiling with XHProf](http://techportal.inviqa.com/2009/12/01/profiling-with-xhprof/)
+* [Profiling PHP Applications With xdebug](http://devzone.zend.com/1139/profiling-php-applications-with-xdebug/)

@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class UploadTest extends SapphireTest {
-	static $fixture_file = 'UploadTest.yml';
+	protected static $fixture_file = 'UploadTest.yml';
 
 	public function testUpload() {
 		// create tmp file
@@ -36,7 +36,13 @@ class UploadTest extends SapphireTest {
 			'File upload to standard directory in /assets'
 		);
 		$this->assertTrue(
-			(strpos($file1->getFullPath(), Director::baseFolder() . '/assets/' . Upload::$uploads_folder) !== false),	
+			(
+				strpos(
+					$file1->getFullPath(), 
+					Director::baseFolder() . '/assets/' . Config::inst()->get('Upload', 'uploads_folder')
+				) 
+				!== false
+			),	
 			'File upload to standard directory in /assets'
 		);
 		$file1->delete();
@@ -214,7 +220,7 @@ class UploadTest extends SapphireTest {
 	// @param String $namePattern	A regular expression applied to files in the directory. If the name matches
 	// the pattern, it is deleted. Directories, . and .. are excluded.
 	public function deleteTestUploadFiles($namePattern) {
-		$tmpFolder = ASSETS_PATH . "/" . Upload::$uploads_folder;
+		$tmpFolder = ASSETS_PATH . "/" . Config::inst()->get('Upload', 'uploads_folder');
 		$files = scandir($tmpFolder);
 		foreach ($files as $f) {
 			if ($f == "." || $f == ".." || is_dir("$tmpFolder/$f")) continue;
@@ -310,6 +316,62 @@ class UploadTest extends SapphireTest {
 			'UploadTest-testUpload-2',
 			$file2->Name,
 			'File receives a number attached to the end'
+		);
+		
+		$file->delete();
+		$file2->delete();
+	}
+
+	public function testReplaceFile() {
+		// create tmp file
+		$tmpFileName = 'UploadTest-testUpload';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
+		$this->deleteTestUploadFiles("/UploadTest-testUpload.*/");
+
+		$v = new UploadTest_Validator();
+		$v->setAllowedExtensions(array(''));
+
+		// test upload into default folder
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->load($tmpFile);
+		$file = $u->getFile();
+
+		$this->assertEquals(
+			'UploadTest-testUpload',
+			$file->Name,
+			'File is uploaded without extension'
+		);
+		
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->setReplaceFile(true);
+		$u->load($tmpFile);
+		$file2 = $u->getFile();
+		$this->assertEquals(
+			'UploadTest-testUpload',
+			$file2->Name,
+			'File does not receive new name'
+		);
+		$this->assertEquals(
+			$file->ID,
+			$file2->ID,
+			'File database record is the same'
 		);
 		
 		$file->delete();

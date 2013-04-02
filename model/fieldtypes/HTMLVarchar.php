@@ -8,12 +8,27 @@
  */
 class HTMLVarchar extends Varchar {
 	
-	public static $escape_type = 'xml';
-	
-	public function forTemplate() {
-		return ShortcodeParser::get_active()->parse($this->value);
+	private static $escape_type = 'xml';
+
+	protected $processShortcodes = true;
+
+	public function setOptions(array $options = array()) {
+		parent::setOptions($options);
+
+		if(array_key_exists("shortcodes", $options)) {
+			$this->processShortcodes = !!$options["shortcodes"];
+		}
 	}
-	
+
+	public function forTemplate() {
+		if ($this->processShortcodes) {
+			return ShortcodeParser::get_active()->parse($this->value);
+		}
+		else {
+			return $this->value;
+		}
+	}
+
 	public function exists() {
 		return parent::exists() && $this->value != '<p></p>';
 	}

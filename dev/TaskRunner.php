@@ -5,12 +5,12 @@
  */
 class TaskRunner extends Controller {
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'' => 'index',
 		'$TaskName' => 'runTask'
 	);
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'runTask',
 	);
@@ -43,7 +43,7 @@ class TaskRunner extends Controller {
 			echo "<ul>";
 			foreach($tasks as $task) {
 				echo "<li><p>";
-				echo "<a href=\"{$base}dev/tasks/" . $task['class'] . "\">" . $task['title'] . "</a><br />";
+				echo "<a href=\"{$base}dev/tasks/" . $task['segment'] . "\">" . $task['title'] . "</a><br />";
 				echo "<span class=\"description\">" . $task['description'] . "</span>";
 				echo "</p></li>\n";
 			}
@@ -54,28 +54,41 @@ class TaskRunner extends Controller {
 		} else {
 			echo "SILVERSTRIPE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
 			foreach($tasks as $task) {
-				echo " * $task: sake dev/tasks/" . $task['class'] . "\n";
+				echo " * $task[title]: sake dev/tasks/" . $task['segment'] . "\n";
 			}
 		}
 	}
 	
 	public function runTask($request) {
-		$taskName = $request->param('TaskName');
-		if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
-			$title = singleton($taskName)->getTitle();
-			if(Director::is_cli()) echo "Running task '$title'...\n\n";
-			elseif(!Director::is_ajax()) echo "<h1>Running task '$title'...</h1>\n";
+		$name = $request->param('TaskName');
+		$tasks = $this->getTasks();
 
-			$task = new $taskName();
-			if ($task->isEnabled()) $task->run($request);
-			else echo "<p>{$title} is disabled</p>";
-		} else {
-			echo "Build task '$taskName' not found.";
-			if(class_exists($taskName)) echo "  It isn't a subclass of BuildTask.";
-			echo "\n";
+		$title = function ($content) {
+			printf(Director::is_cli() ? "%s\n\n" : '<h1>%s</h1>', $content);
+		};
+
+		$message = function ($content) {
+			printf(Director::is_cli() ? "%s\n" : '<p>%s</p>', $content);
+		};
+
+		foreach ($tasks as $task) {
+			if ($task['segment'] == $name) {
+				$inst = Injector::inst()->create($task['class']);
+				$title(sprintf('Running Task %s', $inst->getTitle()));
+
+				if (!$inst->isEnabled()) {
+					$message('The task is disabled');
+					return;
+				}
+
+				$inst->run($request);
+				return;
+			}
 		}
+
+		$message(sprintf('The build task "%s" could not be found', $name));
 	}
-	
+
 	/**
 	 * @return array Array of associative arrays for each task (Keys: 'class', 'title', 'description')
 	 */
@@ -95,13 +108,14 @@ class TaskRunner extends Controller {
 			$availableTasks[] = array(
 				'class' => $class,
 				'title' => singleton($class)->getTitle(),
+				'segment' => str_replace('\\', '-', $class),
 				'description' => $desc,
 			);
 		}
 		
 		return $availableTasks;
 	}
-	
+
 }
 
 

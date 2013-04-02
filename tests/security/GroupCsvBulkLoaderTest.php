@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class GroupCsvBulkLoaderTest extends SapphireTest {
-	static $fixture_file = 'GroupCsvBulkLoaderTest.yml';
+	protected static $fixture_file = 'GroupCsvBulkLoaderTest.yml';
 	
 	public function testNewImport() {
 		$loader = new GroupCsvBulkLoader();

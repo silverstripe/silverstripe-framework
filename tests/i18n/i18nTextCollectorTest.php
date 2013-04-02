@@ -33,7 +33,7 @@ class i18nTextCollectorTest extends SapphireTest {
 			$this->alternateBasePath, false, true, false
 		);
 		
-		$manifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$manifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
 		$manifest->regenerate(false);
 		SS_TemplateLoader::instance()->pushManifest($manifest);
 	}
@@ -470,8 +470,8 @@ YAML;
 	public function testCollectFromThemesTemplates() {
 		$c = new i18nTextCollector();
 		
-		$theme = SSViewer::current_theme();
-		SSViewer::set_theme('testtheme1');
+		$theme = Config::inst()->get('SSViewer', 'theme');
+		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
 		
 		$templateFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
 		$html = file_get_contents($templateFilePath);
@@ -523,7 +523,7 @@ YAML;
 			array('Theme1 My include replacement no namespace: %s')
 		);
 		
-		SSViewer::set_theme($theme);
+		Config::inst()->update('SSViewer', 'theme', $theme);
 	}
 	
 	public function testCollectFromFilesystemAndWriteMasterTables() {

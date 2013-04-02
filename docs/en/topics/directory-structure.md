@@ -21,6 +21,7 @@ existing modules or the directories lists in "Core Structure".
  | Directory           | Description                                                         | 
  | ---------           | -----------                                                         | 
  | `<mysite>/`           | This directory contains all of your code that defines your website. | 
+ | `<mysite>/_config`    | YAML configuration specific to  your application                    | 
  | `<mysite>/code`       | PHP code for model and controller (subdirectories are optional)     | 
  | `<mysite>/templates`  | HTML [templates](templates) with *.ss-extension                     | 
  | `<mysite>/css `       | CSS files                                                           | 
@@ -38,7 +39,7 @@ See [themes](/topics/themes)
 
 ## Module Structure		{#module_structure}
 
-Modules are currently top-level folders that need to have a *_config.php*-file present.
+Modules are currently top-level folders that have a `_config.php` file or a `_config/` directory present.
 They should follow the same conventions as posed in "Custom Site Structure"
 
 Example Forum:

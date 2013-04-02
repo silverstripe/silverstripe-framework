@@ -161,7 +161,7 @@ class Form extends RequestHandler {
 			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
 		}
 		if(!$actions instanceof FieldList) {
-			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
+			throw new InvalidArgumentException('$actions must be a valid FieldList instance');
 		}
 		if($validator && !$validator instanceof Validator) {
 			throw new InvalidArgumentException('$validator must be a Valdidator instance');
@@ -197,7 +197,7 @@ class Form extends RequestHandler {
 		$this->securityToken = ($securityEnabled) ? new SecurityToken() : new NullSecurityToken();
 	}
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'field/$FieldName!' => 'handleField',
 		'POST ' => 'httpSubmission',
 		'GET ' => 'httpSubmission',
@@ -578,24 +578,6 @@ class Form extends RequestHandler {
 	}
 	
 	/**
-	 * Get a named field from this form's fields.
-	 * It will traverse into composite fields for you, to find the field you want.
-	 * It will only return a data field.
-	 * 
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 * @return FormField
-	 */
-	public function dataFieldByName($name) {
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->dataFieldByName($field->getName())) $this->fields->push($field);
-		}
-		
-		return $this->fields->dataFieldByName($name);
-	}
-
-	/**
 	 * Return the form's action buttons - used by the templates
 	 * 
 	 * @return FieldList The action list
@@ -620,18 +602,6 @@ class Form extends RequestHandler {
 	public function unsetAllActions(){
 		$this->actions = new FieldList();
 		return $this;
-	}
-
-	/**
-	 * Unset the form's action button by its name.
-	 * 
-	 * @deprecated 3.0 Use Actions() and FieldList API instead
-	 * @param string $name
-	 */
-	public function unsetActionByName($name) {
-		Deprecation::notice('3.0', 'Use Actions() and FieldList API instead');
-
-		$this->actions->removeByName($name);
 	}
 
 	/**
@@ -667,34 +637,6 @@ class Form extends RequestHandler {
 		$attrs = array_merge($attrs, $this->attributes);
 
 		return $attrs;
-	}
-
-	/**
-	 * Unset the form's dataField by its name
-	 *
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 */
-	public function unsetDataFieldByName($fieldName){
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		foreach($this->Fields()->dataFields() as $child) {
-			if(is_object($child) && ($child->getName() == $fieldName || $child->Title() == $fieldName)) {
-				$child = null;
-			}
-		}
-	}
-	
-	/**
-	 * Remove a field from the given tab.
-	 *
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 */
-	public function unsetFieldFromTab($tabName, $fieldName) {
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		// Find the tab
-		$tab = $this->Fields()->findOrMakeTab($tabName);
-		$tab->removeByName($fieldName);
 	}
 
 	/**
@@ -819,14 +761,6 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * @deprecated 3.0 Please use {@link getEncType}.
-	 */
-	public function FormEncType() {
-		Deprecation::notice('3.0', 'Please use Form->getEncType() instead.');
-		return $this->getEncType();
-	}
-
-	/**
 	 * Returns the real HTTP method for the form:
 	 * GET, POST, PUT, DELETE or HEAD.
 	 * As most browsers only support GET and POST in
@@ -940,14 +874,6 @@ class Form extends RequestHandler {
 	public function setController($controller) {
 		$this->controller = $controller;
 		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function Name() {
-		Deprecation::notice('3.0', 'Use getName() instead.');
-		return $this->getName();
 	}
 
 	/**
@@ -1267,25 +1193,6 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * Resets a specific field to its passed default value.
-	 * Does NOT clear out all submitted data in the form.
-	 *
-	 * @deprecated 3.0 Use Fields() and FieldList API instead
-	 * @param string $fieldName
-	 * @param mixed $fieldValue
-	 */
-	public function resetField($fieldName, $fieldValue = null) {
-		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
-
-		$dataFields = $this->fields->dataFields();
-		if($dataFields) foreach($dataFields as $field) {
-			if($field->getName()==$fieldName) {
-				$field = $field->setValue($fieldValue);
-			}
-		}
-	}
-	
-	/**
 	 * Call the given method on the given field.
 	 * This is used by Ajax-savvy form fields.  By putting '&action=callfieldmethod' to the end
 	 * of the form action, they can access server-side data.
@@ -1320,7 +1227,7 @@ class Form extends RequestHandler {
 	 * Return a rendered version of this form.
 	 * 
 	 * This is returned when you access a form as $FormObject rather
-	 * than <% control FormObject %>
+	 * than <% with FormObject %>
 	 */
 	public function forTemplate() {
 		$return = $this->renderWith(array_merge(
@@ -1433,34 +1340,6 @@ class Form extends RequestHandler {
 	public function enableSecurityToken() {
 		$this->securityToken = new SecurityToken();
 		return $this;
-	}
-	
-	/**
-	 * Disable security tokens for every form.
-	 * Note that this doesn't apply to {@link SecurityToken}
-	 * instances outside of the Form class, nor applies
-	 * to existing form instances.
-	 * 
-	 * See {@link enable_all_security_tokens()}.
-	 * 
-	 * @deprecated 2.5 Use SecurityToken::disable()
-	 */
-	public static function disable_all_security_tokens() {
-		Deprecation::notice('2.5', 'Use SecurityToken::disable() instead.');
-		SecurityToken::disable();
-	}
-	
-	/**
-	 * Returns true if security is enabled - that is if the security token
-	 * should be included and checked on this form.
-	 * 
-	 * @deprecated 2.5 Use Form->getSecurityToken()->isEnabled()
-	 *
-	 * @return bool
-	 */
-	public function securityTokenEnabled() {
-		Deprecation::notice('2.5', 'Use Form->getSecurityToken()->isEnabled() instead.');
-		return $this->securityToken->isEnabled();
 	}
 	
 	/**

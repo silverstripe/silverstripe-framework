@@ -1,7 +1,7 @@
 <?php
 
 class VersionedTest extends SapphireTest {
-	static $fixture_file = 'VersionedTest.yml';
+	protected static $fixture_file = 'VersionedTest.yml';
 
 	protected $extraDataObjects = array(
 		'VersionedTest_DataObject',
@@ -74,8 +74,18 @@ class VersionedTest extends SapphireTest {
 	 * Test Versioned::get_including_deleted()
 	 */
 	public function testGetIncludingDeleted() {
-		// Delete a page
-		$this->objFromFixture('VersionedTest_DataObject', 'page3')->delete();
+		// Get all ids of pages
+		$allPageIDs = DataObject::get(
+			'VersionedTest_DataObject', 
+			"\"ParentID\" = 0", "\"VersionedTest_DataObject\".\"ID\" ASC"
+		)->column('ID');
+		
+		// Modify a page, ensuring that the Version ID and Record ID will differ,
+		// and then subsequently delete it
+		$targetPage = $this->objFromFixture('VersionedTest_DataObject', 'page3');
+		$targetPage->Content = 'To be deleted';
+		$targetPage->write();
+		$targetPage->delete();
 	
 		// Get all items, ignoring deleted
 		$remainingPages = DataObject::get("VersionedTest_DataObject", "\"ParentID\" = 0",
@@ -90,12 +100,17 @@ class VersionedTest extends SapphireTest {
 		// Check that page 3 is still there
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), $allPages->column('Title'));
 		
+		// Check that the returned pages have the correct IDs
+		$this->assertEquals($allPageIDs, $allPages->column('ID'));
+		
 		// Check that this still works if we switch to reading the other stage
 		Versioned::reading_stage("Live");
 		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0",
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), $allPages->column('Title'));
 		
+		// Check that the returned pages still have the correct IDs
+		$this->assertEquals($allPageIDs, $allPages->column('ID'));
 	}
 	
 	public function testVersionedFieldsAdded() {
@@ -395,27 +410,27 @@ class VersionedTest extends SapphireTest {
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		'Title' => 'Varchar',
 		'Content' => 'HTMLText'
 	);
 
-	static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Parent' => 'VersionedTest_DataObject'
 	);
 }
 
 class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"ExtraField" => "Varchar",
 	);
 	
-	static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
 }
@@ -424,5 +439,5 @@ class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnl
  * @ignore
  */
 class VersionedTest_UnversionedWithField extends DataObject implements TestOnly {
-	public static $db = array('Version' => 'Varchar(255)');
+	private static $db = array('Version' => 'Varchar(255)');
 }

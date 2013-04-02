@@ -135,7 +135,7 @@
 			}
 		});
 
-		$('.ss-gridfield .action.gridfield-button-delete').entwine({
+		$('.ss-gridfield .action.gridfield-button-delete, .cms-content-actions .ss-ui-action-destructive .ui-button-text').entwine({
 			onclick: function(e){
 				if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 					e.preventDefault();
@@ -301,7 +301,7 @@
 							},
 							type: "GET",
 							url: suggestionUrl,
-							data: escape(searchField.attr('name'))+'='+escape(searchField.val()), 
+							data: encodeURIComponent(searchField.attr('name'))+'='+encodeURIComponent(searchField.val()), 
 							success: function(data) {
 								response( $.map(JSON.parse(data), function( name, id ) {
 									return { label: name, value: name, id: id };

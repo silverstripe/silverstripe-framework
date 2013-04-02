@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class PermissionCheckboxSetFieldTest extends SapphireTest {
-	static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
+	protected static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
 	
 	public function testHiddenPermissions() {
 		$f = new PermissionCheckboxSetField(

@@ -2,7 +2,7 @@
 
 class HierarchyTest extends SapphireTest {
 
-	static $fixture_file = 'HierarchyTest.yml';
+	protected static $fixture_file = 'HierarchyTest.yml';
 	
 	protected $requiredExtensions = array(
 		'HierarchyTest_Object' => array('Hierarchy', 'Versioned')
@@ -415,11 +415,11 @@ class HierarchyTest extends SapphireTest {
 }
 
 class HierarchyTest_Object extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar'
 	);
 	
-	static $extensions = array(
+	private static $extensions = array(
 		'Hierarchy',
 		"Versioned('Stage', 'Live')",
 	);

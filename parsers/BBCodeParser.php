@@ -17,48 +17,73 @@ unset($options);
 class BBCodeParser extends TextParser {
 
 	/**
-	 * Set whether phrases starting with http:// or www. are automatically linked
-	 * @var Boolean
+	 * @config
+	 * @var Boolean Set whether phrases starting with http:// or www. are automatically linked
 	 */
-	protected static $autolinkUrls = true;
+	private static $autolink_urls = true;
 	
 	/**
-	 * Set whether similies :), :(, :P are converted to images
-	 * @var Boolean
+	 * @config
+	 * @var Boolean Set whether similies :), :(, :P are converted to images
 	 */
-	protected static $allowSimilies = false;
+	private static $allow_similies = false;
 	
 	/**
-	 * Set the location of the smiles folder. By default use the ones in framework
+	 * @config
+	 * @var string Set the location of the smiles folder. By default use the ones in framework
 	 * but this can be overridden by setting  BBCodeParser::set_icon_folder('themes/yourtheme/images/');
-	 * @var string
 	 */
-	protected static $smilies_location = null;
+	private static $smilies_location = null;
 	
+	/**
+	 * @deprecated 3.2 Use the "BBCodeParser.smilies_location" config setting instead
+	 */
 	public static function smilies_location() {
+		Deprecation::notice('3.2', 'Use the "BBCodeParser.smilies_location" config setting instead');
 		if(!BBCodeParser::$smilies_location) {
 			return FRAMEWORK_DIR . '/images/smilies';
 		}
-		return BBCodeParser::$smilies_location;
+		return static::config()->smilies_location;
 	}
+
+	/**
+	 * @deprecated 3.2 Use the "BBCodeParser.smilies_location" config setting instead
+	 */
 	public static function set_icon_folder($path) {
-		BBCodeParser::$smilies_location = $path;
+		Deprecation::notice('3.2', 'Use the "BBCodeParser.smilies_location" config setting instead');
+		static::config()->smilies_location = $path;
 	} 
 	
+	/**
+	 * @deprecated 3.2 Use the "BBCodeParser.autolink_urls" config setting instead
+	 */
 	public static function autolinkUrls() {
-		return (self::$autolinkUrls != null) ? true : false;
+		Deprecation::notice('3.2', 'Use the "BBCodeParser.autolink_urls" config setting instead');
+		return static::config()->autolink_urls;
 	}
 	
+	/**
+	 * @deprecated 3.2 Use the "BBCodeParser.autolink_urls" config setting instead
+	 */
 	public static function disable_autolink_urls($autolink = false) {
-		BBCodeParser::$autolinkUrls = $autolink;
+		Deprecation::notice('3.2', 'Use the "BBCodeParser.autolink_urls" config setting instead');
+		static::config()->autolink_urls = $autolink;
 	}
 	
+	/**
+	 * @deprecated 3.2 Use the "BBCodeParser.allow_smilies" config setting instead
+	 */
 	public static function smiliesAllowed() {
-		return (self::$allowSimilies != null) ? true : false;
+		Deprecation::notice('3.2', 'Use the "BBCodeParser.allow_smilies" config setting instead');
+		return static::config()->allow_smilies;
 	}
 	
+	/**
+	 * @deprecated 3.2 Use the "BBCodeParser.allow_smilies" config setting instead
+	 */
 	public static function enable_smilies() {
-		BBCodeParser::$allowSimilies = true;
+		Deprecation::notice('3.2', 'Use the "BBCodeParser.allow_smilies" config setting instead');
+		static::config()->allow_similies = true;
 	}
 	
 	

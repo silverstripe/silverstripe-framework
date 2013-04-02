@@ -13,7 +13,7 @@ enter a date manually.
 
 	:::php
 	class Page extends SiteTree {
-		static $db = array(
+		private static $db = array(
 			'MyDate' => 'Date',
 		);
 	

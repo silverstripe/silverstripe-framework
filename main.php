@@ -31,13 +31,10 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
  *  - Sets up error handlers with {@link Debug::loadErrorHandlers()}
  *  - Calls {@link DB::connect()}, passing it the global variable $databaseConfig that should 
  *    be defined in an _config.php
- *  - Sets up the default director rules using {@link Director::addRules()}
+ *  - Sets up the default director rules using {@link Director::$rules}
  * 
  * After that, it calls {@link Director::direct()}, which is responsible for doing most of the 
  * real work.
- *
- * Finally, main.php will use {@link Profiler} to show a profile if the querystring variable 
- * "debug_profile" is set.
  *
  * CONFIGURING THE WEBSERVER
  *
@@ -66,8 +63,22 @@ if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
 	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
 }
 
+// PHP 5.4's built-in webserver uses this
+if (php_sapi_name() == 'cli-server') {
+	$url = $_SERVER['REQUEST_URI'];
+	
+	// Querystring args need to be explicitly parsed
+	if(strpos($url,'?') !== false) {
+		list($url, $query) = explode('?',$url,2);
+		parse_str($query, $_GET);
+		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+	}
+	
+	// Pass back to the webserver for files that exist
+	if(file_exists(BASE_PATH . $url)) return false;
+
 // Apache rewrite rules use this
-if (isset($_GET['url'])) {
+} else if (isset($_GET['url'])) {
 	$url = $_GET['url'];
 	// IIS includes get variables in url
 	$i = strpos($url, '?');
@@ -89,14 +100,10 @@ if (isset($_GET['url'])) {
 // Remove base folders from the URL if webroot is hosted in a subfolder
 if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
 
-if (isset($_GET['debug_profile'])) {
-	Profiler::init();
-	Profiler::mark('all_execution');
-	Profiler::mark('main.php init');
-}
-
 // Connect to database
 require_once('model/DB.php');
+
+global $databaseConfig;
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
@@ -114,20 +121,8 @@ if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseC
 	die();
 }
 
-if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
 DB::connect($databaseConfig);
-if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
-
-if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
-
 
 // Direct away - this is the "main" function, that hands control to the appropriate controller
 DataModel::set_inst(new DataModel());
 Director::direct($url, DataModel::inst());
-
-if (isset($_GET['debug_profile'])) {
-	Profiler::unmark('all_execution');
-	if(!Director::isLive()) {
-		Profiler::show(isset($_GET['profile_trace']));
-	}
-}

@@ -18,7 +18,7 @@
  */
 class Text extends StringField {
 
-	static $casting = array(
+	private static $casting = array(
 		"AbsoluteLinks" => "Text",
 		"BigSummary" => "Text",
 		"ContextSummary" => "Text",
@@ -78,17 +78,7 @@ class Text extends StringField {
 	public function NoHTML() {
 		return strip_tags($this->value);
 	}
-	/**
-	 * Return the value of the field with XML tags escaped.
-	 * 
-	 * @deprecated 3.0 Use DBField->XML() instead.
-	 * @return string
-	 */
-	public function EscapeXML() {
-		Deprecation::notice('3.0', 'Use DBField->XML() instead.');
-		return str_replace(array('&','<','>','"'), array('&amp;','&lt;','&gt;','&quot;'), $this->value);
-	}
-	
+
 	/**
 	 * Return the value of the field with relative links converted to absolute urls.
 	 * @return string

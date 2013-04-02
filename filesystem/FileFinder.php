@@ -32,7 +32,7 @@ class SS_FileFinder {
 	/**
 	 * @var array
 	 */
-	public static $vcs_dirs = array(
+	protected static $vcs_dirs = array(
 		'.git', '.svn', '.hg', '.bzr'
 	);
 
@@ -45,7 +45,7 @@ class SS_FileFinder {
 	 *
 	 * @var array
 	 */
-	public static $default_options = array(
+	protected static $default_options = array(
 		'name_regex'           => null,
 		'accept_callback'      => null,
 		'accept_dir_callback'  => null,

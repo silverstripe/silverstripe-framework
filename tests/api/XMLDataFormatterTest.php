@@ -2,7 +2,7 @@
 class XMLDataFormatterTest extends SapphireTest {
 	protected $arguments, $contents, $tagName;
 
-	public static $fixture_file = 'XMLDataFormatterTest.yml';
+	protected static $fixture_file = 'XMLDataFormatterTest.yml';
 
 	public function setUp() {
 		ShortcodeParser::get_active()->register('test_shortcode', array($this, 'shortcodeSaver'));
@@ -32,13 +32,12 @@ class XMLDataFormatterTest extends SapphireTest {
 		$this->assertEquals('Test Company', (string) $xml->Company);
 		$this->assertEquals($obj->ID, (int) $xml->ID);
 		$this->assertEquals(
-			'<Content><![CDATA[<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.'
-				. ' <![CDATA[this is some nested CDATA]]]]><![CDATA[>]]></Content>',
+			'<Content><![CDATA[<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.]]>'
+				. '</Content>',
 			$xml->Content->asXML()
 		);
 		$this->assertEquals(
-			'<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.'
-				. ' <![CDATA[this is some nested CDATA]]>',
+			'<a href="http://mysite.com">mysite.com</a> is a link in this HTML content.',
 			(string)$xml->Content
 		);
 	}
@@ -76,7 +75,7 @@ class XMLDataFormatterTest extends SapphireTest {
 }
 class XMLDataFormatterTest_DataObject extends DataObject implements TestOnly {
 
-	public static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar(50)',
 		'Company' => 'Varchar(50)',
 		'Content' => 'HTMLText'

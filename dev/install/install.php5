@@ -31,15 +31,24 @@ if (function_exists('session_start')) {
 // Include environment files
 $usingEnv = false;
 $envFileExists = false;
-$envFiles = array('_ss_environment.php', '../_ss_environment.php', '../../_ss_environment.php');
-foreach($envFiles as $envFile) {
-	if(@file_exists($envFile)) {
-		include_once($envFile);
+//define the name of the environment file
+$envFile = '_ss_environment.php';
+//define the dir to start scanning from
+$dir = '.';
+//check this dir and every parent dir (until we hit the base of the drive)
+do {
+	$dir = realpath($dir) . '/';
+	//if the file exists, then we include it, set relevant vars and break out
+	if (file_exists($dir . $envFile)) {
+		include_once($dir . $envFile);
 		$envFileExists = true;
+		//legacy variable assignment
 		$usingEnv = true;
 		break;
 	}
-}
+//here we need to check that the real path of the last dir and the next one are
+// not the same, if they are, we have hit the root of the drive
+} while (realpath($dir) != realpath($dir .= '../'));
 
 if($envFileExists) {
 	if(!empty($_REQUEST['useEnv'])) {
@@ -1080,17 +1089,8 @@ global \$database;
 
 require_once('conf/ConfigureFromEnv.php');
 
-MySQLDatabase::set_connection_charset('utf8');
-
-// Set the current theme. More themes can be downloaded from
-// http://www.silverstripe.org/themes/
-SSViewer::set_theme('$theme');
-
 // Set the site locale
 i18n::set_locale('$locale');
-
-// Enable nested URLs for this site (e.g. page/sub-page/)
-if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
 PHP
 			);
 
@@ -1113,17 +1113,8 @@ global \$databaseConfig;
 	"path" => '{$dbConfig['path']}',
 );
 
-MySQLDatabase::set_connection_charset('utf8');
-
-// Set the current theme. More themes can be downloaded from
-// http://www.silverstripe.org/themes/
-SSViewer::set_theme('$theme');
-
 // Set the site locale
 i18n::set_locale('$locale');
-
-// Enable nested URLs for this site (e.g. page/sub-page/)
-if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
 PHP
 			);
 		}
@@ -1225,7 +1216,7 @@ PHP
 					}, 2000);
 				</script>
 				<noscript>
-				<li><a href="$destinationURL">Click here to access your site.</li>
+				<li><a href="$destinationURL">Click here to access your site.</a></li>
 				</noscript>
 HTML;
 			}
