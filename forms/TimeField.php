@@ -29,7 +29,7 @@ class TimeField extends TextField {
 	static $default_config = array(
 		'timeformat' => null,
 		'use_strtotime' => true,
-		'datavalueformat' => 'HH:mm:ss'
+		'datavalueformat' => 'HH:mm:ss a'
 	);
 
 	/**
