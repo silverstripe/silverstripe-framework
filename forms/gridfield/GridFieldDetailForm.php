@@ -455,6 +455,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		if(!$this->record->canEdit()) {
 			return $controller->httpError(403);
 		}
+		
+		if (isset($data['ClassName']) && $data['ClassName'] != $this->record->ClassName) {
+			$newClassName = $data['ClassName'];
+			// The records originally saved attribute was overwritten by $form->saveInto($record) before.
+			// This is necessary for newClassInstance() to work as expected, and trigger change detection
+			// on the ClassName attribute
+			$this->record->setClassName($this->record->ClassName);
+			// Replace $record with a new instance
+			$this->record = $this->record->newClassInstance($newClassName);
+		}
 
 		try {
 			$form->saveInto($this->record);
