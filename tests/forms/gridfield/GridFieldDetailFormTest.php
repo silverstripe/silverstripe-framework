@@ -242,7 +242,7 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 		)
 	);
 
-	private static $default_sort = 'FirstName';
+	private static $default_sort = '"FirstName"';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -266,7 +266,7 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
-	private static $default_sort = 'Name';
+	private static $default_sort = '"Name"';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -290,7 +290,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
-	private static $default_sort = 'Name';
+	private static $default_sort = '"Name"';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
