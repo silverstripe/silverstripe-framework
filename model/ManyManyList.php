@@ -180,6 +180,7 @@ class ManyManyList extends RelationList {
 		$from = $query->getFrom();
 		unset($from[$this->joinTable]);
 		$query->setFrom($from);
+		$query->setDistinct(false);
 
 		// Use a sub-query as SQLite does not support setting delete targets in
 		// joined queries.
