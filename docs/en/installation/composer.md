@@ -213,7 +213,7 @@ This is how you do it:
 
  		composer require silverstripe/cms
 
-Composer will scan all of the repositories you list, collect meta-data about the packages within them, and use them in favour of the packages listed on packagist.  To switch back to using the mainline version of the package, just remove your the `repositories` section from `composer.json` and run `composer update`.
+Composer will scan all of the repositories you list, collect meta-data about the packages within them, and use them in favour of the packages listed on packagist.  To switch back to using the mainline version of the package, just remove the `repositories` section from `composer.json` and run `composer update`.
 
 Now add an "upstream" remote to the original repository location so you can rebase or merge your fork as required.
 
@@ -245,7 +245,7 @@ Open `composer.json`, and find the module's `require`.  Then put `as (core versi
 
 What this means is that when the `myproj` branch is checked out into a project, this will satisfy any dependencies that 3.0.x-dev would meet.  So, if another module has `"silverstripe/framework": ">=3.0.0"` in its dependency list, it won't get a conflict.
 
-Both the version and the alias are specified as Composer versions, not branch names.  For the relationship between branch/tag names and Composer vesrions, read [the relevant Composer documentation](http://getcomposer.org/doc/02-libraries.md#specifying-the-version).
+Both the version and the alias are specified as Composer versions, not branch names.  For the relationship between branch/tag names and Composer versions, read [the relevant Composer documentation](http://getcomposer.org/doc/02-libraries.md#specifying-the-version).
 
 This is not the only way to set things up in Composer. For more information on this topic, read the ["Aliases" chapter of the Composer documentation](http://getcomposer.org/doc/articles/aliases.md).
 
