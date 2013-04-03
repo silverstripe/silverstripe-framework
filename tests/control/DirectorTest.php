@@ -242,6 +242,13 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse($output);
 	}
 
+	public function testForceSSLDifferentDestinationBaseURL() {
+		Director::setBaseURL('/');
+		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
+		$output = Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
+		$this->assertEquals($output, 'https://secure.mysite.com/admin');
+	}
+
 	/**
 	 * @covers Director::extract_request_headers()
 	 */
