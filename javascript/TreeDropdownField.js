@@ -281,6 +281,9 @@
 			getTitle: function() {
 				return this.find('.treedropdownfield-title').val();
 			},
+			resetTitle: function() {
+				this.setTitle(decodeURIComponent(this.data('title')));
+			},
 			search: function(str, callback) {
 				this.openPanel();
 				this.loadTree({search: str}, callback);
@@ -288,7 +291,7 @@
 			cancelSearch: function() {
 				this.closePanel();
 				this.loadTree();
-				this.setTitle(this.data('title'));
+				this.resetTitle();
 			}
 		});
 		
@@ -299,7 +302,7 @@
 			},
 			onfocusout: function(e) {
 				var field = this.getField();
-				if(!field.getTitle()) field.setTitle(false);
+				field.resetTitle();
 			},
 			onkeydown: function(e) {
 				var field = this.getField();
