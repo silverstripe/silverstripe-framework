@@ -48,7 +48,7 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider {
 	public static function getDataList($className) {
 		$list = new DataList($className);
 		$list->setDataModel(DataModel::inst());
-		return $list;
+		return $list->sort(array());
 	}
 
 }
