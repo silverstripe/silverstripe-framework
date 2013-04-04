@@ -85,7 +85,6 @@ $locales = array(
   'it_IT' => 'Italian (Italy)',
   'ja_JP' => 'Japanese (Japan)',
   'km_KH' => 'Khmer (Cambodia)',
-  'lc_XX' => 'LOLCAT',
   'lv_LV' => 'Latvian (Latvia)',
   'lt_LT' => 'Lithuanian (Lithuania)',
   'ms_MY' => 'Malay (Malaysia)',
