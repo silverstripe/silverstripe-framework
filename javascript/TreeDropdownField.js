@@ -255,7 +255,7 @@
 				
 				var title = decodeURIComponent(this.data('title'));
 				this.find('.treedropdownfield-title').replaceWith(
-					$('<input type="text" class="treedropdownfield-title search" />')
+					$('<input type="text" class="treedropdownfield-title search" data-skip-autofocus="true" />')
 				);
 				
 				this.setTitle(title ? title : strings.searchFieldTitle);
