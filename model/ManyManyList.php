@@ -181,6 +181,7 @@ class ManyManyList extends RelationList {
 		unset($from[$this->joinTable]);
 		$query->setFrom($from);
 		$query->setDistinct(false);
+		$query->setOrderBy(null, null); // ensure any default sorting is removed, ORDER BY can break DELETE clauses
 
 		// Use a sub-query as SQLite does not support setting delete targets in
 		// joined queries.
