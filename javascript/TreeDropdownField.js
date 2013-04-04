@@ -29,6 +29,10 @@
 		 * @todo Expand title height to fit all elements
 		 */
 		$('.TreeDropdownField').entwine({
+
+			// XMLHttpRequest
+			CurrentXhr: null,
+
 			onadd: function() {
 				this.append(
 					'<span class="treedropdownfield-title"></span>' +
@@ -70,7 +74,7 @@
 					.removeClass('ui-icon-triangle-1-s')
 					.addClass('ui-icon-triangle-1-n');
 				
-				if(tree.is(':empty')) this.loadTree();
+				if(tree.is(':empty') && !panel.hasClass('loading')) this.loadTree();
 				this.trigger('panelshow');
 			},
 			closePanel: function() {
@@ -131,13 +135,21 @@
 				return this.find(':input:hidden').val();
 			},
 			loadTree: function(params, callback) {
-				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
+				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder'),
+					params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams(), xhr;
+
+				if(this.getCurrentXhr()) this.getCurrentXhr().abort();
 				panel.addClass('loading');
-				treeHolder.load(this.data('urlTree'), params, function(html, status, xhr) {
-					var firstLoad = true;
-					if(status == 'success') {
-						$(this)
+				xhr = $.ajax({
+					url: this.data('urlTree'),
+					data: params,
+					complete: function(xhr, status) {
+						panel.removeClass('loading');	
+					},
+					success: function(html, status, xhr) {
+						treeHolder.html(html);
+						var firstLoad = true;
+						treeHolder
 							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
 								var val = self.getValue(), selectNode = treeHolder.find('*[data-id="' + val + '"]'), 
@@ -163,12 +175,13 @@
 								
 								// Avoid auto-closing panel on first load
 								if(!firstLoad) self.closePanel();
-								firstLoad=false
+								firstLoad=false;
 							});
+
+						self.setCurrentXhr(null);
 					}
-					
-					panel.removeClass('loading');
 				});
+				this.setCurrentXhr(xhr);
 			},
 			getTreeConfig: function() {
 				var self = this;
@@ -311,12 +324,21 @@
 			},
 			loadTree: function(params, callback) {
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
+				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams(), xhr;
+				
+				if(this.getCurrentXhr()) this.getCurrentXhr().abort();
 				panel.addClass('loading');
-				treeHolder.load(this.data('urlTree'), params, function(html, status, xhr) {
-					var firstLoad = true;
-					if(status == 'success') {
-						$(this)
+				xhr = $.ajax({
+					url: this.data('urlTree'),
+					data: params,
+					complete: function(xhr, status) {
+						panel.removeClass('loading');	
+					},
+					success: function(html, status, xhr) {
+						treeHolder.html(html);
+						var firstLoad = true;
+						self.setCurrentXhr(null);
+						treeHolder
 							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
 								$.each(self.getValue(), function(i, val) {
@@ -339,9 +361,8 @@
 								}));
 							});
 					}
-					
-					panel.removeClass('loading');
 				});
+				this.setCurrentXhr(xhr);
 			},
 			getValue: function() {
 				var val = this._super();
