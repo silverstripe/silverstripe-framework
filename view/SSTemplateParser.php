@@ -4516,8 +4516,8 @@ class SSTemplateParser extends Parser {
 			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE 
 			// glitches
 			if(stripos($code, "<html") !== false) {
-				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
-				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
+				$code = preg_replace('/(<html[^>]*>)/i', "<!-- template $templateName -->\\1", $code);
+				$code = preg_replace('/(<\/html[^>]*>)/i', "\\1<!-- end template $templateName -->", $code);
 			} else {
 				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
 					' -->\';' . "\n", $code);
