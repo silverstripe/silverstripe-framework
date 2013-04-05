@@ -41,7 +41,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$obj = new HtmlEditorFieldTest_Object();
 		$editor = new HtmlEditorField('Content');
 		
-		$editor->setValue('<img src="assets/example.jpg" />');
+		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" />');
 		$editor->saveInto($obj);
 
 		$parser = new CSSContentParser($obj->Content);
@@ -49,14 +49,32 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals('', (string)$xml[0]['alt'], 'Alt tags are added by default.');
 		$this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
 
-		$editor->setValue('<img src="assets/example.jpg" alt="foo" title="bar" />');
+		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" alt="foo" title="bar" />');
 		$editor->saveInto($obj);
 
 		$parser = new CSSContentParser($obj->Content);
 		$xml = $parser->getByXpath('//img');
 		$this->assertEquals('foo', (string)$xml[0]['alt'], 'Alt tags are preserved.');
 		$this->assertEquals('bar', (string)$xml[0]['title'], 'Title tags are preserved.');
+		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file could not be found');
 	}
+	
+	public function testResizedImageInsertion() {
+		$obj = new HtmlEditorFieldTest_Object();
+		$editor = new HtmlEditorField('Content');
+	
+		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" width=10 height=20 />');
+		$editor->saveInto($obj);
+	
+		$parser = new CSSContentParser($obj->Content);
+		$xml = $parser->getByXpath('//img');
+		$this->assertEquals('', (string)$xml[0]['alt'], 'Alt tags are added by default.');
+		$this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
+		$this->assertEquals(10, (int)$xml[0]['width'], 'Width tag of resized image is missing.');
+		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is missing.');
+		$this->assertEquals('assets/_resampled/resizedimage10x20-HTMLEditorFieldTest_example.jpg', (string)$xml[0]['src'], 'Wrong URL of resized image is set.');
+		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file could not be found');
+	}	
 	
 	public function testMultiLineSaving() {
 		$obj = $this->objFromFixture('HtmlEditorFieldTest_Object', 'home');
@@ -112,6 +130,7 @@ class HtmlEditorFieldTest_DummyMediaFormFieldExtension extends Extension impleme
 class HtmlEditorFieldTest_Object extends DataObject implements TestOnly {
 	private static $db = array(
 		'Title' => 'Varchar',
-		'Content' => 'HTMLText'
+		'Content' => 'HTMLText',
+		'HasBrokenFile' => 'Boolean'
 	);
 }

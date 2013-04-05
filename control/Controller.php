@@ -265,11 +265,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 */
 	public function getViewer($action) {
 		// Hard-coded templates
-		if($this->templates[$action]) {
+		if(isset($this->templates[$action])) {
 			$templates = $this->templates[$action];
-		}	else if($this->templates['index']) {
+		}	else if(isset($this->templates['index'])) {
 			$templates = $this->templates['index'];
-		}	else if($this->template) {
+		}	else if(isset($this->template)) {
 			$templates = $this->template;
 		} else {
 			// Add action-specific templates for inheritance chain

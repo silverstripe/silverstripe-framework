@@ -102,8 +102,8 @@ class ImageTest extends SapphireTest {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
 		$image_generated = $image->SetWidth(200);
 		$p = $image_generated->getFullPath();
-		$this->assertTrue(file_exists($p));
+		$this->assertTrue(file_exists($p), 'Resized image not existing after creation call');
 		$image->deleteFormattedImages();
-		$this->assertFalse(file_exists($p));
+		$this->assertFalse(file_exists($p), 'Resized image still existing after deletion call');
 	}
 }

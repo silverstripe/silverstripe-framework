@@ -312,7 +312,7 @@ class Image extends File {
 	public function cacheFilename($format, $arg1 = null, $arg2 = null) {
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 		
-		$format = $format.$arg1.$arg2;
+		$format = $format.$arg1.'x'.$arg2;
 		
 		return $folder . "_resampled/$format-" . $this->Name;
 	}
@@ -404,7 +404,7 @@ class Image extends File {
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$pattern = "/^(({$generateFuncs})\d+\-)+" . preg_quote($this->Name) . "$/i";
+		$pattern = "/^(({$generateFuncs})\d*x\d*\-)+" . preg_quote($this->Name) . "$/i";
 
 		foreach($cachedFiles as $cfile) {
 			if(preg_match($pattern, $cfile)) {
