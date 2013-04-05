@@ -28,7 +28,7 @@ class HiddenField extends FormField {
 		);
 	}
 
-	function SmallFieldHolder() {
-		return $this->FieldHolder();
+	function SmallFieldHolder($properties = array()) {
+		return $this->FieldHolder($properties);
 	}
 }
