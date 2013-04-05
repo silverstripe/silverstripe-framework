@@ -14,5 +14,5 @@ Image:
         Parent: =>Folder.folder1
     imageWithMetacharacters:
         Title: This is a/an image Title
-        Filename: assets/ImageTest/test_image).png
+        Filename: assets/ImageTest/test_image.png
         Parent: =>Folder.folder1
