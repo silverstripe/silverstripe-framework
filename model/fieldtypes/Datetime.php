@@ -57,7 +57,7 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	 * Returns the date in the raw SQL-format, e.g. “2006-01-18 16:32:04”
 	 */
 	public function Nice() {
-		if($this->value) return $this->Format('d/m/Y g:ia');
+		if($this->value) return $this->Format(i18n::get_date_format().' '.i18n::get_time_format());
 	}
 
 	public function Nice24() {
