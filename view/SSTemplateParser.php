@@ -3913,7 +3913,7 @@ class SSTemplateParser extends Parser {
 
 
 
-	/* Comment: "<%--" (!"--%>" /./)+ "--%>" */
+	/* Comment: "<%--" (!"--%>" /(?s)./)+ "--%>" */
 	protected $match_Comment_typestack = array('Comment');
 	function match_Comment ($stack = array()) {
 		$matchrule = "Comment"; $result = $this->construct($matchrule, $matchrule, null);
