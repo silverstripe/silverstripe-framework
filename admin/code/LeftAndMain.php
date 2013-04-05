@@ -120,12 +120,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Used mainly to work around the missing "lazy loading" functionality
 	 * for getting css/javascript required after an ajax-call (e.g. loading the editform).
 	 *
+	 * YAML configuration example:
+	 * <code>
+	 * LeftAndMain:
+	 *   extra_requirements_javascript:
+	 *     mysite/javascript/myscript.js:
+	 * </code>
+	 *
 	 * @config
 	 * @var array
 	 */
 	private static $extra_requirements_javascript = array();
 
 	/**
+	 * YAML configuration example:
+	 * <code>
+	 * LeftAndMain:
+	 *   extra_requirements_css:
+	 *     mysite/css/mystyle.css:
+	 *       media: screen
+	 * </code>
+	 * 
 	 * @config
 	 * @var array See {@link extra_requirements_javascript}
 	 */

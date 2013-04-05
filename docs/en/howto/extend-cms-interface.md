@@ -62,7 +62,12 @@ Paste the following content into a new file called `mysite/css/BookmarkedPages.c
 	.cms-bottom-bar a {color: #444444;}
 
 Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requirements_css`
-[configuration value](/topics/configuration) to 'mysite/css/BookmarkedPages.css'.
+[configuration value](/topics/configuration).
+
+	:::yml
+	LeftAndMain:
+	  extra_requirements_css:
+	    mysite/css/BookmarkedPages.css:
 
 ## Create a "bookmark" flag on pages ##
 
