@@ -228,6 +228,10 @@ One thing you do not want to do is to issue a git commit with the -a option. Thi
 
 	$ git commit -a 
 
+Sometimes, you might correct an issue which was reported in a different repo. In these cases, don't simply refer to the issue number as GitHub will infer that as correcting an issue in the current repo. In these cases, use the full GitHub path to reference the issue.
+
+	$ git commit -m 'Issue silverstripe/silverstripe-cms#100: Some kind of descriptive message'
+
 ## What is git rebase?
 
 Using `git rebase` helps create clean commit trees and makes keeping your code up-to-date with the current state of the upstream master easy. Here's how it works.
