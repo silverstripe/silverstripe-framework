@@ -62,7 +62,7 @@ class Date extends DBField {
 	 * Returns the date in the format dd/mm/yy 
 	 */	 
 	public function Nice() {
-		if($this->value) return $this->Format('d/m/Y');
+		if($this->value) return $this->Format(i18n::get_date_format());
 	}
 	
 	/**
@@ -135,8 +135,8 @@ class Date extends DBField {
 	 */
 	public function Format($format) {
 		if($this->value){
-			$date = new DateTime($this->value);
-			return $date->Format($format);
+			$date = new Zend_Date($this->value,'YYYY-MM-dd HH:mm:ss');
+			return $date->toString($format);
 		}
 	}
 	
