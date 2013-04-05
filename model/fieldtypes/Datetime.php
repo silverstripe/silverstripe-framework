@@ -87,7 +87,23 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {
-		return new DatetimeField($this->name, $title);
+		$field = DatetimeField::create($this->name, $title);
+
+		// Show formatting hints for better usability
+		$dateField = $field->getDateField();
+		$dateField->setDescription(sprintf(
+			_t('FormField.Example', 'e.g. %s', 'Example format'),
+			Convert::raw2xml(Zend_Date::now()->toString($dateField->getConfig('dateformat')))
+		));
+		$dateField->setAttribute('placeholder', $dateField->getConfig('dateformat'));
+		$timeField = $field->getTimeField();
+		$timeField->setDescription(sprintf(
+			_t('FormField.Example', 'e.g. %s', 'Example format'),
+			Convert::raw2xml(Zend_Date::now()->toString($timeField->getConfig('timeformat')))
+		));
+		$timeField->setAttribute('placeholder', $timeField->getConfig('timeformat'));
+
+		return $field;
 	}
 	
 	/**
