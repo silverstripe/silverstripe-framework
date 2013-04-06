@@ -1077,12 +1077,12 @@ class Versioned extends DataExtension {
 	 * @param $version Either the string 'Live' or a version number
 	 */
 	public function doRollbackTo($version) {
-		$this->extend('onBeforeRollback', $version);
+		$this->owner->extend('onBeforeRollback', $version);
 		$this->publish($version, "Stage", true);
 
 		$this->owner->writeWithoutVersion();
 
-		$this->extend('onAfterRollback', $version);
+		$this->owner->extend('onAfterRollback', $version);
 	}
 	
 	/**
