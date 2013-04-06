@@ -492,6 +492,7 @@ abstract class Object {
 
 	/**
 	 * Remove an extension from a class.
+	 *
 	 * Keep in mind that this won't revert any datamodel additions
 	 * of the extension at runtime, unless its used before the
 	 * schema building kicks in (in your _config.php).
@@ -509,6 +510,20 @@ abstract class Object {
 		$class = get_called_class();
 
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
+
+		// remove any instances of the extension with parameters
+		$config = Config::inst()->get($class, 'extensions');
+
+		if($config) {
+			foreach($config as $k => $v) {
+				// extensions with parameters will be stored in config as
+				// ExtensionName("Param").
+				if(preg_match(sprintf("/^(%s)\(/", preg_quote($extension, '/')), $v)) {
+					Config::inst()->remove($class, 'extensions', Config::anything(), $v);
+				}
+			}
+		}
+
 		Config::inst()->extraConfigSourcesChanged($class);
 
 		// unset singletons to avoid side-effects
