@@ -281,6 +281,10 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals($headers, Director::extract_request_headers($request));
 	}
 
+	public function testUnmatchedRequestReturns404() {
+		$this->assertEquals(404, Director::test('no-route')->getStatusCode());
+	}
+
 }
 
 class DirectorTestRequest_Controller extends Controller implements TestOnly {

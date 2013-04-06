@@ -331,6 +331,9 @@ class Director implements TemplateGlobalProvider {
 				}
 			}
 		}
+
+		// No URL rules matched, so return a 404 error.
+		return new SS_HTTPResponse('No URL rule was matched', 404);
 	}
 	
 	/**
