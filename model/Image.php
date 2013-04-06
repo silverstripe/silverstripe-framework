@@ -298,6 +298,8 @@ class Image extends File {
 			$cached = new Image_Cached($cacheFile);
 			// Pass through the title so the templates can use it
 			$cached->Title = $this->Title;
+			$cached->ParentID = $this->ParentID;
+			$cached->Parent = $this->Parent();			
 			return $cached;
 		}
 	}
@@ -312,7 +314,7 @@ class Image extends File {
 	public function cacheFilename($format, $arg1 = null, $arg2 = null) {
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 		
-		$format = $format.$arg1.$arg2;
+		$format = $format.$arg1.'x'.$arg2;
 		
 		return $folder . "_resampled/$format-" . $this->Name;
 	}
@@ -369,14 +371,11 @@ class Image extends File {
 	}
 	
 	/**
-	 * Remove all of the formatted cached images for this image.
-	 *
-	 * @return int The number of formatted images deleted
+	 * Generate a list of images that were generated from this image
 	 */
-	public function deleteFormattedImages() {
-		if(!$this->Filename) return 0;
+	private function getGeneratedImages() {
+		$generatedImages = array();
 		
-		$numDeleted = 0;
 		$methodNames = $this->allMethodNames(true);
 		$cachedFiles = array();
 		
@@ -404,15 +403,51 @@ class Image extends File {
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$pattern = "/^(({$generateFuncs})\d+\-)+" . preg_quote($this->Name) . "$/i";
-
+		$pattern = "/^((?P<Generator>{$generateFuncs})(?P<Arg1>\d*)x(?P<Arg2>\d*)\-)+" . preg_quote($this->Name) . "$/i";
+		
 		foreach($cachedFiles as $cfile) {
-			if(preg_match($pattern, $cfile)) {
+			if(preg_match($pattern, $cfile, $matches)) {
 				if(Director::fileExists($cacheDir . $cfile)) {
-					unlink($cacheDir . $cfile);
-					$numDeleted++;
+					$generatedImages[] = array ( 'FileName' => $cacheDir . $cfile, 'Generator' => $matches['Generator'],
+						'Arg1' => $matches['Arg1'], 'Arg2' => $matches['Arg2'] );
 				}
 			}
+		}
+		
+		return $generatedImages;
+	}
+	
+	/**
+	 * Regenerate all of the formatted cached images for this image.
+	 *
+	 * @return int The number of formatted images regenerated
+	 */	
+	public function regenerateFormattedImages() {
+		if(!$this->Filename) return 0;
+		
+		$numGenerated = 0;
+		$generatedImages = $this->getGeneratedImages();
+		foreach($generatedImages as $singleImage) {
+			$this->generateFormattedImage($singleImage['Generator'], $singleImage['Arg1'],
+					$singleImage['Arg2']);
+		}
+		
+		return $numGenerated;
+	}
+	
+	/**
+	 * Remove all of the formatted cached images for this image.
+	 *
+	 * @return int The number of formatted images deleted
+	 */
+	public function deleteFormattedImages() {
+		if(!$this->Filename) return 0;
+		
+		$numDeleted = 0;
+		$generatedImages = $this->getGeneratedImages();
+		foreach($generatedImages as $singleImage) {
+			unlink($singleImage['FileName']);
+			$numDeleted++;
 		}
 		
 		return $numDeleted;
