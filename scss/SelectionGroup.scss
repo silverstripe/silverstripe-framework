@@ -12,14 +12,14 @@
 		width: 20px;
 		float : left;
 	}
-	li div.field {
+	li > div.field {
 		display: none;
 		font-size: 1em;
 	}
 	li input, .right .SelectionGroup li label {
 		display: block;
 	}	
-	li.selected div.field {
+	li.selected > div.field {
 		margin-left: 30px;
 		display: block;
 		margin-bottom: 1em;
