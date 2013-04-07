@@ -50,6 +50,9 @@ class ImageTest extends SapphireTest {
 			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
 				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
 			}
+			if($folder && file_exists(BASE_PATH."/".$folder->Filename."_resampled")) {
+				Filesystem::removeFolder(BASE_PATH."/".$folder->Filename."_resampled");
+			}			
 		}
 		
 		parent::tearDown();
@@ -102,8 +105,9 @@ class ImageTest extends SapphireTest {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
 		$image_generated = $image->SetWidth(200);
 		$p = $image_generated->getFullPath();
-		$this->assertTrue(file_exists($p));
-		$image->deleteFormattedImages();
-		$this->assertFalse(file_exists($p));
+		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
+		$numDeleted = $image->deleteFormattedImages();
+		$this->assertEquals(1, $numDeleted, 'Expected one image to be deleted, but deleted ' . $numDeleted . ' images');
+		$this->assertFalse(file_exists($p), 'Resized image not existing after deletion call');
 	}
 }
