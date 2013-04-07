@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
@@ -23,6 +24,23 @@ class StringFieldTest extends SapphireTest {
 		$this->assertEquals(
 			'THIS IS A TEST!',
 			DBField::create_field('StringFieldTest_MyStringField', 'This is a TEST!')->UpperCase()
+		);
+	}
+
+	/**
+	 * @covers StringField->Nl2Br()
+	 */
+	public function testNl2Br() {
+		$this->assertEquals(
+			"String<br />line",
+			DBField::create_field('StringFieldTest_MyStringField', 'String\nLine')->Nl2Br()
+		);
+	}
+
+	public function testChainingCommands() {
+		$this->assertEquals(
+			'string<br />line"',
+			DBField::create_field('StringFieldTest_MyStringField', 'String\nLine')->Nl2Br()->Lower()
 		);
 	}
 

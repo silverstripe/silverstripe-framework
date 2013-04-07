@@ -19,7 +19,6 @@
 class Text extends StringField {
 
 	private static $casting = array(
-		"AbsoluteLinks" => "Text",
 		"BigSummary" => "Text",
 		"ContextSummary" => "Text",
 		"FirstParagraph" => "Text",
@@ -30,7 +29,6 @@ class Text extends StringField {
 		'EscapeXML' => 'Text',
 		'LimitWordCount' => 'Text',
 		'LimitWordCountXML' => 'HTMLText',
-		'NoHTML' => 'Text',
 	);
 	
 	/**
@@ -56,24 +54,33 @@ class Text extends StringField {
 	/**
 	 * Return the value of the field stripped of html tags.
 	 *
-	 * @return string
+	 * @return Text
 	 */
 	public function NoHTML() {
-		return strip_tags($this->value);
+		$no = clone $this;
+		$no->setValue(strip_tags($this->value));
+
+		return $no;
 	}
 
 	/**
 	 * Return the value of the field with relative links converted to absolute urls.
-	 * @return string
+	 *
+	 * @return Text
 	 */
 	public function AbsoluteLinks() {
-		return HTTP::absoluteURLs($this->value);
+		$links = clone $this;
+		$links->setValue(HTTP::absoluteURLs($this->value));
+
+		return $links;
 	}
 
 	/**
 	 * Limit sentences, can be controlled by passing an integer.
 	 *
 	 * @param int $sentCount The amount of sentences you want.
+	 *
+	 * @return Text
 	 */
 	public function LimitSentences($sentCount = 2) {
 		if(!is_numeric($sentCount)) {
@@ -93,47 +100,74 @@ class Text extends StringField {
 			}
 		}
 
-		return count($output)==0 ? '' : implode($output, '. ') . '.';				
+		$limit = clone $this;
+		$limit->setValue(count($output) == 0 ? '' : implode($output, '. ') . '.');
+
+		return $limit;
 	}
 	
 	
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 *
+	 * @return Text
 	 */
 	public function FirstSentence() {
-		$data = Convert::xml2raw( $this->value );
-		if( !$data ) return "";
+		$data = Convert::xml2raw($this->value);
+
+		if(!$data) { 
+			return $this;
+		}
 		
+		$sentences = explode('.', $data);
 		
-		$sentences = explode( '.', $data );
+		if(count($sentences)) {
+			$sentence = clone $this;
+			$sentence->setValue($sentences[0] . '.');
+
+			return $sentence;
+		}
 		
-		if( count( $sentences ) )
-			return $sentences[0] . '.';
-		else
-			return $this->Summary(20);
+		return $this->Summary(20);
 	}	
 
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 *
+	 * @param int $maxWords
+	 * 
+	 * @return Text
 	 */
 	public function Summary($maxWords = 50) {
-		// get first sentence?
-		// this needs to be more robust
-		$value = Convert::xml2raw( $this->value /*, true*/ );
-		if(!$value) return '';
+		$value = Convert::xml2raw($this->value);
+
+		if(!$value) {
+			return $this;
+		}
 		
 		// grab the first paragraph, or, failing that, the whole content
-		if(strpos($value, "\n\n")) $value = substr($value, 0, strpos($value, "\n\n"));
+		if(strpos($value, "\n\n")) {
+			$value = substr($value, 0, strpos($value, "\n\n"));
+		}
+
 		$sentences = explode('.', $value);	
 		$count = count(explode(' ', $sentences[0]));
 		
 		// if the first sentence is too long, show only the first $maxWords words
 		if($count > $maxWords) {
-			return implode( ' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . '...';
+			$summary = clone $this;
+			$summary->setValue(implode(
+				' ', 
+				array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)
+				) . '...'
+			);
+
+			return $summary;
 		}
 
 		// add each sentence while there are enough words to do so
 		$result = '';
+
 		do {
 			$result .= trim(array_shift( $sentences )).'.';
 			if(count($sentences) > 0) {
@@ -147,52 +181,31 @@ class Text extends StringField {
 			);
 		} while(($count < $maxWords || $brokenLink) && $sentences && trim( $sentences[0]));
 		
-		if(preg_match('/<a[^>]*>/', $result) && !preg_match( '/<\/a>/', $result)) $result .= '</a>';
-		
-		return Convert::raw2xml($result);
-	}
-	
-	/**
-	* Performs the same function as the big summary, but doesn't trim new paragraphs off data.
-	* Caution: Not XML/HTML-safe - does not respect closing tags.
-	*/
-	public function BigSummary($maxWords = 50, $plain = 1) {
-		$result = "";
-		
-		// get first sentence?
-		// this needs to be more robust
-		if($plain) $data = Convert::xml2raw($this->value, true);
-		
-		if(!$data) return "";
-			
-		$sentences = explode('.', $data);	
-		$count = count(explode(' ', $sentences[0]));
-		
-		// if the first sentence is too long, show only the first $maxWords words
-		if($count > $maxWords) {
-			return implode(' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . '...';
-		}
-
-		// add each sentence while there are enough words to do so
-		do {
-			$result .= trim(array_shift($sentences));
-			if($sentences) {
-				$result .= '. ';
-				$count += count(explode(' ', $sentences[0]));
-			}
-			
-			// Ensure that we don't trim half way through a tag or a link
-			$brokenLink = (
-				substr_count($result,'<') != substr_count($result,'>')) ||
-				(substr_count($result,'<a') != substr_count($result,'</a')
-			);
-		} while(($count < $maxWords || $brokenLink) && $sentences && trim($sentences[0]));
-		
-		if(preg_match( '/<a[^>]*>/', $result) && !preg_match( '/<\/a>/', $result)) {
+		if(preg_match('/<a[^>]*>/', $result) && !preg_match( '/<\/a>/', $result)) {
 			$result .= '</a>';
 		}
 		
-		return $result;
+		$summary = clone $this;
+		$summary->setValue(Convert::raw2xml($result));
+
+		return $summary;
+	}
+	
+	/**
+	 * Performs the same function as the big summary, but doesn't trim new 
+	 * paragraphs off data.
+	 *
+	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 *
+	 * @param int $maxWords
+	 * @param boolean $plain
+	 *
+	 * @return Text
+	 */
+	public function BigSummary($maxWords = 50, $plain = 1) {
+		Deprecation::notice('3.2', 'BigSummary is deprecated. Please use the "Summary" method');
+
+		return $this->Summary($maxWords);
 	}
 	
 	/**
@@ -271,19 +284,29 @@ class Text extends StringField {
 				}
 			}
 		}
+
 		$summary = trim($summary);
 		
-		if($position > 0) $summary = $prefix . $summary;
-		if(strlen($this->value) > ($characters + $position)) $summary = $summary . $suffix;
+		if($position > 0) {
+			$summary = $prefix . $summary;
+		}
+
+		if(strlen($this->value) > ($characters + $position)) {
+			$summary = $summary . $suffix;
+		}
 		
-		return $summary;
+		$text = clone $this;
+		$text->setValue($summary);
+
+		return $text;
 	}
 	
 	/**
 	 * Allows a sub-class of TextParser to be rendered.
 	 * 
 	 * @see TextParser for implementation details.
-	 * @return string
+	 *
+	 * @return Text
 	 */
 	public function Parse($parser = "TextParser") {
 		if($parser == "TextParser" || is_subclass_of($parser, "TextParser")) {
@@ -294,7 +317,8 @@ class Text extends StringField {
 			// TODO Don't kill script execution, we can continue without losing complete control of the app
 			user_error("Couldn't find an appropriate TextParser sub-class to create (Looked for '$parser')."
 				. "Make sure it sub-classes TextParser and that you've done ?flush=1.", E_USER_WARNING);
-			return Convert::raw2xml($this->value);
+
+			return DBField::create_field('HTMLText' , Convert::raw2xml($this->value));
 		}
 	}
 	
@@ -305,9 +329,11 @@ class Text extends StringField {
 	public function scaffoldFormField($title = null, $params = null) {
 		if(!$this->nullifyEmpty) {
 			// Allow the user to select if it's null instead of automatically assuming empty string is
-			return new NullableField(new TextareaField($this->name, $title));
+			return new NullableField(new TextareaField(
+				$this->name, 
+				$title
+			));
 		} else {
-			// Automatically determine null (empty string)
 			return new TextareaField($this->name, $title);
 		}
 	}

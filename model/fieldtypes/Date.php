@@ -1,6 +1,7 @@
 <?php
 /**
  * Represents a date field.
+ *
  * The field currently supports New Zealand date format (DD/MM/YYYY),
  * or an ISO 8601 formatted date (YYYY-MM-DD).
  * Alternatively you can set a timestamp that is evaluated through
@@ -46,98 +47,124 @@ class Date extends DBField {
 
 		if(is_numeric($value)) {
 			$this->value = date('Y-m-d', $value);
-		} elseif(is_string($value)) {
-			try{
+		} else if(is_string($value)) {
+			try {
 				$date = new DateTime($value);
 				$this->value = $date->Format('Y-m-d');
+
 				return;
-			}catch(Exception $e){
+			} catch(Exception $e) {
 				$this->value = null;
+
 				return;
 			}
 		}
 	}
 
 	/**
-	 * Returns the date in the format dd/mm/yy 
+	 * Returns the date in the format dd/mm/yy.
+	 *
+	 * @return Text
 	 */	 
 	public function Nice() {
-		if($this->value) return $this->Format('d/m/Y');
+		return DBField::create_field('Text', $this->Format('d/m/Y'));
 	}
 	
 	/**
-	 * Returns the date in US format: “01/18/2006”
+	 * Returns the date in US format: “01/18/2006”.
+	 *
+	 * @return Text
 	 */
 	public function NiceUS() {
-		if($this->value) return $this->Format('m/d/Y');
+		return DBField::create_field('Text', $this->Format('m/d/Y'));
 	}
 	
 	/** 
-	 * Returns the year from the given date
+	 * Returns the year from the given date.
+	 *
+	 * @return Int
 	 */
 	public function Year() {
-		if($this->value) return $this->Format('Y');
+		return DBField::create_field('Int', $this->Format('Y'));
 	}
 	
 	/**
 	 * Returns the Full day, of the given date.
+	 *
+	 * @return Text
 	 */
 	public function Day(){
-		if($this->value) return $this->Format('l');
+		return DBField::create_fields('Text', $this->Format('l'));
 	}
 	
 	/**
 	 * Returns a full textual representation of a month, such as January.
+	 *
+	 * @return Text
 	 */
 	public function Month() {
-		if($this->value) return $this->Format('F');
+		return DBField::create_field('Text', $this->Format('F'));
 	}
 	
 	/**
-	 * Returns the short version of the month such as Jan
+	 * Returns the short version of the month such as Jan.
+	 *
+	 * @return Text
 	 */
 	public function ShortMonth() {
-		if($this->value) return $this->Format('M');
+		return DBField::create_field('Text', $this->Format('M'));
 	}
 
 	/**
 	 * Returns the day of the month.
+	 *
 	 * @param boolean $includeOrdinals Include ordinal suffix to day, e.g. "th" or "rd"
-	 * @return string
+	 *
+	 * @return Text
 	 */
 	public function DayOfMonth($includeOrdinal = false) {
-		if($this->value) {
-			$format = 'j';
-			if ($includeOrdinal) $format .= 'S';
-			return $this->Format($format);
+		$format = 'j';
+
+		if ($includeOrdinal) {
+			$format .= 'S';
 		}
+
+		return DBField::create_field('Text', $this->Format($format));
 	}
 	
 	/**
 	 * Returns the date in the format 24 December 2006
+	 *
+	 * @return Text
 	 */
 	public function Long() {
-		if($this->value) return $this->Format('j F Y');
+		return DBField::create_field('Text', $this->Format('j F Y'));
 	}
 	
 	/**
 	 * Returns the date in the format 24 Dec 2006
+	 *
+	 * @return Text
 	 */
 	public function Full() {
-		if($this->value) return $this->Format('j M Y');
+		return DBField::create_field('Text', $this->Format('j M Y'));
 	}
 	
 	/**
 	 * Return the date using a particular formatting string.
 	 * 
 	 * @param string $format Format code string. e.g. "d M Y" (see http://php.net/date)
-	 * @return string The date in the requested format
+	 *
+	 * @return Text The date in the requested format
 	 */
 	public function Format($format) {
-		if($this->value){
+		if($this->value) {
 			$date = new DateTime($this->value);
-			return $date->Format($format);
+
+			return DBField::create_field('Text', $date->Format($format));
 		}
+
+		return DBField::create_field('Text');
 	}
 	
 	/**
@@ -149,11 +176,14 @@ class Date extends DBField {
 	public function FormatI18N($formattingString) {
 		if($this->value) {
 			$fecfrm = strftime($formattingString, strtotime($this->value));
-			return utf8_encode($fecfrm);
+
+			return DBField::create_field('Text', utf8_encode($fecfrm));
 		}
+
+		return DBField::create_field('Text', null);
 	}
 	
-	/*
+	/**
 	 * Return a string in the form "12 - 16 Sept" or "12 Aug - 16 Sept"
 	 * @param Date $otherDateObj Another date object specifying the end of the range
 	 * @param boolean $includeOrdinals Include ordinal suffix to day, e.g. "th" or "rd"
@@ -302,13 +332,22 @@ class Date extends DBField {
 	}
 
 	public function requireField() {
-		$parts=Array('datatype'=>'date', 'arrayValue'=>$this->arrayValue);
-		$values=Array('type'=>'date', 'parts'=>$parts);
+		$parts = array(
+			'datatype' => 'date', 
+			'arrayValue' => $this->arrayValue
+		);
+		
+		$values = array(
+			'type' => 'date', 
+			'parts' => $parts
+		);
+
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	/**
 	 * Returns true if date is in the past.
+	 *
 	 * @return boolean
 	 */
 	public function InPast() {
@@ -317,6 +356,7 @@ class Date extends DBField {
 	
 	/**
 	 * Returns true if date is in the future.
+	 *
 	 * @return boolean
 	 */
 	public function InFuture() {
@@ -325,6 +365,7 @@ class Date extends DBField {
 	
 	/**
 	 * Returns true if date is today.
+	 *
 	 * @return boolean
 	 */
 	public function IsToday() {
@@ -368,10 +409,14 @@ class Date extends DBField {
 	 * @param $fmonth int The number of the month (e.g. 3 is March, 4 is April)
 	 * @param $fday int The day of the month
 	 * @param $fyear int Determine historical value
+	 *
 	 * @return string Date in YYYY-MM-DD format
 	 */
 	public static function past_date($fmonth, $fday = 1, $fyear = null) {
-		if(!$fyear) $fyear = date('Y');
+		if(!$fyear) {
+			$fyear = date('Y');
+		}
+
 		$fday = (int) $fday;
 		$fmonth = (int) $fmonth;
 		$fyear = (int) $fyear;
@@ -386,6 +431,12 @@ class Date extends DBField {
 		}
 	}
 	
+	/**
+	 * @param string $title
+	 * @param array $params
+	 *
+	 * @return DateField
+	 */
 	public function scaffoldFormField($title = null, $params = null) {
 		return new DateField($this->name, $title);
 	}

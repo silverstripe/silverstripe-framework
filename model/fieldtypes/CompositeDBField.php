@@ -160,6 +160,7 @@ interface CompositeDBField {
 	/**
 	 * Return array in the format of {@link $composite_db}.
 	 * Used by {@link DataObject->hasOwnDatabaseField()}.
+	 *
 	 * @return array
 	 */
 	public function compositeDatabaseFields();
