@@ -200,6 +200,8 @@ class Director implements TemplateGlobalProvider {
 	public static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null,
 			$headers = null, $cookies = null, &$request = null) {
 
+		Config::nest();
+
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
@@ -217,7 +219,6 @@ class Director implements TemplateGlobalProvider {
 		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
 		$existingServer	= isset($_SERVER) ? $_SERVER : array();
 		
-		$existingCookieReportErrors = Config::inst()->get('Cookie', 'report_errors');
 		$existingRequirementsBackend = Requirements::backend();
 
 		Config::inst()->update('Cookie', 'report_errors', false);
@@ -268,12 +269,13 @@ class Director implements TemplateGlobalProvider {
 		$_COOKIE = $existingCookies;
 		$_SERVER = $existingServer;
 
-		Config::inst()->update('Cookie', 'report_errors', $existingCookieReportErrors);
 		Requirements::set_backend($existingRequirementsBackend);
 
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		Versioned::reading_stage($oldStage);
+
+		Config::unnest();
 		
 		return $result;
 	}
