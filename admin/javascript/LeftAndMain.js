@@ -252,9 +252,11 @@ jQuery.noConflict();
 			 *  - {String} url
 			 *  - {String} title New window title
 			 *  - {Object} data Any additional data passed through to History.pushState()
-			 *  - {boolean} forceReload Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
+			 *  - {boolean} forceReload Forces the replacement of the current history state, even if the URL
+			 *    is the same, i.e. allows reloading.
+			 *  - {String} id the id to focus on
 			 */
-			loadPanel: function(url, title, data, forceReload) {
+			loadPanel: function(url, title, data, forceReload, focus) {
 				if(!data) data = {};
 				if(!title) title = "";
 
@@ -287,6 +289,21 @@ jQuery.noConflict();
 					}
 				} else {
 					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
+				}
+				if (focus) {
+					var delay = (function() {
+						var timer = 0;
+						return function(callback, ms) {
+							clearTimeout(timer);
+							timer = setTimeout(callback, ms);
+						};
+					})();
+					delay(function() {
+						var temp = $(focus).val();	
+						$(focus).val('');
+						$(focus).focus();
+						$(focus).val(temp);
+					}, 1000);
 				}
 			},
 
@@ -939,6 +956,50 @@ jQuery.noConflict();
 		 */	
 		$('.cms-search-form').entwine({
 
+			onkeyup : function (e) {
+				this.searchContent(e);
+			},
+			onchange : function (e) {
+				this.searchContent(e);
+			},
+
+			// used by Content in the search filter to limit results based on its input
+			searchContent: function(e) {
+
+				// check if e.target is set as IE8 does not support it
+				if (e.target) {
+					var id = '#' + e.target.id;
+				} else {
+					var id = '#' + e.srcElement.id;
+				}
+				var value = $(id).val();
+				var valueLength = value.length;
+				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
+					// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
+					// as it handles checkbox values more consistently
+					var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
+					return (vals.length);
+				});
+				var url = this.attr('action');
+				var delay = (function() {
+					var timer = 0;
+					return function(callback, ms) {
+						clearTimeout(timer);
+						timer = setTimeout(callback, ms);
+					};
+				})();
+				var container = this.closest('.cms-container');
+
+				delay(function() {
+					// Remove empty elements and make the URL prettier
+					if(nonEmptyInputs.length) url =
+						 $.path.addSearchParams(url, nonEmptyInputs.serialize());
+
+					container.loadPanel(url, null, null, null, id);
+					return false;
+				}, 1000);
+
+			},
 			onsubmit: function() {
 				// Remove empty elements and make the URL prettier
 				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
