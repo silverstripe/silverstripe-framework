@@ -26,6 +26,7 @@ class SS_ClassManifest {
 	protected $children     = array();
 	protected $descendants  = array();
 	protected $interfaces   = array();
+	protected $traits       = array();
 	protected $implementors = array();
 	protected $configs      = array();
 
@@ -105,6 +106,17 @@ class SS_ClassManifest {
 	}
 
 	/**
+	 * @return TokenisedRegularExpression
+	 */
+	public static function get_trait_parser() {
+		return new TokenisedRegularExpression(array(
+			0 => T_TRAIT,
+			1 => T_WHITESPACE,
+			2 => array(T_STRING, 'save_to' => 'traitName')
+		));
+	}
+
+	/**
 	 * Constructs and initialises a new class manifest, either loading the data
 	 * from the cache or re-scanning for classes.
 	 *
@@ -126,6 +138,7 @@ class SS_ClassManifest {
 			$this->classes      = $data['classes'];
 			$this->descendants  = $data['descendants'];
 			$this->interfaces   = $data['interfaces'];
+			$this->traits       = $data['traits'];
 			$this->implementors = $data['implementors'];
 			$this->configs      = $data['configs'];
 		} else {
@@ -147,6 +160,8 @@ class SS_ClassManifest {
 			return $this->classes[$name];
 		} elseif (isset($this->interfaces[$name])) {
 			return $this->interfaces[$name];
+		} elseif (isset($this->traits[$name])) {
+			return $this->traits[$name];
 		}
 	}
 
@@ -208,6 +223,15 @@ class SS_ClassManifest {
 	}
 
 	/**
+	 * Returns a map of lowercased traits names to file locations.
+	 *
+	 * @return array
+	 */
+	public function getTraits() {
+		return $this->traits;
+	}
+
+	/**
 	 * Returns a map of lowercased interface names to the classes the implement
 	 * them.
 	 *
@@ -264,7 +288,7 @@ class SS_ClassManifest {
 	 */
 	public function regenerate($cache = true) {
 		$reset = array(
-			'classes', 'roots', 'children', 'descendants', 'interfaces',
+			'classes', 'roots', 'children', 'descendants', 'interfaces', 'traits',
 			'implementors', 'configs'
 		);
 
@@ -291,6 +315,7 @@ class SS_ClassManifest {
 				'classes'      => $this->classes,
 				'descendants'  => $this->descendants,
 				'interfaces'   => $this->interfaces,
+				'traits'       => $this->traits,
 				'implementors' => $this->implementors,
 				'configs'      => $this->configs
 			);
@@ -306,7 +331,8 @@ class SS_ClassManifest {
 
 		$classes    = null;
 		$interfaces = null;
-		$namespace = null;
+		$traits     = null;
+		$namespace  = null;
 
 		// The results of individual file parses are cached, since only a few
 		// files will have changed and TokenisedRegularExpression is quite
@@ -317,19 +343,20 @@ class SS_ClassManifest {
 
 		if ($data = $this->cache->load($key)) {
 			$valid = (
-				isset($data['classes']) && isset($data['interfaces']) && isset($data['namespace'])
-				&& is_array($data['classes']) && is_array($data['interfaces']) && is_string($data['namespace'])
+				isset($data['classes']) && isset($data['interfaces']) && isset($data['traits']) && isset($data['namespace'])
+				&& is_array($data['classes']) && is_array($data['interfaces']) && is_array($data['traits']) && is_string($data['namespace'])
 			);
 
 			if ($valid) {
 				$classes    = $data['classes'];
 				$interfaces = $data['interfaces'];
-				$namespace = $data['namespace'];
+				$traits     = $data['traits'];
+				$namespace  = $data['namespace'];
 			}
 		}
 
 		if (!$classes) {
-			$tokens     = token_get_all($file);
+			$tokens = token_get_all($file);
 			
 			$classes = self::get_namespaced_class_parser()->findAll($tokens);
 			$namespace = self::get_namespace_parser()->findAll($tokens);
@@ -340,8 +367,10 @@ class SS_ClassManifest {
 			}
 
 			$interfaces = self::get_interface_parser()->findAll($tokens);
+			// for backword compatiblity to PHP 5.3.x we check if traits are supported / the constant exists 
+			$traits = (defined('T_TRAIT')) ? self::get_trait_parser()->findAll($tokens) : array();
 
-			$cache = array('classes' => $classes, 'interfaces' => $interfaces, 'namespace' => $namespace);
+			$cache = array('classes' => $classes, 'interfaces' => $interfaces, 'traits' => $traits, 'namespace' => $namespace);
 			$this->cache->save($cache, $key);
 		}
 
@@ -404,6 +433,10 @@ class SS_ClassManifest {
 
 		foreach ($interfaces as $interface) {
 			$this->interfaces[strtolower($namespace . $interface['interfaceName'])] = $pathname;
+		}
+		
+		foreach ($traits as $trait) {
+			$this->traits[strtolower($namespace . $trait['traitName'])] = $pathname;
 		}
 	}
 

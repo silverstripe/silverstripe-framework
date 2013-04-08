@@ -26,7 +26,9 @@ class ClassManifestTest extends SapphireTest {
 			'classa'     => 'module/classes/ClassA.php',
 			'INTERFACEA' => 'module/interfaces/InterfaceA.php',
 			'InterfaceA' => 'module/interfaces/InterfaceA.php',
-			'interfacea' => 'module/interfaces/InterfaceA.php'
+			'interfacea' => 'module/interfaces/InterfaceA.php',
+			'traita'     => 'module/traits/TraitA.php',
+			'TraitA'     => 'module/traits/TraitA.php',
 		);
 
 		foreach ($expect as $name => $path) {
@@ -39,14 +41,15 @@ class ClassManifestTest extends SapphireTest {
 			'classa' => "{$this->base}/module/classes/ClassA.php",
 			'classb' => "{$this->base}/module/classes/ClassB.php",
 			'classc' => "{$this->base}/module/classes/ClassC.php",
-			'classd' => "{$this->base}/module/classes/ClassD.php"
+			'classd' => "{$this->base}/module/classes/ClassD.php",
+			'classe' => "{$this->base}/module/classes/ClassE.php",
 		);
 		$this->assertEquals($expect, $this->manifest->getClasses());
 	}
 
 	public function testGetClassNames() {
 		$this->assertEquals(
-			array('classa', 'classb', 'classc', 'classd'),
+			array('classa', 'classb', 'classc', 'classd', 'classe'),
 			$this->manifest->getClassNames());
 	}
 
@@ -77,6 +80,14 @@ class ClassManifestTest extends SapphireTest {
 			'interfaceb' => "{$this->base}/module/interfaces/InterfaceB.php"
 		);
 		$this->assertEquals($expect, $this->manifest->getInterfaces());
+	}
+
+	public function testGetTraits	() {
+		$expect = array(
+			'traita' => "{$this->base}/module/traits/TraitA.php",
+			'traitb' => "{$this->base}/module/traits/TraitB.php",
+		);
+		$this->assertEquals($expect, $this->manifest->getTraits());
 	}
 
 	public function testGetImplementors() {
