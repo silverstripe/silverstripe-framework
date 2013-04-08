@@ -202,6 +202,13 @@ You can combine two or more conditions with `&&` ("and"). The markup is used if
 		Lets swap dinners
 	<% end_if %>
 
+You can use inequalities like `<`, `<=`, `>`, `>=` to compare numbers.
+
+	:::ss
+	<% if $Number>="5" && $Number<="10" %>
+		Number between 5 and 10
+	<% end_if %>
+
 ## Looping Over Lists
 
 The `<% loop %>...<% end_loop %>` tag is used to **iterate** or loop over a 
