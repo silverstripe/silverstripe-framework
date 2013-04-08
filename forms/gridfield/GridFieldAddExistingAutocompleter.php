@@ -7,9 +7,8 @@
  * Often used alongside {@link GridFieldDeleteAction} for detaching existing records from a relatinship.
  * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldAddExistingAutocompleter
-		implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
-	
+class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
+
 	/**
 	 * Which template to use for rendering
 	 * 
@@ -28,25 +27,10 @@ class GridFieldAddExistingAutocompleter
 	protected $searchList;
 
 	/**
-	 * Define column names which should be included in the search.
-	 * By default, they're searched with a {@link StartsWithFilter}.
-	 * To define custom filters, use the same notation as {@link DataList->filter()},
-	 * e.g. "Name:EndsWith".
-	 * 
+	 * Which columns that should be used for doing a "StartsWith" search.
 	 * If multiple fields are provided, the filtering is performed non-exclusive.
-	 * If no fields are provided, tries to auto-detect fields from
-	 * {@link DataObject->searchableFields()}.
-	 * 
-	 * The fields support "dot-notation" for relationships, e.g.
-	 * a entry called "Team.Name" will search through the names of
-	 * a "Team" relationship.
-	 *
-	 * @example
-	 *  array(
-	 *  	'Name',
-	 *  	'Email:StartsWith',
-	 *  	'Team.Name'
-	 *  )
+	 * If no fields are provided, tries to auto-detect a "Title" or "Name" field,
+	 * and falls back to the first textual field defined on the object.
 	 *
 	 * @var Array
 	 */
@@ -75,7 +59,7 @@ class GridFieldAddExistingAutocompleter
 		$this->targetFragment = $targetFragment;
 		$this->searchFields = (array)$searchFields;
 	}
-	
+
 	/**
 	 * 
 	 * @param GridField $gridField
@@ -84,45 +68,45 @@ class GridFieldAddExistingAutocompleter
 	public function getHTMLFragments($gridField) {
 		$searchState = $gridField->State->GridFieldSearchRelation;
 		$dataClass = $gridField->getList()->dataClass();
-		
+
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 
 		$searchFields = ($this->getSearchFields())
 			? $this->getSearchFields()
 			: $this->scaffoldSearchFields($dataClass);
-		
+
 		$value = $this->findSingleEntry($gridField, $searchFields, $searchState, $dataClass);
 
 		$searchField = new TextField('gridfield_relationsearch',
-			_t('GridField.RelationSearch', "Relation search"), $value);
+						_t('GridField.RelationSearch', "Relation search"), $value);
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
 		$searchField->addExtraClass('relation-search no-change-track');
-		
+
 		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind',
-			_t('GridField.Find', "Find"), 'find', 'find');
+						_t('GridField.Find', "Find"), 'find', 'find');
 		$findAction->setAttribute('data-icon', 'relationfind');
 
 		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd',
-			_t('GridField.LinkExisting', "Link Existing"), 'addto', 'addto');
+						_t('GridField.LinkExisting', "Link Existing"), 'addto', 'addto');
 		$addAction->setAttribute('data-icon', 'chain--plus');
 
 		// If an object is not found, disable the action
 		if(!is_int($gridField->State->GridFieldAddRelation)) {
 			$addAction->setReadonly(true);
 		}
-		
+
 		$forTemplate->Fields->push($searchField);
 		$forTemplate->Fields->push($findAction);
 		$forTemplate->Fields->push($addAction);
-		
+
 		return array(
 			$this->targetFragment => $forTemplate->renderWith($this->itemClass)
 		);
 	}
-	
+
 	/**
 	 *
 	 * @param GridField $gridField
@@ -154,7 +138,7 @@ class GridFieldAddExistingAutocompleter
 				break;
 		}
 	}
-	
+
 	/**
 	 * If an object ID is set, add the object to the list
 	 *
@@ -176,7 +160,7 @@ class GridFieldAddExistingAutocompleter
 		$gridField->State->GridFieldAddRelation = null;
 		return $dataList;
 	}
-	
+
 	/**
 	 *
 	 * @param GridField $gridField
@@ -187,7 +171,7 @@ class GridFieldAddExistingAutocompleter
 			'search' => 'doSearch',
 		);
 	}
-	
+
 	/**
 	 * Returns a json array of a search results that can be used by for example Jquery.ui.autosuggestion
 	 *
@@ -197,25 +181,67 @@ class GridFieldAddExistingAutocompleter
 	public function doSearch($gridField, $request) {
 		$dataClass = $gridField->getList()->dataClass();
 		$allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
-		
-		$searchFields = ($this->getSearchFields())
-			? $this->getSearchFields()
-			: $this->scaffoldSearchFields($dataClass);
-		if(!$searchFields) {
+
+		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
+		if (!$searchFields) {
 			throw new LogicException(
-				sprintf('GridFieldAddExistingAutocompleter: No searchable fields could be found for class "%s"',
-				$dataClass));
+					sprintf('GridFieldAddExistingAutocompleter: No searchable fields could be found for class "%s"', $dataClass));
 		}
 
-		$params = array();
-		foreach($searchFields as $searchField) {
-			$name = (strpos($searchField, ':') !== FALSE) ? $searchField : "$searchField:StartsWith";
-			$params[$name] = $request->getVar('gridfield_relationsearch');
+		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
+		$stmts = array();
+		$joinClassNames = array();
+		foreach ($searchFields as $index => $searchField) {
+			if (strpos($searchField, '.') !== false) {
+				$originalSearchableField = $searchField;
+				$parts = explode('.', $searchField);
+				$relationName = $parts[0];
+				$searchField = $parts[1];
+				$joinClassName = null;
+				$relationClassName = Object::get_static($dataClass, 'has_many');
+				if (is_array($relationClassName)) {
+					$relationClassName = $relationClassName[$relationName];
+				}
+				if (!is_null($relationClassName)) {
+					foreach (singleton($relationClassName)->getClassAncestry() as $ancestor) {
+						if (DataObject::has_own_table($ancestor)) {
+							$joinClassName = $ancestor;
+							break;
+						}
+					}
+				}
+				if (is_null($joinClassName)) {
+					throw new LogicException(
+							sprintf('GridFieldAddExistingAutocompleter: Searchable field "%s" could not be found for class "%s"', $originalSearchableField, $dataClass)
+					);
+				} else {
+					$joinClassNames[$relationName] = $joinClassName;
+					$searchFields[$index] = $relationClassName . '.' . $searchField;
+					$searchField = $relationClassName . '"."' . $searchField;
+				}
+				$has_one = Object::get_static($relationClassName, 'has_one');
+				foreach ($has_one as $hasOneRelationName => $hasOneRelationClassName) {
+					if ($hasOneRelationClassName == $dataClass) {
+						$targetRelationName = $hasOneRelationName;
+						continue;
+					}
+				}
+			} else {
+				$searchField = $dataClass . '"."' . $searchField;
+			}
+			$stmts[] = sprintf('"%s" LIKE \'%s%%\'', $searchField, Convert::raw2sql($request->getVar('gridfield_relationsearch')));
+		}
+		foreach ($joinClassNames as $relationName => $joinClassName) {
+			$allList->leftJoin(
+					$joinClassName, sprintf(
+							'"%s"."ID" = "%s"."%sID"', $dataClass, $joinClassName, $targetRelationName
+					)
+			);
 		}
 		$results = $allList
+			->where(implode(' OR ', $stmts))
 			->subtract($gridField->getList())
-			->filterAny($params)
-			->sort(strtok($searchFields[0], ':'), 'ASC')
+			->sort($searchFields[0], 'ASC')
 			->limit($this->getResultsLimit());
 
 		$json = array();
@@ -266,44 +292,40 @@ class GridFieldAddExistingAutocompleter
 	}
 
 	/**
-	 * Detect searchable fields and searchable relations.
-	 * Falls back to {@link DataObject->summaryFields()} if
-	 * no custom search fields are defined.
+	 * Detect searchable fields and searchable relations
+	 * Only has_many relations may be searched.
+	 * Falls back to Title or Name if no earchableFields are defined.
 	 * 
 	 * @param  String the class name
 	 * @return Array|null names of the searchable fields
 	 */
 	public function scaffoldSearchFields($dataClass) {
 		$obj = singleton($dataClass);
-		$fields = null;
-		if($fieldSpecs = $obj->searchableFields()) {
-			$customSearchableFields = $obj->stat('searchable_fields');
-			foreach($fieldSpecs as $name => $spec) {
-				if(is_array($spec) && array_key_exists('filter', $spec)) {
-					// The searchableFields() spec defaults to PartialMatch,
-					// so we need to check the original setting.
-					// If the field is defined $searchable_fields = array('MyField'),
-					// then default to StartsWith filter, which makes more sense in this context.
-					if(!$customSearchableFields || array_search($name, $customSearchableFields)) {
-						$filter = 'StartsWith';
-					} else {
-						$filter = preg_replace('/Filter$/', '', $spec['filter']);
+		$searchableFields = null;
+		if ($obj->searchableFields()) {
+			foreach ($obj->searchableFields() as $name => $specOrName) {
+				//searchableFields() may return a multidimensional array
+				$searchableFieldKey = (is_int($name)) ? $specOrName : $name;
+				if (strpos($searchableFieldKey, ".") !== false) {
+					$parts = explode('.', $searchableFieldKey);
+					$relationName = $parts[0];
+					$has_many = Object::get_static($dataClass, 'has_many');
+					if (is_array($has_many) && array_key_exists($relationName, $has_many)) {
+						$searchableFields[] = $searchableFieldKey;
 					}
-					$fields[] = "{$name}:{$filter}";
 				} else {
-					$fields[] = $name;
+					$searchableFields[] = $searchableFieldKey;
 				}
 			}
 		}
-		if (is_null($fields)) {
+		if (is_null($searchableFields)) {
 			if ($obj->hasDatabaseField('Title')) {
-				$fields = array('Title');
+				$searchableFields = array('Title');
 			} elseif ($obj->hasDatabaseField('Name')) {
-				$fields = array('Name');
+				$searchableFields = array('Name');
 			}
 		}
-
-		return $fields;
+		return $searchableFields;
 	}
 
 	/**
@@ -320,9 +342,9 @@ class GridFieldAddExistingAutocompleter
 		} else {
 			$labels = array();
 			if($searchFields) foreach($searchFields as $searchField) {
-				$label = singleton($dataClass)->fieldLabel($searchField);
+					$label = singleton($dataClass)->fieldLabel($searchField);
 				if($label) $labels[] = $label;
-			}
+				}
 			if($labels) {
 				return _t(
 					'GridField.PlaceHolderWithLabels', 
@@ -380,12 +402,12 @@ class GridFieldAddExistingAutocompleter
 		}
 		$existingList = clone $gridField->getList();
 		$searchResults = $fullList->subtract($existingList->limit(0))->filter($field.':StartsWith', $searchTerm);
-		
+
 		// If more than one, skip
 		if($searchResults->count() != 1) {
 			return '';
 		}
-		
+
 		$gridField->State->GridFieldAddRelation = $searchResults->first()->ID;
 		return $searchResults->first()->$field;
 	}
