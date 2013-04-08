@@ -293,10 +293,22 @@ class DataQuery {
 					}
 				} else {
 					$qualCol = '"' . implode('"."', $parts) . '"';
+					$strTable = $parts[0];
+					$dbConn = DB::getConn();
+					$bAddInSelect = false;
+
+					$arrTables = $dbConn->tableList();
+					if(in_array($qualCol, $arrTables)){
+						$arrCols = $dbConn->fieldList($strTable);
+						if(in_array($qualCol, $arrCols)){
+							$bAddInSelect = true;
+						}
+					}
+					
 					
 					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
-					if(!in_array($qualCol, $query->getSelect())) {
+					if(!in_array($qualCol, $query->getSelect()) && $bAddInSelect) {
 						$query->selectField($qualCol);
 					}
 				}
