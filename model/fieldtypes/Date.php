@@ -387,6 +387,15 @@ class Date extends DBField {
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {
-		return new DateField($this->name, $title);
+		$field = DateField::create($this->name, $title);
+		
+		// Show formatting hints for better usability
+		$field->setDescription(sprintf(
+			_t('FormField.Example', 'e.g. %s', 'Example format'),
+			Convert::raw2xml(Zend_Date::now()->toString($field->getConfig('dateformat')))
+		));
+		$field->setAttribute('placeholder', $field->getConfig('dateformat'));
+		
+		return $field;
 	}
 }
