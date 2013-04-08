@@ -554,6 +554,9 @@ body.cms {
 
 			&.disabled {
 				color: $color-text-disabled;
+				
+				@include opacity(0.5);
+
 				&:hover {
 					background: none;
 				}
