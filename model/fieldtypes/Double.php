@@ -17,13 +17,19 @@ class Double extends DBField {
 		}
 	}
 	
+	/**
+	 * @return Text
+	 */
 	public function Nice() {
-		return number_format($this->value, 2);
+		return DBField::create_field('Text', number_format($this->value, 2));
 	}
 	
 	/**
 	 * Returns the value to be set in the database to blank this field.
+	 *
 	 * Usually it's a choice between null, 0, and ''
+	 *
+	 * @return mixed
 	 */
 	public function nullValue() {
 		return 0;
@@ -31,7 +37,12 @@ class Double extends DBField {
 
 	/**
 	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
+	 *
 	 * If necessary, this should include quotes.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return mixed
 	 */
 	public function prepValueForDB($value) {
 		if($value === true) {

@@ -15,46 +15,77 @@ class Int extends DBField {
 
 	/**
 	 * Returns the number, with commas added as appropriate, eg “1,000”.
+	 *
+	 * @return Text
 	 */
 	public function Formatted() {
-		return number_format($this->value);
+		return DBField::create_field('Text', number_format($this->value));
 	}
 
+	/**
+	 * @return string
+	 */
 	public function nullValue() {
 		return "0";
 	}
 
 	public function requireField() {
-		$parts=Array(
-			'datatype'=>'int',
-			'precision'=>11,
-			'null'=>'not null',
-			'default'=>$this->defaultVal,
-			'arrayValue'=>$this->arrayValue);
+		$parts = array(
+			'datatype' => 'int',
+			'precision' => 11,
+			'null' => 'not null',
+			'default' => $this->defaultVal,
+			'arrayValue' => $this->arrayValue
+		);
 		
-		$values=Array('type'=>'int', 'parts'=>$parts);
+		$values = array(
+			'type' => 'int', 
+			'parts' => $parts
+		);
+
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 
+	/**
+	 * @return ArrayList
+	 */
 	public function Times() {
 		$output = new ArrayList();
-		for( $i = 0; $i < $this->value; $i++ )
-			$output->push( new ArrayData( array( 'Number' => $i + 1 ) ) );
+
+		for($i = 0; $i < $this->value; $i++) {
+			$output->push(new ArrayData(array(
+				'Number' => $i + 1 
+			)));
+		}
 
 		return $output;
 	}
 
+	/**
+	 * @return Text
+	 */
 	public function Nice() {
-		return sprintf( '%d', $this->value );
+		return DBField::create_field('Text', sprintf( '%d', $this->value));
 	}
 	
+	/**
+	 * @param string $title
+	 * @param array $params
+	 *
+	 * @return NumericField
+	 */
 	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
 	
 	/**
 	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
+	 *
 	 * If necessary, this should include quotes.
+	 *
+	 * @param mixed
+	 *
+	 * @return string
 	 */
 	public function prepValueForDB($value) {
 		if($value === true) {
@@ -70,4 +101,3 @@ class Int extends DBField {
 	}
 	
 }
-

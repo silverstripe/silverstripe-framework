@@ -13,17 +13,6 @@ abstract class StringField extends DBField {
 	protected $nullifyEmpty = true;
 
 	/**
-	 * @var array
-	 */
-	private static $casting = array(
-		"LimitCharacters" => "Text",
-		'LimitWordCount' => 'Text',
-		'LimitWordCountXML' => 'HTMLText',
-		"LowerCase" => "Text",
-		"UpperCase" => "Text",
-	);
-
-	/**
 	 * Construct a string type field with a set of optional parameters.
 	 *
 	 * @param $name string The name of the field
@@ -31,8 +20,8 @@ abstract class StringField extends DBField {
 	 *                       {@link StringField::setOptions()} for information on the available options
 	 */
 	public function __construct($name = null, $options = array()) {
-		// Workaround: The singleton pattern calls this constructor with true/1 as the second parameter, so we
-		// must ignore it
+		// Workaround: The singleton pattern calls this constructor with true/1 
+		// as the second parameter, so we must ignore it
 		if(is_array($options)){
 			$this->setOptions($options);
 		}
@@ -42,6 +31,7 @@ abstract class StringField extends DBField {
 	
 	/**
 	 * Update the optional parameters for this field.
+	 *
 	 * @param $options array of options
 	 * The options allowed are:
 	 *   <ul><li>"nullifyEmpty"
@@ -49,7 +39,6 @@ abstract class StringField extends DBField {
 	 *       True (the default) means that empty strings are automatically converted to nulls to be stored in
 	 *       the database. Set it to false to ensure that nulls and empty strings are kept intact in the database.
 	 *   </li></ul>
-	 * @return unknown_type
 	 */
 	public function setOptions(array $options = array()) {
 		if(array_key_exists("nullifyEmpty", $options)) {
@@ -119,7 +108,7 @@ abstract class StringField extends DBField {
 			$value = (mb_strlen($value) > $limit) ? mb_substr($value, 0, $limit) . $add : $value;
 		}
 
-		return $value;
+		return DBField::create('Text', $value);
 	}
 
 
@@ -132,7 +121,7 @@ abstract class StringField extends DBField {
 	 * @param int $numWords Number of words to limit by.
 	 * @param string $add Ellipsis to add to the end of truncated string.
 	 *
-	 * @return string
+	 * @return Text
 	 */
 	public function LimitWordCount($numWords = 26, $add = '...') {
 		$this->value = trim(Convert::xml2raw($this->value));
@@ -145,7 +134,7 @@ abstract class StringField extends DBField {
 			$ret = implode(' ', $ret) . $add;
 		}
 
-		return $ret;
+		return DBField::create('Text', $ret);
 	}
 
 	/**
@@ -156,28 +145,44 @@ abstract class StringField extends DBField {
 	 * @param int $numWords Number of words to limit by.
 	 * @param string $add Ellipsis to add to the end of truncated string.
 	 *
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function LimitWordCountXML($numWords = 26, $add = '...') {
 		$ret = $this->LimitWordCount($numWords, $add);
 
-		return Convert::raw2xml($ret);
+		return DBField::create('HTMLText', Convert::raw2xml($ret));
 	}
 
 	/**
 	 * Converts the current value for this StringField to lowercase.
 	 *
-	 * @return string
+	 * @return StringField
 	 */
 	public function LowerCase() {
-		return mb_strtolower($this->value);
+		$lower = clone $this;
+		$lower->setValue(mb_strtolower($lower->value));
+
+		return $lower;
 	}
 
 	/**
 	 * Converts the current value for this StringField to uppercase.
-	 * @return string 
+	 *
+	 * @return StringField 
 	 */ 
 	public function UpperCase() {
-		return mb_strtoupper($this->value);
+		$upper = clone $this;
+		$upper->setValue(mb_strtoupper($upper->value));
+
+		return $upper;
+	}
+
+	/**
+	 * Converts new lines to breaks.
+	 *
+	 * @return HTMLText
+	 */
+	public function Nl2Br() {
+		return DBField::create('HTMLText', nl2br($this->value));
 	}
 }

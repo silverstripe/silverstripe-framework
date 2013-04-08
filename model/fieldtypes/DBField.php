@@ -1,12 +1,15 @@
 <?php
 /**
  * Single field in the database.
+ *
  * Every field from the database is represented as a sub-class of DBField.
  * 
  * <b>Multi-value DBField objects</b>
  * 
- * Sometimes you will want to make DBField classes that don't have a 1-1 match to database fields.  To do this, there
- * are a number of fields for you to overload.
+ * Sometimes you will want to make DBField classes that don't have a 1-1 match 
+ * to database fields.  To do this, there are a number of fields for you to 
+ * overload.
+ *
  *  - Overload {@link writeToManipulation} to add the appropriate references to the INSERT or UPDATE command
  *  - Overload {@link addToQuery} to add the appropriate items to a SELECT query's field list
  *  - Add appropriate accessor methods 
@@ -60,6 +63,7 @@ abstract class DBField extends ViewableData {
 	 */
 	protected $defaultVal;
 	
+
 	public function __construct($name = null) {
 		$this->name = $name;
 		
@@ -68,29 +72,42 @@ abstract class DBField extends ViewableData {
 	
 	/**
 	 * Create a DBField object that's not bound to any particular field.
+	 *
 	 * Useful for accessing the classes behaviour for other parts of your code.
+	 *
+	 * @param string $className
+	 * @param mixed $value
+	 * @param string $name
+	 * @param mixed $object
 	 */
 	public static function create_field($className, $value, $name = null, $object = null) {
 		$dbField = Object::create($className, $name, $object);
 		$dbField->setValue($value, null, false);
+
 		return $dbField;
 	}
 	
 	/**
 	 * Set the name of this field.
-	 * The name should never be altered, but it if was never given a name in the first place you can set a name.
-	 * If you try an alter the name a warning will be thrown. 
+	 *
+	 * The name should never be altered, but it if was never given a name in 
+	 * the first place you can set a name. If you try an alter the name a 
+	 * warning will be thrown. 
+	 *
+	 * @return string
 	 */
 	public function setName($name) {
 		if($this->name) {
 			user_error("DBField::setName() shouldn't be called once a DBField already has a name."
 				. "It's partially immutable - it shouldn't be altered after it's given a value.", E_USER_WARNING);
 		}
+
 		$this->name = $name;
 	}
 	
 	/**
 	 * Returns the name of this field.
+	 *
 	 * @return string
 	 */
 	public function getName() {
@@ -99,6 +116,7 @@ abstract class DBField extends ViewableData {
 	
 	/**
 	 * Returns the value of this field.
+	 *
 	 * @return mixed
 	 */
 	public function getValue() {
@@ -135,6 +153,7 @@ abstract class DBField extends ViewableData {
 	 * this should include quotes.
 	 * 
 	 * @param $value mixed The value to check
+	 *
 	 * @return string The encoded value
 	 */
 	public function prepValueForDB($value) {
@@ -158,18 +177,19 @@ abstract class DBField extends ViewableData {
 	 * @param array $manipulation
 	 */
 	public function writeToManipulation(&$manipulation) {
-		$manipulation['fields'][$this->name] = $this->exists() 
-			? $this->prepValueForDB($this->value) : $this->nullValue();
+		if($this->exists()) {
+			$manipulation['fields'][$this->name] = $this->prepValueForDB($this->value);
+		} else { 
+			$manipulation['fields'][$this->name] = $this->nullValue();
+		}
 	}
 	
 	/**
-	 * Add custom query parameters for this field,
-	 * mostly SELECT statements for multi-value fields. 
+	 * Add custom query parameters for this field, mostly SELECT statements for 
+	 * multi-value fields. 
 	 * 
-	 * By default, the ORM layer does a
-	 * SELECT <tablename>.* which
-	 * gets you the default representations
-	 * of all columns.
+	 * By default, the ORM layer does a SELECT <tablename>.* which gets you the 
+	 * default representations of all columns.
 	 *
 	 * @param SS_Query $query
 	 */
@@ -223,6 +243,8 @@ abstract class DBField extends ViewableData {
 	/**
 	 * Returns the value to be set in the database to blank this field.
 	 * Usually it's a choice between null, 0, and ''
+	 *
+	 * @return mixed
 	 */
 	public function nullValue() {
 		return "null";
@@ -230,6 +252,8 @@ abstract class DBField extends ViewableData {
 
 	/**
 	 * Saves this field to the given data object.
+	 *
+	 * @param DataObject
 	 */
 	public function saveInto($dataObject) {
 		$fieldName = $this->name;
@@ -246,7 +270,8 @@ abstract class DBField extends ViewableData {
 	 *
 	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
 	 * 
-	 * @param string $title Optional. Localized title of the generated instance
+	 * @param string $title Optional. Localized title of the generated instance.
+	 *
 	 * @return FormField
 	 */
 	public function scaffoldFormField($title = null) {
@@ -261,7 +286,8 @@ abstract class DBField extends ViewableData {
 	 *
 	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}.
 	 * 
-	 * @param string $title Optional. Localized title of the generated instance
+	 * @param string $title Optional. Localized title of the generated instance.
+	 *
 	 * @return FormField
 	 */
 	public function scaffoldSearchField($title = null) {
@@ -280,6 +306,7 @@ abstract class DBField extends ViewableData {
 	public function defaultSearchFilter($name = false) {
 		$name = ($name) ? $name : $this->name;
 		$filterClass = $this->stat('default_search_filter_class');
+
 		return new $filterClass($name);
 	}
 	
@@ -298,6 +325,9 @@ abstract class DBField extends ViewableData {
 DBG;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function __toString() {
 		return $this->forTemplate();
 	}

@@ -14,31 +14,45 @@ class Boolean extends DBField {
 	}
 	
 	public function requireField() {
-		$parts=Array(
-			'datatype'=>'tinyint',
-			'precision'=>1,
-			'sign'=>'unsigned',
-			'null'=>'not null',
-			'default'=>$this->defaultVal,
-			'arrayValue'=>$this->arrayValue
+		$parts = array(
+			'datatype' => 'tinyint',
+			'precision' => 1,
+			'sign' => 'unsigned',
+			'null' => 'not null',
+			'default' => $this->defaultVal,
+			'arrayValue' => $this->arrayValue
 		);
-		$values=Array('type'=>'boolean', 'parts'=>$parts);
+
+		$values = array(
+			'type' => 'boolean', 
+			'parts' => $parts
+		);
+
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function Nice() {
 		return ($this->value) ? _t('Boolean.YES', 'Yes') : _t('Boolean.NO', 'No');
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function NiceAsBoolean() {
 		return ($this->value) ? 'true' : 'false';
 	}
 
 	/**
 	 * Saves this field to the given data object.
+	 *
+	 * @param DataObject
 	 */
 	public function saveInto($dataObject) {
 		$fieldName = $this->name;
+		
 		if($fieldName) {
 			$dataObject->$fieldName = ($this->value) ? 1 : 0;
 		} else {
@@ -46,10 +60,21 @@ class Boolean extends DBField {
 		}
 	}
 
+	/**
+	 * @param string $title
+	 * @param array $params
+	 *
+	 * @return CheckboxField
+	 */
 	public function scaffoldFormField($title = null, $params = null) {
 		return new CheckboxField($this->name, $title);
 	}
 	
+	/**
+	 * @param string $title
+	 *
+	 * @return DropdownField
+	 */
 	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Boolean.ANY', 'Any');
 		$source = array(
@@ -59,29 +84,29 @@ class Boolean extends DBField {
 		
 		$field = new DropdownField($this->name, $title, $source);
 		$field->setEmptyString("($anyText)");
+
 		return $field;
 	}
 
 	/**
 	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
+	 *
 	 * If necessary, this should include quotes.
+	 *
+	 * @return string
 	 */
 	public function prepValueForDB($value) {
-		if(strpos($value, '[')!==false)
+		if(strpos($value, '[') !== false) {
 			return Convert::raw2sql($value);
-		else {
-			if($value && strtolower($value) != 'f') {
-				return "'1'";
-			} else {
-				return "'0'";
-			}
+		} else {
+			return ($value && strtolower($value) != 'f') ? "'1'" : "'0'";
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function nullValue() {
 		return "'0'";
 	}
-	
 }
-
-
