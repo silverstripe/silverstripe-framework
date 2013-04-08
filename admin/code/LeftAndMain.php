@@ -266,7 +266,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			// Use theme from the site config
 			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
 				$theme = $config->Theme;
-			} elseif(Config::inst()->get('SSViewer', 'theme')) {
+			} elseif(Config::inst()->get('SSViewer', 'theme_enabled') && Config::inst()->get('SSViewer', 'theme')) {
 				$theme = Config::inst()->get('SSViewer', 'theme');
 			} else {
 				$theme = false;
@@ -387,9 +387,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$dummy = null;
 		$this->extend('init', $dummy);
 
-		// The user's theme shouldn't affect the CMS, if, for example, they have replaced
-		// TableListField.ss or Form.ss.
-		Config::inst()->update('SSViewer', 'theme', null);
+		// The user's theme shouldn't affect the CMS, if, for example, they have replaced TableListField.ss or Form.ss.
+		Config::inst()->update('SSViewer', 'theme_enabled', false);
 	}
 	
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {

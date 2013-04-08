@@ -572,15 +572,20 @@ class SSViewer {
 	
 	/**
 	 * @config
-	 * @var string
+	 * @var string The used "theme", which usually consists of templates, images and stylesheets.
+	 * Only used when {@link $theme_enabled} is set to TRUE.
 	 */
-	private static $current_theme = null;
-	
+	private static $theme = null;
+
 	/**
 	 * @config
-	 * @var string
+	 * @var boolean Use the theme. Set to FALSE in order to disable themes,
+	 * which can be useful for scenarios where theme overrides are temporarily undesired,
+	 * such as an administrative interface separate from the website theme. 
+	 * It retains the theme settings to be re-enabled, for example when a website content
+	 * needs to be rendered from within this administrative interface.
 	 */
-	private static $current_custom_theme = null;
+	private static $theme_enabled = true;
 
 	/**
 	 * @var boolean
@@ -603,9 +608,6 @@ class SSViewer {
 	public static function set_theme($theme) {
 		Deprecation::notice('3.2', 'Use the "SSViewer.theme" config setting instead');
 		Config::inst()->update('SSViewer', 'theme', $theme);
-		//Static publishing needs to have a theme set, otherwise it defaults to the content controller theme
-		if(!is_null($theme))
-			Config::inst()->update('SSViewer', 'custom_theme', $theme);
 	}
 	
 	/**
@@ -655,8 +657,8 @@ class SSViewer {
 	 * @return string
 	 */
 	public static function current_custom_theme(){
-		Deprecation::notice('3.2', 'Use the "SSViewer.theme" config setting instead');
-		return Config::inst()->get('SSViewer', 'custom_theme');
+		Deprecation::notice('3.2', 'Use the "SSViewer.theme" and "SSViewer.theme_enabled" config settings instead');
+		return Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null;
 	}
 	
 	/**
@@ -683,8 +685,13 @@ class SSViewer {
 		if(!is_array($templateList) && substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
+			if(Config::inst()->get('SSViewer', 'theme_enabled')) {
+				$theme = Config::inst()->get('SSViewer', 'theme');
+			} else {
+				$theme = null;
+			}
 			$this->chosenTemplates = SS_TemplateLoader::instance()->findTemplates(
-				$templateList, Config::inst()->get('SSViewer', 'theme')
+				$templateList, $theme
 			);
 		}
 
@@ -792,7 +799,12 @@ class SSViewer {
 	 */
 	public static function getTemplateFileByType($identifier, $type) {
 		$loader = SS_TemplateLoader::instance();
-		$found  = $loader->findTemplates("$type/$identifier", Config::inst()->get('SSViewer', 'theme'));
+		if(Config::inst()->get('SSViewer', 'theme_enabled')) {
+			$theme = Config::inst()->get('SSViewer', 'theme');
+		} else {
+			$theme = null;
+		}
+		$found  = $loader->findTemplates("$type/$identifier", $theme);
 
 		if ($found) {
 			return $found['main'];
