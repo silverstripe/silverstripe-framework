@@ -809,6 +809,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 		
 		// If the amount of pages exceeds the node thresholds set, use the callback
+		$html = null;
 		if($obj->ParentID && $nodeCountCallback) {
 			$html = $nodeCountCallback($obj, $obj->$numChildrenMethod());
 		} 
