@@ -450,8 +450,13 @@ abstract class Object {
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
-	public static function add_extension($extension) {
-		$class = get_called_class();
+	public static function add_extension($classOrExtension, $extension = null) {
+		if(func_num_args() > 1) {
+			$class = $classOrExtension;
+		} else {
+			$class = get_called_class();
+			$extension = $classOrExtension;
+		}
 
 		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
