@@ -282,12 +282,12 @@ class DataQuery {
 					} else {
 						$qualCol = "\"$parts[0]\"";
 					}
-
-					// remove original sort
-					unset($orderby[$k]);
-					// add new columns sort
-					$orderby[$qualCol] = $dir;
-					
+						
+						// remove original sort
+						unset($orderby[$k]);
+						// add new columns sort
+						$orderby[$qualCol] = $dir;
+							
 					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
 					$selects = $query->getSelect();

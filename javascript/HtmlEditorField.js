@@ -488,7 +488,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				/* NOP */
 			},
 			resetFields: function() {
-				/* NOP */
+				// Flush the tree drop down fields, as their content might get changed in other parts of the CMS, ie in Files and images
+				this.find('.tree-holder').empty();
 			}
 		});
 

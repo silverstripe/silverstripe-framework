@@ -1244,7 +1244,7 @@ class Versioned_Version extends ViewableData {
 					else $component = $component->relation($relation);
 				} else {
 					$component = $component->$relation();
-				}
+}
 			}
 		}
 

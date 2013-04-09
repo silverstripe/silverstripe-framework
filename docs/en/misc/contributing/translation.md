@@ -14,6 +14,11 @@ We provide a GUI for translations through [getlocalization.com](http://getlocali
 
 For all modules listed there, we automatically import new master strings as they get committed to the various codebases, so you're always translating on the latest and greatest version.
 
+Since getlocalization doesn't allow you to download your own work,
+we've created a simple downloader for this purpose at [http://translate.silverstripe.org/download.php](http://translate.silverstripe.org/download.php)
+([sample download of de.yml](http://translate.silverstripe.org/download.php?project=silverstripe_cms&locale=de)).
+Requests count against our own API user on getlocalization.com, so please use the script responsibly.
+
 ## FAQ
 
 ### How do I translate a module not listed on getlocalization?

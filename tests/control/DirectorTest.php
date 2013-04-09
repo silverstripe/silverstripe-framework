@@ -243,7 +243,7 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testForceSSLAlternateDomain() {
-		Director::setBaseURL('/');
+		Config::inst()->update('Director', 'alternate_base_url', '/');
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
 		$output = Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
 		$this->assertEquals($output, 'https://secure.mysite.com/admin');

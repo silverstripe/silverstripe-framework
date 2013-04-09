@@ -94,7 +94,6 @@ $locales = array(
   'it_IT' => 'Italian (Italy)',
   'ja_JP' => 'Japanese (Japan)',
   'km_KH' => 'Khmer (Cambodia)',
-  'lc_XX' => 'LOLCAT',
   'lv_LV' => 'Latvian (Latvia)',
   'lt_LT' => 'Lithuanian (Lithuania)',
   'ms_MY' => 'Malay (Malaysia)',
@@ -1316,7 +1315,14 @@ TEXT;
 			<requestFiltering>
 				<hiddenSegments applyToWebDAV="false">
 					<add segment="silverstripe-cache" />
+					<add segment="vendor" />
+					<add segment="composer.json" />
+					<add segment="composer.lock" />
 				</hiddenSegments>
+				<fileExtensions allowUnlisted="true" >
+					<add fileExtension=".ss" allowed="false"/>
+					<add fileExtension=".yml" allowed="false"/>
+				</fileExtensions>
 			</requestFiltering>
 		</security>
 		<rewrite>
