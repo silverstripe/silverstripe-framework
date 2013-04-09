@@ -107,13 +107,13 @@ abstract class DataExtension extends Extension {
 	public function can($member) {
 	}
 	
-	public function canEdit($member) {
+	public function canEdit($member = null) {
 	}
 	
-	public function canDelete($member) {
+	public function canDelete($member = null) {
 	}
 	
-	public function canCreate($member) {
+	public function canCreate($member = null) {
 	}
 
 	/**
