@@ -154,7 +154,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		$menuPriority = array();
 		$menuTitle    = array();
 		foreach($menuItems as $key => $menuItem) {
-			$menuPriority[$key] = $menuItem->priority;
+			$menuPriority[$key] = is_numeric($menuItem->priority) ? $menuItem->priority : 0;
 			$menuTitle[$key]    = $menuItem->title;
 		}
 		array_multisort($menuPriority, SORT_DESC, $menuTitle, SORT_ASC, $menuItems);
