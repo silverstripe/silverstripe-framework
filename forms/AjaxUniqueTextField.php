@@ -9,22 +9,16 @@ class AjaxUniqueTextField extends TextField {
 	
 	protected $restrictedField;
 	protected $restrictedTable;
-	// protected $restrictedMessage;
 	protected $validateURL;
-	
 	protected $restrictedRegex;
 	
 	public function __construct($name, $title, $restrictedField, $restrictedTable, $value = "", $maxLength = null,
 			$validationURL = null, $restrictedRegex = null ){
 
-		$this->maxLength = $maxLength;
-		
+		$this->maxLength       = $maxLength;
 		$this->restrictedField = $restrictedField;
-		
 		$this->restrictedTable = $restrictedTable;
-		
-		$this->validateURL = $validationURL;
-		
+		$this->validateURL     = $validationURL;
 		$this->restrictedRegex = $restrictedRegex;
 		
 		parent::__construct($name, $title, $value);	
@@ -38,12 +32,12 @@ class AjaxUniqueTextField extends TextField {
 				. "RestrictedRegex\" value=\"{$this->restrictedRegex}\" />";
 		
 		$attributes = array(
-			'type' => 'text',
-			'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
-			'id' => $this->id(),
-			'name' => $this->getName(),
-			'value' => $this->Value(),
-			'tabindex' => $this->getAttribute('tabindex'),
+			'type'      => 'text',
+			'class'     => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
+			'id'        => $this->id(),
+			'name'      => $this->getName(),
+			'value'     => $this->Value(),
+			'tabindex'  => $this->getAttribute('tabindex'),
 			'maxlength' => ($this->maxLength) ? $this->maxLength : null
 		);
 		
@@ -51,14 +45,13 @@ class AjaxUniqueTextField extends TextField {
 	}
 
 	public function validate( $validator ) {
-		$result = DB::query(sprintf(
-			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s'",
-			$this->restrictedTable,
-			$this->restrictedField,
-			Convert::raw2sql($this->value)
-		))->value();
+		$table = $this->restrictedTable;
+		$filter = array(
+			$this->restrictedField => $this->value,
+		);
+		$count = $table::get()->filter($filter)->count();
 
-		if( $result && ( $result > 0 ) ) {
+		if( $count && ( $count > 0 ) ) {
 			$validator->validationError($this->name,
 				_t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique"));
 			return false;
