@@ -98,4 +98,14 @@ class CmsFormsContext extends BehatContext
 
 		$this->getMainContext()->assertElementContains('#' . $inputField->getAttribute('id'), $value);
 	}
+
+	/**
+	 * @Given /^I should see a "([^"]*)" button$/
+	 */
+	public function iShouldSeeAButton($text)
+	{
+		$page = $this->getSession()->getPage();
+		$element = $page->find('named', array('link_or_button', "'$text'"));
+		assertNotNull($element, sprintf('%s button not found', $text));
+	}
 }
