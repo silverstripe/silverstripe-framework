@@ -7,6 +7,7 @@
  */
 class AjaxUniqueTextField extends TextField {
 	
+	protected $excludedID;
 	protected $restrictedField;
 	protected $restrictedTable;
 	// protected $restrictedMessage;
@@ -50,12 +51,25 @@ class AjaxUniqueTextField extends TextField {
 		return FormField::create_tag('input', $attributes);
 	}
 
-	public function validate( $validator ) {
+	public function setExcludedID($excludedID) {
+		/**
+		 * Exclude the provided ID in the restrictedTable from uniqueness checking.
+		 * @var [integer]
+		 */
+		$this->excludedID = (int)$excludedID;
+	}
+
+	public function getExcludedID() {
+		return $this->excludedID;
+	} 
+
+	function validate( $validator ) {
 		$result = DB::query(sprintf(
-			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s'",
+			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s' AND \"ID\" != '%s'",
 			$this->restrictedTable,
 			$this->restrictedField,
-			Convert::raw2sql($this->value)
+			Convert::raw2sql($this->value),
+			Convert::raw2sql($this->excludedID)
 		))->value();
 
 		if( $result && ( $result > 0 ) ) {
