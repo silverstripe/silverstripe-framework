@@ -446,11 +446,18 @@ abstract class Object {
 	 * Keep in mind that the extension will only be applied to new
 	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
+	 * @deprecated 3.2 Use YAML config instead, see 
+	 *             http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
 	 * @param string $class Class that should be extended - has to be a subclass of {@link Object}
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
 	public static function add_extension($classOrExtension, $extension = null) {
+		Deprecation::notice(
+			'3.2', 
+			'Use YAML config instead, see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension'
+		);
+
 		if(func_num_args() > 1) {
 			$class = $classOrExtension;
 		} else {
