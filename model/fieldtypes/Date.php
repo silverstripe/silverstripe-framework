@@ -148,8 +148,7 @@ class Date extends DBField {
 	 */
 	public function FormatI18N($formattingString) {
 		if($this->value) {
-			$fecfrm = strftime($formattingString, strtotime($this->value));
-			return utf8_encode($fecfrm);
+			return strftime($formattingString, strtotime($this->value));
 		}
 	}
 	
