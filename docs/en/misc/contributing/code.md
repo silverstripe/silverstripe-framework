@@ -14,13 +14,31 @@ Note: By supplying code to the SilverStripe core team in patches, tickets and pu
 We ask for this so that the ownership in the license is clear and unambiguous, and so that community involvement doesn't stop us from being able to continue supporting these projects.  By releasing this code under a permissive license, this copyright assignment won't prevent you from using the code in any way you see fit.
 </div>
 
+## Quickfire Do's and Don't's
+
+If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp documentation"](http://help.github.com/). 
+We also found the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/) useful.
+If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
+
+  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
+
+  * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream branch you branched off.
+
+  * **A single development branch should represent changes related to a single issue.** If you decide to work on another issue, create another branch.
+
+  * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream branch, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
+
+  * **Choose the correct branch**:  Most pull requests should go against the *pre-release branch*, only critical bugfixes  against the *release branch*.  If you're changing an API or introducing a major feature, the pull request should go against `master`. Depending on where in the release process the pre-release branch is. If its in beta, the room for API changes is very small (read more about our [release process](/misc/release-process)).
+
 ## Step-by-step: From forking to sending the pull request
+
+_**NOTE:** The commands on this page assume that you are branching from `3.1`, at the time of writing this is the pre-release branch._
 
 1. Install the project through composer. The process is described in detail in "[Installation through Composer](../../installation/composer#contributing)".
 
- 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.0.x-dev
+ 		composer create-project --keep-vcs --dev silverstripe/installer ./my/website/folder 3.1.x-dev
 
-2. Edit the `composer.json`. Remove the `@stable` markers from the core modules in there. 
+2. Edit the `composer.json`. Remove any `@stable` markers from the core modules in there. 
    Add your fork URLs, in this example a fork of the `cms` module on the `sminnee` github account 
    (replace with your own fork URL). Run a `composer update` afterwards.
 
@@ -29,7 +47,7 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 				"type": "vcs",
 				"url": "git@github.com:sminnee/silverstripe-cms.git"
 			}
-		]
+		],
 
 3. Add a new "upstream" remote so you can track the original repository for changes, and rebase/merge your fork as required.
 
@@ -38,19 +56,21 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 4. [Branch for new issue and develop on issue branch](code#branch-for-new-issue-and-develop-on-issue-branch)
 
+		# verify current branch 'base' then branch and switch
+		git status
 		git branch ###-description
 		git checkout ###-description
 
-5. As time passes, the upstream repository accumulates new commits. Keep your working copy's master branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
+5. As time passes, the upstream repository accumulates new commits. Keep your working copy's branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
 
 		# [make sure all your changes are committed as necessary in branch]
 		git fetch upstream
-		git rebase upstream/master
+		git rebase upstream/3.1
 
 6. When development is complete, [squash all commit related to a single issue into a single commit](code#squash-all-commits-related-to-a-single-issue-into-a-single-commit).
 
 		git fetch upstream
-		git rebase -i upstream/master
+		git rebase -i upstream/3.1
 
 7. Push release candidate branch to GitHub 
 
@@ -64,25 +84,6 @@ there are any problems they will follow up with you, so please ensure they have 
 ### Workflow Diagram ###
 
 ![Workflow diagram](http://www.silverstripe.org/assets/doc-silverstripe-org/collaboration-on-github.png)
-
-### Quickfire Do's and Don't's
-
-If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp documentation"](http://help.github.com/). 
-We also found the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/) useful.
-If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
-
-  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
-
-  * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream master.
-
-  * **A single development branch should represent changes related to a single issue.** If you decide to work on another issue, create another branch.
-
-  * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Issue #100 Description of the issue here." We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
-
-  * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
-  Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
-  against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
-  the pull request should go against `master` (read more about our [release process](/misc/release-process)).
 
 ### Editing files directly on GitHub.com
 
@@ -156,6 +157,7 @@ Example: Good commit message
 
 Before you start working on a new feature or bugfix, create a new branch dedicated to that one change named by issue number and description. If you're working on Issue #100, a retweet bugfix, create a new branch with the issue number and description, like this:
 
+	$ git status
 	$ git branch 100-dataobject-get-one
 	$ git checkout 100-dataobject-get-one
 
