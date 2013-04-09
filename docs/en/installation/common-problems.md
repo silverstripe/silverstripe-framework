@@ -50,7 +50,7 @@ handle the new code.  Here are some specifics situations:
 ## My edited CMS content doesn't show on the website
 
 If you've set up your site and it used to be working, but now it's suddenly totally broken, you may have forgotten to
-publish your draft content.  Go to the CMS and use the "publish" button.  You can visit `admin/publishall` to publish
+publish your draft content.  Go to the CMS and use the "publish" button.  You can visit `admin/pages/publishall` to publish
 every page on the site, if that's easier.
 
 ## I can see unparsed PHP output in my browser
