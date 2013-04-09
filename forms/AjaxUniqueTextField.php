@@ -8,34 +8,28 @@
 class AjaxUniqueTextField extends TextField {
 	
 	protected $restrictedField;
-	protected $restrictedTable;
-	// protected $restrictedMessage;
-	protected $validateURL;
-	
 	protected $restrictedRegex;
+	protected $restrictedTable;
+	protected $validationURL;
 	
-	public function __construct($name, $title, $restrictedField, $restrictedTable, $value = "", $maxLength = null,
+	
+	public function __construct($name, $title, $restrictedField, $restrictedTable, $value = '', $maxLength = null,
 			$validationURL = null, $restrictedRegex = null ){
 
-		$this->maxLength = $maxLength;
+		$this->setRestrictedField($restrictedField);
+		$this->setRestrictedTable($restrictedTable);
+		$this->setValidationURL($validationURL);
+		$this->setRestrictedRegex($restrictedRegex);
 		
-		$this->restrictedField = $restrictedField;
-		
-		$this->restrictedTable = $restrictedTable;
-		
-		$this->validateURL = $validationURL;
-		
-		$this->restrictedRegex = $restrictedRegex;
-		
-		parent::__construct($name, $title, $value);	
+		parent::__construct($name, $title, $value, $maxLength);	
 	}
 	
 	public function Field($properties = array()) {
-		$url = Convert::raw2att( $this->validateURL );
+		$url = Convert::raw2att( $this->getValidationURL() );
 		
-		if($this->restrictedRegex)
+		if($this->getRestrictedRegex())
 			$restrict = "<input type=\"hidden\" class=\"hidden\" name=\"{$this->name}Restricted\" id=\"" . $this->id()
-				. "RestrictedRegex\" value=\"{$this->restrictedRegex}\" />";
+				. "RestrictedRegex\" value=\"{$this->getRestrictedRegex()}\" />";
 		
 		$attributes = array(
 			'type' => 'text',
@@ -44,17 +38,65 @@ class AjaxUniqueTextField extends TextField {
 			'name' => $this->getName(),
 			'value' => $this->Value(),
 			'tabindex' => $this->getAttribute('tabindex'),
-			'maxlength' => ($this->maxLength) ? $this->maxLength : null
+			'maxlength' => ($this->getMaxLength()) ? $this->getMaxLength() : null
 		);
 		
 		return FormField::create_tag('input', $attributes);
 	}
 
+	public function getRestrictedField() {
+		return $this->restrictedField;
+	}
+
+	public function getRestrictedTable() {
+		return $this->restrictedTable;
+	}
+
+	public function getRestrictedRegex() {
+		return $this->restrictedRegex;
+	}
+
+	public function getValidationURL() {
+		return $this->validationURL;
+	}
+
+	public function setRestrictedField($restrictedField) {
+		/**
+		 *  The name of the database field you want force uniqueness on. e.g "Title"
+		 * @var string
+		 */
+		$this->restrictedField = $restrictedField;
+	}
+
+	public function setRestrictedRegex($restrictedRegex) {
+		/**
+		 * Optional regex that must pass for validation to pass.
+		 * @var string
+		 */
+		$this->restrictedRegex = $restrictedRegex;
+	}
+
+	public function setRestrictedTable($restrictedTable) {
+		/**
+		 *  The name of the database table that restrictedField exists in, e.g "SiteTree" 
+		 * @var string
+		 */
+		$this->restrictedTable = $restrictedTable;
+	}
+
+	public function setValidationURL($validationURL) {
+		/**
+		 *  Optional, callback url, e.g "home/validate/foo" which returns a bool. Must be true for validation to pass. 
+		 * @var string
+		 */
+		$this->validationURL = $validationURL;
+	}
+
 	public function validate( $validator ) {
 		$result = DB::query(sprintf(
 			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s'",
-			$this->restrictedTable,
-			$this->restrictedField,
+			$this->getRestrictedTable(),
+			$this->getRestrictedField(),
 			Convert::raw2sql($this->value)
 		))->value();
 
