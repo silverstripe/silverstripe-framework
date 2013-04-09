@@ -112,7 +112,7 @@ class File extends DataObject {
 		'','html','htm','xhtml','js','css',
 		'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff',
 		'au','mid','midi','mpa','mp3','ogg','m4a','ra','wma','wav','cda',
-		'avi','mpg','mpeg','asf','wmv','m4v','mov','mkv','mp4','swf','flv','ram','rm',
+		'avi','mpg','mpeg','asf','wmv','m4v','mov','mkv','mp4','swf','flv','ram','rm','ogv','webm'
 		'doc','docx','txt','rtf','xls','xlsx','pages',
 		'ppt','pptx','pps','csv',
 		'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
@@ -128,7 +128,7 @@ class File extends DataObject {
 			"apl", "avr" ,"cda" ,"mp4" ,"ogg"
 		),
 		'mov' => array(
-			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt"
+			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt",'ogv','webm'
 		),
 		'zip' => array(
 			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
@@ -777,6 +777,8 @@ class File extends DataObject {
 			'pdf' => _t('File.PdfType', 'Adobe Acrobat PDF file'),
 			'mp3' => _t('File.Mp3Type', 'MP3 audio file'),
 			'wav' => _t('File.WavType', 'WAV audo file'),
+			'wav' => _t('File.OgvType', 'OGV audo file'),
+			'webm' => _t('File.Webm', 'WEBM audo file'),
 			'avi' => _t('File.AviType', 'AVI video file'),
 			'mpg' => _t('File.MpgType', 'MPEG video file'),
 			'mpeg' => _t('File.MpgType', 'MPEG video file'),
