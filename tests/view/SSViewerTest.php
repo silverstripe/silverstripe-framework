@@ -448,6 +448,14 @@ after')
 		$this->assertEquals('ACD', $this->render('A<% if 4 > 4 %>B<% else %>C<% end_if %>D'));
 		$this->assertEquals('ACD', $this->render('A<% if 4 < 4 %>B<% else %>C<% end_if %>D'));
 
+		// empty else_if and else tags, if this would not be supported,
+		// the output would stop after A, thereby failing the assert
+		$this->assertEquals('AD', $this->render('A<% if IsSet %><% else %><% end_if %>D'));
+		$this->assertEquals('AD', 
+			$this->render('A<% if NotSet %><% else_if IsSet %><% else %><% end_if %>D'));
+		$this->assertEquals('AD', 
+			$this->render('A<% if NotSet %><% else_if AlsoNotSet %><% else %><% end_if %>D'));
+
 		// Bare words with ending space
 		$this->assertEquals('ABC',
 			$this->render('A<% if "RawVal" == RawVal %>B<% end_if %>C'));
