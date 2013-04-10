@@ -7,28 +7,41 @@
  */
 class AjaxUniqueTextField extends TextField {
 	
-	protected $excludedID;
+	/**
+	 * Callback to the data list provider method, used to provide the submitted data.
+	 * See call_user_func() for syntax.
+	 * @var callable
+	 */	
+	protected $listProvider;
+
+	/**
+	 * Data list containing data to be validated, populated using setList(<DataList>)
+	 * @var DataList
+	 */	
+	protected $list;
+		
 	protected $restrictedField;
-	protected $restrictedTable;
-	// protected $restrictedMessage;
+	
 	protected $validateURL;
 	
 	protected $restrictedRegex;
 	
-	public function __construct($name, $title, $restrictedField, $restrictedTable, $value = "", $maxLength = null,
+	public function __construct($name, $title, $restrictedField = null, $restrictedTable = null, $value = '', $maxLength = null,
 			$validationURL = null, $restrictedRegex = null ){
 
-		$this->maxLength = $maxLength;
-		
 		$this->restrictedField = $restrictedField;
-		
-		$this->restrictedTable = $restrictedTable;
-		
+
+		if (!is_null($restrictedTable)) {
+			Deprecation::notice('3.2', 'Use the "setListProvider(<callable>)" method instead of restictedTable');
+			$list = new DataList($restrictedTable);
+			$this->setList($list);
+		}
+
 		$this->validateURL = $validationURL;
 		
 		$this->restrictedRegex = $restrictedRegex;
 		
-		parent::__construct($name, $title, $value);	
+		parent::__construct($name, $title, $value, $maxLength);	
 	}
 	
 	public function Field($properties = array()) {
@@ -51,30 +64,66 @@ class AjaxUniqueTextField extends TextField {
 		return FormField::create_tag('input', $attributes);
 	}
 
-	public function setExcludedID($excludedID) {
-		/**
-		 * Exclude the provided ID in the restrictedTable from uniqueness checking.
-		 * @var [integer]
-		 */
-		$this->excludedID = (int)$excludedID;
+	/**
+	 * Sets the dataList to be validated
+	 * Example (from DataObject):
+	 * public function DataListProvider($formField) {
+	 * 		$list = new DataList('SiteTree');
+	 * 		$list = $list->filter('Title', $formField->Value());
+	 * 		$list = $list->exclude('ID', $this->ID);
+	 * 		$formField->setList($list);
+	 * 	}
+	 * 
+	 * @param DataList $list
+	 */
+	public function setList(DataList $list) {
+		$this->list = $list;
 	}
 
-	public function getExcludedID() {
-		return $this->excludedID;
-	} 
+	/**
+	 * Sets the callback that will provide the DataList
+	 * @param callable $listProvider
+	 * Example (from DataObject):
+	 * $ajaxutf = new AjaxUniqueTextField('UniqueTitle','Unique Title');
+	 * $ajaxutf->setListProvider(array($this,'DataListProvider'));
+	 * $fields->insertBefore($ajaxutf, 'Content');
+	 * 
+	 */
+	public function setListProvider($listProvider) {
+		$this->listProvider = $listProvider;
+	}
+
+	/**
+	 * @return callable
+	 */
+	public function getListProvider() {
+		return $this->listProvider;
+	}
+ 
+	/**
+	 * @return DataList
+	 */
+	public function getList() {
+		return $this->list;
+	}
 
 	function validate( $validator ) {
-		$result = DB::query(sprintf(
-			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s' AND \"ID\" != '%s'",
-			$this->restrictedTable,
-			$this->restrictedField,
-			Convert::raw2sql($this->value),
-			Convert::raw2sql($this->excludedID)
-		))->value();
+		if (!is_null($this->getListProvider())) {
+			call_user_func($this->getListProvider(), $this);
+		}
 
-		if( $result && ( $result > 0 ) ) {
-			$validator->validationError($this->name,
-				_t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique"));
+		$list = $this->getList();
+
+		if (is_null($this->getListProvider())) {
+			$list = $list->filter($this->restrictedField, $this->Value());
+		}
+		if (is_null($list)) {
+			user_error("Missing required DataList. Please supply a datalist using the setList() method.", E_USER_ERROR);
+			return false;
+		}
+
+		if( $list->count() > 0 ) {
+			$validator->validationError($this->name,	_t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique"));
 			return false;
 		}
 
