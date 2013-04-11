@@ -346,10 +346,10 @@ class Image extends File {
 	 * @param integer $height The height to size to
 	 * @return Image
 	 */
-	public function PaddedImage($width, $height) {
+	public function PaddedImage($width, $height, $backgroundColor=null) {
 		return $this->isSize($width, $height)
 			? $this 
-			: $this->getFormattedImage('PaddedImage', $width, $height);
+			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor);
 	}
 	
 	/**
@@ -360,8 +360,8 @@ class Image extends File {
 	 * @param integer $height The height to size to
 	 * @return Image_Backend
 	 */
-	public function generatePaddedImage(Image_Backend $backend, $width, $height) {
-		return $backend->paddedResize($width, $height);
+	public function generatePaddedImage(Image_Backend $backend, $width, $height, $backgroundColor=null) {
+		return $backend->paddedResize($width, $height, $backgroundColor);
 	}
 	
 	/**
@@ -399,17 +399,20 @@ class Image extends File {
 	 * Return an image object representing the image in the given format.
 	 * This image will be generated using generateFormattedImage().
 	 * The generated image is cached, to flush the cache append ?flush=1 to your URL.
+	 * 
+	 * Just pass the correct number of parameters expected by the working function
+	 * 
 	 * @param string $format The name of the format.
-	 * @param string $arg1 An argument to pass to the generate function.
-	 * @param string $arg2 A second argument to pass to the generate function.
 	 * @return Image_Cached
 	 */
-	public function getFormattedImage($format, $arg1 = null, $arg2 = null) {
+	public function getFormattedImage($format) {
+		$args = func_get_args();
+		
 		if($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
-			$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
-
+			$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
+			
 			if(!file_exists(Director::baseFolder()."/".$cacheFile) || isset($_GET['flush'])) {
-				$this->generateFormattedImage($format, $arg1, $arg2);
+				call_user_func_array(array($this, "generateFormattedImage"), $args);
 			}
 			
 			$cached = new Image_Cached($cacheFile);
@@ -422,14 +425,14 @@ class Image extends File {
 	/**
 	 * Return the filename for the cached image, given it's format name and arguments.
 	 * @param string $format The format name.
-	 * @param string $arg1 The first argument passed to the generate function.
-	 * @param string $arg2 The second argument passed to the generate function.
 	 * @return string
 	 */
-	public function cacheFilename($format, $arg1 = null, $arg2 = null) {
+	public function cacheFilename($format) {
+		$args = func_get_args();
+		array_shift($args);
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 		
-		$format = $format.$arg1.$arg2;
+		$format = $format.implode('', $args);
 		
 		return $folder . "_resampled/$format-" . $this->Name;
 	}
@@ -440,11 +443,11 @@ class Image extends File {
 	 * using the specific 'generate' method for the specified format.
 	 * 
 	 * @param string $format Name of the format to generate.
-	 * @param string $arg1 Argument to pass to the generate method.
-	 * @param string $arg2 A second argument to pass to the generate method.
 	 */
-	public function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
-		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
+	public function generateFormattedImage($format) {
+		$args = func_get_args();
+		
+		$cacheFile = call_user_func_array(array($this, "cacheFilename"), $args);
 		
 		$backend = Injector::inst()->createWithArgs(self::$backend, array(
 			Director::baseFolder()."/" . $this->Filename
@@ -454,7 +457,11 @@ class Image extends File {
 
 			$generateFunc = "generate$format";		
 			if($this->hasMethod($generateFunc)){
-				$backend = $this->$generateFunc($backend, $arg1, $arg2);
+				
+				array_shift($args);
+				array_unshift($args, $backend);
+					
+				$backend = call_user_func_array(array($this, $generateFunc), $args);
 				if($backend){
 					$backend->writeTo(Director::baseFolder()."/" . $cacheFile);
 				}
