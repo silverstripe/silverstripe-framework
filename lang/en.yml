@@ -60,8 +60,8 @@ en:
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     ANY: Any
-    NO: No
-    YES: Yes
+    NOANSWER: No
+    YESANSWER: Yes
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -79,8 +79,8 @@ en:
     HELLO: Hi
     PASSWORD: Password
   CheckboxField:
-    NO: No
-    YES: Yes
+    NOANSWER: No
+    YESANSWER: Yes
   ComplexTableField:
     CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
