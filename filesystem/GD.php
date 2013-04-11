@@ -351,7 +351,6 @@ class GDBackend extends Object implements Image_Backend {
 	 */
 	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
 		if(!$this->gd) return;
-
 		$width = round($width);
 		$height = round($height);
 		

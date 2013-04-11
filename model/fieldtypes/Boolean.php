@@ -27,7 +27,7 @@ class Boolean extends DBField {
 	}
 	
 	public function Nice() {
-		return ($this->value) ? _t('Boolean.YES', 'Yes') : _t('Boolean.NO', 'No');
+		return ($this->value) ? _t('Boolean.YESANSWER', 'Yes') : _t('Boolean.NOANSWER', 'No');
 	}
 	
 	public function NiceAsBoolean() {
@@ -53,8 +53,8 @@ class Boolean extends DBField {
 	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Boolean.ANY', 'Any');
 		$source = array(
-			1 => _t('Boolean.YES', 'Yes'),
-			0 => _t('Boolean.NO', 'No')
+			1 => _t('Boolean.YESANSWER', 'Yes'),
+			0 => _t('Boolean.NOANSWER', 'No')
 		);
 		
 		$field = new DropdownField($this->name, $title, $source);
