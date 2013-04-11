@@ -440,24 +440,23 @@ abstract class Object {
 	
 	/**
 	 * Add an extension to a specific class.
+	 *
+	 * The preferred method for adding extensions is through YAML config,
+	 * since it avoids autoloading the class, and is easier to override in
+	 * more specific configurations.
+	 * 
 	 * As an alternative, extensions can be added to a specific class
 	 * directly in the {@link Object::$extensions} array.
 	 * See {@link SiteTree::$extensions} for examples.
 	 * Keep in mind that the extension will only be applied to new
 	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
-	 * @deprecated 3.2 Use YAML config instead, see 
-	 *             http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
+	 * @see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
 	 * @param string $class Class that should be extended - has to be a subclass of {@link Object}
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
 	public static function add_extension($classOrExtension, $extension = null) {
-		Deprecation::notice(
-			'3.2', 
-			'Use YAML config instead, see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension'
-		);
-
 		if(func_num_args() > 1) {
 			$class = $classOrExtension;
 		} else {

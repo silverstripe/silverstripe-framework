@@ -33,12 +33,9 @@ In order to active this extension, you'd add the following to your [config.yml](
 	    - MyMemberExtension
 
 Alternatively, you can add extensions through PHP code as well (in your `config.php` file), 
-which means they can be used in conditional configuration.
+which means they can be used in conditional configuration. 
 
 	:::php
-	// Preferred notation: Through the Config API
-	Config::inst()->update('Member', 'extensions', array('MyMemberExtension'));
-	// Legacy notation: Through static class access
 	Member::add_extension('MyMemberExtension');
 
 ##  Implementation
