@@ -87,8 +87,8 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
 		$this->assertEquals(10, (int)$xml[0]['width'], 'Width tag of resized image is set.');
 		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
-		$this->assertEquals('assets/_resampled/resizedimage10x20-HTMLEditorFieldTest_example.jpg', (string)$xml[0]['src'], 'Correct URL of resized image is set.');
-		$this->assertTrue(file_exists('assets/_resampled/resizedimage10x20-HTMLEditorFieldTest_example.jpg'), 'File for resized image exists');
+		$this->assertEquals('assets/_resampled/ResizedImage10x20-HTMLEditorFieldTest_example.jpg', (string)$xml[0]['src'], 'Correct URL of resized image is set.');
+		$this->assertTrue(file_exists('assets/_resampled/ResizedImage10x20-HTMLEditorFieldTest_example.jpg'), 'File for resized image exists');
 		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file exists.');
 	}	
 	
