@@ -254,7 +254,7 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 
 		$html = $backend->includeInHTML(false, self::$html_template);
-		
+
 		/* Javascript has correct path */
 		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/', $html),
 			'javascript has correct path'); 

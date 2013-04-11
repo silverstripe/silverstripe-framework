@@ -200,6 +200,8 @@ class Director implements TemplateGlobalProvider {
 	public static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null,
 			$headers = null, $cookies = null, &$request = null) {
 
+		Config::nest();
+
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
@@ -217,7 +219,6 @@ class Director implements TemplateGlobalProvider {
 		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
 		$existingServer	= isset($_SERVER) ? $_SERVER : array();
 		
-		$existingCookieReportErrors = Config::inst()->get('Cookie', 'report_errors');
 		$existingRequirementsBackend = Requirements::backend();
 
 		Config::inst()->update('Cookie', 'report_errors', false);
@@ -268,12 +269,13 @@ class Director implements TemplateGlobalProvider {
 		$_COOKIE = $existingCookies;
 		$_SERVER = $existingServer;
 
-		Config::inst()->update('Cookie', 'report_errors', $existingCookieReportErrors);
 		Requirements::set_backend($existingRequirementsBackend);
 
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		Versioned::reading_stage($oldStage);
+
+		Config::unnest();
 		
 		return $result;
 	}
@@ -331,6 +333,9 @@ class Director implements TemplateGlobalProvider {
 				}
 			}
 		}
+
+		// No URL rules matched, so return a 404 error.
+		return new SS_HTTPResponse('No URL rule was matched', 404);
 	}
 	
 	/**
@@ -693,15 +698,23 @@ class Director implements TemplateGlobalProvider {
 	 * if(Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/'));
 	 * </code>
 	 * 
+	 * If you want certain parts of your site protected under a different domain, you can specify
+	 * the domain as an argument:
+	 * <code>
+	 * if(Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/'), 'secure.mysite.com');
+	 * </code>
+	 *
 	 * Note that the session data will be lost when moving from HTTP to HTTPS.
 	 * It is your responsibility to ensure that this won't cause usability problems.
 	 * 
 	 * CAUTION: This does not respect the site environment mode. You should check this
 	 * as per the above examples using Director::isLive() or Director::isTest() for example.
 	 * 
+	 * @param array $patterns Array of regex patterns to match URLs that should be HTTPS
+	 * @param string $secureDomain Secure domain to redirect to. Defaults to the current domain
 	 * @return boolean|string String of URL when unit tests running, boolean FALSE if patterns don't match request URI
 	 */
-	public static function forceSSL($patterns = null) {
+	public static function forceSSL($patterns = null, $secureDomain = null) {
 		if(!isset($_SERVER['REQUEST_URI'])) return false;
 		
 		$matched = false;
@@ -710,8 +723,9 @@ class Director implements TemplateGlobalProvider {
 			// Calling from the command-line?
 			if(!isset($_SERVER['REQUEST_URI'])) return;
 
-			// protect portions of the site based on the pattern
 			$relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
+
+			// protect portions of the site based on the pattern
 			foreach($patterns as $pattern) {
 				if(preg_match($pattern, $relativeURL)) {
 					$matched = true;
@@ -727,7 +741,14 @@ class Director implements TemplateGlobalProvider {
 				&& !(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) 
 				&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https')) {
 
-			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
+			// if an domain is specified, redirect to that instead of the current domain
+			if($secureDomain) {
+				$url = 'https://' . $secureDomain . $_SERVER['REQUEST_URI'];
+			} else {
+				$url = $_SERVER['REQUEST_URI'];
+			}
+
+			$destURL = str_replace('http:', 'https:', Director::absoluteURL($url));
 
 			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
 			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {

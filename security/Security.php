@@ -91,10 +91,11 @@ class Security extends Controller {
 	/**
 	 * Random secure token, can be used as a crypto key internally.
 	 * Generate one through 'sake dev/generatesecuretoken'.
-	 * 
+	 *
+	 * @config
 	 * @var String
 	 */
-	public static $token;
+	private static $token;
 	
 	/**
 	 * Get location of word list file

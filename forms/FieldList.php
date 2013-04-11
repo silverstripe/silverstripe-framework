@@ -402,7 +402,8 @@ class FieldList extends ArrayList {
 	public function push($item, $key = null) {
 		$this->onBeforeInsert($item);
 		$item->setContainerFieldList($this);
-		return parent::push($item, $key = null);
+
+		return parent::push($item, $key);
 	}
 
 	/**
@@ -410,7 +411,10 @@ class FieldList extends ArrayList {
 	 */
 	protected function onBeforeInsert($item) {
 		$this->flushFieldsCache();
-		if($item->getName()) $this->rootFieldList()->removeByName($item->getName(), true);
+
+		if($item->getName()) {
+			$this->rootFieldList()->removeByName($item->getName(), true);
+		}
 	}
 		
 	
@@ -420,7 +424,10 @@ class FieldList extends ArrayList {
 	 * @param Form $form The form to set this FieldList to
 	 */
 	public function setForm($form) {
-		foreach($this as $field) $field->setForm($form);
+		foreach($this as $field) {
+			$field->setForm($form);
+		}
+		
 		return $this;
 	}
 	

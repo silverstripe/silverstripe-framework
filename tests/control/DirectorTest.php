@@ -242,6 +242,13 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse($output);
 	}
 
+	public function testForceSSLAlternateDomain() {
+		Config::inst()->update('Director', 'alternate_base_url', '/');
+		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
+		$output = Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
+		$this->assertEquals($output, 'https://secure.mysite.com/admin');
+	}
+
 	/**
 	 * @covers Director::extract_request_headers()
 	 */
@@ -272,6 +279,10 @@ class DirectorTest extends SapphireTest {
 		);
 		
 		$this->assertEquals($headers, Director::extract_request_headers($request));
+	}
+
+	public function testUnmatchedRequestReturns404() {
+		$this->assertEquals(404, Director::test('no-route')->getStatusCode());
 	}
 
 }

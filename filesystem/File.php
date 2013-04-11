@@ -110,14 +110,11 @@ class File extends DataObject {
 	 * Instructions for the change you need to make are included in a comment in the config file.
 	 */
 	private static $allowed_extensions = array(
-		'','html','htm','xhtml','js','css',
-		'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff',
-		'au','mid','midi','mpa','mp3','ogg','m4a','ra','wma','wav','cda',
-		'avi','mpg','mpeg','asf','wmv','m4v','mov','mkv','mp4','swf','flv','ram','rm',
-		'doc','docx','txt','rtf','xls','xlsx','pages',
-		'ppt','pptx','pps','csv',
-		'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
-		'xml','pdf',
+		'','ace','arc','arj','asf','au','avi','bmp','bz2','cab','cda','css','csv','dmg','doc','docx',
+		'flv','gif','gpx','gz','hqx','htm','html','ico','jar','jpeg','jpg','js','kml', 'm4a','m4v',
+		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','pages','pcx','pdf','pkg',
+		'png','pps','ppt','pptx','ra','ram','rm','rtf','sit','sitx','swf','tar','tgz','tif','tiff',
+		'txt','wav','wma','wmv','xhtml','xls','xlsx','xml','zip','zipx',
 	);
 
 	/**

@@ -192,30 +192,61 @@ class Image extends File {
 		}
 	}
 	
-	public function SetWidth($width) {
-		return $this->getWidth() == $width ? $this : $this->getFormattedImage('SetWidth', $width);
-	}
-	
-	public function SetHeight($height) {
-		return $this->getHeight() == $height ? $this : $this->getFormattedImage('SetHeight', $height);
-	}
-	
-	public function SetSize($width, $height) {
-		return (($this->getWidth() == $width) &&  ($this->getHeight() == $height)) 
-			? $this 
-			: $this->getFormattedImage('SetSize', $width, $height);
-	}
-	
+	/**
+	 * Resize the image by preserving aspect ratio, keeping the image inside the
+	 * $width and $height
+	 * 
+	 * @param integer $width The width to size within
+	 * @param integer $height The height to size within
+	 * @return Image
+	 */
 	public function SetRatioSize($width, $height) {
-		return $this->getFormattedImage('SetRatioSize', $width, $height);
+		
+		// Check if image is already sized to the correct dimension
+		$widthRatio = $width / $this->width;
+		$heightRatio = $height / $this->height;
+		if( $widthRatio < $heightRatio ) {
+			// Target is higher aspect ratio than image, so check width
+			if($this->isWidth($width)) return $this;
+		} else {
+			// Target is wider aspect ratio than image, so check height
+			if($this->isHeight($height)) return $this;
+		}
+		
+		// Item must be regenerated
+		return  $this->getFormattedImage('SetRatioSize', $width, $height);
 	}
 	
+	/**
+	 * Resize the image by preserving aspect ratio, keeping the image inside the
+	 * $width and $height
+	 * 
+	 * @param Image_Backend $backend
+	 * @param integer $width The width to size within
+	 * @param integer $height The height to size within
+	 * @return Image_Backend
+	 */
 	public function generateSetRatioSize(Image_Backend $backend, $width, $height) {
 		return $backend->resizeRatio($width, $height);
 	}
 	
 	/**
 	 * Resize this Image by width, keeping aspect ratio. Use in templates with $SetWidth.
+	 * 
+	 * @param integer $width The width to set
+	 * @return Image
+	 */
+	public function SetWidth($width) {
+		return $this->isWidth($width) 
+			? $this
+			: $this->getFormattedImage('SetWidth', $width);
+	}
+	
+	/**
+	 * Resize this Image by width, keeping aspect ratio. Use in templates with $SetWidth.
+	 * 
+	 * @param Image_Backend $backend
+	 * @param type $width The width to set
 	 * @return Image_Backend
 	 */
 	public function generateSetWidth(Image_Backend $backend, $width) {
@@ -224,6 +255,21 @@ class Image extends File {
 	
 	/**
 	 * Resize this Image by height, keeping aspect ratio. Use in templates with $SetHeight.
+	 * 
+	 * @param integer $height The height to set
+	 * @return Image
+	 */
+	public function SetHeight($height) {
+		return $this->isHeight($height)
+			? $this 
+			: $this->getFormattedImage('SetHeight', $height);
+	}
+	
+	/**
+	 * Resize this Image by height, keeping aspect ratio. Use in templates with $SetHeight.
+	 * 
+	 * @param Image_Backend $backend
+	 * @param integer $height The height to set
 	 * @return Image_Backend
 	 */
 	public function generateSetHeight(Image_Backend $backend, $height){
@@ -232,6 +278,24 @@ class Image extends File {
 	
 	/**
 	 * Resize this Image by both width and height, using padded resize. Use in templates with $SetSize.
+	 * @see Image::PaddedImage()
+	 * 
+	 * @param integer $width The width to size to
+	 * @param integer $height The height to size to
+	 * @return Image
+	 */
+	public function SetSize($width, $height) {
+		return $this->isSize($width, $height)
+			? $this 
+			: $this->getFormattedImage('SetSize', $width, $height);
+	}
+	
+	/**
+	 * Resize this Image by both width and height, using padded resize. Use in templates with $SetSize.
+	 * 
+	 * @param Image_Backend $backend
+	 * @param integer $width The width to size to
+	 * @param integer $height The height to size to
 	 * @return Image_Backend
 	 */
 	public function generateSetSize(Image_Backend $backend, $width, $height) {
@@ -274,8 +338,61 @@ class Image extends File {
 		return $backend->croppedResize($this->stat('strip_thumbnail_width'),$this->stat('strip_thumbnail_height'));
 	}
 	
+	/**
+	 * Resize this Image by both width and height, using padded resize. Use in templates with $PaddedImage.
+	 * @see Image::SetSize()
+	 * 
+	 * @param integer $width The width to size to
+	 * @param integer $height The height to size to
+	 * @return Image
+	 */
+	public function PaddedImage($width, $height) {
+		return $this->isSize($width, $height)
+			? $this 
+			: $this->getFormattedImage('PaddedImage', $width, $height);
+	}
+	
+	/**
+	 * Resize this Image by both width and height, using padded resize. Use in templates with $PaddedImage.
+	 * 
+	 * @param Image_Backend $backend
+	 * @param integer $width The width to size to
+	 * @param integer $height The height to size to
+	 * @return Image_Backend
+	 */
 	public function generatePaddedImage(Image_Backend $backend, $width, $height) {
 		return $backend->paddedResize($width, $height);
+	}
+	
+	/**
+	 * Determine if this image is of the specified size
+	 * 
+	 * @param integer $width Width to check
+	 * @param integer $height Height to check
+	 * @return boolean
+	 */
+	public function isSize($width, $height) {
+		return $this->isWidth($width) && $this->isHeight($height);
+	}
+	
+	/**
+	 * Determine if this image is of the specified width
+	 * 
+	 * @param integer $width Width to check
+	 * @return boolean
+	 */
+	public function isWidth($width) {
+		return !empty($width) && $this->getWidth() == $width;
+	}
+	
+	/**
+	 * Determine if this image is of the specified width
+	 * 
+	 * @param integer $height Height to check
+	 * @return boolean
+	 */
+	public function isHeight($height) {
+		return !empty($height) && $this->getHeight() == $height;
 	}
 
 	/**
@@ -323,6 +440,7 @@ class Image extends File {
 	 * Generate an image on the specified format. It will save the image
 	 * at the location specified by cacheFilename(). The image will be generated
 	 * using the specific 'generate' method for the specified format.
+	 * 
 	 * @param string $format Name of the format to generate.
 	 * @param string $arg1 Argument to pass to the generate method.
 	 * @param string $arg2 A second argument to pass to the generate method.
@@ -352,6 +470,25 @@ class Image extends File {
 	/**
 	 * Generate a resized copy of this image with the given width & height.
 	 * Use in templates with $ResizedImage.
+	 * 
+	 * @param integer $width Width to resize to
+	 * @param integer $height Height to resize to
+	 * @return Image
+	 */
+	public function ResizedImage($width, $height) {
+		return $this->isSize($width, $height)
+			? $this 
+			: $this->getFormattedImage('ResizedImage', $width, $height);
+	}
+	
+	/**
+	 * Generate a resized copy of this image with the given width & height.
+	 * Use in templates with $ResizedImage.
+	 * 
+	 * @param Image_Backend $backend
+	 * @param integer $width Width to resize to
+	 * @param integer $height Height to resize to
+	 * @return Image_Backend
 	 */
 	public function generateResizedImage(Image_Backend $backend, $width, $height) {
 		if(!$backend){
@@ -361,10 +498,29 @@ class Image extends File {
 			return $backend->resize($width, $height);
 		}
 	}
+	
+	/**
+	 * Generate a resized copy of this image with the given width & height, cropping to maintain aspect ratio.
+	 * Use in templates with $CroppedImage
+	 * 
+	 * @param integer $width Width to crop to
+	 * @param integer $height Height to crop to
+	 * @return Image
+	 */
+	public function CroppedImage($width, $height) {
+		return $this->isSize($width, $height)
+			? $this 
+			: $this->getFormattedImage('CroppedImage', $width, $height);
+	}
 
 	/**
 	 * Generate a resized copy of this image with the given width & height, cropping to maintain aspect ratio.
 	 * Use in templates with $CroppedImage
+	 * 
+	 * @param Image_Backend $backend
+	 * @param integer $width Width to crop to
+	 * @param integer $height Height to crop to
+	 * @return Image_Backend
 	 */
 	public function generateCroppedImage(Image_Backend $backend, $width, $height) {
 		return $backend->croppedResize($width, $height);

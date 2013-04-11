@@ -1,22 +1,31 @@
 <?php
 /**
  * An abstract base class for the string field types (i.e. Varchar and Text)
+ *
  * @package framework
  * @subpackage model
- * @author Pete Bacon Darwin
- *
  */
 abstract class StringField extends DBField {
+
+	/**
+	 * @var boolean
+	 */
 	protected $nullifyEmpty = true;
 
+	/**
+	 * @var array
+	 */
 	private static $casting = array(
 		"LimitCharacters" => "Text",
+		'LimitWordCount' => 'Text',
+		'LimitWordCountXML' => 'HTMLText',
 		"LowerCase" => "Text",
 		"UpperCase" => "Text",
 	);
 
 	/**
-	 * Construct a string type field with a set of optional parameters
+	 * Construct a string type field with a set of optional parameters.
+	 *
 	 * @param $name string The name of the field
 	 * @param $options array An array of options e.g. array('nullifyEmpty'=>false).  See
 	 *                       {@link StringField::setOptions()} for information on the available options
@@ -27,6 +36,7 @@ abstract class StringField extends DBField {
 		if(is_array($options)){
 			$this->setOptions($options);
 		}
+
 		parent::__construct($name);
 	}
 	
@@ -48,15 +58,20 @@ abstract class StringField extends DBField {
 	}
 	
 	/**
-	 * Set whether this field stores empty strings rather than converting them to null
+	 * Set whether this field stores empty strings rather than converting
+	 * them to null.
+	 *
 	 * @param $value boolean True if empty strings are to be converted to null
 	 */
 	public function setNullifyEmpty($value) {
 		$this->nullifyEmpty = ($value ? true : false);
 	}
+
 	/**
-	 * Get whether this field stores empty strings rather than converting them to null
-	 * @return bool True if empty strings are to be converted to null
+	 * Get whether this field stores empty strings rather than converting
+	 * them to null
+	 *
+	 * @return boolean True if empty strings are to be converted to null
 	 */
 	public function getNullifyEmpty() {
 		return $this->nullifyEmpty;
@@ -93,6 +108,7 @@ abstract class StringField extends DBField {
 	 */
 	public function LimitCharacters($limit = 20, $add = '...') {
 		$value = trim($this->value);
+
 		if($this->stat('escape_type') == 'xml') {
 			$value = strip_tags($value);
 			$value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
@@ -102,11 +118,55 @@ abstract class StringField extends DBField {
 		} else {
 			$value = (mb_strlen($value) > $limit) ? mb_substr($value, 0, $limit) . $add : $value;
 		}
+
 		return $value;
 	}
 
+
 	/**
-	 * Converts the current value for this Enum DBField to lowercase.
+	 * Limit this field's content by a number of words.
+	 *
+	 * CAUTION: This is not XML safe. Please use
+	 * {@link LimitWordCountXML()} instead.
+	 *
+	 * @param int $numWords Number of words to limit by.
+	 * @param string $add Ellipsis to add to the end of truncated string.
+	 *
+	 * @return string
+	 */
+	public function LimitWordCount($numWords = 26, $add = '...') {
+		$this->value = trim(Convert::xml2raw($this->value));
+		$ret = explode(' ', $this->value, $numWords + 1);
+
+		if(count($ret) <= $numWords - 1) {
+			$ret = $this->value;
+		} else {
+			array_pop($ret);
+			$ret = implode(' ', $ret) . $add;
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Limit the number of words of the current field's
+	 * content. This is XML safe, so characters like &
+	 * are converted to &amp;
+	 *
+	 * @param int $numWords Number of words to limit by.
+	 * @param string $add Ellipsis to add to the end of truncated string.
+	 *
+	 * @return string
+	 */
+	public function LimitWordCountXML($numWords = 26, $add = '...') {
+		$ret = $this->LimitWordCount($numWords, $add);
+
+		return Convert::raw2xml($ret);
+	}
+
+	/**
+	 * Converts the current value for this StringField to lowercase.
+	 *
 	 * @return string
 	 */
 	public function LowerCase() {
@@ -114,11 +174,10 @@ abstract class StringField extends DBField {
 	}
 
 	/**
-	 * Converts the current value for this Enum DBField to uppercase.
+	 * Converts the current value for this StringField to uppercase.
 	 * @return string 
 	 */ 
 	public function UpperCase() {
 		return mb_strtoupper($this->value);
 	}
-
 }

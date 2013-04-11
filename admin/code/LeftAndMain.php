@@ -120,12 +120,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Used mainly to work around the missing "lazy loading" functionality
 	 * for getting css/javascript required after an ajax-call (e.g. loading the editform).
 	 *
+	 * YAML configuration example:
+	 * <code>
+	 * LeftAndMain:
+	 *   extra_requirements_javascript:
+	 *     mysite/javascript/myscript.js:
+	 * </code>
+	 *
 	 * @config
 	 * @var array
 	 */
 	private static $extra_requirements_javascript = array();
 
 	/**
+	 * YAML configuration example:
+	 * <code>
+	 * LeftAndMain:
+	 *   extra_requirements_css:
+	 *     mysite/css/mystyle.css:
+	 *       media: screen
+	 * </code>
+	 * 
 	 * @config
 	 * @var array See {@link extra_requirements_javascript}
 	 */
@@ -193,7 +208,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		CMSMenu::add_link(
 			'Help', 
 			_t('LeftAndMain.HELP', 'Help', 'Menu title'), 
-			$this->config()->help_link
+			$this->config()->help_link,
+			-2
 		);
 
 		// Allow customisation of the access check by a extension
@@ -251,7 +267,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			// Use theme from the site config
 			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
 				$theme = $config->Theme;
-			} elseif(Config::inst()->get('SSViewer', 'theme')) {
+			} elseif(Config::inst()->get('SSViewer', 'theme_enabled') && Config::inst()->get('SSViewer', 'theme')) {
 				$theme = Config::inst()->get('SSViewer', 'theme');
 			} else {
 				$theme = false;
@@ -372,9 +388,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$dummy = null;
 		$this->extend('init', $dummy);
 
-		// The user's theme shouldn't affect the CMS, if, for example, they have replaced
-		// TableListField.ss or Form.ss.
-		Config::inst()->update('SSViewer', 'theme', null);
+		// The user's theme shouldn't affect the CMS, if, for example, they have replaced TableListField.ss or Form.ss.
+		Config::inst()->update('SSViewer', 'theme_enabled', false);
 	}
 	
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
@@ -765,15 +780,54 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$link = Controller::join_links($recordController->Link("show"), $child->ID);
 			return LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child))->forTemplate();
 		};
-		$html = $obj->getChildrenAsUL(
-			"",
-			$titleFn,
-			singleton('CMSPagesController'),
-			true, 
-			$childrenMethod,
-			$numChildrenMethod,
-			$nodeCountThreshold
-		);
+		
+		// Limit the amount of nodes shown for performance reasons.
+		// Skip the check if we're filtering the tree, since its not clear how many children will
+		// match the filter criteria until they're queried (and matched up with previously marked nodes).
+		$nodeThresholdLeaf = Config::inst()->get('Hierarchy', 'node_threshold_leaf');
+		if($nodeThresholdLeaf && !$filterFunction) {
+			$nodeCountCallback = function($parent, $numChildren) use($controller, $className, $nodeThresholdLeaf) {
+				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
+					return sprintf(
+						'<ul><li class="readonly"><span class="item">'
+							. '%s (<a href="%s" class="cms-panel-link" data-pjax-target="Content">%s</a>)'
+							. '</span></li></ul>',
+						_t('LeftAndMain.TooManyPages', 'Too many pages'),
+						Controller::join_links(
+							$controller->LinkWithSearch($controller->Link()), '
+							?view=list&ParentID=' . $parent->ID
+						), 
+						_t(
+							'LeftAndMain.ShowAsList', 
+							'show as list', 
+							'Show large amount of pages in list instead of tree view'
+						)
+					);
+				}
+			};	
+		} else {
+			$nodeCountCallback = null;
+		}
+		
+		// If the amount of pages exceeds the node thresholds set, use the callback
+		$html = null;
+		if($obj->ParentID && $nodeCountCallback) {
+			$html = $nodeCountCallback($obj, $obj->$numChildrenMethod());
+		} 
+
+		// Otherwise return the actual tree (which might still filter leaf thresholds on children)
+		if(!$html) {
+			$html = $obj->getChildrenAsUL(
+				"",
+				$titleFn,
+				singleton('CMSPagesController'),
+				true, 
+				$childrenMethod,
+				$numChildrenMethod,
+				$nodeCountThreshold,
+				$nodeCountCallback
+			);
+		}
 
 		// Wrap the root if needs be.
 		if(!$rootID) {

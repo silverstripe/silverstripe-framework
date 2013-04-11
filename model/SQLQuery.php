@@ -1071,6 +1071,7 @@ class SQLQuery {
 		$clone->setOrderBy($this->orderby);
 		$clone->setGroupBy($this->groupby);
 		if($alias) {
+			$clone->setSelect(array());
 			$clone->selectField($column, $alias);
 		} else {
 			$clone->setSelect($column);

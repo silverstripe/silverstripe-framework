@@ -418,6 +418,19 @@
 					background-color: $color-cms-batchactions-menu-selected-background;
 				}
 			} 
+			&.readonly {
+				color: $color-text-disabled;
+				padding-left: 18px;
+
+				// Don't show drag icons or required spacing
+				a, a:link {
+					margin: 0;
+					padding: 0;
+				}
+				.jstree-icon {
+					display: none;
+				}
+			}
 		}	
 		a, a:link {
 			color:  $color-text-blue-link;
@@ -441,6 +454,7 @@
 			margin-right: 6px;
 			margin-top:  -1px;
 			@include border-radius(2px, 2px);
+	
 			&.modified, &.addedtodraft  {
 				color:  #7E7470;
 				border: 1px solid #C9B800;
@@ -524,7 +538,7 @@ a .jstree-pageicon {
 	li.class-VirtualPage > & {
 		background-position: 0 -32px;
 	}
-	li.class-ErrorPage > a & {
+	li.class-ErrorPage > & {
 		background-position: 0 -112px;
 	}
 }

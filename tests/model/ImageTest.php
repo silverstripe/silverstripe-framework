@@ -84,6 +84,9 @@ class ImageTest extends SapphireTest {
 		$this->assertEquals($expected, $actual);
 	}
 	
+	/**
+	 * Tests that multiple image manipulations may be performed on a single Image
+	 */
 	public function testMultipleGenerateManipulationCalls() {
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		
@@ -99,6 +102,78 @@ class ImageTest extends SapphireTest {
 		$expected = 100;
 		$actual = $imageSecond->getHeight();
 		$this->assertEquals($expected, $actual);
+	}
+	
+	/**
+	 * Tests that image manipulations that do not affect the resulting dimensions
+	 * of the output image do not resample the file.
+	 */
+	public function testReluctanceToResampling() {
+		 
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->isSize(300, 300));
+		
+		// Set width to 50 pixels
+		$imageSetWidth = $image->SetWidth(300);
+		$this->assertEquals($imageSetWidth->getWidth(), 300);
+		$this->assertEquals($image->Filename, $imageSetWidth->Filename);
+		
+		// Set height to 300 pixels
+		$imageSetHeight = $image->SetHeight(300);
+		$this->assertEquals($imageSetHeight->getHeight(), 300);
+		$this->assertEquals($image->Filename, $imageSetHeight->Filename);
+		
+		// Crop image to 300 x 300
+		$imageCropped = $image->CroppedImage(300, 300);
+		$this->assertTrue($imageCropped->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageCropped->Filename);
+		
+		// Resize (padded) to 300 x 300
+		$imageSized = $image->SetSize(300, 300);
+		$this->assertTrue($imageSized->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageSized->Filename);
+		
+		// Padded image 300 x 300 (same as above)
+		$imagePadded = $image->PaddedImage(300, 300);
+		$this->assertTrue($imagePadded->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imagePadded->Filename);
+		
+		// Resized (stretched) to 300 x 300
+		$imageStretched = $image->ResizedImage(300, 300);
+		$this->assertTrue($imageStretched->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageStretched->Filename);
+		
+		// SetRatioSize (various options)
+		$imageSetRatioSize = $image->SetRatioSize(300, 600);
+		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageSetRatioSize->Filename);
+		$imageSetRatioSize = $image->SetRatioSize(600, 300);
+		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageSetRatioSize->Filename);
+		$imageSetRatioSize = $image->SetRatioSize(300, 300);
+		$this->assertTrue($imageSetRatioSize->isSize(300, 300));
+		$this->assertEquals($image->Filename, $imageSetRatioSize->Filename);
+	}
+	
+	public function testImageResize() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$this->assertTrue($image->isSize(300, 300));
+		
+		// Test normal resize
+		$resized = $image->SetSize(150, 100);
+		$this->assertTrue($resized->isSize(150, 100));
+		
+		// Test cropped resize
+		$cropped = $image->CroppedImage(100, 200);
+		$this->assertTrue($cropped->isSize(100, 200));
+		
+		// Test padded resize
+		$padded = $image->PaddedImage(200, 100);
+		$this->assertTrue($padded->isSize(200, 100));
+		
+		// Test SetRatioSize
+		$ratio = $image->SetRatioSize(80, 160);
+		$this->assertTrue($ratio->isSize(80, 80));
 	}
 	
 	public function testGeneratedImageDeletion() {

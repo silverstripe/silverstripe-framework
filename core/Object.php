@@ -440,18 +440,29 @@ abstract class Object {
 	
 	/**
 	 * Add an extension to a specific class.
+	 *
+	 * The preferred method for adding extensions is through YAML config,
+	 * since it avoids autoloading the class, and is easier to override in
+	 * more specific configurations.
+	 * 
 	 * As an alternative, extensions can be added to a specific class
 	 * directly in the {@link Object::$extensions} array.
 	 * See {@link SiteTree::$extensions} for examples.
 	 * Keep in mind that the extension will only be applied to new
 	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
+	 * @see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
 	 * @param string $class Class that should be extended - has to be a subclass of {@link Object}
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
-	public static function add_extension($extension) {
-		$class = get_called_class();
+	public static function add_extension($classOrExtension, $extension = null) {
+		if(func_num_args() > 1) {
+			$class = $classOrExtension;
+		} else {
+			$class = get_called_class();
+			$extension = $classOrExtension;
+		}
 
 		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
@@ -492,6 +503,7 @@ abstract class Object {
 
 	/**
 	 * Remove an extension from a class.
+	 *
 	 * Keep in mind that this won't revert any datamodel additions
 	 * of the extension at runtime, unless its used before the
 	 * schema building kicks in (in your _config.php).
@@ -509,6 +521,20 @@ abstract class Object {
 		$class = get_called_class();
 
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
+
+		// remove any instances of the extension with parameters
+		$config = Config::inst()->get($class, 'extensions');
+
+		if($config) {
+			foreach($config as $k => $v) {
+				// extensions with parameters will be stored in config as
+				// ExtensionName("Param").
+				if(preg_match(sprintf("/^(%s)\(/", preg_quote($extension, '/')), $v)) {
+					Config::inst()->remove($class, 'extensions', Config::anything(), $v);
+				}
+			}
+		}
+
 		Config::inst()->extraConfigSourcesChanged($class);
 
 		// unset singletons to avoid side-effects

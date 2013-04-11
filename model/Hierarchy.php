@@ -15,6 +15,28 @@ class Hierarchy extends DataExtension {
 	 * @var Int
 	 */
 	protected $_cache_numChildren;
+
+	/**
+	 * @config
+	 * @var integer The lower bounds for the amount of nodes to mark. If set, the logic will expand
+	 * nodes until it reaches at least this number, and then stops. Root nodes will always
+	 * show regardless of this settting. Further nodes can be lazy-loaded via ajax.
+	 * This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having
+	 * 30 children, the actual node count will be 50 (all root nodes plus first expanded child).
+	 */
+	private static $node_threshold_total = 50;
+
+	/**
+	 * @config
+	 * @var integer Limit on the maximum children a specific node can display.
+	 * Serves as a hard limit to avoid exceeding available server resources
+	 * in generating the tree, and browser resources in rendering it.
+	 * Nodes with children exceeding this value typically won't display
+	 * any children, although this is configurable through the $nodeCountCallback
+	 * parameter in {@link getChildrenAsUL()}. "Root" nodes will always show
+	 * all children, regardless of this setting.
+	 */
+	private static $node_threshold_leaf = 250;
 	
 	public function augmentSQL(SQLQuery &$query) {
 	}
@@ -74,21 +96,29 @@ class Hierarchy extends DataExtension {
 	 * @param string $childrenMethod The name of the method used to get children from each object
 	 * @param boolean $rootCall Set to true for this first call, and then to false for calls inside the recursion. You
 	 *                          should not change this.
-	 * @param int $nodeCountThreshold The lower bounds for the amount of nodes to mark. If set, the logic will expand
-	 *                          nodes until it eaches at least this number, and then stops. Root nodes will always
-	 *                          show regardless of this settting. Further nodes can be lazy-loaded via ajax.
-	 *                          This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having
-	 *                          30 children, the actual node count will be 50 (all root nodes plus first expanded child).
+	 * @param int $nodeCountThreshold See {@link self::$node_threshold_total}
+	 * @param callable $nodeCountCallback Called with the node count, which gives the callback an opportunity
+	 *                 to intercept the query. Useful e.g. to avoid excessive children listings (Arguments: $parent, $numChildren)
 	 *                          
 	 * @return string
 	 */
 	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, 
 			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", 
-			$numChildrenMethod = "numChildren", $rootCall = true, $nodeCountThreshold = 30) {
+			$numChildrenMethod = "numChildren", $rootCall = true, $nodeCountThreshold = null, $nodeCountCallback = null) {
+
+		if(!is_numeric($nodeCountThreshold)) {
+			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
+		}
 
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished($numChildrenMethod);
 		}
+
+		if($nodeCountCallback) {
+			$nodeCountWarning = $nodeCountCallback($this->owner, $this->owner->$numChildrenMethod());	
+			if($nodeCountWarning) return $nodeCountWarning;
+		}
+		
 		
 		if($this->owner->hasMethod($childrenMethod)) {
 			$children = $this->owner->$childrenMethod($extraArg);
@@ -110,7 +140,6 @@ class Hierarchy extends DataExtension {
 					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
 					$output .= "\n";
 
-					
 					$numChildren = $child->$numChildrenMethod();
 					if(
 						// Always traverse into opened nodes (they might be exposed as parents of search results)
@@ -119,10 +148,16 @@ class Hierarchy extends DataExtension {
 						// Otherwise, the remaining nodes are lazy loaded via ajax.
 						&& $child->isMarked()
 					) {
-						$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
-							$numChildrenMethod, false, $nodeCountThreshold);
-					} 
-					elseif($child->isTreeOpened()) {
+						// Additionally check if node count requirements are met
+						$nodeCountWarning = $nodeCountCallback ? $nodeCountCallback($child, $numChildren) : null;
+						if($nodeCountWarning) {
+							$output .= $nodeCountWarning;
+							$child->markClosed();
+						} else {
+							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
+								$numChildrenMethod, false, $nodeCountThreshold);	
+						}
+					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either
 						$child->markClosed();
 					}

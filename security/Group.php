@@ -102,12 +102,18 @@ class Group extends DataObject {
 			$config->getComponentByType('GridFieldDetailForm')
 				->setValidator(new Member_Validator())
 				->setItemEditFormCallback(function($form, $component) use($group) {
-					// If new records are created in a group context,
-					// set this group by default.
 					$record = $form->getRecord();
-					if($record && !$record->ID) {
-						$groupsField = $form->Fields()->dataFieldByName('DirectGroups');
-						if($groupsField) $groupsField->setValue($group->ID);
+					$groupsField = $form->Fields()->dataFieldByName('DirectGroups');
+					if($groupsField) {
+						// If new records are created in a group context,
+						// set this group by default.
+						if($record && !$record->ID) {
+							$groupsField->setValue($group->ID);
+						} elseif($record && $record->ID) {
+							// TODO Mark disabled once chosen.js supports it
+							// $groupsField->setDisabledItems(array($group->ID));
+							$form->Fields()->replaceField('DirectGroups', $groupsField->performReadonlyTransformation());
+						}
 					}
 				});
 			$memberList = GridField::create('Members',false, $this->Members(), $config)->addExtraClass('members_grid');

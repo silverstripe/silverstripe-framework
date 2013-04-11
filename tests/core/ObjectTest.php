@@ -265,10 +265,12 @@ class ObjectTest extends SapphireTest {
 
 		// ObjectTest_ExtendTest1 is already present in $extensions
 		ObjectTest_ExtensionRemoveTest::remove_extension('ObjectTest_ExtendTest1');
+
 		$this->assertFalse(
 			ObjectTest_ExtensionRemoveTest::has_extension('ObjectTest_ExtendTest1'),
 			"Extension added through \$extensions are detected as removed in has_extension()"
 		);
+
 		$objectTest_ExtensionRemoveTest = new ObjectTest_ExtensionRemoveTest();
 		$this->assertFalse(
 			$objectTest_ExtensionRemoveTest->hasExtension('ObjectTest_ExtendTest1'),
@@ -276,6 +278,27 @@ class ObjectTest extends SapphireTest {
 		);
 	}
 	
+	public function testRemoveExtensionWithParameters() {
+		ObjectTest_ExtensionRemoveTest::add_extension('ObjectTest_ExtendTest2("MyParam")');
+
+		$this->assertTrue(
+			ObjectTest_ExtensionRemoveTest::has_extension('ObjectTest_ExtendTest2'),
+			"Extension added through \$add_extension() are added correctly"
+		);
+
+		ObjectTest_ExtensionRemoveTest::remove_extension('ObjectTest_ExtendTest2');
+		$this->assertFalse(
+			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2'),
+			"Extension added through \$add_extension() are detected as removed in has_extension()"
+		);
+
+		$objectTest_ExtensionRemoveTest = new ObjectTest_ExtensionRemoveTest();
+		$this->assertFalse(
+			$objectTest_ExtensionRemoveTest->hasExtension('ObjectTest_ExtendTest2'),
+			"Extensions added through \$extensions are detected as removed in instances through hasExtension()"
+		);
+	}
+
 	public function testParentClass() {
 		$this->assertEquals(ObjectTest_MyObject::create()->parentClass(), 'Object');
 	}

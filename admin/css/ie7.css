@@ -107,23 +107,23 @@ fieldset.switch-states .switch input.state-name { margin-left: -20px; }
 .ui-state-default .btn-icon-unpublish_disabled, .ui-widget-content .btn-icon-unpublish_disabled { background-position: 0 -176px; }
 
 .icon { text-indent: -9999px; border: none; outline: none; }
-.icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-sedfac01ed1.png'); }
+.icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-s391afdd013.png'); }
 .icon.icon-24.icon-assetadmin { background-position: 0 -120px; }
 .icon.icon-24.icon-cmsmain { background-position: 0 -48px; }
-.icon.icon-24.icon-cmspagescontroller { background-position: 0 -192px; }
+.icon.icon-24.icon-cmspagescontroller { background-position: 0 -216px; }
 .icon.icon-24.icon-cmssettingscontroller { background-position: 0 0; }
 .icon.icon-24.icon-securityadmin { background-position: 0 -24px; }
 .icon.icon-24.icon-reportadmin { background-position: 0 -72px; }
-.icon.icon-24.icon-commentadmin { background-position: 0 -168px; }
+.icon.icon-24.icon-commentadmin { background-position: 0 -192px; }
 .icon.icon-24.icon-help { background-position: 0 -96px; }
-.icon.icon-16 { width: 16px; height: 16px; background: url('../images/menu-icons/16x16-sb173d358c2.png'); }
+.icon.icon-16 { width: 16px; height: 16px; background: url('../images/menu-icons/16x16-sf5b94bb49b.png'); }
 .icon.icon-16.icon-assetadmin { background-position: 0 -80px; }
 .icon.icon-16.icon-cmsmain { background-position: 0 -16px; }
 .icon.icon-16.icon-cmspagescontroller { background-position: 0 -112px; }
 .icon.icon-16.icon-cmssettingscontroller { background-position: 0 0; }
 .icon.icon-16.icon-securityadmin { background-position: 0 -48px; }
 .icon.icon-16.icon-reportadmin { background-position: 0 -32px; }
-.icon.icon-16.icon-commentadmin { background-position: 0 -128px; }
+.icon.icon-16.icon-commentadmin { background-position: 0 -144px; }
 .icon.icon-16.icon-help { background-position: 0 -64px; }
 
 html { overflow: hidden; }

@@ -1029,7 +1029,7 @@ jQuery.noConflict();
 				this._super();
 			},
 			onremove: function() {
-				this.tabs('destroy');
+				if (this.data('tabs')) this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {

@@ -15,10 +15,12 @@ your own routes since the cms module handles these routes.
 	<?php
 	
 	class FastFood_Controller extends Controller {
-		public static $allowed_actions = array('order');
-	    public function order(SS_HTTPRequest $request) {
-	        print_r($arguments);
-	    }
+		
+		private static $allowed_actions = array('order');
+		
+		public function order(SS_HTTPRequest $request) {
+			print_r($request->allParams());
+		}
 	}
 
 ## Routing
@@ -32,7 +34,7 @@ your own routes since the cms module handles these routes.
 	---
 	Director:
 	  rules:
-	    'fastfood/$Action/$ID/$Name': 'FastFood_Controller'
+	    'fastfood//$Action/$ID/$Name': 'FastFood_Controller'
 
 
 Request for `/fastfood/order/24/cheesefries` would result in the following to 
@@ -69,7 +71,8 @@ way to perform checks against permission codes or custom logic.
 
 	:::php
 	class MyController extends Controller {
-		public static $allowed_actions = array(
+		
+		private static $allowed_actions = array(
 			// someaction can be accessed by anyone, any time
 			'someaction', 
 			// So can otheraction
@@ -107,7 +110,9 @@ e.g. to handle responses conditionally on the passed request data.
 
 	:::php
 	class MyController extends Controller {
-		public static $allowed_actions = array('myaction');
+		
+		private static $allowed_actions = array('myaction');
+		
 		public function myaction($request) {
 			if(!$request->getVar('apikey')) {
 				return $this->httpError(403, 'No API key provided');
@@ -135,7 +140,9 @@ permission checks.
 
 	:::php
 	class MyController extends Controller {
-		public static $allowed_actions = array();
+		
+		private static $allowed_actions = array();
+		
 		public function init() {
 			parent::init();
 			if(!Permission::check('ADMIN')) return $this->httpError(403);
@@ -230,10 +237,12 @@ either `301` for permanent redirects, or `302` for temporary redirects (default)
 You can also limit access to actions on a controller using the static `$allowed_actions` array. This allows you to always allow an action, or restrict it to a specific permission or to call a method that checks if the action is allowed.
 
 For example, the default `Controller::$allowed_actions` is
+
 	private static $allowed_actions = array(
 		'handleAction',
 		'handleIndex',
 	);
+	
 which allows the `handleAction` and `handleIndex` methods to be called via a URL.
 
 To allow any action on your controller to be called you can either leave your `$allowed_actions` array empty or not have one at all. This is the default behaviour, however it is not recommended as it allows anything on your controller to be called via a URL, including view-specific methods.
@@ -241,6 +250,7 @@ To allow any action on your controller to be called you can either leave your `$
 The recommended approach is to explicitly state the actions that can be called via a URL. Any action not in the `$allowed_actions` array, excluding the default `index` method, is then unable to be called.
 
 To always allow an action to be called, you can either add the name of the action to the array or add a value of `true` to the array, using the name of the method as its index. For example
+	
 	private static $allowed_actions = array(
 		'MyAwesomeAction',
 		'MyOtherAction' => true
@@ -248,6 +258,7 @@ To always allow an action to be called, you can either add the name of the actio
 
 
 To require that the current user has a certain permission before being allowed to call an action you add the action to the array as an index with the value being the permission code that user must have. For example
+
 	private static $allowed_actions = array(
 		'MyAwesomeAction',
 		'MyOtherAction' => true,
@@ -256,6 +267,7 @@ To require that the current user has a certain permission before being allowed t
 	);
 
 If neither of these are enough to decide if an action should be called, you can have the check use a method. The method must be on the controller class and return true if the action is allowed or false if it isn't. To do this add the action to the array as an index with the value being the name of the method to called preceded by '->'. You are able to pass static arguments to the method in much the same way as you can with extensions. Strings are enclosed in quotes, numeric values are written as numbers and true and false are written as true and false. For example
+	
 	private static $allowed_actions = array(
 		'MyAwesomeAction',
 		'MyOtherAction' => true,

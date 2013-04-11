@@ -59,9 +59,8 @@ Redirections](security#redirect_back_to_another_page_after_login) for more infor
  | Site URL                                         | | Action                                                            | 
  | --------                                         | | ------                                                            | 
  | http://yoursite.com**/dev/build**                | | Rebuild the entire database and manifest, see below for additional URL Variables                                      | 
- | http://yoursite.com**/admin/publishall/**        | | Publish all pages on the site                                     | 
- | http://yoursite.com**/anypage/images/flush**     | | Creates new images for the page by deleting the resized ones and going back to the original to create new resized one | 
-
+ | http://yoursite.com**/admin/publishall/**        | | Publish all pages on the site
+ 
 ###  /dev/build
 
  | URL Variable  | | Values | | Description                                                                                 | 
