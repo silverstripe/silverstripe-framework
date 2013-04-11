@@ -133,7 +133,9 @@ Same goes for version control plumbing like merges, file renames or reverts.
 Further guidelines:
 
 * Each commit should form a logical unit - if you fix two unrelated bugs, commit each one separately
-* If you are fixing a ticket from our [bugtracker](http://open.silverstripe.com), please append `(fixes #<ticketnumber>)`
+* If you are fixing a ticket from our [bugtracker](https://github.com/silverstripe/sapphire/issues), please append `(fixes #<ticketnumber>)`
+* When fixing issues across repos (e.g. a commit to `framework` fixes an issue raised in the `cms` bugtracker),
+  use `(fixes silverstripe/silverstripe-cms#<issue-number>)` ([details](https://github.com/blog/1439-closing-issues-across-repositories))
 * If your change is related to another commit, reference it with its abbreviated commit hash. 
 * Mention important changed classes and methods in the commit summary.
 
