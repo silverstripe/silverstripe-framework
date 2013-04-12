@@ -15,7 +15,7 @@
  * Example:
  * <code>
  * $field = new DatetimeField('Name', 'Label');
- * $field->setConfig('datavalueformat', 'YYYY-MM-dd HH:mm'); // global setting
+ * $field->setConfig('datavalueformat', 'yyyy-MM-dd HH:mm'); // global setting
  * $field->getDateField()->setConfig('showcalendar', 1); // field-specific setting
  * </code>
  * 
@@ -46,7 +46,7 @@ class DatetimeField extends FormField {
 	 * @var array
 	 */
 	private static $default_config = array(
-		'datavalueformat' => 'YYYY-MM-dd HH:mm:ss',
+		'datavalueformat' => 'yyyy-MM-dd HH:mm:ss',
 		'usertimezone' => null,
 		'datetimeorder' => '%s %s',
 	);
