@@ -1535,7 +1535,7 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher */
+	/* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher? */
 	protected $match_ElseIfPart_typestack = array('ElseIfPart');
 	function match_ElseIfPart ($stack = array()) {
 		$matchrule = "ElseIfPart"; $result = $this->construct($matchrule, $matchrule, null);
@@ -1557,12 +1557,19 @@ class SSTemplateParser extends Parser {
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			if (( $subres = $this->literal( '%>' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_240 = FALSE; break; }
+			$res_239 = $result;
+			$pos_239 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
-			else { $_240 = FALSE; break; }
+			else {
+				$result = $res_239;
+				$this->pos = $pos_239;
+				unset( $res_239 );
+				unset( $pos_239 );
+			}
 			$_240 = TRUE; break;
 		}
 		while(0);
@@ -1571,7 +1578,7 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher */
+	/* ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher? */
 	protected $match_ElsePart_typestack = array('ElsePart');
 	function match_ElsePart ($stack = array()) {
 		$matchrule = "ElsePart"; $result = $this->construct($matchrule, $matchrule, null);
@@ -1585,12 +1592,19 @@ class SSTemplateParser extends Parser {
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			if (( $subres = $this->literal( '%>' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_248 = FALSE; break; }
+			$res_247 = $result;
+			$pos_247 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
-			else { $_248 = FALSE; break; }
+			else {
+				$result = $res_247;
+				$this->pos = $pos_247;
+				unset( $res_247 );
+				unset( $pos_247 );
+			}
 			$_248 = TRUE; break;
 		}
 		while(0);
@@ -1661,14 +1675,14 @@ class SSTemplateParser extends Parser {
 	function If_ElseIfPart(&$res, $sub) {
 		$res['php'] .= 
 			'else if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
-				$sub['Template']['php'] . PHP_EOL . 
+            (isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
 
 	function If_ElsePart(&$res, $sub) {
 		$res['php'] .= 
 			'else { ' . PHP_EOL . 
-				$sub['Template']['php'] . PHP_EOL . 
+            (isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
 
