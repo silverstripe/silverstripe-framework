@@ -428,17 +428,23 @@ class Image extends File {
 	 * Return the filename for the cached image, given it's format name and arguments.
 	 * @param string $format The format name.
 	 * @return string
+	 * @throws InvalidArgumentException 
 	 */
 	public function cacheFilename($format) {
 		$args = func_get_args();
 		array_shift($args);
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 		
-		$format = $format.implode('x', $args);
+		$format = $format . base64_encode(json_encode($args));
+		$filename = $format . "-" . $this->Name;
+		$patterns = $this->getFilenamePatterns($this->Name);
+		if (!preg_match($patterns['FullPattern'], $filename)) {
+			throw new InvalidArgumentException('Filename ' . $filename . ' that should be used to cache a resized image is invalid');
+		}
 		
-		return $folder . "_resampled/$format-" . $this->Name;
+		return $folder . "_resampled/" . $filename;
 	}
-	
+		
 	/**
 	 * Generate an image on the specified format. It will save the image
 	 * at the location specified by cacheFilename(). The image will be generated
@@ -532,14 +538,36 @@ class Image extends File {
 	public function generateCroppedImage(Image_Backend $backend, $width, $height) {
 		return $backend->croppedResize($width, $height);
 	}
+
+	/**
+	 * Generate patterns that will help to match filenames of cached images
+	 *
+	 * @param string $filename Filename of source image
+	 * @return array
+	 */	
+	private function getFilenamePatterns($filename) {
+		$methodNames = $this->allMethodNames(true);
+		$generateFuncs = array();
+		foreach($methodNames as $methodName) {
+			if(substr($methodName, 0, 8) == 'generate') {
+				$format = substr($methodName, 8);
+				$generateFuncs[] = preg_quote($format);
+			}
+		}
+		// All generate functions may appear any number of times in the image cache name.
+		$generateFuncs = implode('|', $generateFuncs);	
+		$base64Match = "[a-zA-Z0-9\/\r\n+]*={0,2}";	
+		return array(
+				'FullPattern' => "/^((?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-)+" . preg_quote($filename) . "$/i",
+				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-/i"
+		);
+	}
 	
 	/**
 	 * Generate a list of images that were generated from this image
 	 */
 	private function getGeneratedImages() {
 		$generatedImages = array();
-		
-		$methodNames = $this->allMethodNames(true);
 		$cachedFiles = array();
 		
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . '/';
@@ -557,22 +585,26 @@ class Image extends File {
 			}
 		}
 		
-		$generateFuncs = array();
-		foreach($methodNames as $methodName) {
-			if(substr($methodName, 0, 8) == 'generate') {
-				$format = substr($methodName, 8);
-				$generateFuncs[] = preg_quote($format);
-			}
-		}
-		// All generate functions may appear any number of times in the image cache name.
-		$generateFuncs = implode('|', $generateFuncs);
-		$pattern = "/^((?P<Generator>{$generateFuncs})(?P<Arg1>\d*)x(?P<Arg2>\d*)\-)+" . preg_quote($this->Name) . "$/i";
+		$pattern = $this->getFilenamePatterns($this->Name);
 
 		foreach($cachedFiles as $cfile) {
-			if(preg_match($pattern, $cfile, $matches)) {
+			if(preg_match($pattern['FullPattern'], $cfile, $matches)) {
 				if(Director::fileExists($cacheDir . $cfile)) {
-					$generatedImages[] = array ( 'FileName' => $cacheDir . $cfile, 'Generator' => $matches['Generator'],
-						'Arg1' => $matches['Arg1'], 'Arg2' => $matches['Arg2'] );
+					$subFilename = substr($cfile, 0, -1 * strlen($this->Name));
+					preg_match_all($pattern['GeneratorPattern'], $subFilename, $subMatches, PREG_SET_ORDER);
+					
+					$generatorArray = array();
+					foreach ($subMatches as $singleMatch) {
+						$generatorArray[] = array('Generator' => $singleMatch['Generator'],
+						'Args' => json_decode(base64_decode($singleMatch['Args'])));
+					}
+					
+						// Using array_reverse is important, as a cached image will
+						// have the generators settings in the filename in reversed
+						// order: the last generator given in the filename is the
+						// first that was used. Later resizements are prepended  
+					$generatedImages[] = array ( 'FileName' => $cacheDir . $cfile,
+							'Generators' => array_reverse($generatorArray) );
 				}
 			}
 		}
@@ -588,11 +620,23 @@ class Image extends File {
 	public function regenerateFormattedImages() {
 		if(!$this->Filename) return 0;
 		
+			// Without this, not a single file would be written
+			// caused by a check in getFormattedImage()
+		$_GET['flush'] = 1;		
+		
 		$numGenerated = 0;
 		$generatedImages = $this->getGeneratedImages();
+		$doneList = array();
 		foreach($generatedImages as $singleImage) {
-			$this->generateFormattedImage($singleImage['Generator'], $singleImage['Arg1'],
-					$singleImage['Arg2']);
+			$cachedImage = $this;
+			if (in_array($singleImage['FileName'], $doneList) ) continue;
+			
+			foreach($singleImage['Generators'] as $singleGenerator) {
+				$args = array_merge(array($singleGenerator['Generator']), $singleGenerator['Args']);
+				$cachedImage = call_user_func_array(array($cachedImage, "getFormattedImage"), $args);
+			}
+			$doneList[] = $singleImage['FileName'];
+			$numGenerated++;
 		}
 		
 		return $numGenerated;
