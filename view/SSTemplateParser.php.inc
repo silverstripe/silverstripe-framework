@@ -1047,11 +1047,11 @@ class SSTemplateParser extends Parser {
 		
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
-			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE 
-			// glitches
+			// If this template is a full HTML page, then put the comments just outside the HTML tag, 
+			// this is still no problem for IE as long as the DOCTYPE-declaration is done before this comment
 			if(stripos($code, "<html") !== false) {
-				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
-				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
+				$code = preg_replace('/(<html[^>]*>)/i', "<!-- template $templateName -->\\1", $code);
+				$code = preg_replace('/(<\/html[^>]*>)/i', "\\1<!-- end template $templateName -->", $code);
 			} else {
 				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
 					' -->\';' . "\n", $code);

@@ -1068,10 +1068,10 @@ after')
 		
 		$result = $view->process($data);
 		$expected = '<!doctype html>
-<html><!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss -->
+<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss --><html>
 	<head></head>
 	<body></body>
-<!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
+</html><!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss -->
 ';
 		$this->assertEquals($result, $expected);
 		
