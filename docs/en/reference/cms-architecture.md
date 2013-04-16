@@ -85,32 +85,57 @@ So to add or "subclass" a tools panel, simply create this file and it's automati
 
 ## Layout and Panels
 
-The CMS markup is structured into "panels", which are the base units containing
-interface components (or other panels), as declared by the class `cms-panel`. Panels can be made collapsible, and
-get the ability to be resized and aligned with a layout manager, in our case [jLayout](http://www.bramstein.com/projects/jlayout/).
-This layout manager applies CSS declarations (mostly dimensions and positioning) via JavaScript,
-by extracting additional metadata from the markup in the form of HTML5 data attributes.
-We're using a "border layout" which separates the panels into five areas: north, south, east, west and center (all of which are optional).
-As layouts can be nested, this allows for some powerful combinations. Our 
-[Howto: Extend the CMS Interface](../howto/extend-cms-interface) has a practical example on
-how to add a bottom panel to the CMS UI. 
+The various panels and UI components within them are loosely coupled to the layout engine through the `data-layout-type`
+attribute. The layout is triggered on the top element and cascades into children, with a `redraw` method defined on
+each panel and UI component that needs to update itself as a result of layouting.
 
-The various panels and UI components within them are not tightly coupled
-to the layout engine, so any changes in dimension which impact the overall layout
-need to be handled manually. In SilverStripe, we've established a convention for a `redraw()`
-method on each panel and UI component for this purpose, which is usually invoked
-through its parent container. Invocation order is crucial here, generally going from
-innermost to outermost elements. For example, the tab panels have be applied in the CMS form
-before the form itself is layouted with its sibling panels to avoid incorrect dimensions.
-
-![Layout variations](_images/cms-architecture.png)
+Refer to [Layout reference](../reference/layout) for further information.
 
 ## Forms
 
 SilverStripe constructs forms and its fields within PHP,
 mainly through the `[getCMSFields()](api:DataObject->getCMSFields())` method.
 This in turn means that the CMS loads these forms as HTML via Ajax calls,
-e.g. after saving a record (which requires a form refresh), or switching the section in the CMS>
+e.g. after saving a record (which requires a form refresh), or switching the section in the CMS.
+
+Depending on where in the DOM hierarchy you want to use a form,
+custom templates and additional CSS classes might be required for correct operation.
+For example, the "EditForm" has specific view and logic JavaScript behaviour
+which can be enabled via adding the "cms-edit-form" class. 
+In order to set the correct layout classes, we also need a custom template.
+To obey the inheritance chain, we use `$this->getTemplatesWithSuffix('_EditForm')` for
+selecting the most specific template (so `MyAdmin_EditForm.ss`, if it exists).
+
+Basic example form in a CMS controller subclass:
+
+	:::php
+	class MyAdmin extends LeftAndMain {
+		function getEditForm() {
+			$form = new Form(
+				$this, 
+				'EditForm',
+				new FieldSet(
+					TabSet::create(
+						'Root',
+						Tab::create('Main',
+							TextField::create('MyText')
+						)
+					)->setTemplate('CMSTabset')
+				),
+				new FieldSet(
+					FormAction::create('doSubmit')
+				)
+			);
+			// Required for correct CMS layout
+			$form->addExtraClass('cms-edit-form');
+			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+			return $form;
+		}
+	}
+
+Note: Usually you don't need to worry about these settings, 
+and will simply call `parent::getEditForm()` to modify an existing,
+correctly configured form.
 
 ## JavaScript through jQuery.entwine
 
@@ -206,7 +231,7 @@ in a single Ajax request.
 	:::php
 	// mysite/code/MyAdmin.php
 	class MyAdmin extends LeftAndMain {
-		static $url_segment = 'myadmin';
+		private static $url_segment = 'myadmin';
 		public function getResponseNegotiator() {
 			$negotiator = parent::getResponseNegotiator();
 			$controller = $this;
@@ -286,9 +311,11 @@ without affecting the response body.
 
 Built-in headers are:
 
+  * `X-Title`: Set window title (requires URL encoding)
 	* `X-Controller`: PHP class name matching a menu entry, which is marked active
 	* `X-ControllerURL`: Alternative URL to record in the HTML5 browser history
 	* `X-Status`: Extended status information, used for an information popover.
+	* `X-Reload`: Force a full page reload based on `X-ControllerURL`
 
 ## Special Links
 
@@ -355,9 +382,107 @@ Note that a similar tree logic is also used for the
 form fields to select one or more entries from those hierarchies
 (`[api:TreeDropdownField]` and `[api:TreeMultiselectField]`).
 
+## Tabs
+
+We're using [jQuery UI tabs](http://jqueryui.com/), but in a customized fashion.
+HTML with tabs can be created either directly through HTML templates in the CMS,
+or indirectly through a `[api:TabSet]` form field. Since tabsets are useable
+outside of the CMS as well, the baseline application of tabs happens via
+a small wrapper around `jQuery.tabs()` stored in `TabSet.js`.
+
+In the CMS however, tabs need to do more: They memorize their active tab
+in the user's browser, and lazy load content via ajax once they're activated.
+
+They also need to work across different "layout containers" (see above),
+meaning a tab navigation might be in a layout header, while the tab
+content is occupied by the main content area. jQuery assumes a common
+parent in the DOM for both the tab navigation and its target DOM elements.
+In order to achieve this level of flexibility, most tabsets in the CMS
+use a custom template which leaves rendering the tab navigation to
+a separate template: `CMSMain.ss`. See the "Forms" section above
+for an example form.
+
+Here's how you would apply this template to your own tabsets used in the CMS.
+Note that you usually only need to apply it to the outermost tabset,
+since all others should render with their tab navigation inline.
+
+Form template with custom tab navigation (trimmed down):
+
+	:::ss
+	<form $FormAttributes data-layout-type="border">
+
+		<div class="cms-content-header north">
+			<% if Fields.hasTabset %>
+				<% with Fields.fieldByName('Root') %>
+				<div class="cms-content-header-tabs">
+					<ul>
+					<% loop Tabs %>
+						<li><a href="#$id">$Title</a></li>
+					<% end_loop %>
+					</ul>
+				</div>
+				<% end_with %>
+			<% end_if %>
+		</div>
+
+		<div class="cms-content-fields center">
+			<fieldset>
+				<% loop Fields %>$FieldHolder<% end_loop %>
+			</fieldset>
+		</div>
+		
+	</form>
+
+Tabset template without tab navigation (e.g. `CMSTabset.ss`)
+
+	:::ss
+	<div $AttributesHTML>
+		<% loop Tabs %>
+			<% if Tabs %>
+				$FieldHolder
+			<% else %>
+				<div $AttributesHTML>
+					<% loop Fields %>
+						$FieldHolder
+					<% end_loop %>
+				</div>
+			<% end_if %>
+		<% end_loop %>
+	</div>
+
+Lazy loading works based on the `href` attribute of the tab navigation.
+The base behaviour is applied through adding a class `.cms-tabset` to a container.
+Assuming that each tab has its own URL which is tracked in the HTML5 history,
+the current tab display also has to work when loaded directly without Ajax.
+This is achieved by template conditionals (see "MyActiveCondition").
+The `.cms-panel-link` class will automatically trigger the ajax loading,
+and load the HTML content into the main view. Example:
+
+	:::ss
+	<div id="my-tab-id" class="cms-tabset" data-ignore-tab-state="true">
+		<ul>
+			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
+				<a href="admin/mytabs/tab1" class="cms-panel-link">
+					Tab1
+				</a>
+			</li>
+			<li class="<% if MyActiveCondition %> ui-tabs-active<% end_if %>">
+				<a href="admin/mytabs/tab2" class="cms-panel-link">
+					Tab2
+				</a>
+			</li>
+		</ul>
+	</div>
+
+The URL endpoints `admin/mytabs/tab1` and `admin/mytabs/tab2`
+should return HTML fragments suitable for inserting into the content area,
+through the `PjaxResponseNegotiator` class (see above).
+
+
 ## Related
 
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
  * [Howto: Customize the CMS tree](../howto/customize-cms-tree)
  * [Reference: ModelAdmin](../reference/modeladmin)
+ * [Reference: Layout](../reference/layout)
  * [Topics: Rich Text Editing](../topics/rich-text-editing)

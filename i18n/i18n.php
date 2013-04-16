@@ -69,24 +69,28 @@ class i18n extends Object implements TemplateGlobalProvider {
 	protected static $current_locale = '';
 	
 	/**
+	 * @config
 	 * @var string
 	 */
-	protected static $default_locale = 'en_US';
+	private static $default_locale = 'en_US';
 	
 	/**
+	 * @config
 	 * @var boolean
 	 */
-	protected static $js_i18n = true;
+	private static $js_i18n = true;
 	
 	/**
+	 * @config
 	 * @var string
 	 */
-	protected static $date_format;
+	private static $date_format;
 	
 	/**
+	 * @config
 	 * @var string
 	 */
-	protected static $time_format;
+	private static $time_format;
 	
 	/**
 	 * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
@@ -107,24 +111,30 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 
 	 * @see Requirements::process_i18n_javascript() 
 	 *
+	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
 	 * @param bool $bool
 	 */
 	public static function set_js_i18n($bool) {
-		self::$js_i18n = $bool;
+		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
+		Config::inst()->update('i18n', 'js_i18n', $bool);
 	}
 	
 	/**
+	 * @deprecated 3.2 Use the "i18n.js_i18n" config setting instead
 	 * @return bool
 	 */
 	public static function get_js_i18n() {
-		return self::$js_i18n;
+		Deprecation::notice('3.2', 'Use the "i18n.js_i18n" config setting instead');
+		return Config::inst()->get('i18n', 'js_i18n');
 	}
 	
 	/**
+	 * @deprecated 3.2 Use the "i18n.date_format" config setting instead
 	 * @param string ISO date format
 	 */
 	public static function set_date_format($format) {
-		self::$date_format = $format;
+		Deprecation::notice('3.2', 'Use the "i18n.date_format" config setting instead');
+		Config::inst()->update('i18n', 'date_format', $format);
 	}
 	
 	/**
@@ -132,14 +142,17 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_date_format() {
 		require_once 'Zend/Date.php';
-		return (self::$date_format) ? self::$date_format : Zend_Locale_Format::getDateFormat(self::get_locale());
+		$dateFormat = Config::inst()->get('i18n', 'date_format');
+		return ($dateFormat) ? $dateFormat : Zend_Locale_Format::getDateFormat(self::get_locale());
 	}
 	
 	/**
+	 * @deprecated 3.2 Use the "i18n.time_format" config setting instead
 	 * @param string ISO time format
 	 */
 	public static function set_time_format($format) {
-		self::$time_format = $format;
+		Deprecation::notice('3.2', 'Use the "i18n.time_format" config setting instead');
+		Config::inst()->update('i18n', 'time_format', $format);
 	}
 	
 	/**
@@ -147,15 +160,17 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_time_format() {
 		require_once 'Zend/Date.php';
-		return (self::$time_format) ? self::$time_format : Zend_Locale_Format::getTimeFormat(self::get_locale());
+		$timeFormat = Config::inst()->get('i18n', 'time_format');
+		return ($timeFormat) ? $timeFormat : Zend_Locale_Format::getTimeFormat(self::get_locale());
 	}
 	
 	/**
 	 * An exhaustive list of possible locales (code => language and country)
 	 *
+	 * @config
 	 * @var array
 	 */
-	public static $all_locales = array (
+	private static $all_locales = array (
 			'aa_DJ' => 'Afar (Djibouti)',
 			'ab_GE' => 'Abkhazian (Georgia)',
 			'abr_GH' => 'Abron (Ghana)',
@@ -638,191 +653,698 @@ class i18n extends Object implements TemplateGlobalProvider {
 	);
 	
 	/**
+	 * @config
 	 * @var array $common_languages A list of commonly used languages, in the form
 	 * langcode => array( EnglishName, NativeName)
 	 */
-	public static $common_languages = array(
-		'af' => array('Afrikaans', 'Afrikaans'),
-		'sq' => array('Albanian', 'shqip'),
-		'ar' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
-		'eu' => array('Basque', 'euskera'),
-		'be' => array('Belarusian',
-			'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
-		'bn' => array('Bengali', '&#2476;&#2494;&#2434;&#2482;&#2494;'),
-		'bg' => array('Bulgarian', '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
-		'ca' => array('Catalan', 'catal&agrave;'),
-		'zh_yue' => array('Chinese (Cantonese)', '&#24291;&#26481;&#35441; [&#24191;&#19996;&#35805;]'),
-		'zh_cmn' => array('Chinese (Mandarin)', '&#26222;&#36890;&#35441; [&#26222;&#36890;&#35805;]'),
-		'hr' => array('Croatian', 'Hrvatski'),
-		'zh' => array('Chinese','中国的'),
-		'cs' => array('Czech', '&#x010D;e&#353;tina'),
-		'cy' => array('Welsh', 'Welsh/Cymraeg'),
-		'da' => array('Danish', 'dansk'),
-		'nl' => array('Dutch',  'Nederlands'),
-		'en' => array('English', 'English'),
-		'eo' => array('Esperanto', 'Esperanto'),
-		'et' => array('Estonian', 'eesti keel'),
-		'fo' => array('Faroese', 'F&oslash;royska'),
-		'fi' => array('Finnish', 'suomi'),
-		'fr' => array('French', 'fran&ccedil;ais'),
-		'gd' => array('Gaelic', 'Gaeilge'),
-		'gl' => array('Galician', 'Galego'),
-		'de' => array('German', 'Deutsch'),
-		'el' => array('Greek', '&#949;&#955;&#955;&#951;&#957;&#953;&#954;&#940;'),
-		'gu' => array('Gujarati', '&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752;'),
-		'ha' => array('Hausa', '&#1581;&#1614;&#1608;&#1618;&#1587;&#1614;'),
-		'he' => array('Hebrew', '&#1506;&#1489;&#1512;&#1497;&#1514;'),
-		'hi' => array('Hindi', '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'),
-		'hu' => array('Hungarian', 'magyar'),
-		'is' => array('Icelandic', '&Iacute;slenska'),
-		'io' => array('Ido', 'Ido'),
-		'id' => array('Indonesian', 'Bahasa Indonesia'),
-		'ga' => array('Irish', 'Irish'),
-		'it' => array('Italian', 'italiano'),
-		'ja' => array('Japanese', '&#26085;&#26412;&#35486;'),
-		'jv' => array('Javanese', 'basa Jawa'),
-		'ko' => array('Korean', '&#54620;&#44397;&#50612; [&#38867;&#22283;&#35486;]'),
-		'ku' => array('Kurdish', 'Kurd&iacute;'),
-		'lv' => array('Latvian', 'latvie&#353;u'),
-		'lt' => array('Lithuanian', 'lietuvi&#353;kai'),
-		'lmo' => array('Lombard', 'Lombardo'),
-		'mk' => array('Macedonian', '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'),
-		'mi' => array('Maori', 'Māori'),
-		'ms' => array('Malay', 'Bahasa melayu'),
-		'mt' => array('Maltese', 'Malti'),
-		'mr' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
-		'ne' => array('Nepali', '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'),
-		'no' => array('Norwegian', 'Norsk'),
-		'om' => array('Oromo', 'Afaan Oromo'),
-		'fa' => array('Persian', '&#1601;&#1575;&#1585;&#1587;&#1609;'),
-		'pl' => array('Polish', 'polski'),
-		'pt_PT' => array('Portuguese (Portugal)', 'portugu&ecirc;s (Portugal)'),
-		'pt_BR' => array('Portuguese (Brazil)', 'portugu&ecirc;s (Brazil)'),
-		'pa' => array('Punjabi', '&#2602;&#2672;&#2588;&#2622;&#2604;&#2624;'),
-		'qu' => array('Quechua', 'Quechua'),
-		'rm' => array('Romansh', 'rumantsch'),
-		'ro' => array('Romanian', 'rom&acirc;n'),
-		'ru' => array('Russian', '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'),
-		'sco' => array('Scots', 'Scoats leid, Lallans'),
-		'sr' => array('Serbian', '&#1089;&#1088;&#1087;&#1089;&#1082;&#1080;'),
-		'sk' => array('Slovak', 'sloven&#269;ina'),
-		'sl' => array('Slovenian', 'sloven&#353;&#269;ina'),
-		'es' => array('Spanish', 'espa&ntilde;ol'),
-		'sv' => array('Swedish', 'Svenska'),
-		'tl' => array('Tagalog', 'Tagalog'),
-		'ta' => array('Tamil', '&#2980;&#2990;&#3007;&#2996;&#3021;'),
-		'te' => array('Telugu', '&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;'),
-		'to' => array('Tonga', 'chiTonga'),
-		'ts' => array('Tsonga', 'xiTshonga'),
-		'tn' => array('Tswana', 'seTswana'),
-		'tr' => array('Turkish', 'T&uuml;rk&ccedil;e'),
-		'tk' => array('Turkmen', '&#1090;&#1199;&#1088;&#1082;m&#1077;&#1085;&#1095;&#1077;'),
-		'tw' => array('Twi', 'twi'),
-		'uk' => array('Ukrainian', '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'),
-		'ur' => array('Urdu', '&#1575;&#1585;&#1583;&#1608;'),
-		'uz' => array('Uzbek', '&#1118;&#1079;&#1073;&#1077;&#1082;'),
-		've' => array('Venda', 'tshiVen&#x1E13;a'),
-		'vi' => array('Vietnamese', 'ti&#7871;ng vi&#7879;t'),
-		'wa' => array('Walloon', 'walon'),
-		'wo' => array('Wolof', 'Wollof'),
-		'xh' => array('Xhosa', 'isiXhosa'),
-		'yi' => array('Yiddish', '&#1522;&#1460;&#1491;&#1497;&#1513;'),
-		'zu' => array('Zulu', 'isiZulu')
+	private static $common_languages = array(
+		'af' => array(
+			'name' => 'Afrikaans', 
+			'native' => 'Afrikaans'
+		),
+		'sq' => array(
+			'name' => 'Albanian', 
+			'native' => 'shqip'
+		),
+		'ar' => array(
+			'name' => 'Arabic', 
+			'native' => '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'
+		),
+		'eu' => array(
+			'name' => 'Basque', 
+			'native' => 'euskera'
+		),
+		'be' => array(
+			'name' => 'Belarusian',
+			'native' => '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'
+		),
+		'bn' => array(
+			'name' => 'Bengali', 
+			'native' => '&#2476;&#2494;&#2434;&#2482;&#2494;'
+		),
+		'bg' => array(
+			'name' => 'Bulgarian', 
+			'native' => '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'
+		),
+		'ca' => array(
+			'name' => 'Catalan', 
+			'native' => 'catal&agrave;'
+		),
+		'zh_yue' => array(
+			'name' => 'Chinese (Cantonese)', 
+			'native' => '&#24291;&#26481;&#35441; [&#24191;&#19996;&#35805;]'
+		),
+		'zh_cmn' => array(
+			'name' => 'Chinese (Mandarin)', 
+			'native' => '&#26222;&#36890;&#35441; [&#26222;&#36890;&#35805;]'
+		),
+		'hr' => array(
+			'name' => 'Croatian', 
+			'native' => 'Hrvatski'
+		),
+		'zh' => array(
+			'name' => 'Chinese','中国的'
+		),
+		'cs' => array(
+			'name' => 'Czech', 
+			'native' => '&#x010D;e&#353;tina'
+		),
+		'cy' => array(
+			'name' => 'Welsh', 
+			'native' => 'Welsh/Cymraeg'
+		),
+		'da' => array(
+			'name' => 'Danish', 
+			'native' => 'dansk'
+		),
+		'nl' => array(
+			'name' => 'Dutch',  
+			'native' => 'Nederlands'
+		),
+		'en' => array(
+			'name' => 'English', 
+			'native' => 'English'
+		),
+		'eo' => array(
+			'name' => 'Esperanto', 
+			'native' => 'Esperanto'
+		),
+		'et' => array(
+			'name' => 'Estonian', 
+			'native' => 'eesti keel'
+		),
+		'fo' => array(
+			'name' => 'Faroese', 
+			'native' => 'F&oslash;royska'
+		),
+		'fi' => array(
+			'name' => 'Finnish', 
+			'native' => 'suomi'
+		),
+		'fr' => array(
+			'name' => 'French', 
+			'native' => 'fran&ccedil;ais'
+		),
+		'gd' => array(
+			'name' => 'Gaelic', 
+			'native' => 'Gaeilge'
+		),
+		'gl' => array(
+			'name' => 'Galician', 
+			'native' => 'Galego'
+		),
+		'de' => array(
+			'name' => 'German', 
+			'native' => 'Deutsch'
+		),
+		'el' => array(
+			'name' => 'Greek', 
+			'native' => '&#949;&#955;&#955;&#951;&#957;&#953;&#954;&#940;'
+		),
+		'gu' => array(
+			'name' => 'Gujarati', 
+			'native' => '&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752;'
+		),
+		'ha' => array(
+			'name' => 'Hausa', 
+			'native' => '&#1581;&#1614;&#1608;&#1618;&#1587;&#1614;'
+		),
+		'he' => array(
+			'name' => 'Hebrew', 
+			'native' => '&#1506;&#1489;&#1512;&#1497;&#1514;'
+		),
+		'hi' => array(
+			'name' => 'Hindi', 
+			'native' => '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'
+		),
+		'hu' => array(
+			'name' => 'Hungarian', 
+			'native' => 'magyar'
+		),
+		'is' => array(
+			'name' => 'Icelandic', 
+			'native' => '&Iacute;slenska'
+		),
+		'io' => array(
+			'name' => 'Ido', 
+			'native' => 'Ido'
+		),
+		'id' => array(
+			'name' => 'Indonesian', 
+			'native' => 'Bahasa Indonesia'
+		),
+		'ga' => array(
+			'name' => 'Irish', 
+			'native' => 'Irish'
+		),
+		'it' => array(
+			'name' => 'Italian', 
+			'native' => 'italiano'
+		),
+		'ja' => array(
+			'name' => 'Japanese', 
+			'native' => '&#26085;&#26412;&#35486;'
+		),
+		'jv' => array(
+			'name' => 'Javanese', 
+			'native' => 'basa Jawa'
+		),
+		'ko' => array(
+			'name' => 'Korean', 
+			'native' => '&#54620;&#44397;&#50612; [&#38867;&#22283;&#35486;]'
+		),
+		'ku' => array(
+			'name' => 'Kurdish', 
+			'native' => 'Kurd&iacute;'
+		),
+		'lv' => array(
+			'name' => 'Latvian', 
+			'native' => 'latvie&#353;u'
+		),
+		'lt' => array(
+			'name' => 'Lithuanian', 
+			'native' => 'lietuvi&#353;kai'
+		),
+		'lmo' => array(
+			'name' => 'Lombard', 
+			'native' => 'Lombardo'
+		),
+		'mk' => array(
+			'name' => 'Macedonian', 
+			'native' => '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'
+		),
+		'mi' => array(
+			'name' => 'Maori', 
+			'native' => 'Māori'
+		),
+		'ms' => array(
+			'name' => 'Malay', 
+			'native' => 'Bahasa melayu'
+		),
+		'mt' => array(
+			'name' => 'Maltese', 
+			'native' => 'Malti'
+		),
+		'mr' => array(
+			'name' => 'Marathi', 
+			'native' => '&#2350;&#2352;&#2366;&#2336;&#2368;'
+		),
+		'ne' => array(
+			'name' => 'Nepali', 
+			'native' => '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'
+		),
+		'no' => array(
+			'name' => 'Norwegian', 
+			'native' => 'Norsk'
+		),
+		'om' => array(
+			'name' => 'Oromo', 
+			'native' => 'Afaan Oromo'
+		),
+		'fa' => array(
+			'name' => 'Persian', 
+			'native' => '&#1601;&#1575;&#1585;&#1587;&#1609;'
+		),
+		'pl' => array(
+			'name' => 'Polish', 
+			'native' => 'polski'
+		),
+		'pt_PT' => array(
+			'name' => 'Portuguese (Portugal)', 
+			'native' => 'portugu&ecirc;s (Portugal)'
+		),
+		'pt_BR' => array(
+			'name' => 'Portuguese (Brazil)', 
+			'native' => 'portugu&ecirc;s (Brazil)'
+		),
+		'pa' => array(
+			'name' => 'Punjabi', 
+			'native' => '&#2602;&#2672;&#2588;&#2622;&#2604;&#2624;'
+		),
+		'qu' => array(
+			'name' => 'Quechua', 
+			'native' => 'Quechua'
+		),
+		'rm' => array(
+			'name' => 'Romansh', 
+			'native' => 'rumantsch'
+		),
+		'ro' => array(
+			'name' => 'Romanian', 
+			'native' => 'rom&acirc;n'
+		),
+		'ru' => array(
+			'name' => 'Russian', 
+			'native' => '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'
+		),
+		'sco' => array(
+			'name' => 'Scots', 
+			'native' => 'Scoats leid, Lallans'
+		),
+		'sr' => array(
+			'name' => 'Serbian', 
+			'native' => '&#1089;&#1088;&#1087;&#1089;&#1082;&#1080;'
+		),
+		'sk' => array(
+			'name' => 'Slovak', 
+			'native' => 'sloven&#269;ina'
+		),
+		'sl' => array(
+			'name' => 'Slovenian', 
+			'native' => 'sloven&#353;&#269;ina'
+		),
+		'es' => array(
+			'name' => 'Spanish', 
+			'native' => 'espa&ntilde;ol'
+		),
+		'sv' => array(
+			'name' => 'Swedish', 
+			'native' => 'Svenska'
+		),
+		'tl' => array(
+			'name' => 'Tagalog', 
+			'native' => 'Tagalog'
+		),
+		'ta' => array(
+			'name' => 'Tamil', 
+			'native' => '&#2980;&#2990;&#3007;&#2996;&#3021;'
+		),
+		'te' => array(
+			'name' => 'Telugu', 
+			'native' => '&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;'
+		),
+		'to' => array(
+			'name' => 'Tonga', 
+			'native' => 'chiTonga'
+		),
+		'ts' => array(
+			'name' => 'Tsonga', 
+			'native' => 'xiTshonga'
+		),
+		'tn' => array(
+			'name' => 'Tswana', 
+			'native' => 'seTswana'
+		),
+		'tr' => array(
+			'name' => 'Turkish', 
+			'native' => 'T&uuml;rk&ccedil;e'
+		),
+		'tk' => array(
+			'name' => 'Turkmen', 
+			'native' => '&#1090;&#1199;&#1088;&#1082;m&#1077;&#1085;&#1095;&#1077;'
+		),
+		'tw' => array(
+			'name' => 'Twi', 
+			'native' => 'twi'
+		),
+		'uk' => array(
+			'name' => 'Ukrainian', 
+			'native' => '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'
+		),
+		'ur' => array(
+			'name' => 'Urdu', 
+			'native' => '&#1575;&#1585;&#1583;&#1608;'
+		),
+		'uz' => array(
+			'name' => 'Uzbek', 
+			'native' => '&#1118;&#1079;&#1073;&#1077;&#1082;'
+		),
+		've' => array(
+			'name' => 'Venda', 
+			'native' => 'tshiVen&#x1E13;a'
+		),
+		'vi' => array(
+			'name' => 'Vietnamese', 
+			'native' => 'ti&#7871;ng vi&#7879;t'
+		),
+		'wa' => array(
+			'name' => 'Walloon', 
+			'native' => 'walon'
+		),
+		'wo' => array(
+			'name' => 'Wolof', 
+			'native' => 'Wollof'
+		),
+		'xh' => array(
+			'name' => 'Xhosa', 
+			'native' => 'isiXhosa'
+		),
+		'yi' => array(
+			'name' => 'Yiddish', 
+			'native' => '&#1522;&#1460;&#1491;&#1497;&#1513;'
+		),
+		'zu' => array(
+			'name' => 'Zulu', 
+			'native' => 'isiZulu'
+		)
 	);
 	
 	/**
+	 * @config
 	 * @var array $common_locales
 	 * Sorted alphabtically by the common language name,
 	 * not the locale key.
 	 */
-	public static $common_locales = array(
-		'af_ZA' => array('Afrikaans', 'Afrikaans'),
-		'sq_AL' => array('Albanian', 'shqip'),
-		'ar_EG' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
-		'eu_ES' => array('Basque', 'euskera'),
-		'be_BY' => array('Belarusian',
-			'&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
-		'bn_BD' => array('Bengali', '&#2476;&#2494;&#2434;&#2482;&#2494;'),
-		'bg_BG' => array('Bulgarian', '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
-		'ca_ES' => array('Catalan', 'catal&agrave;'),
-		'zh_CN' => array('Chinese','中国的'),
-		'zh_yue' => array('Chinese (Cantonese)', '&#24291;&#26481;&#35441; [&#24191;&#19996;&#35805;]'),
-		'zh_cmn' => array('Chinese (Mandarin)', '&#26222;&#36890;&#35441; [&#26222;&#36890;&#35805;]'),
-		'hr_HR' => array('Croatian', 'Hrvatski'),
-		'cs_CZ' => array('Czech', '&#x010D;e&#353;tina'),
-		'cy_GB' => array('Welsh', 'Welsh/Cymraeg'),
-		'da_DK' => array('Danish', 'dansk'),
-		'nl_NL' => array('Dutch', 'Nederlands'),
-		'en_NZ' => array('English (NZ)', 'English (NZ)'),
-		'en_US' => array('English (US)', 'English (US)'),
-		'en_GB' => array('English (UK)', 'English (UK)'),
-		'eo_XX' => array('Esperanto', 'Esperanto'),
-		'et_EE' => array('Estonian', 'eesti keel'),
-		'fo_FO' => array('Faroese', 'F&oslash;royska'),
-		'fi_FI' => array('Finnish', 'suomi'),
-		'fr_FR' => array('French', 'fran&ccedil;ais'),
-		'gd_GB' => array('Gaelic', 'Gaeilge'),
-		'gl_ES' => array('Galician', 'Galego'),
-		'de_DE' => array('German', 'Deutsch'),
-		'el_GR' => array('Greek', '&#949;&#955;&#955;&#951;&#957;&#953;&#954;&#940;'),
-		'gu_IN' => array('Gujarati', '&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752;'),
-		'ha_NG' => array('Hausa', '&#1581;&#1614;&#1608;&#1618;&#1587;&#1614;'),
-		'he_IL' => array('Hebrew', '&#1506;&#1489;&#1512;&#1497;&#1514;'),
-		'hi_IN' => array('Hindi', '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'),
-		'hu_HU' => array('Hungarian', 'magyar'),
-		'is_IS' => array('Icelandic', '&Iacute;slenska'),
-		'id_ID' => array('Indonesian', 'Bahasa Indonesia'),
-		'ga_IE' => array('Irish', 'Irish'),
-		'it_IT' => array('Italian', 'italiano'),
-		'ja_JP' => array('Japanese', '&#26085;&#26412;&#35486;'),
-		'jv_ID' => array('Javanese', 'basa Jawa'),
-		'ko_KR' => array('Korean', '&#54620;&#44397;&#50612; [&#38867;&#22283;&#35486;]'),
-		'ku_IQ' => array('Kurdish', 'Kurd&iacute;'),
-		'lv_LV' => array('Latvian', 'latvie&#353;u'),
-		'lt_LT' => array('Lithuanian', 'lietuvi&#353;kai'),
-		'mk_MK' => array('Macedonian', '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'),
-		'mi_NZ' => array('Maori', 'Māori'),
-		'ms_MY' => array('Malay', 'Bahasa melayu'),
-		'mt_MT' => array('Maltese', 'Malti'),
-		'mr_IN' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
-		'ne_NP' => array('Nepali', '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'),
-		'nb_NO' => array('Norwegian', 'Norsk'),
-		'om_ET' => array('Oromo', 'Afaan Oromo'),
-		'fa_IR' => array('Persian', '&#1601;&#1575;&#1585;&#1587;&#1609;'),
-		'pl_PL' => array('Polish', 'polski'),
-		'pt_PT' => array('Portuguese (Portugal)', 'portugu&ecirc;s (Portugal)'),
-		'pt_BR' => array('Portuguese (Brazil)', 'portugu&ecirc;s (Brazil)'),
-		'pa_IN' => array('Punjabi', '&#2602;&#2672;&#2588;&#2622;&#2604;&#2624;'),
-		'qu_PE' => array('Quechua', 'Quechua'),
-		'rm_CH' => array('Romansh', 'rumantsch'),
-		'ro_RO' => array('Romanian', 'rom&acirc;n'),
-		'ru_RU' => array('Russian', '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'),
-		'sco_SCO' => array('Scots', 'Scoats leid, Lallans'),
-		'sr_RS' => array('Serbian', '&#1089;&#1088;&#1087;&#1089;&#1082;&#1080;'),
-		'sk_SK' => array('Slovak', 'sloven&#269;ina'),
-		'sl_SI' => array('Slovenian', 'sloven&#353;&#269;ina'),
-		'es_ES' => array('Spanish', 'espa&ntilde;ol'),
-		'sv_SE' => array('Swedish', 'Svenska'),
-		'tl_PH' => array('Tagalog', 'Tagalog'),
-		'ta_IN' => array('Tamil', '&#2980;&#2990;&#3007;&#2996;&#3021;'),
-		'te_IN' => array('Telugu', '&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;'),
-		'to_TO' => array('Tonga', 'chiTonga'),
-		'ts_ZA' => array('Tsonga', 'xiTshonga'),
-		'tn_ZA' => array('Tswana', 'seTswana'),
-		'tr_TR' => array('Turkish', 'T&uuml;rk&ccedil;e'),
-		'tk_TM' => array('Turkmen', '&#1090;&#1199;&#1088;&#1082;m&#1077;&#1085;&#1095;&#1077;'),
-		'tw_GH' => array('Twi', 'twi'),
-		'uk_UA' => array('Ukrainian', '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'),
-		'ur_PK' => array('Urdu', '&#1575;&#1585;&#1583;&#1608;'),
-		'uz_UZ' => array('Uzbek', '&#1118;&#1079;&#1073;&#1077;&#1082;'),
-		've_ZA' => array('Venda', 'tshiVen&#x1E13;a'),
-		'vi_VN' => array('Vietnamese', 'ti&#7871;ng vi&#7879;t'),
-		'wo_SN' => array('Wolof', 'Wollof'),
-		'xh_ZA' => array('Xhosa', 'isiXhosa'),
-		'zu_ZA' => array('Zulu', 'isiZulu'),
+	private static $common_locales = array(
+		'af_ZA' => array(
+			'name' => 'Afrikaans',
+			'native' => 'Afrikaans'
+		),
+		'sq_AL' => array(
+			'name' => 'Albanian',
+			'native' => 'shqip'
+		),
+		'ar_EG' => array(
+			'name' => 'Arabic',
+			'native' => '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'
+		),
+		'eu_ES' => array(
+			'name' => 'Basque',
+			'native' => 'euskera'
+		),
+		'be_BY' => array(
+			'name' => 'Belarusian',
+			'native' => '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'
+		),
+		'bn_BD' => array(
+			'name' => 'Bengali',
+			'native' => '&#2476;&#2494;&#2434;&#2482;&#2494;'
+		),
+		'bg_BG' => array(
+			'name' => 'Bulgarian',
+			'native' => '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'
+		),
+		'ca_ES' => array(
+			'name' => 'Catalan',
+			'native' => 'catal&agrave;'
+		),
+		'zh_CN' => array(
+			'name' => 'Chinese',
+			'native' => '中国的'
+		),
+		'zh_yue' => array(
+			'name' => 'Chinese (Cantonese)',
+			'native' => '&#24291;&#26481;&#35441; [&#24191;&#19996;&#35805;]'
+		),
+		'zh_cmn' => array(
+			'name' => 'Chinese (Mandarin)',
+			'native' => '&#26222;&#36890;&#35441; [&#26222;&#36890;&#35805;]'
+		),
+		'hr_HR' => array(
+			'name' => 'Croatian',
+			'native' => 'Hrvatski'
+		),
+		'cs_CZ' => array(
+			'name' => 'Czech',
+			'native' => '&#x010D;e&#353;tina'
+		),
+		'cy_GB' => array(
+			'name' => 'Welsh',
+			'native' => 'Welsh/Cymraeg'
+		),
+		'da_DK' => array(
+			'name' => 'Danish',
+			'native' => 'dansk'
+		),
+		'nl_NL' => array(
+			'name' => 'Dutch',
+			'native' => 'Nederlands'
+		),
+		'en_NZ' => array(
+			'name' => 'English (NZ)',
+			'native' => 'English (NZ)'
+		),
+		'en_US' => array(
+			'name' => 'English (US)',
+			'native' => 'English (US)'
+		),
+		'en_GB' => array(
+			'name' => 'English (UK)',
+			'native' => 'English (UK)'
+		),
+		'eo_XX' => array(
+			'name' => 'Esperanto',
+			'native' => 'Esperanto'
+		),
+		'et_EE' => array(
+			'name' => 'Estonian',
+			'native' => 'eesti keel'
+		),
+		'fo_FO' => array(
+			'name' => 'Faroese',
+			'native' => 'F&oslash;royska'
+		),
+		'fi_FI' => array(
+			'name' => 'Finnish',
+			'native' => 'suomi'
+		),
+		'fr_FR' => array(
+			'name' => 'French',
+			'native' => 'fran&ccedil;ais'
+		),
+		'gd_GB' => array(
+			'name' => 'Gaelic',
+			'native' => 'Gaeilge'
+		),
+		'gl_ES' => array(
+			'name' => 'Galician',
+			'native' => 'Galego'
+		),
+		'de_DE' => array(
+			'name' => 'German',
+			'native' => 'Deutsch'
+		),
+		'el_GR' => array(
+			'name' => 'Greek',
+			'native' => '&#949;&#955;&#955;&#951;&#957;&#953;&#954;&#940;'
+		),
+		'gu_IN' => array(
+			'name' => 'Gujarati',
+			'native' => '&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752;'
+		),
+		'ha_NG' => array(
+			'name' => 'Hausa',
+			'native' => '&#1581;&#1614;&#1608;&#1618;&#1587;&#1614;'
+		),
+		'he_IL' => array(
+			'name' => 'Hebrew',
+			'native' => '&#1506;&#1489;&#1512;&#1497;&#1514;'
+		),
+		'hi_IN' => array(
+			'name' => 'Hindi',
+			'native' => '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'
+		),
+		'hu_HU' => array(
+			'name' => 'Hungarian',
+			'native' => 'magyar'
+		),
+		'is_IS' => array(
+			'name' => 'Icelandic',
+			'native' => '&Iacute;slenska'
+		),
+		'id_ID' => array(
+			'name' => 'Indonesian',
+			'native' => 'Bahasa Indonesia'
+		),
+		'ga_IE' => array(
+			'name' => 'Irish',
+			'native' => 'Irish'
+		),
+		'it_IT' => array(
+			'name' => 'Italian',
+			'native' => 'italiano'
+		),
+		'ja_JP' => array(
+			'name' => 'Japanese',
+			'native' => '&#26085;&#26412;&#35486;'
+		),
+		'jv_ID' => array(
+			'name' => 'Javanese',
+			'native' => 'basa Jawa'
+		),
+		'ko_KR' => array(
+			'name' => 'Korean',
+			'native' => '&#54620;&#44397;&#50612; [&#38867;&#22283;&#35486;]'
+		),
+		'ku_IQ' => array(
+			'name' => 'Kurdish',
+			'native' => 'Kurd&iacute;'
+		),
+		'lv_LV' => array(
+			'name' => 'Latvian',
+			'native' => 'latvie&#353;u'
+		),
+		'lt_LT' => array(
+			'name' => 'Lithuanian',
+			'native' => 'lietuvi&#353;kai'
+		),
+		'mk_MK' => array(
+			'name' => 'Macedonian',
+			'native' => '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'
+		),
+		'mi_NZ' => array(
+			'name' => 'Maori',
+			'native' => 'Māori'
+		),
+		'ms_MY' => array(
+			'name' => 'Malay',
+			'native' => 'Bahasa melayu'
+		),
+		'mt_MT' => array(
+			'name' => 'Maltese',
+			'native' => 'Malti'
+		),
+		'mr_IN' => array(
+			'name' => 'Marathi',
+			'native' => '&#2350;&#2352;&#2366;&#2336;&#2368;'
+		),
+		'ne_NP' => array(
+			'name' => 'Nepali',
+			'native' => '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'
+		),
+		'nb_NO' => array(
+			'name' => 'Norwegian',
+			'native' => 'Norsk'
+		),
+		'om_ET' => array(
+			'name' => 'Oromo',
+			'native' => 'Afaan Oromo'
+		),
+		'fa_IR' => array(
+			'name' => 'Persian',
+			'native' => '&#1601;&#1575;&#1585;&#1587;&#1609;'
+		),
+		'pl_PL' => array(
+			'name' => 'Polish',
+			'native' => 'polski'
+		),
+		'pt_PT' => array(
+			'name' => 'Portuguese (Portugal)',
+			'native' => 'portugu&ecirc;s (Portugal)'
+		),
+		'pt_BR' => array(
+			'name' => 'Portuguese (Brazil)',
+			'native' => 'portugu&ecirc;s (Brazil)'
+		),
+		'pa_IN' => array(
+			'name' => 'Punjabi',
+			'native' => '&#2602;&#2672;&#2588;&#2622;&#2604;&#2624;'
+		),
+		'qu_PE' => array(
+			'name' => 'Quechua',
+			'native' => 'Quechua'
+		),
+		'rm_CH' => array(
+			'name' => 'Romansh',
+			'native' => 'rumantsch'
+		),
+		'ro_RO' => array(
+			'name' => 'Romanian',
+			'native' => 'rom&acirc;n'
+		),
+		'ru_RU' => array(
+			'name' => 'Russian',
+			'native' => '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'
+		),
+		'sco_SCO' => array(
+			'name' => 'Scots',
+			'native' => 'Scoats leid, Lallans'
+		),
+		'sr_RS' => array(
+			'name' => 'Serbian',
+			'native' => '&#1089;&#1088;&#1087;&#1089;&#1082;&#1080;'
+		),
+		'sk_SK' => array(
+			'name' => 'Slovak',
+			'native' => 'sloven&#269;ina'
+		),
+		'sl_SI' => array(
+			'name' => 'Slovenian',
+			'native' => 'sloven&#353;&#269;ina'
+		),
+		'es_ES' => array(
+			'name' => 'Spanish',
+			'native' => 'espa&ntilde;ol'
+		),
+		'sv_SE' => array(
+			'name' => 'Swedish',
+			'native' => 'Svenska'
+		),
+		'tl_PH' => array(
+			'name' => 'Tagalog',
+			'native' => 'Tagalog'
+		),
+		'ta_IN' => array(
+			'name' => 'Tamil',
+			'native' => '&#2980;&#2990;&#3007;&#2996;&#3021;'
+		),
+		'te_IN' => array(
+			'name' => 'Telugu',
+			'native' => '&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;'
+		),
+		'to_TO' => array(
+			'name' => 'Tonga',
+			'native' => 'chiTonga'
+		),
+		'ts_ZA' => array(
+			'name' => 'Tsonga',
+			'native' => 'xiTshonga'
+		),
+		'tn_ZA' => array(
+			'name' => 'Tswana',
+			'native' => 'seTswana'
+		),
+		'tr_TR' => array(
+			'name' => 'Turkish',
+			'native' => 'T&uuml;rk&ccedil;e'
+		),
+		'tk_TM' => array(
+			'name' => 'Turkmen',
+			'native' => '&#1090;&#1199;&#1088;&#1082;m&#1077;&#1085;&#1095;&#1077;'
+		),
+		'tw_GH' => array(
+			'name' => 'Twi',
+			'native' => 'twi'
+		),
+		'uk_UA' => array(
+			'name' => 'Ukrainian',
+			'native' => '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'
+		),
+		'ur_PK' => array(
+			'name' => 'Urdu',
+			'native' => '&#1575;&#1585;&#1583;&#1608;'
+		),
+		'uz_UZ' => array(
+			'name' => 'Uzbek',
+			'native' => '&#1118;&#1079;&#1073;&#1077;&#1082;'
+		),
+		've_ZA' => array(
+			'name' => 'Venda',
+			'native' => 'tshiVen&#x1E13;a'
+		),
+		'vi_VN' => array(
+			'name' => 'Vietnamese',
+			'native' => 'ti&#7871;ng vi&#7879;t'
+		),
+		'wo_SN' => array(
+			'name' => 'Wolof',
+			'native' => 'Wollof'
+		),
+		'xh_ZA' => array(
+			'name' => 'Xhosa',
+			'native' => 'isiXhosa'
+		),
+		'zu_ZA' => array(
+			'name' => 'Zulu',
+			'native' => 'isiZulu'
+		),
 	);
 	
-	static $tinymce_lang = array(
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $tinymce_lang = array(
 		'ca_AD' => 'ca',
 		'ca_ES' => 'ca',
 		'cs_CZ' => 'cs',
@@ -986,13 +1508,14 @@ class i18n extends Object implements TemplateGlobalProvider {
 	);
 	
 	/**
+	 * @config
 	 * @var array $likely_subtags Provides you "likely locales"
 	 * for a given "short" language code. This is a guess,
 	 * as we can't disambiguate from e.g. "en" to "en_US" - it
 	 * could also mean "en_UK".
 	 * @see http://www.unicode.org/cldr/data/charts/supplemental/likely_subtags.html
 	 */
-	static $likely_subtags = array(
+	private static $likely_subtags = array(
 		'aa' => 'aa_ET',
 		'ab' => 'ab_GE',
 		'ady' => 'ady_RU',
@@ -1652,8 +2175,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_common_languages($native = false) {
 		$languages = array();
-		foreach (self::$common_languages as $code => $name) {
-			$languages[$code] = ($native ? $name[1] : $name[0]);
+		foreach (Config::inst()->get('i18n', 'common_languages') as $code => $name) {
+			$languages[$code] = ($native ? $name['native'] : $name['name']);
 		}
 		return $languages;
 	}
@@ -1666,8 +2189,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	public static function get_common_locales($native = false) {
 		$languages = array();
-		foreach (self::$common_locales as $code => $name) {
-			$languages[$code] = ($native ? $name[1] : $name[0]);
+		foreach (Config::inst()->get('i18n', 'common_locales') as $code => $name) {
+			$languages[$code] = ($native ? $name['native'] : $name['name']);
 		}
 		return $languages;
 	}
@@ -1678,7 +2201,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return list of languages in the form 'code' => 'name'
 	 */
 	public static function get_locale_list() {
-		return self::$all_locales;
+		Deprecation::notice('3.2', 'Use the "i18n.all_locales" config setting instead');
+		return (array)Config::inst()->get('i18n', 'all_locales');
 	}
 	
 	/**
@@ -1697,6 +2221,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		foreach($modules as $module) {
 			if(!file_exists("{$module}/lang/")) continue;
 			
+			$allLocales = Config::inst()->get('i18n', 'all_locales');
 			$moduleLocales = scandir("{$module}/lang/");
 			foreach($moduleLocales as $moduleLocale) {
 				preg_match('/(.*)\.[\w\d]+$/',$moduleLocale, $matches);
@@ -1704,7 +2229,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 					// Normalize locale to include likely region tag.
 					// TODO Replace with CLDR list of actually available languages/regions
 					$locale = str_replace('-', '_', self::get_locale_from_lang($locale));
-					$locales[$locale] = (@self::$all_locales[$locale]) ? self::$all_locales[$locale] : $locale;
+					$locales[$locale] = (isset($allLocales[$locale])) ? $allLocales[$locale] : $locale;
 				}
 			}
 		}
@@ -1725,11 +2250,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return Name of the language
 	 */
 	public static function get_language_name($code, $native = false) {
-		$langs = self::$common_languages;
+		$langs = Config::inst()->get('i18n', 'common_languages');
 		if($native) {
-			return (isset($langs[$code][1])) ? $langs[$code][1] : false;
+			return (isset($langs[$code]['native'])) ? $langs[$code]['native'] : false;
 		} else {
-			return (isset($langs[$code][0])) ? $langs[$code][0] : false;
+			return (isset($langs[$code]['name'])) ? $langs[$code]['name'] : false;
 		}
 	}
 	
@@ -1742,7 +2267,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return Name of the locale
 	 */
 	public static function get_locale_name($code) {
-		$langs = self::get_locale_list();
+		$langs = self::config()->all_locales;
 		return isset($langs[$code]) ? $langs[$code] : false;
 	}
 	
@@ -1763,8 +2288,9 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return Language
 	 */
 	public static function get_tinymce_lang() {
-		if(isset(self::$tinymce_lang[self::get_locale()])) {
-			return self::$tinymce_lang[self::get_locale()];
+		$lang = Config::inst()->get('i18n', 'tinymce_lang');
+		if(isset($lang[self::get_locale()])) {
+			return $lang[self::get_locale()];
 		}
 		
 		return 'en';
@@ -1819,10 +2345,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return string Long locale, e.g. "en_US"
 	 */
 	public static function get_locale_from_lang($lang) {
+		$subtags = Config::inst()->get('i18n', 'likely_subtags');
 		if(preg_match('/\-|_/', $lang)) {
 			return $lang;
-		} else if(isset(self::$likely_subtags[$lang])) {
-			return self::$likely_subtags[$lang];
+		} else if(isset($subtags[$lang])) {
+			return $subtags[$lang];
 		} else {
 			return $lang . '_' . strtoupper($lang);
 		}
@@ -1880,7 +2407,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function validate_locale($locale) {
 		// Convert en-US to en_US
 		$locale = str_replace('-', '_', $locale);
-		return (array_key_exists($locale, self::$all_locales));
+		return (array_key_exists($locale, Config::inst()->get('i18n', 'all_locales')));
 	}
 
 	/**
@@ -1933,20 +2460,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function set_default_locale($locale) {
 		self::$default_locale = $locale;
 	}
-	
-	/**
-	 * Include a locale file determined by module name and locale 
-	 * 
-	 * @deprecated 3.0 Use Zend_Translate instead
-	 * 
-	 * @param string $module Module that contains the locale file
-	 * @param string $locale Locale to be loaded
-	 */
-	public static function include_locale_file($module, $locale) {
-		Deprecation::notice('3.0', 'Use Zend_Translate instead.');
-		
-		if (file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) include_once($file);
-	}
 
 	/**
 	 * Includes all available language files for a certain defined locale.
@@ -1997,7 +2510,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 				if(is_dir($themesBase)) {
 					foreach(scandir($themesBase) as $theme) {
 						if(
-							strpos($theme, SSViewer::current_theme()) === 0
+							strpos($theme, Config::inst()->get('SSViewer', 'theme')) === 0
 							&& file_exists("{$themesBase}/{$theme}/lang/")
 						) {
 							$filename = $adapter->getFilenameForLocale($locale);

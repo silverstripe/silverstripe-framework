@@ -33,7 +33,8 @@ class FixtureBlueprint {
 		'afterCreate' => array(),
 	);
 
-	static $dependencies = array(
+	/** @config */
+	private static $dependencies = array(
 		'factory' => '%$FixtureFactory'
 	);
 
@@ -69,8 +70,8 @@ class FixtureBlueprint {
 	public function createObject($identifier, $data = null, $fixtures = null) {
 		// We have to disable validation while we import the fixtures, as the order in
 		// which they are imported doesnt guarantee valid relations until after the import is complete.
-		$validationenabled = DataObject::get_validation_enabled();
-		DataObject::set_validation_enabled(false);
+		$validationenabled = Config::inst()->get('DataObject', 'validation_enabled');
+		Config::inst()->update('DataObject', 'validation_enabled', false);
 
 		$this->invokeCallbacks('beforeCreate', array($identifier, &$data, &$fixtures));
 
@@ -169,11 +170,11 @@ class FixtureBlueprint {
 				));
 			}	
 		} catch(Exception $e) {
-			DataObject::set_validation_enabled($validationenabled);			
+			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
 			throw $e;
 		}
 
-		DataObject::set_validation_enabled($validationenabled);
+		Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
 
 		$this->invokeCallbacks('afterCreate', array($obj, $identifier, &$data, &$fixtures));
 

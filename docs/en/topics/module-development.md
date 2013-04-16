@@ -8,7 +8,7 @@ templating for any initial installation. If you're wanting to add generic functi
 project, like a forum, an ecommerce package or a blog you can do it like this;
 
 1.  Create another directory at the root level (same level as "framework" and "cms")
-2.  You must create an _config.php inside your module directory, else SilverStripe will not include it
+2.  You must create an `_config/` directory inside your module directory, else SilverStripe will not include it
 3.  Inside your module directory, follow our [directory structure guidelines](/topics/directory-structure#module_structure)
 
 ## Tips

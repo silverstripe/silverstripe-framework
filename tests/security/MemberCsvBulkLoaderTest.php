@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class MemberCsvBulkLoaderTest extends SapphireTest {
-	static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
+	protected static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
 	
 	public function testNewImport() {
 		$loader = new MemberCsvBulkLoader();
@@ -70,7 +70,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$member = DataObject::get_by_id('Member', $memberID);
 
 		// TODO Direct getter doesn't work, wtf!
-		$this->assertEquals(Security::get_password_encryption_algorithm(), $member->getField('PasswordEncryption'));
+		$this->assertEquals(Security::config()->password_encryption_algorithm, $member->getField('PasswordEncryption'));
 		$result = $member->checkPassword('mypassword');
 		$this->assertTrue($result->valid());
 	}

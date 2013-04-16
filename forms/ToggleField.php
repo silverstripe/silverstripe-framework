@@ -2,6 +2,8 @@
 /**
  * ReadonlyField with added toggle-capabilities - will preview the first sentence of the contained text-value,
  * and show the full content by a javascript-switch.
+ *
+ * @deprecated 3.1 Use custom javascript with a ReadonlyField.
  * 
  * Caution: Strips HTML-encoding for the preview.
  * @package forms
@@ -48,9 +50,8 @@ class ToggleField extends ReadonlyField {
 
 	public function Field($properties = array()) {
 		$content = '';
-		
-		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/behaviour/behaviour.js");
+
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . "/javascript/ToggleField.js");
 		
 		if($this->startClosed) $this->addExtraClass('startClosed');
@@ -60,7 +61,7 @@ class ToggleField extends ReadonlyField {
 		
 		if($this->charNum) $reducedVal = substr($rawInput,0,$this->charNum);
 		else $reducedVal = DBField::create_field('Text',$rawInput)->{$this->truncateMethod}();
-		
+
 		// only create togglefield if the truncated content is shorter
 		if(strlen($reducedVal) < strlen($rawInput)) {
 			$content = <<<HTML

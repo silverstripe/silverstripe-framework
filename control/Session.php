@@ -87,18 +87,39 @@ class Session {
 
 	/**
 	 * @var $timeout Set session timeout
+	 * @config
 	 */
-	protected static $timeout = 0;
+	private static $timeout = 0;
 	
-	protected static $session_ips = array();
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $session_ips = array();
 
-	protected static $cookie_domain;
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $cookie_domain;
 
-	protected static $cookie_path;
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $cookie_path;
 	
-	protected static $session_store_path;
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $session_store_path;
 
-	protected static $cookie_secure = false;
+	/**
+	 * @config
+	 * @var boolean
+	 */
+	private static $cookie_secure = false;
 
 	/**
 	 * Session data
@@ -123,38 +144,52 @@ class Session {
 	 * 
 	 * To make cookies visible on all subdomains then the domain
 	 * must be prefixed with a dot like '.php.net'.
+	 *
+	 * @deprecated 3.2 Use the "Session.cookie_domain" config setting instead
 	 * 
 	 * @param string $domain The domain to set
 	 */
 	public static function set_cookie_domain($domain) {
-		self::$cookie_domain = $domain;
+		Deprecation::notice('3.2', 'Use the "Session.cookie_domain" config setting instead');
+		Config::inst()->update('Session', 'cookie_domain', $age);
 	}
 
 	/**
 	 * Get the cookie domain.
+	 *
+	 * @deprecated 3.2 Use the "Session.cookie_domain" config setting instead
+	 * 
 	 * @return string
 	 */
 	public static function get_cookie_domain() {
-		return self::$cookie_domain;
+		Deprecation::notice('3.2', 'Use the "Session.cookie_domain" config setting instead');
+		return Config::inst()->get('Session', 'cookie_domain');
 	}
 
 	/**
 	 * Path to set on the domain where the session cookie will work.
 	 * Use a single slash ('/') for all paths on the domain.
 	 *
+	 * @deprecated 3.2 Use the "Session.cookie_path" config setting instead
+	 *
 	 * @param string $path The path to set
 	 */
 	public static function set_cookie_path($path) {
-		self::$cookie_path = $path;
+		Deprecation::notice('3.2', 'Use the "Session.cookie_path" config setting instead');
+		Config::inst()->update('Session', 'cookie_path', $path);
 	}
 
 	/**
 	 * Get the path on the domain where the session cookie will work.
+	 *
+	 * @deprecated 3.2 Use the "Session.cookie_path" config setting instead
+	 * 
 	 * @return string
 	 */
 	public static function get_cookie_path() {
-		if(self::$cookie_path) {
-			return self::$cookie_path;
+		Deprecation::notice('3.2', 'Use the "Session.cookie_path" config setting instead');
+		if(Config::inst()->get('Session', 'cookie_path')) {
+			return Config::inst()->get('Session', 'cookie_path');
 		} else {
 			return Director::baseURL();
 		}
@@ -162,26 +197,38 @@ class Session {
 
 	/**
 	 * Secure cookie, tells the browser to only send it over SSL.
+	 *
+	 * @deprecated 3.2 Use the "Session.cookie_secure" config setting instead
+	 * 
 	 * @param boolean $secure
 	 */
 	public static function set_cookie_secure($secure) {
-		self::$cookie_secure = (bool) $secure;
+		Deprecation::notice('3.2', 'Use the "Session.cookie_secure" config setting instead');
+		Config::inst()->update('Session', 'cookie_secure', (bool)$secure);
 	}
 
 	/**
 	 * Get if the cookie is secure
+	 *
+	 * @deprecated 3.2 Use the "Session.cookie_secure" config setting instead
+	 * 
 	 * @return boolean
 	 */
 	public static function get_cookie_secure() {
-		return (bool) self::$cookie_secure;
+		Deprecation::notice('3.2', 'Use the "Session.cookie_secure" config setting instead');
+		return Config::inst()->get('Session', 'cookie_secure');
 	}
 
 	/**
 	 * Set the session store path
+	 * 
+	 * @deprecated 3.2 Use the "Session.session_store_path" config setting instead
+	 * 
 	 * @param string $path Filesystem path to the session store
 	 */ 
 	public static function set_session_store_path($path) {
-		self::$session_store_path = $path;
+		Deprecation::notice('3.2', 'Use the "Session.session_store_path" config setting instead');
+		Config::inst()->update('Session', 'session_store_path', $path);
 	}
 	
 	/**
@@ -189,7 +236,8 @@ class Session {
 	 * @return string
 	 */
 	public static function get_session_store_path() {
-		return self::$session_store_path;
+		Deprecation::notice('3.2', 'Use the "Session.session_store_path" config setting instead');
+		return Config::inst()->get('Session', 'session_store_path');
 	}
 
 	/**
@@ -204,16 +252,14 @@ class Session {
 	 * Any user connecting from 127.0.0.1 (localhost) will have their session expired after 10 hours.
 	 *
 	 * Session::set_timeout is used to set the timeout value for any users whose address is not in the given IP range.
+	 *
+	 * @deprecated 3.2 Use the "Session.timeout_ips" config setting instead
 	 * 
 	 * @param array $session_ips Array of IPv4 rules.
 	 */
-	public static function set_timeout_ips($session_ips) {
-		if(!is_array($session_ips)) {
-			user_error("Session::set_timeout_ips expects an array as its argument", E_USER_NOTICE);
-			self::$session_ips = array();
-		} else {
-			self::$session_ips = $session_ips;
-		}
+	public static function set_timeout_ips($ips) {
+		Deprecation::notice('3.2', 'Use the "Session.timeout_ips" config setting instead');
+		Config::inst()->update('Session', 'timeout_ips', $ips);
 	}
 	
 	/**
@@ -440,8 +486,8 @@ class Session {
 	* @param type the type of message
 	*/
 	public static function setFormMessage($formname,$message,$type){
-		Session::set("FormInfo.$formname.message", $message);
-		Session::set("FormInfo.$formname.type", $type);
+		Session::set("FormInfo.$formname.formError.message", $message);
+		Session::set("FormInfo.$formname.formError.type", $type);
 	}
 
 	/**
@@ -450,16 +496,18 @@ class Session {
 	 * @param string $sid Start the session with a specific ID
 	 */
 	public static function start($sid = null) {
-		$path = self::get_cookie_path();
-		$domain = self::get_cookie_domain();
-		$secure = self::get_cookie_secure();
-		$session_path = self::get_session_store_path();
+		$path = Config::inst()->get('Session', 'cookie_path');
+		if(!$path) $path = Director::baseURL();
+		$domain = Config::inst()->get('Session', 'cookie_domain');
+		$secure = Config::inst()->get('Session', 'cookie_secure');
+		$session_path = Config::inst()->get('Session', 'session_store_path');
+		$timeout = Config::inst()->get('Session', 'timeout');
 
 		if(!session_id() && !headers_sent()) {
 			if($domain) {
-				session_set_cookie_params(self::$timeout, $path, $domain, $secure /* secure */, true /* httponly */);
+				session_set_cookie_params($timeout, $path, $domain, $secure /* secure */, true /* httponly */);
 			} else {
-				session_set_cookie_params(self::$timeout, $path, null, $secure /* secure */, true /* httponly */);
+				session_set_cookie_params($timeout, $path, null, $secure /* secure */, true /* httponly */);
 			}
 
 			// Allow storing the session in a non standard location
@@ -480,9 +528,10 @@ class Session {
 	public static function destroy($removeCookie = true) {
 		if(session_id()) {
 			if($removeCookie) {
-				$path = self::get_cookie_path();
-				$domain = self::get_cookie_domain();
-				$secure = self::get_cookie_secure(); 
+				$path = Config::inst()->get('cookie_path');
+				if(!$path) $path = Director::baseURL();
+				$domain = Config::inst()->get('cookie_domain');
+				$secure = Config::inst()->get('cookie_secure'); 
 				
 				if($domain) {
 					setcookie(session_name(), '', null, $path, $domain, $secure, true); 
@@ -500,13 +549,20 @@ class Session {
 	/**
 	 * Set the timeout of a Session value
 	 *
+	 * @deprecated 3.2 Use the "Session.timeout" config setting instead
+	 * 
 	 * @param int $timeout Time until a session expires in seconds. Defaults to expire when browser is closed.
 	 */
 	public static function set_timeout($timeout) {
-		self::$timeout = intval($timeout);
+		Deprecation::notice('3.2', 'Use the "Session.timeout" config setting instead');
+		Config::inst()->update('Session', 'timeout', (int)$timeout);
 	}
 	
+	/**
+	 * @deprecated 3.2 Use the "Session.timeout" config setting instead
+	 */
 	public static function get_timeout() {
-		return self::$timeout;
+		Deprecation::notice('3.2', 'Use the "Session.timeout" config setting instead');
+		return Config::inst()->update('Session', 'timeout');
 	}
 }

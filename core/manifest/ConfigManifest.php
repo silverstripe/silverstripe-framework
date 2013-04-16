@@ -225,7 +225,7 @@ class SS_ConfigManifest {
 		else {
 			// If we got an odd number of parts the config file doesn't have a header for every document
 			if (count($parts) % 2 != 0) {
-				user_error("Configuration file $basename does not have an equal number of headers and config blocks");
+				user_error("Configuration file '$pathname' does not have an equal number of headers and config blocks");
 			}
 
 			// Step through each pair

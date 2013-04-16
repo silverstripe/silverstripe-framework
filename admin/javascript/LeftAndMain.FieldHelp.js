@@ -1,27 +1,35 @@
 (function($) {
 	$.entwine('ss', function($) {
 		/**
-		 * Takes form fields with a title attribute, extracts it, and displays
-		 * it as inline help text below the field.
+		 * Converts an inline field description into a tooltip
+		 * which is shown on hover over any part of the field container,
+		 * as well as when focusing into an input element within the field container.
+		 *
+		 * Note that some fields don't have distinct focusable
+		 * input fields (e.g. GridField), and aren't compatible
+		 * with showing tooltips.
 		 */
-		$(".cms form .field .middleColumn > [title]").entwine({
+		$(".cms .field.cms-description-tooltip").entwine({
 			onmatch: function() {
-				
-				var title = this.prop("title");
-				var field = this.closest(".field");
-
-				if(title && title.length && field.has('.help').length == 0) {
-					var span = $("<span></span>", {
-						"class": "help",
-						"html":  title
+				var descriptionEl = this.find('.description'), inputEl, tooltipEl;
+				if(descriptionEl.length) {
+					this
+						// TODO Remove title setting, shouldn't be necessary
+						.attr('title', descriptionEl.text())
+						.tooltip({content: descriptionEl.html()});
+					descriptionEl.remove();
+				}
+			}
 					});
 
-					field.append(span);
-					this.removeProp("title");
+		$(".cms .field.cms-description-tooltip :input").entwine({
+			onfocusin: function(e) {
+				this.closest('.field').tooltip('open');
+			},
+			onfocusout: function(e) {
+				this.closest('.field').tooltip('close');
 				}
-
-				this._super();
-			}
 		});
-	});
+
+		});
 }(jQuery));

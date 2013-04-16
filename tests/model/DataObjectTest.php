@@ -5,7 +5,7 @@
  */
 class DataObjectTest extends SapphireTest {
 	
-	static $fixture_file = 'DataObjectTest.yml';
+	protected static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
@@ -115,24 +115,6 @@ class DataObjectTest extends SapphireTest {
 		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" DESC");
 		$this->assertEquals(3, $comments->Count());
 		$this->assertEquals('Phil', $comments->First()->Name);
-
-		// Test join - 2.4 only
-		$originalDeprecation = Deprecation::dump_settings();
-		Deprecation::notification_version('2.4');
-
-		$comments = DataObject::get(
-			'DataObjectTest_TeamComment',
-			"\"DataObjectTest_Team\".\"Title\" = 'Team 1'",
-			"\"Name\" ASC",
-			"INNER JOIN \"DataObjectTest_Team\""
-				. " ON \"DataObjectTest_TeamComment\".\"TeamID\" = \"DataObjectTest_Team\".\"ID\""
-		);
-
-		$this->assertEquals(2, $comments->Count());
-		$this->assertEquals('Bob', $comments->First()->Name);
-		$this->assertEquals('Joe', $comments->Last()->Name);
-
-		Deprecation::restore_settings($originalDeprecation);
 
 		// Test limit
 		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" ASC", '', '1,2');
@@ -1138,48 +1120,48 @@ class DataObjectTest extends SapphireTest {
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'IsRetired' => 'Boolean',
 		'ShirtNumber' => 'Varchar',
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'FavouriteTeam' => 'DataObjectTest_Team',
 	);
 	
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'Teams' => 'DataObjectTest_Team'
 	);
 }
 
 class DataObjectTest_Team extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar', 
 		'DatabaseField' => 'HTMLVarchar'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		"Captain" => 'DataObjectTest_Player',
 		'HasOneRelationship' => 'DataObjectTest_Player',
 	);
 
-	static $has_many = array(
+	private static $has_many = array(
 		'SubTeams' => 'DataObjectTest_SubTeam',
 		'Comments' => 'DataObjectTest_TeamComment'
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		'Players' => 'DataObjectTest_Player'
 	);
 	
-	static $many_many_extraFields = array(
+	private static $many_many_extraFields = array(
 		'Players' => array(
 			'Position' => 'Varchar(100)'
 		)
 	);
 
-	static $default_sort = "Title";
+	private static $default_sort = '"Title"';
 
 	public function MyTitle() {
 		return 'Team ' . $this->Title;
@@ -1192,7 +1174,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 }
 
 class DataObjectTest_Fixture extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		// Funny field names
 		'Data' => 'Varchar',
 		'Duplicate' => 'Varchar',
@@ -1206,7 +1188,7 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 		'MyFieldWithAltDefault' => 'Varchar'
 	);
 
-	static $defaults = array(
+	private static $defaults = array(
 		'MyFieldWithDefault' => 'Default Value',
 	);
 
@@ -1219,16 +1201,16 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 }
 
 class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'SubclassDatabaseField' => 'Varchar'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		"ParentTeam" => 'DataObjectTest_Team',
 	);
 }
 class OtherSubclassWithSameField extends DataObjectTest_Team implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'SubclassDatabaseField' => 'Varchar',
 	);
 }
@@ -1243,11 +1225,11 @@ class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements Te
 
 class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'ExtendedDatabaseField' => 'Varchar'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'ExtendedHasOneRelationship' => 'DataObjectTest_Player'
 	);
 
@@ -1259,7 +1241,7 @@ class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
 
 class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar(50)'
 	);
 	
@@ -1273,42 +1255,42 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 }
 
 class DataObjectTest_Company extends DataObject {
-	public static $has_one = array (
+	private static $has_one = array (
 		'CEO'         => 'DataObjectTest_CEO',
 		'PreviousCEO' => 'DataObjectTest_CEO'
 	);
 	
-	public static $has_many = array (
+	private static $has_many = array (
 		'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 		'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
 	);
 }
 
 class DataObjectTest_Staff extends DataObject {
-	public static $has_one = array (
+	private static $has_one = array (
 		'CurrentCompany'  => 'DataObjectTest_Company',
 		'PreviousCompany' => 'DataObjectTest_Company'
 	);
 }
 
 class DataObjectTest_CEO extends DataObjectTest_Staff {
-	public static $belongs_to = array (
+	private static $belongs_to = array (
 		'Company'         => 'DataObjectTest_Company.CEO',
 		'PreviousCompany' => 'DataObjectTest_Company.PreviousCEO'
 	);
 }
 
 class DataObjectTest_TeamComment extends DataObject {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'Comment' => 'Text'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'Team' => 'DataObjectTest_Team'
 	);
 
 }
 
-DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Extension');
+DataObjectTest_Team::add_extension('DataObjectTest_Team_Extension');
 

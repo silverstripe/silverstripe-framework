@@ -13,12 +13,8 @@ Your extension will need to be a subclass of `[api:DataExtension]` or the `[api:
 
 	:::php
 	<?php
-	
-	// mysite/code/CustomMember.php
-	
-	class CustomMember extends DataExtension {
-	
-	}
+	// mysite/code/MyMemberExtension.php
+	class MyMemberExtension extends DataExtension {}
 
 This defines your own extension where you can add your own functions, database fields or other properties you want.
 After you create this extension however it does not yet apply it to your object. Next you need to tell SilverStripe what
@@ -26,22 +22,23 @@ class you want to extend.
 
 ### Adding a extension to a built-in class
 
-Sometimes you will want to add extension to classes that you didn't make.  For example, you might want to add the
-ForumRole extension to the `[api:Member]` object.
+Sometimes you will want to add extension to classes that you can't cleanly subclass. 
+For example, you might want to add a `MyMemberExtension` class to the `[api:Member]` object.
 
+In order to active this extension, you'd add the following to your [config.yml](/topics/configuration).
+
+	:::yml
+	Member:
+	  extensions:
+	    - MyMemberExtension
+
+Alternatively, you can add extensions through PHP code as well (in your `config.php` file), 
+which means they can be used in conditional configuration. 
 
 	:::php
-	Object::add_extension('Class You Want To Override', 'Your Class Name');
-
-
-For example above we want to override Member with a Custom Member so we would write the following
-
-	:::php
-	// add to mysite/_config.php	
-	Object::add_extension('Member', 'CustomMember');
+	Member::add_extension('MyMemberExtension');
 
 ##  Implementation
-
 
 ###  Adding extra database fields
 
@@ -52,10 +49,10 @@ The function should return a map where the keys are the names of the static vari
 
 	:::php
 	class CustomMember extends DataExtension {
-		static $db = array(
+		private static $db = array(
 			'AvatarURL' => 'Varchar',
 		);
-		static $has_one = array(
+		private static $has_one = array(
 			'RelatedMember' => 'Member',
 		);
 	}
@@ -127,9 +124,9 @@ extended by.
 	:::php
 	class Customer extends DataObject {
 	
-	 static $has_one = array('Account'=>'Account');
+	 private static $has_one = array('Account'=>'Account');
 	
-	 static $extensions = array(
+	 private static $extensions = array(
 	    'CustomerWorkflow'
 	 );
 	
@@ -137,11 +134,11 @@ extended by.
 	
 	class Account extends DataObject {
 	
-	 static $db = array(
+	 private static $db = array(
 	     'IsMarkedForDeletion'=>'Boolean'
 	 );
 	
-	 static $has_many = array('Customers'=>'Customer');
+	 private static $has_many = array('Customers'=>'Customer');
 	
 	}
 	

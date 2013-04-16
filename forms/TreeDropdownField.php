@@ -42,11 +42,11 @@
 
 class TreeDropdownField extends FormField {
 	
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action!/$ID' => '$Action'
 	);
 	
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'tree'
 	);
 	
@@ -85,8 +85,9 @@ class TreeDropdownField extends FormField {
 	 * @param bool $showSearch enable the ability to search the tree by 
 	 *		entering the text in the input field.
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title',
-			$showSearch = false) {
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', 
+		$labelField = 'TreeTitle', $showSearch = false
+	) {
 
 		$this->sourceObject = $sourceObject;
 		$this->keyField     = $keyField;
@@ -159,6 +160,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setChildrenMethod($method) {
 		$this->childrenMethod = $method;
+		return $this;
 	}
 
 	/**
@@ -267,10 +269,50 @@ class TreeDropdownField extends FormField {
 			. $this->keyField . '\" class=\"class-$child->class"' 
 			. ' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 
-		if($isSubTree) {
-			return substr(trim($obj->getChildrenAsUL('', $eval, null, true, $this->childrenMethod)), 4, -5);
+		// Limit the amount of nodes shown for performance reasons.
+		// Skip the check if we're filtering the tree, since its not clear how many children will
+		// match the filter criteria until they're queried (and matched up with previously marked nodes).
+		$nodeThresholdLeaf = Config::inst()->get('Hierarchy', 'node_threshold_leaf');
+		if($nodeThresholdLeaf && !$this->filterCallback && !$this->search) {
+			$className = $this->sourceObject;
+			$nodeCountCallback = function($parent, $numChildren) use($className, $nodeThresholdLeaf) {
+				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
+					return sprintf(
+						'<ul><li><span class="item">%s</span></li></ul>',
+						_t('LeftAndMain.TooManyPages', 'Too many pages')
+					);
+				}
+			};	
 		} else {
-			return $obj->getChildrenAsUL('class="tree"', $eval, null, true, $this->childrenMethod);
+			$nodeCountCallback = null;
+		}
+
+		if($isSubTree) {
+			$html = $obj->getChildrenAsUL(
+				"",
+				$eval,
+				null,
+				true, 
+				$this->childrenMethod,
+				'numChildren',
+				true, // root call
+				null,
+				$nodeCountCallback
+			);
+			return substr(trim($html), 4, -5);
+		} else {
+			$html = $obj->getChildrenAsUL(
+				'class="tree"',
+				$eval,
+				null,
+				true, 
+				$this->childrenMethod,
+				'numChildren',
+				true, // root call
+				null,
+				$nodeCountCallback
+			);
+			return $html;
 		}
 	}
 
@@ -289,6 +331,51 @@ class TreeDropdownField extends FormField {
 		}
 		
 		return true;
+	}
+
+	/**
+	 * @param String $field
+	 */
+	public function setLabelField($field) {
+		$this->labelField = $field;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getLabelField() {
+		return $this->labelField;
+	}
+
+	/**
+	 * @param String $field
+	 */
+	public function setKeyField($field) {
+		$this->keyField = $field;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getKeyField() {
+		return $this->keyField;
+	}
+
+	/**
+	 * @param String $field
+	 */
+	public function setSourceObject($class) {
+		$this->sourceObject = $class;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getSourceObject() {
+		return $this->sourceObject;
 	}
 	
 	/**
@@ -341,9 +428,14 @@ class TreeDropdownField extends FormField {
 	 * Changes this field to the readonly field.
 	 */
 	public function performReadonlyTransformation() {
-		return new TreeDropdownField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField,
-			$this->labelField);
+		$copy = $this->castedCopy('TreeDropdownField_Readonly');
+		$copy->setKeyField($this->keyField);
+		$copy->setLabelField($this->labelField);
+		$copy->setSourceObject($this->sourceObject);
+		
+		return $copy;
 	}
+	
 }
 
 /**

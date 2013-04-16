@@ -8,7 +8,7 @@
  */
 class FolderTest extends SapphireTest {
 	
-	static $fixture_file = 'FileTest.yml'; 
+	protected static $fixture_file = 'FileTest.yml'; 
 	
 	public function testCreateFromNameAndParentIDSetsFilename() {
 		$folder1 = $this->objFromFixture('Folder', 'folder1');

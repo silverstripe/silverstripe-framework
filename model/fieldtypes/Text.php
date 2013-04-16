@@ -18,7 +18,7 @@
  */
 class Text extends StringField {
 
-	static $casting = array(
+	private static $casting = array(
 		"AbsoluteLinks" => "Text",
 		"BigSummary" => "Text",
 		"ContextSummary" => "Text",
@@ -38,57 +38,30 @@ class Text extends StringField {
  	 * @see DBField::requireField()
  	 */
 	public function requireField() {
-		$parts=Array(
-			'datatype'=>'mediumtext',
-			'character set'=>'utf8',
-			'collate'=>'utf8_general_ci',
-			'arrayValue'=>$this->arrayValue
+		$parts = array(
+			'datatype' => 'mediumtext',
+			'character set' => 'utf8',
+			'collate' => 'utf8_general_ci',
+			'arrayValue' => $this->arrayValue
 		);
-		$values=Array('type'=>'text', 'parts'=>$parts);
+
+		$values= array(
+			'type' => 'text',
+			'parts' => $parts
+		);
+
 		DB::requireField($this->tableName, $this->name, $values, $this->default);
 	}
 	
 	/**
-	 * Limit this field's content by a number of words.
-	 * CAUTION: This is not XML safe. Please use
-	 * {@link LimitWordCountXML()} instead.
+	 * Return the value of the field stripped of html tags.
 	 *
-	 * @param int $numWords Number of words to limit by
-	 * @param string $add Ellipsis to add to the end of truncated string
-	 * @return string
-	 */
-	public function LimitWordCount($numWords = 26, $add = '...') {
-		$this->value = trim(Convert::xml2raw($this->value));
-		$ret = explode(' ', $this->value, $numWords + 1);
-		
-		if(count($ret) <= $numWords - 1) {
-			$ret = $this->value;
-		} else {
-			array_pop($ret);
-			$ret = implode(' ', $ret) . $add;
-		}
-		
-		return $ret;
-	}
-	
-	/**
-	 * Return the value of the field stripped of html tags
 	 * @return string
 	 */
 	public function NoHTML() {
 		return strip_tags($this->value);
 	}
-	/**
-	 * Return the value of the field with XML tags escaped.
-	 * 
-	 * @deprecated 3.0 Use DBField->XML() instead.
-	 * @return string
-	 */
-	public function EscapeXML() {
-		Deprecation::notice('3.0', 'Use DBField->XML() instead.');
-		return str_replace(array('&','<','>','"'), array('&amp;','&lt;','&gt;','&quot;'), $this->value);
-	}
-	
+
 	/**
 	 * Return the value of the field with relative links converted to absolute urls.
 	 * @return string
@@ -96,27 +69,16 @@ class Text extends StringField {
 	public function AbsoluteLinks() {
 		return HTTP::absoluteURLs($this->value);
 	}
-	
-	/**
-	 * Limit the number of words of the current field's
-	 * content. This is XML safe, so characters like &
-	 * are converted to &amp;
-	 *
-	 * @param int $numWords Number of words to limit by
-	 * @param string $add Ellipsis to add to the end of truncated string
-	 * @return string
-	 */
-	public function LimitWordCountXML($numWords = 26, $add = '...') {
-		$ret = $this->LimitWordCount($numWords, $add);
-		return Convert::raw2xml($ret);
-	}
 
 	/**
 	 * Limit sentences, can be controlled by passing an integer.
+	 *
 	 * @param int $sentCount The amount of sentences you want.
 	 */
 	public function LimitSentences($sentCount = 2) {
-		if(!is_numeric($sentCount)) user_error("Text::LimitSentence() expects one numeric argument", E_USER_NOTICE);
+		if(!is_numeric($sentCount)) {
+			user_error("Text::LimitSentence() expects one numeric argument", E_USER_NOTICE);
+		}
 		
 		$output = array();
 		$data = trim(Convert::xml2raw($this->value));
@@ -191,7 +153,7 @@ class Text extends StringField {
 	}
 	
 	/**
-	* Performs the same function as the big summary, but doesnt trim new paragraphs off data.
+	* Performs the same function as the big summary, but doesn't trim new paragraphs off data.
 	* Caution: Not XML/HTML-safe - does not respect closing tags.
 	*/
 	public function BigSummary($maxWords = 50, $plain = 1) {
@@ -358,5 +320,3 @@ class Text extends StringField {
 		return new TextField($this->name, $title);
 	}
 }
-
-

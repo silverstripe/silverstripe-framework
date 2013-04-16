@@ -14,7 +14,7 @@ as a .tar.gz file.
 
 1.  Unpack the contents of the zip file into the `themes` directory in your SilverStripe installation.
 2.  Change the site to the theme. You can do this either by:
-	- putting the following line in your ./mysite/_config.php: `SSViewer::set_theme("themename");`
+	- Altering the `SSViewer.theme` setting in your `[config.yml](/topics/configuration)`
 	- changing the theme in the Site Configuration panel in the CMS
 3. Visit your homepage with ?flush=all appended to the URL. `http://yoursite.com?flush=all`
 

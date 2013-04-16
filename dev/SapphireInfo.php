@@ -5,7 +5,7 @@
  * @subpackage control
  */
 class SapphireInfo extends Controller {
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'baseurl',
 		'version',
 		'environmenttype',

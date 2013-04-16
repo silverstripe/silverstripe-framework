@@ -1,7 +1,7 @@
 .ModelAdmin .cms-content-fields {
 	overflow:hidden; //removes scrolling from filter panel
 	.cms-edit-form {
-		overflow-y:scroll; //adds scrolling only to the datagrid 
+		overflow-y:auto; //adds scrolling only to the datagrid 
 		overflow-x:hidden;
 	}
 	.cms-content-tools .cms-panel-content {

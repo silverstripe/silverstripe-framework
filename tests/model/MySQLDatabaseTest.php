@@ -11,7 +11,7 @@ class MySQLDatabaseTest extends SapphireTest {
 	
 	public function setUp() {
 		if(DB::getConn() instanceof MySQLDatabase) {
-			MySQLDatabaseTest_DO::$db = array(
+			MySQLDatabaseTest_DO::config()->db = array(
 				'MultiEnum1' => 'MultiEnum("A, B, C, D","")',
 				'MultiEnum2' => 'MultiEnum("A, B, C, D","A")',
 				'MultiEnum3' => 'MultiEnum("A, B, C, D","A, B")',
@@ -43,6 +43,6 @@ class MySQLDatabaseTest extends SapphireTest {
 }
 
 class MySQLDatabaseTest_DO extends DataObject implements TestOnly {
-	static $db = array();
+	private static $db = array();
 
 }

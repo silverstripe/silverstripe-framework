@@ -5,7 +5,7 @@ It is where most documentation should live, and is the natural "second step" aft
 
  * [Access Control and Page Security](access-control): Restricting access and setting up permissions on your website
  * [Command line Usage](commandline): Calling controllers via the command line interface using `sake`
- * [Configuring your website](configuration): How to configure the `_config.php` file
+ * [Configuration](configuration): Influence behaviour through PHP and YAML configuration
  * [Controller](controller): The intermediate layer between your templates and the data model
  * [Data Types](data-types): Types that properties on `DataObject` can have (e.g. `Text` or `Date`)
  * [Datamodel](datamodel): How we use an "Object-relational model" to expose database information in a useful way

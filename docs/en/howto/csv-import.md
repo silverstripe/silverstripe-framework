@@ -48,13 +48,13 @@ The simplest way to use [api:CsvBulkLoader] is through a [api:ModelAdmin] interf
 	:::php
 	<?php
 	class PlayerAdmin extends ModelAdmin {
-	   static $managed_models = array(
+	   private static $managed_models = array(
 	      'Player'
 	   );
-	   static $model_importers = array(
+	   private static $model_importers = array(
 	      'Player' => 'PlayerCsvBulkLoader', 
 	   );
-	   static $url_segment = 'players';
+	   private static $url_segment = 'players';
 	}
 	?>
 
@@ -63,13 +63,16 @@ below the search form on the left.
 
 ## Import through a custom controller
 
-You can have more customized logic and interface feedback through a custom controller. Let's create a simple upload form (which is used for `MyDataObject` instances). You can access it through  `http://localhost/MyController/?flush=all`.
+You can have more customized logic and interface feedback through a custom controller. 
+Let's create a simple upload form (which is used for `MyDataObject` instances). 
+You'll need to add a route to your controller to make it accessible via URL 
+(see [director](/reference/director)).
 
 	:::php
 	<?php
 	class MyController extends Controller {
 
-		static $allowed_actions = array('Form');
+		private static $allowed_actions = array('Form');
 		
 		protected $template = "BlankPage";
 		
@@ -126,13 +129,13 @@ Datamodel for Player
 	:::php
 	<?php
 	class Player extends DataObject {
-	   static $db = array(
+	   private static $db = array(
 	      'PlayerNumber' => 'Int',
 	      'FirstName' => 'Text', 
 	      'LastName' => 'Text', 
 	      'Birthday' => 'Date', 
 	   );
-	   static $has_one = array(
+	   private static $has_one = array(
 	      'Team' => 'FootballTeam'
 	   );
 	}
@@ -144,10 +147,10 @@ Datamodel for FootballTeam:
 	:::php
 	<?php
 	class FootballTeam extends DataObject {
-	   static $db = array(
+	   private static $db = array(
 	      'Title' => 'Text', 
 	   );
-	   static $has_many = array(
+	   private static $has_many = array(
 	      'Players' => 'Player'
 	   );
 	}

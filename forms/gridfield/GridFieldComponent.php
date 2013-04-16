@@ -142,3 +142,18 @@ interface GridField_URLHandler extends GridFieldComponent {
 	 */
 	public function getURLHandlers($gridField);
 }
+
+/**
+ * A component which is used to handle when a grid field is saved into a record.
+ */
+interface GridField_SaveHandler extends GridFieldComponent {
+
+	/**
+	 * Called when a grid field is saved - i.e. the form is submitted.
+	 *
+	 * @param GridField $field
+	 * @param DataObjectInterface $record
+	 */
+	public function handleSave(GridField $grid, DataObjectInterface $record);
+
+}

@@ -21,7 +21,7 @@ abstract class Object {
 	 * 
 	 * Example:
 	 * <code>
-	 * public static $extensions = array (
+	 * private static $extensions = array (
 	 *   'Hierarchy',
 	 *   "Version('Stage', 'Live')"
 	 * );
@@ -33,8 +33,9 @@ abstract class Object {
 	 * Extensions are instanciated together with the object and stored in {@link $extension_instances}.
 	 *
 	 * @var array $extensions
+	 * @config
 	 */
-	public static $extensions = null;
+	private static $extensions = null;
 	
 	private static
 		$classes_constructed = array(),
@@ -153,12 +154,19 @@ abstract class Object {
 		// Keep track of the current bucket that we're putting data into
 		$bucket = &$args;
 		$bucketStack = array();
+		$had_ns = false;
 		
 		foreach($tokens as $token) {
 			$tName = is_array($token) ? $token[0] : $token;
 			// Get the class naem
 			if($class == null && is_array($token) && $token[0] == T_STRING) {
 				$class = $token[1];
+			} elseif(is_array($token) && $token[0] == T_NS_SEPARATOR) {
+				$class .= $token[1];
+				$had_ns = true;
+			} elseif ($had_ns && is_array($token) && $token[0] == T_STRING) {
+				$class .= $token[1];
+				$had_ns = false;
 			// Get arguments
 			} else if(is_array($token)) {
 				switch($token[0]) {
@@ -187,11 +195,13 @@ abstract class Object {
 			
 				case T_STRING:
 					switch($token[1]) {
-						case 'true': $args[] = true; break;
-						case 'false': $args[] = false; break;
+						case 'true': $bucket[] = true; break;
+						case 'false': $bucket[] = false; break;
+						case 'null': $bucket[] = null; break;
 						default: throw new Exception("Bad T_STRING arg '{$token[1]}'");
 					}
-				
+					break;
+
 				case T_ARRAY:
 					// Add an empty array to the bucket
 					$bucket[] = array();
@@ -411,10 +421,11 @@ abstract class Object {
 	/**
 	 * Return TRUE if a class has a specified extension
 	 *
-	 * @param string $class
 	 * @param string $requiredExtension the class name of the extension to check for.
 	 */
-	public static function has_extension($class, $requiredExtension) {
+	public static function has_extension($requiredExtension) {
+		$class = get_called_class();
+
 		$requiredExtension = strtolower($requiredExtension);
 		$extensions = Config::inst()->get($class, 'extensions');
 
@@ -429,17 +440,30 @@ abstract class Object {
 	
 	/**
 	 * Add an extension to a specific class.
+	 *
+	 * The preferred method for adding extensions is through YAML config,
+	 * since it avoids autoloading the class, and is easier to override in
+	 * more specific configurations.
+	 * 
 	 * As an alternative, extensions can be added to a specific class
 	 * directly in the {@link Object::$extensions} array.
 	 * See {@link SiteTree::$extensions} for examples.
 	 * Keep in mind that the extension will only be applied to new
 	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
+	 * @see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
 	 * @param string $class Class that should be extended - has to be a subclass of {@link Object}
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
-	public static function add_extension($class, $extension) {
+	public static function add_extension($classOrExtension, $extension = null) {
+		if(func_num_args() > 1) {
+			$class = $classOrExtension;
+		} else {
+			$class = get_called_class();
+			$extension = $classOrExtension;
+		}
+
 		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
 		}
@@ -461,10 +485,11 @@ abstract class Object {
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
-			unset(self::$extension_sources[$subclass]);
 		}
 
 		Config::inst()->update($class, 'extensions', array($extension));
+		Config::inst()->extraConfigSourcesChanged($class);
+
 		Injector::inst()->unregisterAllObjects();
 
 		// load statics now for DataObject classes
@@ -478,6 +503,7 @@ abstract class Object {
 
 	/**
 	 * Remove an extension from a class.
+	 *
 	 * Keep in mind that this won't revert any datamodel additions
 	 * of the extension at runtime, unless its used before the
 	 * schema building kicks in (in your _config.php).
@@ -489,11 +515,27 @@ abstract class Object {
 	 * 
 	 * @todo Add support for removing extensions with parameters
 	 *
-	 * @param string $class
 	 * @param string $extension Classname of an {@link Extension} subclass, without parameters
 	 */
-	public static function remove_extension($class, $extension) {
+	public static function remove_extension($extension) {
+		$class = get_called_class();
+
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
+
+		// remove any instances of the extension with parameters
+		$config = Config::inst()->get($class, 'extensions');
+
+		if($config) {
+			foreach($config as $k => $v) {
+				// extensions with parameters will be stored in config as
+				// ExtensionName("Param").
+				if(preg_match(sprintf("/^(%s)\(/", preg_quote($extension, '/')), $v)) {
+					Config::inst()->remove($class, 'extensions', Config::anything(), $v);
+				}
+			}
+		}
+
+		Config::inst()->extraConfigSourcesChanged($class);
 
 		// unset singletons to avoid side-effects
 		Injector::inst()->unregisterAllObjects();
@@ -504,7 +546,6 @@ abstract class Object {
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
-			unset(self::$extension_sources[$subclass]);
 		}
 	}
 	
@@ -531,9 +572,6 @@ abstract class Object {
 	
 	// --------------------------------------------------------------------------------------------------------------
 
-	private static $extension_sources = array();
-
-	// Don't bother checking some classes that should never be extended
 	private static $unextendable_classes = array('Object', 'ViewableData', 'RequestHandler');
 
 	static public function get_extra_config_sources($class = null) {
@@ -541,9 +579,6 @@ abstract class Object {
 
 		// If this class is unextendable, NOP
 		if(in_array($class, self::$unextendable_classes)) return;
-
-		// If we have a pre-cached version, use that
-		if(array_key_exists($class, self::$extension_sources)) return self::$extension_sources[$class];
 
 		// Variable to hold sources in
 		$sources = null;
@@ -560,7 +595,7 @@ abstract class Object {
 				$sources[] = $extensionClass;
 
 				if(!ClassInfo::has_method_from($extensionClass, 'add_to_class', 'Extension')) {
-					Deprecation::notice('3.1.0', 
+					Deprecation::notice('3.2.0', 
 						"add_to_class deprecated on $extensionClass. Use get_extra_config instead");
 				}
 
@@ -575,7 +610,7 @@ abstract class Object {
 			}
 		}
 
-		return self::$extension_sources[$class] = $sources;
+		return $sources;
 	}
 
 	public function __construct() {
@@ -814,14 +849,7 @@ abstract class Object {
 	public function uninherited($name) {
 		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::UNINHERITED);
 	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function set_uninherited() {
-		Deprecation::notice('2.4', 'Use a custom static on your object instead.');
-	}
-	
+
 	// --------------------------------------------------------------------------------------------------------------
 	
 	/**

@@ -1,7 +1,7 @@
 <?php
 
 class GridFieldDetailFormTest extends FunctionalTest {
-	static $fixture_file = 'GridFieldDetailFormTest.yml';
+	protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
 	protected $extraDataObjects = array(
 		'GridFieldDetailFormTest_Person',
@@ -106,6 +106,45 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
 	}
 
+	public function testEditFormWithManyManyExtraData() {
+		$this->logInWithPermission('ADMIN');
+
+		// Lists all categories for a person
+		$response = $this->get('GridFieldDetailFormTest_CategoryController');
+		$this->assertFalse($response->isError());
+		$parser = new CSSContentParser($response->getBody());
+		$editlinkitem = $parser->getBySelector('.ss-gridfield-items .first .edit-link');
+		$editlink = (string) $editlinkitem[0]['href'];
+
+		// Edit a single category, incl. manymany extrafields added manually
+		// through GridFieldDetailFormTest_CategoryController
+		$response = $this->get($editlink);
+		$this->assertFalse($response->isError());
+		$parser = new CSSContentParser($response->getBody());
+		$editform = $parser->getBySelector('#Form_ItemEditForm');
+		$editformurl = (string) $editform[0]['action'];
+
+		$manyManyField = $parser->getByXpath('//*[@id="Form_ItemEditForm"]//input[@name="ManyMany[IsPublished]"]');
+		$this->assertTrue((bool)$manyManyField);
+		
+		$response = $this->post(
+			$editformurl,
+			array(
+				'Name' => 'Updated Category',
+				'ManyMany' => array('IsPublished' => 1),
+				'action_doSave' => 1
+			)
+		);
+		$this->assertFalse($response->isError());
+
+		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+		$this->assertEquals(
+			array('IsPublished' => 1),
+			$person->Categories()->getExtraData('', $category->ID)
+		);
+	}
+
 	public function testNestedEditForm() {
 		$this->logInWithPermission('ADMIN');
 
@@ -153,6 +192,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	}
 
 	public function testCustomItemRequestClass() {
+		$this->logInWithPermission('ADMIN');
+
 		$component = new GridFieldDetailForm();
 		$this->assertEquals('GridFieldDetailForm_ItemRequest', $component->getItemRequestClass());
 		$component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
@@ -160,6 +201,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	}
 
 	public function testItemEditFormCallback() {
+		$this->logInWithPermission('ADMIN');
+		
 		$category = new GridFieldDetailFormTest_Category();
 		$component = new GridFieldDetailForm();
 		$component->setItemEditFormCallback(function($form, $component) {
@@ -180,20 +223,26 @@ class GridFieldDetailFormTest extends FunctionalTest {
 }
 
 class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'Group' => 'GridFieldDetailFormTest_PeopleGroup'
 	);
 
-	static $many_many = array(
+	private static $many_many = array(
 		'Categories' => 'GridFieldDetailFormTest_Category'
 	);
 
-	static $default_sort = 'FirstName';
+	private static $many_many_extraFields = array(
+		'Categories' => array(
+			'IsPublished' => 'Boolean'
+		)
+	);
+
+	private static $default_sort = '"FirstName"';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -209,15 +258,15 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 }
 
 class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar'
 	);
 
-	static $has_many = array(
+	private static $has_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
-	static $default_sort = 'Name';
+	private static $default_sort = '"Name"';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -233,15 +282,15 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 }
 
 class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar'
 	);
 
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
-	static $default_sort = 'Name';
+	private static $default_sort = '"Name"';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -278,10 +327,28 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 
 class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
-
+	
 	public function Form() {
 		$field = new GridField('testfield', 'testfield', GridFieldDetailFormTest_PeopleGroup::get()->sort('Name'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
+		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+		$field->getConfig()->addComponent(new GridFieldEditButton());
+		return new Form($this, 'Form', new FieldList($field), new FieldList());
+	}
+}
+
+class GridFieldDetailFormTest_CategoryController extends Controller implements TestOnly {
+	protected $template = 'BlankPage';
+
+	public function Form() {
+		// GridField lists categories for a specific person
+		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$detailFields = singleton('GridFieldDetailFormTest_Category')->getCMSFields();
+		$detailFields->addFieldToTab('Root.Main', new CheckboxField('ManyMany[IsPublished]'));
+		$field = new GridField('testfield', 'testfield', $person->Categories());
+		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$gridFieldForm->setFields($detailFields);
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
 		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$field->getConfig()->addComponent(new GridFieldEditButton());

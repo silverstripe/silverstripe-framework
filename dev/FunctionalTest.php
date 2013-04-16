@@ -28,12 +28,12 @@ class FunctionalTest extends SapphireTest {
 	 * This can be handy for functional testing of modules without having to worry about whether a user has changed
 	 * behaviour by replacing the theme.
 	 */
-	static $disable_themes = false;
+	protected static $disable_themes = false;
 	
 	/**
 	 * Set this to true on your sub-class to use the draft site by default for every test in this class.
 	 */
-	static $use_draft_site = false;
+	protected static $use_draft_site = false;
 	
 	protected $mainSession = null;
 	
@@ -64,10 +64,10 @@ class FunctionalTest extends SapphireTest {
 		$this->mainSession = new TestSession();
 
 		// Disable theme, if necessary
-		if($this->stat('disable_themes')) SSViewer::set_theme(null);
+		if(static::get_disable_themes()) Config::inst()->update('SSViewer', 'theme', null);
 		
 		// Switch to draft site, if necessary
-		if($this->stat('use_draft_site')) {
+		if(static::get_use_draft_site()) {
 			$this->useDraftSite();
 		}
 		
@@ -323,10 +323,22 @@ class FunctionalTest extends SapphireTest {
 
 	/**
 	 * Return a static variable from this class.
-	 * Gets around PHP's lack of late static binding.
 	 */
 	public function stat($varName) {
-		$className = get_class($this);
-		return eval("return {$className}::\$$varName;");
+		return static::$varName;
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public static function get_disable_themes() {
+		return static::$disable_themes;
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public static function get_use_draft_site() {
+		return static::$use_draft_site;
 	}
 }

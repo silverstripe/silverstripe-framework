@@ -150,15 +150,14 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 			}
 		}
 		
-		// Sort menu items according to priority
+		// Sort menu items according to priority, then title asc
 		$menuPriority = array();
-		$i = 0;
+		$menuTitle    = array();
 		foreach($menuItems as $key => $menuItem) {
-			$i++;
-			// This funny litle formula ensures that the first item added with the same priority will be left-most.
-			$menuPriority[$key] = $menuItem->priority*100 - $i;
+			$menuPriority[$key] = is_numeric($menuItem->priority) ? $menuItem->priority : 0;
+			$menuTitle[$key]    = $menuItem->title;
 		}
-		array_multisort($menuPriority, SORT_DESC, $menuItems);
+		array_multisort($menuPriority, SORT_DESC, $menuTitle, SORT_ASC, $menuItems);
 		
 		return $menuItems;
 	}
@@ -220,7 +219,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * 					{@link remove_menu_item}. Also used as a CSS-class for icon customization.
 	 * @param string $menuTitle Localized title showing in the menu bar 
 	 * @param string $url A relative URL that will be linked in the menu bar.
-	 * 					Make sure to add a matching route via {@link Director::addRules()} to this url.
+	 * 					Make sure to add a matching route via {@link Director::$rules} to this url.
 	 * @param string $controllerClass The controller class for this menu, used to check permisssions.  
 	 * 					If blank, it's assumed that this is public, and always shown to users who 
 	 * 					have the rights to access some other part of the admin area.

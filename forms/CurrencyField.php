@@ -40,9 +40,7 @@ class CurrencyField extends TextField {
 	 * Create a new class for this field
 	 */
 	public function performReadonlyTransformation() {
-		$field = new CurrencyField_Readonly($this->name, $this->title, $this->value);
-		$field -> addExtraClass($this->extraClass());
-		return $field;
+		return $this->castedCopy('CurrencyField_Readonly');
 	}
 
 	public function validate($validator) {

@@ -103,6 +103,10 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	public function column($value = 'ID') {
 		return $this->list->column($value);
 	}
+	
+	public function each($callback) {
+		return $this->list->each($callback);
+	}
 
 	public function canSortBy($by) {
 		return $this->list->canSortBy($by);

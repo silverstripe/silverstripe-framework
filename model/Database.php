@@ -6,23 +6,20 @@
  * @subpackage model
  */
 abstract class SS_Database {
-	/**
-	 * Connection object to the database.
-	 * @param resource
-	 */
-	static $globalConn;
 	
 	/**
+	 * @config
 	 * @var boolean Check tables when running /dev/build, and repair them if necessary. 
 	 * In case of large databases or more fine-grained control on how to handle
 	 * data corruption in tables, you can disable this behaviour and handle it
 	 * outside of this class, e.g. through a nightly system task with extended logging capabilities.
 	 */
-	static $check_and_repair_on_build = true;
+	private static $check_and_repair_on_build = true;
 	
 	/**
 	 * If this is false, then information about database operations
 	 * will be displayed, eg creation of tables.
+	 * 
 	 * @param boolean
 	 */
 	protected $supressOutput = false;
@@ -329,7 +326,9 @@ abstract class SS_Database {
 			$this->transCreateTable($table, $options, $extensions);
 			$this->alterationMessage("Table $table: created","created");
 		} else {
-			if(self::$check_and_repair_on_build) $this->checkAndRepairTable($table, $options);
+			if(Config::inst()->get('Database', 'check_and_repair_on_build')) {
+				$this->checkAndRepairTable($table, $options);
+			} 
 			
 			// Check if options changed
 			$tableOptionsChanged = false;
@@ -486,8 +485,6 @@ abstract class SS_Database {
 		$fieldValue = null;
 		$newTable = false;
 		
-		Profiler::mark('requireField');
-		
 		// backwards compatibility patch for pre 2.4 requireField() calls
 		$spec_orig=$spec;
 		
@@ -538,10 +535,7 @@ abstract class SS_Database {
 		}
 		
 		if($newTable || $fieldValue=='') {
-			Profiler::mark('createField');
-			
 			$this->transCreateField($table, $field, $spec_orig);
-			Profiler::unmark('createField');
 			$this->alterationMessage("Field $table.$field: created as $spec_orig","created");
 		} else if($fieldValue != $specValue) {
 			// If enums/sets are being modified, then we need to fix existing data in the table.
@@ -577,13 +571,12 @@ abstract class SS_Database {
 					}
 				}
 			}
-			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec_orig);
-			Profiler::unmark('alterField');
-			$this->alterationMessage("Field $table.$field: changed to $specValue"
-				. " <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
+			$this->alterationMessage(
+				"Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>",
+				"changed"
+			);
 		}
-		Profiler::unmark('requireField');
 	}
 	
 	/**
@@ -757,6 +750,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the SELECT clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @param array $select Select columns
 	 * @param boolean $distinct Distinct select?
 	 * @return string
@@ -777,6 +772,8 @@ abstract class SS_Database {
 
 	/**
 	 * Return the FROM clause ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlFromToString($from) {
@@ -785,6 +782,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the WHERE clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlWhereToString($where, $connective) {
@@ -793,6 +792,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the ORDER BY clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlOrderByToString($orderby) {
@@ -807,6 +808,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the GROUP BY clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlGroupByToString($groupby) {
@@ -815,6 +818,8 @@ abstract class SS_Database {
 
 	/**
 	 * Returns the HAVING clauses ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlHavingToString($having) {
@@ -823,6 +828,8 @@ abstract class SS_Database {
 
 	/**
 	 * Return the LIMIT clause ready for inserting into a query.
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @return string
 	 */
 	public function sqlLimitToString($limit) {
@@ -854,6 +861,8 @@ abstract class SS_Database {
 
 	/**
 	 * Convert a SQLQuery object into a SQL statement
+	 * Caution: Expects correctly quoted and escaped SQL fragments.
+	 * 
 	 * @param $query SQLQuery
 	 */
 	public function sqlQueryToString(SQLQuery $query) {
@@ -888,6 +897,18 @@ abstract class SS_Database {
 	public function prepStringForDB($string) {
 		return "'" . Convert::raw2sql($string) . "'";
 	}
+
+	/**
+	 * Generate a WHERE clause for text matching.
+	 * 
+	 * @param String $field Quoted field name
+	 * @param String $value Escaped search. Can include percentage wildcards.
+	 * @param boolean $exact Exact matches or wildcard support.
+	 * @param boolean $negate Negate the clause.
+	 * @param boolean $caseSensitive Perform case sensitive search.
+	 * @return String SQL
+	 */
+	abstract public function comparisonClause($field, $value, $exact = false, $negate = false, $caseSensitive = false);
 
 	/**
 	 * function to return an SQL datetime expression that can be used with the adapter in use

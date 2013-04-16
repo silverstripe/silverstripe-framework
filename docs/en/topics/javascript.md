@@ -408,7 +408,7 @@ HTML
 
 	:::ss
 	<form action"#">
-	  <div class="autocomplete {url:'MyController/autocomplete'}">
+	  <div class="autocomplete {url:'my-controller-route/autocomplete'}">
 	    <input type="text" name="title" />
 	    <div class="results" style="display: none;">
 	  </div>

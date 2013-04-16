@@ -4,6 +4,12 @@ jQuery.noConflict();
  * File: LeftAndMain.js
  */
 (function($) {
+
+	window.onresize = function(e) {
+		// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
+		$('.cms-container').trigger('windowresize');
+	};
+
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
@@ -27,7 +33,7 @@ jQuery.noConflict();
 					disable_search_threshold: 20
 				});
 
-				var title = el.prop('title')
+				var title = el.prop('title');
 
 				if(title) {
 					el.siblings('.chzn-container').prop('title', title);
@@ -102,6 +108,17 @@ jQuery.noConflict();
 			StateChangeCount: 0,
 			
 			/**
+			 * Options for the threeColumnCompressor layout algorithm.
+			 *
+			 * See LeftAndMain.Layout.js for description of these options.
+			 */
+			LayoutOptions: {
+				minContentWidth: 820,
+				minPreviewWidth: 400,
+				mode: 'content'
+			},
+
+			/**
 			 * Constructor: onmatch
 			 */
 			onadd: function() {
@@ -119,7 +136,7 @@ jQuery.noConflict();
 					this._super();
 					return;
 				}
-				
+
 				// Initialize layouts
 				this.redraw();
 
@@ -127,13 +144,17 @@ jQuery.noConflict();
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
+				this.restoreTabState();
 				
 				this._super();
 			},
 
 			fromWindow: {
-				onstatechange: function(){ this.handleStateChange(); },
-				onresize: function(){ this.redraw(); }
+				onstatechange: function(){ this.handleStateChange(); }
+			},
+
+			'onwindowresize': function() {
+				this.redraw();
 			},
 
 			'from .cms-panel': {
@@ -144,19 +165,80 @@ jQuery.noConflict();
 				onaftersubmitform: function(){ this.redraw(); }
 			},
 
+			/**
+			 * Ensure the user can see the requested section - restore the default view.
+			 */
+			'from .cms-menu-list li a': {
+				onclick: function(e) {
+					var href = $(e.target).attr('href');
+					if(e.which > 1 || href == this._tabStateUrl()) return;
+					this.splitViewMode();
+				}
+			},
+
+			/**
+			 * Change the options of the threeColumnCompressor layout, and trigger layouting. You can provide any or
+			 * all options. The remaining options will not be changed.
+			 */
+			updateLayoutOptions: function(newSpec) {
+				var spec = this.getLayoutOptions();
+				$.extend(spec, newSpec);
+				this.redraw();
+			},
+
+			/**
+			 * Enable the split view - with content on the left and preview on the right.
+			 */
+			splitViewMode: function() {
+				this.updateLayoutOptions({
+					mode: 'split'
+				});
+				this.redraw();
+			},
+
+			/**
+			 * Content only.
+			 */
+			contentViewMode: function() {
+				this.updateLayoutOptions({
+					mode: 'content'
+				});
+				this.redraw();
+			},
+
+			/**
+			 * Preview only.
+			 */
+			previewMode: function() {
+				this.updateLayoutOptions({
+					mode: 'preview'
+				});
+				this.redraw();
+			},
+
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
-				// Move from inner to outer layouts. Some of the elements might not exist.
-				// Not all edit forms are layouted, so qualify by their data value.
+				// Reset the algorithm.
+				this.data('jlayout', jLayout.threeColumnCompressor(
+					{
+						menu: this.children('.cms-menu'),
+						content: this.children('.cms-content'),
+						preview: this.children('.cms-preview')
+					},
+					this.getLayoutOptions()
+				));
+				
+				// Trigger layout algorithm once at the top. This also lays out children - we move from outside to
+				// inside, resizing to fit the parent.
+				this.layout();
 
-				this.layout({resize: false});
-				this.find('.cms-panel-layout').redraw(); 
-				this.find('.cms-content-fields[data-layout-type]').redraw(); 
-				this.find('.cms-edit-form[data-layout-type]').redraw(); 
+				// Redraw on all the children that need it
+				this.find('.cms-panel-layout').redraw();
+				this.find('.cms-content-fields[data-layout-type]').redraw();
+				this.find('.cms-edit-form[data-layout-type]').redraw();
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
-				this.layout({resize: false});
 			},
 
 			/**
@@ -243,7 +325,8 @@ jQuery.noConflict();
 				$(button).addClass('loading');
 	
 				// validate if required
-				if(!form.validate()) {
+				var validationResult = form.validate();
+				if(typeof validationResult!=='undefined' && !validationResult) {
 					// TODO Automatically switch to the tab/position of the first error
 					statusMessage("Validation failed.", "bad");
 
@@ -354,8 +437,8 @@ jQuery.noConflict();
 						contentEls.removeClass('loading');
 					},
 					success: function(data, status, xhr) {
-						var els = self.handleAjaxResponse(data, status, xhr);
-						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els});
+						var els = self.handleAjaxResponse(data, status, xhr, state);
+						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els, state: state});
 					}
 				});
 				
@@ -366,9 +449,15 @@ jQuery.noConflict();
 			 * Handles ajax responses containing plain HTML, or mulitple
 			 * PJAX fragments wrapped in JSON (see PjaxResponseNegotiator PHP class).
 			 * Can be hooked into an ajax 'success' callback.
+			 *
+			 * Parameters:
+			 * 	(Object) data
+			 * 	(String) status
+			 * 	(XMLHTTPRequest) xhr
+			 * 	(Object) state The original history state which the request was initiated with
 			 */
-			handleAjaxResponse: function(data, status, xhr) {
-				var self = this, url, activeTabs, guessFragment;
+			handleAjaxResponse: function(data, status, xhr, state) {
+				var self = this, url, selectedTabs, guessFragment;
 
 				// Support a full reload
 				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
@@ -380,9 +469,15 @@ jQuery.noConflict();
 				// case we'll ignore the response
 				if(!data) return;
 
+				// Support a full reload
+				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
+					document.location.href = xhr.getResponseHeader('X-ControllerURL');
+					return;
+				}
+
 				// Update title
 				var title = xhr.getResponseHeader('X-Title');
-				if(title) document.title = title;
+				if(title) document.title = decodeURIComponent(title.replace(/\+/g, ' '));
 
 				var newFragments = {}, newContentEls;
 				// If content type is text/json (ignoring charset and other parameters)
@@ -417,8 +512,9 @@ jQuery.noConflict();
 					
 					// Set loading state and store element state
 					var origStyle = contentEl.attr('style');
-					var origVisible = contentEl.is(':visible');
-					var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
+					var origParent = contentEl.parent();
+					var origParentLayoutApplied = (typeof origParent.data('jlayout')!=='undefined');
+					var layoutClasses = ['east', 'west', 'center', 'north', 'south', 'column-hidden'];
 					var elemClasses = contentEl.attr('class');
 					var origLayoutClasses = [];
 					if(elemClasses) {
@@ -432,7 +528,6 @@ jQuery.noConflict();
 						.removeClass(layoutClasses.join(' '))
 						.addClass(origLayoutClasses.join(' '));
 					if(origStyle) newContentEl.attr('style', origStyle);
-					newContentEl.css('visibility', 'hidden');
 
 					// Allow injection of inline styles, as they're not allowed in the document body.
 					// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
@@ -442,8 +537,12 @@ jQuery.noConflict();
 					// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
 					contentEl.replaceWith(newContentEl);
 
-					// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
-					if(origVisible) newContentEl.css('visibility', 'visible');
+					// Force jlayout to rebuild internal hierarchy to point to the new elements.
+					// This is only necessary for elements that are at least 3 levels deep. 2nd level elements will
+					// be taken care of when we lay out the top level element (.cms-container).
+					if (!origParent.is('.cms-container') && origParentLayoutApplied) {
+						origParent.layout();
+					}
 				});
 
 				// Re-init tabs (in case the form tag itself is a tabset)
@@ -452,7 +551,7 @@ jQuery.noConflict();
 
 				this.redraw();
 
-				this.restoreTabState();
+				this.restoreTabState(typeof state.data.tabState !== 'undefined' ? state.data.tabState : null);
 
 				return newContentEls;
 			},
@@ -493,36 +592,69 @@ jQuery.noConflict();
 			 * Requires HTML5 sessionStorage support.
 			 */
 			saveTabState: function() {
-				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage == null) return;
+				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
 
-				var activeTabs = [], url = this._tabStateUrl();
-				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {
+				var selectedTabs = [], url = this._tabStateUrl();
+				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {					
 					var id = $(el).attr('id');
 					if(!id) return; // we need a unique reference
 					if(!$(el).data('tabs')) return; // don't act on uninit'ed controls
-					if($(el).data('ignoreTabState')) return; // allow opt-out
-					activeTabs.push({id:id, active:$(el).tabs('option', 'active')});
+
+					// Allow opt-out via data element or entwine property.
+					if($(el).data('ignoreTabState') || $(el).getIgnoreTabState()) return;
+
+					selectedTabs.push({id:id, selected:$(el).tabs('option', 'selected')});
 				});
-				if(activeTabs) window.sessionStorage.setItem('tabs-' + url, JSON.stringify(activeTabs));
+
+				if(selectedTabs) {
+					var tabsUrl = 'tabs-' + url;
+					try {
+						window.sessionStorage.setItem(tabsUrl, JSON.stringify(selectedTabs));
+					} catch(err) {
+						if (err.code === DOMException.QUOTA_EXCEEDED_ERR && window.sessionStorage.length === 0) {
+							// If this fails we ignore the error as the only issue is that it 
+							// does not remember the tab state.
+							// This is a Safari bug which happens when private browsing is enabled.
+							return;
+						} else {
+							throw err;
+						}
+					}
+				}
 			},
 
 			/**
 			 * Re-select previously saved tabs.
 			 * Requires HTML5 sessionStorage support.
+			 *
+			 * Parameters:
+			 * 	(Object) Map of tab container selectors to tab selectors.
+			 * 	Used to mark a specific tab as active regardless of the previously saved options.
 			 */
-			restoreTabState: function() {
-				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage == null) return;
-
+			restoreTabState: function(overrideStates) {
 				var self = this, url = this._tabStateUrl(),
-					data = window.sessionStorage.getItem('tabs-' + url),
-					activeTabs = data ? JSON.parse(data) : false;
-				if(activeTabs) {
-					$.each(activeTabs, function(i, activeTab) {
-						var el = self.find('#' + activeTab.id);
-						if(!el.data('tabs')) return; // don't act on uninit'ed controls
-						el.tabs('option', 'active', activeTab.active);
-					});
-				}
+					hasSessionStorage = (typeof(window.sessionStorage)!=="undefined" && window.sessionStorage),
+					sessionData = hasSessionStorage ? window.sessionStorage.getItem('tabs-' + url) : null,
+					sessionStates = sessionData ? JSON.parse(sessionData) : false;
+
+				this.find('.cms-tabset').each(function() {
+					var index, tabset = $(this), tabsetId = tabset.attr('id'), tab,
+						forcedTab = tabset.find('.ss-tabs-force-active');
+
+					if(!tabset.data('tabs')) return; // don't act on uninit'ed controls
+
+					if(forcedTab.length) {
+						index = forcedTab.index();
+					} else if(overrideStates && overrideStates[tabsetId]) {
+						tab = tabset.find(overrideStates[tabsetId].tabSelector);
+						if(tab.length) index = tab.index();
+					} else if(sessionStates) {
+						$.each(sessionStates, function(i, sessionState) {
+							if(tabset.is('#' + sessionState.id)) index = sessionState.selected;
+						});
+					}
+					if(index !== null) tabset.tabs('select', index);
+				});
 			},
 
 			/**
@@ -633,7 +765,7 @@ jQuery.noConflict();
 						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
 						
 						try {
-							if (typeof msg != "undefined" && msg != null) eval(msg);
+							if (typeof msg != "undefined" && msg !== null) eval(msg);
 						}
 						catch(e) {}
 						
@@ -784,8 +916,6 @@ jQuery.noConflict();
 		$(".cms-panel-layout").entwine({
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-
-				this.layout({resize: false});
 			}
 		});
 	
@@ -834,37 +964,6 @@ jQuery.noConflict();
 				this.submit();
 			}
 
-		});
-
-		/**
-		 * Simple toggle link, which points to a DOm element by its ID selector
-		 * in the href attribute (which doubles as an anchor link to that element).
-		 */
-		$('.cms .cms-help-toggle').entwine({
-			onmatch: function() {
-				this._super();
-
-				var id=this.attr('href');
-				if(id.indexOf('#')!=0) {
-					id=id.split('#');
-					id='#'+id[1];
-				}
-
-				jQuery(id).hide();
-			},
-			onunmatch: function() {
-				this._super();
-			},
-			onclick: function(e) {
-				var id=this.attr('href');
-				if(id.indexOf('#')!=0) {
-					id=id.split('#');
-					id='#'+id[1];
-				}
-
-				jQuery(id).toggle();
-				e.preventDefault();
-			}
 		});
 
 		/**
@@ -930,12 +1029,12 @@ jQuery.noConflict();
 				this._super();
 			},
 			onremove: function() {
-				this.tabs('destroy');
+				if (this.data('tabs')) this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {
 				this.rewriteHashlinks();
-
+				
 				var id = this.attr('id'), activeTab = this.find('ul:first .ui-tabs-active');
 
 				if(!this.data('uiTabs')) this.tabs({
@@ -948,7 +1047,7 @@ jQuery.noConflict();
 					activate: function(e, ui) {
 						// Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
 						var actions = $(this).closest('form').find('.Actions');
-						if($(ui.tab).closest('li').hasClass('readonly')) {
+						if($(ui.newTab).closest('li').hasClass('readonly')) {
 							actions.fadeOut();
 						} else {
 							actions.show();

@@ -19,9 +19,10 @@ interface SS_Sortable {
 	public function canSortBy($by);
 
 	/**
-	 * Sorts this list by one or more fields. You can either pass in a single
+	 * Return a new instance of this list that is sorted by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.
 	 *
+	 * @return SS_Sortable
 	 * @example $list = $list->sort('Name'); // default ASC sorting
 	 * @example $list = $list->sort('Name DESC'); // DESC sorting
 	 * @example $list = $list->sort('Name', 'ASC');
@@ -31,11 +32,10 @@ interface SS_Sortable {
 	
 	
 	/**
-	 * Reverses the list based on reversing the current sort.
+	 * Return a new instance of this list based on reversing the current sort.
 	 *
+	 * @return SS_Sortable
 	 * @example $list = $list->reverse();
-	 *
-	 * @return array
 	 */
 	public function reverse();
 }

@@ -12,11 +12,13 @@ detailed error messages for security reasons. You'll typically need to get your 
 information.
 
 If you can log-in to the CMS as an administrator, append `?isDev=1` to any URL to temporarily set your browsing session into
-"dev mode". If you can't log-in in the first place because of the error, add this directive to your `mysite/_config.php`
+"dev mode". If you can't log-in in the first place because of the error, add this directive to your `mysite/_config/config.yml`
 (don't forget to remove it afterwards!):
 
 	:::php
-	Director::set_environment_type('dev'); // temporary debugging statement
+	Director:
+	  # temporary debugging statement
+	  environment_type: 'dev'
 
 <div class="warning" markdown='1'>
 On "live" environments, the `?isDev=1` solution is preferred, as it means that your other visitors don't see ugly

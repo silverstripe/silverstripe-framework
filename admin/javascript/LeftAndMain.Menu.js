@@ -257,6 +257,14 @@
 				return false; // prevent wrapping link event to fire
 			}
 		});
+
+		$('.cms .profile-link').entwine({
+			onclick: function() {
+				$('.cms-container').loadPanel(this.attr('href'));
+				$('.cms-menu-list li').removeClass('current').close(); 
+				return false;
+			}
+		});
 		
 	});
 }(jQuery));

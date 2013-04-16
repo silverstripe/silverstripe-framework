@@ -44,30 +44,6 @@
 class FileField extends FormField {
 	
 	/**
-	 * Restrict filesize for either all filetypes
-	 * or a specific extension, with extension-name
-	 * as array-key and the size-restriction in bytes as array-value.
-	 *
-	 * @deprecated 2.5
-	 * @var array 
-	 */
-	public $allowedMaxFileSize = array();
-
-	/**
-	 * @var array Collection of extensions. 
-	 * Extension-names are treated case-insensitive.
-	 * 
-	 * Example:
-	 * <code>
-	 * 	array("jpg","GIF")
-	 * </code>
-	 *
-	 * @deprecated 2.5
-	 * @var array
-	 */
-	public $allowedExtensions = array();
-	
-	/**
 	 * Flag to automatically determine and save a has_one-relationship
 	 * on the saved record (e.g. a "Player" has_one "PlayerImage" would
 	 * trigger saving the ID of newly created file into "PlayerImageID"
@@ -88,11 +64,11 @@ class FileField extends FormField {
 
 	/**
 	 * Partial filesystem path relative to /assets directory.
-	 * Defaults to 'Uploads'.
+	 * Defaults to Upload::$uploads_folder.
 	 *
 	 * @var string
 	 */
-	protected $folderName = 'Uploads';
+	protected $folderName = false;
 	
 	/**
 	 * Create a new file field.
@@ -102,15 +78,7 @@ class FileField extends FormField {
 	 * @param int $value The value of the field.
 	 */
 	public function __construct($name, $title = null, $value = null) {
-		if(count(func_get_args()) > 3) {
-			Deprecation::notice(
-				'3.0', 
-				'Use setRightTitle() and setFolderName() instead of constructor arguments', 
-				Deprecation::SCOPE_GLOBAL
-			);
-		}
-
-		$this->upload = new Upload();
+		$this->upload = Upload::create();
 	
 		parent::__construct($name, $title, $value);
 	}
@@ -143,7 +111,7 @@ class FileField extends FormField {
 			$file = new $fileClass();
 		}
 		
-		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->folderName);
+		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->getFolderName());
 		if($this->upload->isError()) return false;
 		
 		$file = $this->upload->getFile();
@@ -192,7 +160,7 @@ class FileField extends FormField {
 	 * @return string
 	 */
 	public function getFolderName() {
-		return $this->folderName;
+		return ($this->folderName !== false) ? $this->folderName : Config::inst()->get('Upload', 'uploads_folder');
 	}
 	
 	public function validate($validator) {

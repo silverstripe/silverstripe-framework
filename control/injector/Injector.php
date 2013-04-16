@@ -692,6 +692,7 @@ class Injector {
 	 * Register a service with an explicit name
 	 */
 	public function registerNamedService($name, $service) {
+		$this->specs[$name] = array('class' => get_class($service));
 		$this->serviceCache[$name] = $service;
 		$this->inject($service);
 	}

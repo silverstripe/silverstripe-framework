@@ -1,43 +1,67 @@
 <?php
 /**
  * Represents a Decimal field.
+ *
  * @package framework
  * @subpackage model
  */
 class Decimal extends DBField {
+
 	protected $wholeSize, $decimalSize, $defaultValue;
 	
 	/**
 	 * Create a new Decimal field.
+	 *
+	 * @param string $name
+	 * @param int $wholeSize
+	 * @param int $decimalSize
+	 * @param float $defaultValue
 	 */
 	public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
-		$this->wholeSize = isset($wholeSize) ? $wholeSize : 9;
-		$this->decimalSize = isset($decimalSize) ? $decimalSize : 2;
-		$this->defaultValue = $defaultValue;
+		$this->wholeSize = is_int($wholeSize) ? $wholeSize : 9;
+		$this->decimalSize = is_int($decimalSize) ? $decimalSize : 2;
+
+		$this->defaultValue = number_format((float) $defaultValue, $decimalSize);;
+
 		parent::__construct($name);
 	}
 	
+	/**
+	 * @return float
+	 */
 	public function Nice() {
-		return number_format($this->value,$this->decimalSize);
+		return number_format($this->value, $this->decimalSize);
 	}
 	
+	/**
+	 * @return int
+	 */
 	public function Int() {
-		return floor( $this->value );
+		return floor($this->value);
 	}
 	
 	public function requireField() {
-		$parts=Array(
-			'datatype'=>'decimal',
-			'precision'=>"$this->wholeSize,$this->decimalSize",
-			'default'=>(double)$this->defaultValue,
-			'arrayValue'=>$this->arrayValue);
+		$parts = array(
+			'datatype' => 'decimal',
+			'precision' => "$this->wholeSize,$this->decimalSize",
+			'default' => $this->defaultValue,
+			'arrayValue' => $this->arrayValue
+		);
 		
-		$values=Array('type'=>'decimal', 'parts'=>$parts);
+		$values = array(
+			'type' => 'decimal',
+			'parts' => $parts
+		);
+
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
+	/**
+	 * @param DataObject $dataObject
+	 */
 	public function saveInto($dataObject) {
 		$fieldName = $this->name;
+
 		if($fieldName) {
 			$dataObject->$fieldName = (float)preg_replace('/[^0-9.\-\+]/', '', $this->value);
 		} else {
@@ -45,31 +69,42 @@ class Decimal extends DBField {
 		}
 	}
 	
+	/**
+	 * @param string $title
+	 * @param array $params
+	 *
+	 * @return NumericField
+	 */
 	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
-		
+
+	/**
+	 * @return float
+	 */
 	public function nullValue() {
 		return "0.00";
 	}
 
 	/**
-	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
-	 * If necessary, this should include quotes.
+	 * Return an encoding of the given value suitable for inclusion in a SQL
+	 * statement. If necessary, this should include quotes.
+	 *
+	 * @param float $value
+	 *
+	 * @return mixed
 	 */
 	public function prepValueForDB($value) {
 		if($value === true) {
 			return 1;
 		} if(!$value || !is_numeric($value)) {
-			if(strpos($value, '[')===false)
+			if(strpos($value, '[') === false) {
 				return '0';
-			else
+			} else {
 				return Convert::raw2sql($value);
+			}
 		} else {
 			return Convert::raw2sql($value);
 		}
 	}
-	
 }
-
-

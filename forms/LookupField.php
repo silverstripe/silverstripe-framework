@@ -32,7 +32,7 @@ class LookupField extends DropdownField {
 
 		// Don't check if string arguments are matching against the source,
 		// as they might be generated HTML diff views instead of the actual values
-		if($this->value && !$mapped) {
+		if($this->value && !is_array($this->value) && !$mapped) {
 			$mapped = array(trim($this->value));
 			$values = array();
 		}

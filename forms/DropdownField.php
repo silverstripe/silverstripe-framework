@@ -66,6 +66,14 @@
  * );
  * </code>
  * 
+ * <b>Disabling individual items</b>
+ * 
+ * Individual items can be disabled by feeding their array keys to setDisabledItems.
+ * 
+ * <code>
+ * $DrDownField->setDisabledItems( array( 'US', 'GEM' ) );
+ * </code>
+ * 
  * @see CheckboxSetField for multiple selections through checkboxes instead.
  * @see ListboxField for a single <select> box (with single or multiple selections).
  * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
@@ -76,7 +84,7 @@
 class DropdownField extends FormField {
 
 	/**
-	 * @var boolean $source Associative or numeric array of all dropdown items,
+	 * @var Array $source Associative or numeric array of all dropdown items,
 	 * with array key as the submitted field value, and the array value as a
 	 * natural language description shown in the interface element.
 	 */
@@ -102,6 +110,11 @@ class DropdownField extends FormField {
 	 * e.g. "Select...".
 	 */
 	protected $emptyString = '';
+	
+	/**
+	 * @var array $disabledItems The keys for items that should be disabled (greyed out) in the dropdown
+	 */
+	protected $disabledItems = array();
 	
 	/**
 	 * Creates a new dropdown field.
@@ -154,11 +167,17 @@ class DropdownField extends FormField {
 					$selected = ($value) ? $value == $this->value : $value === $this->value;
 					$this->isSelected = $selected;
 				}
+				
+				$disabled = false;
+				if(in_array($value, $this->disabledItems) && $title != $this->emptyString ){
+					$disabled = 'disabled';
+				}
 
 				$options[] = new ArrayData(array(
 					'Title' => $title,
 					'Value' => $value,
 					'Selected' => $selected,
+					'Disabled' => $disabled,
 				));
 			}
 		}
@@ -166,6 +185,24 @@ class DropdownField extends FormField {
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
 		return parent::Field($properties);
+	}
+	
+	/**
+	 * Mark certain elements as disabled,
+	 * regardless of the {@link setDisabled()} settings.
+	 * 
+	 * @param array $items Collection of array keys, as defined in the $source array
+	 */
+	public function setDisabledItems($items){
+		$this->disabledItems = $items;
+		return $this;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	public function getDisabledItems(){
+		return $this->disabledItems;
 	}
 
 	public function getAttributes() {
@@ -239,10 +276,10 @@ class DropdownField extends FormField {
 	}
 
 	public function performReadonlyTransformation() {
-		$field = new LookupField($this->name, $this->title, $this->getSource());
-		$field->setValue($this->value);
-		$field->setForm($this->form);
+		$field = $this->castedCopy('LookupField');
+		$field->setSource($this->getSource());
 		$field->setReadonly(true);
+		
 		return $field;
 	}
 }

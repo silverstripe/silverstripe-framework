@@ -24,7 +24,7 @@ class GridField extends FormField {
 	 *
 	 * @var array
 	 */
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'gridFieldAlterAction'
 	);
@@ -326,7 +326,7 @@ class GridField extends FormField {
 			}
 		}
 
-		$total = $list->count();
+		$total = count($list);
 		if($total > 0) {
 			$rows = array();
 			foreach($list as $idx => $record) {
@@ -339,13 +339,13 @@ class GridField extends FormField {
 					// A return value of null means this columns should be skipped altogether.
 					if($colContent === null) continue;
 					$colAttributes = $this->getColumnAttributes($record, $column);
-					$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+					$rowContent .= FormField::create_tag('td', $colAttributes, $colContent);
 				}
 				$classes = array('ss-gridfield-item');
 				if ($idx == 0) $classes[] = 'first';
 				if ($idx == $total-1) $classes[] = 'last';
 				$classes[] = ($idx % 2) ? 'even' : 'odd';
-				$row = $this->createTag(
+				$row = FormField::create_tag(
 					'tr',
 					array(
 						"class" => implode(' ', $classes),
@@ -361,26 +361,27 @@ class GridField extends FormField {
 		} 
 		
 		// Display a message when the grid field is empty
-		if(!(isset($content['body']) && $content['body'])) {    
-			$content['body'] = $this->createTag(
+		if(!(isset($content['body']) && $content['body'])) {
+			$content['body'] = FormField::create_tag(
 				'tr',
 				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
-				$this->createTag(
+				FormField::create_tag(
 					'td',
 					array('colspan' => count($columns)),
-					_t('GridField.NoItemsFound', 'No items found'))
+					_t('GridField.NoItemsFound', 'No items found')
+				)
 			);
 		}
 
 		// Turn into the relevant parts of a table
 		$head = $content['header']
-			? $this->createTag('thead', array(), $content['header'])
+			? FormField::create_tag('thead', array(), $content['header'])
 			: '';
 		$body = $content['body']
-			? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), $content['body'])
+			? FormField::create_tag('tbody', array('class' => 'ss-gridfield-items'), $content['body'])
 			: '';
 		$foot = $content['footer']
-			? $this->createTag('tfoot', array(), $content['footer'])
+			? FormField::create_tag('tfoot', array(), $content['footer'])
 			: '';
 
 		$this->addExtraClass('ss-gridfield field');
@@ -396,11 +397,18 @@ class GridField extends FormField {
 			'cellspacing' => '0'	
 		);
 
+		if($this->getDescription()) {
+			$content['after'] .= FormField::create_tag(
+				'span', 
+				array('class' => 'description'), 
+				$this->getDescription()
+			);
+		}
 
 		return
-			$this->createTag('fieldset', $attrs, 
+			FormField::create_tag('fieldset', $attrs, 
 				$content['before'] .
-				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
+				FormField::create_tag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
 				$content['after']
 			);
 	}
@@ -604,7 +612,7 @@ class GridField extends FormField {
 				$stateChange = Session::get($id);
 				$actionName = $stateChange['actionName'];
 				$args = isset($stateChange['args']) ? $stateChange['args'] : array();
-				$html = $this->handleAction($actionName, $args, $data);
+				$html = $this->handleAlterAction($actionName, $args, $data);
 				// A field can optionally return its own HTML
 				if($html) return $html;
 			}
@@ -634,7 +642,7 @@ class GridField extends FormField {
 	 * @return type
 	 * @throws InvalidArgumentException
 	 */
-	public function handleAction($actionName, $args, $data) {
+	public function handleAlterAction($actionName, $args, $data) {
 		$actionName = strtolower($actionName);
 		foreach($this->getComponents() as $component) {
 			if(!($component instanceof GridField_ActionProvider)) {
@@ -719,6 +727,15 @@ class GridField extends FormField {
 		
 		return parent::handleRequest($request, $model);
 	}
+
+	public function saveInto(DataObjectInterface $record) {
+		foreach($this->getComponents() as $component) {
+			if($component instanceof GridField_SaveHandler) {
+				$component->handleSave($this, $record);
+			}
+		}
+	}
+
 }
 
 

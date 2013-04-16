@@ -1,9 +1,11 @@
 (function($){
 	$.entwine('ss', function($){
 		/**
-		 * Lightweight wrapper around jQuery UI tabs.
+		 * Lightweight wrapper around jQuery UI tabs for generic tab set-up
 		 */
 		$('.ss-tabset').entwine({
+			IgnoreTabState: false,
+
 			onadd: function() {
 				// Can't name redraw() as it clashes with other CMS entwine classes
 				this.redrawTabs();
@@ -30,7 +32,7 @@
 					if(!matches) return;
 					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);
 				});
-			}
+			}			
 		});
 	});
 })(jQuery);

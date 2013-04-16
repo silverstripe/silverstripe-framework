@@ -160,4 +160,46 @@ class DateTest extends SapphireTest {
 		$this->assertEquals('03 Apr 3000', $date->Format('d M Y'));
 	}
 
+	public function testAgoInPast() {
+		SS_Datetime::set_mock_now('2000-12-31 12:00:00');
+
+		$this->assertEquals(
+			'10 years ago', 
+			DBField::create_field('Date', '1990-12-31')->Ago(),
+			'Exact past match on years'
+		);
+
+		$this->assertEquals(
+			'10 years ago', 
+			DBField::create_field('Date', '1990-12-30')->Ago(),
+			'Approximate past match on years'
+		);
+
+		$this->assertEquals(
+			'1 year ago', 
+			DBField::create_field('Date', '1999-12-30')->Ago(),
+			'Approximate past match in singular'
+		);
+
+		SS_Datetime::clear_mock_now();
+	}
+
+	public function testAgoInFuture() {
+		SS_Datetime::set_mock_now('2000-12-31 00:00:00');
+
+		$this->assertEquals(
+			'in 10 years', 
+			DBField::create_field('Date', '2010-12-31')->Ago(),
+			'Exact past match on years'
+		);
+
+		$this->assertEquals(
+			'in 1 day', 
+			DBField::create_field('Date', '2001-01-01')->Ago(),
+			'Approximate past match on minutes'
+		);
+
+		SS_Datetime::clear_mock_now();
+	}
+
 }

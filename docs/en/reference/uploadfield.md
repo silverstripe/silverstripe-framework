@@ -21,7 +21,7 @@ based on a has_one relation:
 	:::php
 	class GalleryPage extends Page {
 	
-    	static $has_one = array(
+    	private static $has_one = array(
         	'SingleImage' => 'Image'
     	);
 		
@@ -53,7 +53,7 @@ UploadField will detect the relation based on its $name property value:
 	:::php
 	class GalleryPage extends Page {
 	
-		static $many_many = array(
+		private static $many_many = array(
 			'GalleryImages' => 'Image'
 		);
 		
@@ -110,7 +110,8 @@ the folder doesn't exist, it will be created.
 
 ## Limit the allowed filetypes
 
-`AllowedExtensions` is by default `File::$allowed_extensions` but can be overwritten for each UploadField:
+`AllowedExtensions` defaults to the `File.allowed_extensions` configuration setting, 
+but can be overwritten for each UploadField:
 
 	:::php
 	$uploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
@@ -157,7 +158,7 @@ like this:
 	:::php
 	class GalleryImage extends DataExtension {
 
-		static $db = array(
+		private static $db = array(
 			'Description' => 'Text'
 		);
 		
@@ -169,7 +170,7 @@ like this:
 Now register the DataExtension for the Image class in your _config.php:
 
 	:::php
-	Object::add_extension('Image', 'GalleryImage');
+	Image::add_extension('GalleryImage');
 	
 NOTE: although you can subclass the Image class instead of using a DataExtension, this is not advisable. For instance: when using a subclass, the 'From files' button will only return files that were uploaded for that subclass, it won't recognize any other images!			
 ### Edit uploaded images
@@ -219,6 +220,13 @@ editform, or 'fileEditValidator' to determine the validator (eg RequiredFields).
    (of a method on File to provide a actions) for the EditForm (Example: 'getCMSActions')
  - `fileEditValidator`: (string) Validator (eg RequiredFields) or string $name 
    (of a method on File to provide a Validator) for the EditForm (Example: 'getCMSValidator')
+
+You can also configure the underlying `[api:Upload]` class, by using the YAML config system.
+
+	:::yaml
+	Upload:
+	  # Globally disables automatic renaming of files
+	  replaceFile: true
   
 ## TODO: Using the UploadField in a frontend form
 

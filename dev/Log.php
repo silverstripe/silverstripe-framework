@@ -68,7 +68,7 @@ class SS_Log {
 	 * Caution: Depends on logger implementation (mainly targeted at {@link SS_LogEmailWriter}).
 	 * @see http://framework.zend.com/manual/en/zend.log.overview.html#zend.log.overview.understanding-fields
 	 */
-	static $log_globals = array(
+	protected static $log_globals = array(
 		'_SERVER' => array(
 			'HTTP_ACCEPT',
 			'HTTP_ACCEPT_CHARSET', 

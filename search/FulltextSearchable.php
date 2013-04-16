@@ -32,7 +32,7 @@ class FulltextSearchable extends DataExtension {
 	 * It can be used to limit the searched classes, but not to add your own classes.
 	 * For this purpose, please use {@link Object::add_extension()} directly:
 	 * <code>
-	 * Object::add_extension('MyObject', "FulltextSearchable('MySearchableField','MyOtherField')");
+	 * MyObject::add_extension("FulltextSearchable('MySearchableField,'MyOtherField')");
 	 * </code>
 	 * 
 	 * Caution: This is a wrapper method that should only be used in _config.php,
@@ -43,8 +43,8 @@ class FulltextSearchable extends DataExtension {
 	 */
 	public static function enable($searchableClasses = array('SiteTree', 'File')) {
 		$defaultColumns = array(
-			'SiteTree' => '"Title","MenuTitle","Content","MetaTitle","MetaDescription","MetaKeywords"',
-			'File' => '"Title","Filename","Content"'
+			'SiteTree' => '"Title","MenuTitle","Content","MetaDescription"',
+			'File' => '"Filename","Title","Content"'
 		);
 
 		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
@@ -53,7 +53,7 @@ class FulltextSearchable extends DataExtension {
 			
 			if(isset($defaultColumns[$class])) {
 				Config::inst()->update($class, 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
-				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
+				$class::add_extension("FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {
 				throw new Exception(
 					"FulltextSearchable::enable() I don't know the default search columns for class '$class'");
@@ -61,7 +61,7 @@ class FulltextSearchable extends DataExtension {
 		}
 		self::$searchable_classes = $searchableClasses;
 		if(class_exists("ContentController")){
-			Object::add_extension("ContentController", "ContentControllerSearchExtension");
+			ContentController::add_extension("ContentControllerSearchExtension");
 		}
 	}
 

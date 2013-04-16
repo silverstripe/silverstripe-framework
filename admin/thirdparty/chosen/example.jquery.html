@@ -1189,7 +1189,7 @@
       </div>
       <div>
         <em>Multiple Select</em>
-        <select data-placeholder="Your Favorite Types of Bear" style="width:350px;" multiple class="chzn-select" id="test_me" name="test_me_form" tabindex="8">
+        <select data-placeholder="Your Favorite Types of Bear" style="width:350px;" multiple class="chzn-select" tabindex="8">
           <option value=""></option>
           <option>American Black Bear</option>
           <option>Asiatic Black Bear</option>
@@ -1197,6 +1197,24 @@
           <option>Giant Panda</option>
           <option selected>Sloth Bear</option>
           <option disabled>Sun Bear</option>
+          <option selected>Polar Bear</option>
+          <option disabled>Spectacled Bear</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="side-by-side clearfix">
+      <p>It is also possible to prevent selected options being deselected by also making them disabled.</p>
+      <div>
+        <select data-placeholder="Your Favorite Types of Bear" style="width:350px;" multiple class="chzn-select" id="test_me_paddington" name="test_me_form" tabindex="8">
+          <option value=""></option>
+          <option>American Black Bear</option>
+          <option>Asiatic Black Bear</option>
+          <option>Brown Bear</option>
+          <option>Giant Panda</option>
+          <option selected disabled>Sloth Bear</option>
+          <option disabled>Sun Bear</option>
+          <option selected disabled>Paddington Bear</option>
           <option selected>Polar Bear</option>
           <option disabled>Spectacled Bear</option>
         </select>
@@ -1215,6 +1233,18 @@
       <p>Setting the "No results" search text is as easy as passing an option when you create Chosen:</p>
       <code>
         $(".chzn-select").chosen({no_results_text: "No results matched"});
+      </code>
+    </div>
+
+    <h2>Limit Selected Options in Multiselect</h2>
+    <div class="side-by-side clearfix">
+      <p>You can easily limit how many options can user select:</p>
+      <code>
+        $(".chzn-select").chosen({max_selected_options: 5});
+      </code>
+      <p>If you try to select another option with limit reached <code>liszt:maxselected</code> event is triggered:</p>
+      <code>
+        $(".chzn-select").bind("liszt:maxselected", function () { ... });
       </code>
     </div>
     
@@ -1300,3 +1330,4 @@
   <script type="text/javascript"> $(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({allow_single_deselect:true}); </script>
   </form>
 </body>
+</html>

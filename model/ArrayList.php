@@ -2,6 +2,17 @@
 /**
  * A list object that wraps around an array of objects or arrays.
  *
+ * Note that (like DataLists), the implementations of the methods from SS_Filterable, SS_Sortable and
+ * SS_Limitable return a new instance of ArrayList, rather than modifying the existing instance.
+ *
+ * For easy reference, methods that operate in this way are:
+ *
+ *   - limit
+ *   - reverse
+ *   - sort
+ *   - filter
+ *   - exclude
+ *
  * @package framework
  * @subpackage model
  */
@@ -12,14 +23,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * 
 	 * @var array
 	 */
-	protected $items;
+	protected $items = array();
 	
 	/**
 	 *
 	 * @param array $items - an initial array to fill this object with
 	 */
 	public function __construct(array $items = array()) {
-		$this->items = $items;
+		$this->items = array_values($items);
 		parent::__construct();
 	}
 	
@@ -69,6 +80,18 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	public function toArray() {
 		return $this->items;
 	}
+	
+	/**
+	 * Walks the list using the specified callback
+	 *
+	 * @param callable $callback
+	 * @return DataList
+	 */
+	public function each($callback) {
+		foreach($this as $item) {
+			$callback($item);
+		}
+	}
 
 	public function debug() {
 		$val = "<h2>" . $this->class . "</h2><ul>";
@@ -109,21 +132,10 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @param int $length
 	 * @return ArrayList 
 	 */
-	public function getRange($offset, $length) {
-		Deprecation::notice("3.0", 'getRange($offset, $length) is deprecated.  Use limit($length, $offset) instead.'
-			. ' Note the new argument order.');
-		return $this->limit($length, $offset);
-	}
-
-	/**
-	 * Get a sub-range of this dataobjectset as an array
-	 * 
-	 * @param int $offset
-	 * @param int $length
-	 * @return ArrayList 
-	 */
 	public function limit($length, $offset = 0) {
-		return new ArrayList(array_slice($this->items, $offset, $length));
+		$list = clone $this;
+		$list->items = array_slice($this->items, $offset, $length);
+		return $list;
 	}
 
 	/**
@@ -141,9 +153,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @param mixed $item 
 	 */
 	public function remove($item) {
+		$renumberKeys = false;
 		foreach ($this->items as $key => $value) {
-			if ($item === $value) unset($this->items[$key]);
+			if ($item === $value) {
+				$renumberKeys = true;
+				unset($this->items[$key]);
+			}
 		}
+		if($renumberKeys) $this->items = array_values($this->items);
 	}
 
 	/**
@@ -180,16 +197,20 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function removeDuplicates($field = 'ID') {
 		$seen = array();
+		$renumberKeys = false;
 
 		foreach ($this->items as $key => $item) {
 			$value = $this->extractValue($item, $field);
 
 			if (array_key_exists($value, $seen)) {
+				$renumberKeys = true;
 				unset($this->items[$key]);
 			}
 
 			$seen[$value] = true;
 		}
+
+		if($renumberKeys) $this->items = array_values($this->items);
 	}
 
 	/**
@@ -304,8 +325,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * @return ArrayList
 	 */
 	public function reverse() {
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
+		$list = clone $this;
 		$list->items = array_reverse($this->items);
 		
 		return $list;
@@ -371,8 +391,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			$multisortArgs[] = &$sortDirection[$column];
 		}
 
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
+		$list = clone $this;
 		// As the last argument we pass in a reference to the items that all the sorting will be applied upon
 		$multisortArgs[] = &$list->items;
 		call_user_func_array('array_multisort', $multisortArgs);
@@ -435,8 +454,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
+		$list = clone $this;
 		$list->items = $itemsToKeep;
 		return $list;
 	}
@@ -477,7 +495,6 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			}
 		}
 
-		$itemsToKeep = array();
 
 		$hitsRequiredToRemove = count($removeUs);
 		$matches = array();
@@ -492,13 +509,16 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		$keysToRemove = array_keys($matches,$hitsRequiredToRemove);
-		// TODO 3.1: This currently mutates existing array
-		$list = /* clone */ $this;
 
-		foreach($keysToRemove as $itemToRemoveIdx){
-			$list->remove($this->items[$itemToRemoveIdx]);
+		$itemsToKeep = array();
+		foreach($this->items as $key => $value) {
+			if(!in_array($key, $keysToRemove)) {
+				$itemsToKeep[] = $value;
+			}
 		}
 
+		$list = clone $this;
+		$list->items = $itemsToKeep;
 		return $list;
 	}
 

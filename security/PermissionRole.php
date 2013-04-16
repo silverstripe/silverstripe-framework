@@ -14,24 +14,24 @@
  * @subpackage security
  */
 class PermissionRole extends DataObject {
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar",
 		"OnlyAdminCanApply" => "Boolean"
 	);
 	
-	static $has_many = array(
+	private static $has_many = array(
 		"Codes" => "PermissionRoleCode",
 	);
 	
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		"Groups" => "Group",
 	);
 	
-	static $default_sort = '"Title"';
+	private static $default_sort = '"Title"';
 	
-	static $singular_name = 'Role';
+	private static $singular_name = 'Role';
 
-	static $plural_name = 'Roles';
+	private static $plural_name = 'Roles';
 	
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
@@ -48,7 +48,9 @@ class PermissionRole extends DataObject {
 				'RoleID'
 			)
 		);
-		$permissionField->setHiddenPermissions(SecurityAdmin::$hidden_permissions);
+		$permissionField->setHiddenPermissions(
+			Config::inst()->get('Permission', 'hidden_permissions')
+		);
 		
 		return $fields;
 	}

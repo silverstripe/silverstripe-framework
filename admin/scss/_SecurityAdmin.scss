@@ -1,12 +1,15 @@
-.SecurityAdmin {
-	// Same rules in .member-profile-form
-	.permissioncheckboxset, .permissioncheckboxsetfield_readonly {
-		.optionset {
-			li {
-				float: none;
-				width: auto;
-			}	
-		}
+.permissioncheckboxset, .permissioncheckboxsetfield_readonly {
+	h5 {
+		margin: 0;
+	}
+	.optionset {
+		overflow: auto;
+
+		li {
+			float: none;
+			width: auto;
+			clear: both;
+		}	
 	}
 }
 

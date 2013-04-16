@@ -13,7 +13,7 @@ class MemberAuthenticator extends Authenticator {
 	 *  If set, will migrate to new precision-safe password hashing
 	 *  upon login. See http://open.silverstripe.org/ticket/3004.
 	 */
-	static $migrate_legacy_hashes = array(
+	private static $migrate_legacy_hashes = array(
 		'md5' => 'md5_v2.4', 
 		'sha1' => 'sha1_v2.4'
 	);
@@ -45,7 +45,7 @@ class MemberAuthenticator extends Authenticator {
 		} else {
 			$member = DataObject::get_one(
 				"Member", 
-				"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
+				"\"" . Member::config()->unique_identifier_field . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
 			);
 
 			if($member) {
@@ -64,7 +64,7 @@ class MemberAuthenticator extends Authenticator {
 		/**
 		 * TODO We could handle this with an extension
 		 */
-		if(Security::login_recording()) {
+		if(Security::config()->login_recording) {
 			$attempt = new LoginAttempt();
 			if($member) {
 				// successful login (member is existing with matching password)
@@ -77,7 +77,7 @@ class MemberAuthenticator extends Authenticator {
 				// failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
 				$existingMember = DataObject::get_one(
 					"Member",
-					"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user'"
+					"\"" . Member::config()->unique_identifier_field . "\" = '$SQL_user'"
 				);
 				if($existingMember) {
 					$attempt->MemberID = $existingMember->ID;

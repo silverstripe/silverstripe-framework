@@ -3,16 +3,14 @@
 <% end_if %>
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
-			<% include BackLink_Button %>
-			<h2 id="page-title-heading">
+			<% include BackLink_Button %>			
 			<% with Controller %>
 				<% include CMSBreadcrumbs %>
-			<% end_with %>
-			</h2>
+			<% end_with %>			
 		</div>
 		<% if Fields.hasTabset %>
 			<% with Fields.fieldByName('Root') %>
-			<div class="cms-content-header-tabs">
+			<div class="cms-content-header-tabs cms-tabset-nav-primary">
 				<ul>
 				<% loop Tabs %>
 					<li<% if extraClass %> class="$extraClass"<% end_if %>><a href="#$id">$Title</a></li>
@@ -29,7 +27,7 @@
 		$EditFormTools
 	<% end_with %>
 	
-	<div class="cms-content-fields center cms-panel-padded">
+	<div class="cms-content-fields center <% if not $Fields.hasTabset %>cms-panel-padded<% end_if %>">
 		<% if Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>
@@ -45,7 +43,7 @@
 		</fieldset>
 	</div>
 
-	<div class="cms-content-actions south">
+	<div class="cms-content-actions cms-content-controls south">
 		<% if Actions %>
 		<div class="Actions">
 			<% loop Actions %>

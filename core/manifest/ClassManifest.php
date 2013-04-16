@@ -117,11 +117,10 @@ class SS_ClassManifest {
 		$this->base  = $base;
 		$this->tests = $includeTests;
 
-		$this->cache = SS_Cache::factory('SS_ClassManifest', 'Core', array(
-			'automatic_serialization' => true,
-			'lifetime' => null
-		));
-		$this->cacheKey = $this->tests ? 'manifest_tests' : 'manifest';
+		$cacheClass = defined('SS_MANIFESTCACHE') ? SS_MANIFESTCACHE : 'ManifestCache_File';
+
+		$this->cache = new $cacheClass('classmanifest'.($includeTests ? '_tests' : ''));
+		$this->cacheKey = 'manifest';
 
 		if (!$forceRegen && $data = $this->cache->load($this->cacheKey)) {
 			$this->classes      = $data['classes'];
@@ -343,7 +342,7 @@ class SS_ClassManifest {
 			$interfaces = self::get_interface_parser()->findAll($tokens);
 
 			$cache = array('classes' => $classes, 'interfaces' => $interfaces, 'namespace' => $namespace);
-			$this->cache->save($cache, $key, array('fileparse'));
+			$this->cache->save($cache, $key);
 		}
 
 		foreach ($classes as $class) {

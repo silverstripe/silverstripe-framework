@@ -104,6 +104,24 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	public function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
+		$this->setUrl($url);
+
+		$this->getVars = (array)$getVars;
+		$this->postVars = (array)$postVars;
+		$this->body = $body;
+	}
+
+	/**
+	 * Allow the setting of a URL
+	 *
+	 * This is here so that RootURLController can change the URL of the request
+	 * without us loosing all the other info attached (like headers)
+	 *
+	 * @param string The new URL
+	 *
+	 * @return SS_HTTPRequest The updated request
+	 */
+	public function setUrl($url) {
 		$this->url = $url;
 
 		// Normalize URL if its relative (strictly speaking), or has leading slashes
@@ -116,43 +134,71 @@ class SS_HTTPRequest implements ArrayAccess {
 		}
 		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
 		else $this->dirParts = array();
-		
-		$this->getVars = (array)$getVars;
-		$this->postVars = (array)$postVars;
-		$this->body = $body;
+
+		return $this;
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function isGET() {
 		return $this->httpMethod == 'GET';
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function isPOST() {
 		return $this->httpMethod == 'POST';
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function isPUT() {
 		return $this->httpMethod == 'PUT';
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isDELETE() {
 		return $this->httpMethod == 'DELETE';
-	}	
+	}
 
+	/**
+	 * @return bool
+	 */
 	public function isHEAD() {
 		return $this->httpMethod == 'HEAD';
-	}	
-	
+	}
+
+	/**
+	 * @param string $body
+	 * @return SS_HTTPRequest $this
+	 */
 	public function setBody($body) {
 		$this->body = $body;
+		return $this;
 	}
-	
+
+	/**
+	 * @return null|string
+	 */
 	public function getBody() {
 		return $this->body;
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function getVars() {
 		return $this->getVars;
 	}
+
+	/**
+	 * @return array
+	 */
 	public function postVars() {
 		return $this->postVars;
 	}
@@ -167,15 +213,27 @@ class SS_HTTPRequest implements ArrayAccess {
 	public function requestVars() {
 		return ArrayLib::array_merge_recursive($this->getVars, $this->postVars);
 	}
-	
+
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
 	public function getVar($name) {
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
 	}
-	
+
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
 	public function postVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 	}
-	
+
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
 	public function requestVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
@@ -227,6 +285,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Remove an existing HTTP header
 	 *
 	 * @param string $header
+	 * @return mixed
 	 */
 	public function getHeader($header) {
 		return (isset($this->headers[$header])) ? $this->headers[$header] : null;			
@@ -237,16 +296,17 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * e.g. "Content-Type".
 	 *
 	 * @param string $header
+	 * @return SS_HTTPRequest $this
 	 */
 	public function removeHeader($header) {
 		if(isset($this->headers[$header])) unset($this->headers[$header]);
+		return $this;
 	}
 	
 	/**
 	 * Returns the URL used to generate the page
 	 *
 	 * @param bool $includeGetVars whether or not to include the get parameters\
-	 * 
 	 * @return string
 	 */
 	public function getURL($includeGetVars = false) {
@@ -317,7 +377,15 @@ class SS_HTTPRequest implements ArrayAccess {
 	public function offsetUnset($offset) {}
 	
 	/**
-	 * Construct an SS_HTTPResponse that will deliver a file to the client
+	 * Construct an SS_HTTPResponse that will deliver a file to the client.
+	 * Caution: Since it requires $fileData to be passed as binary data (no stream support),
+	 * it's only advisable to send small files through this method.
+	 *
+	 * @static
+	 * @param $fileData
+	 * @param $fileName
+	 * @param null $mimeType
+	 * @return SS_HTTPResponse
 	 */
 	public static function send_file($fileData, $fileName, $mimeType = null) {
 		if(!$mimeType) {
@@ -350,6 +418,10 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * 
 	 * The pattern can optionally start with an HTTP method and a space.  For example, "POST $Controller/$Action".
 	 * This is used to define a rule that only matches on a specific HTTP method.
+	 *
+	 * @param $pattern
+	 * @param bool $shiftOnSuccess
+	 * @return array|bool
 	 */
 	public function match($pattern, $shiftOnSuccess = false) {
 		// Check if a specific method is required
@@ -433,7 +505,10 @@ class SS_HTTPRequest implements ArrayAccess {
 		if($arguments === array()) $arguments['_matched'] = true;
 		return $arguments;
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function allParams() {
 		return $this->allParams;
 	}
@@ -459,26 +534,43 @@ class SS_HTTPRequest implements ArrayAccess {
 
 		return $value;
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function latestParams() {
 		return $this->latestParams;
 	}
-	
+
+	/**
+	 * @param string $name
+	 * @return string|null
+	 */
 	public function latestParam($name) {
 		if(isset($this->latestParams[$name])) return $this->latestParams[$name];
 		else return null;
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function routeParams() {
 		return $this->routeParams;
 	}
-	
+
+	/**
+	 * @param $params
+	 * @return SS_HTTPRequest $this
+	 */
 	public function setRouteParams($params) {
 		$this->routeParams = $params;
+		return $this;
 	}
-	
-	public function params()
-	{
+
+	/**
+	 * @return array
+	 */
+	public function params() {
 		return array_merge($this->allParams, $this->routeParams);
 	}
 	
@@ -509,6 +601,9 @@ class SS_HTTPRequest implements ArrayAccess {
 	/**
 	 * Returns true if this is a URL that will match without shifting off any of the URL.
 	 * This is used by the request handler to prevent infinite parsing loops.
+	 *
+	 * @param $pattern
+	 * @return bool
 	 */
 	public function isEmptyPattern($pattern) {
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
@@ -523,7 +618,6 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * If you specify shifting more than 1 item off, then the items will be returned as an array
 	 *
 	 * @param int $count Shift Count
-	 *
 	 * @return String|Array
 	 */
 	public function shift($count = 1) {
@@ -534,7 +628,7 @@ class SS_HTTPRequest implements ArrayAccess {
 		for($i=0;$i<$count;$i++) {
 			$value = array_shift($this->dirParts);
 			
-			if(!$value) break;
+			if($value === null) break;
 			
 			$return[] = $value;
 		}
@@ -545,6 +639,8 @@ class SS_HTTPRequest implements ArrayAccess {
 	/**
 	 * Returns true if the URL has been completely parsed.
 	 * This will respect parsed but unshifted directory parts.
+	 *
+	 * @return bool
 	 */
 	public function allParsed() {
 		return sizeof($this->dirParts) <= $this->unshiftedButParsedParts;

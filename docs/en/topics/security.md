@@ -79,7 +79,7 @@ Example:
 
 	:::php
 	class MyController extends Controller {
-	  static $allowed_actions = array('myurlaction');
+	  private static $allowed_actions = array('myurlaction');
 	  public function myurlaction($RAW_urlParams) {
 	    $SQL_urlParams = Convert::raw2sql($RAW_urlParams); // works recursively on an array
 	    $objs = Player::get()->where("Name = '{$SQL_data[OtherID]}'");
@@ -136,7 +136,7 @@ PHP:
 
 	:::php
 	class MyObject extends DataObject {
-	  public static $db = array(
+	  private static $db = array(
 	    'MyEscapedValue' => 'Text', // Example value: <b>not bold</b>
 	    'MyUnescapedValue' => 'HTMLText' // Example value: <b>bold</b>
 	  );
@@ -220,7 +220,7 @@ PHP:
 
 	:::php
 	class MyController extends Controller {
-		static $allowed_actions = array('search');
+		private static $allowed_actions = array('search');
 		public function search($request) {
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
 			return $this->customise(array(
@@ -250,7 +250,7 @@ PHP:
 
 	:::php
 	class MyController extends Controller {
-		static $allowed_actions = array('search');
+		private static $allowed_actions = array('search');
 		public function search($request) {
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
 			$rssLink = Controller::join_links($this->Link(), $rssRelativeLink);

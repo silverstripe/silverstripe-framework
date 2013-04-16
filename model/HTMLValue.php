@@ -1,68 +1,155 @@
 <?php
+
 /**
- * This class acts as a wrapper around the built in DOMDocument class in order to use it to manage a HTML snippet,
- * rather than a whole document, while still exposing the DOMDocument API.
+ * This class handles the converting of HTML fragments between a string and a DOMDocument based
+ * representation.
+ *
+ * It's designed to allow dependancy injection to replace the standard HTML4 version with one that
+ * handles XHTML or HTML5 instead
  *
  * @package framework
  * @subpackage integration
  */
-class SS_HTMLValue extends ViewableData {
-	
-	/**
-	 * @var DOMDocument
-	 */
-	protected $document;
-	
-	/**
-	 * @param string $content
-	 */
-	public function __construct($content = null) {
-		$this->setDocument(new DOMDocument('1.0', 'UTF-8'));
-		$this->setScrictErrorChecking(false);
-		$this->setOutputFormatting(false);
-		$this->setContent($content);
+abstract class SS_HTMLValue extends ViewableData {
 
+	public function __construct($fragment = null) {
+		if ($fragment) $this->setContent($fragment);
 		parent::__construct();
 	}
 
-	/**
-	 * Should strict error checking be used?
-	 * @param boolean $bool
-	 */
-	public function setScrictErrorChecking($bool) {
-		$this->getDocument()->scrictErrorChecking = $bool;
-	}
+	abstract public function setContent($fragment);
 
 	/**
-	 * Should the output be formatted?
-	 * @param boolean $bool
-	 */
-	public function setOutputFormatting($bool) {
-		$this->getDocument()->formatOutput = $bool;
-	}
-
-	/**
+	 * @param string $content
 	 * @return string
 	 */
 	public function getContent() {
-		// strip any surrounding tags before the <body> and after the </body> which are automatically added by
-		// DOMDocument.  Note that we can't use the argument to saveHTML() as it's only supported in PHP 5.3.6+,
-		// we support 5.3.2 as a minimum in addition to the above, trim any surrounding newlines from the output
+		$doc = clone $this->getDocument();
+		$xp = new DOMXPath($doc);
 
-		// shortcodes use square brackets which get escaped into HTML entities by saveHTML()
-		// this manually replaces them back to square brackets so that the shortcodes still work correctly
-		// we can't use urldecode() here, as valid characters like "+" will be incorrectly replaced with spaces
-		return trim(
-			preg_replace(
-				array(
-					'/(.*)<body>/is',
-					'/<\/body>(.*)/is',
-				),
-				'',
-				str_replace(array('%5B', '%5D'), array('[', ']'), $this->getDocument()->saveHTML())
-			)
+		// If there's no body, the content is empty string
+		if (!$doc->getElementsByTagName('body')->length) return '';
+
+		// saveHTML Percentage-encodes any URI-based attributes. We don't want this, since it interferes with
+		// shortcodes. So first, save all the attribute values for later restoration.
+		$attrs = array(); $i = 0;
+
+		foreach ($xp->query('//body//@*') as $attr) {
+			$key = "__HTMLVALUE_".($i++);
+			$attrs[$key] = $attr->value;
+			$attr->value = $key;
+		}
+
+		// Then, call saveHTML & extract out the content from the body tag
+		$res = preg_replace(
+			array(
+				'/^(.*?)<body>/is',
+				'/<\/body>(.*?)$/isD',
+			),
+			'',
+			$doc->saveHTML()
 		);
+
+		// Then replace the saved attributes with their original versions
+		$res = preg_replace_callback('/__HTMLVALUE_(\d+)/', function($matches) use ($attrs) {
+			return $attrs[$matches[0]];
+		}, $res);
+
+		return $res;
 	}
+
+	/** @see HTMLValue::getContent() */
+	public function forTemplate() {
+		return $this->getContent();
+	}
+
+	/** @var DOMDocument */
+	private $document = null;
+	/** @var bool */
+	private $valid = true;
+
+	/**
+	 * Get the DOMDocument for the passed content
+	 * @return DOMDocument | false - Return false if HTML not valid, the DOMDocument instance otherwise
+	 */
+	public function getDocument() {
+		if (!$this->valid) {
+			return false;
+		}
+		else if ($this->document) {
+			return $this->document;
+		}
+		else {
+			$this->document = new DOMDocument('1.0', 'UTF-8');
+			$this->document->strictErrorChecking = false;
+			$this->document->formatOutput = false;
+
+			return $this->document;
+		}
+	}
+
+	/**
+	 * Is this HTMLValue in an errored state?
+	 * @return bool
+	 */
+	public function isValid() {
+		return $this->valid;
+	}
+
+	/**
+	 * @param DOMDocument $document
+	 */
+	public function setDocument($document) {
+		$this->document = $document;
+		$this->valid = true;
+	}
+
+	public function setInvalid() {
+		$this->document = $this->valid = false;
+	}
+
+	/**
+	 * Pass through any missed method calls to DOMDocument (if they exist)
+	 * so that HTMLValue can be treated mostly like an instance of DOMDocument
+	 */
+	public function __call($method, $arguments) {
+		$doc = $this->getDocument();
+
+		if(method_exists($doc, $method)) {
+			return call_user_func_array(array($doc, $method), $arguments);
+		}
+		else {
+			return parent::__call($method, $arguments);
+		}
+	}
+
+	/**
+	 * Get the body element, or false if there isn't one (we haven't loaded any content
+	 * or this instance is in an invalid state)
+	 */
+	public function getBody() {
+		$doc = $this->getDocument();
+		if (!$doc) return false;
+
+		$body = $doc->getElementsByTagName('body');
+		if (!$body->length) return false;
+
+		return $body->item(0);
+	}
+
+	/**
+	 * Make an xpath query against this HTML
+	 *
+	 * @param $query string - The xpath query string
+	 * @return DOMNodeList
+	 */
+	public function query($query) {
+		$xp = new DOMXPath($this->getDocument());
+		return $xp->query($query);
+	}
+}
+
+class SS_HTML4Value extends SS_HTMLValue {
 
 	/**
 	 * @param string $content
@@ -73,41 +160,12 @@ class SS_HTMLValue extends ViewableData {
 		// This behaviour is apparently XML spec, but we don't want this because it messes up the HTML
 		$content = str_replace(chr(13), '', $content);
 
+		// Reset the document if we're in an invalid state for some reason
+		if (!$this->isValid()) $this->setDocument(null);
+
 		return @$this->getDocument()->loadHTML(
 			'<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' .
 			"<body>$content</body></html>"
 		);
 	}
-
-	/**
-	 * @return DOMDocument
-	 */
-	public function getDocument() {
-		return $this->document;
-	}
-
-	/**
-	 * @param DOMDocument $document
-	 */
-	public function setDocument($document) {
-		$this->document = $document;
-	}
-
-	/**
-	 * A simple convenience wrapper around DOMDocument::getElementsByTagName().
-	 *
-	 * @param string $name
-	 * @return DOMNodeList
-	 */
-	public function getElementsByTagName($name) {
-		return $this->getDocument()->getElementsByTagName($name);
-	}
-	
-	/**
-	 * @see HTMLValue::getContent()
-	 */
-	public function forTemplate() {
-		return $this->getContent();
-	}
-	
 }

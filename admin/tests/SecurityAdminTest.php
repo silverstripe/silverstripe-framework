@@ -5,7 +5,7 @@
  */
 class SecurityAdminTest extends FunctionalTest {
 
-	static $fixture_file = 'LeftAndMainTest.yml';
+	protected static $fixture_file = 'LeftAndMainTest.yml';
 	
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 
@@ -45,37 +45,12 @@ class SecurityAdminTest extends FunctionalTest {
 	// 	$this->assertEquals($lines[1], '', "Empty export only has no content row");
 	// }
 	
-	public function testAddHiddenPermission() {
-		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
-		$this->assertContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
-		
-		// reset to defaults
-		SecurityAdmin::clear_hidden_permissions();
-	}
-	
-	public function testRemoveHiddenPermission() {
-		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
-		$this->assertContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
-		SecurityAdmin::remove_hidden_permission('CMS_ACCESS_ReportAdmin');
-		$this->assertNotContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
-		
-		// reset to defaults
-		SecurityAdmin::clear_hidden_permissions();
-	}
-	
-	public function testClearHiddenPermission() {
-		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
-		$this->assertContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
-		SecurityAdmin::clear_hidden_permissions('CMS_ACCESS_ReportAdmin');
-		$this->assertNotContains('CMS_ACCESS_ReportAdmin', SecurityAdmin::get_hidden_permissions());
-	}
-	
 	public function testPermissionFieldRespectsHiddenPermissions() {
 		$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
 		
 		$group = $this->objFromFixture('Group', 'admin');
 		
-		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
+		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_ReportAdmin'));
 		$response = $this->get(sprintf('admin/security/EditForm/field/Groups/item/%d/edit', $group->ID));
 		
 		$this->assertContains(
@@ -86,9 +61,6 @@ class SecurityAdminTest extends FunctionalTest {
 			'CMS_ACCESS_ReportAdmin',
 			$response->getBody()
 		);
-		
-		// reset to defaults
-		SecurityAdmin::clear_hidden_permissions();
 	}
 }
 

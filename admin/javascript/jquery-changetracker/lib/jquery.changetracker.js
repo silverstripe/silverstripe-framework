@@ -57,20 +57,42 @@
 
 			var onchange = function(e) {
 				var $field = $(e.target);
-				var origVal = $field.data('changetracker.origVal');
-				if(origVal === null || e.target.value != origVal) {
-					// TODO Also add class to radiobutton/checkbox siblings
+				var origVal = $field.data('changetracker.origVal'), newVal;
+				
+				// Determine value based on field type
+				if($field.is(':checkbox')) {
+					newVal = $field.is(':checked') ? 1 : 0;
+				} else {
+					newVal = $field.val();
+				}
+				
+				// Determine changed state based on value comparisons
+				if(origVal === null || newVal != origVal) {
 					$field.addClass(options.changedCssClass);
 					self.addClass(options.changedCssClass);
+				} else {
+					$field.removeClass(options.changedCssClass);
+					// Unset changed state on all radio buttons of the same name
+					if($field.is(':radio')) {
+						self.find(':radio[name=' + $field.attr('name') + ']').removeClass(options.changedCssClass);
+					}
+					// Only unset form state if no other fields are changed as well
+					if(!self.getFields().filter('.' + options.changedCssClass).length) {
+						self.removeClass(options.changedCssClass);
+					}
 				}
 			};
 			
 			// setup original values
-			var fields = this.getFields();
+			var fields = this.getFields(), origVal;
 			fields.filter(':radio,:checkbox').bind('click.changetracker', onchange);
 			fields.not(':radio,:checkbox').bind('change.changetracker', onchange);
 			fields.each(function() {
-				var origVal = $(this).is(':radio,:checkbox') ? self.find(':input[name=' + $(this).attr('name') + ']:checked').val() : $(this).val();
+				if($(this).is(':radio,:checkbox')) {
+					origVal = self.find(':input[name=' + $(this).attr('name') + ']:checked').val();
+				} else {
+					origVal = $(this).val();
+				}
 				$(this).data('changetracker.origVal', origVal);
 			});
 

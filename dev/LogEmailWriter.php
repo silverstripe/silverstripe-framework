@@ -12,9 +12,10 @@ require_once 'Zend/Log/Writer/Abstract.php';
 class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 
 	/**
+	 * @config
 	 * @var $send_from Email address to send log information from
 	 */
-	protected static $send_from = 'errors@silverstripe.com';
+	private static $send_from = 'errors@silverstripe.com';
 
 	protected $emailAddress;
 
@@ -29,12 +30,20 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		return new SS_LogEmailWriter($emailAddress, $customSmtpServer);
 	}
 
+	/**
+	 * @deprecated 3.2 Use the "SS_LogEmailWriter.send_from" config setting instead
+	 */
 	public static function set_send_from($address) {
-		self::$send_from = $address;
+		Deprecation::notice('3.2', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
+		Config::inst()->update('SS_LogEmailWriter', 'send_from', $address);
 	}
 
+	/**
+	 * @deprecated 3.2 Use the "SS_LogEmailWriter.send_from" config setting instead
+	 */
 	public static function get_send_from() {
-		return self::$send_from;
+		Deprecation::notice('3.2', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
+		return Config::inst()->get('SS_LogEmailWriter', 'send_from');
 	}
 
 	/**
@@ -51,6 +60,7 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		$formattedData = $this->_formatter->format($event);
 		$subject = $formattedData['subject'];
 		$data = $formattedData['data'];
+		$from = Config::inst()->get('SS_LogEmailWriter', 'send_from');
 
 		// override the SMTP server with a custom one if required
 		$originalSMTP = ini_get('SMTP');
@@ -66,14 +76,14 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 				$subject,
 				$data,
 				null,
-				"Content-type: text/html\nFrom: " . self::$send_from
+				"Content-type: text/html\nFrom: " . $from
 			);
 		} else {
 			mail(
 				$this->emailAddress,
 				$subject,
 				$data,
-				"Content-type: text/html\nFrom: " . self::$send_from
+				"Content-type: text/html\nFrom: " . $from
 			);			
 		}
 

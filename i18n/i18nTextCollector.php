@@ -466,7 +466,7 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 		// Create folder for lang files
 		$langFolder = $path . '/lang';
 		if(!file_exists($langFolder)) {
-			Filesystem::makeFolder($langFolder, Filesystem::$folder_create_mask);
+			Filesystem::makeFolder($langFolder, Config::inst()->get('Filesystem', 'folder_create_mask'));
 			touch($langFolder . '/_manifest_exclude');
 		}
 
@@ -543,7 +543,7 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 		// Create folder for lang files
 		$langFolder = $path . '/lang';
 		if(!file_exists($langFolder)) {
-			Filesystem::makeFolder($langFolder, Filesystem::$folder_create_mask);
+			Filesystem::makeFolder($langFolder, Config::inst()->get('Filesystem', 'folder_create_mask'));
 			touch($langFolder . '/_manifest_exclude');
 		}
 
@@ -591,8 +591,9 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
  */
 class i18nTextCollector_Parser extends SSTemplateParser {
 
-	static $entities = array();
-	static $currentEntity = array();
+	private static $entities = array();
+	
+	private static $currentEntity = array();
 
 	public function Translate__construct(&$res) {
 		self::$currentEntity = array(null,null,null); //start with empty array

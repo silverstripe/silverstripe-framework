@@ -6,7 +6,7 @@
 
 class ListboxFieldTest extends SapphireTest {
 
-	static $fixture_file = 'ListboxFieldTest.yml';
+	protected static $fixture_file = 'ListboxFieldTest.yml';
 	
 	protected $extraDataObjects = array('ListboxFieldTest_DataObject', 'ListboxFieldTest_Article',
 		'ListboxFieldTest_Tag');
@@ -197,24 +197,24 @@ class ListboxFieldTest extends SapphireTest {
 }
 
 class ListboxFieldTest_DataObject extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Choices' => 'Text'
 	);
 }
 
 class ListboxFieldTest_Article extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Content" => "Text",
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		"Tags" => "ListboxFieldTest_Tag",
 	);
 	
 }
 
 class ListboxFieldTest_Tag extends DataObject implements TestOnly {
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'Articles' => 'ListboxFieldTest_Article'
 	);
 }

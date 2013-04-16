@@ -13,8 +13,9 @@
  */
 class HtmlEditorConfig {
 
-	static $configs = array();
-	static $current = null;
+	private static $configs = array();
+	
+	private static $current = null;
 	
 	/**
 	 * Get the HtmlEditorConfig object for the given identifier. This is a correct way to get an HtmlEditorConfig

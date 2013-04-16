@@ -6,6 +6,8 @@
 class MemberDatetimeOptionsetField extends OptionsetField {
 
 	public function Field($properties = array()) {
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberDatetimeOptionsetField.js');
+
 		$options = '';
 		$odd = 0;
 		$source = $this->getSource();
@@ -45,7 +47,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 					$itemID, _t('MemberDatetimeOptionsetField.Custom', 'Custom')
 				)
 			. sprintf(
-				"<input class=\"customFormat\" name=\"%s_custom\" value=\"%s\" />\n", 
+					"<input class=\"customFormat cms-help cms-help-tooltip\" name=\"%s_custom\" value=\"%s\" />\n",
 				$this->name, Convert::raw2xml($value)
 			)
 			. sprintf(
@@ -57,15 +59,6 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
 			Convert::raw2xml(Zend_Date::now()->toString($value))
 		) : '';
-		$options .= sprintf(
-			'<a class="cms-help-toggle" href="#%s">%s</a>',
-			$this->id() . '_Help',
-			_t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help')
-		);
-		$options .= "<div id=\"" . $this->id() . "_Help\">";
-		$options .= $this->getFormattingHelpText();
-		$options .= "</div>";
-		$options .= "</li>\n";
 
 		$id = $this->id();
 		return "<ul id=\"$id\" class=\"optionset {$this->extraClass()}\">\n$options</ul>\n";
@@ -74,42 +67,46 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	/**
 	 * @todo Put this text into a template?
 	 */
-	public function getFormattingHelpText() {
-		$output = '<ul>';
-		$output .= '<li>YYYY = ' . _t('MemberDatetimeOptionsetField.FOURDIGITYEAR', 'Four-digit year',
-			40, 'Help text describing what "YYYY" means in ISO date formatting') . '</li>';
-		$output .= '<li>YY = ' . _t('MemberDatetimeOptionsetField.TWODIGITYEAR', 'Two-digit year',
-			40, 'Help text describing what "YY" means in ISO date formatting') . '</li>';
-		$output .= '<li>MMMM = ' . _t('MemberDatetimeOptionsetField.FULLNAMEMONTH', 'Full name of month (e.g. June)',
-			40, 'Help text describing what "MMMM" means in ISO date formatting') . '</li>';
-		$output .= '<li>MMM = ' . _t('MemberDatetimeOptionsetField.SHORTMONTH', 'Short name of month (e.g. Jun)',
-			40, 'Help text letting describing what "MMM" means in ISO date formatting') . '</li>';
-		$output .= '<li>MM = ' . _t('MemberDatetimeOptionsetField.TWODIGITMONTH', 'Two-digit month (01=January, etc.)',
-			40, 'Help text describing what "MM" means in ISO date formatting') . '</li>';
-		$output .= '<li>M = ' . _t('MemberDatetimeOptionsetField.MONTHNOLEADING', 'Month digit without leading zero',
-			40, 'Help text describing what "M" means in ISO date formatting') . '</li>';
-		$output .= '<li>dd = ' . _t('MemberDatetimeOptionsetField.TWODIGITDAY', 'Two-digit day of month',
-			40, 'Help text describing what "dd" means in ISO date formatting') . '</li>';
-		$output .= '<li>d = ' . _t('MemberDatetimeOptionsetField.DAYNOLEADING', 'Day of month without leading zero',
-			40, 'Help text describing what "d" means in ISO date formatting') . '</li>';
-		$output .= '<li>hh = ' . _t('MemberDatetimeOptionsetField.TWODIGITHOUR', 'Two digits of hour (00 through 23)',
-			40, 'Help text describing what "hh" means in ISO date formatting') . '</li>';
-		$output .= '<li>h = ' . _t('MemberDatetimeOptionsetField.HOURNOLEADING', 'Hour without leading zero',
-			40, 'Help text describing what "h" means in ISO date formatting') . '</li>';
-		$output .= '<li>mm = ' . _t('MemberDatetimeOptionsetField.TWODIGITMINUTE',
+	public function getDescription() {
+		$output = 
+			'<a href="#" class="toggle">' 
+			. _t('MemberDatetimeOptionsetField.Toggle', 'Show formatting help')
+			. '</a>'
+			. '<ul class="toggle-content">'
+			. '<li>YYYY = ' . _t('MemberDatetimeOptionsetField.FOURDIGITYEAR', 'Four-digit year',
+				40, 'Help text describing what "YYYY" means in ISO date formatting') . '</li>'
+			. '<li>YY = ' . _t('MemberDatetimeOptionsetField.TWODIGITYEAR', 'Two-digit year',
+				40, 'Help text describing what "YY" means in ISO date formatting') . '</li>'
+			. '<li>MMMM = ' . _t('MemberDatetimeOptionsetField.FULLNAMEMONTH', 'Full name of month (e.g. June)',
+				40, 'Help text describing what "MMMM" means in ISO date formatting') . '</li>'
+			. '<li>MMM = ' . _t('MemberDatetimeOptionsetField.SHORTMONTH', 'Short name of month (e.g. Jun)',
+				40, 'Help text letting describing what "MMM" means in ISO date formatting') . '</li>'
+			. '<li>MM = ' . _t('MemberDatetimeOptionsetField.TWODIGITMONTH', 'Two-digit month (01=January, etc.)',
+				40, 'Help text describing what "MM" means in ISO date formatting') . '</li>'
+			. '<li>M = ' . _t('MemberDatetimeOptionsetField.MONTHNOLEADING', 'Month digit without leading zero',
+				40, 'Help text describing what "M" means in ISO date formatting') . '</li>'
+			. '<li>dd = ' . _t('MemberDatetimeOptionsetField.TWODIGITDAY', 'Two-digit day of month',
+				40, 'Help text describing what "dd" means in ISO date formatting') . '</li>'
+			. '<li>d = ' . _t('MemberDatetimeOptionsetField.DAYNOLEADING', 'Day of month without leading zero',
+				40, 'Help text describing what "d" means in ISO date formatting') . '</li>'
+			. '<li>hh = ' . _t('MemberDatetimeOptionsetField.TWODIGITHOUR', 'Two digits of hour (00 through 23)',
+				40, 'Help text describing what "hh" means in ISO date formatting') . '</li>'
+			. '<li>h = ' . _t('MemberDatetimeOptionsetField.HOURNOLEADING', 'Hour without leading zero',
+				40, 'Help text describing what "h" means in ISO date formatting') . '</li>'
+			. '<li>mm = ' . _t('MemberDatetimeOptionsetField.TWODIGITMINUTE',
 			'Two digits of minute (00 through 59)',
-			40, 'Help text describing what "mm" means in ISO date formatting') . '</li>';
-		$output .= '<li>m = ' . _t('MemberDatetimeOptionsetField.MINUTENOLEADING', 'Minute without leading zero',
-			40, 'Help text describing what "m" means in ISO date formatting') . '</li>';
-		$output .= '<li>ss = ' . _t('MemberDatetimeOptionsetField.TWODIGITSECOND',
+				40, 'Help text describing what "mm" means in ISO date formatting') . '</li>'
+			. '<li>m = ' . _t('MemberDatetimeOptionsetField.MINUTENOLEADING', 'Minute without leading zero',
+				40, 'Help text describing what "m" means in ISO date formatting') . '</li>'
+			. '<li>ss = ' . _t('MemberDatetimeOptionsetField.TWODIGITSECOND',
 			'Two digits of second (00 through 59)',
-			40, 'Help text describing what "ss" means in ISO date formatting') . '</li>';
-		$output .= '<li>s = ' . _t('MemberDatetimeOptionsetField.DIGITSDECFRACTIONSECOND',
+				40, 'Help text describing what "ss" means in ISO date formatting') . '</li>'
+			. '<li>s = ' . _t('MemberDatetimeOptionsetField.DIGITSDECFRACTIONSECOND',
 			'One or more digits representing a decimal fraction of a second',
-			40, 'Help text describing what "s" means in ISO date formatting') . '</li>';
-		$output .= '<li>a = ' . _t('MemberDatetimeOptionsetField.AMORPM', 'AM (Ante meridiem) or PM (Post meridiem)',
-			40, 'Help text describing what "a" means in ISO date formatting') . '</li>';
-		$output .= '</ul>';
+				40, 'Help text describing what "s" means in ISO date formatting') . '</li>'
+			. '<li>a = ' . _t('MemberDatetimeOptionsetField.AMORPM', 'AM (Ante meridiem) or PM (Post meridiem)',
+				40, 'Help text describing what "a" means in ISO date formatting') . '</li>'
+			. '</ul>';
 		return $output;
 	}
 

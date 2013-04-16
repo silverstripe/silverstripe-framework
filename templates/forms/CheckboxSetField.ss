@@ -1,4 +1,4 @@
-<ul id="$ID" class="$extraClass"<% if Description %> title="$Description"<% end_if %>>
+<ul id="$ID" class="$extraClass">
 	<% if Options.Count %>
 		<% loop Options %>
 			<li class="$Class">

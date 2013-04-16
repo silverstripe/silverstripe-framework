@@ -4,10 +4,12 @@
  * @subpackage formatters
  */
 class XMLDataFormatter extends DataFormatter {
+	
 	/**
+	 * @config
 	 * @todo pass this from the API to the data formatter somehow
 	 */
-	static $api_base = "api/v1/";
+	private static $api_base = "api/v1/";
 	
 	protected $outputContentType = 'text/xml';
 	
@@ -43,7 +45,7 @@ class XMLDataFormatter extends DataFormatter {
 	public function convertDataObjectWithoutHeader(DataObject $obj, $fields = null, $relations = null) {
 		$className = $obj->class;
 		$id = $obj->ID;
-		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
+		$objHref = Director::absoluteURL($this->config()->api_base . "$obj->class/$obj->ID");
 	
 		$xml = "<$className href=\"$objHref.xml\">\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
@@ -75,9 +77,9 @@ class XMLDataFormatter extends DataFormatter {
 
 				$fieldName = $relName . 'ID';
 				if($obj->$fieldName) {
-					$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
+					$href = Director::absoluteURL($this->config()->api_base . "$relClass/" . $obj->$fieldName);
 				} else {
-					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+					$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName");
 				}
 				$xml .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"" . $obj->$fieldName
 					. "\"></$relName>\n";
@@ -94,8 +96,8 @@ class XMLDataFormatter extends DataFormatter {
 				$items = $obj->$relName();
 				if ($items) {
 					foreach($items as $item) {
-						//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-						$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+						//$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName/$item->ID");
+						$href = Director::absoluteURL($this->config()->api_base . "$relClass/$item->ID");
 						$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
 					}
 				}
@@ -113,7 +115,7 @@ class XMLDataFormatter extends DataFormatter {
 				$items = $obj->$relName();
 				if ($items) {
 					foreach($items as $item) {
-						$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+						$href = Director::absoluteURL($this->config()->api_base . "$relClass/$item->ID");
 						$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
 					}
 				}
@@ -139,7 +141,7 @@ class XMLDataFormatter extends DataFormatter {
 		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		$xml .= (is_numeric($this->totalSize)) ? "<$className totalSize=\"{$this->totalSize}\">\n" : "<$className>\n";
 		foreach($set as $item) {
-			if($item->canView()) $xml .= $this->convertDataObjectWithoutHeader($item, $fields);
+			$xml .= $this->convertDataObjectWithoutHeader($item, $fields);
 		}
 		$xml .= "</$className>";
 	

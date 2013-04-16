@@ -19,7 +19,7 @@ class ManifestFileFinder extends SS_FileFinder {
 	const LANG_DIR     = 'lang';
 	const TESTS_DIR    = 'tests';
 
-	public static $default_options = array(
+	protected static $default_options = array(
 		'include_themes' => false,
 		'ignore_tests'   => true,
 		'min_depth'      => 1

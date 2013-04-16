@@ -1,7 +1,5 @@
 <% if isReadonly %>
-	<span id="$ID"
-	      <% if extraClass %>class="$extraClass"<% end_if %>
-	      <% if $Description %>title="$Description"<% end_if %>>
+	<span id="$ID"<% if extraClass %> class="$extraClass"<% end_if %>>
 		$Value
 	</span>
 <% else %>

@@ -31,7 +31,7 @@ class PhpUnitWrapper_3_4 extends PhpUnitWrapper {
 			// blacklist selected folders from coverage report
 			$modules = $this->moduleDirectories();
 			
-			foreach(TestRunner::$coverage_filter_dirs as $dir) {
+			foreach(TestRunner::config()->coverage_filter_dirs as $dir) {
 				if($dir[0] == '*') {
 					$dir = substr($dir, 1);
 					foreach ($modules as $module) {

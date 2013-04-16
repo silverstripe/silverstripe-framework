@@ -13,7 +13,7 @@ enter a date manually.
 
 	:::php
 	class Page extends SiteTree {
-		static $db = array(
+		private static $db = array(
 			'MyDate' => 'Date',
 		);
 	
@@ -59,6 +59,26 @@ HTML5 placeholders 'day', 'month' and 'year' are enabled by default.
 		->setConfig('dmyfields', true);
 		->setConfig('dmyseparator', '/') // set the separator
 		->setConfig('dmyplaceholders', 'true'); // enable HTML 5 Placeholders
+
+## Formatting Hints
+
+Its often not immediate apparent which format a field accepts,
+and showing the technical format (e.g. `HH:mm:ss`) is of limited
+use to the average user. An alternative is to show the current date
+in the desired format alongside the field description as an example.
+
+	:::php
+	$dateField = DateField::create('MyDate');
+	// Show long format as text below the field
+	$dateField->setDescription(sprintf(
+		_t('FormField.Example', 'e.g. %s', 'Example format'),
+		Convert::raw2xml(Zend_Date::now()->toString($dateField->getConfig('dateformat')))
+	));
+	// Alternatively, set short format as a placeholder in the field
+	$dateField->setAttribute('placeholder', $dateField->getConfig('dateformat'));
+
+Note: Fields scaffolded through `[api:DataObject::scaffoldCMSFields()]` automatically
+have a description attached to them.
 
 ## Calendar Field
  

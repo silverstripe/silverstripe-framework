@@ -43,8 +43,7 @@ class SS_ClassLoader {
 	}
 
 	/**
-	 * Pushes a class manifest instance onto the top of the stack. This will
-	 * also include any module configuration files at the same time.
+	 * Pushes a class manifest instance onto the top of the stack.
 	 *
 	 * @param SS_ClassManifest $manifest
 	 * @param Boolean Marks the manifest as exclusive. If set to FALSE, will
@@ -52,10 +51,6 @@ class SS_ClassLoader {
 	 */
 	public function pushManifest(SS_ClassManifest $manifest, $exclusive = true) {
 		$this->manifests[] = array('exclusive' => $exclusive, 'instance' => $manifest);
-
-		foreach ($manifest->getConfigs() as $config) {
-			require_once $config;
-		}
 	}
 
 	/**

@@ -7,7 +7,7 @@ namespace DataObjectTest;
  * Note that it was deliberated named to include "\N" to try and trip bad code up.
  */
 class NamespacedClass extends \DataObject {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 	);
 }

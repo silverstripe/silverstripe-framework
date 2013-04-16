@@ -10,6 +10,8 @@
 /**
  * Execution time profiler.
  * 
+ * @deprecated 3.1 The Profiler class is deprecated, use third party tools like XHProf instead
+ * 
  * @package framework
  * @subpackage misc
  */
@@ -51,6 +53,7 @@ class Profiler {
 	// Public Methods
 	
 	public static function init() {
+		Deprecation::notice('3.1', 'The Profiler class is deprecated, use third party tools like XHProf instead');
 		if(!self::$inst) self::$inst = new Profiler(true,true);
 	}
 		

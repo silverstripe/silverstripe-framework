@@ -38,23 +38,24 @@ class YamlFixtureTest extends SapphireTest {
 	}
 	
 	public function testSQLInsert() {
+		$factory = new FixtureFactory();
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
 		$fixture = Injector::inst()->create('YamlFixture', $relPath);
-		$fixture->saveIntoDatabase(DataModel::inst());
+		$fixture->writeInto($factory);
 
-		$this->assertGreaterThan(0, $fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject1"));
+		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject1"));
 		$object1 = DataObject::get_by_id(
 			"YamlFixtureTest_DataObject",
-			$fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject1")
+			$factory->getId("YamlFixtureTest_DataObject", "testobject1")
 		);
 		$this->assertTrue(
 			$object1->ManyMany()->Count() == 2, 
 			"Should be two items in this relationship"
 		);
-		$this->assertGreaterThan(0, $fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject2"));
+		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject2"));
 		$object2 = DataObject::get_by_id(
 			"YamlFixtureTest_DataObject",
-			$fixture->idFromFixture("YamlFixtureTest_DataObject", "testobject2")
+			$factory->getId("YamlFixtureTest_DataObject", "testobject2")
 		);
 		$this->assertTrue(
 			$object2->ManyMany()->Count() == 1, 
@@ -74,19 +75,19 @@ class YamlFixtureTest extends SapphireTest {
 }
 
 class YamlFixtureTest_DataObject extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar"
 	);
-	static $many_many = array(
+	private static $many_many = array(
 		"ManyMany" => "YamlFixtureTest_DataObjectRelation"
 	);
 }
 
 class YamlFixtureTest_DataObjectRelation extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar"
 	);
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		"TestParent" => "YamlFixtureTest_DataObject"
 	); 
 }

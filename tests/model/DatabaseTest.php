@@ -150,9 +150,9 @@ class DatabaseTest extends SapphireTest {
 
 class DatabaseTest_MyObject extends DataObject implements TestOnly {
 
-	static $create_table_options = array('MySQLDatabase' => 'ENGINE=InnoDB');
+	private static $create_table_options = array('MySQLDatabase' => 'ENGINE=InnoDB');
 
-	static $db = array(
+	private static $db = array(
 		'MyField' => 'Varchar'
 	);
 }

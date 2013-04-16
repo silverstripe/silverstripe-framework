@@ -11,7 +11,7 @@ class Enum extends StringField {
 	
 	protected $enum, $default;
 	
-	public static $default_search_filter_class = 'ExactMatchFilter';
+	private static $default_search_filter_class = 'ExactMatchFilter';
 	
 	/**
 	 * Create a new Enum field.
@@ -95,7 +95,9 @@ class Enum extends StringField {
 		if(!$name) $name = $this->name;
 
 		$field = new DropdownField($name, $title, $this->enumValues($hasEmpty), $value, $form);
-		$field->setEmptyString($emptyString);
+		if($hasEmpty) {
+			$field->setEmptyString($emptyString);
+		}
 
 		return $field;
 	}

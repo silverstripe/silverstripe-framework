@@ -12,16 +12,16 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		FileSystem::makeFolder($this->alternateBaseSavePath);
-		Director::setBaseFolder($this->alternateBasePath);
+		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
 		// Push a template loader running from the fake webroot onto the stack.
-		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
 		$templateManifest->regenerate(false);
 		SS_TemplateLoader::instance()->pushManifest($templateManifest);
-		$this->_oldTheme = SSViewer::current_theme();
-		SSViewer::set_theme('testtheme1');
+		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
+		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
 		
-		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
+		$classManifest = new SS_ClassManifest($this->alternateBasePath, null, true, true, false);
 		SS_ClassLoader::instance()->pushManifest($classManifest);
 
 		$this->originalLocale = i18n::get_locale();
@@ -43,8 +43,8 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		SS_TemplateLoader::instance()->popManifest();
 		SS_ClassLoader::instance()->popManifest();
 		i18n::set_locale($this->originalLocale);
-		Director::setBaseFolder(null);
-		SSViewer::set_theme($this->_oldTheme);
+		Config::inst()->update('Director', 'alternate_base_folder', null);
+		Config::inst()->update('SSViewer', 'theme', $this->_oldTheme);
 		i18n::register_translator($this->origAdapter, 'core');
 		
 		parent::tearDown();

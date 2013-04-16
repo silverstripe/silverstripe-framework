@@ -21,7 +21,7 @@ The poll we will be creating on our homepage will ask the user for their name an
 
 	:::php
 	class HomePage_Controller extends Page_Controller {
-		static $allowed_actions = array('BrowserPollForm');
+		private static $allowed_actions = array('BrowserPollForm');
 
 		// ...
 	
@@ -175,7 +175,7 @@ If you recall, in the [second tutorial](2-extending-a-basic-site) we said that a
 	:::php
 	<?php	
 	class BrowserPollSubmission extends DataObject {
-		static $db = array(
+		private static $db = array(
 			'Name' => 'Text',
 			'Browser' => 'Text'
 		);

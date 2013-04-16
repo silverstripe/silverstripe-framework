@@ -18,10 +18,11 @@
  * via overriding {@link FileNameFilter_DefaultFilter::$default_replacements}.
  * 
  * To leave uploaded filenames as they are (being aware of filesystem restrictions),
- * add the following code to your _config.php:
+ * add the following code to your YAML config:
  * <code>
- * FileNameFilter::$default_use_transliterator = false;
- * FileNameFilter::$default_replacements = array();
+ * FileNameFilter:
+ *   default_use_transliterator: false
+ *   default_replacements:
  * </code>
  * 
  * See {@link URLSegmentFilter} for a more generic implementation.
@@ -29,17 +30,19 @@
 class FileNameFilter extends Object {
 	
 	/**
+	 * @config
 	 * @var Boolean
 	 */
-	static $default_use_transliterator = true;
+	private static $default_use_transliterator = true;
 	
 	/**
+	 * @config
 	 * @var Array See {@link setReplacements()}.
 	 */
-	static $default_replacements = array(
+	private static $default_replacements = array(
 		'/\s/' => '-', // remove whitespace
 		'/_/' => '-', // underscores to dashes
-		'/[^A-Za-z0-9+.-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
+		'/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
 		'/[\-]{2,}/' => '-', // remove duplicate dashes
 		'/^[\.\-_]+/' => '', // Remove all leading dots, dashes or underscores
 	);
@@ -87,7 +90,7 @@ class FileNameFilter extends Object {
 	 * @return Array
 	 */
 	public function getReplacements() {
-		return ($this->replacements) ? $this->replacements : self::$default_replacements;
+		return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
 	}
 		
 	/**
@@ -99,7 +102,7 @@ class FileNameFilter extends Object {
 	 * @return SS_Transliterator|NULL
 	 */
 	public function getTransliterator() {
-		if($this->transliterator === null && self::$default_use_transliterator) {
+		if($this->transliterator === null && $this->config()->default_use_transliterator) {
 			$this->transliterator = SS_Transliterator::create();
 		} 
 		return $this->transliterator;

@@ -1,7 +1,7 @@
 <?php
 
 class ModelAdminTest extends FunctionalTest {
-	static $fixture_file = 'ModelAdminTest.yml';
+	protected static $fixture_file = 'ModelAdminTest.yml';
 	
 	protected $extraDataObjects = array(
 		'ModelAdminTest_Admin',
@@ -34,16 +34,16 @@ class ModelAdminTest extends FunctionalTest {
 }
 
 class ModelAdminTest_Admin extends ModelAdmin implements TestOnly {
-	static $url_segment = 'testadmin';
+	private static $url_segment = 'testadmin';
 	
-	public static $managed_models = array(
+	private static $managed_models = array(
 		'ModelAdminTest_Contact',
 	);
 }
 class ModelAdminTest_PlayerAdmin extends ModelAdmin implements TestOnly {
-	static $url_segment = 'testadmin';
+	private static $url_segment = 'testadmin';
 
-	public static $managed_models = array(
+	private static $managed_models = array(
 		'ModelAdminTest_Player'
 	);
 
@@ -55,21 +55,21 @@ class ModelAdminTest_PlayerAdmin extends ModelAdmin implements TestOnly {
 	}
 }
 class ModelAdminTest_Contact extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'Phone' => 'Varchar',
 	);
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'Name' => 'Name',
 		'Phone' => 'Phone'
 	);
 }
 class ModelAdminTest_Player extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'Position' => 'Varchar',
 	);
-	static $has_one = array(
+	private static $has_one = array(
 		'Contact' => 'ModelAdminTest_Contact'
 	);
 }

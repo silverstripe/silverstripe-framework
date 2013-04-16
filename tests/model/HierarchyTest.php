@@ -2,7 +2,7 @@
 
 class HierarchyTest extends SapphireTest {
 
-	static $fixture_file = 'HierarchyTest.yml';
+	protected static $fixture_file = 'HierarchyTest.yml';
 	
 	protected $requiredExtensions = array(
 		'HierarchyTest_Object' => array('Hierarchy', 'Versioned')
@@ -60,11 +60,11 @@ class HierarchyTest extends SapphireTest {
 		$obj3 = Versioned::get_including_deleted("HierarchyTest_Object", "\"Title\" = 'Obj 3'")->First();
 	
 		// Check that both obj 3 children are returned
-		$this->assertEquals(array("Obj 3a", "Obj 3b"), 
+		$this->assertEquals(array("Obj 3a", "Obj 3b", "Obj 3c"), 
 			$obj3->AllHistoricalChildren()->column('Title'));
 			
 		// Check numHistoricalChildren
-		$this->assertEquals(2, $obj3->numHistoricalChildren());
+		$this->assertEquals(3, $obj3->numHistoricalChildren());
 		
 	}
 	
@@ -94,7 +94,7 @@ class HierarchyTest extends SapphireTest {
 	public function testNumChildren() {
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj1')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3')->numChildren(), 3);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2a')->numChildren(), 2);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2b')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3a')->numChildren(), 2);
@@ -200,29 +200,13 @@ class HierarchyTest extends SapphireTest {
 			true,  // rootCall
 			$nodeCountThreshold
 		);
-		$parser = new CSSContentParser($html);
-		$node2 = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node2,
+		$this->assertTreeContains($html, array($obj2),
 			'Contains root elements'
 		);
-		$node2a = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]' .
-				'/ul/li[@id="' . $obj2a->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node2a,
+		$this->assertTreeContains($html, array($obj2, $obj2a),
 			'Contains child elements (in correct nesting)'
 		);
-		$node2aa = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]' .
-				'/ul/li[@id="' . $obj2a->ID . '"]' .
-				'/ul/li[@id="' . $obj2aa->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node2aa,
+		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
 			'Contains grandchild elements (in correct nesting)'
 		);
 	}
@@ -247,27 +231,13 @@ class HierarchyTest extends SapphireTest {
 			true, 
 			$nodeCountThreshold
 		);
-		$parser = new CSSContentParser($html);
-		$node1 = $parser->getByXpath(
-			'//ul/li[@id="' . $obj1->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node1,
+		$this->assertTreeContains($html, array($obj1),
 			'Contains root elements'
 		);
-		$node2 = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node2,
+		$this->assertTreeContains($html, array($obj2),
 			'Contains root elements'
 		);
-		$node2a = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]' .
-				'/ul/li[@id="' . $obj2a->ID . '"]'
-		);
-		$this->assertFalse(
-			(bool)$node2a,
+		$this->assertTreeNotContains($html, array($obj2, $obj2a),
 			'Does not contains child elements because they exceed minNodeCount'
 		);
 	}
@@ -296,20 +266,12 @@ class HierarchyTest extends SapphireTest {
 			true, 
 			$nodeCountThreshold
 		);
-		$parser = new CSSContentParser($html);
-		$node2 = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node2,
+		$this->assertTreeContains($html, array($obj2),
 			'Contains root elements'
 		);
-		$node2aa = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]' .
-				'/ul/li[@id="' . $obj2a->ID . '"]' .
-				'/ul/li[@id="' . $obj2aa->ID . '"]'
+		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
+			'Does contain marked children nodes regardless of configured threshold'
 		);
-		$this->assertTrue((bool)$node2aa);
 	}
 
 	public function testGetChildrenAsULMinNodeCountWithFilters() {
@@ -343,21 +305,10 @@ class HierarchyTest extends SapphireTest {
 			true, 
 			$nodeCountThreshold
 		);
-		$parser = new CSSContentParser($html);
-		$node1 = $parser->getByXpath(
-			'//ul/li[@id="' . $obj1->ID . '"]'
-		);
-		$this->assertFalse(
-			(bool)$node1,
+		$this->assertTreeNotContains($html, array($obj1),
 			'Does not contain root elements which dont match the filter'
 		);
-		$node2aa = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]' .
-				'/ul/li[@id="' . $obj2a->ID . '"]' .
-				'/ul/li[@id="' . $obj2aa->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node2aa,
+		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
 			'Contains non-root elements which match the filter'
 		);
 	}
@@ -377,8 +328,6 @@ class HierarchyTest extends SapphireTest {
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
 			// Results need to include parent hierarchy, even if we just want to
 			// match the innermost node.
-			// var_dump($record->Title);
-			// var_dump(in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID)));
 			return in_array($record->ID, array($obj2->ID, $obj2a->ID, $obj2aa->ID));
 		});
 		$root->markPartialTree($nodeCountThreshold);
@@ -393,33 +342,91 @@ class HierarchyTest extends SapphireTest {
 			true, 
 			$nodeCountThreshold
 		);
-		$parser = new CSSContentParser($html);
-		$node1 = $parser->getByXpath(
-			'//ul/li[@id="' . $obj1->ID . '"]'
-		);
-		$this->assertFalse(
-			(bool)$node1,
+		$this->assertTreeNotContains($html, array($obj1),
 			'Does not contain root elements which dont match the filter'
 		);
-		$node2aa = $parser->getByXpath(
-			'//ul/li[@id="' . $obj2->ID . '"]' .
-				'/ul/li[@id="' . $obj2a->ID . '"]' .
-				'/ul/li[@id="' . $obj2aa->ID . '"]'
-		);
-		$this->assertTrue(
-			(bool)$node2aa,
+		$this->assertTreeContains($html, array($obj2, $obj2a, $obj2aa),
 			'Contains non-root elements which match the filter'
 		);
+	}
+
+	public function testGetChildrenAsULNodeThresholdLeaf() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj3 = $this->objFromFixture('HierarchyTest_Object', 'obj3');
+		$obj3a = $this->objFromFixture('HierarchyTest_Object', 'obj3a');
+
+		$nodeCountThreshold = 99;
+
+		$root = new HierarchyTest_Object();
+		$root->markPartialTree($nodeCountThreshold);
+		$nodeCountCallback = function($parent, $numChildren) {
+			// Set low enough that it the fixture structure should exceed it
+			if($parent->ID && $numChildren > 2) {
+				return '<span class="exceeded">Exceeded!</span>';
+			}
+		};	
+
+		$html = $root->getChildrenAsUL(
+			"", 
+			'"<li id=\"" . $child->ID . "\">" . $child->Title', 
+			null, 
+			true, // limit to marked
+			"AllChildrenIncludingDeleted", 
+			"numChildren", 
+			true, 
+			$nodeCountThreshold,
+			$nodeCountCallback
+		);
+		$this->assertTreeContains($html, array($obj1),
+			'Does contain root elements regardless of count'
+		);
+		$this->assertTreeContains($html, array($obj3),
+			'Does contain root elements regardless of count'
+		);
+		$this->assertTreeContains($html, array($obj2, $obj2a),
+			'Contains children which do not exceed threshold'
+		);
+		$this->assertTreeNotContains($html, array($obj3, $obj3a),
+			'Does not contain children which exceed threshold'
+		);
+	}
+
+	/**
+	 * @param String $html  [description]
+	 * @param array $nodes Breadcrumb path as array
+	 * @param String $message
+	 */
+	protected function assertTreeContains($html, $nodes, $message = null) {
+		$parser = new CSSContentParser($html);
+		$xpath = '/';
+		foreach($nodes as $node) $xpath .= '/ul/li[@id="' . $node->ID . '"]';
+		$match = $parser->getByXpath($xpath);
+		self::assertThat((bool)$match, self::isTrue(), $message);
+	}
+
+	/**
+	 * @param String $html  [description]
+	 * @param array $nodes Breadcrumb path as array
+	 * @param String $message
+	 */
+	protected function assertTreeNotContains($html, $nodes, $message = null) {
+		$parser = new CSSContentParser($html);
+		$xpath = '/';
+		foreach($nodes as $node) $xpath .= '/ul/li[@id="' . $node->ID . '"]';
+		$match = $parser->getByXpath($xpath);
+		self::assertThat((bool)$match, self::isFalse(), $message);	
 	}
 
 }
 
 class HierarchyTest_Object extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar'
 	);
 	
-	static $extensions = array(
+	private static $extensions = array(
 		'Hierarchy',
 		"Versioned('Stage', 'Live')",
 	);

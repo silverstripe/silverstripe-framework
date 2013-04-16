@@ -184,14 +184,6 @@ class ClassInfo {
 	}
 
 	/**
-	 * @deprecated 3.0 Please use is_subclass_of.
-	 */
-	public static function is_subclass_of($class, $parent) {
-		Deprecation::notice('3.0', 'Use is_subclass_of() instead.');
-		return is_subclass_of($class, $parent);
-	}
-
-	/**
 	 * Get all classes contained in a file.
 	 * @uses ManifestBuilder
 	 * 

@@ -523,6 +523,14 @@ class InjectorTest extends SapphireTest {
 		
 		$this->assertInstanceOf('OtherTestObject', $item->property->property);
 	}
+
+	public function testNamedServices() {
+		$injector = new Injector();
+		$service  = new stdClass();
+
+		$injector->registerNamedService('NamedService', $service);
+		$this->assertEquals($service, $injector->get('NamedService'));
+	}
 	
 	public function testCreateConfiggedObjectWithCustomConstructorArgs() {
 		// need to make sure that even if the config defines some constructor params, 
@@ -532,6 +540,7 @@ class InjectorTest extends SapphireTest {
 		$item = $injector->create('ConfigConstructor', 'othervalue');
 		$this->assertEquals($item->property, 'othervalue');
 	}
+
 }
 
 class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator implements TestOnly {
@@ -638,7 +647,8 @@ class NewRequirementsBackend implements TestOnly {
 class TestStaticInjections implements TestOnly {
 
 	public $backend;
-	static $dependencies = array(
+	/** @config */
+	private static $dependencies = array(
 		'backend' => '%$NewRequirementsBackend'
 	);
 

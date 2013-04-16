@@ -281,7 +281,7 @@ class SSTemplateParser extends Parser {
 	# character which, in some context, would indicate the end of a free string, regardless of if we're actually in
 	# that context or not 
 	 
-	FreeString: /[^,)%!=|&]+/
+	FreeString: /[^,)%!=><|&]+/
 	
 	# An argument - either a marked value, or a bare value, prefering lookup matching on the bare value over
 	# freestring matching as long as that would give a successful parse 
@@ -338,7 +338,7 @@ class SSTemplateParser extends Parser {
 	 
 	# if and else_if blocks allow basic comparisons between arguments
 	 
-	ComparisonOperator: "==" | "!=" | "="
+	ComparisonOperator: "!=" | "==" | ">=" | ">" | "<=" | "<" | "="
 
 	Comparison: Argument < ComparisonOperator > Argument
 	*/
@@ -662,8 +662,19 @@ class SSTemplateParser extends Parser {
 	}
 
 	function NamedArgument_Value(&$res, $sub) {
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] 
-			: str_replace('$$FINAL', 'XML_val', $sub['php']);
+		switch($sub['ArgumentMode']) {
+			case 'string':
+				$res['php'] .= $sub['php'];
+				break;
+
+			case 'default':
+				$res['php'] .= $sub['string_php'];
+				break;
+
+			default:
+				$res['php'] .= str_replace('$$FINAL', 'obj', $sub['php']) . '->self()';
+				break;
+		}
 	}
 
 	/*!*
@@ -793,7 +804,7 @@ class SSTemplateParser extends Parser {
 	 * @deprecated
 	 */
 	function ClosedBlock_Handle_Control(&$res) {
-		Deprecation::notice('3.1', 'Use <% with %> or <% loop %> instead.');
+		Deprecation::notice('3.1', '<% control %> is deprecated. Use <% with %> or <% loop %> instead.');
 		return $this->ClosedBlock_Handle_Loop($res);
 	}
 	
@@ -936,7 +947,7 @@ class SSTemplateParser extends Parser {
 	 
 	# This is used to remove template comments
 	 
-	Comment: "<%--" (!"--%>" /./)+ "--%>"
+	Comment: "<%--" (!"--%>" /(?s)./)+ "--%>"
 	*/
 	function Comment__construct(&$res) {
 		$res['php'] = '';
@@ -991,7 +1002,7 @@ class SSTemplateParser extends Parser {
 		// non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
+			'href="\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
 				\'#',
 			$text
 		);

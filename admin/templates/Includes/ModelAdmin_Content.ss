@@ -12,11 +12,11 @@
 			</h2>
 		</div>
 
-		<div class="cms-content-header-tabs">
+		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
 			<ul>
 			<% loop ManagedModelTabs %>
 				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
-					<a href="$Link" class="cms-panel-link">$Title</a>
+					<a href="$Link" class="cms-panel-link" title="Form_EditForm">$Title</a>
 				</li>
 			<% end_loop %>
 			</ul>

@@ -7,7 +7,7 @@ class GridFieldExportButtonTest extends SapphireTest {
 
 	protected $form;
 
-	public static $fixture_file = 'GridFieldExportButtonTest.yml';
+	protected static $fixture_file = 'GridFieldExportButtonTest.yml';
 
 	protected $extraDataObjects = array(
 		'GridFieldExportButtonTest_Team'
@@ -77,7 +77,7 @@ class GridFieldExportButtonTest extends SapphireTest {
 }
 class GridFieldExportButtonTest_Team extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
 	);

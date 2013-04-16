@@ -24,7 +24,7 @@ define('30719',E_ALL);
  */
 class SapphireREPL extends Controller {
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index'
 	);
 

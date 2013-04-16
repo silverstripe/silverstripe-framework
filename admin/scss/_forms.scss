@@ -16,8 +16,8 @@ form.nostyle {
 
 .field {
 	display: block;
-	border-bottom: 1px solid $color-shadow-light;
-    @include box-shadow(0 1px 0 lighten($color-shadow-light, 16%));
+	border-bottom: 1px solid $color-light-separator;
+    @include box-shadow(0 1px 0 $box-shadow-shine-minimal);
 
 	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
 	//overflow: hidden;
@@ -42,7 +42,7 @@ form.nostyle {
 		.middleColumn {
 			margin-left: 0;
 		}
-		.help {
+		.description {
 			margin-left: 0;
 		}
 	}
@@ -84,25 +84,36 @@ form.nostyle {
 		display: block;
 	}
 
+	.fieldgroup .fieldgroup-field.last {  /* This is used on page/settings/visibility */
+    	padding-bottom: 8px; /* replicates li item spacing */
+    }
+
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
-	.help {
+	.description {
 		clear: both;
 		color: lighten($color-text, 20%);
 		display: block;
 		font-style: italic;
-		margin: $grid-y/2 0 0 $grid-x*23;
+		margin: $grid-y/2 0 0 $grid-x*23; // left align with .middleColumn
+	}
+	
+	&.checkbox .description, &.ss-gridfield .description {
+		margin-left: 0;
 	}
 	
 	input.text,
 	textarea,
 	select,
 	.TreeDropdownField {
+		margin-left: 10px;
 		width: 100%;
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
-
-		.help {
+		&.description {
+			margin:0; //overrides help class adding left margin to the textarea input.
+		}
+		.description {
 			max-width: $grid-x * 64;
 		}
 	}
@@ -207,6 +218,7 @@ form.small .field, .field.small {
 	
 	/* chzn override */
 	.chzn-container {
+		max-width: 416px;
 		.chzn-results {
 			
 			li {
@@ -243,6 +255,9 @@ form.small .field, .field.small {
 			}
 		}
 	}
+	.chzn-choices {
+		@include border-radius(3px);
+	}
 	
 	/* Date Fields */
 	input.month, input.day, input.year { 
@@ -265,6 +280,44 @@ form.small .field, .field.small {
  * ---------------------------------------------------- */
 
 .cms {
+	.button-no-style{
+		button{
+			@include border-radius(0);
+			background: none;
+			border: none;
+			color: $color-text-blue-link;
+			display: block;
+			font-weight:normal;	
+			margin:0;
+			outline:none;
+			padding-left:10px;
+			padding-right:10px;	
+			text-align: left;			
+			text-shadow: none;	
+			white-space:normal;		
+			&.ss-ui-action-destructive{
+				color: darken($color-error,25%);
+			}
+			span{
+				padding-left:0;
+				padding-right:0;
+			}
+			&:hover, &:focus, &:active{	
+				@include box-shadow(none);		
+				outline:none;
+				background:none;				
+				border:none;
+			}
+			&.loading {
+				background: transparent url(../../images/network-save.gif) no-repeat $grid-x center;
+				.ui-button-text {
+					padding-left: 16px /* icon */ + ($grid-x/2);
+				}
+				
+				
+			}
+		}
+	}
 
 	.Actions, .cms-actions-row {
 		> * {
@@ -281,6 +334,10 @@ form.small .field, .field.small {
 	.Actions {
 		min-height: 30px;
 		overflow: auto;
+		padding: $grid-x $grid-y * 1.5;
+	}
+	.south .Actions, .ui-tabs-panel .Actions,  .ui-tabs-panel iframe .Actions {
+		padding: 0;
 	}
 
 	input.loading, button.loading,
@@ -347,6 +404,13 @@ form.small .field, .field.small {
 			);
 			@include box-shadow(0 0 5px darken($color-button-generic, 20%) inset);
 		}
+
+		&.ss-ui-action-minor {
+			span {
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
 		
 		/* constructive */
 		&.ss-ui-action-constructive {
@@ -388,7 +452,6 @@ form.small .field, .field.small {
 
 		&.ss-ui-button-small {
 			.ui-button-text {
-				padding: ($grid-y/4) ($grid-x/4);
 				font-size: $font-base-size - 2;
 			}
 		}
@@ -447,19 +510,17 @@ form.small .field, .field.small {
 	.fieldgroup-field {
 		float: left;
 		display: block;
-		padding: $grid-y 0 0 $grid-x;
+		padding: $grid-y $grid-x 0 0;
 
-		&.odd {
-			
-		}
-		
-		&.even {
-			
-		}
-		
 		.field {
 			border: none;
 			padding-bottom: 0;
+		}
+
+		label {
+			margin-left: 0;
+			margin-right: 1em;
+			width: auto;
 		}
 	}
 
@@ -471,10 +532,11 @@ form.small .field, .field.small {
 }
 
 .ss-toggle {
-	margin-bottom: $grid-y;
+	margin: $grid-y 0;
 
 	.ui-accordion-header {
 		font-weight: bold;
+		font-size: 12px;
 
 		&.ui-state-default {
 			@include background-image(
@@ -482,18 +544,31 @@ form.small .field, .field.small {
 			);
 			text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
 		}
+		.ui-accordion-header-icon {
+			margin-top: -9px;
+		}
 	}
 
 	.ui-accordion-content {
-		padding: $grid-y*2 0 $grid-y 0;
+		padding: $grid-y 0 $grid-y*1.5;
 
 		.field {
 			@include box-shadow(none);
-			padding-left: $grid-x*2;
-			padding-right: $grid-x*2;
+			padding-left: $grid-x*1.5;
+			padding-right: $grid-x*1.5;
 
 			&:last-child {
 				margin-bottom: 0;
+			}
+			.middleColumn {
+				margin-left: 0;
+			}
+			label {
+				float: none;
+				margin-left: 0;
+			}
+			.description {
+				margin-left: 0;
 			}
 		}
 	}
@@ -533,12 +608,14 @@ input.radio {
  * ---------------------------------------------------- */
 .optionset {
 	padding-bottom: 8px;
+	padding-top: 8px;
 	
 	li {
 		float: left;
 		display: block;
 		width: $grid-x * 27;
 		padding-bottom: $grid-x;
+		padding-top: 0;
 		line-height: $grid-y * 2;
 		list-style: none;
 
@@ -554,6 +631,9 @@ input.radio {
 			padding-left: $grid-y;
 		}
 
+	}
+	&.field {
+		padding-top: 0;
 	}
 	
 }
@@ -585,7 +665,128 @@ input.radio {
 }
 
 
+/***************************************************************
+* On/Off Switch. 
+* Supports switching between up to 5 values (used for Draft/Published)
+* Example html set-up:
+*	<fieldset class="switch-states size_2"> 			
+*		<div class="switch">				
+*			<input id="Draft" class="first" name="view" type="radio" checked>
+*			<label for="Draft">Draft</label>	
+*			<input id="Published" class="last" name="view" type="radio">
+*			<label for="Published">Published</label>						
+*			<span class="slide-button"></span>	
+*		</div>			
+*	</fieldset>
+****************************************************************/
+fieldset.switch-states{	
+	padding:0 20px 0 0;	
+	margin-right: 5px;
 
+	.switch{
+		@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.1));
+		@include border-radius(3px);
+		-webkit-animation: bugfix infinite 1s; //Bugfix for older Webkit, including mobile Webkit.
+		background:lighten(#2d3035,69%); 
+		display: block;				
+		height: 25px;
+		margin-top:3px;
+		padding:0 10px;	
+		position: relative;			
+		width:100%;
+		z-index:5;
+		
+		label{
+			@include hide-text-overflow;
+			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));	
+			color:lighten($color-text-dark,40%);
+			color:rgba($color-text-dark,0.5);
+			cursor: pointer;
+			float:left;
+			font-weight:bold;
+			height: 100%;
+			line-height: 25px;		
+			position:relative;
+			z-index:2;	
+			/* Make text unselectable in browsers that support that */
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;			
+			&:hover{
+				color:lighten($color-text-dark, 30%);	
+				color:rgba($color-text-dark,0.7);								
+			}	
+			span{
+				@include box-sizing('border-box');
+				@include hide-text-overflow;
+				display:inline-block;
+				padding:0 10px;
+			}
+		}
+		input {
+			opacity: 0;
+			filter: alpha(opacity = 0);
+			visibility:none;	
+			position: absolute;			
+			&:checked + label {
+				@include transition(all 0.3s ease-out 0s); 	
+				color: #fff;
+				text-shadow: 0 -1px 0 darken($color-menu-button,10%);
+			}
+		}
+		.slide-button{
+			@include background-image(linear-gradient(
+				#2b9c32,
+				#64ab36
+			));		
+			@include border-radius(3px);
+			@include box-shadow(inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2));
+			@include text-shadow(0 1px 0 rgba(255,255,255,0.5));
+			@include transition(all 0.3s ease-out 0s); 	
+			background-color: #2b9c32; 
+			display:block;
+			height: 100%;
+			left:0;
+			padding: 0;
+			position: absolute;
+			top: 0;	
+			z-index: 1;	
+		}
+	}
 
+	/*	
+		Produce css for up to 5 states.
 
-
+		Note: with a little adjustment the switch can take more than 5 items, 
+		but a dropdown would probably be more appropriate
+	*/
+	@for $i from 1 through 5 {
+		&.size_#{$i} {
+			label, .slide-button { 
+				width:  100% / $i;				
+			}	  			
+			@if $i == 1{
+				label span{
+					padding-right:0; //even up the padding for a single item
+				}
+			}
+			input:checked:nth-of-type(2) ~ .slide-button {	
+				left: 100% / $i;
+			}
+			input:checked:nth-of-type(3) ~ .slide-button {	
+				left: (100% / $i) * 2;
+			}
+			input:checked:nth-of-type(4) ~ .slide-button {	
+				left: (100% / $i) * 3;
+			}
+			input:checked:nth-of-type(5) ~ .slide-button {	
+				left: (100% / $i) * 4;
+			}
+		} 
+	}		
+} 
+//old web-kit browser fix	
+@-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }

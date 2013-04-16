@@ -6,7 +6,7 @@
 
 class DataObjectLazyLoadingTest extends SapphireTest {
 
-	static $fixture_file = array(
+	protected static $fixture_file = array(
 		'DataObjectTest.yml',
 		'VersionedTest.yml'
 	);
@@ -395,19 +395,19 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 
 /** Additional classes for versioned lazy loading testing */
 class VersionedLazy_DataObject extends DataObject {
-	static $db = array(
+	private static $db = array(
 		"PageName" => "Varchar"
 	);
-	static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
 }
 
 class VersionedLazySub_DataObject extends VersionedLazy_DataObject {
-	static $db = array(
+	private static $db = array(
 		"ExtraField" => "Varchar",
 	);
-	static $extensions = array(
+	private static $extensions = array(
 		"Versioned('Stage', 'Live')"
 	);
 }

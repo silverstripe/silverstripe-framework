@@ -19,8 +19,9 @@ interface SS_Filterable {
 	public function canFilterBy($by);
 	
 	/**
-	 * Filter the list to include items with these charactaristics
-	 * 
+	 * Return a new instance of this list that only includes items with these charactaristics
+	 *
+	 * @return SS_Filterable
 	 * @example $list = $list->filter('Name', 'bob'); // only bob in the list
 	 * @example $list = $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
 	 * @example $list = $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
@@ -31,8 +32,9 @@ interface SS_Filterable {
 	public function filter();
 	
 	/**
-	 * Exclude the list to not contain items with these charactaristics
+	 * Return a new instance of this list that excludes any items with these charactaristics
 	 *
+	 * @return SS_Filterable
 	 * @example $list = $list->exclude('Name', 'bob'); // exclude bob from list
 	 * @example $list = $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
 	 * @example $list = $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21

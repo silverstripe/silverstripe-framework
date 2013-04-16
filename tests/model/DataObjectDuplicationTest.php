@@ -74,26 +74,26 @@ class DataObjectDuplicationTest extends SapphireTest {
 
 class DataObjectDuplicateTestClass1 extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'text' => 'Varchar'
 	);
 
-	static $has_many = array(
+	private static $has_many = array(
 		'twos' => 'DataObjectDuplicateTestClass2'
 	);
 
-	static $many_many = array(
+	private static $many_many = array(
 		'threes' => 'DataObjectDuplicateTestClass3'
 	);
 }
 
 class DataObjectDuplicateTestClass2 extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'text' => 'Varchar'
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'one' => 'DataObjectDuplicateTestClass1'
 	);
 
@@ -101,11 +101,11 @@ class DataObjectDuplicateTestClass2 extends DataObject implements TestOnly {
 
 class DataObjectDuplicateTestClass3 extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'text' => 'Varchar'
 	);
 
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'ones' => 'DataObjectDuplicateTestClass1'
 	);
 }

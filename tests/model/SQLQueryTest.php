@@ -2,7 +2,7 @@
 
 class SQLQueryTest extends SapphireTest {
 	
-	public static $fixture_file = 'SQLQueryTest.yml';
+	protected static $fixture_file = 'SQLQueryTest.yml';
 
 	protected $extraDataObjects = array(
 		'SQLQueryTest_DO',
@@ -367,6 +367,19 @@ class SQLQueryTest extends SapphireTest {
 			$this->assertEquals('Object 1', $row['Name']);
 		}
 	}
+	
+	/**
+	 * Tests aggregate() function
+	 */
+	public function testAggregate() {
+		$query = new SQLQuery();
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setGroupBy('"Common"');
+		
+		$queryClone = $query->aggregate('COUNT(*)', 'cnt');
+		$result = $queryClone->execute();
+		$this->assertEquals(array(2), $result->column('cnt'));
+	}
 
 	/**
 	 * Test that "_SortColumn0" is added for an aggregate in the ORDER BY
@@ -378,7 +391,7 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->setSelect(array('"Name"', '"Meta"'));
 		$query->setFrom('"SQLQueryTest_DO"');
-		$query->setOrderBy(array('MAX(Date)'));
+		$query->setOrderBy(array('MAX("Date")'));
 		$query->setGroupBy(array('"Name"', '"Meta"'));
 		$query->setLimit('1', '1');
 
@@ -396,24 +409,25 @@ class SQLQueryTest extends SapphireTest {
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"Meta" => "Varchar",
+		"Common" => "Varchar",
 		"Date" => "SS_Datetime"
 	);
 }
 
 class SQLQueryTestBase extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar",
 	);
 }
 
 class SQLQueryTestChild extends SQLQueryTestBase {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 	);
 }

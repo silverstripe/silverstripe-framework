@@ -246,9 +246,10 @@ class Requirements {
 	 *
 	 * @param string $combinedFileName
 	 * @param array $files
+	 * @param string $media
 	 */
-	public static function combine_files($combinedFileName, $files) {
-		self::backend()->combine_files($combinedFileName, $files);
+	public static function combine_files($combinedFileName, $files, $media = null) {
+		self::backend()->combine_files($combinedFileName, $files, $media);
 	}
 
 	/**
@@ -569,7 +570,7 @@ class Requirements_Backend {
 
 	/**
 	 * Needed to actively prevent the inclusion of a file,
-	 * e.g. when using your own prototype.js.
+	 * e.g. when using your own jQuery version.
 	 * Blocking should only be used as an exception, because
 	 * it is hard to trace back. You can just block items with an
 	 * ID, so make sure you add an unique identifier to customCSS() and customScript().
@@ -648,10 +649,10 @@ class Requirements_Backend {
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
 	public function includeInHTML($templateFile, $content) {
-		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
-		
-		if((strpos($content, '</head>') !== false || strpos($content, '</head ') !== false)
-				&& ($this->css||$this->javascript||$this->customCSS||$this->customScript||$this->customHeadTags)) {
+		if(
+			(strpos($content, '</head>') !== false || strpos($content, '</head ') !== false)
+			&& ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)
+		) {
 			$requirements = '';
 			$jsRequirements = '';
 
@@ -659,7 +660,7 @@ class Requirements_Backend {
 			$this->process_combined_files();
 
 			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
-				$path = $this->path_for_file($file);
+				$path = Convert::raw2xml($this->path_for_file($file));
 				if($path) {
 					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
 				}
@@ -676,7 +677,7 @@ class Requirements_Backend {
 			}
 
 			foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {
-				$path = $this->path_for_file($file);
+				$path = Convert::raw2xml($this->path_for_file($file));
 				if($path) {
 					$media = (isset($params['media']) && !empty($params['media']))
 						? " media=\"{$params['media']}\"" : "";
@@ -699,9 +700,10 @@ class Requirements_Backend {
 				// We put script tags into the body, for performance.
 				// If your template already has script tags in the body, then we put our script
 				// tags just before those. Otherwise, we put it at the bottom.
-				$p1 = strripos($content, '<script');
 				$p2 = stripos($content, '<body');
-				if($p1 !== false && $p1 > $p2) {
+				$p1 = stripos($content, '<script', $p2);
+
+				if($p1 !== false) {
 					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
 					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
@@ -715,8 +717,6 @@ class Requirements_Backend {
 			}
 		}
 
-		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
-		
 		return $content;
 	}
 
@@ -758,7 +758,7 @@ class Requirements_Backend {
 	 */
 	public function add_i18n_javascript($langDir, $return = false, $langOnly = false) {
 		$files = array();
-		if(i18n::get_js_i18n()) {
+		if(i18n::config()->js_i18n) {
 			// Include i18n.js even if no languages are found.  The fact that
 			// add_i18n_javascript() was called indicates that the methods in
 			// here are needed.
@@ -768,6 +768,11 @@ class Requirements_Backend {
 
 			$files[] = $langDir . i18n::default_locale() . '.js';
 			$files[] = $langDir . i18n::get_locale() . '.js';
+
+			// If both files don't exist, hard fallback to en_US
+			if(!Director::fileExists($files[0]) && !Director::fileExists($files[1])) {
+				$files[] = $langDir . 'en_US.js';
+			}
 
 		// Stub i18n implementation for when i18n is disabled.
 		} else {
@@ -867,8 +872,9 @@ class Requirements_Backend {
 	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()}
 	 *                                 by default)
 	 * @param array $files Array of filenames relative to the webroot
+	 * @param string $media Comma-separated list of media-types (e.g. "screen,projector").
 	 */
-	public function combine_files($combinedFileName, $files) {
+	public function combine_files($combinedFileName, $files, $media = null) {
 		// duplicate check
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
@@ -885,7 +891,7 @@ class Requirements_Backend {
 				if (isset($file['type']) && in_array($file['type'], array('css', 'javascript', 'js'))) {
 					switch ($file['type']) {
 						case 'css':
-							$this->css($file['path']);
+							$this->css($file['path'], $media);
 							break;
 						default:
 							$this->javascript($file['path']);
@@ -895,7 +901,7 @@ class Requirements_Backend {
 				} elseif (isset($file[1]) && in_array($file[1], array('css', 'javascript', 'js'))) {
 					switch ($file[1]) {
 						case 'css':
-							$this->css($file[0]);
+							$this->css($file[0], $media);
 							break;
 						default:
 							$this->javascript($file[0]);
@@ -910,7 +916,7 @@ class Requirements_Backend {
 				if(substr($file, -2) == 'js') {
 					$this->javascript($file);
 				} elseif(substr($file, -3) == 'css') {
-					$this->css($file);
+					$this->css($file, $media);
 				} else {
 					user_error("Requirements_Backend::combine_files(): Couldn't guess file type for file '$file', "
 						. "please specify by passing using an array instead.", E_USER_NOTICE);
@@ -994,7 +1000,8 @@ class Requirements_Backend {
 
 		foreach($this->css as $file => $params) {
 			if(isset($combinerCheck[$file])) {
-				$newCSSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;
+				// Inherit the parameters from the last file in the combine set.
+				$newCSSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = $params;
 				$combinedFiles[$combinerCheck[$file]] = true;
 			} else {
 				$newCSSRequirements[$file] = $params;

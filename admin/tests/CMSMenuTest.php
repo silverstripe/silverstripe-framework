@@ -82,7 +82,7 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 }
 
 class CMSMenuTest_LeftAndMainController extends LeftAndMain implements TestOnly {
-	static $url_segment = 'CMSMenuTest_LeftAndMainController';
-	static $menu_title = 'CMSMenuTest_LeftAndMainController';
-	static $menu_priority = 50;
+	private static $url_segment = 'CMSMenuTest_LeftAndMainController';
+	private static $menu_title = 'CMSMenuTest_LeftAndMainController';
+	private static $menu_priority = 50;
 }

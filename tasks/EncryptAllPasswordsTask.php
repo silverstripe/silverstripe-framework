@@ -28,7 +28,7 @@ class EncryptAllPasswordsTask extends BuildTask {
 	}
 	
 	public function run($request) {
-		$algo = Security::get_password_encryption_algorithm();
+		$algo = Security::config()->password_encryption_algorithm;
 		if($algo == 'none') {
 			$this->debugMessage('Password encryption disabled');
 			return;

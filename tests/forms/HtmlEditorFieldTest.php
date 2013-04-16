@@ -5,9 +5,9 @@
  */
 class HtmlEditorFieldTest extends FunctionalTest {
 	
-	public static $fixture_file = 'HtmlEditorFieldTest.yml';
+	protected static $fixture_file = 'HtmlEditorFieldTest.yml';
 	
-	public static $use_draft_site = true;
+	protected static $use_draft_site = true;
 	
 	protected $requiredExtensions = array(
 		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyMediaFormFieldExtension')
@@ -41,7 +41,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$obj = new HtmlEditorFieldTest_Object();
 		$editor = new HtmlEditorField('Content');
 		
-		$editor->setValue('<img src="assets/example.jpg" />');
+		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" />');
 		$editor->saveInto($obj);
 
 		$parser = new CSSContentParser($obj->Content);
@@ -49,14 +49,48 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals('', (string)$xml[0]['alt'], 'Alt tags are added by default.');
 		$this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
 
-		$editor->setValue('<img src="assets/example.jpg" alt="foo" title="bar" />');
+		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" alt="foo" title="bar" />');
 		$editor->saveInto($obj);
 
 		$parser = new CSSContentParser($obj->Content);
 		$xml = $parser->getByXpath('//img');
 		$this->assertEquals('foo', (string)$xml[0]['alt'], 'Alt tags are preserved.');
 		$this->assertEquals('bar', (string)$xml[0]['title'], 'Title tags are preserved.');
+		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file exists.');
 	}
+	
+	public function testResizedImageInsertion() {
+		$obj = new HtmlEditorFieldTest_Object();
+		$editor = new HtmlEditorField('Content');
+	
+		/*
+		 * Following stuff is neccessary to
+		 *     a) use the proper filename for the image we are referencing
+		 *     b) not confuse the "existing" filesystem by our test
+		 */
+		$imageFile = $this->objFromFixture('Image', 'example_image');
+		$imageFile->Filename = FRAMEWORK_DIR . '/' . $imageFile->Filename;
+		$origUpdateFilesystem = Config::inst()->get('File', 'update_filesystem');
+		Config::inst()->update('File', 'update_filesystem', false);
+		$imageFile->write();
+		Config::inst()->update('File', 'update_filesystem', $origUpdateFilesystem);	
+		/*
+		 * End of test bet setting
+		 */	
+		
+		$editor->setValue('<img src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" />');
+		$editor->saveInto($obj);
+	
+		$parser = new CSSContentParser($obj->Content);
+		$xml = $parser->getByXpath('//img');
+		$this->assertEquals('', (string)$xml[0]['alt'], 'Alt tags are added by default.');
+		$this->assertEquals('', (string)$xml[0]['title'], 'Title tags are added by default.');
+		$this->assertEquals(10, (int)$xml[0]['width'], 'Width tag of resized image is set.');
+		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
+		$this->assertEquals('assets/_resampled/ResizedImage10x20-HTMLEditorFieldTest_example.jpg', (string)$xml[0]['src'], 'Correct URL of resized image is set.');
+		$this->assertTrue(file_exists('assets/_resampled/ResizedImage10x20-HTMLEditorFieldTest_example.jpg'), 'File for resized image exists');
+		$this->assertEquals(false, $obj->HasBrokenFile, 'Referenced image file exists.');
+	}	
 	
 	public function testMultiLineSaving() {
 		$obj = $this->objFromFixture('HtmlEditorFieldTest_Object', 'home');
@@ -110,8 +144,9 @@ class HtmlEditorFieldTest_DummyMediaFormFieldExtension extends Extension impleme
 }
 
 class HtmlEditorFieldTest_Object extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar',
-		'Content' => 'HTMLText'
+		'Content' => 'HTMLText',
+		'HasBrokenFile' => 'Boolean'
 	);
 }

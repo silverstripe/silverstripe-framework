@@ -26,40 +26,66 @@
  * devs might know what they're doing and don't want contentnegotiator messing with their HTML4 doctypes,
  * but still find it useful to have self-closing tags removed.
  */
-class ContentNegotiator {
+class ContentNegotiator extends Object {
 
-	protected static $encoding = 'utf-8';
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $content_type = '';
+	
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $encoding = 'utf-8';
 
-	protected static $enabled = false;
+	/**
+	 * @config
+	 * @var boolean
+	 */
+	private static $enabled = false;
 
 	/**
 	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say,
 	 * windows-1252, to improve interoperability with extended characters being imported from windows excel.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.encoding" config setting instead
 	 */
 	public static function set_encoding($encoding) {
-		self::$encoding = $encoding;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.encoding" config setting instead');
+		Config::inst()->update('ContentNegotiator', 'encoding', $encoding);
 	}
 
 	/**
 	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes
 	 * that need to specify the character set make use of this function.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.encoding" config setting instead
 	 */
 	public static function get_encoding() {
-		return self::$encoding;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.encoding" config setting instead');
+		return Config::inst()->get('ContentNegotiator', 'encoding');
 	}
 
 	/**
 	 * Enable content negotiation for all templates, not just those with the xml header.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.enabled" config setting instead
 	 */
 	public static function enable() {
-		self::$enabled = true;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.enabled" config setting instead');
+		Config::inst()->update('ContentNegotiator', 'enabled', true);
 	}
 	
-	/*
+	/**
 	 * Disable content negotiation for all templates, not just those with the xml header.
+	 *
+	 * @deprecated 3.2 Use the "ContentNegotiator.enabled" config setting instead
 	 */
 	public static function disable() {
-		self::$enabled = false;
+		Deprecation::notice('3.2', 'Use the "ContentNegotiator.enabled" config setting instead');
+		Config::inst()->update('ContentNegotiator', 'enabled', false);
 	}
 
 	/**
@@ -75,7 +101,7 @@ class ContentNegotiator {
 			return false;
 		}
 
-		if(self::$enabled) return true;
+		if(Config::inst()->get('ContentNegotiator', 'enabled')) return true;
 		else return (substr($response->getBody(),0,5) == '<' . '?xml');
 	}
 
@@ -122,48 +148,57 @@ class ContentNegotiator {
 		$negotiator->$chosenFormat( $response );
 	}
 
-	/**
-	 * Only sends the HTTP Content-Type as "application/xhtml+xml"
-	 * if the template starts with the typical "<?xml" Pragma.
-	 * Assumes that a correct doctype is set, and doesn't change or append to it.
-	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;).
+	/** 
+	 * Check user defined content type and use it, if it's empty use the strict application/xhtml+xml.
+	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;
+	 * <input>, checked, selected).
 	 *
 	 * @param $response SS_HTTPResponse
 	 * @return string
-	 * @todo More flexible tag and entity parsing through regular expressions or tag definition lists
+	 * @todo Search for more xhtml replacement
 	 */
 	public function xhtml(SS_HTTPResponse $response) {
 		$content = $response->getBody();
-		
-		// Only serve "pure" XHTML if the XML header is present
-		if(substr($content,0,5) == '<' . '?xml' ) {
-			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
-			$response->addHeader("Vary" , "Accept");
+		$encoding = Config::inst()->get('ContentNegotiator', 'encoding');
 
-			// Fix base tag
-			$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
-				'<base href="$1" />', $content);
-			
-			$content = str_replace('&nbsp;','&#160;', $content);
-			$content = str_replace('<br>','<br />', $content);
-			$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
-			
-			$response->setBody($content);
-
+		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
+		if (empty($contentType)) {
+			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . $encoding);
 		} else {
-			return $this->html($response);
+			$response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
 		}
+		$response->addHeader("Vary" , "Accept");
+
+		// Fix base tag
+		$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
+			'<base href="$1" />', $content);
+
+		$content = str_replace('&nbsp;','&#160;', $content);
+		$content = str_replace('<br>','<br />', $content);
+		$content = str_replace('<hr>','<hr />', $content);
+		$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
+		$content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
+		$content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content);
+		$content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content);
+
+		$response->setBody($content);
 	}
 	
 	/*
-	 * Sends HTTP Content-Type as "text/html", and replaces existing doctypes with
-	 * HTML4.01 Strict.
+	 * Check user defined content type and use it, if it's empty use the text/html.
+	 * If find a XML header replaces it and existing doctypes with HTML4.01 Strict.
 	 * Replaces self-closing tags like <img /> with unclosed solitary tags like <img>.
 	 * Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
 	 * Removes "xmlns" attributes and any <?xml> Pragmas.
 	 */
 	public function html(SS_HTTPResponse $response) {
-		$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
+		$encoding = Config::inst()->get('ContentNegotiator', 'encoding');
+		$contentType = Config::inst()->get('ContentNegotiator', 'content_type');
+		if (empty($contentType)) {
+			$response->addHeader("Content-Type", "text/html; charset=" . $encoding);
+		} else {
+			$response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
+		}
 		$response->addHeader("Vary", "Accept");
 
 		$content = $response->getBody();

@@ -35,7 +35,7 @@ Create a new file, `~/Sites/_ss_environment.php`.  Put the following content in 
 	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
 
 
-Now, edit each of your site's configuration file, `~/Sites/(projectname)/mysite/_config.php`.  Delete all mention
+Now, edit each of your site's configuration file, usually `mysite/_config.php`.  Delete all mention
 of `$databaseConfig` and `Director::set_dev_servers`, and instead make sure that you file starts like this.
 
 	:::php
@@ -56,10 +56,8 @@ of `$databaseConfig` and `Director::set_dev_servers`, and instead make sure that
 The mechanism by which the `_ss_environment.php` files work is quite simple.  Here's how it works:
 
 *  At the beginning of SilverStripe's execution, the `_ss_environment.php` file is searched for, and if it is found, it's
-included.  SilverStripe looks in 3 places for the file:
-    * The site's base folder (ie, a sibling of framework, jsparty, and cms)
-    * The parent of the base folder
-    * The grandparent of the base folder
+included.  SilverStripe looks in all the parent folders of framework up to the server root (using the REAL location of
+the dir - see PHP realpath()):
 *  The `_ss_environment.php` file sets a number of "define()".
 *  "conf/ConfigureFromEnv.php" is included from within your `mysite/_config.php`.  This file has a number of regular
 configuration commands that use those defines as their arguments.  If you are curious, open up
@@ -102,3 +100,25 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 	// This is used by sake to know which directory points to which URL
 	global $_FILE_TO_URL_MAPPING;
 	$_FILE_TO_URL_MAPPING['/var/www'] = 'http://simon.geek.nz';
+
+## Available Constants
+
+| Name  | Description |
+| ----  | ----------- |
+| `TEMP_FOLDER` | Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *sys_get_temp_dir()*, and falls back to *silverstripe-cache* in the webroot. See *getTempFolder()* in *framework/core/Core.php* |
+| `SS_DATABASE_CLASS` | The database class to use, MySQLDatabase, MSSQLDatabase, etc. defaults to MySQLDatabase|
+| `SS_DATABASE_SERVER`| The database server to use, defaulting to localhost|
+| `SS_DATABASE_USERNAME`| The database username (mandatory)|
+| `SS_DATABASE_PASSWORD`| The database password (mandatory)|
+| `SS_DATABASE_PORT`|     The database port|
+| `SS_DATABASE_SUFFIX`|   A suffix to add to the database name.|
+| `SS_DATABASE_PREFIX`|   A prefix to add to the database name.|
+| `SS_DATABASE_TIMEZONE`| Set the database timezone to something other than the system timezone.
+| `SS_DATABASE_CHOOSE_NAME`| Boolean/Int.  If set, then the system will choose a default database name for you if one isn't give in the $database variable.  The database name will be "SS_" followed by the name of the folder into which you have installed SilverStripe.  If this is enabled, it means that the phpinstaller will work out of the box without the installer needing to alter any files.  This helps prevent accidental changes to the environment. If `SS_DATABASE_CHOOSE_NAME` is an integer greater than one, then an ancestor folder will be used for the  database name.  This is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build. If it's 2, the parent folder will be chosen; if it's 3 the grandparent, and so on.|
+| `SS_ENVIRONMENT_TYPE`| The environment type: dev, test or live.|
+| `SS_DEFAULT_ADMIN_USERNAME`| The username of the default admin - this is a non-database user with administrative privileges.|
+| `SS_DEFAULT_ADMIN_PASSWORD`| The password of the default admin.|
+| `SS_USE_BASIC_AUTH`| Protect the site with basic auth (good for test sites)|
+| `SS_SEND_ALL_EMAILS_TO`| If you set this define, all emails will be redirected to this address.|
+| `SS_SEND_ALL_EMAILS_FROM`| If you set this define, all emails will be send from this address.|
+| `SS_ERROR_LOG` | |

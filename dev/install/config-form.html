@@ -157,7 +157,7 @@
 														$attrs['class'] .= ' configured-by-env';
 													}
 													$attrHTML = '';
-													foreach($attrs as $attrName => $attrValue) $attrHTML .= "$attrName=\"$attrValue\" ";
+													foreach($attrs as $attrName => $attrValue) $attrHTML .= "$attrName=\"" . htmlspecialchars($attrValue) . '"';
 													if(isset($fieldSpec['attributes'])) $attrs = array_merge($attrs, $fieldSpec['attributes']);
 													
 													// html

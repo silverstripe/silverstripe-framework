@@ -69,7 +69,7 @@ class PurifierHTMLCleaner extends HTMLCleaner {
 	
 	public function cleanHTML($content) {
 		$html = new HTMLPurifier();
-		$doc = new SS_HTMLValue($html->purify($content));
+		$doc = Injector::inst()->create('HTMLValue', $html->purify($content));
 		return $doc->getContent();
 	}
 }

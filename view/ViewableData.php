@@ -21,8 +21,9 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * </code>
 	 *
 	 * @var array
+	 * @config
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		'CSSClasses' => 'Varchar'
 	);
 	
@@ -31,8 +32,9 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * is required.
 	 *
 	 * @var string
+	 * @config
 	 */
-	public static $default_cast = 'HTMLText';
+	private static $default_cast = 'Text';
 	
 	/**
 	 * @var array
@@ -318,7 +320,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string|array|SSViewer $template the template to render into
 	 * @param array $customFields fields to customise() the object with before rendering
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function renderWith($template, $customFields = null) {
 		if(!is_object($template)) {
@@ -330,7 +332,6 @@ class ViewableData extends Object implements IteratorAggregate {
 		if($customFields instanceof ViewableData) {
 			$data = $data->customise($customFields);
 		}
-		
 		if($template instanceof SSViewer) {
 			return $template->process($data, is_array($customFields) ? $customFields : null);
 		}
@@ -351,10 +352,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param string $cacheName a custom cache name
 	 */
 	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
-		if(isset($_REQUEST['debug_profile'])) {
-			Profiler::mark("obj.$fieldName", "on a $this->class object");
-		}
-		
 		if(!$cacheName) $cacheName = $arguments ? $fieldName . implode(',', $arguments) : $fieldName;
 		
 		if(!isset($this->objCache[$cacheName])) {
@@ -382,10 +379,6 @@ class ViewableData extends Object implements IteratorAggregate {
 			if($cache) $this->objCache[$cacheName] = $value;
 		} else {
 			$value = $this->objCache[$cacheName];
-		}
-		
-		if(isset($_REQUEST['debug_profile'])) {
-			Profiler::unmark("obj.$fieldName", "on a $this->class object");
 		}
 		
 		if(!is_object($value) && $forceReturnedObject) {
@@ -529,7 +522,10 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public function ThemeDir($subtheme = false) {
-		if($theme = SSViewer::current_theme()) {
+		if(
+			Config::inst()->get('SSViewer', 'theme_enabled') 
+			&& $theme = Config::inst()->get('SSViewer', 'theme')
+		) {
 			return THEMES_DIR . "/$theme" . ($subtheme ? "_$subtheme" : null);
 		}
 		

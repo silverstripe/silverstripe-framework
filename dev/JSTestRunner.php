@@ -37,12 +37,12 @@ class JSTestRunner extends Controller {
 	/** @ignore */
 	private static $default_reporter;
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'' => 'browse',
 		'$TestCase' => 'only',
 	);
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index',
 		'all',
 		'browse',

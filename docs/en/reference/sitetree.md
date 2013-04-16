@@ -74,7 +74,7 @@ Hierarchy operations (defined on `[api:Hierarchy]`:
  * `$page->AllHistoricalChildren()`: Return all the children this page had, including pages that were deleted from both stage & live.
  * `$page->AllChildrenIncludingDeleted()`: Return all children, including those that have been deleted but are still in live.
 
-## Limiting Hierarchy
+## Allowed Children, Default Child and Root-Level 
 
 By default, any page type can be the child of any other page type.  
 However, there are static properties that can be
@@ -85,21 +85,21 @@ Example: Restrict blog entry pages to nesting underneath their blog holder
 	:::php
 	class BlogHolder extends Page {
 	  // Blog holders can only contain blog entries
-	  static $allowed_children = array("BlogEntry");
-	  static $default_child = "BlogEntry";
+	  private static $allowed_children = array("BlogEntry");
+	  private static $default_child = "BlogEntry";
 	  // ...
 	}
 	
 	class BlogEntry extends Page {
 	  // Blog entries can't contain children
-	  static $allowed_children = "none";
-	  static $can_be_root = false;
+	  private static $allowed_children = "none";
+	  private static $can_be_root = false;
 	  // ...
 	}	
 	
 	class Page extends SiteTree {
 	  // Don't let BlogEntry pages be underneath Pages.  Only underneath Blog holders.
-	  static $allowed_children = array("*Page,", "BlogHolder");
+	  private static $allowed_children = array("*Page,", "BlogHolder");
 	}
 
 
@@ -115,9 +115,20 @@ level.
 
 Note that there is no allowed_parents` control.  To set this, you will need to specify the `allowed_children` of all other page types to exclude the page type in question.
 
-## Permission Control
+## Tree Limitations
 
+SilverStripe limits the amount of initially rendered nodes in order to avoid
+processing delays, usually to a couple of dozen. The value can be configured
+through `[api:Hierarchy::$node_threshold_total]`.
 
+If a website has thousands of pages, the tree UI metaphor can become an inefficient way
+to manage them. The CMS has an alternative "list view" for this purpose, which allows
+sorting and paging through large numbers of pages in a tabular view.
+
+To avoid exceeding performance constraints of both the server and browser,
+SilverStripe places hard limits on the amount of rendered pages in
+a specific tree leaf, typically a couple of hundred pages.
+The value can be configured through `[api:Hierarchy::$node_threshold_leaf]`.
 
 ## Tree Display (Description, Icons and Badges)
 
@@ -130,10 +141,10 @@ when navigating the tree or adding a new page:
 
 	:::php
 	class StaggPage extends Page {
-		static $singular_name = 'Staff Directory';
-		static $plural_name = 'Staff Directories';
-		static $description = 'Two-column layout with a list of staff members';
-		static $icon = 'mysite/images/staff-icon.png';
+		private static $singular_name = 'Staff Directory';
+		private static $plural_name = 'Staff Directories';
+		private static $description = 'Two-column layout with a list of staff members';
+		private static $icon = 'mysite/images/staff-icon.png';
 		// ...
 	}
 

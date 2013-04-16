@@ -6,7 +6,8 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Context\TranslatedContextInterface,
 	Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException;
+	Behat\Behat\Exception\PendingException,
+	Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode;
 
@@ -251,6 +252,52 @@ class CmsUiContext extends BehatContext
 	}
 
 	/**
+	 * @Given /^I set the CMS mode to "([^"]*)"$/
+	 */
+	public function iSetTheCmsToMode($mode)
+	{
+		return array(
+			new Step\When(sprintf('I fill in the "Change view mode" dropdown with "%s"', $mode)),
+			new Step\When('I wait for 1 second') // wait for CMS layout to redraw
+		);
+	}
+
+	/**
+	 * @Given /^I wait for the preview to load$/
+	 */
+	public function iWaitForThePreviewToLoad() 
+	{
+		$driver = $this->getSession()->getDriver();
+		$driver->switchToIFrame('cms-preview-iframe');
+		
+		$this->getSession()->wait(
+			5000, 
+			"!jQuery('iframe[name=cms-preview-iframe]').hasClass('loading')"
+		);
+
+		$driver->switchToWindow();   
+	}
+
+	/**
+	 * @Given /^I switch the preview to "([^"]*)"$/
+	 */
+	public function iSwitchThePreviewToMode($mode) 
+	{
+		$controls = $this->getSession()->getPage()->find('css', '.cms-preview-controls');
+		assertNotNull($controls, 'Preview controls not found');
+
+		$label = $controls->find('xpath', sprintf(
+			'.//label[(@for="%s")]', 
+			$mode
+		));
+		assertNotNull($label, 'Preview mode switch not found');
+
+		$label->click();
+
+		return new Step\When('I wait for the preview to load');
+	}
+
+	/**
 	 * @Given /^the preview does not contain "([^"]*)"$/
 	 */
 	public function thePreviewDoesNotContain($content)
@@ -265,38 +312,75 @@ class CmsUiContext extends BehatContext
 	/**
 	 * Workaround for chosen.js dropdowns which hide the original dropdown field.
 	 * 
-	 * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
-	 * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)" dropdown$/
+	 * @When /^(?:|I )fill in the "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
+	 * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for the "(?P<field>(?:[^"]|\\")*)" dropdown$/
 	 */
 	public function theIFillInTheDropdownWith($field, $value)
 	{
 		$field = $this->fixStepArgument($field);
 		$value = $this->fixStepArgument($value);
 
-		$inputField = $this->getSession()->getPage()->findField($field);
-		if(null === $inputField) {
-			throw new ElementNotFoundException(sprintf(
+		// Given the fuzzy matching, we might get more than one matching field.
+		$formFields = array();
+
+		// Find by label
+		$formField = $this->getSession()->getPage()->findField($field);
+		if($formField) $formFields[] = $formField;
+
+		// Fall back to finding by title (for dropdowns without a label)
+		if(!$formFields) {
+			$formFields = $this->getSession()->getPage()->findAll(
+				'xpath',
+				sprintf(
+					'//*[self::select][(./@title="%s")]',
+					$field
+				)
+			);
+		}
+
+		assertGreaterThan(0, count($formFields), sprintf(
 				'Chosen.js dropdown named "%s" not found',
 				$field
 			));
+
+		$containers = array();
+		foreach($formFields as $formField) {
+			// Traverse up to field holder
+			$containerCandidate = $formField;
+			do {
+				$containerCandidate = $containerCandidate->getParent();
+			} while($containerCandidate && !preg_match('/field/', $containerCandidate->getAttribute('class'))); 
+
+			if(
+				$containerCandidate 
+				&& $containerCandidate->isVisible() 
+				&& preg_match('/field/', $containerCandidate->getAttribute('class'))
+			) {
+				$containers[] = $containerCandidate;
+		}
 		}
 
-		$container = $inputField->getParent()->getParent();
-		if(null === $container) throw new ElementNotFoundException('Chosen.js field container not found');
+		assertGreaterThan(0, count($containers), 'Chosen.js field container not found');
 		
-		$linkEl = $container->find('xpath', './/a');
-		if(null === $linkEl) throw new ElementNotFoundException('Chosen.js link element  not found');
-		$linkEl->click();
+		// Default to first visible container
+		$container = $containers[0];
+		
+		// Click on newly expanded list element, indirectly setting the dropdown value
+		$linkEl = $container->find('xpath', './/a[./@href]');
+		assertNotNull($linkEl, 'Chosen.js link element not found');
 		$this->getSession()->wait(100); // wait for dropdown overlay to appear
+		$linkEl->click();
 
 		$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
-		if(null === $listEl) 
-		{
-			throw new ElementNotFoundException(sprintf(
+		assertNotNull($listEl, sprintf(
 				'Chosen.js list element with title "%s" not found',
 				$value
 			));
-		}
+
+		// Dropdown flyout might be animated
+		// $this->getSession()->wait(1000, 'jQuery(":animated").length == 0');
+		$this->getSession()->wait(300);
+
 		$listEl->click();
 	}
 

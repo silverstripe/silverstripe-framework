@@ -8,21 +8,21 @@ class BasicAuthTest extends FunctionalTest {
 
 	static $original_unique_identifier_field;
 
-	static $fixture_file = 'BasicAuthTest.yml';
+	protected static $fixture_file = 'BasicAuthTest.yml';
 
 	public function setUp() {
 		parent::setUp();
 
 		// Fixtures assume Email is the field used to identify the log in identity
-		self::$original_unique_identifier_field = Member::get_unique_identifier_field();
-		Member::set_unique_identifier_field('Email');
+		self::$original_unique_identifier_field = Member::config()->unique_identifier_field;
+		Member::config()->unique_identifier_field = 'Email';
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 		
 		BasicAuth::protect_entire_site(false);
-		Member::set_unique_identifier_field(self::$original_unique_identifier_field);
+		Member::config()->unique_identifier_field = self::$original_unique_identifier_field;
 	}
 
 	public function testBasicAuthEnabledWithoutLogin() {

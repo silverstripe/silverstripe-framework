@@ -16,7 +16,8 @@
  * @subpackage security
  */
 class PasswordValidator extends Object {
-	static $character_strength_tests = array(
+	
+	private static $character_strength_tests = array(
 		'lowercase' => '/[a-z]/',
 		'uppercase' => '/[A-Z]/',
 		'digits' => '/[0-9]/',
@@ -73,7 +74,7 @@ class PasswordValidator extends Object {
 			$score = 0;
 			$missedTests = array();
 			foreach($this->testNames as $name) {
-				if(preg_match(self::$character_strength_tests[$name], $password)) $score++;
+				if(preg_match(self::config()->character_strength_tests[$name], $password)) $score++;
 				else $missedTests[] = $name;
 			}
 			

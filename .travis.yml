@@ -5,23 +5,23 @@ php:
  - 5.4
 
 env:
- - DB=MYSQL CORE_RELEASE=3.0
- - DB=PGSQL CORE_RELEASE=3.0
- - DB=SQLITE3 CORE_RELEASE=3.0
- - PHPCS=1 CORE_RELEASE=3.0
+ - DB=MYSQL CORE_RELEASE=master
+ - DB=PGSQL CORE_RELEASE=master
+ - DB=SQLITE3 CORE_RELEASE=master
+ - PHPCS=1 CORE_RELEASE=master
 
 matrix:
   exclude:
     - php: 5.4
-      env: DB=PGSQL CORE_RELEASE=3.0
+      env: DB=PGSQL CORE_RELEASE=master
     - php: 5.4
-      env: DB=SQLITE3 CORE_RELEASE=3.0
+      env: DB=SQLITE3 CORE_RELEASE=master
     - php: 5.4
-      env: PHPCS=1 CORE_RELEASE=3.0
+      env: PHPCS=1 CORE_RELEASE=master
   allow_failures:
-    - env: DB=PGSQL CORE_RELEASE=3.0
-    - env: DB=SQLITE3 CORE_RELEASE=3.0
-    - env: PHPCS=1 CORE_RELEASE=3.0
+    - env: DB=PGSQL CORE_RELEASE=master
+    - env: DB=SQLITE3 CORE_RELEASE=master
+    - env: PHPCS=1 CORE_RELEASE=master
 
 before_script:
  - pear install pear/PHP_CodeSniffer

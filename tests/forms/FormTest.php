@@ -5,12 +5,20 @@
  */
 class FormTest extends FunctionalTest {
 	
-	static $fixture_file = 'FormTest.yml';
+	protected static $fixture_file = 'FormTest.yml';
 
 	protected $extraDataObjects = array(
 		'FormTest_Player',
 		'FormTest_Team',
 	);
+
+	function setUp() {
+		parent::setUp();
+
+		Config::inst()->update('Director', 'rules', array(
+			'FormTest_Controller' => 'FormTest_Controller'
+		));
+	}
 	
 	public function testLoadDataFromRequest() {
 		$form = new Form(
@@ -239,7 +247,7 @@ class FormTest extends FunctionalTest {
 		$this->assertPartialMatchBySelector(
 			'#SomeRequiredField span.required',
 			array(
-				'"SomeRequiredField" is required'
+				'"Some Required Field" is required'
 			),
 			'Required fields show a notification on field when left blank'
 		);
@@ -408,17 +416,17 @@ class FormTest extends FunctionalTest {
 }
 
 class FormTest_Player extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'Biography' => 'Text',
 		'Birthday' => 'Date'
 	);
 	
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'Teams' => 'FormTest_Team'
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'FavouriteTeam' => 'FormTest_Team', 
 	);
 	
@@ -429,18 +437,18 @@ class FormTest_Player extends DataObject implements TestOnly {
 }
 
 class FormTest_Team extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'Region' => 'Varchar',
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		'Players' => 'FormTest_Player'
 	);
 }
 
 class FormTest_Controller extends Controller implements TestOnly {
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
 	);
 
@@ -502,7 +510,7 @@ class FormTest_Controller extends Controller implements TestOnly {
 }
 
 class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
 	);
 
@@ -537,8 +545,3 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 		return new SSViewer('BlankPage');
 	}
 }
-
-Config::inst()->update('Director', 'rules', array(
-	'FormTest_Controller' => 'FormTest_Controller'
-));
-

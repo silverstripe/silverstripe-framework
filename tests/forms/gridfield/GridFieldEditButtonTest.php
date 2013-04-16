@@ -12,7 +12,7 @@ class GridFieldEditButtonTest extends SapphireTest {
 	protected $form;
 	
 	/** @var string */
-	public static $fixture_file = 'GridFieldActionTest.yml';
+	protected static $fixture_file = 'GridFieldActionTest.yml';
 
 	/** @var array */
 	protected $extraDataObjects = array('GridFieldAction_Delete_Team', 'GridFieldAction_Edit_Team');
@@ -25,15 +25,16 @@ class GridFieldEditButtonTest extends SapphireTest {
 		$this->form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
 	}
 	
-	public function testDontShowEditLinks() {
+	public function testShowEditLinks() {
 		if(Member::currentUser()) { Member::currentUser()->logOut(); }
 		
 		$content = new CSSContentParser($this->gridField->FieldHolder());
 		// Check that there are content
 		$this->assertEquals(3, count($content->getBySelector('.ss-gridfield-item')));
-		// Make sure that there are no edit links
-		$this->assertEquals(0, count($content->getBySelector('.edit-link')),
-			'Edit links should not show when not logged in.');
+		// Make sure that there are edit links, even though the user doesn't have "edit" permissions
+		// (he can still view the records)
+		$this->assertEquals(2, count($content->getBySelector('.edit-link')),
+			'Edit links should show when not logged in.');
 	}
 	
 	public function testShowEditLinksWithAdminPermission() {
@@ -45,7 +46,7 @@ class GridFieldEditButtonTest extends SapphireTest {
 }
 
 class GridFieldAction_Edit_Team extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar',
 		'City' => 'Varchar'
 	);

@@ -31,14 +31,14 @@ class i18nTest extends SapphireTest {
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		FileSystem::makeFolder($this->alternateBaseSavePath);
-		Director::setBaseFolder($this->alternateBasePath);
+		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
 		// Push a template loader running from the fake webroot onto the stack.
-		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
 		$templateManifest->regenerate(false);
 		SS_TemplateLoader::instance()->pushManifest($templateManifest);
-		$this->_oldTheme = SSViewer::current_theme();
-		SSViewer::set_theme('testtheme1');
+		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
+		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
 
 		$this->originalLocale = i18n::get_locale();
 		
@@ -58,8 +58,8 @@ class i18nTest extends SapphireTest {
 	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
 		i18n::set_locale($this->originalLocale);
-		Director::setBaseFolder(null);
-		SSViewer::set_theme($this->_oldTheme);
+		Config::inst()->update('Director', 'alternate_base_folder', null);
+		Config::inst()->update('SSViewer', 'theme', $this->_oldTheme);
 		i18n::register_translator($this->origAdapter, 'core');
 		
 		parent::tearDown();
@@ -84,14 +84,14 @@ class i18nTest extends SapphireTest {
 	public function testDateFormatCustom() {
 		i18n::set_locale('en_US');
 		$this->assertEquals('MMM d, y', i18n::get_date_format());
-		i18n::set_date_format('d/MM/yyyy');
+		i18n::config()->date_format = 'd/MM/yyyy';
 		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
 	}
 	
 	public function testTimeFormatCustom() {
 		i18n::set_locale('en_US');
 		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
-		i18n::set_time_format('HH:mm:ss');
+		i18n::config()->time_format = 'HH:mm:ss';
 		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
 	}
 	
@@ -563,24 +563,33 @@ class i18nTest extends SapphireTest {
 		SS_ClassLoader::instance()->popManifest();
 	}
 	
+	public function testGetLanguageName() {
+		Config::inst()->update(
+			'i18n', 
+			'common_languages', 
+			array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
+		);
+		$this->assertEquals('German (Cologne)', i18n::get_language_name('de_CGN'));
+		$this->assertEquals('K&ouml;lsch', i18n::get_language_name('de_CGN', true));
+	}
 }
 
 class i18nTest_DataObject extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'MyProperty' => 'Varchar',
 		'MyUntranslatedProperty' => 'Text'
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'HasOneRelation' => 'Member'
 	);
 	
-	static $has_many = array(
+	private static $has_many = array(
 		'HasManyRelation' => 'Member'
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		'ManyManyRelation' => 'Member'
 	);
 	

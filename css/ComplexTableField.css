@@ -1,6 +1,0 @@
-/* table */
-.ComplexTableField { margin-bottom: 10px; }
-.ComplexTableField tbody td { cursor: pointer; }
-.ComplexTableField tbody td.markingcheckbox { cursor: default; }
-
-.ui-dialog .ctf-dialog.ui-dialog-content { padding-right: 0; /* scrollbars */ }

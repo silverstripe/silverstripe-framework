@@ -43,7 +43,7 @@ class PhpUnitWrapper_3_5 extends PhpUnitWrapper {
 			$filter = $coverage->filter();
 			$modules = $this->moduleDirectories();
 
-			foreach(TestRunner::$coverage_filter_dirs as $dir) {
+			foreach(TestRunner::config()->coverage_filter_dirs as $dir) {
 				if($dir[0] == '*') {
 					$dir = substr($dir, 1);
 					foreach ($modules as $module) {

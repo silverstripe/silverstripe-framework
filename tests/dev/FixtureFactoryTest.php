@@ -152,19 +152,19 @@ class FixtureFactoryTest extends SapphireTest {
 }
 
 class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar"
 	);
-	static $many_many = array(
+	private static $many_many = array(
 		"ManyMany" => "FixtureFactoryTest_DataObjectRelation"
 	);
 }
 
 class FixtureFactoryTest_DataObjectRelation extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar"
 	);
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		"TestParent" => "FixtureFactoryTest_DataObject"
 	); 
 }

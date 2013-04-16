@@ -57,20 +57,20 @@ class DirectorTest extends SapphireTest {
 
 	public function testAlternativeBaseURL() {
 		// relative base URLs - you should end them in a /
-		Director::setBaseURL('/relativebase/');
+		Config::inst()->update('Director', 'alternate_base_url', '/relativebase/');
 		$this->assertEquals('/relativebase/', Director::baseURL());
 		$this->assertEquals(Director::protocolAndHost() . '/relativebase/', Director::absoluteBaseURL());
 		$this->assertEquals(Director::protocolAndHost() . '/relativebase/subfolder/test',
 			Director::absoluteURL('subfolder/test'));
 
 		// absolute base URLs - you should end them in a /
-		Director::setBaseURL('http://www.example.org/');
+		Config::inst()->update('Director', 'alternate_base_url', 'http://www.example.org/');
 		$this->assertEquals('http://www.example.org/', Director::baseURL());
 		$this->assertEquals('http://www.example.org/', Director::absoluteBaseURL());
 		$this->assertEquals('http://www.example.org/subfolder/test', Director::absoluteURL('subfolder/test'));
 
 		// Setting it to false restores functionality
-		Director::setBaseURL(false);
+		Config::inst()->update('Director', 'alternate_base_url', false);
 		$this->assertEquals(BASE_URL.'/', Director::baseURL());
 		$this->assertEquals(Director::protocolAndHost().BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
 		$this->assertEquals(Director::protocolAndHost().BASE_URL . '/subfolder/test',
@@ -104,6 +104,8 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_absolute_url('test.com/testpage'));
 		$this->assertFalse(Director::is_absolute_url('/relative'));
 		$this->assertFalse(Director::is_absolute_url('relative'));
+		$this->assertFalse(Director::is_absolute_url("/relative/?url=http://foo.com"));
+		$this->assertFalse(Director::is_absolute_url("/relative/#http://foo.com"));
 		$this->assertTrue(Director::is_absolute_url("https://test.com/?url=http://foo.com"));
 		$this->assertTrue(Director::is_absolute_url("trickparseurl:http://test.com"));
 		$this->assertTrue(Director::is_absolute_url('//test.com'));
@@ -122,22 +124,29 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_relative_url('ftp://test.com'));
 		$this->assertTrue(Director::is_relative_url('/relative'));
 		$this->assertTrue(Director::is_relative_url('relative'));
-		// $this->assertTrue(Director::is_relative_url('/relative/?url=http://test.com'));
+		$this->assertTrue(Director::is_relative_url('/relative/?url=http://test.com'));
+		$this->assertTrue(Director::is_relative_url('/relative/#=http://test.com'));
 	}
 	
 	public function testMakeRelative() {
 		$siteUrl = Director::absoluteBaseURL();
 		$siteUrlNoProtocol = preg_replace('/https?:\/\//', '', $siteUrl);
+		
 		$this->assertEquals(Director::makeRelative("$siteUrl"), '');
-		//$this->assertEquals(Director::makeRelative("https://$siteUrlNoProtocol"), '');
+		$this->assertEquals(Director::makeRelative("https://$siteUrlNoProtocol"), '');
+		$this->assertEquals(Director::makeRelative("http://$siteUrlNoProtocol"), '');
+
 		$this->assertEquals(Director::makeRelative("   $siteUrl/testpage   "), 'testpage');
-		//$this->assertEquals(Director::makeRelative("$siteUrlNoProtocol/testpage"), 'testpage');
+		$this->assertEquals(Director::makeRelative("$siteUrlNoProtocol/testpage"), 'testpage');
+		
 		$this->assertEquals(Director::makeRelative('ftp://test.com'), 'ftp://test.com');
 		$this->assertEquals(Director::makeRelative('http://test.com'), 'http://test.com');
-		// the below is not a relative URL, test makes no sense
-		// $this->assertEquals(Director::makeRelative('/relative'), '/relative');
+
 		$this->assertEquals(Director::makeRelative('relative'), 'relative');
 		$this->assertEquals(Director::makeRelative("$siteUrl/?url=http://test.com"), '?url=http://test.com');
+
+		$this->assertEquals("test", Director::makeRelative("https://".$siteUrlNoProtocol."/test"));
+		$this->assertEquals("test", Director::makeRelative("http://".$siteUrlNoProtocol."/test"));
 	}
 	
 	/**
@@ -180,40 +189,6 @@ class DirectorTest extends SapphireTest {
 				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
 			}
 		}
-	}
-	
-	public function testURLParam() {
-		// 2.4 only
-		$originalDeprecation = Deprecation::dump_settings();
-		Deprecation::notification_version('2.4');
-
-		Director::test('DirectorTestRule/myaction/myid/myotherid');
-		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
-		$this->assertEquals(Director::urlParam('Action'), 'myaction');
-		$this->assertEquals(Director::urlParam('ID'), 'myid');
-		$this->assertEquals(Director::urlParam('OtherID'), 'myotherid');
-
-		Deprecation::restore_settings($originalDeprecation);
-	}
-	
-	public function testURLParams() {
-		// 2.4 only
-		$originalDeprecation = Deprecation::dump_settings();
-		Deprecation::notification_version('2.4');
-
-		Director::test('DirectorTestRule/myaction/myid/myotherid');
-		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
-		$this->assertEquals(
-			Director::urlParams(), 
-			array(
-				'Controller' => 'DirectorTestRequest_Controller',
-				'Action' => 'myaction', 
-				'ID' => 'myid', 
-				'OtherID' => 'myotherid'
-			)
-		);
-
-		Deprecation::restore_settings($originalDeprecation);
 	}
 	
 	/**
@@ -267,6 +242,13 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse($output);
 	}
 
+	public function testForceSSLAlternateDomain() {
+		Config::inst()->update('Director', 'alternate_base_url', '/');
+		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
+		$output = Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
+		$this->assertEquals($output, 'https://secure.mysite.com/admin');
+	}
+
 	/**
 	 * @covers Director::extract_request_headers()
 	 */
@@ -297,6 +279,10 @@ class DirectorTest extends SapphireTest {
 		);
 		
 		$this->assertEquals($headers, Director::extract_request_headers($request));
+	}
+
+	public function testUnmatchedRequestReturns404() {
+		$this->assertEquals(404, Director::test('no-route')->getStatusCode());
 	}
 
 }

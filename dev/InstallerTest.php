@@ -6,7 +6,7 @@
  */
 class InstallerTest extends Controller {
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'testrewrite'
 	);
 

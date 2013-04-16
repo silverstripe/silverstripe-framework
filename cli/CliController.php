@@ -11,7 +11,7 @@
  */
 abstract class CliController extends Controller {
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'index'
 	);
 

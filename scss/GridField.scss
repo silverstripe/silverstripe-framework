@@ -41,9 +41,11 @@ $gf_grid_x:	16px;
 		& > div {
 			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
+				margin-bottom: 0;
+				.action {
 				margin-bottom:$gf_grid_y;
-				@include clearfix;
 			}
+		}
 		}
 
 		&[data-selectable] {
@@ -61,24 +63,18 @@ $gf_grid_x:	16px;
 	 	}
 
 	 	p button#action_export {
-			margin-top:$gf_grid_y;
 			span.btn-icon-download-csv {
 				height:17px; //exact height of icon
 			}
-			.ui-button-text {
-				padding-left:26px; //to accomodate wider export icon
-			} 
 	 	}
 	 	.right {
 	 		float:right;
 			& > * {
 				float: right;
-				margin-left:5px;			
-				font-size: $gf_grid_y*1.2;
+				margin-left:$gf_grid_x/2;			
 			}
 
-			.pagination-records-number
-			{
+			.pagination-records-number {
 				font-size: 1.0em;
 				padding: 6px 3px 6px 0;
 				color: $color-text-light;
@@ -89,12 +85,16 @@ $gf_grid_x:	16px;
 		.left { 
 			float:left;
 			& > * {
-				margin-right:5px;
+				margin-right:$gf_grid_x/2;
 				float: left;
 				font-size: $gf_grid_y*1.2;
 			}
 		}
+
+		.ss-gridfield-buttonrow {
+			font-size: $gf_grid_y*1.2;
 	}
+		}
 	
 	.ss-gridfield {
 		.grid-levelup {
@@ -106,19 +106,20 @@ $gf_grid_x:	16px;
 			margin-bottom: 6px;
 		}
 		.add-existing-autocompleter {
+			span {															
+				@include inline-block(top);
+			}
 			input.relation-search {
-				width: 380px;
+				width: 270px;
+				margin-bottom: $gf_grid_y;
 			}
 			width: 500px;
 		}
-		.grid-print-button{
-			display: inline-block;
+		.grid-csv-button, .grid-print-button {
+			margin-bottom: $gf_grid_y;
+			@include inline-block();
 		}
-		.grid-csv-button{
-			display: inline-block;
 		}
-	}
-
 	table.ss-gridfield-table {
 		display: table; 
 		@include box-shadow-none;		
@@ -162,7 +163,7 @@ $gf_grid_x:	16px;
 				word-wrap:break-word;
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
-				// Overwritten for IE7, which doesn't support this.			
+				// Overwritten for IE7, which doesnt support this.			
 				&.col-buttons {
 					width: auto;
 					padding:0 $gf_grid_x/2;
@@ -255,8 +256,7 @@ $gf_grid_x:	16px;
 					display:inline-block;
 					width:20px;
 					height:20px; //min height to fit the edit icon
-					text-align: left;
-					text-indent:-9999em;
+					text-indent:9999em;
 					overflow: hidden;
 					vertical-align: middle;
 				}
@@ -344,6 +344,8 @@ $gf_grid_x:	16px;
 						padding-right:0;
 						&.filter-buttons{
 							min-width:0;
+							box-shadow: none;
+							border: none;
 							div{
 								width:auto;
 								display:inline;
@@ -591,6 +593,8 @@ $gf_grid_x:	16px;
 							border:none;
 							width:10px;
 							margin:0 10px;
+							display:inline;
+							float:none;
 							span {
 								text-indent:-9999em;
 							}

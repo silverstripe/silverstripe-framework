@@ -7,30 +7,6 @@
  */
 abstract class DataExtension extends Extension {
 
-	/**
-	 * Statics on a {@link DataObject} subclass
-	 * which can be extended by an extension. This list is
-	 * limited for security and performance reasons.
-	 *
-	 * Keys are the static names, and the values are whether or not the value is an array that should
-	 * be merged.
-	 *
-	 * @var array
-	 */
-	protected static $extendable_statics = array(
-		'db' => true,
-		'has_one' => true,
-		'belongs_to' => true,
-		'indexes' => true,
-		'defaults' => true,
-		'has_many' => true,
-		'many_many' => true,
-		'belongs_many_many' => true,
-		'many_many_extraFields' => true,
-		'searchable_fields' => true,
-		'api_access' => false,
-	);
-
 	public static function get_extra_config($class, $extension, $args) {
 		if(method_exists($extension, 'extraDBFields')) {
 			$extraStaticsMethod = 'extraDBFields';

@@ -42,7 +42,7 @@ Here is an example where we display a basic gridfield with the default settings:
 	:::php
 	class GridController extends Page_Controller {
 
-		static $allowed_actions = array('index');
+		private static $allowed_actions = array('index');
 		
 		public function index(SS_HTTPRequest $request) {
 			$this->Content = $this->AllPages();
@@ -80,7 +80,7 @@ We will now move onto what the `GridFieldConfig`s are and how to use them.
 
 ----
 
-## GridFieldConfig
+## Configuration
 
 A gridfields's behaviour and look all depends on what config we're giving it. In the above example 
 we did not specify one, so it picked a default config called `GridFieldConfig_Base`.
@@ -100,7 +100,7 @@ A config object can be either injected as the fourth argument of the GridField c
 
 The framework comes shipped with some base GridFieldConfigs:
 
-### GridFieldConfig_Base
+### Table listing with GridFieldConfig_Base
 
 A simple read-only and paginated view of records with sortable and searchable headers.
 
@@ -109,7 +109,7 @@ A simple read-only and paginated view of records with sortable and searchable he
 
 The fields displayed are from `DataObject::getSummaryFields()`
 
-### GridFieldConfig_RecordViewer
+### Viewing records with GridFieldConfig_RecordViewer
 
 Similar to `GridFieldConfig_Base` with the addition support of:
 
@@ -120,7 +120,7 @@ The fields displayed in the read-only view is from `DataObject::getCMSFields()`
 	:::php
 	$gridField = new GridField('pages', 'All pages', SiteTree::get(), GridFieldConfig_RecordViewer::create());
 
-### GridFieldConfig_RecordEditor
+### Editing records with GridFieldConfig_RecordEditor
 
 Similar to `GridFieldConfig_RecordViewer` with the addition support of:
 
@@ -132,7 +132,7 @@ Similar to `GridFieldConfig_RecordViewer` with the addition support of:
 
 The fields displayed in the edit form are from `DataObject::getCMSFields()`
  
-### GridFieldConfig_RelationEditor
+### Editing relations with GridFieldConfig_RelationEditor
 
 Similar to `GridFieldConfig_RecordEditor`, but adds features to work on a record's has-many or 
 many-many relationships. As such, it expects the list used with the `GridField` to be a
@@ -149,9 +149,61 @@ The relations can be:
 
 The fields displayed in the edit form are from `DataObject::getCMSFields()`
 
+## Customizing Detail Forms
+
+The `GridFieldDetailForm` component drives the record editing form which is usually configured
+through the configs `GridFieldConfig_RecordEditor` and `GridFieldConfig_RelationEditor`
+described above. It takes its fields from `DataObject->getCMSFields()`,
+but can be customized to accept different fields via its `[api:GridFieldDetailForm->setFields()](api:setFields())` method.
+
+The component also has the ability to load and save data stored on join tables
+when two records are related via a "many_many" relationship, as defined through
+`[api:DataObject::$many_many_extraFields]`. While loading and saving works transparently,
+you need to add the necessary fields manually, they're not included in the `getCMSFields()` scaffolding.
+
+These extra fields act like usual form fields, but need to be "namespaced"
+in order for the gridfield logic to detect them as fields for relation extradata,
+and to avoid clashes with the other form fields.
+The namespace notation is `ManyMany[<extradata-field-name>]`, so for example
+`ManyMany[MyExtraField]`.
+
+Example:
+
+	:::php
+	class Player extends DataObject {
+		private static $db = array('Name' => 'Text');
+		public static $many_many = array('Teams' => 'Team');
+		public static $many_many_extraFields = array(
+			'Teams' => array('Position' => 'Text')
+		);
+		public function getCMSFields() {
+			$fields = parent::getCMSFields();
+
+			if($this->ID) {
+				$teamFields = singleton('Team')->getCMSFields();
+				$teamFields->addFieldToTab(
+					'Root.Main',
+					// Please follow the "ManyMany[<extradata-name>]" convention
+					new TextField('ManyMany[Position]', 'Current Position')
+				);
+				$config = GridFieldConfig_RelationEditor::create();
+				$config->getComponentByType('GridFieldDetailForm')->setFields($teamFields);
+				$gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
+				$fields->findOrMakeTab('Root.Teams')->replaceField('Teams', $gridField);
+			}
+
+			return $fields;
+		}
+	}
+
+	class Team extends DataObject {
+		private static $db = array('Name' => 'Text');
+		public static $many_many = array('Players' => 'Player');
+	}
+
 ## GridFieldComponents
 
-GridFieldComponents the actual workers in a gridfield. They can be responsible for:
+The `GridFieldComponent` classes are the actual workers in a gridfield. They can be responsible for:
 
  - Output some HTML to be rendered
  - Manipulate data
@@ -253,12 +305,28 @@ This object is used for creating actions buttons, for example a delete button. W
 a FormAction, the gridfield finds a `GridField_ActionProvider` that listens on that action. 
 `GridFieldDeleteAction` have a pretty basic implementation of how to use a Form action.
 
+## GridField_SaveHandler
+
+This is used to create a handler that is called when a form containing the grid
+field is saved into a record. This is useful for performing actions when saving
+the record.
+
 ### GridState
 
 Gridstate is a class that is used to contain the current state and actions on the gridfield. It's 
 transfered between page requests by being inserted as a hidden field in the form.
 
 A GridFieldComponent sets and gets data from the GridState.
+
+## Permissions
+
+Since GridField is mostly used in the CMS, the controller managing a GridField instance
+will already do some permission checks for you, and can decline display or executing
+any logic on your field. 
+
+If you need more granular control, e.g. to consistently deny non-admins from deleting
+records, use the `DataObject->can...()` methods 
+(see [DataObject permissions](/reference/dataobject#permissions)).
 
 ## Related
 

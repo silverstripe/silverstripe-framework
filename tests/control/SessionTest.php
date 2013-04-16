@@ -77,9 +77,9 @@ class SessionTest extends SapphireTest {
 	}
 
 	public function testNonStandardPath(){
-		Session::set_session_store_path(realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
+		Config::inst()->update('Session', 'store_path', (realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session')));
 		Session::start();
 
-		$this->assertEquals(Session::get_session_store_path(), '');
+		$this->assertEquals(Config::inst()->get('Session', 'store_path'), '');
 	}
 }

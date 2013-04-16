@@ -1,6 +1,8 @@
 @import 'themes/default';
 @import 'ieShared';
 
+
+
 //IE8 needs this defined inside .cms-panel
 .cms-panel {
 	@include IEVerticalPanelText;
@@ -15,11 +17,7 @@
 	}
 }
 
-
-
 .cms .cms-content-tools {
-	// Visual aid for IE as there are no box-shadows
-	border-right: 1px solid #CCC;
 
 	//fix for width of dropdowns in filter panel
 	.cms-panel-content .dropdown select {

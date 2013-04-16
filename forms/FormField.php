@@ -118,6 +118,23 @@ class FormField extends RequestHandler {
 	}
 
 	/**
+	 * Construct and return HTML tag.
+	 */
+	public static function create_tag($tag, $attributes, $content = null) {
+		$preparedAttributes = '';
+		foreach($attributes as $k => $v) {
+			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes
+			// can sometimes get finicky
+			if(!empty($v) || $v === '0' || ($k == 'value' && $v !== null) ) {
+				$preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
+			}
+		}
+
+		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
+		else return "<$tag$preparedAttributes />";
+	}
+
+	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
@@ -125,7 +142,7 @@ class FormField extends RequestHandler {
 	 */
 	public function __construct($name, $title = null, $value = null) {
 		$this->name = $name;
-		$this->title = ($title === null) ? $name : $title;
+		$this->title = ($title === null) ? self::name_to_label($name) : $title;
 
 		if($value !== NULL) $this->setValue($value);
 
@@ -159,14 +176,6 @@ class FormField extends RequestHandler {
 		return $this->name;
 	}
 
-	/**
-	 * @deprecated 3.0 Use {@link getName()}.
-	 */
-	public function Name() {
-		Deprecation::notice('3.0', 'Use getName() instead.');
-		return $this->getName();
-	}
-	
 	/** 
 	 * Returns the field message, used by form validation.
 	 * Use {@link setError()} to set this property.
@@ -252,30 +261,6 @@ class FormField extends RequestHandler {
 	public function setLeftTitle($val) {
 		$this->leftTitle = $val;
 		return $this;
-	}
-
-	/**
-	 * Set tabindex HTML attribute
-	 * (defaults to none).
-	 *
-	 * @deprecated 3.0 Use setAttribute("tabindex") instead
-	 * @param int $index
-	 */
-	public function setTabIndex($index) {
-		Deprecation::notice('3.0', 'Use setAttribute("tabindex") instead');
-		$this->setAttribute($index);
-		return $this;
-	}
-
-	/**
-	 * Get tabindex (if previously set)
-	 * 
-	 * @deprecated 3.0 Use getAttribute("tabindex") instead
-	 * @return int
-	 */
-	public function getTabIndex() {
-		Deprecation::notice('3.0', 'Use getAttribute("tabindex") instead');
-		return $this->getAttribute('tabindex');
 	}
 
 	/**
@@ -371,9 +356,8 @@ class FormField extends RequestHandler {
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
-			'title' => $this->getDescription(),
 		);
-		
+
 		return array_merge($attrs, $this->attributes);
 	}
 
@@ -725,10 +709,15 @@ class FormField extends RequestHandler {
 	 * Returns a readonly version of this field
 	 */
 	public function performReadonlyTransformation() {
-		$field = new ReadonlyField($this->name, $this->title, $this->value);
-		$field->addExtraClass($this->extraClass());
-		$field->setForm($this->form);
-		return $field;
+		$readonlyClassName = $this->class . '_Disabled';
+		if(ClassInfo::exists($readonlyClassName)) {
+			$clone = $this->castedCopy($readonlyClassName);
+		} else {
+			$clone = $this->castedCopy('ReadonlyField');
+			$clone->setReadonly(true);
+		}
+
+		return $clone;
 	}
 	
 	/**
@@ -739,14 +728,15 @@ class FormField extends RequestHandler {
 	 * @return FormField
 	 */
 	public function performDisabledTransformation() {
-		$clone = clone $this;
-		$disabledClassName = $clone->class . '_Disabled';
+		$disabledClassName = $this->class . '_Disabled';
 		if(ClassInfo::exists($disabledClassName)) {
-			return new $disabledClassName($this->name, $this->title, $this->value);
+			$clone = $this->castedCopy($disabledClassName);
 		} else {
+			$clone = clone $this;
 			$clone->setDisabled(true);
-			return $clone;
 		}
+
+		return $clone;
 	}
 
 	public function transform(FormTransformation $trans) {
@@ -772,25 +762,11 @@ class FormField extends RequestHandler {
 	}
 
 	/**
-	 * Construct and return HTML tag.
-	 * 
-	 * @deprecated 3.0 Please define your own FormField template using {@link setFieldTemplate()}
-	 * and/or {@link renderFieldTemplate()}
-	 * 
-	 * @todo Transform to static helper method.
+	 * @deprecated 3.2 Use FormField::create_tag()
 	 */
 	public function createTag($tag, $attributes, $content = null) {
-		$preparedAttributes = '';
-		foreach($attributes as $k => $v) {
-			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes
-			// can sometimes get finicky
-			if(!empty($v) || $v === '0' || $k == 'value') {
-				$preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
-			}
-		}
-
-		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
-		else return "<$tag$preparedAttributes />";
+		Deprecation::notice('3.2', 'Use FormField::create_tag()');
+		return self::create_tag($tag, $attributes, $content);
 	}
 
 	/**
@@ -806,17 +782,9 @@ class FormField extends RequestHandler {
 	}
 
 	/**
-	 * @deprecated 3.0 Use setDescription()
-	 */
-	public function describe($description) {
-		Deprecation::notice('3.0', 'Use setDescription()');
-		$this->setDescription($description);
-		return $this;
-	}
-
-	/**
 	 * Describe this field, provide help text for it.
-	 * By default, renders as a "title" attribute on the form field.
+	 * By default, renders as a <span class="description"> 
+	 * underneath the form field.
 	 * 
 	 * @return string Description
 	 */
@@ -855,11 +823,6 @@ class FormField extends RequestHandler {
 		}
 	}
 
-	public function setContainerFieldSet($list) {
-		Deprecation::notice('3.0', 'Use setContainerFieldList() instead.');
-		return $this->setContainerFieldList($list);
-	}
-
 	/**
 	 * Set the FieldList that contains this field.
 	 *
@@ -871,14 +834,47 @@ class FormField extends RequestHandler {
 		return $this;
 	}
 
-	public function rootFieldSet() {
-		Deprecation::notice('3.0', 'Use rootFieldList() instead.');
-		return $this->rootFieldList();
-	}
-
 	public function rootFieldList() {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else user_error("rootFieldList() called on $this->class object without a containerFieldList", E_USER_ERROR);
+	}
+
+	/**
+	 * Returns another instance of this field, but "cast" to a different class.
+	 * The logic tries to retain all of the instance properties,
+	 * and may be overloaded by subclasses to set additional ones.
+	 *
+	 * Assumes the standard FormField parameter signature with
+	 * its name as the only mandatory argument. Mainly geared towards
+	 * creating *_Readonly or *_Disabled subclasses of the same type,
+	 * or casting to a {@link ReadonlyField}.
+	 *
+	 * Does not copy custom field templates, since they probably won't apply to
+	 * the new instance. 
+	 * 
+	 * @param  String $classOrCopy Class name for copy, or existing copy instance to update
+	 * @return FormField
+	 */
+	public function castedCopy($classOrCopy) {
+		$field = (is_object($classOrCopy)) ? $classOrCopy : new $classOrCopy($this->name);
+		$field
+			->setValue($this->value) // get value directly from property, avoid any conversions
+			->setForm($this->form)
+			->setTitle($this->Title())
+			->setLeftTitle($this->LeftTitle())
+			->setRightTitle($this->RightTitle())
+			->addExtraClass($this->extraClass())
+			->setDescription($this->getDescription());
+			
+		// Only include built-in attributes, ignore anything
+		// set through getAttributes(), since those might change important characteristics
+		// of the field, e.g. its "type" attribute.
+		foreach($this->attributes as $k => $v) {
+			$field->setAttribute($k, $v);
+		}
+		$field->dontEscape = $this->dontEscape;
+
+		return $field;
 	}
 	
 }

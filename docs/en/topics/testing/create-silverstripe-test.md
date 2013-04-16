@@ -8,7 +8,7 @@ provides us the basics of creating unit tests.
 	class SiteTreeTest extends SapphireTest {
 		
 		// Define the fixture file to use for this test class
-		static $fixture_file = 'SiteTreeTest.yml';
+		private static $fixture_file = 'SiteTreeTest.yml';
 	
 		/**	
 		 * Test generation of the URLSegment values.

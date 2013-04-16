@@ -31,7 +31,7 @@ class UploadField extends FileField {
 	/**
 	 * @var array
 	 */
-	public static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'upload',
 		'attach',
 		'handleItem',
@@ -41,7 +41,7 @@ class UploadField extends FileField {
 	/**
 	 * @var array
 	 */
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'item/$ID' => 'handleItem',
 		'select' => 'handleSelect',
 		'$Action!' => '$Action',
@@ -158,7 +158,9 @@ class UploadField extends FileField {
 		if($items) $this->setItems($items);
 
 		// filter out '' since this would be a regex problem on JS end
-		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); 
+		$this->getValidator()->setAllowedExtensions(
+			array_filter(Config::inst()->get('File', 'allowed_extensions'))
+		); 
 		// get the lower max size
 		$this->getValidator()->setAllowedMaxFileSize(min(File::ini2bytes(ini_get('upload_max_filesize')),
 			File::ini2bytes(ini_get('post_max_size'))));
@@ -451,7 +453,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleSelect(SS_HTTPRequest $request) {
-		return UploadField_SelectHandler::create($this, $this->folderName);
+		return UploadField_SelectHandler::create($this, $this->getFolderName());
 	}
 
 	/**
@@ -526,7 +528,7 @@ class UploadField extends FileField {
 
 			// Get the uploaded file into a new file object.
 			try {
-				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->folderName);
+				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->getFolderName());
 			} catch (Exception $e) {
 				// we shouldn't get an error here, but just in case
 				$return['error'] = $e->getMessage();
@@ -688,7 +690,7 @@ class UploadField_ItemHandler extends RequestHandler {
 	 */
 	protected $itemID;
 
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action!' => '$Action',
 		'' => 'index',
 	);
@@ -918,7 +920,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 */
 	protected $folderName;
 
-	public static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action!' => '$Action',
 		'' => 'index',
 	);

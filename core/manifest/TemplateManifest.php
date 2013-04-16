@@ -14,6 +14,7 @@ class SS_TemplateManifest {
 	protected $tests;
 	protected $cache;
 	protected $cacheKey;
+	protected $project;
 	protected $inited;
 	protected $forceRegen;
 	protected $templates = array();
@@ -23,20 +24,23 @@ class SS_TemplateManifest {
 	 * or loaded from cache until needed.
 	 *
 	 * @param string $base The base path.
+	 * @param string $project Path to application code
+	 *
 	 * @param bool $includeTests Include tests in the manifest.
 	 * @param bool $forceRegen Force the manifest to be regenerated.
 	 */
-	public function __construct($base, $includeTests = false, $forceRegen = false) {
+	public function __construct($base, $project, $includeTests = false, $forceRegen = false) {
 		$this->base  = $base;
 		$this->tests = $includeTests;
 
-		$this->cacheKey   = $this->tests ? 'manifest_tests' : 'manifest';
-		$this->forceRegen = $forceRegen;
+		$this->project = $project;
 
-		$this->cache = SS_Cache::factory('SS_TemplateManifest', 'Core', array(
-			'automatic_serialization' => true,
-			'lifetime' => null
-		));
+		$cacheClass = defined('SS_MANIFESTCACHE') ? SS_MANIFESTCACHE : 'ManifestCache_File';
+
+		$this->cache = new $cacheClass('templatemanifest'.($includeTests ? '_tests' : ''));
+		$this->cacheKey = 'manifest';
+
+		$this->forceRegen = $forceRegen;
 	}
 
 	/**
@@ -97,6 +101,30 @@ class SS_TemplateManifest {
 	}
 
 	/**
+	 * Returns the correct candidate template. In order of importance, application
+	 * project code, current theme and finally modules.
+	 *
+	 * @param string $name
+	 * @param string $theme - theme name
+	 *
+	 * @return array
+	 */
+	public function getCandidateTemplate($name, $theme = null) {
+		$candidates = $this->getTemplate($name);
+
+		if ($this->project && isset($candidates[$this->project])) {
+			$found = $candidates[$this->project];
+		} else if ($theme && isset($candidates['themes'][$theme])) {
+			$found = $candidates['themes'][$theme];
+		} else {
+			unset($candidates['themes']);
+			$found = $candidates;
+		}
+
+		return $found;
+	}
+
+	/**
 	 * Regenerates the manifest by scanning the base path.
 	 *
 	 * @param bool $cache
@@ -109,6 +137,7 @@ class SS_TemplateManifest {
 			'ignore_tests'  => !$this->tests,
 			'file_callback'  => array($this, 'handleFile')
 		));
+
 		$finder->find($this->base);
 
 		if ($cache) {
@@ -119,13 +148,16 @@ class SS_TemplateManifest {
 	}
 
 	public function handleFile($basename, $pathname, $depth) {
+		$projectFile = false;
+		$theme = null;
+
 		if (strpos($pathname, $this->base . '/' . THEMES_DIR) === 0) {
 			$start = strlen($this->base . '/' . THEMES_DIR) + 1;
 			$theme = substr($pathname, $start);
 			$theme = substr($theme, 0, strpos($theme, '/'));
 			$theme = strtok($theme, '_');
-		} else {
-			$theme = null;
+		} else if($this->project && (strpos($pathname, $this->base . '/' . $this->project .'/') === 0)) { 
+			$projectFile = true;
 		}
 
 		$type = basename(dirname($pathname));
@@ -137,9 +169,12 @@ class SS_TemplateManifest {
 
 		if ($theme) {
 			$this->templates[$name]['themes'][$theme][$type] = $pathname;
+		} else if($projectFile) {
+			$this->templates[$name][$this->project][$type] = $pathname;
 		} else {
 			$this->templates[$name][$type] = $pathname;
 		}
+
 	}
 
 	protected function init() {
@@ -150,5 +185,4 @@ class SS_TemplateManifest {
 			$this->regenerate();
 		}
 	}
-
 }

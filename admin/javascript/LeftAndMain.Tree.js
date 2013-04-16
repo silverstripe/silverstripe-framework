@@ -96,6 +96,7 @@
 
 							$.ajax({
 								'url': self.data('urlSavetreenode'),
+								'type': 'POST',
 								'data': {
 									ID: nodeID, 
 									ParentID: newParentID,

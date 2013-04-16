@@ -11,10 +11,9 @@
  * @subpackage model
  */
 class HTMLText extends Text {
-	
-	public static $escape_type = 'xml';
+	private static $escape_type = 'xml';
 
-	static $casting = array(
+	private static $casting = array(
 		"AbsoluteLinks" => "HTMLText",
 		"BigSummary" => "HTMLText",
 		"ContextSummary" => "HTMLText",
@@ -32,6 +31,16 @@ class HTMLText extends Text {
 		'LimitWordCountXML' => 'HTMLText',
 		'NoHTML' => 'Text',
 	);
+
+	protected $processShortcodes = true;
+
+	public function setOptions(array $options = array()) {
+		parent::setOptions($options);
+
+		if(array_key_exists("shortcodes", $options)) {
+			$this->processShortcodes = !!$options["shortcodes"];
+		}
+	}
 
 	/**
 	 * Create a summary of the content. This will be some section of the first paragraph, limited by
@@ -133,7 +142,12 @@ class HTMLText extends Text {
 	}	
 	
 	public function forTemplate() {
-		return ShortcodeParser::get_active()->parse($this->value);
+		if ($this->processShortcodes) {
+			return ShortcodeParser::get_active()->parse($this->value);
+		}
+		else {
+			return $this->value;
+		}
 	}
 	
 	/**

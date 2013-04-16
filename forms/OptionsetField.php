@@ -92,9 +92,8 @@ class OptionsetField extends DropdownField {
 
 	public function performReadonlyTransformation() {
 		// Source and values are DataObject sets.
-		$items = $this->getSource();
-		$field = new LookupField($this->name, $this->title ? $this->title : '', $items, $this->value);
-		$field->setForm($this->form);
+		$field = $this->castedCopy('LookupField');
+		$field->setValue($this->getSource());
 		$field->setReadonly(true);
 		
 		return $field;

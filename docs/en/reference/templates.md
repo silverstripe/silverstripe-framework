@@ -202,6 +202,13 @@ You can combine two or more conditions with `&&` ("and"). The markup is used if
 		Lets swap dinners
 	<% end_if %>
 
+You can use inequalities like `<`, `<=`, `>`, `>=` to compare numbers.
+
+	:::ss
+	<% if $Number>="5" && $Number<="10" %>
+		Number between 5 and 10
+	<% end_if %>
+
 ## Looping Over Lists
 
 The `<% loop %>...<% end_loop %>` tag is used to **iterate** or loop over a 
@@ -569,7 +576,7 @@ default if it exists and there is no action in the url parameters.
 	:::php
 	class MyPage_Controller extends Page_Controller {
 
-		static $allowed_actions = array('index');
+		private static $allowed_actions = array('index');
 	
 		public function init(){
 			parent::init();  
@@ -614,10 +621,8 @@ would be created:
 
 
 There are cases where this can be unhelpful.  HTML fragments created from Ajax responses are the most common.  In these
-situations, you can disable fragment link rewriting like so:
-
-	:::php
-	SSViewer::setOption('rewriteHashlinks', false);
+situations, you can disable fragment link rewriting by setting the
+`SSViewer.rewrite_hash_links` configuration value to `false`.
 
 ### More Advanced Controls
 

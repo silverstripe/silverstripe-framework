@@ -3,10 +3,7 @@
  * Record all login attempts through the {@link LoginForm} object.
  * This behaviour is disabled by default.
  *
- * Enable through a setting in your _config.php:
- * <code>
- * Security::set_login_recording(true);
- * </code>
+ * Enable through {@link Security::$login_recording}.
  * 
  * Caution: Please make sure that enabling logging
  * complies with your privacy standards. We're logging
@@ -17,21 +14,21 @@
  */
 class LoginAttempt extends DataObject {
 	
-	static $db = array(
+	private static $db = array(
 		'Email' => 'Varchar(255)', 
 		'Status' => "Enum('Success,Failure')", 
 		'IP' => 'Varchar(255)', 
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Member' => 'Member', // only linked if the member actually exists
 	);
 	
-	static $has_many = array();
+	private static $has_many = array();
 	
-	static $many_many = array();
+	private static $many_many = array();
 	
-	static $belongs_many_many = array();
+	private static $belongs_many_many = array();
 	
 	/**
 	 *

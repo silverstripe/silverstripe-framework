@@ -13,7 +13,7 @@ class RSSFeed extends ViewableData {
 	 * Casting information for this object's methods.
 	 * Let's us use $Title.XML in templates
 	 */
-	public static $casting = array(
+	private static $casting = array(
 		"Title" => "Varchar",
 		"Description" => "Varchar",
 	);
@@ -186,8 +186,8 @@ class RSSFeed extends ViewableData {
 	 * Output the feed to the browser
 	 */
 	public function outputToBrowser() {
-		$prevState = SSViewer::get_source_file_comments();
-		SSViewer::set_source_file_comments(false);
+		$prevState = Config::inst()->get('SSViewer', 'source_file_comments');
+		Config::inst()->update('SSViewer', 'source_file_comments', false);
 
 		$response = Controller::curr()->getResponse();
 
@@ -204,7 +204,7 @@ class RSSFeed extends ViewableData {
 			$response->addHeader("Content-Type", "application/rss+xml");
 		}
 
-		SSViewer::set_source_file_comments($prevState);
+		Config::inst()->update('SSViewer', 'source_file_comments', $prevState);
 
 		return $this->renderWith($this->getTemplate());
 	}
@@ -295,7 +295,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the description of the entry.
 	 */
 	public function Description() {
-		return $this->rssField($this->descriptionField, 'Text');
+		return $this->rssField($this->descriptionField, 'HTMLText');
 	}
 
 	/**

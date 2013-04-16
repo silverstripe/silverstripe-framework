@@ -40,12 +40,6 @@ class CheckboxField extends FormField {
 		$field->setForm($this->form);
 		return $field;	
 	}
-	
-	public function performDisabledTransformation() {
-		$clone = clone $this;
-		$clone->setDisabled(true);
-		return $clone;
-	}
 
 }
 

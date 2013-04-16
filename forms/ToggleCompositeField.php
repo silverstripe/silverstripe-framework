@@ -84,13 +84,5 @@ class ToggleCompositeField extends CompositeField {
 		return $this;
 	}
 
-	/**
-	 * @deprecated 3.0
-	 */
-	public function startClosed($bool) {
-		Deprecation::notice('3.0', 'Please use ToggleCompositeField->setStartClosed()');
-		$this->setStartClosed($bool);
-	}
-
 }
 

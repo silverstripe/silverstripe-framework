@@ -54,11 +54,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	/**
 	 * Default URL handlers - (Action)/(ID)/(OtherID)
 	 */
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => 'handleAction',
 	);
 	
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'handleAction',
 		'handleIndex',
 	);
@@ -157,9 +157,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 					. "returning it without modification.");
 			}
 			$this->response = $body;
-			
+
 		} else {
-			if(is_object($body)) {
+			if($body instanceof Object && $body->hasMethod('getViewer')) {
 				if(isset($_REQUEST['debug_request'])) {
 					Debug::message("Request handler $body->class object to $this->class controller;"
 						. "rendering with template returned by $body->class::getViewer()");
@@ -182,36 +182,25 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Controller's default action handler.  It will call the method named in $Action, if that method exists.
 	 * If $Action isn't given, it will use "index" as a default.
 	 */
-	public function handleAction($request) {
-		// urlParams, requestParams, and action are set for backward compatability 
+	protected function handleAction($request, $action) {
 		foreach($request->latestParams() as $k => $v) {
 			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
 		}
 
-		$this->action = str_replace("-","_",$request->param('Action'));
+		$this->action = $action;
 		$this->requestParams = $request->requestVars();
-		if(!$this->action) $this->action = 'index';
-		
-		if(!$this->hasAction($this->action)) {
-			$this->httpError(404, "The action '$this->action' does not exist in class $this->class");
-		}
-		
-		// run & init are manually disabled, because they create infinite loops and other dodgy situations 
-		if(!$this->checkAccessAction($this->action) || in_array(strtolower($this->action), array('run', 'init'))) {
-			return $this->httpError(403, "Action '$this->action' isn't allowed on class $this->class");
-		}
-		
-		if($this->hasMethod($this->action)) {
-			$result = $this->{$this->action}($request);
-			
+
+		if($this->hasMethod($action)) {
+			$result = parent::handleAction($request, $action);
+
 			// If the action returns an array, customise with it before rendering the template.
 			if(is_array($result)) {
-				return $this->getViewer($this->action)->process($this->customise($result));
+				return $this->getViewer($action)->process($this->customise($result));
 			} else {
 				return $result;
 			}
 		} else {
-			return $this->getViewer($this->action)->process($this);
+			return $this->getViewer($action)->process($this);
 		}
 	}
 

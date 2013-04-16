@@ -49,7 +49,8 @@ class SS_TemplateLoader {
 
 	/**
 	 * Attempts to find possible candidate templates from a set of template
-	 * names and a theme.
+	 * names from modules, current theme directory and finally the application
+	 * folder.
 	 *
 	 * The template names can be passed in as plain strings, or be in the
 	 * format "type/name", where type is the type of template to search for
@@ -57,10 +58,12 @@ class SS_TemplateLoader {
 	 *
 	 * @param  string|array $templates
 	 * @param  string $theme
+	 *
 	 * @return array
 	 */
 	public function findTemplates($templates, $theme = null) {
 		$result = array();
+		$project = project();
 
 		foreach ((array) $templates as $template) {
 			$found = false;
@@ -71,21 +74,14 @@ class SS_TemplateLoader {
 				$type = null;
 			}
 
-			if ($candidates = $this->getManifest()->getTemplate($template)) {
-				if ($theme && isset($candidates['themes'][$theme])) {
-					$found = $candidates['themes'][$theme];
-				} else {
-					unset($candidates['themes']);
-					$found = $candidates;
+			if ($found = $this->getManifest()->getCandidateTemplate($template, $theme)) {
+				if ($type && isset($found[$type])) {
+					$found = array(
+						'main' => $found[$type]
+					);
 				}
-
-				if ($found) {
-					if ($type && isset($found[$type])) {
-						$found = array('main' => $found[$type]);
-					}
-
-					$result = array_merge($found, $result);
-				}
+	
+				$result = array_merge($found, $result);
 			}
 		}
 

@@ -32,6 +32,13 @@ class CsvBulkLoader extends BulkLoader {
 	 */
 	public $hasHeaderRow = true;
 	
+	/**
+	 * @inheritDoc
+	 */
+	public function preview($filepath) {
+		return $this->processAll($filepath, true);
+	}
+	
 	protected function processAll($filepath, $preview = false) {
 		$results = new BulkLoader_Result();
 		
@@ -81,27 +88,36 @@ class CsvBulkLoader extends BulkLoader {
 				if(!$relationObj || !$relationObj->exists()) {
 					$relationClass = $obj->has_one($relationName);
 					$relationObj = new $relationClass();
-					$relationObj->write();
+					//write if we aren't previewing
+					if (!$preview) $relationObj->write();
 				}
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
-				$obj->write();
-				$obj->flushCache(); // avoid relation caching confusion
+				//write if we are not previewing
+				if (!$preview) {
+					$obj->write();
+					$obj->flushCache(); // avoid relation caching confusion
+				}
 				
 			} elseif(strpos($fieldName, '.') !== false) {
 				// we have a relation column with dot notation
-				list($relationName,$columnName) = explode('.', $fieldName);
+				list($relationName, $columnName) = explode('.', $fieldName);
 				// always gives us an component (either empty or existing)
 				$relationObj = $obj->getComponent($relationName);
-				$relationObj->write();
+				if (!$preview) $relationObj->write();
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
-				$obj->write();
-				$obj->flushCache(); // avoid relation caching confusion
+				//write if we are not previewing
+				if (!$preview) {
+					$obj->write();
+					$obj->flushCache(); // avoid relation caching confusion
+				}
 			}
 			
 		}
 
 		// second run: save data
 		foreach($record as $fieldName => $val) {
+			//break out of the loop if we are previewing
+			if ($preview) break;
 			if($this->isNullValue($val, $fieldName)) continue;
 			if(strpos($fieldName, '->') !== FALSE) {
 				$funcName = substr($fieldName, 2);

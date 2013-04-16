@@ -9,7 +9,7 @@
  * @subpackage testing
  */
 class SearchFilterApplyRelationTest extends SapphireTest{
-	static $fixture_file = 'SearchFilterApplyRelationTest.yml';
+	protected static $fixture_file = 'SearchFilterApplyRelationTest.yml';
 	
 	protected $extraDataObjects = array(
 		'SearchFilterApplyRelationTest_DO',
@@ -110,21 +110,21 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 }
 
 class SearchFilterApplyRelationTest_DO extends DataObject implements TestOnly {
-	static $has_one = array(
+	private static $has_one = array(
 		'SearchFilterApplyRelationTest_HasOneGrantChild' => 'SearchFilterApplyRelationTest_HasOneGrantChild'
 	);
 	
-	static $has_many = array(
+	private static $has_many = array(
 		'SearchFilterApplyRelationTest_HasManyGrantChildren' => 'SearchFilterApplyRelationTest_HasManyGrantChild'
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		'ManyManyGrantChildren' => 'SearchFilterApplyRelationTest_ManyManyGrantChild'
 	);
 }
 
 class SearchFilterApplyRelationTest_HasOneParent extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar"
 	);
 }
@@ -132,7 +132,7 @@ class SearchFilterApplyRelationTest_HasOneParent extends DataObject implements T
 class SearchFilterApplyRelationTest_HasOneChild extends SearchFilterApplyRelationTest_HasOneParent
 		implements TestOnly {
 	// This is to create an seperate Table only.
-	static $db = array(
+	private static $db = array(
 		"ChildField" => "Varchar"
 	);
 }
@@ -140,16 +140,16 @@ class SearchFilterApplyRelationTest_HasOneChild extends SearchFilterApplyRelatio
 class SearchFilterApplyRelationTest_HasOneGrantChild extends SearchFilterApplyRelationTest_HasOneChild
 		implements TestOnly {
 	// This is to create an seperate Table only.
-	static $db = array(
+	private static $db = array(
 		"GrantChildField" => "Varchar"
 	);
-	static $has_many = array(
+	private static $has_many = array(
 		"SearchFilterApplyRelationTest_DOs" => "SearchFilterApplyRelationTest_DO"
 	);
 }
 
 class SearchFilterApplyRelationTest_HasManyParent extends DataObject implements TestOnly {
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar"
 	);
 }
@@ -157,19 +157,19 @@ class SearchFilterApplyRelationTest_HasManyParent extends DataObject implements 
 class SearchFilterApplyRelationTest_HasManyChild extends SearchFilterApplyRelationTest_HasManyParent
 		implements TestOnly {
 	// This is to create an separate Table only.
-	static $db = array(
+	private static $db = array(
 		"ChildField" => "Varchar"
 	);
 }
 
 class SearchFilterApplyRelationTest_HasManyGrantChild extends SearchFilterApplyRelationTest_HasManyChild{
-	static $has_one = array(
+	private static $has_one = array(
 		"SearchFilterApplyRelationTest_DO" => "SearchFilterApplyRelationTest_DO"
 	);
 }
 
 class SearchFilterApplyRelationTest_ManyManyParent extends DataObject implements TestOnly{
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar"
 	);
 }
@@ -177,7 +177,7 @@ class SearchFilterApplyRelationTest_ManyManyParent extends DataObject implements
 class SearchFilterApplyRelationTest_ManyManyChild extends SearchFilterApplyRelationTest_ManyManyParent
 		implements TestOnly {
 	// This is to create an seperate Table only.
-	static $db = array(
+	private static $db = array(
 		"ChildField" => "Varchar"
 	);
 }
@@ -185,10 +185,10 @@ class SearchFilterApplyRelationTest_ManyManyChild extends SearchFilterApplyRelat
 class SearchFilterApplyRelationTest_ManyManyGrantChild extends SearchFilterApplyRelationTest_ManyManyChild
 		implements TestOnly {
 	// This is to create an seperate Table only.
-	static $db = array(
+	private static $db = array(
 		"GrantChildField" => "Varchar"
 	);
-	static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		"DOs" => "SearchFilterApplyRelationTest_DO"
 	);
 }

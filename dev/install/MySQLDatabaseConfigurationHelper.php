@@ -134,4 +134,45 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		);
 	}
 
+	/**
+	 * Ensure we have permissions to alter tables.
+	 * 
+	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
+	 * @return array Result - e.g. array('okay' => true, 'applies' => true), where applies is whether
+	 * the test is relevant for the database
+	 */
+	public function requireDatabaseAlterPermissions($databaseConfig) {
+		$success = false;
+		$conn = new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
+		if($conn) {
+			if ($res = $conn->query('SHOW GRANTS')) {
+				// Annoyingly, MySQL 'escapes' the database, so we need to do it too.
+				$db = str_replace(array('%', '_', '`'), array('\%', '\_', '``'), $databaseConfig['database']);
+				while ($row = $res->fetch_array()) {
+					if (preg_match('/^GRANT (.+) ON (.+) TO/', $row[0], $matches)) {
+						// Need to change to an array of permissions, because ALTER is contained in ALTER ROUTINES.
+						$permission = array_map('trim', explode(',', $matches[1]));
+						$on_database = $matches[2];
+						// The use of both ` and " is because of ANSI mode.
+						if (in_array('ALL PRIVILEGES', $permission) and (
+								($on_database == '*.*') or ($on_database == '`' . $db . '`.*')
+								or ($on_database == '"' . $db . '".*'))) {
+							$success = true;
+							break;
+						}
+						if (in_array('ALTER', $permission) and (
+								($on_database == '*.*') or ($on_database == '`' . $db . '`.*')
+								or ($on_database == '"' . $db . '".*'))) {
+							$success = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return array(
+			'success' => $success,
+			'applies' => true
+		);
+	}
 }

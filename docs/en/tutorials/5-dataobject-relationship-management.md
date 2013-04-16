@@ -34,11 +34,11 @@ Let's create the `Student` and `Project` objects.
 	:::php
 	<?php
 	class Student extends DataObject {
-		static $db = array(
+		private static $db = array(
 			'Name' => 'Varchar',
 			'University' => 'Varchar',
 		);
-		static $has_one = array(
+		private static $has_one = array(
 			'Project' => 'Project'
 		);	
 	}
@@ -48,7 +48,7 @@ Let's create the `Student` and `Project` objects.
 	:::php
 	<?php
 	class Project extends Page {
-		static $has_many = array(
+		private static $has_many = array(
 			'Students' => 'Student'
 		);
 	}
@@ -90,7 +90,7 @@ The restriction is enforced through the `$allowed_children` directive.
 	:::php
 	<?php
 	class ProjectsHolder extends Page {
-		static $allowed_children = array(
+		private static $allowed_children = array(
 			'Project'
 		);
 	}
@@ -194,10 +194,10 @@ The first step is to create the `Mentor` object and set the relation with the `P
 	:::php
 	<?php
 	class Mentor extends DataObject {
-		static $db = array(
+		private static $db = array(
 			'Name' => 'Varchar',
 		);
-		static $belongs_many_many = array(
+		private static $belongs_many_many = array(
 			'Projects' => 'Project'
 		);
 	}
@@ -207,7 +207,7 @@ The first step is to create the `Mentor` object and set the relation with the `P
 	:::php
 	class Project extends Page {
 		// ...
-		static $many_many = array(
+		private static $many_many = array(
 			'Mentors' => 'Mentor'
 		);
 	}

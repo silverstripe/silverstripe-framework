@@ -10,14 +10,14 @@
  */
 class DevelopmentAdmin extends Controller {
 	
-	static $url_handlers = array(
+	private static $url_handlers = array(
 		'' => 'index',
 		'build/defaults' => 'buildDefaults',
 		'$Action' => '$Action',
 		'$Action//$Action/$ID' => 'handleAction',
 	);
 	
-	static $allowed_actions = array( 
+	private static $allowed_actions = array( 
 		'index', 
 		'tests', 
 		'jstests', 
@@ -77,12 +77,8 @@ class DevelopmentAdmin extends Controller {
 	public function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
-			"buildcache" => "Rebuild the static cache, if you're using StaticPublisher",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
-			"tests/startsession" => "Start a test session in your browser"
-				. " (gives you a temporary database with default content)",
-			"tests/endsession" => "Ends a test session",
 			"jstests" => "See a list of JavaScript tests to run",
 			"jstests/all" => "Run all JavaScript tests",
 			"tasks" => "See a list of build tasks to run"
@@ -192,16 +188,6 @@ Config::inst()->update('Security', 'token', '$token');
 TXT;
 	}
 
-	public function reset() {
-		$link = BASE_URL.'/dev/tests/startsession';
-		
-		return "<p>The dev/reset feature has been removed.  If you are trying to test your site " .
-			"with a clean datababase, we recommend that you use " .
-			"<a href=\"$link\">dev/test/startsession</a> ".
-			"instead.</P>";
-
-	}
-	
 	public function errors() {
 		$this->redirect("Debug_");
 	}

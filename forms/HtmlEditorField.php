@@ -9,9 +9,10 @@
 class HtmlEditorField extends TextareaField {
 
 	/**
+	 * @config
 	 * @var Boolean Use TinyMCE's GZIP compressor
 	 */
-	static $use_gzip = true;
+	private static $use_gzip = true;
 
 	protected $rows = 30;
 	
@@ -23,7 +24,7 @@ class HtmlEditorField extends TextareaField {
 
 		$configObj = HtmlEditorConfig::get_active();
 
-		if(self::$use_gzip) {
+		if(Config::inst()->get('HtmlEditorField', 'use_gzip')) {
 			$internalPlugins = array();
 			foreach($configObj->getPlugins() as $plugin => $path) if(!$path) $internalPlugins[] = $plugin;
 			$tag = TinyMCE_Compressor::renderTag(array(
@@ -46,11 +47,6 @@ class HtmlEditorField extends TextareaField {
 	 * @see TextareaField::__construct()
 	 */
 	public function __construct($name, $title = null, $value = '') {
-		if(count(func_get_args()) > 3) {
-			Deprecation::notice('3.0', 'Use setRows() and setColumns() instead of constructor arguments',
-				Deprecation::SCOPE_GLOBAL);
-		}
-
 		parent::__construct($name, $title, $value);
 		
 		self::include_js();
@@ -61,8 +57,8 @@ class HtmlEditorField extends TextareaField {
 	 */
 	public function Field($properties = array()) {
 		// mark up broken links
-		$value  = new SS_HTMLValue($this->value);
-		
+		$value = Injector::inst()->create('HTMLValue', $this->value);
+
 		if($links = $value->getElementsByTagName('a')) foreach($links as $link) {
 			$matches = array();
 			
@@ -81,11 +77,10 @@ class HtmlEditorField extends TextareaField {
 			}
 		}
 
-		return $this->createTag (
-			'textarea',
-			$this->getAttributes(),
-			htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8')
-		);
+		$properties['Value'] = htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8');
+		$obj = $this->customise($properties);
+
+		return $obj->renderWith($this->getTemplates());
 	}
 
 	public function getAttributes() {
@@ -109,7 +104,7 @@ class HtmlEditorField extends TextareaField {
 		$linkedPages = array();
 		$linkedFiles = array();
 		
-		$htmlValue = new SS_HTMLValue($this->value);
+		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
 		
 		if(class_exists('SiteTree')) {
 			// Populate link tracking for internal links & links to asset files.
@@ -210,9 +205,9 @@ class HtmlEditorField extends TextareaField {
 	 * @return HtmlEditorField_Readonly
 	 */
 	public function performReadonlyTransformation() {
-		$field = new HtmlEditorField_Readonly($this->name, $this->title, $this->value);
-		$field->setForm($this->form);
+		$field = $this->castedCopy('HtmlEditorField_Readonly');
 		$field->dontEscape = true;
+		
 		return $field;
 	}
 	
@@ -247,7 +242,7 @@ class HtmlEditorField_Readonly extends ReadonlyField {
  */
 class HtmlEditorField_Toolbar extends RequestHandler {
 
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'LinkForm',
 		'MediaForm',
 		'viewfile'
@@ -430,23 +425,27 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->addExtraClass('ss-assetuploadfield');
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
-		$computerUploadField->setFolderName(Upload::$uploads_folder);
+		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
 
 		$tabSet = new TabSet(
 			"MediaFormInsertMediaTabs",
 			new Tab(
+				'FromComputer',
 				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
 				$computerUploadField
 			),
 			new Tab(
+				'FromWeb',
 				_t('HtmlEditorField.FROMWEB', 'From the web'),
 				$fromWeb
 			),
 			new Tab(
+				'FromCms',
 				_t('HtmlEditorField.FROMCMS','From the CMS'),
 				$fromCMS
 			)
 		);
+		$tabSet->addExtraClass('cms-tabset-primary');
 
 		$allFields = new CompositeField(
 			$tabSet,
@@ -693,7 +692,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	protected function getFieldsForImage($url, $file) {
 		if($file->File instanceof Image) {
-			$formattedImage = $file->File->generateFormattedImage('SetWidth', Image::$asset_preview_width);
+			$formattedImage = $file->File->generateFormattedImage('SetWidth', Config::inst()->get('Image', 'asset_preview_width'));
 			$thumbnailURL = $formattedImage ? $formattedImage->URL : $url;	
 		} else {
 			$thumbnailURL = $url;

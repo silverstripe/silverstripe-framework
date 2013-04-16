@@ -58,7 +58,7 @@ class MemberLoginForm extends LoginForm {
 			);
 		} else {
 			if(!$fields) {
-				$label=singleton('Member')->fieldLabel(Member::get_unique_identifier_field());
+				$label=singleton('Member')->fieldLabel(Member::config()->unique_identifier_field);
 				$fields = new FieldList(
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
 					// Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
@@ -66,7 +66,7 @@ class MemberLoginForm extends LoginForm {
 					new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
 					new PasswordField("Password", _t('Member.PASSWORD', 'Password'))
 				);
-				if(Security::$autologin_enabled) {
+				if(Security::config()->autologin_enabled) {
 					$fields->push(new CheckboxField(
 						"Remember", 
 						_t('Member.REMEMBERME', "Remember me next time?")
@@ -138,14 +138,10 @@ JS
 
 			if($backURL) Session::set('BackURL', $backURL);
 			
-			if($badLoginURL = Session::get("BadLoginURL")) {
-				$this->controller->redirect($badLoginURL);
-			} else {
-				// Show the right tab on failed login
-				$loginLink = Director::absoluteURL($this->controller->Link('login'));
-				if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL);
-				$this->controller->redirect($loginLink . '#' . $this->FormName() .'_tab');
-			}
+			// Show the right tab on failed login
+			$loginLink = Director::absoluteURL($this->controller->Link('login'));
+			if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL);
+			$this->controller->redirect($loginLink . '#' . $this->FormName() .'_tab');
 		}
 	}
 
@@ -188,8 +184,8 @@ JS
 		}
 
 		// If a default login dest has been set, redirect to that.
-		if (Security::default_login_dest()) {
-			return $this->controller->redirect(Director::absoluteBaseURL() . Security::default_login_dest());
+		if (Security::config()->default_login_dest) {
+			return $this->controller->redirect(Director::absoluteBaseURL() . Security::config()->default_login_dest);
 		}
 
 		// Redirect the user to the page where he came from
@@ -256,7 +252,7 @@ JS
 		$SQL_data = Convert::raw2sql($data);
 		$SQL_email = $SQL_data['Email'];
 		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");
-
+		
 		if($member) {
 			$token = $member->generateAutologinTokenAndStoreHash();
 
@@ -267,12 +263,12 @@ JS
 			));
 			$e->setTo($member->Email);
 			$e->send();
-
+		
 			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} elseif($data['Email']) {
-			// Avoid information disclosure by displaying the same status,
-			// regardless wether the email address actually exists
-			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
+		// Avoid information disclosure by displaying the same status,
+		// regardless wether the email address actually exists
+			$this->controller->redirect('Security/passwordsent/' . rawurlencode($data['Email']));
 		} else {
 			$this->sessionMessage(
 				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
@@ -280,7 +276,7 @@ JS
 			);
 			
 			$this->controller->redirect('Security/lostpassword');
-		}
+	}
 	}
 
 }

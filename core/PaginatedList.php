@@ -417,29 +417,4 @@ class PaginatedList extends SS_ListDecorator {
 		}
 	}
 
-	// DEPRECATED --------------------------------------------------------------
-
-	/**
-	 * @deprecated 3.0 Use individual getter methods.
-	 */
-	public function getPageLimits() {
-		Deprecation::notice('3.0', 'Use getPageStart, getPageLength, or getTotalItems instead.');
-		return array(
-			'pageStart'  => $this->getPageStart(),
-			'pageLength' => $this->pageLength,
-			'totalSize'  => $this->getTotalItems(),
-		);
 	}
-
-	/**
-	 * @deprecated 3.0 Use individual setter methods.
-	 */
-	public function setPageLimits($pageStart, $pageLength, $totalSize) {
-		Deprecation::notice('3.0', 'Use setPageStart, setPageLength, or setTotalItems instead.');
-		$this->setPageStart($pageStart);
-		$this->setPageLength($pageLength);
-		$this->setTotalItems($totalSize);
-		return $this;
-	}
-
-}

@@ -1,7 +1,7 @@
 <?php
 
 class DataExtensionTest extends SapphireTest {
-	static $fixture_file = 'DataExtensionTest.yml';
+	protected static $fixture_file = 'DataExtensionTest.yml';
 	
 	protected $extraDataObjects = array(
 		'DataExtensionTest_Member',
@@ -75,7 +75,7 @@ class DataExtensionTest extends SapphireTest {
 	 */
 	public function testAddExtensionLoadsStatics() {
 		// Object::add_extension() will load DOD statics directly, so let's try adding a extension on the fly
-		Object::add_extension('DataExtensionTest_Player', 'DataExtensionTest_PlayerExtension');
+		DataExtensionTest_Player::add_extension('DataExtensionTest_PlayerExtension');
 		
 		// Now that we've just added the extension, we need to rebuild the database
 		$this->resetDBSchema(true);
@@ -160,7 +160,7 @@ class DataExtensionTest extends SapphireTest {
 
 class DataExtensionTest_Member extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"Name" => "Varchar",
 		"Email" => "Varchar"
 	);
@@ -169,7 +169,7 @@ class DataExtensionTest_Member extends DataObject implements TestOnly {
 
 class DataExtensionTest_Player extends DataObject implements TestOnly {
 
-	static $db = array(
+	private static $db = array(
 		'Name' => 'Varchar'
 	);
 	
@@ -177,60 +177,64 @@ class DataExtensionTest_Player extends DataObject implements TestOnly {
 
 class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnly {
 	
-	public static function add_to_class($class = null, $extensionClass = null, $args = null) {
+	public static function get_extra_config($class = null, $extensionClass = null, $args = null) {
+		$config = array();
+
 		// Only add these extensions if the $class is set to DataExtensionTest_Player, to
 		// test that the argument works.
 		if($class == 'DataExtensionTest_Player') {
-			Config::inst()->update($class, 'db', array(
+			$config['db'] = array(
 				'Address' => 'Text',
 				'DateBirth' => 'Date',
 				'Status' => "Enum('Shooter,Goalie')"
-			));
-			Config::inst()->update($class, 'defaults', array(
+			);
+			$config['defaults'] = array(
 				'Status' => 'Goalie'
-			));
+			);
 		}
+
+		return $config;
 	}
 	
 }
 
 class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
 
-	public static $db = array(
+	private static $db = array(
 		'Website' => 'Varchar',
 		'Phone' => 'Varchar(255)',
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'RelatedObjects' => 'DataExtensionTest_RelatedObject'
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'Phone' => '123'
 	);
 
-	public static $api_access = true;
+	private static $api_access = true;
 
 }
 
 class DataExtensionTest_RelatedObject extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		"FieldOne" => "Varchar",
 		"FieldTwo" => "Varchar"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"Contact" => "DataExtensionTest_Member"
 	);
 	
 }
 
-DataObject::add_extension('DataExtensionTest_Member', 'DataExtensionTest_ContactRole');
+DataExtensionTest_Member::add_extension('DataExtensionTest_ContactRole');
 
 class DataExtensionTest_MyObject extends DataObject implements TestOnly {
 	
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar', 
 	);
 	
@@ -291,7 +295,7 @@ class DataExtensionTest_Ext2 extends DataExtension implements TestOnly {
 
 class DataExtensionTest_Faves extends DataExtension implements TestOnly {
 
-	public static $many_many = array(
+	private static $many_many = array(
 		'Faves' => 'DataExtensionTest_RelatedObject'
 	);
 
@@ -305,7 +309,7 @@ class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly {
 
 }
 
-DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext1');
-DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext2');
-DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Faves');
+DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext1');
+DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext2');
+DataExtensionTest_MyObject::add_extension('DataExtensionTest_Faves');
 

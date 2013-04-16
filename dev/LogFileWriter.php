@@ -58,6 +58,7 @@ class SS_LogFileWriter extends Zend_Log_Writer_Abstract {
 			$this->setFormatter($formatter);
 		}
 		$message = $this->_formatter->format($event);
+		if(!file_exists(dirname($this->path))) mkdir(dirname($this->path), 0755, true);
 		error_log($message, $this->messageType, $this->path, $this->extraHeaders);
 	}
 

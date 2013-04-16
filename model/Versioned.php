@@ -55,7 +55,7 @@ class Versioned extends DataExtension {
 	 * 
 	 * @var array $db_for_versions_table
 	 */
-	static $db_for_versions_table = array(
+	private static $db_for_versions_table = array(
 		"RecordID" => "Int",
 		"Version" => "Int",
 		"WasPublished" => "Boolean",
@@ -69,7 +69,7 @@ class Versioned extends DataExtension {
 	 * 
 	 * @var array $indexes_for_versions_table
 	 */
-	static $indexes_for_versions_table = array(
+	private static $indexes_for_versions_table = array(
 		'RecordID_Version' => '("RecordID","Version")',
 		'RecordID' => true,
 		'Version' => true,
@@ -103,7 +103,7 @@ class Versioned extends DataExtension {
 		$this->liveStage = array_pop($stages);
 	}
 
-	static $db = array(
+	private static $db = array(
 		'Version' => 'Int'
 	);
 
@@ -152,7 +152,7 @@ class Versioned extends DataExtension {
 				$query->replaceText("`{$table}_versions`.`ID`", "`{$table}_versions`.`RecordID`");
 				
 				// Add all <basetable>_versions columns
-				foreach(self::$db_for_versions_table as $name => $type) {
+				foreach(Config::inst()->get('Versioned', 'db_for_versions_table') as $name => $type) {
 					$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 				}
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
@@ -203,6 +203,7 @@ class Versioned extends DataExtension {
 			// below)
 			$dataQuery->setQueryParam('Versioned.mode', 'stage');
 			$this->augmentSQL($query, $dataQuery);
+			$dataQuery->setQueryParam('Versioned.mode', 'stage_unique');
 
 			// Now exclude any ID from any other stage. Note that we double rename to avoid the regular stage rename
 			// renaming all subquery references to be Versioned.stage
@@ -229,11 +230,22 @@ class Versioned extends DataExtension {
 			}
 		
 			// Add all <basetable>_versions columns
-			foreach(self::$db_for_versions_table as $name => $type) {
+			foreach(Config::inst()->get('Versioned', 'db_for_versions_table') as $name => $type) {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 			}
+			
+			// Alias the record ID as the row ID
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
-			$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
+			
+			// Ensure that any sort order referring to this ID is correctly aliased
+			$orders = $query->getOrderBy();
+			foreach($orders as $order => $dir) {
+				if($order === "\"$baseTable\".\"ID\"") {
+					unset($orders[$order]);
+					$orders["\"{$baseTable}_versions\".\"RecordID\""] = $dir;
+				}
+			}
+			$query->setOrderBy($orders);
 			
 			// latest_version has one more step
 			// Return latest version instances, regardless of whether they are on a particular stage
@@ -250,6 +262,9 @@ class Versioned extends DataExtension {
 						) AS \"{$alias}_versions_latest\"
 						WHERE \"{$alias}_versions_latest\".\"RecordID\" = \"{$alias}_versions\".\"RecordID\"
 					)");
+			} else {
+				// If all versions are requested, ensure that records are sorted by this field
+				$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
 			}
 			break;
 		default:
@@ -391,12 +406,12 @@ class Versioned extends DataExtension {
 				if($isRootClass) {
 					// Create table for all versions
 					$versionFields = array_merge(
-						self::$db_for_versions_table,
+						Config::inst()->get('Versioned', 'db_for_versions_table'),
 						(array)$fields
 					);
 				
 					$versionIndexes = array_merge(
-						self::$indexes_for_versions_table,
+						Config::inst()->get('Versioned', 'indexes_for_versions_table'),
 						(array)$indexes
 					);
 				} else {
@@ -751,13 +766,25 @@ class Versioned extends DataExtension {
 		return !$stagesAreEqual;
 	}
 	
+	/**
+	 * @param string $filter 
+	 * @param string $sort   
+	 * @param string $limit  
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
+	 * @param string $having 
+	 */
 	public function Versions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		return $this->allVersions($filter, $sort, $limit, $join, $having);
 	}
 	
 	/**
 	 * Return a list of all the versions available.
+	 * 
 	 * @param  string $filter 
+	 * @param  string $sort   
+	 * @param  string $limit  
+	 * @param  string $join   Deprecated, use leftJoin($table, $joinClause) instead
+	 * @param  string $having 
 	 */
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)
@@ -782,7 +809,7 @@ class Versioned extends DataExtension {
 		}
 		
 		// Add all <basetable>_versions columns
-		foreach(self::$db_for_versions_table as $name => $type) {
+		foreach(Config::inst()->get('Versioned', 'db_for_versions_table') as $name => $type) {
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 		}
 		
@@ -1006,7 +1033,7 @@ class Versioned extends DataExtension {
 	 * @param string $stage The name of the stage.
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
-	 * @param string $join A join expression, such as LEFT JOIN or INNER JOIN
+	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param int $limit A limit on the number of records returned from the database.
 	 * @param string $containerClass The container class for the result set (default is DataList)
 	 * @return SS_List
@@ -1015,10 +1042,10 @@ class Versioned extends DataExtension {
 			$containerClass = 'DataList') {
 
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
-		$dq = $result->dataQuery();
-		$dq->setQueryParam('Versioned.mode', 'stage');
-		$dq->setQueryParam('Versioned.stage', $stage);
-		return $result;
+		return $result->setDataQueryParam(array(
+			'Versioned.mode' => 'stage',
+			'Versioned.stage' => $stage
+		));
 	}
 	
 	public function deleteFromStage($stage) {
@@ -1050,8 +1077,12 @@ class Versioned extends DataExtension {
 	 * @param $version Either the string 'Live' or a version number
 	 */
 	public function doRollbackTo($version) {
+		$this->owner->extend('onBeforeRollback', $version);
 		$this->publish($version, "Stage", true);
+
 		$this->owner->writeWithoutVersion();
+
+		$this->owner->extend('onAfterRollback', $version);
 	}
 	
 	/**
@@ -1061,8 +1092,10 @@ class Versioned extends DataExtension {
 	 */
 	public static function get_latest_version($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($baseClass)->where("\"$baseClass\".\"RecordID\" = $id");
-		$list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
+		$list = DataList::create($baseClass)
+			->where("\"$baseClass\".\"RecordID\" = $id")
+			->setDataQueryParam("Versioned.mode", "latest_versions");
+
 		return $list->First();
 	}
 	
@@ -1089,8 +1122,11 @@ class Versioned extends DataExtension {
 	 * In particular, this will query deleted records as well as active ones.
 	 */
 	public static function get_including_deleted($class, $filter = "", $sort = "") {
-		$list = DataList::create($class)->where($filter)->sort($sort);
-		$list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
+		$list = DataList::create($class)
+			->where($filter)
+			->sort($sort)
+			->setDataQueryParam("Versioned.mode", "latest_versions");
+
 		return $list;
 	}
 	
@@ -1105,8 +1141,9 @@ class Versioned extends DataExtension {
 		$baseClass = ClassInfo::baseDataClass($class);
 		$list = DataList::create($baseClass)
 			->where("\"$baseClass\".\"RecordID\" = $id")
-			->where("\"$baseClass\".\"Version\" = " . (int)$version);
-		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
+			->where("\"$baseClass\".\"Version\" = " . (int)$version)
+			->setDataQueryParam("Versioned.mode", 'all_versions');
+
 		return $list->First();
 	}
 
@@ -1116,8 +1153,10 @@ class Versioned extends DataExtension {
 	 */
 	public static function get_all_versions($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
-		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
+		$list = DataList::create($class)
+			->where("\"$baseClass\".\"RecordID\" = $id")
+			->setDataQueryParam('Versioned.mode', 'all_versions');
+
 		return $list;
 	}
 	
@@ -1186,5 +1225,33 @@ class Versioned_Version extends ViewableData {
 	
 	public function Published() {
 		return !empty( $this->record['WasPublished'] );
+	}
+
+	/**
+	 * Copied from DataObject to allow access via dot notation.
+	 */
+	public function relField($fieldName) {
+		$component = $this;
+
+		if(strpos($fieldName, '.') !== false) {
+			$parts = explode('.', $fieldName);
+			$fieldName = array_pop($parts);
+
+			// Traverse dot syntax
+			foreach($parts as $relation) {
+				if($component instanceof SS_List) {
+					if(method_exists($component,$relation)) $component = $component->$relation();
+					else $component = $component->relation($relation);
+				} else {
+					$component = $component->$relation();
+}
+			}
+		}
+
+		// Unlike has-one's, these "relations" can return false
+		if($component) {
+			if ($component->hasMethod($fieldName)) return $component->$fieldName();
+			return $component->$fieldName;
+		}
 	}
 }

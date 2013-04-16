@@ -125,7 +125,7 @@ An alternative approach would be a custom getter in the object definition.
 
 	:::php
 	class Player extends DataObject {
-		static $db = array(
+		private static $db = array(
 			'Name' => 
 			'Birthdate' => 'Date'
 		);

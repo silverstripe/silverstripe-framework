@@ -8,25 +8,25 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 
 	// the (1) after Type specifies the DB default value which is needed for
 	// upgrades from older SilverStripe versions
-	static $db = array(
+	private static $db = array(
 		"Code" => "Varchar",
 		"Arg" => "Int",
 		"Type" => "Int(1)"
 	);
-	static $has_one = array(
+	private static $has_one = array(
 		"Group" => "Group"
 	);
-	static $indexes = array(
+	private static $indexes = array(
 		"Code" => true
 	);
-	static $defaults = array(
+	private static $defaults = array(
 		"Type" => 1
 	);
-	static $has_many = array();
+	private static $has_many = array();
 	
-	static $many_many = array();
+	private static $many_many = array();
 	
-	static $belongs_many_many = array();
+	private static $belongs_many_many = array();
 
 	/**
 	 * This is the value to use for the "Type" field if a permission should be
@@ -53,42 +53,38 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 *
 	 * @var bool
 	 */
-	static $declared_permissions = null;
+	private static $declared_permissions = null;
 
 	/**
 	 * Linear list of declared permissions in the system.
 	 *
 	 * @var array
 	 */
-	protected static $declared_permissions_list = null;
+	private static $declared_permissions_list = null;
 
 	/**
+	 * @config
 	 * @var $strict_checking Boolean Method to globally disable "strict" checking,
 	 * which means a permission will be granted if the key does not exist at all.
 	 */
-	static $strict_checking = true;
-	
-	/**
-	 * If this setting is set, then permissions can imply other permissions
-	 *
-	 * @var bool
-	 */
-	static $implied_permissions = false;
+	private static $strict_checking = true;
 
 	/**
 	 * Set to false to prevent the 'ADMIN' permission from implying all
 	 * permissions in the system
 	 *
+	 * @config
 	 * @var bool
 	 */
-	static $admin_implies_all = true;
+	private static $admin_implies_all = true;
 	
 	/**
 	 * a list of permission codes which doesn't appear in the Permission list
 	 * when make the {@link PermissionCheckboxSetField}
+	 * @config
 	 * @var array;
 	 */
-	static $hidden_permissions = array();
+	private static $hidden_permissions = array();
 
 	/**
 	 * Check that the current member has the given permission.
@@ -157,7 +153,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 			// If $admin_implies_all was false then this would be inefficient, but that's an edge
 			// case and this keeps the code simpler
 			if(!is_array($code)) $code = array($code);
-			if(self::$admin_implies_all) $code[] = "ADMIN";
+			if(Config::inst()->get('Permission', 'admin_implies_all')) $code[] = "ADMIN";
 
 			// Multiple $code values - return true if at least one matches, ie, intersection exists
 			return (bool)array_intersect($code, self::$cache_permissions[$memberID]);
@@ -195,7 +191,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 		
 		$SQL_code = Convert::raw2sql($code);
 		
-		$adminFilter = (self::$admin_implies_all) ?  ",'ADMIN'" : '';
+		$adminFilter = (Config::inst()->get('Permission', 'admin_implies_all')) ?  ",'ADMIN'" : '';
 
 		// Raw SQL for efficiency
 		$permission = DB::query("
@@ -212,7 +208,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 		if($permission) return $permission;
 
 		// Strict checking disabled?
-		if(!self::$strict_checking || !$strict) {
+		if(!Config::inst()->get('Permission', 'strict_checking') || !$strict) {
 			$hasPermission = DB::query("
 				SELECT COUNT(*) 
 				FROM \"Permission\"
@@ -230,21 +226,22 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * Get all the 'any' permission codes available to the given member.
-	 * @return array();
+	 *
+	 * @return array
 	 */
 	public static function permissions_for_member($memberID) {
 		$groupList = self::groupList($memberID);
+
 		if($groupList) {
 			$groupCSV = implode(", ", $groupList);
 
-			// Raw SQL for efficiency
-			return array_unique(DB::query("
+			$allowed = array_unique(DB::query("
 				SELECT \"Code\"
 				FROM \"Permission\"
 				WHERE \"Type\" = " . self::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
-				
+
 				UNION
-				
+
 				SELECT \"Code\"
 				FROM \"PermissionRoleCode\" PRC
 				INNER JOIN \"PermissionRole\" PR ON PRC.\"RoleID\" = PR.\"ID\"
@@ -252,9 +249,16 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 				WHERE \"GroupID\" IN ($groupCSV)
 			")->column());
 
-		} else {
-			return array();
+			$denied = array_unique(DB::query("
+				SELECT \"Code\"
+				FROM \"Permission\"
+				WHERE \"Type\" = " . self::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+			")->column());                        
+			
+			return array_diff($allowed, $denied);         
 		}
+		
+		return array();
 	}
 
 
@@ -526,21 +530,27 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * add a permission represented by the $code to the {@link slef::$hidden_permissions} list
 	 *
+	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
 	public static function add_to_hidden_permissions($code){
-		self::$hidden_permissions[] = $code;
+		if(is_string($codes)) $codes = array($codes);
+		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Config::inst()->update('Permission', 'hidden_permissions', $codes);
 	}
 	
 	/**
 	 * remove a permission represented by the $code from the {@link slef::$hidden_permissions} list
 	 *
+	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
 	 * @param $code string - the permissions code
 	 * @return void
 	 */
 	public static function remove_from_hidden_permissions($code){
-		self::$hidden_permissions = array_diff(self::$hidden_permissions, array($code));
+		if(is_string($codes)) $codes = array($codes);
+		Deprecation::notice('3.2', 'Use "Permission.hidden_permissions" config setting instead');
+		Config::inst()->remove('Permission', 'hidden_permissions', $codes);
 	}
 
 	/**
@@ -549,17 +559,13 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * Permissions can be grouped by nesting arrays. Scalar values are always
 	 * treated as permissions.
 	 *
+	 * @deprecated 3.2 Use "Permission.declared_permissions" config setting instead
 	 * @param array $permArray A (possibly nested) array of permissions to
 	 *                         declare for the system.
 	 */
 	public static function declare_permissions($permArray) {
-		if(is_array(self::$declared_permissions)) {
-			self::$declared_permissions =
-				array_merge_recursive(self::$declared_permissions, $permArray);
-		}
-		else {
-			self::$declared_permissions = $permArray;
-		}
+		Deprecation::notice('3.2', 'Use "Permission.declared_permissions" config setting instead');
+		self::config()->declared_permissions = $permArray;
 	}
 
 

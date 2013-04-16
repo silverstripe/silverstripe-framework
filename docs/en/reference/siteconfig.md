@@ -24,7 +24,6 @@ Or if you want to access variables in the PHP you can do
 
 	:::php
 	$config = SiteConfig::current_site_config(); 
-	
 	$config->Title
 
 
@@ -39,7 +38,7 @@ Create a mysite/code/CustomSiteConfig.php file.
 	
 	class CustomSiteConfig extends DataExtension {
 		
-		static $db = array(
+		private static $db = array(
 			'FooterContent' => 'HTMLText'
 		);
 	
@@ -49,9 +48,12 @@ Create a mysite/code/CustomSiteConfig.php file.
 	}
 
 
-Then add a link to your extension in the _config.php file like below.
+Then activate your extension in your `[config.yml](/topics/configuration)` file.
 
-	Object::add_extension('SiteConfig', 'CustomSiteConfig');
+	:::yml
+	SiteConfig:
+	  extensions:
+	    - CustomSiteConfig
 
 
 This tells SilverStripe to add the CustomSiteConfig extension to the `[api:SiteConfig]` class. 

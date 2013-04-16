@@ -164,11 +164,42 @@ class Config {
 	}
 
 	/**
-	 * Empty construction, otherwise calling singleton('Config') (not the right way to get the current active config
-	 * instance, but people might) gives an error
+	 * Make the newly active Config be a copy of the current active Config instance.
+	 *
+	 * You can then make changes to the configuration by calling update and remove on the new
+	 * value returned by Config::inst(), and then discard those changes later by calling unnest
+	 */
+	static public function nest() {
+		$current = self::$instance;
+
+		$new = clone $current;
+		$new->nestedFrom = $current;
+		self::set_instance($new);
+	}
+
+	/**
+	 * Change the active Config back to the Config instance the current active Config object
+	 * was copied from
+	 */
+	static public function unnest() {
+		self::set_instance(self::$instance->nestedFrom);
+	}
+
+	protected $cache;
+
+	/**
+	 * Each copy of the Config object need's it's own cache, so changes don't leak through to other instances
 	 */
 	public function __construct() {
+		$this->cache = new Config_LRU();
 	}
+
+	public function __clone() {
+		$this->cache = clone $this->cache;
+	}
+
+	/** @var Config - The config instance this one was copied from when Config::nest() was called */
+	protected $nestedFrom = null;
 
 	/** @var [array] - Array of arrays. Each member is an nested array keyed as $class => $name => $value,
 	 * where value is a config value to treat as the highest priority item */
@@ -177,6 +208,13 @@ class Config {
 	/** @var [array] - Array of arrays. Each member is an nested array keyed as $class => $name => $value,
 	 * where value is a config value suppress from any lower priority item */
 	protected $suppresses = array();
+
+	protected $staticManifests = array();
+
+	public function pushConfigStaticManifest(SS_ConfigStaticManifest $manifest) {
+		array_unshift($this->staticManifests, $manifest);
+		$this->cache->clean();
+	}
 
 	/** @var [array] - The list of settings pulled from config files to search through */
 	protected $manifests = array();
@@ -187,8 +225,9 @@ class Config {
 	 * WARNING: Config manifests to not merge entries, and do not solve before/after rules inter-manifest -
 	 * instead, the last manifest to be added always wins
 	 */
-	public function pushConfigManifest(SS_ConfigManifest $manifest) {
+	public function pushConfigYamlManifest(SS_ConfigManifest $manifest) {
 		array_unshift($this->manifests, $manifest->yamlConfig);
+		$this->cache->clean();
 
 		// @todo: Do anything with these. They're for caching after config.php has executed
 		$this->collectConfigPHPSettings = true;
@@ -271,7 +310,6 @@ class Config {
 	}
 
 	public static function merge_high_into_low(&$result, $value) {
-		if (!$value) return;
 		$newType = self::get_value_type($value);
 
 		if (!$result) {
@@ -342,34 +380,17 @@ class Config {
 		return $res;
 	}
 
-	/**
-	 * Get the config value associated for a given class and property
-	 *
-	 * This merges all current sources and overrides together to give final value
-	 * todo: Currently this is done every time. This function is an inner loop function, so we really need to be
-	 * caching heavily here.
-	 *
-	 * @param $class string - The name of the class to get the value for
-	 * @param $name string - The property to get the value for
-	 * @param int $sourceOptions Bitmask which can be set to some combintain of Config::UNINHERITED,
-	 *                           Config::FIRST_SET, and Config::EXCLUDE_EXTENSIONS.
-	 *                           
-	 *   Config::UNINHERITED does not include parent classes when merging configuration fragments
-	 *   Config::FIRST_SET stops inheriting once the first class that sets a value (even an empty value) is encoutered
-	 *   Config::EXCLUDE_EXTRA_SOURCES does not include any additional static sources (such as extensions)
-	 *
-	 *   Config::INHERITED is a utility constant that can be used to mean "none of the above", equvilient to 0
-	 *   Setting both Config::UNINHERITED and Config::FIRST_SET behaves the same as just Config::UNINHERITED
-	 *
-	 * should the parent classes value be merged in as the lowest priority source?
-	 * @param $result array|scalar Reference to a variable to put the result in. Also returned, so this can be left
-	 *                             as null safely. If you do pass a value, it will be treated as the highest priority
-	 *                             value in the result chain
-	 * @param $suppress array Internal use when called by child classes. Array of mask pairs to filter value by
-	 * @return array|scalar The value of the config item, or null if no value set. Could be an associative array,
-	 *                      sequential array or scalar depending on value (see class docblock)
-	 */
-	public function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
+	protected $extraConfigSources = array();
+
+	public function extraConfigSourcesChanged($class) {
+		unset($this->extraConfigSources[$class]);
+		$this->cache->clean("__{$class}");
+	}
+
+	protected function getUncached($class, $name, $sourceOptions, &$result, $suppress, &$tags) {
+		$tags[] = "__{$class}";
+		$tags[] = "__{$class}__{$name}";
+
 		// If result is already not something to merge into, just return it
 		if ($result !== null && !is_array($result)) return $result;
 
@@ -397,19 +418,32 @@ class Config {
 			}
 		}
 
-		// Then look at the static variables
-		$nothing = new stdClass();
-
 		$sources = array($class);
+
 		// Include extensions only if not flagged not to, and some have been set
 		if (($sourceOptions & self::EXCLUDE_EXTRA_SOURCES) != self::EXCLUDE_EXTRA_SOURCES) {
-			$extraSources = Object::get_extra_config_sources($class);
+			// If we don't have a fresh list of extra sources, get it from the class itself
+			if (!array_key_exists($class, $this->extraConfigSources)) {
+				$this->extraConfigSources[$class] = Object::get_extra_config_sources($class);
+			}
+
+			// Update $sources with any extra sources
+			$extraSources = $this->extraConfigSources[$class];
 			if ($extraSources) $sources = array_merge($sources, $extraSources);
 		}
 
+		$value = $nothing = null;
+
 		foreach ($sources as $staticSource) {
-			if (is_array($staticSource)) $value = isset($staticSource[$name]) ? $staticSource[$name] : $nothing;
-			else $value = Object::static_lookup($staticSource, $name, $nothing);
+			if (is_array($staticSource)) {
+				$value = isset($staticSource[$name]) ? $staticSource[$name] : $nothing;
+			}
+			else {
+				foreach ($this->staticManifests as $i => $statics) {
+					$value = $statics->get($staticSource, $name, $nothing);
+					if ($value !== $nothing) break;
+				}
+			}
 
 			if ($value !== $nothing) {
 				self::merge_low_into_high($result, $value, $suppress);
@@ -418,14 +452,53 @@ class Config {
 		}
 
 		// Finally, merge in the values from the parent class
-		if (($sourceOptions & self::UNINHERITED) != self::UNINHERITED 
-				&& (($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)) {
+		if (
+			($sourceOptions & self::UNINHERITED) != self::UNINHERITED &&
+			(($sourceOptions & self::FIRST_SET) != self::FIRST_SET || $result === null)
+		) {
 			$parent = get_parent_class($class);
-			if ($parent) $this->get($parent, $name, $sourceOptions, $result, $suppress);
+			if ($parent) $this->getUncached($parent, $name, $sourceOptions, $result, $suppress, $tags);
 		}
 
-		if ($name == 'routes') {
-			print_r($result); die;
+		return $result;
+	}
+
+	/**
+	 * Get the config value associated for a given class and property
+	 *
+	 * This merges all current sources and overrides together to give final value
+	 * todo: Currently this is done every time. This function is an inner loop function, so we really need to be
+	 * caching heavily here.
+	 *
+	 * @param $class string - The name of the class to get the value for
+	 * @param $name string - The property to get the value for
+	 * @param int $sourceOptions Bitmask which can be set to some combintain of Config::UNINHERITED,
+	 *                           Config::FIRST_SET, and Config::EXCLUDE_EXTENSIONS.
+	 *
+	 *   Config::UNINHERITED does not include parent classes when merging configuration fragments
+	 *   Config::FIRST_SET stops inheriting once the first class that sets a value (even an empty value) is encoutered
+	 *   Config::EXCLUDE_EXTRA_SOURCES does not include any additional static sources (such as extensions)
+	 *
+	 *   Config::INHERITED is a utility constant that can be used to mean "none of the above", equvilient to 0
+	 *   Setting both Config::UNINHERITED and Config::FIRST_SET behaves the same as just Config::UNINHERITED
+	 *
+	 * should the parent classes value be merged in as the lowest priority source?
+	 * @param $result array|scalar Reference to a variable to put the result in. Also returned, so this can be left
+	 *                             as null safely. If you do pass a value, it will be treated as the highest priority
+	 *                             value in the result chain
+	 * @param $suppress array Internal use when called by child classes. Array of mask pairs to filter value by
+	 * @return array|scalar The value of the config item, or null if no value set. Could be an associative array,
+	 *                      sequential array or scalar depending on value (see class docblock)
+	 */
+	public function get($class, $name, $sourceOptions = 0, &$result = null, $suppress = null) {
+		// Have we got a cached value? Use it if so
+		$key = $class.$name.$sourceOptions;
+
+		if (($result = $this->cache->get($key)) === false) {
+			$tags = array();
+			$result = null;
+			$this->getUncached($class, $name, $sourceOptions, $result, $suppress, $tags);
+			$this->cache->set($key, $result, $tags);
 		}
 
 		return $result;
@@ -435,7 +508,7 @@ class Config {
 	 * Update a configuration value
 	 *
 	 * Configuration is modify only. The value passed is merged into the existing configuration. If you want to
-	 * replace the current value, you'll need to call remove first.
+	 * replace the current array value, you'll need to call remove first.
 	 *
 	 * @param $class string - The class to update a configuration value for
 	 * @param $name string - The configuration property name to update
@@ -448,10 +521,19 @@ class Config {
 	 * You will get an error if you try and override array values with non-array values or vice-versa
 	 */
 	public function update($class, $name, $val) {
-		if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
+		if(is_null($val)) {
+			$this->remove($class, $name);
+		} else {
+			if (!isset($this->overrides[0][$class])) $this->overrides[0][$class] = array();
 
-		if (!isset($this->overrides[0][$class][$name])) $this->overrides[0][$class][$name] = $val;
-		else self::merge_high_into_low($this->overrides[0][$class][$name], $val);
+			if (!array_key_exists($name, $this->overrides[0][$class])) {
+				$this->overrides[0][$class][$name] = $val;
+			} else {
+				self::merge_high_into_low($this->overrides[0][$class][$name], $val);
+			}
+		}
+
+		$this->cache->clean("__{$class}__{$name}");
 	}
 
 	/**
@@ -484,7 +566,7 @@ class Config {
 	 *
 	 * Matching is always by "==", not by "==="
 	 */
-	public function remove($class, $name) {
+	public function remove($class, $name /*,$key = null*/ /*,$value = null*/) {
 		$argc = func_num_args();
 		$key = $argc > 2 ? func_get_arg(2) : self::anything();
 		$value = $argc > 3 ? func_get_arg(3) : self::anything();
@@ -508,8 +590,115 @@ class Config {
 		if (!isset($this->suppresses[0][$class][$name])) $this->suppresses[0][$class][$name] = array();
 
 		$this->suppresses[0][$class][$name][] = $suppress;
+
+		$this->cache->clean("__{$class}__{$name}");
 	}
 
+}
+
+class Config_LRU {
+	const SIZE = 1000;
+
+	protected $cache;
+	protected $indexing;
+
+	protected $i = 0;
+	protected $c = 0;
+
+	public function __construct() {
+		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
+			// SplFixedArray causes seg faults before PHP 5.3.7
+			$this->cache = array();
+		}
+		else {
+			$this->cache = new SplFixedArray(self::SIZE);
+		}
+
+		// Pre-fill with stdClass instances. By reusing we avoid object-thrashing
+		for ($i = 0; $i < self::SIZE; $i++) {
+			$this->cache[$i] = new stdClass();
+			$this->cache[$i]->key = null;
+		}
+
+		$this->indexing = array();
+	}
+
+	public function __clone() {
+		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
+			// SplFixedArray causes seg faults before PHP 5.3.7
+			$cloned = array();
+		}
+		else {
+			$cloned = new SplFixedArray(self::SIZE);
+		}
+		for ($i = 0; $i < self::SIZE; $i++) {
+			$cloned[$i] = clone $this->cache[$i];
+		}
+		$this->cache = $cloned;
+	}
+
+	public function set($key, $val, $tags = array()) {
+		// Find an index to set at
+		$replacing = null;
+
+		// Target count - not always the lowest, but guaranteed to exist (or hit an empty item)
+		$target = $this->c - self::SIZE + 1;
+		$i = $stop = $this->i;
+		
+		do {
+			if (!($i--)) $i = self::SIZE-1;
+			$item = $this->cache[$i];
+
+			if ($item->key === null) { $replacing = null; break; }
+			else if ($item->c <= $target) { $replacing = $item; break; }
+		}
+		while ($i != $stop);
+
+		if ($replacing) unset($this->indexing[$replacing->key]);
+
+		$this->indexing[$key] = $this->i = $i;
+
+		$obj = $this->cache[$i];
+		$obj->key = $key;
+		$obj->value = $val;
+		$obj->tags = $tags;
+		$obj->c = ++$this->c;
+	}
+
+	private $hit = 0;
+	private $miss = 0;
+
+	public function stats() {
+		return $this->miss ? ($this->hit / $this->miss) : 0;
+	}
+
+	public function get($key) {
+		if (isset($this->indexing[$key])) {
+			$this->hit++;
+
+			$res = $this->cache[$this->indexing[$key]];
+			$res->c = ++$this->c;
+			return $res->value;
+		}
+
+		$this->miss++;
+		return false;
+	}
+
+	public function clean($tag = null) {
+		if ($tag) {
+			foreach ($this->cache as $i => $v) {
+				if ($v->key !== null && in_array($tag, $v->tags)) {
+					unset($this->indexing[$v->key]);
+					$this->cache[$i]->key = null;
+				}
+			}
+		}
+		else {
+			for ($i = 0; $i < self::SIZE; $i++) $this->cache[$i]->key = null;
+			$this->indexing = array();
+		}
+	}
 }
 
 class Config_ForClass {
