@@ -111,7 +111,10 @@ class NamespacedClassManifestTest extends SapphireTest {
 	}
 	
 	public function testGetModules() {
-		$expect = array("module" => "{$this->base}/module");
+		$expect = array(
+			"module" => "{$this->base}/module",
+			"moduleb" => "{$this->base}/moduleb"
+		);
 		$this->assertEquals($expect, $this->manifest->getModules());
 	}
 }
