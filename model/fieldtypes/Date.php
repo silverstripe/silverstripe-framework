@@ -18,6 +18,7 @@
  * @package framework
  * @subpackage model
  */
+require_once 'Zend/Date.php';
 class Date extends DBField {
 	
 	public function setValue($value, $record = null) {
@@ -49,7 +50,7 @@ class Date extends DBField {
 		} elseif(is_string($value)) {
 			try{
 				$date = new DateTime($value);
-				$this->value = $date->Format('Y-m-d');
+				$this->value = $date->Format('Y-M-d');
 				return;
 			}catch(Exception $e){
 				$this->value = null;
@@ -59,45 +60,52 @@ class Date extends DBField {
 	}
 
 	/**
-	 * Returns the date in the format dd/mm/yy 
+	 * Returns the date in the format Mar 31, 2008 
 	 */	 
 	public function Nice() {
-		if($this->value) return $this->Format('d/m/Y');
+		if($this->value) return $this->Format(i18n::get_date_format());
+	}
+	
+	/**
+	 * Returns the date in the format 31.03.2008
+	 */	 
+	public function Short() {
+		if($this->value) return $this->Format(Zend_Date::DATE_SHORT);
 	}
 	
 	/**
 	 * Returns the date in US format: “01/18/2006”
 	 */
 	public function NiceUS() {
-		if($this->value) return $this->Format('m/d/Y');
+		if($this->value) return $this->Format('MM/dd/YYYY');
 	}
 	
 	/** 
 	 * Returns the year from the given date
 	 */
 	public function Year() {
-		if($this->value) return $this->Format('Y');
+		if($this->value) return $this->Format(Zend_Date::YEAR);
 	}
 	
 	/**
 	 * Returns the Full day, of the given date.
 	 */
 	public function Day(){
-		if($this->value) return $this->Format('l');
+		if($this->value) return $this->Format(Zend_Date::WEEKDAY);
 	}
 	
 	/**
 	 * Returns a full textual representation of a month, such as January.
 	 */
 	public function Month() {
-		if($this->value) return $this->Format('F');
+		if($this->value) return $this->Format(Zend_Date::MONTH_NAME);
 	}
 	
 	/**
 	 * Returns the short version of the month such as Jan
 	 */
 	public function ShortMonth() {
-		if($this->value) return $this->Format('M');
+		if($this->value) return $this->Format(Zend_Date::MONTH_NAME_SHORT);
 	}
 
 	/**
@@ -107,24 +115,24 @@ class Date extends DBField {
 	 */
 	public function DayOfMonth($includeOrdinal = false) {
 		if($this->value) {
-			$format = 'j';
-			if ($includeOrdinal) $format .= 'S';
+			$format = Zend_Date::DAY;
+			if ($includeOrdinal) $format .= Zend_Date::DAY_SUFFIX;
 			return $this->Format($format);
 		}
 	}
 	
 	/**
-	 * Returns the date in the format 24 December 2006
+	 * Returns the date in the format 13. February 2009
 	 */
 	public function Long() {
-		if($this->value) return $this->Format('j F Y');
+		if($this->value) return $this->Format(Zend_Date::DATE_LONG);
 	}
 	
 	/**
-	 * Returns the date in the format 24 Dec 2006
+	 * Returns the date in the format Monday, March 31, 2008
 	 */
 	public function Full() {
-		if($this->value) return $this->Format('j M Y');
+		if($this->value) return $this->Format(Zend_Date::DATE_FULL);
 	}
 	
 	/**
@@ -135,8 +143,8 @@ class Date extends DBField {
 	 */
 	public function Format($format) {
 		if($this->value){
-			$date = new DateTime($this->value);
-			return $date->Format($format);
+			$date = new Zend_Date($this->value,'YYYY-MM-dd HH:mm:ss');
+			return $date->toString($format);
 		}
 	}
 	
