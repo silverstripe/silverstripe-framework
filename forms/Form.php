@@ -556,7 +556,7 @@ class Form extends RequestHandler {
 	 * @return FieldList
 	 */
 	public function HiddenFields() {
-		return $this->fields->HiddenFields();
+		return $this->Fields()->HiddenFields();
 	}
 
 	/**
@@ -564,7 +564,7 @@ class Form extends RequestHandler {
 	 * Useful when making your own simplified form layouts.
 	 */
 	public function VisibleFields() {
-		return $this->fields->VisibleFields();
+		return $this->Fields()->VisibleFields();
 	}
 	
 	/**
