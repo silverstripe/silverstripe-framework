@@ -384,7 +384,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($extraThemedCss) foreach ($extraThemedCss as $file => $config) {
 			Requirements::themedCSS($file, isset($config['media']) ? $config['media'] : null);
 		}
-
+		Requirements::customCSS(CMSMain::generatePageIconsCss());
 		$dummy = null;
 		$this->extend('init', $dummy);
 
