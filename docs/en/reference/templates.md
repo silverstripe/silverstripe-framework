@@ -225,7 +225,10 @@ This loops over the children of a page, and generates an unordered list showing
 the `Title` property from each one. Note that `$Title` *inside* the loop refers 
 to the `Title` property on each object that is looped over, not the current page. 
 To refer to the current page's `Title` property inside the loop, you can do 
-`$Up.Title`. More about `Up` later.
+`$Up.Title`. More about `Up` later.  
+  
+`$Me` can be used to refer to the current object context the template is rendered
+with.
 
 ### Position Indicators
 
@@ -252,7 +255,7 @@ custom column names based on your loop statement. Note that this works for any
 control statement (not just children).
 
 	:::ss
-	<% loop Children %>
+	<% loop $Children %>
 	<div class="column-{$Modulus(4)}">
 		...
 	</div>
@@ -265,7 +268,7 @@ You can also use $MultipleOf(value, offset) to help build columned layouts. In
 this case we want to add a <br> after every 3th item.
 
 	:::ss
-	<% loop Children %>
+	<% loop $Children %>
 		<% if MultipleOf(3) %>
 			<br>
 		<% end_if %>
@@ -289,11 +292,11 @@ the scope back to the previous level. Take the following example:
 	:::ss
 	$Title
 	--
-	<% loop Children %>
+	<% loop $Children %>
 		$Title
 		$Up.Title
 		--
-		<% loop Children %>
+		<% loop $Children %>
 			$Title
 			$Up.Title
 		<% end_loop %>
@@ -321,12 +324,12 @@ include `$Top`:
 	:::ss
 	$Title
 	--
-	<% loop Children %>
+	<% loop $Children %>
 		$Title
 		$Up.Title
 		$Top.Title
 		--
-		<% loop Children %>
+		<% loop $Children %>
 			$Title
 			$Up.Title
 			$Top.Title
