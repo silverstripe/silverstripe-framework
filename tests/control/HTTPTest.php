@@ -187,6 +187,18 @@ class HTTPTest extends SapphireTest {
 		});
 	}
 	
+	public function testEmailLinks() {
+		$this->withBaseURL('http://www.silverstripe.org/', function($test){
+			
+			// links
+			$test->assertEquals(
+				'<a href=\'mailto:admin@silverstripe.org\'>Email Us</a>',
+				HTTP::absoluteURLs('<a href=\'mailto:admin@silverstripe.org\'>Email Us</a>')
+			);
+		});
+		
+	}
+	
 	/**
 	 * Run a test while mocking the base url with the provided value
 	 * @param string $url The base URL to use for this test
