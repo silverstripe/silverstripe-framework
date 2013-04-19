@@ -152,7 +152,9 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithId.csv';
 		$loader->duplicateChecks = array(
 			'ExternalIdentifier' => 'ExternalIdentifier',
+			'NonExistantIdentifier' => 'ExternalIdentifier',
 			'ExternalIdentifier' => 'ExternalIdentifier',
+			'AdditionalIdentifier' => 'ExternalIdentifier'
 		);
 		$results = $loader->load($filepath);
 		$createdPlayers = $results->Created();
