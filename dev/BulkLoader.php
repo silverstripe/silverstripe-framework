@@ -101,7 +101,7 @@ abstract class BulkLoader extends ViewableData {
 	 * 
 	 * {@see Member::$unique_identifier_field}.
 	 * 
-	 * If multiple checks are specified, the first one "wins".
+	 * If multiple checks are specified, the first non-empty field "wins".
 	 * 
 	 *  <code>
 	 * <?php
