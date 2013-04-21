@@ -221,6 +221,7 @@ To refer to the current page's `Title` property inside the loop, you can do
 `$Up.Title`. More about `Up` later.  
   
 `Me` can be used to refer to the current object context the template is rendered
+with.
 
 ### Position Indicators
 
