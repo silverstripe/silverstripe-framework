@@ -118,7 +118,7 @@ interface CompositeDBField {
 	 * parameter. 
 	 * 
 	 * @param DBField|array $value
-	 * @param array $record Map of values loaded from the database
+	 * @param DataObject|array $record An array or object that this field is part of
 	 * @param boolean $markChanged Indicate wether this field should be marked changed. 
 	 *  Set to FALSE if you are initializing this field after construction, rather
 	 *  than setting a new value.
