@@ -221,31 +221,6 @@ To refer to the current page's `Title` property inside the loop, you can do
 `$Up.Title`. More about `Up` later.  
   
 `Me` can be used to refer to the current object context the template is rendered
-with. For example:  
-**HomePage.php**
-
-	:::php
-	class HomePage_Controller extends Page_Controller {
-		public function Subjects() {
-			$allowed_actions = array('Subjects');
-			
-			// Returns a DataList
-			$subjects = Subject::get();
-			
-			// Render the AjaxTest.ss template with the $subjects
-			// DataList object
-			return $subjects->renderWith('AjaxTest')
-		}
-	}
-
-**AjaxTest.ss**
-
-	:::ss
-	<ul>
-		<% loop Me %>
-			<li>$Title</li>
-		<% end_loop %>
-	</ul>
 
 ### Position Indicators
 
