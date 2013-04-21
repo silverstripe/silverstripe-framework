@@ -162,15 +162,12 @@ class CsvBulkLoader extends BulkLoader {
 	 */
 	public function findExistingObject($record) {
 		$SNG_objectClass = singleton($this->objectClass);
-		
 		// checking for existing records (only if not already found)
 		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
 			if(is_string($duplicateCheck)) {
 				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
-				if(!isset($record[$fieldName])) {
-					return false;
-					//user_error("CsvBulkLoader:processRecord: Couldn't find duplicate identifier '{$fieldName}'
-					//in columns", E_USER_ERROR);
+				if(!isset($record[$fieldName]) || empty($record[$fieldName])) { //skip current duplicate check if field value is empty
+					continue;
 				}
 				$SQL_fieldValue = Convert::raw2sql($record[$fieldName]);
 				$existingRecord = DataObject::get_one($this->objectClass, "\"$SQL_fieldName\" = '{$SQL_fieldValue}'");
@@ -184,16 +181,15 @@ class CsvBulkLoader extends BulkLoader {
 					user_error("CsvBulkLoader::processRecord():"
 						. " {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
 				}
-				
-				if($existingRecord) return $existingRecord;
+				if($existingRecord) {
+					return $existingRecord;
+				}
 			} else {
 				user_error('CsvBulkLoader::processRecord(): Wrong format for $duplicateChecks', E_USER_ERROR);
 			}
 		}
-		
 		return false;
 	}
-	
 	
 	/**
 	 * Determine wether any loaded files should be parsed
