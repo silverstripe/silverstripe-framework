@@ -422,7 +422,8 @@ class Security extends Controller {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
 			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 		$controller = new Page_Controller($tmpPage);
 			$controller->init();
 
@@ -482,7 +483,8 @@ class Security extends Controller {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
 			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 		$controller = new Page_Controller($tmpPage);
 			$controller->init();
 
@@ -533,7 +535,8 @@ class Security extends Controller {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
 			$tmpPage->URLSegment = 'Security';
-			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 		$controller = new Page_Controller($tmpPage);
 			$controller->init();
 
