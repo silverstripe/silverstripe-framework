@@ -74,8 +74,9 @@ global $database;
 
 // No database provided
 if(!isset($database) || !$database) {
-	// if SS_DATABASE_CHOOSE_NAME 
-	if(defined('SS_DATABASE_CHOOSE_NAME') && SS_DATABASE_CHOOSE_NAME) {
+	if(defined('SS_DATABASE_NAME')) {
+		$database = SS_DATABASE_NAME;
+	} else if(defined('SS_DATABASE_CHOOSE_NAME') && SS_DATABASE_CHOOSE_NAME) {
 		$loopCount = (int)SS_DATABASE_CHOOSE_NAME;
 		$databaseDir = BASE_PATH;
 		for($i=0;$i<$loopCount-1;$i++) $databaseDir = dirname($databaseDir);
