@@ -26,9 +26,9 @@ Here is a very simple template:
 				<p>Welcome $FirstName $Surname.</p>
 			<% end_with %>
 			
-			<% if Dishes %>
+			<% if $Dishes %>
 			<ul>
-				<% loop Dishes %>	  
+				<% loop $Dishes %>	  
 					<li>$Title ($Price.Nice)</li>
 				<% end_loop %>
 			</ul>
