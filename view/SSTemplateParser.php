@@ -4590,19 +4590,20 @@ class SSTemplateParser extends Parser {
 			// Get the result
 			$code = $result['php'];
 		}
-		
+
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
-			// If this template is a full HTML page, then put the comments just outside the HTML tag, 
-			// this is still no problem for IE as long as the DOCTYPE-declaration is done before this comment
-			if(stripos($code, "<html") !== false) {
-				$code = preg_replace('/(<html[^>]*>)/i', "<!-- template $templateName -->\\1", $code);
-				$code = preg_replace('/(<\/html[^>]*>)/i', "\\1<!-- end template $templateName -->", $code);
+			// If this template contains a doctype, put it right after it,
+			// if not, put it after the <html> tag to avoid IE glitches
+			if(stripos($code, "<!doctype") !== false) {
+				$code = preg_replace('/(<!doctype[^>]*("[^"]")*[^>]*>)/im', "$1\r\n<!-- template $templateName -->", $code);
+			} elseif(stripos($code, "<html") !== false) {
+				$code = preg_replace('/(<html[^>]*>)/i', "$1<!-- template $templateName -->", $code);
 			} else {
 				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
-					' -->\';' . "\n", $code);
-				$code .= "\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
+					' -->\';' . "\r\n", $code);
 			}
+			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 		}	
 		
 		return $code;
