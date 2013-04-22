@@ -1062,13 +1062,27 @@ class SSTemplateParser extends Parser {
 		// if not, put it after the <html> tag to avoid IE glitches
 		if(stripos($code, "<!doctype") !== false) {
 			$code = preg_replace('/(<!doctype[^>]*("[^"]")*[^>]*>)/im', "$1\r\n<!-- template $templateName -->", $code);
+			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 		} elseif(stripos($code, "<html") !== false) {
-			$code = preg_replace('/(<html[^>]*>)/i', "$1<!-- template $templateName -->", $code);
+			$code = preg_replace_callback('/(.*)(<html[^>]*>)(.*)/i', function($matches) use ($templateName) {
+				if (stripos($matches[3], '<!--') === false && stripos($matches[3], '-->') !== false) {
+					// after this <html> tag there is a comment close but no comment has been opened
+					// this most likely means that this <html> tag is inside a comment
+					// we should not add a comment inside a comment (invalid html)
+					// lets append it at the end of the comment
+					// an example case for this is the html5boilerplate: <!--[if IE]><html class="ie"><![endif]-->
+					return $matches[0];
+				} else {
+					// all other cases, add the comment and return it
+					return "{$matches[1]}{$matches[2]}<!-- template $templateName -->{$matches[3]}";
+				}
+			}, $code);
+			$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->$1", $code);
 		} else {
 			$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
 				' -->\';' . "\r\n", $code);
+			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 		}
-		$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 		return $code;
 	}
 	
