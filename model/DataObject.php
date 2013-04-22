@@ -731,6 +731,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * Return all currently fetched database fields.
+	 *
+	 * This function is similar to toMap() but doesn't trigger the lazy-loading of all unfetched fields.
+	 * Obviously, this makes it a lot faster.
+	 *
+	 * @return array The data as a map.
+	 */
+	public function getQueriedDatabaseFields() {
+		return $this->record;
+	}
+
+	/**
 	 * Update a number of fields on this object, given a map of the desired changes.
 	 * 
 	 * The field names can be simple names, or you can use a dot syntax to access $has_one relations.

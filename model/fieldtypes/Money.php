@@ -103,6 +103,11 @@ class Money extends DBField implements CompositeDBField {
 	}
 
 	public function setValue($value, $record = null, $markChanged = true) {
+		// Convert an object to an array
+		if($record && $record instanceof DataObject) {
+			$record = $record->getQueriedDatabaseFields();
+		}
+
 		// @todo Allow resetting value to NULL through Money $value field
 		if ($value instanceof Money && $value->exists()) {
 			$this->setCurrency($value->getCurrency(), $markChanged);
