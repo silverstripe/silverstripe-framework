@@ -10,7 +10,7 @@ class TextField extends FormField {
 	/**
 	 * @var int
 	 */
-	protected $maxLength;
+	protected $maxLength, $placeholder;
 	
 	/**
 	 * Returns an input field, class="text" and type="text" with an optional maxlength
@@ -37,12 +37,31 @@ class TextField extends FormField {
 		return $this->maxLength;
 	}
 
+	/**
+	 * Provide placeholder text for this field.
+	 * 
+	 * @param string $placeholder
+	 */
+	public function setPlaceholder($placeholder) {
+		$this->placeholder = $placeholder;
+		
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPlaceholder() {
+		return $this->placeholder;
+	}
+
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
 				'maxlength' => $this->getMaxLength(),
-				'size' => ($this->getMaxLength()) ? min($this->getMaxLength(), 30) : null
+				'size' => ($this->getMaxLength()) ? min($this->getMaxLength(), 30) : null,
+				'placeholder' => $this->getPlaceholder(),
 			)
 		);
 	}
