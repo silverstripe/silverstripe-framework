@@ -175,6 +175,90 @@ class ImageTest extends SapphireTest {
 		$ratio = $image->SetRatioSize(80, 160);
 		$this->assertTrue($ratio->isSize(80, 80));
 	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 */
+	public function testGenerateImageWithInvalidParameters() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$image->setHeight('String');
+		$image->PaddedImage(600,600,'XXXXXX');
+	}
+	
+	public function testCacheFilename() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$imageFirst = $image->SetSize(200,200);
+		$imageFilename = $imageFirst->getFullPath();
+			// Encoding of the arguments is duplicated from cacheFilename
+		$neededPart = 'SetSize' . base64_encode(json_encode(array(200,200)));
+		$this->assertContains($neededPart, $imageFilename, 'Filename for cached image is correctly generated');
+	}
+	
+	public function testMultipleGenerateManipulationCalls_Regeneration() {
+		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
+		$folder = new SS_FileFinder();
+	
+		$imageFirst = $image->SetSize(200,200);
+		$this->assertNotNull($imageFirst);
+		$expected = 200;
+		$actual = $imageFirst->getWidth();
+	
+		$this->assertEquals($expected, $actual);
+	
+		$imageSecond = $imageFirst->setHeight(100);
+		$this->assertNotNull($imageSecond);
+		$expected = 100;
+		$actual = $imageSecond->getHeight();
+		$this->assertEquals($expected, $actual);	
+		
+		$imageThird = $imageSecond->PaddedImage(600,600,'0F0F0F');
+		// Encoding of the arguments is duplicated from cacheFilename
+		$argumentString = base64_encode(json_encode(array(600,600,'0F0F0F')));
+		$this->assertNotNull($imageThird);
+		$this->assertContains($argumentString, $imageThird->getFullPath(), 'Image contains background color for padded resizement');
+	
+		$imageThirdPath = $imageThird->getFullPath();
+		$filesInFolder = $folder->find(dirname($imageThirdPath));
+		$this->assertEquals(3, count($filesInFolder), 'Image folder contains only the expected number of images before regeneration');
+	
+		$hash = md5_file($imageThirdPath);
+		$this->assertEquals(3, $image->regenerateFormattedImages(), 'Cached images were regenerated in the right number');
+		$this->assertEquals($hash, md5_file($imageThirdPath), 'Regeneration of third image is correct');
+	
+		/* Check that no other images exist, to ensure that the regeneration did not create other images */
+		$this->assertEquals($filesInFolder, $folder->find(dirname($imageThirdPath)), 'Image folder contains only the expected image files after regeneration');
+	}
+	
+	public function testRegenerateImages() {
+		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image_generated = $image->SetWidth(200);
+		$p = $image_generated->getFullPath();
+		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
+		$this->assertEquals(1, $image->regenerateFormattedImages(), 'Cached images were regenerated correct');
+		$this->assertEquals($image_generated->getWidth(), 200, 'Resized image has correct width after regeneration call');
+		$this->assertTrue(file_exists($p), 'Resized image exists after regeneration call');
+	}
+	
+	public function testRegenerateImagesWithRenaming() {
+		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image_generated = $image->SetWidth(200);
+		$p = $image_generated->getFullPath();
+		$this->assertTrue(file_exists($p), 'Resized image exists after creation call');
+	
+		// Encoding of the arguments is duplicated from cacheFilename
+		$oldArgumentString = base64_encode(json_encode(array(200)));
+		$newArgumentString = base64_encode(json_encode(array(300)));
+		
+		$newPath = str_replace($oldArgumentString, $newArgumentString, $p);
+		$newRelative = str_replace($oldArgumentString, $newArgumentString, $image_generated->getFileName());
+		rename($p, $newPath);
+		$this->assertFalse(file_exists($p), 'Resized image does not exist after movement call under old name');
+		$this->assertTrue(file_exists($newPath), 'Resized image exists after movement call under new name');
+		$this->assertEquals(1, $image->regenerateFormattedImages(), 'Cached images were regenerated in the right number');
+	
+		$image_generated_2 = new Image_Cached($newRelative);
+		$this->assertEquals(300, $image_generated_2->getWidth(), 'Cached image was regenerated with correct width');
+	}
 	
 	public function testGeneratedImageDeletion() {
 		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');

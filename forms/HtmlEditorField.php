@@ -151,8 +151,8 @@ class HtmlEditorField extends TextareaField {
 			}
 			
 			// Resample the images if the width & height have changed.
-			$width  = $img->getAttribute('width');
-			$height = $img->getAttribute('height');
+			$width  = (int)$img->getAttribute('width');
+			$height = (int)$img->getAttribute('height');
 			
 			if($image){
 				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
