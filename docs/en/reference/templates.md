@@ -214,12 +214,15 @@ collection of items. For example:
 		<% end_loop %>
 	</ul>
 
-This loops over the children of a page, and generates an unordered list showing 
-the `Title` property from each one. Note that `$Title` *inside* the loop refers 
-to the `Title` property on each object that is looped over, not the current page. 
-To refer to the current page's `Title` property inside the loop, you can do 
-`$Up.Title`. More about `Up` later.  
-  
+This loops over the children of a page, and generates an unordered list showing
+the `Title` property from each one. Note that `$Title` *inside* the loop refers
+to the `Title` property on each object that is looped over, not the current page.
+This is know as the `Scope` of the template. For more information about `Scope`
+see the section below.
+
+To refer to the current page's `Title` property inside the loop, you can do
+`$Up.Title`. More about `Up` later.
+
 `$Me` can be used to refer to the current object context the template is rendered
 with.
 
@@ -234,6 +237,50 @@ current position in the list and iteration:
  * `$FirstLast`: Returns a string, "first", "last", or "". Useful for CSS classes.
  * `$Pos`: The current position in the list (integer). Will start at 1.
  * `$TotalItems`: Number of items in the list (integer)
+
+### Altering the list
+
+`<% loop %>` statements iterate over a `[api:DataList]` instance. As the
+template has access to the list object, templates can call `[api:DataList]`
+functions. For instance, see the following examples:
+
+Providing a custom sort.
+
+	:::ss
+	<ul>
+		<% loop $Children.Sort(Title) %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
+
+Limiting the number of items displayed.
+
+	:::ss
+	<ul>
+		<% loop $Children.Limit(10) %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
+
+Reversing the loop.
+
+	:::ss
+	<ul>
+		<% loop $Children.Reverse %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
+
+
+The `DataList` class also supports chaining methods. For example, to reverse
+the list and output the last 3 items we would write:
+
+	:::ss
+	<ul>
+		<% loop $Children.Reverse.Limit(3) %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
 
 ### Modulus and MultipleOf
 
