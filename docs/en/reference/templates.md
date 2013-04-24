@@ -213,6 +213,15 @@ collection of items. For example:
 			<li>$Title</li>
 		<% end_loop %>
 	</ul>
+	
+This example shows how to reverse **iterate** a collection of items.
+	
+	:::ss
+	<ul>
+		<% loop $Children.Reverse %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
 
 This loops over the children of a page, and generates an unordered list showing
 the `Title` property from each one. Note that `$Title` *inside* the loop refers
