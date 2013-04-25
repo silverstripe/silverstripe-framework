@@ -62,10 +62,10 @@
 				var content = jQuery(o.content);
 				content.find('.ss-htmleditorfield-file.embed').each(function() {
 					var el = jQuery(this);
-					var shortCode = '[embed width=' + el.data('width')
-										+ ' height=' + el.data('height')
-										+ ' class=' + el.data('cssclass')
-										+ ' thumbnail=' + el.data('thumbnail')
+					var shortCode = '[embed width="' + el.data('width') + '"'
+										+ ' height="' + el.data('height') + '"'
+										+ ' class="' + el.data('cssclass') + '"'
+										+ ' thumbnail="' + el.data('thumbnail') + '"'
 										+ ']' + el.data('url')
 										+ '[/embed]';
 					el.replaceWith(shortCode);
