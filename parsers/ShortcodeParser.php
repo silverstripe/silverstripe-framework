@@ -151,7 +151,7 @@ class ShortcodeParser {
 		(?:
 			(?:\'([^\']+)\') | # Value surrounded by \'
 			(?:"([^"]+)")    | # Value surrounded by "
-			(\w+)              # Bare value
+			([^\s,\]]+)          # Bare value
 		)
 ';
 	
