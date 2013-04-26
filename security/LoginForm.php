@@ -40,5 +40,14 @@ abstract class LoginForm extends Form {
 		
 		return new $this->authenticator_class;
 	}
+
+	/**
+	 * Get the authenticator name.
+	 * @return string The friendly name for use in templates, etc.
+	 */
+	public function getAuthenticatorName() {
+		$authClass = $this->authenticator_class;
+		return $authClass::get_name();
+	}
 }
 

@@ -80,6 +80,14 @@ class Security extends Controller {
 	 * @config
 	 */
 	private static $template_main = 'Page';
+
+	/**
+	 * Template that's used to render the pages in AJAX mode
+	 *
+	 * @var string
+	 * @config
+	 */
+	private static $template_ajax = 'Page_ajax';
 	
 	/**
 	 * Default message set used in permission failures.
@@ -91,8 +99,7 @@ class Security extends Controller {
 	/**
 	 * Random secure token, can be used as a crypto key internally.
 	 * Generate one through 'sake dev/generatesecuretoken'.
-	 *
-	 * @config
+	 * 
 	 * @var String
 	 */
 	private static $token;
@@ -350,10 +357,13 @@ class Security extends Controller {
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
+		// Used to switch templates later
+		$isAjax = Director::is_ajax();
 		// Event handler for pre-login, with an option to let it break you out of the login form
 		$eventResults = $this->extend('onBeforeSecurityLogin');
 		// If there was a redirection, return
 		if($this->redirectedTo()) return;
+
 		// If there was an SS_HTTPResponse object returned, then return that
 		else if($eventResults) {
 			foreach($eventResults as $result) {
@@ -361,11 +371,6 @@ class Security extends Controller {
 			}
 		}
 		
-		$customCSS = project() . '/css/tabs.css';
-		if(Director::fileExists($customCSS)) {
-			Requirements::css($customCSS);
-		}
-
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOGIN', 'Log in');
@@ -376,80 +381,72 @@ class Security extends Controller {
 			$controller = Page_Controller::create($tmpPage);
 			$controller->setDataModel($this->model);
 			$controller->init();
-		} else {
+		}
+		else {
 			$controller = $this;
 		}
 
 		// if the controller calls Director::redirect(), this will break early
-		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
+		if(($response = $controller->getResponse()) && $response->isFinished()) {
+			return $response;
+		}
 
 		$content = '';
 		$forms = $this->GetLoginForms();
-		if(!count($forms)) {
+		$formCount = count($forms);
+
+		if(!$formCount) {
 			user_error('No login-forms found, please use Authenticator::register_authenticator() to add one',
 				E_USER_ERROR);
 		}
 		
-		// only display tabs when more than one authenticator is provided
-		// to save bandwidth and reduce the amount of custom styling needed 
-		if(count($forms) > 1) {
-			// Needed because the <base href=".."> in the template makes problems
-			// with the tabstrip library otherwise
-			$link_base = Director::absoluteURL($this->Link("login"));
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-			
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			
-			Requirements::css(FRAMEWORK_DIR . '/css/Security_login.css');
-			
-			Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
-			
-			$content = '<div id="Form_EditForm">';
-			$content .= '<div class="ss-tabset">';
-			$content .= '<ul>';
-			$content_forms = '';
+		// If there are many login forms, then use a special template to allow the user to choose
+		// how to authenticate.
+		if($formCount > 1) {
+			$viewData = new ArrayData(array(
+				'Forms' => new ArrayList($forms),
+			));
 
-			foreach($forms as $form) {
-				$content .= "<li><a href=\"#{$form->FormName()}_tab\">"
-					. $form->getAuthenticator()->get_name()
-					. "</a></li>\n";
+			$multiAuthTemplates = array('Security_MultiAuthenticatorLogin');
 
-				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">'
-					. $form->forTemplate() . "</div>\n";
+			// If AJAX request then choose a specialised template if available
+			if($isAjax) {
+				array_unshift($multiAuthTemplates, 'Security_MultiAuthenticatorLogin_ajax');
 			}
 
-			$content .= "</ul>\n" . $content_forms . "\n</div>\n</div>\n";
-		} else {
-			$content .= $forms[0]->forTemplate();
+			$content = $viewData->renderWith($multiAuthTemplates);
+		}
+		// Display the form
+		else {
+			// If this is an AJAX request, use the AJAX template
+			$templateMethod = $isAjax ? 'forAjaxTemplate' : 'forTemplate';
+
+			$content = $forms[0]->$templateMethod();
 		}
 		
-		if(strlen($message = Session::get('Security.Message.message')) > 0) {
+		// Handle any for messages from validation, etc.
+		// If there is a message, put it in a paragraph with some handy CSS classing.
+		$message = Session::get('Security.Message.message');
+		if(!empty($message)) {
 			$message_type = Session::get('Security.Message.type');
-			if($message_type == 'bad') {
-				$message = "<p class=\"message $message_type\">$message</p>";
-			} else {
-				$message = "<p>$message</p>";
-			}
-
-			$customisedController = $controller->customise(array(
-				"Content" => $message,
-				"Form" => $content,
-			));
-		} else {
-			$customisedController = $controller->customise(array(
-				"Form" => $content,
-			));
+			$message = "<p class=\"message $message_type\">$message</p>";
 		}
-		
+
+		// Finally, customise the controller to add the content (any form messages) and the form.
+		$customisedController = $controller->customise(array(
+			"Content" => $message,
+			"Form" => $content,
+		));
+
+		// We've displayed the message in the form output, so reset it for the next run.
 		Session::clear('Security.Message');
 
-		// custom processing
+		// Choose the template for use
+		$finalTemplate = $isAjax ? 'template_ajax' : 'template_main';
+
+		// Return the customised controller
 		return $customisedController->renderWith(
-			array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage')
+			array('Security_login', 'Security', $this->stat($finalTemplate), 'BlankPage')
 		);
 	}
 	
