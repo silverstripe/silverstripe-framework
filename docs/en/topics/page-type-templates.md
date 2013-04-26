@@ -95,15 +95,15 @@ Note that pages with the `ShowInMenus` property set to FALSE will be filtered ou
 ### Children Loops
 
 	:::ss
-	<% loop Children %>...<% end_loop %>
+	<% loop $Children %>...<% end_loop %>
 
 Will loop over all children of the current page context.
 Helpful to create page-specific subnavigations.
-Most likely, you'll want to use `<% loop Menu %>` for your main menus,
+Most likely, you'll want to use `<% loop $Menu %>` for your main menus,
 since its independent of the page context.
 
 	:::ss
-	<% loop ChildrenOf(<my-page-url>) %>...<% end_loop %>
+	<% loop $ChildrenOf(<my-page-url>) %>...<% end_loop %>
 
 Will create a list of the children of the given page,
 as identified by its `URLSegment` value. This can come in handy because its not dependent
@@ -111,7 +111,7 @@ on the context of the current page. For example, it would allow you to list all 
 underneath a "staff" holder on any page, regardless if its on the top level or elsewhere.
 
 	:::ss
-	<% loop allChildren %>...<% end_loop %>
+	<% loop $allChildren %>...<% end_loop %>
 
 This will show all children of a page even if the `ShowInMenus` property is set to FALSE.
 
@@ -137,7 +137,7 @@ To simply retrieve the parent page of the current context (if existing), use the
 ### Access to a specific Page
 
 	:::ss
-	<% loop Page(my-page) %>...<% end_loop %>`
+	<% loop $Page(my-page) %>...<% end_loop %>`
 
 "Page" will return a single page from the site tree, looking it up by URL.  You can use it in the `<% loop %>` format.
 Can't be called using `$Page(my-page).Title`.
@@ -180,7 +180,7 @@ More common uses:
 Example: Only show the menu item linked if its the current one:
 
 	:::ss
-	<% if LinkOrCurrent = current %>
+	<% if $LinkOrCurrent = current %>
 		$Title
 	<% else %>
 		<a href="$Link">$Title</a>
@@ -199,9 +199,9 @@ Simply place a file with the same name in your `themes/<your-theme>/templates`
 folder to customize its output. Here's the default template:
 
 	:::ss
-	<% if Pages %>
-		<% loop Pages %>
-			<% if Last %>$Title.XML<% else %><a href="$Link">$MenuTitle.XML</a> &raquo;<% end_if %>
+	<% if $Pages %>
+		<% loop $Pages %>
+			<% if $Last %>$Title.XML<% else %><a href="$Link">$MenuTitle.XML</a> &raquo;<% end_if %>
 		<% end_loop %>
 	<% end_if %>
 

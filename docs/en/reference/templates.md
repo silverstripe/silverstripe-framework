@@ -26,9 +26,9 @@ Here is a very simple template:
 				<p>Welcome $FirstName $Surname.</p>
 			<% end_with %>
 			
-			<% if Dishes %>
+			<% if $Dishes %>
 			<ul>
-				<% loop Dishes %>	  
+				<% loop $Dishes %>	  
 					<li>$Title ($Price.Nice)</li>
 				<% end_loop %>
 			</ul>
@@ -106,7 +106,7 @@ The "include" tag can be particularly helpful for nested functionality. In this 
 a variable is true
 
 	:::ss
-	<% if CurrentMember %>
+	<% if $CurrentMember %>
 		<% include MembersOnlyInclude %>
 	<% end_if %>
 
@@ -114,7 +114,7 @@ Includes can't directly access the parent scope of the scope active when the inc
 pass arguments to the include, which are available on the scope top within the include
 
 	:::ss
-	<% with CurrentMember %>
+	<% with $CurrentMember %>
 		<% include MemberDetails PageTitle=$Top.Title, PageID=$Top.ID %>
 	<% end_with %>
 
@@ -182,7 +182,7 @@ the markup in the `else` clause is used, if that clause is present.
 This example shows the use of `not` to negate the test.
 
 	:::ss
-	<% if not $DinnerInOven %>
+	<% if $not $DinnerInOven %>
 		I'm going out for dinner tonight.
 	<% end_if %>
 
@@ -309,7 +309,7 @@ this case we want to add a <br> after every 3th item.
 
 	:::ss
 	<% loop $Children %>
-		<% if MultipleOf(3) %>
+		<% if $MultipleOf(3) %>
 			<br>
 		<% end_if %>
 	<% end_loop %>
@@ -502,11 +502,11 @@ It renders in the template as `<base href="http://www.mydomain.com" /><!--[if lt
 
 Returns the currently logged in member, if there is one.  
 All of their details or any special Member page controls can be called on this.  
-Alternately, you can use `<% if CurrentMember %>` to detect whether someone has logged
+Alternately, you can use `<% if $CurrentMember %>` to detect whether someone has logged
 in. 
 
 	:::ss
-	<% if CurrentMember %>
+	<% if $CurrentMember %>
 	  Welcome Back, $CurrentMember.FirstName
 	<% end_if %>
 
@@ -541,7 +541,7 @@ Your function could return a single value as above or it could be a subclass of 
 And now you could call these values by using
 
 	:::ss
-	<% with MyCustomValues %>
+	<% with $MyCustomValues %>
 	$Hi , $Name
 	<% end_with %>
 	// output "Kia Ora , John Smith" 

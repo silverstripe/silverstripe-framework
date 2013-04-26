@@ -139,9 +139,9 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 
 
 	:::ss
-	<% if Results %>
+	<% if $Results %>
 		<ul>
-			<% loop Results %>
+			<% loop $Results %>
 				<li>$Title, $Autor</li>
 			<% end_loop %>
 		</ul>
@@ -149,19 +149,19 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 		<p>Sorry, your search query did not return any results.</p>
 	<% end_if %>
 	
-	<% if Results.MoreThanOnePage %>
+	<% if $Results.MoreThanOnePage %>
 		<div id="PageNumbers">
 			<p>
-				<% if Results.NotFirstPage %>
+				<% if $Results.NotFirstPage %>
 					<a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
 				<% end_if %>
 			
 				<span>
-			    		<% loop Results.PaginationSummary(4) %>
-						<% if CurrentBool %>
+			    		<% loop $Results.PaginationSummary(4) %>
+						<% if $CurrentBool %>
 							$PageNum
 						<% else %>
-							<% if Link %>
+							<% if $Link %>
 								<a href="$Link" title="View page number $PageNum">$PageNum</a>
 							<% else %>
 								&hellip;
@@ -170,7 +170,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 					<% end_loop %>
 				</span>
 			
-				<% if Results.NotLastPage %>
+				<% if $Results.NotLastPage %>
 					<a class="next" href="$Results.NextLink" title="View the next page">Next</a>
 				<% end_if %>
 			</p>

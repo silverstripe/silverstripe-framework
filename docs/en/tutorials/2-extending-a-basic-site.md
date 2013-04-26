@@ -285,7 +285,7 @@ We'll now create a template for the article holder. We want our news section to 
 			$Content        
 			<div class="content">$Content</div>
 		</article>
-		<% loop Children %>
+		<% loop $Children %>
 			<article>
 				<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
 				<p>$Content.FirstParagraph</p>
@@ -313,7 +313,7 @@ Cut the code between "loop Children" in *ArticleHolder.ss** and replace it with 
 
 	:::ss
 	...
-	<% loop Children %>
+	<% loop $Children %>
 		<% include ArticleTeaser %>
 	<% end_loop %>
 	...
@@ -370,7 +370,7 @@ This function simply runs a database query that gets the latest news articles fr
 	<!-- ... -->
 	<div class="content">$Content</div>
 	</article>
-	<% loop LatestNews %>
+	<% loop $LatestNews %>
 		<% include ArticleTeaser %>
 	<% end_loop %>
 
@@ -489,7 +489,7 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 			$Content        
 			<div class="content">$Content</div>
 		</article>
-		<% loop Children %>
+		<% loop $Children %>
 			<article>
 				<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
 				$Photo.SetWidth(150)
