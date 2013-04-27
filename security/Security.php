@@ -850,7 +850,7 @@ class Security extends Controller {
 	 */
 	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
 		// Fall back to the default encryption algorithm
-		if(!$algorithm) $algorithm = self::config()->encryption_algorithm;
+		if(!$algorithm) $algorithm = self::config()->password_encryption_algorithm;
 		
 		$e = PasswordEncryptor::create_for_algorithm($algorithm);
 
