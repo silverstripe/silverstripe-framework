@@ -808,7 +808,7 @@ class Security extends Controller {
 	public static function set_password_encryption_algorithm($algorithm) {
 		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
 		
-		self::config()->encryption_algorithm = $algorithm;
+		self::config()->password_encryption_algorithm = $algorithm;
 	}
 	
 	/**
@@ -817,7 +817,7 @@ class Security extends Controller {
 	 */
 	public static function get_password_encryption_algorithm() {
 		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
-		return self::config()->encryption_algorithm;
+		return self::config()->password_encryption_algorithm;
 	}
 
 	/**
@@ -849,7 +849,7 @@ class Security extends Controller {
 	 */
 	public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null) {
 		// Fall back to the default encryption algorithm
-		if(!$algorithm) $algorithm = self::config()->encryption_algorithm;
+		if(!$algorithm) $algorithm = self::config()->password_encryption_algorithm;
 		
 		$e = PasswordEncryptor::create_for_algorithm($algorithm);
 
