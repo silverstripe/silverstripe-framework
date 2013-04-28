@@ -145,12 +145,17 @@ class Form extends RequestHandler {
 	protected $attributes = array();
 
 	/**
+	 * @var ResponseNegotiator|null Name of the response negotiator, if any, used to respond with this form
+	 */
+	protected $responseNegotiator = null;
+
+	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
 	 * @param String $name The method on the controller that will return this form object.
 	 * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
-	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of
+	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldList} of
 	 *                           {@link FormAction} objects
 	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
@@ -210,7 +215,6 @@ class Form extends RequestHandler {
 	 */
 	public function setupFormErrors() {
 		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
-
 		if(isset($errorInfo['errors']) && is_array($errorInfo['errors'])) {
 			foreach($errorInfo['errors'] as $error) {
 				$field = $this->fields->dataFieldByName($error['fieldName']);
@@ -337,11 +341,16 @@ class Form extends RequestHandler {
 					$response->addHeader('Content-Type', 'application/json');
 				} else {
 					$this->setupFormErrors();
-					// Send the newly rendered form tag as HTML
-					$response = new SS_HTTPResponse($this->forTemplate());
-					$response->addHeader('Content-Type', 'text/html');
+					if($negotiator = $this->getResponseNegotiator()) {
+						$negotiator->setResponse(new SS_HTTPResponse($this));
+						$response = $negotiator->respond($request);
+					}
+					else {
+						// Send the newly rendered form tag as HTML
+						$response = new SS_HTTPResponse($this->forTemplate());
+						$response->addHeader('Content-Type', 'text/html');
+					}
 				}
-				
 				return $response;
 			} else {
 				if($this->getRedirectToFormOnValidationError()) {
@@ -368,6 +377,24 @@ class Form extends RequestHandler {
 		}
 		
 		return $this->httpError(404);
+	}
+
+	/**
+	 * Sets the response negotiator
+	 * @param ResponseNegotiator $negotiator The response negotiator to use
+	 * @return Form The current form
+	 */
+	public function setResponseNegotiator($negotiator) {
+		$this->responseNegotiator = $negotiator;
+		return $this;
+	}
+
+	/**
+	 * Gets the current response negotiator
+	 * @return ResponseNegotiator|null
+	 */
+	public function getResponseNegotiator() {
+		return $this->responseNegotiator;
 	}
 	
 	/**
