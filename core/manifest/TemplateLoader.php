@@ -73,11 +73,11 @@ class SS_TemplateLoader {
 
 			if ($candidates = $this->getManifest()->getTemplate($template)) {
 				if ($theme && isset($candidates['themes'][$theme])) {
-					$found = $candidates['themes'][$theme];
+					$found = array_merge($candidates, $candidates['themes'][$theme]);
 				} else {
-					unset($candidates['themes']);
 					$found = $candidates;
 				}
+				unset($found['themes']);
 
 				if ($found) {
 					if ($type && isset($found[$type])) {
