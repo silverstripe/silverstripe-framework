@@ -75,15 +75,15 @@ class SS_TemplateLoader {
 			}
 
 			if ($found = $this->getManifest()->getCandidateTemplate($template, $theme)) {
-				if ($type && isset($found[$type])) {
+					if ($type && isset($found[$type])) {
 					$found = array(
 						'main' => $found[$type]
 					);
+					}
+
+					$result = array_merge($found, $result);
 				}
-	
-				$result = array_merge($found, $result);
 			}
-		}
 
 		return $result;
 	}

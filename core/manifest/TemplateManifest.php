@@ -115,11 +115,11 @@ class SS_TemplateManifest {
 		if ($this->project && isset($candidates[$this->project])) {
 			$found = $candidates[$this->project];
 		} else if ($theme && isset($candidates['themes'][$theme])) {
-			$found = $candidates['themes'][$theme];
+			$found = array_merge($candidates, $candidates['themes'][$theme]);
 		} else {
-			unset($candidates['themes']);
 			$found = $candidates;
 		}
+		if(isset($found['themes'])) unset($found['themes']);
 
 		return $found;
 	}
