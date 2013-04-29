@@ -69,7 +69,8 @@ class Group extends DataObject {
 					$parentidfield = DropdownField::create(						'ParentID', 
 						$this->fieldLabel('Parent'), 
 						Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
-					)->setEmptyString(' ')
+					)->setEmptyString(' '),
+					new TextareaField('Description', $this->fieldLabel('Description'))
 				),
 
 				$permissionsTab = new Tab('Permissions', _t('SecurityAdmin.PERMISSIONS', 'Permissions'),

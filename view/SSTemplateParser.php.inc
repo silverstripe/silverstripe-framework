@@ -417,8 +417,8 @@ class SSTemplateParser extends Parser {
 	# argument structure to every other block 
 	 
 	IfPart: '<%' < 'if' [ :IfArgument > '%>' Template:$TemplateMatcher?
-	ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher
-	ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher
+	ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher?
+	ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher?
 
 	If: IfPart ElseIfPart* ElsePart? '<%' < 'end_if' > '%>'
 	*/
@@ -432,14 +432,14 @@ class SSTemplateParser extends Parser {
 	function If_ElseIfPart(&$res, $sub) {
 		$res['php'] .= 
 			'else if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
-				$sub['Template']['php'] . PHP_EOL . 
+				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
 
 	function If_ElsePart(&$res, $sub) {
 		$res['php'] .= 
 			'else { ' . PHP_EOL . 
-				$sub['Template']['php'] . PHP_EOL . 
+				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
 
@@ -1044,21 +1044,45 @@ class SSTemplateParser extends Parser {
 			// Get the result
 			$code = $result['php'];
 		}
-		
+
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
-			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE 
-			// glitches
-			if(stripos($code, "<html") !== false) {
-				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
-				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
-			} else {
-				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
-					' -->\';' . "\n", $code);
-				$code .= "\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
-			}
+			$code = $parser->includeDebuggingComments($code, $templateName);
 		}	
 		
+		return $code;
+	}
+
+	/**
+	 * @param string $code
+	 * @return string $code
+	 */
+	protected function includeDebuggingComments($code, $templateName) {
+		// If this template contains a doctype, put it right after it,
+		// if not, put it after the <html> tag to avoid IE glitches
+		if(stripos($code, "<!doctype") !== false) {
+			$code = preg_replace('/(<!doctype[^>]*("[^"]")*[^>]*>)/im', "$1\r\n<!-- template $templateName -->", $code);
+			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
+		} elseif(stripos($code, "<html") !== false) {
+			$code = preg_replace_callback('/(.*)(<html[^>]*>)(.*)/i', function($matches) use ($templateName) {
+				if (stripos($matches[3], '<!--') === false && stripos($matches[3], '-->') !== false) {
+					// after this <html> tag there is a comment close but no comment has been opened
+					// this most likely means that this <html> tag is inside a comment
+					// we should not add a comment inside a comment (invalid html)
+					// lets append it at the end of the comment
+					// an example case for this is the html5boilerplate: <!--[if IE]><html class="ie"><![endif]-->
+					return $matches[0];
+				} else {
+					// all other cases, add the comment and return it
+					return "{$matches[1]}{$matches[2]}<!-- template $templateName -->{$matches[3]}";
+				}
+			}, $code);
+			$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->$1", $code);
+		} else {
+			$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
+				' -->\';' . "\r\n", $code);
+			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
+		}
 		return $code;
 	}
 	

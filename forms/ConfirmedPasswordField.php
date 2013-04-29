@@ -60,6 +60,13 @@ class ConfirmedPasswordField extends FormField {
 	public $showOnClickTitle;
 	
 	/**
+	 * Child fields (_Password, _ConfirmPassword)
+	 * 
+	 * @var FieldList
+	 */
+	 public $children;
+	
+	/**
 	 * @param string $name
 	 * @param string $title
 	 * @param mixed $value

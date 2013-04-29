@@ -114,6 +114,7 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 | `SS_DATABASE_SUFFIX`|   A suffix to add to the database name.|
 | `SS_DATABASE_PREFIX`|   A prefix to add to the database name.|
 | `SS_DATABASE_TIMEZONE`| Set the database timezone to something other than the system timezone.
+| `SS_DATABASE_NAME` | Set the database name. Assumes the `$database` global variable in your config is missing or empty. |
 | `SS_DATABASE_CHOOSE_NAME`| Boolean/Int.  If set, then the system will choose a default database name for you if one isn't give in the $database variable.  The database name will be "SS_" followed by the name of the folder into which you have installed SilverStripe.  If this is enabled, it means that the phpinstaller will work out of the box without the installer needing to alter any files.  This helps prevent accidental changes to the environment. If `SS_DATABASE_CHOOSE_NAME` is an integer greater than one, then an ancestor folder will be used for the  database name.  This is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build. If it's 2, the parent folder will be chosen; if it's 3 the grandparent, and so on.|
 | `SS_ENVIRONMENT_TYPE`| The environment type: dev, test or live.|
 | `SS_DEFAULT_ADMIN_USERNAME`| The username of the default admin - this is a non-database user with administrative privileges.|

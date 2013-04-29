@@ -52,7 +52,7 @@ abstract class SS_HTMLValue extends ViewableData {
 
 		// Then replace the saved attributes with their original versions
 		$res = preg_replace_callback('/__HTMLVALUE_(\d+)/', function($matches) use ($attrs) {
-			return $attrs[$matches[0]];
+			return Convert::raw2att($attrs[$matches[0]]);
 		}, $res);
 
 		return $res;

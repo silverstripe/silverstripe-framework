@@ -1535,7 +1535,7 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher */
+	/* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher? */
 	protected $match_ElseIfPart_typestack = array('ElseIfPart');
 	function match_ElseIfPart ($stack = array()) {
 		$matchrule = "ElseIfPart"; $result = $this->construct($matchrule, $matchrule, null);
@@ -1557,12 +1557,19 @@ class SSTemplateParser extends Parser {
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			if (( $subres = $this->literal( '%>' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_240 = FALSE; break; }
+			$res_239 = $result;
+			$pos_239 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
-			else { $_240 = FALSE; break; }
+			else {
+				$result = $res_239;
+				$this->pos = $pos_239;
+				unset( $res_239 );
+				unset( $pos_239 );
+			}
 			$_240 = TRUE; break;
 		}
 		while(0);
@@ -1571,7 +1578,7 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher */
+	/* ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher? */
 	protected $match_ElsePart_typestack = array('ElsePart');
 	function match_ElsePart ($stack = array()) {
 		$matchrule = "ElsePart"; $result = $this->construct($matchrule, $matchrule, null);
@@ -1585,12 +1592,19 @@ class SSTemplateParser extends Parser {
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			if (( $subres = $this->literal( '%>' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_248 = FALSE; break; }
+			$res_247 = $result;
+			$pos_247 = $this->pos;
 			$matcher = 'match_'.$this->expression($result, $stack, 'TemplateMatcher'); $key = $matcher; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
-			else { $_248 = FALSE; break; }
+			else {
+				$result = $res_247;
+				$this->pos = $pos_247;
+				unset( $res_247 );
+				unset( $pos_247 );
+			}
 			$_248 = TRUE; break;
 		}
 		while(0);
@@ -1661,14 +1675,14 @@ class SSTemplateParser extends Parser {
 	function If_ElseIfPart(&$res, $sub) {
 		$res['php'] .= 
 			'else if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
-				$sub['Template']['php'] . PHP_EOL . 
+				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
 
 	function If_ElsePart(&$res, $sub) {
 		$res['php'] .= 
 			'else { ' . PHP_EOL . 
-				$sub['Template']['php'] . PHP_EOL . 
+				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
 
@@ -4576,21 +4590,45 @@ class SSTemplateParser extends Parser {
 			// Get the result
 			$code = $result['php'];
 		}
-		
+
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
-			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE 
-			// glitches
-			if(stripos($code, "<html") !== false) {
-				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
-				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
-			} else {
-				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
-					' -->\';' . "\n", $code);
-				$code .= "\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
-			}
+			$code = $parser->includeDebuggingComments($code, $templateName);
 		}	
 		
+		return $code;
+	}
+
+	/**
+	 * @param string $code
+	 * @return string $code
+	 */
+	protected function includeDebuggingComments($code, $templateName) {
+		// If this template contains a doctype, put it right after it,
+		// if not, put it after the <html> tag to avoid IE glitches
+		if(stripos($code, "<!doctype") !== false) {
+			$code = preg_replace('/(<!doctype[^>]*("[^"]")*[^>]*>)/im', "$1\r\n<!-- template $templateName -->", $code);
+			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
+		} elseif(stripos($code, "<html") !== false) {
+			$code = preg_replace_callback('/(.*)(<html[^>]*>)(.*)/i', function($matches) use ($templateName) {
+				if (stripos($matches[3], '<!--') === false && stripos($matches[3], '-->') !== false) {
+					// after this <html> tag there is a comment close but no comment has been opened
+					// this most likely means that this <html> tag is inside a comment
+					// we should not add a comment inside a comment (invalid html)
+					// lets append it at the end of the comment
+					// an example case for this is the html5boilerplate: <!--[if IE]><html class="ie"><![endif]-->
+					return $matches[0];
+				} else {
+					// all other cases, add the comment and return it
+					return "{$matches[1]}{$matches[2]}<!-- template $templateName -->{$matches[3]}";
+				}
+			}, $code);
+			$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->$1", $code);
+		} else {
+			$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
+				' -->\';' . "\r\n", $code);
+			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
+		}
 		return $code;
 	}
 	

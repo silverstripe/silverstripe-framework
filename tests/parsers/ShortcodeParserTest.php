@@ -150,13 +150,13 @@ class ShortcodeParserTest extends SapphireTest {
 	}
 
 	public function testUnquotedArguments() {
-		$this->assertEquals('', $this->parser->parse('[test_shortcode,foo=bar,baz = buz]'));
-		$this->assertEquals(array('foo' => 'bar', 'baz' => 'buz'), $this->arguments);
+		$this->assertEquals('', $this->parser->parse('[test_shortcode,foo=bar!,baz = buz123]'));
+		$this->assertEquals(array('foo' => 'bar!', 'baz' => 'buz123'), $this->arguments);
 	}
 	
 	public function testSpacesForDelimiter() {
-		$this->assertEquals('', $this->parser->parse('[test_shortcode foo=bar baz = buz]'));
-		$this->assertEquals(array('foo' => 'bar', 'baz' => 'buz'), $this->arguments);
+		$this->assertEquals('', $this->parser->parse('[test_shortcode foo=bar! baz = buz123]'));
+		$this->assertEquals(array('foo' => 'bar!', 'baz' => 'buz123'), $this->arguments);
 	}
 
 	public function testSelfClosingTag() {

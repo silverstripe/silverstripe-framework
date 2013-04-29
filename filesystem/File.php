@@ -872,7 +872,7 @@ class File extends DataObject {
 			// TODO Merge this with Upload_Validator
 			$extension = $this->getExtension();
 			$allowed = array_map('strtolower', $this->config()->allowed_extensions);
-			if($extension && !in_array(strtolower($extension), $allowed)) {
+			if(!in_array(strtolower($extension), $allowed)) {
 				$exts =  $allowed;
 				sort($exts);
 				$message = sprintf(

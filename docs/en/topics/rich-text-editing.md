@@ -5,7 +5,9 @@
 Editing and formatting content is the bread and butter of every content management system,
 which is why SilverStripe has a tight integration with our preferred editor library, [TinyMCE](http://tinymce.com).
 On top of the base functionality, we use our own insertion dialogs to ensure
-you can effectively select and upload files.
+you can effectively select and upload files. In addition to the markup managed by TinyMCE,
+we use [shortcodes](/reference/shortcodes) to store information about inserted
+images or media elements.
 
 ## Usage
 
@@ -151,7 +153,12 @@ documentation, or browse through plugins that come with the Framework at `thirdp
 The `[api:HtmlEditorField]` API also handles inserting images and media
 files into the managed HTML content. It can be used both for referencing
 files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs),
-as well as hotlinking files from the web.
+as well as hotlinking files from the web. 
+
+We use [shortcodes](/reference/shortcodes) to store information about inserted images or media elements.
+The `[api:ShortcodeParser]` API post-processes the HTML content on rendering,
+and replaces the shortcodes accordingly. It also takes care of care of placing the
+shortcode replacements relative to its surrounding markup (e.g. left/right alignment).
 
 ## oEmbed: Embedding media through external services
 
@@ -167,6 +174,27 @@ Since these requests are performed on page rendering, they typically have a long
 a cache, append `?flush=1` to a URL.
 
 To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
+
+### Doctypes
+
+Since TinyMCE generates markup, it needs to know which doctype your documents
+will be rendered in. You can set this through the [element_format](http://www.tinymce.com/wiki.php/Configuration:element_format) configuration variable. It defaults to the stricter 'xhtml'
+setting, for example rendering self closing tags like `<br/>` instead of `<br>`.
+In case you want to adhere to HTML4 instead, use the following configuration:
+
+	:::php
+	HtmlEditorConfig::get('cms')->setOption('element_format', 'html');
+
+By default, TinyMCE and SilverStripe will generate valid HTML5 markup,
+but it will strip out HTML5 tags like `<article>` or `<figure>`.
+If you plan to use those, add them to the [valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements)
+configuration setting.
+
+Also, the `[api:SS_HTMLValue]` API underpinning the HTML processing parses the markup
+into a temporary object tree which can be traversed and modified before saving.
+The built-in parser only supports HTML4 and XHTML syntax. In order to successfully
+process HTML5 tags, please use the
+['silverstripe/html5' module](https://github.com/silverstripe/silverstripe-html5).
 
 ## Recipes
 
