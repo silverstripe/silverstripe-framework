@@ -39,7 +39,7 @@ Used in side panels and action tabs
 .cms table.ss-gridfield-table tbody { background: #FFF; }
 .cms table.ss-gridfield-table tbody tr { cursor: pointer; }
 .cms table.ss-gridfield-table tbody td { width: auto; max-width: 500px; word-wrap: break-word; }
-.cms table.ss-gridfield-table tbody td.col-buttons { width: auto; padding: 0 8px; text-align: right; white-space: nowrap; }
+.cms table.ss-gridfield-table tbody td.col-buttons { width: 1px; padding: 0 8px; text-align: right; white-space: nowrap; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; border-right: none; text-indent: -9999em; padding: 0; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 3px -4px; display: block; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #0073c1; }
@@ -72,7 +72,7 @@ Used in side panels and action tabs
 .cms table.ss-gridfield-table tr th { font-weight: bold; font-size: 12px; color: #FFF; padding: 5px; border-right: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th div.fieldgroup, .cms table.ss-gridfield-table tr th div.fieldgroup-field { width: 100%; position: relative; }
 .cms table.ss-gridfield-table tr th div.fieldgroup { min-width: 200px; padding-right: 0; }
-.cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 0; box-shadow: none; border: none; }
+.cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 49px; box-shadow: none; border: none; }
 .cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons div { width: auto; display: inline; }
 .cms table.ss-gridfield-table tr th.main { white-space: nowrap; border-top: 1px solid #a4b4bf; border-left: 1px solid #a4b4bf; color: #fff; background: #98aab6; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th.main span { text-shadow: 0px -1px 0 rgba(0, 0, 0, 0.2); padding-left: 8px; padding-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; margin-right: 8px; }

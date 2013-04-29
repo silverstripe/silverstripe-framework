@@ -165,7 +165,7 @@ $gf_grid_x:	16px;
 				// The last column (buttons) should always shrink to fit.
 				// Overwritten for IE7, which doesnt support this.			
 				&.col-buttons {
-					width: auto;
+					width: 1px;
 					padding:0 $gf_grid_x/2;
 					text-align: right;
 					white-space: nowrap;
@@ -343,7 +343,7 @@ $gf_grid_x:	16px;
 						min-width: $gf_grid_x*12.5;
 						padding-right:0;
 						&.filter-buttons{
-							min-width:0;
+							min-width:49px;
 							box-shadow: none;
 							border: none;
 							div{
