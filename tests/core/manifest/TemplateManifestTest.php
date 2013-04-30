@@ -47,6 +47,13 @@ class TemplateManifestTest extends SapphireTest {
 			'subfolder' => array(
 				'main' => "{$this->base}/module/subfolder/templates/Subfolder.ss"
 			),
+			'customthemepage' => array (
+			  'Layout' => "{$this->base}/module/templates/Layout/CustomThemePage.ss",
+			  'themes' =>
+			  array(
+			    'theme' => array('main' => "{$this->base}/themes/theme/templates/CustomThemePage.ss",)
+			  )
+			),
 			'include' => array('themes' => array(
 				'theme' => array(
 					'Includes' => "{$this->base}/themes/theme/templates/Includes/Include.ss"
@@ -66,7 +73,7 @@ class TemplateManifestTest extends SapphireTest {
 		ksort($expectTests);
 		ksort($manifest);
 		ksort($manifestTests);
-
+		
 		$this->assertEquals(
 			$expect, $manifest,
 			'All templates are correctly loaded in the manifest.'
