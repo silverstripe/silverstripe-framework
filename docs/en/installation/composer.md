@@ -66,7 +66,16 @@ Composer isn't only used to download SilverStripe CMS, it can also be used to ma
 
 	composer require silverstripe/forum:*
 
-This command has two parts.  First is `silverstripe/forum`. This is the name of the package.  You can find other packages with the following command:
+This will install the forum module in the latest compatible version.
+By default, Composer updates other existing modules (like `framework` and `cms`),
+and installs "dev" dependencies like PHPUnit. In case you don't need those dependencies,
+use the following command instead:
+
+	composer require --no-update silverstripe/forum:*
+	composer update --no-dev
+
+The `require` command has two parts. First is `silverstripe/forum`. This is the name of the package. 
+You can find other packages with the following command:
 
 	composer search silverstripe
 
@@ -84,7 +93,7 @@ Except for the control code of the Voyager space probe, every piece of code in t
 
 To get the latest updates of the modules in your project, run this command:
 
-	composer update
+	composer update --no-dev
 
 Updates to the required modules will be installed, and the `composer.lock` file will get updated with the specific commits of each of those.
 
