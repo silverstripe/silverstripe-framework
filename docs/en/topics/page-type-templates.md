@@ -137,7 +137,7 @@ To simply retrieve the parent page of the current context (if existing), use the
 ### Access to a specific Page
 
 	:::ss
-	<% loop $Page(my-page) %>...<% end_loop %>`
+	<% with $Page(my-page) %>...<% end_with %>`
 
 "Page" will return a single page from the site tree, looking it up by URL.  You can use it in the `<% loop %>` format.
 Can't be called using `$Page(my-page).Title`.
