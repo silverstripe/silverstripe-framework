@@ -1185,7 +1185,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			getExtraData: function() {
 				var width = this.find(':input[name=Width]').val(),
 					height = this.find(':input[name=Height]').val();
-				return {
+				var data = {
 					'CaptionText': this.find(':input[name=CaptionText]').val(),
 					'Url': this.find(':input[name=URL]').val(),
 					'thumbnail': this.find('.thumbnail-preview').attr('src'),
@@ -1193,6 +1193,12 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					'height' : height ? parseInt(height, 10) : null,
 					'cssclass': this.find(':input[name=CSSClass]').val()
 				};
+				this.find(':input').each(function(){
+					if($(this).hasClass('extra-data')){
+						data[$(this).attr('name')] = $(this).val();
+					}
+				});
+				return data;
 			},
 			getHTML: function() {
 				var el,
