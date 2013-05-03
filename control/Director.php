@@ -579,7 +579,7 @@ class Director implements TemplateGlobalProvider {
 			// Check for more than one leading slash without a protocol.
 				// While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
 				// and hence a potential security risk. Single leading slashes are not an issue though.
-			|| preg_match('/\s*[\/]{2,}/', $url)
+			|| preg_match('%^\s*/{2,}%', $url)
 			|| (
 				// If a colon is found, check if it's part of a valid scheme definition
 				// (meaning its not preceded by a slash).
