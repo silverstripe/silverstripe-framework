@@ -64,7 +64,7 @@ class Form extends RequestHandler {
 
 	protected $validator;
 	
-	protected $formMethod = "post";
+	protected $formMethod = "POST";
 	
 	protected static $current_action;
 	
@@ -239,6 +239,12 @@ class Form extends RequestHandler {
 	 * if the form is valid.
 	 */
 	public function httpSubmission($request) {
+		// Check that submission has arrived by the correct HTTP method
+		if ($this->formMethod != $this->request->httpMethod()) {
+			$response = Controller::curr()->getResponse();
+			$response->addHeader('Allow', $this->formMethod);
+			$this->httpError(405, _t("Form.METHOD_NOT_ALLOWED", "You must submit the form by method specified in the form."));
+		}
 		$vars = $request->requestVars();
 		if(isset($funcName)) {
 			Form::set_current_action($funcName);
@@ -526,7 +532,7 @@ class Form extends RequestHandler {
 		$this->securityTokenAdded = true;
 		
 		// add the "real" HTTP method if necessary (for PUT, DELETE and HEAD)
-		if($this->FormMethod() != $this->FormHttpMethod()) {
+		if (strtoupper($this->FormMethod()) != $this->FormHttpMethod()) {
 			$methodField = new HiddenField('_method', '', $this->FormHttpMethod());
 			$methodField->setForm($this);
 			$extraFields->push($methodField);
@@ -656,7 +662,7 @@ class Form extends RequestHandler {
 		// - forms with security tokens shouldn't be cached because security tokens expire
 		$needsCacheDisabled = false;
 		if ($this->getSecurityToken()->isEnabled()) $needsCacheDisabled = true;
-		if ($this->FormMethod() != 'get') $needsCacheDisabled = true;
+		if ($this->FormMethod() != 'GET') $needsCacheDisabled = true;
 		if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) {
 			$needsCacheDisabled = true;
 		}
@@ -783,8 +789,8 @@ class Form extends RequestHandler {
 	 * @return string Form tag compatbile HTTP method: 'get' or 'post'
 	 */
 	public function FormMethod() {
-		if(in_array($this->formMethod,array('get','post'))) {
-			return $this->formMethod;
+		if(in_array($this->formMethod,array('GET','POST'))) {
+			return strtolower($this->formMethod);
 		} else {
 			return 'post';
 		}
@@ -796,7 +802,7 @@ class Form extends RequestHandler {
 	 * @param $method string
 	 */
 	public function setFormMethod($method) {
-		$this->formMethod = strtolower($method);
+		$this->formMethod = strtoupper($method);
 		return $this;
 	}
 	
