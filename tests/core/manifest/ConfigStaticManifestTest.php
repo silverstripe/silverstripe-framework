@@ -163,4 +163,23 @@ DOC;
 		$statics = $this->parseSelf()->getStatics();
 		$this->assertNull(@$statics[__CLASS__]['static_method']);
 	}
+
+	public function testParsingShortArray() {
+		if(version_compare(PHP_VERSION, '5.4', '<')) {
+			$this->markTestSkipped('This test requires PHP 5.4 or higher');
+			return;
+		}
+
+		$parser = new SS_ConfigStaticManifest_Parser(__DIR__ . '/ConfigStaticManifestTest/ConfigStaticManifestTestMyObject.php');
+		$parser->parse();
+
+		$statics = $parser->getStatics();
+
+		$expectedValue = array(
+			'Name' => 'Varchar',
+			'Description' => 'Text',
+		);
+
+		$this->assertEquals($expectedValue, $statics['ConfigStaticManifestTestMyObject']['db']['value']);
+	}
 }

@@ -282,10 +282,9 @@ class SS_ConfigStaticManifest_Parser {
 				$type = is_array($token) ? $token[0] : $token;
 
 				// Track array nesting depth
-				if($type == T_ARRAY) {
+				if($type == T_ARRAY || $type == '[') {
 					$depth += 1;
-				}
-				else if($type == ')') {
+				} elseif($type == ')' || $type == ']') {
 					$depth -= 1;
 				}
 

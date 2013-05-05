@@ -252,7 +252,7 @@ class i18nTextCollector extends Object {
 				$inConcat = true;
 			} elseif($inTransFn && $token == ',') {
 				$inConcat = false;
-			} elseif($inTransFn && ($token == ')' || $finalTokenDueToArray)) {
+			} elseif($inTransFn && ($token == ')' || $finalTokenDueToArray || $token == '[')) {
 				// finalize definition
 				$inTransFn = false;
 				$inConcat = false;
