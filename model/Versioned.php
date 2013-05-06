@@ -147,6 +147,10 @@ class Versioned extends DataExtension {
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
 			foreach($query->getFrom() as $table => $dummy) {
+				if(!DB::getConn()->hasTable($table . '_versions')) {
+					continue;
+				}
+
 				$query->renameTable($table, $table . '_versions');
 				$query->replaceText("\"{$table}_versions\".\"ID\"", "\"{$table}_versions\".\"RecordID\"");
 				$query->replaceText("`{$table}_versions`.`ID`", "`{$table}_versions`.`RecordID`");
@@ -161,7 +165,6 @@ class Versioned extends DataExtension {
 					$query->addWhere("\"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
 				}
 			}
-
 			// Link to the version archived on that date
 			$safeDate = Convert::raw2sql($date);
 			$query->addWhere(
