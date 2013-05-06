@@ -670,7 +670,7 @@ class Security extends Controller {
 	 * @return Form Returns the lost password form
 	 */
 	public function ChangePasswordForm() {
-		return new ChangePasswordForm($this, 'ChangePasswordForm');
+        return Object::create('ChangePasswordForm', $this, 'ChangePasswordForm');
 	}
 
 	/**
