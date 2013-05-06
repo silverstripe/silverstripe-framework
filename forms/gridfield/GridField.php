@@ -670,7 +670,7 @@ class GridField extends FormField {
 		$this->setDataModel($model);
 
 		$fieldData = $this->request->requestVar($this->getName());
-		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);
+		if($fieldData && isset($fieldData['GridState'])) $this->getState(false)->setValue($fieldData['GridState']);
 		
 		foreach($this->getComponents() as $component) {
 			if(!($component instanceof GridField_URLHandler)) {
