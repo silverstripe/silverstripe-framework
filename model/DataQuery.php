@@ -329,7 +329,9 @@ class DataQuery {
 	 */
 	public function count() {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
-		return $this->getFinalisedQuery()->count("DISTINCT \"$baseClass\".\"ID\"");
+		$query = $this->getFinalisedQuery();
+		$query->setDistinct(true);
+		return $query->count("\"$baseClass\".\"ID\"");
 	}
 
 	/**
