@@ -422,6 +422,10 @@ class Image extends File {
 		}
 	}
 	
+	// html image formats
+	private static $browser_supported_image_exts = array('jpg','jpeg','png','gif');
+	// fallback format if original image format isn't supported by the browser
+	private static $default_thumbnail_ext = 'png';
 	/**
 	 * Return the filename for the cached image, given it's format name and arguments.
 	 * @param string $format The format name.
@@ -434,7 +438,15 @@ class Image extends File {
 		
 		$format = $format.implode('', $args);
 		
-		return $folder . "_resampled/$format-" . $this->Name;
+		// generate thumbnail in default_thumbnail_ext format if original file isn't supported by browser
+		if(!in_array($this->getExtension(),self::$browser_supported_image_exts)){
+			// replace extention to default thumbnail extention
+			$name = substr_replace($this->Name,self::$default_thumbnail_ext,strrpos($this->Name,'.')+1);
+		}else{
+			// use original image extention
+			$name = $this->Name;
+		}
+		return $folder . "_resampled/$format-" . $name;
 	}
 	
 	/**
