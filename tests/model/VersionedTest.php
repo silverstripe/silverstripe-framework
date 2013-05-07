@@ -5,7 +5,8 @@ class VersionedTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
 		'VersionedTest_DataObject',
-		'VersionedTest_Subclass'
+		'VersionedTest_Subclass',
+		'VersionedTest_RelatedWithoutVersion'
 	);
 	
 	protected $requiredExtensions = array(
@@ -407,6 +408,38 @@ class VersionedTest extends SapphireTest {
 			'Additional version fields returned');
 		$this->assertEquals($extraFields, array('2005', '2007', '2009'), 'Additional version fields returned');
 	}
+
+	public function testArchiveRelatedDataWithoutVersioned() {
+		SS_Datetime::set_mock_now('2009-01-01 00:00:00');
+
+		$relatedData = new VersionedTest_RelatedWithoutVersion();
+		$relatedData->Name = 'Related Data';
+		$relatedDataId = $relatedData->write();
+
+		$testData = new VersionedTest_DataObject();
+		$testData->Title = 'Test';
+		$testData->Content = 'Before Content';
+		$testData->Related()->add($relatedData);
+		$id = $testData->write();
+
+		SS_Datetime::set_mock_now('2010-01-01 00:00:00');
+		$testData->Content = 'After Content';
+		$testData->write();
+
+		$_GET['archiveDate'] = '2009-01-01 19:00:00';
+		Versioned::reading_archived_date('2009-01-01 19:00:00');
+
+		$fetchedData = VersionedTest_DataObject::get()->byId($id);
+		$this->assertEquals('Before Content', $fetchedData->Content, 'We see the correct content of the older version');
+
+		$relatedData = VersionedTest_RelatedWithoutVersion::get()->byId($relatedDataId);
+		$this->assertEquals(
+			1,
+			$relatedData->Related()->count(),
+			'We have a relation, with no version table, querying it still works'
+		);
+	}
+
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {
@@ -423,6 +456,23 @@ class VersionedTest_DataObject extends DataObject implements TestOnly {
 	private static $has_one = array(
 		'Parent' => 'VersionedTest_DataObject'
 	);
+
+	private static $many_many = array(
+		'Related' => 'VersionedTest_RelatedWithoutVersion'
+	);
+
+}
+
+class VersionedTest_RelatedWithoutVersion extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Name' => 'Varchar'
+	);
+
+	private static $belongs_many_many = array(
+		'Related' => 'VersionedTest_DataObject'
+	);
+
 }
 
 class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
