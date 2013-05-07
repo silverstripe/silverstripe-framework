@@ -327,6 +327,14 @@ _t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {good
 		"New context (this should be ignored)",
 		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
 _t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+_t('i18nTestModule.INJECTIONS5','_DOES_NOT_EXIST', "Hello {name} {greeting}. But it is late, {goodbye}",
+	["name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"]);
+_t('i18nTestModule.INJECTIONS6', "Hello {name} {greeting}. But it is late, {goodbye}",
+	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
+_t("i18nTestModule.INJECTIONS7", "Hello {name} {greeting}. But it is late, {goodbye}",
+		"New context (this should be ignored)",
+		["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]);
+_t('i18nTestModule.INJECTIONS8', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 PHP;
 
 		$collectedTranslatables = $c->collectFromCode($php, 'mymodule');
@@ -337,6 +345,11 @@ PHP;
 				"Hello {name} {greeting}. But it is late, {goodbye}"),
 			'i18nTestModule.INJECTIONS2' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
 			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}",
+				"New context (this should be ignored)"),
+			'i18nTestModule.INJECTIONS5' => array("_DOES_NOT_EXIST",
+				"Hello {name} {greeting}. But it is late, {goodbye}"),
+			'i18nTestModule.INJECTIONS6' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
+			'i18nTestModule.INJECTIONS7' => array("Hello {name} {greeting}. But it is late, {goodbye}",
 				"New context (this should be ignored)"),
 		));
 

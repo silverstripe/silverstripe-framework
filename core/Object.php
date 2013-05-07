@@ -211,7 +211,12 @@ abstract class Object {
 				}
 
 			} else {
-				if($tName == ')') {
+				if($tName == '[') {
+					// Add an empty array to the bucket
+					$bucket[] = array();
+					$bucketStack[] = &$bucket;
+					$bucket = &$bucket[sizeof($bucket)-1];
+				} elseif($tName == ')' || $tName == ']') {
 					// Pop-by-reference
 					$bucket = &$bucketStack[sizeof($bucketStack)-1];
 					array_pop($bucketStack);
