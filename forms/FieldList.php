@@ -200,6 +200,22 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
+	 * Remove multiple fields from this FieldList by Name.
+	 * The fields can also be inside a CompositeField.
+	 * 
+	 * @param array $fields The name of the field or tab
+	 */
+
+	public function removeFieldsByName($fields){
+		if(is_string($fields)){
+			user_error('FieldList::removeFieldsByName() was called with a string instead of an array of fields.', E_USER_WARNING);
+		}
+		foreach($fields as $field){
+			$this->removeByName($field);
+		}
+	}
+	
+	/**
 	 * Replace a single field with another.  Ignores dataless fields such as Tabs and TabSets
 	 *
 	 * @param string $fieldName The name of the field to replace
