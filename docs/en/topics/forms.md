@@ -7,18 +7,18 @@ and handle the actions and data from a form.
 
 A fully implemented form in SilverStripe includes a couple of classes that individually have separate concerns.
 
- * Controller - Takes care of assemble the form and recieving data from it.
+ * Controller - Takes care of assemble the form and receiving data from it.
  * Form - Holds sets of fields, actions and validators.
- * FormField  - Fields that recieves data or displays them, e.g input fields.
+ * FormField  - Fields that receive data or displays them, e.g input fields.
  * FormActions - Often submit buttons that executes actions.
- * Validators - Validates the whole form, see [Form validation](form-validation.md) topic for more information.
+ * Validators - Validate the whole form, see [Form validation](form-validation.md) topic for more information.
 
 Depending on your needs you can customize and override any of the above classes, however the defaults are often 
 sufficient.
 
 ## The Controller
 
-Forms start at the controller. Here is an simple example on how to set up a form in a controller.
+Forms start at the controller. Here is a simple example on how to set up a form in a controller.
 
 **Page.php**
 
@@ -363,6 +363,13 @@ Adds a new text field called FavouriteColour next to the Content field in the CM
 
 	:::php
 	$this->Fields()->addFieldToTab('Root.Content', new TextField('FavouriteColour'), 'Content');
+
+## Security
+
+The form must be submitted with the correct HTTP method (POST, unless
+you change it by calling `$this->setFormMethod()`). If the submission is
+with a mismatched method, the submission is rejected with status code
+405 (method not allowed).
 
 ## Related
 
