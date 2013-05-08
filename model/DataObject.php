@@ -791,6 +791,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if($relObj) {
 					$relObj->$fieldName = $v;
 					$relObj->write();
+					$relatedFieldName = $relation."ID";
+					$this->$relatedFieldName = $relObj->ID;
 					$relObj->flushCache();
 				} else {
 					user_error("Couldn't follow dot syntax '$k' on '$this->class' object", E_USER_WARNING);
