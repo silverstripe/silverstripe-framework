@@ -89,6 +89,9 @@ class MemberLoginForm extends LoginForm {
 			$fields->push(new HiddenField('BackURL', 'BackURL', $backURL));
 		}
 
+		// Reduce attack surface by enforcing POST requests
+		$this->setFormMethod('POST', true);
+
 		parent::__construct($controller, $name, $fields, $actions);
 
 		// Focus on the email input when the page is loaded
