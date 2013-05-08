@@ -197,6 +197,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		parent::init();
 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', false); 
+		Config::inst()->update('ContentNegotiator', 'enabled', false);
 		
 		// set language
 		$member = Member::currentUser();
