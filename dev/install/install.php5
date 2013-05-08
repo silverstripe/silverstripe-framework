@@ -417,7 +417,9 @@ class InstallRequirements {
 			$this->warning(array("Webserver Configuration", "URL rewriting support", "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
 		}
 
-		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
+		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver Configuration", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
+
+		$this->requirePostSupport(array("Webserver Configuration", "POST Support", 'I can\'t find $_POST, make sure POST is enabled.'));
 
 		// Check for GD support
 		if(!$this->requireFunction("imagecreatetruecolor", array("PHP Configuration", "GD2 support", "PHP must have GD version 2."))) {
@@ -469,6 +471,7 @@ class InstallRequirements {
 
 	function suggestPHPSetting($settingName, $settingValues, $testDetails) {
 		$this->testing($testDetails);
+
 		$val = ini_get($settingName);
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
@@ -478,6 +481,7 @@ class InstallRequirements {
 
 	function suggestClass($class, $testDetails) {
 		$this->testing($testDetails);
+
 		if(!class_exists($class)) {
 			$this->warning($testDetails);
 		}
@@ -485,6 +489,7 @@ class InstallRequirements {
 
 	function requireDateTimezone($testDetails) {
 		$this->testing($testDetails);
+
 		$result = ini_get('date.timezone') && in_array(ini_get('date.timezone'), timezone_identifiers_list());
 		if(!$result) {
 			$this->error($testDetails);
@@ -597,7 +602,10 @@ class InstallRequirements {
 
 	function requireFunction($funcName, $testDetails) {
 		$this->testing($testDetails);
-		if(!function_exists($funcName)) $this->error($testDetails);
+		
+		if(!function_exists($funcName)) {
+			$this->error($testDetails);
+		}
 		else return true;
 	}
 
@@ -912,17 +920,35 @@ class InstallRequirements {
 		}
 	}
 
-	function requireServerVariables($varNames, $errorMessage) {
-		//$this->testing($testDetails);
+	function requireServerVariables($varNames, $testDetails) {
+		$this->testing($testDetails);
+		$missing = array();
+		
 		foreach($varNames as $varName) {
-			if(!$_SERVER[$varName]) $missing[] = '$_SERVER[' . $varName . ']';
+			if(!isset($_SERVER[$varName]) || !$_SERVER[$varName])  {
+				$missing[] = '$_SERVER[' . $varName . ']';
+			}
 		}
-		if(!isset($missing)) {
+
+		if(!$missing) {
 			return true;
 		} else {
 			$testDetails[2] .= " (the following PHP variables are missing: " . implode(", ", $missing) . ")";
 			$this->error($testDetails);
 		}
+	}
+
+
+	function requirePostSupport($testDetails) {
+		$this->testing($testDetails);
+
+		if(!isset($_POST)) {
+			$this->error($testDetails);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	function isRunningWebServer($testDetails) {
