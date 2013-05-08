@@ -83,7 +83,7 @@ WARNING: Currently the UploadField doesn't fully support has_many relations, so 
 ### Overview
 
 The field can either be configured on an instance level through `setConfig(<key>, <value>)`,
-or globally by overriding the YAML defaults.
+or globally by overriding the YAML defaults. See the [Configuration Reference](#configuration-reference) section for possible values.
 
 Example: mysite/_config/uploadfield.yml
 
