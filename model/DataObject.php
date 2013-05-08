@@ -1123,7 +1123,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		// No changes made
-		if($this->changed) {
+		if($this->changed || $forceWrite) {
 			foreach($this->getClassAncestry() as $ancestor) {
 				if(self::has_own_table($ancestor))
 				$ancestry[] = $ancestor;
@@ -1133,13 +1133,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!$forceInsert) unset($this->changed['ID']);
 
 			$hasChanges = false;
-			foreach($this->changed as $fieldName => $changed) {
-				if($changed) {
-					$hasChanges = true;
-					break;
+			if (!$forceWrite) {
+				foreach ($this->changed as $fieldName => $changed) {
+					if ($changed) {
+						$hasChanges = true;
+						break;
+					}
 				}
 			}
-
 			if($hasChanges || $forceWrite || !$this->record['ID']) {
 					
 				// New records have their insert into the base data table done first, so that they can pass the
