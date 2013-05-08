@@ -166,7 +166,7 @@ class CsvBulkLoader extends BulkLoader {
 		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
 			if(is_string($duplicateCheck)) {
 				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
-				if(!isset($record[$fieldName]) || empty($record[$fieldName])) { //skip current duplicate check if field value is empty
+				if(!isset($record[$SQL_fieldName]) || empty($record[$SQL_fieldName])) { //skip current duplicate check if field value is empty
 					continue;
 				}
 				$SQL_fieldValue = Convert::raw2sql($record[$fieldName]);
