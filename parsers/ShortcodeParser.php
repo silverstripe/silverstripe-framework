@@ -421,7 +421,8 @@ class ShortcodeParser {
 	protected function moveMarkerToCompliantHome($node, $parent, $location) {
 		// Move before block parent
 		if($location == self::BEFORE) {
-			$parent->parentNode->insertBefore($node, $parent);
+            if (isset($parent->parentNode))
+			    $parent->parentNode->insertBefore($node, $parent);
 		}
 		// Move after block parent
 		else if($location == self::AFTER) {
