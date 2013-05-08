@@ -2325,9 +2325,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Returns true if the given field exists
-	 * in a database column on any of the objects tables,
-	 * or as a dynamic getter with get<fieldName>().
+	 * Returns true if the given field exists in a database column on any of 
+	 * the objects tables and optionally look up a dynamic getter with 
+	 * get<fieldName>().
 	 *
 	 * @param string $field Name of the field
 	 * @return boolean True if the given field exists
@@ -2635,22 +2635,31 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Traverses to a DBField referenced by relationships between data objects.
-	 * The path to the related field is specified with dot separated syntax (eg: Parent.Child.Child.FieldName)
 	 *
-	 * @param $fieldPath string
-	 * @return DBField
+	 * The path to the related field is specified with dot separated syntax 
+	 * (eg: Parent.Child.Child.FieldName).
+	 *
+	 * @param string $fieldPath
+	 *
+	 * @return mixed DBField of the field on the object or a DataList instance.
 	 */
 	public function relObject($fieldPath) {
+		$object = null;
+
 		if(strpos($fieldPath, '.') !== false) {
 			$parts = explode('.', $fieldPath);
 			$fieldName = array_pop($parts);
 
 			// Traverse dot syntax
 			$component = $this;
+
 			foreach($parts as $relation) {
 				if($component instanceof SS_List) {
-					if(method_exists($component,$relation)) $component = $component->$relation();
-					else $component = $component->relation($relation);
+					if(method_exists($component,$relation)) {
+						$component = $component->$relation();
+					} else {
+						$component = $component->relation($relation);
+					}
 				} else {
 					$component = $component->$relation();
 				}
@@ -2662,12 +2671,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$object = $this->dbObject($fieldPath);
 		}
 
-
-		if (!($object instanceof DBField) && !($object instanceof DataList)) {
-			// Todo: come up with a broader range of exception objects to describe differnet kinds of errors
-			// programatically
-			throw new Exception("Unable to traverse to related object field [$fieldPath] on [$this->class]");
-		}
 		return $object;
 	}
 
@@ -3108,21 +3111,31 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Get the default searchable fields for this object,
-	 * as defined in the $searchable_fields list. If searchable
-	 * fields are not defined on the data object, uses a default
-	 * selection of summary fields.
+	 * Get the default searchable fields for this object, as defined in the 
+	 * $searchable_fields list. If searchable fields are not defined on the 
+	 * data object, uses a default selection of summary fields.
 	 *
 	 * @return array
 	 */
 	public function searchableFields() {
 		// can have mixed format, need to make consistent in most verbose form
 		$fields = $this->stat('searchable_fields');
-		
 		$labels = $this->fieldLabels();
 		
 		// fallback to summary fields
-		if(!$fields) $fields = array_keys($this->summaryFields());
+		if(!$fields) {
+			$summaryFields = array_keys($this->summaryFields());
+			$fields = array();
+
+			// remove the custom getters as the search should not include.
+			if($summaryFields) {
+				foreach($summaryFields as $key => $name) {
+					if($this->hasDatabaseField($name) || $this->relObject($name)) {
+						$fields[] = $name;
+					}
+				}
+			}
+		}
 		
 		// we need to make sure the format is unified before
 		// augmenting fields, so extensions can apply consistent checks
