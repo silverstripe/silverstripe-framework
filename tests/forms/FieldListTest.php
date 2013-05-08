@@ -147,6 +147,26 @@ class FieldListTest extends SapphireTest {
 	}
 	
 	/**
+	 * Test removing multiple fields from a set by their names in an array.
+	 */
+	public function testRemoveFieldsByName() {
+		$fields = new FieldList();
+		
+		/* First of all, we add some fields into our FieldList object */
+		$fields->push(new TextField('Name', 'Your name'));
+		$fields->push(new TextField('Email', 'Your email'));
+		
+		/* We have 2 fields in our set now */
+		$this->assertEquals(2, $fields->Count());
+		
+		/* Then, we call up removeByName() to take it out again */
+		$fields->removeByName(array('Name', 'Email'));
+		
+		/* We have 0 fields in our set now, as we've just removed the one we added */
+		$this->assertEquals(0, $fields->Count());
+	}
+	
+	/**
 	 * Test replacing a field with another one.
 	 */
 	public function testReplaceField() {
