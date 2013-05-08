@@ -58,4 +58,13 @@ class SS_HTML4ValueTest extends SapphireTest {
 		);
 	}
 
+	public function testAttributeEscaping() {
+		$value = new SS_HTML4Value();
+
+		$value->setContent('<a href="[]"></a>');
+		$this->assertEquals('<a href="[]"></a>', $value->getContent(), "'[' character isn't escaped");
+
+		$value->setContent('<a href="&quot;"></a>');
+		$this->assertEquals('<a href="&quot;"></a>', $value->getContent(), "'\"' character is escaped");
+	}
 }

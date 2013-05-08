@@ -448,6 +448,14 @@ after')
 		$this->assertEquals('ACD', $this->render('A<% if 4 > 4 %>B<% else %>C<% end_if %>D'));
 		$this->assertEquals('ACD', $this->render('A<% if 4 < 4 %>B<% else %>C<% end_if %>D'));
 
+		// empty else_if and else tags, if this would not be supported,
+		// the output would stop after A, thereby failing the assert
+		$this->assertEquals('AD', $this->render('A<% if IsSet %><% else %><% end_if %>D'));
+		$this->assertEquals('AD', 
+			$this->render('A<% if NotSet %><% else_if IsSet %><% else %><% end_if %>D'));
+		$this->assertEquals('AD', 
+			$this->render('A<% if NotSet %><% else_if AlsoNotSet %><% else %><% end_if %>D'));
+
 		// Bare words with ending space
 		$this->assertEquals('ABC',
 			$this->render('A<% if "RawVal" == RawVal %>B<% end_if %>C'));
@@ -1054,42 +1062,97 @@ after')
 		$origEnv = Config::inst()->get('Director', 'environment_type');
 		Config::inst()->update('Director', 'environment_type', 'dev');
 		Config::inst()->update('SSViewer', 'source_file_comments', true);
-		
-		$view = new SSViewer(array('SSViewerTestCommentsFullSource'));
-		$data = new ArrayData(array());
-		
-		$result = $view->process($data);
-		$expected = '<!doctype html>
-<html><!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss -->
-	<head></head>
-	<body></body>
-<!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
-';
-		$this->assertEquals($result, $expected);
-		
-		$view = new SSViewer(array('SSViewerTestCommentsPartialSource'));
-		$data = new ArrayData(array());
-		
-		$result = $view->process($data);
-		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss -->'
-			. '<div class=\'typography\'></div><!-- end template ' . FRAMEWORK_PATH
-			. '/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
-		$this->assertEquals($result, $expected);
-		
-		$view = new SSViewer(array('SSViewerTestCommentsWithInclude'));
-		$data = new ArrayData(array());
-		
-		$result = $view->process($data);
-		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss -->'
-			. '<div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template '
-			. FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template '
-			. FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss -->'
-			. '<!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . FRAMEWORK_PATH 
-			. '/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
-		$this->assertEquals($result, $expected);
-
+	   $f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
+		$templates = array(
+			array(
+				'name' => 'SSViewerTestCommentsFullSource',
+				'expected' => ""
+					. "<!doctype html>"
+					. "<!-- template $f/SSViewerTestCommentsFullSource.ss -->"
+					. "<html>"
+					. "\t<head></head>"
+					. "\t<body></body>"
+					. "</html>"
+					. "<!-- end template $f/SSViewerTestCommentsFullSource.ss -->",
+			),
+			array(
+				'name' => 'SSViewerTestCommentsFullSourceHTML4Doctype',
+				'expected' => ""
+					. "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\t\t\"http://www.w3.org/TR/html4/strict.dtd\">"
+					. "<!-- template $f/SSViewerTestCommentsFullSourceHTML4Doctype.ss -->"
+					. "<html>"
+					. "\t<head></head>"
+					. "\t<body></body>"
+					. "</html>"
+					. "<!-- end template $f/SSViewerTestCommentsFullSourceHTML4Doctype.ss -->",
+			),
+			array(
+				'name' => 'SSViewerTestCommentsFullSourceNoDoctype',
+				'expected' => ""
+					. "<html><!-- template $f/SSViewerTestCommentsFullSourceNoDoctype.ss -->"
+					. "\t<head></head>"
+					. "\t<body></body>"
+					. "<!-- end template $f/SSViewerTestCommentsFullSourceNoDoctype.ss --></html>",
+			),
+			array(
+				'name' => 'SSViewerTestCommentsFullSourceIfIE',
+				'expected' => ""
+					. "<!doctype html>"
+					. "<!-- template $f/SSViewerTestCommentsFullSourceIfIE.ss -->"
+					. "<!--[if lte IE 8]> <html class='old-ie'> <![endif]-->"
+					. "<!--[if gt IE 8]> <html class='new-ie'> <![endif]-->"
+					. "<!--[if !IE]><!--> <html class='no-ie'> <!--<![endif]-->"
+					. "\t<head></head>"
+					. "\t<body></body>"
+					. "</html>"
+					. "<!-- end template $f/SSViewerTestCommentsFullSourceIfIE.ss -->",
+			),
+			array(
+				'name' => 'SSViewerTestCommentsFullSourceIfIENoDoctype',
+				'expected' => ""
+					. "<!--[if lte IE 8]> <html class='old-ie'> <![endif]-->"
+					. "<!--[if gt IE 8]> <html class='new-ie'> <![endif]-->"
+					. "<!--[if !IE]><!--> <html class='no-ie'>"
+					. "<!-- template $f/SSViewerTestCommentsFullSourceIfIENoDoctype.ss -->"
+					. " <!--<![endif]-->"
+					. "\t<head></head>"
+					. "\t<body></body>"
+					. "<!-- end template $f/SSViewerTestCommentsFullSourceIfIENoDoctype.ss --></html>",
+			),
+			array(
+				'name' => 'SSViewerTestCommentsPartialSource',
+				'expected' =>
+				"<!-- template $f/SSViewerTestCommentsPartialSource.ss -->"
+					. "<div class='typography'></div>"
+					. "<!-- end template $f/SSViewerTestCommentsPartialSource.ss -->",
+			),
+			array(
+				'name' => 'SSViewerTestCommentsWithInclude',
+				'expected' =>
+				"<!-- template $f/SSViewerTestCommentsWithInclude.ss -->"
+					. "<div class='typography'>"
+					. "<!-- include 'SSViewerTestCommentsInclude' -->"
+					. "<!-- template $f/SSViewerTestCommentsInclude.ss -->"
+					. "Included"
+					. "<!-- end template $f/SSViewerTestCommentsInclude.ss -->"
+					. "<!-- end include 'SSViewerTestCommentsInclude' -->"
+					. "</div>"
+					. "<!-- end template $f/SSViewerTestCommentsWithInclude.ss -->",
+			),
+		);
+		foreach ($templates as $template) {
+			$this->_renderWithSourceFileComments($template['name'], $template['expected']);
+		}
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		Config::inst()->update('Director', 'environment_type', $origEnv);
+	}
+	private function _renderWithSourceFileComments($name, $expected) {
+		$viewer = new SSViewer(array($name));
+		$data = new ArrayData(array());
+		$result = $viewer->process($data);
+		$expected = str_replace(array("\r", "\n"), '', $expected);
+		$result = str_replace(array("\r", "\n"), '', $result);
+		$this->assertEquals($result, $expected);
 	}
 
 	public function testLoopIteratorIterator() {

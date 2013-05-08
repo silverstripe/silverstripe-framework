@@ -164,7 +164,7 @@ class Form extends RequestHandler {
 			throw new InvalidArgumentException('$actions must be a valid FieldList instance');
 		}
 		if($validator && !$validator instanceof Validator) {
-			throw new InvalidArgumentException('$validator must be a Valdidator instance');
+			throw new InvalidArgumentException('$validator must be a Validator instance');
 		}
 
 		$fields->setForm($this);
@@ -556,7 +556,7 @@ class Form extends RequestHandler {
 	 * @return FieldList
 	 */
 	public function HiddenFields() {
-		return $this->fields->HiddenFields();
+		return $this->Fields()->HiddenFields();
 	}
 
 	/**
@@ -564,7 +564,7 @@ class Form extends RequestHandler {
 	 * Useful when making your own simplified form layouts.
 	 */
 	public function VisibleFields() {
-		return $this->fields->VisibleFields();
+		return $this->Fields()->VisibleFields();
 	}
 	
 	/**

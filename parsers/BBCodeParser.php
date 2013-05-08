@@ -182,7 +182,7 @@ class BBCodeParser extends TextParser {
 		$this->content = preg_replace("/\n\s*\n/", "</p><p>", $this->content);
 		$this->content = str_replace("\n", "<br />", $this->content);
 				
-		if(BBCodeParser::smiliesAllowed()) {
+		if($this->config()->allow_smilies) {
 			$smilies = array(
 				'#(?<!\w):D(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/grin.gif'> ", // :D
 				'#(?<!\w):\)(?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/smile.gif'> ", // :)

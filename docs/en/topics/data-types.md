@@ -13,12 +13,12 @@ sentence in a longer piece of text.
 *  `[api:Date]`: A date field
 *  `[api:Decimal]`: A decimal number.
 *  `[api:Enum]`: An enumeration of a set of strings
-*  `[api:HTMLText]`: A variable-length string of up to 2 megabytes, designed to store HTML
+*  `[api:HTMLText]`: A variable-length string of up to 2MB, designed to store HTML
 *  `[api:HTMLVarchar]`: A variable-length string of up to 255 characters, designed to store HTML
 *  `[api:Int]`: An integer field.
 *  `[api:Percentage]`: A decimal number between 0 and 1 that represents a percentage.
 *  `[api:SS_Datetime]`: A date / time field
-*  `[api:Text]`: A variable-length string of up to 2 megabytes, designed to store raw text
+*  `[api:Text]`: A variable-length string of up to 2MB, designed to store raw text
 *  `[api:Time]`: A time field
 *  `[api:Varchar]`: A variable-length string of up to 255 characters, designed to store raw text
 
@@ -83,12 +83,15 @@ Example: Flagging an object of type `MyObject` (see above) if it's date is in th
 
 ## Casting HTML Text
 
-The database field types `[api:HTMLVarchar]` and `[api:Varchar]` are exactly the same in the database.  However, the 
-templating engine knows to escape the `[api:Varchar]` field and not the `[api:HTMLVarchar]` field.  So, it's important you
-use the right field if you don't want to be putting $FieldType.XML everywhere.
+The database field types `[api:HTMLVarchar]`/`[api:HTMLText]` and `[api:Varchar]`/`[api:Text]` 
+are exactly the same in the database.  However, the  templating engine knows to escape 
+fields without the `HTML` prefix automatically in templates,
+to prevent them from rendering HTML interpreted by browsers.
+This escaping prevents attacks like CSRF or XSS (see "[security](/topics/security)"),
+which is important if these fields store user-provided data.
 
-If you're going to put HTML content into the field, please use the field type with the HTML prefix.  Otherwise, you're
-going to risk double-escaping your data, forgetting to escape your data, and generally creating a confusing situation.
+You can disable this auto-escaping by using the `$MyField.RAW` escaping hints,
+or explicitly request escaping of HTML content via `$MyHtmlField.XML`.
 
 ## Related
 

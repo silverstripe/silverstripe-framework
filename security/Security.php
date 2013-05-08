@@ -809,7 +809,7 @@ class Security extends Controller {
 	public static function set_password_encryption_algorithm($algorithm) {
 		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
 		
-		self::config()->encryption_algorithm = $algorithm;
+		self::config()->password_encryption_algorithm = $algorithm;
 	}
 	
 	/**
@@ -818,7 +818,7 @@ class Security extends Controller {
 	 */
 	public static function get_password_encryption_algorithm() {
 		Deprecation::notice('3.2', 'Use the "Security.password_encryption_algorithm" config setting instead');
-		return self::config()->encryption_algorithm;
+		return self::config()->password_encryption_algorithm;
 	}
 
 	/**
