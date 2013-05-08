@@ -240,42 +240,26 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		
 		$width = round($width);
 		$height = round($height);
-		$geometry = $this->getImageGeometry();
+		$geo = $this->getImageGeometry();
 		
 		// Check that a resize is actually necessary.
-		if ($width == $geometry["width"] && $height == $geometry["height"]) {
+		if ($width == $geo["width"] && $height == $geo["height"]) {
 			return $this;
+		}
+		
+		if(!$backgroundColor){
+			$backgroundColor = new ImagickPixel('transparent');
 		}
 		
 		$new = clone $this;
 		$new->setBackgroundColor($backgroundColor);
 		
-		$destAR = $width / $height;
-		if ($geometry["width"] > 0 && $geometry["height"] > 0) {
-			// We can't divide by zero theres something wrong.
-			
-			$srcAR = $this->width / $this->height;
-		
-			// Destination narrower than the source
-			if($destAR < $srcAR) {
-				$srcY = 0;
-				$srcHeight = $this->height;
-				
-				$srcWidth = round( $this->height * $destAR );
-				$srcX = round( ($this->width - $srcWidth) / 2 );
-			
-			// Destination shorter than the source
-			} else {
-				$srcX = 0;
-				$srcWidth = $this->width;
-				
-				$srcHeight = round( $this->width / $destAR );
-				$srcY = round( ($this->height - $srcHeight) / 2 );
-			}
-		
-			$new->extentImage($width, $height, $destX, $destY);
+		if(($geo['width']/$width) < ($geo['height']/$height)){
+			$new->cropImage($geo['width'], floor($height*$geo['width']/$width), 0, (($geo['height']-($height*$geo['width']/$width))/2));
+		}else{
+		    $new->cropImage(ceil($width*$geo['height']/$height), $geo['height'], (($geo['width']-($width*$geo['height']/$height))/2), 0);
 		}
-		
+		$new->ThumbnailImage($width,$height,true);
 		return $new;
 	}
 }
