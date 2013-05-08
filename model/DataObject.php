@@ -772,10 +772,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					// no support for has_many or many_many relationships,
 					// as the updater wouldn't know which object to write to (or create)
 					if($relObj->$relation() instanceof DataObject) {
+						$parentObj = $relObj;
 						$relObj = $relObj->$relation();
-						
 						// If the intermediate relationship objects have been created, then write them
-						if($i<sizeof($relation)-1 && !$relObj->ID) $relObj->write();
+						if($i<sizeof($relation)-1 && !$relObj->ID || (!$relObj->ID && $parentObj != $this)) {
+							$relObj->write();
+							$relatedFieldName = $relation."ID";
+							$parentObj->$relatedFieldName = $relObj->ID;
+							$parentObj->write();
+						}
 					} else {
 						user_error(
 							"DataObject::update(): Can't traverse relationship '$relation'," .  
@@ -791,6 +796,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if($relObj) {
 					$relObj->$fieldName = $v;
 					$relObj->write();
+					$relatedFieldName = $relation."ID";
+					$this->$relatedFieldName = $relObj->ID;
 					$relObj->flushCache();
 				} else {
 					user_error("Couldn't follow dot syntax '$k' on '$this->class' object", E_USER_WARNING);
