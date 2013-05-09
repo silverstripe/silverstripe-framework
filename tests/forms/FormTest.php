@@ -330,6 +330,24 @@ class FormTest extends FunctionalTest {
 		);
 		$this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
 	}
+
+	public function testStrictFormMethodChecking() {
+		$response = $this->get('FormTest_ControllerWithStrictPostCheck');
+		$response = $this->get(
+			'FormTest_ControllerWithStrictPostCheck/Form/?Email=test@test.com&action_doSubmit=1'
+		);
+		$this->assertEquals(405, $response->getStatusCode(), 'Submission fails with wrong method');
+
+		$response = $this->get('FormTest_ControllerWithStrictPostCheck');
+		$response = $this->post(
+			'FormTest_ControllerWithStrictPostCheck/Form',
+			array(
+				'Email' => 'test@test.com',
+				'action_doSubmit' => 1
+			)
+		);
+		$this->assertEquals(200, $response->getStatusCode(), 'Submission succeeds with correct method');
+	}
 	
 	public function testEnableSecurityToken() {
 		SecurityToken::disable();
@@ -468,25 +486,8 @@ class FormTest_Controller extends Controller implements TestOnly {
 				'SomeRequiredField'
 			)
 		);
-
-		// Disable CSRF protection for easier form submission handling
-		$form->disableSecurityToken();
+		$form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
 		
-		return $form;
-	}
-	
-	public function FormWithSecurityToken() {
-		$form = new Form(
-			$this,
-			'FormWithSecurityToken',
-			new FieldList(
-				new EmailField('Email')
-			),
-			new FieldList(
-				new FormAction('doSubmit')
-			)
-		);
-
 		return $form;
 	}
 	
@@ -533,12 +534,40 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 		return $this->redirectBack();
 	}
 
-	public function getViewer($action = null) {
-		return new SSViewer('BlankPage');
-	}
 }
 
-Config::inst()->update('Director', 'rules', array(
-	'FormTest_Controller' => 'FormTest_Controller'
-));
+class FormTest_ControllerWithStrictPostCheck extends Controller implements TestOnly {
+	protected $template = 'BlankPage';
+	
+	public function Link($action = null) {
+		return Controller::join_links(
+			'FormTest_ControllerWithStrictPostCheck', 
+			$this->request->latestParam('Action'),
+			$this->request->latestParam('ID'), 
+			$action
+		);
+	}
+	
+	public function Form() {
+		$form = new Form(
+			$this,
+			'Form',
+			new FieldList(
+				new EmailField('Email')
+			),
+			new FieldList(
+				new FormAction('doSubmit')
+			)
+		);
+		$form->setFormMethod('POST');
+		$form->setStrictFormMethodCheck(true);
+		$form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
 
+		return $form;
+	}
+	
+	public function doSubmit($data, $form, $request) {
+		$form->sessionMessage('Test save was successful', 'good');
+		return $this->redirectBack();
+	}
+}
