@@ -181,15 +181,23 @@ class DevelopmentAdmin extends Controller {
 		$generator = Injector::inst()->create('RandomGenerator');
 		$token = $generator->randomToken('sha1');
 
-		echo <<<TXT
-
-Token: $token
-
-Please add this to your mysite/_config.php with the following code:
-Config::inst()->update('Security', 'token', '$token');
-
-
-TXT;
+		$path = $this->request->getVar('path');
+		if($path) {
+			if(file_exists(BASE_PATH . '/' . $path)) {
+				echo sprintf(
+					"Configuration file '%s' exists, can't merge. Please choose a new file.\n",
+					BASE_PATH . '/' . $path
+				);
+				exit(1);
+			}
+			$yml = "Security:\n  token: $token";
+			file_put_contents(BASE_PATH . '/' . $path, $yml);
+			echo "Configured token in $path\n";
+		} else {
+			echo "Generated new token. Please add the following code to your YAML configuration:\n\n";
+			echo "Security:\n";
+			echo "  token: $token\n";
+		}
 	}
 
 	public function reset() {
