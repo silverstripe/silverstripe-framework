@@ -64,7 +64,7 @@ class Form extends RequestHandler {
 
 	protected $validator;
 	
-	protected $formMethod = "post";
+	protected $formMethod = "POST";
 
 	/**
 	 * @var boolean
@@ -248,14 +248,14 @@ class Form extends RequestHandler {
 		if($this->strictFormMethodCheck) {
 			
 			// Throws an error if the method is bad...
-			if($this->formMethod != strtolower($request->httpMethod())) {
+			if($this->formMethod != $request->httpMethod()) {
 				$response = Controller::curr()->getResponse();
 				$response->addHeader('Allow', $this->formMethod);
 				$this->httpError(405, _t("Form.BAD_METHOD", "This form requires a ".$this->formMethod." submission"));
 			}
 
-			// ...and only uses the vairables corresponding to that method type
-			$vars = $this->formMethod == 'get' ? $request->getVars() : $request->postVars();
+			// ...and only uses the variables corresponding to that method type
+			$vars = $this->formMethod == 'GET' ? $request->getVars() : $request->postVars();
 		} else {
 			$vars = $request->requestVars();
 		}
@@ -546,7 +546,7 @@ class Form extends RequestHandler {
 		$this->securityTokenAdded = true;
 		
 		// add the "real" HTTP method if necessary (for PUT, DELETE and HEAD)
-		if($this->FormMethod() != $this->FormHttpMethod()) {
+		if (strtoupper($this->FormMethod()) != $this->FormHttpMethod()) {
 			$methodField = new HiddenField('_method', '', $this->FormHttpMethod());
 			$methodField->setForm($this);
 			$extraFields->push($methodField);
@@ -676,7 +676,7 @@ class Form extends RequestHandler {
 		// - forms with security tokens shouldn't be cached because security tokens expire
 		$needsCacheDisabled = false;
 		if ($this->getSecurityToken()->isEnabled()) $needsCacheDisabled = true;
-		if ($this->FormMethod() != 'get') $needsCacheDisabled = true;
+		if ($this->FormMethod() != 'GET') $needsCacheDisabled = true;
 		if (!($this->validator instanceof RequiredFields) || count($this->validator->getRequired())) {
 			$needsCacheDisabled = true;
 		}
@@ -692,7 +692,12 @@ class Form extends RequestHandler {
 		// Remove excluded
 		if($exclude) $attrs = array_diff_key($attrs, array_flip($exclude));
 
-		// Create markkup
+		// Prepare HTML-friendly 'method' attribute (lower-case)
+		if (isset($attrs['method'])) {
+			$attrs['method'] = strtolower($attrs['method']);
+		}
+
+		// Create markup
 		$parts = array();
 		foreach($attrs as $name => $value) {
 			$parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
@@ -800,13 +805,13 @@ class Form extends RequestHandler {
 	 * Returns the form method to be used in the <form> tag.
 	 * See {@link FormHttpMethod()} to get the "real" method.
 	 * 
-	 * @return string Form tag compatbile HTTP method: 'get' or 'post'
+	 * @return string Form HTTP method restricted to 'GET' or 'POST'
 	 */
 	public function FormMethod() {
-		if(in_array($this->formMethod,array('get','post'))) {
+		if(in_array($this->formMethod,array('GET','POST'))) {
 			return $this->formMethod;
 		} else {
-			return 'post';
+			return 'POST';
 		}
 	}
 	
@@ -817,7 +822,7 @@ class Form extends RequestHandler {
 	 * @param $strict If non-null, pass value to {@link setStrictFormMethodCheck()}.
 	 */
 	public function setFormMethod($method, $strict = null) {
-		$this->formMethod = strtolower($method);
+		$this->formMethod = strtoupper($method);
 		if($strict !== null) $this->setStrictFormMethodCheck($strict);
 		return $this;
 	}
