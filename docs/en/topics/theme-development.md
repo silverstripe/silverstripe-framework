@@ -72,9 +72,9 @@ our theme in action. The code for mine is below.
 	  </div>
 	 
 	  <div id="Navigation">
-	    <% if Menu(1) %>
+	    <% if $Menu(1) %>
 	    <ul>
-	      <% loop Menu(1) %>	  
+	      <% loop $Menu(1) %>	  
 	        <li><a href="$Link" title="Go to the $Title page" class="$LinkingMode">$MenuTitle</a></li>
 	      <% end_loop %>
 	    </ul>
@@ -182,9 +182,9 @@ Next is a division for the main navigation. This may contain something like:
 
 	:::ss
 	<div id="Navigation">
-	  <% if Menu(1) %>
+	  <% if $Menu(1) %>
 	  <ul>
-	    <% loop Menu(1) %>	  
+	    <% loop $Menu(1) %>	  
 	      <li><a href="$Link" title="Go to the $Title page" class="$LinkingMode">$MenuTitle</a></li>
 	    <% end_loop %>
 	 </ul>
@@ -198,8 +198,8 @@ Before stepping into a loop it's good practise to check if it exists first. This
 important in manipulating SilverStripe templates, but in any programming language!
 
 	:::ss
-	<% if MyFunction %>
-	  <% loop MyFunction %>
+	<% if $MyFunction %>
+	  <% loop $MyFunction %>
 	    $Title
 	  <% end_loop %>
 	<% end_if %>

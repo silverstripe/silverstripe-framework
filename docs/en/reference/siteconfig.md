@@ -15,7 +15,7 @@ You can access `[api:SiteConfig]` options from any SS template by using the func
 	
 	// or 
 	
-	<% loop SiteConfig %>
+	<% loop $SiteConfig %>
 	$Title $AnotherField
 	<% end_loop %>
 

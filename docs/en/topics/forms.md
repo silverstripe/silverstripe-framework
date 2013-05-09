@@ -264,7 +264,7 @@ basic customisation:
 
 	:::ss
 	<form $FormAttributes>
-		<% if Message %>
+		<% if $Message %>
 			<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>
 			<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
@@ -284,9 +284,9 @@ basic customisation:
 			$Fields.dataFieldByName(SecurityID)
 		</fieldset>
 		
-		<% if Actions %>
+		<% if $Actions %>
 		<div class="Actions">
-			<% loop Actions %>$Field<% end_loop %>
+			<% loop $Actions %>$Field<% end_loop %>
 		</div>
 		<% end_if %>
 	</form>
@@ -297,7 +297,7 @@ for the type of field. Pass in the name of the field as the first parameter, as 
 template.
 
 To find more methods, have a look at the `[api:Form]` class and `[api:FieldList]` class as there is a lot of different 
-methods of customising the form templates. An example is that you could use `<% loop Fields %>` instead of specifying 
+methods of customising the form templates. An example is that you could use `<% loop $Fields %>` instead of specifying 
 each field manually, as we've done above.
 
 ### Custom form field templates

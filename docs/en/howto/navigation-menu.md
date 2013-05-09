@@ -9,7 +9,7 @@ located in `themes/<mytheme>/templates/Page.ss`.
 
     :::ss
     <ul> 
-    	<% loop Menu(1) %>	  
+    	<% loop $Menu(1) %>	  
     	<li>
           <a href="$Link" title="Go to the $Title page" class="$LinkingMode">
            <span>$MenuTitle</span>

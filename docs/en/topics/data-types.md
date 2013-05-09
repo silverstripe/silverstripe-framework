@@ -79,7 +79,7 @@ In templates, casting helpers are available without the need for an `obj()` call
 Example: Flagging an object of type `MyObject` (see above) if it's date is in the past.
 	
 	:::ss
-	<% if MyObjectInstance.MyDate.InPast %>Outdated!<% end_if %>
+	<% if $MyObjectInstance.MyDate.InPast %>Outdated!<% end_if %>
 
 ## Casting HTML Text
 

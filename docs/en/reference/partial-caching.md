@@ -215,7 +215,7 @@ Failing example:
 	:::ss
 	<% cached LastEdited %>
 	
-	  <% loop Children %>
+	  <% loop $Children %>
 	    <% cached LastEdited %>
 	      $Name
 	    <% end_cached %>
@@ -231,7 +231,7 @@ Can be re-written as:
 	<% cached LastEdited %>
 	
 	  <% cached Children.max(LastEdited) %>
-	    <% loop Children %>
+	    <% loop $Children %>
 	      $Name
 	    <% end_loop %>
 	  <% end_cached %>

@@ -427,7 +427,7 @@ Put code into the classes in the following order (where applicable).
  *  Commonly used methods like `getCMSFields()`
  *  Accessor methods (`getMyField()` and `setMyField()`)
  *  Controller action methods
- *  Template data-access methods (methods that will be called by a `$MethodName` or `<% loop MethodName %>` construct in a template somewhere)
+ *  Template data-access methods (methods that will be called by a `$MethodName` or `<% loop $MethodName %>` construct in a template somewhere)
  *  Object methods
 
 ### SQL Format

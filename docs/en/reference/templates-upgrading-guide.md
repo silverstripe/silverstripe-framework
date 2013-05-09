@@ -4,9 +4,9 @@ These are the main changes to the SiverStripe 3 template language.
 
 ## Control blocks: Loops vs. Scope
 
-The `<% control var %>...<% end_control %>` in SilverStripe prior to version 3 has two different meanings. Firstly, if the control variable is a collection (e.g. DataList), then `<% control %>` iterates over that set. If it's a non-iteratable object, however, `<% control %>` introduces a new scope, which is used to render the inner template code. This dual-use is confusing to some people, and doesn't allow a collection of objects to be used as a scope.
+The `<% control $var %>...<% end_control %>` in SilverStripe prior to version 3 has two different meanings. Firstly, if the control variable is a collection (e.g. DataList), then `<% control %>` iterates over that set. If it's a non-iteratable object, however, `<% control %>` introduces a new scope, which is used to render the inner template code. This dual-use is confusing to some people, and doesn't allow a collection of objects to be used as a scope.
 
-In SilverStripe 3, the first usage (iteration) is replaced by `<% loop var %>`. The second usage (scoping) is replaced by `<% with var %>`
+In SilverStripe 3, the first usage (iteration) is replaced by `<% loop $var %>`. The second usage (scoping) is replaced by `<% with $var %>`
 
 ## Literals in Expressions
 

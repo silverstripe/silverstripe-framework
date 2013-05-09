@@ -36,7 +36,7 @@ The first step is to simply list the objects in the template:
 
 	:::ss
 	<ul>
-		<% loop PaginatedPages %>
+		<% loop $PaginatedPages %>
 			<li><a href="$Link">$Title</a></li>
 		<% end_loop %>
 	</ul>
@@ -45,22 +45,22 @@ By default this will display 10 pages at a time. The next step is to add paginat
 controls below this so the user can switch between pages:
 
 	:::ss
-	<% if PaginatedPages.MoreThanOnePage %>
-		<% if PaginatedPages.NotFirstPage %>
+	<% if $PaginatedPages.MoreThanOnePage %>
+		<% if $PaginatedPages.NotFirstPage %>
 			<a class="prev" href="$PaginatedPages.PrevLink">Prev</a>
 		<% end_if %>
-		<% loop PaginatedPages.Pages %>
-			<% if CurrentBool %>
+		<% loop $PaginatedPages.Pages %>
+			<% if $CurrentBool %>
 				$PageNum
 			<% else %>
-				<% if Link %>
+				<% if $Link %>
 					<a href="$Link">$PageNum</a>
 				<% else %>
 					...
 				<% end_if %>
 			<% end_if %>
 			<% end_loop %>
-		<% if PaginatedPages.NotLastPage %>
+		<% if $PaginatedPages.NotLastPage %>
 			<a class="next" href="$PaginatedPages.NextLink">Next</a>
 		<% end_if %>
 	<% end_if %>
