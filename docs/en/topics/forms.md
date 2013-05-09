@@ -339,6 +339,14 @@ or set on a form field instance via anyone of these methods:
 SilverStripe tries to protect users against *Cross-Site Request Forgery (CSRF)* by adding a hidden *SecurityID*
 parameter to each form. See [secure-development](/topics/security) for details.
 
+In addition, you should limit forms to the intended HTTP verb (mostly `GET` or `POST`)
+to further reduce attack surface, by using `[api:Form->setStrictFormMethodCheck()]`.
+
+	:::php
+	$myForm->setFormMethod('POST');
+	$myForm->setStrictFormMethodCheck(true);
+	$myForm->setFormMethod('POST', true); // alternative short notation
+
 ### Remove existing fields
 
 If you want to remove certain fields from your subclass:
