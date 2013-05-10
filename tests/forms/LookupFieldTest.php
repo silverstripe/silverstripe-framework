@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
@@ -79,5 +80,35 @@ class LookupFieldTest extends SapphireTest {
 			$f->Field()
 		);
 	}
-	
+
+	public function testWithMultiDimensionalSource() {
+		$choices = array(
+			"Non-vegetarian" => array(
+				0 => 'Carnivore',
+			),
+			"Vegetarian" => array(
+				3 => 'Carrots', 
+			),
+			"Other" => array(
+				9 => 'Vegan'
+			)
+		);
+
+		$f = new LookupField('test', 'test', $choices);
+		$f->setValue(3);
+
+		$this->assertEquals(
+			'<span class="readonly" id="test">Carrots</span><input type="hidden" name="test" value="3" />', 
+			$f->Field()
+		);
+
+		$f->setValue(array(
+			3, 9
+		));
+
+		$this->assertEquals(
+			'<span class="readonly" id="test">Carrots, Vegan</span><input type="hidden" name="test" value="3, 9" />', 
+			$f->Field()
+		);
+	}
 }
