@@ -95,6 +95,12 @@ class ConfirmedPasswordField extends FormField {
 		if($showOnClick) {
 			$this->children->push(new HiddenField("{$name}[_PasswordFieldVisible]"));
 		}
+
+		// disable auto complete
+		foreach($this->children as $child) {
+			$child->setAttribute('autocomplete', 'off');
+		}
+
 		$this->showOnClick = $showOnClick;
 		
 		// we have labels for the subfields
@@ -136,11 +142,13 @@ class ConfirmedPasswordField extends FormField {
 		foreach($this->children as $field) {
 			$field->setDisabled($this->isDisabled()); 
 			$field->setReadonly($this->isReadonly());
+
 			if(count($this->attributes)) {
 				foreach($this->attributes as $name => $value) {
 					$field->setAttribute($name, $value);
 				}
 			}
+
 			$content .= $field->FieldHolder();
 		}
 
