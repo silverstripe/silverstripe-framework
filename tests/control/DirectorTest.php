@@ -9,6 +9,8 @@ class DirectorTest extends SapphireTest {
 
 	protected static $originalRequestURI;
 
+	protected $originalProtocolHeaders = array();
+
 	public function setUp() {
 		parent::setUp();
 
@@ -24,6 +26,16 @@ class DirectorTest extends SapphireTest {
 				'Locale' => 'en_NZ'
 			)
 		));
+
+		$headers = array(
+			'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
+		);
+
+		foreach($headers as $header) {
+			if(isset($_SERVER[$header])) {
+				$this->originalProtocolHeaders[$header] = $_SERVER[$header];
+			}
+		}
 	}
 	
 	public function tearDown() {
@@ -31,7 +43,13 @@ class DirectorTest extends SapphireTest {
 		
 		// Reinstate the original REQUEST_URI after it was modified by some tests
 		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
-		
+
+		if($this->originalProtocolHeaders) {
+			foreach($this->originalProtocolHeaders as $header => $value) {
+				$_SERVER[$header] = $value;
+			}
+		}
+
 		parent::tearDown();
 	}
 	
@@ -285,6 +303,43 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals(404, Director::test('no-route')->getStatusCode());
 	}
 
+	public function testIsHttps() {
+		// nothing available
+		$headers = array(
+			'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
+		);
+
+		foreach($headers as $header) {
+			if(isset($_SERVER[$header])) {
+				unset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']);
+			}
+		}
+
+		$this->assertFalse(Director::is_https());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'https';
+		$this->assertTrue(Director::is_https());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'http';
+		$this->assertFalse(Director::is_https());
+
+		$_SERVER['HTTP_X_FORWARDED_PROTOCOL'] = 'ftp';
+		$this->assertFalse(Director::is_https());
+
+		// https via HTTPS
+		$_SERVER['HTTPS'] = 'true';
+		$this->assertTrue(Director::is_https());
+
+		$_SERVER['HTTPS'] = '1';
+		$this->assertTrue(Director::is_https());
+
+		$_SERVER['HTTPS'] = 'off';
+		$this->assertFalse(Director::is_https());
+
+		// https via SSL
+		$_SERVER['SSL'] = '';
+		$this->assertTrue(Director::is_https());
+	}
 }
 
 class DirectorTestRequest_Controller extends Controller implements TestOnly {

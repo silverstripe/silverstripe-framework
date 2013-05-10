@@ -418,33 +418,63 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Return the current protocol that the site is running under 
+	 * Return the current protocol that the site is running under.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public static function protocol() {
-		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])&&strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])=='https') {
-			return "https://";
+		return (self::is_https()) ? 'https://' : 'http://';
+	}
+
+	/**
+	 * Return whether the site is running as under HTTPS.
+	 *
+	 * @return boolean
+	 */
+	public static function is_https() {
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) { 
+			if(strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') {
+				return true;
+			}
 		}
-		return (isset($_SERVER['SSL']) || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) 
-			? 'https://' : 'http://';
+
+		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
+			return true;
+		}
+		else if(isset($_SERVER['SSL'])) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
 	 * Returns the root URL for the site.
-	 * It will be automatically calculated unless it is overridden with {@link setBaseURL()}.
+	 *
+	 * It will be automatically calculated unless it is overridden with 
+	 * {@link setBaseURL()}.
+	 *
+	 * @return string
 	 */
 	public static function baseURL() {
 		$alternate = Config::inst()->get('Director', 'alternate_base_url');
+
 		if($alternate) {
 			return $alternate;
 		} else {
 			$base = BASE_URL;
-			if($base == '/' || $base == '/.' || $base == '\\') $baseURL = '/';
-			else $baseURL = $base . '/';
 			
-			if(defined('BASE_SCRIPT_URL')) return $baseURL . BASE_SCRIPT_URL;
-			else return $baseURL;
+			if($base == '/' || $base == '/.' || $base == '\\') {
+				$baseURL = '/';
+			} else {
+				$baseURL = $base . '/';
+			}
+			
+			if(defined('BASE_SCRIPT_URL')) {
+				return $baseURL . BASE_SCRIPT_URL;
+			}
+
+			return $baseURL;
 		}
 	}
 	
@@ -737,9 +767,7 @@ class Director implements TemplateGlobalProvider {
 			$matched = true;
 		}
 
-		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') 
-				&& !(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) 
-				&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https')) {
+		if($matched && !self::is_https()) {
 
 			// if an domain is specified, redirect to that instead of the current domain
 			if($secureDomain) {
@@ -755,6 +783,7 @@ class Director implements TemplateGlobalProvider {
 				return $destURL;
 			} else {
 				if(!headers_sent()) header("Location: $destURL");
+				
 				die("<h1>Your browser is not accepting header redirects</h1>"
 					. "<p>Please <a href=\"$destURL\">click here</a>");
 			}
