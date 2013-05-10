@@ -1,5 +1,5 @@
 (function ($) {
-	$('.confirmedpassword .showOnClick a').live('click', function () {
+	$(document).on('click', '.confirmedpassword .showOnClick a', function () {
 		var $container = $('.showOnClickContainer', $(this).parent());
 
 		$container.toggle('fast', function() {
