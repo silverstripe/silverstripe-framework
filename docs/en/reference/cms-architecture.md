@@ -106,12 +106,15 @@ In order to set the correct layout classes, we also need a custom template.
 To obey the inheritance chain, we use `$this->getTemplatesWithSuffix('_EditForm')` for
 selecting the most specific template (so `MyAdmin_EditForm.ss`, if it exists).
 
+The form should be of type `CMSForm` rather than `Form`, since it allows the use
+of a `PjaxResponseNegotiator` to handle its display.
+
 Basic example form in a CMS controller subclass:
 
 	:::php
 	class MyAdmin extends LeftAndMain {
 		function getEditForm() {
-			$form = new Form(
+			return CMSForm::create(
 				$this, 
 				'EditForm',
 				new FieldSet(
@@ -125,11 +128,14 @@ Basic example form in a CMS controller subclass:
 				new FieldSet(
 					FormAction::create('doSubmit')
 				)
-			);
-			// Required for correct CMS layout
-			$form->addExtraClass('cms-edit-form');
-			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
-			return $form;
+			)
+				// JS and CSS use this identifier
+				->setHTMLID('Form_EditForm')
+				// Render correct responses on validation errors
+				->setResponseNegotiator($this->getResponseNegotiator());
+				// Required for correct CMS layout
+				->addExtraClass('cms-edit-form')
+				->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		}
 	}
 
