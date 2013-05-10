@@ -1,6 +1,11 @@
 <?php
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class VersionedTest extends SapphireTest {
+	
 	protected static $fixture_file = 'VersionedTest.yml';
 
 	protected $extraDataObjects = array(
@@ -122,6 +127,13 @@ class VersionedTest extends SapphireTest {
 		$obj2 = new VersionedTest_Subclass();
 		// Check that the Version column is added as a full-fledged column
 		$this->assertInstanceOf('Int', $obj2->dbObject('Version'));
+	}
+
+	public function testVersionedFieldsNotInCMS() {
+		$obj = new VersionedTest_DataObject();
+
+		// the version field in cms causes issues with Versioned::augmentWrite()
+		$this->assertNull($obj->getCMSFields()->dataFieldByName('Version'));
 	}
 
 	public function testPublishCreateNewVersion() {
@@ -442,6 +454,11 @@ class VersionedTest extends SapphireTest {
 
 }
 
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class VersionedTest_DataObject extends DataObject implements TestOnly {
 	private static $db = array(
 		"Name" => "Varchar",
@@ -463,6 +480,10 @@ class VersionedTest_DataObject extends DataObject implements TestOnly {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class VersionedTest_RelatedWithoutVersion extends DataObject implements TestOnly {
 
 	private static $db = array(
@@ -475,6 +496,10 @@ class VersionedTest_RelatedWithoutVersion extends DataObject implements TestOnly
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
 	private static $db = array(
 		"ExtraField" => "Varchar",
@@ -486,7 +511,8 @@ class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnl
 }
 
 /**
- * @ignore
+ * @package framework
+ * @subpackage tests
  */
 class VersionedTest_UnversionedWithField extends DataObject implements TestOnly {
 	private static $db = array('Version' => 'Varchar(255)');

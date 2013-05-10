@@ -1313,6 +1313,15 @@ class Versioned extends DataExtension {
 		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', 'Past Versions of this page');
 	}
 	
+	/**
+	 * @param FieldList
+	 */
+	public function updateCMSFields(&$fields) {
+		// remove the version field from the CMS as this should be left 
+		// entirely up to the extension (not the cms user). 
+		$fields->removeByName('Version');
+	}
+
 	public function flushCache() {
 		self::$cache_versionnumber = array();
 	}
