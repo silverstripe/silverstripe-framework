@@ -1,9 +1,11 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
  */
 class ArrayLibTest extends SapphireTest {
+
 	public function testInvert() {
 		$arr = array(
 			'row1' => array(
@@ -186,5 +188,32 @@ class ArrayLibTest extends SapphireTest {
 			ArrayLib::array_merge_recursive($first, $second),
 			'Numeric keys should behave like string keys'
 		);
+	}
+
+	public function testFlatten() {
+		$options = array(
+			'1' => 'one',
+			'2' => 'two'
+		);
+
+		$expected = $options;
+
+		$this->assertEquals($expected, ArrayLib::flatten($options));
+
+		$options = array(
+			'1' => array(
+				'2' => 'two',
+				'3' => 'three'
+			),
+			'4' => 'four'
+		);
+
+		$expected = array(
+			'2' => 'two',
+			'3' => 'three',
+			'4' => 'four'
+		);
+
+		$this->assertEquals($expected, ArrayLib::flatten($options));
 	}
 }
