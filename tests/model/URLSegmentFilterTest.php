@@ -5,12 +5,27 @@
  */
 class URLSegmentFilterTest extends SapphireTest {
 	
+	protected $usesDatabase = false;
+	
 	public function testReplacesCommonEnglishSymbols() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(false);
 		$this->assertEquals(
 			'john-and-spencer', 
 			$f->filter('John & Spencer')
+		);
+	}
+	
+	public function testReplacesWhitespace() {
+		$f = new URLSegmentFilter();
+		$f->setAllowMultibyte(false);
+		$this->assertEquals(
+			'john-and-spencer', 
+			$f->filter('John and Spencer')
+		);
+		$this->assertEquals(
+			'john-and-spencer', 
+			$f->filter('John+and+Spencer')
 		);
 	}
 	
