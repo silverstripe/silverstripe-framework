@@ -459,6 +459,10 @@ class InstallRequirements {
 
 		$this->suggestClass('finfo', array('PHP Configuration', 'fileinfo support', 'fileinfo should be enabled in PHP. SilverStripe uses it for MIME type detection of files. SilverStripe will still operate, but email attachments and sending files to browser (e.g. export data to CSV) may not work correctly without finfo.'));
 
+		$this->suggestFunction('curl_init', array('PHP Configuration', 'curl support', 'curl should be enabled in PHP. SilverStripe uses it for consuming web services via the RestfulService class and many modules rely on it.'));
+
+		$this->suggestClass('tidy', array('PHP Configuration', 'tidy support', 'Tidy provides a library of code to clean up your html. SilverStripe will operate fine without tidy but HTMLCleaner will not be effective.'));
+
 		$this->suggestPHPSetting('asp_tags', array(false,0,''), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
 		$this->suggestPHPSetting('magic_quotes_gpc', array(false,0,''), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
 		$this->suggestPHPSetting('display_errors', array(false,0,''), array('PHP Configuration', 'display_errors option', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
@@ -483,6 +487,14 @@ class InstallRequirements {
 		$this->testing($testDetails);
 
 		if(!class_exists($class)) {
+			$this->warning($testDetails);
+		}
+	}
+
+	function suggestFunction($class, $testDetails) {
+		$this->testing($testDetails);
+
+		if(!function_exists($class)) {
 			$this->warning($testDetails);
 		}
 	}
