@@ -27,7 +27,8 @@ class CsvBulkLoader extends BulkLoader {
 	public $enclosure = '"';
 	
 	/**
-	 * Identifies if the has a header row.
+	 * Identifies if csv the has a header row.
+	 *
 	 * @var boolean
 	 */
 	public $hasHeaderRow = true;
@@ -39,15 +40,37 @@ class CsvBulkLoader extends BulkLoader {
 		return $this->processAll($filepath, true);
 	}
 	
+	/**
+	 * @param string $filepath
+	 * @param boolean $preview
+	 */
 	protected function processAll($filepath, $preview = false) {
 		$results = new BulkLoader_Result();
 		
-		$csv = new CSVParser($filepath, $this->delimiter, $this->enclosure);
+		$csv = new CSVParser(
+			$filepath,
+			$this->delimiter,
+			$this->enclosure
+		);
 		
 		// ColumnMap has two uses, depending on whether hasHeaderRow is set
 		if($this->columnMap) {
-			if($this->hasHeaderRow) $csv->mapColumns($this->columnMap);
-			else $csv->provideHeaderRow($this->columnMap);
+			// if the map goes to a callback, use the same key value as the map
+			// value, rather than function name as multiple keys may use the
+			// same callback
+			foreach($this->columnMap as $k => $v) {
+				if(strpos($v, "->") === 0) {
+					$map[$k] = $k;
+				} else {
+					$map[$k] = $v;
+				}
+			}
+
+			if($this->hasHeaderRow) {
+				$csv->mapColumns($map);
+			} else {
+				$csv->provideHeaderRow($map);
+			}
 		}
 		
 		foreach($csv as $row) {
@@ -115,12 +138,19 @@ class CsvBulkLoader extends BulkLoader {
 		}
 
 		// second run: save data
+
 		foreach($record as $fieldName => $val) {
-			//break out of the loop if we are previewing
-			if ($preview) break;
-			if($this->isNullValue($val, $fieldName)) continue;
-			if(strpos($fieldName, '->') !== FALSE) {
-				$funcName = substr($fieldName, 2);
+			// break out of the loop if we are previewing
+			if ($preview) {
+				break;
+			}
+
+			// look up the mapping to see if this needs to map to callback
+			$mapped = $this->columnMap && isset($this->columnMap[$fieldName]);
+			
+			if($mapped && strpos($this->columnMap[$fieldName], '->') === 0) {
+				$funcName = substr($this->columnMap[$fieldName], 2);
+
 				$this->$funcName($obj, $val, $record);
 			} else if($obj->hasMethod("import{$fieldName}")) {
 				$obj->{"import{$fieldName}"}($val, $record);

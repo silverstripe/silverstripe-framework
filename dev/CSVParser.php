@@ -93,9 +93,11 @@ class CSVParser extends Object implements Iterator {
 	public function mapColumns($columnMap) {
 		if($columnMap) {
 			$lowerColumnMap = array();
+
 			foreach($columnMap as $k => $v) {
 				$lowerColumnMap[strtolower($k)] = $v;
 			}
+
 			$this->columnMap = array_merge($this->columnMap, $lowerColumnMap);
 		}
 	}
@@ -230,7 +232,5 @@ class CSVParser extends Object implements Iterator {
 	public function valid() {
 		return $this->currentRow ? true : false;
 	}
-	
-
 }
 
