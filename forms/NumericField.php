@@ -1,19 +1,29 @@
 <?php
+
 /**
- * Text input field with validation for numeric values.
+ * Text input field with validation for numeric values. Supports validating
+ * the numeric value as to the {@link i18n::get_locale()} value.
  * 
  * @package forms
  * @subpackage fields-formattedinput
  */
-class NumericField extends TextField{
+class NumericField extends TextField {
 
 	public function Type() {
 		return 'numeric text';
 	}
 
-	/** PHP Validation **/
-	public function validate($validator){
-		if($this->value && !is_numeric(trim($this->value))){
+	public function validate($validator) {
+		if(!$this->value && !$validator->fieldIsRequired($this->name)) {
+			return true;
+		}
+
+		$valid = Zend_Locale_Format::isNumber(
+			trim($this->value), 
+			array('locale' => i18n::get_locale())
+		);
+
+		if(!$valid) {
 			$validator->validationError(
 				$this->name,
 				_t(
@@ -22,10 +32,11 @@ class NumericField extends TextField{
 				),
 				"validation"
 			);
+
 			return false;
-		} else{
-			return true;
 		}
+		
+		return true;
 	}
 	
 	public function dataValue() {
