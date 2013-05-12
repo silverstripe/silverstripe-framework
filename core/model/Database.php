@@ -390,13 +390,14 @@ abstract class SS_Database {
 				}
 			}
 		}
-		
+
+		$spec_msg = DB::getConn()->convertIndexSpec($spec);
+
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
-			$this->alterationMessage("Index $table.$index: created as $spec","created");
+			$this->alterationMessage("Index $table.$index: created as $spec_msg","created");
 		} else if($array_spec != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
-			$spec_msg=DB::getConn()->convertIndexSpec($spec);
 			$this->alterationMessage("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
 		}
 	}
