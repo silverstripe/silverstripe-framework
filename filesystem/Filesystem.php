@@ -19,8 +19,27 @@ class Filesystem extends Object {
 	 */
 	private static $folder_create_mask = 02775;
 	
+	/**
+	 * @var int
+	 */
 	protected static $cache_folderModTime;
 	
+	/**
+	 * @config
+	 *
+	 * Array of file / folder regex expressions to exclude from the 
+	 * {@link Filesystem::sync()}
+	 *
+	 * @var array
+	 */
+	private static $sync_blacklisted_patterns = array(
+		"/^\./",
+		"/^_combinedfiles$/i",
+		"/^_resampled$/i",
+		"/^web.config/i",
+		"/^Thumbs(.)/"
+	);
+
 	/**
 	 * Create a folder on the filesystem, recursively.
 	 * Uses {@link Filesystem::$folder_create_mask} to set filesystem permissions.

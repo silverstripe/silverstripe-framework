@@ -293,5 +293,49 @@ class FolderTest extends SapphireTest {
 		
 		parent::tearDown();
 	}
+
+	public function testSyncedChildren() {
+		mkdir(ASSETS_PATH ."/FolderTest");
+		mkdir(ASSETS_PATH ."/FolderTest/sync");
+
+		$files = array(
+			'.htaccess',
+			'.git',
+			'web.config',
+			'.DS_Store',
+			'_my_synced_file.txt'
+		);
+
+		$folders = array(
+			'_combinedfiles',
+			'_resampled',
+			'_testsync'
+		);
+
+		foreach($files as $file) {
+			$fh = fopen(ASSETS_PATH."/FolderTest/sync/$file", "w");
+			fwrite($fh, 'test');
+			fclose($fh);
+		}
+
+		foreach($folders as $folder) {
+			mkdir(ASSETS_PATH ."/FolderTest/sync/". $folder);
+		}
+
+		$folder = Folder::find_or_make('/FolderTest/sync');
+		$result = $folder->syncChildren();
+
+		$this->assertEquals(10, $result['skipped']);
+		$this->assertEquals(2, $result['added']);
+
+		// folder with a path of _test should exist
+		$this->assertEquals(1, Folder::get()->filter(array(
+			'Name' => '_testsync'
+		))->count());
+
+		$this->assertEquals(1, File::get()->filter(array(
+			'Name' => '_my_synced_file.txt'
+		))->count());
+	}
 	
 }
