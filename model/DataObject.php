@@ -1569,29 +1569,38 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and
+	 * Return the class of a one-to-one component. 
+	 *
+	 * If $component is null, return all of the one-to-one components and
 	 * their classes.
 	 *
 	 * @param string $component Name of component
 	 *
-	 * @return string|array The class of the one-to-one component, or an array of all one-to-one components and their
-	 *                      classes.
+	 * @return string|array
 	 */
 	public function has_one($component = null) {
 		$classes = ClassInfo::ancestry($this);
+		$ignored = array('Object', 'ViewableData', 'DataObject');
 
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
-			if(in_array($class, array('Object', 'ViewableData', 'DataObject'))) continue;
+			if(in_array($class, $ignored)) {
+				continue;
+			}
 
 			if($component) {
-				$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
+				$hasOne = Config::inst()->get(
+					$class, 'has_one', Config::UNINHERITED
+				);
 				
 				if(isset($hasOne[$component])) {
 					return $hasOne[$component];
 				}
 			} else {
-				$newItems = (array)Config::inst()->get($class, 'has_one', Config::UNINHERITED);
+				$newItems = (array) Config::inst()->get(
+					$class, 'has_one', Config::UNINHERITED
+				);
+				
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
@@ -1600,9 +1609,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						. " relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
 					}
 				}
-				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
+
+				if(isset($items)) { 
+					$items = array_merge($newItems, (array) $items);
+				} else {
+					$items = $newItems;
+				}
 			}
 		}
+
 		return isset($items) ? $items : null;
 	}
 	
@@ -2262,7 +2277,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Set the value of the field.
 	 *
-	 * Called by {@link __set()} and any setFieldName() methods you might
+	 * Called by {@link __set()} and any setFieldName() methods you might 
 	 * create.
 	 *
 	 * @param string $fieldName Name of the field
@@ -2274,9 +2289,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($val instanceof DBField) {
 			$val->Name = $fieldName;
 
-			// If we've just lazy-loaded the column, then we need to populate
-			// the $original array by called getField(). Too much overhead?
-			// Could this be done by a quicker method? Maybe only on a call
+			// If we've just lazy-loaded the column, then we need to populate 
+			// the $original array by called getField(). Too much overhead? 
+			// Could this be done by a quicker method? Maybe only on a call 
 			// to getChanged()?
 			$this->getField($fieldName);
 
@@ -2285,12 +2300,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(is_object($val) && $this->db($fieldName)) {
 				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
 			}
-
+			
 			// User has set a has_one relationship using
 			// $obj->Relationship = $obj.
 			$componentClass = $this->has_one($fieldName);
-
-			if($componentClass) {
+	
+			if($componentClass) {	
 				$dbField = $fieldName.'ID';
 
 				// flag that the object has changed
@@ -2328,7 +2343,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$this->record[$fieldName] = $val;
 
 				// check if we're writing to a component ID field such as
-				// RelationID. Writing to relationID database field
+				// RelationID. Writing to relationID database field 
 				// directly should clear the components cache.
 				if(substr($fieldName, -2) == "ID") {
 					$comKey = substr($fieldName, 0, -2);
@@ -2337,7 +2352,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						unset($this->components[$comKey]);
 					}
 				}
-			}
+			} 
 		}
 
 		return $this;
