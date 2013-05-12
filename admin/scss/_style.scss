@@ -99,8 +99,7 @@ body.cms {
 		position: left bottom;
 	}
 
-	.cms-content-header-info *,
-	.cms-content-header-tabs * {
+	.cms-content-header-info *{
 		@include inline-block;
 	}
 
@@ -302,14 +301,14 @@ body.cms {
 		background-color: $color-base;
 		@include background-image(
 			linear-gradient(lighten($color-base, 12%), $color-base)
-			);
+		);
 
 		border-top:none;			
 		border: {
 			right-color: darken($color-base, 15%);
 			left-color: lighten($color-base, 10%);
 		}
-			}
+	}
 		
 	.ui-state-active {
 		@include box-shadow(none);
@@ -328,8 +327,15 @@ body.cms {
 	}
 
 	.cms-content-header-tabs {
-	float: right;
+		float: right;
+		height: 39px;
+		
+		.ui-tabs-nav li {
+			min-width: 40px;
+			height: 39px;
+			display: block;
 		}
+	}
 
 /** -------------------------------------------------------
  * Loading Interface
