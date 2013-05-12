@@ -120,6 +120,7 @@ class Zend_Locale
         // Remove once updating Zend_Locale to 2.0 (which uses CLDR 1.9), see
         // https://github.com/zendframework/zf2/tree/master/resources/cldr/main
         'mi' => true, 'mi_NZ' => true,
+        'lc' => true, 'lc_XX' => true,
     );
 
     /**
@@ -180,7 +181,8 @@ class Zend_Locale
         // CUSTOM SilverStripe Add Maori locales.
         // Remove once updating Zend_Locale to 2.0 (which uses CLDR 1.9), see
         // https://github.com/zendframework/zf2/tree/master/resources/cldr/main
-        'MI' => 'mi_NZ'
+        'MI' => 'mi_NZ',
+        'LC' => 'lc_XX',
     );
 
     /**
