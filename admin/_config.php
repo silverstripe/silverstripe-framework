@@ -14,7 +14,7 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 	'valid_elements' => "@[id|class|style|title],a[id|rel|rev|dir|tabindex|accesskey|type|name|href|target|title"
 		. "|class],-strong/-b[class],-em/-i[class],-strike[class],-u[class],#p[id|dir|class|align|style],-ol[class],"
 		. "-ul[class],-li[class],br,img[id|dir|longdesc|usemap|class|src|border|alt=|title|width|height|align|data*],"
-		. "-sub[class],-sup[class],-blockquote[dir|class],"
+		. "-sub[class],-sup[class],-blockquote[dir|class],-cite[dir|class|id|title],"
 		. "-table[border=0|cellspacing|cellpadding|width|height|class|align|summary|dir|id|style],"
 		. "-tr[id|dir|class|rowspan|width|height|align|valign|bgcolor|background|bordercolor|style],"
 		. "tbody[id|class|style],thead[id|class|style],tfoot[id|class|style],"
