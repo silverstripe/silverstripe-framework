@@ -428,59 +428,87 @@ but using the *obj()*-method or accessing through a template will cast the value
 
 ## Relations
 
-Relations are built through static array definitions on a class, in the format `<relationship-name> => <classname>`
+Relations are built through static array definitions on a class, in the format 
+`<relationship-name> => <classname>`
 
 ### has_one
 
-A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", in the example below this would be "TeamID"
-on the "Player"-table.
+A 1-to-1 relation creates a database-column called "`<relationship-name>`ID", 
+in the example below this would be "TeamID" on the "Player"-table.
 
 	:::php
-	// access with $myPlayer->Team()
 	class Player extends DataObject {
 	  public static $has_one = array(
 	    "Team" => "Team",
 	  );
 	}
 
-SilverStripe's `[api:SiteTree]` base-class for content-pages uses a 1-to-1 relationship to link to its
-parent element in the tree:
+SilverStripe's `[api:SiteTree]` base-class for content-pages uses a 1-to-1 
+relationship to link to its parent element in the tree:
 
 	:::php
-	// access with $mySiteTree->Parent()
 	class SiteTree extends DataObject {
 	  public static $has_one = array(
 	    "Parent" => "SiteTree",
 	  );
 	}
 
+#### Setting a has_one relationship
+
+You can set a related object via the datamodel much the same was as you accessed
+it. For example, to change the Parent of a page
+
+	:::php
+	$page->Parent = $newParent
+
+<div class="info" markdown='1'>
+Ensure that the object you're assigning to the relation is of the correct class.
+</div>
+
+If you're creating objects dynamically, make to call write() to save them to the
+database before relating them.
+
+	:::php
+	$newParent = new Page();
+	$newParent->Title = "New Parent";
+
+	$newParent->write(); // saves to the database
+
+	$page->Parent = $newParent;
+
+
 ### has_many
 
-Defines 1-to-many joins. A database-column named ""`<relationship-name>`ID"" will to be created in the child-class.
+Defines 1-to-many joins. A database-column named ""`<relationship-name>`ID"" 
+will to be created in the child-class.
 
 <div class="warning" markdown='1'>
-**CAUTION:** Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary
-accessors available on both ends.
+**CAUTION:** Ensure you specify a $has_one-relationship on the related child-class 
+as well, in order to have the necessary accessors available on both ends.
 </div>
 
 	:::php
-	// access with $myTeam->Players() or $player->Team()
 	class Team extends DataObject {
+	  
 	  public static $has_many = array(
 	    "Players" => "Player",
 	  );
 	}
+
 	class Player extends DataObject {
+	  
 	  public static $has_one = array(
 	    "Team" => "Team",
 	  );
 	}
 
 
-To specify multiple $has_manys to the same object you can use dot notation to distinguish them like below
+To specify multiple $has_manys to the same object you can use dot notation 
+to distinguish them like below:
 
 	:::php
 	class Person extends DataObject {
+
 		public static $has_many = array(
 			"Managing" => "Company.Manager",
 			"Cleaning" => "Company.Cleaner",
@@ -488,6 +516,7 @@ To specify multiple $has_manys to the same object you can use dot notation to di
 	}
 	
 	class Company extends DataObject {
+
 		public static $has_one = array(
 			"Manager" => "Person",
 			"Cleaner" => "Person"
@@ -495,7 +524,8 @@ To specify multiple $has_manys to the same object you can use dot notation to di
 	}
 
 
-Multiple $has_one relationships are okay if they aren't linking to the same object type.
+Multiple $has_one relationships are okay if they aren't linking to the 
+same object type.
 
 	:::php
 	/**
@@ -513,10 +543,10 @@ Multiple $has_one relationships are okay if they aren't linking to the same obje
 	  );
 	}
 
-
 ### many_many
 
-Defines many-to-many joins. A new table, (this-class)_(relationship-name), will be created with a pair of ID fields.
+Defines many-to-many joins. A new table, (this-class)_(relationship-name), 
+will be created with a pair of ID fields.
 
 <div class="warning" markdown='1'>
 **CAUTION:** Please specify a $belongs_many_many-relationship on the related class as well, in order to have the necessary
@@ -536,30 +566,92 @@ accessors available on both ends.
 	  );
 	}
 
+### Adding has_many, many_many relations
 
-### Adding relations
-
-Adding new items to a relations works the same, regardless if you're editing a *has_many*- or a *many_many*. 
-They are encapsulated by `[api:HasManyList]` and `[api:ManyManyList]`, both of which provide very similar APIs, 
-e.g. an `add()` and `remove()` method.
+Adding new items to a relations works the same, regardless if you're editing a 
+*has_many*- or a *many_many*. They are encapsulated by `[api:HasManyList]` and 
+`[api:ManyManyList]`, both of which provide very similar APIs including an 
+`add()` and `remove()` method.
 
 	:::php
 	class Team extends DataObject {
 	  // see "many_many"-description for a sample definition of class "Category"
+
 	  public static $many_many = array(
 	    "Categories" => "Category",
 	  );
 		
 	  public function addCategories(SS_List $cats) {
-	    foreach($cats as $cat) $this->Categories()->add($cat);
+	    foreach($cats as $cat) {
+	    	$this->Categories()->add($cat);
+	    }
 	  }
 	}
 
+### Accessing a relationship 
+
+Quick access to a relationship and the objects linked can be accomplished in 
+both PHP and templates for both the object and the related object.
+
+The PHP data model uses `$obj->RelationshipName()` and the [templates](../reference/templates.md) 
+syntax uses `<% loop RelationshipName %>` or `<% with RelationshipName %>`.
+
+For example, a function to access the parent page title through the `has_one` 
+relationship defined between two pages might look like below.
+
+**mysite/code/Page.php**
+
+	:::php
+	function getParentTitle() {
+		$parent = $this->Parent();
+
+		// $parent will now be the `SiteTree` instance from the relationship.
+		// You can call any database field, method or relationship from the 
+		// `SiteTree` class.
+
+		return $parent->Title;
+	}
+
+This functionality can also be implemented in templates using the `<% with %>`
+command.
+
+**themes/simple/templates/Page.ss**
+	
+	:::ss
+	<% with Parent %>
+		<!-- scope is now of the 'Parent' -->
+		<h2>$Title</h2>
+	<% end_with %>
+
+Accessing `has_many`, `many_many` and `belongs_many_many` named relations 
+return instances of a `[api:DataList]` for iterating over the related objects.
+
+For PHP code, use the `foreach` statement to loop over the results
+
+	:::php
+	$team = // 
+
+	// checks to see if the Categories relationship has any records.
+	if($team->Categories()->exists()) {
+		foreach($team->Categories() as $category) {
+			//
+		}
+	}
+
+For templates, replace `<% with %>` statements with the `<% loop %>` construct. 
+
+	:::ss
+	<% if Categories %>
+		<% loop Categories %>
+			<h2>$Title</h2>
+		<% end_loop %>
+	<% end_if %>
 
 ### Custom Relations
 
-You can use the flexible datamodel to get a filtered result-list without writing any SQL. For example, this snippet 
-gets you the "Players"-relation on a team, but only containing active players.
+You can use the flexible datamodel to get a filtered result-list without writing 
+any SQL. For example, this snippet gets you the "Players"-relation on a team, 
+but only containing active players.
 
 See `[api:DataObject::$has_many]` for more info on the described relations.
 
@@ -575,20 +667,29 @@ See `[api:DataObject::$has_many]` for more info on the described relations.
 	  }
 	}
 
-Note: Adding new records to a filtered `RelationList` like in the example above doesn't automatically set the 
-filtered criteria on the added record.
+<div class="warning" markdown='1'>
+Note: Adding new records to a filtered `RelationList` like in the example 
+above doesn't automatically set the  filtered criteria on the added record.
+</div>
 
 ### Relations on Unsaved Objects
 
-You can also set *has_many* and *many_many* relations before the `DataObject` is saved. This behaviour uses the
-`[api:UnsavedRelationList]` and converts it into the correct `RelationList` when saving the `DataObject` for the
-first time.
+You can also set *has_many* and *many_many* relations before the `DataObject` 
+is saved. This behaviour uses the `[api:UnsavedRelationList]` and converts it 
+into the correct `RelationList` when saving the `DataObject` for the first time.
 
-This unsaved lists will also recursively save any unsaved objects that they contain.
+This unsaved lists will also recursively save any unsaved objects that they 
+contain.
 
-As these lists are not backed by the database, most of the filtering methods on `DataList` cannot be used on a
-list of this type. As such, an `UnsavedRelationList` should only be used for setting a relation before saving an
-object, not for displaying the objects contained in the relation.
+<div class="warning" markdown='1'>
+To write unsaved `has_one` relationships to the database call 
+`$obj->write(false, false, false, true)`
+</div>
+
+As these lists are not backed by the database, most of the filtering methods on 
+`DataList` cannot be used on a list of this type. As such, an `UnsavedRelationList` 
+should only be used for setting a relation before saving an object, not for 
+displaying the objects contained in the relation.
 
 ## Validation and Constraints
 
@@ -672,6 +773,7 @@ You have to make sure though that certain properties are not overwritten, e.g. *
 
 	:::php
 	$myPlayer = Player::get()->byID(99);
+
 	if($myPlayer) {
 	  $myPlayer->Firstname = "John"; // sets property on object
 	  $myPlayer->write(); // writes row to database
