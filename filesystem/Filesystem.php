@@ -180,14 +180,32 @@ class Filesystem extends Object {
 		// Update the image tracking of all pages
 		if($syncLinkTracking) {
 			if(class_exists('SiteTree')) {
-				if(class_exists('Subsite')) $origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
-				if(class_exists('Subsite')) Subsite::$disable_subsite_filter = true;
-				foreach(DataObject::get("SiteTree") as $page) {
+
+				// if subsites exist, go through each subsite and sync each subsite's pages.
+				// disabling the filter doesn't work reliably, because writing pages that share
+				// the same URLSegment between subsites will break, e.g. "home" between two
+				// sites will modify one of them to "home-2", thinking it's a duplicate. The
+				// check before a write is done in SiteTree::validURLSegment()
+				if(class_exists('Subsite')) {
+					// loop through each subsite ID, changing the subsite, then query it's pages
+					foreach(Subsite::get()->getIDList() as $id) {
+						Subsite::changeSubsite($id);
+						foreach(SiteTree::get() as $page) {
+							// syncLinkTracking is called by SiteTree::onBeforeWrite().
+							// Call it without affecting the page version, as this is an internal change.
+							$page->writeWithoutVersion();
+						}
+					}
+
+					// change back to the main site so the foreach below works
+					Subsite::changeSubsite(0);
+				}
+
+				foreach(SiteTree::get() as $page) {
 					// syncLinkTracking is called by SiteTree::onBeforeWrite().
 					// Call it without affecting the page version, as this is an internal change.
 					$page->writeWithoutVersion();
 				}
-				if(class_exists('Subsite')) Subsite::disable_subsite_filter($origDisableSubsiteFilter);
 			}
 		}
 		
