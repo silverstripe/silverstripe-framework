@@ -44,13 +44,14 @@
 		</div>
 		<% end_if %>
 		<div class="ss-uploadfield-item-info">
-			<label class="ss-uploadfield-item-name"><b>
+			<label class="ss-uploadfield-item-name">
 				<% if $multiple %>
-					<% _t('UploadField.ATTACHFILES', 'Attach files') %>
+					<b><% _t('UploadField.ATTACHFILES', 'Attach files') %></b>
 				<% else %>
-					<% _t('UploadField.ATTACHFILE', 'Attach a file') %>
+					<b><% _t('UploadField.ATTACHFILE', 'Attach a file') %></b>
 				<% end_if %>
-			</b></label>
+				<small>(<%t UploadField.UPLOADSINTO 'saves into /{path}' path=$FolderName %>)</small></em>
+			</label>
 			<% if canUpload %>
 			<label class="ss-uploadfield-fromcomputer ss-ui-button ui-corner-all" title="<% _t('UploadField.FROMCOMPUTERINFO', 'Upload from your computer') %>" data-icon="drive-upload">
 				<% _t('UploadField.FROMCOMPUTER', 'From your computer') %>
