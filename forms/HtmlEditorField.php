@@ -112,25 +112,45 @@ class HtmlEditorField extends TextareaField {
 				$href = Director::makeRelative($link->getAttribute('href'));
 
 				if($href) {
-					if(preg_match('/\[sitetree_link,id=([0-9]+)\]/i', $href, $matches)) {
-						$ID = $matches[1];
-
+					if(preg_match('/\[sitetree_link(?|(,)|( ))id=([0-9]+)\]/i', $href, $matches)) {
+						$ID = $matches[2];
+						if($matches[1]==' ') {	// rewrite old links to new syntax
+							$link->removeAttribute('href');
+							$link->setAttribute('href', '[sitetree_link,id=' . $ID . ']');
+						}
 						// clear out any broken link classes
 						if($class = $link->getAttribute('class')) {
 							$link->setAttribute('class',
-								preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
+									preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
 						}
 
 						$linkedPages[] = $ID;
 						if(!DataObject::get_by_id('SiteTree', $ID))  $record->HasBrokenLink = true;
 
+					} else if(preg_match('/\[file_link,id=([0-9]+)\]/i', $href, $matches)) {
+						$ID = $matches[1];
+
+						// clear out any broken link classes
+						if($class = $link->getAttribute('class')) {
+							$link->setAttribute('class',
+									preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
+						}
+
+						$linkedFiles[] = $ID;
+						if(!DataObject::get_by_id('SiteTree', $ID))  $record->HasBrokenLink = true;
+						
 					} else if(substr($href, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR.'/') {
 						$candidateFile = File::find(Convert::raw2sql(urldecode($href)));
 						if($candidateFile) {
 							$linkedFiles[] = $candidateFile->ID;
+							//rewrite file link to new syntax
+							$link->removeAttribute('href');
+							$link->setAttribute('href', '[file_link,id=' . $candidateFile->ID . ']');
 						} else {
 							$record->HasBrokenFile = true;
 						}
+						
+
 					} else if($href == '' || $href[0] == '/') {
 						$record->HasBrokenLink = true;
 					}
