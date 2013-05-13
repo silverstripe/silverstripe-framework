@@ -45,6 +45,12 @@ class ContentNegotiator extends Object {
 	 * @var boolean
 	 */
 	private static $enabled = false;
+	
+	/**
+	 * @config
+	 * @var string
+	 */
+	private static $default_format = 'html';
 
 	/**
 	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say,
@@ -114,7 +120,7 @@ class ContentNegotiator extends Object {
 		);
 		$q = array();
 		if(headers_sent()) {
-			$chosenFormat = "html";
+			$chosenFormat = Config::inst()->get('ContentNegotiator', 'default_format');
 
 		} else if(isset($_GET['forceFormat'])) {
 			$chosenFormat = $_GET['forceFormat'];
@@ -139,7 +145,7 @@ class ContentNegotiator extends Object {
 					krsort($q);
 					$chosenFormat = reset($q);
 				} else {
-					$chosenFormat = "html";
+					$chosenFormat = Config::inst()->get('ContentNegotiator', 'default_format');
 				}
 			}
 		}
