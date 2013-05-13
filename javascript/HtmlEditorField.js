@@ -716,7 +716,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					email: RegExp.$1,
 					Description: title
 				};
-			} else if(href.match(/^(assets\/.*)$/) || href.match(/^\[file_link\s*(?:%20)?id=([0-9]+)\]?(#.*)?$/)) {
+			} else if(href.match(/^(assets\/.*)$/) || href.match(/^\[file_link\s*(?:\s*|%20|,)?id=([0-9]+)\]?(#.*)?$/)) {
 				return {
 					LinkType: 'file',
 					file: RegExp.$1,
