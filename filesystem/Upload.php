@@ -45,7 +45,7 @@ class Upload extends Controller {
 	 * @var array
 	 */
 	protected $tmpFile;
-
+	
 	/**
 	 * Replace an existing file rather than renaming the new one.
 	 * @var Boolean
@@ -68,7 +68,7 @@ class Upload extends Controller {
 	 * @var string
 	 */
 	private static $uploads_folder = "Uploads"; 
-
+	
 	public function __construct() {
 		parent::__construct();
 		$this->validator = new Upload_Validator();
@@ -127,11 +127,8 @@ class Upload extends Controller {
 		$parentFolder = Folder::find_or_make($folderPath);
 
 		// Create a folder for uploading.
-		if(!file_exists(ASSETS_PATH)){
-			mkdir(ASSETS_PATH, Config::inst()->get('Filesystem', 'folder_create_mask'));
-		}
 		if(!file_exists(ASSETS_PATH . "/" . $folderPath)){
-			mkdir(ASSETS_PATH . "/" . $folderPath, Config::inst()->get('Filesystem', 'folder_create_mask'));
+			Filesystem::makeFolder(ASSETS_PATH . "/" . $folderPath);
 		}
 
 		// Generate default filename
@@ -140,7 +137,7 @@ class Upload extends Controller {
 		$fileName = basename($file);
 
 		$relativeFilePath = ASSETS_DIR . "/" . $folderPath . "/$fileName";
-
+		
 		// Create a new file record (or try to retrieve an existing one)
 		if(!$this->file) {
 			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
@@ -156,24 +153,24 @@ class Upload extends Controller {
 		
 		// if filename already exists, version the filename (e.g. test.gif to test1.gif)
 		if(!$this->replaceFile) {
-			while(file_exists("$base/$relativeFilePath")) {
-				$i = isset($i) ? ($i+1) : 2;
-				$oldFilePath = $relativeFilePath;
-				// make sure archives retain valid extensions
-				if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
-					substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
-						$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-				} else if (strpos($relativeFilePath, '.') !== false) {
-					$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
-				} else if (strpos($relativeFilePath, '_') !== false) {
-					$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
-				} else {
-					$relativeFilePath .= '_'.$i;
-				}
-				if($oldFilePath == $relativeFilePath && $i > 2) {
-					user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
-				}
-			}	
+		while(file_exists("$base/$relativeFilePath")) {
+			$i = isset($i) ? ($i+1) : 2;
+			$oldFilePath = $relativeFilePath;
+			// make sure archives retain valid extensions
+			if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
+				substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
+					$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
+			} else if (strpos($relativeFilePath, '.') !== false) {
+				$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
+			} else if (strpos($relativeFilePath, '_') !== false) {
+				$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
+			} else {
+				$relativeFilePath .= '_'.$i;
+			}
+			if($oldFilePath == $relativeFilePath && $i > 2) {
+				user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
+			}
+		}
 		}
 
 		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$relativeFilePath")) {
@@ -199,7 +196,7 @@ class Upload extends Controller {
 		$this->file = $file;
 		return $this->load($tmpFile, $folderPath);
 	}
-
+	
 	/**
 	 * @return Boolean
 	 */
