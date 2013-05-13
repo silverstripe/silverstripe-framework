@@ -17,6 +17,8 @@ class NumericField extends TextField {
 		if(!$this->value && !$validator->fieldIsRequired($this->name)) {
 			return true;
 		}
+		
+		require_once THIRDPARTY_PATH."/Zend/Locale/Format.php";
 
 		$valid = Zend_Locale_Format::isNumber(
 			trim($this->value), 
