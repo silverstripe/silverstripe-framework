@@ -124,11 +124,8 @@ class Upload extends Controller {
 		$parentFolder = Folder::find_or_make($folderPath);
 
 		// Create a folder for uploading.
-		if(!file_exists(ASSETS_PATH)){
-			mkdir(ASSETS_PATH, Filesystem::$folder_create_mask);
-		}
 		if(!file_exists(ASSETS_PATH . "/" . $folderPath)){
-			mkdir(ASSETS_PATH . "/" . $folderPath, Filesystem::$folder_create_mask);
+			Filesystem::makeFolder(ASSETS_PATH . "/" . $folderPath);
 		}
 
 		// Generate default filename
