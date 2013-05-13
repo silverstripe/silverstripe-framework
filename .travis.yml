@@ -8,7 +8,6 @@ env:
  - DB=MYSQL CORE_RELEASE=3.0
  - DB=PGSQL CORE_RELEASE=3.0
  - DB=SQLITE3 CORE_RELEASE=3.0
- - PHPCS=1 CORE_RELEASE=3.0
 
 matrix:
   exclude:
@@ -16,22 +15,18 @@ matrix:
       env: DB=PGSQL CORE_RELEASE=3.0
     - php: 5.4
       env: DB=SQLITE3 CORE_RELEASE=3.0
-    - php: 5.4
-      env: PHPCS=1 CORE_RELEASE=3.0
   allow_failures:
     - env: DB=PGSQL CORE_RELEASE=3.0
     - env: DB=SQLITE3 CORE_RELEASE=3.0
-    - env: PHPCS=1 CORE_RELEASE=3.0
 
 before_script:
- - pear install pear/PHP_CodeSniffer
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
  - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
  - cd ~/builds/ss
 
 script: 
- - sh -c "if [ '$PHPCS' != '1' ]; then phpunit framework/tests; else phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml -np framework && phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml -np framework; fi"
+ - phpunit framework/tests
 
 branches:
   except:
