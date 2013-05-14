@@ -360,7 +360,7 @@ class Debug {
 		}
 
 		if(!headers_sent()) {
-			$currController = Controller::curr();
+			$currController = Controller::has_curr() ? Controller::curr() : null;
 			// Ensure the error message complies with the HTTP 1.1 spec
 			$msg = strip_tags(str_replace(array("\n", "\r"), '', $friendlyErrorMessage));
 			if($currController) {
