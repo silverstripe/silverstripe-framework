@@ -1,14 +1,18 @@
 <?php
 /**
- * Utility class to facilitate complex CSV-imports by defining column-mappings and custom converters. 
- * Uses the fgetcsv() function to process CSV input. Accepts a file-handler as input.
+ * Utility class to facilitate complex CSV-imports by defining column-mappings 
+ * and custom converters. 
+ *
+ * Uses the fgetcsv() function to process CSV input. Accepts a file-handler as 
+ * input.
  * 
  * @see http://rfc.net/rfc4180.html
+ *
  * @package framework
  * @subpackage bulkloading
- * @author Ingo Schommer, Silverstripe Ltd. (<myfirstname>@silverstripe.com)
  * 
- * @todo Support for deleting existing records not matched in the import (through relation checks)
+ * @todo Support for deleting existing records not matched in the import 
+ * (through relation checks)
  */
 class CsvBulkLoader extends BulkLoader {
 	
@@ -48,15 +52,15 @@ class CsvBulkLoader extends BulkLoader {
 		$results = new BulkLoader_Result();
 		
 		$csv = new CSVParser(
-			$filepath,
-			$this->delimiter,
+			$filepath, 
+			$this->delimiter, 
 			$this->enclosure
 		);
 		
 		// ColumnMap has two uses, depending on whether hasHeaderRow is set
 		if($this->columnMap) {
 			// if the map goes to a callback, use the same key value as the map
-			// value, rather than function name as multiple keys may use the
+			// value, rather than function name as multiple keys may use the 
 			// same callback
 			foreach($this->columnMap as $k => $v) {
 				if(strpos($v, "->") === 0) {
@@ -82,7 +86,14 @@ class CsvBulkLoader extends BulkLoader {
 	
 	/**
 	 * @todo Better messages for relation checks and duplicate detection
-	 * Note that columnMap isn't used
+	 * Note that columnMap isn't used.
+	 *
+	 * @param array $record
+	 * @param array $columnMap
+	 * @param BulkLoader_Result $results
+	 * @param boolean $preview
+	 *
+	 * @return int
 	 */
 	protected function processRecord($record, $columnMap, &$results, $preview = false) {
 		$class = $this->objectClass;
@@ -128,13 +139,13 @@ class CsvBulkLoader extends BulkLoader {
 				$relationObj = $obj->getComponent($relationName);
 				if (!$preview) $relationObj->write();
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
+
 				//write if we are not previewing
 				if (!$preview) {
 					$obj->write();
 					$obj->flushCache(); // avoid relation caching confusion
 				}
 			}
-			
 		}
 
 		// second run: save data
@@ -184,24 +195,31 @@ class CsvBulkLoader extends BulkLoader {
 	}
 	
 	/**
-	 * Find an existing objects based on one or more uniqueness
-	 * columns specified via {@link self::$duplicateChecks}
+	 * Find an existing objects based on one or more uniqueness columns 
+	 * specified via {@link self::$duplicateChecks}.
 	 *
 	 * @param array $record CSV data column
-	 * @return unknown
+	 *
+	 * @return mixed
 	 */
 	public function findExistingObject($record) {
 		$SNG_objectClass = singleton($this->objectClass);
 		// checking for existing records (only if not already found)
+
 		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
 			if(is_string($duplicateCheck)) {
 				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
+				
 				if(!isset($record[$SQL_fieldName]) || empty($record[$SQL_fieldName])) { //skip current duplicate check if field value is empty
 					continue;
 				}
+
 				$SQL_fieldValue = Convert::raw2sql($record[$SQL_fieldName]);
 				$existingRecord = DataObject::get_one($this->objectClass, "\"$SQL_fieldName\" = '{$SQL_fieldValue}'");
-				if($existingRecord) return $existingRecord;
+				
+				if($existingRecord) {
+					return $existingRecord;
+				}
 			} elseif(is_array($duplicateCheck) && isset($duplicateCheck['callback'])) {
 				if($this->hasMethod($duplicateCheck['callback'])) {
 					$existingRecord = $this->{$duplicateCheck['callback']}($record[$fieldName], $record);
@@ -211,6 +229,7 @@ class CsvBulkLoader extends BulkLoader {
 					user_error("CsvBulkLoader::processRecord():"
 						. " {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
 				}
+
 				if($existingRecord) {
 					return $existingRecord;
 				}
@@ -218,17 +237,17 @@ class CsvBulkLoader extends BulkLoader {
 				user_error('CsvBulkLoader::processRecord(): Wrong format for $duplicateChecks', E_USER_ERROR);
 			}
 		}
+
 		return false;
 	}
 	
 	/**
-	 * Determine wether any loaded files should be parsed
-	 * with a header-row (otherwise we rely on {@link self::$columnMap}.
+	 * Determine whether any loaded files should be parsed with a 
+	 * header-row (otherwise we rely on {@link self::$columnMap}.
 	 *
 	 * @return boolean
 	 */
 	public function hasHeaderRow() {
 		return ($this->hasHeaderRow || isset($this->columnMap));
 	}
-	
 }
