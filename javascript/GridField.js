@@ -170,8 +170,11 @@
 					data = window.location.search.replace(/^\?/, '') + '&' + data;
 				}
 
+				// decide whether we should use ? or & to connect the URL
+				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
+
 				var url = $.path.makeUrlAbsolute(
-					grid.data('url') + '?' + data,
+					grid.data('url') + connector + data,
 					$('base').attr('href')
 				);
 
@@ -215,8 +218,11 @@
 					data = window.location.search.replace(/^\?/, '') + '&' + data;
 				}
 
+				// decide whether we should use ? or & to connect the URL
+				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
+
 				window.location.href = $.path.makeUrlAbsolute(
-					grid.data('url') + '?' + data,
+					grid.data('url') + connector + data,
 					$('base').attr('href')
 				);
 
