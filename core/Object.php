@@ -67,6 +67,52 @@ abstract class Object {
 	protected $extension_instances = array();
 	
 	/**
+	 * List of callbacks to call prior to extensions having extend called on them,
+	 * each grouped by methodName.
+	 *
+	 * @var array[callable]
+	 */
+	protected $beforeExtendCallbacks = array();
+
+	/**
+	 * Allows user code to hook into Object::extend prior to control
+	 * being delegated to extensions. Each callback will be reset
+	 * once called.
+	 * 
+	 * @param string $method The name of the method to hook into
+	 * @param callable $callback The callback to execute
+	 */
+	protected function beforeExtending($method, $callback) {
+		if(empty($this->beforeExtendCallbacks[$method])) {
+			$this->beforeExtendCallbacks[$method] = array();
+		}
+		$this->beforeExtendCallbacks[$method][] = $callback;
+	}
+	
+	/**
+	 * List of callbacks to call after extensions having extend called on them,
+	 * each grouped by methodName.
+	 *
+	 * @var array[callable]
+	 */
+	protected $afterExtendCallbacks = array();
+
+	/**
+	 * Allows user code to hook into Object::extend after control
+	 * being delegated to extensions. Each callback will be reset
+	 * once called.
+	 * 
+	 * @param string $method The name of the method to hook into
+	 * @param callable $callback The callback to execute
+	 */
+	protected function afterExtending($method, $callback) {
+		if(empty($this->afterExtendCallbacks[$method])) {
+			$this->afterExtendCallbacks[$method] = array();
+		}
+		$this->afterExtendCallbacks[$method][] = $callback;
+	}
+	
+	/**
 	 * An implementation of the factory method, allows you to create an instance of a class
 	 *
 	 * This method first for strong class overloads (singletons & DB interaction), then custom class overloads. If an
@@ -929,6 +975,14 @@ abstract class Object {
 	public function extend($method, &$a1=null, &$a2=null, &$a3=null, &$a4=null, &$a5=null, &$a6=null, &$a7=null) {
 		$values = array();
 		
+		if(!empty($this->beforeExtendCallbacks[$method])) {
+			foreach(array_reverse($this->beforeExtendCallbacks[$method]) as $callback) {
+				$value = call_user_func($callback, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
+				if($value !== null) $values[] = $value;
+			}
+			$this->beforeExtendCallbacks[$method] = array();
+		}
+
 		if($this->extension_instances) foreach($this->extension_instances as $instance) {
 			if(method_exists($instance, $method)) {
 				$instance->setOwner($this);
@@ -936,6 +990,14 @@ abstract class Object {
 				if($value !== null) $values[] = $value;
 				$instance->clearOwner();
 			}
+		}
+		
+		if(!empty($this->afterExtendCallbacks[$method])) {
+			foreach(array_reverse($this->afterExtendCallbacks[$method]) as $callback) {
+				$value = call_user_func($callback, $a1, $a2, $a3, $a4, $a5, $a6, $a7);
+				if($value !== null) $values[] = $value;
+			}
+			$this->afterExtendCallbacks[$method] = array();
 		}
 		
 		return $values;
