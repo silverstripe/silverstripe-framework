@@ -182,7 +182,7 @@ the markup in the `else` clause is used, if that clause is present.
 This example shows the use of `not` to negate the test.
 
 	:::ss
-	<% if $not $DinnerInOven %>
+	<% if not $DinnerInOven %>
 		I'm going out for dinner tonight.
 	<% end_if %>
 
