@@ -64,7 +64,7 @@ Now you have two choices: Smaller fixes (e.g. typos) can be edited directly in t
 The module authors will get notified automatically, review your patch, and merge it back as appropriate.
 For new features, we recommend creating a ["feature branch"](http://progit.org/book/ch3-3.html) rather than a really big patch.
 
-On github, you can review outstanding [sapphire pull requests](https://github.com/silverstripe/sapphire/pulls) and [cms pull requests](https://github.com/silverstripe/silverstripe-cms/pulls)).
+On github, you can review outstanding [sapphire pull requests](https://github.com/silverstripe/silverstripe-framework/pulls) and [cms pull requests](https://github.com/silverstripe/silverstripe-cms/pulls)).
 
 If you want to learn more about git, please have a look at the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/).
 
@@ -160,7 +160,7 @@ Modifying documentation requires basic [PHPDoc](http://en.wikipedia.org/wiki/PHP
 If you have downloaded SilverStripe or a module, chances
 are that you already have the documentation files - they are kept alongside the source code (in the `docs/` subfolder).
 
-In general, you have to "[fork](http://help.github.com/forking/)" the [github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire)
+In general, you have to "[fork](http://help.github.com/forking/)" the [github.com/silverstripe/silverstripe-framework](http://github.com/silverstripe/silverstripe-framework)
 and [github.com/silverstripe/silverstripe-cms](http://github.com/silverstripe/silverstripe-cms) repositories
 and send us "[pull requests](http://help.github.com/pull-requests/)". 
 Note: Smaller edits can be performed in the github.com web interface on your fork,

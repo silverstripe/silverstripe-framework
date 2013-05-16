@@ -24,7 +24,7 @@ See [frequently asked questions](/installation/from-source#frequently-asked-ques
 SilverStripe core is currently hosted on [github.com/silverstripe](http://github.com/silverstripe). The core consists of four parts:
 
  * The `installer` project ([github.com/silverstripe/silverstripe-installer](http://github.com/silverstripe/silverstripe-installer))
- * The `sapphire` module ([github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire))
+ * The `sapphire` module ([github.com/silverstripe/silverstripe-framework](http://github.com/silverstripe/silverstripe-framework))
  * The `cms` module ([github.com/silverstripe/silverstripe-cms](http://github.com/silverstripe/silverstripe-cms))
  * A sample theme called `blackcandy` ([github.com/silverstripe-themes/silverstripe-blackcandy](http://github.com/silverstripe-themes/silverstripe-blackcandy))
 
@@ -147,7 +147,7 @@ Please replace `<username>` below with your github username.
 
 	git clone git@github.com:<username>/silverstripe-installer.git my-silverstripe-project
 	cd my-silverstripe-project
-	git clone git@github.com:<username>/sapphire.git sapphire
+	git clone git@github.com:<username>/silverstripe-framework.git sapphire
 	git clone git@github.com:<username>/silverstripe-cms.git cms
 	git clone git@github.com:<username>/silverstripe-blackcandy.git themes/blackcandy
 
@@ -155,7 +155,7 @@ Now you need to add the original repository as `upstream`, so you can keep your 
 
 	cd my-silverstripe-project
 	(git remote add upstream git://github.com/silverstripe/silverstripe-installer.git && git fetch upstream)
-	(cd sapphire && git remote add upstream git://github.com/silverstripe/sapphire.git && git fetch upstream)
+	(cd sapphire && git remote add upstream git://github.com/silverstripe/silverstripe-framework.git && git fetch upstream)
 	(cd cms && git remote add upstream git://github.com/silverstripe/silverstripe-cms.git && git fetch upstream)
 	(cd themes/blackcandy && git remote add upstream git://github.com/silverstripe-themes/silverstripe-blackcandy.git)
 
