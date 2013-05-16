@@ -1,6 +1,6 @@
 ## SilverStripe Framework
 
-[![Build Status](https://secure.travis-ci.org/silverstripe/sapphire.png?branch=3.1)](https://travis-ci.org/silverstripe/sapphire)
+[![Build Status](https://secure.travis-ci.org/silverstripe/silverstripe-framework.png?branch=3.1)](https://travis-ci.org/silverstripe/silverstripe-framework)
 
 PHP5 framework forming the base for the SilverStripe CMS ([http://silverstripe.org](http://silverstripe.org)). 
 Requires a [`silverstripe-installer`](http://github.com/silverstripe/silverstripe-installer) base project. Typically used alongside the [`cms`](http://github.com/silverstripe/silverstripe-cms) module.
@@ -23,7 +23,7 @@ If you would like to make changes to the SilverStripe core codebase, we have an 
 
  * [Server Requirements](http://doc.silverstripe.org/framework/en/installation/server-requirements)
  * [Changelogs](http://doc.silverstripe.org/framework/en/changelogs/)
- * [Bugtracker: Framework](https://github.com/silverstripe/sapphire/issues)
+ * [Bugtracker: Framework](https://github.com/silverstripe/silverstripe-framework/issues)
  * [Bugtracker: CMS](https://github.com/silverstripe/silverstripe-cms/issues)
  * [Bugtracker: Installer](https://github.com/silverstripe/silverstripe-installer/issues)
  * [Forums](http://silverstripe.org/forums)
