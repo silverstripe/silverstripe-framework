@@ -7,9 +7,9 @@
 If you have discovered a bug in SilverStripe, we'd be glad to hear about it -
 well written bug reports can be half of the solution already!
 
- * [Framework Bugtracker](https://github.com/silverstripe/sapphire/issues)
+ * [Framework Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
  * [CMS Bugtracker](https://github.com/silverstripe/silverstripe-cms/issues)
- * [Documentation Bugtracker](https://github.com/silverstripe/sapphire/issues)
+ * [Documentation Bugtracker](https://github.com/silverstripe/silverstripe-framework/issues)
  * Search on [http://silverstripe.org/modules](http://silverstripe.org/modules) for module-specific bugtrackers
 
 Before submitting a bug:
@@ -25,7 +25,7 @@ Before submitting a bug:
 
 If the issue does look like a new bug:
 
- * [Create a new ticket](https://github.com/silverstripe/sapphire/issues/new)
+ * [Create a new ticket](https://github.com/silverstripe/silverstripe-framework/issues/new)
  * Describe the steps required to reproduce your issue, and the expected outcome. Unit tests, screenshots and screencasts can help here.
  * Describe your environment as detailed as possible: SilverStripe version, Browser, PHP version, Operating System, any installed SilverStripe modules.
  * *(optional)* [Submit a pull request](/misc/contributing/code) which fixes the issue.

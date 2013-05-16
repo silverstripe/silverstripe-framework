@@ -68,7 +68,7 @@ and explanations on how the rules get processed for those methods.
 
 See:
 
-*  [framework/_config/routes.yml](https://github.com/silverstripe/sapphire/blob/master/_config/routes.yml)
+*  [framework/_config/routes.yml](https://github.com/silverstripe/silverstripe-framework/blob/master/_config/routes.yml)
 *  [cms/_config/routes.yml](https://github.com/silverstripe/silverstripe-cms/blob/master/_config/routes.yml)
 
 
