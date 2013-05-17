@@ -24,6 +24,7 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Page Types](page-types): What is a "page type" and how do you create one?
  * [Search](search): Searching for properties in the database as well as other documents
  * [Security](security): How to develop secure SilverStripe applications with good code examples
+ * [Shortcodes](shortcodes): Use simple placeholders for powerful content replacements like multimedia embeds
  * [Templates](templates): SilverStripe template syntax: Variables, loops, includes and much more
  * [Testing](testing): Functional and Unit Testing with PHPUnit and SilverStripe's testing framework
  * [Developing Themes](theme-development): Package templates, images and CSS to a reusable theme
