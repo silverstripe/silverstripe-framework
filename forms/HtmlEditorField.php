@@ -14,6 +14,10 @@ class HtmlEditorField extends TextareaField {
 	static $use_gzip = true;
 
 	protected $rows = 30;
+
+	protected $extraClasses = array(
+		'stacked' // show full width in CMS by default
+	);
 	
 	/**
 	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
