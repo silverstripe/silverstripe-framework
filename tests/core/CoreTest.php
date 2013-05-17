@@ -21,6 +21,8 @@ class CoreTest extends SapphireTest {
 		if(file_exists($this->tempPath)) {
 			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . '/' . $user);
 		} else {
+			$user = getTempFolderUsername();
+
 			// A typical Windows location for where sites are stored on IIS
 			$this->assertEquals(sys_get_temp_dir() . '/silverstripe-cacheC--inetpub-wwwroot-silverstripe-test-project/' . $user,
 				getTempFolder('C:\\inetpub\\wwwroot\\silverstripe-test-project'));
