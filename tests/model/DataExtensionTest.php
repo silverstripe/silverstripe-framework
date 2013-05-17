@@ -8,6 +8,9 @@ class DataExtensionTest extends SapphireTest {
 		'DataExtensionTest_Player',
 		'DataExtensionTest_RelatedObject',
 		'DataExtensionTest_MyObject',
+		'DataExtensionTest_CMSFieldsBase',
+		'DataExtensionTest_CMSFieldsChild',
+		'DataExtensionTest_CMSFieldsGrandchild'
 	);
 	
 	protected $requiredExtensions = array(
@@ -155,6 +158,61 @@ class DataExtensionTest extends SapphireTest {
 
 		$this->assertEquals("hello world", $mo->testMethodApplied());
 		$this->assertEquals("hello world", $do->testMethodApplied());
+	}
+	
+	public function testPageFieldGeneration() {
+		$page = new DataExtensionTest_CMSFieldsBase();
+		$fields = $page->getCMSFields();
+		$this->assertNotEmpty($fields);
+		
+		// Check basic field exists
+		$this->assertNotEmpty($fields->dataFieldByName('PageField'));
+	}
+	
+	public function testPageExtensionsFieldGeneration() {
+		$page = new DataExtensionTest_CMSFieldsBase();
+		$fields = $page->getCMSFields();
+		$this->assertNotEmpty($fields);
+		
+		// Check extending fields exist
+		$this->assertNotEmpty($fields->dataFieldByName('ExtendedFieldRemove')); // Not removed yet!
+		$this->assertNotEmpty($fields->dataFieldByName('ExtendedFieldKeep'));
+	}
+	
+	public function testSubpageFieldGeneration() {
+		$page = new DataExtensionTest_CMSFieldsChild();
+		$fields = $page->getCMSFields();
+		$this->assertNotEmpty($fields);
+		
+		// Check extending fields exist
+		$this->assertEmpty($fields->dataFieldByName('ExtendedFieldRemove')); // Removed by child class
+		$this->assertNotEmpty($fields->dataFieldByName('ExtendedFieldKeep'));
+		$this->assertNotEmpty($preExtendedField = $fields->dataFieldByName('ChildFieldBeforeExtension'));
+		$this->assertEquals($preExtendedField->Title(), 'ChildFieldBeforeExtension: Modified Title');
+		
+		// Post-extension fields
+		$this->assertNotEmpty($fields->dataFieldByName('ChildField'));
+	}
+	
+	public function testSubSubpageFieldGeneration() {
+		$page = new DataExtensionTest_CMSFieldsGrandchild();
+		$fields = $page->getCMSFields();
+		$this->assertNotEmpty($fields);
+		
+		// Check extending fields exist
+		$this->assertEmpty($fields->dataFieldByName('ExtendedFieldRemove')); // Removed by child class
+		$this->assertNotEmpty($fields->dataFieldByName('ExtendedFieldKeep'));
+		
+		// Check child fields removed by grandchild in beforeUpdateCMSFields
+		$this->assertEmpty($fields->dataFieldByName('ChildFieldBeforeExtension')); // Removed by grandchild class
+		
+		// Check grandchild field modified by extension
+		$this->assertNotEmpty($preExtendedField = $fields->dataFieldByName('GrandchildFieldBeforeExtension'));
+		$this->assertEquals($preExtendedField->Title(), 'GrandchildFieldBeforeExtension: Modified Title');
+		
+		// Post-extension fields
+		$this->assertNotEmpty($fields->dataFieldByName('ChildField'));
+		$this->assertNotEmpty($fields->dataFieldByName('GrandchildField'));
 	}
 }
 
@@ -313,3 +371,93 @@ DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext1');
 DataExtensionTest_MyObject::add_extension('DataExtensionTest_Ext2');
 DataExtensionTest_MyObject::add_extension('DataExtensionTest_Faves');
 
+/**
+ * Base class for CMS fields
+ */
+class DataExtensionTest_CMSFieldsBase extends DataObject implements TestOnly {
+	
+	private static $db = array(
+		'PageField' => 'Varchar(255)'
+	);
+	
+	private static $extensions = array(
+		'DataExtensionTest_CMSFieldsBaseExtension'
+	);
+	
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->addFieldToTab('Root.Test', new TextField('PageField'));
+		return $fields;
+	}
+}
+
+/**
+ * Extension to top level test class, tests that updateCMSFields work
+ */
+class DataExtensionTest_CMSFieldsBaseExtension extends DataExtension implements TestOnly {
+	private static $db = array(
+		'ExtendedFieldKeep' => 'Varchar(255)',
+		'ExtendedFieldRemove' => 'Varchar(255)'
+	);
+	
+	public function updateCMSFields(FieldList $fields) {
+		$fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldRemove'));
+		$fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldKeep'));
+		
+		if($childField = $fields->dataFieldByName('ChildFieldBeforeExtension')) {
+			$childField->setTitle('ChildFieldBeforeExtension: Modified Title');
+		}
+		
+		if($grandchildField = $fields->dataFieldByName('GrandchildFieldBeforeExtension')) {
+			$grandchildField->setTitle('GrandchildFieldBeforeExtension: Modified Title');
+		}
+	}
+}
+
+/**
+ * Second level test class.
+ * Tests usage of beforeExtendingCMSFields
+ */
+class DataExtensionTest_CMSFieldsChild extends DataExtensionTest_CMSFieldsBase implements TestOnly {
+	private static $db = array(
+		'ChildField' => 'Varchar(255)',
+		'ChildFieldBeforeExtension' => 'Varchar(255)'
+	);
+	
+	public function getCMSFields() {
+		$this->beforeExtending('updateCMSFields', function(FieldList $fields) {
+			$fields->addFieldToTab('Root.Test', new TextField('ChildFieldBeforeExtension'));
+		});
+		
+		$this->afterExtending('updateCMSFields', function(FieldList $fields){
+			$fields->removeByName('ExtendedFieldRemove', true);
+		});
+		
+		$fields = parent::getCMSFields();
+		$fields->addFieldToTab('Root.Test', new TextField('ChildField'));
+		return $fields;
+	}
+}
+
+/**
+ * Third level test class, testing that beforeExtendingCMSFields can be nested
+ */
+class DataExtensionTest_CMSFieldsGrandchild extends DataExtensionTest_CMSFieldsChild implements TestOnly {
+	private static $db = array(
+		'GrandchildField' => 'Varchar(255)'
+	);
+	
+	public function getCMSFields() {
+		$this->beforeUpdateCMSFields(function(FieldList $fields) {
+			// Remove field from parent's beforeExtendingCMSFields
+			$fields->removeByName('ChildFieldBeforeExtension', true);
+			
+			// Adds own pre-extension field
+			$fields->addFieldToTab('Root.Test', new TextField('GrandchildFieldBeforeExtension'));
+		});
+		
+		$fields = parent::getCMSFields();
+		$fields->addFieldToTab('Root.Test', new TextField('GrandchildField'));
+		return $fields;
+	}
+}

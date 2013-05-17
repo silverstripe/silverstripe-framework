@@ -63,6 +63,8 @@ data management interfaces with very little custom coding.
 
 You can also alter the fields of built-in and module `DataObject` classes through
 your own `[DataExtension](/reference/dataextension)`, and a call to `[api:DataExtension->updateCMSFields()]`.
+`[api::DataObject->beforeUpdateCMSFields()]` can also be used to interact with and add to automatically
+scaffolded fields prior to being passed to extensions (See `[DataExtension](/reference/dataextension)`).
 
 ### Searchable Fields
 
