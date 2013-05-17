@@ -36,8 +36,8 @@ ensure they're casted correctly:
 
 	:::php
 	class MyObject extends DataObject {
-		static $db = array('Content' => 'HTMLText');
-		static $casting = array('ContentHighlighted' => 'HTMLText');
+		private static $db = array('Content' => 'HTMLText');
+		private static $casting = array('ContentHighlighted' => 'HTMLText');
 		public function ContentHighlighted($term) {
 			return str_replace($term, "<em>$term</em>", $this->Content);
 		}
