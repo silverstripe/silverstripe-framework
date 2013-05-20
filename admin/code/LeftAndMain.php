@@ -6,8 +6,8 @@
  * This is essentially an abstract class which should be subclassed.
  * See {@link CMSMain} for a good example.
  * 
- * @package cms
- * @subpackage core
+ * @package framework
+ * @subpackage admin
  */
 class LeftAndMain extends Controller implements PermissionProvider {
 	
@@ -1769,6 +1769,9 @@ class LeftAndMainMarkingFilter {
 
 /**
  * Allow overriding finished state for faux redirects.
+ *
+ * @package framework
+ * @subpackage admin
  */
 class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
 
@@ -1788,7 +1791,10 @@ class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
  * Wrapper around objects being displayed in a tree.
  * Caution: Volatile API.
  *
- * @todo Implement recursive tree node rendering
+ * @todo Implement recursive tree node rendering.
+ *
+ * @package framework
+ * @subpackage admin
  */
 class LeftAndMain_TreeNode extends ViewableData {
 	

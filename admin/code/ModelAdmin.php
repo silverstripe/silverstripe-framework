@@ -26,8 +26,8 @@
  * 
  * @uses SearchContext
  * 
- * @package cms
- * @subpackage core
+ * @package framework
+ * @subpackage admin
  */
 abstract class ModelAdmin extends LeftAndMain {
 

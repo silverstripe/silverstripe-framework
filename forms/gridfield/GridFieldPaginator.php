@@ -1,10 +1,10 @@
 <?php
 /**
- * GridFieldPaginator paginates the gridfields list and adds controlls to the
- * bottom of the gridfield.
+ * GridFieldPaginator paginates the {@link GridField} list and adds controls 
+ * to the bottom of the {@link GridField}.
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 	

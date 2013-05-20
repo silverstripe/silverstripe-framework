@@ -1,11 +1,13 @@
 <?php
+
 /**
- * GridFieldSortableHeader adds column headers to a gridfield that can also sort the columns
+ * GridFieldSortableHeader adds column headers to a {@link GridField} that can 
+ * also sort the columns.
  * 
  * @see GridField
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 
@@ -14,7 +16,9 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	 */
 	protected $throwExceptionOnBadDataType = true;
 
-	/** @var array */
+	/** 
+	 * @var array 
+	 */
 	public $fieldSorting = array();
 	
 	/**

@@ -1,9 +1,11 @@
 <?php
 /**
  * A button that allows a user to view readonly details of a record. This is
- * disabled by default and intended for use in readonly grid fields.
+ * disabled by default and intended for use in readonly {@link GridField}
+ * instances.
  *
  * @package framework
+ * @subpackage fields-gridfield
  */
 class GridFieldViewButton implements GridField_ColumnProvider {
 
@@ -31,5 +33,4 @@ class GridFieldViewButton implements GridField_ColumnProvider {
 	public function getColumnMetadata($gridField, $col) {
 		return array('title' => null);
 	}
-
 }

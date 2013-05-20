@@ -1,21 +1,27 @@
 <?php
 /**
- * Encapsulates a collection of components following the {@link GridFieldComponent} interface.
- * While the {@link GridField} itself has some configuration in the form of setters,
- * most of the details are dealt with through components.
+ * Encapsulates a collection of components following the 
+ * {@link GridFieldComponent} interface. While the {@link GridField} itself 
+ * has some configuration in the form of setters, most of the details are 
+ * dealt with through components.
  * 
  * For example, you would add a {@link GridFieldPaginator} component to enable
- * pagination on the listed records, and configure it through {@link GridFieldPaginator->setItemsPerPage()}.
+ * pagination on the listed records, and configure it through 
+ * {@link GridFieldPaginator->setItemsPerPage()}.
  * 
- * In order to reduce the amount of custom code required, the framework provides
- * some default configurations for common use cases:
+ * In order to reduce the amount of custom code required, the framework 
+ * provides some default configurations for common use cases:
+ *
  * - {@link GridFieldConfig_Base} (added by default to GridField)
  * - {@link GridFieldConfig_RecordEditor}
  * - {@link GridFieldConfig_RelationEditor}
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
 class GridFieldConfig {
+
 	/**
-	 *
 	 * @var ArrayList
 	 */
 	protected $components = null;
@@ -129,12 +135,15 @@ class GridFieldConfig {
 }
 
 /**
- * A simple readonly, paginated view of records,
- * with sortable and searchable headers.
+ * A simple readonly, paginated view of records, with sortable and searchable 
+ * headers.
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
 class GridFieldConfig_Base extends GridFieldConfig {
+
 	/**
-	 *
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
@@ -153,6 +162,9 @@ class GridFieldConfig_Base extends GridFieldConfig {
 
 /**
  * Allows viewing readonly details of individual records.
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
 class GridFieldConfig_RecordViewer extends GridFieldConfig_Base {
 
@@ -166,7 +178,8 @@ class GridFieldConfig_RecordViewer extends GridFieldConfig_Base {
 }
 
 /**
- * 
+ * @package framework
+ * @subpackage fields-gridfield
  */
 class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	/**
@@ -195,22 +208,28 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 
 
 /**
- * Similar to {@link GridFieldConfig_RecordEditor}, but adds features
- * to work on has-many or many-many relationships. 
- * Allows to search for existing records to add to the relationship,
- * detach listed records from the relationship (rather than removing them from the database),
- * and automatically add newly created records to it.
+ * Similar to {@link GridFieldConfig_RecordEditor}, but adds features to work 
+ * on has-many or many-many relationships. 
+ *
+ * Allows to search for existing records to add to the relationship, detach 
+ * listed records from the relationship (rather than removing them from the 
+ * database), and automatically add newly created records to it.
  * 
- * To further configure the field, use {@link getComponentByType()},
- * for example to change the field to search.
+ * To further configure the field, use {@link getComponentByType()}, for 
+ * example to change the field to search.
+ *
  * <code>
  * GridFieldConfig_RelationEditor::create()
- * 	->getComponentByType('GridFieldAddExistingAutocompleter')->setSearchFields('MyField');
+ * 	->getComponentByType('GridFieldAddExistingAutocompleter')
+ * 	->setSearchFields('MyField');
  * </code>
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
 class GridFieldConfig_RelationEditor extends GridFieldConfig {
+	
 	/**
-	 *
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {

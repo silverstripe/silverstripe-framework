@@ -1,12 +1,12 @@
 <?php
-/**
- * @package framework
- * @subpackage gridfield
- */
 
 /**
- * Adds an "Export list" button to the bottom of a GridField.
+ * Adds an "Export list" button to the bottom of a {@link GridField}.
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
+
 class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
 
 	/**

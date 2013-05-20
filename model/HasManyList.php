@@ -1,9 +1,13 @@
 <?php
 
 /**
- * Subclass of {@link DataList} representing a has_many relation
+ * Subclass of {@link DataList} representing a has_many relation.
+ *
+ * @package framework
+ * @subpackage model
  */
 class HasManyList extends RelationList {
+
 	protected $foreignKey;
 	
 	/**
@@ -18,6 +22,7 @@ class HasManyList extends RelationList {
 	 */
 	public function __construct($dataClass, $foreignKey) {
 		parent::__construct($dataClass);
+
 		$this->foreignKey = $foreignKey;
 	}
 	
@@ -36,7 +41,9 @@ class HasManyList extends RelationList {
 
 	/**
 	 * Adds the item to this relation.
+	 *
 	 * It does so by setting the relationFilters.
+	 *
 	 * @param $item The DataObject to be added, or its ID 
 	 */
 	public function add($item) {
@@ -66,11 +73,14 @@ class HasManyList extends RelationList {
 
 	/**
 	 * Remove an item from this relation.
+	 *
 	 * Doesn't actually remove the item, it just clears the foreign key value.
-	 * @param $itemID The ID of the item to be removed
+	 *
+	 * @param $itemID The ID of the item to be removed.
 	 */
 	public function removeByID($itemID) {
 		$item = $this->byID($itemID);
+
 		return $this->remove($item);
 	}
 	

@@ -1,19 +1,23 @@
 <?php
 
 /**
- * An ArrayList that represents an unsaved relation.
+ * An {@link ArrayList} that represents an unsaved relation.
  *
- * has_many and many_many relations cannot be saved until after the DataObject they're
- * on has been written. This List pretends to be a RelationList and stores the related
- * objects in memory.
+ * has_many and many_many relations cannot be saved until after the DataObject 
+ * they're on has been written. This List pretends to be a RelationList and 
+ * stores the related objects in memory.
  *
- * It can store both saved objects (as IDs) or unsaved objects (as instances of
- * $dataClass). Unsaved objects are then written when the list is saved into an instance
- * of RelationList.
+ * It can store both saved objects (as IDs) or unsaved objects (as instances 
+ * of $dataClass). Unsaved objects are then written when the list is saved 
+ * into an instance of {@link RelationList}.
  *
  * Most methods that alter the list of objects throw LogicExceptions.
+ *
+ * @package framework
+ * @subpackage model
  */
 class UnsavedRelationList extends ArrayList {
+	
 	/**
 	 * The DataObject class name that this relation is on
 	 * 

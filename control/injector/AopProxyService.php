@@ -2,13 +2,10 @@
 
 /**
  * A class that proxies another, allowing various functionality to be
- * injected
+ * injected.
  * 
- * @author marcus@silverstripe.com.au
  * @package framework
  * @subpackage injector
- * 
- * @license http://silverstripe.org/bsd-license/
  */
 class AopProxyService {
 	public $beforeCall = array();

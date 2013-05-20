@@ -1,15 +1,13 @@
 <?php
 
 /**
- * A BeforeCallAspect is run before a method is executed
+ * A BeforeCallAspect is run before a method is executed.
  *
  * This is a declared interface, but isn't actually required
  * as PHP doesn't really care about types... 
  * 
- * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @package framework
  * @subpackage injector
- * @license BSD http://silverstripe.org/BSD-license
  */
 interface BeforeCallAspect {
 	

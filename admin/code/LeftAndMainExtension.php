@@ -2,8 +2,8 @@
 /**
  * Plug-ins for additional functionality in your LeftAndMain classes.
  * 
- * @package    cms
- * @subpackage core
+ * @package framework
+ * @subpackage admin
  */
 abstract class LeftAndMainExtension extends Extension {
 
