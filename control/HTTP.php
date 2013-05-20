@@ -62,7 +62,10 @@ class HTTP {
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
 		return HTTP::urlRewriter($html, function($url) {
-			if(stripos($url, 'mailto:') === 0) return $url;
+			//no need to rewrite, if uri has a protocol (determined here by existence of reserved URI character ":")
+			if(preg_match('/^\w+:/', $url)){
+				return $url;
+			}
 			return Director::absoluteURL($url, true);
 		});
 	}
