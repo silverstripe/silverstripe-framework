@@ -1433,7 +1433,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 		
-		$result = new HasManyList($componentClass, $joinField);
+		$result = HasManyList::create($componentClass, $joinField);
 		if($this->model) $result->setDataModel($this->model);
 		$result = $result->forForeignID($this->ID);
 
@@ -1557,7 +1557,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->unsavedRelations[$componentName];
 		}
 		
-		$result = Injector::inst()->create('ManyManyList', $componentClass, $table, $componentField, $parentField,
+		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
 		if($this->model) $result->setDataModel($this->model);
 
