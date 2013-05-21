@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
  *
  * @package framework
- * @subpackage gridfield
+ * @subpackage fields-gridfield
  */
-
 class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
 
 	/**

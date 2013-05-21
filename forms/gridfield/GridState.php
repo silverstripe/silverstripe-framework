@@ -1,13 +1,14 @@
 <?php
 /**
- * This class is a snapshot of the current status of a {@link GridField}. It's 
- * designed to be inserted into a Form as a HiddenField and passed through to
- * actions such as the {@link GridField_FormAction}
+ * This class is a snapshot of the current status of a {@link GridField}. 
+ *
+ * It's designed to be inserted into a Form as a HiddenField and passed through 
+ * to actions such as the {@link GridField_FormAction}.
  * 
  * @see GridField
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridState extends HiddenField {
 
@@ -115,12 +116,13 @@ class GridState extends HiddenField {
 }
 
 /**
- * Simple set of data, similar to stdClass, but without the notice-level errors.
+ * Simple set of data, similar to stdClass, but without the notice-level 
+ * errors.
  *
  * @see GridState
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridState_Data {
 
@@ -174,7 +176,7 @@ class GridState_Data {
  * @see GridState
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridState_Component implements GridField_HTMLProvider {
 	

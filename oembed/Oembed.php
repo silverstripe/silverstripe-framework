@@ -1,15 +1,24 @@
 <?php
 /**
  * Format of the Oembed config. Autodiscover allows discovery of all URLs.
- * Endpoint set to true means autodiscovery for this specific provider is allowed
- * (even if autodiscovery in general has been disabled).
  *
+ * Endpoint set to true means autodiscovery for this specific provider is 
+ * allowed (even if autodiscovery in general has been disabled).
+ *
+ * <code>
+ * 
+ * name: Oembed
+ * ---
  * Oembed:
  *   providers:
- *     {pattern}:
- *        {endpoint}/true
+ *     'http://*.youtube.com/watch*':
+ *     'http://www.youtube.com/oembed/'
  *   autodiscover:
- *     true/false
+ *     true
+ * </code>
+ *
+ * @package framework
+ * @subpackage oembed
  */
 
 class Oembed {
@@ -178,6 +187,10 @@ class Oembed {
 	}
 }
 
+/**
+ * @package framework
+ * @subpackage oembed
+ */
 class Oembed_Result extends ViewableData {
 	/**
 	 * JSON data fetched from the Oembed URL.
