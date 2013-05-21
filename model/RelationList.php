@@ -2,9 +2,11 @@
 
 /**
  * A DataList that represents a relation.
+ *
  * Adds the notion of a foreign ID that can be optionally set.
  * 
- * @todo Is this additional class really necessary?
+ * @package framework
+ * @subpackage model
  */
 abstract class RelationList extends DataList {
 
@@ -13,8 +15,10 @@ abstract class RelationList extends DataList {
 	}
 
 	/**
-	 * Returns a copy of this list with the ManyMany relationship linked to the given foreign ID.
-	 * @param $id An ID or an array of IDs.
+	 * Returns a copy of this list with the ManyMany relationship linked to 
+	 * the given foreign ID.
+	 *
+	 * @param int|array $id An ID or an array of IDs.
 	 */
 	public function forForeignID($id) {
 		// Turn a 1-element array into a simple value
@@ -43,7 +47,9 @@ abstract class RelationList extends DataList {
 	}
 
 	/**
-	 * Returns a where clause that filters the members of this relationship to just the related items
+	 * Returns a where clause that filters the members of this relationship to 
+	 * just the related items.
+	 *
 	 * @param $id (optional) An ID or an array of IDs - if not provided, will use the current ids as per getForeignID
 	 */
 	abstract protected function foreignIDFilter($id = null);

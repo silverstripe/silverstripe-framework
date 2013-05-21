@@ -991,7 +991,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function removeByID($itemID) {
 		$item = $this->byID($itemID);
-		if($item) return $item->delete();
+
+		if($item) {
+			return $item->delete();
+		}
 	}
 	
 	/**

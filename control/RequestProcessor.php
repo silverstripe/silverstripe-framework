@@ -1,10 +1,8 @@
 <?php
 
 /**
- * Description of RequestProcessor
- *
- * @author marcus@silverstripe.com.au
- * @license BSD License http://silverstripe.org/bsd-license/
+ * @package framework
+ * @subpackage control
  */
 class RequestProcessor {
 

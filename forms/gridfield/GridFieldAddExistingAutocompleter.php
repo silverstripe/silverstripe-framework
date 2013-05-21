@@ -1,14 +1,25 @@
 <?php
 /**
- * This class is is responsible for adding objects to another object's has_many and many_many relation,
- * as defined by the {@link RelationList} passed to the GridField constructor.
- * Objects can be searched through an input field (partially matching one or more fields).
+ * This class is is responsible for adding objects to another object's has_many 
+ * and many_many relation, as defined by the {@link RelationList} passed to the 
+ * {@link GridField} constructor.
+ *
+ * Objects can be searched through an input field (partially matching one or 
+ * more fields).
+ *
  * Selecting from the results will add the object to the relation.
- * Often used alongside {@link GridFieldDeleteAction} for detaching existing records from a relatinship.
- * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
+ *
+ * Often used alongside {@link GridFieldDeleteAction} for detaching existing 
+ * records from a relationship.
+ *
+ * For easier setup, have a look at a sample configuration in 
+ * {@link GridFieldConfig_RelationEditor}.
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
-class GridFieldAddExistingAutocompleter
-		implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
+class GridFieldAddExistingAutocompleter 
+	implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 	
 	/**
 	 * Which template to use for rendering
