@@ -196,6 +196,7 @@ class RequestHandler extends ViewableData {
 
 		foreach($this->extension_instances as $extension) {
 			if($extensionActions = Object::get_static(get_class($extension), 'allowed_actions')) {
+				if(!$actions) $actions = array();
 				$actions = array_merge($actions, $extensionActions);
 			}
 		}
