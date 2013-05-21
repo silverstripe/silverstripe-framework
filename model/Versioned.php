@@ -1316,7 +1316,7 @@ class Versioned extends DataExtension {
 	/**
 	 * @param FieldList
 	 */
-	public function updateCMSFields(&$fields) {
+	public function updateCMSFields(FieldList $fields) {
 		// remove the version field from the CMS as this should be left 
 		// entirely up to the extension (not the cms user). 
 		$fields->removeByName('Version');
