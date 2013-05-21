@@ -172,6 +172,7 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 
 form.stacked .field label, .field.stacked label { display: block; float: none; padding-bottom: 10px; }
 form.stacked .field .middleColumn, .field.stacked .middleColumn { margin-left: 0px; clear: left; }
+form.stacked .field .description, .field.stacked .description { margin-left: 0px; }
 
 form.small .field label.left, .field.small label.left { width: 112px; }
 form.small .field .middleColumn, .field.small .middleColumn { margin-left: 120px; }
