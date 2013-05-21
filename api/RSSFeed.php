@@ -275,7 +275,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the description of the entry.
 	 */
 	function Description() {
-		return $this->rssField($this->descriptionField, 'Text');
+		return $this->rssField($this->descriptionField, 'HTMLText');
 	}
 
 	/**
