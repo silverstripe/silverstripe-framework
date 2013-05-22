@@ -265,6 +265,9 @@ input.radio { margin-left: 0; }
 .optionset.field { padding-top: 0; }
 
 /** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
+.htmleditor label { display: block; float: none; padding-bottom: 10px; }
+.htmleditor .middleColumn { margin-left: 0px; clear: left; }
+.htmleditor .description { margin-left: 0px; }
 .htmleditor textarea { visibility: hidden; }
 .htmleditor .mceEditor input, .htmleditor .mceEditor select { width: auto; }
 .htmleditor label.left { padding-bottom: 4px; }
