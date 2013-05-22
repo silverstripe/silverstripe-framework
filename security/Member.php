@@ -1424,6 +1424,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$config = HtmlEditorConfig::get($group->HtmlEditorConfig);
 				if($config && $config->getOption('priority') > $currentPriority) {
 					$currentName = $configName;
+					$currentPriority = $config->getOption('priority');
 				}
 			}
 		}
