@@ -58,9 +58,7 @@
 				$('body').bind('click', _clickTestFn);
 				
 				var panel = this.getPanel(), tree = this.find('.tree-holder');
-				var top = this.position().top + this.height();
-				
-				panel.css('top', top);
+
 				panel.css('width', this.width());
 				
 				panel.show();
