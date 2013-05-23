@@ -644,7 +644,7 @@ class SSViewer {
 
 		foreach (scandir($path) as $item) {
 			if ($item[0] != '.' && is_dir("$path/$item")) {
-				if ($subthemes || !strpos($item, '_')) {
+				if ($subthemes || strpos($item, '_') === false) {
 					$themes[$item] = $item;
 				}
 			}
