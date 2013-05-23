@@ -92,7 +92,8 @@
 					// Ensure the first validation error is visible
 					var firstTabWithErrors = this.find('.message.validation:first').closest('.tab');
 					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
-					firstTabWithErrors.closest('.tabset').tabs('select', firstTabWithErrors.attr('id'));
+					this.redraw();
+					firstTabWithErrors.closest('.cms-tabset').tabs('select', firstTabWithErrors.attr('id'));
 				}
 			
 				this._super();
