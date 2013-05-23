@@ -14,14 +14,6 @@
 	<!-- PHP-PEG generated file not intended for human consumption -->
 	<exclude-pattern>*/SSTemplateParser.php$</exclude-pattern>
 	
-	<rule ref="Generic.Files.LineEndings.InvalidEOLChar">
-		<severity>8</severity>
-	</rule>
-	<rule ref="Generic.Files.LineEndings">
-		<properties>
-			<property name="eolChar" value="\n" />
-		</properties>
-	</rule>
 	<rule ref="Generic.Files.LineLength.TooLong">
 		<severity>7</severity>
 	</rule>
