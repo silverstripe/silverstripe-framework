@@ -988,7 +988,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @todo Push all this logic into Member_GroupSet's getIterator()?
 	 */
 	public function Groups() {
-		$groups = Injector::inst()->create('Member_GroupSet', 'Group', 'Group_Members', 'GroupID', 'MemberID');
+		$groups = Member_GroupSet::create('Group', 'Group_Members', 'GroupID', 'MemberID');
 		$groups = $groups->forForeignID($this->ID);
 		
 		$this->extend('updateGroups', $groups);
@@ -1424,6 +1424,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$config = HtmlEditorConfig::get($group->HtmlEditorConfig);
 				if($config && $config->getOption('priority') > $currentPriority) {
 					$currentName = $configName;
+					$currentPriority = $config->getOption('priority');
 				}
 			}
 		}

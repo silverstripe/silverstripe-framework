@@ -4,10 +4,10 @@
  * GridFieldPage displays a simple current page count summary.
  * E.g. "View 1 - 15 of 32"
  * 
- * Depends on GridFieldPaginator being added to the same gridfield
+ * Depends on {@link GridFieldPaginator} being added to the {@link GridField}.
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridFieldPageCount implements GridField_HTMLProvider {
 	/**

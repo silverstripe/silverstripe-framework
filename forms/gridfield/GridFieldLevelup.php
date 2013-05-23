@@ -1,10 +1,13 @@
 <?php
 /**
- * Adds a "level up" link to a GridField table, which is useful
- * when viewing hierarchical data. Requires the managed record 
- * to have a "getParent()" method or has_one relationship called "Parent".
+ * Adds a "level up" link to a GridField table, which is useful when viewing 
+ * hierarchical data. Requires the managed record to have a "getParent()" 
+ * method or has_one relationship called "Parent".
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
-class GridFieldLevelup extends Object implements GridField_HTMLProvider{
+class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 	
 	/**
 	 * @var integer - the record id of the level up to

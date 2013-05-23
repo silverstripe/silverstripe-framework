@@ -8,6 +8,26 @@ class DataObjectDuplicationTest extends SapphireTest {
 		'DataObjectDuplicateTestClass3'
 	);
 
+	public function testDuplicate() {
+		$orig = new DataObjectDuplicateTestClass1();
+		$orig->text = 'foo';
+		$orig->write();
+
+		$duplicate = $orig->duplicate();
+		$this->assertInstanceOf('DataObjectDuplicateTestClass1', $duplicate,
+			'Creates the correct type'
+		);
+		$this->assertNotEquals($duplicate->ID, $orig->ID,
+			'Creates a unique record'
+		);
+		$this->assertEquals('foo', $duplicate->text,
+			'Copies fields'
+		);
+		$this->assertEquals(2, DataObjectDuplicateTestClass1::get()->Count(),
+			'Only creates a single duplicate'
+		);
+	}
+
 	public function testDuplicateManyManyClasses() {
 		//create new test classes below
 		$one = new DataObjectDuplicateTestClass1();

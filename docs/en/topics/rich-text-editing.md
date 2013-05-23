@@ -253,7 +253,7 @@ of the CMS you have to take care of instanciation yourself:
 	:::ss
 	// File: mysite/templates/MyController.ss
 	$Form
-	<% with EditorToolbar %>
+	<% with $EditorToolbar %>
 		$MediaForm
 		$LinkForm
 	<% end_with %>

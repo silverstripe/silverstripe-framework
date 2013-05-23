@@ -222,17 +222,20 @@ class Security extends Controller {
 				$messageSet = array('default' => $messageSet);
 			}
 
+			$member = Member::currentUser();
+
 			// Work out the right message to show
-			if(Member::currentUser()) {
+			if($member && $member->exists()) {
 				$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 				$response->setStatusCode(403);
 
 				//If 'alreadyLoggedIn' is not specified in the array, then use the default
 				//which should have been specified in the lines above
-				if(isset($messageSet['alreadyLoggedIn']))
-					$message=$messageSet['alreadyLoggedIn'];
-				else
-					$message=$messageSet['default'];
+				if(isset($messageSet['alreadyLoggedIn'])) {
+					$message = $messageSet['alreadyLoggedIn'];
+				} else {
+					$message = $messageSet['default'];
+				}
 
 				// Somewhat hackish way to render a login form with an error message.
 				$me = new Security();
@@ -240,8 +243,11 @@ class Security extends Controller {
 				$form->sessionMessage($message, 'warning');
 				Session::set('MemberLoginForm.force_message',1);
 				$formText = $me->login();
-				
+
 				$response->setBody($formText);
+
+				$controller->extend('permissionDenied', $member);
+
 				return $response;
 			} else {
 				$message = $messageSet['default'];
@@ -647,7 +653,7 @@ class Security extends Controller {
 	 * @return Form Returns the lost password form
 	 */
 	public function ChangePasswordForm() {
-		return new ChangePasswordForm($this, 'ChangePasswordForm');
+        return Object::create('ChangePasswordForm', $this, 'ChangePasswordForm');
 	}
 
 	/**

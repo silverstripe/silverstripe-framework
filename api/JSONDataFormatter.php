@@ -97,7 +97,7 @@ class JSONDataFormatter extends DataFormatter {
 					$innerParts[] = ArrayData::array_to_object(array(
 						"className" => $relClass,
 						"href" => "$href.json",
-						"id" => $obj->$fieldName
+						"id" => $item->$fieldName
 					));
 				}
 				$serobj->$relName = $innerParts;
@@ -118,7 +118,7 @@ class JSONDataFormatter extends DataFormatter {
 					$innerParts[] = ArrayData::array_to_object(array(
 						"className" => $relClass,
 						"href" => "$href.json",
-						"id" => $obj->$fieldName
+						"id" => $item->$fieldName
 					));
 				}
 				$serobj->$relName = $innerParts;

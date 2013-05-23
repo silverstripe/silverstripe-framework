@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Two masked input fields, checks for matching passwords.
- * Optionally hides the fields by default and shows
- * a link to toggle their visibility.
+ *
+ * Optionally hides the fields by default and shows a link to toggle their 
+ * visibility.
  * 
  * @package forms
  * @subpackage fields-formattedinput
@@ -39,11 +41,12 @@ class ConfirmedPasswordField extends FormField {
 	public $canBeEmpty = false;
 	
 	/**
-	 * If set to TRUE, the "password" and "confirm password"
-	 * formfields will be hidden via CSS and JavaScript by default,
-	 * and triggered by a link. An additional hidden field
-	 * determines if showing the fields has been triggered,
-	 * and just validates/saves the input in this case.
+	 * If set to TRUE, the "password" and "confirm password" form fields will 
+	 * be hidden via CSS and JavaScript by default, and triggered by a link. 
+	 *
+	 * An additional hidden field determines if showing the fields has been 
+	 * triggered and just validates/saves the input in this case.
+	 *
 	 * This behaviour works unobtrusively, without JavaScript enabled
 	 * the fields show, validate and save by default.
 	 * 
@@ -52,8 +55,7 @@ class ConfirmedPasswordField extends FormField {
 	protected $showOnClick = false;
 	
 	/**
-	 * Title for the link that triggers
-	 * the visibility of password fields.
+	 * Title for the link that triggers the visibility of password fields.
 	 *
 	 * @var string
 	 */
@@ -93,6 +95,12 @@ class ConfirmedPasswordField extends FormField {
 		if($showOnClick) {
 			$this->children->push(new HiddenField("{$name}[_PasswordFieldVisible]"));
 		}
+
+		// disable auto complete
+		foreach($this->children as $child) {
+			$child->setAttribute('autocomplete', 'off');
+		}
+
 		$this->showOnClick = $showOnClick;
 		
 		// we have labels for the subfields
@@ -102,6 +110,11 @@ class ConfirmedPasswordField extends FormField {
 		$this->setValue($value);
 	}
 	
+	/**
+	 * @param array $properties
+	 *
+	 * @return string
+	 */
 	public function Field($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ConfirmedPasswordField.js');
@@ -129,11 +142,13 @@ class ConfirmedPasswordField extends FormField {
 		foreach($this->children as $field) {
 			$field->setDisabled($this->isDisabled()); 
 			$field->setReadonly($this->isReadonly());
+
 			if(count($this->attributes)) {
 				foreach($this->attributes as $name => $value) {
 					$field->setAttribute($name, $value);
 				}
 			}
+
 			$content .= $field->FieldHolder();
 		}
 
@@ -154,65 +169,91 @@ class ConfirmedPasswordField extends FormField {
 	}
 	
 	/**
-	 * Can be empty is a flag that turns on/off empty field checking.
+	 * Can be empty is a flag that turns on / off empty field checking.
+	 *
 	 * For example, set this to false (the default) when creating a user account,
-	 * and true 
+	 * and true when displaying on an edit form.
+	 *
+	 * @param boolean $value
+	 * 
+	 * @return ConfirmedPasswordField
 	 */
 	public function setCanBeEmpty($value) {
 		$this->canBeEmpty = (bool)$value;
+
 		return $this;
 	}
 	
 	/**
-	 * The title on the link which triggers display of the
-	 * "password" and "confirm password" formfields.
-	 * Only used if {@link setShowOnClick()} is set to TRUE.
+	 * The title on the link which triggers display of the "password" and 
+	 * "confirm password" formfields. Only used if {@link setShowOnClick()} 
+	 * is set to TRUE.
 	 * 
-	 * @param $title
+	 * @param string $title
+	 *
+	 * @return ConfirmedPasswordField
 	 */
 	public function setShowOnClickTitle($title) {
 		$this->showOnClickTitle = $title;
+
 		return $this;
 	}
 	
 	/**
-	 * @return string
+	 * @return string $title
 	 */
 	public function getShowOnClickTitle() {
 		return $this->showOnClickTitle;
 	}
 	
+	/**
+	 * @param string $title
+	 *
+	 * @return ConfirmedPasswordField
+	 */
 	public function setRightTitle($title) {
 		foreach($this->children as $field) {
 			$field->setRightTitle($title);
 		}
+
 		return $this;
 	}
 	
 	/**
-	 * @param array: 2 entrie array with the customised title for each of the 2 children.
+	 * @param array $titles 2 entry array with the customized title for each 
+	 *						of the 2 children.
+	 *
+	 * @return ConfirmedPasswordField
 	 */
 	public function setChildrenTitles($titles) {
-		if(is_array($titles)&&count($titles)==2){
+		if(is_array($titles) && count($titles) == 2) {
 			foreach($this->children as $field) {
-				if(isset($titles[0])){
+				if(isset($titles[0])) {
 					$field->setTitle($titles[0]);
+
 					array_shift($titles);		
 				}
 			}
 		}
+
 		return $this;
 	}
 	
 	/**
-	 * Value is sometimes an array, and sometimes a single value, so we need to handle both cases
+	 * Value is sometimes an array, and sometimes a single value, so we need 
+	 * to handle both cases.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return ConfirmedPasswordField
 	 */
 	public function setValue($value) {
 		if(is_array($value)) {
 			if($value['_Password'] || (!$value['_Password'] && !$this->canBeEmpty)) {
 				$this->value = $value['_Password'];
 			}
-			if($this->showOnClick && isset($value['_PasswordFieldVisible'])){
+
+			if($this->showOnClick && isset($value['_PasswordFieldVisible'])) {
 				$this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]')
 					->setValue($value['_PasswordFieldVisible']);
 			}
@@ -221,29 +262,40 @@ class ConfirmedPasswordField extends FormField {
 				$this->value = $value;
 			}
 		}
-		$this->children->fieldByName($this->getName() . '[_Password]')->setValue($this->value);
-		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')->setValue($this->value);
+
+		$this->children->fieldByName($this->getName() . '[_Password]')
+			->setValue($this->value);
+
+		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')
+			->setValue($this->value);
 
 		return $this;
 	}
 
 	/**
-	 * Determines if the field was actually
-	 * shown on the clientside - if not,
+	 * Determines if the field was actually shown on the client side - if not, 
 	 * we don't validate or save it.
 	 * 
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isSaveable() {
 		$isVisible = $this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]');
+
 		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
 	}
 	
+	/**
+	 * @param Validator $validator
+	 *
+	 * @return boolean
+	 */
 	public function validate($validator) {
 		$name = $this->name;
 		
 		// if field isn't visible, don't validate
-		if(!$this->isSaveable()) return true; 
+		if(!$this->isSaveable()) {
+			return true;
+		}
 		
 		$passwordField = $this->children->fieldByName($name.'[_Password]');
 		$passwordConfirmField = $this->children->fieldByName($name.'[_ConfirmPassword]');
@@ -254,16 +306,26 @@ class ConfirmedPasswordField extends FormField {
 		
 		// both password-fields should be the same
 		if($value != $passwordConfirmField->Value()) {
-			$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"),
-				"validation", false);
+			$validator->validationError(
+				$name, 
+				_t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"),
+				"validation", 
+				false
+			);
+
 			return false;
 		}
 
 		if(!$this->canBeEmpty) {
 			// both password-fields shouldn't be empty
 			if(!$value || !$passwordConfirmField->Value()) {
-				$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"),
-					"validation", false);
+				$validator->validationError(
+					$name, 
+					_t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"),
+					"validation", 
+					false
+				);
+
 				return false;
 			}
 		}
@@ -310,21 +372,25 @@ class ConfirmedPasswordField extends FormField {
 					"validation", 
 					false
 				);
+
 				return false;
 			}
 		}
+
 		return true;
 	}
 	
 	/**
-	 * Only save if field was shown on the client,
-	 * and is not empty.
+	 * Only save if field was shown on the client, and is not empty.
 	 *
-	 * @param DataObject $record
-	 * @return bool
+	 * @param DataObjectInterface $record
+	 *
+	 * @return boolean
 	 */
 	public function saveInto(DataObjectInterface $record) {
-		if(!$this->isSaveable()) return false;
+		if(!$this->isSaveable()) {
+			return false;
+		}
 		
 		if(!($this->canBeEmpty && !$this->value)) {
 			parent::saveInto($record);
@@ -332,7 +398,9 @@ class ConfirmedPasswordField extends FormField {
 	}
 	
 	/**
-	 * Makes a pretty readonly field with some stars in it
+	 * Makes a read only field with some stars in it to replace the password
+	 *
+	 * @return ReadonlyField
 	 */
 	public function performReadonlyTransformation() {
 		$field = $this->castedCopy('ReadonlyField')

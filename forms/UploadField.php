@@ -94,6 +94,11 @@ class UploadField extends FileField {
 		 */
 		'canAttachExisting' => "CMS_ACCESS_AssetAdmin",
 		/**
+		 * @var boolean Shows the target folder for new uploads in the field UI.
+		 * Disable to keep the internal filesystem structure hidden from users.
+		 */
+		'canPreviewFolder' => true,
+		/**
 		 * @var boolean If a second file is uploaded, should it replace the existing one rather than throwing an errror?
 		 * This only applies for has_one relationships, and only replaces the association
 		 * rather than the actual file database record or filesystem entry.

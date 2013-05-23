@@ -750,6 +750,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * Return all currently fetched database fields.
+	 *
+	 * This function is similar to toMap() but doesn't trigger the lazy-loading of all unfetched fields.
+	 * Obviously, this makes it a lot faster.
+	 *
+	 * @return array The data as a map.
+	 */
+	public function getQueriedDatabaseFields() {
+		return $this->record;
+	}
+
+	/**
 	 * Update a number of fields on this object, given a map of the desired changes.
 	 * 
 	 * The field names can be simple names, or you can use a dot syntax to access $has_one relations.
@@ -1123,7 +1135,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		// No changes made
-		if($this->changed) {
+		if($this->changed || $forceWrite) {
 			foreach($this->getClassAncestry() as $ancestor) {
 				if(self::has_own_table($ancestor))
 				$ancestry[] = $ancestor;
@@ -1133,13 +1145,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!$forceInsert) unset($this->changed['ID']);
 
 			$hasChanges = false;
-			foreach($this->changed as $fieldName => $changed) {
-				if($changed) {
-					$hasChanges = true;
-					break;
+			if (!$forceWrite) {
+				foreach ($this->changed as $fieldName => $changed) {
+					if ($changed) {
+						$hasChanges = true;
+						break;
+					}
 				}
 			}
-
 			if($hasChanges || $forceWrite || !$this->record['ID']) {
 					
 				// New records have their insert into the base data table done first, so that they can pass the
@@ -1420,7 +1433,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 		
-		$result = new HasManyList($componentClass, $joinField);
+		$result = HasManyList::create($componentClass, $joinField);
 		if($this->model) $result->setDataModel($this->model);
 		$result = $result->forForeignID($this->ID);
 
@@ -1544,7 +1557,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $this->unsavedRelations[$componentName];
 		}
 		
-		$result = Injector::inst()->create('ManyManyList', $componentClass, $table, $componentField, $parentField,
+		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
 		if($this->model) $result->setDataModel($this->model);
 
@@ -1987,6 +2000,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
+	 * Allows user code to hook into DataObject::getCMSFields prior to updateCMSFields
+	 * being called on extensions
+	 * 
+	 * @param callable $callback The callback to execute
+	 */
+	protected function beforeUpdateCMSFields($callback) {
+		$this->beforeExtending('updateCMSFields', $callback);
+	}
+	
+	/**
 	 * Centerpiece of every data administration interface in Silverstripe,
 	 * which returns a {@link FieldList} suitable for a {@link Form} object.
 	 * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
@@ -2325,9 +2348,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Returns true if the given field exists
-	 * in a database column on any of the objects tables,
-	 * or as a dynamic getter with get<fieldName>().
+	 * Returns true if the given field exists in a database column on any of 
+	 * the objects tables and optionally look up a dynamic getter with 
+	 * get<fieldName>().
 	 *
 	 * @param string $field Name of the field
 	 * @return boolean True if the given field exists
@@ -2635,22 +2658,31 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Traverses to a DBField referenced by relationships between data objects.
-	 * The path to the related field is specified with dot separated syntax (eg: Parent.Child.Child.FieldName)
 	 *
-	 * @param $fieldPath string
-	 * @return DBField
+	 * The path to the related field is specified with dot separated syntax 
+	 * (eg: Parent.Child.Child.FieldName).
+	 *
+	 * @param string $fieldPath
+	 *
+	 * @return mixed DBField of the field on the object or a DataList instance.
 	 */
 	public function relObject($fieldPath) {
+		$object = null;
+
 		if(strpos($fieldPath, '.') !== false) {
 			$parts = explode('.', $fieldPath);
 			$fieldName = array_pop($parts);
 
 			// Traverse dot syntax
 			$component = $this;
+
 			foreach($parts as $relation) {
 				if($component instanceof SS_List) {
-					if(method_exists($component,$relation)) $component = $component->$relation();
-					else $component = $component->relation($relation);
+					if(method_exists($component,$relation)) {
+						$component = $component->$relation();
+					} else {
+						$component = $component->relation($relation);
+					}
 				} else {
 					$component = $component->$relation();
 				}
@@ -2662,12 +2694,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$object = $this->dbObject($fieldPath);
 		}
 
-
-		if (!($object instanceof DBField) && !($object instanceof DataList)) {
-			// Todo: come up with a broader range of exception objects to describe differnet kinds of errors
-			// programatically
-			throw new Exception("Unable to traverse to related object field [$fieldPath] on [$this->class]");
-		}
 		return $object;
 	}
 
@@ -3108,21 +3134,31 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Get the default searchable fields for this object,
-	 * as defined in the $searchable_fields list. If searchable
-	 * fields are not defined on the data object, uses a default
-	 * selection of summary fields.
+	 * Get the default searchable fields for this object, as defined in the 
+	 * $searchable_fields list. If searchable fields are not defined on the 
+	 * data object, uses a default selection of summary fields.
 	 *
 	 * @return array
 	 */
 	public function searchableFields() {
 		// can have mixed format, need to make consistent in most verbose form
 		$fields = $this->stat('searchable_fields');
-		
 		$labels = $this->fieldLabels();
 		
 		// fallback to summary fields
-		if(!$fields) $fields = array_keys($this->summaryFields());
+		if(!$fields) {
+			$summaryFields = array_keys($this->summaryFields());
+			$fields = array();
+
+			// remove the custom getters as the search should not include.
+			if($summaryFields) {
+				foreach($summaryFields as $key => $name) {
+					if($this->hasDatabaseField($name) || $this->relObject($name)) {
+						$fields[] = $name;
+					}
+				}
+			}
+		}
 		
 		// we need to make sure the format is unified before
 		// augmenting fields, so extensions can apply consistent checks

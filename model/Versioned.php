@@ -1,11 +1,15 @@
 <?php
+
 /**
- * The Versioned extension allows your DataObjects to have several versions, allowing
- * you to rollback changes and view history. An example of this is the pages used in the CMS.
+ * The Versioned extension allows your DataObjects to have several versions, 
+ * allowing you to rollback changes and view history. An example of this is 
+ * the pages used in the CMS.
+ *
  * @package framework
  * @subpackage model
  */
 class Versioned extends DataExtension {
+
 	/**
 	 * An array of possible stages.
 	 * @var array
@@ -40,6 +44,11 @@ class Versioned extends DataExtension {
 	protected static $cache_versionnumber;
 	
 	/**
+	 * @var string
+	 */
+	protected static $reading_mode = null;
+
+	/**
 	 * @var Boolean Flag which is temporarily changed during the write() process
 	 * to influence augmentWrite() behaviour. If set to TRUE, no new version will be created
 	 * for the following write. Needs to be public as other classes introspect this state
@@ -64,6 +73,20 @@ class Versioned extends DataExtension {
 	);
 	
 	/**
+	 * @var array
+	 */
+	private static $db = array(
+		'Version' => 'Int'
+	);
+
+	/**
+	 * Keep track of the archive tables that have been created.
+	 *
+	 * @var array
+	 */
+	private static $archive_tables = array();
+
+	/**
 	 * Additional database indexes for the new
 	 * "_versions" table. Used in {@link augmentDatabase()}.
 	 * 
@@ -78,7 +101,25 @@ class Versioned extends DataExtension {
 	);
 
 	/**
-	 * Reset static configuration variables to their default values
+	 * An array of DataObject extensions that may require versioning for extra tables
+	 * The array value is a set of suffixes to form these table names, assuming a preceding '_'.
+	 * E.g. if Extension1 creates a new table 'Class_suffix1' 
+	 * and Extension2 the tables 'Class_suffix2' and 'Class_suffix3':
+	 *
+	 * 	$versionableExtensions = array(
+	 * 		'Extension1' => 'suffix1',
+	 * 		'Extension2' => array('suffix2', 'suffix3'),
+	 * 	);
+	 * 
+	 * Make sure your extension has a static $enabled-property that determines if it is
+	 * processed by Versioned.
+	 *
+	 * @var array
+	 */
+	protected static $versionableExtensions = array('Translatable' => 'lang');
+
+	/**
+	 * Reset static configuration variables to their default values.
 	 */
 	public static function reset() {
 		self::$reading_mode = '';
@@ -88,36 +129,33 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Construct a new Versioned object.
+	 *
 	 * @var array $stages The different stages the versioned object can be.
-	 * The first stage is consiedered the 'default' stage, the last stage is
+	 * The first stage is considered the 'default' stage, the last stage is
 	 * considered the 'live' stage.
 	 */
-	public function __construct($stages=array('Stage','Live')) {
+	public function __construct($stages = array('Stage','Live')) {
 		parent::__construct();
 
 		if(!is_array($stages)) {
 			$stages = func_get_args();
 		}
+
 		$this->stages = $stages;
 		$this->defaultStage = reset($stages);
 		$this->liveStage = array_pop($stages);
 	}
-
-	private static $db = array(
-		'Version' => 'Int'
-	);
-
-	public static function get_extra_config($class, $extension, $args) {
-		array(
-			'has_many' => array('Versions' => $class)
-		);
-	}
 	
 	/**
-	 * Amend freshly created DataQuery objects with versioned-specific information 
+	 * Amend freshly created DataQuery objects with versioned-specific 
+	 * information.
+	 *
+	 * @param SQLQuery
+	 * @param DataQuery
 	 */
 	public function augmentDataQueryCreation(SQLQuery &$query, DataQuery &$dataQuery) {
 		$parts = explode('.', Versioned::get_reading_mode());
+
 		if($parts[0] == 'Archive') {
 			$dataQuery->setQueryParam('Versioned.mode', 'archive');
 			$dataQuery->setQueryParam('Versioned.date', $parts[1]);
@@ -147,6 +185,10 @@ class Versioned extends DataExtension {
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
 			foreach($query->getFrom() as $table => $dummy) {
+				if(!DB::getConn()->hasTable($table . '_versions')) {
+					continue;
+				}
+
 				$query->renameTable($table, $table . '_versions');
 				$query->replaceText("\"{$table}_versions\".\"ID\"", "\"{$table}_versions\".\"RecordID\"");
 				$query->replaceText("`{$table}_versions`.`ID`", "`{$table}_versions`.`RecordID`");
@@ -161,7 +203,6 @@ class Versioned extends DataExtension {
 					$query->addWhere("\"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
 				}
 			}
-
 			// Link to the version archived on that date
 			$safeDate = Convert::raw2sql($date);
 			$query->addWhere(
@@ -274,12 +315,13 @@ class Versioned extends DataExtension {
 	}
 
 	/**
-	 * For lazy loaded fields requiring extra sql manipulation, ie versioning
+	 * For lazy loaded fields requiring extra sql manipulation, ie versioning.
+	 *
 	 * @param SQLQuery $query
 	 * @param DataQuery $dataQuery
 	 * @param DataObject $dataObject
 	 */
-	function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $dataObject) {
+	public function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $dataObject) {
 		// The VersionedMode local variable ensures that this decorator only applies to 
 		// queries that have originated from the Versioned object, and have the Versioned 
 		// metadata set on the query object. This prevents regular queries from 
@@ -299,14 +341,11 @@ class Versioned extends DataExtension {
 			$dataQuery->where("\"$dataClass\".\"ID\" = {$dataObject->ID}")->limit(1);
 		}
 	}
-	
-	/**
-	 * Keep track of the archive tables that have been created 
-	 */
-	private static $archive_tables = array();
+
 	
 	/**
 	 * Called by {@link SapphireTest} when the database is reset.
+	 *
 	 * @todo Reduce the coupling between this and SapphireTest, somehow.
 	 */
 	public static function on_db_reset() {
@@ -320,24 +359,6 @@ class Versioned extends DataExtension {
 		// Remove references to them
 		self::$archive_tables = array();
 	}
-
-	/**
-	 * An array of DataObject extensions that may require versioning for extra tables
-	 * The array value is a set of suffixes to form these table names, assuming a preceding '_'.
-	 * E.g. if Extension1 creates a new table 'Class_suffix1' 
-	 * and Extension2 the tables 'Class_suffix2' and 'Class_suffix3':
-	 *
-	 * 	$versionableExtensions = array(
-	 * 		'Extension1' => 'suffix1',
-	 * 		'Extension2' => array('suffix2', 'suffix3'),
-	 * 	);
-	 * 
-	 * Make sure your extension has a static $enabled-property that determines if it is
-	 * processed by Versioned.
-	 *
-	 * @var array
-	 */
-	protected static $versionableExtensions = array('Translatable' => 'lang');
 	
 	public function augmentDatabase() {
 		$classTable = $this->owner->class;
@@ -504,6 +525,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Augment a write-record request.
+	 *
 	 * @param SQLQuery $manipulation Query to augment.
 	 */
 	public function augmentWrite(&$manipulation) {
@@ -599,10 +621,15 @@ class Versioned extends DataExtension {
 		}
 		
 		// Clear the migration flag
-		if($this->migratingVersion) $this->migrateVersion(null);
+		if($this->migratingVersion) {
+			$this->migrateVersion(null);
+		}
 
-		// Add the new version # back into the data object, for accessing after this write
-		if(isset($thisVersion)) $this->owner->Version = str_replace("'","",$thisVersion);
+		// Add the new version # back into the data object, for accessing 
+		// after this write
+		if(isset($thisVersion)) {
+			$this->owner->Version = str_replace("'","", $thisVersion);
+		}
 	}
 
 	/**
@@ -613,23 +640,30 @@ class Versioned extends DataExtension {
 	 */
 	public function writeWithoutVersion() {
 		$this->_nextWriteWithoutVersion = true;
+
 		return $this->owner->write();
 	}
 
+	/**
+	 *
+	 */
 	public function onAfterWrite() {
 		$this->_nextWriteWithoutVersion = false;
 	}
 
 	/**
-	 * If a write was skipped, then we need to ensure that we don't leave a migrateVersion()
-	 * value lying around for the next write.
+	 * If a write was skipped, then we need to ensure that we don't leave a 
+	 * migrateVersion() value lying around for the next write.
+	 *
+	 *
 	 */
 	public function onAfterSkippedWrite() {
 		$this->migrateVersion(null);
 	}
 	
 	/**
-	 * Determine if a table is supporting the Versioned extensions (e.g. $table_versions does exists)
+	 * Determine if a table is supporting the Versioned extensions (e.g. 
+	 * $table_versions does exists).
 	 *
 	 * @param string $table Table name
 	 * @return boolean
@@ -641,20 +675,29 @@ class Versioned extends DataExtension {
 	}
 	
 	/**
-	 * Check if a certain table has the 'Version' field
+	 * Check if a certain table has the 'Version' field.
 	 *
 	 * @param string $table Table name
+	 *
 	 * @return boolean Returns false if the field isn't in the table, true otherwise
 	 */
 	public function hasVersionField($table) {
 		$rPos = strrpos($table,'_');
+
 		if(($rPos !== false) && in_array(substr($table,$rPos), $this->stages)) {
 			$tableWithoutStage = substr($table,0,$rPos);
 		} else {
 			$tableWithoutStage = $table;
 		}
+
 		return ('DataObject' == get_parent_class($tableWithoutStage));
 	}
+
+	/**
+	 * @param string $table
+	 *
+	 * @return string
+	 */
 	public function extendWithSuffix($table) {
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
 			if ($this->owner->hasExtension($versionableExtension)) {
@@ -664,13 +707,13 @@ class Versioned extends DataExtension {
 				$ext->clearOwner();
 			}
 		}
+
 		return $table;
 	}
 
-	//-----------------------------------------------------------------------------------------------//
-	
 	/**
 	 * Get the latest published DataObject.
+	 *
 	 * @return DataObject
 	 */
 	public function latestPublished() {
@@ -687,6 +730,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Move a database record from one stage to the other.
+	 *
 	 * @param fromStage Place to copy from.  Can be either a stage name or a version number.
 	 * @param toStage Place to copy to.  Must be a stage name.
 	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version
@@ -738,6 +782,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Set the migrating version.
+	 *
 	 * @param string $version The version.
 	 */
 	public function migrateVersion($version) {
@@ -746,7 +791,9 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Compare two stages to see if they're different.
+	 *
 	 * Only checks the version numbers, not the actual content.
+	 *
 	 * @param string $stage1 The first stage to check.
 	 * @param string $stage2
 	 */
@@ -758,11 +805,14 @@ class Versioned extends DataExtension {
 			return true;
 		}
 
-		// We test for equality - if one of the versions doesn't exist, this will be false
-		//TODO: DB Abstraction: if statement here:
+		// We test for equality - if one of the versions doesn't exist, this 
+		// will be false.
+
+		// TODO: DB Abstraction: if statement here:
 		$stagesAreEqual = DB::query("SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\""
 			. " THEN 1 ELSE 0 END FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\""
 			. " AND \"$table1\".\"ID\" = {$this->owner->ID}")->value();
+
 		return !$stagesAreEqual;
 	}
 	
@@ -830,8 +880,10 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Compare two version, and return the diff between them.
+	 *
 	 * @param string $from The version to compare from.
 	 * @param string $to The version to compare to.
+	 *
 	 * @return DataObject
 	 */
 	public function compareVersions($from, $to) {
@@ -839,26 +891,39 @@ class Versioned extends DataExtension {
 		$toRecord = Versioned::get_version($this->owner->class, $this->owner->ID, $to);
 		
 		$diff = new DataDifferencer($fromRecord, $toRecord);
+
 		return $diff->diffedData();
 	}
 	
 	/**
 	 * Return the base table - the class that directly extends DataObject.
+	 *
 	 * @return string
 	 */
 	public function baseTable($stage = null) {
 		$tableClasses = ClassInfo::dataClassesFor($this->owner->class);
 		$baseClass = array_shift($tableClasses);
-		return (!$stage || $stage == $this->defaultStage) ? $baseClass : $baseClass . "_$stage";		
+
+		if(!$stage || $stage == $this->defaultStage) {
+			return $baseClass;
+		}
+
+		return $baseClass . "_$stage";		
 	}
 		
 	//-----------------------------------------------------------------------------------------------//
 	
 	/**
 	 * Choose the stage the site is currently on.
-	 * If $_GET['stage'] is set, then it will use that stage, and store it in the session.
-	 * if $_GET['archiveDate'] is set, it will use that date, and store it in the session.
-	 * If neither of these are set, it checks the session, otherwise the stage is set to 'Live'.
+	 *
+	 * If $_GET['stage'] is set, then it will use that stage, and store it in 
+	 * the session.
+	 *
+	 * if $_GET['archiveDate'] is set, it will use that date, and store it in 
+	 * the session.
+	 *
+	 * If neither of these are set, it checks the session, otherwise the stage 
+	 * is set to 'Live'.
 	 */
 	public static function choose_site_stage() {
 		if(isset($_GET['stage'])) {
@@ -897,6 +962,8 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Set the current reading mode.
+	 *
+	 * @param string $mode
 	 */
 	public static function set_reading_mode($mode) {
 		Versioned::$reading_mode = $mode;
@@ -904,6 +971,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Get the current reading mode.
+	 *
 	 * @return string
 	 */
 	public static function get_reading_mode() {
@@ -912,6 +980,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Get the name of the 'live' stage.
+	 *
 	 * @return string
 	 */
 	public static function get_live_stage() {
@@ -920,15 +989,20 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Get the current reading stage.
+	 *
 	 * @return string
 	 */
 	public static function current_stage() {
 		$parts = explode('.', Versioned::get_reading_mode());
-		if($parts[0] == 'Stage') return $parts[1];
+
+		if($parts[0] == 'Stage') {
+			return $parts[1];
+		}
 	}
 	
 	/**
 	 * Get the current archive date.
+	 *
 	 * @return string
 	 */
 	public static function current_archived_date() {
@@ -938,6 +1012,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Set the reading stage.
+	 *
 	 * @param string $stage New reading stage.
 	 */
 	public static function reading_stage($stage) {
@@ -946,6 +1021,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Set the reading archive date.
+	 *
 	 * @param string $date New reading archived date.
 	 */
 	public static function reading_archived_date($date) {
@@ -961,11 +1037,13 @@ class Versioned extends DataExtension {
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param boolean $cache Use caching.
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
+	 *
 	 * @return DataObject
 	 */
 	public static function get_one_by_stage($class, $stage, $filter = '', $cache = true, $sort = '') {
 		// TODO: No identity cache operating
 		$items = self::get_by_stage($class, $stage, $filter, $sort, null, 1);
+
 		return $items->First();
 	}
 	
@@ -976,6 +1054,7 @@ class Versioned extends DataExtension {
 	 * @param string $stage
 	 * @param int $id
 	 * @param boolean $cache
+	 *
 	 * @return int
 	 */
 	public static function get_versionnumber_by_stage($class, $stage, $id, $cache = true) {
@@ -992,10 +1071,14 @@ class Versioned extends DataExtension {
 		
 		// cache value (if required)
 		if($cache) {
-			if(!isset(self::$cache_versionnumber[$baseClass])) self::$cache_versionnumber[$baseClass] = array();
+			if(!isset(self::$cache_versionnumber[$baseClass])) {
+				self::$cache_versionnumber[$baseClass] = array();
+			}
+
 			if(!isset(self::$cache_versionnumber[$baseClass][$stage])) {
 				self::$cache_versionnumber[$baseClass][$stage] = array();
 			}
+
 			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
 		}
 		
@@ -1003,17 +1086,26 @@ class Versioned extends DataExtension {
 	}
 	
 	/**
-	 * Pre-populate the cache for Versioned::get_versionnumber_by_stage() for a list of record IDs,
-	 * for more efficient database querying.  If $idList is null, then every page will be pre-cached.
+	 * Pre-populate the cache for Versioned::get_versionnumber_by_stage() for 
+	 * a list of record IDs, for more efficient database querying.  If $idList 
+	 * is null, then every page will be pre-cached.
+	 *
+	 * @param string $class
+	 * @param string $stage
+	 * @param array $idList
 	 */
 	public static function prepopulate_versionnumber_cache($class, $stage, $idList = null) {
 		$filter = "";
+
 		if($idList) {
 			// Validate the ID list
-			foreach($idList as $id) if(!is_numeric($id)) {
-				user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id,
+			foreach($idList as $id) {
+				if(!is_numeric($id)) {
+					user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id,
 					E_USER_ERROR);
+				}
 			}
+
 			$filter = "WHERE \"ID\" IN(" .implode(", ", $idList) . ")";
 		}
 		
@@ -1021,6 +1113,7 @@ class Versioned extends DataExtension {
 		$stageTable = ($stage == 'Stage') ? $baseClass : "{$baseClass}_{$stage}";
 
 		$versions = DB::query("SELECT \"ID\", \"Version\" FROM \"$stageTable\" $filter")->map();
+
 		foreach($versions as $id => $version) {
 			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
 		}
@@ -1036,6 +1129,7 @@ class Versioned extends DataExtension {
 	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
 	 * @param int $limit A limit on the number of records returned from the database.
 	 * @param string $containerClass The container class for the result set (default is DataList)
+	 *
 	 * @return SS_List
 	 */
 	public static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '',
@@ -1048,6 +1142,11 @@ class Versioned extends DataExtension {
 		));
 	}
 	
+	/**
+	 * @param string $stage
+	 *
+	 * @return int
+	 */
 	public function deleteFromStage($stage) {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
@@ -1062,11 +1161,17 @@ class Versioned extends DataExtension {
 		return $result;
 	}
 	
+	/**
+	 * @param string $stage
+	 * @param boolean $forceInsert
+	 */
 	public function writeToStage($stage, $forceInsert = false) {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
+
 		$result = $this->owner->write(false, $forceInsert);
 		Versioned::set_reading_mode($oldMode);
+
 		return $result;
 	}
 
@@ -1074,7 +1179,7 @@ class Versioned extends DataExtension {
 	 * Roll the draft version of this page to match the published page.
 	 * Caution: Doesn't overwrite the object properties with the rolled back version.
 	 * 
-	 * @param $version Either the string 'Live' or a version number
+	 * @param int $version Either the string 'Live' or a version number
 	 */
 	public function doRollbackTo($version) {
 		$this->owner->extend('onBeforeRollback', $version);
@@ -1107,7 +1212,7 @@ class Versioned extends DataExtension {
 	 * @see get_latest_version()
 	 * @see latestPublished
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isLatestVersion() {
 		$version = self::get_latest_version($this->owner->class, $this->owner->ID);
@@ -1120,6 +1225,10 @@ class Versioned extends DataExtension {
 	 * version of each page stored in the (class)_versions tables.
 	 *
 	 * In particular, this will query deleted records as well as active ones.
+	 *
+	 * @param string $class
+	 * @param string $filter
+	 * @param string $sort
 	 */
 	public static function get_including_deleted($class, $filter = "", $sort = "") {
 		$list = DataList::create($class)
@@ -1132,9 +1241,15 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Return the specific version of the given id.
-	 * Caution: The record is retrieved as a DataObject, but saving back modifications
-	 * via write() will create a new version, rather than modifying the existing one.
+	 *
+	 * Caution: The record is retrieved as a DataObject, but saving back 
+	 * modifications via write() will create a new version, rather than 
+	 * modifying the existing one.
 	 * 
+	 * @param string $class
+	 * @param int $id
+	 * @param int $version
+	 *
 	 * @return DataObject
 	 */
 	public static function get_version($class, $id, $version) {
@@ -1148,7 +1263,11 @@ class Versioned extends DataExtension {
 	}
 
 	/**
-	 * Return a list of all versions for a given id
+	 * Return a list of all versions for a given id.
+	 *
+	 * @param string $class
+	 * @param int $id
+	 *
 	 * @return DataList
 	 */
 	public static function get_all_versions($class, $id) {
@@ -1160,25 +1279,44 @@ class Versioned extends DataExtension {
 		return $list;
 	}
 	
+	/**
+	 * @param Controller $controller
+	 */
 	public function contentcontrollerInit($controller) {
 		self::choose_site_stage();
 	}
+
+	/**
+	 * @param Controller $controller
+	 */
 	public function modelascontrollerInit($controller) {
 		self::choose_site_stage();
 	}
 	
-	protected static $reading_mode = null;
-	
+	/**
+	 * @param array $labels
+	 */
 	public function updateFieldLabels(&$labels) {
 		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', 'Past Versions of this page');
 	}
 	
+	/**
+	 * @param FieldList
+	 */
+	public function updateCMSFields(FieldList $fields) {
+		// remove the version field from the CMS as this should be left 
+		// entirely up to the extension (not the cms user). 
+		$fields->removeByName('Version');
+	}
+
 	public function flushCache() {
 		self::$cache_versionnumber = array();
 	}
 
 	/**
-	 * Return a piece of text to keep DataObject cache keys appropriately specific
+	 * Return a piece of text to keep DataObject cache keys appropriately specific.
+	 *
+	 * @return string
 	 */
 	public function cacheKeyComponent() {
 		return 'versionedmode-'.self::get_reading_mode();
@@ -1194,7 +1332,14 @@ class Versioned extends DataExtension {
  * @see Versioned
  */
 class Versioned_Version extends ViewableData {
+	/**
+	 * @var array
+	 */
 	protected $record;
+
+	/**
+	 * @var DataObject
+	 */
 	protected $object;
 	
 	public function __construct($record) {
@@ -1208,23 +1353,36 @@ class Versioned_Version extends ViewableData {
 		parent::__construct();
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function PublishedClass() {
 		return $this->record['WasPublished'] ? 'published' : 'internal';
 	}
 	
+	/**
+	 * @return Member
+	 */
 	public function Author() {
-		return DataObject::get_by_id("Member", $this->record['AuthorID']);
+		return Member::get()->byId($this->record['AuthorID']);
 	}
 	
+	/**
+	 * @return Member
+	 */
 	public function Publisher() {
-		if( !$this->record['WasPublished'] )
+		if (!$this->record['WasPublished']) {
 			return null;
+		}
 			
-		return DataObject::get_by_id("Member", $this->record['PublisherID']);
+		return Member::get()->byId($this->record['PublisherID']);
 	}
 	
+	/**
+	 * @return boolean
+	 */
 	public function Published() {
-		return !empty( $this->record['WasPublished'] );
+		return !empty($this->record['WasPublished']);
 	}
 
 	/**
@@ -1240,17 +1398,23 @@ class Versioned_Version extends ViewableData {
 			// Traverse dot syntax
 			foreach($parts as $relation) {
 				if($component instanceof SS_List) {
-					if(method_exists($component,$relation)) $component = $component->$relation();
-					else $component = $component->relation($relation);
+					if(method_exists($component,$relation)) {
+						$component = $component->$relation();
+					} else {
+						$component = $component->relation($relation);
+					}
 				} else {
 					$component = $component->$relation();
-}
+				}
 			}
 		}
 
 		// Unlike has-one's, these "relations" can return false
 		if($component) {
-			if ($component->hasMethod($fieldName)) return $component->$fieldName();
+			if ($component->hasMethod($fieldName)) {
+				return $component->$fieldName();
+			}
+
 			return $component->$fieldName;
 		}
 	}

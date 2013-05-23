@@ -85,7 +85,7 @@ and committed to a special "translation-staging" branch on github.
 You can download individual files by opening them on github.com (inside the `lang/` folder), and using the "Raw" view.
 Place those files in the appropriate directories on a local silverstripe installation. 
 
- * ["translation-staging" branch for framework module](https://github.com/silverstripe/sapphire/tree/translation-staging)
+ * ["translation-staging" branch for framework module](https://github.com/silverstripe/silverstripe-framework/tree/translation-staging)
  * ["translation-staging" branch for cms module](https://github.com/silverstripe/silverstripe-cms/tree/translation-staging)
 
 # Related

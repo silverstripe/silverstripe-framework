@@ -1,17 +1,18 @@
 <?php
-/**
- * @package framework
- * @subpackage gridfield
- */
 
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
+ *
+ * @package framework
+ * @subpackage fields-gridfield
  */
 class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
 
 	/**
-	 * @var array Map of a property name on the printed objects, with values being the column title in the CSV file.
-	 * Note that titles are only used when {@link $csvHasHeader} is set to TRUE.
+	 * @var array Map of a property name on the printed objects, with values 
+	 * being the column title in the CSV file.
+	 *
+	 * Note that titles are only used when {@link $csvHasHeader} is set to TRUE
 	 */
 	protected $printColumns;
 
@@ -21,7 +22,9 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	protected $printHasHeader = true;
 	
 	/**
-	 * Fragment to write the button to
+	 * Fragment to write the button to.
+	 *
+	 * @var string
 	 */
 	protected $targetFragment;
 
@@ -36,6 +39,10 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 
 	/**
 	 * Place the print button in a <p> tag below the field
+	 *
+	 * @param GridField
+	 *
+	 * @return array
 	 */
 	public function getHTMLFragments($gridField) {
 		$button = new GridField_FormAction(
@@ -45,21 +52,34 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 			'print', 
 			null
 		);
+
 		$button->setAttribute('data-icon', 'grid_print');
 		$button->addExtraClass('gridfield-button-print');
-		//$button->addExtraClass('no-ajax');
+
 		return array(
 			$this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>', 
 		);
 	}
 
 	/**
-	 * print is an action button
+	 * Print is an action button.
+	 *
+	 * @param GridField
+	 *
+	 * @return array
 	 */
 	public function getActions($gridField) {
 		return array('print');
 	}
 
+	/**
+	 * Handle the print action.
+	 *
+	 * @param GridField
+	 * @param string
+	 * @param array
+	 * @param array
+	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if($actionName == 'print') {
 			return $this->handlePrint($gridField);
@@ -67,7 +87,10 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	}
 
 	/**
-	 * it is also a URL
+	 * Print is accessible via the url
+	 *
+	 * @param GridField
+	 * @return array
 	 */
 	public function getURLHandlers($gridField) {
 		return array(
@@ -82,15 +105,20 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		set_time_limit(60);
 		Requirements::clear();
 		Requirements::css(FRAMEWORK_DIR . '/css/GridField_print.css');
+
 		if($data = $this->generatePrintData($gridField)){
 			return $data->renderWith("GridField_print");
 		}
 	}
 
 	/**
-	 * Export core.
- 	 */
-	public function generatePrintData($gridField) {
+	 * Return the columns to print
+	 *
+	 * @param GridField
+	 * 
+	 * @return array
+	 */
+	protected function getPrintColumnsForGridField(GridField $gridField) {
 		if($this->printColumns) {
 			$printColumns = $this->printColumns;
 		} else if($dataCols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns')) {
@@ -98,74 +126,93 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		} else {
 			$printColumns = singleton($gridField->getModelClass())->summaryFields();
 		}
-		
-		$header = null;
-		if($this->printHasHeader){
-			$header = new ArrayList();
-			foreach($printColumns as $field => $label){
-				$header->push(
-					new ArrayData(array(
-						"CellString" => $label,
-					))
-				);
-			}
-		}
-		
-		$items = $gridField->getList();
-		foreach($gridField->getConfig()->getComponents() as $component){
-			if($component instanceof GridFieldFilterHeader || $component instanceof GridFieldSortableHeader) {
-				$items = $component->getManipulatedData($gridField, $items);
-			}
-		}
-		
-		$itemRows = new ArrayList();
-		foreach($items as $item) {
-			$itemRow = new ArrayList();
-			foreach($printColumns as $field => $label) {
-				$value = $gridField->getDataFieldValue($item, $field);
-				$itemRow->push(
-					new ArrayData(array(
-						"CellString" => $value,
-					))
-				);
-			}
-			$itemRows->push(new ArrayData(
-				array(
-					"ItemRow" => $itemRow
-				)
-			));
-			$item->destroy();
-		}
-		
-		//get title for the print view
+
+		return $printColumns;
+	}
+
+	/**
+	 * Return the title of the printed page
+	 *
+	 * @param GridField
+	 *
+	 * @return array
+	 */
+	public function getTitle(GridField $gridField) {
 		$form = $gridField->getForm();
 		$currentController = Controller::curr();
 		$title = '';
+
 		if(method_exists($currentController, 'Title')) {
 			$title = $currentController->Title();
-		}else{
-			if($currentController->Title){
+		} else {
+			if ($currentController->Title) {
 				$title = $currentController->Title;
-			}else{
+			} else {
 				if($form->Name()){
 					$title = $form->Name();
 				}
 			}
 		}
-		if($fieldTitle = $gridField->Title()){
-			if($title) $title .= " - ";
+
+		if($fieldTitle = $gridField->Title()) {
+			if($title) {
+				$title .= " - ";
+			}
+
 			$title .= $fieldTitle;
 		}
+
+		return $title;
+	}
+
+	/**
+	 * Export core.
+	 *
+	 * @param GridField
+ 	 */
+	public function generatePrintData(GridField $gridField) {
+		$printColumns = $this->getPrintColumnsForGridField($gridField);
 		
-		$ret = new ArrayData(
-			array(
-				"Title" => $title,
-				"Header" => $header,
-				"ItemRows" => $itemRows,
-				"Datetime" => SS_Datetime::now(),
-				"Member" => Member::currentUser(),
-			)
-		);
+		$header = null;
+
+		if($this->printHasHeader) {
+			$header = new ArrayList();
+
+			foreach($printColumns as $field => $label){
+				$header->push(new ArrayData(array(
+					"CellString" => $label,
+				)));
+			}
+		}
+		
+		$items = $gridField->getManipulatedList();
+		$itemRows = new ArrayList();
+
+		foreach($items as $item) {
+			$itemRow = new ArrayList();
+			
+			foreach($printColumns as $field => $label) {
+				$value = $gridField->getDataFieldValue($item, $field);
+
+				$itemRow->push(new ArrayData(array(
+					"CellString" => $value,
+				)));
+			}
+			
+			$itemRows->push(new ArrayData(array(
+				"ItemRow" => $itemRow
+			)));
+
+			$item->destroy();
+		}
+
+		$ret = new ArrayData(array(
+			"Title" => $this->getTitle($gridField),
+			"Header" => $header,
+			"ItemRows" => $itemRows,
+			"Datetime" => SS_Datetime::now(),
+			"Member" => Member::currentUser(),
+		));
 		
 		return $ret;
 	}
@@ -182,6 +229,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	public function setPrintColumns($cols) {
 		$this->printColumns = $cols;
+
 		return $this;
 	}
 
@@ -197,6 +245,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	public function setPrintHasHeader($bool) {
 		$this->printHasHeader = $bool;
+
 		return $this;
 	}
 }

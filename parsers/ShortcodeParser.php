@@ -1,9 +1,11 @@
 <?php
 /**
  * A simple parser that allows you to map BBCode-like "shortcodes" to an arbitrary callback.
- *
- * See the documentation at docs/reference/shortcodes.md .
- *
+ * It is a simple regex based parser that allows you to replace simple bbcode-like tags
+ * within a HTMLText or HTMLVarchar field when rendered into a template. The API is inspired by and very similar to the
+ * [Wordpress implementation](http://codex.wordpress.org/Shortcode_API) of shortcodes.
+ * 
+ * @see http://doc.silverstripe.org/framework/en/topics/shortcodes
  * @package framework
  * @subpackage misc
  */
@@ -194,7 +196,7 @@ class ShortcodeParser {
 	/**
 	 * Look through a string that contains shortcode tags and pull out the locations and details
 	 * of those tags
-	 * 
+	 *
 	 * Doesn't support nested shortcode tags
 	 * 
 	 * @param string $content
@@ -203,12 +205,12 @@ class ShortcodeParser {
 	 */
 	protected function extractTags($content) {
 		$tags = array();
-
+		
 		if(preg_match_all(self::tagrx(), $content, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
 			foreach($matches as $match) {
 				// Ignore any elements
 				if (empty($match['open'][0]) && empty($match['close'][0])) continue;
-				
+
 				// Pull the attributes out into a key/value hash
 				$attrs = array();
 				
@@ -218,7 +220,7 @@ class ShortcodeParser {
 					foreach ($attrmatches as $attr) {
 						list($whole, $name, $value) = array_values(array_filter($attr));
 						$attrs[$name] = $value;
-					}
+				}
 				}
 				
 				// And store the indexes, tag details, etc
@@ -233,7 +235,7 @@ class ShortcodeParser {
 					'escaped' => !empty($match['oesc'][0]) || !empty($match['cesc1'][0]) || !empty($match['cesc2'][0])
 				);
 			}
-		}
+			}
 
 		$i = count($tags);
 		while($i--) {
@@ -243,14 +245,14 @@ class ShortcodeParser {
 				
 				if ($i == 0) {
 					$err = 'Close tag "'.$tags[$i]['close'].'" is the first found tag, so has no related open tag';
-				}
+		}
 				else if (!$tags[$i-1]['open']) {
 					$err = 'Close tag "'.$tags[$i]['close'].'" preceded by another close tag "'.$tags[$i-1]['close'].'"';
 				}
 				else if ($tags[$i]['close'] != $tags[$i-1]['open']) {
 					$err = 'Close tag "'.$tags[$i]['close'].'" doesn\'t match preceding open tag "'.$tags[$i-1]['open'].'"';
 				}
-
+		
 				if($err) {
 					if(self::$error_behavior == self::ERROR) user_error($err, E_USER_ERRROR);	
 				} 
@@ -345,12 +347,12 @@ class ShortcodeParser {
 						}
 					}
 
-					return $content;
+		return $content;
 				});
-			}
+	}
 		}
 	}
-
+	
 	/**
 	 * Replace the element-scoped tags with markers
 	 *
@@ -361,14 +363,14 @@ class ShortcodeParser {
 		
 		if($tags) {
 			$markerClass = self::$marker_class;
-			
+		
 			$content = $this->replaceTagsWithText($content, $tags, function($idx, $tag) use ($markerClass) {
 				return '<img class="'.$markerClass.'" data-tagid="'.$idx.'" />';
 			});
-		}
+				}
 		
 		return array($content, $tags);
-	}
+			}
 
 	protected function findParentsForMarkers($nodes) {
 		$parents = array();
@@ -378,15 +380,15 @@ class ShortcodeParser {
 
 			do {
 				$parent = $parent->parentNode;
-			}
+		}
 			while($parent instanceof DOMElement && !in_array(strtolower($parent->tagName), self::$block_level_elements));
 
 			$node->setAttribute('data-parentid', count($parents));
 			$parents[] = $parent;
-		}
-		
-		return $parents;
 	}
+	
+		return $parents;
+}
 	
 	const BEFORE = 'before';
 	const AFTER = 'after';
@@ -421,10 +423,10 @@ class ShortcodeParser {
 	protected function moveMarkerToCompliantHome($node, $parent, $location) {
 		// Move before block parent
 		if($location == self::BEFORE) {
+		if (isset($parent->parentNode))
 			$parent->parentNode->insertBefore($node, $parent);
-		}
-		// Move after block parent
-		else if($location == self::AFTER) {
+		} else if($location == self::AFTER) {
+			// Move after block parent
 			$this->insertAfter($node, $parent);
 		}
 		// Split parent at node

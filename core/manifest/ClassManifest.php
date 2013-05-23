@@ -248,19 +248,28 @@ class SS_ClassManifest {
 
 	/**
 	 * Returns an array of module names mapped to their paths.
-	 * "Modules" in SilverStripe are simply directories with a _config.php file.
+	 *
+	 * "Modules" in SilverStripe are simply directories with a _config.php 
+	 * file.
 	 *
 	 * @return array
 	 */
 	public function getModules() {
 		$modules = array();
-		foreach($this->configs as $configPath) {
-			$modules[basename(dirname($configPath))] = dirname($configPath);
+		
+		if($this->configs) {
+			foreach($this->configs as $configPath) {
+				$modules[basename(dirname($configPath))] = dirname($configPath);
+			}
 		}
-		foreach($this->configDirs as $configDir) {
-			$path = preg_replace('/\/_config$/', '', dirname($configDir));
-			$modules[basename($path)] = $path;
+
+		if($this->configDirs) {
+			foreach($this->configDirs as $configDir) {
+				$path = preg_replace('/\/_config$/', '', dirname($configDir));
+				$modules[basename($path)] = $path;
+			}
 		}
+
 		return $modules;
 	}
 

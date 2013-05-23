@@ -7,18 +7,18 @@ and handle the actions and data from a form.
 
 A fully implemented form in SilverStripe includes a couple of classes that individually have separate concerns.
 
- * Controller - Takes care of assemble the form and recieving data from it.
+ * Controller - Takes care of assembling the form and receiving data from it.
  * Form - Holds sets of fields, actions and validators.
- * FormField  - Fields that recieves data or displays them, e.g input fields.
+ * FormField  - Fields that receive data or displays them, e.g input fields.
  * FormActions - Often submit buttons that executes actions.
- * Validators - Validates the whole form, see [Form validation](form-validation.md) topic for more information.
+ * Validators - Validate the whole form, see [Form validation](form-validation.md) topic for more information.
 
 Depending on your needs you can customize and override any of the above classes, however the defaults are often 
 sufficient.
 
 ## The Controller
 
-Forms start at the controller. Here is an simple example on how to set up a form in a controller.
+Forms start at the controller. Here is a simple example on how to set up a form in a controller.
 
 **Page.php**
 
@@ -264,7 +264,7 @@ basic customisation:
 
 	:::ss
 	<form $FormAttributes>
-		<% if Message %>
+		<% if $Message %>
 			<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>
 			<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
@@ -284,9 +284,9 @@ basic customisation:
 			$Fields.dataFieldByName(SecurityID)
 		</fieldset>
 		
-		<% if Actions %>
+		<% if $Actions %>
 		<div class="Actions">
-			<% loop Actions %>$Field<% end_loop %>
+			<% loop $Actions %>$Field<% end_loop %>
 		</div>
 		<% end_if %>
 	</form>
@@ -297,7 +297,7 @@ for the type of field. Pass in the name of the field as the first parameter, as 
 template.
 
 To find more methods, have a look at the `[api:Form]` class and `[api:FieldList]` class as there is a lot of different 
-methods of customising the form templates. An example is that you could use `<% loop Fields %>` instead of specifying 
+methods of customising the form templates. An example is that you could use `<% loop $Fields %>` instead of specifying 
 each field manually, as we've done above.
 
 ### Custom form field templates
@@ -338,6 +338,14 @@ or set on a form field instance via anyone of these methods:
 
 SilverStripe tries to protect users against *Cross-Site Request Forgery (CSRF)* by adding a hidden *SecurityID*
 parameter to each form. See [secure-development](/topics/security) for details.
+
+In addition, you should limit forms to the intended HTTP verb (mostly `GET` or `POST`)
+to further reduce attack surface, by using `[api:Form->setStrictFormMethodCheck()]`.
+
+	:::php
+	$myForm->setFormMethod('POST');
+	$myForm->setStrictFormMethodCheck(true);
+	$myForm->setFormMethod('POST', true); // alternative short notation
 
 ### Remove existing fields
 

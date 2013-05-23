@@ -173,6 +173,14 @@ class HTTPTest extends SapphireTest {
 				HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
 			);
 			
+			//check dot segments
+			// Assumption: dots are not removed
+				//if they were, the url should be: http://www.silverstripe.org/abc
+			$test->assertEquals(
+				'<a href="http://www.silverstripe.org/test/page/../../abc">Test</a>',
+				HTTP::absoluteURLs('<a href="test/page/../../abc">Test</a>')
+			);
+
 			// image
 			$test->assertEquals(
 				'<img src=\'http://www.silverstripe.org/themes/silverstripe/images/logo-org.png\' />',
@@ -187,16 +195,33 @@ class HTTPTest extends SapphireTest {
 		});
 	}
 	
-	public function testEmailLinks() {
+	/**
+	 * 	Make sure URI schemes are not rewritten
+	 */
+	public function testURISchemes() {
 		$this->withBaseURL('http://www.silverstripe.org/', function($test){
-			
-			// links
+
+			// mailto
 			$test->assertEquals(
 				'<a href=\'mailto:admin@silverstripe.org\'>Email Us</a>',
-				HTTP::absoluteURLs('<a href=\'mailto:admin@silverstripe.org\'>Email Us</a>')
+				HTTP::absoluteURLs('<a href=\'mailto:admin@silverstripe.org\'>Email Us</a>'),
+				'Email links are not rewritten'
 			);
+
+			// data uri
+			$test->assertEquals(
+				'<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
+				HTTP::absoluteURLs('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />'),
+				'Data URI links are not rewritten'
+			);
+
+			// call
+			$test->assertEquals(
+				'<a href="callto:12345678" />',
+				HTTP::absoluteURLs('<a href="callto:12345678" />'),
+				'Call to links are not rewritten'
+			);	
 		});
-		
 	}
 	
 	/**

@@ -157,16 +157,27 @@
 			},
 			onclick: function(e){
 				var btn = this.closest(':button'), grid = this.getGridField(),
-					form = this.closest('form'), data = form.find(':input').serialize();
+					form = this.closest('form'), data = form.find(':input.gridstate').serialize();;
 
 				// Add current button
-				data += '&' + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
 
-				// Include any GET parameters from the current URL, as the view state might depend on it.
-				// For example, a list prefiltered through external search criteria might be passed to GridField.
-				if(window.location.search) data = window.location.search.replace(/^\?/, '') + '&' + data;
+				// Include any GET parameters from the current URL, as the view
+				// state might depend on it.
+				// For example, a list prefiltered through external search criteria
+				// might be passed to GridField.
+				if(window.location.search) {
+					data = window.location.search.replace(/^\?/, '') + '&' + data;
+				}
 
-				var url = $.path.makeUrlAbsolute(grid.data('url') + '?' + data, $('base').attr('href'));
+				// decide whether we should use ? or & to connect the URL
+				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
+
+				var url = $.path.makeUrlAbsolute(
+					grid.data('url') + connector + data,
+					$('base').attr('href')
+				);
+
 				var newWindow = window.open(url);
 
 				return false;
@@ -188,22 +199,33 @@
 		
 		/**
 		 * Prevents actions from causing an ajax reload of the field.
-		 * Useful e.g. for actions which rely on HTTP response headers being interpreted nativel
-		 * by the browser, like file download triggers.
+		 *
+		 * Useful e.g. for actions which rely on HTTP response headers being
+		 * interpreted natively by the browser, like file download triggers.
 		 */
 		$('.ss-gridfield .action.no-ajax').entwine({
 			onclick: function(e){
 				var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
-					form = this.closest('form'), data = form.find(':input').serialize();
+					form = this.closest('form'), data = form.find(':input.gridstate').serialize();
 
 				// Add current button
-				data += '&' + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+				data += "&" + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
 
-				// Include any GET parameters from the current URL, as the view state might depend on it.
-				// For example, a list prefiltered through external search criteria might be passed to GridField.
-				if(window.location.search) data = window.location.search.replace(/^\?/, '') + '&' + data;
+				// Include any GET parameters from the current URL, as the view
+				// state might depend on it. For example, a list pre-filtered
+				// through external search criteria might be passed to GridField.
+				if(window.location.search) {
+					data = window.location.search.replace(/^\?/, '') + '&' + data;
+				}
 
-				window.location.href = $.path.makeUrlAbsolute(grid.data('url') + '?' + data, $('base').attr('href'));
+				// decide whether we should use ? or & to connect the URL
+				var connector = grid.data('url').indexOf('?') == -1 ? '?' : '&';
+
+				window.location.href = $.path.makeUrlAbsolute(
+					grid.data('url') + connector + data,
+					$('base').attr('href')
+				);
+
 				return false;
 			}
 		});
@@ -340,7 +362,5 @@
 				}
 			}
 		});
-
 	});
-
 }(jQuery));

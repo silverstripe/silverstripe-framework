@@ -643,6 +643,10 @@ jQuery.noConflict();
 
 					if(!tabset.data('tabs')) return; // don't act on uninit'ed controls
 
+					// The tabs may have changed, notify the widget that it should update its internal state.
+					tabset.tabs('refresh');
+
+					// Make sure the intended tab is selected.
 					if(forcedTab.length) {
 						index = forcedTab.index();
 					} else if(overrideStates && overrideStates[tabsetId]) {

@@ -1,17 +1,20 @@
 <?php
 /**
- * 
  * @see GridField
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridFieldDataColumns implements GridField_ColumnProvider {
 
-	/** @var array */
+	/** 
+	 * @var array 
+	 */
 	public $fieldCasting = array();
 
-	/** @var array */
+	/** 
+	 * @var array 
+	 */
 	public $fieldFormatting = array();
 	
 	/**

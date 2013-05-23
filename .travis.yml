@@ -24,14 +24,13 @@ matrix:
     - env: PHPCS=1 CORE_RELEASE=master
 
 before_script:
- - pear install pear/PHP_CodeSniffer
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
  - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
  - cd ~/builds/ss
 
 script: 
- - sh -c "if [ '$PHPCS' != '1' ]; then phpunit framework/tests; else phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml -np framework && phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml -np framework; fi"
+ - phpunit framework/tests
 
 branches:
   except:

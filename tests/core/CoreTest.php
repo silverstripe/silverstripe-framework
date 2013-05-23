@@ -16,8 +16,10 @@ class CoreTest extends SapphireTest {
 	}
 
 	public function testGetTempPathInProject() {
+		$user = getTempFolderUsername();
+
 		if(file_exists($this->tempPath)) {
-			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath);
+			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . '/' . $user);
 		} else {
 			$user = getTempFolderUsername();
 

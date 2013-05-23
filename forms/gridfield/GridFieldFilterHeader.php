@@ -1,11 +1,12 @@
 <?php
 /**
- * GridFieldFilterHeader alters the gridfield with some filtering fields in the header of each column
+ * GridFieldFilterHeader alters the {@link GridField} with some filtering 
+ * fields in the header of each column.
  * 
  * @see GridField
  * 
  * @package framework
- * @subpackage fields-relational
+ * @subpackage fields-gridfield
  */
 class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 

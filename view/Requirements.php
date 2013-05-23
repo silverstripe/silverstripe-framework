@@ -810,6 +810,8 @@ class Requirements_Backend {
 				}
 				$suffix .= substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
 				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
+			} else {
+				$suffix = '';
 			}
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
 		} else {

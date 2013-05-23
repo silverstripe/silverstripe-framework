@@ -1,7 +1,10 @@
 <?php
 
 /**
- * Subclass of {@link DataList} representing a many_many relation
+ * Subclass of {@link DataList} representing a many_many relation.
+ *
+ * @package framework
+ * @subpackage model
  */
 class ManyManyList extends RelationList {
 	

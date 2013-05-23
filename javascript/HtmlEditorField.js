@@ -716,7 +716,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					email: RegExp.$1,
 					Description: title
 				};
-			} else if(href.match(/^(assets\/.*)$/) || href.match(/^\[file_link\s*(?:%20)?id=([0-9]+)\]?(#.*)?$/)) {
+			} else if(href.match(/^(assets\/.*)$/) || href.match(/^\[file_link\s*(?:\s*|%20|,)?id=([0-9]+)\]?(#.*)?$/)) {
 				return {
 					LinkType: 'file',
 					file: RegExp.$1,
@@ -1126,7 +1126,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			updateFromNode: function(node) {
 				this.find(':input[name=AltText]').val(node.attr('alt'));
 				this.find(':input[name=Title]').val(node.attr('title'));
-				this.find(':input[name=CSSClass]').val(node.attr('class')).attr('disabled', 'disabled');
+				this.find(':input[name=CSSClass]').val(node.attr('class'));
 				this.find(':input[name=Width]').val(node.width());
 				this.find(':input[name=Height]').val(node.height());
 				this.find(':input[name=CaptionText]').val(node.siblings('.caption:first').text());

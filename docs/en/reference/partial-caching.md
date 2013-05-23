@@ -58,11 +58,10 @@ To help do this, SilverStripe introduces the concept of Aggregates. These calcul
 on sets of `[api:DataObject]`s - the most useful for us being the Max aggregate.
 
 For example, if we have a menu, we want that menu to update whenever _any_ page is edited, but would like to cache it
-otherwise. By using aggregates, that's easy
+otherwise. By using aggregates, we can do that like this:
 
 	:::ss
-	<% cached 'navigation', List(Page).max(LastEdited) %>
-
+	<% cached 'navigation', List(SiteTree).max(LastEdited) %>
 
 If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added or
 edited
@@ -70,13 +69,11 @@ edited
 	:::ss
 	<% cached 'categorylist', List(Category).max(LastEdited) %>
 
-
 We can also calculate aggregates on relationships. A block that shows the current member's favourites needs to update
 whenever the relationship Member::$has_many = array('Favourites' => Favourite') changes.
 
 	:::ss
 	<% cached 'favourites', CurrentMember.ID, CurrentMember.Favourites.max(LastEdited) %>
-
 
 ## Cache key calculated in controller
 
@@ -215,7 +212,7 @@ Failing example:
 	:::ss
 	<% cached LastEdited %>
 	
-	  <% loop Children %>
+	  <% loop $Children %>
 	    <% cached LastEdited %>
 	      $Name
 	    <% end_cached %>
@@ -231,7 +228,7 @@ Can be re-written as:
 	<% cached LastEdited %>
 	
 	  <% cached Children.max(LastEdited) %>
-	    <% loop Children %>
+	    <% loop $Children %>
 	      $Name
 	    <% end_loop %>
 	  <% end_cached %>

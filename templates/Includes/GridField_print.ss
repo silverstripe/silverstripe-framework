@@ -10,9 +10,15 @@
 				<tr><% loop Header %><th>$CellString</th><% end_loop %></tr>
 			</thead>
 			<tbody>
+				<% if ItemRows %>
 				<% loop ItemRows %>
 					<tr><% loop ItemRow %><td>$CellString</td><% end_loop %></tr>
 				<% end_loop %>
+				<% else %>
+					<tr>
+						<td colspan="$Header.Count"><p><% _t('GridField.NoItemsFound', 'No items found') %></p></td>
+					</tr>
+				<% end_if %>
 			</tbody>
 		</table>
 		<p>

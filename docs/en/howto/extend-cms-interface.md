@@ -126,7 +126,7 @@ and replace it with the following:
 
 	:::ss
 	<ul>
-		<% loop BookmarkedPages %>
+		<% loop $BookmarkedPages %>
 		<li><a href="admin/pages/edit/show/$ID">Edit "$Title"</a></li>
 		<% end_loop %>
 	</ul>

@@ -117,7 +117,7 @@ class Group extends DataObject {
 						}
 					}
 				});
-			$memberList = GridField::create('Members',false, $this->Members(), $config)->addExtraClass('members_grid');
+			$memberList = GridField::create('Members',false, $this->DirectMembers(), $config)->addExtraClass('members_grid');
 			// @todo Implement permission checking on GridField
 			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 			$fields->addFieldToTab('Root.Members', $memberList);

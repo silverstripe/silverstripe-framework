@@ -42,6 +42,13 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 
 		$this->assertEquals($expectCustomPage, $loader->findTemplates(array('CustomPage', 'Page')));
+
+		// 'main' template only exists in theme, and 'Layout' template only exists in module
+		$expectCustomThemePage = array(
+			'main'   => "$base/themes/theme/templates/CustomThemePage.ss",
+			'Layout' => "$base/module/templates/Layout/CustomThemePage.ss"
+		);
+		$this->assertEquals($expectCustomThemePage, $loader->findTemplates(array('CustomThemePage', 'Page'), 'theme'));
 	}
 
 	public function testFindTemplatesApplicationOverridesModule() {

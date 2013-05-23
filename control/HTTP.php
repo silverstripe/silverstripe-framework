@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A class with HTTP-related helpers.
  * Like Debug, this is more a bundle of methods than a class ;-)
@@ -8,17 +9,30 @@
  */
 class HTTP {
 
+	/**
+	 * @var int $cache_age
+	 */
 	protected static $cache_age = 0;
 
+	/**
+	 * @var timestamp $modification_date
+	 */
 	protected static $modification_date = null;
 
+	/**
+	 * @var string $etag
+	 */
 	protected static $etag = null;
 
 	/**
-	 * Turns a local system filename into a URL by comparing it to the script filename
+	 * Turns a local system filename into a URL by comparing it to the script 
+	 * filename.
+	 *
+	 * @param string
 	 */
 	public static function filename2url($filename) {
 		$slashPos = -1;
+
 		while(($slashPos = strpos($filename, "/", $slashPos+1)) !== false) {
 			if(substr($filename, 0, $slashPos) == substr($_SERVER['SCRIPT_FILENAME'],0,$slashPos)) {
 				$commonLength = $slashPos;
@@ -27,13 +41,19 @@ class HTTP {
 			}
 		}
 
-		$urlBase = substr($_SERVER['PHP_SELF'], 0, -(strlen($_SERVER['SCRIPT_FILENAME']) - $commonLength));
+		$urlBase = substr(
+			$_SERVER['PHP_SELF'], 
+			0, 
+			-(strlen($_SERVER['SCRIPT_FILENAME']) - $commonLength)
+		);
+		
 		$url = $urlBase . substr($filename, $commonLength);
 		$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https" : "http";
-		return "$protocol://". $_SERVER['HTTP_HOST'] . $url;
 
 		// Count the number of extra folders the script is in.
 		// $prefix = str_repeat("../", substr_count(substr($_SERVER[SCRIPT_FILENAME],$commonBaseLength)));
+	
+		return "$protocol://". $_SERVER['HTTP_HOST'] . $url;
 	}
 
 	/**
@@ -42,7 +62,10 @@ class HTTP {
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
 		return HTTP::urlRewriter($html, function($url) {
-			if(stripos($url, 'mailto:') === 0) return $url;
+			//no need to rewrite, if uri has a protocol (determined here by existence of reserved URI character ":")
+			if(preg_match('/^\w+:/', $url)){
+				return $url;
+			}
 			return Director::absoluteURL($url, true);
 		});
 	}

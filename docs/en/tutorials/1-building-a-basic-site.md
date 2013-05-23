@@ -158,7 +158,7 @@ Open up *themes/simple/templates/Includes/Navigation.ss*
 The Menu for our site is created using a **loop**. Loops allow us to iterate over a data set, and render each item using a sub-template.
 	 
 	:::ss 
-	<% loop Menu(1) %>
+	<% loop $Menu(1) %>
 
 returns a set of first level menu items. We can then use the template variable
 *$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page and *$LinkingMode* to help style our menu with CSS (explained in more detail shortly).
@@ -168,7 +168,7 @@ returns a set of first level menu items. We can then use the template variable
 
 	:::ss
 	<ul>
-		<% loop Menu(1) %>	  
+		<% loop $Menu(1) %>	  
 			<li class="$LinkingMode">
 				<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 			</li>
@@ -225,7 +225,7 @@ Adding a second level menu is very similar to adding the first level menu. Open 
 
 	:::ss
 	<ul>
-	  <% loop Menu(2) %>
+	  <% loop $Menu(2) %>
 	    <li class="$LinkingMode">
 		    <a href="$Link" title="Go to the $Title.XML page">
 		    	<span class="arrow">&rarr;</span>
@@ -245,10 +245,10 @@ Look again in the *Sidebar.ss* file and you will see that the menu is surrounded
 like this:
 
 	:::ss
-	<% if Menu(2) %>
+	<% if $Menu(2) %>
 		...
 			<ul>
-				<% loop Menu(2) %>
+				<% loop $Menu(2) %>
 				<li class="$LinkingMode">
 					<a href="$Link" title="Go to the $Title.XML page">
 						<span class="arrow">&rarr;</span>
@@ -269,7 +269,7 @@ Now that we have two levels of navigation, it would also be useful to include so
 Open up */themes/simple/templates/Includes/BreadCrumbs.ss* template and look at the following code:
 
 	:::ss
-	<% if Level(2) %>
+	<% if $Level(2) %>
 		<div id="Breadcrumbs">
 		   	$Breadcrumbs
 		</div>
@@ -295,12 +295,12 @@ The following example runs an if statement, and a loop on *Children*, checking t
 
 	:::ss
 	<ul>
-	  <% loop Menu(1) %>
+	  <% loop $Menu(1) %>
 	    <li class="$LinkingMode">
 	      <a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
-	      <% if Children %>
+	      <% if $Children %>
 		      <ul>
-		        <% loop Children %>
+		        <% loop $Children %>
 		          <li class="$LinkingMode">
 		          	<a href="$Link" title="Go to the $Title.XML page">
 		          		<span class="arrow">&rarr;</span>

@@ -1,0 +1,5 @@
+tools:
+    custom_commands:
+        -
+            scope: file
+            command: php tests/phpcs_runner.php %pathname%

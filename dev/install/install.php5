@@ -28,27 +28,47 @@ if (function_exists('session_start')) {
 	session_start();
 }
 
-// Include environment files
-$usingEnv = false;
-$envFileExists = false;
+/**
+ * Include _ss_environment.php file
+ */
 //define the name of the environment file
 $envFile = '_ss_environment.php';
-//define the dir to start scanning from
-$dir = '.';
-//check this dir and every parent dir (until we hit the base of the drive)
-do {
-	$dir = realpath($dir) . '/';
-	//if the file exists, then we include it, set relevant vars and break out
-	if (file_exists($dir . $envFile)) {
-		include_once($dir . $envFile);
-		$envFileExists = true;
-		//legacy variable assignment
-		$usingEnv = true;
-		break;
-	}
-//here we need to check that the real path of the last dir and the next one are
-// not the same, if they are, we have hit the root of the drive
-} while (realpath($dir) != realpath($dir .= '../'));
+//define the dirs to start scanning from (have to add the trailing slash)
+// we're going to check the realpath AND the path as the script sees it
+$dirsToCheck = array(
+	realpath('.'),
+	dirname($_SERVER['SCRIPT_FILENAME'])
+);
+//if they are the same, remove one of them
+if ($dirsToCheck[0] == $dirsToCheck[1]) {
+	unset($dirsToCheck[1]);
+}
+foreach ($dirsToCheck as $dir) {
+	//check this dir and every parent dir (until we hit the base of the drive)
+	// or until we hit a dir we can't read
+	do {
+		//add the trailing slash we need to concatenate properly
+		$dir .= DIRECTORY_SEPARATOR;
+		//if it's readable, go ahead
+		if (@is_readable($dir)) {
+			//if the file exists, then we include it, set relevant vars and break out
+			if (file_exists($dir . $envFile)) {
+				define('SS_ENVIRONMENT_FILE', $dir . $envFile);
+				include_once(SS_ENVIRONMENT_FILE);
+				//break out of BOTH loops because we found the $envFile
+				break(2);
+			}
+		}
+		else {
+			//break out of the while loop, we can't read the dir
+			break;
+		}
+		//go up a directory
+		$dir = dirname($dir);
+	//here we need to check that the path of the last dir and the next one are
+	// not the same, if they are, we have hit the root of the drive
+	} while (dirname($dir) != $dir);
+}
 
 if($envFileExists) {
 	if(!empty($_REQUEST['useEnv'])) {
@@ -94,6 +114,7 @@ $locales = array(
   'it_IT' => 'Italian (Italy)',
   'ja_JP' => 'Japanese (Japan)',
   'km_KH' => 'Khmer (Cambodia)',
+  'lc_XX' => 'LOLCAT',
   'lv_LV' => 'Latvian (Latvia)',
   'lt_LT' => 'Lithuanian (Lithuania)',
   'ms_MY' => 'Malay (Malaysia)',
@@ -426,7 +447,9 @@ class InstallRequirements {
 			$this->warning(array("Webserver Configuration", "URL rewriting support", "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
 		}
 
-		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
+		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver Configuration", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
+
+		$this->requirePostSupport(array("Webserver Configuration", "POST Support", 'I can\'t find $_POST, make sure POST is enabled.'));
 
 		// Check for GD support
 		if(!$this->requireFunction("imagecreatetruecolor", array("PHP Configuration", "GD2 support", "PHP must have GD version 2."))) {
@@ -466,6 +489,10 @@ class InstallRequirements {
 
 		$this->suggestClass('finfo', array('PHP Configuration', 'fileinfo support', 'fileinfo should be enabled in PHP. SilverStripe uses it for MIME type detection of files. SilverStripe will still operate, but email attachments and sending files to browser (e.g. export data to CSV) may not work correctly without finfo.'));
 
+		$this->suggestFunction('curl_init', array('PHP Configuration', 'curl support', 'curl should be enabled in PHP. SilverStripe uses it for consuming web services via the RestfulService class and many modules rely on it.'));
+
+		$this->suggestClass('tidy', array('PHP Configuration', 'tidy support', 'Tidy provides a library of code to clean up your html. SilverStripe will operate fine without tidy but HTMLCleaner will not be effective.'));
+
 		$this->suggestPHPSetting('asp_tags', array(false,0,''), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
 		$this->suggestPHPSetting('magic_quotes_gpc', array(false,0,''), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
 		$this->suggestPHPSetting('display_errors', array(false,0,''), array('PHP Configuration', 'display_errors option', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
@@ -478,6 +505,7 @@ class InstallRequirements {
 
 	function suggestPHPSetting($settingName, $settingValues, $testDetails) {
 		$this->testing($testDetails);
+
 		$val = ini_get($settingName);
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
@@ -487,13 +515,23 @@ class InstallRequirements {
 
 	function suggestClass($class, $testDetails) {
 		$this->testing($testDetails);
+
 		if(!class_exists($class)) {
+			$this->warning($testDetails);
+		}
+	}
+
+	function suggestFunction($class, $testDetails) {
+		$this->testing($testDetails);
+
+		if(!function_exists($class)) {
 			$this->warning($testDetails);
 		}
 	}
 
 	function requireDateTimezone($testDetails) {
 		$this->testing($testDetails);
+
 		$result = ini_get('date.timezone') && in_array(ini_get('date.timezone'), timezone_identifiers_list());
 		if(!$result) {
 			$this->error($testDetails);
@@ -606,7 +644,10 @@ class InstallRequirements {
 
 	function requireFunction($funcName, $testDetails) {
 		$this->testing($testDetails);
-		if(!function_exists($funcName)) $this->error($testDetails);
+		
+		if(!function_exists($funcName)) {
+			$this->error($testDetails);
+		}
 		else return true;
 	}
 
@@ -935,17 +976,35 @@ class InstallRequirements {
 		}
 	}
 
-	function requireServerVariables($varNames, $errorMessage) {
-		//$this->testing($testDetails);
+	function requireServerVariables($varNames, $testDetails) {
+		$this->testing($testDetails);
+		$missing = array();
+		
 		foreach($varNames as $varName) {
-			if(!$_SERVER[$varName]) $missing[] = '$_SERVER[' . $varName . ']';
+			if(!isset($_SERVER[$varName]) || !$_SERVER[$varName])  {
+				$missing[] = '$_SERVER[' . $varName . ']';
+			}
 		}
-		if(!isset($missing)) {
+
+		if(!$missing) {
 			return true;
 		} else {
 			$testDetails[2] .= " (the following PHP variables are missing: " . implode(", ", $missing) . ")";
 			$this->error($testDetails);
 		}
+	}
+
+
+	function requirePostSupport($testDetails) {
+		$this->testing($testDetails);
+
+		if(!isset($_POST)) {
+			$this->error($testDetails);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	function isRunningWebServer($testDetails) {

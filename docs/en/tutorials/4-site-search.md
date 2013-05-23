@@ -33,7 +33,7 @@ To add the search form, we can add `$SearchForm` anywhere in our templates. In t
 
 	:::ss
 	...
-	<% if SearchForm %>
+	<% if $SearchForm %>
 		<span class="search-dropdown-icon">L</span>
 		<div class="search-bar">
 			$SearchForm
@@ -98,16 +98,16 @@ class.
 	<div id="Content" class="searchResults">
 	    <h1>$Title</h1>
 	     
-	    <% if Query %>
+	    <% if $Query %>
 	        <p class="searchQuery"><strong>You searched for &quot;{$Query}&quot;</strong></p>
 	    <% end_if %>
 	         
-	    <% if Results %>
+	    <% if $Results %>
 	    <ul id="SearchResults">
-	        <% loop Results %>
+	        <% loop $Results %>
 	        <li>
 	            <a class="searchResultHeader" href="$Link">
-	                <% if MenuTitle %>
+	                <% if $MenuTitle %>
 	                $MenuTitle
 	                <% else %>
 	                $Title
@@ -124,17 +124,17 @@ class.
 	    <p>Sorry, your search query did not return any results.</p>
 	    <% end_if %>
 	             
-	    <% if Results.MoreThanOnePage %>
+	    <% if $Results.MoreThanOnePage %>
 	    <div id="PageNumbers">
-	        <% if Results.NotLastPage %>
+	        <% if $Results.NotLastPage %>
 	        <a class="next" href="$Results.NextLink" title="View the next page">Next</a>
 	        <% end_if %>
-	        <% if Results.NotFirstPage %>
+	        <% if $Results.NotFirstPage %>
 	        <a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
 	        <% end_if %>
 	        <span>
-	            <% loop Results.Pages %>
-	                <% if CurrentBool %>
+	            <% loop $Results.Pages %>
+	                <% if $CurrentBool %>
 	                $PageNum
 	                <% else %>
 	                <a href="$Link" title="View page number $PageNum">$PageNum</a>

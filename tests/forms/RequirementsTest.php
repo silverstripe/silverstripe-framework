@@ -362,18 +362,18 @@ class RequirementsTest extends SapphireTest {
 
 		$backend->set_suffix_requirements(true);
 		$html = $backend->includeInHTML(false, $template);
-		$this->assertRegexp('/RequirementsTest_a\.js\?m=[\d]*/', $html);
-		$this->assertRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
-		$this->assertRegexp('/RequirementsTest_a\.css\?m=[\d]*/', $html);
-		$this->assertRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
+		$this->assertRegexp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
+		$this->assertRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
+		$this->assertRegexp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
+		$this->assertRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
 
 		$backend->set_suffix_requirements(false);
 		$html = $backend->includeInHTML(false, $template);
 		$this->assertNotContains('RequirementsTest_a.js=', $html);
-		$this->assertNotRegexp('/RequirementsTest_a\.js\?m=[\d]*/', $html);
-		$this->assertNotRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
-		$this->assertNotRegexp('/RequirementsTest_a\.css\?m=[\d]*/', $html);
-		$this->assertNotRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb/', $html);
+		$this->assertNotRegexp('/RequirementsTest_a\.js\?m=[\d]*"/', $html);
+		$this->assertNotRegexp('/RequirementsTest_b\.js\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
+		$this->assertNotRegexp('/RequirementsTest_a\.css\?m=[\d]*"/', $html);
+		$this->assertNotRegexp('/RequirementsTest_b\.css\?m=[\d]*&amp;foo=bar&amp;bla=blubb"/', $html);
 	}
 
 	public function assertFileIncluded($backend, $type, $files) {

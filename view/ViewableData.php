@@ -371,7 +371,7 @@ class ViewableData extends Object implements IteratorAggregate {
 				}
 				
 				$valueObject = Object::create_from_string($castConstructor, $fieldName);
-				$valueObject->setValue($value, ($this->hasMethod('toMap') ? $this->toMap() : null));
+				$valueObject->setValue($value, $this);
 				
 				$value = $valueObject;
 			}

@@ -1,6 +1,12 @@
 <?php
 
+/**
+ * @package framework
+ * @package tests
+ */
 class CSVParserTest extends SapphireTest {
+
+
 	public function testParsingWithHeaders() {
 		/* By default, a CSV file will be interpreted as having headers */
 		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');
@@ -87,5 +93,4 @@ class CSVParserTest extends SapphireTest {
 		$this->assertEquals(array("Birthday","31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
 		$this->assertEquals(array('IsRegistered', '1', '0', '1', '1'), $registered);
 	}
-	
 }

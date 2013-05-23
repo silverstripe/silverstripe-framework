@@ -153,16 +153,7 @@ form.nostyle {
 }
 
 form.stacked .field, .field.stacked {
-	label {
-		display: block;
-		float: none;
-		padding-bottom: 10px;
-	}
-	
-	.middleColumn {
-		margin-left: 0px;
-		clear: left;
-	}
+	@include form-field-stacked;
 }
 
 form.small .field, .field.small {
@@ -644,6 +635,8 @@ input.radio {
  * ---------------------------------------------------- */
 
 .htmleditor {
+
+	@include form-field-stacked;
 	
 	textarea {
 		visibility: hidden; // enabled by JS
