@@ -145,19 +145,6 @@ class Versioned extends DataExtension {
 		$this->defaultStage = reset($stages);
 		$this->liveStage = array_pop($stages);
 	}
-
-	/**
-	 * @param string
-	 * @param string
-	 * @param array
-	 *
-	 * @return array
-	 */
-	public static function get_extra_config($class, $extension, $args) {
-		return array(
-			'has_many' => array('Versions' => $class)
-		);
-	}
 	
 	/**
 	 * Amend freshly created DataQuery objects with versioned-specific 
