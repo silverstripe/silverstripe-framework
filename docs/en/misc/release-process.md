@@ -44,7 +44,7 @@ going into the *alpha* cycle. Preview releases are named *A.B.C-pr1* (and furthe
 
 So far, major releases have happened every couple of years. Most new releases are *minor version number* or *micro
 version number* increments.
-So far, we only had one major release, from the *1.x* to the *2.x* line.
+So far, we have had two major releases; from the *1.x* to the *2.x* line and from the *2.x* to the *3.x* line.
 
 ### Minor releases
 

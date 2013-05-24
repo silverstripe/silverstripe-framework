@@ -1,13 +1,13 @@
 # Upgrading
 
-Usually an update or upgrade your SilverStripe installation just means 
+Usually an update or upgrade to your SilverStripe installation just means 
 overwriting files and updating your database-schema. 
 
 See our [upgrade notes and changelogs](/changelogs) for release-specific information.
 
 ## Process
 
-*  Check if any modules (e.g. blog or forum) in your installation are compatible and need to be upgraded as well
+*  Check if any modules (e.g. blog or forum) in your installation are incompatible and need to be upgraded as well
 *  Backup your database content
 *  Backup your webroot files
 *  Download the new release and uncompress it to a temporary folder
