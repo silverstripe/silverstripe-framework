@@ -58,7 +58,7 @@ every page on the site, if that's easier.
 ## I can see unparsed PHP output in my browser
 
 Please make sure all code inside `*.php` files is wrapped in classes. Due to the way `[api:ManifestBuilder]`
-includes all files with this extension, any **procedural code will be executed on every call**. Most common error here
+includes all files with this extension, any **procedural code will be executed on every call**. The most common error here
 is putting a test.php/phpinfo.php file in the document root. See [datamodel](/topics/datamodel) and [controllers](/topics/controller)
 for ways how to structure your code.
 
