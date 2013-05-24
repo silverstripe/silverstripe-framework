@@ -60,7 +60,7 @@ includes all files with this extension, any **procedural code will be executed o
 is putting a test.php/phpinfo.php file in the document root. See [datamodel](/topics/datamodel) and [controllers](/topics/controller)
 for ways how to structure your code.
 
-Also, please check that you have PHP enabled on the webserver, and you're at least running PHP 5.1.
+Also, please check that you have PHP enabled on the webserver, and you're running PHP 5.1 or later.
 The web-based [SilverStripe installer](/installation) can help you with this.
 
 ## I've got file permission problems during installation
