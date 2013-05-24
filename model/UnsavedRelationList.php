@@ -51,6 +51,7 @@ class UnsavedRelationList extends ArrayList {
 		$this->baseClass = $baseClass;
 		$this->relationName = $relationName;
 		$this->dataClass = $dataClass;
+		parent::__construct();
 	}
 
 	/**
