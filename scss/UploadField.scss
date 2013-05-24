@@ -51,25 +51,25 @@
 			}
 		}
 		.ss-uploadfield-item-info {
-			float: left;
-			margin-left: 15px;
+			margin-left: 95px;
 			
 			.ss-uploadfield-item-name {
 				display: block;
 				line-height: 13px;
 				height: 26px;
 				margin: 0;
-				text-align: left;			
-				b {
-					font-weight: bold; 
-					padding: 0 5px 0 0;
-				}
+				text-align: left;
 				.name {
-					font-size: $font-base-size - 1;
-					color: lighten($color-text, 25%);
-					width:290px; //Ensures the title doesn't interfer with the status message
+					max-width: 240px;
+					font-weight: bold;
 					@include hide-text-overflow;
-					display:inline;					
+					display:inline;
+					float:left;
+				}
+				.size {
+					color: lighten($color-text, 25%);
+					padding: 0 0 0 5px;
+					display:inline;
 					float:left;
 				}
 				.ss-uploadfield-item-status {
@@ -80,6 +80,7 @@
 					&.ui-state-error-text {
 						color: $color-button-destructive;
 						font-weight: bold;
+						width:150px; //Allocates the status message enough room to be useful. Will wrap if it is longer
 					}
 					&.ui-state-warning-text {
 						color: darken($color-warning, 10%);
@@ -166,7 +167,6 @@
 				height: 16px;
 				cursor: pointer;
 				@include single-box-shadow(none);
-				background: none;
 				position: relative;
 				// background: sprite($sprites16, cross-circle) no-repeat;
 				
