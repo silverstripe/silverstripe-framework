@@ -291,6 +291,15 @@
 					node.attr(attrName, newNode.attr(attrName));
 				});
 
+				// To avoid conflicting classes when the node gets its content replaced (see below)
+				// Filter out all previous status flags if they are not in the class property of the new node
+				var statusFlags = ['removedfromdraft', 'deletedonlive', 'addedtodraft', 'modified'];
+				for(var i=0; i<statusFlags.length; i++){
+					if (node.attr('class').indexOf(statusFlags[i]) === -1){
+						origClasses = origClasses.replace(statusFlags[i], '');
+					}
+				}
+
 				// Replace inner content
 				var origChildren = node.children('ul').detach();
 				node.addClass(origClasses).html(newNode.html()).append(origChildren);
