@@ -65,7 +65,7 @@ The web-based [SilverStripe installer](/installation) can help you with this.
 
 ## I've got file permission problems during installation
 
-The php installer needs to be able write files during installation, which should be restricted again afterwards. It
+The php installer needs to be able to write files during installation, which should be restricted again afterwards. It
 needs to create/have write-access to:
 
  * The main installation directory (for creating .htaccess file and assets directory)
