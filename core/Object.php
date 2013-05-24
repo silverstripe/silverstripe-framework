@@ -746,8 +746,8 @@ abstract class Object {
 			}
 		} else {
 			// Please do not change the exception code number below.
-			
-			throw new Exception("Object->__call(): the method '$method' does not exist on '$this->class'", 2175);
+			$class = (empty($this->class) ? get_class($this) : $this->class);
+			throw new Exception("Object->__call(): the method '$method' does not exist on '$class'", 2175);
 		}
 	}
 	
