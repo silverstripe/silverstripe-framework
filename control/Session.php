@@ -528,21 +528,26 @@ class Session {
 	public static function destroy($removeCookie = true) {
 		if(session_id()) {
 			if($removeCookie) {
-				$path = Config::inst()->get('cookie_path');
+				$path = Config::inst()->get('Session', 'cookie_path');
 				if(!$path) $path = Director::baseURL();
-				$domain = Config::inst()->get('cookie_domain');
-				$secure = Config::inst()->get('cookie_secure'); 
+				$domain = Config::inst()->get('Session', 'cookie_domain');
+				$secure = Config::inst()->get('Session', 'cookie_secure');
 				
 				if($domain) {
-					setcookie(session_name(), '', null, $path, $domain, $secure, true); 
+					setcookie(session_name(), '', null, $path, $domain, $secure, true);
 				}
-				else { 
-					setcookie(session_name(), '', null, $path, null, $secure, true); 
+				else {
+					setcookie(session_name(), '', null, $path, null, $secure, true);
 				}
 				
 				unset($_COOKIE[session_name()]);
 			}
+
 			session_destroy();
+
+			// Clean up the superglobal - session_destroy does not do it.
+			// http://nz1.php.net/manual/en/function.session-destroy.php
+			unset($_SESSION);
 		}
 	}
 	
