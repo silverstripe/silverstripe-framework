@@ -31,6 +31,8 @@ if (function_exists('session_start')) {
 /**
  * Include _ss_environment.php file
  */
+$usingEnv = false;
+$envFileExists = false;
 //define the name of the environment file
 $envFile = '_ss_environment.php';
 //define the dirs to start scanning from (have to add the trailing slash)
@@ -53,8 +55,10 @@ foreach ($dirsToCheck as $dir) {
 		if (@is_readable($dir)) {
 			//if the file exists, then we include it, set relevant vars and break out
 			if (file_exists($dir . $envFile)) {
-				define('SS_ENVIRONMENT_FILE', $dir . $envFile);
-				include_once(SS_ENVIRONMENT_FILE);
+				include_once($dir . $envFile);
+				$envFileExists = true;
+				//legacy variable assignment
+				$usingEnv = true;
 				//break out of BOTH loops because we found the $envFile
 				break(2);
 			}
