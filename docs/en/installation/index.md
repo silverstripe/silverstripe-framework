@@ -11,7 +11,7 @@ SilverStripe is a web application. This means that you will need to have a webse
 
 ## Getting the code
 
-The best way to get SilverStripe is with [Composer](composer). Composer is a package management tool for PHP that
+The best way to get SilverStripe is to [install with Composer](composer). Composer is a package management tool for PHP that
 lets you install and upgrade SilverStripe and its modules.  Although installing Composer is one extra step, it will give you much more flexibility than just downloading the file from silverstripe.org.
 
 Other ways to get SilverStripe:
