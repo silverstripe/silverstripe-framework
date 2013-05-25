@@ -449,6 +449,9 @@ class SS_HTTPRequest implements ArrayAccess {
 			$shiftCount = sizeof($patternParts);
 		}
 
+		// Filter out any "empty" matching parts - either from an initial / or a trailing /
+		$patternParts = array_values(array_filter($patternParts));
+
 		$arguments = array();
 		foreach($patternParts as $i => $part) {
 			$part = trim($part);
