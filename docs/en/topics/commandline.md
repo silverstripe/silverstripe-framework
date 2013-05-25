@@ -131,18 +131,18 @@ On a unix machine, you can typically run a scheduled task with a [cron job](http
 using one of the following command-line calls:
 
 ```
-/path/to/site_root/framework/sake MyTask
-php /path/to/site_root/framework/cli-script.php MyTask
+/path/to/site_root/framework/sake dev/tasks/MyTask
+php /path/to/site_root/framework/cli-script.php dev/tasks/MyTask
 ```
 
 If you find that your cron job appears to be retrieving the login screen, then you may need to use `php-cli`
 instead. This is typical of a cPanel-based setup.
 ```
-php-cli /path/to/site_root/framework/cli-script.php MyTask
+php-cli /path/to/site_root/framework/cli-script.php dev/tasks/MyTask
 ```
 
 A good approach to setting up and testing your task to run with cron is:
  
- 1. Try running the task via the command-line on your server. `/path/to/site_root/framework/sake MyTask`
- 2. Set up a cron job to run the task every minute. `* * * * * /path/to/site_root/framework/sake MyTask`
- 3. Finally, set the task to run when you want it to. `0 2 * * * /path/to/site_root/framework/sake MyTask` (2am)
+ 1. Try running the task via the command-line on your server. `/path/to/site_root/framework/sake dev/tasks/MyTask`
+ 2. Set up a cron job to run the task every minute. `* * * * * /path/to/site_root/framework/sake dev/tasks/MyTask`
+ 3. Finally, set the task to run when you want it to. `0 2 * * * /path/to/site_root/framework/sake dev/tasks/MyTask` (2am)
