@@ -41,7 +41,8 @@ class SessionTest extends SapphireTest {
 		Session::set('Test-2', 'Test-2');
 		
 		$session = Session::get_all();
-		
+		unset($session['HTTP_USER_AGENT']);
+
 		$this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
 	}
 
@@ -49,7 +50,9 @@ class SessionTest extends SapphireTest {
 		$s = new Session(array('something' => array('does' => 'exist')));
 
 		$s->inst_set('something.does', 'exist');
-		$this->assertEquals(array(), $s->inst_changedData());
+		$result = $s->inst_changedData();
+		unset($result['HTTP_USER_AGENT']);
+		$this->assertEquals(array(), $result);
 	}
 
 	/**
@@ -59,11 +62,15 @@ class SessionTest extends SapphireTest {
 		$s = new Session(array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.doesnt.exist');
-		$this->assertEquals(array(), $s->inst_changedData());
+		$result = $s->inst_changedData();
+		unset($result['HTTP_USER_AGENT']);
+		$this->assertEquals(array(), $result);
 
 		$s->inst_set('something-else', 'val');
 		$s->inst_clear('something-new');
-		$this->assertEquals(array('something-else' => 'val'), $s->inst_changedData());
+		$result = $s->inst_changedData();
+		unset($result['HTTP_USER_AGENT']);
+		$this->assertEquals(array('something-else' => 'val'), $result);
 	}
 
 	/**
@@ -73,7 +80,9 @@ class SessionTest extends SapphireTest {
 		$s = new Session(array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.does');
-		$this->assertEquals(array('something' => array('does' => null)), $s->inst_changedData());
+		$result = $s->inst_changedData();
+		unset($result['HTTP_USER_AGENT']);
+		$this->assertEquals(array('something' => array('does' => null)), $result);
 	}
 
 	public function testNonStandardPath(){
@@ -81,5 +90,21 @@ class SessionTest extends SapphireTest {
 		Session::start();
 
 		$this->assertEquals(Config::inst()->get('Session', 'store_path'), '');
+	}
+
+	public function testUserAgentLockout() {
+		// Set a user agent
+		$_SERVER['HTTP_USER_AGENT'] = 'Test Agent';
+
+		// Generate our session
+		$s = new Session(array());
+		$s->inst_set('val', 123);
+
+		// Change our UA
+		$_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';
+		
+		// Verify the new session reset our values
+		$s2 = new Session($s);
+		$this->assertNotEquals($s2->inst_get('val'), 123);
 	}
 }
