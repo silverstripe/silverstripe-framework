@@ -19,6 +19,51 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_TeamComment'
 	);
 	
+
+	public function testSetHasOneRelation() {
+		$team = new DataObjectTest_Team();
+
+		$captain = new DataObjectTest_Player();
+		$captain->ShirtNumber = "8";
+
+		$team->Captain = $captain;
+
+		// basic assignment, without record in DB.
+		$this->assertEquals("8", $team->Captain()->ShirtNumber);
+
+		// clearing the relation should clear components
+		$team->Captain = null;
+		$this->assertFalse($team->Captain()->exists());
+
+		$replacement = new DataObjectTest_Player();
+		$replacement->ShirtNumber = "26";
+		$replacement->write();
+
+		// write() should preserve the ceo
+		$team->Captain = $replacement;
+		$team->write();
+
+		$this->assertEquals("26", $team->Captain()->ShirtNumber);
+
+		// updating the ID should clear the component
+		$team->CaptainID = null;
+		$this->assertFalse($team->Captain()->exists());
+
+		// updating the ID field directly should also update the 
+		// component
+		$team->write();
+
+		$team->Captain = $captain;
+		$team->CaptainID = $replacement->ID;
+
+		$this->assertEquals("26", $team->Captain()->ShirtNumber);
+
+		// change should be preserved.
+		$team->write();
+		$this->assertEquals("26", $team->Captain()->ShirtNumber);
+	}
+
+
 	public function testDataIntegrityWhenTwoSubclassesHaveSameField() {
 		// Save data into DataObjectTest_SubTeam.SubclassDatabaseField
 		$obj = new DataObjectTest_SubTeam();
@@ -1278,6 +1323,7 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 }
 
 class DataObjectTest_Company extends DataObject {
+
 	private static $has_one = array (
 		'CEO'         => 'DataObjectTest_CEO',
 		'PreviousCEO' => 'DataObjectTest_CEO'
@@ -1290,13 +1336,15 @@ class DataObjectTest_Company extends DataObject {
 }
 
 class DataObjectTest_Staff extends DataObject {
-	private static $has_one = array (
+
+	private static $has_one = array(
 		'CurrentCompany'  => 'DataObjectTest_Company',
 		'PreviousCompany' => 'DataObjectTest_Company'
 	);
 }
 
 class DataObjectTest_CEO extends DataObjectTest_Staff {
+
 	private static $belongs_to = array (
 		'Company'         => 'DataObjectTest_Company.CEO',
 		'PreviousCompany' => 'DataObjectTest_Company.PreviousCEO'

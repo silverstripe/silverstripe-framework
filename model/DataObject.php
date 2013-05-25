@@ -1576,29 +1576,38 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and
+	 * Return the class of a one-to-one component. 
+	 *
+	 * If $component is null, return all of the one-to-one components and
 	 * their classes.
 	 *
 	 * @param string $component Name of component
 	 *
-	 * @return string|array The class of the one-to-one component, or an array of all one-to-one components and their
-	 *                      classes.
+	 * @return string|array
 	 */
 	public function has_one($component = null) {
 		$classes = ClassInfo::ancestry($this);
+		$ignored = array('Object', 'ViewableData', 'DataObject');
 
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
-			if(in_array($class, array('Object', 'ViewableData', 'DataObject'))) continue;
+			if(in_array($class, $ignored)) {
+				continue;
+			}
 
 			if($component) {
-				$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
+				$hasOne = Config::inst()->get(
+					$class, 'has_one', Config::UNINHERITED
+				);
 				
 				if(isset($hasOne[$component])) {
 					return $hasOne[$component];
 				}
 			} else {
-				$newItems = (array)Config::inst()->get($class, 'has_one', Config::UNINHERITED);
+				$newItems = (array) Config::inst()->get(
+					$class, 'has_one', Config::UNINHERITED
+				);
+				
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
@@ -1607,9 +1616,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						. " relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
 					}
 				}
-				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
+
+				if(isset($items)) { 
+					$items = array_merge($newItems, (array) $items);
+				} else {
+					$items = $newItems;
+				}
 			}
 		}
+
 		return isset($items) ? $items : null;
 	}
 	
@@ -2277,36 +2292,56 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Set the value of the field
-	 * Called by {@link __set()} and any setFieldName() methods you might create.
+	 * Set the value of the field.
+	 *
+	 * Called by {@link __set()} and any setFieldName() methods you might 
+	 * create.
 	 *
 	 * @param string $fieldName Name of the field
 	 * @param mixed $val New field value
+	 *
 	 * @return DataObject $this
 	 */
 	public function setField($fieldName, $val) {
-		// Situation 1: Passing an DBField
 		if($val instanceof DBField) {
 			$val->Name = $fieldName;
 
-			// If we've just lazy-loaded the column, then we need to populate the $original array by
-			// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
-			// on a call to getChanged()?
+			// If we've just lazy-loaded the column, then we need to populate 
+			// the $original array by called getField(). Too much overhead? 
+			// Could this be done by a quicker method? Maybe only on a call 
+			// to getChanged()?
 			$this->getField($fieldName);
 
 			$this->record[$fieldName] = $val;
-		// Situation 2: Passing a literal or non-DBField object
 		} else {
-			// If this is a proper database field, we shouldn't be getting non-DBField objects
 			if(is_object($val) && $this->db($fieldName)) {
 				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
 			}
-		
-			$defaults = $this->stat('defaults');
-			// if a field is not existing or has strictly changed
-			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
-				// TODO Add check for php-level defaults which are not set in the db
-				// TODO Add check for hidden input-fields (readonly) which are not set in the db
+			
+			// User has set a has_one relationship using
+			// $obj->Relationship = $obj.
+			$componentClass = $this->has_one($fieldName);
+	
+			if($componentClass) {	
+				$dbField = $fieldName.'ID';
+
+				// flag that the object has changed
+				$this->changed[$dbField] = 2;
+
+				// remove the component if setting relation to null
+				if(!$val) {
+					if(isset($this->components[$fieldName])) {
+						unset($this->components[$fieldName]);
+					}
+
+					if(isset($this->record[$dbField])) {
+						unset($this->record[$dbField]);
+					}
+				} else if($val instanceof $componentClass) {
+					$this->components[$fieldName] = $val;
+					$this->record[$dbField] = $val->ID;
+				}
+			} else if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
 				// At the very least, the type has changed
 				$this->changed[$fieldName] = 1;
 				
@@ -2322,10 +2357,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// on a call to getChanged()?
 				$this->getField($fieldName);
 
-				// Value is always saved back when strict check succeeds.
 				$this->record[$fieldName] = $val;
-			}
+
+				// check if we're writing to a component ID field such as
+				// RelationID. Writing to relationID database field 
+				// directly should clear the components cache.
+				if(substr($fieldName, -2) == "ID") {
+					$comKey = substr($fieldName, 0, -2);
+
+					if(isset($this->components[$comKey])) {
+						unset($this->components[$comKey]);
+					}
+				}
+			} 
 		}
+
 		return $this;
 	}
 
