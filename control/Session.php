@@ -137,6 +137,22 @@ class Session {
 		if($data instanceof Session) $data = $data->inst_getAll();
 
 		$this->data = $data;
+
+		if (isset($_SERVER['HTTP_USER_AGENT'])) {
+			$ua = $_SERVER['HTTP_USER_AGENT'];
+		} else {
+			$ua = '';
+		}
+		
+		if (isset($this->data['HTTP_USER_AGENT'])) {
+			if ($this->data['HTTP_USER_AGENT'] != $ua) {
+				// Funny business detected!
+				// Destroy the session and re-create it
+				Session::destroy();
+				Session::start();
+		} else {
+			$this->inst_set('HTTP_USER_AGENT', $ua);
+		}
 	}
 
 	/**
