@@ -1286,16 +1286,15 @@ HTML;
 ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
-<IfModule mod_alias.c>
-	RedirectMatch 403 /silverstripe-cache(/|$)
-	RedirectMatch 403 /vendor(/|$)
-	RedirectMatch 403 /composer\.(json|lock)
-</IfModule>
-
 <IfModule mod_rewrite.c>
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
 	$baseClause
+
+	RewriteRule ^vendor(/|$) - [F,L,NC]
+	RewriteRule silverstripe-cache(/|$) - [F,L,NC]
+	RewriteRule composer\.(json|lock) - [F,L,NC]
+	
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_URI} !\.php$
