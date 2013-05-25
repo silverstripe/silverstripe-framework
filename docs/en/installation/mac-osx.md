@@ -7,7 +7,7 @@ webserver on OSX we suggest using [MAMP](http://www.mamp.info/en/index.php) or u
 to manage your packages.
 
 If you want to use the default OSX PHP version then you will need to recompile your own versions of PHP with GD. Providing instructions
-for how to recompile PHP is beyond the scope of our documentation but try a online search.
+for how to recompile PHP is beyond the scope of our documentation but try an online search.
 
 ## Installing MAMP
 
@@ -34,4 +34,4 @@ won't come along.
 
 Open your web browser and go to `http://localhost:8888/silverstripe/`. Enter your database details - by default with MAMP its user `root` and password  `root` and select your account details. Click "Check Details".
 
-Once everything is sorted hit Install! and Voila you have SilverStripe installed 
+Once everything is sorted hit "Install!" and Voila,  you have SilverStripe installed 
