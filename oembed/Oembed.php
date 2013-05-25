@@ -311,9 +311,9 @@ class Oembed_Result extends ViewableData {
 		case 'video':
 		case 'rich':
 			if($this->extraClass) {
-				return "<div class='$this->extraClass'>$this->HTML</div>";
+				return "<div class='media $this->extraClass'>$this->HTML</div>";
 			} else {
-				return $this->HTML;
+				return "<div class='media'>$this->HTML</div>";
 			}
 			break;
 		case 'link':
