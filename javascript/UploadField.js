@@ -48,6 +48,39 @@
 
 			return result;
 		},
+		_onSend: function (e, data) {
+			//check the array of existing files to see if we are trying to upload a file that already exists
+			var that = this;
+			var config = $('div.ss-upload').entwine('ss').getConfig();
+			var existingFiles = [];
+			if (typeof (config.existingFiles) !== "undefined") {
+				existingFiles = config.existingFiles;
+			}
+
+			var fileExists = false;
+			jQuery.each(existingFiles,function(){
+				if ($(this)[0].toLowerCase() === data.files[0].name.toLowerCase()) {
+					fileExists = true;
+					return;
+				}
+			});
+
+			if (fileExists) {
+				//display the dialogs with the question to overwrite or not
+				data.context.find('.ss-uploadfield-item-status').text(config.errorMessages.overwriteWarning).css('max-width','75%');
+				data.context.find('.ss-uploadfield-item-progress').hide();
+				data.context.find('.ss-uploadfield-item-overwrite').show();
+				data.context.find('.ss-uploadfield-item-overwrite-warning').on('click', function(){
+					data.context.find('.ss-uploadfield-item-progress').show();
+					data.context.find('.ss-uploadfield-item-overwrite').hide();
+
+					//upload only if the "overwrite" button is clicked
+					$.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
+				});
+			} else {    //regular file upload
+				return $.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
+			}
+		},
 		_onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
 			$.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
 			if (this._active === 0) {

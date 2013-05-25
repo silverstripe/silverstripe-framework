@@ -29,7 +29,7 @@
 			// TODO tmp hack until we have permissions and can disable delete
 			display: none;
 		}
-		&.ss-uploadfield-item-cancel{
+		&.ss-uploadfield-item-cancel, &.ss-uploadfield-item-overwrite-warning {
 			@include border-radius(0);
 			border-left:1px solid rgba(#fff, 0.2);
 			margin-top:0px;

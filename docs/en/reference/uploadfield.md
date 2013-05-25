@@ -225,9 +225,9 @@ You can also configure the underlying `[api:Upload]` class, by using the YAML co
 
 	:::yaml
 	Upload:
-	  # Globally disables automatic renaming of files
+	  # Globally disables automatic renaming of files and displays a warning before overwriting an existing file
 	  replaceFile: true
-  
+
 ## TODO: Using the UploadField in a frontend form
 
 *At this moment the UploadField not yet fully supports being used on a frontend 

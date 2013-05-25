@@ -141,7 +141,11 @@ class UploadField extends FileField {
 		 * @example 'getCMSValidator'
 		 * @var string
 		 */
-		'fileEditValidator' => null
+		'fileEditValidator' => null,
+		/**
+		 * Show a warning when overwriting a file
+		 */
+		'overwriteWarning' => true,
 	);
 
 	/**
@@ -415,6 +419,17 @@ class UploadField extends FileField {
 		$configOverwrite = array();
 		if (is_numeric($config['maxNumberOfFiles']) && $this->getItems()->count()) {
 			$configOverwrite['maxNumberOfFiles'] = $config['maxNumberOfFiles'] - $this->getItems()->count();
+		}
+
+		//get all the existing files in the current folder
+		if ($this->getConfig('overwriteWarning')) {
+			$folder = Folder::find_or_make($this->getFolderName());
+			$files = glob( $folder->getFullPath() . '/*' );
+			$config['existingFiles'] = array_map("basename", $files);;
+
+			//add overwrite warning error message to the config object sent to Javascript
+			$config['errorMessages']['overwriteWarning'] =
+				_t('UploadField.OVERWRITEWARNING','File with the same name already exists');
 		}
 		
 		$config = array_merge($config, $this->ufConfig, $configOverwrite);

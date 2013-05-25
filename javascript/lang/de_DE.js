@@ -34,6 +34,7 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UploadField.EMPTYRESULT': 'Leere Datei erhalten',
 		'UploadField.LOADING': 'Lädt ...',
 		'UploadField.Editing': 'Bearbeite ...',
-		'UploadField.Uploaded': 'Hochgeladen'
+		'UploadField.Uploaded': 'Hochgeladen',
+		'UploadField.OVERWRITEWARNING': 'Datei mit diesem Namen existiert bereits'
 	});
 }
