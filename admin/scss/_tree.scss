@@ -408,7 +408,7 @@
 					background-position: -56px -36px;
 				}
 			}
-			&.deletedonlive {
+			&.status-deletedonlive {
 				.text {
 					text-decoration: line-through;
 				}
@@ -455,17 +455,17 @@
 			margin-top:  -1px;
 			@include border-radius(2px, 2px);
 	
-			&.modified, &.addedtodraft  {
+			&.status-modified, &.status-addedtodraft  {
 				color:  #7E7470;
 				border: 1px solid #C9B800;
 				background-color: #FFF0BC;
 			}
-			&.deletedonlive, &.removedfromdraft {
+			&.status-deletedonlive, &.status-removedfromdraft {
 				color:  #636363;
 				border: 1px solid #E49393;
 				background-color: #F2DADB;
 			}
-			&.workflow-approval {
+			&.status-workflow-approval {
 				color:  #56660C;
 				border: 1px solid #7C8816;
 				background-color: #DAE79A;
