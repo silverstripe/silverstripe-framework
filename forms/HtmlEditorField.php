@@ -112,25 +112,35 @@ class HtmlEditorField extends TextareaField {
 				$href = Director::makeRelative($link->getAttribute('href'));
 
 				if($href) {
-					if(preg_match('/\[sitetree_link,id=([0-9]+)\]/i', $href, $matches)) {
-						$ID = $matches[1];
-
+					if(preg_match('/\[(?|(sitetree)|(file))_link(?|(,)|( ))id=([0-9]+)\]/i', $href, $matches)) {
+						$ID = $matches[3];
+						if($matches[2]==' ') {	// rewrite old links to new syntax
+							$link->removeAttribute('href');
+							$link->setAttribute('href', '[' . $matches[1] . '_link,id=' . $ID . ']');
+						}
 						// clear out any broken link classes
 						if($class = $link->getAttribute('class')) {
 							$link->setAttribute('class',
-								preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
+									preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
 						}
-
-						$linkedPages[] = $ID;
+						if($matches[1]=='sitetree') {
+							$linkedPages[] = $ID;
+						}else {
+							$linkedFiles[] = $ID;
+						}
 						if(!DataObject::get_by_id('SiteTree', $ID))  $record->HasBrokenLink = true;
-
 					} else if(substr($href, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR.'/') {
 						$candidateFile = File::find(Convert::raw2sql(urldecode($href)));
 						if($candidateFile) {
 							$linkedFiles[] = $candidateFile->ID;
+							//rewrite file link to new syntax
+							$link->removeAttribute('href');
+							$link->setAttribute('href', '[file_link,id=' . $candidateFile->ID . ']');
 						} else {
 							$record->HasBrokenFile = true;
 						}
+						
+
 					} else if($href == '' || $href[0] == '/') {
 						$record->HasBrokenLink = true;
 					}
