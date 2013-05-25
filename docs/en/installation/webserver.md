@@ -32,7 +32,7 @@ If the above steps don't work for any reason have a read of the [Common Problems
 
 ### Yaml
 
-For the reasons explained in [security](/topics/security) Yaml files are blocked by default by the .htaccess file
+For the reasons explained in [security](/topics/security), Yaml files are blocked by default by the .htaccess file
 provided by the SilverStripe installer module.
 
 To allow serving yaml files from a specific directory, add code like this to an .htaccess file in that directory
