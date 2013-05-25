@@ -68,17 +68,17 @@ body.cms.ss-uploadfield-edit-iframe .fieldholder-small label, .composite.ss-asse
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-progress .ss-uploadfield-item-progressbarvalue { width: 0; background: #60b3dd url(../images/progressbar_blue.gif) repeat left center; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform { /* don't use display none, for it will break jQuery('iframe').contents().height() */ height: 0; overflow: hidden; clear: both; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { width: 100%; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { float: left; margin: 10px 0 0; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { float: left; margin: 25px 0 0; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { margin: 10px 0px 0 20px; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info label { font-size: 18px; line-height: 30px; padding: 8px 16px; margin-right: 0px; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info label { font-size: 18px; line-height: 30px; padding: 0px 16px; margin-right: 0px; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { /*position: relative; */ overflow: hidden; display: block; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer .btn-icon-drive-upload-large { background: url(../images/drive-upload-large.png) no-repeat 0px -4px; width: 32px; height: 32px; margin-top: -12px; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { float: left; font-weight: bold; font-size: 22px; padding: 0 20px; line-height: 70px; margin-top: 4px; display: none; }
-.ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { font-size: 18px; margin-top: 0; }
-.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { margin-top: 9px; -webkit-border-radius: 13px; -moz-border-radius: 13px; -ms-border-radius: 13px; -o-border-radius: 13px; border-radius: 13px; -webkit-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; -moz-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; border: 2px dashed gray; background: #d4dbe0; display: none; height: 54px; width: 360px; float: left; text-align: center; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer .btn-icon-drive-upload-large { background: url(../images/drive-upload-white.png) no-repeat 0px 0px; width: 32px; height: 32px; margin-top: -12px; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { float: left; font-weight: bold; font-size: 22px; padding: 0 20px; line-height: 70px; margin-top: 10px; display: none; }
+.ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { font-size: 18px; margin-top: -5px; }
+.ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { margin-top: 9px; padding: 8px 0; -webkit-border-radius: 13px; -moz-border-radius: 13px; -ms-border-radius: 13px; -o-border-radius: 13px; border-radius: 13px; -webkit-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; -moz-box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; box-shadow: rgba(128, 128, 128, 0.4) 0 0 4px 0 inset, 0 1px 0 #fafafa; border: 2px dashed gray; background: #d4dbe0; display: none; height: 54px; min-width: 280px; float: left; text-align: center; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone.active.hover { -webkit-box-shadow: rgba(255, 255, 255, 0.6) 0 0 3px 2px inset; -moz-box-shadow: rgba(255, 255, 255, 0.6) 0 0 3px 2px inset; box-shadow: rgba(255, 255, 255, 0.6) 0 0 3px 2px inset; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div { color: #5e5e5e; text-shadow: 0px 1px 0px #fff; background: url("../images/upload.png") 0 10px no-repeat; z-index: 1; padding: 6px 48px 0; line-height: 25px; font-size: 20px; font-weight: bold; display: inline-block; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div span { display: block; font-size: 12px; z-index: -1; margin-top: -3px; }
-.ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { height: 54px; width: 277px; overflow: hidden; }
+.ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone { height: 54px; min-width: 250px; overflow: hidden; padding: 0; margin-top: 2px; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div { background-position: 0 11px; padding-top: 21px; margin-left: 33px; }
 .ss-insert-media .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-dropzone div span { height: 38px; font-size: 18px; line-height: 18px; }
