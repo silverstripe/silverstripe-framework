@@ -413,6 +413,7 @@ class InstallRequirements {
 		$this->requireModule(FRAMEWORK_NAME, array("File permissions", FRAMEWORK_NAME . "/ directory exists?"));
 
 		if($isApache) {
+			$this->checkApacheVersion(array("Webserver Configuration", "Webserver is not Apache 1.x", "SilverStripe requires Apache version 2 or greater", $webserver));
 			$this->requireWriteable('.htaccess', array("File permissions", "Is the .htaccess file writeable?", null));
 		} elseif($isIIS) {
 			$this->requireWriteable('web.config', array("File permissions", "Is the web.config file writeable?", null));
@@ -666,6 +667,17 @@ class InstallRequirements {
 			$this->error($testDetails);
 		}
 		else return true;
+	}
+
+	function checkApacheVersion($testDetails) {
+		$this->testing($testDetails);
+
+		$is1pointx = preg_match('#Apache[/ ]1\.#', $testDetails[3]);
+		if($is1pointx) {
+			$this->error($testDetails);
+		}
+
+		return true;
 	}
 
 	function requirePHPVersion($recommendedVersion, $requiredVersion, $testDetails) {
