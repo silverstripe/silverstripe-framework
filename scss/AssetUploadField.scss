@@ -319,7 +319,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			height: 54px;
 			width: 360px;
 			float: left;
-			text-align: left;
+			text-align: center;
 
 			&.active{
 				&.hover{
@@ -336,7 +336,6 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 				font-size: 20px;
 				font-weight: bold;
 				display: inline-block;
-				margin-left: 83px;
 				span {
 					display: block;
 					font-size: 12px;
