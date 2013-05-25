@@ -115,6 +115,7 @@ class FormField extends RequestHandler {
 		} else {
 			$label = $fieldName;
 		}
+
 		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
 		
 		return $label;
@@ -177,17 +178,44 @@ class FormField extends RequestHandler {
 	
 	/**
 	 * Returns the HTML ID of the field - used in the template by label tags.
+	 *
 	 * The ID is generated as FormName_FieldName.  All Field functions should ensure
 	 * that this ID is included in the field.
+	 *
+	 * @return string
 	 */
 	public function ID() {
-		$name = preg_replace('/(^-)|(-$)/', '', preg_replace('/[^A-Za-z0-9_-]+/', '-', $this->name));
-		if($this->form) return $this->form->FormName() . '_' . $name;
-		else return $name;
+		return $this->getTemplateHelper()->generateFieldID($this);
 	}
 	
 	/**
-	 * Returns the field name - used by templates.
+	 * Returns the HTML ID for the form field holder element.
+	 *
+	 * @return string
+	 */
+	public function HolderID() {
+		return $this->getTemplateHelper()->generateFieldHolderID($this);
+	}
+
+	/**
+	 * Returns the current {@link FormTemplateHelper} on either the parent
+	 * Form or the global helper set through the {@link Injector} layout.
+	 *
+	 * To customize a single {@link FormField}, use {@link setTemplate} and
+	 * provide a custom template name.
+	 *
+	 * @return FormTemplateHelper
+	 */
+	public function getTemplateHelper() {
+		if($this->form) {
+			return $this->form->getTemplateHelper();
+		}
+
+		return Injector::inst()->get('FormTemplateHelper');
+	}
+
+	/**
+	 * Returns the raw field name.
 	 * 
 	 * @return string
 	 */
@@ -552,7 +580,6 @@ class FormField extends RequestHandler {
 	 * message has not been defined then just return blank. The default
 	 * error is defined on {@link Validator}.
 	 *
-	 * @todo Should the default error message be stored here instead
 	 * @return string
 	 */
 	public function getCustomValidationMessage() {

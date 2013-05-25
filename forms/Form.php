@@ -150,6 +150,21 @@ class Form extends RequestHandler {
 	protected $attributes = array();
 
 	/**
+	 * @var FormTemplateHelper
+	 */
+	private $templateHelper = null;
+
+	/**
+	 * @ignore
+	 */
+	private $htmlID = null;
+
+	/**
+	 * @ignore
+	 */
+	private $formActionPath = false;
+
+	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
@@ -642,13 +657,14 @@ class Form extends RequestHandler {
 
 	public function getAttributes() {
 		$attrs = array(
-			'id' => $this->FormName(),
+			'id' => $this->getTemplateHelper()->generateFormID($this),
 			'action' => $this->FormAction(),
 			'method' => $this->FormMethod(),
 			'enctype' => $this->getEncType(),
 			'target' => $this->target,
 			'class' => $this->extraClass(),
 		);
+
 		if($this->validator && $this->validator->getErrors()) {
 			if(!isset($attrs['class'])) $attrs['class'] = '';
 			$attrs['class'] .= ' validationerror';
@@ -670,6 +686,7 @@ class Form extends RequestHandler {
 		$exclude = (is_string($attrs)) ? func_get_args() : null;
 
 		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
+
 
 		// Figure out if we can cache this form
 		// - forms with validation shouldn't be cached, cos their error messages won't be shown
@@ -706,13 +723,43 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	* Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
-	* another frame
-	* 
-	* @param target The value of the target
-	*/
+	 * Set the {@link FormTemplateHelper}
+	 *
+	 * @param string|FormTemplateHelper
+	 */
+	public function setTemplateHelper($helper) {
+		$this->templateHelper = $helper;
+	}
+
+	/**
+	 * Return a {@link FormTemplateHelper} for this form. If one has not been
+	 * set, return the default helper.
+	 *
+	 * @return FormTemplateHelper
+	 */
+	public function getTemplateHelper() {
+		if($this->templateHelper) {
+			if(is_string($this->templateHelper)) {
+				return Injector::inst()->get($this->templateHelper);
+			}
+
+			return $this->templateHelper;
+		}
+
+		return Injector::inst()->get('FormTemplateHelper');
+	}
+
+	/**
+	 * Set the target of this form to any value - useful for opening the form
+	 * contents in a new window or refreshing another frame.
+	 *
+	 * @param target $target The value of the target
+	 *
+	 * @return FormField
+	 */
 	public function setTarget($target) {
 		$this->target = $target;
+
 		return $this;
 	}
 	
@@ -862,38 +909,50 @@ class Form extends RequestHandler {
 		}
 	}
 	
-	/** @ignore */
-	private $formActionPath = false;
-	
 	/**
 	 * Set the form action attribute to a custom URL.
 	 * 
-	 * Note: For "normal" forms, you shouldn't need to use this method.  It is recommended only for situations where
-	 * you have two relatively distinct parts of the system trying to communicate via a form post.
+	 * Note: For "normal" forms, you shouldn't need to use this method.  It is
+	 * recommended only for situations where you have two relatively distinct
+	 * parts of the system trying to communicate via a form post.
 	 */
 	public function setFormAction($path) {
 		$this->formActionPath = $path;
+
 		return $this;
 	}
 
 	/**
-	 * @ignore
-	 */
-	private $htmlID = null;
-
-	/**
-	 * Returns the name of the form
+	 * Returns the name of the form.
+	 *
+	 * @return string
 	 */
 	public function FormName() {
-		if($this->htmlID) return $this->htmlID;
-		else return $this->class . '_' . str_replace(array('.', '/'), '', $this->name);
+		if($this->htmlID) {
+			return $this->htmlID;
+		} else {
+			return $this->class . '_' . str_replace(array('.', '/'), '', $this->name);
+		}
 	}
 
 	/**
-	 * Set the HTML ID attribute of the form
+	 * Set the HTML ID attribute of the form.
+	 *
+	 * @param string $id
+	 *
+	 * @return FormField
 	 */
 	public function setHTMLID($id) {
 		$this->htmlID = $id;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getHTMLID() {
+		return $this->htmlID;
 	}
 	
 	/**

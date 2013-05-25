@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
@@ -228,6 +229,8 @@ class FormTest extends FunctionalTest {
 	}
 	
 	public function testSessionValidationMessage() {
+		Config::inst()->update('Injector', 'FormTemplateHelper', array('class' => 'FormTemplateHelper_Pre32'));
+
 		$this->get('FormTest_Controller');
 		
 		$response = $this->post(
@@ -251,7 +254,6 @@ class FormTest extends FunctionalTest {
 			),
 			'Required fields show a notification on field when left blank'
 		);
-		
 	}
 	
 	public function testSessionSuccessMessage() {
@@ -433,6 +435,10 @@ class FormTest extends FunctionalTest {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Player extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
@@ -454,6 +460,10 @@ class FormTest_Player extends DataObject implements TestOnly {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Team extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
@@ -465,6 +475,10 @@ class FormTest_Team extends DataObject implements TestOnly {
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Controller extends Controller implements TestOnly {
 	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
@@ -510,6 +524,10 @@ class FormTest_Controller extends Controller implements TestOnly {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
 	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
