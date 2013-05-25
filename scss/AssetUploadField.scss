@@ -274,14 +274,14 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 	
 		.ss-uploadfield-item-info {
 			float: left;
-			margin: 10px 0 0;
+			margin: 25px 0 0;
 			.ss-insert-media &{
 				margin: 10px 0px 0 20px;
 			}
 			label{
 				font-size: 18px;
 				line-height: 30px;
-				padding: 8px 16px;
+				padding: 0px 16px;
 				margin-right:0px;
 			}
 		}
@@ -290,7 +290,7 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			overflow: hidden;
 			display: block;
 			.btn-icon-drive-upload-large {
-				background: url(../images/drive-upload-large.png) no-repeat 0px -4px;
+				background: url(../images/drive-upload-white.png) no-repeat 0px 0px;
 				width:32px;
 				height:32px;
 				margin-top:-12px;
@@ -302,22 +302,23 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			font-size: 22px;
 			padding: 0 20px;
 			line-height: 70px;
-			margin-top:4px;
+			margin-top:10px;
 			display: none;
 			.ss-insert-media &{
-				font-size: 18px;	
-				margin-top: 0;
+				font-size: 18px;
+				margin-top: -5px;
 			}
 		}
 		.ss-uploadfield-dropzone { 
 			margin-top:9px;
+			padding: 8px 0;
 			@include border-radius(13px);
 			@include box-shadow(rgba($color-medium-separator, 0.4) 0 0 4px 0 inset, 0 1px 0 #FAFAFA);
 			border: 2px dashed $color-medium-separator;
 			background: lighten($color-base,12%);
 			display: none;
 			height: 54px;
-			width: 360px;
+			min-width: 280px;
 			float: left;
 			text-align: center;
 
@@ -345,10 +346,11 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			}
 			.ss-insert-media &{
 				height: 54px;
-				width: 277px; //Design has these smaller than main upload area
+				min-width: 250px; //Design has these smaller than main upload area
 				overflow:hidden;
-
-				div{		
+				padding:0;
+				margin-top:2px;
+				div{
 					background-position:0 11px;
 					padding-top:21px;
 					margin-left: 33px;
