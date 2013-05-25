@@ -79,6 +79,10 @@
 		margin: 0 8px 0 5px;
 		background: sprite($sprites32, logout) no-repeat;
 		text-indent: -9999em;
+		opacity:0.9;
+		&:hover, &:focus{
+			opacity:1;
+		}
 	}
 }
 
