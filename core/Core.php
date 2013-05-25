@@ -142,6 +142,9 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 		if($_GET) stripslashes_recursively($_GET);
 		if($_POST) stripslashes_recursively($_POST);
 		if($_COOKIE) stripslashes_recursively($_COOKIE);
+		// No more magic_quotes!
+		trigger_error('get_magic_quotes_gpc support is being removed from Silverstripe. Please set this to off in ' .
+			' your php.ini and see http://php.net/manual/en/security.magicquotes.php', E_USER_WARNING);
 	}
 	
 	/**
