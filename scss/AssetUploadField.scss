@@ -7,7 +7,7 @@
 @import "_elementMixins";
 
 // Temporary. To be hidden and replaced with javascript tooltip
-.ss-uploadfield-view-allowed-extensions{
+.ss-uploadfield-view-allowed-extensions {
 	padding-top:5px;
 	clear:both;
 	max-width:750px;
@@ -19,18 +19,8 @@
 	}
 }
 
-#AssetUploadField {
-	border-bottom: 0;
-	@include box-shadow(none);
-}
 .backlink {
 	padding-left: 12px;
-}
-
-#Form_EditorToolbarMediaForm {
-	.ui-tabs-panel {
-		padding-left: 0px;
-	}
 }
 
 body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fieldset {
@@ -52,6 +42,9 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 }
 
 .ss-assetuploadfield {
+	border-bottom: 0;
+	@include box-shadow(none);
+
 	h3 {
 		border-bottom: 1px solid $color-shadow-light;
 		@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
