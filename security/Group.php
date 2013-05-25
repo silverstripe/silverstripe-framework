@@ -251,9 +251,11 @@ class Group extends DataObject {
 		// Remove the default foreign key filter in prep for re-applying a filter containing all children groups.
 		// Filters are conjunctive in DataQuery by default, so this filter would otherwise overrule any less specific
 		// ones.
-		$result = $result->alterDataQuery(function($query){
-			$query->removeFilterOn('Group_Members');
-		});
+		if(!($result instanceof UnsavedRelationList)) {
+			$result = $result->alterDataQuery(function($query){
+				$query->removeFilterOn('Group_Members');
+			});
+		}
 		// Now set all children groups as a new foreign key
 		$groups = Group::get()->byIDs($this->collateFamilyIDs());
 		$result = $result->forForeignID($groups->column('ID'))->where($filter)->sort($sort)->limit($limit);
