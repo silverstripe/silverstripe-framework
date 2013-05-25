@@ -530,20 +530,22 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * Return the member for the auto login hash
 	 *
+	 * @param string RAW_token The auto login token, expressed as "(memberid):(unencrypted autologin key)" 
 	 * @param bool $login Should the member be logged in?
 	 */
-	public static function member_from_autologinhash($RAW_hash, $login = false) {
+	public static function member_from_autologinhash($RAW_token, $login = false) {
+		list($RAW_id, $RAW_hash) = explode(":", $RAW_token, 2);
+
 		$SQL_hash = Convert::raw2sql($RAW_hash);
 
-		$member = DataObject::get_one(
-			'Member',
-			"\"AutoLoginHash\"='" . $SQL_hash . "' AND \"AutoLoginExpired\" > " . DB::getConn()->now()
-		);
+		// Find user with non-expired key
+		$member = Member::get()->byID($RAW_id);
 
-		if($login && $member)
-			$member->logIn();
-
-		return $member;
+		// check if autologin token matches
+		if($member->validateAutoLoginToken($SQL_hash)) {
+			if($login) $member->logIn();
+			return $member;
+		}
 	}
 
 	/**

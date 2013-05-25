@@ -18,20 +18,38 @@ class MemberAuthenticator extends Authenticator {
 		'sha1' => 'sha1_v2.4'
 	);
 
-	/**
-	 * Method to authenticate an user
-	 *
-	 * @param array $RAW_data Raw data to authenticate the user
-	 * @param Form $form Optional: If passed, better error messages can be
-	 *                             produced by using
-	 *                             {@link Form::sessionMessage()}
-	 * @return bool|Member Returns FALSE if authentication fails, otherwise
-	 *                     the member object
-	 * @see Security::setDefaultAdmin()
-	 */
-	public static function authenticate($RAW_data, Form $form = null) {
-		if(array_key_exists('Email', $RAW_data) && $RAW_data['Email']){
-			$SQL_user = Convert::raw2sql($RAW_data['Email']);
+  /**
+   * Method to authenticate an user
+   *
+   * @param array $RAW_data Raw data to authenticate the user
+   * @param Form $form Optional: If passed, better error messages can be
+   *                             produced by using
+   *                             {@link Form::sessionMessage()}
+   * @return bool|Member Returns FALSE if authentication fails, otherwise
+   *                     the member object
+   * @see Security::setDefaultAdmin()
+   */
+  public function authenticate($RAW_data, Form $form = null) {
+	if(array_key_exists('Email', $RAW_data) && $RAW_data['Email']){
+		$SQL_user = Convert::raw2sql($RAW_data['Email']);
+	} else {
+		return false;
+	}
+
+	$isLockedOut = false;
+	$result = null;
+
+	// Default login (see Security::setDefaultAdmin())
+	if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
+		$member = Security::findAnAdministrator();
+	} else {
+		$member = DataObject::get_one(
+			"Member", 
+			"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
+		);
+
+		if($member) {
+			$result = $member->checkPassword($RAW_data['Password']);
 		} else {
 			return false;
 		}
@@ -124,27 +142,61 @@ class MemberAuthenticator extends Authenticator {
 
 		return $member;
 	}
+  }
 
 
 	/**
-	 * Method that creates the login form for this authentication method
-	 *
-	 * @param Controller The parent controller, necessary to create the
-	 *                   appropriate form action tag
-	 * @return Form Returns the login form to use with this authentication
-	 *              method
+	 * Returns true to indicate that this authenticator supports password reset
 	 */
-	public static function get_login_form(Controller $controller) {
-		return Object::create("MemberLoginForm", $controller, "LoginForm");
+	public function supportsPasswordReset() {
+		return true;
 	}
 
 
 	/**
-	 * Get the name of the authentication method
-	 *
-	 * @return string Returns the name of the authentication method.
+	 * Check this member's password
 	 */
-	public static function get_name() {
+	public function checkPassword(Member $member, $password) {
+		return $member->checkPassword($password)->valid();
+	}
+
+	/**
+	 * Change this member's password
+	 */
+	public function changePassword(Member $member, $password) {
+		return $member->changePassword($password);
+	}
+
+
+
+  /**
+   * Method that creates the login form for this authentication method
+   *
+   * @param Controller The parent controller, necessary to create the
+   *                   appropriate form action tag
+   * @return Form Returns the login form to use with this authentication
+   *              method
+   */
+  public function getLoginForm(Controller $controller, $name) {
+    return Object::create("MemberLoginForm", $controller, $name, $this);
+  }
+
+	public function getLoginFields() {
+		$label=singleton('Member')->fieldLabel(Member::config()->unique_identifier_field);
+		return new FieldList(
+			// Regardless of what the unique identifer field is (usually 'Email'), it will be held in the 'Email' value, below:
+			new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
+			new PasswordField("Password", _t('Member.PASSWORD', 'Password'))
+		);
+	}
+
+
+  /**
+   * Get the name of the authentication method
+   *
+   * @return string Returns the name of the authentication method.
+   */
+  public function getName() {
 		return _t('MemberAuthenticator.TITLE', "E-mail &amp; Password");
 	}
 }
