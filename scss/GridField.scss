@@ -198,31 +198,31 @@ $gf_grid_x:	16px;
 						@include border-radius(2px, 2px);
 					}
 					
-					span.badge.modified {
+					span.badge.status-modified {
 						color:  #7E7470;
 						border: 1px solid #C9B800;
 						background-color: #FFF0BC;
 					}
 					
-					span.badge.addedtodraft {
+					span.badge.status-addedtodraft {
 						color:  #7E7470;
 						border: 1px solid #C9B800;
 						background-color: #FFF0BC;
 					}
 					
-					span.badge.deletedonlive {
+					span.badge.status-deletedonlive {
 						color:  #636363;
 						border: 1px solid #E49393;
 						background-color: #F2DADB;
 					}
 					
-					span.badge.removedfromdraft {
+					span.badge.status-removedfromdraft {
 						color:  #636363;
 						border: 1px solid #E49393;
 						background-color: #F2DADB;
 					}
 					
-					span.badge.workflow-approval {
+					span.badge.status-workflow-approval {
 						color:  #56660C;
 						border: 1px solid #7C8816;
 						background-color: #DAE79A;
