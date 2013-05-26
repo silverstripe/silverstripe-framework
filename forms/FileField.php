@@ -132,7 +132,7 @@ class FileField extends FormField {
 	/**
 	 * Get custom validator for this field
 	 * 
-	 * @param object $validator
+	 * @param Upload_Validator $validator
 	 */
 	public function getValidator() {
 		return $this->upload->getValidator();
@@ -141,7 +141,8 @@ class FileField extends FormField {
 	/**
 	 * Set custom validator for this field
 	 * 
-	 * @param object $validator
+	 * @param Upload_Validator $validator
+	 * @return FileField Self reference
 	 */
 	public function setValidator($validator) {
 		$this->upload->setValidator($validator);
@@ -149,7 +150,10 @@ class FileField extends FormField {
 	}
 	
 	/**
+	 * Sets the upload folder name
+	 * 
 	 * @param string $folderName
+	 * @return FileField Self reference
 	 */
 	public function setFolderName($folderName) {
 		$this->folderName = $folderName;
@@ -157,6 +161,8 @@ class FileField extends FormField {
 	}
 	
 	/**
+	 * Gets the upload folder name
+	 * 
 	 * @return string
 	 */
 	public function getFolderName() {
@@ -181,14 +187,23 @@ class FileField extends FormField {
 	}
 
 	/**
+	 * Retrieves the Upload handler
+	 * 
 	 * @return Upload
 	 */
 	public function getUpload() {
 		return $this->upload;
 	}
 
+	/**
+	 * Sets the upload handler
+	 * 
+	 * @param Upload $upload
+	 * @return FileField Self reference
+	 */
 	public function setUpload(Upload $upload) {
 		$this->upload = $upload;
+		return $this;
 	}
 
 }

@@ -6,10 +6,8 @@
 	</span>
 	</button>
 <% end_if %>
-<% if UploadFieldHasRelation %>
-	<button data-href="$UploadFieldRemoveLink" class="ss-uploadfield-item-remove ss-ui-button ui-corner-all" title="<% _t('UploadField.REMOVEINFO', 'Remove this file from here, but do not delete it from the file store') %>" data-icon="plug-disconnect-prohibition">
-	<% _t('UploadField.REMOVE', 'Remove') %></button>
-<% end_if %>
+<button class="ss-uploadfield-item-remove ss-ui-button ui-corner-all" title="<% _t('UploadField.REMOVEINFO', 'Remove this file from here, but do not delete it from the file store') %>" data-icon="plug-disconnect-prohibition">
+<% _t('UploadField.REMOVE', 'Remove') %></button>
 <% if canDelete %>
 	<button data-href="$UploadFieldDeleteLink" class="ss-uploadfield-item-delete ss-ui-button ui-corner-all" title="<% _t('UploadField.DELETEINFO', 'Permanently delete this file from the file store') %>" data-icon="minus-circle"><% _t('UploadField.DELETE', 'Delete from files') %></button>
 <% end_if %>
