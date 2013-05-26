@@ -453,6 +453,9 @@
 				if(navi) navi.style.display = 'none';
 				var naviMsg = doc.getElementById('SilverStripeNavigatorMessage');
 				if(naviMsg) naviMsg.style.display = 'none';
+
+				// Trigger extensions.
+				this.trigger('afterIframeAdjustedForPreview', [ doc ]);
 			}
 		});
 
