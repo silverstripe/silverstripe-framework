@@ -44,11 +44,11 @@ Used in side panels and action tabs
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 3px -4px; display: block; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #0073c1; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 10px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; border-radius: 2px / 2px; }
-.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
-.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
-.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.deletedonlive { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
-.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.removedfromdraft { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
-.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.workflow-approval { color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-deletedonlive { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-removedfromdraft { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.status-workflow-approval { color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
 .cms table.ss-gridfield-table tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 1px 0; width: auto; text-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.ui-state-hover { background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.ui-state-active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
