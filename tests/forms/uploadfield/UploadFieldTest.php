@@ -140,7 +140,8 @@ class UploadFieldTest extends FunctionalTest {
 
 		// Test that the record isn't written to automatically
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertEquals($relationCount, $record->ManyManyFiles()->Count()); // Existing file count should be retained
+		// Existing file count should be retained
+		$this->assertEquals($relationCount, $record->ManyManyFiles()->Count());
 		
 		// Test that saving the form writes the record
 		$ids = array_merge($record->ManyManyFiles()->getIDList(), array($uploadedFile->ID));
@@ -148,7 +149,8 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEmpty($response['errors']);
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$record->flushCache();
-		$this->assertEquals($relationCount + 1, $record->ManyManyFiles()->Count()); // New record should appear here now
+		// New record should appear here now
+		$this->assertEquals($relationCount + 1, $record->ManyManyFiles()->Count());
 	}
 
 	/**
@@ -186,18 +188,18 @@ class UploadFieldTest extends FunctionalTest {
 		}
 	}
 
-  /**
-   * Test that max number of items on has_many is validated
-   */
+	/**
+	 * Test that max number of items on has_many is validated
+	 */
 	public function testAllowedMaxFileNumberWithHasMany() {
 		$this->loginWithPermission('ADMIN');
-		
+
 		// The 'HasManyFilesMaxTwo' field has a maximum of two files able to be attached to it.
 		// We want to add files to it until we attempt to add the third. We expect that the first
 		// two should work and the third will fail.
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$record->HasManyFilesMaxTwo()->removeAll();
-		
+
 		// Get references for each file to upload
 		$file1 = $this->objFromFixture('File', 'file1');
 		$file2 = $this->objFromFixture('File', 'file2');
@@ -206,11 +208,11 @@ class UploadFieldTest extends FunctionalTest {
 		// Write the first element, should be okay.
 		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID));
 		$this->assertEmpty($response['errors']);
-		
+
 		// Write the second element, should be okay.
 		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID, $file2->ID));
 		$this->assertEmpty($response['errors']);
- 
+
 		// Write the third element, should result in error.
 		$response = $this->mockUploadFileIDs('HasManyFilesMaxTwo', array($file1->ID, $file2->ID, $file3->ID));
 		$this->assertNotEmpty($response['errors']);
