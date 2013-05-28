@@ -381,7 +381,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($extraCss) foreach($extraCss as $file => $config) {
 			Requirements::css($file, isset($config['media']) ? $config['media'] : null);
 		}
-		$extraThemedCss = $this->stat('extra_requirements_themedcss');
+		$extraThemedCss = $this->stat('extra_requirements_themedCss');
 		if($extraThemedCss) foreach ($extraThemedCss as $file => $config) {
 			Requirements::themedCSS($file, isset($config['media']) ? $config['media'] : null);
 		}
@@ -1687,8 +1687,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 */
 	public static function require_themed_css($name, $media = null) {
-		Deprecation::notice('3.2', 'Use "LeftAndMain.extra_requirements_css" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array($name => array('media' => $media)));
+		Deprecation::notice('3.2', 'Use "LeftAndMain.extra_requirements_themedCss" config setting instead');
+		Config::inst()->update('LeftAndMain', 'extra_requirements_themedCss', array($name => array('media' => $media)));
 	}
 	
 }
