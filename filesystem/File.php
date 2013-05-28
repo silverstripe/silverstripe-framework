@@ -527,13 +527,13 @@ class File extends DataObject {
 			if(!is_a($this, 'Folder')) {
 				// Only throw a fatal error if *both* before and after paths don't exist.
 				if(!file_exists($pathBeforeAbs)) {
-					throw new Exception("Cannot move $pathBefore to $pathAfter - $pathBefore doesn't exist");
+					throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs - $pathBeforeAbs doesn't exist");
 				}
 				
 				// Check that target directory (not the file itself) exists.
 				// Only check if we're dealing with a file, otherwise the folder will need to be created
 				if(!file_exists(dirname($pathAfterAbs))) {
-					throw new Exception("Cannot move $pathBefore to $pathAfter - Directory " . dirname($pathAfter)
+					throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs - Directory " . dirname($pathAfter)
 						. " doesn't exist");
 				}
 			} 
