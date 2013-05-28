@@ -2576,6 +2576,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function canView($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
 
@@ -2584,6 +2588,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function canEdit($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
 
@@ -2592,6 +2600,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function canDelete($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
 
@@ -2602,6 +2614,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function canCreate($member = null) {
+		$extended = $this->extendedCan(__FUNCTION__, $member);
+		if($extended !== null) {
+			return $extended;
+		}
 		return Permission::check('ADMIN', 'any', $member);
 	}
 
