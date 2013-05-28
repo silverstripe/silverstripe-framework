@@ -218,7 +218,7 @@ Most of the time, it's caused by a loaded PHP extension that is broken.
 
 **Q: I get the error "HTTP Error 500.0 - Internal Server Error - C:\Program Files (x86)\PHP\php-cgi.exe - The FastCGI process exceeded configured request timeout"**
 
-**A:** A script is running for a long time, such as a unit test. To fix this, you'll need to increase the request timeout to a higher value in both IIS and PHP. Refer to the IIS FastCGI configuration documentation and PHP configuration parts of this document for where to change the appropriate values.
+**A:** A script has been running for a long time, such as a unit test. To fix this, you'll need to increase the request timeout to a higher value in both IIS and PHP. Refer to the IIS FastCGI configuration documentation and PHP configuration parts of this document for where to change the appropriate values.
 
 **Q: I cannot access SQL Server from a remote server, such as a development environment**
 
