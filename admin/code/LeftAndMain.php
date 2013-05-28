@@ -1840,7 +1840,12 @@ class LeftAndMain_TreeNode extends ViewableData {
 		$classes = $this->obj->CMSTreeClasses();
 		if($this->isCurrent) $classes .= " current";
 		$flags = $this->obj->hasMethod('getStatusFlags') ? $this->obj->getStatusFlags() : false;
-		if($flags) $classes .= ' status-' . implode('status-', array_keys($flags));
+		if ($flags) {
+			$statuses = array_keys($flags);
+			foreach ($statuses as $s) {
+				$classes .= ' status-' . $s;
+			}
+		}
 		return $classes;
 	}
 
