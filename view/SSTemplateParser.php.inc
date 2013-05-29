@@ -252,7 +252,9 @@ class SSTemplateParser extends Parser {
 	Injection: BracketInjection | SimpleInjection
 	*/
 	function Injection_STR(&$res, $sub) {
-		$res['php'] = '$val .= '. str_replace('$$FINAL', 'XML_val', $sub['Lookup']['php']) . ';';
+		list($clones, $call) = $this->cloneArgumentScopes($sub['Lookup']['php']);
+		$res['php'] .= $clones;
+		$res['php'] .= '$val .= '. str_replace('$$FINAL', 'XML_val', $call) . ';';
 	}
 
 	/*!*
@@ -793,6 +795,9 @@ class SSTemplateParser extends Parser {
 				($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
 		}
 
+		list($clones, $on) = $this->cloneArgumentScopes($on);
+		$on = $clones . $on;
+
 		return
 			$on . '; $scope->pushScope(); while (($key = $scope->next()) !== false) {' . PHP_EOL .
 				$res['Template']['php'] . PHP_EOL .
@@ -821,8 +826,12 @@ class SSTemplateParser extends Parser {
 		if ($arg['ArgumentMode'] == 'string') {
 			throw new SSTemplateParseException('Control block cant take string as argument.', $this);
 		}
-		
+	
 		$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+
+		list($clones, $on) = $this->cloneArgumentScopes($on);
+		$on = $clones . $on;
+
 		return 
 			$on . '; $scope->pushScope();' . PHP_EOL .
 				$res['Template']['php'] . PHP_EOL .
@@ -1002,7 +1011,8 @@ class SSTemplateParser extends Parser {
 		// non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
+			'href="\' . (Config::inst()->get(\'SSViewer\', \'rewrite_hash_links\') ?
+				strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . 
 				\'#',
 			$text
 		);
@@ -1084,6 +1094,51 @@ class SSTemplateParser extends Parser {
 			$code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 		}
 		return $code;
+	}
+
+	/**
+	 * Parses a line of PHP and clones all variables after the first one.
+	 *
+	 * @param string $code The line of generated to PHP
+	 * @return array A two element array containing the clone calls as the first element and the updated code line
+	 *               as the second element.
+	 */
+	protected function cloneArgumentScopes($code) {
+		$clones = '';
+		$tokens = token_get_all('<?php ' . $code);
+		array_shift($tokens);
+		$i = 0;
+		foreach($tokens as &$token) {
+			// We only care about variables
+			if(!is_array($token) || $token[0] != T_VARIABLE) {
+				continue;
+			}
+			// Skip the '$FINAL' variable
+			if($token[1] == '$FINAL') {
+				continue;
+			}
+			// We don't want to rename the very first one
+			if(!$i) {
+				$i++;
+				continue;
+			}
+			$name = "{$token[1]}_{$i}_clone";
+			$clones .= "$name = clone $token[1];\n";
+			$token[1] = $name;
+			$i++;
+		}
+
+		// Build the string up again
+		$code = '';
+		foreach($tokens as $t) {
+			if(is_array($t)) {
+				$code .= $t[1];
+			} else {
+				$code .= $t;
+			}
+		}
+
+		return array($clones, $code);
 	}
 	
 	/**
