@@ -5,8 +5,12 @@ window.tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
 				'<img src="{%=file.thumbnail_url%}" alt="" />' +
 			'</span></div>' +
 			'<div class="ss-uploadfield-item-info">' +
+				'{% if (!file.error) { %}' +
+					'<input type="hidden" name="{%=file.fieldname%}[Files][]" value="{%=file.id%}" />' + 
+				'{% } %}' + 
 				'<label class="ss-uploadfield-item-name">' + 
 					'<span class="name" title="{%=file.name%}">{%=file.name%}</span> ' + 
+					'<span class="size">{%=o.formatFileSize(file.size)%}</span>' +
 					'{% if (!file.error) { %}' +
 						'<div class="ss-uploadfield-item-status ui-state-success-text" title="'+ss.i18n._t('UploadField.Uploaded', 'Uploaded')+'">'+ss.i18n._t('UploadField.Uploaded', 'Uploaded')+'</div>' +						
 					'{% } else {  %}' +
@@ -16,7 +20,7 @@ window.tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
 				'</label>' +
 				'{% if (file.error) { %}' +
 					'<div class="ss-uploadfield-item-actions">' + 
-						'<div class="ss-uploadfield-item-cancel ss-uploadfield-item-cancelfailed"><button class="icon icon-16">' + ss.i18n._t('UploadField.CANCEL', 'Cancel') + '</button></div>' +
+						'<div class="ss-uploadfield-item-cancel ss-uploadfield-item-cancelfailed delete"><button class="icon icon-16" data-icon="delete" title="' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '">' + ss.i18n._t('UploadField.CANCELREMOVE', 'Cancel/Remove') + '</button></div>' +
 					'</div>' +
 				'{% } else { %}' +
 					'<div class="ss-uploadfield-item-actions">{% print(file.buttons, true); %}</div>' +
