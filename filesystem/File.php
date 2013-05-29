@@ -340,10 +340,10 @@ class File extends DataObject {
 		}
 
 		// Upload
-		$uploadField = new UploadField('UploadField','Upload Field');
-		$uploadField->setConfig('previewMaxWidth', 40);
-		$uploadField->setConfig('previewMaxHeight', 30);
-		$uploadField->setConfig('allowedMaxFileNumber', 1);
+		$uploadField = UploadField::create('UploadField','Upload Field')
+			->setPreviewMaxWidth(40)
+			->setPreviewMaxHeight(30)
+			->setAllowedMaxFileNumber(1);
 		//$uploadField->setTemplate('FileEditUploadField');
 		if ($this->ParentID) {
 			$parent = $this->Parent();
