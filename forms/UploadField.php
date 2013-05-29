@@ -425,9 +425,14 @@ class UploadField extends FileField {
 		//get all the existing files in the current folder
 		if ($this->getConfig('overwriteWarning')) {
 			$folder = Folder::find_or_make($this->getFolderName());
-			$files = glob( $folder->getFullPath() . '/*' );
-			$config['existingFiles'] = array_map("basename", $files);;
-
+			if($folder && $folder->exists()) {
+				$path = $folder->getFullPath();
+			} else {
+				// we're overwriting a file in the assets root
+				$path = ASSETS_PATH;
+			}
+			$files = glob($path . '/*');
+			$config['existingFiles'] = array_map("basename", $files);
 			//add overwrite warning error message to the config object sent to Javascript
 			$config['errorMessages']['overwriteWarning'] =
 				_t('UploadField.OVERWRITEWARNING','File with the same name already exists');
