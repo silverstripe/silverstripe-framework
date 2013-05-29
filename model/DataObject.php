@@ -192,6 +192,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var [string] - class => ClassName field definition cache for self::database_fields
 	 */
 	private static $classname_spec_cache = array();
+	
+	/**
+	 * Clear all cached classname specs. It's necessary to clear all cached subclassed names
+	 * for any classes if a new class manifest is generated.
+	 */
+	public static function clear_classname_spec_cache() {
+		self::$classname_spec_cache = array();
+	}
 
 	/**
 	 * Return the complete map of fields on this object, including "Created", "LastEdited" and "ClassName".
@@ -202,7 +210,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public static function database_fields($class) {
 		if(get_parent_class($class) == 'DataObject') {
-			if(!isset(self::$classname_spec_cache[$class])) {
+			if(empty(self::$classname_spec_cache[$class])) {
 				$classNames = ClassInfo::subclassesFor($class);
 
 				$db = DB::getConn();
