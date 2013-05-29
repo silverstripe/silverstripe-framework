@@ -112,9 +112,9 @@ class File extends DataObject {
 	private static $allowed_extensions = array(
 		'','ace','arc','arj','asf','au','avi','bmp','bz2','cab','cda','css','csv','dmg','doc','docx',
 		'flv','gif','gpx','gz','hqx','htm','html','ico','jar','jpeg','jpg','js','kml', 'm4a','m4v',
-		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','pages','pcx','pdf','pkg',
+		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','ogv','pages','pcx','pdf','pkg',
 		'png','pps','ppt','pptx','ra','ram','rm','rtf','sit','sitx','swf','tar','tgz','tif','tiff',
-		'txt','wav','wma','wmv','xhtml','xls','xlsx','xml','zip','zipx',
+		'txt','wav','webm','wma','wmv','xhtml','xls','xlsx','xml','zip','zipx',
 	);
 
 	/**
@@ -127,7 +127,7 @@ class File extends DataObject {
 			"apl", "avr" ,"cda" ,"mp4" ,"ogg"
 		),
 		'mov' => array(
-			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt"
+			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt", "ogv", "webm"
 		),
 		'zip' => array(
 			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
