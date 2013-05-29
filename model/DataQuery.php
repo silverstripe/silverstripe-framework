@@ -419,14 +419,22 @@ class DataQuery {
 	}
 	
 	/**
+	 * Set the GROUP BY clause of this query.
+	 * 
+	 * @param String $groupby Escaped SQL statement
+	 */
+	public function groupby($groupby) {
+		$this->query->addGroupBy($groupby);
+		return $this;
+	}
+	
+	/**
 	 * Set the HAVING clause of this query.
 	 * 
 	 * @param String $having Escaped SQL statement
 	 */
 	public function having($having) {
-		if($having) {
-			$this->query->addHaving($having);
-		}
+		$this->query->addHaving($having);
 		return $this;
 	}
 
