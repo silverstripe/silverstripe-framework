@@ -228,7 +228,25 @@
 					'themes': {
 						'theme': 'apple'
 					},
-					'plugins': ['html_data', 'ui', 'themes']
+					'types' : {
+						'types' : {
+							'default': {
+								'check_node': function(node) {
+									return ( ! node.hasClass('disabled'));
+								},
+								'uncheck_node': function(node) {
+									return ( ! node.hasClass('disabled'));
+								},
+								'select_node': function(node) {
+									return ( ! node.hasClass('disabled'));
+								},
+								'deselect_node': function(node) {
+									return ( ! node.hasClass('disabled'));
+								}
+							}
+						}
+					},
+					'plugins': ['html_data', 'ui', 'themes', 'types']
 				};
 			},
 			/**

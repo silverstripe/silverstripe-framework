@@ -53,7 +53,8 @@ class TreeDropdownField extends FormField {
 	/**
 	 * @ignore
 	 */
-	protected $sourceObject, $keyField, $labelField, $filterCallback, $searchCallback, $baseID = 0;
+	protected $sourceObject, $keyField, $labelField, $filterCallback,
+		$disableCallback, $searchCallback, $baseID = 0;
 	/**
 	 * @var string default child method in Hierarcy->getChildrenAsUL
 	 */
@@ -122,6 +123,20 @@ class TreeDropdownField extends FormField {
 		$this->filterCallback = $callback;
 		return $this;
 	}
+
+	/**
+	 * Set a callback used to disable checkboxes for some items in the tree 
+	 *
+	 * @param callback $callback
+	 */
+	public function setDisableFunction($callback) {
+		if(!is_callable($callback, true)) {
+			throw new InvalidArgumentException('TreeDropdownField->setDisableFunction(): not passed a valid callback');
+		}
+		
+		$this->disableCallback = $callback;
+		return $this;
+	}
 	
 	/**
 	 * Set a callback used to search the hierarchy globally, even before 
@@ -181,11 +196,11 @@ class TreeDropdownField extends FormField {
 		if($record) {
 			$title = $record->{$this->labelField};
 		} else {
-			if($this->showSearch){
+			if($this->showSearch) {
 				$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
-			}else{
-			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
-		}
+			} else {
+				$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+			}
 		}
 
 		// TODO Implement for TreeMultiSelectField
@@ -276,12 +291,13 @@ class TreeDropdownField extends FormField {
 			$keyField = $self->keyField;
 			$labelField = $self->labelField;
 			return sprintf(
-				'<li id="selector-%s-%s" data-id="%s" class="class-%s %s"><a rel="%d">%s</a>',
+				'<li id="selector-%s-%s" data-id="%s" class="class-%s %s %s"><a rel="%d">%s</a>',
 				Convert::raw2xml($self->getName()),
 				Convert::raw2xml($child->$keyField),
 				Convert::raw2xml($child->$keyField),
 				Convert::raw2xml($child->class),
 				Convert::raw2xml($child->markingClasses()),
+				($self->nodeIsDisabled($child)) ? 'disabled' : '',
 				(int)$child->ID,
 				$escapeLabelField ? Convert::raw2xml($child->$labelField) : $child->$labelField
 			);
@@ -349,6 +365,15 @@ class TreeDropdownField extends FormField {
 		}
 		
 		return true;
+	}
+
+	/**
+	 * Marking a specific node in the tree as disabled
+	 * @param $node
+	 * @return boolean
+	 */
+	public function nodeIsDisabled($node) {
+		return ($this->disableCallback && call_user_func($this->disableCallback, $node));
 	}
 
 	/**
