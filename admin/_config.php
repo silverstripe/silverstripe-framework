@@ -6,7 +6,7 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 	'mode' => 'none', // initialized through LeftAndMain.EditFor.js logic
 
 	'body_class' => 'typography',
-	'document_base_url' => Director::absoluteBaseURL(),
+	'document_base_url' => isset($_SERVER['HTTP_HOST']) ? Director::absoluteBaseURL() : null,
 
 	'cleanup_callback' => "sapphiremce_cleanup",
 
