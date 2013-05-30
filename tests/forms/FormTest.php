@@ -13,7 +13,7 @@ class FormTest extends FunctionalTest {
 		'FormTest_Team',
 	);
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 
 		Config::inst()->update('Director', 'rules', array(
@@ -229,8 +229,6 @@ class FormTest extends FunctionalTest {
 	}
 	
 	public function testSessionValidationMessage() {
-		Config::inst()->update('Injector', 'FormTemplateHelper', array('class' => 'FormTemplateHelper_Pre32'));
-
 		$this->get('FormTest_Controller');
 		
 		$response = $this->post(
@@ -240,15 +238,16 @@ class FormTest extends FunctionalTest {
 				// leaving out "Required" field
 			)
 		);
+
 		$this->assertPartialMatchBySelector(
-			'#Email span.message',
+			'#Form_Form_Email_Holder span.message',
 			array(
 				'Please enter an email address'
 			),
 			'Formfield validation shows note on field if invalid'
 		);
 		$this->assertPartialMatchBySelector(
-			'#SomeRequiredField span.required',
+			'#Form_Form_SomeRequiredField_Holder span.required',
 			array(
 				'"Some Required Field" is required'
 			),
