@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package framework
  * @subpackage tests
@@ -12,7 +13,7 @@ class FormTest extends FunctionalTest {
 		'FormTest_Team',
 	);
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 
 		Config::inst()->update('Director', 'rules', array(
@@ -237,21 +238,21 @@ class FormTest extends FunctionalTest {
 				// leaving out "Required" field
 			)
 		);
+
 		$this->assertPartialMatchBySelector(
-			'#Email span.message',
+			'#Form_Form_Email_Holder span.message',
 			array(
 				'Please enter an email address'
 			),
 			'Formfield validation shows note on field if invalid'
 		);
 		$this->assertPartialMatchBySelector(
-			'#SomeRequiredField span.required',
+			'#Form_Form_SomeRequiredField_Holder span.required',
 			array(
 				'"Some Required Field" is required'
 			),
 			'Required fields show a notification on field when left blank'
 		);
-		
 	}
 	
 	public function testSessionSuccessMessage() {
@@ -433,6 +434,10 @@ class FormTest extends FunctionalTest {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Player extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
@@ -454,6 +459,10 @@ class FormTest_Player extends DataObject implements TestOnly {
 	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Team extends DataObject implements TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
@@ -465,6 +474,10 @@ class FormTest_Team extends DataObject implements TestOnly {
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_Controller extends Controller implements TestOnly {
 	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
@@ -510,6 +523,10 @@ class FormTest_Controller extends Controller implements TestOnly {
 
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
 	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
