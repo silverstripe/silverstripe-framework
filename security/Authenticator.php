@@ -17,7 +17,7 @@ abstract class Authenticator extends Object {
 	 * @var array
 	 */
 	private static $authenticators = array('MemberAuthenticator');
-	
+
 	/**
 	 * Used to influence the order of authenticators on the login-screen
 	 * (default shows first).
@@ -37,7 +37,51 @@ abstract class Authenticator extends Object {
 	 * @return bool|Member Returns FALSE if authentication fails, otherwise
 	 *                     the member object
 	 */
-	public static function authenticate($RAW_data, Form $form = null) {
+	public abstract function authenticate($RAW_data, Form $form = null);
+
+
+	/**
+	 * Check that the password of the given member is correct.
+	 * Used, for example, by the change password feature to validate the 'old password'
+	 */
+	public abstract function checkPassword(Member $member, $password);
+
+	/**
+	 * Send the password reset link via email.
+	 */
+	public function sendResetPasswordEmail($member) {
+		$token = $member->generateAutologinTokenAndStoreHash();
+
+		$email = Member_ForgotPasswordEmail::create();
+		$email->populateTemplate($member);
+		$email->populateTemplate(array(
+			'PasswordResetLink' => Security::getPasswordResetLink($member, $token),
+		));
+		$email->setTo($member->Email);
+		$email->send();
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public static function get_login_form(Controller $controller) {
+		Deprecation::notice('3.1', 'Instantiate the authenticator and use getLoginForm() instaed');
+
+		$authenticator = get_called_class();
+		$a = new $authenticator;
+		return $a->getLoginForm($controller, 'LoginForm');
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static function get_name() {
+		Deprecation::notice('3.1', 'Instantiate the authenticator and use getName() instaed');
+
+		$authenticator = get_called_class();
+		$a = new $authenticator;
+		return $a->getName();
 	}
 
 	/**
@@ -48,22 +92,94 @@ abstract class Authenticator extends Object {
 	 * @return Form Returns the login form to use with this authentication
 	 *              method
 	 */
-	public static function get_login_form(Controller $controller) {
+	public function getLoginForm(Controller $controller, $name) {
+		return new LoginForm($controller, $name, $this);
 	}
 
+	public function getChangePasswordForm($controller,  $name) {
+		return new ChangePasswordForm($controller, $name, $this);
+	}
+
+	public function getLostPasswordForm($controller, $name) {
+		$fields = $this->getLostPasswordFields();
+		$fields->push(new HiddenField("AuthenticationMethod", null, get_class($this)));
+
+		$form = new Form(
+			$controller,
+			'LostPasswordForm',
+			$fields,
+			new FieldList(
+				new FormAction(
+					'forgotPassword',
+					_t('Security.BUTTONSEND', 'Send me the password reset link')
+				)
+			),
+			false
+		);
+
+		$data = $_GET;
+		unset($data['AuthenticationMethod']);
+		unset($data['SecurityID']);
+		unset($data['url']);
+		if($data) $form->loadDataFrom($data);
+
+		return $form;
+	}
+
+	/**
+	 * Retuns a {@link FieldList} of fields to include in the log-in form
+	 */
+	public abstract function getLoginFields();
+
+	/**
+	 * Update the password of the given member.
+	 * Used by the change password function
+	 */
+	public abstract function changePassword(Member $member, $password);
 
 	/**
 	 * Get the name of the authentication method
 	 *
 	 * @return string Returns the name of the authentication method.
+	 *
 	 */
-	public static function get_name() {
+	public abstract function getName();
+
+	/**
+	 * Boolean function; returns true if this authenticator supports password reset
+	 */
+	public abstract function supportsPasswordReset();
+
+	/**
+	 * Return the fields that should be requested on the forgot password form.
+	 * The default form shows an Email field and a forgotPassword action.
+	 */
+	public function getLostPasswordFields() {
+		return new FieldList(
+			new EmailField('Email', _t('Member.EMAIL', 'Email'))
+		);
 	}
+
+	/**
+	 * Returns the member to send the lost password email to.
+	 * @param $data The data from the lost password form.
+	 */
+	function getMemberForLostPasswordEmail($data) {
+		$SQL_data = Convert::raw2sql($data);
+		$SQL_email = $SQL_data['Email'];
+		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");
+
+		return $member;
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Registration plumbing
 
 	public static function register($authenticator) {
-	self::register_authenticator($authenticator);	
+		self::register_authenticator($authenticator);	
 	}
-
 
 	/**
 	 * Register a new authenticator
@@ -186,4 +302,3 @@ abstract class Authenticator extends Object {
 		return true;
 	}
 }
-

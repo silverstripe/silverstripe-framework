@@ -270,26 +270,29 @@ class Security extends Controller {
 		return;
 	}
 
+	/**
+	 * Return a {@link Authenticator} object for the authenticator currently in use.
+	 */
+	protected function authenticator() {
+		if(isset($this->requestParams['AuthenticationMethod'])) {
+			$authenticator = trim($this->requestParams['AuthenticationMethod']);
+			if(!in_array($authenticator, Authenticator::get_authenticators())) {
+				throw new Exception("Bad authenticator '$authenticator'");
+			}
+
+		} else {
+			$authenticator = Authenticator::get_default_authenticator();
+		}
+		
+		return new $authenticator;
+	}
+
 
 	/**
 	 * Get the login form to process according to the submitted data
 	 */
 	public function LoginForm() {
-		if(isset($this->requestParams['AuthenticationMethod'])) {
-			$authenticator = trim($_REQUEST['AuthenticationMethod']);
-
-			$authenticators = Authenticator::get_authenticators();
-			if(in_array($authenticator, $authenticators)) {
-				return call_user_func(array($authenticator, 'get_login_form'), $this);
-			}
-		}
-		else {
-			if($authenticator = Authenticator::get_default_authenticator()) {
-				return call_user_func(array($authenticator, 'get_login_form'), $this);
-			}
-		}
-		
-		user_error('Passed invalid authentication method', E_USER_ERROR);
+		return $this->authenticator()->getLoginForm($this, 'LoginForm');
 	}
 
 
@@ -301,15 +304,13 @@ class Security extends Controller {
 	 *
 	 * @todo Check how to activate/deactivate authentication methods
 	 */
-	public function GetLoginForms()
-	{
+	public function GetLoginForms() {
 		$forms = array();
 
 		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
-			array_push($forms,
-						call_user_func(array($authenticator, 'get_login_form'),
-																$this));
+			$a = new $authenticator;
+			array_push($forms, $a->getLoginForm($this, 'LoginForm'));
 		}
 
 		return $forms;
@@ -420,12 +421,8 @@ class Security extends Controller {
 			$content_forms = '';
 
 			foreach($forms as $form) {
-				$content .= "<li><a href=\"#{$form->FormName()}_tab\">"
-					. $form->getAuthenticator()->get_name()
-					. "</a></li>\n";
-
-				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">'
-					. $form->forTemplate() . "</div>\n";
+				$content .= "<li><a href=\"$link_base#{$form->FormName()}_tab\">{$form->getAuthenticator()->getName()}</a></li>\n";
+				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">' . $form->forTemplate() . "</div>\n";
 			}
 
 			$content .= "</ul>\n" . $content_forms . "\n</div>\n</div>\n";
@@ -481,6 +478,13 @@ class Security extends Controller {
 			$controller = $this;
 		}
 
+		// If member is already specified, send the link straight away. This is done via "changepassword" action.
+		if (isset($_REQUEST['member']) && is_numeric($_REQUEST['member'])) {
+			$this->authenticator()->sendResetPasswordEmail((int)$_REQUEST['member']);
+			$this->redirect('Security/passwordsent');
+			return;
+		}
+
 		// if the controller calls Director::redirect(), this will break early
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
@@ -508,19 +512,34 @@ class Security extends Controller {
 	 * @return Form Returns the lost password form
 	 */
 	public function LostPasswordForm() {
-		return MemberLoginForm::create(			$this,
-			'LostPasswordForm',
-			new FieldList(
-				new EmailField('Email', _t('Member.EMAIL', 'Email'))
-			),
-			new FieldList(
-				new FormAction(
-					'forgotPassword',
-					_t('Security.BUTTONSEND', 'Send me the password reset link')
-				)
-			),
-			false
-		);
+	    return $this->authenticator()->getLostPasswordForm($this, 'LostPasswordForm');
+	}
+
+	/**
+	 * Forgot password form handler method
+	 *
+	 * This method is called when the user clicks on "I've lost my password"
+	 *
+	 * @param array $data Submitted data
+	 */
+	function forgotPassword($data, $form) {
+		$member = $this->authenticator()->getMemberForLostPasswordEmail($data);
+
+		if($member) {
+			$this->authenticator()->sendResetPasswordEmail($member);
+			$this->redirect('Security/passwordsent/' . urlencode($data['Email']));
+		} elseif($data['Email']) {
+			// Avoid information disclosure by displaying the same status,
+			// regardless wether the email address actually exists
+			$this->redirect('Security/passwordsent/' . urlencode($data['Email']));
+		} else {
+			$this->sessionMessage(
+				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
+				'bad'
+			);
+
+			$this->redirect('Security/lostpassword');
+		}
 	}
 
 
@@ -620,6 +639,10 @@ class Security extends Controller {
 
 		// Check whether we are merely changin password, or resetting.
 		if(isset($_REQUEST['t']) && $member && $member->validateAutoLoginToken($_REQUEST['t'])) {
+			// Log out if we're already logged in
+			$loggedInMember = Member::currentUser();
+			if($loggedInMember) $loggedInMember->logOut();
+
 			// On first valid password reset request redirect to the same URL without hash to avoid referrer leakage.
 
 			// Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
@@ -646,17 +669,30 @@ class Security extends Controller {
 			// show an error message if the auto login token is invalid and the
 			// user is not logged in
 			if(!isset($_REQUEST['t']) || !$member) {
-				$customisedController = $controller->customise(
-					array('Content' =>
-						_t(
-							'Security.NOTERESETLINKINVALID',
-							'<p>The password reset link is invalid or expired.</p>'
-							. '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-							. ' you <a href="{link2}">logged in</a>.</p>',
-							array('link1' => $this->Link('lostpassword'), 'link2' => $this->link('login'))
+				if (isset($_REQUEST['member']) && is_numeric($_REQUEST['member'])) {
+					$customisedController = $controller->customise(
+						array('Content' =>
+							sprintf(
+								_t('Security.NOTERESETLINKINVALIDMEMBERKNOWN',
+									'<p>The password reset link is invalid or has expired. <a href="%s">Request another password reset email with a new link</a>.</p>'
+								),
+								$this->Link('lostpassword?member='.(int)$_REQUEST['member'])
+							)
 						)
-					)
-				);
+					);
+				} else {
+					$customisedController = $controller->customise(
+						array('Content' =>
+							_t(
+								'Security.NOTERESETLINKINVALID',
+								'<p>The password reset link is invalid or expired.</p>'
+								. '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+								. ' you <a href="{link2}">logged in</a>.</p>',
+								array('link1' => $this->Link('lostpassword'), 'link2' => $this->link('login'))
+							)
+						)
+					);
+				}
 			} else {
 				self::permissionFailure(
 					$this,
@@ -677,7 +713,7 @@ class Security extends Controller {
 	 * @return Form Returns the lost password form
 	 */
 	public function ChangePasswordForm() {
-        return Object::create('ChangePasswordForm', $this, 'ChangePasswordForm');
+		return $this->authenticator()->getChangePasswordForm($this, 'ChangePasswordForm');
 	}
 
 	/**

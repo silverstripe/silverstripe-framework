@@ -29,7 +29,7 @@ class MemberAuthenticator extends Authenticator {
 	 *                     the member object
 	 * @see Security::setDefaultAdmin()
 	 */
-	public static function authenticate($RAW_data, Form $form = null) {
+	public function authenticate($RAW_data, Form $form = null) {
 		if(array_key_exists('Email', $RAW_data) && $RAW_data['Email']){
 			$SQL_user = Convert::raw2sql($RAW_data['Email']);
 		} else {
@@ -41,90 +41,133 @@ class MemberAuthenticator extends Authenticator {
 
 		// Default login (see Security::setDefaultAdmin())
 		if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
-			$member = Security::findAnAdministrator();
+			return Security::findAnAdministrator();
+
 		} else {
 			$member = DataObject::get_one(
 				"Member", 
-				"\"" . Member::config()->unique_identifier_field . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
+				"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
 			);
 
 			if($member) {
 				$result = $member->checkPassword($RAW_data['Password']);
 			} else {
-				$result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
-			}
-
-			if($member && !$result->valid()) { 
-				$member->registerFailedLogin();
-				$member = false;
-			}
-		}
-		
-		// Optionally record every login attempt as a {@link LoginAttempt} object
-		/**
-		 * TODO We could handle this with an extension
-		 */
-		if(Security::config()->login_recording) {
-			$attempt = new LoginAttempt();
-			if($member) {
-				// successful login (member is existing with matching password)
-				$attempt->MemberID = $member->ID;
-				$attempt->Status = 'Success';
-				
-				// Audit logging hook
-				$member->extend('authenticated');
-			} else {
-				// failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
-				$existingMember = DataObject::get_one(
-					"Member",
-					"\"" . Member::config()->unique_identifier_field . "\" = '$SQL_user'"
-				);
-				if($existingMember) {
-					$attempt->MemberID = $existingMember->ID;
-					
-					// Audit logging hook
-					$existingMember->extend('authenticationFailed');
-				} else {
-					
-					// Audit logging hook
-					singleton('Member')->extend('authenticationFailedUnknownUser', $RAW_data);
-				}
-				$attempt->Status = 'Failure';
-			}
-			if(is_array($RAW_data['Email'])) {
-				user_error("Bad email passed to MemberAuthenticator::authenticate(): $RAW_data[Email]", E_USER_WARNING);
 				return false;
 			}
+
+			$isLockedOut = false;
+			$result = null;
+
+			// Default login (see Security::setDefaultAdmin())
+			if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
+				$member = Security::findAnAdministrator();
+			} else {
+				$member = DataObject::get_one(
+					"Member", 
+					"\"" . Member::config()->unique_identifier_field . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
+				);
+
+				if($member) {
+					$result = $member->checkPassword($RAW_data['Password']);
+				} else {
+					$result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
+				}
+
+				if($member && !$result->valid()) { 
+					$member->registerFailedLogin();
+					$member = false;
+				}
+			}
 			
-			$attempt->Email = $RAW_data['Email'];
-			$attempt->IP = Controller::curr()->getRequest()->getIP();
-			$attempt->write();
-		}
-		
-		// Legacy migration to precision-safe password hashes.
-		// A login-event with cleartext passwords is the only time
-		// when we can rehash passwords to a different hashing algorithm,
-		// bulk-migration doesn't work due to the nature of hashing.
-		// See PasswordEncryptor_LegacyPHPHash class.
-		if(
-			$member // only migrate after successful login
-			&& self::$migrate_legacy_hashes
-			&& array_key_exists($member->PasswordEncryption, self::$migrate_legacy_hashes)
-		) {
-			$member->Password = $RAW_data['Password'];
-			$member->PasswordEncryption = self::$migrate_legacy_hashes[$member->PasswordEncryption];
-			$member->write();
-		}
+			// Optionally record every login attempt as a {@link LoginAttempt} object
+			/**
+			 * TODO We could handle this with an extension
+			 */
+			if(Security::config()->login_recording) {
+				$attempt = new LoginAttempt();
+				if($member) {
+					// successful login (member is existing with matching password)
+					$attempt->MemberID = $member->ID;
+					$attempt->Status = 'Success';
+					
+					// Audit logging hook
+					$member->extend('authenticated');
+				} else {
+					// failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
+					$existingMember = DataObject::get_one(
+						"Member",
+						"\"" . Member::config()->unique_identifier_field . "\" = '$SQL_user'"
+					);
+					if($existingMember) {
+						$attempt->MemberID = $existingMember->ID;
+						
+						// Audit logging hook
+						$existingMember->extend('authenticationFailed');
+					} else {
+						
+						// Audit logging hook
+						singleton('Member')->extend('authenticationFailedUnknownUser', $RAW_data);
+					}
+					$attempt->Status = 'Failure';
+				}
+				if(is_array($RAW_data['Email'])) {
+					user_error("Bad email passed to MemberAuthenticator::authenticate(): $RAW_data[Email]", E_USER_WARNING);
+			} else {
+					return false;
+				}
+				
+				$attempt->Email = $RAW_data['Email'];
+				$attempt->IP = Controller::curr()->getRequest()->getIP();
+				$attempt->write();
+			}
+			
+			// Legacy migration to precision-safe password hashes.
+			// A login-event with cleartext passwords is the only time
+			// when we can rehash passwords to a different hashing algorithm,
+			// bulk-migration doesn't work due to the nature of hashing.
+			// See PasswordEncryptor_LegacyPHPHash class.
+			if(
+				$member // only migrate after successful login
+				&& self::$migrate_legacy_hashes
+				&& array_key_exists($member->PasswordEncryption, self::$migrate_legacy_hashes)
+			) {
+				$member->Password = $RAW_data['Password'];
+				$member->PasswordEncryption = self::$migrate_legacy_hashes[$member->PasswordEncryption];
+				$member->write();
+			}
 
-		if($member) {
-			Session::clear('BackURL');
-		} else {
-			if($form && $result) $form->sessionMessage($result->message(), 'bad');
-		}
+			if($member) {
+				Session::clear('BackURL');
+			} else {
+				if($form && $result) $form->sessionMessage($result->message(), 'bad');
+			}
 
-		return $member;
+			return $member;
+		}
 	}
 
+
+	/**
+	 * Returns true to indicate that this authenticator supports password reset
+	 */
+	public function supportsPasswordReset() {
+		return true;
+	}
+
+
+	/**
+	 * Check this member's password
+	 */
+	public function checkPassword(Member $member, $password) {
+		return $member->checkPassword($password)->valid();
+	}
+
+	/**
+	 * Change this member's password
+	 */
+	public function changePassword(Member $member, $password) {
+		return $member->changePassword($password);
+	}
 
 	/**
 	 * Method that creates the login form for this authentication method
@@ -134,17 +177,29 @@ class MemberAuthenticator extends Authenticator {
 	 * @return Form Returns the login form to use with this authentication
 	 *              method
 	 */
-	public static function get_login_form(Controller $controller) {
-		return Object::create("MemberLoginForm", $controller, "LoginForm");
+	public function getLoginForm(Controller $controller, $name) {
+		return Object::create("LoginForm", $controller, $name, $this);
 	}
 
+	/**
+	 * Return the fields for the login form.
+	 * Used by the default LoginForm class
+	 */
+	public function getLoginFields() {
+		$label=singleton('Member')->fieldLabel(Member::config()->unique_identifier_field);
+		return new FieldList(
+			// Regardless of what the unique identifer field is (usually 'Email'), it will be held in the 'Email' value, below:
+			new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
+			new PasswordField("Password", _t('Member.PASSWORD', 'Password'))
+		);
+	}
 
 	/**
 	 * Get the name of the authentication method
 	 *
 	 * @return string Returns the name of the authentication method.
 	 */
-	public static function get_name() {
+	public function getName() {
 		return _t('MemberAuthenticator.TITLE', "E-mail &amp; Password");
 	}
 }
