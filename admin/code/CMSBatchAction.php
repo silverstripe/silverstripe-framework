@@ -82,13 +82,9 @@ abstract class CMSBatchAction extends Object {
 		
 		foreach($objs as $obj) {
 			
-			// Don't run doPublish() if $obj isn't in a fit state be published
-			// @todo Implementation logic _is_ better in CMSBatchAction_Publish#run() but at least objects not matching, still get the batchaction run over them
-			if ($helperMethod == 'isPublish' && !$obj->getIsDeletedFromStage()) {
-				// Perform the action
-				if (!call_user_func_array(array($obj, $helperMethod), $arguments)) {
-					$status['error'][$obj->ID] = '';
-				}
+			// Perform the action
+			if (!call_user_func_array(array($obj, $helperMethod), $arguments)) {
+				$status['error'][$obj->ID] = '';
 			}
 			
 			// Now make sure the tree title is appropriately updated
