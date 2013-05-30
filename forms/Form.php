@@ -928,11 +928,7 @@ class Form extends RequestHandler {
 	 * @return string
 	 */
 	public function FormName() {
-		if($this->htmlID) {
-			return $this->htmlID;
-		} else {
-			return $this->class . '_' . str_replace(array('.', '/'), '', $this->name);
-		}
+		return $this->getTemplateHelper()->generateFormID($this);
 	}
 
 	/**

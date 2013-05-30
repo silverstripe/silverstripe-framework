@@ -41,7 +41,9 @@ class FormTemplateHelper {
 			return Convert::raw2htmlid($id);
 		}
 
-		return Convert::raw2htmlid($form->FormName());
+		return Convert::raw2htmlid(
+			get_class($form) . '_' . str_replace(array('.', '/'), '', $form->getName())
+		);
 	}
 
 	/**
@@ -63,7 +65,7 @@ class FormTemplateHelper {
 	public function generateFieldID($field) {
 		if($form = $field->getForm()) {
 			return sprintf("%s_%s",
-				$form->getHTMLID(),
+				$this->generateFormID($form),
 				Convert::raw2htmlid($field->getName())
 			);
 		}
@@ -93,7 +95,10 @@ class FormTemplateHelper_Pre32 extends FormTemplateHelper {
 			return $id;
 		}
 
-		return $form->class . '_' . str_replace(array('.', '/'), '', $form->getName());
+		return sprintf("%s_%s", 
+			$form->class,
+			str_replace(array('.', '/'), '', $form->getName())
+		);
 	}
 
 	/**
@@ -111,10 +116,18 @@ class FormTemplateHelper_Pre32 extends FormTemplateHelper {
 	 * @return string
 	 */
 	public function generateFieldID($field) {
-		$name = preg_replace('/(^-)|(-$)/', '', preg_replace('/[^A-Za-z0-9_-]+/', '-', $field->getName()));
+		$name = preg_replace(
+			'/(^-)|(-$)/', '', 
+			preg_replace('/[^A-Za-z0-9_-]+/', '-', $field->getName())
+		);
 
 		if($form = $field->getForm()) {
-			return $form->FormName() . '_' . $name;
+			$form = sprintf("%s_%s",
+				get_class($form),
+				str_replace(array('.', '/'), '', $form->getName())
+			);
+
+			return $form . '_' . $name;
 		}
 
 		return $name;
