@@ -96,6 +96,13 @@ abstract class StringField extends DBField {
 			return parent::prepValueForDB($value);
 		}
 	}
+
+	/**
+	 * @return string
+	 */
+	public function forTemplate() {
+		return nl2br($this->XML());
+	}
 	
 	/**
 	 * Limit this field's content by a number of characters.
