@@ -5,6 +5,16 @@
  */
 
 class StringFieldTest extends SapphireTest {
+
+	/**
+	 * @covers StringField->forTemplate()
+	 */
+	public function testForTemplate() {
+		$this->assertEquals(
+			"this is<br />\na test!",
+			DBField::create_field('StringFieldTest_MyStringField', "this is\na test!")->forTemplate()
+		);
+	}
 	
 	/**
 	 * @covers StringField->LowerCase()
