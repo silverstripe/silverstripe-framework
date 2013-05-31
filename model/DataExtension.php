@@ -42,7 +42,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * @param SQLQuery $query Query to augment.
 	 */
-	public function augmentSQL(SQLQuery &$query) {
+	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
 	}
 
 	/**
