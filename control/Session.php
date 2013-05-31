@@ -535,6 +535,13 @@ class Session {
 			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
 			@session_start();
+
+		}
+
+		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
+		// By default it's the total session lifetime
+		if($timeout && !headers_sent()) {
+			setcookie(session_name(), session_id(), time()+$timeout, $path, $domain ? $domain : null, $secure, true);
 		}
 	}
 
