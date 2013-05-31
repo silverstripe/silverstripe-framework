@@ -462,18 +462,18 @@ body.cms { overflow: hidden; }
 .cms-add-form ul.SelectionGroup { padding-left: 28px; }
 .cms-add-form .parent-mode { padding: 8px; overflow: auto; }
 
-#PageType ul { padding-left: 20px; }
-#PageType ul li { float: none; width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
-#PageType ul li:last-child { border-bottom: none; }
-#PageType ul li:hover, #PageType ul li.selected { background-color: rgba(255, 255, 102, 0.3); }
-#PageType ul li.disabled { color: #aaaaaa; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); opacity: 0.5; }
-#PageType ul li.disabled:hover { background: none; }
-#PageType ul li input { margin: inherit; }
-#PageType ul li label { padding-left: 0; padding-bottom: 0; }
-#PageType ul li input, #PageType ul li label, #PageType ul li .page-icon, #PageType ul li .title { float: left; line-height: 1.3em; }
-#PageType ul li .page-icon { margin: 0 4px; }
-#PageType ul li .title { width: 120px; font-weight: bold; padding-right: 10px; }
-#PageType ul li .description { font-style: italic; display: inline; clear: none; margin: 0; }
+#Form_AddForm_PageType_Holder ul { padding-left: 20px; }
+#Form_AddForm_PageType_Holder ul li { float: none; width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
+#Form_AddForm_PageType_Holder ul li:last-child { border-bottom: none; }
+#Form_AddForm_PageType_Holder ul li:hover, #Form_AddForm_PageType_Holder ul li.selected { background-color: rgba(255, 255, 102, 0.3); }
+#Form_AddForm_PageType_Holder ul li.disabled { color: #aaaaaa; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); opacity: 0.5; }
+#Form_AddForm_PageType_Holder ul li.disabled:hover { background: none; }
+#Form_AddForm_PageType_Holder ul li input { margin: inherit; }
+#Form_AddForm_PageType_Holder ul li label { padding-left: 0; padding-bottom: 0; }
+#Form_AddForm_PageType_Holder ul li input, #Form_AddForm_PageType_Holder ul li label, #Form_AddForm_PageType_Holder ul li .page-icon, #Form_AddForm_PageType_Holder ul li .title { float: left; line-height: 1.3em; }
+#Form_AddForm_PageType_Holder ul li .page-icon { margin: 0 4px; }
+#Form_AddForm_PageType_Holder ul li .title { width: 120px; font-weight: bold; padding-right: 10px; }
+#Form_AddForm_PageType_Holder ul li .description { font-style: italic; display: inline; clear: none; margin: 0; }
 
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
 .cms-content-toolbar { min-height: 29px; display: block; margin: 0 0 8px 0; border-bottom: 1px solid #d0d3d5; -webkit-box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); -moz-box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); -o-box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); box-shadow: 0 1px 0 rgba(248, 248, 248, 0.9); *zoom: 1; /* smaller treedropdown */ }
@@ -1017,8 +1017,8 @@ visible. Added and removed with js in TabSet.js  */ /***************************
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel.first { left: 0; width: 203px; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .ui-icon { padding-right: 0; }
 .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .tab-nav-link, .cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel .ss-ui-button { font-size: 12px; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #PageType ul { padding: 0; }
-.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #PageType ul li { padding: 4px 5px; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #Form_AddForm_PageType_Holder ul { padding: 0; }
+.cms .ss-ui-action-tabset.multi .ss-ui-action-tab.ui-tabs-panel #Form_AddForm_PageType_Holder ul li { padding: 4px 5px; }
 .cms .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav, .cms .ss-ui-action-tabset.tabset-open ul.ui-tabs-nav li.first { -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; }
 .cms .ss-ui-action-tabset.tabset-open-last ul.ui-tabs-nav li.last { -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 .cms .ss-ui-action-tabset .batch-check, .cms .ss-ui-action-tabset .ui-icon { display: inline-block; float: left; margin-left: -2px; padding-right: 6px; }
