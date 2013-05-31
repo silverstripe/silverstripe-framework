@@ -239,7 +239,10 @@ class Text extends StringField {
 	public function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true,
 			$prefix = "... ", $suffix = "...") {
 
-		if(!$string) $string = $_REQUEST['Search'];	// Use the default "Search" request variable (from SearchForm)
+		if(!$string) {
+			// Use the default "Search" request variable (from SearchForm)
+			$string = isset($_REQUEST['Search']) ? $_REQUEST['Search'] : '';
+		}
 
 		// Remove HTML tags so we don't have to deal with matching tags
 		$text = $striphtml ? $this->NoHTML() : $this->value;

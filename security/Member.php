@@ -447,7 +447,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function logOut() {
 		Session::clear("loggedInAs");
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, null, 0);
-		self::session_regenerate_id();
+
+		Session::destroy();
 
 		$this->extend('memberLoggedOut');
 

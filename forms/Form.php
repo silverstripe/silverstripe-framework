@@ -259,10 +259,6 @@ class Form extends RequestHandler {
 		} else {
 			$vars = $request->requestVars();
 		}
-
-		if(isset($funcName)) {
-			Form::set_current_action($funcName);
-		}
 		
 		// Populate the form
 		$this->loadDataFrom($vars, true);
@@ -299,6 +295,7 @@ class Form extends RequestHandler {
 		}
 			
 		if(isset($funcName)) {
+			Form::set_current_action($funcName);
 			$this->setButtonClicked($funcName);
 		}
 		

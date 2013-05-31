@@ -153,6 +153,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	private static $extra_requirements_themedCss = array();
 
 	/**
+	 * If true, call a keepalive ping every 5 minutes from the CMS interface,
+	 * to ensure that the session never dies.
+	 * 
+	 * @config
+	 * @var boolean
+	 */
+	private static $session_keepalive_ping = true;
+
+	/**
 	 * @var PjaxResponseNegotiator
 	 */
 	protected $responseNegotiator;
@@ -327,28 +336,30 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		HTMLEditorField::include_js();
 
-		Requirements::combine_files(
-			'leftandmain.js',
-			array_unique(array_merge(
-				array(
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
-				),
-				Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
-				Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
-			))
-		);
+		$leftAndMainIncludes = array_unique(array_merge(
+			array(
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
+			),
+			Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
+			Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
+		));
+
+		if($this->config()->session_keepalive_ping) {
+			$leftAndMainIncludes[] = FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js';
+		}
+
+		Requirements::combine_files('leftandmain.js', $leftAndMainIncludes);
 
 		// TODO Confuses jQuery.ondemand through document.write()
 		if (Director::isDev()) {
@@ -381,7 +392,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($extraCss) foreach($extraCss as $file => $config) {
 			Requirements::css($file, isset($config['media']) ? $config['media'] : null);
 		}
-		$extraThemedCss = $this->stat('extra_requirements_themedcss');
+		$extraThemedCss = $this->stat('extra_requirements_themedCss');
 		if($extraThemedCss) foreach ($extraThemedCss as $file => $config) {
 			Requirements::themedCSS($file, isset($config['media']) ? $config['media'] : null);
 		}
@@ -1687,8 +1698,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 */
 	public static function require_themed_css($name, $media = null) {
-		Deprecation::notice('3.2', 'Use "LeftAndMain.extra_requirements_css" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array($name => array('media' => $media)));
+		Deprecation::notice('3.2', 'Use "LeftAndMain.extra_requirements_themedCss" config setting instead');
+		Config::inst()->update('LeftAndMain', 'extra_requirements_themedCss', array($name => array('media' => $media)));
 	}
 	
 }
@@ -1840,7 +1851,12 @@ class LeftAndMain_TreeNode extends ViewableData {
 		$classes = $this->obj->CMSTreeClasses();
 		if($this->isCurrent) $classes .= " current";
 		$flags = $this->obj->hasMethod('getStatusFlags') ? $this->obj->getStatusFlags() : false;
-		if($flags) $classes .= ' ' . implode(' ', array_keys($flags));
+		if ($flags) {
+			$statuses = array_keys($flags);
+			foreach ($statuses as $s) {
+				$classes .= ' status-' . $s;
+			}
+		}
 		return $classes;
 	}
 

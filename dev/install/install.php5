@@ -31,6 +31,8 @@ if (function_exists('session_start')) {
 /**
  * Include _ss_environment.php file
  */
+$usingEnv = false;
+$envFileExists = false;
 //define the name of the environment file
 $envFile = '_ss_environment.php';
 //define the dirs to start scanning from (have to add the trailing slash)
@@ -53,8 +55,10 @@ foreach ($dirsToCheck as $dir) {
 		if (@is_readable($dir)) {
 			//if the file exists, then we include it, set relevant vars and break out
 			if (file_exists($dir . $envFile)) {
-				define('SS_ENVIRONMENT_FILE', $dir . $envFile);
-				include_once(SS_ENVIRONMENT_FILE);
+				include_once($dir . $envFile);
+				$envFileExists = true;
+				//legacy variable assignment
+				$usingEnv = true;
 				//break out of BOTH loops because we found the $envFile
 				break(2);
 			}
@@ -418,6 +422,7 @@ class InstallRequirements {
 		$this->requireModule(FRAMEWORK_NAME, array("File permissions", FRAMEWORK_NAME . "/ directory exists?"));
 
 		if($isApache) {
+			$this->checkApacheVersion(array("Webserver Configuration", "Webserver is not Apache 1.x", "SilverStripe requires Apache version 2 or greater", $webserver));
 			$this->requireWriteable('.htaccess', array("File permissions", "Is the .htaccess file writeable?", null));
 		} elseif($isIIS) {
 			$this->requireWriteable('web.config', array("File permissions", "Is the web.config file writeable?", null));
@@ -493,9 +498,9 @@ class InstallRequirements {
 
 		$this->suggestClass('tidy', array('PHP Configuration', 'tidy support', 'Tidy provides a library of code to clean up your html. SilverStripe will operate fine without tidy but HTMLCleaner will not be effective.'));
 
-		$this->suggestPHPSetting('asp_tags', array(false,0,''), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
-		$this->suggestPHPSetting('magic_quotes_gpc', array(false,0,''), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
-		$this->suggestPHPSetting('display_errors', array(false,0,''), array('PHP Configuration', 'display_errors option', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
+		$this->suggestPHPSetting('asp_tags', array(false), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
+		$this->requirePHPSetting('magic_quotes_gpc', array(false), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
+		$this->suggestPHPSetting('display_errors', array(false), array('PHP Configuration', 'display_errors option', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
 
 		// Check memory allocation
 		$this->requireMemory(32*1024*1024, 64*1024*1024, array("PHP Configuration", "Memory allocation (PHP config option 'memory_limit')", "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.", ini_get("memory_limit")));
@@ -510,6 +515,16 @@ class InstallRequirements {
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
 			$this->warning($testDetails);
+		}
+	}
+
+	function requirePHPSetting($settingName, $settingValues, $testDetails) {
+		$this->testing($testDetails);
+
+		$val = ini_get($settingName);
+		if(!in_array($val, $settingValues) && $val != $settingValues) {
+			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
+			$this->error($testDetails);
 		}
 	}
 
@@ -671,6 +686,17 @@ class InstallRequirements {
 			$this->error($testDetails);
 		}
 		else return true;
+	}
+
+	function checkApacheVersion($testDetails) {
+		$this->testing($testDetails);
+
+		$is1pointx = preg_match('#Apache[/ ]1\.#', $testDetails[3]);
+		if($is1pointx) {
+			$this->error($testDetails);
+		}
+
+		return true;
 	}
 
 	function requirePHPVersion($recommendedVersion, $requiredVersion, $testDetails) {
@@ -1350,16 +1376,15 @@ HTML;
 ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
-<IfModule mod_alias.c>
-	RedirectMatch 403 /silverstripe-cache(/|$)
-	RedirectMatch 403 /vendor(/|$)
-	RedirectMatch 403 /composer\.(json|lock)
-</IfModule>
-
 <IfModule mod_rewrite.c>
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
 	$baseClause
+
+	RewriteRule ^vendor(/|$) - [F,L,NC]
+	RewriteRule silverstripe-cache(/|$) - [F,L,NC]
+	RewriteRule composer\.(json|lock) - [F,L,NC]
+	
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_URI} !\.php$

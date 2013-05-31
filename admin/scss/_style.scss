@@ -1354,7 +1354,7 @@ body.cms-dialog {
 			}
 		}
 		button.add-url{
-			margin-top:13px;
+			margin-top:5px;
 			padding-top:15px;
 			@include clearfix;
 			border:none;
@@ -1364,6 +1364,12 @@ body.cms-dialog {
 			.btn-icon-addMedia{
 				width:20px;
 				height:20px;
+			}
+			.ui-button-text{
+				margin-left:10px;
+				margin-top:-5px;
+				line-height:20px;
+				float:left;
 			}
 			&:hover, &:active{
 				border:none;
@@ -1417,6 +1423,14 @@ body.cms-dialog {
 				@include box-shadow(0 0 0 rgba(0, 0, 0, 0));
 				margin-bottom:0;
 			}	
+		}
+	}
+
+	.CompositeField{
+		.text{
+			select{
+				margin: 5px 0 0 0;
+			}
 		}
 	}
 }

@@ -821,15 +821,18 @@ jQuery.noConflict();
 		$('.cms-content .Actions').entwine({
 			onmatch: function() {
 				this.find('.ss-ui-button').click(function() {
-						var form = this.form;
-						// forms don't natively store the button they've been triggered with
-						if(form) {
-							form.clickedButton = this;
-							// Reset the clicked button shortly after the onsubmit handlers
-							// have fired on the form
-							setTimeout(function() {form.clickedButton = null;}, 10);
-						}
-					});
+					var form = this.form;
+
+					// forms don't natively store the button they've been triggered with
+					if(form) {
+						form.clickedButton = this;
+						// Reset the clicked button shortly after the onsubmit handlers
+						// have fired on the form
+						setTimeout(function() {
+							form.clickedButton = null;
+						}, 10);
+					}
+				});
 
 				this.redraw();
 				this._super();
@@ -942,33 +945,45 @@ jQuery.noConflict();
 		 * Generic search form in the CMS, often hooked up to a GridField results display.
 		 */	
 		$('.cms-search-form').entwine({
-
-			onsubmit: function() {
+			onsubmit: function(e) {
 				// Remove empty elements and make the URL prettier
-				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
+				var nonEmptyInputs,
+					url;
+
+				nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
 					// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
 					// as it handles checkbox values more consistently
 					var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
 					return (vals.length);
 				});
-				var url = this.attr('action');
-				if(nonEmptyInputs.length) url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
+
+				url = this.attr('action');
+
+				if(nonEmptyInputs.length) {
+					url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
+				}
 
 				var container = this.closest('.cms-container');
 				container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
-				container.loadPanel(url);
+				container.loadPanel(url, "", {}, true);
+
 				return false;
-			},
-
-			/**
-			 * Resets are processed on the serverside, so need to trigger a submit.
-			 */
-			onreset: function(e) {
-				this.clearForm();
-				this.submit();
 			}
-
 		});
+
+		/**
+		 * Reset button handler. IE8 does not bubble reset events to
+		 */
+		$(".cms-search-form button[type=reset]").entwine({
+			onclick: function(e) {
+				e.preventDefault();
+				
+				var form = $(this).parents('form');
+
+				form.clearForm();
+				form.submit();
+			}
+		})
 
 		/**
 		 * Allows to lazy load a panel, by leaving it empty

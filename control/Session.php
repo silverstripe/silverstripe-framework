@@ -137,6 +137,24 @@ class Session {
 		if($data instanceof Session) $data = $data->inst_getAll();
 
 		$this->data = $data;
+		
+		if (isset($_SERVER['HTTP_USER_AGENT'])) {
+			$ua = $_SERVER['HTTP_USER_AGENT'];
+		} else {
+			$ua = '';
+		}
+
+		if (isset($this->data['HTTP_USER_AGENT'])) {
+			if ($this->data['HTTP_USER_AGENT'] != $ua) {
+				// Funny business detected!
+				$this->inst_clearAll();
+				
+				Session::destroy();
+				Session::start();
+			}
+		}
+		
+		$this->inst_set('HTTP_USER_AGENT', $ua);
 	}
 
 	/**
@@ -517,6 +535,13 @@ class Session {
 			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
 			@session_start();
+
+		}
+
+		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
+		// By default it's the total session lifetime
+		if($timeout && !headers_sent()) {
+			setcookie(session_name(), session_id(), time()+$timeout, $path, $domain ? $domain : null, $secure, true);
 		}
 	}
 
@@ -528,21 +553,26 @@ class Session {
 	public static function destroy($removeCookie = true) {
 		if(session_id()) {
 			if($removeCookie) {
-				$path = Config::inst()->get('cookie_path');
+				$path = Config::inst()->get('Session', 'cookie_path');
 				if(!$path) $path = Director::baseURL();
-				$domain = Config::inst()->get('cookie_domain');
-				$secure = Config::inst()->get('cookie_secure'); 
+				$domain = Config::inst()->get('Session', 'cookie_domain');
+				$secure = Config::inst()->get('Session', 'cookie_secure');
 				
 				if($domain) {
-					setcookie(session_name(), '', null, $path, $domain, $secure, true); 
+					setcookie(session_name(), '', null, $path, $domain, $secure, true);
 				}
-				else { 
-					setcookie(session_name(), '', null, $path, null, $secure, true); 
+				else {
+					setcookie(session_name(), '', null, $path, null, $secure, true);
 				}
 				
 				unset($_COOKIE[session_name()]);
 			}
+
 			session_destroy();
+
+			// Clean up the superglobal - session_destroy does not do it.
+			// http://nz1.php.net/manual/en/function.session-destroy.php
+			unset($_SESSION);
 		}
 	}
 	

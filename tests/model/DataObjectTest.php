@@ -619,14 +619,14 @@ class DataObjectTest extends SapphireTest {
 		 * objects */
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team1->CaptainID = $this->idFromFixture('DataObjectTest_Player', 'captain1');
-		
+
 		$team1->update(array(
 			'DatabaseField' => 'Something',
 			'Captain.FirstName' => 'Jim',
 			'Captain.Email' => 'jim@example.com',
 			'Captain.FavouriteTeam.Title' => 'New and improved team 1',
 		));
-		
+
 		/* Test the simple case of updating fields on the object itself */
 		$this->assertEquals('Something', $team1->DatabaseField);
 
@@ -639,6 +639,29 @@ class DataObjectTest extends SapphireTest {
 		/* Jim's favourite team is team 1; we need to reload the object to the the change that setting Captain.
 		 * FavouriteTeam.Title made */
 		$reloadedTeam1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
+	}
+
+	public function testDataObjectUpdateNew() {
+		/* update() calls can use the dot syntax to reference has_one relations and other methods that return
+		 * objects */
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$team1->CaptainID = 0;
+
+		$team1->update(array(
+			'Captain.FirstName' => 'Jim',
+			'Captain.FavouriteTeam.Title' => 'New and improved team 1',
+		));
+		/* Test that the captain ID has been updated */
+		$this->assertGreaterThan(0, $team1->CaptainID);
+
+		/* Fetch the newly created captain */
+		$captain1 = DataObjectTest_Player::get()->byID($team1->CaptainID);
+		$this->assertEquals('Jim', $captain1->FirstName);
+
+		/* Grab the favourite team and make sure it has the correct values */
+		$reloadedTeam1 = $captain1->FavouriteTeam();
+		$this->assertEquals($reloadedTeam1->ID, $captain1->FavouriteTeamID);
 		$this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
 	}
 

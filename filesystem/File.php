@@ -112,9 +112,9 @@ class File extends DataObject {
 	private static $allowed_extensions = array(
 		'','ace','arc','arj','asf','au','avi','bmp','bz2','cab','cda','css','csv','dmg','doc','docx',
 		'flv','gif','gpx','gz','hqx','htm','html','ico','jar','jpeg','jpg','js','kml', 'm4a','m4v',
-		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','pages','pcx','pdf','pkg',
+		'mid','midi','mkv','mov','mp3','mp4','mpa','mpeg','mpg','ogg','ogv','pages','pcx','pdf','pkg',
 		'png','pps','ppt','pptx','ra','ram','rm','rtf','sit','sitx','swf','tar','tgz','tif','tiff',
-		'txt','wav','wma','wmv','xhtml','xls','xlsx','xml','zip','zipx',
+		'txt','wav','webm','wma','wmv','xhtml','xls','xlsx','xml','zip','zipx',
 	);
 
 	/**
@@ -127,7 +127,7 @@ class File extends DataObject {
 			"apl", "avr" ,"cda" ,"mp4" ,"ogg"
 		),
 		'mov' => array(
-			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt"
+			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt", "ogv", "webm"
 		),
 		'zip' => array(
 			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
@@ -340,10 +340,10 @@ class File extends DataObject {
 		}
 
 		// Upload
-		$uploadField = new UploadField('UploadField','Upload Field');
-		$uploadField->setConfig('previewMaxWidth', 40);
-		$uploadField->setConfig('previewMaxHeight', 30);
-		$uploadField->setConfig('allowedMaxFileNumber', 1);
+		$uploadField = UploadField::create('UploadField','Upload Field')
+			->setPreviewMaxWidth(40)
+			->setPreviewMaxHeight(30)
+			->setAllowedMaxFileNumber(1);
 		//$uploadField->setTemplate('FileEditUploadField');
 		if ($this->ParentID) {
 			$parent = $this->Parent();
@@ -527,13 +527,13 @@ class File extends DataObject {
 			if(!is_a($this, 'Folder')) {
 				// Only throw a fatal error if *both* before and after paths don't exist.
 				if(!file_exists($pathBeforeAbs)) {
-					throw new Exception("Cannot move $pathBefore to $pathAfter - $pathBefore doesn't exist");
+					throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs - $pathBeforeAbs doesn't exist");
 				}
 				
 				// Check that target directory (not the file itself) exists.
 				// Only check if we're dealing with a file, otherwise the folder will need to be created
 				if(!file_exists(dirname($pathAfterAbs))) {
-					throw new Exception("Cannot move $pathBefore to $pathAfter - Directory " . dirname($pathAfter)
+					throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs - Directory " . dirname($pathAfter)
 						. " doesn't exist");
 				}
 			} 

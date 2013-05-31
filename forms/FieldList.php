@@ -170,10 +170,10 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Remove a field from this FieldList by Name.
+	 * Remove a field or fields from this FieldList by Name.
 	 * The field could also be inside a CompositeField.
 	 * 
-	 * @param string $fieldName The name of the field or tab
+	 * @param string|array $fieldName The name of, or an array with the field(s) or tab(s)
 	 * @param boolean $dataFieldOnly If this is true, then a field will only
 	 * be removed if it's a data field.  Dataless fields, such as tabs, will
 	 * be left as-is.
@@ -182,8 +182,16 @@ class FieldList extends ArrayList {
 		if(!$fieldName) {
 			user_error('FieldList::removeByName() was called with a blank field name.', E_USER_WARNING);
 		}
+
+		// Handle array syntax
+		if(is_array($fieldName)) {
+			foreach($fieldName as $field){
+				$this->removeByName($field, $dataFieldOnly);
+			}
+			return;
+		}
+
 		$this->flushFieldsCache();
-		
 		foreach($this->items as $i => $child) {
 			if(is_object($child)){
 				$childName = $child->getName();

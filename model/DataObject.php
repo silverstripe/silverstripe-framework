@@ -192,6 +192,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var [string] - class => ClassName field definition cache for self::database_fields
 	 */
 	private static $classname_spec_cache = array();
+	
+	/**
+	 * Clear all cached classname specs. It's necessary to clear all cached subclassed names
+	 * for any classes if a new class manifest is generated.
+	 */
+	public static function clear_classname_spec_cache() {
+		self::$classname_spec_cache = array();
+	}
 
 	/**
 	 * Return the complete map of fields on this object, including "Created", "LastEdited" and "ClassName".
@@ -202,7 +210,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public static function database_fields($class) {
 		if(get_parent_class($class) == 'DataObject') {
-			if(!isset(self::$classname_spec_cache[$class])) {
+			if(empty(self::$classname_spec_cache[$class])) {
 				$classNames = ClassInfo::subclassesFor($class);
 
 				$db = DB::getConn();
@@ -784,10 +792,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					// no support for has_many or many_many relationships,
 					// as the updater wouldn't know which object to write to (or create)
 					if($relObj->$relation() instanceof DataObject) {
+						$parentObj = $relObj;
 						$relObj = $relObj->$relation();
-						
 						// If the intermediate relationship objects have been created, then write them
-						if($i<sizeof($relation)-1 && !$relObj->ID) $relObj->write();
+						if($i<sizeof($relation)-1 && !$relObj->ID || (!$relObj->ID && $parentObj != $this)) {
+							$relObj->write();
+							$relatedFieldName = $relation."ID";
+							$parentObj->$relatedFieldName = $relObj->ID;
+							$parentObj->write();
+						}
 					} else {
 						user_error(
 							"DataObject::update(): Can't traverse relationship '$relation'," .  
@@ -803,6 +816,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if($relObj) {
 					$relObj->$fieldName = $v;
 					$relObj->write();
+					$relatedFieldName = $relation."ID";
+					$this->$relatedFieldName = $relObj->ID;
 					$relObj->flushCache();
 				} else {
 					user_error("Couldn't follow dot syntax '$k' on '$this->class' object", E_USER_WARNING);

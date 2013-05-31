@@ -860,6 +860,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 		
 		$this->cache_generatedMembers[$permCode]->logIn();
+		return $this->cache_generatedMembers[$permCode]->ID;
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-div.TreeDropdownField { width: 400px; background: #fff; border: 1px solid #aaa; cursor: pointer; overflow: hidden; }
+div.TreeDropdownField { width: 400px; background: #fff; border: 1px solid #aaa; cursor: pointer; overflow: visible; position: relative; }
 div.TreeDropdownField input { border: none; background: none; padding: 0; margin: 0; }
 div.TreeDropdownField .treedropdownfield-title { float: left; padding: 7px; width: 90%; line-height: 16px; overflow: hidden; outline: none; }
 div.TreeDropdownField .treedropdownfield-panel { clear: left; position: absolute; overflow: auto; display: none; cursor: default; border: 1px solid #aaa; border-top: none; margin: 1px 0 0 -1px; /* account for border on container div */ max-height: 200px; background-color: #fff; z-index: 50; -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); -moz-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); -o-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); }

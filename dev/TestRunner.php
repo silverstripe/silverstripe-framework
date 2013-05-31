@@ -92,6 +92,10 @@ class TestRunner extends Controller {
 		Config::inst()->pushConfigStaticManifest(new SS_ConfigStaticManifest(
 			BASE_PATH, true, isset($_GET['flush'])
 		));
+		
+		// Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
+		// (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
+		DataObject::clear_classname_spec_cache();
 	}
 
 	public function init() {

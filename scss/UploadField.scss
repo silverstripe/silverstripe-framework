@@ -17,12 +17,17 @@
 			float:left;
 		}
 
+		// Stop nolabel from resetting margin on tree dropdown
+		&.from-CMS .nolabel.treedropdown .middleColumn{
+			margin-left:184px;
+		}
+
 	}
 
 	.middleColumn {
 		// TODO .middleColumn styling should probably be theme specific (eg cms ui will look different than blackcandy)
 		// so we should move this style into the cms and black candy files
-		width: 526px;
+		width: 510px;
 		padding: 0;
 		background: #fff;
 		border: 1px solid lighten($color-medium-separator, 20%);
@@ -51,39 +56,43 @@
 			}
 		}
 		.ss-uploadfield-item-info {
-			float: left;
-			margin-left: 15px;
+			margin-left: 95px;
 			
 			.ss-uploadfield-item-name {
 				display: block;
 				line-height: 13px;
 				height: 26px;
 				margin: 0;
-				text-align: left;			
-				b {
-					font-weight: bold; 
-					padding: 0 5px 0 0;
-				}
+				text-align: left;
 				.name {
-					font-size: $font-base-size - 1;
-					color: lighten($color-text, 25%);
-					width:290px; //Ensures the title doesn't interfer with the status message
+					max-width: 240px;
+					font-weight: bold;
 					@include hide-text-overflow;
-					display:inline;					
+					display:inline;
+					float:left;
+				}
+				.size {
+					color: lighten($color-text, 25%);
+					padding: 0 0 0 5px;
+					display:inline;
 					float:left;
 				}
 				.ss-uploadfield-item-status {
 					float: right;
 					padding: 0 0 0 5px;
-					width:100px; //Allocates the status message enough room to be useful. Will wrap if it is longer
-					text-align:right;				
+					text-align:right;
+					max-width: 75%;
+					
 					&.ui-state-error-text {
 						color: $color-button-destructive;
 						font-weight: bold;
+						width:150px; //Allocates the status message enough room to be useful. Will wrap if it is longer
 					}
+					
 					&.ui-state-warning-text {
 						color: darken($color-warning, 10%);
 					}
+					
 					&.ui-state-success-text {
 						color: $color-button-constructive;
 					}
@@ -94,7 +103,7 @@
 	.ss-ui-button {
 		display: block;
 		float: left;
-		margin: 0 10px 0 0;
+		margin: 0 10px 6px 0;
 	
 		&.ss-uploadfield-fromcomputer {
 			position: relative;
@@ -119,8 +128,9 @@
 			}
 		}
 		.ss-uploadfield-item-actions {
-			height: 28px;
-			margin: 6px 0 0;
+			min-height: 28px;
+			overflow: hidden;
+			margin: 6px 0 -6px 0;
 			position: relative;
 		}
 		.ss-uploadfield-item-progress {
@@ -166,7 +176,6 @@
 				height: 16px;
 				cursor: pointer;
 				@include single-box-shadow(none);
-				background: none;
 				position: relative;
 				// background: sprite($sprites16, cross-circle) no-repeat;
 				

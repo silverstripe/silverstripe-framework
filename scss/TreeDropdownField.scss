@@ -3,7 +3,8 @@ div.TreeDropdownField {
 	background: #fff;
 	border: 1px solid #aaa;
 	cursor: pointer;
-	overflow: hidden;
+	overflow: visible;
+	position:relative;
 
 	input {
 		border: none;
