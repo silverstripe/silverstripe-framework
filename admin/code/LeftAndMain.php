@@ -153,6 +153,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	private static $extra_requirements_themedCss = array();
 
 	/**
+	 * If true, call a keepalive ping every 5 minutes from the CMS interface,
+	 * to ensure that the session never dies.
+	 * 
+	 * @config
+	 * @var boolean
+	 */
+	private static $session_keepalive_ping = true;
+
+	/**
 	 * @var PjaxResponseNegotiator
 	 */
 	protected $responseNegotiator;
@@ -327,28 +336,30 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		HTMLEditorField::include_js();
 
-		Requirements::combine_files(
-			'leftandmain.js',
-			array_unique(array_merge(
-				array(
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
-					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
-				),
-				Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
-				Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
-			))
-		);
+		$leftAndMainIncludes = array_unique(array_merge(
+			array(
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
+			),
+			Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
+			Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
+		));
+
+		if($this->config()->session_keepalive_ping) {
+			$leftAndMainIncludes[] = FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js';
+		}
+
+		Requirements::combine_files('leftandmain.js', $leftAndMainIncludes);
 
 		// TODO Confuses jQuery.ondemand through document.write()
 		if (Director::isDev()) {
