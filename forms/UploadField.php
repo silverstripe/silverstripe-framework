@@ -1548,8 +1548,13 @@ class UploadField_SelectHandler extends RequestHandler {
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());
 		$config->addComponent(new GridFieldFilterHeader());
-		$config->addComponent(new GridFieldDataColumns());
-		$config->addComponent(new GridFieldPaginator(10));
+		$config->addComponent($columns = new GridFieldDataColumns());
+		$columns->setDisplayFields(array(
+			'StripThumbnail' => '',
+			'Name' => 'Name',
+			'Title' => 'Title'
+		));
+		$config->addComponent(new GridFieldPaginator(8));
 
 		// If relation is to be autoset, we need to make sure we only list compatible objects.
 		$baseClass = $this->parent->getRelationAutosetClass();
