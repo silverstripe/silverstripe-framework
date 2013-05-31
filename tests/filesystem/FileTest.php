@@ -15,8 +15,8 @@ class FileTest extends SapphireTest {
 		$parser = new ShortcodeParser();
 		$parser->register('file_link', array('File', 'link_shortcode_handler'));
 
-		$fileShortcode = sprintf('[file_link id=%d]', $testFile->ID);
-		$fileEnclosed  = sprintf('[file_link id=%d]Example Content[/file_link]', $testFile->ID);
+		$fileShortcode = sprintf('[file_link,id=%d]', $testFile->ID);
+		$fileEnclosed  = sprintf('[file_link,id=%d]Example Content[/file_link]', $testFile->ID);
 
 		$fileShortcodeExpected = $testFile->Link();
 		$fileEnclosedExpected  = sprintf(
@@ -27,11 +27,11 @@ class FileTest extends SapphireTest {
 
 		$testFile->delete();
 
-		$fileShortcode = '[file_link id="-1"]';
-		$fileEnclosed  = '[file_link id="-1"]Example Content[/file_link]';
+		$fileShortcode = '[file_link,id="-1"]';
+		$fileEnclosed  = '[file_link,id="-1"]Example Content[/file_link]';
 
 		$this->assertEquals('', $parser->parse('[file_link]'), 'Test that invalid ID attributes are not parsed.');
-		$this->assertEquals('', $parser->parse('[file_link id="text"]'));
+		$this->assertEquals('', $parser->parse('[file_link,id="text"]'));
 		$this->assertEquals('', $parser->parse('[file_link]Example Content[/file_link]'));
 
 		if(class_exists('ErrorPage')) {
