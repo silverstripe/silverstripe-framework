@@ -398,7 +398,9 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$items = $parser->getBySelector('#HasManyNoViewFiles .ss-uploadfield-files .ss-uploadfield-item');
+		$items = $parser->getBySelector(
+			'#UploadFieldTestForm_Form_HasManyNoViewFiles_Holder .ss-uploadfield-files .ss-uploadfield-item'
+		);
 		$ids = array();
 		foreach($items as $item) $ids[] = (int)$item['data-fileid'];
 		
@@ -519,13 +521,18 @@ class UploadFieldTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		
 		$this->assertFalse(
-			(bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'),
+			(bool)$parser->getBySelector(
+				'#UploadFieldTestForm_Form_ReadonlyField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'
+				),
 			'Removes all buttons on items');
 		$this->assertFalse(
-			(bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-dropzone'),
+			(bool)$parser->getBySelector('#UploadFieldTestForm_Form_ReadonlyField .ss-uploadfield-dropzone'),
 			'Removes dropzone'
 		);
-		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-addfile'),
+		$this->assertFalse(
+			(bool)$parser->getBySelector(
+				'#UploadFieldTestForm_Form_ReadonlyField .ss-uploadfield-addfile'
+			),
 			'Entire "add" area'
 		);
 	}
@@ -538,12 +545,16 @@ class UploadFieldTest extends FunctionalTest {
 
 		$parser = new CSSContentParser($response->getBody());
 		$this->assertFalse(
-			(bool)$parser->getBySelector('#DisabledField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'),
+			(bool)$parser->getBySelector(
+				'#UploadFieldTestForm_Form_DisabledField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'
+			),
 			'Removes all buttons on items');
-		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-dropzone'),
+		$this->assertFalse((bool)$parser->getBySelector(
+			'#UploadFieldTestForm_Form_DisabledField .ss-uploadfield-dropzone'
+			),
 			'Removes dropzone');
 		$this->assertFalse(
-			(bool)$parser->getBySelector('#DisabledField .ss-uploadfield-addfile'),
+			(bool)$parser->getBySelector('#UploadFieldTestForm_Form_DisabledField .ss-uploadfield-addfile'),
 			'Entire "add" area'
 		);
 	}
@@ -554,10 +565,14 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		$this->assertFalse((bool)$parser->getBySelector('#CanUploadFalseField .ss-uploadfield-dropzone'),
+		var_dump($response->getBody());
+		$this->assertFalse(
+			(bool)$parser->getBySelector(
+				'#UploadFieldTestForm_Form_CanUploadFalseField_Holder .ss-uploadfield-dropzone'
+			),
 			'Removes dropzone');
 		$this->assertTrue(
-			(bool)$parser->getBySelector('#CanUploadFalseField .ss-uploadfield-fromfiles'),
+			(bool)$parser->getBySelector('#UploadFieldTestForm_Form_CanUploadFalseField_Holder .ss-uploadfield-fromfiles'),
 			'Keeps "From files" button'
 		);
 	}	
@@ -587,11 +602,15 @@ class UploadFieldTest extends FunctionalTest {
 
 		$parser = new CSSContentParser($response->getBody());
 		$this->assertTrue(
-			(bool)$parser->getBySelector('#CanAttachExistingFalseField .ss-uploadfield-fromcomputer-fileinput'),
+			(bool)$parser->getBySelector(
+				'#UploadFieldTestForm_Form_CanAttachExistingFalseField_Holder .ss-uploadfield-fromcomputer-fileinput'
+			),
 			'Keeps input file control'
 		);
 		$this->assertFalse(
-			(bool)$parser->getBySelector('#CanAttachExistingFalseField .ss-uploadfield-fromfiles'),
+			(bool)$parser->getBySelector(
+				'#UploadFieldTestForm_Form_CanAttachExistingFalseField_Holder .ss-uploadfield-fromfiles'
+			),
 			'Removes "From files" button'
 		);
 	}
