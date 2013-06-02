@@ -2,6 +2,7 @@ af:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nuwe Dossier'
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: 'Eerste opgelaai'
     DIM: Afmetings
@@ -59,9 +60,9 @@ af:
     ERRORNOTADMIN: 'Daardie verbruiker is nie ''n administreerder nie'
     ERRORNOTREC: 'Daar die verbruikersnaam / wagwoord is nie herken nie'
   Boolean:
-    0: Onwaar
     ANY: Enige
-    1: Waar
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   CMSLoadingScreen.ss:
     LOADING: 'Besig om te laai...'
     REQUIREJS: 'Die IBS vereis dat JavaScript aangeskakel is'
@@ -70,6 +71,8 @@ af:
     ACCESSALLINTERFACES: 'Toegang tot alle IBS gedeeltes'
     ACCESSALLINTERFACESHELP: 'Oorheers meer spesifieke toegans verstellings'
     SAVE: Stoor
+  CMSPageHistoryController_versions.ss:
+    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'My profiel'
   ChangePasswordEmail.ss:
@@ -79,8 +82,8 @@ af:
     HELLO: 'Hi daar'
     PASSWORD: Wagwoord
   CheckboxField:
-    - Onwaar
-    - Waar
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Maak wipop toe'
     SUCCESSADD2: '{name} bygesit'
@@ -109,20 +112,21 @@ af:
     PLURALNAME: 'Data Voorwerpe'
     SINGULARNAME: 'Data Voorwerp'
   Date:
-    DAY: dag
-    DAYS: dae
-    HOUR: uur
-    HOURS: ure
-    MIN: minuut
-    MINS: minute
-    MONTH: maand
-    MONTHS: maande
-    SEC: sekonde
-    SECS: sekondes
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    LessThanMinuteAgo: 'less than a minute'
+    MIN: min
+    MINS: mins
+    MONTH: month
+    MONTHS: months
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: '{difference} terug'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: jaar
-    YEARS: jare
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: 'Nie gestel nie'
     TODAY: vandag
@@ -198,7 +202,8 @@ af:
     TEXT2: 'wagwoord herstel skakel'
     TEXT3: vir
   Form:
-    FIELDISREQUIRED: '%s word benodig.'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Gaan
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The waarde wat ingesleutel is is nie uniek nie'
@@ -208,6 +213,7 @@ af:
     VALIDATOR: Vergeldiger
     VALIDCURRENCY: 'Tik asseblief ''n geldige geldeenheid in '
   FormField:
+    Example: 'e.g. %s'
     NONE: geen
   GridAction:
     DELETE_DESCRIPTION: Verwyder
@@ -230,6 +236,7 @@ af:
     ResetFilter: Herstel
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
+    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: 'Kanselleer '
     Create: Skep
@@ -237,7 +244,9 @@ af:
     DeletePermissionsFailure: 'Geen toestemming om te verwyder nie'
     Deleted: 'Verwyderde %s %s'
     Save: Stoor
-    Saved: 'Gestoor %s %s'
+    Saved: 'Saved {name} {link}'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Voeg nog ''n rol by hierdie groep'
@@ -267,6 +276,7 @@ af:
     ADDURL: 'Voeg URL by'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anker
+    BUTTONADDURL: 'Add url'
     BUTTONINSERT: 'Plaas in'
     BUTTONINSERTLINK: 'Sit in'
     BUTTONREMOVELINK: 'Verwyder skakel'
@@ -331,6 +341,9 @@ af:
     PreviewButton: Beskou
     REORGANISATIONSUCCESSFUL: 'Die ''site tree'' is suksesvol geheorganiseer'
     SAVEDUP: Gestoor
+    ShowAsList: 'show as list'
+    TooManyPages: 'Too many pages'
+    ValidationError: 'Validation error'
     VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
@@ -407,6 +420,7 @@ af:
     TWODIGITMONTH: 'Twee syfer maand (01=Januarie etc)'
     TWODIGITSECOND: 'Twee syfers van sekondes (00 to 59)'
     TWODIGITYEAR: 'Twee syfer jaar'
+    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p> Voer gebruikers in <em>CSV</em>formaat (komma geskeide waardes).<small> <a href="#" class="toggle-advanced">Wys gevorderde gebruike</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -421,7 +435,7 @@ af:
   ModelAdmin:
     DELETE: Verwyder
     DELETEDRECORDS: 'Verwyder {count} rekords'
-    EMPTYBEFOREIMPORT: 'Maak databasis skoon voordat data ingevoer word'
+    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'Voer in van CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Soek asseblief vir ''n CSV lêer om in the voer'
@@ -515,7 +529,20 @@ af:
     BtnImport: 'Voer In'
     FileFieldLabel: 'CSV Lêer <small>(Laat toe uitbreidings: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Change view mode'
+    Desktop: Desktop
+    DualWindowView: 'Dual Window'
     Edit: Verander
+    EditView: 'Edit mode'
+    Mobile: Mobile
+    PreviewState: 'Preview State'
+    PreviewView: 'Preview mode'
+    Responsive: Responsive
+    SplitView: 'Split mode'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Select a preview width'
+    Width: width
   SimpleImageField:
     NOUPLOAD: 'Geen foto gelaai nie'
   SiteTree:
@@ -551,6 +578,8 @@ af:
     ATTACHFILE: 'Heg lêer aan'
     ATTACHFILES: 'Heg lêer(s) aan'
     AttachFile: 'Aangehegde lêer(s)'
+    CHOOSEANOTHERFILE: 'Choose another file'
+    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Verwyder van lêers af'
     DELETEINFO: 'Wis die lêer uit die lêer stoor uit'
     DOEDIT: Stoor
@@ -565,12 +594,15 @@ af:
     FROMFILES: 'Van die lêers afdeling'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Maksimum aantal van {count} lêer(s) oorskry '
+    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Kan net {count} lêer oplaai'
+    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: Verwyder
     REMOVEERROR: 'Daar het ''n fout onstaan met die verwydering van die lêer'
     REMOVEINFO: 'Verwyder die lêer van hier af maar moet dit nie uit die lêer stoor verwyder nie'
     STARTALL: 'Begin alles'
     STARTALLINFO: 'Begin op alles op te laai'
     Saved: Gestoor
+    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Weergawe

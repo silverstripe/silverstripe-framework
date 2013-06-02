@@ -2,6 +2,7 @@ sr:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Нова фасцикла'
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: 'Прво достављено'
     DIM: Димензије
@@ -59,9 +60,9 @@ sr:
     ERRORNOTADMIN: 'Овај корисник није администратор.'
     ERRORNOTREC: 'То корисничко име / лозинка није препознато'
   Boolean:
-    0: 'False'
     ANY: Any
-    1: 'True'
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -70,6 +71,8 @@ sr:
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Сачувај
+  CMSPageHistoryController_versions.ss:
+    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
@@ -79,8 +82,8 @@ sr:
     HELLO: Здраво
     PASSWORD: Password
   CheckboxField:
-    - 'False'
-    - 'True'
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
@@ -92,7 +95,7 @@ sr:
     SORTDESC: 'Сортирају у опадајућем поретку'
   ComplexTableField_popup.ss:
     NEXT: Следеће
-    PREVIOUS: Претходно
+    PREVIOUS: 'Претходно'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -109,20 +112,21 @@ sr:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: дан
-    DAYS: дана
-    HOUR: сат
-    HOURS: сати
-    MIN: минут
-    MINS: минута
-    MONTH: месец
-    MONTHS: месеци
-    SEC: секунда
-    SECS: секунди
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    LessThanMinuteAgo: 'less than a minute'
+    MIN: min
+    MINS: mins
+    MONTH: month
+    MONTHS: months
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: година
-    YEARS: година
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: 'not set'
     TODAY: данас
@@ -198,7 +202,8 @@ sr:
     TEXT2: 'password reset link'
     TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s је захтевано'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Унета вредност није јединствена'
@@ -208,6 +213,7 @@ sr:
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
+    Example: 'e.g. %s'
     NONE: без
   GridAction:
     DELETE_DESCRIPTION: Delete
@@ -230,6 +236,7 @@ sr:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
+    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -237,7 +244,9 @@ sr:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
-    Saved: 'Saved %s %s'
+    Saved: 'Saved {name} {link}'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
@@ -267,6 +276,7 @@ sr:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
+    BUTTONADDURL: 'Add url'
     BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Уметни линк'
     BUTTONREMOVELINK: 'Уклони линк'
@@ -331,7 +341,10 @@ sr:
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    ShowAsList: 'show as list'
+    TooManyPages: 'Too many pages'
+    ValidationError: 'Validation error'
+    VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -407,6 +420,7 @@ sr:
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
     TWODIGITYEAR: 'Two-digit year'
+    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -421,7 +435,7 @@ sr:
   ModelAdmin:
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -515,7 +529,20 @@ sr:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Change view mode'
+    Desktop: Desktop
+    DualWindowView: 'Dual Window'
     Edit: Edit
+    EditView: 'Edit mode'
+    Mobile: Mobile
+    PreviewState: 'Preview State'
+    PreviewView: 'Preview mode'
+    Responsive: Responsive
+    SplitView: 'Split mode'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Select a preview width'
+    Width: width
   SimpleImageField:
     NOUPLOAD: 'Ниједна слика није достављена'
   SiteTree:
@@ -551,6 +578,8 @@ sr:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
     AttachFile: 'Attach file(s)'
+    CHOOSEANOTHERFILE: 'Choose another file'
+    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
@@ -565,12 +594,15 @@ sr:
     FROMFILES: 'From files'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
+    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versions
