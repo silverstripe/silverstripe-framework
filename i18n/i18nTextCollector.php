@@ -71,10 +71,21 @@ class i18nTextCollector extends Object {
 	 * @uses DataObject->collectI18nStatics()
 	 * 
 	 * @param array $restrictToModules
+	 * @param array $mergeWithExisting Merge new master strings with existing ones
+	 * already defined in language files, rather than replacing them. This can be useful
+	 * for long-term maintenance of translations across releases, because it allows
+	 * "translation backports" to older releases without removing strings these older releases
+	 * still rely on.
 	 */	
-	public function run($restrictToModules = null) {
-		//Debug::message("Collecting text...", false);
-		
+	public function run($restrictToModules = null, $mergeWithExisting = false) {
+		$entitiesByModule = $this->collect($restrictToModules, $mergeWithExisting);
+		// Write each module language file
+		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
+			$this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
+		}
+	}
+
+	public function collect($restrictToModules = null, $mergeWithExisting = false) {
 		$modules = scandir($this->basePath);
 		$themeFolders = array();
 		
@@ -137,7 +148,31 @@ class i18nTextCollector extends Object {
 					$entitiesByModule[$othermodule][$fullName] = $spec;
 					unset($entitiesByModule[$module][$fullName]);
 				}
-			}			
+			}		
+
+			// Optionally merge with existing master strings
+			// TODO Support all defined source formats through i18n::get_translators().
+			//      Currently not possible because adapter instances can't be fully reset through the Zend API,
+			//      meaning master strings accumulate across modules
+			if($mergeWithExisting) {
+				$adapter = Injector::inst()->get('i18nRailsYamlAdapter');
+				$masterFile = "{$this->basePath}/{$module}/lang/" 
+					. $adapter->getFilenameForLocale($this->defaultLocale);
+				if(!file_exists($masterFile)) continue;
+
+				$adapter->addTranslation(array(
+					'content' => $masterFile,
+					'locale' => $this->defaultLocale
+				));
+				$entitiesByModule[$module] = array_merge(
+					array_map(
+						// Transform each master string from scalar value to array of strings
+						function($v) {return array($v);},
+						$adapter->getMessages($this->defaultLocale)
+					),
+					$entitiesByModule[$module]
+				);	
+			}
 		}
 
 		// Restrict modules we update to just the specified ones (if any passed)
@@ -147,10 +182,11 @@ class i18nTextCollector extends Object {
 			}
 		}
 
-		// Write each module language file
-		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
-			$this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
-		}
+		return $entitiesByModule;
+	}
+
+	public function write($module, $entities) {
+		$this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
 	}
 	
 	/**

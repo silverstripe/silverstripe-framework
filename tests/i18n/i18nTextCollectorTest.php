@@ -538,6 +538,30 @@ YAML;
 		
 		Config::inst()->update('SSViewer', 'theme', $theme);
 	}
+
+	public function testCollectMergesWithExisting() {
+		$defaultlocal = i18n::default_locale();
+		$local = i18n::get_locale();
+		i18n::set_locale('en_US'); 
+		i18n::set_default_locale('en_US');
+
+		$c = new i18nTextCollector();
+		$c->setWriter(new i18nTextCollector_Writer_Php());
+		$c->basePath = $this->alternateBasePath;
+		$c->baseSavePath = $this->alternateBaseSavePath;
+		
+		$entitiesByModule = $c->collect(null, true /* merge */);
+		$this->assertArrayHasKey(
+			'i18nTestModule.ENTITY',
+			$entitiesByModule['i18ntestmodule'],
+			'Retains existing entities'
+		);
+		$this->assertArrayHasKey(
+			'i18nTestModule.NEWENTITY',
+			$entitiesByModule['i18ntestmodule'],
+			'Adds new entities'
+		);
+	}
 	
 	public function testCollectFromFilesystemAndWriteMasterTables() {
 		$defaultlocal = i18n::default_locale();

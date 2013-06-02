@@ -10,6 +10,12 @@ class i18nTextCollectorTask extends BuildTask {
 	protected $description = "
 		Traverses through files in order to collect the 'entity master tables'
 		stored in each module.
+
+		Parameters:
+		- locale: Sets default locale
+		- writer: Custom writer class (defaults to i18nTextCollector_Writer_RailsYaml)
+		- module: One or more modules to limit collection (comma-separated)
+		- merge: Merge new strings with existing ones already defined in language files (default: FALSE)
 	";
 	
 	public function init() {
@@ -32,6 +38,6 @@ class i18nTextCollectorTask extends BuildTask {
 		$writer = $request->getVar('writer');
 		if($writer) $c->setWriter(new $writer());
 		$restrictModules = ($request->getVar('module')) ? explode(',', $request->getVar('module')) : null;
-		return $c->run($restrictModules);
+		return $c->run($restrictModules, (bool)$request->getVar('merge'));
 	}
 }
