@@ -378,29 +378,58 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
 		if($ie) {
 			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
-			if($version == 7) Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie7.css');
-			else if($version == 8) Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie8.css');
+
+			if($version == 7) {
+				Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie7.css');
+			} else if($version == 8) {
+				Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie8.css');
+			}
 		}
 
 		// Custom requirements
 		$extraJs = $this->stat('extra_requirements_javascript');
 
-		if($extraJs) foreach($extraJs as $file => $config) {
-			Requirements::javascript($file);
+		if($extraJs) {
+			foreach($extraJs as $file => $config) {
+				if(is_numeric($file)) {
+					$file = $config;
+				}
+				
+				Requirements::javascript($file);
+			}
 		}
+
 		$extraCss = $this->stat('extra_requirements_css');
-		if($extraCss) foreach($extraCss as $file => $config) {
-			Requirements::css($file, isset($config['media']) ? $config['media'] : null);
+		
+		if($extraCss) {
+			foreach($extraCss as $file => $config) {
+				if(is_numeric($file)) {
+					$file = $config;
+					$config = array();
+				}
+				
+				Requirements::css($file, isset($config['media']) ? $config['media'] : null);
+			}
 		}
+
 		$extraThemedCss = $this->stat('extra_requirements_themedCss');
-		if($extraThemedCss) foreach ($extraThemedCss as $file => $config) {
-			Requirements::themedCSS($file, isset($config['media']) ? $config['media'] : null);
+
+		if($extraThemedCss) {
+			foreach ($extraThemedCss as $file => $config) {
+				if(is_numeric($file)) {
+					$file = $config;
+					$config = array();
+				}
+
+				Requirements::themedCSS($file, isset($config['media']) ? $config['media'] : null);
+			}
 		}
 
 		$dummy = null;
 		$this->extend('init', $dummy);
 
-		// The user's theme shouldn't affect the CMS, if, for example, they have replaced TableListField.ss or Form.ss.
+		// The user's theme shouldn't affect the CMS, if, for example, they have 
+		// replaced TableListField.ss or Form.ss.
 		Config::inst()->update('SSViewer', 'theme_enabled', false);
 	}
 	

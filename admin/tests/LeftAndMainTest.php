@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @package cms
+ * @package framework
  * @subpackage tests
  */
 class LeftAndMainTest extends FunctionalTest {
@@ -9,14 +10,49 @@ class LeftAndMainTest extends FunctionalTest {
 	
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 	
+	protected $backupCss, $backupJs, $backupCombined;
+
 	public function setUp() {
 		parent::setUp();
 		
 		// @todo fix controller stack problems and re-activate
 		//$this->autoFollowRedirection = false;
 		CMSMenu::populate_menu();
+
+		$this->backupCss = Config::inst()->get('LeftAndMain', 'extra_requirements_css');
+		$this->backupJs = Config::inst()->get('LeftAndMain', 'extra_requirements_javascript');
+		$this->backupCombined = Requirements::get_combined_files_enabled();
+
+		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array(
+			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.css'
+		));
+
+		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', array(
+			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.js'
+		));
+
+		Requirements::set_combined_files_enabled(false);
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+
+		Config::inst()->update('LeftAndMain', 'extra_requirements_css', $this->backupCss);
+		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', $this->backupJs);
+
+		Requirements::set_combined_files_enabled($this->backupCombined);
 	}
 	
+
+	public function testExtraCssAndJavascript() {
+		$admin = $this->objFromFixture('Member', 'admin');
+		$this->session()->inst_set('loggedInAs', $admin->ID);
+		$response = $this->get('LeftAndMainTest_Controller');
+
+		$this->assertRegExp('/tests\/assets\/LeftAndMainTest.css/i', $response->getBody(), "body should contain custom css");
+		$this->assertRegExp('/tests\/assets\/LeftAndMainTest.js/i', $response->getBody(), "body should contain custom js");
+	}
+
 	/**
 	 * Note: This test would typically rely on SiteTree and CMSMain, but is mocked by
 	 * LeftAndMain_Controller and LeftAndMain_Object here to remove this dependency.
@@ -158,15 +194,22 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		$this->session()->inst_set('loggedInAs', null);
 	}
-	
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class LeftAndMainTest_Controller extends LeftAndMain implements TestOnly {
 	protected $template = 'BlankPage';
 	
 	private static $tree_class = 'LeftAndMainTest_Object';
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class LeftAndMainTest_Object extends DataObject implements TestOnly {
 	
 	private static $db = array(

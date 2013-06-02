@@ -69,7 +69,7 @@ to the `LeftAndMain.extra_requirements_javascript` [configuration value](/topics
 	:::yml
 	LeftAndMain
 	  extra_requirements_javascript:
-	    mysite/javascript/MyLeftAndMain.Preview.js:
+	    - mysite/javascript/MyLeftAndMain.Preview.js:
 
 In order to find out which configuration values are available, the source code
 is your best reference at the moment - have a look in `framework/admin/javascript/LeftAndMain.Preview.js`.
