@@ -155,7 +155,7 @@ class i18nTextCollector extends Object {
 			//      Currently not possible because adapter instances can't be fully reset through the Zend API,
 			//      meaning master strings accumulate across modules
 			if($mergeWithExisting) {
-				$adapter = Injector::inst()->get('i18nRailsYamlAdapter');
+				$adapter = Injector::inst()->create('i18nRailsYamlAdapter');
 				$masterFile = "{$this->basePath}/{$module}/lang/" 
 					. $adapter->getFilenameForLocale($this->defaultLocale);
 				if(!file_exists($masterFile)) continue;
