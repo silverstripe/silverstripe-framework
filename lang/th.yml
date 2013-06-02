@@ -2,6 +2,7 @@ th:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: สร้างโฟลเดอร์ใหม่
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: อัพโหลดครั้งแรก
     DIM: สัดส่วนกว้างยาว
@@ -39,8 +40,8 @@ th:
     COLOREDEXAMPLE: 'blue text'
     EMAILLINK: ลิงก์อีเมล
     EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
-    IMAGE: รูปภาพ
-    IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
+    IMAGE: 'รูปภาพ'
+    IMAGEDESCRIPTION: 'แสดงรูปภาพในหน้าบทความของคุณ'
     ITALIC: ข้อความตัวเอียง
     ITALICEXAMPLE: ตัวเอียง
     LINK: ลิงก์เว็บไซต์
@@ -59,9 +60,9 @@ th:
     ERRORNOTADMIN: ผู้ใช้งานรายดังกล่าวไม่ใช่ผู้ดูแลระบบ
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    0: ไม่ตกลง
     ANY: ใดๆ
-    1: ตกลง
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   CMSLoadingScreen.ss:
     LOADING: กำลังโหลด...
     REQUIREJS: 'CMS ตัวนี้จำเป็นต้องมีการเปิดใช้งานจาวาสคริปต์'
@@ -70,6 +71,8 @@ th:
     ACCESSALLINTERFACES: 'เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: บันทึก
+  CMSPageHistoryController_versions.ss:
+    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
@@ -79,8 +82,8 @@ th:
     HELLO: สวัสดี
     PASSWORD: รหัสผ่าน
   CheckboxField:
-    - ไม่ตกลง
-    - ตกลง
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: ปิดหน้าต่างป๊อปอัพ
     SUCCESSADD2: 'เพิ่มแล้ว {name}'
@@ -109,20 +112,21 @@ th:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: วัน
-    DAYS: วัน
-    HOUR: ชั่วโมง
-    HOURS: ชั่วโมง
-    MIN: นาที
-    MINS: นาที
-    MONTH: เดือน
-    MONTHS: เดือน
-    SEC: วินาที
-    SECS: วินาที
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    LessThanMinuteAgo: 'less than a minute'
+    MIN: min
+    MINS: mins
+    MONTH: month
+    MONTHS: months
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: ปี
-    YEARS: ปี
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: ไม่ต้องตั้งค่า
     TODAY: วันนี้
@@ -198,7 +202,8 @@ th:
     TEXT2: ลิงค์รีเซ็ตรหัสผ่าน
     TEXT3: สำหรับ
   Form:
-    FIELDISREQUIRED: '%s เป็นข้อมูลที่จำเป็น'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: ไป
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
@@ -208,6 +213,7 @@ th:
     VALIDATOR: Validator
     VALIDCURRENCY: กรุณากรอกสกุลเงินที่ถูกต้อง
   FormField:
+    Example: 'e.g. %s'
     NONE: ไม่มี
   GridAction:
     DELETE_DESCRIPTION: ลบ
@@ -230,6 +236,7 @@ th:
     ResetFilter: รีเซ็ต
   GridFieldAction_Delete:
     DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบได้
+    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: ยกเลิก
     Create: สร้าง
@@ -237,7 +244,9 @@ th:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'ลบ %s %s แล้ว'
     Save: บันทึก
-    Saved: 'บันทึกแล้ว %s %s'
+    Saved: 'Saved {name} {link}'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss: null
   Group:
     AddRole: เพิ่มบทบาทให้กับกลุ่มนี้
@@ -267,11 +276,12 @@ th:
     ADDURL: 'เพิ่ม URL'
     ADJUSTDETAILSDIMENSIONS: 'รายละเอียด &amp; ขนาดสัดส่วน'
     ANCHORVALUE: Anchor
+    BUTTONADDURL: 'Add url'
     BUTTONINSERT: แทรก
     BUTTONINSERTLINK: แทรกลิงค์
     BUTTONREMOVELINK: ลบลิงค์
     BUTTONUpdate: อัพเดท
-    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
+    CAPTIONTEXT: 'ข้อความคำอธิบายใต้ภาพ'
     CSSCLASS: 'การจัดวาง / รูปแบบ'
     CSSCLASSCENTER: 'Centered, on its own.'
     CSSCLASSLEFT: 'On the left, with text wrapping around.'
@@ -312,7 +322,7 @@ th:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
   ImageField:
-    IMAGE: รูปภาพ
+    IMAGE: 'รูปภาพ'
   Image_Cached:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
@@ -331,7 +341,10 @@ th:
     PreviewButton: ดูตัวอย่าง
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: บันทึกแล้ว
-    VersionUnknown: ไม่ทราบ
+    ShowAsList: 'show as list'
+    TooManyPages: 'Too many pages'
+    ValidationError: 'Validation error'
+    VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: สวัสดีค่ะ
     LOGOUT: ออกจากระบบ
@@ -361,7 +374,7 @@ th:
     ERRORPASSWORDNOTMATCH: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: ชื่อจริง
-    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
+    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: รหัสผ่านใหม่
@@ -379,7 +392,7 @@ th:
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
     db_LastVisited: วันที่เยี่ยมชมล่าสุด
-    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
+    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
     db_LockedOutUntil: ออกจากระบบจนกว่า
     db_NumVisit: จำนวนการเข้าชม
     db_Password: รหัสผ่าน
@@ -407,6 +420,7 @@ th:
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
     TWODIGITYEAR: 'Two-digit year'
+    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -421,7 +435,7 @@ th:
   ModelAdmin:
     DELETE: ลบ
     DELETEDRECORDS: 'ลบแล้ว {count} รายการ'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'นำเข้าจากไฟล์ CSV'
     IMPORTEDRECORDS: 'นำเข้าแล้ว {count} รายการ'
     NOCSVFILE: 'กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล'
@@ -503,7 +517,7 @@ th:
     IMPORTGROUPS: นำเข้ากลุ่ม
     IMPORTUSERS: นำเข้าผู้ใช้งาน
     MEMBERS: สมาชิก
-    MENUTITLE: ความปลอดภัย
+    MENUTITLE: 'ความปลอดภัย'
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: สร้างกลุ่มใหม่
     PERMISSIONS: สิทธิ์อนุญาต
@@ -515,9 +529,22 @@ th:
     BtnImport: นำเข้า
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Change view mode'
+    Desktop: Desktop
+    DualWindowView: 'Dual Window'
     Edit: แก้ไข
+    EditView: 'Edit mode'
+    Mobile: Mobile
+    PreviewState: 'Preview State'
+    PreviewView: 'Preview mode'
+    Responsive: Responsive
+    SplitView: 'Split mode'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Select a preview width'
+    Width: width
   SimpleImageField:
-    NOUPLOAD: ยังไม่มีรูปภาพที่ถูกอัพโหลด
+    NOUPLOAD: 'ยังไม่มีรูปภาพที่ถูกอัพโหลด'
   SiteTree:
     TABMAIN: หลัก
   TableField:
@@ -551,6 +578,8 @@ th:
     ATTACHFILE: แนบไฟล์
     ATTACHFILES: แนบไฟล์
     AttachFile: แนบไฟล์
+    CHOOSEANOTHERFILE: 'Choose another file'
+    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: ลบจากไฟล์
     DELETEINFO: ลบไฟล์นี้ออกจากพื้นที่จัดเก็บไฟล์อย่างถาวร
     DOEDIT: บันทึก
@@ -565,12 +594,15 @@ th:
     FROMFILES: จากไฟล์
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: ลบออก
     REMOVEERROR: พบข้อผิดพลาดในระหว่างการลบไฟล์
     REMOVEINFO: 'ลบไฟล์นี้จากที่นี่ แต่ไม่ต้องลบไฟล์ดังกล่าวจากพื้นที่จัดเก็บไฟล์'
     STARTALL: เริ่มทั้งหมด
     STARTALLINFO: เริ่มการอัพโหลดทั้งหมด
     Saved: บันทึกแล้ว
+    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: เวอร์ชั่น

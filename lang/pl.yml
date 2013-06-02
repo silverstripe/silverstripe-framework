@@ -2,6 +2,7 @@ pl:
   AssetAdmin:
     ALLOWEDEXTS: 'Dopuszczalne rozszerzenia'
     NEWFOLDER: NowyFolder
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
     DIM: Rozmiar
@@ -59,9 +60,9 @@ pl:
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
     ERRORNOTREC: 'Nie istnieje taki username/hasło'
   Boolean:
-    0: Nie
     ANY: Jakikolwiek
-    1: Tak
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   CMSLoadingScreen.ss:
     LOADING: Wczytywanie...
     REQUIREJS: 'CMS wymaga włączonej obsługi JavaScript.'
@@ -70,6 +71,8 @@ pl:
     ACCESSALLINTERFACES: 'Dostęp do wszystkich sekcji CMSa'
     ACCESSALLINTERFACESHELP: 'Nadpisuje bardziej specyficzne ustawienia dostępu.'
     SAVE: Zapisz
+  CMSPageHistoryController_versions.ss:
+    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'Mój profil'
   ChangePasswordEmail.ss:
@@ -79,8 +82,8 @@ pl:
     HELLO: Cześć
     PASSWORD: Hasło
   CheckboxField:
-    - Nie
-    - Tak
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Zamknij Okienko'
     SUCCESSADD2: 'Dodano {name}'
@@ -109,20 +112,21 @@ pl:
     PLURALNAME: 'Obiekty danych'
     SINGULARNAME: 'Obiekt danych'
   Date:
-    DAY: dzień
-    DAYS: dni
-    HOUR: godzina
-    HOURS: godziny
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    LessThanMinuteAgo: 'less than a minute'
     MIN: min
-    MINS: minuty
-    MONTH: miesiąc
-    MONTHS: miesiące
-    SEC: sekunda
-    SECS: sekundy
+    MINS: mins
+    MONTH: month
+    MONTHS: months
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: '{difference} temu'
     TIMEDIFFIN: 'w {difference}'
-    YEAR: rok
-    YEARS: lata
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: 'nie ustawiono'
     TODAY: dzisiaj
@@ -198,7 +202,8 @@ pl:
     TEXT2: 'link zmiany hasła'
     TEXT3: dla
   Form:
-    FIELDISREQUIRED: '%s jest wymagane'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
     VALIDATIONNOTUNIQUE: 'Wprowadzona wartość nie jest unikalna'
@@ -208,6 +213,7 @@ pl:
     VALIDATOR: Walidator
     VALIDCURRENCY: 'Proszę podaj prawidłową walutę'
   FormField:
+    Example: 'e.g. %s'
     NONE: brak
   GridAction:
     DELETE_DESCRIPTION: Usuń
@@ -230,6 +236,7 @@ pl:
     ResetFilter: Resetuj
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
+    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: Anuluj
     Create: Stwórz
@@ -237,7 +244,9 @@ pl:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     Deleted: 'Usunięto %s %s'
     Save: Zapisz
-    Saved: 'Zapisano %s %s'
+    Saved: 'Saved {name} {link}'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Dodaj rolę dla tej grupy'
@@ -267,6 +276,7 @@ pl:
     ADDURL: 'Dodaj adres URL'
     ADJUSTDETAILSDIMENSIONS: 'Szczegóły i rozmiar'
     ANCHORVALUE: Odnośnik
+    BUTTONADDURL: 'Add url'
     BUTTONINSERT: Wstaw
     BUTTONINSERTLINK: 'Wstaw link'
     BUTTONREMOVELINK: 'Zmień link'
@@ -328,9 +338,12 @@ pl:
     PERMALREADY: 'Niestety nie masz dostępu do tej części CMS. Jeśli chcesz zalogować się jako ktoś inny, zrób to poniżej'
     PERMDEFAULT: 'Proszę wybrać metodę identyfikacji i wpisać swoje dane, aby uruchomić CMSa.'
     PLEASESAVE: 'Proszę zapisać stronę. Ta strona nie mogła zostać uaktualniona, ponieważ nie została jeszcze zapisana.'
-    PreviewButton: Podgląd
+    PreviewButton: 'Podgląd'
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
+    ShowAsList: 'show as list'
+    TooManyPages: 'Too many pages'
+    ValidationError: 'Validation error'
     VersionUnknown: nieznany
   LeftAndMain_Menu.ss:
     Hello: Witaj
@@ -398,7 +411,7 @@ pl:
     HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
-    Preview: Podgląd
+    Preview: 'Podgląd'
     SHORTMONTH: 'Skrócona nazwa miesiąca (np. Cze)'
     TOGGLEHELP: 'Przełącz pomoc formatowania'
     TWODIGITDAY: 'Dwucyfrowy dzień miesiąca'
@@ -407,6 +420,7 @@ pl:
     TWODIGITMONTH: 'Dwucyfrowy miesiąc (01=Styczeń, itd.)'
     TWODIGITSECOND: 'Dwucyfrowa sekunda (od 00 do 59)'
     TWODIGITYEAR: 'Dwucyfrowy rok'
+    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -421,7 +435,7 @@ pl:
   ModelAdmin:
     DELETE: Usuń
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
-    EMPTYBEFOREIMPORT: 'Wyczyść bazę danych przed importowaniem'
+    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'Import z CSV'
     IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
     NOCSVFILE: 'Wybierz plik CSV do zaimportowania'
@@ -515,7 +529,20 @@ pl:
     BtnImport: 'Import z CSV'
     FileFieldLabel: 'Plik CSV <small>(Dozwolone rozszerzenia: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Change view mode'
+    Desktop: Desktop
+    DualWindowView: 'Dual Window'
     Edit: Edycja
+    EditView: 'Edit mode'
+    Mobile: Mobile
+    PreviewState: 'Preview State'
+    PreviewView: 'Preview mode'
+    Responsive: Responsive
+    SplitView: 'Split mode'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Select a preview width'
+    Width: width
   SimpleImageField:
     NOUPLOAD: 'Nie wgrano zdjęć'
   SiteTree:
@@ -551,6 +578,8 @@ pl:
     ATTACHFILE: 'Załącz plik'
     ATTACHFILES: 'Załącz pliki'
     AttachFile: 'Załącz plik(i)'
+    CHOOSEANOTHERFILE: 'Choose another file'
+    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Usuń z plików'
     DELETEINFO: 'Usuń ten plik z magazynu'
     DOEDIT: Zapisz
@@ -565,12 +594,15 @@ pl:
     FROMFILES: 'Z plików'
     HOTLINKINFO: 'Informacja: Ten obrazek pochodzi z zewnętrznego serwisu. Upewnij się, że jego twórca pozwala korzystać z niego.'
     MAXNUMBEROFFILES: 'Osiągnięto maksymalną liczbę {count} plików.'
+    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Można wgrać tylko {count} plik(ów/i)'
+    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: Usuń
     REMOVEERROR: 'Błąd podczas usuwania pliku'
     REMOVEINFO: 'Usuń pliki z tego miejsca, ale nie usuwaj ich z magazynu'
     STARTALL: 'Rozpocznij wszystko'
     STARTALLINFO: 'Rozpocznij ładowanie wszystkich'
     Saved: Zapisano
+    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Wersje

@@ -2,6 +2,7 @@ es_AR:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'Nueva Carpeta'
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: 'Agregado por primera vez'
     DIM: Dimensiones
@@ -59,9 +60,9 @@ es_AR:
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   Boolean:
-    0: No
     ANY: Cualquiera
-    1: Sí
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -70,6 +71,8 @@ es_AR:
     ACCESSALLINTERFACES: 'Acceder a todas las secciones del CMS'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Guardar
+  CMSPageHistoryController_versions.ss:
+    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
@@ -79,8 +82,8 @@ es_AR:
     HELLO: Hola
     PASSWORD: Contraseña
   CheckboxField:
-    - No
-    - No
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Cerrar Ventana Emergente'
     SUCCESSADD2: 'Added {name}'
@@ -109,20 +112,21 @@ es_AR:
     PLURALNAME: 'Objetos de Datos'
     SINGULARNAME: 'Objeto de Datos'
   Date:
-    DAY: día
-    DAYS: días
-    HOUR: hora
-    HOURS: horas
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    LessThanMinuteAgo: 'less than a minute'
     MIN: min
-    MINS: min
-    MONTH: mes
-    MONTHS: meses
-    SEC: seg
-    SECS: segs
+    MINS: mins
+    MONTH: month
+    MONTHS: months
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: año
-    YEARS: años
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: 'no especificada'
     TODAY: hoy
@@ -198,7 +202,8 @@ es_AR:
     TEXT2: 'vínculo para restablecer la contraseña'
     TEXT3: para
   Form:
-    FIELDISREQUIRED: '%s es obligatorio.'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'El valor ingresado no es único'
@@ -208,6 +213,7 @@ es_AR:
     VALIDATOR: Verificador
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
+    Example: 'e.g. %s'
     NONE: ninguna
   GridAction:
     DELETE_DESCRIPTION: Delete
@@ -230,6 +236,7 @@ es_AR:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
+    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -237,7 +244,9 @@ es_AR:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
-    Saved: 'Saved %s %s'
+    Saved: 'Saved {name} {link}'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
@@ -267,6 +276,7 @@ es_AR:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anclar
+    BUTTONADDURL: 'Add url'
     BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Insertar enlace'
     BUTTONREMOVELINK: 'Quitar enlace'
@@ -331,7 +341,10 @@ es_AR:
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    ShowAsList: 'show as list'
+    TooManyPages: 'Too many pages'
+    ValidationError: 'Validation error'
+    VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -407,6 +420,7 @@ es_AR:
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
     TWODIGITYEAR: 'Two-digit year'
+    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Importar miembros en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -421,7 +435,7 @@ es_AR:
   ModelAdmin:
     DELETE: Eliminar
     DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'Importar desde CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Por favor explorar por un archivo CVS para importar'
@@ -515,7 +529,20 @@ es_AR:
     BtnImport: importar
     FileFieldLabel: 'Archivo CSV <small>(extensiones permitidas: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Change view mode'
+    Desktop: Desktop
+    DualWindowView: 'Dual Window'
     Edit: Edit
+    EditView: 'Edit mode'
+    Mobile: Mobile
+    PreviewState: 'Preview State'
+    PreviewView: 'Preview mode'
+    Responsive: Responsive
+    SplitView: 'Split mode'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Select a preview width'
+    Width: width
   SimpleImageField:
     NOUPLOAD: 'La Imagen No se Cargó'
   SiteTree:
@@ -551,6 +578,8 @@ es_AR:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
     AttachFile: 'Attach file(s)'
+    CHOOSEANOTHERFILE: 'Choose another file'
+    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
@@ -565,12 +594,15 @@ es_AR:
     FROMFILES: 'From files'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
+    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versiones

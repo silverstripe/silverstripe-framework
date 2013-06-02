@@ -2,6 +2,7 @@ cs:
   AssetAdmin:
     ALLOWEDEXTS: 'Povolené extenze'
     NEWFOLDER: 'Nová složka'
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: 'Poprvé nahráno'
     DIM: Rozměry
@@ -59,9 +60,9 @@ cs:
     ERRORNOTADMIN: 'Tento uživatel není administrátor.'
     ERRORNOTREC: 'Toto uživatelské jméno / heslo nebylo rozpoznáno'
   Boolean:
-    0: Ne
     ANY: Jakkýkoliv
-    1: Ano
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   CMSLoadingScreen.ss:
     LOADING: Nahrávání...
     REQUIREJS: 'CMS vyžaduje, aby jste měli JavaScript zapnut.'
@@ -70,6 +71,8 @@ cs:
     ACCESSALLINTERFACES: 'Přístup ke všem sekcím CMS'
     ACCESSALLINTERFACESHELP: 'Prepíše více specifické nastavení přístupu.'
     SAVE: Uložit
+  CMSPageHistoryController_versions.ss:
+    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'Můj profil'
   ChangePasswordEmail.ss:
@@ -79,8 +82,8 @@ cs:
     HELLO: 'Dobrý den'
     PASSWORD: Heslo
   CheckboxField:
-    - Ne
-    - Ano
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: Zavřít
     SUCCESSADD2: 'Přidáno {name}'
@@ -109,20 +112,21 @@ cs:
     PLURALNAME: 'Datové objekty'
     SINGULARNAME: 'Datový objekt'
   Date:
-    DAY: den
-    DAYS: dny
-    HOUR: hodina
-    HOURS: hodiny
-    MIN: minuta
-    MINS: minuty
-    MONTH: měsíc
-    MONTHS: měsíce
-    SEC: sekunda
-    SECS: sekundy
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    LessThanMinuteAgo: 'less than a minute'
+    MIN: min
+    MINS: mins
+    MONTH: month
+    MONTHS: months
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: 'před {difference}'
     TIMEDIFFIN: 'v {difference}'
-    YEAR: rok
-    YEARS: roky
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: nenastaveno
     TODAY: dnes
@@ -198,7 +202,8 @@ cs:
     TEXT2: 'odkaz na reset hesla'
     TEXT3: pro
   Form:
-    FIELDISREQUIRED: '%s je požadováno.'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Jdi
     VALIDATIONCREDITNUMBER: 'Prosím ujistěte se, že jste zadal/a {number} číslo kreditní karty správně'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota není unikátní'
@@ -208,6 +213,7 @@ cs:
     VALIDATOR: Validátor
     VALIDCURRENCY: 'Prosím zadejte platnou měnu'
   FormField:
+    Example: 'e.g. %s'
     NONE: žádný
   GridAction:
     DELETE_DESCRIPTION: Smazat
@@ -230,6 +236,7 @@ cs:
     ResetFilter: Resetovat
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
+    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: Storno
     Create: Vytvořit
@@ -237,7 +244,9 @@ cs:
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
     Deleted: 'Smazáno %s %s'
     Save: Uložit
-    Saved: 'Uloženo %s %s'
+    Saved: 'Saved {name} {link}'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Přidat roli pro tuto skupinu'
@@ -267,6 +276,7 @@ cs:
     ADDURL: 'Přidat URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozměry'
     ANCHORVALUE: 'Záložka (kotva)'
+    BUTTONADDURL: 'Add url'
     BUTTONINSERT: Vložit
     BUTTONINSERTLINK: 'Vložit odkaz'
     BUTTONREMOVELINK: 'Odstranit odkaz'
@@ -293,7 +303,7 @@ cs:
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
     IMAGETITLETEXT: 'Titulek textu (tooltip)'
     IMAGETITLETEXTDESC: 'Pro další informace o obrázku'
-    IMAGEWIDTHPX: Šířka
+    IMAGEWIDTHPX: 'Šířka'
     INSERTMEDIA: 'Vložit média'
     LINK: 'Vložit nebo upravit odkaz'
     LINKANCHOR: 'Záložka (kotva) na stránce'
@@ -331,7 +341,10 @@ cs:
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.
-    VersionUnknown: neznáme
+    ShowAsList: 'show as list'
+    TooManyPages: 'Too many pages'
+    ValidationError: 'Validation error'
+    VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: Ahoj
     LOGOUT: 'Odhlásit se'
@@ -407,6 +420,7 @@ cs:
     TWODIGITMONTH: 'Dvojčíslí měsíce (01=Leden, atď.)'
     TWODIGITSECOND: 'Dvojčíslí vteřiny (00 až 59)'
     TWODIGITYEAR: 'Dvojčíslí roku'
+    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Import členů v <em>CSV formátu</em> (čárkou-oddělené hodnoty). <small><a href="#" class="toggle-advanced">Zobrazit rozšířené použití</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použití</h4>\\n<ul>\\n<li>Povolené sloupce: <em>%s</em></li>\\n<li>Existující uživatelé jsou porovnáni jejich unikátní vlastností <em>Code</em>, a aktualizováni s novými hodnotami z importovaného souboru.</li>\\n<li>Skupiny mohou být přiřazeny sloupcem <em>Groups</em>. Skupiny jsou identifikovány svojí vlastností <em>Code</em>, více skupin může být odděleno čárkou. Existující členství ve skupině nejsou smazána.</li>\\n</ul>\\n</div>"
@@ -421,7 +435,7 @@ cs:
   ModelAdmin:
     DELETE: Smazat
     DELETEDRECORDS: 'Smazáno {count} záznamů.'
-    EMPTYBEFOREIMPORT: 'Vyčistit databázi před importováním'
+    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'Importovat ze souboru CSV'
     IMPORTEDRECORDS: 'Importováno {count} záznamů.'
     NOCSVFILE: 'Prosím, vyhledejte soubor CSV pro import'
@@ -515,7 +529,20 @@ cs:
     BtnImport: Import
     FileFieldLabel: 'Soubor CSV <small>(Povoleny přípony: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Change view mode'
+    Desktop: Desktop
+    DualWindowView: 'Dual Window'
     Edit: Editovat
+    EditView: 'Edit mode'
+    Mobile: Mobile
+    PreviewState: 'Preview State'
+    PreviewView: 'Preview mode'
+    Responsive: Responsive
+    SplitView: 'Split mode'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Select a preview width'
+    Width: width
   SimpleImageField:
     NOUPLOAD: 'Nebyl nahrán žádný obrázek'
   SiteTree:
@@ -551,6 +578,8 @@ cs:
     ATTACHFILE: 'Připojit soubor'
     ATTACHFILES: 'Připojit soubory'
     AttachFile: 'Připojit soubor(y)'
+    CHOOSEANOTHERFILE: 'Choose another file'
+    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Smazat ze souborů'
     DELETEINFO: 'Trvale odstranit tento soubor z úložiště souborů'
     DOEDIT: Uložit
@@ -565,12 +594,15 @@ cs:
     FROMFILES: 'Ze souborů'
     HOTLINKINFO: 'Info: Tento obrázek bude "hotlinkován". Ujistěte se prosím, že máte oprávnění od původního tvůrce webu, aby se tak stalo.'
     MAXNUMBEROFFILES: 'Maximální počet {count} soubor(ů) překročen.'
+    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Můžete nahrát pouze {count} souborů'
+    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: Odstranit
     REMOVEERROR: 'Chyba odstranění souboru'
     REMOVEINFO: 'Odtranit tento soubor odsud, ale nesmazat ho z úložiště souborů'
     STARTALL: 'Začni vše'
     STARTALLINFO: 'Začni vše nahrávat'
     Saved: Uloženo
+    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Verze
