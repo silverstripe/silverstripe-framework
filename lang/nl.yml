@@ -274,7 +274,7 @@ nl:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig de niveau hoger om dit op te lossen'
   HtmlEditorField:
     ADDURL: 'Voeg URL toe'
-    ADJUSTDETAILSDIMENSIONS: 'Details $amp; afmeting'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; afmeting'
     ANCHORVALUE: Anker
     BUTTONADDURL: 'Voeg URL toe'
     BUTTONINSERT: Invoegen
