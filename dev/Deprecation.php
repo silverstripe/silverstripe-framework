@@ -88,7 +88,7 @@ class Deprecation {
 
 		$callingfile = realpath($backtrace[1]['file']);
 
-		global $manifest;
+		$manifest = SS_ClassLoader::instance()->getManifest();
 		foreach ($manifest->getModules() as $name => $path) {
 			if (strpos($callingfile, realpath($path)) === 0) {
 				return $name;
