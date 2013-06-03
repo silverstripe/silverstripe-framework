@@ -23,6 +23,12 @@ class SQLQuery {
 	 * @var array
 	 */
 	public $from = array();
+
+	/**
+	 * An array of actual table names without their alias.
+	 * @var array
+	 */
+	public $tables = array();
 	
 	/**
 	 * An array of filters.
@@ -138,7 +144,9 @@ class SQLQuery {
 	 * @return SQLQuery This instance
 	 */
 	public function from($table) {
-		$this->from[str_replace(array('"','`'),'',$table)] = $table;
+		$tableName = str_replace(array('"','`'),'',$table);
+		$this->from[$tableName] = $table;
+		$this->tables[] = $tableName;
 		
 		return $this;
 	}
@@ -157,6 +165,7 @@ class SQLQuery {
 			$tableAlias = $table;
 		}
 		$this->from[$tableAlias] = "LEFT JOIN \"$table\" AS \"$tableAlias\" ON $onPredicate";
+		$this->tables[] = $table;
 		return $this;
 	}
 	
@@ -174,7 +183,17 @@ class SQLQuery {
 			$tableAlias = $table;
 		}
 		$this->from[$tableAlias] = "INNER JOIN \"$table\" AS \"$tableAlias\" ON $onPredicate";
+		$this->tables[] = $table;
 		return $this;
+	}
+
+	/**
+	 * Returns the array of unique table names used in this query (not aliases).
+	 *
+	 * @return array unique table names (actual table - not aliases) used by this query
+	 */
+	public function getTables() {
+		return array_unique($this->tables);
 	}
 	
 	/**
