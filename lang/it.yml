@@ -2,7 +2,7 @@ it:
   AssetAdmin:
     ALLOWEDEXTS: 'Estensioni consentite'
     NEWFOLDER: NuovaCartella
-    SHOWALLOWEDEXTS: 'Show allowed extensions'
+    SHOWALLOWEDEXTS: 'Mostra le estensioni ammesse'
   AssetTableField:
     CREATED: 'Inizialmente caricato'
     DIM: Dimensioni
@@ -61,8 +61,8 @@ it:
     ERRORNOTREC: 'Nome utente / password non riconosciuti'
   Boolean:
     ANY: Qualsiasi
-    NOANSWER: 'False'
-    YESANSWER: 'True'
+    NOANSWER: 'No'
+    YESANSWER: 'Si'
   CMSLoadingScreen.ss:
     LOADING: 'Caricamento in corso...'
     REQUIREJS: 'Il CMS richiede JavaScript abilitato.'
@@ -72,7 +72,7 @@ it:
     ACCESSALLINTERFACESHELP: 'Annulla le impostazioni di accesso più specifiche.'
     SAVE: Salva
   CMSPageHistoryController_versions.ss:
-    PREVIEW: 'Website preview'
+    PREVIEW: 'Preview del sito'
   CMSProfileController:
     MENUTITLE: 'Il mio Profilo'
   ChangePasswordEmail.ss:
@@ -82,8 +82,8 @@ it:
     HELLO: Ciao
     PASSWORD: Password
   CheckboxField:
-    NOANSWER: 'False'
-    YESANSWER: 'True'
+    NOANSWER: 'No'
+    YESANSWER: 'Si'
   ComplexTableField:
     CLOSEPOPUP: 'Chiudi Finestra'
     SUCCESSADD2: 'Aggiunto {name}'
@@ -112,21 +112,21 @@ it:
     PLURALNAME: 'Data Objects'
     SINGULARNAME: 'Data Object'
   Date:
-    DAY: day
-    DAYS: days
-    HOUR: hour
-    HOURS: hours
-    LessThanMinuteAgo: 'less than a minute'
+    DAY: giorno
+    DAYS: giorni
+    HOUR: ora
+    HOURS: ore
+    LessThanMinuteAgo: 'meno di un minuto'
     MIN: min
-    MINS: mins
-    MONTH: month
-    MONTHS: months
+    MINS: min
+    MONTH: mese
+    MONTHS: mesi
     SEC: sec
-    SECS: secs
+    SECS: sec
     TIMEDIFFAGO: '{difference} fa'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: year
-    YEARS: years
+    YEAR: anno
+    YEARS: anni
   DateField:
     NOTSET: 'non impostato'
     TODAY: oggi
@@ -202,8 +202,8 @@ it:
     TEXT2: 'Link per l''azzeramento della password'
     TEXT3: per
   Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
+    CSRF_FAILED_MESSAGE: 'Sembra che ci sia stato un problema tecnico. Per favore clicca sul pulsante "indietro", ricarica la pagina e riprova.'
+    FIELDISREQUIRED: '{name} è richiesto'
     SubmitBtnLabel: Vai
     VALIDATIONCREDITNUMBER: 'Assicurati che il numero di carta di credito {number} sia inserito correttamente'
     VALIDATIONNOTUNIQUE: 'Il valore inserito non è unico'
@@ -213,7 +213,7 @@ it:
     VALIDATOR: Valiidatore
     VALIDCURRENCY: 'Inserisci una valuta valida'
   FormField:
-    Example: 'e.g. %s'
+    Example: 'es. %s'
     NONE: nessuno
   GridAction:
     DELETE_DESCRIPTION: Elimina
@@ -236,7 +236,7 @@ it:
     ResetFilter: Azzera
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
-    EditPermissionsFailure: 'No permission to unlink record'
+    EditPermissionsFailure: 'Non hai i permessi per modificare'
   GridFieldDetailForm:
     CancelBtn: Annulla
     Create: Crea
@@ -244,9 +244,9 @@ it:
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
     Deleted: 'Eliminato %s %s'
     Save: Salva
-    Saved: 'Saved {name} {link}'
+    Saved: 'Salvato {name} {link}'
   GridFieldEditButton.ss:
-    EDIT: Edit
+    EDIT: Modifica
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Aggiungi un ruolo per questo gruppo'
@@ -276,7 +276,7 @@ it:
     ADDURL: 'Aggiungi URL'
     ADJUSTDETAILSDIMENSIONS: 'Dettagli e dimensioni'
     ANCHORVALUE: Ancora
-    BUTTONADDURL: 'Add url'
+    BUTTONADDURL: 'Aggiungi url'
     BUTTONINSERT: Inserisci
     BUTTONINSERTLINK: 'Inserisci link'
     BUTTONREMOVELINK: 'Rimuovi link'
@@ -341,9 +341,9 @@ it:
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: 'Albero del sito riorganizzato con successo.'
     SAVEDUP: Salvato.
-    ShowAsList: 'show as list'
-    TooManyPages: 'Too many pages'
-    ValidationError: 'Validation error'
+    ShowAsList: 'Mostra come lista'
+    TooManyPages: 'Troppe pagine'
+    ValidationError: 'Errore di validazione'
     VersionUnknown: sconosciuto
   LeftAndMain_Menu.ss:
     Hello: Ciao
@@ -420,7 +420,7 @@ it:
     TWODIGITMONTH: 'Mese a due cifre (01=Gennaio, ecc.)'
     TWODIGITSECOND: 'Secondi a due cifre (00 a 59)'
     TWODIGITYEAR: 'Anno a due cifre'
-    Toggle: 'Show formatting help'
+    Toggle: 'Mostra help per la validazione'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
     Help2: "<div class=\"advanced\">\\n<h4>Utilizzo avanzato</h4>\\n<ul>\\n<li>Colonne consentite: <em>%s</em></li>\\n<li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori \\ndal file importato.</li>\\n<li>I gruppi possono essere assegnati attraverso la colonna <em>Groups</em>. I gruppi sono identificati attraverso la loro colonna <em>Code</em>, \\npiù gruppi devono essere separati da virgola. L''appartenenza esistente a gruppi non viene cancellata.</li>\\n</ul>\\n</div>"
@@ -435,7 +435,7 @@ it:
   ModelAdmin:
     DELETE: Elimina
     DELETEDRECORDS: 'Eliminati {count} record.'
-    EMPTYBEFOREIMPORT: 'Replace data'
+    EMPTYBEFOREIMPORT: 'Cancella database prima dell''import'
     IMPORT: 'Importa da CSV'
     IMPORTEDRECORDS: 'Importati {count} record.'
     NOCSVFILE: 'Scegli un file CSV da importare'
@@ -530,7 +530,7 @@ it:
     FileFieldLabel: 'File CSV <small>(Estensioni consentite: *.csv)</small>'
   SilverStripeNavigator:
     Auto: Auto
-    ChangeViewMode: 'Change view mode'
+    ChangeViewMode: 'Cambia visualizzazione'
     Desktop: Desktop
     DualWindowView: 'Dual Window'
     Edit: Modifica
@@ -541,8 +541,8 @@ it:
     Responsive: Responsive
     SplitView: 'Split mode'
     Tablet: Tablet
-    ViewDeviceWidth: 'Select a preview width'
-    Width: width
+    ViewDeviceWidth: 'Seleziona la larghezza di Preview'
+    Width: Larghezza
   SimpleImageField:
     NOUPLOAD: 'Nessuna immagine caricata'
   SiteTree:
@@ -578,8 +578,8 @@ it:
     ATTACHFILE: 'Allega un file'
     ATTACHFILES: 'Allega file'
     AttachFile: 'Allega file'
-    CHOOSEANOTHERFILE: 'Choose another file'
-    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
+    CHOOSEANOTHERFILE: 'Scegli un altro file'
+    CHOOSEANOTHERINFO: 'Sostituisci questo file con un altro dal file store'
     DELETE: Elimina
     DELETEINFO: 'Elimina permanentemente questo file dal CMS'
     DOEDIT: Salva
@@ -594,15 +594,15 @@ it:
     FROMFILES: 'Dal CMS'
     HOTLINKINFO: 'Info: Questa immagine sarà collegata. Assicurati di avere il permesso di farlo.'
     MAXNUMBEROFFILES: 'Numero massimo di {count} file ecceduto.'
-    MAXNUMBEROFFILESONE: 'Can only upload one file'
+    MAXNUMBEROFFILESONE: 'Puoi caricare solo un file'
     MAXNUMBEROFFILESSHORT: 'Puoi caricare solo {count} file'
-    OVERWRITEWARNING: 'File with the same name already exists'
+    OVERWRITEWARNING: 'Un file con lo stesso nome esiste già'
     REMOVE: Rimuovi
     REMOVEERROR: 'Errore eliminando il file'
     REMOVEINFO: 'Rimuove il file da qui, ma non lo elimina dal CMS'
     STARTALL: 'Avvia tutti'
     STARTALLINFO: 'Avvia tutti i caricamenti'
     Saved: Salvato
-    UPLOADSINTO: 'saves into /{path}'
+    UPLOADSINTO: 'salva in /{path}'
   Versioned:
     has_many_Versions: Versioni
