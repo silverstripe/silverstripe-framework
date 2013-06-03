@@ -978,7 +978,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return A {@link ValidationResult} object
 	 */
 	protected function validate() {
-		$result = new ValidationResult();
+		$result = ValidationResult::create();
 		$this->extend('validate', $result);
 		return $result;
 	}
