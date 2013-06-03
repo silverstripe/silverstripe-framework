@@ -33,6 +33,9 @@
 			&.disabled > a {
 				color: #aaaaaa;
 			}
+			&.edit-disabled > a {
+				color: #aaaaaa;
+			}
 			// Expand/collapse arrows
 			& > .jstree-icon {
 				cursor: pointer;
