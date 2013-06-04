@@ -69,7 +69,6 @@ Feature: Manage users
     When I click the "Users" CMS tab
     And I click "staffmember@test.com" in the "#Root_Users" element
     And I select "Admin Group" from "Groups"
-    And I additionally select "Administrators" from "Groups"
     And I press the "Save" button
     Then I should see a "Saved Member" message
 
