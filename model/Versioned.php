@@ -80,6 +80,14 @@ class Versioned extends DataExtension {
 	);
 
 	/**
+	 * Used to enable or disable the prepopulation of the version number cache.
+	 * Defaults to true.
+	 *
+	 * @var boolean
+	 */
+	private static $prepopulate_versionnumber_cache = true;
+
+	/**
 	 * Keep track of the archive tables that have been created.
 	 *
 	 * @var array
@@ -1095,6 +1103,9 @@ class Versioned extends DataExtension {
 	 * @param array $idList
 	 */
 	public static function prepopulate_versionnumber_cache($class, $stage, $idList = null) {
+		if (!Config::inst()->get('Versioned', 'prepopulate_versionnumber_cache')) {
+			return;
+		}
 		$filter = "";
 
 		if($idList) {
