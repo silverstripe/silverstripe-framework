@@ -431,7 +431,7 @@ body.cms {
 .message {												// White
 	display: block;
 	clear: both;
-	margin: $grid-y 0;
+	margin: 0 0 $grid-y;
 	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
 	font-weight: normal;	
 	border: 1px #ccc solid;
@@ -604,7 +604,8 @@ body.cms {
 .cms-content-toolbar {
 	min-height: 29px;
 	display: block;
-	margin: 0 0 $grid-y 0;
+	margin: 0 0 $grid-y*1.5 0;
+	padding-bottom: 0;
 	
 	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	@include legacy-pie-clearfix();
@@ -690,7 +691,8 @@ body.cms {
 	
 	.cms-panel-header {
 		clear: both;
-		margin: 0 0 $grid-y - 1;
+		margin: 10px 0 $grid-y - 1;
+		padding-bottom: 2px;
 		line-height: $grid-y * 3;
 		
 		@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
@@ -823,6 +825,22 @@ body.cms {
 	}
 }
 
+/** ------------------------------------------------------------------
+* CMS notice, used for filter messages, but generic enough to use elsewhere
+* ----------------------------------------------------------------- */
+
+.cms-notice {
+	display: block;
+	margin: 0 0 8px;
+	padding: 10px 12px;
+	font-weight: normal;  
+	border: 1px $color-light-separator solid;
+	background: #fff; // for browsers that don't understand rgba
+	background: rgba(#fff,0.5);
+	text-shadow: none;
+	@include border-radius(3px);
+}
+
 /** 
  * CMS Batch actions
  */
@@ -854,6 +872,9 @@ body.cms {
 
 		fieldset, .Actions {
 			display: inline-block;
+		}
+		#view-mode-batchactions {
+			margin-top: 2px;
 		}
 	}
 
