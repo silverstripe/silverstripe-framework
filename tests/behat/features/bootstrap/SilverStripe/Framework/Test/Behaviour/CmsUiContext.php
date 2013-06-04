@@ -6,8 +6,9 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Context\TranslatedContextInterface,
 	Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode,
+	Behat\Behat\Exception\PendingException,
+	Behat\Mink\Exception\ElementNotFoundException,
+	Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode;
 
 
@@ -263,7 +264,7 @@ class CmsUiContext extends BehatContext
 	}
 
 	/**
-	 * Workaround for chosen.js dropdowns which hide the original dropdown field.
+	 * Workaround for chosen.js dropdowns or tree dropdowns which hide the original dropdown field.
 	 * 
 	 * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
 	 * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)" dropdown$/
@@ -272,32 +273,55 @@ class CmsUiContext extends BehatContext
 	{
 		$field = $this->fixStepArgument($field);
 		$value = $this->fixStepArgument($value);
+		$nativeField = $this->getSession()->getPage()->findField($field);
+		if($nativeField) {
+			$nativeField->selectOption($value);
+		} else {
+			// TODO Allow searching by label
+			$inputField = $this->getSession()->getPage()->find('xpath', "//*[@name='$field']");
+			if(null === $inputField) {
+				throw new \InvalidArgumentException(sprintf(
+					'Chosen.js dropdown named "%s" not found',
+					$field
+				));
+			}
 
-		$inputField = $this->getSession()->getPage()->findField($field);
-		if(null === $inputField) {
-			throw new ElementNotFoundException(sprintf(
-				'Chosen.js dropdown named "%s" not found',
-				$field
-			));
+			do {
+				$container = $inputField->getParent();
+				$containerClasses = explode(' ', $container->getAttribute('class'));
+			} while(
+				$container
+				&& in_array('field', $containerClasses)
+				&& $container->getTagName() != 'form'
+			);
+			if(null === $container) throw new \InvalidArgumentException('Chosen.js field container not found');
+			
+			$triggerEl = $container->find('xpath', './/a');
+			if(null === $triggerEl) throw new \InvalidArgumentException('Chosen.js link element not found');
+			$triggerEl->click();
+
+			if(in_array('treedropdown', $containerClasses)) {
+				// wait for ajax dropdown to load
+				$this->getSession()->wait(
+					5000,
+					"jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
+				); 
+			} else {
+				// wait for dropdown overlay to appear
+				$this->getSession()->wait(100);
+			}
+
+			$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
+			if(null === $listEl) {
+				throw new \InvalidArgumentException(sprintf(
+					'Chosen.js list element with title "%s" not found',
+					$value
+				));
+			}
+			$listEl->find('xpath', './/a')->click();
 		}
 
-		$container = $inputField->getParent()->getParent();
-		if(null === $container) throw new ElementNotFoundException('Chosen.js field container not found');
 		
-		$linkEl = $container->find('xpath', './/a');
-		if(null === $linkEl) throw new ElementNotFoundException('Chosen.js link element  not found');
-		$linkEl->click();
-		$this->getSession()->wait(100); // wait for dropdown overlay to appear
-
-		$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
-		if(null === $listEl) 
-		{
-			throw new ElementNotFoundException(sprintf(
-				'Chosen.js list element with title "%s" not found',
-				$value
-			));
-		}
-		$listEl->click();
 	}
 
 	/**
