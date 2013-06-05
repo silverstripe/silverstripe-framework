@@ -45,6 +45,14 @@ class FeatureContext extends SilverStripeContext
 		$fixtureContext = new FixtureContext($parameters);
 		$fixtureContext->setFixtureFactory($this->getFixtureFactory());
 		$this->useContext('FixtureContext', $fixtureContext);
+
+		// Use blueprints to set user name from identifier
+    $factory = $fixtureContext->getFixtureFactory();
+    $blueprint = \Injector::inst()->create('FixtureBlueprint', 'Member');
+    $blueprint->addCallback('beforeCreate', function($identifier, &$data, &$fixtures) {
+        if(!isset($data['FirstName'])) $data['FirstName'] = $identifier;
+    });
+    $factory->define('Member', $blueprint);
 	}
 
 	public function setMinkParameters(array $parameters)
@@ -61,7 +69,7 @@ class FeatureContext extends SilverStripeContext
 	 */
 	public function getFixtureFactory() {
 		if(!$this->fixtureFactory) {
-			$this->fixtureFactory = \Injector::inst()->get('FixtureFactory', 'FixtureContextFactory');
+			$this->fixtureFactory = \Injector::inst()->create('BehatFixtureFactory');
 		}
 		return $this->fixtureFactory;
 	}
