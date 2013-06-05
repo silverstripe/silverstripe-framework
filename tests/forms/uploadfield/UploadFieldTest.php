@@ -646,11 +646,27 @@ class UploadFieldTest extends FunctionalTest {
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
-		$file5 = $this->objFromFixture('File', 'file5');
 		$fileSubfolder = $this->objFromFixture('File', 'file-subfolder');
-		$fileNoEdit = $this->objFromFixture('File', 'file-noedit');
 
 		$response = $this->get('UploadFieldTest_Controller/Form/field/ManyManyFiles/select/');
+		$this->assertFalse($response->isError());
+
+		// A bit too much coupling with GridField, but a full template overload would make things too complex
+		$parser = new CSSContentParser($response->getBody());
+		$items = $parser->getBySelector('.ss-gridfield-item');
+		$itemIDs = array_map(create_function('$el', 'return (int)$el["data-id"];'), $items);
+		$this->assertContains($file4->ID, $itemIDs, 'Contains file in assigned folder');
+		$this->assertContains($fileSubfolder->ID, $itemIDs, 'Contains file in subfolder');
+	}
+
+	public function testSelectWithDisplayFolderName() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file4 = $this->objFromFixture('File', 'file4');
+		$fileSubfolder = $this->objFromFixture('File', 'file-subfolder');
+
+		$response = $this->get('UploadFieldTest_Controller/Form/field/HasManyDisplayFolder/select/');
 		$this->assertFalse($response->isError());
 
 		// A bit too much coupling with GridField, but a full template overload would make things too complex
@@ -907,6 +923,10 @@ class UploadFieldTestForm extends Form implements TestOnly {
 		
 		$fieldHasManyNoView = UploadField::create('HasManyNoViewFiles')
 			->setFolderName('UploadFieldTest');
+
+		$fieldHasManyDisplayFolder = UploadField::create('HasManyDisplayFolder')
+			->setFolderName('UploadFieldTest')
+			->setDisplayFolderName('UploadFieldTest');
 		
 		$fieldReadonly = UploadField::create('ReadonlyField')
 			->setFolderName('UploadFieldTest')
@@ -938,6 +958,7 @@ class UploadFieldTestForm extends Form implements TestOnly {
 			$fieldHasManyMaxTwo,
 			$fieldManyMany,
 			$fieldHasManyNoView,
+			$fieldHasManyDisplayFolder,
 			$fieldReadonly,
 			$fieldDisabled,
 			$fieldSubfolder,
