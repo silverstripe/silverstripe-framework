@@ -116,6 +116,7 @@ class FixtureBlueprint {
 
 				$this->setValue($obj, $fieldName, $fieldVal, $fixtures);
 			}
+
 			$obj->write();
 
 			// Save to fixture before relationship processing in case of reflexive relationships

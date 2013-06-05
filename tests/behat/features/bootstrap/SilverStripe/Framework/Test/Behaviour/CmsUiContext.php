@@ -7,8 +7,8 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
 	Behat\Behat\Exception\PendingException,
-	Behat\Mink\Exception\ElementNotFoundException;
-use Behat\Gherkin\Node\PyStringNode,
+	Behat\Mink\Exception\ElementNotFoundException,
+	Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode;
 
 
@@ -310,7 +310,7 @@ class CmsUiContext extends BehatContext
 	}
 
 	/**
-	 * Workaround for chosen.js dropdowns which hide the original dropdown field.
+	 * Workaround for chosen.js dropdowns or tree dropdowns which hide the original dropdown field.
 	 * 
 	 * @When /^(?:|I )fill in the "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
 	 * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for the "(?P<field>(?:[^"]|\\")*)" dropdown$/
@@ -319,6 +319,12 @@ class CmsUiContext extends BehatContext
 	{
 		$field = $this->fixStepArgument($field);
 		$value = $this->fixStepArgument($value);
+
+		$nativeField = $this->getSession()->getPage()->findField($field);
+		if($nativeField) {
+			$nativeField->selectOption($value);
+			return;
+		}
 
 		// Given the fuzzy matching, we might get more than one matching field.
 		$formFields = array();
@@ -338,30 +344,32 @@ class CmsUiContext extends BehatContext
 			);
 		}
 
-		assertGreaterThan(0, count($formFields), sprintf(
-				'Chosen.js dropdown named "%s" not found',
-				$field
-			));
+		// Find by name (incl. hidden fields)
+		if(!$formFields) {
+			$formFields = $this->getSession()->getPage()->findAll('xpath', "//*[@name='$field']");
+		}
 
+		assertGreaterThan(0, count($formFields), sprintf(
+			'Chosen.js dropdown named "%s" not found',
+			$field
+		));
+
+		// Traverse up to field holder
 		$containers = array();
 		foreach($formFields as $formField) {
-			// Traverse up to field holder
-			$containerCandidate = $formField;
 			do {
-				$containerCandidate = $containerCandidate->getParent();
-			} while($containerCandidate && !preg_match('/field/', $containerCandidate->getAttribute('class'))); 
-
-			if(
-				$containerCandidate 
-				&& $containerCandidate->isVisible() 
-				&& preg_match('/field/', $containerCandidate->getAttribute('class'))
-			) {
-				$containers[] = $containerCandidate;
-		}
+				$container = $formField->getParent();
+				$containerClasses = explode(' ', $container->getAttribute('class'));
+				$containers[] = $container;
+			} while(
+				$container
+				&& in_array('field', $containerClasses)
+				&& $container->getTagName() != 'form'
+			);
 		}
 
 		assertGreaterThan(0, count($containers), 'Chosen.js field container not found');
-		
+			
 		// Default to first visible container
 		$container = $containers[0];
 		
@@ -371,17 +379,27 @@ class CmsUiContext extends BehatContext
 		$this->getSession()->wait(100); // wait for dropdown overlay to appear
 		$linkEl->click();
 
+		if(in_array('treedropdown', $containerClasses)) {
+			// wait for ajax dropdown to load
+			$this->getSession()->wait(
+				5000,
+				"jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
+			); 
+		} else {
+			// wait for dropdown overlay to appear (might be animated)
+			$this->getSession()->wait(300);
+		}
+
+		
 		$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
-		assertNotNull($listEl, sprintf(
+		if(null === $listEl) {
+			throw new \InvalidArgumentException(sprintf(
 				'Chosen.js list element with title "%s" not found',
 				$value
 			));
+		}
 
-		// Dropdown flyout might be animated
-		// $this->getSession()->wait(1000, 'jQuery(":animated").length == 0');
-		$this->getSession()->wait(300);
-
-		$listEl->click();
+		$listEl->find('xpath', './/a')->click();
 	}
 
 	/**
