@@ -1,48 +1,21 @@
-@database-defaults
+@javascript
 Feature: Manage users
   As a site administrator
   I want to create and manage user accounts on my site
   So that I can control access to the CMS
 
   Background:
-    Given there are the following Permission records
-      """
-      admin:
-        Code: ADMIN
-      security-admin:
-        Code: CMS_ACCESS_SecurityAdmin
-      """
-    And there are the following Group records
-      """
-      admingroup:
-        Title: Admin Group
-        Code: admin
-        Permissions: =>Permission.admin
-      staffgroup:
-        Title: Staff Group
-        Code: staffgroup
-      """
-    And there are the following Member records
-      """
-      admin:
-        FirstName: Admin
-        Email: admin@test.com
-        Groups: =>Group.admingroup
-      staffmember:
-        FirstName: Staff
-        Email: staffmember@test.com
-        Groups: =>Group.staffgroup
-      """
+    Given a "member" "Admin" belonging to "Admin Group" with "Email"="admin@test.com"
+    And a "member" "Staff" belonging to "Staff Group" with "Email"="staffmember@test.com"
+    And the "group" "Admin Group" has permissions "Full administrative rights"
     And I am logged in with "ADMIN" permissions
     And I go to "/admin/security"
 
-  @javascript
   Scenario: I can list all users regardless of group
     When I click the "Users" CMS tab
     Then I should see "admin@test.com" in the "#Root_Users" element
     And I should see "staffmember@test.com" in the "#Root_Users" element
 
-  @javascript
   Scenario: I can list all users in a specific group
     When I click the "Groups" CMS tab
     # TODO Please check how performant this is
@@ -50,7 +23,6 @@ Feature: Manage users
     Then I should see "admin@test.com" in the "#Root_Members" element
     And I should not see "staffmember@test.com" in the "#Root_Members" element
 
-  @javascript
   Scenario: I can add a user to the system
     When I click the "Users" CMS tab
     And I press the "Add Member" button
@@ -64,7 +36,6 @@ Feature: Manage users
     When I go to "admin/security/"
     Then I should see "john.doe@test.com" in the "#Root_Users" element
 
-  @javascript
   Scenario: I can edit an existing user and add him to an existing group
     When I click the "Users" CMS tab
     And I click "staffmember@test.com" in the "#Root_Users" element
@@ -77,7 +48,6 @@ Feature: Manage users
     And I click "Admin Group" in the "#Root_Groups" element
     Then I should see "staffmember@test.com"
 
-  @javascript
   Scenario: I can delete an existing user
     When I click the "Users" CMS tab
     And I click "staffmember@test.com" in the "#Root_Users" element

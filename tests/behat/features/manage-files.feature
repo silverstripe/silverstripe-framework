@@ -5,9 +5,9 @@ Feature: Manage files
   So that I can insert them into my content efficiently
 
   Background:
-    Given a file "assets/folder1/file1.jpg"
-    And a file "assets/folder1/folder1.1/file2.jpg"
-    And a folder "assets/folder2"
+    Given a "file" "assets/folder1/file1.jpg"
+    And a "file" "assets/folder1/folder1.1/file2.jpg"
+    And a "folder" "assets/folder2"
     And I am logged in with "ADMIN" permissions
     And I go to "/admin/assets"
 
