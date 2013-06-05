@@ -273,55 +273,87 @@ class CmsUiContext extends BehatContext
 	{
 		$field = $this->fixStepArgument($field);
 		$value = $this->fixStepArgument($value);
+
 		$nativeField = $this->getSession()->getPage()->findField($field);
 		if($nativeField) {
 			$nativeField->selectOption($value);
-		} else {
-			// TODO Allow searching by label
-			$inputField = $this->getSession()->getPage()->find('xpath', "//*[@name='$field']");
-			if(null === $inputField) {
-				throw new \InvalidArgumentException(sprintf(
-					'Chosen.js dropdown named "%s" not found',
-					$field
-				));
-			}
+			return;
+		}
 
+		// Given the fuzzy matching, we might get more than one matching field.
+		$formFields = array();
+
+		// Find by label
+		$formField = $this->getSession()->getPage()->findField($field);
+		if($formField) $formFields[] = $formField;
+
+		// Fall back to finding by title (for dropdowns without a label)
+		if(!$formFields) {
+			$formFields = $this->getSession()->getPage()->findAll(
+				'xpath',
+				sprintf(
+					'//*[self::select][(./@title="%s")]',
+					$field
+				)
+			);
+		}
+
+		// Find by name (incl. hidden fields)
+		if(!$formFields) {
+			$formFields = $this->getSession()->getPage()->findAll('xpath', "//*[@name='$field']");
+		}
+
+		assertGreaterThan(0, count($formFields), sprintf(
+			'Chosen.js dropdown named "%s" not found',
+			$field
+		));
+
+		// Traverse up to field holder
+		$containers = array();
+		foreach($formFields as $formField) {
 			do {
-				$container = $inputField->getParent();
+				$container = $formField->getParent();
 				$containerClasses = explode(' ', $container->getAttribute('class'));
+				$containers[] = $container;
 			} while(
 				$container
 				&& in_array('field', $containerClasses)
 				&& $container->getTagName() != 'form'
 			);
-			if(null === $container) throw new \InvalidArgumentException('Chosen.js field container not found');
+		}
+
+		assertGreaterThan(0, count($containers), 'Chosen.js field container not found');
 			
-			$triggerEl = $container->find('xpath', './/a');
-			if(null === $triggerEl) throw new \InvalidArgumentException('Chosen.js link element not found');
-			$triggerEl->click();
+		// Default to first visible container
+		$container = $containers[0];
+		
+		// Click on newly expanded list element, indirectly setting the dropdown value
+		$linkEl = $container->find('xpath', './/a[./@href]');
+		assertNotNull($linkEl, 'Chosen.js link element not found');
+		$this->getSession()->wait(100); // wait for dropdown overlay to appear
+		$linkEl->click();
 
-			if(in_array('treedropdown', $containerClasses)) {
-				// wait for ajax dropdown to load
-				$this->getSession()->wait(
-					5000,
-					"jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
-				); 
-			} else {
-				// wait for dropdown overlay to appear
-				$this->getSession()->wait(100);
-			}
-
-			$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
-			if(null === $listEl) {
-				throw new \InvalidArgumentException(sprintf(
-					'Chosen.js list element with title "%s" not found',
-					$value
-				));
-			}
-			$listEl->find('xpath', './/a')->click();
+		if(in_array('treedropdown', $containerClasses)) {
+			// wait for ajax dropdown to load
+			$this->getSession()->wait(
+				5000,
+				"jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
+			); 
+		} else {
+			// wait for dropdown overlay to appear (might be animated)
+			$this->getSession()->wait(300);
 		}
 
 		
+		$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
+		if(null === $listEl) {
+			throw new \InvalidArgumentException(sprintf(
+				'Chosen.js list element with title "%s" not found',
+				$value
+			));
+		}
+
+		$listEl->find('xpath', './/a')->click();
 	}
 
 	/**
