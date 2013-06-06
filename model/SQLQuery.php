@@ -450,6 +450,7 @@ class SQLQuery {
 	 * Internally, limit will always be stored as a map containing the keys 'start' and 'limit'
 	 *
 	 * @param int|string|array $limit If passed as a string or array, assumes SQL escaped data.
+	 *                                Only applies for positive values, or if an $offset is set as well.
 	 * @param int $offset
 	 *
 	 * @throws InvalidArgumentException
@@ -461,7 +462,7 @@ class SQLQuery {
 			throw new InvalidArgumentException("SQLQuery::setLimit() only takes positive values");
 		}
 
-		if($limit && is_numeric($limit)) {
+		if(is_numeric($limit) && ($limit || $offset)) {
 			$this->limit = array(
 				'start' => $offset,
 				'limit' => $limit,
