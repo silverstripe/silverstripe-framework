@@ -257,7 +257,7 @@ class CmsUiContext extends BehatContext
 	public function iSetTheCmsToMode($mode)
 	{
 		return array(
-			new Step\When(sprintf('I fill in the "Change view mode" dropdown with "%s"', $mode)),
+			new Step\When(sprintf('I select "%s" from "preview-mode-dropdown-in-content-select"', $mode)),
 			new Step\When('I wait for 1 second') // wait for CMS layout to redraw
 		);
 	}
