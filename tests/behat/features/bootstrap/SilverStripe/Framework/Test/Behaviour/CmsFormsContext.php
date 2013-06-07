@@ -105,8 +105,12 @@ class CmsFormsContext extends BehatContext
 	public function iShouldSeeAButton($text)
 	{
 		$page = $this->getSession()->getPage();
-		$element = $page->find('named', array('link_or_button', "'$text'"));
-		assertNotNull($element, sprintf('%s button not found', $text));
+		$els = $page->findAll('named', array('link_or_button', "'$text'"));
+		$matchedEl = null;
+		foreach($els as $el) {
+			if($el->isVisible()) $matchedEl = $el;
+		}
+		assertNotNull($matchedEl, sprintf('%s button not found', $text));
 	}
 
 	/**
@@ -115,8 +119,12 @@ class CmsFormsContext extends BehatContext
 	public function iShouldNotSeeAButton($text)
 	{
 		$page = $this->getSession()->getPage();
-		$element = $page->find('named', array('link_or_button', "'$text'"));
-		assertNull($element, sprintf('%s button found', $text));
+		$els = $page->findAll('named', array('link_or_button', "'$text'"));
+		$matchedEl = null;
+		foreach($els as $el) {
+			if($el->isVisible()) $matchedEl = $el;
+		}
+		assertNull($matchedEl, sprintf('%s button found', $text));
 	}
 
 }
