@@ -60,12 +60,18 @@ class PasswordValidator extends Object {
 	 */
 	public function validate($password, $member) {
 		$valid = new ValidationResult();
-		
+
 		if($this->minLength) {
 			if(strlen($password) < $this->minLength) {
 				$valid->error(
-					sprintf("Password is too short, it must be %s or more characters long.", $this->minLength),
-					"TOO_SHORT"
+					sprintf(
+						_t(
+							'PasswordValidator.TOOSHORT',
+							'Password is too short, it must be %s or more characters long'
+						),
+						$this->minLength
+					),
+					'TOO_SHORT'
 				);
 			}
 		}
@@ -74,32 +80,47 @@ class PasswordValidator extends Object {
 			$score = 0;
 			$missedTests = array();
 			foreach($this->testNames as $name) {
-				if(preg_match(self::config()->character_strength_tests[$name], $password)) $score++;
-				else $missedTests[] = $name;
+				if(preg_match(self::config()->character_strength_tests[$name], $password)) {
+					$score++;
+				} else {
+					$missedTests[] = _t(
+						'PasswordValidator.STRENGTHTEST' . strtoupper($name),
+						$name,
+						'The user needs to add this to their password for more complexity'
+					);
+				}
 			}
-			
+
 			if($score < $this->minScore) {
 				$valid->error(
-					"You need to increase the strength of your passwords by adding some of the following characters: "
-						. implode(", ", $missedTests),
-					"LOW_CHARACTER_STRENGTH"
+					sprintf(
+						_t(
+							'PasswordValidator.LOWCHARSTRENGTH',
+							'Please increase password strength by adding some of the following characters: %s'
+						),
+						implode(', ', $missedTests)
+					),
+					'LOW_CHARACTER_STRENGTH'
 				);
 			}
 		}
-		
+
 		if($this->historicalPasswordCount) {
 			$previousPasswords = DataObject::get(
 				"MemberPassword",
 				"\"MemberID\" = $member->ID",
-				"\"Created\" DESC, \"ID\" Desc",
+				"\"Created\" DESC, \"ID\" DESC",
 				"",
 				$this->historicalPasswordCount
 			);
 			if($previousPasswords) foreach($previousPasswords as $previousPasswords) {
 				if($previousPasswords->checkPassword($password)) {
 					$valid->error(
-						"You've already used that password in the past, please choose a new password",
-						"PREVIOUS_PASSWORD"
+						_t(
+							'PasswordValidator.PREVPASSWORD',
+							'You\'ve already used that password in the past, please choose a new password'
+						),
+						'PREVIOUS_PASSWORD'
 					);
 					break;
 				}
