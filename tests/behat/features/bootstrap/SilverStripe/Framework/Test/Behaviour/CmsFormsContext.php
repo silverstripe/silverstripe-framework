@@ -96,7 +96,11 @@ class CmsFormsContext extends BehatContext
 		$inputField = $page->findField($field);
 		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
 
-		$this->getMainContext()->assertElementContains('#' . $inputField->getAttribute('id'), $value);
+		$this->getMainContext()->assertSession()->elementContains(
+			'named', 
+			$field, 
+			str_replace('\\"', '"', $value) // emulates fixStepArgument()
+		);
 	}
 
 	/**
