@@ -9,7 +9,8 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Exception\PendingException,
 	Behat\Mink\Exception\ElementNotFoundException,
 	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode;
+	Behat\Gherkin\Node\TableNode,
+	Behat\Mink\Element\NodeElement;
 
 
 // PHPUnit
@@ -355,31 +356,21 @@ class CmsUiContext extends BehatContext
 		));
 
 		// Traverse up to field holder
-		$containers = array();
+		$container = null;
 		foreach($formFields as $formField) {
-			do {
-				$container = $formField->getParent();
-				$containerClasses = explode(' ', $container->getAttribute('class'));
-				$containers[] = $container;
-			} while(
-				$container
-				&& in_array('field', $containerClasses)
-				&& $container->getTagName() != 'form'
-			);
+			$container = $this->findParentByClass($formField, 'field');
+			if($container) break; // Default to first visible container
 		}
 
-		assertGreaterThan(0, count($containers), 'Chosen.js field container not found');
+		assertNotNull($container, 'Chosen.js field container not found');
 			
-		// Default to first visible container
-		$container = $containers[0];
-		
 		// Click on newly expanded list element, indirectly setting the dropdown value
 		$linkEl = $container->find('xpath', './/a[./@href]');
 		assertNotNull($linkEl, 'Chosen.js link element not found');
 		$this->getSession()->wait(100); // wait for dropdown overlay to appear
 		$linkEl->click();
 
-		if(in_array('treedropdown', $containerClasses)) {
+		if(in_array('treedropdown', explode(' ', $container->getAttribute('class')))) {
 			// wait for ajax dropdown to load
 			$this->getSession()->wait(
 				5000,
@@ -390,7 +381,6 @@ class CmsUiContext extends BehatContext
 			$this->getSession()->wait(300);
 		}
 
-		
 		$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
 		if(null === $listEl) {
 			throw new \InvalidArgumentException(sprintf(
@@ -399,7 +389,12 @@ class CmsUiContext extends BehatContext
 			));
 		}
 
-		$listEl->find('xpath', './/a')->click();
+		$listLinkEl = $listEl->find('xpath', './/a');
+		if($listLinkEl) {
+			$listLinkEl->click();
+		} else {
+			$listEl->click();
+		}
 	}
 
 	/**
@@ -412,5 +407,25 @@ class CmsUiContext extends BehatContext
 	protected function fixStepArgument($argument)
 	{
 		return str_replace('\\"', '"', $argument);
+	}
+
+	/**
+	 * Returns the closest parent element having a specific class attribute.
+	 * 
+	 * @param  NodeElement $el
+	 * @param  String  $class
+	 * @return Element|null
+	 */
+	protected function findParentByClass(NodeElement $el, $class) {
+		$container = $el->getParent();
+		while($container && $container->getTagName() != 'body'
+		) {
+			if($container->isVisible() && in_array($class, explode(' ', $container->getAttribute('class')))) {
+				return $container;
+			}
+			$container = $container->getParent();
+		}
+
+		return null;
 	}
 }
