@@ -25,7 +25,7 @@ class ChangePasswordForm extends Form {
 		} else {
 			$backURL = Session::get('BackURL');
 		}
-		
+
 		if(!$fields) {
 			$fields = new FieldList();
 			
@@ -67,7 +67,8 @@ class ChangePasswordForm extends Form {
 					_t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"), 
 					"bad"
 				);
-				$this->controller->redirectBack();
+				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
+				$this->controller->redirect($this->controller->Link('changepassword'));
 				return;
 			}
 		}
@@ -91,7 +92,9 @@ class ChangePasswordForm extends Form {
 			$this->sessionMessage(
 				_t('Member.EMPTYNEWPASSWORD', "The new password can't be empty, please try again"),
 				"bad");
-			$this->controller->redirectBack();
+
+			// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
+			$this->controller->redirect($this->controller->Link('changepassword'));
 			return;
 		}
 		else if($data['NewPassword1'] == $data['NewPassword2']) {
@@ -127,7 +130,9 @@ class ChangePasswordForm extends Form {
 					), 
 					"bad"
 				);
-				$this->controller->redirectBack();
+
+				// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
+				$this->controller->redirect($this->controller->Link('changepassword'));
 			}
 
 		} else {
@@ -135,7 +140,9 @@ class ChangePasswordForm extends Form {
 			$this->sessionMessage(
 				_t('Member.ERRORNEWPASSWORD', "You have entered your new password differently, try again"),
 				"bad");
-			$this->controller->redirectBack();
+
+			// redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
+			$this->controller->redirect($this->controller->Link('changepassword'));
 		}
 	}
 
