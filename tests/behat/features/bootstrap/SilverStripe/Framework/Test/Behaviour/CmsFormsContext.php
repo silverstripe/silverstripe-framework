@@ -108,4 +108,15 @@ class CmsFormsContext extends BehatContext
 		$element = $page->find('named', array('link_or_button', "'$text'"));
 		assertNotNull($element, sprintf('%s button not found', $text));
 	}
+
+	/**
+	 * @Given /^I should not see a "([^"]*)" button$/
+	 */
+	public function iShouldNotSeeAButton($text)
+	{
+		$page = $this->getSession()->getPage();
+		$element = $page->find('named', array('link_or_button', "'$text'"));
+		assertNull($element, sprintf('%s button found', $text));
+	}
+
 }
