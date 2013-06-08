@@ -181,7 +181,9 @@ abstract class SearchFilter extends Object {
 		}
 
 		if($candidateClass == 'DataObject') {
-			user_error("Couldn't find field $this->name in any of $this->model's tables.", E_USER_ERROR);
+			// fallback to the provided name in the event of a joined column
+			// name (as the candidate class doesn't check joined records)
+			return $this->fullName;
 		}
 		
 		return "\"$candidateClass\".\"$this->name\"";

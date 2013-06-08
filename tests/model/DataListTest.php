@@ -211,11 +211,7 @@ class DataListTest extends SapphireTest {
 		
 		$this->assertEquals($list->Count(), $count);
 	}
-	
-	public function testFilter() {
-		$this->markTestIncomplete();
-	}
-		
+
 	public function testWhere() {
 		// We can use raw SQL queries with where.  This is only recommended for advanced uses;
 		// if you can, you should use filter().
@@ -578,6 +574,18 @@ class DataListTest extends SapphireTest {
 			$list->offsetGet(2)->Name, 
 			'Results should include comments from Phil, matched by name (even if he\'s not in Team1)'
 		);
+	}
+
+	public function testFilterOnJoin() {
+		$list = DataObjectTest_TeamComment::get()
+			->leftJoin('DataObjectTest_Team',
+				'"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
+			)->filter(array(
+				'Title' => 'Team 1'
+			));
+
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals(array('Joe', 'Bob'), $list->column('Name'));
 	}
 
 	public function testFilterAndExcludeById() {
