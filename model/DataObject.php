@@ -499,7 +499,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					}
 				}
 			} else {    //one-to-one relation
-				$destinationObject->$name = $relations;
+				$destinationObject->{"{$name}ID"} = $relations->ID;
 			}
 		}
 	}
