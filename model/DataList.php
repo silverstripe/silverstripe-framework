@@ -427,10 +427,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Translates a Object relation name to a Database name and apply the relation join to 
-	 * the query.  Throws an InvalidArgumentException if the $field doesn't correspond to a relation
+	 * Translates a {@link Object} relation name to a Database name and apply
+	 * the relation join to the query.  Throws an InvalidArgumentException if
+	 * the $field doesn't correspond to a relation.
 	 *
+	 * @throws InvalidArgumentException
 	 * @param string $field
+	 *
 	 * @return string
 	 */
 	public function getRelationName($field) {
@@ -446,9 +449,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		if(strpos($field,'.') === false) {
 			return '"'.$field.'"';
 		}
+
 		$relations = explode('.', $field);
 		$fieldName = array_pop($relations);
 		$relationModelName = $this->dataQuery->applyRelation($field);
+
 		return '"'.$relationModelName.'"."'.$fieldName.'"';
 	}
 
@@ -467,10 +472,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		} else {
 			$className = 'ExactMatchFilter';
 		}
+
 		if(!class_exists($className)) {
 			$className = 'ExactMatchFilter';
+
 			array_unshift($modifiers, $filter);
 		}
+
 		$t = new $className($field, $value, $modifiers);
 
 		return $this->alterDataQuery(array($t, 'apply'));
