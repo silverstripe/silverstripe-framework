@@ -1,14 +1,16 @@
 <?php
+
 /**
- * This test class will focus on the when an search filter contains relational component,
- * such as has_one, has_many, many_many, the SearchFilter::applyRelation($query) will add
- * the right "join" clauses to $query without the component parent class missing from
- * "join" chain.
+ * This test class will focus on the when an search filter contains relational 
+ * component such as has_one, has_many, many_many, the {@link SearchFilter::applyRelation($query)} 
+ * will add the right "join" clauses to $query without the component parent 
+ * class missing from "join" chain.
  * 
  * @package framework
- * @subpackage testing
+ * @subpackage tests
  */
-class SearchFilterApplyRelationTest extends SapphireTest{
+class SearchFilterApplyRelationTest extends SapphireTest {
+
 	protected static $fixture_file = 'SearchFilterApplyRelationTest.yml';
 	
 	protected $extraDataObjects = array(
@@ -109,7 +111,12 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 	}
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_DO extends DataObject implements TestOnly {
+
 	private static $has_one = array(
 		'SearchFilterApplyRelationTest_HasOneGrantChild' => 'SearchFilterApplyRelationTest_HasOneGrantChild'
 	);
@@ -123,12 +130,20 @@ class SearchFilterApplyRelationTest_DO extends DataObject implements TestOnly {
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_HasOneParent extends DataObject implements TestOnly {
 	private static $db = array(
 		"Title" => "Varchar"
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_HasOneChild extends SearchFilterApplyRelationTest_HasOneParent
 		implements TestOnly {
 	// This is to create an seperate Table only.
@@ -137,6 +152,10 @@ class SearchFilterApplyRelationTest_HasOneChild extends SearchFilterApplyRelatio
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_HasOneGrantChild extends SearchFilterApplyRelationTest_HasOneChild
 		implements TestOnly {
 	// This is to create an seperate Table only.
@@ -148,12 +167,20 @@ class SearchFilterApplyRelationTest_HasOneGrantChild extends SearchFilterApplyRe
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_HasManyParent extends DataObject implements TestOnly {
 	private static $db = array(
 		"Title" => "Varchar"
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_HasManyChild extends SearchFilterApplyRelationTest_HasManyParent
 		implements TestOnly {
 	// This is to create an separate Table only.
@@ -162,12 +189,20 @@ class SearchFilterApplyRelationTest_HasManyChild extends SearchFilterApplyRelati
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_HasManyGrantChild extends SearchFilterApplyRelationTest_HasManyChild{
 	private static $has_one = array(
 		"SearchFilterApplyRelationTest_DO" => "SearchFilterApplyRelationTest_DO"
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_ManyManyParent extends DataObject implements TestOnly{
 	private static $db = array(
 		"Title" => "Varchar"
@@ -182,6 +217,10 @@ class SearchFilterApplyRelationTest_ManyManyChild extends SearchFilterApplyRelat
 	);
 }
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class SearchFilterApplyRelationTest_ManyManyGrantChild extends SearchFilterApplyRelationTest_ManyManyChild
 		implements TestOnly {
 	// This is to create an seperate Table only.
