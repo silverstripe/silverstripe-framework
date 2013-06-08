@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class DataListTest extends SapphireTest {
 	
 	// Borrow the model from DataObjectTest

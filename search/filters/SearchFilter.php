@@ -52,6 +52,7 @@ abstract class SearchFilter extends Object {
 	 */
 	public function __construct($fullName, $value = false, array $modifiers = array()) {
 		$this->fullName = $fullName;
+
 		// sets $this->name and $this->relation
 		$this->addRelation($fullName);
 		$this->value = $value;
@@ -161,18 +162,24 @@ abstract class SearchFilter extends Object {
 	 */
 	public function getDbName() {
 		// Special handler for "NULL" relations
-		if($this->name == "NULL") return $this->name;
+		if($this->name == "NULL") {
+			return $this->name;
+		}
 		
-		// SRM: This code finds the table where the field named $this->name lives
-		// Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
+		// This code finds the table where the field named $this->name lives
+		// Todo: move to somewhere more appropriate, such as DataMapper, the
+		// magical class-to-be?
 		$candidateClass = $this->model;
+
 		while($candidateClass != 'DataObject') {
 			if(DataObject::has_own_table($candidateClass) 
 					&& singleton($candidateClass)->hasOwnTableDatabaseField($this->name)) {
 				break;
 			}
+
 			$candidateClass = get_parent_class($candidateClass);
 		}
+
 		if($candidateClass == 'DataObject') {
 			user_error("Couldn't find field $this->name in any of $this->model's tables.", E_USER_ERROR);
 		}
