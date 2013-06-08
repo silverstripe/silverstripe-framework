@@ -60,6 +60,24 @@ ss.editorWrappers.tinyMCE = (function() {
 			// Patch TinyMCE events into underlying textarea field.
 			ed.onInit.add(function(ed) {
 				jQuery(ed.getElement()).trigger('editorinit');
+
+				// Periodically check for inline changes when focused, 
+				// since TinyMCE's onChange only fires on certain actions
+				// like inserting a new paragraph, as opposed to any user input.
+				// This also works around an issue where the "save" button
+				// wouldn't trigger if the click is the cause of a "blur" event
+				// after an (undetected) inline change. This "blur" causes onChange
+				// to trigger, which will change the button markup to show "alternative" styles,
+				// effectively cancelling the original click event.
+				var interval;
+				jQuery(ed.getBody()).on('focus', function() {
+					interval = setInterval(function() {
+						ed.save();
+					}, 5000);
+				});
+				jQuery(ed.getBody()).on('blur', function() {
+					clearInterval(interval);
+				});
 			});
 			ed.onChange.add(function(ed, l) {
 				// Update underlying textarea on every change, so external handlers
