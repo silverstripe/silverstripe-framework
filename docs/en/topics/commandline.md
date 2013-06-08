@@ -98,21 +98,24 @@ This code provides a good template:
 
 	:::php
 	class MyProcess extends Controller {
-		public static $allowed_actions = array('index');
-	  function index() {
-	    set_time_limit(0);
-	    while(memory_get_usage() < 32*1024*1024) {
-	      if($this->somethingToDo()) {
-	        $this->doSomething();
-	        sleep(1)
-	      } else {
-	        sleep(300);
-	      }
-	    }
-	  }
+
+		private static $allowed_actions = array(
+			'index'
+		);
+
+		function index() {
+			set_time_limit(0);
+
+			while(memory_get_usage() < 32*1024*1024) {
+				if($this->somethingToDo()) {
+					$this->doSomething();
+					sleep(1)
+				} else {
+					sleep(300);
+				}
+			}
+		}
 	}
-
-
 
 Step 2: Install the "daemon" command-line tool on your server.
 
@@ -122,8 +125,9 @@ Step 3: Use sake to start and stop your process
 	sake -stop MyProcess
 
 
-Note that sake processes are currently a little brittle, in that the pid and log files are placed in the site root
-directory, rather than somewhere sensible like /var/log or /var/run.
+Note that sake processes are currently a little brittle, in that the pid and log
+files are placed in the site root directory, rather than somewhere sensible like
+/var/log or /var/run.
 
 ### Running Regular Tasks With Cron
 
@@ -137,6 +141,7 @@ php /path/to/site_root/framework/cli-script.php dev/tasks/MyTask
 
 If you find that your cron job appears to be retrieving the login screen, then you may need to use `php-cli`
 instead. This is typical of a cPanel-based setup.
+
 ```
 php-cli /path/to/site_root/framework/cli-script.php dev/tasks/MyTask
 ```

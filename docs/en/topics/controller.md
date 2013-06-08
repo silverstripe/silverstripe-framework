@@ -164,8 +164,12 @@ through `/fastfood/drivethrough/` to use the same order function.
 
 	:::php
 	class FastFood_Controller extends Controller {
-	    private static $allowed_actions = array('drivethrough');
-	    public static $url_handlers = array(
+
+	    private static $allowed_actions = array(
+		'drivethrough'
+	    );
+
+	    private static $url_handlers = array(
 	        'drivethrough/$Action/$ID/$Name' => 'order'
 	    );
 
