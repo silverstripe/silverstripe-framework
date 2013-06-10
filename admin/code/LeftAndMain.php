@@ -982,6 +982,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// save form data into record
 		$form->saveInto($record, true);
 		$record->write();
+
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 		
@@ -1253,6 +1254,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		} else {
 			$form = $this->EmptyForm();
 		}
+
+		$form->setResponseNegotiator($this->getResponseNegotiator());
 		
 		return $form;
 	}	
