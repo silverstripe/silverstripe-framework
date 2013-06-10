@@ -905,6 +905,7 @@ class Form extends RequestHandler {
 	 */
 	public function setHTMLID($id) {
 		$this->htmlID = $id;
+		return $this;
 	}
 	
 	/**
