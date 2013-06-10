@@ -426,6 +426,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
+		// @todo - Remove this once this field supports display and recovery of file upload validation errors
+		$computerUploadField->setOverwriteWarning(false);
 
 		$tabSet = new TabSet(
 			"MediaFormInsertMediaTabs",
