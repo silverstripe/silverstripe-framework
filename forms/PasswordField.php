@@ -7,6 +7,14 @@
 class PasswordField extends TextField {
 
 	/**
+	 * Controls the autocomplete attribute on the field.
+	 *
+	 * Setting it to false will set the attribute to "off", which will hint the browser
+	 * to not cache the password and to not use any password managers.
+	 */
+	private static $autocomplete;
+
+	/**
 	 * Returns an input field, class="text" and type="text" with an optional
 	 * maxlength
 	 */
@@ -21,10 +29,17 @@ class PasswordField extends TextField {
 
 
 	public function getAttributes() {
-		return array_merge(
+		$attributes = array_merge(
 			parent::getAttributes(),
 			array('type' => 'password')
 		);
+
+		$autocomplete = Config::inst()->get('PasswordField', 'autocomplete');
+		if (isset($autocomplete)) {
+			$attributes['autocomplete'] = $autocomplete ? 'on' : 'off';
+		}
+
+		return $attributes;
 	}
 
 	/**
