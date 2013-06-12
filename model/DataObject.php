@@ -2727,12 +2727,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$relations = explode('.', $fieldName);
 			$fieldName = array_pop($relations);
 			foreach($relations as $relation) {
-				// Bail if any of the below sets a $component to a null object
-				if($component instanceof SS_List && !method_exists($component, $relation)) {
-					$component = $component->relation($relation);
-				// Just call the method and hope for the best
-				} else { 
+				// Inspect $component for element $relation
+				if($component->hasMethod($relation)) {
+					// Check nested method
 					$component = $component->$relation();
+				} elseif($component instanceof SS_List) {
+					// Select adjacent relation from DataList
+					$component = $component->relation($relation);
+				} elseif($component instanceof DataObject
+					&& ($dbObject = $component->dbObject($relation))
+				) { 
+					// Select db object
+					$component = $dbObject;
+				} else {
+					user_error("$relation is not a relation/field on ".get_class($component), E_USER_ERROR);
 				}
 			}
 		}

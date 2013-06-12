@@ -1103,6 +1103,10 @@ class DataObjectTest extends SapphireTest {
 		
 		$newPlayer = new DataObjectTest_Player();
 		$this->assertNull($newPlayer->relField('Teams.First.Title'));
+		
+		// Test that relField works on db field manipulations
+		$comment = $this->objFromFixture('DataObjectTest_TeamComment', 'comment3');
+		$this->assertEquals("PHIL IS A UNIQUE GUY, AND COMMENTS ON TEAM2" , $comment->relField('Comment.UpperCase'));
 	}
 
 	public function testRelObject() {

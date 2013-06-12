@@ -167,13 +167,13 @@ Example: Simple Definition
 	    'ProductCode' => 'Int',
 	  ); 
 	  private static $summary_fields = array(
-	      'Name',
-	      'ProductCode'
-	   );
+	    'Name',
+	    'ProductCode'
+	  );
 	}
 
 
-To include relations in your summaries, you can use a dot-notation.
+To include relations or field manipulations in your summaries, you can use a dot-notation.
 
 	:::php
 	class OtherObject extends DataObject {
@@ -183,16 +183,36 @@ To include relations in your summaries, you can use a dot-notation.
 	}
 	class MyDataObject extends DataObject {
 	  private static $db = array(
-	    'Name' => 'Text'
+	    'Name' => 'Text',
+	    'Description' => 'HTMLText'
 	  );
 	  private static $has_one = array(
 	    'OtherObject' => 'OtherObject'
 	  );
-	   private static $summary_fields = array(
-	      'Name',
-	      'OtherObject.Title'
-	   );
+	  private static $summary_fields = array(
+	    'Name' => 'Name',
+	    'Description.Summary' => 'Description (summary)',
+	    'OtherObject.Title' => 'Other Object Title'
+	  );
 	}
+
+
+Non-textual elements (such as images and their manipulations) can also be used in summaries.
+
+	:::php
+	class MyDataObject extends DataObject {
+	  private static $db = array(
+	    'Name' => 'Text'
+	  );
+	  private static $has_one = array(
+	    'HeroImage' => 'Image'
+	  );
+	  private static $summary_fields = array(
+	    'Name' => 'Name,
+	    'HeroImage.CMSThumbnail' => 'Hero Image'
+	  );
+	}
+
 
 ## Permissions
 
