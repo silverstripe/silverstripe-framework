@@ -86,7 +86,7 @@
  *
  * // No need for special backend for aggregate - TwoLevels with a File slow 
  * // backend supports tags
- * SS_Cache::pick_backend('two-level', 'any', 10); 
+ * SS_Cache::pick_backend('two-level', 'Two-Levels', 10); 
  * </code> 
  *
  * <h2>Invalidate an element</h2>
