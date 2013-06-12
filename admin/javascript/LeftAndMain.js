@@ -974,13 +974,14 @@ jQuery.noConflict();
 		/**
 		 * Reset button handler. IE8 does not bubble reset events to
 		 */
-		$(".cms-search-form button[type=reset]").entwine({
+		$(".cms-search-form button[type=reset], .cms-search-form input[type=reset]").entwine({
 			onclick: function(e) {
 				e.preventDefault();
 				
 				var form = $(this).parents('form');
 
 				form.clearForm();
+				form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated"); // Reset chosen.js
 				form.submit();
 			}
 		})
