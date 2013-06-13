@@ -1004,6 +1004,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * @return {String} HTML suitable for insertion into the rich text editor
 			 */
 			getHTML: function() {
+				// Assumes UploadField markup structure
+				return $('<div>').append(
+					$('<a/>').attr({href: this.data('url')}).text(this.find('.name').text())
+				).html();
 			},
 			/**
 			 * Insert updated HTML content into the rich text editor
