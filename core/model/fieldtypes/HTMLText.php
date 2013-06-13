@@ -149,6 +149,15 @@ class HTMLText extends Text {
 	public function scaffoldSearchField($title = null) {
 		return new TextField($this->name, $title);
 	}
+	
+	/**
+	 * Return the value of the field with XML tags escaped.
+	 * @return string
+	 */
+	function EscapeXML() {
+		$value = ShortcodeParser::get_active()->parse($this->value);
+		return str_replace(array('&','<','>','"'), array('&amp;','&lt;','&gt;','&quot;'), $value);
+	}
 
 }
 
