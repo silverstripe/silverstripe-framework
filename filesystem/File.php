@@ -875,14 +875,11 @@ class File extends DataObject {
 			if(!in_array(strtolower($extension), $allowed)) {
 				$exts =  $allowed;
 				sort($exts);
-				$message = sprintf(
-					_t(
-						'File.INVALIDEXTENSION', 
-						'Extension is not allowed (valid: %s)',
-						
-						'Argument 1: Comma-separated list of valid extensions'
-					),
-					wordwrap(implode(', ',$exts))
+				$message =  _t(
+					'File.INVALIDEXTENSION',
+					'Extension is not allowed (valid: {extensions})',
+					'Argument 1: Comma-separated list of valid extensions',
+					array('extensions' => wordwrap(implode(', ',$exts)))
 				);
 				return new ValidationResult(false, $message);
 			}
