@@ -23,6 +23,7 @@ class CMSProfileController extends LeftAndMain {
 		$form = parent::getEditForm($id, $fields);
 		if($form instanceof SS_HTTPResponse) return $form;
 		
+		$form->Fields()->removeByName('LastVisited');
 		$form->Fields()->push(new HiddenField('ID', null, Member::currentUserID()));
 		$form->Actions()->push(
 			FormAction::create('save',_t('CMSMain.SAVE', 'Save'))
