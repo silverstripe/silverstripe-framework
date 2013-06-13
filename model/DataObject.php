@@ -2568,7 +2568,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$results = $this->extend($methodName, $member);
 		if($results && is_array($results)) {
 			// Remove NULLs
-			$results = array_filter($results, array($this,'isNotNull'));
+			$results = array_filter($results, function($v) {return !is_null($v);});
 			// If there are any non-NULL responses, then return the lowest one of them.
 			// If any explicitly deny the permission, then we don't get access 
 			if($results) return min($results);
@@ -2576,16 +2576,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return null;
 	}
 	
-	/**
-	 * Helper functon for extendedCan
-	 * 
-	 * @param Mixed $value
-	 * @return boolean
-	 */
-	private function isNotNull($value) {
-		return !is_null($value);
-	}
-
 	/**
 	 * @param Member $member
 	 * @return boolean
