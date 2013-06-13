@@ -1262,10 +1262,6 @@ form.member-profile-form {
 }
 
 .cms .ui-dialog{
-	min-width:570px;
-	.htmleditorfield-dialog{
-		min-width:570px;
-	}
 	.ss-ui-dialog.ui-dialog-content {
 		padding-top: 0px; //removes padding so that tabs are flush with header
 	}
@@ -1293,6 +1289,16 @@ form.member-profile-form {
 		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
 		.ui-dialog-title {
 			position:absolute;
+		}
+	}
+
+	.ui-dialog-content {
+		overflow: auto; // TODO Replace with proper $.layout grid
+
+		&.loading {
+			background-image: url(../images/spinner.gif);
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
 		}
 	}
 

@@ -372,6 +372,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					$('body').append(dialog);
 					$.ajax({
 						url: url,
+						complete: function() {
+							dialog.removeClass('loading');
+						},
 						success: function(html) {
 							dialog.html(html);
 							dialog.trigger('dialogopen');
@@ -384,11 +387,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		$('.htmleditorfield-dialog').entwine({
 			onadd: function() {
 				// Create jQuery dialog
-
-				var height = $(window).height() * 0.8; 
-				var width = $(window).width() * 0.8;
-
-				if (!this.is('.ui-dialog-content')) this.dialog({autoOpen: true, bgiframe: true, modal: true, height: height, width: width, ghost: true});
+				if (!this.is('.ui-dialog-content')) {
+					this.ssdialog({autoOpen: true});
+				}
 
 				this._super();
 			},
@@ -397,10 +398,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return this.find('form');
 			},
 			open: function() {
-				this.dialog('open');
+				this.ssdialog('open');
 			},
 			close: function() {
-				this.dialog('close');
+				this.ssdialog('close');
 			},
 			toggle: function(bool) {
 				if(this.is(':visible')) this.close();
