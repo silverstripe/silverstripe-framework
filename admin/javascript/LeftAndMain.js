@@ -461,19 +461,14 @@ jQuery.noConflict();
 
 				// Support a full reload
 				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
-					document.location.href = xhr.getResponseHeader('X-ControllerURL');
+					document.location.href = $('base').attr('href').replace(/\/*$/, '') 
+						+ '/' + xhr.getResponseHeader('X-ControllerURL');
 					return;
 				}
 
 				// Pseudo-redirects via X-ControllerURL might return empty data, in which
 				// case we'll ignore the response
 				if(!data) return;
-
-				// Support a full reload
-				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
-					document.location.href = xhr.getResponseHeader('X-ControllerURL');
-					return;
-				}
 
 				// Update title
 				var title = xhr.getResponseHeader('X-Title');
