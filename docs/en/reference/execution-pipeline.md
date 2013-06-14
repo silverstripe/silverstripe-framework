@@ -13,18 +13,18 @@ The basic .htaccess file after installing SilverStripe look like this:
 
 	<file>
 	### SILVERSTRIPE START ###
-
+	
 	<Files *.ss>
 	Order deny,allow
 	Deny from all
 	Allow from 127.0.0.1
 	</Files>
-
+	
 	<IfModule mod_rewrite.c>
 	RewriteEngine On
-
+	
 	RewriteCond %{REQUEST_URI} !(\.gif$)|(\.jpg$)|(\.png$)|(\.css$)|(\.js$)
-
+	
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteRule .* framework/main.php?url=%1&%{QUERY_STRING} [L]
@@ -34,12 +34,14 @@ The basic .htaccess file after installing SilverStripe look like this:
 
 The `<Files>` section denies direct access to the template files from anywhere but the server itself.
 
-The next section enables the rewriting engine and rewrites requests to `framework/main.php` if they meet the following
+The `<IfModule>` section enables the rewriting engine. Requests will be rewritten if they meet the following
 criteria:
 
 *  URI doesn't end in .gif, .jpg, .png, .css, or .js
-*  The requested file doesn't exist on the filesystem `framework/main.php` is called with the REQUEST_FILENAME (%1) as the `url` parameter and also appends the original
-QUERY_STRING.
+*  The requested file doesn't exist on the filesystem
+ 
+The rewriting engine then calls `framework/main.php` with the REQUEST_FILENAME (%1) as the `url` parameter and also appends the original
+QUERY_STRING. **Example:** *"myblog/cakes?page=2"* is rewritten as *"framework/main.php?url=myblog/cakes&page=2"*.
 
 See the [mod_rewrite documentation](http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html) for more information on how
 mod_rewrite works.
@@ -47,14 +49,14 @@ mod_rewrite works.
 
 ## main.php
 
-All requests go through `main.`php, which sets up the environment and then hands control over to `Director`.
+All requests go through `main.php`, which sets up the environment and then hands control over to `Director`.
 
 ## Director and URL patterns
 
 main.php relies on `[api:Director]` to work out which controller should handle this request.  `[api:Director]` will instantiate that
 controller object and then call `[api:Controller::run()]`.
 
-In general, the URL is build up as follows: `page/action/ID/otherID` - e.g. http://www.mysite.com/mypage/addToCart/12. 
+In general, the URL is built up as follows: `page/action/ID/otherID` - e.g. http://www.mysite.com/mypage/addToCart/12. 
 This will add an object with ID 12 to the cart.
 
 When you create a function, you can access the ID like this:
