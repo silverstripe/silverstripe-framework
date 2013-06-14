@@ -466,7 +466,9 @@ class File extends DataObject {
 		parent::onBeforeWrite();
 
 		// Set default owner
-		if(!$this->ID) $this->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
+		if(!$this->ID && !$this->OwnerID) {
+			$this->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
+		}
 
 		// Set default name
 		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
