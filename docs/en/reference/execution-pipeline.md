@@ -13,18 +13,18 @@ The basic .htaccess file after installing SilverStripe look like this:
 
 	<file>
 	### SILVERSTRIPE START ###
-
+	
 	<Files *.ss>
 	Order deny,allow
 	Deny from all
 	Allow from 127.0.0.1
 	</Files>
-
+	
 	<IfModule mod_rewrite.c>
 	RewriteEngine On
-
+	
 	RewriteCond %{REQUEST_URI} !(\.gif$)|(\.jpg$)|(\.png$)|(\.css$)|(\.js$)
-
+	
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteRule .* framework/main.php?url=%1&%{QUERY_STRING} [L]
