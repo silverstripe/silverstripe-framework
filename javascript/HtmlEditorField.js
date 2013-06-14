@@ -846,6 +846,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// TODO Way too much knowledge on UploadField internals, use viewfile URL directly instead
 				this.find('.htmleditorfield-mediaform-heading.insert')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-actions')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-name')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-preview')[editingSelected ? 'hide' : 'show']();
 				this.find('.Actions .media-insert')[editingSelected ? 'hide' : 'show']();
 				this.find('.htmleditorfield-mediaform-heading.update')[editingSelected ? 'show' : 'hide']();
 				this.find('.Actions .media-update')[editingSelected ? 'show' : 'hide']();
