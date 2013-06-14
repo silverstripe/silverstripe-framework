@@ -717,7 +717,6 @@ form.import-form label.left { width: 250px; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li { white-space: nowrap; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li label { padding-left: 2px; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .fieldgroup .fieldgroup-field { width: 216px; padding-left: 0; }
-.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .TreeDropdownField .treedropdownfield-toggle-panel-link { border-left: none; background: none; background-image: none; }
 
 /** -------------------------------------------- Buttons for FileUpload -------------------------------------------- */
 .ss-uploadfield-item-edit-all .ui-button-text { padding-right: 0; }
