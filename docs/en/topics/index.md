@@ -23,6 +23,7 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Modules](modules): Introduction, how to download and install a module (e.g. with blog or forum functionality)
  * [Page Types](page-types): What is a "page type" and how do you create one?
  * [Search](search): Searching for properties in the database as well as other documents
+ * [Search Engine Optimisation (SEO)](search-engine-optimisation.md): Information on how SilverStripe handles URLs and meta tags for SEO.
  * [Security](security): How to develop secure SilverStripe applications with good code examples
  * [Shortcodes](shortcodes): Use simple placeholders for powerful content replacements like multimedia embeds
  * [Templates](templates): SilverStripe template syntax: Variables, loops, includes and much more

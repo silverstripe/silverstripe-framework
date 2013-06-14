@@ -1,0 +1,6 @@
+---
+name: corecontroller
+---
+Controller:
+  links_have_trailing_slash:
+    true

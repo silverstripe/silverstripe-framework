@@ -561,12 +561,41 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			}
 		}
 		
+		$result = self::handle_trailing_slash_on_link($result);
+		
 		if($querystrings) $result .= '?' . implode('&', $querystrings);
 		if($fragmentIdentifier) $result .= "#$fragmentIdentifier";
 		
 		return $result;
 	}
+	
+	/**
+	 * Add or removes a trailing slash from the passed in URL depending on the URL and configuration
+	 * 
+	 * @param $url string
+	 * @return string - the modiefied url
+	 */
+	public static function handle_trailing_slash_on_link($url) {
 
+		// Remove any current trailing slashes 
+		$url = rtrim($url, '/');
+
+		// If this looks like file name, always skip adding a trailing slash
+		if((strpos(basename($url), '.') !== false)) {
+			return $url;
+		}
+
+		if(!Config::inst()->get('Controller', 'links_have_trailing_slash')) {
+			return $url;
+		}
+
+		return $url . '/';
+	}
+	
+	/**
+	 *
+	 * @return array
+	 */
 	public static function get_template_global_variables() {
 		return array(
 			'CurrentPage' => 'curr',
