@@ -865,7 +865,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var self = this, params = (Number(idOrUrl) == idOrUrl) ? {ID: idOrUrl} : {FileURL: idOrUrl};
 
 				var item = $('<div class="ss-htmleditorfield-file loading" />');
-				this.find('.content-edit').append(item);
+				this.find('.content-edit').prepend(item);
 				
 				var dfr = $.Deferred();
 				
