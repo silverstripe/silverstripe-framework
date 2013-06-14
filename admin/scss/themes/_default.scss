@@ -11,6 +11,7 @@ $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
 /* Keep as solid colours transparent borders wont work in ie */
+$color-darker-bg: #D4D6D8 !default;
 $color-dark-bg: #142136 !default;
 $color-dark-separator: #19435c !default;
 $color-medium-separator: #808080 !default;

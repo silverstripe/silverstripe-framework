@@ -97,11 +97,7 @@ body.cms {
 		image: url(../images/textures/cms_content_header.png);
 		repeat: repeat;
 		position: left bottom;
-	}
-
-	.cms-content-header-info *,
-	.cms-content-header-tabs * {
-		@include inline-block;
+		color: $color-darker-bg;
 	}
 
 	a {
@@ -118,6 +114,11 @@ body.cms {
 		font-size: $font-base-size + 2;
 		font-weight: bold;
 		margin: 0;
+		margin-bottom: $grid-x;
+
+		* {
+			vertical-align: middle;
+		}
 	}
 
 	.cms-content-header-info {
