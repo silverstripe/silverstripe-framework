@@ -1356,7 +1356,7 @@ body.cms-dialog {
 		position:relative;
 	}
 
-	#MediaFormInsertMediaTabs_FromWeb{
+	.htmleditorfield-from-web {
 		.CompositeField{
 			@include clearfix;
 		}
@@ -1494,8 +1494,8 @@ body.cms-dialog {
 		}
 	}
 
-	.ss-uploadfield {
-		&.from-web, &.from-CMS {
+	.htmleditorfield-from-web, .htmleditorfield-from-cms {
+		.ss-uploadfield {
 			.middleColumn {
 				width:auto;
 				background:none;
@@ -1503,8 +1503,10 @@ body.cms-dialog {
 				margin-top:13px;
 			}
 		}
+	}
 
-		&.from-CMS {
+	.htmleditorfield-from-cms {
+		.ss-uploadfield {
 			h4 {
 				float: left; // headline and dropdown on same line
 				margin-top: $grid-y/2; // bring to same baseline as dropdown
@@ -1519,7 +1521,6 @@ body.cms-dialog {
 				padding: 0;
 			}
 		}
-
 	}
 
 	.ss-uploadfield-editandorganize {

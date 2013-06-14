@@ -405,7 +405,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$fileField
 		);
 		
-		$fromCMS->addExtraClass('content ss-uploadfield from-CMS');
+		$fromCMS->addExtraClass('content ss-uploadfield');
 		$select->addExtraClass('content-select');
 
 
@@ -418,7 +418,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		);
 
 		$remoteURL->addExtraClass('remoteurl');
-		$fromWeb->addExtraClass('content ss-uploadfield from-web');
+		$fromWeb->addExtraClass('content ss-uploadfield');
 
 		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
 		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
@@ -433,21 +433,21 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$tabSet = new TabSet(
 			"MediaFormInsertMediaTabs",
-			new Tab(
+			Tab::create(
 				'FromComputer',
 				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
 				$computerUploadField
-			),
-			new Tab(
+			)->addExtraClass('htmleditorfield-from-computer'),
+			Tab::create(
 				'FromWeb',
 				_t('HtmlEditorField.FROMWEB', 'From the web'),
 				$fromWeb
-			),
-			new Tab(
+			)->addExtraClass('htmleditorfield-from-web'),
+			Tab::create(
 				'FromCms',
 				_t('HtmlEditorField.FROMCMS','From the CMS'),
 				$fromCMS
-			)
+			)->addExtraClass('htmleditorfield-from-cms')
 		);
 		$tabSet->addExtraClass('cms-tabset-primary');
 

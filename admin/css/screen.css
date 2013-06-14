@@ -635,17 +635,17 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 
 /** -------------------------------------------- "Insert X" forms -------------------------------------------- */
 .htmleditorfield-dialog.ui-dialog-content { padding: 0; position: relative; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb .CompositeField { overflow: hidden; *zoom: 1; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL .middleColumn { margin-left: 0; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL input.remoteurl { padding-left: 40px; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url { margin-top: 5px; padding-top: 15px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url .ui-button-text { margin-left: 10px; margin-top: -5px; line-height: 20px; float: left; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url:hover, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
+.htmleditorfield-dialog .htmleditorfield-from-web .CompositeField { overflow: hidden; *zoom: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL .middleColumn { margin-left: 0; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL input.remoteurl { padding-left: 40px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url { margin-top: 5px; padding-top: 15px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .ui-button-text { margin-left: 10px; margin-top: -5px; line-height: 20px; float: left; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
+.htmleditorfield-dialog .htmleditorfield-from-web .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 .htmleditorfield-dialog .cms-content-header { padding: 0; width: 100%; height: 40px; }
 .htmleditorfield-dialog .cms-content-header h3 { padding: 0 8px; margin: 10px; }
 .htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .Actions, .htmleditorfield-dialog .ss-insert-link { padding: 8px 16px; }
@@ -662,10 +662,10 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child { padding: 0; text-align: center; }
 .htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child img { max-height: 30px; }
 .htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tr td { padding: 4px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-web .middleColumn, .htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS h4 { float: left; margin-top: 4px; margin-bottom: 0; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn { margin-top: 16px; margin-left: 184px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS .field.treedropdown { border-bottom: 0; padding: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-web .ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { margin-top: 16px; margin-left: 184px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .field.treedropdown { border-bottom: 0; padding: 0; }
 .htmleditorfield-mediaform .ss-uploadfield-editandorganize { display: none; }
 
 /** -------------------------------------------- Search forms (used in AssetAdmin, ModelAdmin, etc) -------------------------------------------- */
