@@ -1432,6 +1432,9 @@ body.cms-dialog {
 
 	.ss-insert-media, .Actions, .ss-insert-link{
 		padding:$grid-y $grid-x*2 ;
+		.ui-tabs-panel {
+			padding: 0;
+		}
 	}
 	.details{
 		.file-url{
@@ -1473,19 +1476,26 @@ body.cms-dialog {
 
 .htmleditorfield-mediaform {
 	.ss-gridfield {
-		// Set thumbnail size 
-		tbody td:first-child img {
-			max-height: 30px;
 		.gridfield-button-delete {
 			// TODO Remove from PHP instead of hiding
 			display: none; // delete action shouldn't be allowed here
 		}
+		table.ss-gridfield-table {
+			tbody td:first-child {
+				padding: 0;
+				text-align: center;
+				img {
+					max-height: 30px; // same thumbnail size as uploadfield rows
+				}
+			}
+			tr td {
+				padding: $grid-x/2; // more compressed space
+			}	
 		}
 	}
 
-	.ss-uploadfield{
-		&.from-web, &.from-CMS{
-			margin-bottom:48px;
+	.ss-uploadfield {
+		&.from-web, &.from-CMS {
 			.middleColumn {
 				width:auto;
 				background:none;
@@ -1494,16 +1504,19 @@ body.cms-dialog {
 			}
 		}
 
-		&.from-CMS{
-			margin-top:33px;
-			h4{
-				margin-top:3px;
+		&.from-CMS {
+			h4 {
+				float: left; // headline and dropdown on same line
+				margin-top: $grid-y/2; // bring to same baseline as dropdown
+				margin-bottom: 0;
 			}
 			.middleColumn {
-				margin-top:0;
-				.TreeDropdownField{
-					margin-top:23px;
-				}			
+				margin-top: $grid-y*2; // same as left-floated h4
+				margin-left: $grid-x*23; // make room for headline
+			}
+			.field.treedropdown {
+				border-bottom: 0; // don't show border, dropdown and gridfield visually belong together
+				padding: 0;
 			}
 		}
 
