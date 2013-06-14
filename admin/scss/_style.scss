@@ -1476,6 +1476,10 @@ body.cms-dialog {
 		// Set thumbnail size 
 		tbody td:first-child img {
 			max-height: 30px;
+		.gridfield-button-delete {
+			// TODO Remove from PHP instead of hiding
+			display: none; // delete action shouldn't be allowed here
+		}
 		}
 	}
 

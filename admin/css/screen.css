@@ -659,6 +659,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 
 .htmleditorfield-mediaform .ss-gridfield tbody td:first-child img { max-height: 30px; }
 .htmleditorfield-mediaform .ss-uploadfield.from-web, .htmleditorfield-mediaform .ss-uploadfield.from-CMS { margin-bottom: 48px; }
+.htmleditorfield-mediaform .ss-gridfield .gridfield-button-delete { display: none; }
 .htmleditorfield-mediaform .ss-uploadfield.from-web .middleColumn, .htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
 .htmleditorfield-mediaform .ss-uploadfield.from-CMS { margin-top: 33px; }
 .htmleditorfield-mediaform .ss-uploadfield.from-CMS h4 { margin-top: 3px; }

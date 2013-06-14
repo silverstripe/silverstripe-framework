@@ -380,6 +380,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new GridFieldSortableHeader(),
 			new GridFieldDataColumns(),
 			new GridFieldPaginator(5),
+			// TODO Shouldn't allow delete here, its too confusing with a "remove from editor view" action.
+			// Remove once we can fit the search button in the last actual title column
 			new GridFieldDeleteAction(),
 			new GridFieldDetailForm()
 		);
