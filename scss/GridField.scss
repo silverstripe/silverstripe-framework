@@ -127,7 +127,6 @@ $gf_grid_x:	16px;
 		border-collapse: separate;	
 		border-bottom: 0 none;				
 		width: 100%;
-		margin-bottom:$gf_grid_y;
 
 		thead {
 			color: darken($color-base, 50%);	
@@ -640,5 +639,9 @@ $gf_grid_x:	16px;
 		td:last-child{
 			border-right: 1px solid $gf_colour_border;
 		}
+	}
+
+	.grid-bottom-button {
+		margin-top:$gf_grid_y;
 	}
 }
