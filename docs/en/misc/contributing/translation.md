@@ -37,7 +37,7 @@ but makes its intent clearer, and allows reordering of placeholders in your tran
 
 ### Do I need to convert special characters (e.g. HTML-entities)?
 
-Special characters (such as german umlauts) need to be entered in their native form. Please don't use HTML-entities ("ä" instead of "ä"). Silverstripe stores and renders most strings in UTF8 (Unicode) format.
+Special characters (such as german umlauts) need to be entered in their native form. Please don't use HTML-entities ("&amp;auml;" instead of "ä"). Silverstripe stores and renders most strings in UTF8 (Unicode) format.
 
 ### How can I check out my translation in the interface?
 
