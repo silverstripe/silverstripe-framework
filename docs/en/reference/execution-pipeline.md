@@ -47,7 +47,7 @@ mod_rewrite works.
 
 ## main.php
 
-All requests go through `main.`php, which sets up the environment and then hands control over to `Director`.
+All requests go through `main.php`, which sets up the environment and then hands control over to `Director`.
 
 ## Director and URL patterns
 
