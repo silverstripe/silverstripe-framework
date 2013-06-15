@@ -1062,6 +1062,12 @@ jQuery.noConflict();
 						return false;
 					},
 					activate: function(e, ui) {
+						// Accessibility: Simulate click to trigger panel load when tab is focused
+						// by a keyboard navigation event rather than a click
+						if(ui.newTab) {
+							ui.newTab.find('.cms-panel-link').click();
+						}
+
 						// Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
 						var actions = $(this).closest('form').find('.Actions');
 						if($(ui.newTab).closest('li').hasClass('readonly')) {
