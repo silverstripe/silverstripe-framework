@@ -77,38 +77,6 @@ form button.minorAction {
 	text-decoration: underline;
 }
 
-
-/**
- * Composite Fields - raw concatenation of fields for programmatic purposes.
- */
-.right form div.CompositeField {
-	margin-left: 7.5em;
-}
-.right form div.CompositeField div.field {
-	font-size: 1em;
-}
-
-.right form div.CompositeField {
-	clear: both;
-}	
-.right form div.CompositeField label.left {
-	float: left;
-	width: 10em;
-	margin-left: -10em;
-}
-
-.right form div.column2 {
-	float: left;
-	width: 45%;
-	margin-right: 4%;
-}
-
-.right form div.multicolumn {
-	width: 100%;
-	float: left;
-	clear: left;
-}
-
 /**
  * Messages
  */
