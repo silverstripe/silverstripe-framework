@@ -713,15 +713,15 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
 				CompositeField::create(
 					CompositeField::create(
-						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->FileType),
-						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $file->getSize()),
+						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type'), $file->FileType),
+						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size'), $file->getSize()),
 						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'), 
 							sprintf('<a href="%s" title="%s" target="_blank" class="file-url">%s</a>',
 								$file->Link(), $file->Link(), $file->RelativeLink())
 						),
-						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':',
+						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded'),
 							$file->Created),
-						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':',
+						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'),
 							$file->LastEdited)
 					)
 				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
