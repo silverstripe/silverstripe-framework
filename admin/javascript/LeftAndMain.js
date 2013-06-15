@@ -669,7 +669,9 @@ jQuery.noConflict();
 				if(url) {
 					s.removeItem('tabs-' + url);	
 				} else {
-					for(var i=0;i<s.length;i++) s.removeItem(s.key(i));
+					for(var i=0;i<s.length;i++) {
+						if(s.key(i).match(/^tabs-/)) s.removeItem(s.key(i));
+					}
 				}
 			},
 
