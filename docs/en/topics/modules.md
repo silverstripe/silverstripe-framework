@@ -106,4 +106,3 @@ and comes with the same caveats.
 ## Related
 
 * [Modules Development](/topics/module-developement)
-* [Module Release Process](/misc/module-release-process)
