@@ -582,6 +582,7 @@ $gf_grid_x:	16px;
 						margin-left:-116px; //half the width of .datagrid-pagination - centers pagination
 						.pagination-page-number {
 							color:$color-text-light;
+							text-align: center;
 							@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 							input {
 								width:35px; //exact width so that a four digit number can be entered
