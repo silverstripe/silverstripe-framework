@@ -125,10 +125,10 @@ jQuery.noConflict();
 				var self = this;
 
 				// Browser detection
-				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
+				if($.browser.msie && parseInt($.browser.version, 10) < 8) {
 					$('.ss-loading-screen').append(
 						'<p class="ss-loading-incompat-warning"><span class="notice">' + 
-						'Your browser is not compatible with the CMS interface. Please use Internet Explorer 7+, Google Chrome 10+ or Mozilla Firefox 3.5+.' +
+						'Your browser is not compatible with the CMS interface. Please use Internet Explorer 8+, Google Chrome or Mozilla Firefox.' +
 						'</span></p>'
 					).css('z-index', $('.ss-loading-screen').css('z-index')+1);
 					$('.loading-animation').remove();
