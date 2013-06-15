@@ -95,6 +95,7 @@ form.nostyle {
 		color: lighten($color-text, 20%);
 		display: block;
 		font-style: italic;
+		line-height: $grid-y * 2;
 		margin: $grid-y/2 0 0 $grid-x*23; // left align with .middleColumn
 	}
 	

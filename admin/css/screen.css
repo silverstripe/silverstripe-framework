@@ -160,7 +160,7 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
 .field .fieldgroup .fieldgroup-field.last { /* This is used on page/settings/visibility */ padding-bottom: 8px; /* replicates li item spacing */ }
-.field .description { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
+.field .description { clear: both; color: #777777; display: block; font-style: italic; line-height: 16px; margin: 4px 0 0 184px; }
 .field.checkbox .description, .field.ss-gridfield .description { margin-left: 0; }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { margin-left: 10px; width: 100%; max-width: 512px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .field input.text.description, .field textarea.description, .field select.description, .field .TreeDropdownField.description { margin: 0; }
