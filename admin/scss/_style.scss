@@ -1598,6 +1598,7 @@ body.cms-dialog {
 
 		img {
 			max-width: $grid-x * 22; // Same as ".field label"
+			max-height: $grid-x * 16; // Fitting typical info displayed (~5 rows)
 		}
 	}
 	.cms-file-info-data {
@@ -1605,10 +1606,16 @@ body.cms-dialog {
 
 		.field {
 			// Unsetting styles from .field, make it more compact visually
-			margin-bottom: 0;
+			margin: 0;
 			padding-bottom: $grid-x;
 			border: none;
 			box-shadow: none;
+			label.left {
+				width: $grid-x*12;
+			}
+			.middleColumn {
+				margin-left: $grid-x*13;
+			}
 			label, span {
 				padding: 0;
 			}
