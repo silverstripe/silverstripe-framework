@@ -7,12 +7,12 @@ multiple projects. SilverStripe already has certain modules included, for
 example "framework" and "cms". These two modules are the core functionality and
 templates for any initial installation.
 
-If you're wanting to add generic functionality that isn't specific to your
+If you want to add generic functionality that isn't specific to your
 project, like a forum, an ecommerce package or a blog you can do it like this;
 
 1.  Create another directory at the root level (same level as "framework" and
 "cms")
-2.  You must create an _config.php inside your module directory, else
+2.  You must create a _config.php inside your module directory, or else
 SilverStripe will not include it
 3.  Inside your module directory, follow our [directory structure guidelines](/topics/directory-structure#module_structure)
 
@@ -21,12 +21,12 @@ automatically include any PHP classes from that module.
 
 ## Tips
 
-Try and keep your module as generic as possible - for example if you're making a
+Try to keep your module as generic as possible - for example if you're making a
 forum module, your members section shouldn't contain fields like 'Games You
 Play' or 'Your LiveJournal Name' - if people want to add these fields they can
 sub-class your class, or extend the fields on to it.
 
-If you're using Requirements to include generic support files for your project
+If you're using [api:Requirements] to include generic support files for your project
 like CSS or Javascript, and want to override these files to be more specific in
 your project, the following code is an example of how to do so using the init()
 function on your module controller classes:
@@ -60,6 +60,7 @@ classes.
 If your module allows developers to customize specific values (for example API
 key values) use the existing configuration system for your data.
 
+	:::php
 	// use this in your module code
 	$varible = Config::inst()->get('ModuleName', 'SomeValue');
 
@@ -85,7 +86,7 @@ application without editing your code.
 	  SomeValue: 10
 
 If you want to make the configuration value user editable in the backend CMS,
-provide a extension to [SiteConfig](/reference/siteconfig).
+provide an extension to [SiteConfig](/reference/siteconfig).
 
 ## Publication
 
@@ -156,7 +157,7 @@ in 3.1.0 you should provide a separate `branch` of the module for 3.0 support.
 	}
 
 You can have an overlap in supported versions (e.g two branches for 3.1) but you
-should explain the differences in your README.md file.
+should explain the differences in your `README.md` file.
 
 If you want to change the minimum supported version of your module, make sure
 you create a new branch which continues to support the minimum version as it
