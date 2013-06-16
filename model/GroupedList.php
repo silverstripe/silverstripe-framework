@@ -43,6 +43,7 @@ class GroupedList extends SS_ListDecorator {
 		$result  = new ArrayList();
 
 		foreach ($grouped as $indVal => $list) {
+			$list = GroupedList::create($list);
 			$result->push(new ArrayData(array(
 				$index    => $indVal,
 				$children => $list
