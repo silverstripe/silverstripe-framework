@@ -124,6 +124,10 @@ body.cms {
 	.cms-content-header-info {
 		float:left;
 		padding-top: 6px;
+
+		& > * {
+			display: inline-block; // align back button and breadcrumbs
+		}
 	}
 	
 	// Reset to default styles
