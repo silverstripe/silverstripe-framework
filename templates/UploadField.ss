@@ -37,6 +37,7 @@
 		</div>
 		<% end_if %>
 		<div class="ss-uploadfield-item-info">
+			<input type='hidden' value='$ID' name='{$Top.Name}[Files][]' />
 			<label class="ss-uploadfield-item-name">
 				<% if $multiple %>
 					<b><% _t('UploadField.ATTACHFILES', 'Attach files') %></b>
