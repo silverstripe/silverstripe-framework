@@ -116,6 +116,21 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	}
 
 	/**
+	 * filters items from the dataList based on canView permission.
+	 * 
+	 * @param SS_List $dataList - the complete list of items the GridField is to display
+	 * @return ArrayList - a list that only has items the current member canView  
+	 */
+	function getListWithPermissionApplied( SS_List $dataList ) {
+		$dataListCanView = new ArrayList();
+		foreach( $dataList as $item ) {
+			if( $item->canView() )
+				$dataListCanView->add($item);
+		}
+		return $dataListCanView;
+	}
+
+	/**
 	 *
 	 * @param GridField $gridField
 	 * @param SS_List $dataList
@@ -127,15 +142,16 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		
 		$state = $this->getGridPagerState($gridField);
 		
+		$dataListCanView = $this->getListWithPermissionApplied( $dataList );
 		// Update item count prior to filter. GridFieldPageCount will rely on this value
-		$this->totalItems = $dataList->count();
+		$this->totalItems = $dataListCanView->count();
 
 		if(!($dataList instanceof SS_Limitable) || ($dataList instanceof UnsavedRelationList)) {
-			return $dataList;
+			return $dataListCanView;
 		}
 		
 		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
-		return $dataList->limit((int)$this->itemsPerPage, (int)$startRow);
+		return $dataListCanView->limit((int)$this->itemsPerPage, (int)$startRow);
 	}
 	
 	/**
