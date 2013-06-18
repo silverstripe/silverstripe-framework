@@ -58,8 +58,8 @@ See [the PHPUnit manual](http://www.phpunit.de/manual/current/en/api.html#api.as
 for a listing of all PHPUnit's built-in assertions.
 
 The `[api:SapphireTest]` class comes with additional assertions which are more
-specific to the framework, e.g. `[assertEmailSent](api:SapphireTest->assertEmailSent())`
-which can simulate sending emails through the `Email->send()` API without actually
+specific to the framework, e.g. `[api:SapphireTest->assertEmailSent()]`
+which can simulate sending emails through the `[api:Email->send()]` API without actually
 using a mail server (see the [testing emails](email-sending)) guide.
 
 ## Fixtures
