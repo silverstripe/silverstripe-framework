@@ -230,7 +230,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return ValidationResult
 	 */
 	public function canLogIn() {
-		$result = new ValidationResult();
+		$result = ValidationResult::create();
 
 		if($this->isLockedOut()) {
 			$result->error(_t (
@@ -677,7 +677,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			if($existingRecord) {
-				throw new ValidationException(new ValidationResult(false, _t(
+				throw new ValidationException(ValidationResult::create(false, _t(
 					'Member.ValidationIdentifierFailed', 
 					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))', 
 					'Values in brackets show "fieldname = value", usually denoting an existing email address',
