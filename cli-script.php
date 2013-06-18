@@ -29,7 +29,7 @@ chdir(dirname($_SERVER['SCRIPT_FILENAME']));
  * For example,
  * sake my/url somearg otherarg key=val --otherkey=val third=val&fourth=val
  *
- * Will result int he following get data:
+ * Will result in the following get data:
  *   args => array('somearg', 'otherarg'),
  *   key => val
  *   otherkey => val
