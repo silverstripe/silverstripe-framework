@@ -56,16 +56,16 @@ The `phpunit` binary should be used from the root directory of your website.
 
 	# Runs all tests defined in phpunit.xml
 	phpunit
-
+	
 	# Run all tests of a specific module
  	phpunit framework/tests/
-
+	
  	# Run specific tests within a specific module
  	phpunit framework/tests/filesystem
-
+	
  	# Run a specific test
 	phpunit framework/tests/filesystem/FolderTest.php
-
+	
 	# Run tests with optional `$_GET` parameters (you need an empty second argument)
  	phpunit framework/tests '' flush=all
 
@@ -81,16 +81,16 @@ particularly around formatting test output.
 
 	# Run all tests
 	sake dev/tests/all
-
+	
 	# Run all tests of a specific module (comma-separated)
 	sake dev/tests/module/framework,cms
-
+	
 	# Run specific tests (comma-separated)
 	sake dev/tests/FolderTest,OtherTest
-
+	
 	# Run tests with optional `$_GET` parameters
 	sake dev/tests/all flush=all
-
+	
 	# Skip some tests
 	sake dev/tests/all SkipTests=MySkippedTest
 
