@@ -529,6 +529,8 @@ body.cms {
 	}
 	ul.SelectionGroup {
 		padding-left:28px;
+		overflow: visible;
+		@include legacy-pie-clearfix;
 	}
 	.parent-mode {
 		padding: $grid-x;
