@@ -115,6 +115,13 @@
 	/**
 	 * Extends jQueryUI dialog with iframe abilities (and related resizing logic),
 	 * and sets some CMS-wide defaults.
+	 *
+	 * Additional settings:
+	 * - 'autoPosition': Automatically reposition window on resize based on 'position' option
+	 * - 'widthRatio': Sets width based on percentage of window (value between 0 and 1)
+	 * - 'heightRatio': Sets width based on percentage of window (value between 0 and 1)
+	 * - 'reloadOnOpen': Reloads the iframe whenever the dialog is reopened
+	 * - 'iframeUrl': Create an iframe element and load this URL when the dialog is created
 	 */
 	$.widget("ssui.ssdialog", $.ui.dialog, {
 		options: {
@@ -124,12 +131,17 @@
 			dialogExtraClass: '',
 
 			// Defaults
-			width: '80%',
-			height: 500,
-			position: 'center',
 			modal: true,
 			bgiframe: true,
-			autoOpen: false
+			autoOpen: false,
+			autoPosition: true,
+			minWidth: 500,
+			maxWidth: 700,
+			minHeight: 300,
+			maxHeight: 600,
+			widthRatio: 0.8,
+			heightRatio: 0.8,
+			resizable: false
 		},
 		_create: function() {
 			$.ui.dialog.prototype._create.call(this);
@@ -150,7 +162,7 @@
 			this.element.append(iframe);
 
 			// Let the iframe handle its scrolling
-			this.element.css('overflow', 'hidden');
+			if(this.options.iframeUrl) this.element.css('overflow', 'hidden');
 		},
 		open: function() {
 			$.ui.dialog.prototype.open.call(this);
@@ -165,7 +177,6 @@
 			}
 
 			// Resize events
-			this.uiDialog.bind('resize.ssdialog', function() {self._resizeIframe();});
 			$(window).bind('resize.ssdialog', function() {self._resizeIframe();});
 		},
 		close: function() {
@@ -175,18 +186,33 @@
 			$(window).unbind('resize.ssdialog');
 		},
 		_resizeIframe: function() {
-			var el = this.element, iframe = el.children('iframe');
-
-			iframe.attr('width', 
-				el.innerWidth() 
-				- parseFloat(el.css('paddingLeft'))
-				- parseFloat(el.css('paddingRight'))
-			);
-			iframe.attr('height', 
-				el.innerHeight()
-				- parseFloat(el.css('paddingTop')) 
-				- parseFloat(el.css('paddingBottom'))
-			);
+			var opts = {}, newWidth, newHeight;
+			if(this.options.widthRatio) {
+				newWidth = $(window).width() * this.options.widthRatio;
+				if(this.options.minWidth && newWidth < this.options.minWidth) {
+					opts.width = this.options.minWidth
+				} else if(this.options.maxWidth && newWidth > this.options.maxWidth) {
+					opts.width = this.options.maxWidth;
+				} else {
+					opts.width = newWidth;
+				}
+			}
+			if(this.options.heightRatio) {
+				newHeight = $(window).height() * this.options.heightRatio;
+				if(this.options.minHeight && newHeight < this.options.minHeight) {
+					opts.height = this.options.minHeight
+				} else if(this.options.maxHeight && newHeight > this.options.maxHeight) {
+					opts.height = this.options.maxHeight;
+				} else {
+					opts.height = newHeight;
+				}
+			}
+			if(this.options.autoPosition) {
+				opts.position = this.options.position;
+			}
+			if(!jQuery.isEmptyObject(opts)) {
+				this._setOptions(opts);
+			}
 		}
 	});
 	

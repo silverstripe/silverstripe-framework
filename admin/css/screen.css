@@ -617,13 +617,13 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 
 .cms .ui-widget-overlay { background-color: #000; background-image: none; }
 
-.cms .ui-dialog { min-width: 570px; }
-.cms .ui-dialog .htmleditorfield-dialog { min-width: 570px; }
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content { padding-top: 0px; }
 
 .ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header { font-size: 14px; padding: 0; border: none; background-color: transparent; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header .ui-dialog-title { position: absolute; }
+.ui-dialog .ui-dialog-content { overflow: auto; }
+.ui-dialog .ui-dialog-content.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 .ui-dialog .cms-dialog-content { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; padding-bottom: 8px; padding-top: 0px; }
 .ui-dialog .cms-dialog-content .Actions { overflow: auto; margin: 8px 0; padding-bottom: 8px; float: right; }
 .ui-dialog .cms-dialog-content .ui-tabs { position: static; }
