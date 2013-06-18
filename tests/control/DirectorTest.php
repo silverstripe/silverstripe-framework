@@ -309,6 +309,8 @@ class DirectorTest extends SapphireTest {
 			'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
 		);
 
+		$origServer = $_SERVER;
+
 		foreach($headers as $header) {
 			if(isset($_SERVER[$header])) {
 				unset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']);
@@ -339,6 +341,8 @@ class DirectorTest extends SapphireTest {
 		// https via SSL
 		$_SERVER['SSL'] = '';
 		$this->assertTrue(Director::is_https());
+
+		$_SERVER = $origServer;
 	}
 }
 
