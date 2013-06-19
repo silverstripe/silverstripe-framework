@@ -265,10 +265,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 */
 	public function getViewer($action) {
 		// Hard-coded templates
-		if($this->templates[$action]) {
+		if(isset($this->templates[$action]) && $this->templates[$action]) {
 			$templates = $this->templates[$action];
-		}	else if($this->templates['index']) {
+
+		}	else if(isset($this->templates['index']) && $this->templates['index']) {
 			$templates = $this->templates['index'];
+
 		}	else if($this->template) {
 			$templates = $this->template;
 		} else {
@@ -317,6 +319,23 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		}
 
 		return $returnURL;
+	}
+
+	/**
+	 * Return the class that defines the given action, so that we know where to check allowed_actions.
+	 * Overrides RequestHandler to also look at defined templates
+	 */
+	protected function definingClassForAction($action) {
+		$definingClass = parent::definingClassForAction($action);
+		if($definingClass) return $definingClass;
+
+		$class = get_class($this);
+		while($class != 'RequestHandler') {
+			$templateName = strtok($class, '_') . '_' . $action;
+			if(SSViewer::hasTemplate($templateName)) return $class;
+
+			$class = get_parent_class($class);
+		}
 	}
 	
 	/**
