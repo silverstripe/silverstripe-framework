@@ -75,7 +75,7 @@ require_once("model/DB.php");
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
 	echo "\nPlease configure your database connection details.  You can do this by creating a file
 called _ss_environment.php in either of the following locations:\n\n";
-	echo " - " .  BASE_PATH  ."/_ss_environment.php\n - " . dirname(BASE_PATH) . "/_ss_environment.php\n\n";
+	echo " - " .  BASE_PATH  . DIRECTORY_SEPARATOR . "_ss_environment.php\n - " . dirname(BASE_PATH) . DIRECTORY_SEPARATOR . "_ss_environment.php\n\n";
 	echo <<<ENVCONTENT
 
 Put the following content into this file:
