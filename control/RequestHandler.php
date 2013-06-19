@@ -371,6 +371,22 @@ class RequestHandler extends ViewableData {
 		
 		return false;
 	}
+
+	/**
+	 * Return the class that defines the given action, so that we know where to check allowed_actions.
+	 */
+	protected function definingClassForAction($actionOrigCasing) {
+		$action = strtolower($actionOrigCasing);
+
+		$definingClass = null;
+		$insts = array_merge(array($this), (array)$this->getExtensionInstances());
+		foreach($insts as $inst) {
+			if(!method_exists($inst, $action)) continue;
+			$r = new ReflectionClass(get_class($inst));
+			$m = $r->getMethod($actionOrigCasing);
+			return $m->getDeclaringClass()->getName();	
+		}
+	}
 	
 	/**
 	 * Check that the given action is allowed to be called from a URL.
@@ -382,58 +398,45 @@ class RequestHandler extends ViewableData {
 
 		$isAllowed = false;
 		$isDefined = false;
-		if($this->hasMethod($actionOrigCasing) || !$action || $action == 'index') {
-			// Get actions for this specific class (without inheritance)
-			$definingClass = null;
-			$insts = array_merge(array($this), (array)$this->getExtensionInstances());
-			foreach($insts as $inst) {
-				if(!method_exists($inst, $action)) continue;
-				$r = new ReflectionClass(get_class($inst));
-				$m = $r->getMethod($actionOrigCasing);
-				$definingClass = $m->getDeclaringClass()->getName();	
-			}
+		
+		// Get actions for this specific class (without inheritance)
+		$definingClass = $this->definingClassForAction($actionOrigCasing);
+		$allowedActions = $this->allowedActions($definingClass);	
 
-			$allowedActions = $this->allowedActions($definingClass);	
-
-			// check if specific action is set
-			if(isset($allowedActions[$action])) {
-				$isDefined = true;
-				$test = $allowedActions[$action];
-				if($test === true || $test === 1 || $test === '1') {
-					// TRUE should always allow access
-					$isAllowed = true;
-				} elseif(substr($test, 0, 2) == '->') {
-					// Determined by custom method with "->" prefix
-					list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
-					$definingClassInst = Injector::inst()->get($definingClass);
-					$isAllowed = call_user_func_array(array($definingClassInst, $method), $arguments);
-				} else {
-					// Value is a permission code to check the current member against
-					$isAllowed = Permission::check($test);
-				}
-			} elseif(
-				is_array($allowedActions) 
-				&& (($key = array_search($action, $allowedActions, true)) !== false) 
-				&& is_numeric($key)
-			) {
-				// Allow numeric array notation (search for array value as action instead of key)
-				$isDefined = true;
+		// check if specific action is set
+		if(isset($allowedActions[$action])) {
+			$isDefined = true;
+			$test = $allowedActions[$action];
+			if($test === true || $test === 1 || $test === '1') {
+				// TRUE should always allow access
 				$isAllowed = true;
-			} elseif(is_array($allowedActions) && !count($allowedActions)) {
-				// If defined as empty array, deny action
-				$isAllowed = false;
-			} elseif($allowedActions === null) {
-				// If undefined, allow action
-				$isAllowed = true;
+			} elseif(substr($test, 0, 2) == '->') {
+				// Determined by custom method with "->" prefix
+				list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
+				$isAllowed = call_user_func_array(array($this, $method), $arguments);
+			} else {
+				// Value is a permission code to check the current member against
+				$isAllowed = Permission::check($test);
 			}
+		} elseif(
+			is_array($allowedActions) 
+			&& (($key = array_search($action, $allowedActions, true)) !== false) 
+			&& is_numeric($key)
+		) {
+			// Allow numeric array notation (search for array value as action instead of key)
+			$isDefined = true;
+			$isAllowed = true;
+		} elseif(is_array($allowedActions) && !count($allowedActions)) {
+			// If defined as empty array, deny action
+			$isAllowed = false;
+		} elseif($allowedActions === null) {
+			// If undefined, allow action
+			$isAllowed = true;
+		}
 
-			// If we don't have a match in allowed_actions,
-			// whitelist the 'index' action as well as undefined actions.
-			if(!$isDefined && ($action == 'index' || empty($action))) {
-				$isAllowed = true;
-			}
-		} else {
-			// Doesn't have method, set to true so that a template can handle this action
+		// If we don't have a match in allowed_actions,
+		// whitelist the 'index' action as well as undefined actions.
+		if(!$isDefined && ($action == 'index' || empty($action))) {
 			$isAllowed = true;
 		}
 
