@@ -150,7 +150,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyle .TreeDropdownField { width: auto; max-width: auto; }
 
 .field { display: block; border-bottom: 1px solid #d0d3d5; -webkit-box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); -moz-box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); padding: 0 0 7px 0; margin: 8px 0; *zoom: 1; }
-.field:last-child { border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
+.field.noborder, .field:last-child { padding-bottom: 0; border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
 .field.nolabel .description { margin-left: 0; }
@@ -160,7 +160,7 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
 .field .fieldgroup .fieldgroup-field.last { /* This is used on page/settings/visibility */ padding-bottom: 8px; /* replicates li item spacing */ }
-.field .description { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
+.field .description { clear: both; color: #777777; display: block; font-style: italic; line-height: 16px; margin: 4px 0 0 184px; }
 .field.checkbox .description, .field.ss-gridfield .description { margin-left: 0; }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { margin-left: 10px; width: 100%; max-width: 512px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .field input.text.description, .field textarea.description, .field select.description, .field .TreeDropdownField.description { margin: 0; }
@@ -636,21 +636,22 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 
 /** -------------------------------------------- "Insert X" forms -------------------------------------------- */
 .htmleditorfield-dialog.ui-dialog-content { padding: 0; position: relative; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb .CompositeField { overflow: hidden; *zoom: 1; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL .middleColumn { margin-left: 0; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL input.remoteurl { padding-left: 40px; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url { margin-top: 5px; padding-top: 15px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url .ui-button-text { margin-left: 10px; margin-top: -5px; line-height: 20px; float: left; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url:hover, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
+.htmleditorfield-dialog .htmleditorfield-from-web .CompositeField { overflow: hidden; *zoom: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL .middleColumn { margin-left: 0; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL input.remoteurl { padding-left: 40px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url { margin-top: 5px; padding-top: 15px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .ui-button-text { margin-left: 10px; margin-top: -5px; line-height: 20px; float: left; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
+.htmleditorfield-dialog .htmleditorfield-from-web .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 .htmleditorfield-dialog .cms-content-header { padding: 0; width: 100%; height: 40px; }
 .htmleditorfield-dialog .cms-content-header h3 { padding: 0 8px; margin: 10px; }
 .htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .Actions, .htmleditorfield-dialog .ss-insert-link { padding: 8px 16px; }
-.htmleditorfield-dialog .details .file-url { display: block; width: 450px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
+.htmleditorfield-dialog .ss-insert-media .ui-tabs-panel, .htmleditorfield-dialog .Actions .ui-tabs-panel, .htmleditorfield-dialog .ss-insert-link .ui-tabs-panel { padding: 0; }
+.htmleditorfield-dialog .details .file-url { display: block; width: 300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
 .htmleditorfield-dialog .details .cms-file-info .field { border: none; -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0); -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
 .htmleditorfield-dialog .details .field { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
 .htmleditorfield-dialog .details .field.last { border-bottom: none; -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0); -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0); box-shadow: 0 0 0 rgba(0, 0, 0, 0); margin-bottom: 0; }
@@ -658,13 +659,14 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 
 .htmleditorfield-linkform .step2 { margin-bottom: 16px; }
 
-.htmleditorfield-mediaform .ss-gridfield tbody td:first-child img { max-height: 30px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-web, .htmleditorfield-mediaform .ss-uploadfield.from-CMS { margin-bottom: 48px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-web .middleColumn, .htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS { margin-top: 33px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS h4 { margin-top: 3px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn { margin-top: 0; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn .TreeDropdownField { margin-top: 23px; }
+.htmleditorfield-mediaform .ss-gridfield .gridfield-button-delete { display: none; }
+.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child { padding: 0; text-align: center; }
+.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child img { max-height: 30px; }
+.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tr td { padding: 4px; }
+.htmleditorfield-mediaform .htmleditorfield-from-web .ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { margin-top: 16px; margin-left: 184px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .field.treedropdown { border-bottom: 0; padding: 0; }
 .htmleditorfield-mediaform .ss-uploadfield-editandorganize { display: none; }
 
 /** -------------------------------------------- Search forms (used in AssetAdmin, ModelAdmin, etc) -------------------------------------------- */
@@ -681,9 +683,11 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 /** -------------------------------------------- Item Edit Form -------------------------------------------- */
 .cms-file-info { overflow: auto; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin-bottom: 8px; }
 .cms-file-info .cms-file-info-preview { float: left; width: 176px; margin-right: 8px; }
-.cms-file-info .cms-file-info-preview img { max-width: 176px; }
+.cms-file-info .cms-file-info-preview img { max-width: 176px; max-height: 128px; }
 .cms-file-info .cms-file-info-data { float: left; }
-.cms-file-info .cms-file-info-data .field { margin-bottom: 0; padding-bottom: 8px; border: none; box-shadow: none; }
+.cms-file-info .cms-file-info-data .field { margin: 0; padding-bottom: 8px; border: none; box-shadow: none; }
+.cms-file-info .cms-file-info-data .field label.left { width: 96px; }
+.cms-file-info .cms-file-info-data .field .middleColumn { margin-left: 104px; }
 .cms-file-info .cms-file-info-data .field label, .cms-file-info .cms-file-info-data .field span { padding: 0; }
 
 form.small .cms-file-info-preview { width: 112px; }
@@ -716,7 +720,6 @@ form.import-form label.left { width: 250px; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li { white-space: nowrap; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li label { padding-left: 2px; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .fieldgroup .fieldgroup-field { width: 216px; padding-left: 0; }
-.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .TreeDropdownField .treedropdownfield-toggle-panel-link { border-left: none; background: none; background-image: none; }
 
 /** -------------------------------------------- Buttons for FileUpload -------------------------------------------- */
 .ss-uploadfield-item-edit-all .ui-button-text { padding-right: 0; }

@@ -1366,7 +1366,7 @@ body.cms-dialog {
 		position:relative;
 	}
 
-	#MediaFormInsertMediaTabs_FromWeb{
+	.htmleditorfield-from-web {
 		.CompositeField{
 			@include clearfix;
 		}
@@ -1442,11 +1442,14 @@ body.cms-dialog {
 
 	.ss-insert-media, .Actions, .ss-insert-link{
 		padding:$grid-y $grid-x*2 ;
+		.ui-tabs-panel {
+			padding: 0;
+		}
 	}
 	.details{
 		.file-url{
 			display:block;
-			width:450px;
+			width:300px;
 			@include hide-text-overflow;
 		}
 		.cms-file-info{
@@ -1483,15 +1486,26 @@ body.cms-dialog {
 
 .htmleditorfield-mediaform {
 	.ss-gridfield {
-		// Set thumbnail size 
-		tbody td:first-child img {
-			max-height: 30px;
+		.gridfield-button-delete {
+			// TODO Remove from PHP instead of hiding
+			display: none; // delete action shouldn't be allowed here
+		}
+		table.ss-gridfield-table {
+			tbody td:first-child {
+				padding: 0;
+				text-align: center;
+				img {
+					max-height: 30px; // same thumbnail size as uploadfield rows
+				}
+			}
+			tr td {
+				padding: $grid-x/2; // more compressed space
+			}	
 		}
 	}
 
-	.ss-uploadfield{
-		&.from-web, &.from-CMS{
-			margin-bottom:48px;
+	.htmleditorfield-from-web, .htmleditorfield-from-cms {
+		.ss-uploadfield {
 			.middleColumn {
 				width:auto;
 				background:none;
@@ -1499,20 +1513,24 @@ body.cms-dialog {
 				margin-top:13px;
 			}
 		}
+	}
 
-		&.from-CMS{
-			margin-top:33px;
-			h4{
-				margin-top:3px;
+	.htmleditorfield-from-cms {
+		.ss-uploadfield {
+			h4 {
+				float: left; // headline and dropdown on same line
+				margin-top: $grid-y/2; // bring to same baseline as dropdown
+				margin-bottom: 0;
 			}
 			.middleColumn {
-				margin-top:0;
-				.TreeDropdownField{
-					margin-top:23px;
-				}			
+				margin-top: $grid-y*2; // same as left-floated h4
+				margin-left: $grid-x*23; // make room for headline
+			}
+			.field.treedropdown {
+				border-bottom: 0; // don't show border, dropdown and gridfield visually belong together
+				padding: 0;
 			}
 		}
-
 	}
 
 	.ss-uploadfield-editandorganize {
@@ -1590,6 +1608,7 @@ body.cms-dialog {
 
 		img {
 			max-width: $grid-x * 22; // Same as ".field label"
+			max-height: $grid-x * 16; // Fitting typical info displayed (~5 rows)
 		}
 	}
 	.cms-file-info-data {
@@ -1597,10 +1616,16 @@ body.cms-dialog {
 
 		.field {
 			// Unsetting styles from .field, make it more compact visually
-			margin-bottom: 0;
+			margin: 0;
 			padding-bottom: $grid-x;
 			border: none;
 			box-shadow: none;
+			label.left {
+				width: $grid-x*12;
+			}
+			.middleColumn {
+				margin-left: $grid-x*13;
+			}
 			label, span {
 				padding: 0;
 			}
@@ -1701,11 +1726,6 @@ form.import-form {
 		.fieldgroup .fieldgroup-field {
 			width:$grid-x*27;
 			padding-left:0;
-		}
-		.TreeDropdownField .treedropdownfield-toggle-panel-link {
-			border-left:none;
-			background:none;
-			background-image:none;
 		}
 	}
 }

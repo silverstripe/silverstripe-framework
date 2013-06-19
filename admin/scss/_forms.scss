@@ -23,12 +23,12 @@ form.nostyle {
 	//overflow: hidden;
 
 	// bottom padding accounts for the border and we have a negative
-	// margin with a postive padding to ensure the bottom border extends
-	// over the edges
+	// margin with a postive padding to ensure the bottom border extends over the edges
 	padding: 0 0 $grid-y - 1 0;
 	margin: $grid-y 0;
 
-	&:last-child {
+	&.noborder, &:last-child {
+		padding-bottom: 0;
 		border-bottom: none;
 		@include box-shadow(none);
 	}
@@ -37,7 +37,7 @@ form.nostyle {
 	// need to use relative positioning and overflow hidden will not expand
 	// the containing boxes
 	@include legacy-pie-clearfix();
-	
+
 	&.nolabel {
 		.middleColumn {
 			margin-left: 0;
@@ -95,6 +95,7 @@ form.nostyle {
 		color: lighten($color-text, 20%);
 		display: block;
 		font-style: italic;
+		line-height: $grid-y * 2;
 		margin: $grid-y/2 0 0 $grid-x*23; // left align with .middleColumn
 	}
 	
