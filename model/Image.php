@@ -350,7 +350,7 @@ class Image extends File {
 	 * @param integer $height The height to size to
 	 * @return Image
 	 */
-	public function PaddedImage($width, $height, $backgroundColor=null) {
+	public function PaddedImage($width, $height, $backgroundColor='FFFFFF') {
 		return $this->isSize($width, $height)
 			? $this 
 			: $this->getFormattedImage('PaddedImage', $width, $height, $backgroundColor);
