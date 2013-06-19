@@ -186,7 +186,7 @@
 			$(window).unbind('resize.ssdialog');
 		},
 		_resizeIframe: function() {
-			var opts = {}, newWidth, newHeight;
+			var opts = {}, newWidth, newHeight, iframe = this.element.children('iframe');;
 			if(this.options.widthRatio) {
 				newWidth = $(window).width() * this.options.widthRatio;
 				if(this.options.minWidth && newWidth < this.options.minWidth) {
@@ -210,8 +210,22 @@
 			if(this.options.autoPosition) {
 				opts.position = this.options.position;
 			}
+
 			if(!jQuery.isEmptyObject(opts)) {
+				// Resize dialog
 				this._setOptions(opts);
+
+				// Resize iframe within dialog
+				iframe.attr('width', 
+					opts.width 
+					- parseFloat(this.element.css('paddingLeft'))
+					- parseFloat(this.element.css('paddingRight'))
+				);
+				iframe.attr('height', 
+					opts.height
+					- parseFloat(this.element.css('paddingTop')) 
+					- parseFloat(this.element.css('paddingBottom'))
+				);
 			}
 		}
 	});
