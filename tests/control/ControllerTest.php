@@ -5,7 +5,7 @@ class ControllerTest extends FunctionalTest {
 	protected static $fixture_file = 'ControllerTest.yml';
 
 	protected $autoFollowRedirection = false;
-
+	
 	protected $requiredExtensions = array(
 		'ControllerTest_AccessBaseController' => array(
 			'ControllerTest_AccessBaseControllerExtension'
@@ -44,7 +44,7 @@ class ControllerTest extends FunctionalTest {
 	
 	public function testAllowedActions() {
 		$adminUser = $this->objFromFixture('Member', 'admin');
-
+		
 		$response = $this->get("ControllerTest_UnsecuredController/");
 		$this->assertEquals(200, $response->getStatusCode(),
 			'Access granted on index action without $allowed_actions on defining controller, ' .
@@ -62,7 +62,7 @@ class ControllerTest extends FunctionalTest {
 			'Access granted on action without $allowed_actions on defining controller, ' .
 			'when called without an action in the URL'
 		);
-
+		
 		$response = $this->get("ControllerTest_AccessBaseController/");
 		$this->assertEquals(200, $response->getStatusCode(),
 			'Access granted on index with empty $allowed_actions on defining controller, ' .
@@ -110,6 +110,12 @@ class ControllerTest extends FunctionalTest {
 			'if action is not a method but rather a template discovered by naming convention'
 		);
 
+		$response = $this->get("ControllerTest_AccessSecuredController/templateaction");
+		$this->assertEquals(403, $response->getStatusCode(),
+			'Access denied on action with $allowed_actions on defining controller, ' .
+			'if action is not a method but rather a template discovered by naming convention'
+		);
+
 		$this->session()->inst_set('loggedInAs', $adminUser->ID);
 		$response = $this->get("ControllerTest_AccessSecuredController/templateaction");
 		$this->assertEquals(200, $response->getStatusCode(),
@@ -147,25 +153,25 @@ class ControllerTest extends FunctionalTest {
 			"Access granted to method defined in allowed_actions on extension, " .
 			"where method is also defined on extension"
 		);
-
+		
 		$response = $this->get('ControllerTest_AccessSecuredController/extensionmethod1');
 		$this->assertEquals(200, $response->getStatusCode(), 
 			"Access granted to method defined in allowed_actions on extension, " .
 			"where method is also defined on extension, even when called in a subclass"
 		);
-
+		
 		$response = $this->get('ControllerTest_AccessBaseController/extensionmethod2');
-		$this->assertEquals(404, $response->getStatusCode(), 
+		$this->assertEquals(404, $response->getStatusCode(),
 			"Access denied to method not defined in allowed_actions on extension, " .
 			"where method is also defined on extension"
 		);
-
+		
 		$response = $this->get('ControllerTest_IndexSecuredController/');
 		$this->assertEquals(403, $response->getStatusCode(), 
 			"Access denied when index action is limited through allowed_actions, " .
 			"and doesn't satisfy checks, and action is empty"
 		);
-
+		
 		$response = $this->get('ControllerTest_IndexSecuredController/index');
 		$this->assertEquals(403, $response->getStatusCode(), 
 			"Access denied when index action is limited through allowed_actions, " .
@@ -174,13 +180,13 @@ class ControllerTest extends FunctionalTest {
 
 		$this->session()->inst_set('loggedInAs', $adminUser->ID);
 		$response = $this->get('ControllerTest_IndexSecuredController/');
-		$this->assertEquals(200, $response->getStatusCode(), 
+		$this->assertEquals(200, $response->getStatusCode(),
 			"Access granted when index action is limited through allowed_actions, " .
 			"and does satisfy checks"
 		);
 		$this->session()->inst_set('loggedInAs', null);
 	}
-
+	
 	/**
 	 * @expectedException PHPUnit_Framework_Error
 	 * @expectedExceptionMessage Wildcards (*) are no longer valid
@@ -358,7 +364,7 @@ class ControllerTest extends FunctionalTest {
 class ControllerTest_Controller extends Controller implements TestOnly {
 	
 	public $Content = "default content";
-
+	
 	private static $allowed_actions = array(
 		'methodaction',
 		'stringaction',
@@ -385,13 +391,13 @@ class ControllerTest_UnsecuredController extends Controller implements TestOnly 
 
 	// Not defined, allow access to all
 	// static $allowed_actions = array();
-	
+
 	// Granted for all
 	public function method1() {}
 
 	// Granted for all
 	public function method2() {}
-}
+	}
 
 class ControllerTest_AccessBaseController extends Controller implements TestOnly {
 
@@ -402,7 +408,7 @@ class ControllerTest_AccessBaseController extends Controller implements TestOnly
 
 	// Denied for all
 	public function method2() {}
-}
+	}
 
 class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 	
@@ -414,7 +420,7 @@ class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseCo
 	);
 
 	public function method2() {}
-		
+
 	public function adminonly() {}
 
 	protected function protectedmethod()  {}
@@ -427,18 +433,18 @@ class ControllerTest_AccessWildcardSecuredController extends ControllerTest_Acce
 		"*" => "ADMIN", // should throw exception
 	);
 	
-}
-
+	}
+	
 class ControllerTest_IndexSecuredController extends ControllerTest_AccessBaseController implements TestOnly {
 	
 	private static $allowed_actions = array(
 		"index" => "ADMIN",
 	);
 	
-}
+	}
 
 class ControllerTest_AccessBaseControllerExtension extends Extension implements TestOnly {
-
+	
 	private static $allowed_actions = array(
 		"extensionmethod1" => true, // granted because defined on this class
 		"method1" => true, // ignored because method not defined on this class
@@ -457,7 +463,7 @@ class ControllerTest_AccessBaseControllerExtension extends Extension implements 
 
 	public function internalextensionmethod() {}
 
-}
+	}
 
 class ControllerTest_HasAction extends Controller {
 	
