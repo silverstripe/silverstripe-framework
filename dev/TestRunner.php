@@ -286,8 +286,18 @@ class TestRunner extends Controller {
 			$skipTests = explode(',', $this->request->getVar('SkipTests'));
 		}
 
-		$classList = array_diff($classList, $skipTests);
+		$abstractClasses = array();
+		foreach($classList as $className) {
+			// Ensure that the autoloader pulls in the test class, as PHPUnit won't know how to do this.
+			class_exists($className);
+			$reflection = new ReflectionClass($className);
+			if ($reflection->isAbstract()) {
+				array_push($abstractClasses, $className);
+			}
+		}
 		
+		$classList = array_diff($classList, $skipTests, $abstractClasses);
+
 		// run tests before outputting anything to the client
 		$suite = new PHPUnit_Framework_TestSuite();
 		natcasesort($classList);

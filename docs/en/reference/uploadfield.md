@@ -208,7 +208,7 @@ like this:
 			'Description' => 'Text'
 		);
 		
-		public static $belongs_many_many = array(
+		private static $belongs_many_many = array(
 			'GalleryPage' => 'GalleryPage'
 		);
 	}

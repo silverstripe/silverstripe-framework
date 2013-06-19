@@ -717,8 +717,14 @@ class SSViewer {
 	public static function hasTemplate($templates) {
 		$manifest = SS_TemplateLoader::instance()->getManifest();
 
+		if(Config::inst()->get('SSViewer', 'theme_enabled')) {
+			$theme = Config::inst()->get('SSViewer', 'theme');
+		} else {
+			$theme = null;
+		}
+
 		foreach ((array) $templates as $template) {
-			if ($manifest->getTemplate($template)) return true;
+			if ($manifest->getCandidateTemplate($template, $theme)) return true;
 		}
 
 		return false;

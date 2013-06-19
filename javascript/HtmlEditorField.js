@@ -14,6 +14,9 @@ var ss = ss || {};
  */
 ss.editorWrappers = {};
 ss.editorWrappers.tinyMCE = (function() {
+	
+	var instance;
+
 	return {
 		init: function(config) {
 			if(!ss.editorWrappers.tinyMCE.initialized) {
@@ -25,7 +28,7 @@ ss.editorWrappers.tinyMCE = (function() {
 		 * @return Mixed Implementation specific object
 		 */
 		getInstance: function() {
-			return tinyMCE.activeEditor;
+			return this.instance;
 		},
 		/**
 		 * Invoked when a content-modifying UI is opened.
@@ -55,13 +58,31 @@ ss.editorWrappers.tinyMCE = (function() {
 		 * @param Function
 		 */
 		create: function(domID, config) {
-			var ed = new tinymce.Editor(domID, config);
+			this.instance = new tinymce.Editor(domID, config);
 
 			// Patch TinyMCE events into underlying textarea field.
-			ed.onInit.add(function(ed) {
+			this.instance.onInit.add(function(ed) {
 				jQuery(ed.getElement()).trigger('editorinit');
+
+				// Periodically check for inline changes when focused, 
+				// since TinyMCE's onChange only fires on certain actions
+				// like inserting a new paragraph, as opposed to any user input.
+				// This also works around an issue where the "save" button
+				// wouldn't trigger if the click is the cause of a "blur" event
+				// after an (undetected) inline change. This "blur" causes onChange
+				// to trigger, which will change the button markup to show "alternative" styles,
+				// effectively cancelling the original click event.
+				var interval;
+				jQuery(ed.getBody()).on('focus', function() {
+					interval = setInterval(function() {
+						ed.save();
+					}, 5000);
+				});
+				jQuery(ed.getBody()).on('blur', function() {
+					clearInterval(interval);
+				});
 			});
-			ed.onChange.add(function(ed, l) {
+			this.instance.onChange.add(function(ed, l) {
 				// Update underlying textarea on every change, so external handlers
 				// such as changetracker have a chance to trigger properly.
 				ed.save();
@@ -69,7 +90,7 @@ ss.editorWrappers.tinyMCE = (function() {
 			});
 			// Add more events here as needed.
 
-			ed.render();
+			this.instance.render();
 		},
 		/**
 		 * Redraw the editor contents
@@ -234,7 +255,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * Constructor: onmatch
 			 */
 			onadd: function() {
-				var edClass = this.data('editor') || ss.editorWrappers['default'], ed = edClass();
+				var edClass = this.data('editor') || 'default', ed = ss.editorWrappers[edClass]();
 				this.setEditor(ed);
 
 				// Using a global config (generated through HTMLEditorConfig PHP logic).
@@ -342,10 +363,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 				};
 
-				var url = $('#cms-editor-dialogs').data('url' + capitalize(type) + 'form'),
+				var self = this, url = $('#cms-editor-dialogs').data('url' + capitalize(type) + 'form'),
 					dialog = $('.htmleditorfield-' + type + 'dialog');
 
 				if(dialog.length) {
+					dialog.getForm().setElement(this);
 					dialog.open();
 				} else {
 					// Show a placeholder for instant feedback. Will be replaced with actual
@@ -354,8 +376,12 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					$('body').append(dialog);
 					$.ajax({
 						url: url,
+						complete: function() {
+							dialog.removeClass('loading');
+						},
 						success: function(html) {
 							dialog.html(html);
+							dialog.getForm().setElement(self);
 							dialog.trigger('dialogopen');
 						}
 					});
@@ -366,11 +392,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		$('.htmleditorfield-dialog').entwine({
 			onadd: function() {
 				// Create jQuery dialog
-
-				var height = $(window).height() * 0.8; 
-				var width = $(window).width() * 0.8;
-
-				if (!this.is('.ui-dialog-content')) this.dialog({autoOpen: true, bgiframe: true, modal: true, height: height, width: width, ghost: true});
+				if (!this.is('.ui-dialog-content')) {
+					this.ssdialog({autoOpen: true});
+				}
 
 				this._super();
 			},
@@ -379,10 +403,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return this.find('form');
 			},
 			open: function() {
-				this.dialog('open');
+				this.ssdialog('open');
 			},
 			close: function() {
-				this.dialog('close');
+				this.ssdialog('close');
 			},
 			toggle: function(bool) {
 				if(this.is(':visible')) this.close();
@@ -396,14 +420,16 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 */
 		$('form.htmleditorfield-form').entwine({
 			Selection: null,
+
+			// Implementation-dependent serialization of the current editor selection state
 			Bookmark: null,
+			
+			// DOMElement pointing to the currently active textarea
+			Element: null,
 
 			setSelection: function(node) {
 				return this._super($(node));
 			},
-
-			// Wrapper for various HTML editors
-			Editor: null,
 
 			onadd: function() {
 				// Move title from headline to (jQuery compatible) title attribute
@@ -415,7 +441,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			onremove: function() {
 				this.setSelection(null);
 				this.setBookmark(null);
-				this.setEditor(null);
+				this.setElement(null);
 
 				this._super();
 			},
@@ -454,19 +480,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 			},
 
-			createEditor: function(){
-				return ss.editorWrappers['default']();
-			},
-
 			/**
-			 * Get the tinyMCE editor
+			 * @return Object ss.editorWrapper instance
 			 */
 			getEditor: function(){
-				var val = this._super();
-				if(!val) {
-					this.setEditor(val = this.createEditor());
-				}
-				return val;
+				return this.getElement().getEditor();
 			},
 
 			modifySelection: function(callback) {
@@ -826,7 +844,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 				this.redraw();
 			},
-			redraw: function() {
+			redraw: function(updateExisting) {
 				this._super();
 			
 				var node = this.getSelection(),
@@ -835,7 +853,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					header = this.find('.header-edit');
 
 				// Only show second step if files are selected
-				if(header) header[(hasItems) ? 'show' : 'hide']();
+				header[(hasItems) ? 'show' : 'hide']();
 
 				// Disable "insert" button if no files are selected
 				this.find('.Actions :submit')
@@ -845,11 +863,15 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Hide file selection and step labels when editing an existing file
 				this.find('#MediaFormInsertMediaTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
 
-				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
-				this.find('.htmleditorfield-mediaform-heading.insert')[updateExisting ? 'hide' : 'show']();
-				this.find('.Actions .media-insert')[updateExisting ? 'hide' : 'show']();
-				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
-				this.find('.Actions .media-update')[updateExisting ? 'show' : 'hide']();
+				// TODO Way too much knowledge on UploadField internals, use viewfile URL directly instead
+				this.find('.htmleditorfield-mediaform-heading.insert')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-actions')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-name')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-preview')[editingSelected ? 'hide' : 'show']();
+				this.find('.Actions .media-insert')[editingSelected ? 'hide' : 'show']();
+				this.find('.htmleditorfield-mediaform-heading.update')[editingSelected ? 'show' : 'hide']();
+				this.find('.Actions .media-update')[editingSelected ? 'show' : 'hide']();
+				this.find('.ss-uploadfield-item-editform').toggleEditForm(editingSelected);
 			},
 			resetFields: function() {				
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
@@ -866,7 +888,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var self = this, params = (Number(idOrUrl) == idOrUrl) ? {ID: idOrUrl} : {FileURL: idOrUrl};
 
 				var item = $('<div class="ss-htmleditorfield-file loading" />');
-				this.find('.content-edit').append(item);
+				this.find('.content-edit').prepend(item);
 				
 				var dfr = $.Deferred();
 				
@@ -1004,6 +1026,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * @return {String} HTML suitable for insertion into the rich text editor
 			 */
 			getHTML: function() {
+				// Assumes UploadField markup structure
+				return $('<div>').append(
+					$('<a/>').attr({href: this.data('url')}).text(this.find('.name').text())
+				).html();
 			},
 			/**
 			 * Insert updated HTML content into the rich text editor
@@ -1300,11 +1326,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		});
 
 		$('div.ss-assetuploadfield .ss-uploadfield-item-editform').entwine({
-			toggleEditForm: function() {
+			toggleEditForm: function(bool) {
 				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
 				var text="";
 
-				if(this.height() === 0) {
+				if(bool === true || (bool !== false && this.height() === 0)) {
 					text = ss.i18n._t('UploadField.Editing', "Editing ...");
 					this.height('auto');
 					itemInfo.find('.toggle-details-icon').addClass('opened');					

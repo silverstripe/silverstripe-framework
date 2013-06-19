@@ -100,9 +100,23 @@ class ControllerTest extends FunctionalTest {
 
 		$response = $this->get("ControllerTest_AccessSecuredController/method2");
 		$this->assertEquals(200, $response->getStatusCode(),
-			'Access grante on action originally defined with empty $allowed_actions on parent controller, ' .
+			'Access granted on action originally defined with empty $allowed_actions on parent controller, ' .
 			'because it has been redefined in the subclass'
 		);
+
+		$response = $this->get("ControllerTest_AccessSecuredController/templateaction");
+		$this->assertEquals(403, $response->getStatusCode(),
+			'Access denied on action with $allowed_actions on defining controller, ' .
+			'if action is not a method but rather a template discovered by naming convention'
+		);
+
+		$this->session()->inst_set('loggedInAs', $adminUser->ID);
+		$response = $this->get("ControllerTest_AccessSecuredController/templateaction");
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Access granted for logged in admin on action with $allowed_actions on defining controller, ' .
+			'if action is not a method but rather a template discovered by naming convention'
+		);
+		$this->session()->inst_set('loggedInAs', null);
 
 		$response = $this->get("ControllerTest_AccessSecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode(),
@@ -349,8 +363,9 @@ class ControllerTest_Controller extends Controller implements TestOnly {
 		'methodaction',
 		'stringaction',
 		'redirectbacktest',
+		'templateaction'
 	);
-	
+
 	public function methodaction() {
 		return array(
 			"Content" => "methodaction content"
@@ -395,7 +410,7 @@ class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseCo
 		"method1", // denied because only defined in parent
 		"method2" => true, // granted because its redefined
 		"adminonly" => "ADMIN",
-		"protectedmethod" => true, // denied because its protected
+		'templateaction' => 'ADMIN'
 	);
 
 	public function method2() {}

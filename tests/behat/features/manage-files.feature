@@ -5,37 +5,10 @@ Feature: Manage files
   So that I can insert them into my content efficiently
 
   Background:
-    # Idea: We could weave the database reset into this through
-    # saying 'Given there are ONLY the following...'.
-    Given there are the following Folder records
-    """
-    folder1:
-        Filename: assets/folder1
-    folder1.1:
-        Filename: assets/folder1/folder1.1
-        Parent: =>Folder.folder1
-    folder2:
-        Filename: assets/folder2
-        Name: folder2
-    """
-    And there are the following File records
-    """
-    file1:
-        Filename: assets/folder1/file1.jpg
-        Name: file1.jpg
-        Parent: =>Folder.folder1
-    file2:
-        Filename: assets/folder1/folder1.1/file2.jpg
-        Name: file2.jpg
-        Parent: =>Folder.folder1.1
-    """
+    Given a "file" "assets/folder1/file1.jpg"
+    And a "file" "assets/folder1/folder1.1/file2.jpg"
+    And a "folder" "assets/folder2"
     And I am logged in with "ADMIN" permissions
-    # Alternative fixture shortcuts, with their titles
-    # as shown in admin/security rather than technical permission codes.
-    # Just an idea for now, could be handled by YAML fixtures as well
-#    And I am logged in with the following permissions
-#      - Access to 'Pages' section
-#      - Access to 'Files' section
     And I go to "/admin/assets"
 
   @modal
@@ -76,7 +49,7 @@ Feature: Manage files
   Scenario: I can change the folder of a file
     Given I click on "folder1" in the "Files" table
     And I click on "file1" in the "folder1" table
-    And I fill in =>Folder.folder2 for "ParentID"
+    And I fill in "folder2" for the "ParentID" dropdown
     And I press the "Save" button
     # /show/0 is to ensure that we are on top level folder
     And I go to "/admin/assets/show/0"

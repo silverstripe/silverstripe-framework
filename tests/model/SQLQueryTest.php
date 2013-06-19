@@ -138,6 +138,39 @@ class SQLQueryTest extends SapphireTest {
 			$query->sql());
 	}
 
+	public function testNullLimit() {
+		$query = new SQLQuery();
+		$query->setFrom("MyTable");
+		$query->setLimit(null);
+
+		$this->assertEquals(
+			'SELECT * FROM MyTable',
+			$query->sql()
+		);
+	}
+
+	public function testZeroLimit() {
+		$query = new SQLQuery();
+		$query->setFrom("MyTable");
+		$query->setLimit(0);
+
+		$this->assertEquals(
+			'SELECT * FROM MyTable',
+			$query->sql()
+		);
+	}
+
+	public function testZeroLimitWithOffset() {
+		$query = new SQLQuery();
+		$query->setFrom("MyTable");
+		$query->setLimit(0, 99);
+
+		$this->assertEquals(
+			'SELECT * FROM MyTable LIMIT 0 OFFSET 99',
+			$query->sql()
+		);
+	}
+
 	/**
 	 * @expectedException InvalidArgumentException
 	 */

@@ -12,19 +12,19 @@ class MySQLDatabase extends SS_Database {
 	 * Connection to the DBMS.
 	 * @var resource
 	 */
-	private $dbConn;
+	protected $dbConn;
 
 	/**
 	 * True if we are connected to a database.
 	 * @var boolean
 	 */
-	private $active;
+	protected $active;
 
 	/**
 	 * The name of the database.
 	 * @var string
 	 */
-	private $database;
+	protected $database;
 
 	/**
 	 * @config
@@ -32,7 +32,7 @@ class MySQLDatabase extends SS_Database {
 	 */
 	private static $connection_charset = null;
 
-	private $supportsTransactions = true;
+	protected $supportsTransactions = true;
 
 	/**
 	 * Sets the character set for the MySQL database connection.
@@ -931,7 +931,7 @@ class MySQLDatabase extends SS_Database {
 
 		$list = new PaginatedList(new ArrayList($objects));
 		$list->setPageStart($start);
-		$list->setPageLEngth($pageLength);
+		$list->setPageLength($pageLength);
 		$list->setTotalItems($totalCount);
 
 		// The list has already been limited by the query above
@@ -1221,13 +1221,13 @@ class MySQLQuery extends SS_Query {
 	 * The MySQLDatabase object that created this result set.
 	 * @var MySQLDatabase
 	 */
-	private $database;
+	protected $database;
 
 	/**
 	 * The internal MySQL handle that points to the result set.
 	 * @var resource
 	 */
-	private $handle;
+	protected $handle;
 
 	/**
 	 * Hook the result-set given into a Query class, suitable for use by SilverStripe.

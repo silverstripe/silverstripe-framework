@@ -1,11 +1,13 @@
 # Forms
 
-HTML forms are in practice the most used way to communicate with a browser. SilverStripe provides classes to generate 
-and handle the actions and data from a form.
+HTML forms are in practice the most used way to communicate with a browser.
+SilverStripe provides classes to generate and handle the actions and data from a
+form.
 
 ## Overview
 
-A fully implemented form in SilverStripe includes a couple of classes that individually have separate concerns.
+A fully implemented form in SilverStripe includes a couple of classes that
+individually have separate concerns.
 
  * Controller - Takes care of assembling the form and receiving data from it.
  * Form - Holds sets of fields, actions and validators.
@@ -13,19 +15,22 @@ A fully implemented form in SilverStripe includes a couple of classes that indiv
  * FormActions - Often submit buttons that executes actions.
  * Validators - Validate the whole form, see [Form validation](form-validation.md) topic for more information.
 
-Depending on your needs you can customize and override any of the above classes, however the defaults are often 
-sufficient.
+Depending on your needs you can customize and override any of the above classes,
+however the defaults are often sufficient.
 
 ## The Controller
 
-Forms start at the controller. Here is a simple example on how to set up a form in a controller.
+Forms start at the controller. Here is a simple example on how to set up a form
+in a controller.
 
 **Page.php**
 
 	:::php
 	class Page_Controller extends ContentController {
 		
-		public static $allowed_actions = array('HelloForm');
+		private static $allowed_actions = array(
+			'HelloForm'
+		);
 		
 		// Template method
 		public function HelloForm() {
@@ -45,18 +50,20 @@ Forms start at the controller. Here is a simple example on how to set up a form 
 		}
 	}
 
-The name of the form ("HelloForm") is passed into the `Form`
-constructor as a second argument. It needs to match the method name.
+The name of the form ("HelloForm") is passed into the `Form` constructor as a
+second argument. It needs to match the method name.
 
-Since forms need a URL, the `HelloForm()` method needs to be handled
-like any other controller action. In order to whitelist its access through
-URLs, we add it to the `$allowed_actions` array. 
-Form actions ("doSayHello") on the other hand should NOT be included here,
-these are handled separately through `Form->httpSubmission()`. 
-You can control access on form actions either by conditionally removing 
-a `FormAction` from the form construction,
-or by defining `$allowed_actions` in your own `Form` class
-(more information in the ["controllers" topic](/topics/controllers)).
+Since forms need a URL, the `HelloForm()` method needs to be handled like any
+other controller action. In order to whitelist its access through URLs, we add
+it to the `$allowed_actions` array.
+
+Form actions ("doSayHello") on the other hand should NOT be included here, these
+are handled separately through `Form->httpSubmission()`.
+
+You can control access on form actions either by conditionally removing a
+`FormAction` from the form construction, or by defining `$allowed_actions` in
+your own `Form` class (more information in the
+["controllers" topic](/topics/controllers)).
 	
 **Page.ss**
 
@@ -65,8 +72,8 @@ or by defining `$allowed_actions` in your own `Form` class
 	<div>$HelloForm</div>
 
 <div class="warning" markdown='1'>
-	Be sure to add the Form name 'HelloForm' to the Controller::$allowed_actions() to be sure that form submissions 
-	get through to the correct action. 
+Be sure to add the Form name 'HelloForm' to the Controller::$allowed_actions()
+to be sure that form submissions get through to the correct action.
 </div>
 
 <div class="notice" markdown='1'>
@@ -78,13 +85,15 @@ documentation or the API documentation for `[api:Object]`::create().
 
 ## The Form
 
-Form is the base class of all forms in a SilverStripe application. Forms in your application can be created either by
-instantiating the Form class itself, or by subclassing it. 
+Form is the base class of all forms in a SilverStripe application. Forms in your
+application can be created either by instantiating the Form class itself, or by
+subclassing it.
 
 ### Instantiating a form
 
-Creating a form is a matter of defining a method to represent that form. This method should return a form object. The
-constructor takes the following arguments:
+Creating a form is a matter of defining a method to represent that form. This
+method should return a form object. The constructor takes the following
+arguments:
 
 *  `$controller`: This must be and instance of the controller that contains the form, often `$this`.
 *  `$name`: This must be the name of the method on that controller that is called to return the form.  The first two
@@ -141,7 +150,7 @@ data.
 	:::php
 	class Page_Controller extends ContentController {
 		
-		public static $allowed_actions = array(
+		private static $allowed_actions = array(
 			'HelloForm',
 		);
 		
@@ -161,6 +170,7 @@ data.
 				EmailField::create("Email"),
 				PasswordField::create("Password")
 			);
+
 			$actions = new FieldList(FormAction::create("login")->setTitle("Log in"));
 			
 			parent::__construct($controller, $name, $fields, $actions);
@@ -180,8 +190,9 @@ There are many classes extending `[api:FormField]`. There is a full overview at
 
 ### Using Form Fields
 
-To get these fields automatically rendered into a form element, all you need to do is create a new instance of the
-class, and add it to the fieldlist of the form.
+To get these fields automatically rendered into a form element, all you need to
+do is create a new instance of the class, and add it to the `FieldList` of the
+form.
 
 	:::php
 	$form = new Form(
@@ -202,8 +213,9 @@ class, and add it to the fieldlist of the form.
 
 ##  Readonly
 
-You can turn a form or individual fields into a readonly version. This is handy in the case of confirmation pages or 
-when certain fields can be edited due to permissions.
+You can turn a form or individual fields into a readonly version. This is handy
+in the case of confirmation pages or when certain fields can be edited due to
+permissions.
 
 Readonly on a Form
 
@@ -242,6 +254,7 @@ First of all, you need to create your form on it's own class, that way you can d
 				EmailField::create("Email"),
 				PasswordField::create("Password")
 			);
+
 			$actions = new FieldList(FormAction::create("login")->setTitle("Log in"));
 			parent::__construct($controller, $name, $fields, $actions);
 		}
@@ -256,11 +269,12 @@ First of all, you need to create your form on it's own class, that way you can d
 		}
 	}
 	
-`MyForm->forTemplate()` tells the `[api:Form]` class to render with a template of return value of `$this->class`, which in this case
-is *MyForm*. If the template doesn't exist, then it falls back to using Form.ss.
+`MyForm->forTemplate()` tells the `[api:Form]` class to render with a template
+of return value of `$this->class`, which in this case is *MyForm*. If the
+template doesn't exist, then it falls back to using Form.ss.
 
-*MyForm.ss* should then be placed into your *templates/Includes* directory for your project. Here is an example of
-basic customisation:
+*MyForm.ss* should then be placed into your *templates/Includes* directory for
+your project. Here is an example of basic customization:
 
 	:::ss
 	<form $FormAttributes>
@@ -314,30 +328,34 @@ Will be rendered as:
 	:::html
 	<input type="text" name="MyText" class="text largeText" id="MyForm_MyCustomForm_MyText" data-validation-regex="[\d]*">
 
-Each form field is rendered into a form via the `[FormField->FieldHolder()](api:FormField)` method, which includes 
-a container `<div>` as well as a `<label>` element (if applicable).
+Each form field is rendered into a form via the
+`[FormField->FieldHolder()](api:FormField)` method, which includes a container
+`<div>` as well as a `<label>` element (if applicable).
 
-You can also render each field without these structural elements through the `[FormField->Field()](api:FormField)` 
-method. In order to influence the form rendering, overloading these two methods is a good start.
+You can also render each field without these structural elements through the
+`[FormField->Field()](api:FormField)` method. In order to influence the form
+rendering, overloading these two methods is a good start.
 
-In addition, most form fields are rendered through SilverStripe templates, e.g. `TextareaField` is rendered via 
-`framework/templates/forms/TextareaField.ss`.
+In addition, most form fields are rendered through SilverStripe templates, e.g.
+`TextareaField` is rendered via `framework/templates/forms/TextareaField.ss`.
 
-These templates can be overwritten globally by placing a template with the same name in your `mysite` directory,
-or set on a form field instance via anyone of these methods:
+These templates can be overwritten globally by placing a template with the same
+name in your `mysite` directory, or set on a form field instance via anyone of
+these methods:
 
  - FormField->setTemplate()
  - FormField->setFieldHolderTemplate()
  - FormField->getSmallFieldHolderTemplate()
  
 <div class="hint" markdown='1'>
-	Caution: Not all FormFields consistently uses templates set by the above methods.
+Caution: Not all FormFields consistently uses templates set by the above methods.
 </div>
 
 ### Securing forms against Cross-Site Request Forgery (CSRF)
 
-SilverStripe tries to protect users against *Cross-Site Request Forgery (CSRF)* by adding a hidden *SecurityID*
-parameter to each form. See [secure-development](/topics/security) for details.
+SilverStripe tries to protect users against *Cross-Site Request Forgery (CSRF)*
+by adding a hidden *SecurityID* parameter to each form. See
+[secure-development](/topics/security) for details.
 
 In addition, you should limit forms to the intended HTTP verb (mostly `GET` or `POST`)
 to further reduce attack surface, by using `[api:Form->setStrictFormMethodCheck()]`.
@@ -353,6 +371,7 @@ If you want to remove certain fields from your subclass:
 
 	:::php
 	class MyCustomForm extends MyForm {
+
 		public function __construct($controller, $name) {
 			parent::__construct($controller, $name);
 			

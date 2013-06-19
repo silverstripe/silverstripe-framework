@@ -110,6 +110,7 @@ class Cookie {
 			$expiry = $expiry > 0 ? time()+(86400*$expiry) : $expiry;
 			$path = ($path) ? $path : Director::baseURL();
 			setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+			$_COOKIE[$name] = $value;
 		} else {
 			if(Config::inst()->get('Cookie', 'report_errors')) {
 				user_error("Cookie '$name' can't be set. The site started outputting content at line $line in $file",

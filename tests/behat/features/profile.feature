@@ -1,4 +1,3 @@
-@database-defaults
 Feature: My Profile
   As a CMS user
   I want to be able to change personal settings

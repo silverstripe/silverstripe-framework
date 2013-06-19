@@ -146,7 +146,7 @@ quotes, `kipper`, which is a **literal**. If true, the text inside the if-block
 is output.
 
 	:::ss
-	<% if $MyDinner="kipper" %>
+	<% if $MyDinner=="kipper" %>
 		Yummy, kipper for tea.
 	<% end_if %>
 
@@ -159,7 +159,7 @@ This example shows the use of the `else` option. The markup after `else` is
 output if the tested condition is *not* true.
 
 	:::ss
-	<% if $MyDinner="kipper" %>
+	<% if $MyDinner=="kipper" %>
 		Yummy, kipper for tea
 	<% else %>
 		I wish I could have kipper :-(
@@ -171,7 +171,7 @@ and the markup for that condition is used. If none of the conditions are true,
 the markup in the `else` clause is used, if that clause is present.
 
 	:::ss
-	<% if $MyDinner="quiche" %>
+	<% if $MyDinner=="quiche" %>
 		Real men don't eat quiche
 	<% else_if $MyDinner=$YourDinner %>
 		We both have good taste

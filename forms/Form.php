@@ -359,9 +359,36 @@ class Form extends RequestHandler {
 		
 		// Validate the form
 		if(!$this->validate()) {
-			if(Director::is_ajax()) {
-				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through
-				// FormResponse)
+			return $this->getValidationErrorResponse();
+		}
+		
+		// First, try a handler method on the controller (has been checked for allowed_actions above already)
+		if($this->controller->hasMethod($funcName)) {
+			return $this->controller->$funcName($vars, $this, $request);
+		// Otherwise, try a handler method on the form object.
+		} elseif($this->hasMethod($funcName)) {
+			return $this->$funcName($vars, $this, $request);
+		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
+			return $field->$funcName($vars, $this, $request);
+		}
+		
+		return $this->httpError(404);
+	}
+
+	/**
+	 * Returns the appropriate response up the controller chain
+	 * if {@link validate()} fails (which is checked prior to executing any form actions).
+	 * By default, returns different views for ajax/non-ajax request, and
+	 * handles 'appliction/json' requests with a JSON object containing the error messages.
+	 * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError}.
+	 * 
+	 * @return SS_HTTPResponse|string
+	 */
+	protected function getValidationErrorResponse() {
+		$request = $this->getRequest();
+		if($request->isAjax()) {
+				// Special case for legacy Validator.js implementation 
+				// (assumes eval'ed javascript collected through FormResponse)
 				$acceptType = $request->getHeader('Accept');
 				if(strpos($acceptType, 'application/json') !== FALSE) {
 					// Send validation errors back as JSON with a flag at the start
@@ -387,19 +414,6 @@ class Form extends RequestHandler {
 				}
 				return $this->controller->redirectBack();
 			}
-		}
-		
-		// First, try a handler method on the controller (has been checked for allowed_actions above already)
-		if($this->controller->hasMethod($funcName)) {
-			return $this->controller->$funcName($vars, $this, $request);
-		// Otherwise, try a handler method on the form object.
-		} elseif($this->hasMethod($funcName)) {
-			return $this->$funcName($vars, $this, $request);
-		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
-			return $field->$funcName($vars, $this, $request);
-		}
-		
-		return $this->httpError(404);
 	}
 	
 	/**
@@ -726,9 +740,9 @@ class Form extends RequestHandler {
 
 	/**
 	 * Set the {@link FormTemplateHelper}
-	 *
+	* 
 	 * @param string|FormTemplateHelper
-	 */
+	*/
 	public function setTemplateHelper($helper) {
 		$this->templateHelper = $helper;
 	}
@@ -949,7 +963,7 @@ class Form extends RequestHandler {
 
 		return $this;
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -1049,9 +1063,9 @@ class Form extends RequestHandler {
 			return $this->message;
 		}
 		
-		$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
-		$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
-	}
+			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
+			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
+		}
 
 	/**
 	 * Set a status message for the form.
@@ -1126,11 +1140,11 @@ class Form extends RequestHandler {
 	 * 
 	 * @return boolean
 	 */
-	public function validate() {
-		if($this->validator) {
+	public function validate(){
+		if($this->validator){
 			$errors = $this->validator->validate();
 
-			if($errors) {
+			if($errors){
 				// Load errors into session and post back
 				$data = $this->getData();
 
@@ -1162,7 +1176,7 @@ class Form extends RequestHandler {
 	 * 
 	 * Passed data should not be escaped, and is saved to the FormField 
 	 * instances unescaped.
-	 *
+	 * 
 	 * Escaping happens automatically on saving the data through 
 	 * {@link saveInto()}.
 	 * 
@@ -1315,7 +1329,7 @@ class Form extends RequestHandler {
 		$dataFields = $this->fields->dataFields();
 		$data = array();
 		
-		if($dataFields) {
+		if($dataFields){
 			foreach($dataFields as $field) {
 				if($field->getName()) {
 					$data[$field->getName()] = $field->dataValue();
@@ -1463,8 +1477,8 @@ class Form extends RequestHandler {
 		foreach($this->actions as $action) {
 			if($this->buttonClickedFunc == $action->actionName()) {
 				return $action;
-			}
 		}
+	}
 	}
 
 	/**
@@ -1476,7 +1490,7 @@ class Form extends RequestHandler {
 	public function defaultAction() {
 		if($this->hasDefaultAction && $this->actions) {
 			return $this->actions->First();
-		}
+	}
 	}
 
 	/**
@@ -1548,7 +1562,7 @@ class Form extends RequestHandler {
 	public static function single_field_required() {
 		if(self::current_action() == 'callfieldmethod') {
 			return $_REQUEST['fieldName'];
-		}
+	}
 	}
 
 	/**

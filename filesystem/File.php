@@ -466,7 +466,9 @@ class File extends DataObject {
 		parent::onBeforeWrite();
 
 		// Set default owner
-		if(!$this->ID) $this->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
+		if(!$this->ID && !$this->OwnerID) {
+			$this->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
+		}
 
 		// Set default name
 		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
@@ -875,14 +877,11 @@ class File extends DataObject {
 			if(!in_array(strtolower($extension), $allowed)) {
 				$exts =  $allowed;
 				sort($exts);
-				$message = sprintf(
-					_t(
-						'File.INVALIDEXTENSION', 
-						'Extension is not allowed (valid: %s)',
-						
-						'Argument 1: Comma-separated list of valid extensions'
-					),
-					wordwrap(implode(', ',$exts))
+				$message =  _t(
+					'File.INVALIDEXTENSION',
+					'Extension is not allowed (valid: {extensions})',
+					'Argument 1: Comma-separated list of valid extensions',
+					array('extensions' => wordwrap(implode(', ',$exts)))
 				);
 				return new ValidationResult(false, $message);
 			}

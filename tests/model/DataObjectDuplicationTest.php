@@ -1,6 +1,8 @@
 <?php
 
 class DataObjectDuplicationTest extends SapphireTest {
+
+	protected $usesDatabase = true;
 	
 	protected $extraDataObjects = array(
 		'DataObjectDuplicateTestClass1',
@@ -27,6 +29,29 @@ class DataObjectDuplicationTest extends SapphireTest {
 			'Only creates a single duplicate'
 		);
 	}
+
+	public function testDuplicateHasOne() {
+		$relationObj = new DataObjectDuplicateTestClass1();
+		$relationObj->text = 'class1';
+		$relationObj->write();
+
+		$orig = new DataObjectDuplicateTestClass2();
+		$orig->text = 'class2';
+		$orig->oneID = $relationObj->ID;
+		$orig->write();
+
+		$duplicate = $orig->duplicate();
+		$this->assertEquals($relationObj->ID, $duplicate->oneID,
+			'Copies has_one relationship'
+		);
+		$this->assertEquals(2, DataObjectDuplicateTestClass2::get()->Count(),
+			'Only creates a single duplicate'
+		);
+		$this->assertEquals(1, DataObjectDuplicateTestClass1::get()->Count(),
+			'Does not create duplicate of has_one relationship'
+		);
+	}
+
 
 	public function testDuplicateManyManyClasses() {
 		//create new test classes below

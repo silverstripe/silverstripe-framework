@@ -6,8 +6,9 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Context\TranslatedContextInterface,
 	Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode,
+	Behat\Behat\Exception\PendingException,
+	Behat\Mink\Exception\ElementHtmlException,
+	Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode;
 
 // PHPUnit
@@ -88,15 +89,25 @@ class CmsFormsContext extends BehatContext
 	}
 
 	/**
-	 * @Then /^the "(?P<field>([^"]*))" HTML field should contain "(?P<value>([^"]*))"$/
+	 * @Then /^the "(?P<locator>([^"]*))" HTML field should contain "(?P<html>([^"]*))"$/
 	 */
-	public function theHtmlFieldShouldContain($field, $value)
+	public function theHtmlFieldShouldContain($locator, $html)
 	{
 		$page = $this->getSession()->getPage();
-		$inputField = $page->findField($field);
-		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+		$element = $page->findField($locator);
+		assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
 
-		$this->getMainContext()->assertElementContains('#' . $inputField->getAttribute('id'), $value);
+		$actual = $element->getAttribute('value');
+		$regex = '/'.preg_quote($html, '/').'/ui';
+		if (!preg_match($regex, $actual)) {
+			$message = sprintf(
+				'The string "%s" was not found in the HTML of the element matching %s "%s".', 
+				$html, 
+				'named', 
+				$locator
+			);
+			throw new ElementHtmlException($message, $this->getSession(), $element);
+		}
 	}
 
 	/**
@@ -105,7 +116,26 @@ class CmsFormsContext extends BehatContext
 	public function iShouldSeeAButton($text)
 	{
 		$page = $this->getSession()->getPage();
-		$element = $page->find('named', array('link_or_button', "'$text'"));
-		assertNotNull($element, sprintf('%s button not found', $text));
+		$els = $page->findAll('named', array('link_or_button', "'$text'"));
+		$matchedEl = null;
+		foreach($els as $el) {
+			if($el->isVisible()) $matchedEl = $el;
+		}
+		assertNotNull($matchedEl, sprintf('%s button not found', $text));
 	}
+
+	/**
+	 * @Given /^I should not see a "([^"]*)" button$/
+	 */
+	public function iShouldNotSeeAButton($text)
+	{
+		$page = $this->getSession()->getPage();
+		$els = $page->findAll('named', array('link_or_button', "'$text'"));
+		$matchedEl = null;
+		foreach($els as $el) {
+			if($el->isVisible()) $matchedEl = $el;
+		}
+		assertNull($matchedEl, sprintf('%s button found', $text));
+	}
+
 }

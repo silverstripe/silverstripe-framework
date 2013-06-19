@@ -381,6 +381,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		if($this->record->ID && !$canEdit) {
 			// Restrict editing of existing records
 			$form->makeReadonly();
+			// Hack to re-enable delete button if user can delete
+			if ($canDelete) {
+				$form->Actions()->fieldByName('action_doDelete')->setReadonly(false);
+			}
 		} elseif(!$this->record->ID && !$canCreate) {
 			// Restrict creation of new records
 			$form->makeReadonly();

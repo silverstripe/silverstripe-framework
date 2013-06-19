@@ -409,6 +409,14 @@ class Requirements_Backend {
 	public $combine_js_with_jsmin = true;
 
 	/**
+	 * Setting for whether or not a file header should be written when
+	 * combining files.
+	 *
+	 * @var boolean
+	 */
+	public $write_header_comment = true;
+
+	/**
 	 * @var string By default, combined files are stored in assets/_combinedfiles.
 	 * Set this by calling Requirements::set_combined_files_folder()
 	 */
@@ -1052,17 +1060,15 @@ class Requirements_Backend {
 			$combinedData = "";
 			foreach(array_diff($fileList, $this->blocked) as $file) {
 				$fileContent = file_get_contents($base . $file);
-				// if we have a javascript file and jsmin is enabled, minify the content
-				$isJS = stripos($file, '.js');
-				if($isJS && $this->combine_js_with_jsmin) {
-					require_once('thirdparty/jsmin/jsmin.php');
+				$fileContent = $this->minifyFile($file, $fileContent);
 
-					increase_time_limit_to();
-					$fileContent = JSMin::minify($fileContent);
+				if ($this->write_header_comment) {
+					// write a header comment for each file for easier identification and debugging
+					// also the semicolon between each file is required for jQuery to be combinable properly
+					$combinedData .= "/****** FILE: $file *****/\n";
 				}
-				// write a header comment for each file for easier identification and debugging
-				// also the semicolon between each file is required for jQuery to be combinable properly
-				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n".($isJS ? ';' : '')."\n";
+
+				$combinedData .= $fileContent . "\n";
 			}
 
 			$successfulWrite = false;
@@ -1085,6 +1091,19 @@ class Requirements_Backend {
 		// method repeatedly - it will behave different on the second call!
 		$this->javascript = $newJSRequirements;
 		$this->css = $newCSSRequirements;
+	}
+
+	protected function minifyFile($filename, $content) {
+		// if we have a javascript file and jsmin is enabled, minify the content
+		$isJS = stripos($filename, '.js');
+		if($isJS && $this->combine_js_with_jsmin) {
+			require_once('thirdparty/jsmin/jsmin.php');
+
+			increase_time_limit_to();
+			$content = JSMin::minify($content);
+		}
+		$content .= ($isJS ? ';' : '') . "\n";
+		return $content;
 	}
 
 	public function get_custom_scripts() {

@@ -97,11 +97,7 @@ body.cms {
 		image: url(../images/textures/cms_content_header.png);
 		repeat: repeat;
 		position: left bottom;
-	}
-
-	.cms-content-header-info *,
-	.cms-content-header-tabs * {
-		@include inline-block;
+		color: $color-darker-bg;
 	}
 
 	a {
@@ -118,11 +114,20 @@ body.cms {
 		font-size: $font-base-size + 2;
 		font-weight: bold;
 		margin: 0;
+		margin-bottom: $grid-x;
+
+		* {
+			vertical-align: middle;
+		}
 	}
 
 	.cms-content-header-info {
 		float:left;
 		padding-top: 6px;
+
+		& > * {
+			display: inline-block; // align back button and breadcrumbs
+		}
 	}
 	
 	// Reset to default styles
@@ -431,7 +436,7 @@ body.cms {
 .message {												// White
 	display: block;
 	clear: both;
-	margin: $grid-y 0;
+	margin: 0 0 $grid-y;
 	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
 	font-weight: normal;	
 	border: 1px #ccc solid;
@@ -604,7 +609,8 @@ body.cms {
 .cms-content-toolbar {
 	min-height: 29px;
 	display: block;
-	margin: 0 0 $grid-y 0;
+	margin: 0 0 $grid-y*1.5 0;
+	padding-bottom: 0;
 	
 	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
 	@include legacy-pie-clearfix();
@@ -651,7 +657,6 @@ body.cms {
  		}
 
 		div {
-			background:url(../images/btn-icon/settings.png) 5px 4px no-repeat;
 			border-left:none;
 			width:100%;
 		}
@@ -690,7 +695,8 @@ body.cms {
 	
 	.cms-panel-header {
 		clear: both;
-		margin: 0 0 $grid-y - 1;
+		margin: 10px 0 $grid-y - 1;
+		padding-bottom: 2px;
 		line-height: $grid-y * 3;
 		
 		@include doubleborder(bottom, $color-light-separator, $box-shadow-shine);
@@ -823,6 +829,22 @@ body.cms {
 	}
 }
 
+/** ------------------------------------------------------------------
+* CMS notice, used for filter messages, but generic enough to use elsewhere
+* ----------------------------------------------------------------- */
+
+.cms-notice {
+	display: block;
+	margin: 0 0 8px;
+	padding: 10px 12px;
+	font-weight: normal;  
+	border: 1px $color-light-separator solid;
+	background: #fff; // for browsers that don't understand rgba
+	background: rgba(#fff,0.5);
+	text-shadow: none;
+	@include border-radius(3px);
+}
+
 /** 
  * CMS Batch actions
  */
@@ -838,6 +860,7 @@ body.cms {
 		padding: 4px 6px;
 		border: 1px solid #aaa;
 		margin-bottom: 8px;
+		margin-right:-1px;
 		background-color: #D9D9D9;
 		@include background-image(linear-gradient(top, #fff, #D9D9D9));
 		border-top-left-radius: 4px;
@@ -854,6 +877,9 @@ body.cms {
 
 		fieldset, .Actions {
 			display: inline-block;
+		}
+		#view-mode-batchactions {
+			margin-top: 2px;
 		}
 	}
 
@@ -882,7 +908,6 @@ body.cms {
 		display: block;
 
 		.chzn-single {
-			margin-left: -1px;
 			border-radius: 0;
 			@include background-image(linear-gradient(top, #fff, #D9D9D9));
 
@@ -892,17 +917,26 @@ body.cms {
 		}
 	}
 
-	.cms-batch-actions .Actions .ss-ui-button {
-		padding-top: 4px;
-		padding-bottom: 4px;
-		height: 28px;
-		margin-left: -1px;
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
+	
+	.cms-batch-actions {
+		.dropdown {
+			margin: 0;
+			.chzn-single {
+				padding-left: 8px; /* use default size without icon */
+			}
+		}
+		.Actions .ss-ui-button {
+			padding-top: 4px;
+			padding-bottom: 4px;
+			height: 28px;
+			margin-left: -1px;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
 
-		&.ui-state-disabled {
-			opacity: 1;
-			color: #ccc;
+			&.ui-state-disabled {
+				opacity: 1;
+				color: #ccc;
+			}
 		}
 	}
 }
@@ -1233,10 +1267,6 @@ form.member-profile-form {
 }
 
 .cms .ui-dialog{
-	min-width:570px;
-	.htmleditorfield-dialog{
-		min-width:570px;
-	}
 	.ss-ui-dialog.ui-dialog-content {
 		padding-top: 0px; //removes padding so that tabs are flush with header
 	}
@@ -1264,6 +1294,16 @@ form.member-profile-form {
 		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
 		.ui-dialog-title {
 			position:absolute;
+		}
+	}
+
+	.ui-dialog-content {
+		overflow: auto; // TODO Replace with proper $.layout grid
+
+		&.loading {
+			background-image: url(../images/spinner.gif);
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
 		}
 	}
 
@@ -1326,7 +1366,7 @@ body.cms-dialog {
 		position:relative;
 	}
 
-	#MediaFormInsertMediaTabs_FromWeb{
+	.htmleditorfield-from-web {
 		.CompositeField{
 			@include clearfix;
 		}
@@ -1402,11 +1442,14 @@ body.cms-dialog {
 
 	.ss-insert-media, .Actions, .ss-insert-link{
 		padding:$grid-y $grid-x*2 ;
+		.ui-tabs-panel {
+			padding: 0;
+		}
 	}
 	.details{
 		.file-url{
 			display:block;
-			width:450px;
+			width:300px;
 			@include hide-text-overflow;
 		}
 		.cms-file-info{
@@ -1443,15 +1486,26 @@ body.cms-dialog {
 
 .htmleditorfield-mediaform {
 	.ss-gridfield {
-		// Set thumbnail size 
-		tbody td:first-child img {
-			max-height: 30px;
+		.gridfield-button-delete {
+			// TODO Remove from PHP instead of hiding
+			display: none; // delete action shouldn't be allowed here
+		}
+		table.ss-gridfield-table {
+			tbody td:first-child {
+				padding: 0;
+				text-align: center;
+				img {
+					max-height: 30px; // same thumbnail size as uploadfield rows
+				}
+			}
+			tr td {
+				padding: $grid-x/2; // more compressed space
+			}	
 		}
 	}
 
-	.ss-uploadfield{
-		&.from-web, &.from-CMS{
-			margin-bottom:48px;
+	.htmleditorfield-from-web, .htmleditorfield-from-cms {
+		.ss-uploadfield {
 			.middleColumn {
 				width:auto;
 				background:none;
@@ -1459,20 +1513,24 @@ body.cms-dialog {
 				margin-top:13px;
 			}
 		}
+	}
 
-		&.from-CMS{
-			margin-top:33px;
-			h4{
-				margin-top:3px;
+	.htmleditorfield-from-cms {
+		.ss-uploadfield {
+			h4 {
+				float: left; // headline and dropdown on same line
+				margin-top: $grid-y/2; // bring to same baseline as dropdown
+				margin-bottom: 0;
 			}
 			.middleColumn {
-				margin-top:0;
-				.TreeDropdownField{
-					margin-top:23px;
-				}			
+				margin-top: $grid-y*2; // same as left-floated h4
+				margin-left: $grid-x*23; // make room for headline
+			}
+			.field.treedropdown {
+				border-bottom: 0; // don't show border, dropdown and gridfield visually belong together
+				padding: 0;
 			}
 		}
-
 	}
 
 	.ss-uploadfield-editandorganize {
@@ -1550,6 +1608,7 @@ body.cms-dialog {
 
 		img {
 			max-width: $grid-x * 22; // Same as ".field label"
+			max-height: $grid-x * 16; // Fitting typical info displayed (~5 rows)
 		}
 	}
 	.cms-file-info-data {
@@ -1557,10 +1616,16 @@ body.cms-dialog {
 
 		.field {
 			// Unsetting styles from .field, make it more compact visually
-			margin-bottom: 0;
+			margin: 0;
 			padding-bottom: $grid-x;
 			border: none;
 			box-shadow: none;
+			label.left {
+				width: $grid-x*12;
+			}
+			.middleColumn {
+				margin-left: $grid-x*13;
+			}
 			label, span {
 				padding: 0;
 			}
@@ -1661,11 +1726,6 @@ form.import-form {
 		.fieldgroup .fieldgroup-field {
 			width:$grid-x*27;
 			padding-left:0;
-		}
-		.TreeDropdownField .treedropdownfield-toggle-panel-link {
-			border-left:none;
-			background:none;
-			background-image:none;
 		}
 	}
 }

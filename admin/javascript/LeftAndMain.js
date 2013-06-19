@@ -125,10 +125,10 @@ jQuery.noConflict();
 				var self = this;
 
 				// Browser detection
-				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
+				if($.browser.msie && parseInt($.browser.version, 10) < 8) {
 					$('.ss-loading-screen').append(
 						'<p class="ss-loading-incompat-warning"><span class="notice">' + 
-						'Your browser is not compatible with the CMS interface. Please use Internet Explorer 7+, Google Chrome 10+ or Mozilla Firefox 3.5+.' +
+						'Your browser is not compatible with the CMS interface. Please use Internet Explorer 8+, Google Chrome or Mozilla Firefox.' +
 						'</span></p>'
 					).css('z-index', $('.ss-loading-screen').css('z-index')+1);
 					$('.loading-animation').remove();
@@ -461,19 +461,14 @@ jQuery.noConflict();
 
 				// Support a full reload
 				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
-					document.location.href = xhr.getResponseHeader('X-ControllerURL');
+					document.location.href = $('base').attr('href').replace(/\/*$/, '') 
+						+ '/' + xhr.getResponseHeader('X-ControllerURL');
 					return;
 				}
 
 				// Pseudo-redirects via X-ControllerURL might return empty data, in which
 				// case we'll ignore the response
 				if(!data) return;
-
-				// Support a full reload
-				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
-					document.location.href = xhr.getResponseHeader('X-ControllerURL');
-					return;
-				}
 
 				// Update title
 				var title = xhr.getResponseHeader('X-Title');
@@ -674,7 +669,9 @@ jQuery.noConflict();
 				if(url) {
 					s.removeItem('tabs-' + url);	
 				} else {
-					for(var i=0;i<s.length;i++) s.removeItem(s.key(i));
+					for(var i=0;i<s.length;i++) {
+						if(s.key(i).match(/^tabs-/)) s.removeItem(s.key(i));
+					}
 				}
 			},
 
@@ -974,13 +971,14 @@ jQuery.noConflict();
 		/**
 		 * Reset button handler. IE8 does not bubble reset events to
 		 */
-		$(".cms-search-form button[type=reset]").entwine({
+		$(".cms-search-form button[type=reset], .cms-search-form input[type=reset]").entwine({
 			onclick: function(e) {
 				e.preventDefault();
 				
 				var form = $(this).parents('form');
 
 				form.clearForm();
+				form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated"); // Reset chosen.js
 				form.submit();
 			}
 		})
@@ -1064,6 +1062,12 @@ jQuery.noConflict();
 						return false;
 					},
 					activate: function(e, ui) {
+						// Accessibility: Simulate click to trigger panel load when tab is focused
+						// by a keyboard navigation event rather than a click
+						if(ui.newTab) {
+							ui.newTab.find('.cms-panel-link').click();
+						}
+
 						// Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
 						var actions = $(this).closest('form').find('.Actions');
 						if($(ui.newTab).closest('li').hasClass('readonly')) {

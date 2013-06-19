@@ -502,14 +502,13 @@ class UploadField extends FileField {
 	/**
 	 * Assign a front-end config variable for the upload field
 	 * 
+	 * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options for the list of front end options available
+	 * 
 	 * @param string $key
 	 * @param mixed $val
 	 * @return UploadField self reference
 	 */
 	public function setConfig($key, $val) {
-		if(!array_key_exists($key, $this->ufConfig)) {
-			user_error("UploadField->setConfig called with invalid option: '$key'", E_USER_ERROR);
-		}
 		$this->ufConfig[$key] = $val;
 		return $this;
 	}
@@ -517,13 +516,13 @@ class UploadField extends FileField {
 	/**
 	 * Gets a front-end config variable for the upload field
 	 * 
+	 * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options for the list of front end options available
+	 * 
 	 * @param string $key
 	 * @return mixed
 	 */
 	public function getConfig($key) {
-		if(!array_key_exists($key, $this->ufConfig)) {
-			user_error("UploadField->getConfig called with invalid option: '$key'", E_USER_ERROR);
-		}
+		if(!isset($this->ufConfig[$key])) return null;
 		return $this->ufConfig[$key];
 	}
 
@@ -1548,8 +1547,13 @@ class UploadField_SelectHandler extends RequestHandler {
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());
 		$config->addComponent(new GridFieldFilterHeader());
-		$config->addComponent(new GridFieldDataColumns());
-		$config->addComponent(new GridFieldPaginator(10));
+		$config->addComponent($columns = new GridFieldDataColumns());
+		$columns->setDisplayFields(array(
+			'StripThumbnail' => '',
+			'Name' => 'Name',
+			'Title' => 'Title'
+		));
+		$config->addComponent(new GridFieldPaginator(8));
 
 		// If relation is to be autoset, we need to make sure we only list compatible objects.
 		$baseClass = $this->parent->getRelationAutosetClass();

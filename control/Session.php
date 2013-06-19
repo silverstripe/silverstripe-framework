@@ -541,7 +541,7 @@ class Session {
 		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
 		// By default it's the total session lifetime
 		if($timeout && !headers_sent()) {
-			setcookie(session_name(), session_id(), time()+$timeout, $path, $domain ? $domain : null, $secure, true);
+			Cookie::set(session_name(), session_id(), time()+$timeout, $path, $domain ? $domain : null, $secure, true);
 		}
 	}
 
@@ -559,10 +559,10 @@ class Session {
 				$secure = Config::inst()->get('Session', 'cookie_secure');
 				
 				if($domain) {
-					setcookie(session_name(), '', null, $path, $domain, $secure, true);
+					Cookie::set(session_name(), '', null, $path, $domain, $secure, true);
 				}
 				else {
-					setcookie(session_name(), '', null, $path, null, $secure, true);
+					Cookie::set(session_name(), '', null, $path, null, $secure, true);
 				}
 				
 				unset($_COOKIE[session_name()]);

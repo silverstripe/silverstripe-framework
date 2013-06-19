@@ -2,6 +2,7 @@ fa_IR:
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 'پوشه جديد'
+    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
     CREATED: 'First uploaded'
     DIM: ابعاد
@@ -9,7 +10,7 @@ fa_IR:
     FOLDER: Folder
     LASTEDIT: 'آخرین تغییرات'
     OWNER: دارنده
-    SIZE: حجم
+    SIZE: 'حجم'
     TITLE: عنوان
     TYPE: نوع
     URL: نشانی
@@ -59,9 +60,9 @@ fa_IR:
     ERRORNOTADMIN: 'That user is not an administrator.'
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
-    0: نه
     ANY: هر
-    1: آری
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   CMSLoadingScreen.ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -70,17 +71,19 @@ fa_IR:
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: نگاهداری
+  CMSPageHistoryController_versions.ss:
+    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'My Profile'
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
-    EMAIL: ايميل
+    EMAIL: 'ايميل'
     HELLO: درود
     PASSWORD: 'كلمه عبور'
   CheckboxField:
-    - نه
-    - آری
+    NOANSWER: 'False'
+    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: 'بستن چنجره'
     SUCCESSADD2: 'Added {name}'
@@ -100,32 +103,33 @@ fa_IR:
     SHOWONCLICKTITLE: 'تغيير كلمه عبور'
   CreditCardField:
     FIRST: نخست
-    FOURTH: چهارم
-    SECOND: دوم
-    THIRD: سوم
+    FOURTH: 'چهارم'
+    SECOND: 'دوم'
+    THIRD: 'سوم'
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'داده های اشیاء'
     SINGULARNAME: 'داده اشیاء'
   Date:
-    DAY: روز
-    DAYS: روز
-    HOUR: ساعت
-    HOURS: ساعت
-    MIN: دقیقه
-    MINS: دقیقه
-    MONTH: ماه
-    MONTHS: 'ماه ها'
-    SEC: ثانیه
-    SECS: ثانیه
+    DAY: day
+    DAYS: days
+    HOUR: hour
+    HOURS: hours
+    LessThanMinuteAgo: 'less than a minute'
+    MIN: min
+    MINS: mins
+    MONTH: month
+    MONTHS: months
+    SEC: sec
+    SECS: secs
     TIMEDIFFAGO: '{difference} ago'
     TIMEDIFFIN: 'in {difference}'
-    YEAR: سال
-    YEARS: سال
+    YEAR: year
+    YEARS: years
   DateField:
     NOTSET: 'not set'
-    TODAY: امروز
+    TODAY: 'امروز'
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
@@ -144,7 +148,7 @@ fa_IR:
     ANY: Any
   File:
     AviType: 'AVI video file'
-    Content: محتوا
+    Content: 'محتوا'
     CssType: 'CSS file'
     DmgType: 'Apple disk image'
     DocType: 'Word document'
@@ -162,7 +166,7 @@ fa_IR:
     MpgType: 'MPEG video file'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: نام
+    Name: 'نام'
     PLURALNAME: 'فايل ها'
     PdfType: 'Adobe Acrobat PDF file'
     PngType: 'PNG image - good general-purpose format'
@@ -198,7 +202,8 @@ fa_IR:
     TEXT2: 'password reset link'
     TEXT3: برای
   Form:
-    FIELDISREQUIRED: '%s نیاز است.'
+    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
+    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
@@ -208,6 +213,7 @@ fa_IR:
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
+    Example: 'e.g. %s'
     NONE: 'هیچ کدام'
   GridAction:
     DELETE_DESCRIPTION: Delete
@@ -230,6 +236,7 @@ fa_IR:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
+    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: Cancel
     Create: Create
@@ -237,7 +244,9 @@ fa_IR:
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     Save: Save
-    Saved: 'Saved %s %s'
+    Saved: 'Saved {name} {link}'
+  GridFieldEditButton.ss:
+    EDIT: Edit
   GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Add a role for this group'
@@ -253,7 +262,7 @@ fa_IR:
     RolesAddEditLink: 'اضافه/ویرایش وظیفه'
     SINGULARNAME: Group
     Sort: 'تربیت چیدن'
-    has_many_Permissions: مجوز‌ها
+    has_many_Permissions: 'مجوز‌ها'
     many_many_Members: اعضاء
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
@@ -267,6 +276,7 @@ fa_IR:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
+    BUTTONADDURL: 'Add url'
     BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'گذاشتن پیوند'
     BUTTONREMOVELINK: 'برداشتن پیوند'
@@ -322,7 +332,7 @@ fa_IR:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: کمک
+    HELP: 'کمک'
     PAGETYPE: 'نوع صفحه'
     PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
     PERMALREADY: 'من متاسفم، شما نمی توانید به آن قسمت از سیستم مدیریت محتوا دسترسی پیدا کنید. اگر میخواهید به عنوان شخص دیگری وارد شوید از قسمت زیر تلاش کنید'
@@ -331,7 +341,10 @@ fa_IR:
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    ShowAsList: 'show as list'
+    TooManyPages: 'Too many pages'
+    ValidationError: 'Validation error'
+    VersionUnknown: Unknown
   LeftAndMain_Menu.ss:
     Hello: Hi
     LOGOUT: 'Log out'
@@ -360,7 +373,7 @@ fa_IR:
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: نام
+    FIRSTNAME: 'نام'
     INTERFACELANG: 'زبان برنامه'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
@@ -407,6 +420,7 @@ fa_IR:
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
     TWODIGITYEAR: 'Two-digit year'
+    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
@@ -421,7 +435,7 @@ fa_IR:
   ModelAdmin:
     DELETE: حذف
     DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
+    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'Import from CSV'
     IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
@@ -515,7 +529,20 @@ fa_IR:
     BtnImport: 'وارد کردن'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
+    Auto: Auto
+    ChangeViewMode: 'Change view mode'
+    Desktop: Desktop
+    DualWindowView: 'Dual Window'
     Edit: Edit
+    EditView: 'Edit mode'
+    Mobile: Mobile
+    PreviewState: 'Preview State'
+    PreviewView: 'Preview mode'
+    Responsive: Responsive
+    SplitView: 'Split mode'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Select a preview width'
+    Width: width
   SimpleImageField:
     NOUPLOAD: 'No Image Uploaded'
   SiteTree:
@@ -551,6 +578,8 @@ fa_IR:
     ATTACHFILE: 'Attach a file'
     ATTACHFILES: 'Attach files'
     AttachFile: 'Attach file(s)'
+    CHOOSEANOTHERFILE: 'Choose another file'
+    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Delete from files'
     DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Save
@@ -565,12 +594,15 @@ fa_IR:
     FROMFILES: 'From files'
     HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     STARTALLINFO: 'Start all uploads'
     Saved: Saved
+    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: 'نسخه ها'

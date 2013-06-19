@@ -210,6 +210,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function checkPassword($password) {
 		$result = $this->canLogIn();
 
+		if(empty($this->Password) && $this->exists()) {
+			$result->error(_t('Member.NoPassword','There is no password on this member.'));
+			return $result;
+		}
+
 		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
 		if(!$e->check($this->Password, $password, $this->Salt, $this)) {
 			$result->error(_t (

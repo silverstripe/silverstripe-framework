@@ -1,7 +1,6 @@
 # Release Process
 
 Describes the process followed for "core" releases (mainly the `framework` and `cms` modules).
-For other modules, we've compiled a helpful guide for a good [module release process](module-release-process).
 
 ## Release Maintainer
 
@@ -18,8 +17,8 @@ Release dates are usually not published prior to the release, but you can get a 
 reviewing the release milestone on github.com. Releases will be
 announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
 
-Releases of the *cms* and *framework* modules are coupled at the moment, they follow the same numbering scheme. Module
-releases are documented separately in [module-release-process](module-release-process).
+Releases of the *cms* and *framework* modules are coupled at the moment, they
+follow the same numbering scheme.
 
 ## Release Numbering
 
