@@ -10,20 +10,6 @@
 		clear: both;
 	}
 
-	.ss-insert-media &{
-		margin-top:20px;
-
-		h4{
-			float:left;
-		}
-
-		// Stop nolabel from resetting margin on tree dropdown
-		&.from-CMS .nolabel.treedropdown .middleColumn{
-			margin-left:184px;
-		}
-
-	}
-
 	.middleColumn {
 		// TODO .middleColumn styling should probably be theme specific (eg cms ui will look different than blackcandy)
 		// so we should move this style into the cms and black candy files
@@ -104,7 +90,7 @@
 		display: block;
 		float: left;
 		margin: 0 10px 6px 0;
-	
+
 		&.ss-uploadfield-fromcomputer {
 			position: relative;
 			overflow: hidden;

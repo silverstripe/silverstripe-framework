@@ -826,7 +826,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 				this.redraw();
 			},
-			redraw: function() {
+			redraw: function(updateExisting) {
 				this._super();
 			
 				var node = this.getSelection(),
@@ -835,7 +835,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					header = this.find('.header-edit');
 
 				// Only show second step if files are selected
-				if(header) header[(hasItems) ? 'show' : 'hide']();
+				header[(hasItems) ? 'show' : 'hide']();
 
 				// Disable "insert" button if no files are selected
 				this.find('.Actions :submit')
@@ -845,11 +845,15 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Hide file selection and step labels when editing an existing file
 				this.find('#MediaFormInsertMediaTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
 
-				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
-				this.find('.htmleditorfield-mediaform-heading.insert')[updateExisting ? 'hide' : 'show']();
-				this.find('.Actions .media-insert')[updateExisting ? 'hide' : 'show']();
-				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
-				this.find('.Actions .media-update')[updateExisting ? 'show' : 'hide']();
+				// TODO Way too much knowledge on UploadField internals, use viewfile URL directly instead
+				this.find('.htmleditorfield-mediaform-heading.insert')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-actions')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-name')[editingSelected ? 'hide' : 'show']();
+				this.find('.ss-uploadfield-item-preview')[editingSelected ? 'hide' : 'show']();
+				this.find('.Actions .media-insert')[editingSelected ? 'hide' : 'show']();
+				this.find('.htmleditorfield-mediaform-heading.update')[editingSelected ? 'show' : 'hide']();
+				this.find('.Actions .media-update')[editingSelected ? 'show' : 'hide']();
+				this.find('.ss-uploadfield-item-editform').toggleEditForm(editingSelected);
 			},
 			resetFields: function() {				
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
@@ -866,7 +870,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var self = this, params = (Number(idOrUrl) == idOrUrl) ? {ID: idOrUrl} : {FileURL: idOrUrl};
 
 				var item = $('<div class="ss-htmleditorfield-file loading" />');
-				this.find('.content-edit').append(item);
+				this.find('.content-edit').prepend(item);
 				
 				var dfr = $.Deferred();
 				
@@ -1302,11 +1306,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		});
 
 		$('div.ss-assetuploadfield .ss-uploadfield-item-editform').entwine({
-			toggleEditForm: function() {
+			toggleEditForm: function(bool) {
 				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
 				var text="";
 
-				if(this.height() === 0) {
+				if(bool === true || (bool !== false && this.height() === 0)) {
 					text = ss.i18n._t('UploadField.Editing', "Editing ...");
 					this.height('auto');
 					itemInfo.find('.toggle-details-icon').addClass('opened');					
