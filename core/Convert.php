@@ -235,11 +235,11 @@ class Convert {
 			$config = $defaultConfig;
 		}
 
-		$data = preg_replace("/<style([^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/is","", $data);
-		$data = preg_replace("/<script([^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/is","", $data);
+		$data = preg_replace("/<style([^A-Za-z0-9>][^>]*)?" . ">.*?<\/style[^>]*>/is","", $data);
+		$data = preg_replace("/<script([^A-Za-z0-9>][^>]*)?" . ">.*?<\/script[^>]*>/is","", $data);
 
 		if($config['ReplaceBoldAsterisk']) {
-			$data = preg_replace('%<(strong|b)( [^>]*)?>|</(strong|b)>%i','*',$data);
+			$data = preg_replace('%<(strong|b)( [^>]*)?' . '>|</(strong|b)>%i','*',$data);
 		}
 		
 		// Expand hyperlinks
@@ -264,14 +264,14 @@ class Convert {
 		}
 		
 		// Parse newline tags
-		$data = preg_replace("/\s*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
-		$data = preg_replace("/\s*<[Pp]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
-		$data = preg_replace("/\s*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?" . "> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Pp]([^A-Za-z0-9>][^>]*)?" . "> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?" . "> */", "\n\n", $data);
 		$data = preg_replace("/\n\n\n+/", "\n\n", $data);
 
-		$data = preg_replace("/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
-		$data = preg_replace("/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
-		$data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", "    ", $data);
+		$data = preg_replace("/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?" . "> */", "\n", $data);
+		$data = preg_replace("/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?" . "> */", "\n", $data);
+		$data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?" . "> */", "    ", $data);
 		$data = preg_replace('/<\/p>/i', "\n\n", $data );
 	
 		// Replace HTML entities

@@ -86,8 +86,8 @@ class HTMLText extends Text {
 			/* See if we can pull a paragraph out*/
 
 			// Strip out any images in case there's one at the beginning. Not doing this will return a blank paragraph
-			$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}', '', $this->value);
-			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $str, $matches)) $str = $matches[2];
+			$str = preg_replace('{^\s*(<.+?' . '>)*<img[^>]*>}', '', $this->value);
+			if (preg_match('{<p(\s[^<>]*)?' . '>(.*[A-Za-z]+.*)</p>}', $str, $matches)) $str = $matches[2];
 
 			/* If _that_ failed, just use the whole text */
 			if (!$str) $str = $this->value;
