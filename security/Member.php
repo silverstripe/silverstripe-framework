@@ -682,7 +682,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			if($existingRecord) {
-				throw new ValidationException(new ValidationResult(false, _t(
+				throw new ValidationException(_t(
 					'Member.ValidationIdentifierFailed', 
 					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))', 
 					'Values in brackets show "fieldname = value", usually denoting an existing email address',
@@ -691,7 +691,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 						'name' => $identifierField,
 						'value' => $this->$identifierField
 					)
-				)));
+				));
 			}
 		}
 
