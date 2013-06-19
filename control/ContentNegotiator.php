@@ -214,7 +214,7 @@ class ContentNegotiator extends Object {
 		$content = preg_replace('/<base href="([^"]*)" \/>/', 
 			'<base href="$1"><!--[if lte IE 6]></base><![endif]-->', $content);
 
-		$content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
+		$content = preg_replace("#<\\?xml[^>]+\\?" . ">\n?#", '', $content);
 		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
 		
 		// Only replace the doctype in templates with the xml header

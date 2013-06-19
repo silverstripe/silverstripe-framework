@@ -977,7 +977,7 @@ class SSViewer {
 		if($this->rewriteHashlinks && $rewrite) {
 			if(strpos($output, '<base') !== false) {
 				if($rewrite === 'php') { 
-					$thisURLRelativeToBase = "<?php echo strip_tags(\$_SERVER['REQUEST_URI']); ?>"; 
+					$thisURLRelativeToBase = "<?php echo strip_tags(\$_SERVER['REQUEST_URI']); ?" . ">";
 				} else { 
 					$thisURLRelativeToBase = strip_tags($_SERVER['REQUEST_URI']); 
 				}
