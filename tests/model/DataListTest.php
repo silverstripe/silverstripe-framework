@@ -133,19 +133,21 @@ class DataListTest extends SapphireTest {
 	}
 	
 	public function testSql() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 		$list = DataObjectTest_TeamComment::get();
-		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created",'
-			. ' "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name",'
-			. ' "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID",'
-			. ' "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
-			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment')
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+			. '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
+			. '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
+			. '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
+			. 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL '
+			. 'THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
+			. $db->quoteString('DataObjectTest_TeamComment')
 			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"';
-		$this->assertEquals($expected, $list->sql());
+		$this->assertSQLEquals($expected, $list->sql($parameters));
 	}
 	
 	public function testInnerJoin() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->innerJoin(
@@ -154,19 +156,22 @@ class DataListTest extends SapphireTest {
 			'Team'
 		);
 
-		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created",'
-			. ' "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name",'
-			. ' "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID",'
-			. ' "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
-			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment')
-			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN "DataObjectTest_Team" AS "Team"'
-			. ' ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+			. '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
+			. '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
+			. '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
+			. 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
+			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
+			. $db->quoteString('DataObjectTest_TeamComment')
+			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
+			. '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
+			. '"DataObjectTest_TeamComment"."TeamID"';
 
-		$this->assertEquals($expected, $list->sql());
+		$this->assertSQLEquals($expected, $list->sql($parameters));
 	}
 	
 	public function testLeftJoin() {
-		$db = DB::getConn();
+		$db = DB::get_conn();
 
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->leftJoin(
@@ -175,15 +180,17 @@ class DataListTest extends SapphireTest {
 			'Team'
 		);
 
-		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created",'
-			. ' "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name",'
-			. ' "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID",'
-			. ' "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
-			. ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '.$db->prepStringForDB('DataObjectTest_TeamComment')
-			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" AS "Team"'
-			. ' ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+			. '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
+			. '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
+			. '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
+			. 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL '
+			. 'THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
+			. $db->quoteString('DataObjectTest_TeamComment')
+			. ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" '
+			. 'AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
 
-		$this->assertEquals($expected, $list->sql());
+		$this->assertSQLEquals($expected, $list->sql($parameters));
 
 		// Test with namespaces (with non-sensical join, but good enough for testing)
 		$list = DataObjectTest_TeamComment::get();
@@ -193,19 +200,19 @@ class DataListTest extends SapphireTest {
 		);
 
 		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-			. '"DataObjectTest_TeamComment"."Created", '
 			. '"DataObjectTest_TeamComment"."LastEdited", '
+			. '"DataObjectTest_TeamComment"."Created", '
 			. '"DataObjectTest_TeamComment"."Name", '
 			. '"DataObjectTest_TeamComment"."Comment", '
 			. '"DataObjectTest_TeamComment"."TeamID", '
 			. '"DataObjectTest_TeamComment"."ID", ' 
 			. 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL '
 			. 'THEN "DataObjectTest_TeamComment"."ClassName" ' 
-			. 'ELSE ' . $db->prepStringForDB('DataObjectTest_TeamComment') . ' END AS "RecordClassName" '
+			. 'ELSE ' . $db->quoteString('DataObjectTest_TeamComment') . ' END AS "RecordClassName" '
 			. 'FROM "DataObjectTest_TeamComment" '
 			. 'LEFT JOIN "DataObjectTest\NamespacedClass" ON '
 			. '"DataObjectTest\NamespacedClass"."ID" = "DataObjectTest_TeamComment"."ID"';
-		$this->assertEquals($expected, $list->sql(), 'Retains backslashes in namespaced classes');
+		$this->assertSQLEquals($expected, $list->sql($parameters), 'Retains backslashes in namespaced classes');
 
 	}
 	
@@ -755,17 +762,20 @@ class DataListTest extends SapphireTest {
 		$list = $list->filter('Comment', 'Phil is a unique guy, and comments on team2');
 		$list = $list->exclude('Name', 'Bob');
 		
-		$this->assertContains(
-			'WHERE ("DataObjectTest_TeamComment"."Comment" = '
-			. '\'Phil is a unique guy, and comments on team2\') '
-			. 'AND (("DataObjectTest_TeamComment"."Name" != \'Bob\'))',
-			$list->sql());
+		$sql = $list->sql($parameters);
+		$this->assertSQLContains(
+			'WHERE ("DataObjectTest_TeamComment"."Comment" = ?) AND (("DataObjectTest_TeamComment"."Name" != ?))',
+			$sql);
+		$this->assertEquals(array('Phil is a unique guy, and comments on team2', 'Bob'), $parameters);
 	}
 
 	public function testExcludeWithSearchFilter() {
 		$list = DataObjectTest_TeamComment::get();
 		$list = $list->exclude('Name:LessThan', 'Bob');
-		$this->assertContains('WHERE (("DataObjectTest_TeamComment"."Name" >= \'Bob\'))', $list->sql());
+		
+		$sql = $list->sql($parameters);
+		$this->assertSQLContains('WHERE (("DataObjectTest_TeamComment"."Name" >= ?))', $sql);
+		$this->assertEquals(array('Bob'), $parameters);
 	}
 	
 	/**
@@ -853,10 +863,11 @@ class DataListTest extends SapphireTest {
 	}
 
 	public function testSortByComplexExpression() {
-		// Test an expression with both spaces and commas
-		// This test also tests that column() can be called with a complex sort expression, so keep using column() below
+		// Test an expression with both spaces and commas. This test also tests that column() can be called 
+		// with a complex sort expression, so keep using column() below
 		$list = DataObjectTest_Team::get()->sort(
-			'CASE WHEN "DataObjectTest_Team"."ClassName" = \'DataObjectTest_SubTeam\' THEN 0 ELSE 1 END, "Title" DESC');
+			'CASE WHEN "DataObjectTest_Team"."ClassName" = \'DataObjectTest_SubTeam\' THEN 0 ELSE 1 END, "Title" DESC'
+		);
 		$this->assertEquals(array(
 			'Subteam 3',
 			'Subteam 2',

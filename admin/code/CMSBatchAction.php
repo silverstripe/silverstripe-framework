@@ -117,16 +117,10 @@ abstract class CMSBatchAction extends Object {
 		
 		$applicableIDs = array();
 		
-		$SQL_ids = implode(', ', array_filter($ids, 'is_numeric'));
-		$draftPages = DataObject::get(
-			$this->managedClass, 
-			sprintf(
-				"\"%s\".\"ID\" IN (%s)",
-				ClassInfo::baseDataClass($this->managedClass),
-				$SQL_ids
-			)
-		);
+		$managedClass = $this->managedClass;
+		$draftPages = DataObject::get($managedClass)->byIDs($ids);
 		
+		// Filter out the live-only ids
 		$onlyOnLive = array_fill_keys($ids, true);
 		if($checkStagePages) {
 			foreach($draftPages as $obj) {
@@ -134,24 +128,13 @@ abstract class CMSBatchAction extends Object {
 				if($obj->$methodName()) $applicableIDs[] = $obj->ID;
 			}
 		}
+		$onlyOnLive = array_keys($onlyOnLive);
 		
-		$managed_class = $this->managedClass;
-		if($managed_class::has_extension('Versioned')) {
+		if($checkLivePages && $onlyOnLive && $managedClass::has_extension('Versioned')) {
 			// Get the pages that only exist on live (deleted from stage)
-			if($checkLivePages && $onlyOnLive) {
-				$SQL_ids = implode(', ', array_keys($onlyOnLive));
-				$livePages = Versioned::get_by_stage(
-					$this->managedClass, "Live", 
-					sprintf(
-						"\"%s\".\"ID\" IN (%s)",
-						ClassInfo::baseDataClass($this->managedClass),
-						$SQL_ids
-					)
-				);
-
-				if($livePages) foreach($livePages as $obj) {
-					if($obj->$methodName()) $applicableIDs[] = $obj->ID;
-				}
+			$livePages = Versioned::get_by_stage($managedClass, "Live")->byIDs($onlyOnLive);
+			foreach($livePages as $obj) {
+				if($obj->$methodName()) $applicableIDs[] = $obj->ID;
 			}
 		}
 

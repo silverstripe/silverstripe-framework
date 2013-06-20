@@ -14,14 +14,14 @@ class Float extends DBField {
 	}
 	
 	public function requireField() {
-		$parts=Array(
+		$parts = Array(
 			'datatype'=>'float',
 			'null'=>'not null',
 			'default'=>$this->defaultVal,
-			'arrayValue'=>$this->arrayValue);
-		
-		$values=Array('type'=>'float', 'parts'=>$parts);
-		DB::requireField($this->tableName, $this->name, $values);
+			'arrayValue'=>$this->arrayValue
+		);
+		$values = Array('type'=>'float', 'parts'=>$parts);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
 	
 	/**
@@ -45,31 +45,18 @@ class Float extends DBField {
 		return new NumericField($this->name, $title);
 	}
 
-	/**
-	 * Returns the value to be set in the database to blank this field.
-	 * Usually it's a choice between null, 0, and ''
-	 */
 	public function nullValue() {
 		return 0;
 	}
 
-	/**
-	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
-	 * If necessary, this should include quotes.
-	 */
 	public function prepValueForDB($value) {
 		if($value === true) {
 			return 1;
+		} elseif(empty($value) || !is_numeric($value)) {
+			return 0;
 		}
-		if(!$value || !is_numeric($value)) {
-			if(strpos($value, '[') === false) {
-				return '0';
-			} else {
-				return Convert::raw2sql($value);
-			}
-		} else {
-			return Convert::raw2sql($value);
-		}
+		
+		return $value;
 	}
 
 }

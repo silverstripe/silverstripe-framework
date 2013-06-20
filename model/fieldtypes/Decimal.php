@@ -53,7 +53,7 @@ class Decimal extends DBField {
 			'parts' => $parts
 		);
 
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
 	
 	/**
@@ -83,28 +83,16 @@ class Decimal extends DBField {
 	 * @return float
 	 */
 	public function nullValue() {
-		return "0.00";
+		return 0;
 	}
 
-	/**
-	 * Return an encoding of the given value suitable for inclusion in a SQL
-	 * statement. If necessary, this should include quotes.
-	 *
-	 * @param float $value
-	 *
-	 * @return mixed
-	 */
 	public function prepValueForDB($value) {
 		if($value === true) {
 			return 1;
-		} if(!$value || !is_numeric($value)) {
-			if(strpos($value, '[') === false) {
-				return '0';
-			} else {
-				return Convert::raw2sql($value);
-			}
-		} else {
-			return Convert::raw2sql($value);
+		} elseif(empty($value) || !is_numeric($value)) {
+			return 0;
 		}
+		
+		return $value;
 	}
 }

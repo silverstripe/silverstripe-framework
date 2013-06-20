@@ -155,8 +155,8 @@ class ConvertTest extends SapphireTest {
 	
 	/**
 	 * Helper function for comparing characters with significant whitespaces
-	 * @param type $expected
-	 * @param type $actual 
+	 * @param string $expected
+	 * @param string $actual 
 	 */
 	protected function assertEqualsQuoted($expected, $actual) {
 		$message = sprintf(

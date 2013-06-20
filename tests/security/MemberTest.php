@@ -367,7 +367,9 @@ class MemberTest extends FunctionalTest {
 		$grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
 		$this->assertEquals($grouplessMember->Groups()->Count(), 2);
 		
-		$group = DataObject::get_one('Group', "\"Code\" = 'somegroupthatwouldneverexist'");
+		$group = DataObject::get_one('Group', array(
+			'"Group"."Code"' => 'somegroupthatwouldneverexist'
+		));
 		$this->assertNotNull($group);
 		$this->assertEquals($group->Code, 'somegroupthatwouldneverexist');
 		$this->assertEquals($group->Title, 'New Group');

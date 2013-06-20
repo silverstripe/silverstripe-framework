@@ -5,7 +5,7 @@
 * SearchContext is intentionally decoupled from any controller-logic,
 * it just receives a set of search parameters and an object class it acts on.
 * 
-* The default output of a SearchContext is either a {@link SQLQuery} object
+* The default output of a SearchContext is either a {@link SQLSelect} object
 * for further refinement, or a {@link SS_List} that can be used to display
 * search results, e.g. in a {@link TableListField} instance.
 * 
@@ -88,7 +88,7 @@ class SearchContext extends Object {
 	}
 	
 	/**
-	 * @todo move to SQLQuery
+	 * @todo move to SQLSelect
 	 * @todo fix hack
 	 */
 	protected function applyBaseTableFields() {

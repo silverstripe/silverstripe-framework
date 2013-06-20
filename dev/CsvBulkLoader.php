@@ -208,19 +208,17 @@ class CsvBulkLoader extends BulkLoader {
 
 		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
 			if(is_string($duplicateCheck)) {
-				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
 				
-				if(!isset($record[$SQL_fieldName]) || empty($record[$SQL_fieldName])) {
-					//skip current duplicate check if field value is empty
-					continue;
-				}
+				// Skip current duplicate check if field value is empty
+				if(empty($record[$duplicateCheck])) continue;
 
-				$SQL_fieldValue = Convert::raw2sql($record[$SQL_fieldName]);
-				$existingRecord = DataObject::get_one($this->objectClass, "\"$SQL_fieldName\" = '{$SQL_fieldValue}'");
+				// Check existing record with this value
+				$dbFieldValue = $record[$duplicateCheck];
+				$existingRecord = DataObject::get($this->objectClass)
+					->filter($duplicateCheck, $dbFieldValue)
+					->first();
 				
-				if($existingRecord) {
-					return $existingRecord;
-				}
+				if($existingRecord) return $existingRecord;
 			} elseif(is_array($duplicateCheck) && isset($duplicateCheck['callback'])) {
 				if($this->hasMethod($duplicateCheck['callback'])) {
 					$existingRecord = $this->{$duplicateCheck['callback']}($record[$fieldName], $record);

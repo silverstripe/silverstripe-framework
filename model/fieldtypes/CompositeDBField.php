@@ -150,10 +150,10 @@ interface CompositeDBField {
 	/**
 	 * Add all columns which are defined through {@link requireField()}
 	 * and {@link $composite_db}, or any additional SQL that is required
-	 * to get to these columns. Will mostly just write to the {@link SQLQuery->select}
+	 * to get to these columns. Will mostly just write to the {@link SQLSelect->select}
 	 * array.
 	 * 
-	 * @param SQLQuery $query
+	 * @param SQLSelect $query
 	 */
 	public function addToQuery(&$query);
 	

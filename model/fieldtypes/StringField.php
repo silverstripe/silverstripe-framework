@@ -91,7 +91,7 @@ abstract class StringField extends DBField {
 	 */
 	public function prepValueForDB($value) {
 		if(!$this->nullifyEmpty && $value === '') {
-			return DB::getConn()->prepStringForDB($value);
+			return $value;
 		} else {
 			return parent::prepValueForDB($value);
 		}

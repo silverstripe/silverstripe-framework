@@ -1110,8 +1110,8 @@ class Form extends RequestHandler {
 	/**
 	 * Set a status message for the form.
 	 * 
-	 * @param message the text of the message
-	 * @param type Should be set to good, bad, or warning.
+	 * @param string $message the text of the message
+	 * @param string $type Should be set to good, bad, or warning.
 	 */
 	public function setMessage($message, $type) {
 		$this->message = $message;
@@ -1122,15 +1122,15 @@ class Form extends RequestHandler {
 	/**
 	 * Set a message to the session, for display next time this form is shown.
 	 * 
-	 * @param message the text of the message
-	 * @param type Should be set to good, bad, or warning.
+	 * @param string $message the text of the message
+	 * @param string $type Should be set to good, bad, or warning.
 	 */
 	public function sessionMessage($message, $type) {
 		Session::set("FormInfo.{$this->FormName()}.formError.message", $message);
 		Session::set("FormInfo.{$this->FormName()}.formError.type", $type);
 	}
 
-	public static function messageForForm( $formName, $message, $type ) {
+	public static function messageForForm($formName, $message, $type ) {
 		Session::set("FormInfo.{$formName}.formError.message", $message);
 		Session::set("FormInfo.{$formName}.formError.type", $type);
 	}

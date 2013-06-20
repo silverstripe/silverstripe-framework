@@ -11,8 +11,8 @@ class TransactionTest extends SapphireTest {
 
 	public function testCreateWithTransaction() {
 
-		if(DB::getConn()->supportsTransactions()==true){
-			DB::getConn()->transactionStart();
+		if(DB::get_conn()->supportsTransactions()==true){
+			DB::get_conn()->transactionStart();
 			$obj=new TransactionTest_Object();
 			$obj->Title='First page';
 			$obj->write();
@@ -22,7 +22,7 @@ class TransactionTest extends SapphireTest {
 			$obj->write();
 
 			//Create a savepoint here:
-			DB::getConn()->transactionSavepoint('rollback');
+			DB::get_conn()->transactionSavepoint('rollback');
 
 			$obj=new TransactionTest_Object();
 			$obj->Title='Third page';
@@ -33,9 +33,9 @@ class TransactionTest extends SapphireTest {
 			$obj->write();
 
 			//Revert to a savepoint:
-			DB::getConn()->transactionRollback('rollback');
+			DB::get_conn()->transactionRollback('rollback');
 
-			DB::getConn()->transactionEnd();
+			DB::get_conn()->transactionEnd();
 
 			$first=DataObject::get('TransactionTest_Object', "\"Title\"='First page'");
 			$second=DataObject::get('TransactionTest_Object', "\"Title\"='Second page'");

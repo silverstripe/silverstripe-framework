@@ -41,10 +41,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 			$groupCodes = explode(',', $record['Groups']);
 			foreach($groupCodes as $groupCode) {
 				if(!isset($_cache_groupByCode[$groupCode])) {
-					$group = DataObject::get_one(
-						'Group', 
-						sprintf('"Code" = \'%s\'', Convert::raw2sql($groupCode))
-					);
+					$group = Group::get()->filter('Code', $groupCode)->first();
 					if(!$group) {
 						$group = new Group();
 						$group->Code = $groupCode;

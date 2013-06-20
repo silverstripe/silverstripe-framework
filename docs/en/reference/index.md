@@ -25,7 +25,7 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [Site Reports](site-reports): Tabular reports in a specialized CMS interface
 * [SiteConfig](siteconfig): Global configuration stored in the database
 * [SiteTree](sitetree): Base class for a "page" in the CMS
-* [SQLQuery](sqlquery): Wrapper around a SQL query allowing modification before execution
+* [SQLSelect](sqlquery): Wrapper around a SQL query allowing modification before execution
 * [StaticPublisher](staticpublisher): Export a page tree as static HTML for better performance and portability
 * [TableField](tablefield): Add and edit records with inline edits in this form field
 * [TableListField](tablelistfield): View and delete records in the CMS

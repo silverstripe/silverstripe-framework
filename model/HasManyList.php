@@ -38,12 +38,11 @@ class HasManyList extends RelationList {
 		if ($id === null) $id = $this->getForeignID();
 
 		// Apply relation filter
+		$key = "\"$this->foreignKey\"";
 		if(is_array($id)) {
-			return "\"$this->foreignKey\" IN ('" .
-				implode("', '", array_map('Convert::raw2sql', $id)) . "')";
+			return array("$key IN (".DB::placeholders($id).")"  => $id);
 		} else if($id !== null){
-			return "\"$this->foreignKey\" = '" . 
-				Convert::raw2sql($id) . "'";
+			return array($key => $id);
 		}
 	}
 
@@ -73,8 +72,8 @@ class HasManyList extends RelationList {
 			return;
 		}
 
-		$fk = $this->foreignKey;
-		$item->$fk = $foreignID;
+		$foreignKey = $this->foreignKey;
+		$item->$foreignKey = $foreignID;
 
 		$item->write();
 	}

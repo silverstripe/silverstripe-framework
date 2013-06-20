@@ -141,12 +141,48 @@ class Convert {
 		return self::raw2json($val);
 	}
 
-	public static function raw2sql($val) {
+	/**
+	 * Safely encodes a value (or list of values) using the current database's
+	 * safe string encoding method
+	 * 
+	 * @param mixed|array $val Input value, or list of values as an array
+	 * @param boolean $quoted Flag indicating whether the value should be safely
+	 * quoted, instead of only being escaped. By default this function will 
+	 * only escape the string (false).
+	 * @return string|array Safely encoded value in the same format as the input
+	 */
+	public static function raw2sql($val, $quoted = false) {
 		if(is_array($val)) {
-			foreach($val as $k => $v) $val[$k] = self::raw2sql($v);
+			foreach($val as $k => $v) {
+				$val[$k] = self::raw2sql($v, $quoted);
+			}
 			return $val;
 		} else {
-			return DB::getConn()->addslashes($val);
+			if($quoted) {
+				return DB::get_conn()->quoteString($val);
+			} else {
+				return DB::get_conn()->escapeString($val);
+			}
+		}
+	}
+	
+	/**
+	 * Safely encodes a SQL symbolic identifier (or list of identifiers), such as a database,
+	 * table, or column name. Supports encoding of multi identfiers separated by
+	 * a delimiter (e.g. ".")
+	 * 
+	 * @param string|array $identifier The identifier to escape. E.g. 'SiteTree.Title'
+	 * @param string $separator The string that delimits subsequent identifiers
+	 * @return string|array The escaped identifier. E.g. '"SiteTree"."Title"'
+	 */
+	public static function symbol2sql($identifier, $separator = '.') {
+		if(is_array($identifier)) {
+			foreach($identifier as $k => $v) {
+				$identifier[$k] = self::symbol2sql($v, $separator);
+			}
+			return $identifier;
+		} else {
+			return DB::get_conn()->escapeIdentifier($identifier, $separator);
 		}
 	}
 
@@ -350,6 +386,7 @@ class Convert {
 	
 	/**
 	 * Normalises newline sequences to conform to (an) OS specific format.
+	 * 
 	 * @param string $data Text containing potentially mixed formats of newline
 	 * sequences including \r, \r\n, \n, or unicode newline characters
 	 * @param string $nl The newline sequence to normalise to. Defaults to that

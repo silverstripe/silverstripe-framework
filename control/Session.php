@@ -504,11 +504,11 @@ class Session {
 	* Sets the appropriate form message in session, with type. This will be shown once,
 	* for the form specified.
 	*
-	* @param formname the form name you wish to use ( usually $form->FormName() )
-	* @param messsage the message you wish to add to it
-	* @param type the type of message
+	* @param string $formname the form name you wish to use ( usually $form->FormName() )
+	* @param string $message the message you wish to add to it
+	* @param string $type the type of message
 	*/
-	public static function setFormMessage($formname,$message,$type){
+	public static function setFormMessage($formname, $message, $type){
 		Session::set("FormInfo.$formname.formError.message", $message);
 		Session::set("FormInfo.$formname.formError.type", $type);
 	}

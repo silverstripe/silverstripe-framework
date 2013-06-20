@@ -9,6 +9,8 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Stable Releases
 
+ * [3.2.0](3.2.0) - Unreleased
+
  * [3.1.5](3.1.5) - 13 May 2014
  * [3.1.4](3.1.4) - 8 April 2014
  * [3.1.0](3.1.0) - 1 October 2013

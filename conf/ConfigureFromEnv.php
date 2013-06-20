@@ -141,3 +141,6 @@ if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
 if(defined('SS_ERROR_LOG')) {
 	SS_Log::add_writer(new SS_LogFileWriter(BASE_PATH . '/' . SS_ERROR_LOG), SS_Log::WARN, '<=');
 }
+
+// Allow database adapters to handle their own configuration
+DatabaseAdapterRegistry::autoconfigure();

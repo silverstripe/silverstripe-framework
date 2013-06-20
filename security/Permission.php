@@ -177,65 +177,71 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 			// Multiple $code values - return true if at least one matches, ie, intersection exists
 			return (bool)array_intersect($code, self::$cache_permissions[$memberID]);
 		} 
+		
+		// Code filters
+		$codeParams = is_array($code) ? $code : array($code);
+		$codeClause = DB::placeholders($codes);
+		$adminParams = (self::$admin_implies_all) ? array('ADMIN') : array();
+		$adminClause = (self::$admin_implies_all) ?  ", ?" : '';
 
 		// The following code should only be used if you're not using the "any" arg.  This is kind
 		// of obselete functionality and could possibly be deprecated.
-
-		$groupList = self::groupList($memberID);
-		if(!$groupList) return false;
-		
-		$groupCSV = implode(", ", $groupList);
+		$groupParams = self::groupList($memberID);
+		if(empty($groupParams)) return false;
+		$groupClause = DB::placeholders($groupParams);
 		
 		// Arg component
+		$argClause = "";
+		$argParams = array();
 		switch($arg) {
 			case "any":
-				$argClause = "";
 				break;
 			case "all":
-				$argClause = " AND \"Arg\" = -1";
+				$argClause = " AND \"Arg\" = ?";
+				$argParams = array(-1);
 				break;
 			default:
 				if(is_numeric($arg)) {
-					$argClause = "AND \"Arg\" IN (-1, $arg) ";
+					$argClause = "AND \"Arg\" IN (?, ?) ";
+					$argParams = array(-1, $arg);
 				} else {
 					user_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
 				}
 		}
-		
-		if(is_array($code)) {
-			$SQL_codeList = "'" . implode("', '", Convert::raw2sql($code)) . "'";
-		} else {
-			$SQL_codeList = "'" . Convert::raw2sql($code) . "'";
-		}
-		
-		$SQL_code = Convert::raw2sql($code);
-		
 		$adminFilter = (Config::inst()->get('Permission', 'admin_implies_all')) ?  ",'ADMIN'" : '';
 
 		// Raw SQL for efficiency
-		$permission = DB::query("
-			SELECT \"ID\"
+		$permission = DB::prepared_query(
+			"SELECT \"ID\"
 			FROM \"Permission\"
 			WHERE (
-				\"Code\" IN ($SQL_codeList $adminFilter)
-				AND \"Type\" = " . self::GRANT_PERMISSION . "
-				AND \"GroupID\" IN ($groupCSV)
+				\"Code\" IN ($codeClause $adminClause)
+				AND \"Type\" = ?
+				AND \"GroupID\" IN ($groupClause)
 				$argClause
+			)",
+			array_merge(
+				$codeParams,
+				$adminParams,
+				array(self::GRANT_PERMISSION),
+				$groupParams,
+				$argParams
 			)
-		")->value();
+		)->value();
 
 		if($permission) return $permission;
 
 		// Strict checking disabled?
 		if(!Config::inst()->get('Permission', 'strict_checking') || !$strict) {
-			$hasPermission = DB::query("
-				SELECT COUNT(*) 
+			$hasPermission = DB::prepared_query(
+				"SELECT COUNT(*) 
 				FROM \"Permission\"
 				WHERE (
-					(\"Code\" IN '$SQL_code')' 
-					AND (\"Type\" = " . self::GRANT_PERMISSION . ")
-				)
-			")->value();
+					\"Code\" IN ($codeClause) AND
+					\"Type\" = ?
+				)",
+				array_merge($codeParams, array(self::GRANT_PERMISSION))
+			)->value();
 
 			if(!$hasPermission) return;
 		}
@@ -412,11 +418,13 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 			}
 		}
 
-		if(!count($groupIDs)) return new ArrayList();
+		if(empty($groupIDs)) return new ArrayList();
 			
-		$members = DataObject::get('Member')->where("\"Group\".\"ID\" IN (" . implode(",",$groupIDs) . ")")
-			->leftJoin("Group_Members", "\"Member\".\"ID\" = \"Group_Members\".\"MemberID\"")
-			->leftJoin("Group", "\"Group_Members\".\"GroupID\" = \"Group\".\"ID\"");
+		$groupClause = DB::placeholders($groupIDs);
+		$members = Member::get()
+			->where(array("\"Group\".\"ID\" IN ($groupClause)" => $groupIDs))
+			->leftJoin("Group_Members", '"Member"."ID" = "Group_Members"."MemberID"')
+			->leftJoin("Group", '"Group_Members"."GroupID" = "Group"."ID"');
 		
 		return $members;
 	}
@@ -427,14 +435,15 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * @return SS_List The matching group objects
 	 */
 	public static function get_groups_by_permission($codes) {
-		if(!is_array($codes)) $codes = array($codes);
-		
-		$SQLa_codes = Convert::raw2sql($codes);
-		$SQL_codes = join("','", $SQLa_codes);
+		$codeParams = is_array($codes) ? $codes : array($codes);
+		$codeClause = DB::placeholders($codeParams);
 		
 		// Via Roles are groups that have the permission via a role
 		return DataObject::get('Group')
-			->where("\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')")
+			->where(array(
+				"\"PermissionRoleCode\".\"Code\" IN ($codeClause) OR \"Permission\".\"Code\" IN ($codeClause)"
+				=> array_merge($codeParams, $codeParams)
+			))
 			->leftJoin('Permission', "\"Permission\".\"GroupID\" = \"Group\".\"ID\"")
 			->leftJoin('Group_Roles', "\"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"")
 			->leftJoin('PermissionRole', "\"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"")

@@ -86,9 +86,9 @@ abstract class SearchFilter extends Object {
 	}
 	
 	/**
-	 * Set the current value to be filtered on.
+	 * Set the current value(s) to be filtered on.
 	 *
-	 * @param string $value
+	 * @param string|array $value
 	 */
 	public function setValue($value) {
 		$this->value = $value;
@@ -96,9 +96,8 @@ abstract class SearchFilter extends Object {
 	
 	/**
 	 * Accessor for the current value to be filtered on.
-	 * Caution: Data is not escaped.
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function getValue() {
 		return $this->value;
@@ -172,8 +171,9 @@ abstract class SearchFilter extends Object {
 		$candidateClass = $this->model;
 
 		while($candidateClass != 'DataObject') {
-			if(DataObject::has_own_table($candidateClass) 
-					&& singleton($candidateClass)->hasOwnTableDatabaseField($this->name)) {
+			if( DataObject::has_own_table($candidateClass) 
+				&& DataObject::has_own_table_database_field($candidateClass, $this->name)
+			) {
 				break;
 			}
 
