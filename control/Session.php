@@ -86,7 +86,7 @@
 class Session {
 
 	/**
-	 * @var $timeout Set session timeout
+	 * @var $timeout Set session timeout in seconds.
 	 * @config
 	 */
 	private static $timeout = 0;
