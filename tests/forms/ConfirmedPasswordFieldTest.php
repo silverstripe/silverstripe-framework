@@ -15,6 +15,26 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		$this->assertEquals('valueB', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
 	}
 
+	public function testHashHidden() {
+		$field = new ConfirmedPasswordField('Password', 'Password', 'valueA');
+		$field->setCanBeEmpty(true);
+
+		$this->assertEquals('valueA', $field->Value());
+		$this->assertEquals('valueA', $field->children->fieldByName($field->getName() . '[_Password]')->Value());
+		$this->assertEquals('valueA', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
+
+		$member = new Member();
+		$member->Password = "valueB";
+		$member->write();
+
+		$form = new Form($this, 'Form', new FieldList($field), new FieldList());
+		$form->loadDataFrom($member);
+
+		$this->assertEquals('', $field->Value());
+		$this->assertEquals('', $field->children->fieldByName($field->getName() . '[_Password]')->Value());
+		$this->assertEquals('', $field->children->fieldByName($field->getName() . '[_ConfirmPassword]')->Value());
+	}
+
 	public function testSetShowOnClick() {
 		//hide by default and display show/hide toggle button
 		$field = new ConfirmedPasswordField('Test', 'Testing', 'valueA', null, true);
