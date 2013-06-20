@@ -458,6 +458,9 @@ class FormTest_Team extends DataObject implements TestOnly {
 }
 
 class FormTest_Controller extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('Form');
+
 	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
 	);
@@ -503,6 +506,9 @@ class FormTest_Controller extends Controller implements TestOnly {
 }
 
 class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
+	
+	private static $allowed_actions = array('Form');
+
 	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
 	);
@@ -537,6 +543,9 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 }
 
 class FormTest_ControllerWithStrictPostCheck extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('Form');
+	
 	protected $template = 'BlankPage';
 	
 	public function Link($action = null) {

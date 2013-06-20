@@ -53,15 +53,31 @@ class ControllerTest extends FunctionalTest {
 
 		$response = $this->get("ControllerTest_UnsecuredController/index");
 		$this->assertEquals(200, $response->getStatusCode(),
-			'Access granted on index action without $allowed_actions on defining controller, ' .
+			'Access denied on index action without $allowed_actions on defining controller, ' .
 			'when called with an action in the URL'
 		);
 
+		Config::inst()->update('RequestHandler', 'require_allowed_actions', false);
+		$response = $this->get("ControllerTest_UnsecuredController/index");
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Access granted on index action without $allowed_actions on defining controller, ' .
+			'when called with an action in the URL, and explicitly allowed through config'
+		);
+		Config::inst()->update('RequestHandler', 'require_allowed_actions', true);
+
+		$response = $this->get("ControllerTest_UnsecuredController/method1");
+		$this->assertEquals(403, $response->getStatusCode(),
+			'Access denied on action without $allowed_actions on defining controller, ' .
+			'when called without an action in the URL'
+		);
+
+		Config::inst()->update('RequestHandler', 'require_allowed_actions', false);
 		$response = $this->get("ControllerTest_UnsecuredController/method1");
 		$this->assertEquals(200, $response->getStatusCode(),
 			'Access granted on action without $allowed_actions on defining controller, ' .
-			'when called without an action in the URL'
+			'when called without an action in the URL, and explicitly allowed through config'
 		);
+		Config::inst()->update('RequestHandler', 'require_allowed_actions', true);
 		
 		$response = $this->get("ControllerTest_AccessBaseController/");
 		$this->assertEquals(200, $response->getStatusCode(),

@@ -149,6 +149,8 @@ class Form extends RequestHandler {
 	 */
 	protected $attributes = array();
 
+	private static $allowed_actions = array('handleField', 'httpSubmission');
+
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
@@ -298,7 +300,7 @@ class Form extends RequestHandler {
 			Form::set_current_action($funcName);
 			$this->setButtonClicked($funcName);
 		}
-		
+
 		// Permission checks (first on controller, then falling back to form)
 		if(
 			// Ensure that the action is actually a button or method on the form,
@@ -360,6 +362,19 @@ class Form extends RequestHandler {
 		return $this->httpError(404);
 	}
 
+	public function checkAccessAction($action) {
+		return (
+			parent::checkAccessAction($action)
+			// Always allow actions which map to buttons. See httpSubmission() for further access checks.
+			|| $this->actions->dataFieldByName('action_' . $action)
+			// Always allow actions on fields
+			|| (
+				$field = $this->checkFieldsForAction($this->Fields(), $action)
+				&& $field->checkAccessAction($action)
+			)
+		);
+	}
+
 	/**
 	 * Returns the appropriate response up the controller chain
 	 * if {@link validate()} fails (which is checked prior to executing any form actions).
@@ -412,7 +427,7 @@ class Form extends RequestHandler {
 				if($field = $this->checkFieldsForAction($field->FieldList(), $funcName)) {
 					return $field;
 				}
-			} elseif ($field->hasMethod($funcName)) {
+			} elseif ($field->hasMethod($funcName) && $field->checkAccessAction($funcName)) {
 				return $field;
 			}
 		}
