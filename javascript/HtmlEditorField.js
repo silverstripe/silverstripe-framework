@@ -1255,9 +1255,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				this.setOrigVal(parseInt(this.val(), 10));
 
-				// Default to a managable size for the HTML view. Can be overwritten by user after initialization
-				if(this.attr('name') == 'Width') this.closest('.ss-htmleditorfield-file').updateDimensions('Width', 600);
-
 			},
 			onunmatch: function() {
 				this._super();
