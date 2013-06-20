@@ -626,10 +626,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
 				)
 			)->addExtraClass('last')
 		);
@@ -750,10 +750,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
 				)
 			)->addExtraClass('last')
 		);
