@@ -14,6 +14,12 @@ class HtmlEditorField extends TextareaField {
 	 */
 	private static $use_gzip = true;
 
+	/**
+	 * @config
+	 * @var Integer Default embed width for Images and Media
+	 */
+	private static $embed_width = 600;
+
 	protected $rows = 30;
 	
 	/**
@@ -634,12 +640,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					TextField::create(
 						'Width', 
 						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
-						$file->Width
+						$file->DefaultEmbedWidth
 					)->setMaxLength(5),
 					TextField::create(
 						'Height', 
 						_t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 
-						$file->Height
+						$file->DefaultEmbedHeight
 					)->setMaxLength(5)
 				)->addExtraClass('dimensions last')
 			);
@@ -757,12 +763,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					TextField::create(
 						'Width', 
 						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
-						$file->Width
+						$file->DefaultEmbedWidth
 					)->setMaxLength(5),
 					TextField::create(
 						'Height', 
 						" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-						$file->Height
+						$file->DefaultEmbedHeight
 					)->setMaxLength(5)
 				)->addExtraClass('dimensions last')
 			);
@@ -908,6 +914,19 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		return $this->oembed->Height ?: 100;
 	}
 
+	public function getDefaultEmbedWidth() {
+		$width = $this->getWidth();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'embed_width');
+		return ($width <= $maxWidth) ? $width : $maxWidth;
+	}
+
+	public function getDefaultEmbedHeight() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'embed_width');
+		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
+	}
+
 	public function getPreview() {
 		if(isset($this->oembed->thumbnail_url)) {
 			return sprintf('<img src="%s" />', $this->oembed->thumbnail_url);
@@ -962,6 +981,19 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 
 	public function getHeight() {
 		return ($this->file) ? $this->file->Height : $this->height;
+	}
+
+	public function getDefaultEmbedWidth() {
+		$width = $this->getWidth();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'embed_width');
+		return ($width <= $maxWidth) ? $width : $maxWidth;
+	}
+
+	public function getDefaultEmbedHeight() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'embed_width');
+		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
 	}
 
 	public function getPreview() {
