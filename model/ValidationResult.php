@@ -36,7 +36,9 @@ class ValidationResult extends Object {
 	}
 	
 	/**
-	 * Record an error against this validation result,
+	 * Record an error against this validation result.
+	 * 
+	 * It's better to use addError, addFeildError, addMessage, or addFieldMessage instead.
 	 * 
 	 * @param string $message     The message string.
 	 * @param string $code        A codename for this error. Only one message per codename will be added.
@@ -44,24 +46,70 @@ class ValidationResult extends Object {
 	 * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
 	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
 	 *                            class to the form, so other values can be used if desired.
+	 *
+	 * @deprecated 3.2
 	 */
 	public function error($message, $code = null, $fieldName = null, $messageType = "bad") {
+		Deprecation::notice('3.2', 'Use addError or addFieldError instead.');
+
+		return $this->addFieldError($fieldName, $message, $messageType, $code);
+	}
+
+	/**
+	 * Record an error against this validation result,
+	 * 
+	 * @param string $message     The message string.
+	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
+	 *                            class to the form, so other values can be used if desired.
+	 * @param string $code        A codename for this error. Only one message per codename will be added.
+	 *                            This can be usedful for ensuring no duplicate messages
+	 */
+	public function addError($message, $messageType = "bad", $code = null) {
 		$this->isValid = false;
 		
-		return $this->addMessage($message, $code, $fieldName, $messageType);
+		return $this->addFieldMessage(null, $message, $messageType, $code);
+	}
+
+	/**
+	 * Record an error against this validation result,
+	 * 
+	 * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
+	 * @param string $message     The message string.
+	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
+	 *                            class to the form, so other values can be used if desired.
+	 * @param string $code        A codename for this error. Only one message per codename will be added.
+	 *                            This can be usedful for ensuring no duplicate messages
+	 */
+	public function addFieldError($fieldName = null, $message, $messageType = "bad", $code = null) {
+		$this->isValid = false;
+		
+		return $this->addFieldMessage($fieldName, $message, $messageType, $code);
 	}
 
 	/**
 	 * Add a message to this ValidationResult without necessarily marking it as an error
 	 *  
 	 * @param string $message     The message string.
-	 * @param string $code        A codename for this error. Only one message per codename will be added.
-	 *                            This can be usedful for ensuring no duplicate messages
-	 * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
 	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
 	 *                            class to the form, so other values can be used if desired.
+	 * @param string $code        A codename for this error. Only one message per codename will be added.
+	 *                            This can be usedful for ensuring no duplicate messages
 	 */
-	public function addMessage($message, $code = null, $fieldName = null, $messageType = "bad") {
+	public function addMessage($message, $messageType = "bad", $code = null) {
+		return $this->addFieldMessage(null, $message, $messageType, $code);
+	}
+
+	/**
+	 * Add a message to this ValidationResult without necessarily marking it as an error
+	 *  
+	 * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
+	 * @param string $message     The message string.
+	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
+	 *                            class to the form, so other values can be used if desired.
+	 * @param string $code        A codename for this error. Only one message per codename will be added.
+	 *                            This can be usedful for ensuring no duplicate messages
+	 */
+	public function addFieldMessage($fieldName, $message, $messageType = "bad", $code = null) {
 		$metadata = array(
 			'message' => $message,
 			'fieldName' => $fieldName,
@@ -72,7 +120,8 @@ class ValidationResult extends Object {
 			if(!is_numeric($code)) {
 				$this->errorList[$code] = $metadata;
 			} else {
-				throw new InvalidArgumentException("ValidationResult::error() - Don't use a numeric code '$code'.  Use a string.");
+				throw new InvalidArgumentException(
+					"ValidationResult::error() - Don't use a numeric code '$code'.  Use a string.");
 				$this->errorList[$code] = $metadata;
 			}
 		} else {
@@ -107,7 +156,10 @@ class ValidationResult extends Object {
 		$output = array();
 		foreach($this->errorList as $key => $item) {
 			if($item['fieldName']) {
-				$output[$item['fieldName']] = array('message' => $item['message'], 'messageType' => $item['messageType']);
+				$output[$item['fieldName']] = array(
+					'message' => $item['message'],
+					'messageType' => $item['messageType']
+				);
 			}
 		}
 		return $output;

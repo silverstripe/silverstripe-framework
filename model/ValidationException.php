@@ -47,11 +47,25 @@ class ValidationException extends Exception {
 			$this->result = new ValidationResult(false, _t("ValdiationExcetpion.DEFAULT_ERROR", "Validation error"));
 
 		} else {
-			throw new InvalidArgumentException("ValidationExceptions must be passed a ValdiationResult, a string, or nothing at all");
+			throw new InvalidArgumentException(
+				"ValidationExceptions must be passed a ValdiationResult, a string, or nothing at all");
 		}
 		
 		// Construct
 		parent::__construct($exceptionMessage ? $exceptionMessage : $this->result->message(), $code);
+	}
+
+	/**
+	 * Create a ValidationException with a message for a single field-specific error message.
+	 * 
+	 * @param  string $field   The field name
+	 * @param  string $message The error message
+	 * @return ValidationException
+	 */
+	static function create_for_field($field, $message) {
+		$result = new ValidationResult;
+		$result->error($message, null, $field);
+		return new ValidationException($result);
 	}
 	
 	/**
