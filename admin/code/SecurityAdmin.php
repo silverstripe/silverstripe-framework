@@ -67,7 +67,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			false,
 			Member::get(),
 			$memberListConfig = GridFieldConfig_RecordEditor::create()
-				->addComponent(new GridFieldExportButton())
+				->addComponent(new GridFieldButtonRow('after'))
+				->addComponent(new GridFieldExportButton('buttons-after-left'))
 		)->addExtraClass("members_grid");
 		$memberListConfig->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
 

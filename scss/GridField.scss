@@ -46,6 +46,18 @@ $gf_grid_x:	16px;
 				margin-bottom:$gf_grid_y;
 			}
 		}
+			&.ss-gridfield-buttonrow-before{
+				margin-bottom: 0;
+				.action {
+				margin-bottom:$gf_grid_y;
+			}
+		}
+			&.ss-gridfield-buttonrow-after{
+				margin-bottom: 0;
+				.action {
+				margin-top:$gf_grid_y;
+			}
+		}
 		}
 
 		&[data-selectable] {
@@ -116,7 +128,8 @@ $gf_grid_x:	16px;
 			width: 500px;
 		}
 		.grid-csv-button, .grid-print-button {
-			margin-bottom: $gf_grid_y;
+			margin-bottom: 0;
+			font-size: $font-base-size;
 			@include inline-block();
 		}
 		}
@@ -640,9 +653,5 @@ $gf_grid_x:	16px;
 		td:last-child{
 			border-right: 1px solid $gf_colour_border;
 		}
-	}
-
-	.grid-bottom-button {
-		margin-top:$gf_grid_y;
 	}
 }
