@@ -363,13 +363,13 @@ class CmsUiContext extends BehatContext
 		}
 
 		assertNotNull($container, 'Chosen.js field container not found');
-			
+
 		// Click on newly expanded list element, indirectly setting the dropdown value
 		$linkEl = $container->find('xpath', './/a[./@href]');
 		assertNotNull($linkEl, 'Chosen.js link element not found');
 		$this->getSession()->wait(100); // wait for dropdown overlay to appear
 		$linkEl->click();
-
+			
 		if(in_array('treedropdown', explode(' ', $container->getAttribute('class')))) {
 			// wait for ajax dropdown to load
 			$this->getSession()->wait(
@@ -422,7 +422,7 @@ class CmsUiContext extends BehatContext
 		) {
 			if($container->isVisible() && in_array($class, explode(' ', $container->getAttribute('class')))) {
 				return $container;
-			}
+}
 			$container = $container->getParent();
 		}
 

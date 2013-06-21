@@ -4,8 +4,22 @@
 		 * On resize of any close the open treedropdownfields
 		 * as we'll need to redo with widths
 		 */
-		$(window).resize(function() {
-			$('.TreeDropdownField').closePanel();
+		var windowWidth, windowHeight;
+		$(window).bind('resize.treedropdownfield', function() {
+			// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
+			var cb = function() {$('.TreeDropdownField').closePanel();};
+
+			// Workaround to avoid IE8 infinite loops when elements are resized as a result of this event 
+			if($.browser.msie && parseInt($.browser.version, 10) < 9) {
+				var newWindowWidth = $(window).width(), newWindowHeight = $(window).height();
+				if(newWindowWidth != windowWidth || newWindowHeight != windowHeight) {
+					windowWidth = newWindowWidth;
+					windowHeight = newWindowHeight;
+					cb();
+				}
+			} else {
+				cb();
+			}
 		});
 		
 		var strings = {

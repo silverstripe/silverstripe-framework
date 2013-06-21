@@ -1211,7 +1211,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$actionsFlattened = $actions->dataFields();
 			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
 			
-			$form = new Form($this, "EditForm", $fields, $actions);
+			$form = CMSForm::create( 
+				$this, "EditForm", $fields, $actions
+			)->setHTMLID('Form_EditForm');
+			$form->setResponseNegotiator($this->getResponseNegotiator());
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
@@ -1264,7 +1267,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return Form
 	 */
 	public function EmptyForm() {
-		$form = new Form(
+		$form = CMSForm::create( 
 			$this, 
 			"EditForm", 
 			new FieldList(
@@ -1282,7 +1285,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				// )
 			), 
 			new FieldList()
-		);
+		)->setHTMLID('Form_EditForm');
+		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->unsetValidator();
 		$form->addExtraClass('cms-edit-form');
 		$form->addExtraClass('root-form');

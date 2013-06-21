@@ -344,9 +344,36 @@ class Form extends RequestHandler {
 		
 		// Validate the form
 		if(!$this->validate()) {
-			if(Director::is_ajax()) {
-				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through
-				// FormResponse)
+			return $this->getValidationErrorResponse();
+		}
+		
+		// First, try a handler method on the controller (has been checked for allowed_actions above already)
+		if($this->controller->hasMethod($funcName)) {
+			return $this->controller->$funcName($vars, $this, $request);
+		// Otherwise, try a handler method on the form object.
+		} elseif($this->hasMethod($funcName)) {
+			return $this->$funcName($vars, $this, $request);
+		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
+			return $field->$funcName($vars, $this, $request);
+		}
+		
+		return $this->httpError(404);
+	}
+
+	/**
+	 * Returns the appropriate response up the controller chain
+	 * if {@link validate()} fails (which is checked prior to executing any form actions).
+	 * By default, returns different views for ajax/non-ajax request, and
+	 * handles 'appliction/json' requests with a JSON object containing the error messages.
+	 * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError}.
+	 * 
+	 * @return SS_HTTPResponse|string
+	 */
+	protected function getValidationErrorResponse() {
+		$request = $this->getRequest();
+		if($request->isAjax()) {
+				// Special case for legacy Validator.js implementation 
+				// (assumes eval'ed javascript collected through FormResponse)
 				$acceptType = $request->getHeader('Accept');
 				if(strpos($acceptType, 'application/json') !== FALSE) {
 					// Send validation errors back as JSON with a flag at the start
@@ -372,19 +399,6 @@ class Form extends RequestHandler {
 				}
 				return $this->controller->redirectBack();
 			}
-		}
-		
-		// First, try a handler method on the controller (has been checked for allowed_actions above already)
-		if($this->controller->hasMethod($funcName)) {
-			return $this->controller->$funcName($vars, $this, $request);
-		// Otherwise, try a handler method on the form object.
-		} elseif($this->hasMethod($funcName)) {
-			return $this->$funcName($vars, $this, $request);
-		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
-			return $field->$funcName($vars, $this, $request);
-		}
-		
-		return $this->httpError(404);
 	}
 	
 	/**
@@ -891,6 +905,7 @@ class Form extends RequestHandler {
 	 */
 	public function setHTMLID($id) {
 		$this->htmlID = $id;
+		return $this;
 	}
 	
 	/**

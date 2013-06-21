@@ -29,7 +29,7 @@ chdir(dirname($_SERVER['SCRIPT_FILENAME']));
  * For example,
  * sake my/url somearg otherarg key=val --otherkey=val third=val&fourth=val
  *
- * Will result int he following get data:
+ * Will result in the following get data:
  *   args => array('somearg', 'otherarg'),
  *   key => val
  *   otherkey => val
@@ -75,7 +75,7 @@ require_once("model/DB.php");
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
 	echo "\nPlease configure your database connection details.  You can do this by creating a file
 called _ss_environment.php in either of the following locations:\n\n";
-	echo " - " .  BASE_PATH  ."_ss_environment.php\n - " . dirname(BASE_PATH) . "_ss_environment.php\n\n";
+	echo " - " .  BASE_PATH  . DIRECTORY_SEPARATOR . "_ss_environment.php\n - " . dirname(BASE_PATH) . DIRECTORY_SEPARATOR . "_ss_environment.php\n\n";
 	echo <<<ENVCONTENT
 
 Put the following content into this file:

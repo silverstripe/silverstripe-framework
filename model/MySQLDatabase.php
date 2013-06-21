@@ -931,7 +931,7 @@ class MySQLDatabase extends SS_Database {
 
 		$list = new PaginatedList(new ArrayList($objects));
 		$list->setPageStart($start);
-		$list->setPageLEngth($pageLength);
+		$list->setPageLength($pageLength);
 		$list->setTotalItems($totalCount);
 
 		// The list has already been limited by the query above

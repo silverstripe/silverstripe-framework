@@ -5,10 +5,23 @@ jQuery.noConflict();
  */
 (function($) {
 
-	window.onresize = function(e) {
+	var windowWidth, windowHeight;
+	$(window).bind('resize.leftandmain', function(e) {
 		// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
-		$('.cms-container').trigger('windowresize');
-	};
+		var cb = function() {$('.cms-container').trigger('windowresize');};
+
+		// Workaround to avoid IE8 infinite loops when elements are resized as a result of this event 
+		if($.browser.msie && parseInt($.browser.version, 10) < 9) {
+			var newWindowWidth = $(window).width(), newWindowHeight = $(window).height();
+			if(newWindowWidth != windowWidth || newWindowHeight != windowHeight) {
+				windowWidth = newWindowWidth;
+				windowHeight = newWindowHeight;
+				cb();
+			}
+		} else {
+			cb();
+		}
+	});
 
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
@@ -136,7 +149,7 @@ jQuery.noConflict();
 					this._super();
 					return;
 				}
-
+				
 				// Initialize layouts
 				this.redraw();
 
@@ -228,15 +241,15 @@ jQuery.noConflict();
 					},
 					this.getLayoutOptions()
 				));
-				
+
 				// Trigger layout algorithm once at the top. This also lays out children - we move from outside to
 				// inside, resizing to fit the parent.
 				this.layout();
 
 				// Redraw on all the children that need it
-				this.find('.cms-panel-layout').redraw();
-				this.find('.cms-content-fields[data-layout-type]').redraw();
-				this.find('.cms-edit-form[data-layout-type]').redraw();
+				this.find('.cms-panel-layout').redraw(); 
+				this.find('.cms-content-fields[data-layout-type]').redraw(); 
+				this.find('.cms-edit-form[data-layout-type]').redraw(); 
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
 			},
@@ -590,7 +603,7 @@ jQuery.noConflict();
 				if(typeof(window.sessionStorage)=="undefined" || window.sessionStorage === null) return;
 
 				var selectedTabs = [], url = this._tabStateUrl();
-				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {					
+				this.find('.cms-tabset,.ss-tabset').each(function(i, el) {
 					var id = $(el).attr('id');
 					if(!id) return; // we need a unique reference
 					if(!$(el).data('tabs')) return; // don't act on uninit'ed controls
@@ -650,8 +663,8 @@ jQuery.noConflict();
 					} else if(sessionStates) {
 						$.each(sessionStates, function(i, sessionState) {
 							if(tabset.is('#' + sessionState.id)) index = sessionState.selected;
-						});
-					}
+					});
+				}
 					if(index !== null) tabset.tabs('select', index);
 				});
 			},
@@ -671,7 +684,7 @@ jQuery.noConflict();
 				} else {
 					for(var i=0;i<s.length;i++) {
 						if(s.key(i).match(/^tabs-/)) s.removeItem(s.key(i));
-					}
+				}
 				}
 			},
 
@@ -818,18 +831,18 @@ jQuery.noConflict();
 		$('.cms-content .Actions').entwine({
 			onmatch: function() {
 				this.find('.ss-ui-button').click(function() {
-					var form = this.form;
+						var form = this.form;
 
-					// forms don't natively store the button they've been triggered with
-					if(form) {
-						form.clickedButton = this;
-						// Reset the clicked button shortly after the onsubmit handlers
-						// have fired on the form
+						// forms don't natively store the button they've been triggered with
+						if(form) {
+							form.clickedButton = this;
+							// Reset the clicked button shortly after the onsubmit handlers
+							// have fired on the form
 						setTimeout(function() {
 							form.clickedButton = null;
 						}, 10);
-					}
-				});
+						}
+					});
 
 				this.redraw();
 				this._super();
@@ -974,13 +987,13 @@ jQuery.noConflict();
 		$(".cms-search-form button[type=reset], .cms-search-form input[type=reset]").entwine({
 			onclick: function(e) {
 				e.preventDefault();
-				
+
 				var form = $(this).parents('form');
 
 				form.clearForm();
 				form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated"); // Reset chosen.js
 				form.submit();
-			}
+				}
 		})
 
 		/**
@@ -1051,7 +1064,7 @@ jQuery.noConflict();
 			},
 			redrawTabs: function() {
 				this.rewriteHashlinks();
-				
+
 				var id = this.attr('id'), activeTab = this.find('ul:first .ui-tabs-active');
 
 				if(!this.data('uiTabs')) this.tabs({

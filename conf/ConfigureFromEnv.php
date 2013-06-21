@@ -17,6 +17,8 @@
  *  - SS_DATABASE_SUFFIX:   A suffix to add to the database name.
  *  - SS_DATABASE_PREFIX:   A prefix to add to the database name.
  *  - SS_DATABASE_TIMEZONE: Set the database timezone to something other than the system timezone.
+ *  - SS_DATABASE_MEMORY:   Use in-memory state if possible. Useful for testing, currently only  
+ *                          supported by the SQLite database adapter.
  * 
  * There is one more setting that is intended to be used by people who work on SilverStripe.
  *  - SS_DATABASE_CHOOSE_NAME: Boolean/Int.  If set, then the system will choose a default database name for you if
@@ -110,6 +112,10 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 	// For schema enabled drivers: 
 	if(defined('SS_DATABASE_SCHEMA')) 
 		$databaseConfig["schema"] = SS_DATABASE_SCHEMA; 
+
+	// For SQlite3 memory databases (mainly for testing purposes)
+	if(defined('SS_DATABASE_MEMORY')) 
+		$databaseConfig["memory"] = SS_DATABASE_MEMORY; 
 }
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {

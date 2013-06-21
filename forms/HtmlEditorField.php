@@ -380,6 +380,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new GridFieldSortableHeader(),
 			new GridFieldDataColumns(),
 			new GridFieldPaginator(5),
+			// TODO Shouldn't allow delete here, its too confusing with a "remove from editor view" action.
+			// Remove once we can fit the search button in the last actual title column
 			new GridFieldDeleteAction(),
 			new GridFieldDetailForm()
 		);
@@ -399,11 +401,11 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fromCMS = new CompositeField(
 			new LiteralField('headerSelect', 
 				'<h4>'.sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.FindInFolder', 'Find in Folder')).'</h4>'),
-			$select = new TreeDropdownField('ParentID', "", 'Folder'),	
+			$select = TreeDropdownField::create('ParentID', "", 'Folder')->addExtraClass('noborder'),	
 			$fileField
 		);
 		
-		$fromCMS->addExtraClass('content ss-uploadfield from-CMS');
+		$fromCMS->addExtraClass('content ss-uploadfield');
 		$select->addExtraClass('content-select');
 
 
@@ -416,7 +418,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		);
 
 		$remoteURL->addExtraClass('remoteurl');
-		$fromWeb->addExtraClass('content ss-uploadfield from-web');
+		$fromWeb->addExtraClass('content ss-uploadfield');
 
 		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
 		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
@@ -426,32 +428,30 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
-		// @todo - Remove this once this field supports display and recovery of file upload validation errors
-		$computerUploadField->setOverwriteWarning(false);
 
 		$tabSet = new TabSet(
 			"MediaFormInsertMediaTabs",
-			new Tab(
+			Tab::create(
 				'FromComputer',
 				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
 				$computerUploadField
-			),
-			new Tab(
+			)->addExtraClass('htmleditorfield-from-computer'),
+			Tab::create(
 				'FromWeb',
 				_t('HtmlEditorField.FROMWEB', 'From the web'),
 				$fromWeb
-			),
-			new Tab(
+			)->addExtraClass('htmleditorfield-from-web'),
+			Tab::create(
 				'FromCms',
 				_t('HtmlEditorField.FROMCMS','From the CMS'),
 				$fromCMS
-			)
+			)->addExtraClass('htmleditorfield-from-cms')
 		);
 		$tabSet->addExtraClass('cms-tabset-primary');
 
 		$allFields = new CompositeField(
 			$tabSet,
-			new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2',
+			new LiteralField('headerEdit', '<h4 class="field noborder header-edit">' . sprintf($numericLabelTmpl, '2',
 				_t('HtmlEditorField.ADJUSTDETAILSDIMENSIONS', 'Details &amp; dimensions')) . '</h4>'),
 			$editComposite = new CompositeField(
 				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
@@ -711,15 +711,15 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
 				CompositeField::create(
 					CompositeField::create(
-						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->FileType),
-						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $file->getSize()),
+						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type'), $file->FileType),
+						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size'), $file->getSize()),
 						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'), 
-							sprintf('<a href="%s" target="_blank" class="file-url">%s</a>',
-								$file->Link(), $file->RelativeLink())
+							sprintf('<a href="%s" title="%s" target="_blank" class="file-url">%s</a>',
+								$file->Link(), $file->Link(), $file->RelativeLink())
 						),
-						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':',
+						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded'),
 							$file->Created),
-						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':',
+						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'),
 							$file->LastEdited)
 					)
 				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')

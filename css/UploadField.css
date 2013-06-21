@@ -11,9 +11,6 @@
 Used in side panels and action tabs
 */
 .ss-uploadfield .clear { clear: both; }
-.ss-insert-media .ss-uploadfield { margin-top: 20px; }
-.ss-insert-media .ss-uploadfield h4 { float: left; }
-.ss-insert-media .ss-uploadfield.from-CMS .nolabel.treedropdown .middleColumn { margin-left: 184px; }
 .ss-uploadfield .middleColumn { width: 510px; padding: 0; background: #fff; border: 1px solid #b3b3b3; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
 .ss-uploadfield .ss-uploadfield-item { margin: 0; padding: 15px; overflow: auto; }
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview { height: 60px; line-height: 60px; width: 80px; text-align: center; font-weight: bold; float: left; overflow: hidden; }

@@ -150,7 +150,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyle .TreeDropdownField { width: auto; max-width: auto; }
 
 .field { display: block; border-bottom: 1px solid #d0d3d5; -webkit-box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); -moz-box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); padding: 0 0 7px 0; margin: 8px 0; *zoom: 1; }
-.field:last-child { border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
+.field.noborder, .field:last-child { padding-bottom: 0; border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
 .field.nolabel .description { margin-left: 0; }
@@ -160,7 +160,7 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
 .field .fieldgroup .fieldgroup-field.last { /* This is used on page/settings/visibility */ padding-bottom: 8px; /* replicates li item spacing */ }
-.field .description { clear: both; color: #777777; display: block; font-style: italic; margin: 4px 0 0 184px; }
+.field .description { clear: both; color: #777777; display: block; font-style: italic; line-height: 16px; margin: 4px 0 0 184px; }
 .field.checkbox .description, .field.ss-gridfield .description { margin-left: 0; }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { margin-left: 10px; width: 100%; max-width: 512px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 .field input.text.description, .field textarea.description, .field select.description, .field .TreeDropdownField.description { margin: 0; }
@@ -367,6 +367,7 @@ body.cms { overflow: hidden; }
 .cms-content-header h2 { font-size: 14px; font-weight: bold; margin: 0; margin-bottom: 8px; }
 .cms-content-header h2 * { vertical-align: middle; }
 .cms-content-header .cms-content-header-info { float: left; padding-top: 6px; }
+.cms-content-header .cms-content-header-info > * { display: inline-block; }
 .cms-content-header .ss-ui-button { line-height: 24px; }
 .cms-content-header .ss-ui-button .ui-button-text { line-height: 1.4; }
 
@@ -459,7 +460,8 @@ body.cms { overflow: hidden; }
 .cms-add-form .step-label { opacity: 0.9; }
 .cms-add-form .step-label .flyout { height: 17px; padding-top: 5px; }
 .cms-add-form .step-label .title { padding-top: 5px; font-weight: bold; text-shadow: 1px 1px 0 white; }
-.cms-add-form ul.SelectionGroup { padding-left: 28px; }
+.cms-add-form ul.SelectionGroup { padding-left: 28px; overflow: visible; *zoom: 1; }
+.cms-add-form ul.SelectionGroup:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .cms-add-form .parent-mode { padding: 8px; overflow: auto; }
 
 #PageType ul { padding-left: 20px; }
@@ -616,13 +618,13 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 
 .cms .ui-widget-overlay { background-color: #000; background-image: none; }
 
-.cms .ui-dialog { min-width: 570px; }
-.cms .ui-dialog .htmleditorfield-dialog { min-width: 570px; }
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content { padding-top: 0px; }
 
 .ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header { font-size: 14px; padding: 0; border: none; background-color: transparent; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header .ui-dialog-title { position: absolute; }
+.ui-dialog .ui-dialog-content { overflow: auto; }
+.ui-dialog .ui-dialog-content.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 .ui-dialog .cms-dialog-content { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; padding-bottom: 8px; padding-top: 0px; }
 .ui-dialog .cms-dialog-content .Actions { overflow: auto; margin: 8px 0; padding-bottom: 8px; float: right; }
 .ui-dialog .cms-dialog-content .ui-tabs { position: static; }
@@ -635,21 +637,22 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 
 /** -------------------------------------------- "Insert X" forms -------------------------------------------- */
 .htmleditorfield-dialog.ui-dialog-content { padding: 0; position: relative; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb .CompositeField { overflow: hidden; *zoom: 1; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL .middleColumn { margin-left: 0; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb #RemoteURL input.remoteurl { padding-left: 40px; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url { margin-top: 5px; padding-top: 15px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url .ui-button-text { margin-left: 10px; margin-top: -5px; line-height: 20px; float: left; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url:hover, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
-.htmleditorfield-dialog #MediaFormInsertMediaTabs_FromWeb .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
+.htmleditorfield-dialog .htmleditorfield-from-web .CompositeField { overflow: hidden; *zoom: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; width: 55%; max-width: 512px; float: left; position: relative; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL label { position: absolute; left: 8px; top: 13px; font-weight: normal; color: #888; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL .middleColumn { margin-left: 0; }
+.htmleditorfield-dialog .htmleditorfield-from-web #RemoteURL input.remoteurl { padding-left: 40px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url { margin-top: 5px; padding-top: 15px; overflow: hidden; *zoom: 1; border: none; background: none; opacity: 0.8; cursor: hand; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .btn-icon-addMedia { width: 20px; height: 20px; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url .ui-button-text { margin-left: 10px; margin-top: -5px; line-height: 20px; float: left; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url:active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; opacity: 1; }
+.htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:hover, .htmleditorfield-dialog .htmleditorfield-from-web button.add-url.ui-state-disabled:active { opacity: 0.35; filter: Alpha(Opacity=35); }
+.htmleditorfield-dialog .htmleditorfield-from-web .loading button.add-url .ui-icon { background-image: url(../images/throbber.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 .htmleditorfield-dialog .cms-content-header { padding: 0; width: 100%; height: 40px; }
 .htmleditorfield-dialog .cms-content-header h3 { padding: 0 8px; margin: 10px; }
 .htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .Actions, .htmleditorfield-dialog .ss-insert-link { padding: 8px 16px; }
-.htmleditorfield-dialog .details .file-url { display: block; width: 450px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
+.htmleditorfield-dialog .ss-insert-media .ui-tabs-panel, .htmleditorfield-dialog .Actions .ui-tabs-panel, .htmleditorfield-dialog .ss-insert-link .ui-tabs-panel { padding: 0; }
+.htmleditorfield-dialog .details .file-url { display: block; width: 300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
 .htmleditorfield-dialog .details .cms-file-info .field { border: none; -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0); -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
 .htmleditorfield-dialog .details .field { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
 .htmleditorfield-dialog .details .field.last { border-bottom: none; -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0); -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0); box-shadow: 0 0 0 rgba(0, 0, 0, 0); margin-bottom: 0; }
@@ -657,14 +660,15 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 
 .htmleditorfield-linkform .step2 { margin-bottom: 16px; }
 
-.htmleditorfield-mediaform .ss-gridfield tbody td:first-child img { max-height: 30px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-web, .htmleditorfield-mediaform .ss-uploadfield.from-CMS { margin-bottom: 48px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-web .middleColumn, .htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS { margin-top: 33px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS h4 { margin-top: 3px; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn { margin-top: 0; }
-.htmleditorfield-mediaform .ss-uploadfield.from-CMS .middleColumn .TreeDropdownField { margin-top: 23px; }
-.htmleditorfield-mediaform .ss-uploadfield-editandorganize { display: none; }
+.htmleditorfield-mediaform .ss-gridfield .gridfield-button-delete { display: none; }
+.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child { padding: 0; text-align: center; }
+.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tbody td:first-child img { max-height: 30px; }
+.htmleditorfield-mediaform .ss-gridfield table.ss-gridfield-table tr td { padding: 4px; }
+.htmleditorfield-mediaform .htmleditorfield-from-web .ss-uploadfield .middleColumn, .htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { width: auto; background: none; border: none; margin-top: 13px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield h4 { float: left; margin-top: 4px; margin-bottom: 0; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .middleColumn { margin-top: 16px; margin-left: 184px; }
+.htmleditorfield-mediaform .htmleditorfield-from-cms .ss-uploadfield .field.treedropdown { border-bottom: 0; padding: 0; }
+.htmleditorfield-mediaform .ss-assetuploadfield .ss-uploadfield-editandorganize .ss-uploadfield-files .ss-uploadfield-item-info { background-color: #9e9e9e; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzllOWU5ZSIvPjxzdG9wIG9mZnNldD0iOCUiIHN0b3AtY29sb3I9IiM5ZDlkOWQiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzg3ODc4NyIvPjxzdG9wIG9mZnNldD0iNTQlIiBzdG9wLWNvbG9yPSIjODY4Njg2Ii8+PHN0b3Agb2Zmc2V0PSI5NiUiIHN0b3AtY29sb3I9IiM2YjZiNmIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2YzZjNmMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #9e9e9e), color-stop(8%, #9d9d9d), color-stop(50%, #878787), color-stop(54%, #868686), color-stop(96%, #6b6b6b), color-stop(100%, #6c6c6c)); background-image: -webkit-linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); background-image: -moz-linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); background-image: -o-linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); background-image: linear-gradient(top, #9e9e9e 0%, #9d9d9d 8%, #878787 50%, #868686 54%, #6b6b6b 96%, #6c6c6c 100%); }
 
 /** -------------------------------------------- Search forms (used in AssetAdmin, ModelAdmin, etc) -------------------------------------------- */
 .cms-search-form { margin-bottom: 16px; }
@@ -680,9 +684,11 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 /** -------------------------------------------- Item Edit Form -------------------------------------------- */
 .cms-file-info { overflow: auto; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin-bottom: 8px; }
 .cms-file-info .cms-file-info-preview { float: left; width: 176px; margin-right: 8px; }
-.cms-file-info .cms-file-info-preview img { max-width: 176px; }
+.cms-file-info .cms-file-info-preview img { max-width: 176px; max-height: 128px; }
 .cms-file-info .cms-file-info-data { float: left; }
-.cms-file-info .cms-file-info-data .field { margin-bottom: 0; padding-bottom: 8px; border: none; box-shadow: none; }
+.cms-file-info .cms-file-info-data .field { margin: 0; padding-bottom: 8px; border: none; box-shadow: none; }
+.cms-file-info .cms-file-info-data .field label.left { width: 96px; }
+.cms-file-info .cms-file-info-data .field .middleColumn { margin-left: 104px; }
 .cms-file-info .cms-file-info-data .field label, .cms-file-info .cms-file-info-data .field span { padding: 0; }
 
 form.small .cms-file-info-preview { width: 112px; }
@@ -715,7 +721,6 @@ form.import-form label.left { width: 250px; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li { white-space: nowrap; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li label { padding-left: 2px; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .fieldgroup .fieldgroup-field { width: 216px; padding-left: 0; }
-.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .TreeDropdownField .treedropdownfield-toggle-panel-link { border-left: none; background: none; background-image: none; }
 
 /** -------------------------------------------- Buttons for FileUpload -------------------------------------------- */
 .ss-uploadfield-item-edit-all .ui-button-text { padding-right: 0; }
@@ -747,7 +752,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree .jstree-wholerow-real, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real { position: relative; z-index: 1; }
 .cms .jstree .jstree-wholerow-real li, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real li { cursor: pointer; }
 .cms .jstree .jstree-wholerow-real a, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow-real a { border-left-color: transparent !important; border-right-color: transparent !important; }
-.cms .jstree .jstree-wholerow, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow, .cms .jstree .jstree-wholerow ul, .cms .jstree .jstree-wholerow li, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow ul, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow ul, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow li, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow li, .cms .jstree .jstree-wholerow a, .cms .jstree .jstree-wholerow a:hover, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow a, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a:hover, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow a:hover, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow ul, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow ul, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow li, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow li, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow ul, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow li, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow a, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow a:hover, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a:hover, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a:hover { margin: 0 !important; padding: 0 !important; }
+.cms .jstree .jstree-wholerow, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow, .cms .jstree .jstree-wholerow ul, .cms .jstree .jstree-wholerow li, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow ul, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow ul, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow li, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow li, .cms .jstree .jstree-wholerow a, .cms .jstree .jstree-wholerow a:hover, .cms .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a, .TreeDropdownField .treedropdownfield-panel .cms .jstree .jstree-wholerow a, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow ul, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow li, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a:hover { margin: 0 !important; padding: 0 !important; }
 .cms .jstree .jstree-wholerow, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow { position: relative; z-index: 0; height: 0; background: transparent !important; }
 .cms .jstree .jstree-wholerow ul, .cms .jstree .jstree-wholerow li, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow ul, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow li { background: transparent !important; width: 100%; }
 .cms .jstree .jstree-wholerow a, .cms .jstree .jstree-wholerow a:hover, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a, .TreeDropdownField .treedropdownfield-panel .jstree .jstree-wholerow a:hover { text-indent: -9999px !important; width: 100%; border-right-width: 0px !important; border-left-width: 0px !important; }
@@ -766,7 +771,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree-themeroller a, .TreeDropdownField .treedropdownfield-panel .jstree-themeroller a { padding: 0 2px; }
 .cms .jstree-themeroller .ui-icon, .TreeDropdownField .treedropdownfield-panel .jstree-themeroller .ui-icon { overflow: visible; }
 .cms .jstree-themeroller .jstree-no-icon, .TreeDropdownField .treedropdownfield-panel .jstree-themeroller .jstree-no-icon { display: none; }
-.cms #jstree-marker, .cms .TreeDropdownField .treedropdownfield-panel #jstree-marker, .TreeDropdownField .treedropdownfield-panel .cms #jstree-marker, .cms #jstree-marker-line, .cms .TreeDropdownField .treedropdownfield-panel #jstree-marker-line, .TreeDropdownField .treedropdownfield-panel .cms #jstree-marker-line, .TreeDropdownField .treedropdownfield-panel .cms #jstree-marker, .cms .TreeDropdownField .treedropdownfield-panel #jstree-marker, .TreeDropdownField .treedropdownfield-panel #jstree-marker, .TreeDropdownField .treedropdownfield-panel .cms #jstree-marker-line, .cms .TreeDropdownField .treedropdownfield-panel #jstree-marker-line, .TreeDropdownField .treedropdownfield-panel #jstree-marker-line { padding: 0; margin: 0; overflow: hidden; position: absolute; top: -30px; background-repeat: no-repeat; display: none; }
+.cms #jstree-marker, .cms .TreeDropdownField .treedropdownfield-panel #jstree-marker, .TreeDropdownField .treedropdownfield-panel .cms #jstree-marker, .cms #jstree-marker-line, .cms .TreeDropdownField .treedropdownfield-panel #jstree-marker-line, .TreeDropdownField .treedropdownfield-panel .cms #jstree-marker-line, .TreeDropdownField .treedropdownfield-panel #jstree-marker, .TreeDropdownField .treedropdownfield-panel #jstree-marker-line { padding: 0; margin: 0; overflow: hidden; position: absolute; top: -30px; background-repeat: no-repeat; display: none; }
 .cms #jstree-marker, .TreeDropdownField .treedropdownfield-panel #jstree-marker { line-height: 10px; font-size: 12px; height: 12px; width: 8px; z-index: 10001; background-color: transparent; text-shadow: 1px 1px 1px white; color: black; }
 .cms #jstree-marker-line, .TreeDropdownField .treedropdownfield-panel #jstree-marker-line { line-height: 0%; font-size: 1px; height: 1px; width: 100px; z-index: 10000; background-color: #456c43; cursor: pointer; border: 1px solid #eeeeee; border-left: 0; -moz-box-shadow: 0px 0px 2px #666; -webkit-box-shadow: 0px 0px 2px #666; box-shadow: 0px 0px 2px #666; -moz-border-radius: 1px; border-radius: 1px; -webkit-border-radius: 1px; }
 .cms #vakata-contextmenu, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu { display: block; visibility: hidden; left: 0; top: -200px; position: absolute; margin: 0; padding: 0; min-width: 180px; background: #FFF; border: 1px solid silver; z-index: 10000; *width: 180px; -webkit-box-shadow: 0 0 10px #cccccc; -moz-box-shadow: 0 0 10px #cccccc; box-shadow: 0 0 10px #cccccc; }
@@ -809,7 +814,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree-apple span.badge.status-deletedonlive, .tree-holder.jstree-apple span.badge.status-removedfromdraft, .cms-tree.jstree-apple span.badge.status-deletedonlive, .cms-tree.jstree-apple span.badge.status-removedfromdraft { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
 .tree-holder.jstree-apple span.badge.status-workflow-approval, .cms-tree.jstree-apple span.badge.status-workflow-approval { color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
 .tree-holder.jstree-apple span.comment-count, .cms-tree.jstree-apple span.comment-count { clear: both; position: relative; text-transform: uppercase; display: inline-block; overflow: visible; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; border-radius: 2px / 2px; color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
-.tree-holder.jstree-apple span.comment-count span.comment-count:before, .tree-holder.jstree-apple span.comment-count .cms-tree.jstree-apple span.comment-count:before, .cms-tree.jstree-apple .tree-holder.jstree-apple span.comment-count span.comment-count:before, .tree-holder.jstree-apple span.comment-count span.comment-count:after, .tree-holder.jstree-apple span.comment-count .cms-tree.jstree-apple span.comment-count:after, .cms-tree.jstree-apple .tree-holder.jstree-apple span.comment-count span.comment-count:after, .cms-tree.jstree-apple span.comment-count .tree-holder.jstree-apple span.comment-count:before, .tree-holder.jstree-apple .cms-tree.jstree-apple span.comment-count span.comment-count:before, .cms-tree.jstree-apple span.comment-count span.comment-count:before, .cms-tree.jstree-apple span.comment-count .tree-holder.jstree-apple span.comment-count:after, .tree-holder.jstree-apple .cms-tree.jstree-apple span.comment-count span.comment-count:after, .cms-tree.jstree-apple span.comment-count span.comment-count:after { content: ""; position: absolute; border-style: solid; /* reduce the damage in FF3.0 */ display: block; width: 0; }
+.tree-holder.jstree-apple span.comment-count span.comment-count:before, .tree-holder.jstree-apple span.comment-count span.comment-count:after, .cms-tree.jstree-apple span.comment-count span.comment-count:before, .cms-tree.jstree-apple span.comment-count span.comment-count:after { content: ""; position: absolute; border-style: solid; /* reduce the damage in FF3.0 */ display: block; width: 0; }
 .tree-holder.jstree-apple span.comment-count:before, .cms-tree.jstree-apple span.comment-count:before { bottom: -4px; /* value = - border-top-width - border-bottom-width */ left: 3px; /* controls horizontal position */ border-width: 4px 4px 0; border-color: #C9B800 transparent; }
 .tree-holder.jstree-apple span.comment-count:after, .cms-tree.jstree-apple span.comment-count:after { bottom: -3px; /* value = - border-top-width - border-bottom-width */ left: 4px; /* value = (:before left) + (:before border-left) - (:after border-left) */ border-width: 3px 3px 0; border-color: #FFF0BC transparent; }
 .tree-holder.jstree-apple .jstree-hovered, .cms-tree.jstree-apple .jstree-hovered { text-shadow: none; text-decoration: none; }
