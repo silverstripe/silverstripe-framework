@@ -1062,7 +1062,7 @@ after')
 		$origEnv = Config::inst()->get('Director', 'environment_type');
 		Config::inst()->update('Director', 'environment_type', 'dev');
 		Config::inst()->update('SSViewer', 'source_file_comments', true);
-	   $f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
+		$f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
 		$templates = array(
 			array(
 				'name' => 'SSViewerTestCommentsFullSource',
