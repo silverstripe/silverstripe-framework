@@ -81,6 +81,19 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertEquals('casted', $newViewableData->forTemplate());
 	}
 
+	public function testDefaultValueWrapping() {
+		$data = new ArrayData(array('Title' => 'SomeTitleValue'));
+		// this results in a cached raw string in ViewableData:
+		$this->assertTrue($data->hasValue('Title'));
+		$this->assertFalse($data->hasValue('SomethingElse'));
+		// this should cast the raw string to a StringField since we are
+		// passing true as the third argument:
+		$obj = $data->obj('Title', null, true);
+		$this->assertTrue(is_object($obj));
+		// and the string field should have the value of the raw string:
+		$this->assertEquals('SomeTitleValue', $obj->forTemplate());
+	}
+
 	public function testRAWVal() {
 		$data = new ViewableDataTest_Castable();
 		$data->test = 'This &amp; This';
