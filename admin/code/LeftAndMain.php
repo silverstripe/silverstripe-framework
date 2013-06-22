@@ -76,7 +76,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @config
 	 * @var string
 	 */
-	private static $help_link = 'http://3.0.userhelp.silverstripe.org';
+	private static $help_link = 'http://userhelp.silverstripe.org/framework/en/3.1';
 
 	/**
 	 * @var array
