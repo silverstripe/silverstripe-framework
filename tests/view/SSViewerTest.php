@@ -511,6 +511,62 @@ after')
 		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}
 
+	public function testIncludeWithBooleanArguments() {
+		$one   = new SSViewerTest_Object(1);
+		$two   = new SSViewerTest_Object(2);
+		$three = new SSViewerTest_Object(3);
+		$four  = new SSViewerTest_Object(4);
+
+		// first test with no arguments
+		$template = '<% include SSViewerTestUsingBooleanArgumentsInclude %>';
+		$this->assertEquals('1 - nothing',   trim($this->render($template, $one)));
+		$this->assertEquals('2 - nothing',   trim($this->render($template, $two)));
+		$this->assertEquals('3 - nothing',   trim($this->render($template, $three)));
+		$this->assertEquals('4 - nothing',   trim($this->render($template, $four)));
+
+		// now with a boolean argument that comes from a method that returns boolean true/false
+		$template = '<% include SSViewerTestUsingBooleanArgumentsInclude DoSomething=$NumberIsEven %>';
+		$this->assertEquals('1 - nothing',   trim($this->render($template, $one)));
+		$this->assertEquals('2 - something', trim($this->render($template, $two)));
+		$this->assertEquals('3 - nothing',   trim($this->render($template, $three)));
+		$this->assertEquals('4 - something', trim($this->render($template, $four)));
+
+		// now with a boolean argument that comes from a method that returns boolean as int 1/0
+		$template = '<% include SSViewerTestUsingBooleanArgumentsInclude DoSomething=$NumberIsOdd %>';
+		$this->assertEquals('1 - something', trim($this->render($template, $one)));
+		$this->assertEquals('2 - nothing',   trim($this->render($template, $two)));
+		$this->assertEquals('3 - something', trim($this->render($template, $three)));
+		$this->assertEquals('4 - nothing',   trim($this->render($template, $four)));
+
+		// now with a boolean argument that comes from a hard-coded 'true'
+		$template = '<% include SSViewerTestUsingBooleanArgumentsInclude DoSomething=true %>';
+		$this->assertEquals('1 - something', trim($this->render($template, $one)));
+		$this->assertEquals('2 - something', trim($this->render($template, $two)));
+		$this->assertEquals('3 - something', trim($this->render($template, $three)));
+		$this->assertEquals('4 - something', trim($this->render($template, $four)));
+
+		// now with a boolean argument that comes from a hard-coded 'false'
+		$template = '<% include SSViewerTestUsingBooleanArgumentsInclude DoSomething=false %>';
+		$this->assertEquals('1 - nothing',   trim($this->render($template, $one)));
+		$this->assertEquals('2 - nothing',   trim($this->render($template, $two)));
+		$this->assertEquals('3 - nothing',   trim($this->render($template, $three)));
+		$this->assertEquals('4 - nothing',   trim($this->render($template, $four)));
+
+		// now with a boolean argument that comes from a hard-coded '1'
+		$template = '<% include SSViewerTestUsingBooleanArgumentsInclude DoSomething=1 %>';
+		$this->assertEquals('1 - something', trim($this->render($template, $one)));
+		$this->assertEquals('2 - something', trim($this->render($template, $two)));
+		$this->assertEquals('3 - something', trim($this->render($template, $three)));
+		$this->assertEquals('4 - something', trim($this->render($template, $four)));
+
+		// now with a boolean argument that comes from a hard-coded '0'
+		$template = '<% include SSViewerTestUsingBooleanArgumentsInclude DoSomething=0 %>';
+		$this->assertEquals('1 - nothing',   trim($this->render($template, $one)));
+		$this->assertEquals('2 - nothing',   trim($this->render($template, $two)));
+		$this->assertEquals('3 - nothing',   trim($this->render($template, $three)));
+		$this->assertEquals('4 - nothing',   trim($this->render($template, $four)));
+	}
+
 	public function testIncludeWithArguments() {
 		$this->assertEquals(
 			$this->render('<% include SSViewerTestIncludeWithArguments %>'),
@@ -1285,6 +1341,16 @@ class SSViewerTest_Object extends DataObject {
 
 	public function absoluteBaseURL() {
 		return "testLocalFunctionPriorityCalled";
+	}
+
+	public function NumberIsEven() {
+		// explicitly return boolean value
+		return (($this->number % 2) == 0) ? true : false;
+	}
+
+	public function NumberIsOdd() {
+		// explicitly return integer true/false
+		return $this->NumberIsEven() ? 0 : 1;
 	}
 
 	public function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
