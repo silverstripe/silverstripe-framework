@@ -153,7 +153,7 @@
 			iframe.bind('load', function(e) {
 				if($(this).attr('src') == 'about:blank') return;
 				
-				$(this).show();
+				iframe.addClass('loaded').show(); // more reliable than 'src' attr check (in IE)
 				self._resizeIframe();
 				self.uiDialog.removeClass('loading');
 			}).hide();
@@ -170,7 +170,7 @@
 			var self = this, iframe = this.element.children('iframe');
 
 			// Load iframe
-			if(!iframe.attr('src') || this.options.reloadOnOpen) {
+			if(this.options.iframeUrl && (!iframe.hasClass('loaded') || this.options.reloadOnOpen)) {
 				iframe.hide();
 				iframe.attr('src', this.options.iframeUrl);
 				this.uiDialog.addClass('loading');
