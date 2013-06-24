@@ -30,6 +30,9 @@ class GridField_URLHandlerTest extends FunctionalTest {
 }
 
 class GridField_URLHandlerTest_Controller extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('Form');
+
 	public function Link() {
 		return get_class($this) ."/";
 	}
@@ -51,6 +54,9 @@ class GridField_URLHandlerTest_Controller extends Controller implements TestOnly
  * Test URLHandler with a nested request handler
  */
 class GridField_URLHandlerTest_Component extends RequestHandler implements GridField_URLHandler {
+	
+	private static $allowed_actions = array('Form', 'showform', 'testpage', 'handleItem');
+
 	protected $gridField;
 	
 	public function getURLHandlers($gridField) {
@@ -96,8 +102,13 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 }
 
 class GridField_URLHandlerTest_Component_ItemRequest extends RequestHandler {
+	
+	private static $allowed_actions = array('Form', 'showform', 'testpage');
+
 	protected $gridField;
+	
 	protected $link;
+	
 	protected $id;
 	
 	public function __construct($gridField, $id, $link) {

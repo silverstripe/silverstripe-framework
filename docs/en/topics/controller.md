@@ -87,9 +87,7 @@ way to perform checks against permission codes or custom logic.
 There's a couple of rules guiding these checks:
 
  * Each class is only responsible for access control on the methods it defines
- * If `$allowed_actions` is defined as an empty array, no actions are allowed
- * If `$allowed_actions` is undefined, all public methods on the specific class are allowed 
-   (not recommended)
+ * If `$allowed_actions` is an empty array or undefined, only the `index` action is allowed
  * Access checks on parent classes need to be overwritten via the Config API
  * Only public methods can be made accessible
  * If a method on a parent class is overwritten, access control for it has to be redefined as well
@@ -102,6 +100,8 @@ There's a couple of rules guiding these checks:
  * `$allowed_actions` can be defined on `Extension` classes applying to the controller.
 
 If the permission check fails, SilverStripe will return a "403 Forbidden" HTTP status.
+You can overwrite the default behaviour on undefined `$allowed_actions` to allow all actions,
+by setting the `RequestHandler.require_allowed_actions` config value to `false` (not recommended).
 
 ### Through the action
 
@@ -172,21 +172,6 @@ through `/fastfood/drivethrough/` to use the same order function.
 	    private static $url_handlers = array(
 	        'drivethrough/$Action/$ID/$Name' => 'order'
 	    );
-
-## Access Control
-
-### Through $allowed_actions
-
- * If `$allowed_actions` is undefined, `null` or `array()`, no actions are accessible
- * Each class is only responsible for access control on the methods it defines
- * Access checks on parent classes need to be overwritten via the Config API
- * Only public methods can be made accessible
- * If a method on a parent class is overwritten, access control for it has to be redefined as well
- * An action named "index" is whitelisted by default
- * Methods returning forms also count as actions which need to be defined
- * Form action methods (targets of `FormAction`) should NOT be included in `$allowed_actions`,
-   they're handled separately through the form routing (see the ["forms" topic](/topics/forms))
- * `$allowed_actions` can be defined on `Extension` classes applying to the controller.
 
 ## URL Patterns
 

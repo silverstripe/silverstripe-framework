@@ -97,6 +97,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 class GridFieldAddExistingAutocompleterTest_Controller extends Controller implements TestOnly {
 
+	private static $allowed_actions = array('Form');
+
 	protected $template = 'BlankPage';
 
 	public function Form() {
