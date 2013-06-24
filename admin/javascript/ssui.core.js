@@ -207,12 +207,8 @@
 					opts.height = newHeight;
 				}
 			}
-			if(this.options.autoPosition) {
-				opts.position = this.options.position;
-			}
 
 			if(!jQuery.isEmptyObject(opts)) {
-				// Resize dialog
 				this._setOptions(opts);
 
 				// Resize iframe within dialog
@@ -226,6 +222,11 @@
 					- parseFloat(this.element.css('paddingTop')) 
 					- parseFloat(this.element.css('paddingBottom'))
 				);
+
+				// Enforce new position
+				if(this.options.autoPosition) {
+					this._setOption("position", this.options.position);
+				}
 			}
 		}
 	});
