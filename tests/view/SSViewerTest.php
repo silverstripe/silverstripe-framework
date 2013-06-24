@@ -165,6 +165,18 @@ SS;
 			'Permissions template functions result correct result');
 	}
 
+	public function testNonFieldCastingHelpersNotUsedInHasValue() {
+		// check if Link without $ in front of variable
+		$result = $this->render(
+			'A<% if Link %>$Link<% end_if %>B', new SSViewerTest_Object());
+		$this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if Link %>');
+
+		// check if Link with $ in front of variable
+		$result = $this->render(
+			'A<% if $Link %>$Link<% end_if %>B', new SSViewerTest_Object());
+		$this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if $Link %>');
+	}
+
 	public function testLocalFunctionsTakePriorityOverGlobals() {
 		$data = new ArrayData(array(
 			'Page' => new SSViewerTest_Object()
@@ -1274,6 +1286,11 @@ class SSViewerTest_Object extends DataObject {
 
 	public $number = null;
 
+	private static $casting = array(
+		'Link' => 'Text',
+	);
+
+
 	public function __construct($number = null) {
 		parent::__construct();
 		$this->number = $number;
@@ -1289,6 +1306,10 @@ class SSViewerTest_Object extends DataObject {
 
 	public function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
 		return $a. $b. $c. $d. $e. $f. $g. $h. $i. $j. $k;
+	}
+
+	public function Link() {
+		return 'some/url.html';
 	}
 }
 
