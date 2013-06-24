@@ -458,6 +458,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	
 	/**
 	 * Redirect to the given URL.
+	 * 
+	 * @return SS_HTTPResponse
 	 */
 	public function redirect($url, $code=302) {
 		if(!$this->response) $this->response = new SS_HTTPResponse();
@@ -473,7 +475,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$url = Director::baseURL() . $url;
 		}
 
-		$this->response->redirect($url, $code);
+		return $this->response->redirect($url, $code);
 	}
 	
 	/**
