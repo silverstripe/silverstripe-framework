@@ -2643,8 +2643,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else if($fieldName == 'ID') {
 			return new PrimaryKey($fieldName, $this);
 			
-		// General casting information for items in $db or $casting
-		} else if($helper = $this->castingHelper($fieldName)) {
+		// General casting information for items in $db
+		} else if($helper = $this->db($fieldName)) {
 			$obj = Object::create_from_string($helper, $fieldName);
 			$obj->setValue($this->$fieldName, $this->record, false);
 			return $obj;
