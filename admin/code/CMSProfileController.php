@@ -6,6 +6,7 @@ class CMSProfileController extends LeftAndMain {
 	private static $menu_title = 'My Profile';
 
 	private static $required_permission_codes = false;
+
 	private static $tree_class = 'Member';
 
 	public function getResponseNegotiator() {

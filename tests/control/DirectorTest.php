@@ -348,6 +348,13 @@ class DirectorTest extends SapphireTest {
 
 class DirectorTestRequest_Controller extends Controller implements TestOnly {
 
+	private static $allowed_actions = array(
+		'returnGetValue',
+		'returnPostValue',
+		'returnRequestValue',
+		'returnCookieValue',
+	);
+
 	public function returnGetValue($request)		{ return $_GET['somekey']; }
 
 	public function returnPostValue($request)		{ return $_POST['somekey']; }

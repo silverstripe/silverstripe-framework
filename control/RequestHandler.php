@@ -96,6 +96,16 @@ class RequestHandler extends ViewableData {
 	 * @config
 	 */
 	private static $allowed_actions = null;
+
+	/**
+	 * @config
+	 * @var boolean Enforce presence of $allowed_actions when checking acccess.
+	 * Defaults to TRUE, meaning all URL actions will be denied.
+	 * When set to FALSE, the controller will allow *all* public methods to be called.
+	 * In most cases this isn't desireable, and in fact a security risk, 
+	 * since some helper methods can cause side effects which shouldn't be exposed through URLs.
+	 */
+	private static $require_allowed_actions = true;
 	
 	public function __construct() {
 		$this->brokenOnConstruct = false;
@@ -430,12 +440,12 @@ class RequestHandler extends ViewableData {
 			// If defined as empty array, deny action
 			$isAllowed = false;
 		} elseif($allowedActions === null) {
-			// If undefined, allow action
-			$isAllowed = true;
+			// If undefined, allow action based on configuration
+			$isAllowed = !Config::inst()->get('RequestHandler', 'require_allowed_actions');
 		}
 
 		// If we don't have a match in allowed_actions,
-		// whitelist the 'index' action as well as undefined actions.
+		// whitelist the 'index' action as well as undefined actions based on configuration.
 		if(!$isDefined && ($action == 'index' || empty($action))) {
 			$isAllowed = true;
 		}

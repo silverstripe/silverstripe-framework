@@ -1331,6 +1331,12 @@ class UploadField_ItemHandler extends RequestHandler {
 		'' => 'index',
 	);
 
+	private static $allowed_actions = array(
+		'delete',
+		'edit',
+		'EditForm',
+	);
+
 	/**
 	 * @param UploadFIeld $parent
 	 * @param int $item
