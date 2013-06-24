@@ -382,7 +382,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						success: function(html) {
 							dialog.html(html);
 							dialog.getForm().setElement(self);
-							dialog.trigger('dialogopen');
+							dialog.trigger('ssdialogopen');
 						}
 					});
 				}
@@ -452,7 +452,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 
 			fromDialog: {
-				ondialogopen: function(){
+				onssdialogopen: function(){
 					var ed = this.getEditor();
 					ed.onopen();
 
@@ -467,7 +467,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.redraw();
 				},
 
-				ondialogclose: function(){
+				onssdialogclose: function(){
 					var ed = this.getEditor();
 					ed.onclose();
 
