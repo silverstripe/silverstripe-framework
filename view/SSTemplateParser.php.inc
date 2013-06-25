@@ -118,6 +118,9 @@ class SSTemplateParser extends Parser {
 	
 	/*!*
 	
+	# Values are bare words in templates, but strings in PHP. We rely on PHP's type conversion to back-convert
+	# strings to numbers when needed.
+
 	Word: / [A-Za-z_] [A-Za-z0-9_]* /
 	Number: / [0-9]+ /
 	Value: / [A-Za-z0-9_]+ /
@@ -128,15 +131,20 @@ class SSTemplateParser extends Parser {
 	CallArguments: :Argument ( < "," < :Argument )*
 	*/
 
-	/** 
-	 * Values are bare words in templates, but strings in PHP. We rely on PHP's type conversion to back-convert
-	 * strings to numbers when needed.
-	 */
+	function CallArguments__construct(&$res) {
+		$res['args'] = array();
+	}
+
 	function CallArguments_Argument(&$res, $sub) {
+		$arg = ($sub['ArgumentMode'] == 'default' ?
+			$sub['string_php'] :
+			str_replace('$$FINAL', 'XML_val', $sub['php'])
+		);
+
+		$res['args'][] = $arg;
+
 		if (!empty($res['php'])) $res['php'] .= ', ';
-		
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : 
-			str_replace('$$FINAL', 'XML_val', $sub['php']);
+		$res['php'] .= $arg;
 	}
 
 	/*!*
@@ -155,24 +163,58 @@ class SSTemplateParser extends Parser {
 
 	Lookup: LookupStep ("." LookupStep)* "." LastLookupStep | LastLookupStep
 	*/
-	
+
 	function Lookup__construct(&$res) {
+		$res['args'] = array();
 		$res['php'] = '$scope';
 		$res['LookupSteps'] = array();
 	}
-	
-	/** 
+
+	/** @var int Counter to make sure variables don't overwrite each other. TODO: Be better about recycling these */
+	static $ctr = 0;
+
+	/**
 	 * The basic generated PHP of LookupStep and LastLookupStep is the same, except that LookupStep calls 'obj' to 
 	 * get the next ViewableData in the sequence, and LastLookupStep calls different methods (XML_val, hasValue, obj)
 	 * depending on the context the lookup is used in.
+	 *
+	 * Note the special handling of arguments to avoid breaking scope chaining part way through.
+	 *
+	 *   $A.B($C.D($E.F, $G.H))
+	 *
+	 * becomes effectively
+	 *
+	 *   $v1 = $E.F; $v2 = $G.H; $v3 = $C.D($v1, $v2); return $A.B($v3);
+	 *
+	 * The caveat is that the output php fragment needs to be an expression, not a set of statements, so we have to
+	 * do a bit of trickery to be able to do both the variable assignment & the call within the same expression.
+	 *
+	 *   (($v1 = $E.F) || true)  // always true - either from $v1, or from true if $v1 gets assigned false
+	 *   &&                      // && so that short-circuit doesn't skip next assignments
+	 *   (($v2 = $G.H) || true)
+	 *   &&
+	 *   (($v3 = $C.D($v1, $v2)) || true)
+	 *   ? $A.B($v3)
+	 *   : 0
+	 *
+	 * Actually it's a bit uglier than that, as the list is built up by recursion.
 	 */
 	function Lookup_AddLookupStep(&$res, $sub, $method) {
 		$res['LookupSteps'][] = $sub;
 		
 		$property = $sub['Call']['Method']['text'];
 		
-		if (isset($sub['Call']['CallArguments']) && $arguments = $sub['Call']['CallArguments']['php']) {
-			$res['php'] .= "->$method('$property', array($arguments), true)";
+		if (!empty($sub['Call']['CallArguments']['args'])) {
+			$vars = array();
+
+			foreach($sub['Call']['CallArguments']['args'] as $arg) {
+				$varname = '$var'.(++self::$ctr);
+
+				$res['args'][] = "(($varname = $arg) || true)";
+				$vars[] = $varname;
+			}
+
+			$res['php'] .= "->$method('$property', array(".implode(',',$vars)."), true)";
 		}
 		else {
 			$res['php'] .= "->$method('$property', null, true)";
@@ -185,8 +227,9 @@ class SSTemplateParser extends Parser {
 
 	function Lookup_LastLookupStep(&$res, $sub) {
 		$this->Lookup_AddLookupStep($res, $sub, '$$FINAL');
-	}
 
+		if (!empty($res['args'])) $res['php'] = '(('.implode('&&',$res['args']).') ? '.$res['php'].' : 0)';
+	}
 
 	/*!*
 
