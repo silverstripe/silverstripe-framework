@@ -1074,7 +1074,7 @@ after')
 		$origEnv = Config::inst()->get('Director', 'environment_type');
 		Config::inst()->update('Director', 'environment_type', 'dev');
 		Config::inst()->update('SSViewer', 'source_file_comments', true);
-	   $f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
+		$f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
 		$templates = array(
 			array(
 				'name' => 'SSViewerTestCommentsFullSource',
@@ -1090,7 +1090,8 @@ after')
 			array(
 				'name' => 'SSViewerTestCommentsFullSourceHTML4Doctype',
 				'expected' => ""
-					. "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\t\t\"http://www.w3.org/TR/html4/strict.dtd\">"
+					. "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\t\t\""
+					. "http://www.w3.org/TR/html4/strict.dtd\">"
 					. "<!-- template $f/SSViewerTestCommentsFullSourceHTML4Doctype.ss -->"
 					. "<html>"
 					. "\t<head></head>"
