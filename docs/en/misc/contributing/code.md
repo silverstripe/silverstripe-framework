@@ -82,7 +82,7 @@ If you're familiar with it, here's the short version of what you need to know. O
   * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
   Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
   against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
-  the pull request should go against `master` (read more about our [release process](/misc/release-process)).
+  the pull request should go against `master` (read more about our [release process](/misc/release-process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
 
 ### Editing files directly on GitHub.com
 
