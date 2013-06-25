@@ -14,6 +14,12 @@ class HtmlEditorField extends TextareaField {
 	 */
 	private static $use_gzip = true;
 
+	/**
+	 * @config
+	 * @var Integer Default insertion width for Images and Media
+	 */
+	private static $insert_width = 600;
+
 	protected $rows = 30;
 	
 	/**
@@ -620,10 +626,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
 				)
 			)->addExtraClass('last')
 		);
@@ -634,12 +640,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					TextField::create(
 						'Width', 
 						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
-						$file->Width
+						$file->InsertWidth
 					)->setMaxLength(5),
 					TextField::create(
 						'Height', 
 						_t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 
-						$file->Height
+						$file->InsertHeight
 					)->setMaxLength(5)
 				)->addExtraClass('dimensions last')
 			);
@@ -744,10 +750,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
 				)
 			)->addExtraClass('last')
 		);
@@ -757,12 +763,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					TextField::create(
 						'Width', 
 						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
-						$file->Width
+						$file->InsertWidth
 					)->setMaxLength(5),
 					TextField::create(
 						'Height', 
 						" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-						$file->Height
+						$file->InsertHeight
 					)->setMaxLength(5)
 				)->addExtraClass('dimensions last')
 			);
@@ -908,6 +914,29 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		return $this->oembed->Height ?: 100;
 	}
 
+	/**
+	 * Provide an initial width for inserted media, restricted based on $embed_width
+	 * 
+	 * @return int
+	 */
+	public function getInsertWidth() {
+		$width = $this->getWidth();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $width : $maxWidth;
+	}
+
+	/**
+	 * Provide an initial height for inserted media, scaled proportionally to the initial width
+	 * 
+	 * @return int
+	 */
+	public function getInsertHeight() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
+	}
+
 	public function getPreview() {
 		if(isset($this->oembed->thumbnail_url)) {
 			return sprintf('<img src="%s" />', $this->oembed->thumbnail_url);
@@ -962,6 +991,29 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 
 	public function getHeight() {
 		return ($this->file) ? $this->file->Height : $this->height;
+	}
+
+	/**
+	 * Provide an initial width for inserted image, restricted based on $embed_width
+	 * 
+	 * @return int
+	 */
+	public function getInsertWidth() {
+		$width = $this->getWidth();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $width : $maxWidth;
+	}
+
+	/**
+	 * Provide an initial height for inserted image, scaled proportionally to the initial width
+	 * 
+	 * @return int
+	 */
+	public function getInsertHeight() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
 	}
 
 	public function getPreview() {
