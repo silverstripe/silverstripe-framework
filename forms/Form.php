@@ -149,7 +149,11 @@ class Form extends RequestHandler {
 	 */
 	protected $attributes = array();
 
-	private static $allowed_actions = array('handleField', 'httpSubmission');
+	private static $allowed_actions = array(
+		'handleField', 
+		'httpSubmission',
+		'forTemplate',
+	);
 
 	/**
 	 * Create a new form, with the given fields an action buttons.
@@ -210,7 +214,7 @@ class Form extends RequestHandler {
 		'GET ' => 'httpSubmission',
 		'HEAD ' => 'httpSubmission',
 	);
-	
+
 	/**
 	 * Set up current form errors in session to
 	 * the current form if appropriate.
