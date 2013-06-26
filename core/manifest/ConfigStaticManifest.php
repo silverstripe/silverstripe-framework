@@ -78,7 +78,8 @@ class SS_ConfigStaticManifest {
 			$static = $this->statics[$class][$name];
 
 			if ($static['access'] != T_PRIVATE) {
-				Deprecation::notice('3.2.0', "Config static $class::\$$name must be marked as private", Deprecation::SCOPE_GLOBAL);
+				Deprecation::notice('3.2.0', "Config static $class::\$$name must be marked as private",
+					Deprecation::SCOPE_GLOBAL);
 				// Don't warn more than once per static
 				$this->statics[$class][$name]['access'] = T_PRIVATE;
 			}
@@ -211,13 +212,23 @@ class SS_ConfigStaticManifest_Parser {
 				$class = $next[1];
 			}
 			else if($type == T_NAMESPACE) {
-				$next = $this->next();
+				$namespace = '';
+				while(true) {
+					$next = $this->next();
 
-				if($next[0] != T_STRING) {
-					user_error("Couldn\'t parse {$this->path} when building config static manifest", E_USER_ERROR);
+					if($next == ';') {
+						break;
+					} elseif($next[0] == T_NS_SEPARATOR) {
+						$namespace .= $next[1];
+						$next = $this->next();
+					}
+
+					if($next[0] != T_STRING) {
+						user_error("Couldn\'t parse {$this->path} when building config static manifest", E_USER_ERROR);
+					}
+
+					$namespace .= $next[1];
 				}
-
-				$namespace = $next[1];
 			}
 			else if($type == '{' || $type == T_CURLY_OPEN || $type == T_DOLLAR_OPEN_CURLY_BRACES){
 				$depth += 1;
@@ -288,7 +299,8 @@ class SS_ConfigStaticManifest_Parser {
 					$depth -= 1;
 				}
 
-				// Parse out the assignment side of a static declaration, ending on either a ';' or a ',' outside an array
+				// Parse out the assignment side of a static declaration,
+				// ending on either a ';' or a ',' outside an array
 				if($type == T_WHITESPACE) {
 					$value .= ' ';
 				}

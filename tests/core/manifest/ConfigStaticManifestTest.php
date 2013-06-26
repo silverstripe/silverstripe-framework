@@ -170,7 +170,8 @@ DOC;
 			return;
 		}
 
-		$parser = new SS_ConfigStaticManifest_Parser(__DIR__ . '/ConfigStaticManifestTest/ConfigStaticManifestTestMyObject.php');
+		$parser = new SS_ConfigStaticManifest_Parser(__DIR__ .
+			'/ConfigStaticManifestTest/ConfigStaticManifestTestMyObject.php');
 		$parser->parse();
 
 		$statics = $parser->getStatics();
@@ -181,5 +182,20 @@ DOC;
 		);
 
 		$this->assertEquals($expectedValue, $statics['ConfigStaticManifestTestMyObject']['db']['value']);
+	}
+
+	public function testParsingNamespacesclass() {
+		$parser = new SS_ConfigStaticManifest_Parser(__DIR__ .
+			'/ConfigStaticManifestTest/ConfigStaticManifestTestNamespace.php');
+		$parser->parse();
+
+		$statics = $parser->getStatics();
+
+		$expectedValue = array(
+			'Name' => 'Varchar',
+			'Description' => 'Text',
+		);
+
+		$this->assertEquals($expectedValue, $statics['config\staticmanifest\NamespaceTest']['db']['value']);
 	}
 }
