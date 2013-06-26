@@ -49,18 +49,34 @@ class SSViewer_Scope {
 
 	public function __construct($item){
 		$this->item = $item;
-		$this->localIndex=0;
+		$this->localIndex = 0;
+		$this->localStack = array();
 		$this->itemStack[] = array($this->item, null, 0, null, null, 0);
 	}
 	
 	public function getItem(){
 		return $this->itemIterator ? $this->itemIterator->current() : $this->item;
 	}
-	
-	public function resetLocalScope(){
+
+	/** Called at the start of every lookup chain by SSTemplateParser to indicate a new lookup from local scope */
+	public function locally() {
 		list($this->item, $this->itemIterator, $this->itemIteratorTotal, $this->popIndex, $this->upIndex,
 			$this->currentIndex) = $this->itemStack[$this->localIndex];
-		array_splice($this->itemStack, $this->localIndex+1);
+
+		// Remember any  un-completed (resetLocalScope hasn't been called) lookup chain. Even if there isn't an
+		// un-completed chain we need to store an empty item, as resetLocalScope doesn't know the difference later
+		$this->localStack[] = array_splice($this->itemStack, $this->localIndex+1);
+
+		return $this;
+	}
+
+	public function resetLocalScope(){
+		$previousLocalState = $this->localStack ? array_pop($this->localStack) : null;
+
+		array_splice($this->itemStack, $this->localIndex+1, count($this->itemStack), $previousLocalState);
+
+		list($this->item, $this->itemIterator, $this->itemIteratorTotal, $this->popIndex, $this->upIndex,
+			$this->currentIndex) = end($this->itemStack);
 	}
 
 	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
