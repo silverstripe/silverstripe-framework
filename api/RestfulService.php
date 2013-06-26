@@ -245,10 +245,11 @@ class RestfulService extends ViewableData {
 			$put = fopen("php://temp", 'r+');				
 			fwrite($put, $data);
 			fseek($put, 0); 
-
 			curl_setopt($ch, CURLOPT_PUT, 1);
 			curl_setopt($ch, CURLOPT_INFILE, $put);
 			curl_setopt($ch, CURLOPT_INFILESIZE, strlen($data)); 
+		} elseif($method == 'DELETE' && isset($data)) {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		}
 
 		// Apply proxy settings
