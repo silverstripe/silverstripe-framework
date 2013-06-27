@@ -573,7 +573,8 @@ class Versioned extends DataExtension {
 					$data=array_diff_key($data,$fields['db']);
 					foreach($data as $k => $v) {
 						if (!isset($newManipulation['fields'][$k])) {
-						$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+							$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+						}
 					}
 				}
 
