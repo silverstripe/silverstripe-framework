@@ -64,6 +64,7 @@ class SS_ConfigManifest {
 	 */
 	public function __construct($base, $includeTests = false, $forceRegen = false ) {
 		$this->base = $base;
+		$this->key = sha1($base).'_';
 
 		// Get the Zend Cache to load/store cache into
 		$this->cache = SS_Cache::factory('SS_Configuration', 'Core', array(
@@ -74,14 +75,14 @@ class SS_ConfigManifest {
 		// Unless we're forcing regen, try loading from cache
 		if (!$forceRegen) {
 			// The PHP config sources are always needed
-			$this->phpConfigSources = $this->cache->load('php_config_sources');
+			$this->phpConfigSources = $this->cache->load($this->key.'php_config_sources');
 			// Get the variant key spec
-			$this->variantKeySpec = $this->cache->load('variant_key_spec');
+			$this->variantKeySpec = $this->cache->load($this->key.'variant_key_spec');
 			// Try getting the pre-filtered & merged config for this variant
-			if (!($this->yamlConfig = $this->cache->load('yaml_config_'.$this->variantKey()))) {
+			if (!($this->yamlConfig = $this->cache->load($this->key.'yaml_config_'.$this->variantKey()))) {
 				// Otherwise, if we do have the yaml config fragments (and we should since we have a variant key spec)
 				// work out the config for this variant
-				if ($this->yamlConfigFragments = $this->cache->load('yaml_config_fragments')) {
+				if ($this->yamlConfigFragments = $this->cache->load($this->key.'yaml_config_fragments')) {
 					$this->buildYamlConfigVariant();
 				}
 			}
@@ -165,9 +166,9 @@ class SS_ConfigManifest {
 		$this->buildVariantKeySpec();
 
 		if ($cache) {
-			$this->cache->save($this->phpConfigSources, 'php_config_sources');
-			$this->cache->save($this->yamlConfigFragments, 'yaml_config_fragments');
-			$this->cache->save($this->variantKeySpec, 'variant_key_spec');
+			$this->cache->save($this->phpConfigSources, $this->key.'php_config_sources');
+			$this->cache->save($this->yamlConfigFragments, $this->key.'yaml_config_fragments');
+			$this->cache->save($this->variantKeySpec, $this->key.'variant_key_spec');
 		}
 	}
 
@@ -493,7 +494,7 @@ class SS_ConfigManifest {
 		}
 
 		if ($cache) {
-			$this->cache->save($this->yamlConfig, 'yaml_config_'.$this->variantKey());
+			$this->cache->save($this->yamlConfig, $this->key.'yaml_config_'.$this->variantKey());
 		}
 	}
 
