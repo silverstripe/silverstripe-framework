@@ -568,8 +568,11 @@ class Versioned extends DataExtension {
 			if(!isset($manipulation[$table]['fields']['Version'])) {
 				// Add any extra, unchanged fields to the version record.
 				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $id")->record();
-				if($data) foreach($data as $k => $v) {
-					if (!isset($newManipulation['fields'][$k])) {
+				if($data) {
+					$fields = DataObject::database_fields($this->owner->class);
+					$data=array_diff_key($data,$fields['db']);
+					foreach($data as $k => $v) {
+						if (!isset($newManipulation['fields'][$k])) {
 						$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
 					}
 				}
