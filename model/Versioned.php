@@ -570,10 +570,12 @@ class Versioned extends DataExtension {
 				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $id")->record();
 				if($data) {
 					$fields = DataObject::database_fields($this->owner->class);
-					$data=array_diff_key($data,$fields['db']);
-					foreach($data as $k => $v) {
-						if (!isset($newManipulation['fields'][$k])) {
-							$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+					if(array_key_exists('db',$fields)) {
+						$data=array_diff_key($data,$fields['db']);
+						foreach($data as $k => $v) {
+							if (!isset($newManipulation['fields'][$k])) {
+								$newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+							}
 						}
 					}
 				}
