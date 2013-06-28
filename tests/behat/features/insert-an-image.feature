@@ -1,3 +1,4 @@
+@assets
 Feature: Insert an image into a page
 As a cms author
 I want to insert an image into a page
