@@ -76,6 +76,33 @@ class TimeField extends TextField {
 	public function Type() {
 		return 'time text';
 	}
+	
+	/**
+	 * Parses a time into a Zend_Date object
+	 * 
+	 * @param string $value Raw value
+	 * @param string $format Format string to check against
+	 * @param string $locale Optional locale to parse against
+	 * @param boolean $exactMatch Flag indicating that the date must be in this
+	 * exact format, and is unchanged after being parsed and written out
+	 * 
+	 * @return Zend_Date Returns the Zend_Date, or null if not in the specified format
+	 */
+	protected function parseTime($value, $format, $locale = null, $exactMatch = false) {
+		// Check if the date is in the correct format
+		if(!Zend_Date::isDate($value, $format)) return null;
+		
+		// Parse the value
+		$valueObject = new Zend_Date($value, $format, $locale);
+			
+		// For exact matches, ensure the value preserves formatting after conversion
+		if($exactMatch && ($value !== $valueObject->get($format))) {
+			return null;
+		} else {
+			return $valueObject;
+		}
+	}
+	
 
 	/**
 	 * Sets the internal value to ISO date format.
@@ -83,6 +110,7 @@ class TimeField extends TextField {
 	 * @param String|Array $val
 	 */
 	public function setValue($val) {
+		
 		// Fuzzy matching through strtotime() to support a wider range of times,
 		// e.g. 11am. This means that validate() might not fire.
 		// Note: Time formats are assumed to be less ambiguous than dates across locales.
@@ -99,13 +127,12 @@ class TimeField extends TextField {
 			$this->valueObj = null;
 		}
 		// load ISO time from database (usually through Form->loadDataForm())
-		else if(Zend_Date::isDate($val, $this->getConfig('datavalueformat'))) {
-			$this->valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'));
+		// Requires exact format to prevent false positives from locale specific times
+		else if($this->valueObj = $this->parseTime($val, $this->getConfig('datavalueformat'), null, true)) {
 			$this->value = $this->valueObj->get($this->getConfig('timeformat'));
 		}
 		// Set in current locale (as string)
-		else if(Zend_Date::isDate($val, $this->getConfig('timeformat'), $this->locale)) {
-			$this->valueObj = new Zend_Date($val, $this->getConfig('timeformat'), $this->locale);
+		else if($this->valueObj = $this->parseTime($val, $this->getConfig('timeformat'), $this->locale)) {
 			$this->value = $this->valueObj->get($this->getConfig('timeformat'));
 		}
 		// Fallback: Set incorrect value so validate() can pick it up

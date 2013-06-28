@@ -100,4 +100,36 @@ class TimeFieldTest extends SapphireTest {
 		$field->setValue('');
 		$this->assertEquals($field->dataValue(), '');
 	}
+	
+	/**
+	 * Test that AM/PM is preserved correctly in various situations
+	 */
+	public function testPreserveAMPM() {
+		
+		// Test with timeformat that includes hour
+		
+		// Check pm
+		$f = new TimeField('Time', 'Time');
+		$f->setConfig('timeformat', 'h:mm:ss a');
+		$f->setValue('3:59 pm');
+		$this->assertEquals($f->dataValue(), '15:59:00');
+		
+		// Check am
+		$f = new TimeField('Time', 'Time');
+		$f->setConfig('timeformat', 'h:mm:ss a');
+		$f->setValue('3:59 am');
+		$this->assertEquals($f->dataValue(), '03:59:00');
+		
+		// Check with ISO date/time
+		$f = new TimeField('Time', 'Time');
+		$f->setConfig('timeformat', 'h:mm:ss a');
+		$f->setValue('15:59:00');
+		$this->assertEquals($f->dataValue(), '15:59:00');
+		
+		// ISO am
+		$f = new TimeField('Time', 'Time');
+		$f->setConfig('timeformat', 'h:mm:ss a');
+		$f->setValue('03:59:00');
+		$this->assertEquals($f->dataValue(), '03:59:00');
+	}
 }
