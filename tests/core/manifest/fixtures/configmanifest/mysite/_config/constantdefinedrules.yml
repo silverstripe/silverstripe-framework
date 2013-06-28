@@ -1,0 +1,28 @@
+---
+Only:
+  ConstantDefined: ConstantDefined_Foo
+---
+ConfigManifestTest:
+  ConstantDefined:
+    FooDefined: Yes
+---
+Only:
+  ConstantDefined: ConstantDefined_Bar
+---
+ConfigManifestTest:
+  ConstantDefined:
+    BarDefined: Yes
+---
+Except:
+  ConstantDefined: ConstantDefined_Foo
+---
+ConfigManifestTest:
+  ConstantDefined:
+    FooDefined: No
+---
+Except:
+  ConstantDefined: ConstantDefined_Bar
+---
+ConfigManifestTest:
+  ConstantDefined:
+    BarDefined: No

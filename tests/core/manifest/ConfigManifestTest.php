@@ -8,6 +8,100 @@ class ConfigManifestTest_ConfigManifestAccess extends SS_ConfigManifest {
 
 class ConfigManifestTest extends SapphireTest {
 
+	protected function getConfigFixture() {
+		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest', true, true);
+		return $manifest->yamlConfig;
+	}
+
+	public function testClassRules() {
+		$config = $this->getConfigFixture();
+
+		$this->assertEquals(
+			'Yes', @$config['ConfigManifestTest']['Class']['DirectorExists'],
+			'Only rule correctly detects existing class'
+		);
+
+		$this->assertEquals(
+			'No', @$config['ConfigManifestTest']['Class']['NoSuchClassExists'],
+			'Except rule correctly detects missing class'
+		);
+	}
+
+	public function testModuleRules() {
+		$config = $this->getConfigFixture();
+
+		$this->assertEquals(
+			'Yes', @$config['ConfigManifestTest']['Module']['MysiteExists'],
+			'Only rule correctly detects existing module'
+		);
+
+		$this->assertEquals(
+			'No', @$config['ConfigManifestTest']['Module']['NoSuchModuleExists'],
+			'Except rule correctly detects missing module'
+		);
+	}
+
+	public function testEnvVarSetRules() {
+		$_ENV['EnvVarSet_Foo'] = 1;
+		$config = $this->getConfigFixture();
+
+		$this->assertEquals(
+			'Yes', @$config['ConfigManifestTest']['EnvVarSet']['FooSet'],
+			'Only rule correctly detects set environment variable'
+		);
+
+		$this->assertEquals(
+			'No', @$config['ConfigManifestTest']['EnvVarSet']['BarSet'],
+			'Except rule correctly detects unset environment variable'
+		);
+	}
+
+	public function testConstantDefinedRules() {
+		define('ConstantDefined_Foo', 1);
+		$config = $this->getConfigFixture();
+
+		$this->assertEquals(
+			'Yes', @$config['ConfigManifestTest']['ConstantDefined']['FooDefined'],
+			'Only rule correctly detects defined constant'
+		);
+
+		$this->assertEquals(
+			'No', @$config['ConfigManifestTest']['ConstantDefined']['BarDefined'],
+			'Except rule correctly detects undefined constant'
+		);
+	}
+
+	public function testEnvOrConstantMatchesValueRules() {
+		$_ENV['EnvOrConstantMatchesValue_Foo'] = 'Foo';
+		define('EnvOrConstantMatchesValue_Bar', 'Bar');
+		$config = $this->getConfigFixture();
+
+		$this->assertEquals(
+			'Yes', @$config['ConfigManifestTest']['EnvOrConstantMatchesValue']['FooIsFoo'],
+			'Only rule correctly detects environment variable matches specified value'
+		);
+
+		$this->assertEquals(
+			'Yes', @$config['ConfigManifestTest']['EnvOrConstantMatchesValue']['BarIsBar'],
+			'Only rule correctly detects constant matches specified value'
+		);
+
+		$this->assertEquals(
+			'No', @$config['ConfigManifestTest']['EnvOrConstantMatchesValue']['FooIsQux'],
+			'Except rule correctly detects environment variable that doesn\'t match specified value'
+		);
+
+		$this->assertEquals(
+			'No', @$config['ConfigManifestTest']['EnvOrConstantMatchesValue']['BarIsQux'],
+			'Except rule correctly detects environment variable that doesn\'t match specified value'
+		);
+
+		$this->assertEquals(
+			'No', @$config['ConfigManifestTest']['EnvOrConstantMatchesValue']['BazIsBaz'],
+			'Except rule correctly detects undefined variable'
+		);
+	}
+
 	public function testRelativeOrder() {
 		$accessor = new ConfigManifestTest_ConfigManifestAccess(BASE_PATH, true, false);
 

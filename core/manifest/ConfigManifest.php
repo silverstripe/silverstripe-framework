@@ -396,10 +396,17 @@ class SS_ConfigManifest {
 		$matchingFragments = array();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
-			$failsonly = isset($fragment['only']) && !$this->matchesPrefilterVariantRules($fragment['only']);
-			$matchesexcept = isset($fragment['except']) && $this->matchesPrefilterVariantRules($fragment['except']);
+			$matches = true;
 
-			if (!$failsonly && !$matchesexcept) $matchingFragments[] = $fragment;
+			if (isset($fragment['only'])) {
+				$matches = $matches && ($this->matchesPrefilterVariantRules($fragment['only']) !== false);
+			}
+
+			if (isset($fragment['except'])) {
+				$matches = $matches && ($this->matchesPrefilterVariantRules($fragment['except']) !== true);
+			}
+
+			if ($matches) $matchingFragments[] = $fragment;
 		}
 
 		$this->yamlConfigFragments = $matchingFragments;
@@ -414,22 +421,26 @@ class SS_ConfigManifest {
 	 * which values means accept or reject a fragment 
 	 */
 	public function matchesPrefilterVariantRules($rules) {
+		$matches = "undefined"; // Needs to be truthy, but not true
+
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
-					if (!ClassInfo::exists($v)) return false;
+					$matches = $matches && ClassInfo::exists($v);
 					break;
 
 				case 'moduleexists':
-					if (!$this->moduleExists($v)) return false;
+					$matches = $matches && $this->moduleExists($v);
 					break;
 				
 				default:
 					// NOP
 			}
+
+			if ($matches === false) return $matches;
 		}
 
-		return true;
+		return $matches;
 	}
 
 	/**
@@ -487,10 +498,17 @@ class SS_ConfigManifest {
 		$this->yamlConfig = array();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
-			$failsonly = isset($fragment['only']) && !$this->matchesVariantRules($fragment['only']);
-			$matchesexcept = isset($fragment['except']) && $this->matchesVariantRules($fragment['except']);
+			$matches = true;
 
-			if (!$failsonly && !$matchesexcept) $this->mergeInYamlFragment($this->yamlConfig, $fragment['fragment']);
+			if (isset($fragment['only'])) {
+				$matches = $matches && ($this->matchesVariantRules($fragment['only']) !== false);
+			}
+
+			if (isset($fragment['except'])) {
+				$matches = $matches && ($this->matchesVariantRules($fragment['except']) !== true);
+			}
+
+			if ($matches) $this->mergeInYamlFragment($this->yamlConfig, $fragment['fragment']);
 		}
 
 		if ($cache) {
@@ -502,6 +520,8 @@ class SS_ConfigManifest {
  	 * Returns false if the non-prefilterable parts of the rule aren't met, and true if they are
  	 */
 	public function matchesVariantRules($rules) {
+		$matches = "undefined"; // Needs to be truthy, but not true
+
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
@@ -511,13 +531,13 @@ class SS_ConfigManifest {
 				case 'environment':
 					switch (strtolower($v)) {
 						case 'live':
-							if (!Director::isLive()) return false;
+							$matches = $matches && Director::isLive();
 							break;
 						case 'test':
-							if (!Director::isTest()) return false;
+							$matches = $matches && Director::isTest();
 							break;
 						case 'dev':
-							if (!Director::isDev()) return false;
+							$matches = $matches && Director::isDev();
 							break;
 						default:
 							user_error('Unknown environment '.$v.' in config fragment', E_USER_ERROR);
@@ -525,21 +545,25 @@ class SS_ConfigManifest {
 					break;
 
 				case 'envvarset':
-					if (isset($_ENV[$k])) break;
-					return false;
+					$matches = $matches && isset($_ENV[$v]);
+					break;
 
 				case 'constantdefined':
-					if (defined($k)) break;
-					return false;
+					$matches = $matches && defined($v);
+					break;
 
 				default:
-					if (isset($_ENV[$k]) && $_ENV[$k] == $v) break;
-					if (defined($k) && constant($k) == $v) break;
-					return false;
+					$matches = $matches && (
+						(isset($_ENV[$k]) && $_ENV[$k] == $v) ||
+						(defined($k) && constant($k) == $v)
+					);
+					break;
 			}
+
+			if ($matches === false) return $matches;
 		}
 
-		return true;
+		return $matches;
 	}
 
 	/**

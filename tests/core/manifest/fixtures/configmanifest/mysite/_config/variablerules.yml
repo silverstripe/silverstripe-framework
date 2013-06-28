@@ -1,0 +1,70 @@
+---
+Only:
+  EnvOrConstantMatchesValue_Foo: Foo
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsFoo: Yes
+---
+Only:
+  EnvOrConstantMatchesValue_Foo: Qux
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsQux: Yes
+---
+Only:
+  EnvOrConstantMatchesValue_Bar: Bar
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsBar: Yes
+---
+Only:
+  EnvOrConstantMatchesValue_Bar: Qux
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsQux: Yes
+---
+Only:
+  EnvOrConstantMatchesValue_Baz: Baz
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BazIsBaz: Yes
+---
+Except:
+  EnvOrConstantMatchesValue_Foo: Foo
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsFoo: No
+---
+Except:
+  EnvOrConstantMatchesValue_Foo: Qux
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    FooIsQux: No
+---
+Except:
+  EnvOrConstantMatchesValue_Bar: Bar
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsBar: No
+---
+Except:
+  EnvOrConstantMatchesValue_Bar: Qux
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BarIsQux: No
+---
+Except:
+  EnvOrConstantMatchesValue_Baz: Baz
+---
+ConfigManifestTest:
+  EnvOrConstantMatchesValue:
+    BazIsBaz: No
