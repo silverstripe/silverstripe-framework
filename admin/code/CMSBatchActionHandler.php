@@ -16,6 +16,12 @@ class CMSBatchActionHandler extends RequestHandler {
 		'$BatchAction/confirmation' => 'handleConfirmation',
 		'$BatchAction' => 'handleBatchAction',
 	);
+
+	private static $allowed_actions = array(
+		'handleBatchAction',
+		'handleApplicablePages',
+		'handleConfirmation',
+	);
 	
 	protected $parentController;
 	
