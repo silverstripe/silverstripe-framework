@@ -367,7 +367,7 @@ class DateField extends TextField {
 			} else {
 				$minDate = new Zend_Date(strftime('%Y-%m-%d', strtotime($min)), $this->getConfig('datavalueformat'));
 			}
-			if(!$this->valueObj->isLater($minDate) && !$this->valueObj->equals($minDate)) {
+			if(!$this->valueObj || (!$this->valueObj->isLater($minDate) && !$this->valueObj->equals($minDate))) {
 				$validator->validationError(
 					$this->name, 
 					_t(
@@ -388,7 +388,7 @@ class DateField extends TextField {
 			} else {
 				$maxDate = new Zend_Date(strftime('%Y-%m-%d', strtotime($max)), $this->getConfig('datavalueformat'));
 			}
-			if(!$this->valueObj->isEarlier($maxDate) && !$this->valueObj->equals($maxDate)) {
+			if(!$this->valueObj || (!$this->valueObj->isEarlier($maxDate) && !$this->valueObj->equals($maxDate))) {
 				$validator->validationError(
 					$this->name, 
 					_t('DateField.VALIDDATEMAXDATE',
