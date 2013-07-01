@@ -1677,6 +1677,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			if($fieldName) {
+				$dbItems = array_merge(
+					self::database_fields($class),
+					$dbItems
+				);
+				
 				if(isset($dbItems[$fieldName])) {
 					return $dbItems[$fieldName];
 				}
