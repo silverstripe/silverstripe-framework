@@ -1,0 +1,18 @@
+---
+Only:
+  Environment: live
+---
+ConfigManifestTest:
+  DynamicEnvironment: live
+---
+Only:
+  Environment: dev
+---
+ConfigManifestTest:
+  DynamicEnvironment: dev
+---
+Only:
+  Environment: test
+---
+ConfigManifestTest:
+  DynamicEnvironment: test
