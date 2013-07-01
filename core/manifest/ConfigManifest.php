@@ -9,7 +9,7 @@
  */
 class SS_ConfigManifest {
 
-	/** 
+	/**
 	  * All the values needed to be collected to determine the correct combination of fragements for
 	  * the current environment.
 	  * @var array
@@ -33,6 +33,17 @@ class SS_ConfigManifest {
 	 * @var array
 	 */
 	public $yamlConfig = array();
+
+	/**
+	 * The variant key state as when yamlConfig was loaded
+	 * @var string
+	 */
+	protected $yamlConfigVariantKey = null;
+
+	/**
+	 * @var [callback] A list of callbacks to be called whenever the content of yamlConfig changes
+	 */
+	protected $configChangeCallbacks = array();
 
 	/**
 	 * A side-effect of collecting the _config fragments is the calculation of all module directories, since
@@ -95,6 +106,11 @@ class SS_ConfigManifest {
 		}
 	}
 
+	public function registerChangeCallback($callback) {
+		call_user_func($callback);
+		$this->configChangeCallbacks[] = $callback;
+	}
+
 	/**
 	 * Includes all of the php _config.php files found by this manifest. Called by SS_Config when adding this manifest
 	 * @return void
@@ -103,6 +119,13 @@ class SS_ConfigManifest {
 		foreach ($this->phpConfigSources as $config) {
 			require_once $config;
 		}
+
+		if ($this->variantKey() != $this->yamlConfigVariantKey) $this->buildYamlConfigVariant();
+	}
+
+	public function get($class, $name, $default=null) {
+		if (isset($this->yamlConfig[$class][$name])) return $this->yamlConfig[$class][$name];
+		else return $default;
 	}
 
 	/**
@@ -496,6 +519,7 @@ class SS_ConfigManifest {
 	 */
 	public function buildYamlConfigVariant($cache = true) {
 		$this->yamlConfig = array();
+		$this->yamlConfigVariantKey = $this->variantKey();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
 			$matches = true;
@@ -514,6 +538,9 @@ class SS_ConfigManifest {
 		if ($cache) {
 			$this->cache->save($this->yamlConfig, $this->key.'yaml_config_'.$this->variantKey());
 		}
+
+		// Since yamlConfig has changed, call any callbacks that are interested
+		foreach ($this->configChangeCallbacks as $callback) call_user_func($callback);
 	}
 
 	/**

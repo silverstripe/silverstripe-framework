@@ -295,8 +295,8 @@ class Config {
 	 * instead, the last manifest to be added always wins
 	 */
 	public function pushConfigYamlManifest(SS_ConfigManifest $manifest) {
-		array_unshift($this->manifests, $manifest->yamlConfig);
-		$this->cache->clean();
+		array_unshift($this->manifests, $manifest);
+		$manifest->registerChangeCallback(array($this->cache, 'clean'));
 
 		// @todo: Do anything with these. They're for caching after config.php has executed
 		$this->collectConfigPHPSettings = true;
@@ -479,10 +479,13 @@ class Config {
 			}
 		}
 
+		$value = $nothing = null;
+
 		// Then the manifest values
 		foreach($this->manifests as $manifest) {
-			if (isset($manifest[$class][$name])) {
-				self::merge_low_into_high($result, $manifest[$class][$name], $suppress);
+			$value = $manifest->get($class, $name, $nothing);
+			if ($value !== $nothing) {
+				self::merge_low_into_high($result, $value, $suppress);
 				if ($result !== null && !is_array($result)) return $result;
 			}
 		}
