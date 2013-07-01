@@ -1,0 +1,28 @@
+---
+Only:
+  EnvVarSet: EnvVarSet_Foo
+---
+ConfigManifestTest:
+  EnvVarSet:
+    FooSet: Yes
+---
+Only:
+  EnvVarSet: EnvVarSet_Bar
+---
+ConfigManifestTest:
+  EnvVarSet:
+    BarSet: Yes
+---
+Except:
+  EnvVarSet: EnvVarSet_Foo
+---
+ConfigManifestTest:
+  EnvVarSet:
+    FooSet: No
+---
+Except:
+  EnvVarSet: EnvVarSet_Bar
+---
+ConfigManifestTest:
+  EnvVarSet:
+    BarSet: No
