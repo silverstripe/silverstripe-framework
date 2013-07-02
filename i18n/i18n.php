@@ -1588,7 +1588,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		if(!self::$translators) {
 			$defaultPriority = 10;
 			self::$translators[$defaultPriority] = array(
-				'core' => new Zend_Translate(array(
+				'core' => @new Zend_Translate(array(
 					'adapter' => 'i18nRailsYamlAdapter',
 					'locale' => self::$default_locale,
 					'disableNotices' => true,
