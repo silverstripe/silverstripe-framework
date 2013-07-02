@@ -81,6 +81,19 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertEquals('casted', $newViewableData->forTemplate());
 	}
 
+	public function testDefaultValueWrapping() {
+		$data = new ArrayData(array('Title' => 'SomeTitleValue'));
+		// this results in a cached raw string in ViewableData:
+		$this->assertTrue($data->hasValue('Title'));
+		$this->assertFalse($data->hasValue('SomethingElse'));
+		// this should cast the raw string to a StringField since we are
+		// passing true as the third argument:
+		$obj = $data->obj('Title', null, true);
+		$this->assertTrue(is_object($obj));
+		// and the string field should have the value of the raw string:
+		$this->assertEquals('SomeTitleValue', $obj->forTemplate());
+	}
+
 	public function testRAWVal() {
 		$data = new ViewableDataTest_Castable();
 		$data->test = 'This &amp; This';
@@ -120,6 +133,28 @@ class ViewableDataTest extends SapphireTest {
 				"castingClass() returns correct results for ::\$$field"
 			);
 		}
+	}
+
+	public function testObjWithCachedStringValueReturnsValidObject() {
+		$obj = new ViewableDataTest_NoCastingInformation();
+
+		// Save a literal string into cache
+		$cache = true;
+		$uncastedData = $obj->obj('noCastingInformation', null, false, $cache);
+
+		// Fetch the cached string as an object
+		$forceReturnedObject = true;
+		$castedData = $obj->obj('noCastingInformation', null, $forceReturnedObject);
+
+		// Uncasted data should always be the nonempty string
+		$this->assertNotEmpty($uncastedData, 'Uncasted data was empty.');
+		$this->assertTrue(is_string($uncastedData), 'Uncasted data should be a string.');
+
+		// Casted data should be the string wrapped in a DBField-object.
+		$this->assertNotEmpty($castedData, 'Casted data was empty.');
+		$this->assertInstanceOf('DBField', $castedData, 'Casted data should be instance of DBField.');
+
+		$this->assertEquals($uncastedData, $castedData->getValue(), 'Casted and uncasted strings are not equal.');
 	}
 }
 
@@ -210,6 +245,12 @@ class ViewableDataTest_CastingClass extends ViewableData {
 		'Argument'      => 'ArgumentType(Argument)',
 		'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
 	);
+}
+
+class ViewableDataTest_NoCastingInformation extends ViewableData {
+	public function noCastingInformation() {
+		return "No casting information";
+	}
 }
 
 /**#@-*/
