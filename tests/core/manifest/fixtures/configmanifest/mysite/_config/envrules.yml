@@ -1,0 +1,42 @@
+---
+Only:
+  Environment: live
+---
+ConfigManifestTest:
+  Environment:
+    LiveEnvironment: live
+---
+Only:
+  Environment: dev
+---
+ConfigManifestTest:
+  Environment:
+    DevEnvironment: dev
+---
+Only:
+  Environment: test
+---
+ConfigManifestTest:
+  Environment:
+    TestEnvironment: test
+---
+Except:
+  Environment: live
+---
+ConfigManifestTest:
+  Environment:
+    LiveEnvironment: notlive
+---
+Except:
+  Environment: dev
+---
+ConfigManifestTest:
+  Environment:
+    DevEnvironment: notdev
+---
+Except:
+  Environment: test
+---
+ConfigManifestTest:
+  Environment:
+    TestEnvironment: nottest
