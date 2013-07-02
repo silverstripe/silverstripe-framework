@@ -9,7 +9,16 @@
  */
 class SS_ConfigManifest {
 
-	/** 
+	/** @var string - The base path used when building the manifest */
+	protected $base;
+
+	/** @var string - A string to prepend to all cache keys to ensure all keys are unique to just this $base */
+	protected $key;
+
+	/** @var bool - Whether `test` directories should be searched when searching for configuration */
+	protected $includeTests;
+
+	/**
 	  * All the values needed to be collected to determine the correct combination of fragements for
 	  * the current environment.
 	  * @var array
@@ -33,6 +42,17 @@ class SS_ConfigManifest {
 	 * @var array
 	 */
 	public $yamlConfig = array();
+
+	/**
+	 * The variant key state as when yamlConfig was loaded
+	 * @var string
+	 */
+	protected $yamlConfigVariantKey = null;
+
+	/**
+	 * @var [callback] A list of callbacks to be called whenever the content of yamlConfig changes
+	 */
+	protected $configChangeCallbacks = array();
 
 	/**
 	 * A side-effect of collecting the _config fragments is the calculation of all module directories, since
@@ -64,6 +84,8 @@ class SS_ConfigManifest {
 	 */
 	public function __construct($base, $includeTests = false, $forceRegen = false ) {
 		$this->base = $base;
+		$this->key = sha1($base).'_';
+		$this->includeTests = $includeTests;
 
 		// Get the Zend Cache to load/store cache into
 		$this->cache = SS_Cache::factory('SS_Configuration', 'Core', array(
@@ -74,24 +96,31 @@ class SS_ConfigManifest {
 		// Unless we're forcing regen, try loading from cache
 		if (!$forceRegen) {
 			// The PHP config sources are always needed
-			$this->phpConfigSources = $this->cache->load('php_config_sources');
+			$this->phpConfigSources = $this->cache->load($this->key.'php_config_sources');
 			// Get the variant key spec
-			$this->variantKeySpec = $this->cache->load('variant_key_spec');
-			// Try getting the pre-filtered & merged config for this variant
-			if (!($this->yamlConfig = $this->cache->load('yaml_config_'.$this->variantKey()))) {
-				// Otherwise, if we do have the yaml config fragments (and we should since we have a variant key spec)
-				// work out the config for this variant
-				if ($this->yamlConfigFragments = $this->cache->load('yaml_config_fragments')) {
-					$this->buildYamlConfigVariant();
-				}
-			}
+			$this->variantKeySpec = $this->cache->load($this->key.'variant_key_spec');
 		}
 
-		// If we don't have a config yet, we need to do a full regen to get it
-		if (!$this->yamlConfig) {
+		// If we don't have a variantKeySpec (because we're forcing regen, or it just wasn't in the cache), generate it
+		if (!$this->variantKeySpec) {
 			$this->regenerate($includeTests);
-			$this->buildYamlConfigVariant();
 		}
+
+		// At this point $this->variantKeySpec will always contain something valid, so we can build the variant
+		$this->buildYamlConfigVariant();
+	}
+
+	/**
+	 * Register a callback to be called whenever the calculated merged config changes
+	 *
+	 * In some situations the merged config can change - for instance, code in _config.php can cause which Only
+	 * and Except fragments match. Registering a callback with this function allows code to be called when
+	 * this happens.
+	 *
+	 * @param callback $callback
+	 */
+	public function registerChangeCallback($callback) {
+		$this->configChangeCallbacks[] = $callback;
 	}
 
 	/**
@@ -102,6 +131,22 @@ class SS_ConfigManifest {
 		foreach ($this->phpConfigSources as $config) {
 			require_once $config;
 		}
+
+		if ($this->variantKey() != $this->yamlConfigVariantKey) $this->buildYamlConfigVariant();
+	}
+
+	/**
+	 * Gets the (merged) config value for the given class and config property name
+	 *
+	 * @param string $class - The class to get the config property value for
+	 * @param string $name - The config property to get the value for
+	 * @param any $default - What to return if no value was contained in any YAML file for the passed $class and $name
+	 * @return any - The merged set of all values contained in all the YAML configuration files for the passed
+	 * $class and $name, or $default if there are none
+	 */
+	public function get($class, $name, $default=null) {
+		if (isset($this->yamlConfig[$class][$name])) return $this->yamlConfig[$class][$name];
+		else return $default;
 	}
 
 	/**
@@ -165,9 +210,9 @@ class SS_ConfigManifest {
 		$this->buildVariantKeySpec();
 
 		if ($cache) {
-			$this->cache->save($this->phpConfigSources, 'php_config_sources');
-			$this->cache->save($this->yamlConfigFragments, 'yaml_config_fragments');
-			$this->cache->save($this->variantKeySpec, 'variant_key_spec');
+			$this->cache->save($this->phpConfigSources, $this->key.'php_config_sources');
+			$this->cache->save($this->yamlConfigFragments, $this->key.'yaml_config_fragments');
+			$this->cache->save($this->variantKeySpec, $this->key.'variant_key_spec');
 		}
 	}
 
@@ -395,10 +440,17 @@ class SS_ConfigManifest {
 		$matchingFragments = array();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
-			$failsonly = isset($fragment['only']) && !$this->matchesPrefilterVariantRules($fragment['only']);
-			$matchesexcept = isset($fragment['except']) && $this->matchesPrefilterVariantRules($fragment['except']);
+			$matches = true;
 
-			if (!$failsonly && !$matchesexcept) $matchingFragments[] = $fragment;
+			if (isset($fragment['only'])) {
+				$matches = $matches && ($this->matchesPrefilterVariantRules($fragment['only']) !== false);
+			}
+
+			if (isset($fragment['except'])) {
+				$matches = $matches && ($this->matchesPrefilterVariantRules($fragment['except']) !== true);
+			}
+
+			if ($matches) $matchingFragments[] = $fragment;
 		}
 
 		$this->yamlConfigFragments = $matchingFragments;
@@ -413,22 +465,26 @@ class SS_ConfigManifest {
 	 * which values means accept or reject a fragment 
 	 */
 	public function matchesPrefilterVariantRules($rules) {
+		$matches = "undefined"; // Needs to be truthy, but not true
+
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
-					if (!ClassInfo::exists($v)) return false;
+					$matches = $matches && ClassInfo::exists($v);
 					break;
 
 				case 'moduleexists':
-					if (!$this->moduleExists($v)) return false;
+					$matches = $matches && $this->moduleExists($v);
 					break;
 				
 				default:
 					// NOP
 			}
+
+			if ($matches === false) return $matches;
 		}
 
-		return true;
+		return $matches;
 	}
 
 	/**
@@ -481,26 +537,61 @@ class SS_ConfigManifest {
 	/**
 	 * Calculates which yaml config fragments are applicable in this variant, and merge those all together into
 	 * the $this->yamlConfig propperty
+	 *
+	 * Checks cache and takes care of loading yamlConfigFragments if they aren't already present, but expects
+	 * $variantKeySpec to already be set
 	 */
 	public function buildYamlConfigVariant($cache = true) {
+		// Only try loading from cache if we don't have the fragments already loaded, as there's no way to know if a
+		// given variant is stale compared to the complete set of fragments
+		if (!$this->yamlConfigFragments) {
+			// First try and just load the exact variant
+			if ($this->yamlConfig = $this->cache->load($this->key.'yaml_config_'.$this->variantKey())) {
+				$this->yamlConfigVariantKey = $this->variantKey();
+				return;
+			}
+			// Otherwise try and load the fragments so we can build the variant
+			else {
+				$this->yamlConfigFragments = $this->cache->load($this->key.'yaml_config_fragments');
+			}
+		}
+
+		// If we still don't have any fragments we have to build them
+		if (!$this->yamlConfigFragments) {
+			$this->regenerate($this->includeTests, $cache);
+		}
+
 		$this->yamlConfig = array();
+		$this->yamlConfigVariantKey = $this->variantKey();
 
 		foreach ($this->yamlConfigFragments as $i => $fragment) {
-			$failsonly = isset($fragment['only']) && !$this->matchesVariantRules($fragment['only']);
-			$matchesexcept = isset($fragment['except']) && $this->matchesVariantRules($fragment['except']);
+			$matches = true;
 
-			if (!$failsonly && !$matchesexcept) $this->mergeInYamlFragment($this->yamlConfig, $fragment['fragment']);
+			if (isset($fragment['only'])) {
+				$matches = $matches && ($this->matchesVariantRules($fragment['only']) !== false);
+			}
+
+			if (isset($fragment['except'])) {
+				$matches = $matches && ($this->matchesVariantRules($fragment['except']) !== true);
+			}
+
+			if ($matches) $this->mergeInYamlFragment($this->yamlConfig, $fragment['fragment']);
 		}
 
 		if ($cache) {
-			$this->cache->save($this->yamlConfig, 'yaml_config_'.$this->variantKey());
+			$this->cache->save($this->yamlConfig, $this->key.'yaml_config_'.$this->variantKey());
 		}
+
+		// Since yamlConfig has changed, call any callbacks that are interested
+		foreach ($this->configChangeCallbacks as $callback) call_user_func($callback);
 	}
 
 	/**
  	 * Returns false if the non-prefilterable parts of the rule aren't met, and true if they are
  	 */
 	public function matchesVariantRules($rules) {
+		$matches = "undefined"; // Needs to be truthy, but not true
+
 		foreach ($rules as $k => $v) {
 			switch (strtolower($k)) {
 				case 'classexists':
@@ -510,13 +601,13 @@ class SS_ConfigManifest {
 				case 'environment':
 					switch (strtolower($v)) {
 						case 'live':
-							if (!Director::isLive()) return false;
+							$matches = $matches && Director::isLive();
 							break;
 						case 'test':
-							if (!Director::isTest()) return false;
+							$matches = $matches && Director::isTest();
 							break;
 						case 'dev':
-							if (!Director::isDev()) return false;
+							$matches = $matches && Director::isDev();
 							break;
 						default:
 							user_error('Unknown environment '.$v.' in config fragment', E_USER_ERROR);
@@ -524,21 +615,25 @@ class SS_ConfigManifest {
 					break;
 
 				case 'envvarset':
-					if (isset($_ENV[$k])) break;
-					return false;
+					$matches = $matches && isset($_ENV[$v]);
+					break;
 
 				case 'constantdefined':
-					if (defined($k)) break;
-					return false;
+					$matches = $matches && defined($v);
+					break;
 
 				default:
-					if (isset($_ENV[$k]) && $_ENV[$k] == $v) break;
-					if (defined($k) && constant($k) == $v) break;
-					return false;
+					$matches = $matches && (
+						(isset($_ENV[$k]) && $_ENV[$k] == $v) ||
+						(defined($k) && constant($k) == $v)
+					);
+					break;
 			}
+
+			if ($matches === false) return $matches;
 		}
 
-		return true;
+		return $matches;
 	}
 
 	/**

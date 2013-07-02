@@ -1,0 +1,28 @@
+---
+Only:
+  ClassExists: Director
+---
+ConfigManifestTest:
+  Class:
+    DirectorExists: Yes
+---
+Only:
+  ClassExists: NoSuchClass
+---
+ConfigManifestTest:
+  Class:
+    NoSuchClassExists: Yes
+---
+Except:
+  ClassExists: Director
+---
+ConfigManifestTest:
+  Class:
+    DirectorExists: No
+---
+Except:
+  ClassExists: NoSuchClass
+---
+ConfigManifestTest:
+  Class:
+    NoSuchClassExists: No

@@ -1,0 +1,28 @@
+---
+Only:
+  ModuleExists: mysite
+---
+ConfigManifestTest:
+  Module:
+    MysiteExists: Yes
+---
+Only:
+  ModuleExists: nosuchmodule
+---
+ConfigManifestTest:
+  Module:
+    NoSuchModuleExists: Yes
+---
+Except:
+  ModuleExists: mysite
+---
+ConfigManifestTest:
+  Module:
+    MysiteExists: No
+---
+Except:
+  ModuleExists: nosuchmodule
+---
+ConfigManifestTest:
+  Module:
+    NoSuchModuleExists: No
