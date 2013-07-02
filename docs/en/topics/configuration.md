@@ -260,7 +260,10 @@ Note than when you have more than one rule for a nested fragment, they're joined
 
   FRAGMENT_INCLUDED = (ONLY && ONLY) && !(EXCEPT && EXCEPT)
 
-That is, the fragment will be included if all Only rules match, except if all Except rules match
+That is, the fragment will be included if all Only rules match, except if all Except rules match.
+
+Also, due to YAML limitations, having multiple conditions of the same kind (say, two `EnvVarSet` in one "Only" block)
+will result in only the latter coming through.
 
 ### The values
 

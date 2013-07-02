@@ -140,6 +140,41 @@ class ConfigManifestTest extends SapphireTest {
 		Config::inst()->unnest();
 	}
 
+	public function testMultipleRules() {
+		$_ENV['MultilpleRules_EnvVariableSet'] = 1;
+		define('MultilpleRules_DefinedConstant', 'defined');
+		$config = $this->getConfigFixtureValue('MultipleRules');
+
+		$this->assertFalse(
+			isset($config['TwoOnlyFail']),
+			'Fragment is not included if one of the Only rules fails.'
+		);
+
+		$this->assertTrue(
+			isset($config['TwoOnlySucceed']),
+			'Fragment is included if both Only rules succeed.'
+		);
+
+		$this->assertTrue(
+			isset($config['TwoExceptSucceed']),
+			'Fragment is included if one of the Except rules matches.'
+		);
+
+		$this->assertFalse(
+			isset($config['TwoExceptFail']),
+			'Fragment is not included if both of the Except rules fail.'
+		);
+
+		$this->assertFalse(
+			isset($config['TwoBlocksFail']),
+			'Fragment is not included if one block fails.'
+		);
+
+		$this->assertTrue(
+			isset($config['TwoBlocksSucceed']),
+			'Fragment is included if both blocks succeed.'
+		);
+	}
 
 	public function testRelativeOrder() {
 		$accessor = new ConfigManifestTest_ConfigManifestAccess(BASE_PATH, true, false);
