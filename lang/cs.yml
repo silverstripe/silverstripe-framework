@@ -507,6 +507,7 @@ cs:
     NOTERESETPASSWORD: 'Zadejte svou e-mailovou adresu a bude vám zaslán nulovací odkaz pro Vaše heslo'
     PASSWORDSENTHEADER: 'Odkaz na resetování hesla byl odeslán na ''{email}'''
     PASSWORDSENTTEXT: 'Děkujeme! Resetovací odkaz byl odeslán na ''{email}'', pokud účet existuje pro tuto emailovou adresu.'
+    LOSTPASSWORDHEADER: 'Ztracené heslo'
   SecurityAdmin:
     ACCESS_HELP: 'Povolit prohlížení, přidávání a editování uživatelů, jako i jejich přidělování oprávnění.'
     APPLY_ROLES: 'Použít role na skupiny'
