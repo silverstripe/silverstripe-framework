@@ -121,6 +121,28 @@ class ViewableDataTest extends SapphireTest {
 			);
 		}
 	}
+
+	public function testObjWithCachedStringValueReturnsValidObject() {
+		$obj = new ViewableDataTest_NoCastingInformation();
+
+		// Save a literal string into cache
+		$cache = true;
+		$uncastedData = $obj->obj('noCastingInformation', null, false, $cache);
+		
+		// Fetch the cached string as an object
+		$forceReturnedObject = true;
+		$castedData = $obj->obj('noCastingInformation', null, $forceReturnedObject);
+
+		// Uncasted data should always be the nonempty string
+		$this->assertNotEmpty($uncastedData, 'Uncasted data was empty.');
+		$this->assertTrue(is_string($uncastedData), 'Uncasted data should be a string.');
+
+		// Casted data should be the string wrapped in a DBField-object.
+		$this->assertNotEmpty($castedData, 'Casted data was empty.');
+		$this->assertInstanceOf('DBField', $castedData, 'Casted data should be instance of DBField.');
+
+		$this->assertEquals($uncastedData, $castedData->getValue(), 'Casted and uncasted strings are not equal.');
+	}
 }
 
 /**#@+
@@ -210,6 +232,12 @@ class ViewableDataTest_CastingClass extends ViewableData {
 		'Argument'      => 'ArgumentType(Argument)',
 		'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
 	);
+}
+
+class ViewableDataTest_NoCastingInformation extends ViewableData {
+	public function noCastingInformation() {
+		return "No casting information";
+	}
 }
 
 /**#@-*/
