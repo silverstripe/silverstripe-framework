@@ -21,7 +21,47 @@ class DataListTest extends SapphireTest {
 		'DataObjectTest_TeamComment',
 		'DataObjectTest\NamespacedClass',
 	);
-	
+
+	public function testFilterDataObjectByCreatedDate() {
+		// create an object to test with
+		$obj1 = new DataObjectTest_ValidatedObject();
+		$obj1->Name = 'test obj 1';
+		$obj1->write();
+		$this->assertTrue($obj1->isInDB());
+
+		// reload the object from the database and reset its Created timestamp to a known value
+		$obj1 = DataObjectTest_ValidatedObject::get()->filter(array('Name' => 'test obj 1'))->first();
+		$this->assertTrue(is_object($obj1));
+		$this->assertEquals('test obj 1', $obj1->Name);
+		$obj1->Created = '2013-01-01 00:00:00';
+		$obj1->write();
+
+		// reload the object again and make sure that our Created date was properly persisted
+		$obj1 = DataObjectTest_ValidatedObject::get()->filter(array('Name' => 'test obj 1'))->first();
+		$this->assertTrue(is_object($obj1));
+		$this->assertEquals('test obj 1', $obj1->Name);
+		$this->assertEquals('2013-01-01 00:00:00', $obj1->Created);
+
+		// now save a second object to the DB with an automatically-set Created value
+		$obj2 = new DataObjectTest_ValidatedObject();
+		$obj2->Name = 'test obj 2';
+		$obj2->write();
+		$this->assertTrue($obj2->isInDB());
+
+		// and a third object
+		$obj3 = new DataObjectTest_ValidatedObject();
+		$obj3->Name = 'test obj 3';
+		$obj3->write();
+		$this->assertTrue($obj3->isInDB());
+
+		// now test the filtering based on Created timestamp
+		$list = DataObjectTest_ValidatedObject::get()
+			->filter(array('Created:GreaterThan' => '2013-02-01 00:00:00'))
+			->toArray();
+		$this->assertEquals(2, count($list));
+
+	}
+
 	public function testSubtract(){
 		$comment1 = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
 		$subtractList = DataObjectTest_TeamComment::get()->filter('ID', $comment1->ID);

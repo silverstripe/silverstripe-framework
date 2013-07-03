@@ -156,6 +156,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected static $_cache_custom_database_fields = array();
 	protected static $_cache_field_labels = array();
 
+	// base fields which are not defined in static $db
+	private static $fixed_fields = array(
+		'ID' => 'Int',
+		'ClassName' => 'Enum',
+		'LastEdited' => 'SS_Datetime',
+		'Created' => 'SS_Datetime',
+	);
+
 	/**
 	 * Non-static relationship cache, indexed by component name.
 	 */
@@ -223,6 +231,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			return array_merge (
+				// TODO: should this be using self::$fixed_fields? only difference is ID field
+				// and ClassName creates an Enum with all values
 				array (
 					'ClassName'  => self::$classname_spec_cache[$class],
 					'Created'    => 'SS_Datetime',
@@ -1651,11 +1661,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Return all of the database fields defined in self::$db and all the parent classes.
 	 * Doesn't include any fields specified by self::$has_one.  Use $this->has_one() to get these fields
+	 * Also returns "base" fields like "Created", "LastEdited", et cetera.
 	 *
 	 * @param string $fieldName Limit the output to a specific field name
 	 * @return array The database fields
 	 */
 	public function db($fieldName = null) {
+		if ($fieldName && array_key_exists($fieldName, self::$fixed_fields)) {
+			return self::$fixed_fields[$fieldName];
+		}
+
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
 		$items = array();
@@ -1694,6 +1709,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 
+		if (!$fieldName) {
+			// trying to get all fields, so add the fixed fields to return value
+			$items = array_merge(self::$fixed_fields, $items);
+		}
 		return $items;
 	}
 
@@ -2387,15 +2406,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function hasDatabaseField($field) {
-		// Add base fields which are not defined in static $db
-		static $fixedFields = array(
-			'ID' => 'Int',
-			'ClassName' => 'Enum',
-			'LastEdited' => 'SS_Datetime',
-			'Created' => 'SS_Datetime',
-		);
-		
-		if(isset($fixedFields[$field])) return true;
+		if(isset(self::$fixed_fields[$field])) return true;
 
 		return array_key_exists($field, $this->inheritedDatabaseFields());
 	}
@@ -2658,7 +2669,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Special case for ID field
 		} else if($fieldName == 'ID') {
 			return new PrimaryKey($fieldName, $this);
-			
+
+		// Special case for ClassName
+		} else if($fieldName == 'ClassName') {
+			$val = get_class($this);
+			return DBField::create_field('Varchar', $val, $fieldName, $this);
+
 		// General casting information for items in $db
 		} else if($helper = $this->db($fieldName)) {
 			$obj = Object::create_from_string($helper, $fieldName);
@@ -2669,11 +2685,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
 			$val = $this->$fieldName;
 			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
-			
-		// Special case for ClassName
-		} else if($fieldName == 'ClassName') {
-			$val = get_class($this);
-			return DBField::create_field('Varchar', $val, $fieldName, $this);
 		}
 	}
 
