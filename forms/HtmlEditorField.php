@@ -665,7 +665,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			), 'CaptionText');
 		}
 
-		$this->extend('updateFieldsForImage', $fields, $url, $file);
+		$this->extend('updateFieldsForOembed', $fields, $url, $file);
 
 		return $fields;
 	}
