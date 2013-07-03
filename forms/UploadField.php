@@ -1490,6 +1490,10 @@ class UploadField_SelectHandler extends RequestHandler {
 		'' => 'index',
 	);
 
+	private static $allowed_actions = array(
+		'Form'
+	);
+
 	public function __construct($parent, $folderName = null) {
 		$this->parent = $parent;
 		$this->folderName = $folderName;
