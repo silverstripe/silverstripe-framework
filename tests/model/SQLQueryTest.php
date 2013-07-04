@@ -378,7 +378,7 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->setSelect(array('"Name"', '"Meta"'));
 		$query->setFrom('"SQLQueryTest_DO"');
-		$query->setOrderBy(array('MAX(Date)'));
+		$query->setOrderBy(array('MAX("Date")'));
 		$query->setGroupBy(array('"Name"', '"Meta"'));
 		$query->setLimit('1', '1');
 
