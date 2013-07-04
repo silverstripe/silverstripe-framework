@@ -64,13 +64,16 @@
 								.addClass('ui-state-warning-text');
 							data.context.find('.ss-uploadfield-item-progress').hide();
 							data.context.find('.ss-uploadfield-item-overwrite').show();
-							data.context.find('.ss-uploadfield-item-overwrite-warning').on('click', function(){
+							data.context.find('.ss-uploadfield-item-overwrite-warning').on('click', function(e){
 								data.context.find('.ss-uploadfield-item-progress').show();
 								data.context.find('.ss-uploadfield-item-overwrite').hide();
 								data.context.find('.ss-uploadfield-item-status')
 									.removeClass('ui-state-warning-text');
 								//upload only if the "overwrite" button is clicked
 								$.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
+								
+								e.preventDefault(); // Avoid a form submit
+								return false;
 							});
 						} else {    //regular file upload
 							return $.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
@@ -319,12 +322,14 @@
 		$('div.ss-upload .ss-uploadfield-startall').entwine({
 			onclick: function(e) {
 				this.closest('.ss-upload').find('.ss-uploadfield-item-start button').click();
+				e.preventDefault(); // Avoid a form submit
 				return false;
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-cancelfailed').entwine({
 			onclick: function(e) {
 				this.closest('.ss-uploadfield-item').remove();
+				e.preventDefault(); // Avoid a form submit
 				return false;
 			}
 		});
@@ -349,6 +354,7 @@
 					fileupload._trigger('destroy', e, {context: item});	
 				}
 				
+				e.preventDefault(); // Avoid a form submit
 				return false;
 			}
 		});
@@ -371,6 +377,7 @@
 				}
 
 				e.preventDefault(); // Avoid a form submit
+				return false;
 			} 
 		});
 		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit').entwine({
@@ -403,6 +410,7 @@
 					editform.toggleEditForm();
 				}
 				e.preventDefault(); // Avoid a form submit
+				return false;
 			}
 		});
 
@@ -489,8 +497,9 @@
 		});
 		$('div.ss-upload .ss-uploadfield-fromfiles').entwine({
 			onclick: function(e) {
-				e.preventDefault();
 				this.getUploadField().openSelectDialog(this.closest('.ss-uploadfield-item'));
+				e.preventDefault(); // Avoid a form submit
+				return false;
 			}
 		});
 	});

@@ -8,6 +8,174 @@ class ConfigManifestTest_ConfigManifestAccess extends SS_ConfigManifest {
 
 class ConfigManifestTest extends SapphireTest {
 
+	protected function getConfigFixtureValue($name) {
+		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest', true, true);
+		return $manifest->get('ConfigManifestTest', $name);
+	}
+
+	public function testClassRules() {
+		$config = $this->getConfigFixtureValue('Class');
+
+		$this->assertEquals(
+			'Yes', @$config['DirectorExists'],
+			'Only rule correctly detects existing class'
+		);
+
+		$this->assertEquals(
+			'No', @$config['NoSuchClassExists'],
+			'Except rule correctly detects missing class'
+		);
+	}
+
+	public function testModuleRules() {
+		$config = $this->getConfigFixtureValue('Module');
+
+		$this->assertEquals(
+			'Yes', @$config['MysiteExists'],
+			'Only rule correctly detects existing module'
+		);
+
+		$this->assertEquals(
+			'No', @$config['NoSuchModuleExists'],
+			'Except rule correctly detects missing module'
+		);
+	}
+
+	public function testEnvVarSetRules() {
+		$_ENV['EnvVarSet_Foo'] = 1;
+		$config = $this->getConfigFixtureValue('EnvVarSet');
+
+		$this->assertEquals(
+			'Yes', @$config['FooSet'],
+			'Only rule correctly detects set environment variable'
+		);
+
+		$this->assertEquals(
+			'No', @$config['BarSet'],
+			'Except rule correctly detects unset environment variable'
+		);
+	}
+
+	public function testConstantDefinedRules() {
+		define('ConstantDefined_Foo', 1);
+		$config = $this->getConfigFixtureValue('ConstantDefined');
+
+		$this->assertEquals(
+			'Yes', @$config['FooDefined'],
+			'Only rule correctly detects defined constant'
+		);
+
+		$this->assertEquals(
+			'No', @$config['BarDefined'],
+			'Except rule correctly detects undefined constant'
+		);
+	}
+
+	public function testEnvOrConstantMatchesValueRules() {
+		$_ENV['EnvOrConstantMatchesValue_Foo'] = 'Foo';
+		define('EnvOrConstantMatchesValue_Bar', 'Bar');
+		$config = $this->getConfigFixtureValue('EnvOrConstantMatchesValue');
+
+		$this->assertEquals(
+			'Yes', @$config['FooIsFoo'],
+			'Only rule correctly detects environment variable matches specified value'
+		);
+
+		$this->assertEquals(
+			'Yes', @$config['BarIsBar'],
+			'Only rule correctly detects constant matches specified value'
+		);
+
+		$this->assertEquals(
+			'No', @$config['FooIsQux'],
+			'Except rule correctly detects environment variable that doesn\'t match specified value'
+		);
+
+		$this->assertEquals(
+			'No', @$config['BarIsQux'],
+			'Except rule correctly detects environment variable that doesn\'t match specified value'
+		);
+
+		$this->assertEquals(
+			'No', @$config['BazIsBaz'],
+			'Except rule correctly detects undefined variable'
+		);
+	}
+
+	public function testEnvironmentRules() {
+		foreach (array('dev', 'test', 'live') as $env) {
+			Config::inst()->nest();
+
+			Config::inst()->update('Director', 'environment_type', $env);
+			$config = $this->getConfigFixtureValue('Environment');
+
+			foreach (array('dev', 'test', 'live') as $check) {
+				$this->assertEquals(
+					$env == $check ? $check : 'not'.$check, @$config[ucfirst($check).'Environment'],
+					'Only & except rules correctly detect environment'
+				);
+			}
+
+			Config::inst()->unnest();
+		}
+	}
+
+	public function testDynamicEnvironmentRules() {
+		Config::inst()->nest();
+
+		// First, make sure environment_type is live
+		Config::inst()->update('Director', 'environment_type', 'live');
+		$this->assertEquals('live', Config::inst()->get('Director', 'environment_type'));
+
+		// Then, load in a new manifest, which includes a _config.php that sets environment_type to dev
+		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest_dynamicenv', true, true);
+		Config::inst()->pushConfigYamlManifest($manifest);
+
+		// Make sure that stuck
+		$this->assertEquals('dev', Config::inst()->get('Director', 'environment_type'));
+
+		// And that the dynamic rule was calculated correctly
+		$this->assertEquals('dev', Config::inst()->get('ConfigManifestTest', 'DynamicEnvironment'));
+
+		Config::inst()->unnest();
+	}
+
+	public function testMultipleRules() {
+		$_ENV['MultilpleRules_EnvVariableSet'] = 1;
+		define('MultilpleRules_DefinedConstant', 'defined');
+		$config = $this->getConfigFixtureValue('MultipleRules');
+
+		$this->assertFalse(
+			isset($config['TwoOnlyFail']),
+			'Fragment is not included if one of the Only rules fails.'
+		);
+
+		$this->assertTrue(
+			isset($config['TwoOnlySucceed']),
+			'Fragment is included if both Only rules succeed.'
+		);
+
+		$this->assertTrue(
+			isset($config['TwoExceptSucceed']),
+			'Fragment is included if one of the Except rules matches.'
+		);
+
+		$this->assertFalse(
+			isset($config['TwoExceptFail']),
+			'Fragment is not included if both of the Except rules fail.'
+		);
+
+		$this->assertFalse(
+			isset($config['TwoBlocksFail']),
+			'Fragment is not included if one block fails.'
+		);
+
+		$this->assertTrue(
+			isset($config['TwoBlocksSucceed']),
+			'Fragment is included if both blocks succeed.'
+		);
+	}
+
 	public function testRelativeOrder() {
 		$accessor = new ConfigManifestTest_ConfigManifestAccess(BASE_PATH, true, false);
 

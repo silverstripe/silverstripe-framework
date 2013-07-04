@@ -165,6 +165,18 @@ SS;
 			'Permissions template functions result correct result');
 	}
 
+	public function testNonFieldCastingHelpersNotUsedInHasValue() {
+		// check if Link without $ in front of variable
+		$result = $this->render(
+			'A<% if Link %>$Link<% end_if %>B', new SSViewerTest_Object());
+		$this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if Link %>');
+
+		// check if Link with $ in front of variable
+		$result = $this->render(
+			'A<% if $Link %>$Link<% end_if %>B', new SSViewerTest_Object());
+		$this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if $Link %>');
+	}
+
 	public function testLocalFunctionsTakePriorityOverGlobals() {
 		$data = new ArrayData(array(
 			'Page' => new SSViewerTest_Object()
@@ -1062,7 +1074,7 @@ after')
 		$origEnv = Config::inst()->get('Director', 'environment_type');
 		Config::inst()->update('Director', 'environment_type', 'dev');
 		Config::inst()->update('SSViewer', 'source_file_comments', true);
-	   $f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
+		$f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
 		$templates = array(
 			array(
 				'name' => 'SSViewerTestCommentsFullSource',
@@ -1078,7 +1090,8 @@ after')
 			array(
 				'name' => 'SSViewerTestCommentsFullSourceHTML4Doctype',
 				'expected' => ""
-					. "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"\t\t\"http://www.w3.org/TR/html4/strict.dtd\">"
+					. "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML "
+					. "4.01//EN\"\t\t\"http://www.w3.org/TR/html4/strict.dtd\">"
 					. "<!-- template $f/SSViewerTestCommentsFullSourceHTML4Doctype.ss -->"
 					. "<html>"
 					. "\t<head></head>"
@@ -1197,6 +1210,45 @@ after')
 			"tests/forms/RequirementsTest_a.js"
 		));
 	}
+
+	public function testCallsWithArguments() {
+		$data = new ArrayData(array(
+			'Set' => new ArrayList(array(
+				new SSViewerTest_Object("1"),
+				new SSViewerTest_Object("2"),
+				new SSViewerTest_Object("3"),
+				new SSViewerTest_Object("4"),
+				new SSViewerTest_Object("5"),
+			)),
+			'Level' => new SSViewerTest_LevelTest(1),
+			'Nest' => array(
+				'Level' => new SSViewerTest_LevelTest(2),
+			),
+		));
+
+		$tests = array(
+			'$Level.output(1)' => '1-1',
+			'$Nest.Level.output($Set.First.Number)' => '2-1',
+			'<% with $Set %>$Up.Level.output($First.Number)<% end_with %>' => '1-1',
+			'<% with $Set %>$Top.Nest.Level.output($First.Number)<% end_with %>' => '2-1',
+			'<% loop $Set %>$Up.Nest.Level.output($Number)<% end_loop %>' => '2-12-22-32-42-5',
+			'<% loop $Set %>$Top.Level.output($Number)<% end_loop %>' => '1-11-21-31-41-5',
+			'<% with $Nest %>$Level.output($Top.Set.First.Number)<% end_with %>' => '2-1',
+			'<% with $Level %>$output($Up.Set.Last.Number)<% end_with %>' => '1-5',
+			'<% with $Level.forWith($Set.Last.Number) %>$output("hi")<% end_with %>' => '5-hi',
+			'<% loop $Level.forLoop($Set.First.Number) %>$Number<% end_loop %>' => '!0',
+			'<% with $Nest %>
+				<% with $Level.forWith($Up.Set.First.Number) %>$output("hi")<% end_with %>
+			<% end_with %>' => '1-hi',
+			'<% with $Nest %>
+				<% loop $Level.forLoop($Top.Set.Last.Number) %>$Number<% end_loop %>
+			<% end_with %>' => '!0!1!2!3!4',
+		);
+
+		foreach($tests as $template => $expected) {
+			$this->assertEquals($expected, trim($this->render($template, $data)));
+		}
+	}
 }
 
 /**
@@ -1274,6 +1326,11 @@ class SSViewerTest_Object extends DataObject {
 
 	public $number = null;
 
+	private static $casting = array(
+		'Link' => 'Text',
+	);
+
+
 	public function __construct($number = null) {
 		parent::__construct();
 		$this->number = $number;
@@ -1289,6 +1346,10 @@ class SSViewerTest_Object extends DataObject {
 
 	public function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
 		return $a. $b. $c. $d. $e. $f. $g. $h. $i. $j. $k;
+	}
+
+	public function Link() {
+		return 'some/url.html';
 	}
 }
 
@@ -1326,3 +1387,28 @@ class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 	}
 
 }
+
+class SSViewerTest_LevelTest extends ViewableData implements TestOnly {
+	protected $depth;
+
+	public function __construct($depth = 1) {
+		$this->depth = $depth;
+	}
+
+	public function output($val) {
+		return "$this->depth-$val";
+	}
+
+	public function forLoop($number) {
+		$ret = array();
+		for($i = 0; $i < (int)$number; ++$i) {
+			$ret[] = new SSViewerTest_Object("!$i");
+		}
+		return new ArrayList($ret);
+	}
+
+	public function forWith($number) {
+		return new self($number);
+	}
+}
+

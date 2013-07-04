@@ -382,7 +382,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						success: function(html) {
 							dialog.html(html);
 							dialog.getForm().setElement(self);
-							dialog.trigger('dialogopen');
+							dialog.trigger('ssdialogopen');
 						}
 					});
 				}
@@ -452,7 +452,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 
 			fromDialog: {
-				ondialogopen: function(){
+				onssdialogopen: function(){
 					var ed = this.getEditor();
 					ed.onopen();
 
@@ -467,7 +467,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.redraw();
 				},
 
-				ondialogclose: function(){
+				onssdialogclose: function(){
 					var ed = this.getEditor();
 					ed.onclose();
 
@@ -826,7 +826,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					});
 
 					ed.repaint();
-				})
+				});
 
 				this.getDialog().close();
 				return false;
@@ -944,8 +944,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var uploadedFiles = $('.ss-uploadfield-files', this).children('.ss-uploadfield-item');
 				uploadedFiles.each(function(){
 					var uploadedID = $(this).data('fileid');
-					if ($.inArray(uploadedID, editFieldIDs) == -1) {
+					if (uploadedID && $.inArray(uploadedID, editFieldIDs) == -1) {
 						//trigger the detail view for filling out details about the file we are about to insert into TinyMCE
+						$(this).remove(); // Remove successfully added item from the queue
 						form.showFileView(uploadedID);
 					}
 				});
@@ -1271,12 +1272,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this._super();
 
 				this.setOrigVal(parseInt(this.val(), 10));
-
-				// Default to a managable size for the HTML view. Can be overwritten by user after initialization
-				if(this.attr('name') == 'Width') {
-					this.closest('.ss-htmleditorfield-file').updateDimensions('Width', 600);
-				}
-
 			},
 			onunmatch: function() {
 				this._super();

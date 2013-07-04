@@ -439,6 +439,9 @@ class SecurityTest extends FunctionalTest {
 }
 
 class SecurityTest_SecuredController extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('index');
+
 	public function index() {
 		if(!Permission::check('ADMIN')) return Security::permissionFailure($this);
 		

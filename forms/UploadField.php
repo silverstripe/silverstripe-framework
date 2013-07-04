@@ -1331,6 +1331,12 @@ class UploadField_ItemHandler extends RequestHandler {
 		'' => 'index',
 	);
 
+	private static $allowed_actions = array(
+		'delete',
+		'edit',
+		'EditForm',
+	);
+
 	/**
 	 * @param UploadFIeld $parent
 	 * @param int $item
@@ -1482,6 +1488,10 @@ class UploadField_SelectHandler extends RequestHandler {
 	private static $url_handlers = array(
 		'$Action!' => '$Action',
 		'' => 'index',
+	);
+
+	private static $allowed_actions = array(
+		'Form'
 	);
 
 	public function __construct($parent, $folderName = null) {

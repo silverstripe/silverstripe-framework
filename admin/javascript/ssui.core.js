@@ -153,7 +153,7 @@
 			iframe.bind('load', function(e) {
 				if($(this).attr('src') == 'about:blank') return;
 				
-				$(this).show();
+				iframe.addClass('loaded').show(); // more reliable than 'src' attr check (in IE)
 				self._resizeIframe();
 				self.uiDialog.removeClass('loading');
 			}).hide();
@@ -170,7 +170,7 @@
 			var self = this, iframe = this.element.children('iframe');
 
 			// Load iframe
-			if(!iframe.attr('src') || this.options.reloadOnOpen) {
+			if(this.options.iframeUrl && (!iframe.hasClass('loaded') || this.options.reloadOnOpen)) {
 				iframe.hide();
 				iframe.attr('src', this.options.iframeUrl);
 				this.uiDialog.addClass('loading');
@@ -186,7 +186,7 @@
 			$(window).unbind('resize.ssdialog');
 		},
 		_resizeIframe: function() {
-			var opts = {}, newWidth, newHeight;
+			var opts = {}, newWidth, newHeight, iframe = this.element.children('iframe');;
 			if(this.options.widthRatio) {
 				newWidth = $(window).width() * this.options.widthRatio;
 				if(this.options.minWidth && newWidth < this.options.minWidth) {
@@ -207,11 +207,26 @@
 					opts.height = newHeight;
 				}
 			}
-			if(this.options.autoPosition) {
-				opts.position = this.options.position;
-			}
+
 			if(!jQuery.isEmptyObject(opts)) {
 				this._setOptions(opts);
+
+				// Resize iframe within dialog
+				iframe.attr('width', 
+					opts.width 
+					- parseFloat(this.element.css('paddingLeft'))
+					- parseFloat(this.element.css('paddingRight'))
+				);
+				iframe.attr('height', 
+					opts.height
+					- parseFloat(this.element.css('paddingTop')) 
+					- parseFloat(this.element.css('paddingBottom'))
+				);
+
+				// Enforce new position
+				if(this.options.autoPosition) {
+					this._setOption("position", this.options.position);
+				}
 			}
 		}
 	});

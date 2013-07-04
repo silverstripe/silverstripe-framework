@@ -529,6 +529,8 @@ body.cms {
 	}
 	ul.SelectionGroup {
 		padding-left:28px;
+		overflow: visible;
+		@include legacy-pie-clearfix;
 	}
 	.parent-mode {
 		padding: $grid-x;
@@ -1533,9 +1535,14 @@ body.cms-dialog {
 		}
 	}
 
-	.ss-uploadfield-editandorganize {
-		display: none;
-	}	
+	.ss-assetuploadfield .ss-uploadfield-editandorganize {
+		.ss-uploadfield-files {
+			.ss-uploadfield-item-info {
+				background-color: grayscale(#5db4df);
+				@include background-image(linear-gradient(top,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%));
+			}
+		}
+	}
 }
 
 /** --------------------------------------------

@@ -227,8 +227,8 @@ To accommodate this, value sections can be filtered to only be used when either 
 current environment.
 
 To achieve this you add a key to the related header section, either "Only" when the value section should be included
-only when the rules contained match, or "Except" when the value section should be included except when the rules
-contained match.
+only when all the rules contained match, or "Except" when the value section should be included except when all of the
+rules contained match.
 
 You then list any of the following rules as sub-keys, with informational values as either a single value or a list.
 
@@ -255,6 +255,15 @@ For instance, to add a property to "foo" when a module exists, and "bar" otherwi
 	MyClass:
 	  property: 'bar'
 	---
+
+Note than when you have more than one rule for a nested fragment, they're joined like
+
+  FRAGMENT_INCLUDED = (ONLY && ONLY) && !(EXCEPT && EXCEPT)
+
+That is, the fragment will be included if all Only rules match, except if all Except rules match.
+
+Also, due to YAML limitations, having multiple conditions of the same kind (say, two `EnvVarSet` in one "Only" block)
+will result in only the latter coming through.
 
 ### The values
 

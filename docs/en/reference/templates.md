@@ -173,7 +173,7 @@ the markup in the `else` clause is used, if that clause is present.
 	:::ss
 	<% if $MyDinner=="quiche" %>
 		Real men don't eat quiche
-	<% else_if $MyDinner=$YourDinner %>
+	<% else_if $MyDinner==$YourDinner %>
 		We both have good taste
 	<% else %>
 		Can I have some of your chips?

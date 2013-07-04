@@ -194,6 +194,12 @@ class GridFieldDetailForm implements GridField_URLHandler {
  * @subpackage fields-gridfield
  */
 class GridFieldDetailForm_ItemRequest extends RequestHandler {
+
+	private static $allowed_actions = array(
+		'edit',
+		'view',
+		'ItemEditForm'
+	);
 	
 	/**
 	 *

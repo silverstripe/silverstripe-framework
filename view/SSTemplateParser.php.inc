@@ -157,7 +157,7 @@ class SSTemplateParser extends Parser {
 	*/
 	
 	function Lookup__construct(&$res) {
-		$res['php'] = '$scope';
+		$res['php'] = '$scope->locally()';
 		$res['LookupSteps'] = array();
 	}
 	

@@ -18,7 +18,20 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment'
 	);
-	
+
+	public function testValidObjectsForBaseFields() {
+		$obj = new DataObjectTest_ValidatedObject();
+
+		foreach (array('Created', 'LastEdited', 'ClassName', 'ID') as $field) {
+			$helper = $obj->dbObject($field);
+			$this->assertTrue(
+				($helper instanceof DBField),
+				"for {$field} expected helper to be DBField, but was " .
+				(is_object($helper) ? get_class($helper) : "null")
+			);
+		}
+	}
+
 	public function testDataIntegrityWhenTwoSubclassesHaveSameField() {
 		// Save data into DataObjectTest_SubTeam.SubclassDatabaseField
 		$obj = new DataObjectTest_SubTeam();

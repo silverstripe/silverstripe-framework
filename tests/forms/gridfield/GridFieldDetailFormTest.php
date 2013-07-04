@@ -282,6 +282,7 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 }
 
 class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
+	
 	private static $db = array(
 		'Name' => 'Varchar'
 	);
@@ -306,6 +307,9 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 }
 
 class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
+	
+	private static $allowed_actions = array('Form');
+
 	protected $template = 'BlankPage';
 
 	public function Form() {
@@ -326,6 +330,9 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 }
 
 class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('Form');
+
 	protected $template = 'BlankPage';
 	
 	public function Form() {
@@ -339,6 +346,9 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 }
 
 class GridFieldDetailFormTest_CategoryController extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('Form');
+	
 	protected $template = 'BlankPage';
 
 	public function Form() {

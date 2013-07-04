@@ -86,7 +86,7 @@
 class Session {
 
 	/**
-	 * @var $timeout Set session timeout
+	 * @var $timeout Set session timeout in seconds.
 	 * @config
 	 */
 	private static $timeout = 0;
@@ -523,9 +523,11 @@ class Session {
 
 		if(!session_id() && !headers_sent()) {
 			if($domain) {
-				session_set_cookie_params($timeout, $path, $domain, $secure /* secure */, true /* httponly */);
+				session_set_cookie_params($timeout, $path, $domain,
+					$secure /* secure */, true /* httponly */);
 			} else {
-				session_set_cookie_params($timeout, $path, null, $secure /* secure */, true /* httponly */);
+				session_set_cookie_params($timeout, $path, null,
+					$secure /* secure */, true /* httponly */);
 			}
 
 			// Allow storing the session in a non standard location
@@ -541,7 +543,8 @@ class Session {
 		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
 		// By default it's the total session lifetime
 		if($timeout && !headers_sent()) {
-			Cookie::set(session_name(), session_id(), time()+$timeout, $path, $domain ? $domain : null, $secure, true);
+			Cookie::set(session_name(), session_id(), $timeout/86400, $path, $domain ? $domain
+				: null, $secure, true);
 		}
 	}
 

@@ -1,0 +1,50 @@
+---
+Only:
+  ConstantDefined: MultilpleRules_UndefinedConstant
+  EnvVarSet: MultilpleRules_EnvVariableSet
+---
+ConfigManifestTest:
+  MultipleRules:
+    TwoOnlyFail: "not included - one of the onlies fails"
+---
+Only:
+  ConstantDefined: MultilpleRules_DefinedConstant
+  EnvVarSet: MultilpleRules_EnvVariableSet
+---
+ConfigManifestTest:
+  MultipleRules:
+    TwoOnlySucceed: "included - both onlies succeed"
+---
+Except:
+  ConstantDefined: MultilpleRules_UndefinedConstant
+  EnvVarSet: MultilpleRules_EnvVariableSet
+---
+ConfigManifestTest:
+  MultipleRules:
+    TwoExceptSucceed: "included - one of the excepts succeeds"
+---
+Except:
+  ConstantDefined: MultilpleRules_DefinedConstant
+  EnvVarSet: MultilpleRules_EnvVariableSet
+---
+ConfigManifestTest:
+  MultipleRules:
+    TwoExceptFail: "not included - both excepts fail"
+---
+Except:
+  EnvVarSet: MultilpleRules_EnvVariableSet
+Only:
+  EnvVarSet: MultilpleRules_EnvVariableSet
+---
+ConfigManifestTest:
+  MultipleRules:
+    TwoBlocksFail: "not included - one block fails"
+---
+Except:
+  ConstantDefined: MultilpleRules_UndefinedConstant
+Only:
+  EnvVarSet: MultilpleRules_EnvVariableSet
+---
+ConfigManifestTest:
+  MultipleRules:
+    TwoBlocksSucceed: "included - both blocks succeed"

@@ -272,6 +272,15 @@ Some rules of thumb:
 *  Don't concatenate URLs in a template.  It only works in extremely simple cases that usually contain bugs.
 *  Use *Controller::join_links()* to concatenate URLs.  It deals with query strings and other such edge cases.
 
+### Filtering incoming HTML from TinyMCE
+
+In some cases you may be particularly concerned about which HTML elements are addable to Content via the CMS.
+By default, although TinyMCE is configured to restrict some dangerous tags (such as `script` tags), this restriction
+is not enforced server-side. A malicious user with write access to the CMS might create a specific request to avoid
+these restrictions.
+
+To enable server side filtering using the same whitelisting controls as TinyMCE, set the
+HtmlEditorField::$sanitise_server_side config property to true.
 
 ## Cross-Site Request Forgery (CSRF)
 

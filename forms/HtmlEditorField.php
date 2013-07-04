@@ -14,6 +14,18 @@ class HtmlEditorField extends TextareaField {
 	 */
 	private static $use_gzip = true;
 
+	/**
+	 * @config
+	 * @var Integer Default insertion width for Images and Media
+	 */
+	private static $insert_width = 600;
+
+	/**
+	 * @config
+	 * @var bool Should we check the valid_elements (& extended_valid_elements) rules from HtmlEditorConfig server side?
+	 */
+	private static $sanitise_server_side = false;
+
 	protected $rows = 30;
 	
 	/**
@@ -105,7 +117,12 @@ class HtmlEditorField extends TextareaField {
 		$linkedFiles = array();
 		
 		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
-		
+
+		if($this->config()->sanitise_server_side) {
+			$santiser = Injector::inst()->create('HtmlEditorSanitiser', HtmlEditorConfig::get_active());
+			$santiser->sanitise($htmlValue);
+		}
+
 		if(class_exists('SiteTree')) {
 			// Populate link tracking for internal links & links to asset files.
 			if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
@@ -428,8 +445,6 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
 		$computerUploadField->setFolderName(Config::inst()->get('Upload', 'uploads_folder'));
-		// @todo - Remove this once this field supports display and recovery of file upload validation errors
-		$computerUploadField->setOverwriteWarning(false);
 
 		$tabSet = new TabSet(
 			"MediaFormInsertMediaTabs",
@@ -622,10 +637,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
 				)
 			)->addExtraClass('last')
 		);
@@ -636,12 +651,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					TextField::create(
 						'Width', 
 						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
-						$file->Width
+						$file->InsertWidth
 					)->setMaxLength(5),
 					TextField::create(
 						'Height', 
 						_t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 
-						$file->Height
+						$file->InsertHeight
 					)->setMaxLength(5)
 				)->addExtraClass('dimensions last')
 			);
@@ -661,7 +676,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			), 'CaptionText');
 		}
 
-		$this->extend('updateFieldsForImage', $fields, $url, $file);
+		$this->extend('updateFieldsForOembed', $fields, $url, $file);
 
 		return $fields;
 	}
@@ -746,10 +761,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
-					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
 				)
 			)->addExtraClass('last')
 		);
@@ -759,12 +774,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					TextField::create(
 						'Width', 
 						_t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 
-						$file->Width
+						$file->InsertWidth
 					)->setMaxLength(5),
 					TextField::create(
 						'Height', 
 						" x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'),
-						$file->Height
+						$file->InsertHeight
 					)->setMaxLength(5)
 				)->addExtraClass('dimensions last')
 			);
@@ -910,6 +925,29 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		return $this->oembed->Height ?: 100;
 	}
 
+	/**
+	 * Provide an initial width for inserted media, restricted based on $embed_width
+	 * 
+	 * @return int
+	 */
+	public function getInsertWidth() {
+		$width = $this->getWidth();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $width : $maxWidth;
+	}
+
+	/**
+	 * Provide an initial height for inserted media, scaled proportionally to the initial width
+	 * 
+	 * @return int
+	 */
+	public function getInsertHeight() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
+	}
+
 	public function getPreview() {
 		if(isset($this->oembed->thumbnail_url)) {
 			return sprintf('<img src="%s" />', $this->oembed->thumbnail_url);
@@ -964,6 +1002,29 @@ class HtmlEditorField_Image extends HtmlEditorField_File {
 
 	public function getHeight() {
 		return ($this->file) ? $this->file->Height : $this->height;
+	}
+
+	/**
+	 * Provide an initial width for inserted image, restricted based on $embed_width
+	 * 
+	 * @return int
+	 */
+	public function getInsertWidth() {
+		$width = $this->getWidth();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $width : $maxWidth;
+	}
+
+	/**
+	 * Provide an initial height for inserted image, scaled proportionally to the initial width
+	 * 
+	 * @return int
+	 */
+	public function getInsertHeight() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		$maxWidth = Config::inst()->get('HtmlEditorField', 'insert_width');
+		return ($width <= $maxWidth) ? $height : round($height*($maxWidth/$width));
 	}
 
 	public function getPreview() {

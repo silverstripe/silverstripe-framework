@@ -130,10 +130,6 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 	
 	public function testDisallowedExtendedActions() {
-		/* Actions on magic methods are only accessible if explicitly allowed on the controller. */
-		$response = Director::test("testGoodBase1/extendedMethod");
-		$this->assertEquals(404, $response->getStatusCode());
-		
 		/* Actions on an extension are allowed because they specifically provided appropriate allowed_actions items */
 		$response = Director::test("testGoodBase1/otherExtendedMethod");
 		$this->assertEquals("otherExtendedMethod", $response->getBody());
@@ -146,9 +142,10 @@ class RequestHandlingTest extends FunctionalTest {
 		$response = Director::test("RequestHandlingTest_AllowedController/failoverMethod");
 		$this->assertEquals("failoverMethod", $response->getBody());
 
-		/* The action on the extension has also been explicitly allowed even though it wasn't on the extension */
+		/* The action on the extension is allowed when explicitly allowed on extension, 
+			even if its not mentioned in controller */
 		$response = Director::test("RequestHandlingTest_AllowedController/extendedMethod");
-		$this->assertEquals("extendedMethod", $response->getBody());
+		$this->assertEquals(200, $response->getStatusCode());
 		
 		/* This action has been blocked by an argument to a method */
 		$response = Director::test('RequestHandlingTest_AllowedController/blockMethod');
@@ -421,8 +418,12 @@ class RequestHandlingTest_FormActionController extends Controller {
  * Simple extension for the test controller
  */
 class RequestHandlingTest_ControllerExtension extends Extension {
+	
 	public static $called_error = false;
+	
 	public static $called_404_error = false;
+
+	private static $allowed_actions = array('extendedMethod');
 
 	public function extendedMethod() {
 		return "extendedMethod";
@@ -455,7 +456,6 @@ class RequestHandlingTest_AllowedController extends Controller implements TestOn
 	
 	private static $allowed_actions = array(
 		'failoverMethod', // part of the failover object
-		'extendedMethod', // part of the RequestHandlingTest_ControllerExtension object
 		'blockMethod' => '->provideAccess(false)',
 		'allowMethod' => '->provideAccess',
 	);
@@ -537,6 +537,8 @@ class RequestHandlingTest_Form extends Form {
 }
 
 class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('Form');
 	
 	public function Form() {
 		return new RequestHandlingTest_FormWithAllowedActions(
@@ -544,8 +546,7 @@ class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller im
 			'Form',
 			new FieldList(),
 			new FieldList(
-				new FormAction('allowedformaction'),
-				new FormAction('disallowedformaction') // disallowed through $allowed_actions in form
+				new FormAction('allowedformaction')
 			)
 		);
 	}
@@ -555,7 +556,6 @@ class RequestHandlingTest_FormWithAllowedActions extends Form {
 
 	private static $allowed_actions = array(
 		'allowedformaction' => 1,
-		'httpSubmission' => 1, // TODO This should be an exception on the parent class
 	);
 	
 	public function allowedformaction() {
@@ -603,6 +603,9 @@ class RequestHandlingTest_FormField extends FormField {
  * Form field for the test
  */
 class RequestHandlingTest_SubclassedFormField extends RequestHandlingTest_FormField {
+
+	private static $allowed_actions = array('customSomething');
+	
 	// We have some url_handlers defined that override RequestHandlingTest_FormField handlers.
 	// We will confirm that the url_handlers inherit.
 	private static $url_handlers = array(
@@ -620,6 +623,8 @@ class RequestHandlingTest_SubclassedFormField extends RequestHandlingTest_FormFi
  * Controller for the test
  */
 class RequestHandlingFieldTest_Controller extends Controller implements TestOnly {
+
+	private static $allowed_actions = array('TestForm');
 	
 	public function TestForm() {
 		return new Form($this, "TestForm", new FieldList(
@@ -641,5 +646,9 @@ class RequestHandlingTest_HandlingField extends FormField {
 	
 	public function actionOnField() {
 		return "Test method on $this->name";
+	}
+
+	public function actionNotAllowedOnField() {
+		return "actionNotAllowedOnField on $this->name";
 	}
 }

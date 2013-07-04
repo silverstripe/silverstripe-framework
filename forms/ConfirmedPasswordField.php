@@ -247,7 +247,10 @@ class ConfirmedPasswordField extends FormField {
 	 *
 	 * @return ConfirmedPasswordField
 	 */
-	public function setValue($value) {
+	public function setValue($value, $data = null) {
+		// If $data is a DataObject, don't use the value, since it's a hashed value
+		if ($data && $data instanceof DataObject) $value = '';
+
 		if(is_array($value)) {
 			if($value['_Password'] || (!$value['_Password'] && !$this->canBeEmpty)) {
 				$this->value = $value['_Password'];
