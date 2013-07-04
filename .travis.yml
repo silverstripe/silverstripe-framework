@@ -1,23 +1,24 @@
 language: php 
 
-php: 
- - 5.3
- - 5.4
+php:
+  - 5.3
 
 env:
- - DB=MYSQL CORE_RELEASE=3.0
- - DB=PGSQL CORE_RELEASE=3.0
- - DB=SQLITE3 CORE_RELEASE=3.0
+  - DB=MYSQL CORE_RELEASE=3.0
 
 matrix:
-  exclude:
-    - php: 5.4
+  include:
+    - php: 5.3
       env: DB=PGSQL CORE_RELEASE=3.0
+    - php: 5.3
+      env: DB=SQLITE CORE_RELEASE=3.0
     - php: 5.4
-      env: DB=SQLITE3 CORE_RELEASE=3.0
+      env: DB=MYSQL CORE_RELEASE=3.0
+    - php: 5.5
+      env: DB=MYSQL CORE_RELEASE=3.0
   allow_failures:
-    - env: DB=PGSQL CORE_RELEASE=3.0
-    - env: DB=SQLITE3 CORE_RELEASE=3.0
+    - php: 5.5
+      env: DB=MYSQL CORE_RELEASE=3.0
 
 before_script:
  - phpenv rehash
