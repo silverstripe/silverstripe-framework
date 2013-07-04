@@ -68,12 +68,12 @@ class GroupTest extends FunctionalTest {
 		$form->saveInto($member);
 		$updatedGroups = $member->Groups();
 
-		$this->assertEquals(
-			array($adminGroup->ID, $parentGroup->ID),
-			$updatedGroups->column(),
+		$this->assertEquals(2, count($updatedGroups->column()),
 			"Adding a toplevel group works"
 		);
-
+		$this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
+		$this->assertContains($parentGroup->ID, $updatedGroups->column('ID'));
+		
 		// Test unsetting relationship
 		$form->loadDataFrom($member);
 		$checkboxSetField = $form->Fields()->fieldByName('Groups');
@@ -84,11 +84,10 @@ class GroupTest extends FunctionalTest {
 		$form->saveInto($member);
 		$member->flushCache();
 		$updatedGroups = $member->Groups();
-		$this->assertEquals(
-			array($adminGroup->ID),
-			$updatedGroups->column(),
+		$this->assertEquals(1, count($updatedGroups->column()),
 			"Removing a previously added toplevel group works"
 		);
+		$this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
 
 		// Test adding child group
 
@@ -101,23 +100,21 @@ class GroupTest extends FunctionalTest {
 		$orphanGroup->ParentID = 99999;
 		$orphanGroup->write();
 		
-		$this->assertEquals(
-			array($parentGroup->ID), 
-			$parentGroup->collateAncestorIDs(),
+		$this->assertEquals(1, count($parentGroup->collateAncestorIDs()),
 			'Root node only contains itself'
 		);
+		$this->assertContains($parentGroup->ID, $parentGroup->collateAncestorIDs());
 		
-		$this->assertEquals(
-			array($childGroup->ID, $parentGroup->ID), 
-			$childGroup->collateAncestorIDs(),
+		$this->assertEquals(2, count($childGroup->collateAncestorIDs()),
 			'Contains parent nodes, with child node first'
 		);
+		$this->assertContains($parentGroup->ID, $childGroup->collateAncestorIDs());
+		$this->assertContains($childGroup->ID, $childGroup->collateAncestorIDs());
 		
-		$this->assertEquals(
-			array($orphanGroup->ID), 
-			$orphanGroup->collateAncestorIDs(),
+		$this->assertEquals(1, count($orphanGroup->collateAncestorIDs()),
 			'Orphaned nodes dont contain invalid parent IDs'
 		);
+		$this->assertContains($orphanGroup->ID, $orphanGroup->collateAncestorIDs());
 	}
 
 	public function testDelete() {
