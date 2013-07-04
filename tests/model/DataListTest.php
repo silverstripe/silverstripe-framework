@@ -625,7 +625,8 @@ class DataListTest extends SapphireTest {
 			));
 
 		$this->assertEquals(2, $list->count());
-		$this->assertEquals(array('Joe', 'Bob'), $list->column('Name'));
+		$values = $list->column('Name');
+		$this->assertEquals(array_intersect($values, array('Joe', 'Bob')), $values);
 	}
 
 	public function testFilterAndExcludeById() {
