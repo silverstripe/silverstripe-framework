@@ -20,6 +20,12 @@ class HtmlEditorField extends TextareaField {
 	 */
 	private static $insert_width = 600;
 
+	/**
+	 * @config
+	 * @var String Default alignment for Images and Media. Accepts: leftAlone|center|left|right
+	 */
+	private static $default_alignment = 'leftAlone';
+
 	protected $rows = 30;
 	
 	/**
@@ -630,7 +636,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
+				),
+				Config::inst()->get('HtmlEditorField', 'default_alignment')
 			)->addExtraClass('last')
 		);
 		if($file->Width != null){
@@ -754,7 +761,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
 					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-				)
+				),
+				Config::inst()->get('HtmlEditorField', 'default_alignment')
 			)->addExtraClass('last')
 		);
 		if($file->Width != null){
