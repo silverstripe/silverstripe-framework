@@ -19,6 +19,17 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_TeamComment'
 	);
 
+	public function testBaseFieldsExcludedFromDb() {
+		$obj = new DataObjectTest_ValidatedObject();
+
+		$dbFields = $obj->db();
+		$this->assertArrayHasKey('Name', $dbFields);
+		$this->assertArrayNotHasKey('Created', $dbFields);
+		$this->assertArrayNotHasKey('LastEdited', $dbFields);
+		$this->assertArrayNotHasKey('ClassName', $dbFields);
+		$this->assertArrayNotHasKey('ID', $dbFields);
+	}
+
 	public function testValidObjectsForBaseFields() {
 		$obj = new DataObjectTest_ValidatedObject();
 

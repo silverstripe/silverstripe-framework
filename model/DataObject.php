@@ -1661,16 +1661,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Return all of the database fields defined in self::$db and all the parent classes.
 	 * Doesn't include any fields specified by self::$has_one.  Use $this->has_one() to get these fields
-	 * Also returns "base" fields like "Created", "LastEdited", et cetera.
 	 *
 	 * @param string $fieldName Limit the output to a specific field name
 	 * @return array The database fields
 	 */
 	public function db($fieldName = null) {
-		if ($fieldName && array_key_exists($fieldName, self::$fixed_fields)) {
-			return self::$fixed_fields[$fieldName];
-		}
-
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
 		$items = array();
@@ -1709,10 +1704,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 
-		if (!$fieldName) {
-			// trying to get all fields, so add the fixed fields to return value
-			$items = array_merge(self::$fixed_fields, $items);
-		}
 		return $items;
 	}
 
@@ -2674,6 +2665,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else if($fieldName == 'ClassName') {
 			$val = get_class($this);
 			return DBField::create_field('Varchar', $val, $fieldName, $this);
+
+		} else if(array_key_exists($fieldName, self::$fixed_fields)) {
+			return DBField::create_field(self::$fixed_fields[$fieldName], $this->$fieldName, $fieldName, $this);
 
 		// General casting information for items in $db
 		} else if($helper = $this->db($fieldName)) {
