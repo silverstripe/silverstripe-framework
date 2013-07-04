@@ -109,6 +109,8 @@
 				this[this.getPanel().is(':visible') ? 'closePanel' : 'openPanel']();
 			},
 			setTitle: function(title) {
+				// need to consider if a title has been set previously
+				title = (title) ? title : this.find('.treedropdownfield-title').html();
 				if(!title) title = strings.fieldTitle;
 					
 				this.find('.treedropdownfield-title').html(title);
