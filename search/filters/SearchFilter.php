@@ -183,7 +183,8 @@ abstract class SearchFilter extends Object {
 		if($candidateClass == 'DataObject') {
 			// fallback to the provided name in the event of a joined column
 			// name (as the candidate class doesn't check joined records)
-			return $this->fullName;
+			$parts = explode('.', $this->fullName);
+			return '"' . implode('"."', $parts) . '"';
 		}
 		
 		return "\"$candidateClass\".\"$this->name\"";
