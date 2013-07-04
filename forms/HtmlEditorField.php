@@ -20,6 +20,12 @@ class HtmlEditorField extends TextareaField {
 	 */
 	private static $insert_width = 600;
 
+	/**
+	 * @config
+	 * @var bool Should we check the valid_elements (& extended_valid_elements) rules from HtmlEditorConfig server side?
+	 */
+	private static $sanitise_server_side = false;
+
 	protected $rows = 30;
 	
 	/**
@@ -111,7 +117,12 @@ class HtmlEditorField extends TextareaField {
 		$linkedFiles = array();
 		
 		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
-		
+
+		if($this->config()->sanitise_server_side) {
+			$santiser = Injector::inst()->create('HtmlEditorSanitiser', HtmlEditorConfig::get_active());
+			$santiser->sanitise($htmlValue);
+		}
+
 		if(class_exists('SiteTree')) {
 			// Populate link tracking for internal links & links to asset files.
 			if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
