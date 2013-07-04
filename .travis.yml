@@ -16,9 +16,6 @@ matrix:
       env: DB=MYSQL CORE_RELEASE=3.0
     - php: 5.5
       env: DB=MYSQL CORE_RELEASE=3.0
-  allow_failures:
-    - php: 5.5
-      env: DB=MYSQL CORE_RELEASE=3.0
 
 before_script:
  - phpenv rehash
