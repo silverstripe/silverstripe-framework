@@ -291,7 +291,7 @@ class SS_ConfigManifest {
 						// For each, parse out into module/file#name, and set any missing to "*"
 						$header[$order] = array();
 						foreach($orderparts as $part) {
-							preg_match('! (?P<module>\*|\w+)? (\/ (?P<file>\*|\w+))? (\# (?P<fragment>\*|\w+))? !x',
+							preg_match('! (?P<module>\*|[^\/#]+)? (\/ (?P<file>\*|\w+))? (\# (?P<fragment>\*|\w+))? !x',
 								$part, $match);
 
 							$header[$order][] = array(
