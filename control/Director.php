@@ -715,6 +715,26 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
+	 * Skip any further processing and immediately respond with a redirect to the passed URL.
+	 *
+	 * @param string $destURL - The URL to redirect to
+	 */
+	protected static function force_redirect($destURL) {
+		$response = new SS_HTTPResponse(
+			"<h1>Your browser is not accepting header redirects</h1>".
+			"<p>Please <a href=\"$destURL\">click here</a>",
+			301
+		);
+
+		HTTP::add_cache_headers($response);
+		$response->addHeader('Location', $destURL);
+
+		// TODO: Use an exception - ATM we can be called from _config.php, before Director#handleRequest's try block
+		$response->output();
+		die;
+	}
+
+	/**
 	 * Force the site to run on SSL.
 	 * 
 	 * To use, call from _config.php. For example:
@@ -782,10 +802,7 @@ class Director implements TemplateGlobalProvider {
 			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
 				return $destURL;
 			} else {
-				if(!headers_sent()) header("Location: $destURL");
-				
-				die("<h1>Your browser is not accepting header redirects</h1>"
-					. "<p>Please <a href=\"$destURL\">click here</a>");
+				self::force_redirect($destURL);
 			}
 		} else {
 			return false;
@@ -800,9 +817,7 @@ class Director implements TemplateGlobalProvider {
 			$destURL = str_replace(Director::protocol(), Director::protocol() . 'www.', 
 				Director::absoluteURL($_SERVER['REQUEST_URI']));
 
-			header("Location: $destURL", true, 301);
-			die("<h1>Your browser is not accepting header redirects</h1>"
-				. "<p>Please <a href=\"$destURL\">click here</a>");
+			self::force_redirect($destURL);
 		}
 	}
 
