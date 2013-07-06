@@ -128,6 +128,14 @@ class Session {
 	
 	protected $changedData = array();
 
+	protected function userAgent() {
+		if (isset($_SERVER['HTTP_USER_AGENT'])) {
+			return $_SERVER['HTTP_USER_AGENT'];
+		} else {
+			return '';
+		}
+	}
+
 	/**
 	 * Start PHP session, then create a new Session object with the given start data.
 	 *
@@ -138,14 +146,8 @@ class Session {
 
 		$this->data = $data;
 		
-		if (isset($_SERVER['HTTP_USER_AGENT'])) {
-			$ua = $_SERVER['HTTP_USER_AGENT'];
-		} else {
-			$ua = '';
-		}
-
 		if (isset($this->data['HTTP_USER_AGENT'])) {
-			if ($this->data['HTTP_USER_AGENT'] != $ua) {
+			if ($this->data['HTTP_USER_AGENT'] != $this->userAgent()) {
 				// Funny business detected!
 				$this->inst_clearAll();
 				
@@ -153,8 +155,6 @@ class Session {
 				Session::start();
 			}
 		}
-		
-		$this->inst_set('HTTP_USER_AGENT', $ua);
 	}
 
 	/**
@@ -460,13 +460,18 @@ class Session {
 	public function inst_getAll() {
 		return $this->data;
 	}
-	
+
+	public function inst_finalize() {
+		$this->inst_set('HTTP_USER_AGENT', $this->userAgent());
+	}
+
 	/**
 	 * Save data to session
 	 * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
 	 */ 
 	public function inst_save() {
 		if($this->changedData) {
+			$this->inst_finalize();
 			if(!isset($_SESSION)) Session::start();
 			$this->recursivelyApply($this->changedData, $_SESSION);
 		}
