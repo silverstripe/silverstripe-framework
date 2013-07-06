@@ -72,13 +72,13 @@ class ValidationExceptionTest extends SapphireTest
 	public function testCreateWithComplexValidationResultAndMessage() {
 		$result = new ValidationResult();
 		$result->error('A spork is not a knife');
-		$result->error('A knife is not a back scratcher');
+		$result->error('A knife is not a scratcher');
 		$exception = new ValidationException($result, 'An error has occurred', E_USER_WARNING);
 		
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
 		$this->assertEquals('An error has occurred', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());
-		$this->assertEquals('A spork is not a knife; A knife is not a back scratcher', $exception->getResult()->message());
+		$this->assertEquals('A spork is not a knife; A knife is not a scratcher', $exception->getResult()->message());
 	}
 
 	/**
