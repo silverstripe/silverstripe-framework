@@ -13,6 +13,164 @@ class ConfigManifestTest extends SapphireTest {
 		return $manifest->get('ConfigManifestTest', $name);
 	}
 
+	/**
+	 * This is a helper method for displaying a relevant message about a parsing failure
+	 */
+	protected function getParsedAsMessage($path) {
+		return sprintf('Reference path "%s" failed to parse correctly', $path);
+	}
+
+	/**
+	 * This test checks the processing of before and after reference paths (module-name/filename#fragment)
+	 * This method uses fixture/configmanifest/mysite/_config/addyamlconfigfile.yml as a fixture
+	 */
+	public function testAddYAMLConfigFileReferencePathParsing() {
+		// Use a mock to avoid testing unrelated functionality
+		$manifest = $this->getMockBuilder('SS_ConfigManifest')
+			->disableOriginalConstructor()
+			->setMethods(array('addModule'))
+			->getMock();
+
+		// This tests that the addModule method is called with the correct value
+		$manifest->expects($this->once())
+			->method('addModule')
+			->with($this->equalTo(dirname(__FILE__).'/fixtures/configmanifest/mysite'));
+
+		// Call the method to be tested
+		$manifest->addYAMLConfigFile(
+			'addyamlconfigfile.yml',
+			dirname(__FILE__).'/fixtures/configmanifest/mysite/_config/addyamlconfigfile.yml',
+			false
+		);
+
+		// There is no getter for yamlConfigFragments
+		$property = new ReflectionProperty('SS_ConfigManifest', 'yamlConfigFragments');
+		$property->setAccessible(true);
+
+		// Get the result back from the parsing
+		$result = $property->getValue($manifest);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => 'mysite',
+					'file' => 'testfile',
+					'name' => 'fragment',
+				),
+			),
+			@$result[0]['after'],
+			$this->getParsedAsMessage('mysite/testfile#fragment')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => 'test-module',
+					'file' => 'testfile',
+					'name' => 'fragment',
+				),
+			),
+			@$result[1]['after'],
+			$this->getParsedAsMessage('test-module/testfile#fragment')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => '*',
+					'file' => '*',
+					'name' => '*',
+				),
+			),
+			@$result[2]['after'],
+			$this->getParsedAsMessage('*')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => '*',
+					'file' => 'testfile',
+					'name' => '*'
+				),
+			),
+			@$result[3]['after'],
+			$this->getParsedAsMessage('*/testfile')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => '*',
+					'file' => '*',
+					'name' => 'fragment'
+				),
+			),
+			@$result[4]['after'],
+			$this->getParsedAsMessage('*/*#fragment')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => '*',
+					'file' => '*',
+					'name' => 'fragment'
+				),
+			),
+			@$result[5]['after'],
+			$this->getParsedAsMessage('#fragment')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => 'test-module',
+					'file' => '*',
+					'name' => 'fragment'
+				),
+			),
+			@$result[6]['after'],
+			$this->getParsedAsMessage('test-module#fragment')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => 'test-module',
+					'file' => '*',
+					'name' => '*'
+				),
+			),
+			@$result[7]['after'],
+			$this->getParsedAsMessage('test-module')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => 'test-module',
+					'file' => '*',
+					'name' => '*'
+				),
+			),
+			@$result[8]['after'],
+			$this->getParsedAsMessage('test-module/*')
+		);
+
+		$this->assertEquals(
+			array(
+				array(
+					'module' => 'test-module',
+					'file' => '*',
+					'name' => '*'
+				),
+			),
+			@$result[9]['after'],
+			$this->getParsedAsMessage('test-module/*/#*')
+		);
+	}
+
 	public function testClassRules() {
 		$config = $this->getConfigFixtureValue('Class');
 
