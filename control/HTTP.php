@@ -338,11 +338,11 @@ class HTTP {
 			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate, no-transform";
 			$responseHeaders["Pragma"] = "";
 
-			// To do: User-Agent should only be added in situations where you *are* actually 
+			// To do: User-Agent should only be added in situations where you *are* actually
 			// varying according to user-agent.
 			$responseHeaders['Vary'] = 'Cookie, X-Forwarded-Protocol, User-Agent, Accept';
-
-		} else {
+		}
+		else {
 			$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-transform";
 		}
 
