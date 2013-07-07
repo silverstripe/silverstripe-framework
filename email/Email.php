@@ -349,8 +349,9 @@ class Email extends ViewableData {
 	 * and it won't be plain email :) 
 	 */
 	protected function parseVariables($isPlain = false) {
+		$origState = Config::inst()->get('SSViewer', 'source_file_comments');
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
-		
+
 		if(!$this->parseVariables_done) {
 			$this->parseVariables_done = true;
 
@@ -373,6 +374,7 @@ class Email extends ViewableData {
 			// Rewrite relative URLs
 			$this->body = HTTP::absoluteURLs($fullBody);
 		}
+		Config::inst()->update('SSViewer', 'source_file_comments', $origState);
 	}
 	
 	/**
