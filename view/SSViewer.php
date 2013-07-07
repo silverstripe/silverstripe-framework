@@ -47,11 +47,17 @@ class SSViewer_Scope {
 	private $localIndex;
 
 
-	public function __construct($item){
+	public function __construct($item, $inheritedScope = null) {
 		$this->item = $item;
 		$this->localIndex = 0;
 		$this->localStack = array();
-		$this->itemStack[] = array($this->item, null, 0, null, null, 0);
+		if ($inheritedScope instanceof SSViewer_Scope) {
+			$this->itemIterator = $inheritedScope->itemIterator;
+			$this->itemIteratorTotal = $inheritedScope->itemIteratorTotal;
+			$this->itemStack[] = array($this->item, $this->itemIterator, $this->itemIteratorTotal, null, null, 0);
+		} else {
+			$this->itemStack[] = array($this->item, null, 0, null, null, 0);
+		}
 	}
 	
 	public function getItem(){
@@ -357,8 +363,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	 */
 	protected $underlay;
 
-	public function __construct($item, $overlay = null, $underlay = null){
-		parent::__construct($item);
+	public function __construct($item, $overlay = null, $underlay = null, $inheritedScope = null) {
+		parent::__construct($item, $inheritedScope);
 
 		// Build up global property providers array only once per request
 		if (self::$globalProperties === null) {
@@ -553,7 +559,7 @@ class SSViewer {
 	 * @var boolean $source_file_comments
 	 */
 	private static $source_file_comments = false;
-	
+
 	/**
 	 * Set whether HTML comments indicating the source .SS file used to render this page should be
 	 * included in the output.  This is enabled by default
@@ -895,10 +901,11 @@ class SSViewer {
 	 * @param Object $item - The item to use as the root scope for the template
 	 * @param array|null $overlay - Any variables to layer on top of the scope
 	 * @param array|null $underlay - Any variables to layer underneath the scope
+	 * @param Object $inheritedScope - the current scope of a parent template including a sub-template
 	 *
 	 * @return string - The result of executing the template
 	 */
-	protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay) {
+	protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay, $inheritedScope = null) {
 		if(isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
 			$lines = file($cacheFile);
 			echo "<h2>Template: $cacheFile</h2>";
@@ -910,7 +917,7 @@ class SSViewer {
 		}
 
 		$cache = $this->getPartialCacheStore();
-		$scope = new SSViewer_DataPresenter($item, $overlay, $underlay);
+		$scope = new SSViewer_DataPresenter($item, $overlay, $underlay, $inheritedScope);
 		$val = '';
 
 		include($cacheFile);
@@ -930,11 +937,12 @@ class SSViewer {
 	 * Note: You can call this method indirectly by {@link ViewableData->renderWith()}.
 	 * 
 	 * @param ViewableData $item
-	 * @param SS_Cache $cache Optional cache backend.
+	 * @param array|null $arguments - arguments to an included template
+	 * @param Object $inheritedScope - the current scope of a parent template including a sub-template
 	 *
 	 * @return HTMLText Parsed template output.
 	 */
-	public function process($item, $arguments = null) {
+	public function process($item, $arguments = null, $inheritedScope = null) {
 		SSViewer::$topLevel[] = $item;
 
 		if ($arguments && $arguments instanceof Zend_Cache_Core) {
@@ -979,7 +987,7 @@ class SSViewer {
 			}
 		}
 
-		$output = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay);
+		$output = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay, $inheritedScope);
 		
 		if($this->includeRequirements) {
 			$output = Requirements::includeInHTML($template, $output);
@@ -1009,11 +1017,11 @@ class SSViewer {
 	 * Execute the given template, passing it the given data.
 	 * Used by the <% include %> template tag to process templates.
 	 */
-	public static function execute_template($template, $data, $arguments = null) {
+	public static function execute_template($template, $data, $arguments = null, $scope = null) {
 		$v = new SSViewer($template);
 		$v->includeRequirements(false);
 
-		return $v->process($data, $arguments);
+		return $v->process($data, $arguments, $scope);
 	}
 
 	public static function parseTemplateContent($content, $template="") {
@@ -1071,7 +1079,7 @@ class SSViewer_FromString extends SSViewer {
 		$this->content = $content;
 	}
 	
-	public function process($item, $arguments = null) {
+	public function process($item, $arguments = null, $scope = null) {
 		if ($arguments && $arguments instanceof Zend_Cache_Core) {
 			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, ' .
 				'the second argument to process is now an array of variables.');
@@ -1086,7 +1094,7 @@ class SSViewer_FromString extends SSViewer {
 		fwrite($fh, $template);
 		fclose($fh);
 
-		$val = $this->includeGeneratedTemplate($tmpFile, $item, $arguments, null);
+		$val = $this->includeGeneratedTemplate($tmpFile, $item, $arguments, null, $scope);
 
 		unlink($tmpFile);
 		return $val;
