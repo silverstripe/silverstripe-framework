@@ -127,7 +127,7 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		// Only resume a session if its not started already, and a session identifier exists
-		if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) {
+		if(!isset($_SESSION) && Session::request_contains_session_id()) {
 			Session::start();
 		}
 		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see belwo)
