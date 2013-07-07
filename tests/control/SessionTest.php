@@ -99,6 +99,7 @@ class SessionTest extends SapphireTest {
 		// Generate our session
 		$s = new Session(array());
 		$s->inst_set('val', 123);
+		$s->inst_finalize();
 
 		// Change our UA
 		$_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';

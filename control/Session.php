@@ -128,6 +128,14 @@ class Session {
 	
 	protected $changedData = array();
 
+	protected function userAgent() {
+		if (isset($_SERVER['HTTP_USER_AGENT'])) {
+			return $_SERVER['HTTP_USER_AGENT'];
+		} else {
+			return '';
+		}
+	}
+
 	/**
 	 * Start PHP session, then create a new Session object with the given start data.
 	 *
@@ -138,14 +146,8 @@ class Session {
 
 		$this->data = $data;
 		
-		if (isset($_SERVER['HTTP_USER_AGENT'])) {
-			$ua = $_SERVER['HTTP_USER_AGENT'];
-		} else {
-			$ua = '';
-		}
-
 		if (isset($this->data['HTTP_USER_AGENT'])) {
-			if ($this->data['HTTP_USER_AGENT'] != $ua) {
+			if ($this->data['HTTP_USER_AGENT'] != $this->userAgent()) {
 				// Funny business detected!
 				$this->inst_clearAll();
 				
@@ -153,8 +155,6 @@ class Session {
 				Session::start();
 			}
 		}
-		
-		$this->inst_set('HTTP_USER_AGENT', $ua);
 	}
 
 	/**
@@ -460,13 +460,18 @@ class Session {
 	public function inst_getAll() {
 		return $this->data;
 	}
-	
+
+	public function inst_finalize() {
+		$this->inst_set('HTTP_USER_AGENT', $this->userAgent());
+	}
+
 	/**
 	 * Save data to session
 	 * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
 	 */ 
 	public function inst_save() {
 		if($this->changedData) {
+			$this->inst_finalize();
 			if(!isset($_SESSION)) Session::start();
 			$this->recursivelyApply($this->changedData, $_SESSION);
 		}
@@ -509,6 +514,16 @@ class Session {
 	}
 
 	/**
+	 * Is there a session ID in the request?
+	 * @return bool
+	 */
+	public static function request_contains_session_id() {
+		$secure = Director::is_https() && Config::inst()->get('Session', 'cookie_secure');
+		$name = $secure ? 'SECSESSID' : session_name();
+		return isset($_COOKIE[$name]) || isset($_REQUEST[$name]);
+	}
+
+	/**
 	 * Initialize session.
 	 *
 	 * @param string $sid Start the session with a specific ID
@@ -517,7 +532,7 @@ class Session {
 		$path = Config::inst()->get('Session', 'cookie_path');
 		if(!$path) $path = Director::baseURL();
 		$domain = Config::inst()->get('Session', 'cookie_domain');
-		$secure = Config::inst()->get('Session', 'cookie_secure');
+		$secure = Director::is_https() && Config::inst()->get('Session', 'cookie_secure');
 		$session_path = Config::inst()->get('Session', 'session_store_path');
 		$timeout = Config::inst()->get('Session', 'timeout');
 
@@ -533,11 +548,14 @@ class Session {
 			// Allow storing the session in a non standard location
 			if($session_path) session_save_path($session_path);
 
+			// If we want a secure cookie for HTTPS, use a seperate session name. This lets us have a
+			// seperate (less secure) session for non-HTTPS requests
+			if($secure) session_name('SECSESSID');
+
 			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
 			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
 			@session_start();
-
 		}
 
 		// Modify the timeout behaviour so it's the *inactive* time before the session expires.
