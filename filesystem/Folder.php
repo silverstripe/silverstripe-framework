@@ -204,7 +204,7 @@ class Folder extends File {
 			return;
 		}
 		
-		$base = BASE_PATH;
+		$base = Director::assetsBaseFolder();
 		// $parentFolder = Folder::findOrMake("Uploads");
 
 		// Generate default filename

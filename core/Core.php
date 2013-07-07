@@ -168,7 +168,24 @@ define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
 define('THIRDPARTY_DIR', SAPPHIRE_DIR . '/thirdparty');
 define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
-define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
+
+/** 
+ * Allows for customization of assets base path. Very usefuly for 
+ * development of big projects with a lots of developers, who share 
+ * a common database. If you set a common assets base path, they can
+ * now share assets.
+ *
+ * You have to define ASSETS_BASE_PATH before this point, that
+ * is only viable in _ss_environment.php.
+ *
+ * Setting ASSETS_BASE_PATH is only first part of customizing ASSETS_BASE_PATH
+ * second part is making sure, that your web server serves the ASSETS_DIR folder
+ * of your website from your customized location. You can do that easily with 
+ * setting up Virtual Folder in your IIS or Alias or even reverse proxy on your Apache.
+ */
+if (!defined('ASSETS_BASE_PATH')) define('ASSETS_BASE_PATH',BASE_PATH);
+
+define('ASSETS_PATH', ASSETS_BASE_PATH . '/' . ASSETS_DIR);
 
 /**
  * Define the temporary folder if it wasn't defined yet
