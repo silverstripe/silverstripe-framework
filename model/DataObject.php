@@ -1468,39 +1468,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Get the query object for a $has_many Component.
-	 *
-	 * @param string $componentName
-	 * @param string $filter
-	 * @param string|array $sort
-	 * @param string $join Deprecated, use leftJoin($table, $joinClause) instead
-	 * @param string|array $limit
-	 * @return SQLQuery
+	 * @deprecated 3.1 Use getComponents to get a filtered DataList for an object's relation
 	 */
 	public function getComponentsQuery($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		if(!$componentClass = $this->has_many($componentName)) {
-			user_error("DataObject::getComponentsQuery(): Unknown 1-to-many component '$componentName'"
-				. " on class '$this->class'", E_USER_ERROR);
-		}
-
-		if($join) {
-			throw new \InvalidArgumentException(
-				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
-			);
-		}
-
-		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
-
-		$id = $this->getField("ID");
-			
-		// get filter
-		$combinedFilter = "\"$joinField\" = '$id'";
-		if(!empty($filter)) $combinedFilter .= " AND ({$filter})";
-			
-		return DataList::create($componentClass)
-			->where($combinedFilter)
-			->canSortBy($sort)
-			->limit($limit);
+		Deprecation::notice('3.1', "Use getComponents to get a filtered DataList for an object's relation");
+		return $this->getComponents($componentName, $filter, $sort, $join, $limit);
 	}
 
 	/**
