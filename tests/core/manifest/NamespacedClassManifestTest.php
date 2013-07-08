@@ -12,7 +12,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->base = dirname(__FILE__) . '/fixtures/namespaced_classmanifest';
 		$this->manifest      = new SS_ClassManifest($this->base, false, true, false);
 	}
@@ -41,17 +41,20 @@ class NamespacedClassManifestTest extends SapphireTest {
 			'silverstripe\test\classe' => "{$this->base}/module/classes/ClassE.php",
 			'silverstripe\test\classf' => "{$this->base}/module/classes/ClassF.php",
 			'silverstripe\test\classg' => "{$this->base}/module/classes/ClassG.php",
-			'silverstripe\test\classh' => "{$this->base}/module/classes/ClassH.php"
+			'silverstripe\test\classh' => "{$this->base}/module/classes/ClassH.php",
+			'sstemplateparser'         => FRAMEWORK_PATH."/view/SSTemplateParser.php",
+			'sstemplateparseexception' => FRAMEWORK_PATH."/view/SSTemplateParser.php"
 		);
-		
+
 		$this->assertEquals($expect, $this->manifest->getClasses());
 	}
 
 	public function testGetClassNames() {
 		$this->assertEquals(
-			array('silverstripe\test\classa', 'silverstripe\test\classb', 'silverstripe\test\classc',
-				'silverstripe\test\classd', 'silverstripe\test\classe', 'silverstripe\test\classf',
-				'silverstripe\test\classg', 'silverstripe\test\classh'),
+			array('sstemplateparser', 'sstemplateparseexception', 'silverstripe\test\classa',
+				'silverstripe\test\classb', 'silverstripe\test\classc', 'silverstripe\test\classd',
+				'silverstripe\test\classe', 'silverstripe\test\classf', 'silverstripe\test\classg',
+				'silverstripe\test\classh'),
 			$this->manifest->getClassNames());
 	}
 
@@ -59,7 +62,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 		$expect = array(
 			'silverstripe\test\classa' => array('silverstripe\test\ClassB', 'silverstripe\test\ClassH'),
 		);
-		
+
 		$this->assertEquals($expect, $this->manifest->getDescendants());
 	}
 
@@ -109,7 +112,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 		$expect = array("{$this->base}/module/_config.php");
 		$this->assertEquals($expect, $this->manifest->getConfigs());
 	}
-	
+
 	public function testGetModules() {
 		$expect = array(
 			"module" => "{$this->base}/module",
