@@ -274,6 +274,15 @@ class SS_ClassManifest {
 	}
 
 	/**
+	 * Used to set up files that we want to exclude from parsing for performance reasons.
+	 */
+	protected function setDefaults()
+	{
+		$this->classes['sstemplateparser'] = FRAMEWORK_PATH.'/view/SSTemplateParser.php';
+		$this->classes['sstemplateparseexception'] = FRAMEWORK_PATH.'/view/SSTemplateParser.php';
+	}
+
+	/**
 	 * Completely regenerates the manifest file.
 	 *
 	 * @param bool $cache Cache the result.
@@ -289,10 +298,12 @@ class SS_ClassManifest {
 			$this->$reset = array();
 		}
 
+		$this->setDefaults();
+
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
 			'name_regex'    => '/^(_config.php|[^_].*\.php)$/',
-			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
+			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php', 'SSTemplateParser.php'),
 			'ignore_tests'  => !$this->tests,
 			'file_callback' => array($this, 'handleFile'),
 			'dir_callback' => array($this, 'handleDir')
