@@ -170,7 +170,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		} else if(ClassInfo::exists(get_class($this) . "_ItemRequest")) {
 			return get_class($this) . "_ItemRequest";
 		} else {
-			return 'GridFieldItemRequest_ItemRequest';
+			return 'GridFieldDetailForm_ItemRequest';
 		}
 	}
 
