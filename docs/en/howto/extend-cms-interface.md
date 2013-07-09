@@ -6,8 +6,8 @@ The CMS interface works just like any other part of your website: It consists of
 PHP controllers, templates, CSS stylesheets and JavaScript. Because it uses the 
 same base elements, it is relatively easy to extend. 
 
-As an example, we're going to add a permanent "bookmarks" bar to popular pages 
-at the bottom of the CMS. A page can be bookmarked by a CMS author through a 
+As an example, we're going to add a permanent "bookmarks" link list to popular pages 
+into the main CMS menu. A page can be bookmarked by a CMS author through a 
 simple checkbox.
 
 For a deeper introduction to the inner workings of the CMS, please refer to our
@@ -24,48 +24,35 @@ the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` t
 We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
-Copy the template markup of the base implementation at `framework/admin/templates/LeftAndMain.ss` 
-into `mysite/templates/LeftAndMain.ss`. It will automatically be picked up by 
-the CMS logic. Add a new section after the `$Content` tag:
+Copy the template markup of the base implementation at `framework/admin/templates/Includes/LeftAndMain_Menu.ss` 
+into `mysite/templates/Includes/LeftAndMain_Menu.ss`. It will automatically be picked up by 
+the CMS logic. Add a new section into the `<ul class="cms-menu-list">`
 	
 	:::ss
 	...
-	<div class="cms-container" data-layout-type="border">
-		$Menu
-		$Content
-		<div class="cms-bottom-bar south">
-			<ul>
-				<li><a href="admin/page/edit/show/1">Edit "My popular page"</a></li>
-				<li><a href="admin/page/edit/show/99">Edit "My other page"</a></li>
-			</ul>
-		</div>
-	</div>
+	<ul class="cms-menu-list">
+		<!-- ... -->
+		<li class="bookmarked-link first">
+			<a href="admin/pages/edit/show/1">Edit "My popular page"</a>
+		</li>
+		<li class="bookmarked-link last">
+			<a href="admin/pages/edit/show/99">Edit "My other page"</a>
+		</li>
+	</ul>
 	...
 	
-Refresh the CMS interface with `admin/?flush=all`, and you should see the new 
-bottom bar with some hardcoded links. We'll make these dynamic further down. 
+Refresh the CMS interface with `admin/?flush=all`, and you should see those
+hardcoded links underneath the left-hand menu. We'll make these dynamic further down. 
 
-You might have noticed that we didn't write any JavaScript to add our layout 
-manager.  The important piece of information is the `south` class in our new 
-`<div>` structure, plus the height value in our CSS. It instructs the existing 
-parent layout how to render the element. This layout manager 
-([jLayout](http://www.bramstein.com/projects/jlayout/)) allows us to build 
-complex layouts with minimal JavaScript configuration.
-
-See [layout reference](../reference/layout) for more specific information on 
-CMS layouting.
-	
 ## Include custom CSS in the CMS
 
-In order to show the links in one line, we'll add some CSS, and get it to load 
+In order to show the links a bit separated from the other menu entries, 
+we'll add some CSS, and get it to load 
 with the CMS interface. Paste the following content into a new file called 
 `mysite/css/BookmarkedPages.css`:
 
 	:::css
-	.cms-bottom-bar {height: 20px; padding: 5px; background: #C6D7DF;}
-	.cms-bottom-bar ul {list-style: none; margin: 0; padding: 0;}
-	.cms-bottom-bar ul li {float: left; margin-left: 1em;}
-	.cms-bottom-bar a {color: #444444;}
+	.bookmarked-link.first {margin-top: 1em;}
 
 Load the new CSS file into the CMS, by setting the `LeftAndMain.extra_requirements_css`
 [configuration value](/topics/configuration).
@@ -139,9 +126,12 @@ Find the `<ul>` you created earlier in `mysite/admin/templates/LeftAndMain.ss`
 and replace it with the following:
 
 	:::ss
-	<ul>
+	<ul class="cms-menu-list">
+		<!-- ... -->
 		<% loop $BookmarkedPages %>
-		<li><a href="admin/pages/edit/show/$ID">Edit "$Title"</a></li>
+		<li class="bookmarked-link $FirstLast">
+			<li><a href="admin/pages/edit/show/$ID">Edit "$Title"</a></li>
+		</li>
 		<% end_loop %>
 	</ul>
 
