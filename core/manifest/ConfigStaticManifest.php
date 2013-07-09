@@ -100,7 +100,7 @@ class SS_ConfigStaticManifest {
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
 			'name_regex'    => '/^([^_].*\.php)$/',
-			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
+			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php', 'SSTemplateParser.php'),
 			'ignore_tests'  => !$this->tests,
 			'file_callback' => array($this, 'handleFile')
 		));

@@ -383,6 +383,7 @@
 		$( 'div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit').entwine({
 			onclick: function(e) {
 				var editform = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
+				var itemInfo = editform.prev('.ss-uploadfield-item-info');
 				var disabled;
 				var iframe = editform.find('iframe');
 
@@ -406,8 +407,15 @@
 						disabled=this.find('ss-uploadfield-item-edit').siblings();
 					}
 					editform.parent('.ss-uploadfield-item').removeClass('ui-state-warning');
-					disabled.toggleClass('ui-state-disabled');
 					editform.toggleEditForm();
+					
+					if (itemInfo.find('.toggle-details-icon').hasClass('opened')) {
+						disabled.addClass('ui-state-disabled');
+						disabled.attr('disabled', 'disabled');
+					} else {
+						disabled.removeClass('ui-state-disabled');
+						disabled.removeAttr('disabled');
+					}
 				}
 				e.preventDefault(); // Avoid a form submit
 				return false;

@@ -29,7 +29,57 @@ class SSViewerTest extends SapphireTest {
 		$result = $data->renderWith("SSViewerTestPartialTemplate");
 		$this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U",'',$result)));
 	}
-	
+
+	public function testIncludeScopeInheritance() {
+		$data = $this->getScopeInheritanceTestData();
+		$expected = array(
+			'Item 1 - First-ODD top:Item 1',
+			'Item 2 - EVEN top:Item 2',
+			'Item 3 - ODD top:Item 3',
+			'Item 4 - EVEN top:Item 4',
+			'Item 5 - ODD top:Item 5',
+			'Item 6 - Last-EVEN top:Item 6',
+		);
+
+		$result = $data->renderWith('SSViewerTestIncludeScopeInheritance');
+		$this->assertExpectedStrings($result, $expected);
+
+		// reset results for the tests that include arguments (the title is passed as an arg)
+		$expected = array(
+			'Item 1 - Item 1 - First-ODD top:Item 1',
+			'Item 2 - Item 2 - EVEN top:Item 2',
+			'Item 3 - Item 3 - ODD top:Item 3',
+			'Item 4 - Item 4 - EVEN top:Item 4',
+			'Item 5 - Item 5 - ODD top:Item 5',
+			'Item 6 - Item 6 - Last-EVEN top:Item 6',
+		);
+
+		$result = $data->renderWith('SSViewerTestIncludeScopeInheritanceWithArgs');
+		$this->assertExpectedStrings($result, $expected);
+	}
+
+	private function getScopeInheritanceTestData() {
+		return new ArrayData(array(
+			'Title' => 'TopTitleValue',
+			'Items' => new ArrayList(array(
+				new ArrayData(array('Title' => 'Item 1')),
+				new ArrayData(array('Title' => 'Item 2')),
+				new ArrayData(array('Title' => 'Item 3')),
+				new ArrayData(array('Title' => 'Item 4')),
+				new ArrayData(array('Title' => 'Item 5')),
+				new ArrayData(array('Title' => 'Item 6'))
+			))
+		));
+	}
+
+	private function assertExpectedStrings($result, $expected) {
+		foreach ($expected as $expectedStr) {
+			$this->assertTrue(
+				(boolean) preg_match("/{$expectedStr}/", $result),
+				"Didn't find '{$expectedStr}' in:\n{$result}"
+			);
+		}
+	}
 	
 	/**
 	 * Small helper to render templates from strings

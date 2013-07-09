@@ -701,7 +701,7 @@ class SSTemplateParser extends Parser {
 		$arguments = $res['arguments'];
 
 		$res['php'] = '$val .= SSViewer::execute_template('.$template.', $scope->getItem(), array(' . 
-			implode(',', $arguments)."));\n";
+			implode(',', $arguments)."), \$scope);\n";
 
 		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
 			$res['php'] =
