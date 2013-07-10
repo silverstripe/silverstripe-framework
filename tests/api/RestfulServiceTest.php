@@ -172,12 +172,14 @@ class RestfulServiceTest extends SapphireTest {
 	public function testHttpHeaderParseing() {
 		$headers = "content-type: text/html; charset=UTF-8\r\n".
 					"Server: Funky/1.0\r\n".
+					"X-BB-ExampleMANycaPS: test\r\n".
 					"Set-Cookie: foo=bar\r\n".
 					"Set-Cookie: baz=quux\r\n".
 					"Set-Cookie: bar=foo\r\n";
 		$expected = array(
 			'Content-Type' => 'text/html; charset=UTF-8',
 			'Server' => 'Funky/1.0',
+			'X-BB-ExampleMANycaPS' => 'test',
 			'Set-Cookie' => array(
 				'foo=bar',
 				'baz=quux',
