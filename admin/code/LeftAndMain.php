@@ -973,7 +973,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(substr($SQL_id,0,3) != 'new') {
 			$record = DataObject::get_by_id($className, $SQL_id);
 			if($record && !$record->canEdit()) return Security::permissionFailure($this);
-			if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
+			if(!$record || !$record->ID) $this->httpError(404, "Bad record ID #" . (int)$data['ID']);
 		} else {
 			if(!singleton($this->stat('tree_class'))->canCreate()) return Security::permissionFailure($this);
 			$record = $this->getNewItem($SQL_id, false);
@@ -994,7 +994,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		$record = DataObject::get_by_id($className, Convert::raw2sql($data['ID']));
 		if($record && !$record->canDelete()) return Security::permissionFailure();
-		if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
+		if(!$record || !$record->ID) $this->httpError(404, "Bad record ID #" . (int)$data['ID']);
 		
 		$record->delete();
 
