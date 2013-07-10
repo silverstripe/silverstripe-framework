@@ -127,6 +127,38 @@ or [sanitize](http://htmlpurifier.org/) it correctly.
 See [http://shiflett.org/articles/foiling-cross-site-attacks](http://shiflett.org/articles/foiling-cross-site-attacks)
 for in-depth information about "Cross-Site-Scripting".
 
+### What if I can't trust my editors?
+
+The default configuration of SilverStripe assumes some level of trust is given to your editors who have access
+to the CMS. Though the HTML WYSIWYG editor is configured to provide some control over the HTML an editor provides,
+this is not enforced server side, and so can be bypassed by a malicious editor. A editor that does so can use an
+XSS attack against an admin to perform any administrative action.
+
+If you can't trust your editors, SilverStripe must be configured to filter the content so that any javascript is
+stripped out
+
+To enable filtering, set the HtmlEditorField::$sanitise_server_side [configuration](/topics/configuration) property to
+true, e.g.
+
+	HtmlEditorField::config()->sanitise_server_side = true
+
+The built in sanitiser enforces the TinyMCE whitelist rules on the server side, and is sufficient to eliminate the
+most common XSS vectors.
+
+However some subtle XSS attacks that exploit HTML parsing bugs need heavier filtering. For greater protection
+you can install the [htmlpurifier](https://github.com/silverstripe-labs/silverstripe-htmlpurifier) module which
+will replace the built in sanitiser with one that uses the [HTML Purifier](http://htmlpurifier.org/) library.
+
+In both cases, you must ensure that you have not configured TinyMCE to explicitly allow script elements or other
+javascript-specific attributes.
+
+##### But I also need my editors to provide javascript
+
+It is not currently possible to allow editors to provide javascript content and yet still protect other users
+from any malicious code within that javascript.
+
+We recommend configuring [shortcodes](/reference/shortcodes) that can be used by editors in place of using javascript directly.
+
 ### Escaping model properties
 
 `[api:SSViewer]` (the SilverStripe template engine) automatically takes care of escaping HTML tags from specific
