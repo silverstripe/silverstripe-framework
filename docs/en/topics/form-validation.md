@@ -1,10 +1,47 @@
 # Form Validation
 
-SilverStripe provides PHP form validation out of the box,
-but doesn't come with any built-in JavaScript validation
+SilverStripe provides PHP form validation out of the box, but doesn't come with any built-in JavaScript validation
 (the previously used `Validator.js` approach has been deprecated).
 
+## ValidationException and ValidationResult
+
+A the core of the validation system in SilverStripe 3.1 is the `ValidationException`.  Any time you want to trigger
+a validation error, you can throw one of these.
+
+	:::php
+	// General error
+	throw new ValidationException("I don't like this form");
+
+	// Field-specific error
+	throw ValidationException::create_for_field("Content", "I don't like your Content");
+
+You can throw these in anywhere that would be called during a form submission.  For example:
+
+ * `onBeforeWrite()` methods on your DataObjects
+ * Action handlers for your forms
+ * Custom classes that connect to 3rd party APIs
+ 
+Internally, a ValidationResult object is created to actually store the validation information, and if you have more
+complex needs (for example, if you need to return errors against multiple fields), you can create a `ValidationResult`
+object yourself and pass is to the `ValidationException` constructor.
+
+	:::php
+	$result = new ValidationResult;
+
+	// General error
+	$result->addError("I don't like this form");	
+
+	// Field-specific error
+	$result->addFieldError("Content", "I don't like your Content");
+
+	// Non-error message
+	$result->addFieldMessage("Title", "But I do like your Title", "good");
+
+	throw new ValidationException($result);
+
 ## Required Fields
+
+In addition to throwing ValidationExceptions, each Form can have a Validator attached.
 
 Validators are implemented as an argument to the `[api:Form]` constructor,
 and are subclasses of the abstract `[api:Validator]` base class.
@@ -45,6 +82,8 @@ a postcode which depends on the country you've selected in a different field.
 There's two ways to go about this: Either you can attach a custom error message
 to a specific field, or a generic message for the whole form.
 
+In both cases, you achieve this by throwing a ValidationException.
+
 Example: Validate postcodes based on the selected country (on the controller).
 
 	:::php
@@ -68,14 +107,12 @@ Example: Validate postcodes based on the selected country (on the controller).
 			
 			// German postcodes need to be five digits
 			if($data['Country'] == 'de' && isset($data['Postcode']) && strlen($data['Postcode']) != 5) {
-				$form->addErrorMessage('Postcode', 'Need five digits for German postcodes', 'bad');
-				return $this->redirectBack();
+				throw ValidationException::create_for_field("Postcode", "Need five digits for German postcodes");
 			}
 			
 			// Global validation error (not specific to form field)
 			if($data['Country'] == 'IR' && isset($data['Postcode']) && $data['Postcode']) {
-				$form->sessionMessage("Ireland doesn't have postcodes!", 'bad');
-				return $this->redirectBack();
+				throw new ValidationException("Ireland doesn't have postcodes!");
 			}
 			
 			// continue normal processing...
@@ -133,11 +170,27 @@ Refer to the ["datamodel" topic](/topics/datamodel#validation-and-constraints) f
 
 ## Subclassing Validator
 
-To create your own validator, you need to subclass validator and define two methods:
+To create your own validator, you need to subclass validator and define one methods:
 
- *  **javascript()** Should output a snippet of JavaScript that will get called to perform javascript validation.
  *  **php($data)** Should return true if the given data is valid, and call $this->validationError() if there were any
 errors.
+
+## Handling errors yourself
+
+If you wish to handle the errors yourself in some way, you can catch the ValidationException.  Here is a simple
+example:
+
+	:::php
+	try {
+		// Do something that might have a validation error
+
+	} catch(ValidationException $e) {
+		// Extract the ValidationResult form the 
+		$result = $e->getResult();
+		// One possible way of showing the errors contained within the ValidationResult
+		echo "There were the following problems:\n" . $result->starredList();
+		
+	}
 
 ## Related
 

@@ -429,7 +429,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				self::session_regenerate_id();
 				Session::set("loggedInAs", $member->ID);
 				// This lets apache rules detect whether the user has logged in
-				if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				if(Member::config()->login_marker_cookie) {
+					Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				}
 				
 				$generator = new RandomGenerator();
 				$token = $generator->randomToken('sha1');
@@ -682,7 +684,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			if($existingRecord) {
-				throw new ValidationException(new ValidationResult(false, _t(
+				throw new ValidationException(_t(
 					'Member.ValidationIdentifierFailed', 
 					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))', 
 					'Values in brackets show "fieldname = value", usually denoting an existing email address',
@@ -691,7 +693,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 						'name' => $identifierField,
 						'value' => $this->$identifierField
 					)
-				)));
+				));
 			}
 		}
 
@@ -713,11 +715,14 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Note that this only works with cleartext passwords, as we can't rehash
 		// existing passwords.
 		if((!$this->ID && $this->Password) || $this->isChanged('Password')) {
+			if($this->PasswordEncryption) $encryption = $this->PasswordEncryption;
+			else $encryption = Security::config()->password_encryption_algorithm;
+
 			// Password was changed: encrypt the password according the settings
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
 				$this->Salt,
-				($this->PasswordEncryption) ? $this->PasswordEncryption : Security::config()->password_encryption_algorithm,
+				$encryption,
 				$this
 			);
 

@@ -72,12 +72,59 @@ class ValidationExceptionTest extends SapphireTest
 	public function testCreateWithComplexValidationResultAndMessage() {
 		$result = new ValidationResult();
 		$result->error('A spork is not a knife');
-		$result->error('A knife is not a back scratcher');
+		$result->error('A knife is not a scratcher');
 		$exception = new ValidationException($result, 'An error has occurred', E_USER_WARNING);
 		
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
 		$this->assertEquals('An error has occurred', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());
-		$this->assertEquals('A spork is not a knife; A knife is not a back scratcher', $exception->getResult()->message());
+		$this->assertEquals('A spork is not a knife; A knife is not a scratcher', $exception->getResult()->message());
 	}
+
+	/**
+	 * Test that a ValidationException created with no contained ValidationResult
+	 * will correctly populate itself with an inferred version
+	 */
+	public function testCreateForField() {
+		$exception = ValidationException::create_for_field('Content', 'Content is required');
+
+		$this->assertEquals('Content is required', $exception->getMessage());
+		$this->assertEquals(false, $exception->getResult()->valid());
+
+		$this->assertEquals(array(
+			'Content' => array(
+				'message' => 'Content is required',
+				'messageType' => 'bad',
+			),
+		), $exception->getResult()->fieldErrors());
+	}
+
+	/**
+	 * Test that a ValidationException created with no contained ValidationResult
+	 * will correctly populate itself with an inferred version
+	 */
+	public function testValidationResultAddMethods() {
+		$result = new ValidationResult();
+		$result->addMessage('A spork is not a knife', 'bad');
+		$result->addError('A knife is not a back scratcher');
+		$result->addFieldMessage('Title', 'Title is good', 'good');
+		$result->addFieldError('Content', 'Content is bad');
+		
+
+		$this->assertEquals(array(
+			'Title' => array(
+				'message' => 'Title is good',
+				'messageType' => 'good'
+			),
+			'Content' => array(
+				'message' => 'Content is bad',
+				'messageType' => 'bad'
+			)
+		), $result->fieldErrors());
+
+		$this->assertEquals('A spork is not a knife; A knife is not a back scratcher', $result->overallMessage());
+
+		$exception = ValidationException::create_for_field('Content', 'Content is required');
+	}
+
 }

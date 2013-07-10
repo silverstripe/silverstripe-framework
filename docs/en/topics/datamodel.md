@@ -682,6 +682,7 @@ model. SilverStripe provides the `[api:DataObject->validate()]` method for this
 purpose.
 
 By default, there is no validation - objects are always valid!  
+
 However, you can overload this method in your
 DataObject sub-classes to specify custom validation, 
 or use the hook through `[api:DataExtension]`.
@@ -689,11 +690,14 @@ or use the hook through `[api:DataExtension]`.
 Invalid objects won't be able to be written - a [api:ValidationException]` will
 be thrown and no write will occur.
 
-It is expected that you call validate() in your own application to test that an
-object is valid before attempting a write, and respond appropriately if it isn't.
+Alternatively, you can throw a ValidationException yourself anywhere in code that gets called by
+DataObject::write(), such as onBeforeWrite().
 
-The return value of `validate()` is a `[api:ValidationResult]` object.
-You can append your own errors in there.
+It is expected that the code in your application will put the write call in a try { } block, and catch any
+`ValidationException` that are thrown to handle them appropriately.  Note, however, that any Form actions already
+have this built in: the users will be sent back to the form with validaiton errors dispalyed.
+
+The return value of `validate()` is a `[api:ValidationResult]` object.  You can append your own errors in there.
 
 Example: Validate postcodes based on the selected country
 

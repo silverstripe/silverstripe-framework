@@ -260,7 +260,7 @@ class SecurityTest extends FunctionalTest {
 			/* THE FIRST 4 TIMES, THE MEMBER SHOULDN'T BE LOCKED OUT */
 			if($i < 5) {
 				$this->assertNull($member->LockedOutUntil);
-				$this->assertContains($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED'));
+				$this->assertContains(_t('Member.ERRORWRONGCRED'), $this->loginErrorMessage());
 			}
 			
 			/* AFTER THAT THE USER IS LOCKED OUT FOR 15 MINUTES */
@@ -433,7 +433,8 @@ class SecurityTest extends FunctionalTest {
 	 * Get the error message on the login form
 	 */
 	public function loginErrorMessage() {
-		return $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.formError.message');
+		$result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
+		return $result->message();
 	}	
 	
 }

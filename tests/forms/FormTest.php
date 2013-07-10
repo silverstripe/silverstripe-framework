@@ -264,6 +264,34 @@ class FormTest extends FunctionalTest {
 			'Form->sessionMessage() shows up after reloading the form'
 		);
 	}
+
+	public function testValidationException() {
+		$this->get('FormTest_Controller');
+		
+		$response = $this->post(
+			'FormTest_Controller/Form',
+			array(
+				'Email' => 'test@test.com',
+				'SomeRequiredField' => 'test',
+				'action_triggerException' => 1,
+			)
+		);
+		$this->assertPartialMatchBySelector(
+			'#Email span.message',
+			array(
+				'Error on Email field'
+			),
+			'Formfield validation shows note on field if invalid'
+		);
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_error',
+			array(
+				'Error at top of form'
+			),
+			'Required fields show a notification on field when left blank'
+		);
+		
+	}
 	
 	public function testGloballyDisabledSecurityTokenInheritsToNewForm() {
 		SecurityToken::enable();
@@ -482,7 +510,8 @@ class FormTest_Controller extends Controller implements TestOnly {
 				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two'))
 			),
 			new FieldList(
-				new FormAction('doSubmit')
+				new FormAction('doSubmit'),
+				new FormAction('triggerException')
 			),
 			new RequiredFields(
 				'Email',
@@ -497,6 +526,12 @@ class FormTest_Controller extends Controller implements TestOnly {
 	public function doSubmit($data, $form, $request) {
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();
+	}
+	public function triggerException($data, $form, $request) {
+		$result = new ValidationResult;
+		$result->error('Error on Email field', null, 'Email');
+		$result->error('Error at top of form');
+		throw new ValidationException($result);
 	}
 
 	public function getViewer($action = null) {
