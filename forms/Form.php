@@ -1425,8 +1425,13 @@ class Form extends RequestHandler {
 			$this->getTemplate(),
 			'Form'
 		));
-		
-		return $view->dontRewriteHashlinks()->process($this);
+
+		$return = $view->dontRewriteHashlinks()->process($this);
+
+		// Now that we're rendered, clear message
+		$this->clearMessage();
+
+		return $return;
 	}
 
 	/**
