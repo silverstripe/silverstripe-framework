@@ -96,13 +96,16 @@ class FormScaffolder extends Object {
 		if($this->obj->has_one()) {
 			foreach($this->obj->has_one() as $relationship => $component) {
 				if($this->restrictFields && !in_array($relationship, $this->restrictFields)) continue;
-				$fieldName = "{$relationship}ID";
+				$fieldName = $component === 'DataObject'
+					? $relationship // Polymorphic has_one field is composite, so don't refer to ID subfield
+					: "{$relationship}ID";
 				if($this->fieldClasses && isset($this->fieldClasses[$fieldName])) {
 					$fieldClass = $this->fieldClasses[$fieldName];
 					$hasOneField = new $fieldClass($fieldName);
 				} else {
 					$hasOneField = $this->obj->dbObject($fieldName)->scaffoldFormField(null, $this->getParamsArray());
 				}
+				if(empty($hasOneField)) continue; // Allow fields to opt out of scaffolding
 				$hasOneField->setTitle($this->obj->fieldLabel($relationship));
 				if($this->tabbed) {
 					$fields->addFieldToTab("Root.Main", $hasOneField);

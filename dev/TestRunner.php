@@ -96,6 +96,7 @@ class TestRunner extends Controller {
 		// Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
 		// (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
 		DataObject::clear_classname_spec_cache();
+		PolymorphicForeignKey::clear_classname_spec_cache();
 	}
 
 	public function init() {

@@ -45,3 +45,24 @@ DataObjectTest_TeamComment:
 		Name: Phil
 		Comment: Phil is a unique guy, and comments on team2
 		Team: =>DataObjectTest_Team.team2
+DataObjectTest_Fan:
+	fan1:
+		Name: Damian
+		Favourite: =>DataObjectTest_Team.team1
+	fan2:
+		Name: Stephen
+		Favourite: =>DataObjectTest_Player.player1
+		SecondFavourite: =>DataObjectTest_Team.team2
+	fan3:
+		Name: Richard
+		Favourite: =>DataObjectTest_Team.team1
+	fan4:
+		Name: Mitch
+		Favourite: =>DataObjectTest_SubTeam.subteam1
+DataObjectTest_Company:
+	company1:
+		Name: Company corp
+		Owner: =>DataObjectTest_Player.player1
+	company1:
+		Name: 'Team co.'
+		Owner: =>DataObjectTest_Player.player2

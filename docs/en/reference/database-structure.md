@@ -21,7 +21,8 @@ Every object of this class **or any of its subclasses** will have an entry in th
 *  Every field listed in the data object's **$db** array will be included in this table.
 *  For every relationship listed in the data object's **$has_one** array, there will be an integer field included in the
 table.  This will contain the ID of the data-object being linked to.  The database field name will be of the form
-"(relationship-name)ID", for example, ParentID.
+"(relationship-name)ID", for example, ParentID. For polymorphic has_one relationships, there is an additional
+"(relationship-name)Class" field to identify the class this ID corresponds to. See [datamodel](/topics/datamodel#has_one).
 
 ### ID Generation
 

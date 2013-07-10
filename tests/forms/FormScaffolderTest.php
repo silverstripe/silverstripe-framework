@@ -33,7 +33,7 @@ class FormScaffolderTest extends SapphireTest {
 		$this->assertNotNull($fields->dataFieldByName('AuthorID'),
 			'getCMSFields() includes has_one fields on singletons');
 		$this->assertNull($fields->dataFieldByName('Tags'),
-			'getCMSFields() doesnt include many_many fields if no ID is present');
+			"getCMSFields() doesn't include many_many fields if no ID is present");
 	}
 	
 	public function testGetCMSFieldsInstance() {
@@ -47,6 +47,14 @@ class FormScaffolderTest extends SapphireTest {
 			'getCMSFields() includes has_one fields on instances');
 		$this->assertNotNull($fields->dataFieldByName('Tags'),
 			'getCMSFields() includes many_many fields if ID is present on instances');
+		$this->assertNotNull($fields->dataFieldByName('SubjectOfArticles'),
+			'getCMSFields() includes polymorphic has_many fields if ID is present on instances');
+		$this->assertNull($fields->dataFieldByName('Subject'),
+			"getCMSFields() doesn't include polymorphic has_one field");
+		$this->assertNull($fields->dataFieldByName('SubjectID'),
+			"getCMSFields() doesn't include polymorphic has_one id field");
+		$this->assertNull($fields->dataFieldByName('SubjectClass'),
+			"getCMSFields() doesn't include polymorphic has_one class field");
 	}
 	
 	public function testUpdateCMSFields() {
@@ -111,10 +119,14 @@ class FormScaffolderTest_Article extends DataObject implements TestOnly {
 		'Content' => 'HTMLText'
 	);
 	private static $has_one = array(
-		'Author' => 'FormScaffolderTest_Author'
+		'Author' => 'FormScaffolderTest_Author',
+		'Subject' => 'DataObject'
 	);
 	private static $many_many = array(
 		'Tags' => 'FormScaffolderTest_Tag', 
+	);
+	private static $has_many = array(
+		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
 	);
 }
 
@@ -123,7 +135,8 @@ class FormScaffolderTest_Author extends Member implements TestOnly {
 		'ProfileImage' => 'Image'
 	);
 	private static $has_many = array(
-		'Articles' => 'FormScaffolderTest_Article'
+		'Articles' => 'FormScaffolderTest_Article.Author',
+		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
 	);
 }
 class FormScaffolderTest_Tag extends DataObject implements TestOnly {
@@ -132,6 +145,9 @@ class FormScaffolderTest_Tag extends DataObject implements TestOnly {
 	);
 	private static $belongs_many_many = array(
 		'Articles' => 'FormScaffolderTest_Article'
+	);
+	private static $has_many = array(
+		'SubjectOfArticles' => 'FormScaffolderTest_Article.Subject'
 	);
 }
 class FormScaffolderTest_ArticleExtension extends DataExtension implements TestOnly {
