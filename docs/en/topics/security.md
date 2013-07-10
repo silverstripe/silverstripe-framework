@@ -407,13 +407,37 @@ configuration and test fixtures).
 You should therefore block access to all yaml files (extension .yml) by default, and white list only yaml files
 you need to serve directly.
 
-See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details 
-specific to your web server
+See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details  specific to your web server
+
+## Passwords
+
+SilverStripe stores passwords with a strong hashing algorithm (blowfish) by default
+(see [api:PasswordEncryptor]). It adds randomness to these hashes via
+salt values generated with the strongest entropy generators available on the platform
+(see [api:RandomGenerator]). This prevents brute force attacks with
+[Rainbow tables](http://en.wikipedia.org/wiki/Rainbow_table).
+
+Strong passwords are a crucial part of any system security.
+So in addition to storing the password in a secure fashion,
+you can also enforce specific password policies by configuring
+a [api:PasswordValidator]:
+
+	:::php
+	$validator = new PasswordValidator();
+	$validator->minLength(7);
+	$validator->checkHistoricalPasswords(6);
+	$validator->characterStrength('lowercase','uppercase','digits','punctuation');
+	Member::set_password_validator($validator);
+
+In addition, you can tighten password security with the following configuration settings:
+
+ * `Member.password_expiry_days`: Set the number of days that a password should be valid for.
+ * `Member.lock_out_after_incorrect_logins`: Number of incorrect logins after which
+    the user is blocked from further attempts for the timespan defined in `$lock_out_delay_mins`
+ * `Member.lock_out_delay_mins`: Minutes of enforced lockout after incorrect password attempts.
+ 		Only applies if `lock_out_after_incorrect_logins` is greater than 0.
 
 ##  Related
 
  * [http://silverstripe.org/security-releases/](http://silverstripe.org/security-releases/)
-
-## Links
-
  * [Best-practices for securing MySQL (securityfocus.com)](http://www.securityfocus.com/infocus/1726)
