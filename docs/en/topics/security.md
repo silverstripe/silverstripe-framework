@@ -407,6 +407,8 @@ configuration and test fixtures).
 You should therefore block access to all yaml files (extension .yml) by default, and white list only yaml files
 you need to serve directly.
 
+See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details 
+specific to your web server
 See [Apache](/installation/webserver) and [Nginx](/installation/nginx) installation documentation for details  specific to your web server
 
 ## Passwords
@@ -436,6 +438,31 @@ In addition, you can tighten password security with the following configuration 
     the user is blocked from further attempts for the timespan defined in `$lock_out_delay_mins`
  * `Member.lock_out_delay_mins`: Minutes of enforced lockout after incorrect password attempts.
  		Only applies if `lock_out_after_incorrect_logins` is greater than 0.
+
+## Clickjacking: Prevent iframe Inclusion
+
+"[Clickjacking](http://en.wikipedia.org/wiki/Clickjacking)"  is a malicious technique
+where a web user is tricked into clicking on hidden interface elements, which can
+lead to the attacker gaining access to user data or taking control of the website behaviour.
+
+You can signal to browsers that the current response isn't allowed to be 
+included in HTML "frame" or "iframe" elements, and thereby prevent the most common
+attack vector. This is done through a HTTP header, which is usually added in your
+controller's `init()` method:
+
+	:::php
+	class MyController extends Controller {
+		public function init() {
+			parent::init();
+
+			$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
+		}
+	}
+	
+
+This is a recommended option to secure any controller which displays
+or submits sensitive user input, and is enabled by default in all CMS controllers,
+as well as the login form.
 
 ##  Related
 
