@@ -9,7 +9,7 @@ class BehatFixtureFactory extends \FixtureFactory {
 
         // Copy identifier to some visible property unless its already defined.
         // Exclude files, since they generate their own named based on the file path.
-        if(!is_a($name, 'File', true)) {
+        if(!$name != 'File' && !is_subclass_of($name, 'File')) {
             foreach(array('Name', 'Title') as $fieldName) {
                 if(singleton($name)->hasField($fieldName) && !isset($data[$fieldName])) {
                     $data[$fieldName] = $identifier;
