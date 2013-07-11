@@ -113,9 +113,18 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * @config
-	 * @var Int
+	 * @var Int Number of incorrect logins after which
+	 * the user is blocked from further attempts for the timespan 
+	 * defined in {@link $lock_out_delay_mins}. 
 	 */
 	private static $lock_out_after_incorrect_logins = null;
+
+	/**
+	 * @config
+	 * @var integer Minutes of enforced lockout after incorrect password attempts.
+	 * Only applies if {@link $lock_out_after_incorrect_logins} greater than 0.
+	 */
+	private static $lock_out_delay_mins = 15;
 	
 	/**
 	 * @config
@@ -238,11 +247,15 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$result = new ValidationResult();
 
 		if($this->isLockedOut()) {
-			$result->error(_t (
-				'Member.ERRORLOCKEDOUT',
-				'Your account has been temporarily disabled because of too many failed attempts at ' .
-				'logging in. Please try again in 20 minutes.'
-			));
+			$result->error(
+				_t(
+					'Member.ERRORLOCKEDOUT2',
+					'Your account has been temporarily disabled because of too many failed attempts at ' .
+					'logging in. Please try again in {count} minutes.',
+					null,
+					array('count' => $this->config()->lock_out_delay_mins)
+				)
+			);
 		}
 
 		$this->extend('canLogIn', $result);
@@ -1407,7 +1420,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$this->write();
 	
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
-				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + 15*60);
+				$lockoutMins = self::config()->lock_out_delay_mins;
+				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + $lockoutMins*60);
 				$this->write();
 			}
 		}
