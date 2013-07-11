@@ -367,6 +367,7 @@ en:
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
+    ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
