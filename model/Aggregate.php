@@ -29,6 +29,8 @@
  * NOTE: The cache logic uses tags, and so a backend that supports tags is required. Currently only the File
  * backend (and the two-level backend with the File backend as the slow store) meets this requirement
  * 
+ * @deprecated 3.1 Use DataList to aggregate data
+ * 
  * @author hfried
  * @package framework
  * @subpackage core
@@ -60,10 +62,15 @@ class Aggregate extends ViewableData {
 	/**
 	 * Constructor
 	 * 
+	 * @deprecated 3.1 Use DataList to aggregate data
+	 * 
 	 * @param string $type The DataObject type we are building an aggregate for
 	 * @param string $filter (optional) An SQL filter to apply to the selected rows before calculating the aggregate
 	 */
 	public function __construct($type, $filter = '') {
+		Deprecation::notice('3.1', 'Call aggregate methods on a DataList directly instead. In templates'
+			. ' an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead'
+			. ' (check partial-caching.md documentation for more details.)');
 		$this->type = $type;
 		$this->filter = $filter;
 		parent::__construct();
