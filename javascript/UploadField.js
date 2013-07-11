@@ -492,7 +492,11 @@
 			onmatch: function() {
 				// TODO entwine event binding doesn't work for iframes
 				this.load(function() {
-					$(this).parent().removeClass('loading');	
+					$(this).parent().removeClass('loading');
+					// Force resize if a validation message is present
+					if ($(this).contents().find('#Form_EditForm_error').text().length > 0) {
+						$(this).parent().fitHeight();
+					}
 				});
 				this._super();
 			},
