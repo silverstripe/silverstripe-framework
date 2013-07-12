@@ -154,7 +154,7 @@ The fields displayed in the edit form are from `DataObject::getCMSFields()`
 The `GridFieldDetailForm` component drives the record editing form which is usually configured
 through the configs `GridFieldConfig_RecordEditor` and `GridFieldConfig_RelationEditor`
 described above. It takes its fields from `DataObject->getCMSFields()`,
-but can be customized to accept different fields via its `[api:GridFieldDetailForm->setFields()](api:setFields())` method.
+but can be customized to accept different fields via its `[api:GridFieldDetailForm->setFields()]` method.
 
 The component also has the ability to load and save data stored on join tables
 when two records are related via a "many_many" relationship, as defined through
