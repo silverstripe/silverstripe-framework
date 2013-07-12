@@ -251,14 +251,14 @@ class DataObjectTest extends SapphireTest {
 	 *   - Test the IDs on the DataObjects are set correctly
 	 */
 	public function testHasManyRelationships() {
-		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 
 		// Test getComponents() gets the ComponentSet of the other side of the relation
-		$this->assertTrue($team->Comments()->Count() == 2);
+		$this->assertTrue($team1->Comments()->Count() == 2);
 
 		// Test the IDs on the DataObjects are set correctly
-		foreach($team->Comments() as $comment) {
-			$this->assertEquals($team->ID, $comment->TeamID);
+		foreach($team1->Comments() as $comment) {
+			$this->assertEquals($team1->ID, $comment->TeamID);
 		}
 
 		// Test that we can add and remove items that already exist in the database
@@ -266,15 +266,23 @@ class DataObjectTest extends SapphireTest {
 		$newComment->Name = "Automated commenter";
 		$newComment->Comment = "This is a new comment";
 		$newComment->write();
-		$team->Comments()->add($newComment);
-		$this->assertEquals($team->ID, $newComment->TeamID);
+		$team1->Comments()->add($newComment);
+		$this->assertEquals($team1->ID, $newComment->TeamID);
 
 		$comment1 = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
 		$comment2 = $this->objFromFixture('DataObjectTest_TeamComment', 'comment2');
-		$team->Comments()->remove($comment2);
+		$team1->Comments()->remove($comment2);
 
-		$commentIDs = $team->Comments()->sort('ID')->column('ID');
-		$this->assertEquals(array($comment1->ID, $newComment->ID), $commentIDs);
+		$team1CommentIDs = $team1->Comments()->sort('ID')->column('ID');
+		$this->assertEquals(array($comment1->ID, $newComment->ID), $team1CommentIDs);
+		
+		// Test that removing an item from a list doesn't remove it from the same
+		// relation belonging to a different object
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
+		$team2->Comments()->remove($comment1);
+		$team1CommentIDs = $team1->Comments()->sort('ID')->column('ID');
+		$this->assertEquals(array($comment1->ID, $newComment->ID), $team1CommentIDs);
 	}
 
 	public function testHasOneRelationship() {
