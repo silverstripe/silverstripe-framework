@@ -525,6 +525,7 @@ class UploadField extends FileField {
 			}
 
 			// Get the uploaded file into a new file object.
+			// The loadIntoFile() method also validates constraints like allowed extensions
 			try {
 				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->folderName);
 			} catch (Exception $e) {
@@ -559,6 +560,7 @@ class UploadField extends FileField {
 		}
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
+		if($return['error']) $response->setStatusCode(403);
 		return $response;
 	}
 

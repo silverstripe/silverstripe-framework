@@ -123,6 +123,33 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertEquals($record->ManyManyFiles()->Last()->Name, $tmpFileName);
 	}
 
+	/**
+	 * Partially covered by {@link UploadTest->testUploadAcceptsAllowedExtension()},
+	 * but this test additionally verifies that those constraints are actually enforced
+	 * in this controller method.
+	 */
+	public function testAllowedExtensions() {
+		$this->loginWithPermission('ADMIN');
+
+		$invalidFile = 'invalid.php';
+		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($invalidFile));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload', 
+			array('AllowedExtensionsField' => $this->getUploadFile($invalidFile))
+		);
+		$this->assertTrue($response->isError());
+		$this->assertContains('Extension is not allowed', $response->getBody());
+
+		$validFile = 'valid.jpg';
+		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($validFile));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload', 
+			array('AllowedExtensionsField' => $this->getUploadFile($validFile))
+		);
+		$this->assertFalse($response->isError());
+		$this->assertNotContains('Extension is not allowed', $response->getBody());
+	}
+
 	public function testAllowedMaxFileNumberWithHasOne() {
 		$this->loginWithPermission('ADMIN');
 		
@@ -831,6 +858,9 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		$fieldCanAttachExisting->setConfig('canAttachExisting', false);
 		$fieldCanAttachExisting->setRecord($record);
 
+		$fieldAllowedExtensions = new UploadField('AllowedExtensionsField');
+		$fieldAllowedExtensions->getValidator()->setAllowedExtensions(array('jpg'));
+
 		$form = new Form(
 			$this,
 			'Form',
@@ -847,7 +877,8 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				$fieldDisabled,
 				$fieldSubfolder,
 				$fieldCanUploadFalse,
-				$fieldCanAttachExisting
+				$fieldCanAttachExisting,
+				$fieldAllowedExtensions
 			),
 			new FieldList(
 				new FormAction('submit')
