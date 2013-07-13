@@ -3,7 +3,7 @@
 	<div class="details" id="SpecDetailsFor{$ModelName}">
 	<h4><% sprintf(_t('ModelAdmin_ImportSpec.ss.IMPORTSPECTITLE', 'Specification for %s'),$ModelName) %></h4>
 		<h5><% _t('ModelAdmin_ImportSpec.ss.IMPORTSPECFIELDS', 'Database columns') %></h5>
-		<% loop Fields %>
+		<% loop $Fields %>
 		<dl>
 			<dt><em>$Name</em></dt>
 			<dd>$Description</dd>
@@ -11,7 +11,7 @@
 		<% end_loop %>
 
 		<h5><% _t('ModelAdmin_ImportSpec.ss.IMPORTSPECRELATIONS', 'Relations') %></h5>
-		<% loop Relations %>
+		<% loop $Relations %>
 		<dl>
 			<dt><em>$Name</em></dt>
 			<dd>$Description</dd>
