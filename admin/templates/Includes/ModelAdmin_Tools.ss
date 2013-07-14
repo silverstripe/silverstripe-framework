@@ -3,7 +3,7 @@
 		<h3 class="cms-panel-header"><% _t('ModelAdmin_Tools.ss.FILTER', 'Filter') %></h3>
 		$SearchForm
 
-		<% if ImportForm %>
+		<% if $ImportForm %>
 			<h3 class="cms-panel-header"><% _t('ModelAdmin_Tools.ss.IMPORT', 'Import') %></h3>
 			$ImportForm
 		<% end_if %>

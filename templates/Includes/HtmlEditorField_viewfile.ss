@@ -38,10 +38,10 @@
 				</div>
 			</div>
 		</div>
-		<% if Info %><div class="info">$Info</div><% end_if %>
+		<% if $Info %><div class="info">$Info</div><% end_if %>
 		<div class="details ss-uploadfield-item-editform loading">
 			<fieldset>
-				<% loop Fields %>
+				<% loop $Fields %>
 					$FieldHolder
 				<% end_loop %>
 			</fieldset>

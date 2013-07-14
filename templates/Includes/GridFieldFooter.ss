@@ -7,7 +7,7 @@
 			$NumRecords
 		</span>
 
-		<% if Message %>
+		<% if $Message %>
 		<div class="datagrid-footer-message">$Message</div>
 		<% end_if %>
 	</td>
