@@ -449,6 +449,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$title = $this->Title();
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', urlencode($title));
+
+		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+		$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
 		
 		return $response;
 	}
