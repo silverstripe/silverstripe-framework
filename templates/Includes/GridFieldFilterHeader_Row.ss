@@ -1,5 +1,5 @@
 <tr class="filter-header" style="display:none;">
-	<% loop Fields %>
+	<% loop $Fields %>
 	<th class="extra">$Field</th>
 	<% end_loop %>
 </tr>

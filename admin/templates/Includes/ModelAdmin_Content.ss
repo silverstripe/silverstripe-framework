@@ -4,7 +4,7 @@
 		<div class="cms-content-header-info">
 			<h2>
 				<% include CMSSectionIcon %>
-				<% if SectionTitle %>
+				<% if $SectionTitle %>
 					$SectionTitle
 				<% else %>
 					<% _t('ModelAdmin.Title', 'Data Models') %>
@@ -14,7 +14,7 @@
 
 		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
 			<ul>
-			<% loop ManagedModelTabs %>
+			<% loop $ManagedModelTabs %>
 				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
 					<a href="$Link" class="cms-panel-link" title="Form_EditForm">$Title</a>
 				</li>

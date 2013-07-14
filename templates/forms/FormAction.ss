@@ -1,6 +1,6 @@
-<% if UseButtonTag %>
+<% if $UseButtonTag %>
 	<button $AttributesHTML>
-		<% if ButtonContent %>$ButtonContent<% else %>$Title<% end_if %>
+		<% if $ButtonContent %>$ButtonContent<% else %>$Title<% end_if %>
 	</button>
 <% else %>
 	<input $AttributesHTML />

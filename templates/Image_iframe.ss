@@ -8,17 +8,17 @@
 
 	<body>
 		<div class="mainblock" style="width: 290px;">
-			<% if UseSimpleForm %>
+			<% if $UseSimpleForm %>
 			$EditImageSimpleForm
 			<% else %>
 			$EditImageForm
 			<% end_if %>
 		</div>
 		
-		<% if Image.ID %>
+		<% if $Image.ID %>
 		<div class="mainblock" >
 			$Image.CMSThumbnail
-			<% if DeleteImageForm %>
+			<% if $DeleteImageForm %>
 				$DeleteImageForm
 			<% end_if %>
 		</div>
