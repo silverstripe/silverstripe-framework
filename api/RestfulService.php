@@ -2,7 +2,7 @@
 /**
  * RestfulService class allows you to consume various RESTful APIs.
  * Through this you could connect and aggregate data of various web services.
- * For more info visit wiki documentation - http://doc.silverstripe.org/doku.php?id=restfulservice
+ * For more info visit wiki documentation - http://doc.silverstripe.org/en/developer_guides/integration/restfulservice/
  *
  * @package framework
  * @subpackage integration
@@ -108,6 +108,11 @@ class RestfulService extends ViewableData implements Flushable {
 		parent::__construct();
 		$this->customHeaders = (array)$this->customHeaders + (array)$this->config()->default_headers;
 		$this->customHeaders = $this->config()->default_headers;
+		//set the user agent if it's not already there
+		if (!isset($this->customHeaders['User-Agent'])) {
+			$sapphireInfo = new SapphireInfo();
+			$this->customHeaders['User-Agent'] = 'SilverStripe/' . $sapphireInfo->Version();
+		}
 	}
 
 	/**
@@ -291,20 +296,14 @@ class RestfulService extends ViewableData implements Flushable {
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
 		$timeout   = 5;
-		$sapphireInfo = new SapphireInfo();
-		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-
-
-		// Write headers to a temporary file
-		$headerfd = tmpfile();
-		curl_setopt($ch, CURLOPT_WRITEHEADER, $headerfd);
+		//include headers in the response
+		curl_setopt($ch, CURLOPT_HEADER, true);
 
 		//set headers if we have them
 		if ($headers) {
@@ -341,13 +340,8 @@ class RestfulService extends ViewableData implements Flushable {
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
-		$body = curl_exec($ch);
-
-		rewind($headerfd);
-		$headers = stream_get_contents($headerfd);
-		fclose($headerfd);
-
-		$response = $this->extractResponse($ch, $headers, $body);
+		$rawResponse = curl_exec($ch);
+		$response = $this->extractResponse($ch, $rawResponse);
 		curl_close($ch);
 
 		return $response;
@@ -401,19 +395,22 @@ class RestfulService extends ViewableData implements Flushable {
 	 *
 	 * @return RestfulService_Response The response object
 	 */
-	protected function extractResponse($ch, $rawHeaders, $rawBody) {
+	protected function extractResponse($ch, $rawResponse) {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		//get a curl error if there is one
 		$curlError = curl_error($ch);
 		//normalise the status code
 		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
+		//calculate the length of the header and extract it
+		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$rawHeaders = substr($rawResponse, 0, $headerLength);
+		//extract the body
+		$body = substr($rawResponse, $headerLength);
 		//parse the headers
-		$parts = array_filter(explode("\r\n\r\n", $rawHeaders));
-		$lastHeaders = array_pop($parts);
-		$headers = $this->parseRawHeaders($lastHeaders);
+		$headers = $this->parseRawHeaders($rawHeaders);
 		//return the response object
-		return new RestfulService_Response($rawBody, $statusCode, $headers);
+		return new RestfulService_Response($body, $statusCode, $headers);
 	}
 
 	/**
@@ -612,14 +609,10 @@ class RestfulService extends ViewableData implements Flushable {
 
 		$childElements = $xml->xpath($node);
 
-		if($childElements)
-		foreach($childElements as $child){
-		$data = array();
-			foreach($child->attributes() as $key => $value){
-				$data["$key"] = Convert::raw2xml($value);
+		if ($childElements) {
+			foreach ($childElements as $child) {
+				$output->push(new ArrayData(Convert::raw2xml($child->attributes())));
 			}
-
-			$output->push(new ArrayData($data));
 		}
 
 		return $output;
