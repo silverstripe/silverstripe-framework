@@ -302,11 +302,15 @@ class RestfulService extends ViewableData {
 	 * @return RestfulService_Response
 	 */
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
-		$ch        = curl_init();
+		$ch = curl_init();
 
+		//set the URL of the request
 		curl_setopt($ch, CURLOPT_URL, $url);
+		//return the response rather than echo it
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		//follow redirects - this can't be done if open_basedir is in effect
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+		//set the request method
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 		//include headers in the response
 		curl_setopt($ch, CURLOPT_HEADER, true);
@@ -321,24 +325,18 @@ class RestfulService extends ViewableData {
 		}
 
 		// Add authentication
-		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
+		if ($this->authUsername) {
+			curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
+		}
 
-		// Add fields to POST and PUT requests
-		if($method == 'POST') {
+		// if $data is supplied, we assume it's a body for the request NO MATTER WHAT
+		if (!empty($data)) {
 			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		} elseif($method == 'PUT') {
-			$put = fopen("php://temp", 'r+');				
-			fwrite($put, $data);
-			fseek($put, 0); 
-
-			curl_setopt($ch, CURLOPT_PUT, 1);
-			curl_setopt($ch, CURLOPT_INFILE, $put);
-			curl_setopt($ch, CURLOPT_INFILESIZE, strlen($data)); 
 		}
 
 		// Apply proxy settings
-		if(is_array($this->proxy)) {
+		if (is_array($this->proxy)) {
 			curl_setopt_array($ch, $this->proxy);
 		}
 
