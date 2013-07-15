@@ -44,7 +44,9 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @config
 	 * @var array
 	 */
-	private static $default_curl_options = array();
+	private static $default_curl_options = array(
+		CURLOPT_CONNECTTIMEOUT => 5
+	);
 
 	/**
 	 * @config
@@ -316,11 +318,9 @@ class RestfulService extends ViewableData implements Flushable {
 	 */
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
-		$timeout   = 5;
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 		//include headers in the response
