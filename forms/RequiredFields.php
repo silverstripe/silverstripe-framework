@@ -121,9 +121,11 @@ class RequiredFields extends Validator {
 	public function removeRequiredField($field) {
 		foreach ($this->required as $i => $required) {
 			if ($field == $required) {
-				array_splice($this->required, $i);
+				unset($this->required[$i]);
+				break;
 			}
 		}
+		return $this;
 	}
 
 	/**
