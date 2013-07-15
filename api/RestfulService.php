@@ -28,6 +28,16 @@ class RestfulService extends ViewableData implements Flushable {
 	 * @config
 	 * @var array
 	 */
+	private static $cachable_methods = array(
+		'GET',
+		'HEAD',
+		'OPTIONS'
+	);
+
+	/**
+	 * @config
+	 * @var array
+	 */
 	private static $default_proxy;
 
 	/**
@@ -234,22 +244,31 @@ class RestfulService extends ViewableData implements Flushable {
 		$method = strtoupper($method);
 		$headers = array_merge((array)$this->customHeaders, (array)$headers);
 		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
+		$cacheExpire = $this->cache_expire;
+		$canCache = in_array($method, $this->config()->cachable_methods);
 
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 
-		$cache_path = $this->getCachePath(array(
-			$url,
-			$method,
-			$data,
-			$headers,
-			$curlOptions,
-			$this->getBasicAuthString()
-		));
+		//if we can cache, calculate the cache path
+		if ($canCache) {
+			$cache_path = $this->getCachePath(array(
+				$url,
+				$method,
+				$data,
+				$headers,
+				$curlOptions,
+				$this->getBasicAuthString()
+			));
+		}
+		// otherwise set the cache expiry to 0
+		else {
+			$cacheExpire = 0;
+		}
 
 		// Check for unexpired cached feed (unless flush is set)
 		//assume any cache_expire that is 0 or less means that we dont want to
 		// cache
-		if($this->cache_expire > 0 && !self::$flush
+		if ($canCache && $this->cache_expire > 0 && !self::$flush
 				&& @file_exists($cache_path)
 				&& @filemtime($cache_path) + $this->cache_expire > time()) {
 
@@ -259,7 +278,7 @@ class RestfulService extends ViewableData implements Flushable {
 		} else {
 			$response = $this->curlRequest($url, $method, $data, $headers, $curlOptions);
 
-			if(!$response->isError()) {
+			if($canCache && !$response->isError()) {
 				// Serialise response object and write to cache
 				$store = serialize($response);
 				file_put_contents($cache_path, $store);
@@ -267,7 +286,7 @@ class RestfulService extends ViewableData implements Flushable {
 			else {
 				// In case of curl or/and http indicate error, populate response's cachedBody property
 				// with cached response body with the cache file exists
-				if (@file_exists($cache_path)) {
+				if ($canCache && @file_exists($cache_path)) {
 					$store = file_get_contents($cache_path);
 					$cachedResponse = unserialize($store);
 
