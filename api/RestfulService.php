@@ -25,6 +25,12 @@ class RestfulService extends ViewableData {
 	 * @config
 	 * @var array
 	 */
+	private static $default_headers = array();
+
+	/**
+	 * @config
+	 * @var array
+	 */
 	private static $default_proxy;
 
 	/**
@@ -90,7 +96,8 @@ class RestfulService extends ViewableData {
 		$this->baseURL = $base;
 		$this->cache_expire = $expiry;
 		parent::__construct();
-		$this->proxy = $this->config()->default_proxy;
+		$this->customHeaders = (array)$this->customHeaders + (array)$this->config()->default_headers;
+		$this->customHeaders = $this->config()->default_headers;
 	}
 	
 	/**
