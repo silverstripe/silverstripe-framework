@@ -139,9 +139,62 @@ class RestfulService extends ViewableData implements Flushable {
 
 	/**
 	 * Set a custom HTTP header
+	 * @deprecated
 	 */
 	public function httpHeader($header) {
-		$this->customHeaders[] = $header;
+		Deprecation::notice('3.2', 'Use "addHeader" instead');
+		//check there is a colon in the header definition
+		if (strpos($header, ':') !== false) {
+			//explode at colon and assign into the header and value
+			list($key, $value) = explode(':', $header, 2);
+			//set the header using the addHeader function
+			$this->addHeader($key, $value);
+		}
+		else {
+			//Their header didn't have a colon, so this is unexpected
+			throw new LogicException('Header doesn\'t contain a colon');
+		}
+		return $this;
+	}
+
+	/**
+	 * Add a HTTP header to the request, replacing any header of the same name.
+	 *
+	 * @param string $header Example: "Content-Type"
+	 * @param string $value Example: "text/xml"
+	 */
+	public function addHeader($header, $value) {
+		$this->customHeaders[$header] = $value;
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getHeaders() {
+		return $this->customHeaders;
+	}
+
+	/**
+	 * Get an existing HTTP header
+	 *
+	 * @param string $header
+	 * @return mixed
+	 */
+	public function getHeader($header) {
+		return (isset($this->customHeaders[$header])) ? $this->customHeaders[$header] : null;
+	}
+
+	/**
+	 * Remove an existing HTTP header by its name,
+	 * e.g. "Content-Type".
+	 *
+	 * @param string $header
+	 * @return SS_HTTPRequest $this
+	 */
+	public function removeHeader($header) {
+		if(isset($this->customHeaders[$header])) unset($this->customHeaders[$header]);
+		return $this;
 	}
 
 	protected function constructURL(){
@@ -245,9 +298,13 @@ class RestfulService extends ViewableData implements Flushable {
 		$headerfd = tmpfile();
 		curl_setopt($ch, CURLOPT_WRITEHEADER, $headerfd);
 
-		// Add headers
-		if($this->customHeaders) {
-			$headers = array_merge((array)$this->customHeaders, (array)$headers);
+		//set headers if we have them
+		if ($headers) {
+			$headersToSend = array();
+			foreach ($headers as $header => $value) {
+				$headersToSend[] = $header . ': ' . $value;
+			}
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headersToSend);
 		}
 
 		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
