@@ -117,8 +117,8 @@ class RestfulService extends ViewableData {
  	* Sets the Query string parameters to send a request.
  	* @param array $params An array passed with necessary parameters. 
  	*/
-	public function setQueryString($params=NULL){
-		$this->queryString = http_build_query($params,'','&');
+	public function setQueryString($params = null){
+		$this->queryString = http_build_query($params, '', '&');
 	}
 
 	/**
@@ -162,7 +162,7 @@ class RestfulService extends ViewableData {
 		}
 		else {
 			//Their header didn't have a colon, so this is unexpected
-			throw new LogicException('Header doesn\'t contain a colon');
+			throw new LogicException("Header doesn't contain a colon");
 		}
 		return $this;
 	}
@@ -203,12 +203,14 @@ class RestfulService extends ViewableData {
 	 * @return SS_HTTPRequest $this
 	 */
 	public function removeHeader($header) {
-		if(isset($this->customHeaders[$header])) unset($this->customHeaders[$header]);
+		if (isset($this->customHeaders[$header])) {
+			unset($this->customHeaders[$header]);
+		}
 		return $this;
 	}
 	
 	protected function constructURL(){
-		return "$this->baseURL" . ($this->queryString ? "?$this->queryString" : "");
+		return $this->baseURL . ($this->queryString ? '?' . $this->queryString : '');
 	}
 		
 	/**
@@ -341,6 +343,7 @@ class RestfulService extends ViewableData {
 		}
 
 		// Set any custom options passed to the request() function
+		//this will override anything we've set above if it's duplicated
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
@@ -431,14 +434,14 @@ class RestfulService extends ViewableData {
 	protected function parseRawHeaders($rawHeaders) {
 		$headers = array();
 		$fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $rawHeaders));
-		foreach( $fields as $field ) {
-			if( preg_match('/([^:]+): (.+)/m', $field, $match) ) {
+		foreach ($fields as $field) {
+			if (preg_match('/([^:]+): (.+)/m', $field, $match)) {
 				$match[1] = preg_replace_callback(
 					'/(?<=^|[\x09\x20\x2D])./',
 					create_function('$matches', 'return strtoupper($matches[0]);'),
 					trim($match[1])
 				);
-				if( isset($headers[$match[1]]) ) {
+				if (isset($headers[$match[1]])) {
 					if (!is_array($headers[$match[1]])) {
 						$headers[$match[1]] = array($headers[$match[1]]);
 					}
@@ -465,7 +468,6 @@ class RestfulService extends ViewableData {
 				$url .= '?' . $this->queryString;
 			}
 		}
-		
 		return str_replace(' ', '%20', $url); // Encode spaces
 	}
 	
@@ -477,21 +479,22 @@ class RestfulService extends ViewableData {
  	* @param string $collection The name of parent node which wraps the elements, if available
  	* @param string $element The element we need to extract the attributes.
  	*/
-	
-	public function getAttributes($xml, $collection=NULL, $element=NULL){
+	public function getAttributes($xml, $collection = null, $element = null){
 		$xml = new SimpleXMLElement($xml);
 		$output = new ArrayList();
 		
-		if($collection)
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-		
-		if($childElements){
-			foreach($childElements as $child){
+		}
+
+		if ($childElements) {
+			foreach ($childElements as $child) {
 				$data = array();
-				foreach($child->attributes() as $key => $value){
-					$data["$key"] = Convert::raw2xml($value);
+				foreach ($child->attributes() as $key => $value) {
+					$data[$key] = Convert::raw2xml($value);
 				}
 				$output->push(new ArrayData($data));
 			}
@@ -507,18 +510,20 @@ class RestfulService extends ViewableData {
  	* @param string $element The element we need to extract the attribute
  	* @param string $attr The name of the attribute
  	*/
-	
-	public function getAttribute($xml, $collection=NULL, $element=NULL, $attr){
+	public function getAttribute($xml, $collection = null, $element = null, $attr){
 		$xml = new SimpleXMLElement($xml);
 		$attr_value = "";
 	
-		if($collection)
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-	
-		if($childElements)
+		}
+
+		if ($childElements) {
 			$attr_value = (string) $childElements[$attr];
+		}
 	
 		return Convert::raw2xml($attr_value);
 		
@@ -532,39 +537,39 @@ class RestfulService extends ViewableData {
  	* @param string $collection The name of parent node which wraps the elements, if available
  	* @param string $element The element we need to extract the node values.
  	*/
-	
-	public function getValues($xml, $collection=NULL, $element=NULL){
+	public function getValues($xml, $collection = null, $element = null){
 		$xml = new SimpleXMLElement($xml);
 		$output = new ArrayList();
-		
-			$childElements = $xml;
-		if($collection)
+		$childElements = $xml;
+
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-		
-		if($childElements){
-			foreach($childElements as $child){
+		}
+
+		if ($childElements) {
+			foreach ($childElements as $child) {
 				$data = array();
-				$this->getRecurseValues($child,$data);			
+				$this->getRecurseValues($child, $data);
 				$output->push(new ArrayData($data));
 			}
 		}
 		return $output;
 	}
 	
-	protected function getRecurseValues($xml,&$data,$parent=""){
+	protected function getRecurseValues($xml, &$data, $parent = ""){
 		$conv_value = "";
 		$child_count = 0;
-		foreach($xml as $key=>$value)
-		{
+		foreach($xml as $key => $value) {
 			$child_count++;    
 			$k = ($parent == "") ? (string)$key : $parent . "_" . (string)$key;
-			if($this->getRecurseValues($value,$data,$k) == 0){  // no childern, aka "leaf node"
+			if ($this->getRecurseValues($value, $data, $k) == 0) {  // no childern, aka "leaf node"
 				$conv_value = Convert::raw2xml($value);
 			}  
 			//Review the fix for similar node names overriding it's predecessor
-			if(array_key_exists($k, $data) == true) {	
+			if (array_key_exists($k, $data) == true) {
 				$data[$k] = $data[$k] . ",". $conv_value;		
 			}
 			else {
@@ -583,17 +588,19 @@ class RestfulService extends ViewableData {
  	* @param string $collection The name of parent node which wraps the elements, if available
  	* @param string $element The element we need to extract the node value.
  	*/
-	
-	public function getValue($xml, $collection=NULL, $element=NULL){
+	public function getValue($xml, $collection = null, $element = null){
 		$xml = new SimpleXMLElement($xml);
 		
-		if($collection)
+		if ($collection) {
 			$childElements = $xml->{$collection};
-		if($element)
+		}
+		if ($element) {
 			$childElements = $xml->{$collection}->{$element};
-		
-		if($childElements)
+		}
+
+		if ($childElements) {
 			return Convert::raw2xml($childElements);
+		}
 	}
 	
 	/**
@@ -601,12 +608,13 @@ class RestfulService extends ViewableData {
  	* @param string $xml source xml to parse, this could be the original response received.
  	* @param string $node Node to search for
  	*/
-	public function searchValue($xml, $node=NULL){
+	public function searchValue($xml, $node = null){
 		$xml = new SimpleXMLElement($xml);
 		$childElements = $xml->xpath($node);
 		
-		if($childElements)
+		if ($childElements) {
 			return Convert::raw2xml($childElements[0]);
+		}
 	}
 	
 	/**
@@ -614,20 +622,20 @@ class RestfulService extends ViewableData {
  	* @param string $xml the source xml to parse, this could be the original response received.
  	* @param string $node Node to search for
  	*/
-	public function searchAttributes($xml, $node=NULL){
+	public function searchAttributes($xml, $node = null){
 		$xml = new SimpleXMLElement($xml);
 		$output = new ArrayList();
 	
 		$childElements = $xml->xpath($node);
 		
-		if($childElements)
-		foreach($childElements as $child){
-		$data = array();
-			foreach($child->attributes() as $key => $value){
-				$data["$key"] = Convert::raw2xml($value);
+		if ($childElements) {
+			foreach ($childElements as $child) {
+				$data = array();
+				foreach ($child->attributes() as $key => $value) {
+					$data["$key"] = Convert::raw2xml($value);
+				}
+				$output->push(new ArrayData($data));
 			}
-			
-			$output->push(new ArrayData($data));
 		}
 		
 		return $output;
