@@ -224,9 +224,11 @@ class RestfulService extends ViewableData implements Flushable {
 	 *                                   be 500
 	 */
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
-
+		//normalise varliables here
 		$url = $this->getAbsoluteRequestURL($subURL);
 		$method = strtoupper($method);
+		$headers = array_merge((array)$this->customHeaders, (array)$headers);
+		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
 
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 
@@ -234,8 +236,8 @@ class RestfulService extends ViewableData implements Flushable {
 			$url,
 			$method,
 			$data,
-			array_merge((array)$this->customHeaders, (array)$headers),
-			$curlOptions + (array)$this->config()->default_curl_options,
+			$headers,
+			$curlOptions,
 			$this->getBasicAuthString()
 		));
 
@@ -291,7 +293,6 @@ class RestfulService extends ViewableData implements Flushable {
 		$timeout   = 5;
 		$sapphireInfo = new SapphireInfo();
 		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
-		$curlOptions = $curlOptions + (array)$this->config()->default_curl_options;
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -313,8 +314,6 @@ class RestfulService extends ViewableData implements Flushable {
 			}
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headersToSend);
 		}
-
-		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 		// Add authentication
 		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, $this->getBasicAuthString());
