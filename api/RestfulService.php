@@ -232,7 +232,9 @@ class RestfulService extends ViewableData {
 		$cacheExpire = $this->cache_expire;
 		$canCache = in_array($method, $this->config()->cachable_methods);
 		
-		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
+		if (!in_array($method, array('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'))) {
+			throw new InvalidArgumentException('Invalid method "' . var_export($method, true) . '" passed to request');
+		}
 		
 		//if we can cache, calculate the cache path
 		if ($canCache) {
