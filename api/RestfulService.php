@@ -656,8 +656,7 @@ class RestfulService_Response extends SS_HTTPResponse {
 	protected $cachedResponse = false;
 	
 	public function __construct($body, $statusCode = 200, $headers = null) {
-		$this->setbody($body);
-		$this->setStatusCode($statusCode);
+		parent::__construct($body, $statusCode);
 		$this->headers = $headers;
 	}
 	
