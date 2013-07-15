@@ -1,21 +1,17 @@
 <?php
 /**
  * RestfulService class allows you to consume various RESTful APIs.
- *
  * Through this you could connect and aggregate data of various web services.
- *
- * @see http://doc.silverstripe.org/framework/en/reference/restfulservice
+ * For more info visit wiki documentation - http://doc.silverstripe.org/doku.php?id=restfulservice  
  * 
  * @package framework
  * @subpackage integration
  */
 class RestfulService extends ViewableData {
-
 	protected $baseURL;
 	protected $queryString;
 	protected $errorTag;
 	protected $checkErrors;
-	protected $connectTimeout = 5;
 	protected $cache_expire;
 	protected $authUsername, $authPassword;
 	protected $customHeaders = array();
@@ -98,6 +94,11 @@ class RestfulService extends ViewableData {
 		parent::__construct();
 		$this->customHeaders = (array)$this->customHeaders + (array)$this->config()->default_headers;
 		$this->customHeaders = $this->config()->default_headers;
+		//set the user agent if it's not already there
+		if (!isset($this->customHeaders['User-Agent'])) {
+			$sapphireInfo = new SapphireInfo();
+			$this->customHeaders['User-Agent'] = 'SilverStripe/' . $sapphireInfo->Version();
+		}
 	}
 	
 	/**
@@ -279,20 +280,15 @@ class RestfulService extends ViewableData {
 	 */
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
-		$sapphireInfo = new SapphireInfo(); 
-		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
+		$timeout   = 5;
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->getConnectTimeout());
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-
-
-		// Write headers to a temporary file
-		$headerfd = tmpfile();
-		curl_setopt($ch, CURLOPT_WRITEHEADER, $headerfd);
+		//include headers in the response
+		curl_setopt($ch, CURLOPT_HEADER, true);
 
 		//set headers if we have them
 		if ($headers) {
@@ -329,13 +325,8 @@ class RestfulService extends ViewableData {
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
-		$body = curl_exec($ch);
-
-		rewind($headerfd);
-		$headers = stream_get_contents($headerfd);
-		fclose($headerfd);
-
-		$response = $this->extractResponse($ch, $headers, $body);
+		$rawResponse = curl_exec($ch);
+		$response = $this->extractResponse($ch, $rawResponse);
 		curl_close($ch);
 
 		return $response;
@@ -389,19 +380,22 @@ class RestfulService extends ViewableData {
 	 *
 	 * @return RestfulService_Response The response object
 	 */
-	protected function extractResponse($ch, $rawHeaders, $rawBody) {
+	protected function extractResponse($ch, $rawResponse) {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		//get a curl error if there is one
 		$curlError = curl_error($ch);
 		//normalise the status code
 		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
+		//calculate the length of the header and extract it
+		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$rawHeaders = substr($rawResponse, 0, $headerLength);
+		//extract the body
+		$body = substr($rawResponse, $headerLength);
 		//parse the headers
-		$parts = array_filter(explode("\r\n\r\n", $rawHeaders));
-		$lastHeaders = array_pop($parts);
-		$headers = $this->parseRawHeaders($lastHeaders);
+		$headers = $this->parseRawHeaders($rawHeaders);
 		//return the response object
-		return new RestfulService_Response($rawBody, $statusCode, $headers);
+		return new RestfulService_Response($body, $statusCode, $headers);
 	}
 
 	/**
@@ -619,31 +613,6 @@ class RestfulService extends ViewableData {
 		
 		return $output;
 	}
-
-	/**
-	 * Set the connection timeout for the curl request in seconds.
-	 *
-	 * @see http://curl.haxx.se/libcurl/c/curl_easy_setopt.html#CURLOPTCONNECTTIMEOUT
-	 *
-	 * @param int
-	 *
-	 * @return RestfulService
-	 */
-	public function setConnectTimeout($timeout) {
-		$this->connectTimeout = $timeout;
-
-		return $this;
-	}
-
-	/**
-	 * Return the connection timeout value.
-	 *
-	 * @return int
-	 */
-	public function getConnectTimeout() {
-		return $this->connectTimeout;
-	}
-
 }
 
 /**
