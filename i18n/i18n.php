@@ -1957,7 +1957,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function include_by_locale($locale, $clean = false) {
 		if($clean) {
 			$cache = Zend_Translate::getCache();
-			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('Zend_Translate'));
 		}
 		
 		// Sort modules by inclusion priority, then alphabetically
