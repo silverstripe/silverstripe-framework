@@ -271,31 +271,53 @@ Injector::inst($default_options);
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST
 
-// Regenerate the manifest if ?flush is set, or if the database is being built.
-// The coupling is a hack, but it removes an annoying bug where new classes
-// referenced in _config.php files can be referenced during the build process.
-$flush = (isset($_GET['flush']) || isset($_REQUEST['url']) && (
-	$_REQUEST['url'] == 'dev/build' || $_REQUEST['url'] == BASE_URL . '/dev/build'
-));
-$manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
+/**
+ * @param  boolean $isFlush    Flush existing caches
+ */
+function loadManifests($isFlush = false) {
+	// Register SilverStripe's class map autoload
+	$manifest = new SS_ClassManifest(BASE_PATH, false, $isFlush);
+	$loader = SS_ClassLoader::instance();
+	$loader->registerAutoloader();
+	$loader->pushManifest($manifest);
 
-// Register SilverStripe's class map autoload
-$loader = SS_ClassLoader::instance();
-$loader->registerAutoloader();
-$loader->pushManifest($manifest);
+	// Fall back to Composer's autoloader (e.g. for PHPUnit), if composer is used
+	if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
+		require_once BASE_PATH . '/vendor/autoload.php';
+	}
 
-// Fall back to Composer's autoloader (e.g. for PHPUnit), if composer is used
-if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
-	require_once BASE_PATH . '/vendor/autoload.php';
+	// Now that the class manifest is up, load the configuration
+	$configManifest = new SS_ConfigManifest(BASE_PATH, false, $isFlush);
+	Config::inst()->pushConfigManifest($configManifest);
+
+	SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+		BASE_PATH, false, $isFlush
+	));
 }
 
-// Now that the class manifest is up, load the configuration
-$configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
-Config::inst()->pushConfigManifest($configManifest);
+// In case classes are missing, force a flush regardless of authentication or environment type.
+// We can't do this through spl_autoload_register() because some optional classes 
+// like Translatable are checked through class_exists(), and are allowed to be missing.
+register_shutdown_function(function() {
+	$error = error_get_last();
+	if(
+		$error && $error['type'] == E_ERROR
+		&& preg_match('/(Class|Interface) .* not found/', $error['message'])
+	) {
+		$loader = SS_ClassLoader::instance();
+		$loader->getManifest()->regenerate();
+		// Can't redirect since headers have already been sent
+		trigger_error(
+			"The class and config manifest have been cleared, please refresh to try again.\n",
+			E_USER_NOTICE
+		);
+		die();
+	}
+});
 
-SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-	BASE_PATH, false, isset($_GET['flush'])
-));
+// Load manifests from caches, or generate them if not present.
+// Will get called again after bootstrap if ?flush=1 is requested (and available).
+loadManifests(false);
 
 // If in live mode, ensure deprecation, strict and notices are not reported
 if(Director::isLive()) {

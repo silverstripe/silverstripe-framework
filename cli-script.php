@@ -72,6 +72,17 @@ $_SESSION = null;
 require_once("model/DB.php");
 DB::connect($databaseConfig);
 
+// Now that we've loaded the configuration, determine if caches should be flushed.
+// The manifest is auto-flushed on missing classes by the shutdown function defined in Core.php,
+// so if we've gotten here we can assume all defined classes are available.
+if(isset($_GET['flush'])) {
+	if(Director::can_flush()) {
+		loadManifests(true);
+	} else {
+		die("Flush not allowed. Either login as admin, or set the environment type to 'dev'");
+	}
+}
+
 // Get the request URL from the querystring arguments
 $url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
 if(!$url) {

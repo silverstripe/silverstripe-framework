@@ -118,6 +118,17 @@ if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
 DB::connect($databaseConfig);
 if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
 
+// Now that we've loaded the configuration, determine if caches should be flushed.
+// The manifest is auto-flushed on missing classes by the shutdown function defined in Core.php,
+// so if we've gotten here we can assume all defined classes are available.
+if(isset($_GET['flush'])) {
+	if(Director::can_flush()) {
+		loadManifests(true);
+	} else {
+		die("Flush not allowed. Either login as admin, or set the environment type to 'dev'");
+	}
+}
+
 if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
 
 
