@@ -212,7 +212,9 @@ define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 if(!defined('ASSETS_DIR')) {
 	define('ASSETS_DIR', 'assets');
 }
-define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
+if(!defined('ASSETS_PATH')) {
+	define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
