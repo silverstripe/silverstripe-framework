@@ -49,6 +49,7 @@
 			return result;
 		},
 		_onSend: function (e, data) {
+			$(this).closest('form').addClass('changed');
 			//check the array of existing files to see if we are trying to upload a file that already exists
 			var that = this;
 			var config = this.options;
@@ -77,6 +78,7 @@
 							});
 						} else {    //regular file upload
 							return $.blueimpUI.fileupload.prototype._onSend.call(that, e, data);
+							$(this).closest('form').addClass('changed');
 						}
 					}
 				);
@@ -137,6 +139,7 @@
 			// Force reflow:
 			this._reflow = this._transition && data.context[0].offsetWidth;
 			data.context.addClass('in');
+			$(this).closest('form').addClass('changed');
 		}
 	});
 
@@ -353,7 +356,7 @@
 					// Removed files will be applied to object on save
 					fileupload._trigger('destroy', e, {context: item});	
 				}
-				
+				$(this).closest('form').addClass('changed');
 				e.preventDefault(); // Avoid a form submit
 				return false;
 			}
