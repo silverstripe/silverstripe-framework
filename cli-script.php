@@ -58,29 +58,14 @@ if(isset($_SERVER['argv'][1])) {
 	$_GET['url'] = $_SERVER['argv'][1];
 }
 
-/**
- * Include SilverStripe's core code
- */
-require_once("core/Core.php");
-
-global $databaseConfig;
-
 // We don't have a session in cli-script, but this prevents errors
 $_SESSION = null;
 
-// Connect to database
-require_once("model/DB.php");
-DB::connect($databaseConfig);
-
-// Now that we've loaded the configuration, determine if caches should be flushed.
-// The manifest is auto-flushed on missing classes by the shutdown function defined in Core.php,
-// so if we've gotten here we can assume all defined classes are available.
-if(isset($_GET['flush'])) {
-	if(Director::can_flush()) {
-		loadManifests(true);
-	} else {
-		die("Flush not allowed. Either login as admin, or set the environment type to 'dev'");
-	}
+// Include SilverStripe's core code
+try {
+	require_once("core/Core.php");	
+} catch(EnvironmentUnconfiguredException $e) {
+	// Ignore warnings on CLI
 }
 
 // Get the request URL from the querystring arguments

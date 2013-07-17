@@ -56,10 +56,23 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
  */
 
 
-/**
- * Include SilverStripe's core code
- */
-require_once('core/Core.php');
+// Include SilverStripe's core code
+try {
+	require_once('core/Core.php');
+} catch(EnvironmentUnconfiguredException $e) {
+	if(!file_exists(BASE_PATH . '/install.php')) {
+		die('SilverStripe Framework requires a $databaseConfig defined.');
+	}
+	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
+	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . BASE_URL . '/install.php';
+	
+	// The above dirname() will equate to "\" on Windows when installing directly from http://localhost (not using
+	// a sub-directory), this really messes things up in some browsers. Let's get rid of the backslashes
+	$installURL = str_replace('\\', '', $installURL);
+	
+	header("Location: $installURL");
+	die();
+}
 
 // IIS will sometimes generate this.
 if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
@@ -92,45 +105,7 @@ if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url 
 if (isset($_GET['debug_profile'])) {
 	Profiler::init();
 	Profiler::mark('all_execution');
-	Profiler::mark('main.php init');
 }
-
-// Connect to database
-require_once('model/DB.php');
-
-// Redirect to the installer if no database is selected
-if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
-	if(!file_exists(BASE_PATH . '/install.php')) {
-		die('SilverStripe Framework requires a $databaseConfig defined.');
-	}
-	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
-	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . BASE_URL . '/install.php';
-	
-	// The above dirname() will equate to "\" on Windows when installing directly from http://localhost (not using
-	// a sub-directory), this really messes things up in some browsers. Let's get rid of the backslashes
-	$installURL = str_replace('\\', '', $installURL);
-	
-	header("Location: $installURL");
-	die();
-}
-
-if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
-DB::connect($databaseConfig);
-if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
-
-// Now that we've loaded the configuration, determine if caches should be flushed.
-// The manifest is auto-flushed on missing classes by the shutdown function defined in Core.php,
-// so if we've gotten here we can assume all defined classes are available.
-if(isset($_GET['flush'])) {
-	if(Director::can_flush()) {
-		loadManifests(true);
-	} else {
-		die("Flush not allowed. Either login as admin, or set the environment type to 'dev'");
-	}
-}
-
-if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
-
 
 // Direct away - this is the "main" function, that hands control to the appropriate controller
 DataModel::set_inst(new DataModel());
