@@ -129,7 +129,7 @@ class Deprecation {
 	 */
 	public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD) {
 		// Never raise deprecation notices in a live environment
-		if(Director::isLive()) return;
+		if(Director::isLive(true)) return;
 
 		// If you pass #.#, assume #.#.0
 		if(preg_match('/^[0-9]+\.[0-9]+$/', $atVersion)) $atVersion .= '.0';
