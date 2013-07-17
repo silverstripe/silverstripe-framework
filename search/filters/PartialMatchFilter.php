@@ -16,13 +16,14 @@ class PartialMatchFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 		$where = array();
 		$comparison = (DB::getConn() instanceof PostgreSQLDatabase) ? 'ILIKE' : 'LIKE';
+		$dbname = (DB::getConn() instanceof PostgreSQLDatabase) ? $this->getDbName().'::text' : $this->getDbName();
 		if(is_array($this->getValue())) {
 			foreach($this->getValue() as $value) {
-				$where[]= sprintf("%s %s '%%%s%%'", $this->getDbName(), $comparison, Convert::raw2sql($value));
+				$where[]= sprintf("%s %s '%%%s%%'", $dbname, $comparison, Convert::raw2sql($value));
 			}
 
 		} else {
-			$where[] = sprintf("%s %s '%%%s%%'", $this->getDbName(), $comparison, Convert::raw2sql($this->getValue()));
+			$where[] = sprintf("%s %s '%%%s%%'", $dbname, $comparison, Convert::raw2sql($this->getValue()));
 		}
 
 		return $query->where(implode(' OR ', $where));
