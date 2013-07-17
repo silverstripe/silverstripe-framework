@@ -226,10 +226,13 @@ require_once("core/Session.php");
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST
 
-/**
- * Include the manifest
- */
-ManifestBuilder::include_manifest();
+register_shutdown_function(array('ManifestBuilder', 'shutdown_handler'));
+
+// Load manifests from caches, or generate them if not present.
+// Will get called again after bootstrap if ?flush=1 is requested (and available).
+// Only allow CLI to flush before bootstrap (and before auth can be checked).
+$isFlush = (php_sapi_name() == 'cli' && isset($_GET['flush']));
+ManifestBuilder::include_manifest($isFlush);
 
 /**
  * ?debugmanifest=1 hook
@@ -250,6 +253,31 @@ if (Director::isLive()) {
  * Load error handlers
  */
 Debug::loadErrorHandlers();
+
+// Connect to database
+global $databaseConfig;
+require_once("core/model/DB.php");
+
+// Redirect to the installer if no database is selected
+if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
+	throw new EnvironmentUnconfiguredException();
+}
+
+if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
+DB::connect($databaseConfig);
+if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
+
+// Now that we've loaded the configuration, determine if caches should be flushed.
+// The manifest is auto-flushed on missing classes by the shutdown function defined in Core.php,
+// so if we've gotten here we can assume all defined classes are available.
+if(isset($_GET['flush'])) {
+	if(Director::can_flush()) {
+		ManifestBuilder::include_manifest(true);
+	} else {
+		if(!headers_sent()) header('Status: 401 Unauthorized');
+		die("Flush not allowed. Either login as admin, or set the environment type to 'dev'");
+	}
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -414,3 +442,5 @@ function increase_time_limit_to($timeLimit = null) {
 		}
 	}
 }
+
+class EnvironmentUnconfiguredException extends Exception {}

@@ -729,6 +729,21 @@ class Director {
 		return (php_sapi_name() == "cli");
 	}
 
+	/**
+	 * Only operational *after* both class manifest and config information are
+	 * in place since it uses the permission system (and database information).
+	 * 
+	 * @return boolean
+	 */
+	public static function can_flush() {
+		return (
+			Director::is_cli()
+			|| Director::isDev() 
+			|| !Security::database_is_ready()
+			|| Permission::check('ADMIN')
+		);
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Site mode methods
 	////////////////////////////////////////////////////////////////////////////////////////////
