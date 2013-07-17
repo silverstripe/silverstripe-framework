@@ -50,19 +50,14 @@ if(isset($_SERVER['argv'][2])) {
 	$_REQUEST = $_GET;
 }
 
-/**
- * Include Sapphire's core code
- */
-require_once("core/Core.php");
-
-global $databaseConfig;
-
 // We don't have a session in cli-script, but this prevents errors
 $_SESSION = null;
 
-// Connect to database
-require_once("core/model/DB.php");
-DB::connect($databaseConfig);
+try {
+  require_once("core/Core.php");
+} catch(EnvironmentUnconfiguredException $e) {
+  // Ignore warnings on CLI
+}
 
 // Get the request URL from the querystring arguments
 $url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;

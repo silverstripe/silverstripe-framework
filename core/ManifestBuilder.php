@@ -60,17 +60,22 @@ class ManifestBuilder {
 	
 	/**
 	 * Include the manifest, regenerating it if necessary
+	 *
+	 * @param Boolean $flush Force a flush. Even if set to FALSE,
+	 * a flush can be triggered if the cache doesn't exist or is stale.
 	 */
-	static function include_manifest() {
+	static function include_manifest($flush = false) {
 		if(isset($_REQUEST['usetestmanifest'])) {
-			self::load_test_manifest();
+			self::load_test_manifest($flush);
 		} else {		
-			// The dev/build reference is some coupling but it solves an annoying bug
-			if(!file_exists(MANIFEST_FILE) || (filemtime(MANIFEST_FILE) < filemtime(BASE_PATH)) 
-				|| isset($_GET['flush']) || (isset($_REQUEST['url']) && ($_REQUEST['url'] == 'dev/build' 
-				|| $_REQUEST['url'] == BASE_URL . '/dev/build'))) {
+			if(
+				$flush
+				|| !file_exists(MANIFEST_FILE) 
+				|| (filemtime(MANIFEST_FILE) < filemtime(BASE_PATH)) 
+			) {
 				self::create_manifest_file();
 			}
+
 			require_once(MANIFEST_FILE);
 		}
 	}
@@ -78,15 +83,19 @@ class ManifestBuilder {
 	/**
 	 * Load a copy of the manifest with tests/ folders included.
 	 * Only loads the ClassInfo and __autoload() globals; this assumes that _config.php files are already included.
+	 *
+	 * @param Boolean $flush Force a flush. Even if set to FALSE,
+	 * a flush can be triggered if the cache doesn't exist or is stale.
 	 */
-	static function load_test_manifest() {
+	static function load_test_manifest($flush = false) {
 		$testManifestFile = MANIFEST_FILE . '-test';
 
 		// The dev/build reference is some coupling but it solves an annoying bug
-		if(!file_exists($testManifestFile) 
+		if(
+			$flush
+			|| !file_exists($testManifestFile) 
 			|| (filemtime($testManifestFile) < filemtime(BASE_PATH)) 
-			|| isset($_GET['flush'])) {
-				
+		) {
 			// Build the manifest, including the tests/ folders
 			$manifestInfo = self::get_manifest_info(BASE_PATH);
 			$manifest = self::generate_php_file($manifestInfo);
@@ -153,6 +162,39 @@ class ManifestBuilder {
  		foreach($manifestInfo['require_once'] as $requireItem) {
  			require_once("$requireItem");
  		}
+ 	}
+
+ 	/**
+ 	 * Passed to register_shutdown_function() in order to respond to E_FATAL errors
+ 	 * about missing classes in a dev-friendly fashion: By preemptively clearing
+ 	 * the manifest before terminating execution.
+ 	 */
+ 	static function shutdown_handler() {
+		$error = error_get_last();
+		if(
+			$error && $error['type'] == E_ERROR
+			&& preg_match('/(Class|Interface) .* not found/', $error['message'])
+		) {
+			ManifestBuilder::include_manifest(true);
+			if(php_sapi_name() == "cli") {
+				die("Cleared class manifest, please try again\n");
+			} elseif(!isset($_GET['flushed'])) {
+				// Can't redirect through HTTP since headers have already been sent.
+				// flushed=1 guards against infinite loops if the class still can't be found after clearing.
+				echo <<<TXT
+<p><strong>Cleared class manifest.</strong> <span id="refresh">Please refresh</span></p>
+<script>
+	document.getElementById("refresh").innerHTML = "Refreshing...";
+	setTimeout(function() {
+		var url = document.location.href.replace(/flush=[^&]+/,'');
+		url += url.match(/\?/) ? '&flushed=1' : '?flushed=1';
+		document.location.href = url;
+	}, 1000);
+</script>
+TXT;
+				die();
+			} 
+		}
  	}
 	
 	/**
