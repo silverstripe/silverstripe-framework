@@ -271,31 +271,43 @@ Injector::inst($default_options);
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST
 
-// Regenerate the manifest if ?flush is set, or if the database is being built.
-// The coupling is a hack, but it removes an annoying bug where new classes
-// referenced in _config.php files can be referenced during the build process.
-$flush = (isset($_GET['flush']) || isset($_REQUEST['url']) && (
-	$_REQUEST['url'] == 'dev/build' || $_REQUEST['url'] == BASE_URL . '/dev/build'
-));
-$manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
+// In case classes are missing, force a flush regardless of authentication or environment type.
+// We can't do this through spl_autoload_register() because some optional classes 
+// like Translatable are checked through class_exists(), and are allowed to be missing.
+register_shutdown_function(function() {
+	$error = error_get_last();
+	if(
+		$error && $error['type'] == E_ERROR
+		&& preg_match('/(Class|Interface) .* not found/', $error['message'])
+	) {
+		$loader = SS_ClassLoader::instance();
+		$loader->getManifest()->regenerate();
+		if(php_sapi_name() == "cli") {
+			die("Cleared class manifest, please try again\n");
+		} elseif(!isset($_GET['flushed'])) {
+			// Can't redirect through HTTP since headers have already been sent.
+			// flushed=1 guards against infinite loops if the class still can't be found after clearing.
+			echo <<<TXT
+<p><strong>Cleared class manifest.</strong> <span id="refresh">Please refresh</span></p>
+<script>
+	document.getElementById("refresh").innerHTML = "Refreshing...";
+	setTimeout(function() {
+		var url = document.location.href.replace(/flush=[^&]+/,'');
+		url += url.match(/\?/) ? '&flushed=1' : '?flushed=1';
+		document.location.href = url;
+	}, 1000);
+</script>
+TXT;
+			die();
+		} 
+	}
+});
 
-// Register SilverStripe's class map autoload
-$loader = SS_ClassLoader::instance();
-$loader->registerAutoloader();
-$loader->pushManifest($manifest);
-
-// Fall back to Composer's autoloader (e.g. for PHPUnit), if composer is used
-if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
-	require_once BASE_PATH . '/vendor/autoload.php';
-}
-
-// Now that the class manifest is up, load the configuration
-$configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
-Config::inst()->pushConfigManifest($configManifest);
-
-SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
-	BASE_PATH, false, isset($_GET['flush'])
-));
+// Load manifests from caches, or generate them if not present.
+// Will get called again after bootstrap if ?flush=1 is requested (and available).
+// Only allow CLI to flush before bootstrap (and before auth can be checked).
+$isFlush = (php_sapi_name() == 'cli' && isset($_GET['flush']));
+loadManifests($isFlush);
 
 // If in live mode, ensure deprecation, strict and notices are not reported
 if(Director::isLive()) {
@@ -305,14 +317,62 @@ if(Director::isLive()) {
 ///////////////////////////////////////////////////////////////////////////////
 // POST-MANIFEST COMMANDS
 
-/**
- * Load error handlers
- */
+// Load error handlers
 Debug::loadErrorHandlers();
+
+// Connect to database
+global $databaseConfig;
+require_once('model/DB.php');
+
+// Throw exception if no database is selected, giving web-based scripts the opportunity
+// to redirect to the installer.
+if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
+	throw new EnvironmentUnconfiguredException();
+}
+
+if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
+DB::connect($databaseConfig);
+if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
+
+// Now that we've loaded the configuration, determine if caches should be flushed.
+// The manifest is auto-flushed on missing classes by the shutdown function defined in Core.php,
+// so if we've gotten here we can assume all defined classes are available.
+if(isset($_GET['flush'])) {
+	if(Director::can_flush()) {
+		loadManifests(true);
+	} else {
+		if(!headers_sent()) header('Status: 401 Unauthorized');
+		die("Flush not allowed. Either login as admin, or set the environment type to 'dev'");
+	}
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
+
+/**
+ * @param  boolean $isFlush Flush existing caches
+ */
+function loadManifests($isFlush = false) {
+	// Register SilverStripe's class map autoload
+	$manifest = new SS_ClassManifest(BASE_PATH, false, $isFlush);
+	$loader = SS_ClassLoader::instance();
+	$loader->registerAutoloader();
+	$loader->pushManifest($manifest);
+
+	// Fall back to Composer's autoloader (e.g. for PHPUnit), if composer is used
+	if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
+		require_once BASE_PATH . '/vendor/autoload.php';
+	}
+
+	// Now that the class manifest is up, load the configuration
+	$configManifest = new SS_ConfigManifest(BASE_PATH, false, $isFlush);
+	Config::inst()->pushConfigManifest($configManifest);
+
+	SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+		BASE_PATH, false, $isFlush
+	));
+}
 
 function getSysTempDir() {
 	Deprecation::notice(3.0, 'Please use PHP function get_sys_temp_dir() instead.');
@@ -488,3 +548,5 @@ function get_increase_time_limit_max() {
 	global $_increase_time_limit_max;
 	return $_increase_time_limit_max;
 }
+
+class EnvironmentUnconfiguredException extends Exception {}

@@ -24,7 +24,7 @@ ini_set('display_errors', 'on');
 error_reporting(E_ALL | E_STRICT);
 
 // Attempt to start a session so that the username and password can be sent back to the user.
-if (function_exists('session_start')) {
+if (function_exists('session_start') && !$_SESSION) {
 	session_start();
 }
 
