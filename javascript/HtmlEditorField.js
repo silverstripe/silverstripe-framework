@@ -547,6 +547,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find('.field#AnchorSelector').show();
 					this.find('.field#AnchorRefresh').show();
 				}
+				if(linkType == 'internal' || linkType == 'external' || linkType == 'anchor') this.find('.field#Description').show();
+
 			},
 			/**
 			 * @return Object Keys: 'href', 'target', 'title'
