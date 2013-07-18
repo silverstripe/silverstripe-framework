@@ -219,6 +219,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function checkPassword($password) {
 		$result = $this->canLogIn();
 
+		// Short-circuit the result upon failure, no further checks needed.
+		if (!$result->valid()) return $result;
+
 		if(empty($this->Password) && $this->exists()) {
 			$result->error(_t('Member.NoPassword','There is no password on this member.'));
 			return $result;
@@ -442,7 +445,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				self::session_regenerate_id();
 				Session::set("loggedInAs", $member->ID);
 				// This lets apache rules detect whether the user has logged in
-				if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				if(Member::config()->login_marker_cookie) {
+					Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				}
 				
 				$generator = new RandomGenerator();
 				$token = $generator->randomToken('sha1');
@@ -730,7 +735,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
 				$this->Salt,
-				($this->PasswordEncryption) ? $this->PasswordEncryption : Security::config()->password_encryption_algorithm,
+				($this->PasswordEncryption) ?
+					$this->PasswordEncryption : Security::config()->password_encryption_algorithm,
 				$this
 			);
 
