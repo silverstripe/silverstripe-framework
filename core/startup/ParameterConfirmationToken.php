@@ -23,7 +23,7 @@ class ParameterConfirmationToken {
 			$basepath = rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
 		}
 
-		require_once('core/TempPath.php');
+		require_once(dirname(dirname(__FILE__)).'/TempPath.php');
 		$tempfolder = getTempFolder($basepath ? $basepath : DIRECTORY_SEPARATOR);
 
 		return $tempfolder.'/token_'.preg_replace('/[^a-z0-9]+/', '', $token);
@@ -31,7 +31,7 @@ class ParameterConfirmationToken {
 
 	protected function genToken() {
 		// Generate a new random token (as random as possible)
-		require_once('security/RandomGenerator.php');
+		require_once(dirname(dirname(dirname(__FILE__))).'/security/RandomGenerator.php');
 		$rg = new RandomGenerator();
 		$token = $rg->randomToken('md5');
 
