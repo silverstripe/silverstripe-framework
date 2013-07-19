@@ -4,6 +4,7 @@ This section provides an overview on how things fit together, the "conceptual gl
 It is where most documentation should live, and is the natural "second step" after finishing the tutorials.
 
  * [Access Control and Page Security](access-control): Restricting access and setting up permissions on your website
+ * [Caching](caching): Explains built-in caches for classes, config and templates. How to use your own caches.
  * [Command line Usage](commandline): Calling controllers via the command line interface using `sake`
  * [Configuring your website](configuration): How to configure the `_config.php` file
  * [Controller](controller): The intermediate layer between your templates and the data model
