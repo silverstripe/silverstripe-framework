@@ -29,7 +29,7 @@ function getTempFolder($base = null) {
 		$cachefolder = "silverstripe-cache";
 	}
 
-	$ssTmp = BASE_PATH . "/silverstripe-cache";
+	$ssTmp = $base . "/silverstripe-cache";
 	if(@file_exists($ssTmp)) {
 		return $ssTmp;
 	}
@@ -43,7 +43,7 @@ function getTempFolder($base = null) {
 	}
 
 	if(!$worked) {
-		$ssTmp = BASE_PATH . "/silverstripe-cache";
+		$ssTmp = $base . "/silverstripe-cache";
 		$worked = true;
 		if(!@file_exists($ssTmp)) {
 			@$worked = mkdir($ssTmp);
