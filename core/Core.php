@@ -173,7 +173,7 @@ define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 /**
  * Define the temporary folder if it wasn't defined yet
  */
-require_once('core/TempPath.php');
+require_once(dirname(__FILE__).'/TempPath.php');
 if(!defined('TEMP_FOLDER')) {
 	define('TEMP_FOLDER', getTempFolder());
 }
