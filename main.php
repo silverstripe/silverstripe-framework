@@ -54,55 +54,129 @@ if(version_compare(phpversion(), 5, '<')) {
  * @see Director::direct()
  */
 
+require_once('core/startup/ErrorControlChain.php');
+require_once('core/startup/ParameterConfirmationToken.php');
 
-/**
- * Include Sapphire's core code
- */
-require_once("core/Core.php");
+class SilverStripeMain {
+	static $token;
 
-if (function_exists('mb_http_output')) {
-	mb_http_output('UTF-8');
-	mb_internal_encoding('UTF-8');
-}
+	static function filterFlush($chain) {
+		self::$token = new ParameterConfirmationToken('flush');
 
-Session::start();
-
-// IIS will sometimes generate this.
-if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
-	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
-}
-
-// Apache rewrite rules use this
-if (isset($_GET['url'])) {
-	$url = $_GET['url'];
-	// IIS includes get variables in url
-	$i = strpos($url, '?');
-	if($i !== false) {
-		$url = substr($url, 0, $i);
+		if (isset($_GET['flush']) && !self::$token->tokenProvided()) {
+			unset($_GET['flush']);
+		}
+		else {
+			$chain->setSuppression(false);
+		}
 	}
-	
-// Lighttpd uses this
-} else {
-	if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
-		list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-	} else {
-		$url = $_SERVER["REQUEST_URI"];
+
+	static function includeCore() {
+		/**
+		 * Include Sapphire's core code
+		 */
+		require_once("core/Core.php");
+
+		if (function_exists('mb_http_output')) {
+			mb_http_output('UTF-8');
+			mb_internal_encoding('UTF-8');
+		}
+
+		Session::start();
+	}
+
+	static function parseURL() {
+		global $url;
+
+		// IIS will sometimes generate this.
+		if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
+			$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
+		}
+
+		// Apache rewrite rules use this
+		if (isset($_GET['url'])) {
+			$url = $_GET['url'];
+			// IIS includes get variables in url
+			$i = strpos($url, '?');
+			if($i !== false) {
+				$url = substr($url, 0, $i);
+			}
+
+		// Lighttpd uses this
+		} else {
+			if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
+				list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
+				parse_str($query, $_GET);
+				if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+			} else {
+				$url = $_SERVER["REQUEST_URI"];
+			}
+		}
+
+		// Remove base folders from the URL if webroot is hosted in a subfolder
+		if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
+	}
+
+	static function startupDatabase() {
+		if (isset($_GET['debug_profile'])) {
+			Profiler::init();
+			Profiler::mark('all_execution');
+			Profiler::mark('main.php init');
+		}
+
+		// Connect to database
+		require_once("core/model/DB.php");
+		global $databaseConfig;
+
+		if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
+		if ($databaseConfig) DB::connect($databaseConfig);
+		if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
+	}
+
+	static function flushIfAllowed() {
+		if (self::$token->parameterProvided() && !self::$token->tokenProvided()) {
+			// First, check if we're in dev mode, or the database doesn't have any security data
+			$canFlush = Director::isDev() || !Security::database_is_ready();
+
+			// Otherwise, we start up the session if needed, then check for admin
+			if (!$canFlush) {
+				if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) {
+					Session::start();
+				}
+
+				if (Permission::check('ADMIN')) {
+					$canFlush = true;
+				}
+				else {
+					$loginPage = Director::absoluteURL(Config::inst()->get('Security', 'login_url'));
+					$loginPage .= "?BackURL=" . urlencode($_SERVER['REQUEST_URI']);
+
+					header('location: '.$loginPage, true, 302);
+					die;
+				}
+			}
+
+			// And if we can flush, reload with an authority token
+			if ($canFlush) self::$token->reloadWithToken();
+		}
+	}
+
+	static function flushIfErrored() {
+		if (self::$token->parameterProvided() && !self::$token->tokenProvided()) {
+			self::$token->reloadWithToken();
+		}
 	}
 }
 
-// Remove base folders from the URL if webroot is hosted in a subfolder
-if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
-
-if (isset($_GET['debug_profile'])) {
-	Profiler::init();
-	Profiler::mark('all_execution');
-	Profiler::mark('main.php init');
-}
-
-// Connect to database
-require_once("core/model/DB.php");
+$chain = new ErrorControlChain();
+$chain
+	->then(array('SilverStripeMain', 'filterFlush'))
+	->then(array('SilverStripeMain', 'includeCore'))
+	->thenAlways(array('SilverStripeMain', 'parseURL'))
+	->then(array('SilverStripeMain', 'startupDatabase'))
+	->then(array('SilverStripeMain', 'flushIfAllowed'))
+	->thenIfErrored(array('SilverStripeMain', 'flushIfErrored'))
+	->execute();
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
@@ -116,10 +190,6 @@ if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseC
 	header("Location: $installURL");
 	die();
 }
-
-if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
-DB::connect($databaseConfig);
-if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
 
 if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
 
