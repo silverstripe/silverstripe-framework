@@ -352,7 +352,7 @@ class RestfulService extends ViewableData {
 				$match[1] = preg_replace_callback(
 					'/(?<=^|[\x09\x20\x2D])./',
 					create_function('$matches', 'return strtoupper($matches[0]);'),
-					strtolower(trim($match[1]))
+					trim($match[1])
 				);
 				if( isset($headers[$match[1]]) ) {
 					if (!is_array($headers[$match[1]])) {

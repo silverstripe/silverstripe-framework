@@ -1,5 +1,5 @@
 <div class="add-existing-autocompleter">
-	<% loop Fields %>
+	<% loop $Fields %>
 	<span>$Field</span>
 	<% end_loop %>
 </div>

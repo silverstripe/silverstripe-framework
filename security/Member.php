@@ -113,9 +113,18 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * @config
-	 * @var Int
+	 * @var Int Number of incorrect logins after which
+	 * the user is blocked from further attempts for the timespan 
+	 * defined in {@link $lock_out_delay_mins}. 
 	 */
 	private static $lock_out_after_incorrect_logins = null;
+
+	/**
+	 * @config
+	 * @var integer Minutes of enforced lockout after incorrect password attempts.
+	 * Only applies if {@link $lock_out_after_incorrect_logins} greater than 0.
+	 */
+	private static $lock_out_delay_mins = 15;
 	
 	/**
 	 * @config
@@ -210,6 +219,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function checkPassword($password) {
 		$result = $this->canLogIn();
 
+		// Short-circuit the result upon failure, no further checks needed.
+		if (!$result->valid()) return $result;
+
 		if(empty($this->Password) && $this->exists()) {
 			$result->error(_t('Member.NoPassword','There is no password on this member.'));
 			return $result;
@@ -238,11 +250,15 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$result = ValidationResult::create();
 
 		if($this->isLockedOut()) {
-			$result->error(_t (
-				'Member.ERRORLOCKEDOUT',
-				'Your account has been temporarily disabled because of too many failed attempts at ' .
-				'logging in. Please try again in 20 minutes.'
-			));
+			$result->error(
+				_t(
+					'Member.ERRORLOCKEDOUT2',
+					'Your account has been temporarily disabled because of too many failed attempts at ' .
+					'logging in. Please try again in {count} minutes.',
+					null,
+					array('count' => $this->config()->lock_out_delay_mins)
+				)
+			);
 		}
 
 		$this->extend('canLogIn', $result);
@@ -429,7 +445,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				self::session_regenerate_id();
 				Session::set("loggedInAs", $member->ID);
 				// This lets apache rules detect whether the user has logged in
-				if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				if(Member::config()->login_marker_cookie) {
+					Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				}
 				
 				$generator = new RandomGenerator();
 				$token = $generator->randomToken('sha1');
@@ -717,7 +735,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
 				$this->Salt,
-				($this->PasswordEncryption) ? $this->PasswordEncryption : Security::config()->password_encryption_algorithm,
+				($this->PasswordEncryption) ?
+					$this->PasswordEncryption : Security::config()->password_encryption_algorithm,
 				$this
 			);
 
@@ -1407,7 +1426,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$this->write();
 	
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
-				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + 15*60);
+				$lockoutMins = self::config()->lock_out_delay_mins;
+				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + $lockoutMins*60);
 				$this->write();
 			}
 		}

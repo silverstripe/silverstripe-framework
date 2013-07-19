@@ -270,6 +270,13 @@ class Security extends Controller {
 		return;
 	}
 
+	public function init() {
+		parent::init();
+
+		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+		$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
+	}
+
 
 	/**
 	 * Get the login form to process according to the submitted data

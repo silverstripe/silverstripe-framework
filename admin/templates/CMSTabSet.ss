@@ -5,12 +5,12 @@
 <%-- e.g. through LeftAndMain_EditForm.ss. --%>
 
 <div $AttributesHTML>
-	<% loop Tabs %>
-		<% if Tabs %>
+	<% loop $Tabs %>
+		<% if $Tabs %>
 			$FieldHolder
 		<% else %>
 			<div $AttributesHTML>
-				<% loop Fields %>
+				<% loop $Fields %>
 					$FieldHolder
 				<% end_loop %>
 			</div>

@@ -154,6 +154,33 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	/**
+	 * Partially covered by {@link UploadTest->testUploadAcceptsAllowedExtension()},
+	 * but this test additionally verifies that those constraints are actually enforced
+	 * in this controller method.
+	 */
+	public function testAllowedExtensions() {
+		$this->loginWithPermission('ADMIN');
+
+		$invalidFile = 'invalid.php';
+		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($invalidFile));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload',
+			array('AllowedExtensionsField' => $this->getUploadFile($invalidFile))
+		);
+		$this->assertTrue($response->isError());
+		$this->assertContains('Extension is not allowed', $response->getBody());
+
+		$validFile = 'valid.txt';
+		$_FILES = array('AllowedExtensionsField' => $this->getUploadFile($validFile));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/AllowedExtensionsField/upload',
+			array('AllowedExtensionsField' => $this->getUploadFile($validFile))
+		);
+		$this->assertFalse($response->isError());
+		$this->assertNotContains('Extension is not allowed', $response->getBody());
+	}
+
+	/**
 	 * Test that has_one relations do not support multiple files
 	 */
 	public function testAllowedMaxFileNumberWithHasOne() {
@@ -899,6 +926,9 @@ class UploadFieldTestForm extends Form implements TestOnly {
 		$fieldCanAttachExisting = UploadField::create('CanAttachExistingFalseField')
 			->setCanAttachExisting(false);
 
+		$fieldAllowedExtensions = new UploadField('AllowedExtensionsField');
+		$fieldAllowedExtensions->getValidator()->setAllowedExtensions(array('txt'));
+
 		$fields = new FieldList(
 			$fieldNoRelation,
 			$fieldHasOne,
@@ -913,7 +943,8 @@ class UploadFieldTestForm extends Form implements TestOnly {
 			$fieldDisabled,
 			$fieldSubfolder,
 			$fieldCanUploadFalse,
-			$fieldCanAttachExisting
+			$fieldCanAttachExisting,
+			$fieldAllowedExtensions
 		);
 		$actions = new FieldList(
 			new FormAction('submit')

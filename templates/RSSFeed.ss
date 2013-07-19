@@ -6,14 +6,14 @@
 		<atom:link href="$Link" rel="self" type="application/rss+xml" />
 		<description>$Description.XML</description>
 
-		<% loop Entries %>
+		<% loop $Entries %>
 		<item>
 			<title>$Title.XML</title>
 			<link>$AbsoluteLink</link>
-			<% if Description %><description>$Description.AbsoluteLinks.XML</description><% end_if %>
-			<% if Date %><pubDate>$Date.Rfc822</pubDate>
+			<% if $Description %><description>$Description.AbsoluteLinks.XML</description><% end_if %>
+			<% if $Date %><pubDate>$Date.Rfc822</pubDate>
 			<% else %><pubDate>$Created.Rfc822</pubDate><% end_if %>
-			<% if Author %><dc:creator>$Author.XML</dc:creator><% end_if %>
+			<% if $Author %><dc:creator>$Author.XML</dc:creator><% end_if %>
 			<guid>$AbsoluteLink</guid>
 		</item>
 		<% end_loop %>

@@ -250,61 +250,76 @@ class SecurityTest extends FunctionalTest {
 		i18n::set_locale('en_US');
 
 		Member::config()->lock_out_after_incorrect_logins = 5;
+		Member::config()->lock_out_delay_mins = 15;
 		
-		/* LOG IN WITH A BAD PASSWORD 7 TIMES */
-
-		for($i=1;$i<=7;$i++) {
+		// Login with a wrong password for more than the defined threshold
+		for($i = 1; $i <= Member::config()->lock_out_after_incorrect_logins+1; $i++) {
 			$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
 			$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
 			
-			/* THE FIRST 4 TIMES, THE MEMBER SHOULDN'T BE LOCKED OUT */
-			if($i < 5) {
-				$this->assertNull($member->LockedOutUntil);
+			if($i < Member::config()->lock_out_after_incorrect_logins) {
+				$this->assertNull(
+					$member->LockedOutUntil,
+					'User does not have a lockout time set if under threshold for failed attempts'
+				);
 				$this->assertContains($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED'));
+			} else {
+				// Fuzzy matching for time to avoid side effects from slow running tests
+				$this->assertGreaterThan(
+					time() + 14*60, 
+					strtotime($member->LockedOutUntil),
+					'User has a lockout time set after too many failed attempts'
+				);
 			}
-			
-			/* AFTER THAT THE USER IS LOCKED OUT FOR 15 MINUTES */
 
-			//(we check for at least 14 minutes because we don't want a slow running test to report a failure.)
-			else {
-				$this->assertGreaterThan(time() + 14*60, strtotime($member->LockedOutUntil));
-			}
-			
-			if($i > 5) {
-				$this->assertContains(_t('Member.ERRORLOCKEDOUT'), $this->loginErrorMessage());
-				// $this->assertTrue(false !== stripos($this->loginErrorMessage(), _t('Member.ERRORLOCKEDOUT')));
+			$msg = _t(
+				'Member.ERRORLOCKEDOUT2',
+				'Your account has been temporarily disabled because of too many failed attempts at ' .
+				'logging in. Please try again in {count} minutes.',
+				null,
+				array('count' => Member::config()->lock_out_delay_mins)
+			);			
+			if($i > Member::config()->lock_out_after_incorrect_logins) {
+				$this->assertContains($msg, $this->loginErrorMessage());
 			}
 		}
 		
-		/* THE USER CAN'T LOG IN NOW, EVEN IF THEY GET THE RIGHT PASSWORD */
-		
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
-		$this->assertNull($this->session()->inst_get('loggedInAs'));
+		$this->assertNull(
+			$this->session()->inst_get('loggedInAs'),
+			'The user can\'t log in after being locked out, even with the right password'
+		);
 		
-		/* BUT, IF TIME PASSES, THEY CAN LOG IN */
-
 		// (We fake this by re-setting LockedOutUntil)
 		$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
 		$member->LockedOutUntil = date('Y-m-d H:i:s', time() - 30);
 		$member->write();
-		
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
-		$this->assertEquals($this->session()->inst_get('loggedInAs'), $member->ID);
+		$this->assertEquals(
+			$this->session()->inst_get('loggedInAs'), 
+			$member->ID,
+			'After lockout expires, the user can login again'
+		);
 		
 		// Log the user out
 		$this->session()->inst_set('loggedInAs', null);
 
-		/* NOW THAT THE LOCK-OUT HAS EXPIRED, CHECK THAT WE ARE ALLOWED 4 FAILED ATTEMPTS BEFORE LOGGING IN */
-
-		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
-		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
-		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
-		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
+		// Login again with wrong password, but less attempts than threshold
+		for($i = 1; $i < Member::config()->lock_out_after_incorrect_logins; $i++) {
+			$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword');
+		}
 		$this->assertNull($this->session()->inst_get('loggedInAs'));
-		$this->assertTrue(false !== stripos($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED')));
+		$this->assertTrue(
+			false !== stripos($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED')),
+			'The user can retry with a wrong password after the lockout expires'
+		);
 		
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
-		$this->assertEquals($this->session()->inst_get('loggedInAs'), $member->ID);
+		$this->assertEquals(
+			$this->session()->inst_get('loggedInAs'), 
+			$member->ID,
+			'The user can login successfully after lockout expires, if staying below the threshold'
+		);
 
 		i18n::set_locale($local);
 	}
