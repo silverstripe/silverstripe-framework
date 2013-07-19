@@ -56,52 +56,113 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
 /**
  * Include SilverStripe's core code
  */
-require_once('core/Core.php');
+require_once('core/startup/ErrorControlChain.php');
+require_once('core/startup/ParameterConfirmationToken.php');
 
-// IIS will sometimes generate this.
-if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
-	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
-}
+$chain = new ErrorControlChain();
+$token = new ParameterConfirmationToken('flush');
 
-// PHP 5.4's built-in webserver uses this
-if (php_sapi_name() == 'cli-server') {
-	$url = $_SERVER['REQUEST_URI'];
-	
-	// Querystring args need to be explicitly parsed
-	if(strpos($url,'?') !== false) {
-		list($url, $query) = explode('?',$url,2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-	}
-	
-	// Pass back to the webserver for files that exist
-	if(file_exists(BASE_PATH . $url)) return false;
+$chain
+	// First, if $_GET['flush'] was set, but no valid token, suppress the flush
+	->then(function($chain) use ($token){
+		if (isset($_GET['flush']) && !$token->tokenProvided()) {
+			unset($_GET['flush']);
+		}
+		else {
+			$chain->setSuppression(false);
+		}
+	})
+	// Then load in core
+	->then(function(){
+		require_once('core/Core.php');
+	})
+	// Then build the URL (even if Core didn't load beyond setting BASE_URL)
+	->thenAlways(function(){
+		global $url;
 
-// Apache rewrite rules use this
-} else if (isset($_GET['url'])) {
-	$url = $_GET['url'];
-	// IIS includes get variables in url
-	$i = strpos($url, '?');
-	if($i !== false) {
-		$url = substr($url, 0, $i);
-	}
-	
-// Lighttpd uses this
-} else {
-	if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
-		list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-	} else {
-		$url = $_SERVER["REQUEST_URI"];
-	}
-}
+		// IIS will sometimes generate this.
+		if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
+			$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
+		}
 
-// Remove base folders from the URL if webroot is hosted in a subfolder
-if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
+		// PHP 5.4's built-in webserver uses this
+		if (php_sapi_name() == 'cli-server') {
+			$url = $_SERVER['REQUEST_URI'];
 
-// Connect to database
-require_once('model/DB.php');
+			// Querystring args need to be explicitly parsed
+			if(strpos($url,'?') !== false) {
+				list($url, $query) = explode('?',$url,2);
+				parse_str($query, $_GET);
+				if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+			}
+
+		// Apache rewrite rules use this
+		} else if (isset($_GET['url'])) {
+			$url = $_GET['url'];
+			// IIS includes get variables in url
+			$i = strpos($url, '?');
+			if($i !== false) {
+				$url = substr($url, 0, $i);
+			}
+
+		// Lighttpd uses this
+		} else {
+			if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
+				list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
+				parse_str($query, $_GET);
+				if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+			} else {
+				$url = $_SERVER["REQUEST_URI"];
+			}
+		}
+
+		// Remove base folders from the URL if webroot is hosted in a subfolder
+		if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
+	})
+	// Then start up the database
+	->then(function(){
+		require_once('model/DB.php');
+		global $databaseConfig;
+		if ($databaseConfig) DB::connect($databaseConfig);
+	})
+	// Then if a flush was requested, redirect to it
+	->then(function($chain) use ($token){
+		if ($token->parameterProvided() && !$token->tokenProvided()) {
+			// First, check if we're in dev mode, or the database doesn't have any security data
+			$canFlush = Director::isDev() || !Security::database_is_ready();
+
+			// Otherwise, we start up the session if needed, then check for admin
+			if (!$canFlush) {
+				if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) {
+					Session::start();
+				}
+
+				if (Permission::check('ADMIN')) {
+					$canFlush = true;
+				}
+				else {
+					$loginPage = Director::absoluteURL(Config::inst()->get('Security', 'login_url'));
+					$loginPage .= "?BackURL=" . urlencode($_SERVER['REQUEST_URI']);
+
+					header('location: '.$loginPage, true, 302);
+					die;
+				}
+			}
+
+			// And if we can flush, reload with an authority token
+			if ($canFlush) $token->reloadWithToken();
+		}
+	})
+	// Finally if a flush was requested but there was an error while figuring out if it's allowed, do it anyway
+	->thenIfErrored(function() use ($token){
+		if ($token->parameterProvided() && !$token->tokenProvided()) {
+			$token->reloadWithToken();
+		}
+	})
+	->execute();
+
+// If we're in PHP's built in webserver, pass back to the webserver for files that exist
+if (php_sapi_name() == 'cli-server' && file_exists(BASE_PATH . $url) && is_file(BASE_PATH . $url)) return false;
 
 global $databaseConfig;
 
@@ -112,16 +173,14 @@ if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseC
 	}
 	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
 	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . BASE_URL . '/install.php';
-	
+
 	// The above dirname() will equate to "\" on Windows when installing directly from http://localhost (not using
 	// a sub-directory), this really messes things up in some browsers. Let's get rid of the backslashes
 	$installURL = str_replace('\\', '', $installURL);
-	
+
 	header("Location: $installURL");
 	die();
 }
-
-DB::connect($databaseConfig);
 
 // Direct away - this is the "main" function, that hands control to the appropriate controller
 DataModel::set_inst(new DataModel());
