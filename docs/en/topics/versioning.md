@@ -59,8 +59,8 @@ You can explicitly request a certain stage through various getters on the `Versi
 	$liveRecords = Versioned::get_by_stage('MyRecord', 'Live');
 
 	// Fetching a single record
-	$stageRecord = Versioned::get_one_by_stage('MyRecord', 'Stage')->byID(99);
-	$liveRecord = Versioned::get_one_by_stage('MyRecord', 'Live')->byID(99);
+	$stageRecord = Versioned::get_by_stage('MyRecord', 'Stage')->byID(99);
+	$liveRecord = Versioned::get_by_stage('MyRecord', 'Live')->byID(99);
 
 ### Historical Versions
 
