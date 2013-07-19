@@ -61,11 +61,8 @@ class ParameterConfirmationToken {
 		// Store the token
 		$this->token = isset($_GET[$parameterName.'token']) ? $_GET[$parameterName.'token'] : null;
 
-		// If a token was provided, but isn't valid, just throw a 403
-		if ($this->token && (!$this->checkToken($this->token))) {
-			header("HTTP/1.0 403 Forbidden", true, 403);
-			die;
-		}
+		// If a token was provided, but isn't valid, ignore it
+		if ($this->token && (!$this->checkToken($this->token))) $this->token = null;
 	}
 
 	public function parameterProvided() {
