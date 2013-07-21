@@ -16,12 +16,7 @@ class ParameterConfirmationToken {
 	protected $token = null;
 
 	protected function pathForToken($token) {
-		if (defined('BASE_PATH')) {
-			$basepath = BASE_PATH;
-		}
-		else {
-			$basepath = rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
-		}
+		$basepath = rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
 
 		require_once(dirname(dirname(__FILE__)).'/TempPath.php');
 		$tempfolder = getTempFolder($basepath ? $basepath : DIRECTORY_SEPARATOR);
