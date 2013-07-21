@@ -1204,7 +1204,7 @@ class DataObjectTest_Player extends Member implements TestOnly {
  * Class DataObjectTest_Page
  * Used in {@link DataObjectTest::testManyManyReturnsSubclass()}
  */
-class DataObjectTest_Page extends SiteTree implements TestOnly {
+class DataObjectTest_Page extends DataObject implements TestOnly {
 	private static $many_many = array(
 		'SpecificTags' => 'DataObjectTest_SpecificTag'
 	);
