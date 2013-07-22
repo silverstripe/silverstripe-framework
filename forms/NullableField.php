@@ -2,12 +2,11 @@
 /**
  * NullableField is a field that wraps other fields when you want to allow the user to specify whether the value of
  * the field is null or not.
- *
+ * 
  * The classic case is to wrap a TextField so that the user can distinguish between an empty string and a null string.
  * <code>
  * $a = new NullableField(new TextField("Field1", "Field 1", "abc"));
  * </code>
- *
  * It displays the field that is wrapped followed by a checkbox that is used to specify if the value is null or not.
  * It uses the Title of the wrapped field for its title.
  * When a form is submitted the field tests the value of the "is null" checkbox and sets its value accordingly.
@@ -15,13 +14,11 @@
  * <code>
  * $field->Value() or $field->dataValue()
  * </code>
- *
  * You can specify the label to use for the "is null" checkbox.  If you want to use I8N for this label then specify it
  * like this:
  * <code>
  * $field->setIsNullLabel(_T(SOME_MODULE_ISNULL_LABEL, "Is Null");
  * </code>
- *
  * @author Pete Bacon Darwin
  * @package forms
  * @subpackage fields-basic
@@ -32,13 +29,13 @@ class NullableField extends FormField {
 	 * @var FormField
 	 */
 	protected $valueField;
-
+		
 	/**
 	 * The label to show next to the is null check box.
 	 * @var string
 	 */
 	protected $isNullLabel;
-
+	
 
 	/**
 	 * Create a new nullable field
@@ -56,7 +53,7 @@ class NullableField extends FormField {
 			$valueField->getForm(), $valueField->RightTitle());
 		$this->readonly = $valueField->isReadonly();
 	}
-
+	
 	/**
 	 * Get the label used for the Is Null checkbox.
 	 * @return string
@@ -72,7 +69,7 @@ class NullableField extends FormField {
 		$this->isNullLabel = $isNulLabel;
 		return $this;
 	}
-
+	
 	/**
 	 * Get the id used for the Is Null check box.
 	 * @return string
@@ -109,7 +106,7 @@ class NullableField extends FormField {
 
 		return $this;
 	}
-
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see forms/FormField#setName($name)

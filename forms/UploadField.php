@@ -2,9 +2,9 @@
 
 /**
  * Field for uploading single or multiple files of all types, including images.
- *
+ * 
  * <b>Features (some might not be available to old browsers):</b>
- *
+ * 
  * - File Drag&Drop support
  * - Progressbar
  * - Image thumbnail/file icons even before upload finished
@@ -14,13 +14,13 @@
  * post_max_size) from php.ini
  *
  * <b>Usage</b>
- *
+ * 
  * <code>
  * $UploadField = new UploadField('AttachedImages', 'Please upload some images <span>(max. 5 files)</span>');
  * $UploadField->setAllowedFileCategories('image');
  * $UploadField->setAllowedMaxFileNumber(5);
  * </code>
- *
+ * 
  * @author Zauberfisch
  * @package framework
  * @subpackage forms
@@ -49,28 +49,28 @@ class UploadField extends FileField {
 
 	/**
 	 * Template to use for the file button widget
-	 *
+	 * 
 	 * @var string
 	 */
 	protected $templateFileButtons = 'UploadField_FileButtons';
 
 	/**
 	 * Template to use for the edit form
-	 *
+	 * 
 	 * @var string
 	 */
 	protected $templateFileEdit = 'UploadField_FileEdit';
 
 	/**
 	 * Parent data record. Will be infered from parent form or controller if blank.
-	 *
+	 * 
 	 * @var DataObject
 	 */
 	protected $record;
 
 	/**
 	 * Items loaded into this field. May be a RelationList, or any other SS_List
-	 *
+	 * 
 	 * @var SS_List
 	 */
 	protected $items;
@@ -79,13 +79,13 @@ class UploadField extends FileField {
 	 * Config for this field used in the front-end javascript
 	 * (will be merged into the config of the javascript file upload plugin).
 	 * See framework/_config/uploadfield.yml for configuration defaults and documentation.
-	 *
+	 * 
 	 * @var array
 	 */
 	protected $ufConfig = array(
 		/**
 		 * Automatically upload the file once selected
-		 *
+		 * 
 		 * @var boolean
 		 */
 		'autoUpload' => true,
@@ -93,53 +93,53 @@ class UploadField extends FileField {
 		 * Restriction on number of files that may be set for this field. Set to null to allow
 		 * unlimited. If record has a has_one and allowedMaxFileNumber is null, it will be set to 1.
 		 * The resulting value will be set to maxNumberOfFiles
-		 *
+		 * 
 		 * @var integer
 		 */
 		'allowedMaxFileNumber' => null,
 		/**
 		 * Can the user upload new files, or just select from existing files.
 		 * String values are interpreted as permission codes.
-		 *
+		 * 
 		 * @var boolean|string
 		 */
 		'canUpload' => true,
 		/**
 		 * Can the user attach files from the assets archive on the site?
 		 * String values are interpreted as permission codes.
-		 *
+		 * 
 		 * @var boolean|string
 		 */
 		'canAttachExisting' => "CMS_ACCESS_AssetAdmin",
 		/**
 		 * Shows the target folder for new uploads in the field UI.
 		 * Disable to keep the internal filesystem structure hidden from users.
-		 *
+		 * 
 		 * @var boolean|string
 		 */
 		'canPreviewFolder' => true,
 		/**
 		 * Maximum width of the preview thumbnail
-		 *
+		 * 
 		 * @var integer
 		 */
 		'previewMaxWidth' => 80,
 		/**
 		 * Maximum height of the preview thumbnail
-		 *
+		 * 
 		 * @var integer
 		 */
 		'previewMaxHeight' => 60,
 		/**
 		 * javascript template used to display uploading files
-		 *
+		 * 
 		 * @see javascript/UploadField_uploadtemplate.js
 		 * @var string
 		 */
 		'uploadTemplateName' => 'ss-uploadfield-uploadtemplate',
 		/**
 		 * javascript template used to display already uploaded files
-		 *
+		 * 
 		 * @see javascript/UploadField_downloadtemplate.js
 		 * @var string
 		 */
@@ -149,7 +149,7 @@ class UploadField extends FileField {
 		 * This requires Upload->replaceFile config to be set to true, otherwise
 		 * files will be renamed instead of overwritten (although the warning will
 		 * still be displayed)
-		 *
+		 * 
 		 * @see Upload
 		 * @var boolean
 		 */
@@ -159,7 +159,7 @@ class UploadField extends FileField {
 	/**
 	 * FieldList $fields or string $name (of a method on File to provide a fields) for the EditForm
 	 * @example 'getCMSFields'
-	 *
+	 * 
 	 * @var FieldList|string
 	 */
 	protected $fileEditFields = null;
@@ -167,7 +167,7 @@ class UploadField extends FileField {
 	/**
 	 * FieldList $actions or string $name (of a method on File to provide a actions) for the EditForm
 	 * @example 'getCMSActions'
-	 *
+	 * 
 	 * @var FieldList|string
 	 */
 	protected $fileEditActions = null;
@@ -175,14 +175,14 @@ class UploadField extends FileField {
 	/**
 	 * Validator (eg RequiredFields) or string $name (of a method on File to provide a Validator) for the EditForm
 	 * @example 'getCMSValidator'
-	 *
+	 * 
 	 * @var RequiredFields|string
 	 */
 	protected $fileEditValidator = null;
 
 	/**
 	 * Construct a new UploadField instance
-	 *
+	 * 
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
 	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on
@@ -190,7 +190,7 @@ class UploadField extends FileField {
 	 * @param Form $form Reference to the container form
 	 */
 	public function __construct($name, $title = null, SS_List $items = null) {
-
+		
 		// TODO thats the first thing that came to my head, feel free to change it
 		$this->addExtraClass('ss-upload'); // class, used by js
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
@@ -204,8 +204,8 @@ class UploadField extends FileField {
 		// filter out '' since this would be a regex problem on JS end
 		$this->getValidator()->setAllowedExtensions(
 			array_filter(Config::inst()->get('File', 'allowed_extensions'))
-		);
-
+		); 
+		
 		// get the lower max size
 		$maxUpload = File::ini2bytes(ini_get('upload_max_filesize'));
 		$maxPost = File::ini2bytes(ini_get('post_max_size'));
@@ -214,7 +214,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Set name of template used for Buttons on each file (replace, edit, remove, delete) (without path or extension)
-	 *
+	 * 
 	 * @param string
 	 */
 	public function setTemplateFileButtons($template) {
@@ -231,7 +231,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Set name of template used for the edit (inline & popup) of a file file (without path or extension)
-	 *
+	 * 
 	 * @param string
 	 */
 	public function setTemplateFileEdit($template) {
@@ -248,7 +248,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Determine if the target folder for new uploads in is visible the field UI.
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public function canPreviewFolder() {
@@ -260,7 +260,7 @@ class UploadField extends FileField {
 	/**
 	 * Determine if the target folder for new uploads in is visible the field UI.
 	 * Disable to keep the internal filesystem structure hidden from users.
-	 *
+	 * 
 	 * @param boolean|string $canPreviewFolder Either a boolean flag, or a
 	 * required permission code
 	 * @return UploadField Self reference
@@ -268,25 +268,25 @@ class UploadField extends FileField {
 	public function setCanPreviewFolder($canPreviewFolder) {
 		return $this->setConfig('canPreviewFolder', $canPreviewFolder);
 	}
-
+	
 	/**
 	 * Determine if the field should show a warning when overwriting a file.
 	 * This requires Upload->replaceFile config to be set to true, otherwise
 	 * files will be renamed instead of overwritten (although the warning will
 	 * still be displayed)
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public function getOverwriteWarning() {
 		return $this->getConfig('overwriteWarning');
 	}
-
+	
 	/**
 	 * Determine if the field should show a warning when overwriting a file.
 	 * This requires Upload->replaceFile config to be set to true, otherwise
 	 * files will be renamed instead of overwritten (although the warning will
 	 * still be displayed)
-	 *
+	 * 
 	 * @param boolean $overwriteWarning
 	 * @return UploadField Self reference
 	 */
@@ -305,7 +305,7 @@ class UploadField extends FileField {
 	/**
 	 * Get the record to use as "Parent" for uploaded Files (eg a Page with a has_one to File) If none is set, it will
 	 * use Form->getRecord() or Form->Controller()->data()
-	 *
+	 * 
 	 * @return DataObject
 	 */
 	public function getRecord() {
@@ -313,7 +313,7 @@ class UploadField extends FileField {
 			if (($record = $this->form->getRecord()) && ($record instanceof DataObject)) {
 				$this->record = $record;
 			} elseif (($controller = $this->form->Controller())
-				&& $controller->hasMethod('data')
+				&& $controller->hasMethod('data') 
 				&& ($record = $controller->data())
 				&& ($record instanceof DataObject)
 			) {
@@ -322,40 +322,40 @@ class UploadField extends FileField {
 		}
 		return $this->record;
 	}
-
+	
 	/**
 	 * Loads the related record values into this field. UploadField can be uploaded
 	 * in one of three ways:
-	 *
+	 * 
 	 *  - By passing in a list of file IDs in the $value parameter (an array with a single
 	 *    key 'Files', with the value being the actual array of IDs).
 	 *  - By passing in an explicit list of File objects in the $record parameter, and
 	 *    leaving $value blank.
 	 *  - By passing in a dataobject in the $record parameter, from which file objects
 	 *    will be extracting using the field name as the relation field.
-	 *
-	 * Each of these methods will update both the items (list of File objects) and the
+	 * 
+	 * Each of these methods will update both the items (list of File objects) and the 
 	 * field value (list of file ID values).
-	 *
+	 * 
 	 * @param array $value Array of submitted form data, if submitting from a form
 	 * @param array|DataObject|SS_List $record Full source record, either as a DataObject,
 	 * SS_List of items, or an array of submitted form data
 	 * @return UploadField Self reference
 	 */
 	public function setValue($value, $record = null) {
-
+		
 		// If we're not passed a value directly, we can attempt to infer the field
 		// value from the second parameter by inspecting its relations
 		$items = new ArrayList();
-
+		
 		// Determine format of presented data
 		if(empty($value) && $record) {
 			// If a record is given as a second parameter, but no submitted values,
 			// then we should inspect this instead for the form values
-
+			
 			if(($record instanceof DataObject) && $record->hasMethod($this->getName())) {
 				// If given a dataobject use reflection to extract details
-
+				
 				$data = $record->{$this->getName()}();
 				if($data instanceof DataObject) {
 					// If has_one, add sole item to default list
@@ -373,8 +373,8 @@ class UploadField extends FileField {
 			$class = $this->getRelationAutosetClass();
 			$items = DataObject::get($class)->byIDs($value['Files']);
 		}
-
-		// If javascript is disabled, direct file upload (non-html5 style) can
+		
+		// If javascript is disabled, direct file upload (non-html5 style) can 
 		// trigger a single or multiple file submission. Note that this may be
 		// included in addition to re-submitted File IDs as above, so these
 		// should be added to the list instead of operated on independently.
@@ -388,7 +388,7 @@ class UploadField extends FileField {
 				}
 			}
 		}
-
+		
 		// Filter items by what's allowed to be viewed
 		$filteredItems = new ArrayList();
 		$fileIDs = array();
@@ -398,7 +398,7 @@ class UploadField extends FileField {
 				$fileIDs[] = $file->ID;
 			}
 		}
-
+		
 		// Filter and cache updated item list
 		$this->items = $filteredItems;
 		// Same format as posted form values for this field. Also ensures that
@@ -411,9 +411,9 @@ class UploadField extends FileField {
 
 	/**
 	 * Sets the items assigned to this field as an SS_List of File objects.
-	 * Calling setItems will also update the value of this field, as well as
+	 * Calling setItems will also update the value of this field, as well as 
 	 * updating the internal list of File items.
-	 *
+	 * 
 	 * @param SS_List $items
 	 * @return UploadField self reference
 	 */
@@ -423,17 +423,17 @@ class UploadField extends FileField {
 
 	/**
 	 * Retrieves the current list of files
-	 *
+	 * 
 	 * @return SS_List
 	 */
 	public function getItems() {
 		return $this->items ? $this->items : new ArrayList();
 	}
-
+	
 	/**
-	 * Retrieves a customised list of all File records to ensure they are
+	 * Retrieves a customised list of all File records to ensure they are 
 	 * properly viewable when rendered in the field template.
-	 *
+	 * 
 	 * @return SS_List[ViewableData_Customised]
 	 */
 	public function getCustomisedItems() {
@@ -443,17 +443,17 @@ class UploadField extends FileField {
 		}
 		return $customised;
 	}
-
+	
 	/**
 	 * Retrieves the list of selected file IDs
-	 *
+	 * 
 	 * @return array
 	 */
 	public function getItemIDs() {
 		$value = $this->Value();
 		return empty($value['Files']) ? array() : $value['Files'];
 	}
-
+	
 	public function Value() {
 		// Re-override FileField Value to use data value
 		return $this->dataValue();
@@ -463,10 +463,10 @@ class UploadField extends FileField {
 		// Check required relation details are available
 		$fieldname = $this->getName();
 		if(!$fieldname) return $this;
-
+		
 		// Get details to save
 		$idList = $this->getItemIDs();
-
+		
 		// Check type of relation
 		$relation = $record->hasMethod($fieldname) ? $record->$fieldname() : null;
 		if($relation && ($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
@@ -482,7 +482,7 @@ class UploadField extends FileField {
 	/**
 	 * Customises a file with additional details suitable for rendering in the
 	 * UploadField.ss template
-	 *
+	 * 
 	 * @param File $file
 	 * @return ViewableData_Customised
 	 */
@@ -501,9 +501,9 @@ class UploadField extends FileField {
 
 	/**
 	 * Assign a front-end config variable for the upload field
-	 *
+	 * 
 	 * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options for the list of front end options available
-	 *
+	 * 
 	 * @param string $key
 	 * @param mixed $val
 	 * @return UploadField self reference
@@ -515,9 +515,9 @@ class UploadField extends FileField {
 
 	/**
 	 * Gets a front-end config variable for the upload field
-	 *
+	 * 
 	 * @see https://github.com/blueimp/jQuery-File-Upload/wiki/Options for the list of front end options available
-	 *
+	 * 
 	 * @param string $key
 	 * @return mixed
 	 */
@@ -528,7 +528,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Determine if the field should automatically upload the file.
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public function getAutoUpload() {
@@ -537,7 +537,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Determine if the field should automatically upload the file
-	 *
+	 * 
 	 * @param boolean $autoUpload
 	 * @return UploadField Self reference
 	 */
@@ -547,15 +547,15 @@ class UploadField extends FileField {
 
 	/**
 	 * Determine maximum number of files allowed to be attached
-	 * Defaults to 1 for has_one and null (unlimited) for
+	 * Defaults to 1 for has_one and null (unlimited) for 
 	 * many_many and has_many relations.
-	 *
+	 * 
 	 * @return integer|null Maximum limit, or null for no limit
 	 */
 	public function getAllowedMaxFileNumber() {
 		$allowedMaxFileNumber = $this->getConfig('allowedMaxFileNumber');
-
-		// if there is a has_one relation with that name on the record and
+		
+		// if there is a has_one relation with that name on the record and 
 		// allowedMaxFileNumber has not been set, it's wanted to be 1
 		if(empty($allowedMaxFileNumber)) {
 			$record = $this->getRecord();
@@ -569,15 +569,15 @@ class UploadField extends FileField {
 			return $allowedMaxFileNumber;
 		}
 	}
-
-
+	
+	
 	/**
 	 * Limit allowed file extensions. Empty by default, allowing all extensions.
 	 * To allow files without an extension, use an empty string.
 	 * See {@link File::$allowed_extensions} to get a good standard set of
 	 * extensions that are typically not harmful in a webserver context.
 	 * See {@link setAllowedMaxFileSize()} to limit file size by extension.
-	 *
+	 * 
 	 * @param array $rules List of extensions
 	 * @return UploadField Self reference
 	 */
@@ -585,13 +585,13 @@ class UploadField extends FileField {
 		$this->getValidator()->setAllowedExtensions($rules);
 		return $this;
 	}
-
+	
 	/**
 	 * Limit allowed file extensions by specifying categories of file types.
 	 * These may be 'image', 'audio', 'mov', 'zip', 'flash', or 'doc'
 	 * See {@link File::$allowed_extensions} for details of allowed extensions
 	 * for each of these categories
-	 *
+	 * 
 	 * @param string $category Category name
 	 * @param string,... $categories Additional category names
 	 * @return UploadField Self reference
@@ -599,13 +599,13 @@ class UploadField extends FileField {
 	public function setAllowedFileCategories($category) {
 		$extensions = array();
 		$knownCategories = File::config()->app_categories;
-
+		
 		// Parse arguments
 		$categories = func_get_args();
 		if(func_num_args() === 1 && is_array(reset($categories))) {
 			$categories = reset($categories);
 		}
-
+		
 		// Merge all categories into list of extensions
 		foreach(array_filter($categories) as $category) {
 			if(isset($knownCategories[$category])) {
@@ -616,11 +616,11 @@ class UploadField extends FileField {
 		}
 		return $this->setAllowedExtensions($extensions);
 	}
-
+	
 	/**
 	 * Returns list of extensions allowed by this field, or an empty array
 	 * if there is no restriction
-	 *
+	 * 
 	 * @return array
 	 */
 	public function getAllowedExtensions() {
@@ -629,7 +629,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Determine maximum number of files allowed to be attached.
-	 *
+	 * 
 	 * @param integer|null $allowedMaxFileNumber Maximum limit. 0 or null will be treated as unlimited
 	 * @return UploadField Self reference
 	 */
@@ -639,7 +639,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Determine if the user has permission to upload.
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public function canUpload() {
@@ -651,7 +651,7 @@ class UploadField extends FileField {
 	/**
 	 * Specify whether the user can upload files.
 	 * String values will be treated as required permission codes
-	 *
+	 * 
 	 * @param boolean|string $canUpload Either a boolean flag, or a required
 	 * permission code
 	 * @return UploadField Self reference
@@ -663,7 +663,7 @@ class UploadField extends FileField {
 	/**
 	 * Determine if the user has permission to attach existing files
 	 * By default returns true if the user has the CMS_ACCESS_AssetAdmin permission
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public function canAttachExisting() {
@@ -671,10 +671,10 @@ class UploadField extends FileField {
 		$can = $this->getConfig('canAttachExisting');
 		return (is_bool($can)) ? $can : Permission::check($can);
 	}
-
+	
 	/**
 	 * Returns true if the field is neither readonly nor disabled
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public function isActive() {
@@ -684,7 +684,7 @@ class UploadField extends FileField {
 	/**
 	 * Specify whether the user can attach existing files
 	 * String values will be treated as required permission codes
-	 *
+	 * 
 	 * @param boolean|string $canAttachExisting Either a boolean flag, or a
 	 * required permission code
 	 * @return UploadField Self reference
@@ -695,7 +695,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Gets thumbnail width. Defaults to 80
-	 *
+	 * 
 	 * @return integer
 	 */
 	public function getPreviewMaxWidth() {
@@ -704,7 +704,7 @@ class UploadField extends FileField {
 
 	/**
 	 * @see UploadField::getPreviewMaxWidth()
-	 *
+	 * 
 	 * @param integer $previewMaxWidth
 	 * @return UploadField Self reference
 	 */
@@ -714,7 +714,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Gets thumbnail height. Defaults to 60
-	 *
+	 * 
 	 * @return integer
 	 */
 	public function getPreviewMaxHeight() {
@@ -723,7 +723,7 @@ class UploadField extends FileField {
 
 	/**
 	 * @see UploadField::getPreviewMaxHeight()
-	 *
+	 * 
 	 * @param integer $previewMaxHeight
 	 * @return UploadField Self reference
 	 */
@@ -734,7 +734,7 @@ class UploadField extends FileField {
 	/**
 	 * javascript template used to display uploading files
 	 * Defaults to 'ss-uploadfield-uploadtemplate'
-	 *
+	 * 
 	 * @see javascript/UploadField_uploadtemplate.js
 	 * @var string
 	 */
@@ -744,7 +744,7 @@ class UploadField extends FileField {
 
 	/**
 	 * @see UploadField::getUploadTemplateName()
-	 *
+	 * 
 	 * @param string $uploadTemplateName
 	 * @return UploadField Self reference
 	 */
@@ -755,7 +755,7 @@ class UploadField extends FileField {
 	/**
 	 * javascript template used to display already uploaded files
 	 * Defaults to 'ss-downloadfield-downloadtemplate'
-	 *
+	 * 
 	 * @see javascript/DownloadField_downloadtemplate.js
 	 * @var string
 	 */
@@ -765,7 +765,7 @@ class UploadField extends FileField {
 
 	/**
 	 * @see Uploadfield::getDownloadTemplateName()
-	 *
+	 * 
 	 * @param string $downloadTemplateName
 	 * @return Uploadfield Self reference
 	 */
@@ -776,12 +776,12 @@ class UploadField extends FileField {
 	/**
 	 * FieldList $fields for the EditForm
 	 * @example 'getCMSFields'
-	 *
+	 * 
 	 * @param File $file File context to generate fields for
 	 * @return FieldList List of form fields
 	 */
 	public function getFileEditFields(File $file) {
-
+		
 		// Empty actions, generate default
 		if(empty($this->fileEditFields)) {
 			$fields = $file->getCMSFields();
@@ -791,22 +791,22 @@ class UploadField extends FileField {
 			}
 			return $fields;
 		}
-
+		
 		// Fields instance
 		if ($this->fileEditFields instanceof FieldList) return $this->fileEditFields;
-
+		
 		// Method to call on the given file
 		if($file->hasMethod($this->fileEditFields)) {
 			return $file->{$this->fileEditFields}();
 		}
-
+		
 		user_error("Invalid value for UploadField::fileEditFields", E_USER_ERROR);
 	}
 
 	/**
 	 * FieldList $fields or string $name (of a method on File to provide a fields) for the EditForm
 	 * @example 'getCMSFields'
-	 *
+	 * 
 	 * @param FieldList|string
 	 * @return Uploadfield Self reference
 	 */
@@ -818,34 +818,34 @@ class UploadField extends FileField {
 	/**
 	 * FieldList $actions or string $name (of a method on File to provide a actions) for the EditForm
 	 * @example 'getCMSActions'
-	 *
+	 * 
 	 * @param File $file File context to generate form actions for
 	 * @return FieldList Field list containing FormAction
 	 */
 	public function getFileEditActions(File $file) {
-
+		
 		// Empty actions, generate default
 		if(empty($this->fileEditActions)) {
 			$actions = new FieldList($saveAction = new FormAction('doEdit', _t('UploadField.DOEDIT', 'Save')));
 			$saveAction->addExtraClass('ss-ui-action-constructive icon-accept');
 			return $actions;
 		}
-
+		
 		// Actions instance
 		if ($this->fileEditActions instanceof FieldList) return $this->fileEditActions;
-
+		
 		// Method to call on the given file
 		if($file->hasMethod($this->fileEditActions)) {
 			return $file->{$this->fileEditActions}();
 		}
-
+		
 		user_error("Invalid value for UploadField::fileEditActions", E_USER_ERROR);
 	}
 
 	/**
 	 * FieldList $actions or string $name (of a method on File to provide a actions) for the EditForm
 	 * @example 'getCMSActions'
-	 *
+	 * 
 	 * @param FieldList|string
 	 * @return Uploadfield Self reference
 	 */
@@ -857,29 +857,29 @@ class UploadField extends FileField {
 	/**
 	 * Determines the validator to use for the edit form
 	 * @example 'getCMSValidator'
-	 *
+	 * 
 	 * @param File $file File context to generate validator from
 	 * @return Validator Validator object
 	 */
 	public function getFileEditValidator(File $file) {
 		// Empty validator
 		if(empty($this->fileEditValidator)) return null;
-
+		
 		// Validator instance
 		if($this->fileEditValidator instanceof Validator) return $this->fileEditValidator;
-
+		
 		// Method to call on the given file
 		if($file->hasMethod($this->fileEditValidator)) {
 			return $file->{$this->fileEditValidator}();
 		}
-
+		
 		user_error("Invalid value for UploadField::fileEditValidator", E_USER_ERROR);
 	}
 
 	/**
 	 * Validator (eg RequiredFields) or string $name (of a method on File to provide a Validator) for the EditForm
 	 * @example 'getCMSValidator'
-	 *
+	 * 
 	 * @param Validator|string
 	 * @return Uploadfield Self reference
 	 */
@@ -931,7 +931,7 @@ class UploadField extends FileField {
 
 		Requirements::combine_files('uploadfield.js', array(
 			// @todo jquery templates is a project no longer maintained and should be retired at some point.
-			THIRDPARTY_DIR . '/javascript-templates/tmpl.js',
+			THIRDPARTY_DIR . '/javascript-templates/tmpl.js', 
 			THIRDPARTY_DIR . '/javascript-loadimage/load-image.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.iframe-transport.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js',
@@ -955,37 +955,37 @@ class UploadField extends FileField {
 			// Fileupload treats maxNumberOfFiles as the max number of _additional_ items allowed
 			'maxNumberOfFiles' => $allowedMaxFileNumber ? ($allowedMaxFileNumber - count($this->getItemIDs())) : null
 		);
-
+		
 		// Validation: File extensions
 		if ($allowedExtensions = $this->getAllowedExtensions()) {
 			$config['acceptFileTypes'] = '(\.|\/)(' . implode('|', $allowedExtensions) . ')$';
 			$config['errorMessages']['acceptFileTypes'] = _t(
-				'File.INVALIDEXTENSIONSHORT',
+				'File.INVALIDEXTENSIONSHORT', 
 				'Extension is not allowed'
 			);
 		}
-
+		
 		// Validation: File size
 		if ($allowedMaxFileSize = $this->getValidator()->getAllowedMaxFileSize()) {
 			$config['maxFileSize'] = $allowedMaxFileSize;
 			$config['errorMessages']['maxFileSize'] = _t(
-				'File.TOOLARGESHORT',
+				'File.TOOLARGESHORT', 
 				'Filesize exceeds {size}',
 				array('size' => File::format_size($config['maxFileSize']))
 			);
 		}
-
+		
 		// Validation: Number of files
 		if ($allowedMaxFileNumber) {
 			if($allowedMaxFileNumber > 1) {
 				$config['errorMessages']['maxNumberOfFiles'] = _t(
-					'UploadField.MAXNUMBEROFFILESSHORT',
+					'UploadField.MAXNUMBEROFFILESSHORT', 
 					'Can only upload {count} files',
 					array('count' => $allowedMaxFileNumber)
 				);
 			} else {
 				$config['errorMessages']['maxNumberOfFiles'] = _t(
-					'UploadField.MAXNUMBEROFFILESONE',
+					'UploadField.MAXNUMBEROFFILESONE', 
 					'Can only upload one file'
 				);
 			}
@@ -997,7 +997,7 @@ class UploadField extends FileField {
 			$config['errorMessages']['overwriteWarning'] =
 				_t('UploadField.OVERWRITEWARNING', 'File with the same name already exists');
 		}
-
+		
 		$mergedConfig = array_merge($config, $this->ufConfig);
 		return $this->customise(array(
 			'configString' => str_replace('"', "'", Convert::raw2json($mergedConfig)),
@@ -1008,26 +1008,26 @@ class UploadField extends FileField {
 
 	/**
 	 * Validation method for this field, called when the entire form is validated
-	 *
+	 * 
 	 * @param Validator $validator
 	 * @return boolean
 	 */
 	public function validate($validator) {
-
+		
 		// @todo Test compatibility with RequiredFields
 		$name = $this->getName();
 		$files = $this->getItems();
-
+		
 		// If there are no files then quit
 		if($files->count() == 0) return true;
 
-		// Check max number of files
+		// Check max number of files 
 		$maxFiles = $this->getAllowedMaxFileNumber();
 		if($maxFiles && ($files->count() > $maxFiles)) {
 			$validator->validationError(
 				$name,
 				_t(
-					'UploadField.MAXNUMBEROFFILES',
+					'UploadField.MAXNUMBEROFFILES', 
 					'Max number of {count} file(s) exceeded.',
 					array('count' => $maxFiles)
 				),
@@ -1035,7 +1035,7 @@ class UploadField extends FileField {
 			);
 			return false;
 		}
-
+		
 		// Revalidate each file against nested validator
 		$this->upload->clearErrors();
 		foreach($files as $file) {
@@ -1049,7 +1049,7 @@ class UploadField extends FileField {
 			);
 			$this->upload->validate($tmpFile);
 		}
-
+		
 		// Check all errors
 		if($errors = $this->upload->getErrors()) {
 			foreach($errors as $error) {
@@ -1057,10 +1057,10 @@ class UploadField extends FileField {
 			}
 			return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	/**
 	 * @param SS_HTTPRequest $request
 	 * @return UploadField_ItemHandler
@@ -1084,15 +1084,15 @@ class UploadField extends FileField {
 	public function handleSelect(SS_HTTPRequest $request) {
 		return UploadField_SelectHandler::create($this, $this->getFolderName());
 	}
-
+	
 	/**
 	 * Given an array of post variables, extract all temporary file data into an array
-	 *
+	 * 
 	 * @param array $postVars Array of posted form data
 	 * @return array List of temporary file data
 	 */
 	protected function extractUploadedFileData($postVars) {
-
+		
 		// Note: Format of posted file parameters in php is a feature of using
 		// <input name='{$Name}[Uploads][]' /> for multiple file uploads
 		$tmpFiles = array();
@@ -1113,33 +1113,33 @@ class UploadField extends FileField {
 			// Fallback to allow single file uploads (method used by AssetUploadField)
 			$tmpFiles[] = $postVars;
 		}
-
+		
 		return $tmpFiles;
 	}
-
+	
 	/**
 	 * Loads the temporary file data into a File object
-	 *
+	 * 
 	 * @param array $tmpFile Temporary file data
 	 * @param string $error Error message
 	 * @return File File object, or null if error
 	 */
 	protected function saveTemporaryFile($tmpFile, &$error = null) {
-
+		
 		// Determine container object
 		$error = null;
 		$fileObject = null;
-
+		
 		if (empty($tmpFile)) {
 			$error = _t('UploadField.FIELDNOTSET', 'File information not found');
 			return null;
 		}
-
+		
 		if($tmpFile['error']) {
 			$error = $tmpFile['error'];
 			return null;
 		}
-
+		
 		// Search for relations that can hold the uploaded files, but don't fallback
 		// to default if there is no automatic relation
 		if ($relationClass = $this->getRelationAutosetClass(null)) {
@@ -1161,15 +1161,15 @@ class UploadField extends FileField {
 			$error = implode(' ' . PHP_EOL, $this->upload->getErrors());
 			return null;
 		}
-
+		
 		// return file
 		return $this->upload->getFile();
 	}
-
+	
 	/**
 	 * Safely encodes the File object with all standard fields required
 	 * by the front end
-	 *
+	 * 
 	 * @param File $file
 	 * @return array Array encoded list of file attributes
 	 */
@@ -1192,7 +1192,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Action to handle upload of a single file
-	 *
+	 * 
 	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse
 	 * @return SS_HTTPResponse
@@ -1205,7 +1205,7 @@ class UploadField extends FileField {
 		// Protect against CSRF on destructive action
 		$token = $this->getForm()->getSecurityToken();
 		if(!$token->checkRequest($request)) return $this->httpError(400);
-
+		
 		// Get form details
 		$name = $this->getName();
 		$postVars = $request->postVar($name);
@@ -1219,7 +1219,7 @@ class UploadField extends FileField {
 		} else {
 			$return = $this->encodeFileAttributes($file);
 		}
-
+		
 		// Format response with json
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
@@ -1228,16 +1228,16 @@ class UploadField extends FileField {
 	}
 
 	/**
-	 * Retrieves details for files that this field wishes to attache to the
+	 * Retrieves details for files that this field wishes to attache to the 
 	 * client-side form
-	 *
+	 * 
 	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse
 	 */
 	public function attach(SS_HTTPRequest $request) {
 		if(!$request->isPOST()) return $this->httpError(403);
 		if(!$this->canAttachExisting()) return $this->httpError(403);
-
+		
 		// Retrieve file attributes required by front end
 		$return = array();
 		$files = File::get()->byIDs($request->postVar('ids'));
@@ -1248,19 +1248,19 @@ class UploadField extends FileField {
 		$response->addHeader('Content-Type', 'application/json');
 		return $response;
 	}
-
+	
 	/**
 	 * Determines if a specified file exists
-	 *
+	 * 
 	 * @param SS_HTTPRequest $request
 	 */
 	public function fileexists(SS_HTTPRequest $request) {
-
+		
 		// Check both original and safely filtered filename
 		$originalFile = $request->requestVar('filename');
 		$nameFilter = FileNameFilter::create();
 		$filteredFile = basename($nameFilter->filter($originalFile));
-
+		
 		// check if either file exists
 		$folder = $this->getFolderName();
 		$exists = false;
@@ -1270,7 +1270,7 @@ class UploadField extends FileField {
 				break;
 			}
 		}
-
+		
 		// Encode and present response
 		$response = new SS_HTTPResponse(Convert::raw2json(array('exists' => $exists)));
 		$response->addHeader('Content-Type', 'application/json');
@@ -1292,10 +1292,10 @@ class UploadField extends FileField {
 	 * @return string Foreign class name.
 	 */
 	public function getRelationAutosetClass($default = 'File') {
-
+		
 		// Don't autodetermine relation if no relationship between parent record
 		if(!$this->relationAutoSetting) return $default;
-
+		
 		// Check record and name
 		$name = $this->getName();
 		$record = $this->getRecord();
@@ -1311,7 +1311,7 @@ class UploadField extends FileField {
 
 /**
  * RequestHandler for actions (edit, remove, delete) on a single item (File) of the UploadField
- *
+ * 
  * @author Zauberfisch
  * @package framework
  * @subpackage forms
@@ -1382,7 +1382,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 	/**
 	 * Action to handle deleting of a single file
-	 *
+	 * 
 	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse
 	 */
@@ -1407,7 +1407,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 	/**
 	 * Action to handle editing of a single file
-	 *
+	 * 
 	 * @param SS_HTTPRequest $request
 	 * @return ViewableData_Customised
 	 */
@@ -1438,14 +1438,14 @@ class UploadField_ItemHandler extends RequestHandler {
 		$validator = $this->parent->getFileEditValidator($file);
 		$form = new Form(
 			$this,
-			__FUNCTION__,
+			__FUNCTION__, 
 			$fields,
 			$actions,
 			$validator
 		);
 		$form->loadDataFrom($file);
 		$form->addExtraClass('small');
-
+		
 		return $form;
 	}
 
@@ -1469,7 +1469,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 		return $this->edit($request);
 	}
-
+	
 }
 
 /**
@@ -1554,7 +1554,7 @@ class UploadField_SelectHandler extends RequestHandler {
 		// Generate the folder selection field.
 		$folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
 		$folderField->setValue($folderID);
-
+		
 		// Generate the file list field.
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());

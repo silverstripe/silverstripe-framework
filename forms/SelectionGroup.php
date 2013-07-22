@@ -1,8 +1,8 @@
 <?php
 /**
- * Represents a number of fields which are selectable by a radio
- * button that appears at the beginning of each item.  Using CSS, you can
- * configure the field to only display its contents if the corresponding radio
+ * Represents a number of fields which are selectable by a radio 
+ * button that appears at the beginning of each item.  Using CSS, you can 
+ * configure the field to only display its contents if the corresponding radio 
  * button is selected. Each item is defined through {@link SelectionGroup_Item}.
  *
  * <code>
@@ -25,16 +25,16 @@
  * @subpackage fields-structural
  */
 class SelectionGroup extends CompositeField {
-
+	
 	/**
 	 * Create a new selection group.
-	 *
+	 * 
 	 * @param name The field name of the selection group.
 	 * @param items The list of {@link SelectionGroup_Item}
 	 */
 	public function __construct($name, $items) {
 		$this->name = $name;
-
+		
 		$selectionItems = array();
 		foreach($items as $key => $item) {
 			if($item instanceof SelectionGroup_Item) {
@@ -45,25 +45,25 @@ class SelectionGroup extends CompositeField {
 					list($key,$title) = explode('//', $key,2);
 				} else {
 					$title = null;
-				}
+				}	
 				$selectionItems[] = new SelectionGroup_Item($key, $item, $title);
 			}
 		}
 
 		parent::__construct($selectionItems);
-
+		
 		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
 	}
 
 	public function FieldSet() {
 		return $this->FieldList();
 	}
-
+	
 	public function FieldList() {
 		$items = parent::FieldList()->toArray();
 		$count = 0;
 		$newItems = array();
-
+		
 		foreach($items as $item) {
 			if($this->value == $item->getValue()) {
 				$firstSelected = " class=\"selected\"";
@@ -72,22 +72,22 @@ class SelectionGroup extends CompositeField {
 				$firstSelected = "";
 				$checked = false;
 			}
-
+			
 			$itemID = $this->ID() . '_' . (++$count);
 			$extra = array(
 				"RadioButton" => FormField::create_tag(
-					'input',
+					'input', 
 					array(
 						'class' => 'selector',
 						'type' => 'radio',
 						'id' => $itemID,
 						'name' => $this->name,
 						'value' => $item->getValue(),
-						'checked' => $checked
+						'checked' => $checked 
 					)
 				),
 				"RadioLabel" => FormField::create_tag(
-					'label',
+					'label', 
 					array('for' => $itemID),
 					$item->getTitle()
 				),
@@ -95,14 +95,14 @@ class SelectionGroup extends CompositeField {
 			);
 			$newItems[] = $item->customise($extra);
 		}
-
+		
 		return new ArrayList($newItems);
 	}
-
+	
 	public function hasData() {
 		return true;
 	}
-
+	
 	public function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR   . '/javascript/SelectionGroup.js');
