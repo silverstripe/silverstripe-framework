@@ -18,6 +18,8 @@
  * It will likely be heavily refactored before the release of 3.2
  */
 class ErrorControlChain {
+	public static $fatal_errors = null; // Initialised after class definition
+
 	protected $error = false;
 	protected $steps = array();
 
@@ -67,8 +69,12 @@ class ErrorControlChain {
 	}
 
 	public function handleError($errno, $errstr) {
-		if ((error_reporting() & $errno) == $errno && $this->suppression) throw new Exception('Generic Error');
-		else return false;
+		if ((error_reporting() & self::$fatal_errors & $errno) != 0 && $this->suppression) {
+			throw new Exception('Generic Error');
+		}
+		else {
+			return false;
+		}
 	}
 
 	protected function lastErrorWasFatal() {
@@ -117,3 +123,6 @@ class ErrorControlChain {
 		}
 	}
 }
+
+ErrorControlChain::$fatal_errors = E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR;
+if (defined('E_RECOVERABLE_ERROR')) ErrorControlChain::$fatal_errors |= E_RECOVERABLE_ERROR;
