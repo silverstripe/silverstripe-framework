@@ -9,8 +9,6 @@
  * Normal errors are suppressed even past the end of the chain. Fatal errors are only suppressed until the end
  * of the chain - the request will then die silently.
  *
- * The exception is if an error occurs and BASE_URL is not yet set - in that case the error is never suppressed.
- *
  * Usage:
  *
  * $chain = new ErrorControlChain();
@@ -20,6 +18,8 @@
  * It will likely be heavily refactored before the release of 3.2
  */
 class ErrorControlChain {
+	public static $fatal_errors = null; // Initialised after class definition
+
 	protected $error = false;
 	protected $steps = array();
 
@@ -68,9 +68,13 @@ class ErrorControlChain {
 		return $this->then($callback, null);
 	}
 
-	public function handleError() {
-		if ($this->suppression && defined('BASE_URL')) throw new Exception('Generic Error');
-		else return false;
+	public function handleError($errno, $errstr) {
+		if ((error_reporting() & self::$fatal_errors & $errno) != 0 && $this->suppression) {
+			throw new Exception('Generic Error');
+		}
+		else {
+			return false;
+		}
 	}
 
 	protected function lastErrorWasFatal() {
@@ -79,7 +83,7 @@ class ErrorControlChain {
 	}
 
 	public function handleFatalError() {
-		if ($this->handleFatalErrors && $this->suppression && defined('BASE_URL')) {
+		if ($this->handleFatalErrors && $this->suppression) {
 			if ($this->lastErrorWasFatal()) {
 				ob_clean();
 				$this->error = true;
@@ -89,7 +93,7 @@ class ErrorControlChain {
 	}
 
 	public function execute() {
-		set_error_handler(array($this, 'handleError'), error_reporting());
+		set_error_handler(array($this, 'handleError'));
 		register_shutdown_function(array($this, 'handleFatalError'));
 		$this->handleFatalErrors = true;
 
@@ -105,7 +109,7 @@ class ErrorControlChain {
 					call_user_func($step['callback'], $this);
 				}
 				catch (Exception $e) {
-					if ($this->suppression && defined('BASE_URL')) $this->error = true;
+					if ($this->suppression) $this->error = true;
 					else throw $e;
 				}
 			}
@@ -119,3 +123,6 @@ class ErrorControlChain {
 		}
 	}
 }
+
+ErrorControlChain::$fatal_errors = E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR;
+if (defined('E_RECOVERABLE_ERROR')) ErrorControlChain::$fatal_errors |= E_RECOVERABLE_ERROR;
