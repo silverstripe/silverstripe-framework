@@ -9,8 +9,6 @@
  * Normal errors are suppressed even past the end of the chain. Fatal errors are only suppressed until the end
  * of the chain - the request will then die silently.
  *
- * The exception is if an error occurs and BASE_URL is not yet set - in that case the error is never suppressed.
- *
  * Usage:
  *
  * $chain = new ErrorControlChain();
@@ -68,8 +66,8 @@ class ErrorControlChain {
 		return $this->then($callback, null);
 	}
 
-	public function handleError() {
-		if ($this->suppression && defined('BASE_URL')) throw new Exception('Generic Error');
+	public function handleError($errno, $errstr) {
+		if ((error_reporting() & $errno) == $errno && $this->suppression) throw new Exception('Generic Error');
 		else return false;
 	}
 
@@ -79,7 +77,7 @@ class ErrorControlChain {
 	}
 
 	public function handleFatalError() {
-		if ($this->handleFatalErrors && $this->suppression && defined('BASE_URL')) {
+		if ($this->handleFatalErrors && $this->suppression) {
 			if ($this->lastErrorWasFatal()) {
 				ob_clean();
 				$this->error = true;
@@ -89,7 +87,7 @@ class ErrorControlChain {
 	}
 
 	public function execute() {
-		set_error_handler(array($this, 'handleError'), error_reporting());
+		set_error_handler(array($this, 'handleError'));
 		register_shutdown_function(array($this, 'handleFatalError'));
 		$this->handleFatalErrors = true;
 
@@ -105,7 +103,7 @@ class ErrorControlChain {
 					call_user_func($step['callback'], $this);
 				}
 				catch (Exception $e) {
-					if ($this->suppression && defined('BASE_URL')) $this->error = true;
+					if ($this->suppression) $this->error = true;
 					else throw $e;
 				}
 			}
