@@ -55,6 +55,43 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
  * @see Director::direct()
  */
 
+/**
+ * Include the defines that set BASE_PATH, etc
+ */
+require_once('core/Constants.php');
+
+/**
+ * Figure out the request URL
+ */
+global $url;
+
+// IIS will sometimes generate this.
+if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
+	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
+}
+
+// Apache rewrite rules use this
+if (isset($_GET['url'])) {
+	$url = $_GET['url'];
+	// IIS includes get variables in url
+	$i = strpos($url, '?');
+	if($i !== false) {
+		$url = substr($url, 0, $i);
+	}
+
+	// Lighttpd uses this
+} else {
+	if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
+		list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
+		parse_str($query, $_GET);
+		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+	} else {
+		$url = $_SERVER["REQUEST_URI"];
+	}
+}
+
+// Remove base folders from the URL if webroot is hosted in a subfolder
+if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
 
 /**
  * Include SilverStripe's core code
@@ -66,68 +103,33 @@ $chain = new ErrorControlChain();
 $token = new ParameterConfirmationToken('flush');
 
 $chain
-	// First, if $_GET['flush'] was set, but no valid token, suppress the flush
 	->then(function($chain) use ($token){
+		// First, if $_GET['flush'] was set, but no valid token, suppress the flush
 		if (isset($_GET['flush']) && !$token->tokenProvided()) {
 			unset($_GET['flush']);
 		}
 		else {
 			$chain->setSuppression(false);
 		}
-	})
-	// Then load in core
-	->then(function(){
+
+		// Load in core
 		require_once('core/Core.php');
-	})
-	// Then build the URL (even if Core didn't load beyond setting BASE_URL)
-	->thenAlways(function(){
-		global $url;
 
-		// IIS will sometimes generate this.
-		if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
-			$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
-		}
-
-		// Apache rewrite rules use this
-		if (isset($_GET['url'])) {
-			$url = $_GET['url'];
-			// IIS includes get variables in url
-			$i = strpos($url, '?');
-			if($i !== false) {
-				$url = substr($url, 0, $i);
-			}
-
-		// Lighttpd uses this
-		} else {
-			if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
-				list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-				parse_str($query, $_GET);
-				if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-			} else {
-				$url = $_SERVER["REQUEST_URI"];
-			}
-		}
-
-		// Remove base folders from the URL if webroot is hosted in a subfolder
-		if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
-	})
-	// Then start up the database
-	->then(function(){
 		if (isset($_GET['debug_profile'])) {
 			Profiler::init();
 			Profiler::mark('all_execution');
 			Profiler::mark('main.php init');
 		}
 
+		// Connect to database
 		require_once('model/DB.php');
 		global $databaseConfig;
 
 		if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
 		if ($databaseConfig) DB::connect($databaseConfig);
 		if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
-	})
-	// Then if a flush was requested, redirect to it
-	->then(function($chain) use ($token){
+
+		// Then if a flush was requested, redirect to it
 		if ($token->parameterProvided() && !$token->tokenProvided()) {
 			// First, check if we're in dev mode, or the database doesn't have any security data
 			$canFlush = Director::isDev() || !Security::database_is_ready();
