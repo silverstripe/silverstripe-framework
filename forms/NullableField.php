@@ -4,19 +4,21 @@
  * the field is null or not.
  * 
  * The classic case is to wrap a TextField so that the user can distinguish between an empty string and a null string.
+ * <code>
  * $a = new NullableField(new TextField("Field1", "Field 1", "abc"));
- * 
+ * </code>
  * It displays the field that is wrapped followed by a checkbox that is used to specify if the value is null or not.
  * It uses the Title of the wrapped field for its title.
  * When a form is submitted the field tests the value of the "is null" checkbox and sets its value accordingly.
  * You can retrieve the value of the wrapped field from the NullableField as follows:
+ * <code>
  * $field->Value() or $field->dataValue()
- * 
+ * </code>
  * You can specify the label to use for the "is null" checkbox.  If you want to use I8N for this label then specify it
  * like this:
- * 
+ * <code>
  * $field->setIsNullLabel(_T(SOME_MODULE_ISNULL_LABEL, "Is Null");
- * 
+ * </code>
  * @author Pete Bacon Darwin
  * @package forms
  * @subpackage fields-basic

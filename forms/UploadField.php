@@ -13,9 +13,9 @@
  * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the value of min(upload_max_filesize,
  * post_max_size) from php.ini
  *
- * <>Usage</b>
+ * <b>Usage</b>
  * 
- * @example <code>
+ * <code>
  * $UploadField = new UploadField('AttachedImages', 'Please upload some images <span>(max. 5 files)</span>');
  * $UploadField->setAllowedFileCategories('image');
  * $UploadField->setAllowedMaxFileNumber(5);

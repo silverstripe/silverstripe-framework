@@ -4,7 +4,7 @@ require_once 'Zend/Date.php';
 /**
  * Form field to display editable time values in an <input type="text"> field. 
  * 
- * # Configuration
+ * <b>Configuration</b>
  * 
  * - 'timeformat' (string): Time format compatible with Zend_Date.
  *    Usually set to default format for {@link locale}
@@ -12,7 +12,7 @@ require_once 'Zend/Date.php';
  * - 'use_strtotime' (boolean): Accept values in PHP's built-in strtotime() notation, in addition
  *    to the format specified in `timeformat`. Example inputs: 'now', '11pm', '23:59:59'.
  * 
- * # Localization
+ * <b>Localization</b>
  * 
  * See {@link DateField}
  * 

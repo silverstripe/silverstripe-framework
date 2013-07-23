@@ -5,8 +5,8 @@
  * ASSUMPTION -> IF you pass your source as an array, you pass values as an array too. Likewise objects are handled
  * the same.
  * 
- * Example:
- * <code php>
+ * <b>Example:</b>
+ * <code>
  * new CheckboxSetField(
  *    $name = "topics",
  *    $title = "I am interested in the following topics",

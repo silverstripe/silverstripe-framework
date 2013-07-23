@@ -5,7 +5,7 @@
  * configure the field to only display its contents if the corresponding radio 
  * button is selected. Each item is defined through {@link SelectionGroup_Item}.
  *
- * @example <code>
+ * <code>
  * $items = array(
  * 	new SelectionGroup_Item(
  * 		'one',

@@ -6,7 +6,7 @@ require_once 'Zend/Date.php';
  * either in a single `<input type="text">` field,
  * or in three separate fields for day, month and year.
  * 
- * # Configuration
+ * <b>Configuration</b>
  * 
  * - 'showcalendar' (boolean): Determines if a calendar picker is shown.
  *    By default, jQuery UI datepicker is used (see {@link DateField_View_JQuery}).
@@ -31,7 +31,7 @@ require_once 'Zend/Date.php';
  * Example: <code>$myDateField->setConfig('jQueryUI.showWeek', true);</code>
  * See http://docs.jquery.com/UI/Datepicker for details.
  * 
- * # Localization
+ * <b>Localization</b>
  * 
  * The field will get its default locale from {@link i18n::get_locale()}, and set the `dateformat`
  * configuration accordingly. Changing the locale through {@link setLocale()} will not update the 
@@ -39,15 +39,16 @@ require_once 'Zend/Date.php';
  * 
  * See http://doc.silverstripe.org/framework/en/topics/i18n for more information about localizing form fields.
  * 
- * # Usage
+ * <b>Usage</b>
  * 
- * ## Example: German dates with separate fields for day, month, year
- * 
+ * <b>Example: German dates with separate fields for day, month, year</b>
+ *   <code>
  *   $f = new DateField('MyDate');
  *   $f->setLocale('de_DE');
  *   $f->setConfig('dmyfields', true);
+ *   </code>
  * 
- * # Validation
+ * <b>Validation</b>
  * 
  * Caution: JavaScript validation is only supported for the 'en_NZ' locale at the moment,
  * it will be disabled automatically for all other locales.
