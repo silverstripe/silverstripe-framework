@@ -206,6 +206,9 @@ class Image extends File {
 	 */
 	public function SetRatioSize($width, $height) {
 		
+		// Prevent divide by zero on missing/blank file
+		if(empty($this->width) || empty($this->height)) return null;
+		
 		// Check if image is already sized to the correct dimension
 		$widthRatio = $width / $this->width;
 		$heightRatio = $height / $this->height;
