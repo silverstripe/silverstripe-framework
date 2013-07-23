@@ -3,16 +3,13 @@
 /**
  * Class ErrorControlChain
  *
- * Runs a set of steps, optionally suppressing (but recording) any errors (even fatal ones) that occur in each step.
- * If an error does occur, subsequent steps are normally skipped, but can optionally be run anyway
- *
- * Normal errors are suppressed even past the end of the chain. Fatal errors are only suppressed until the end
- * of the chain - the request will then die silently.
+ * Runs a set of steps, optionally suppressing uncaught errors or exceptions which would otherwise be fatal that
+ * occur in each step. If an error does occur, subsequent steps are normally skipped, but can optionally be run anyway.
  *
  * Usage:
  *
  * $chain = new ErrorControlChain();
- * $chain->then($callback1)->then($callback2)->then(true, $callback3)->execute();
+ * $chain->then($callback1)->then($callback2)->thenIfErrored($callback3)->execute();
  *
  * WARNING: This class is experimental and designed specifically for use pre-startup in main.php
  * It will likely be heavily refactored before the release of 3.2
@@ -28,6 +25,9 @@ class ErrorControlChain {
 	/** We can't unregister_shutdown_function, so this acts as a flag to enable handling */
 	protected $handleFatalErrors = false;
 
+	/** We overload display_errors to hide errors during execution, so we need to remember the original to restore to */
+	protected $originalDisplayErrors = null;
+
 	public function hasErrored() {
 		return $this->error;
 	}
@@ -38,6 +38,7 @@ class ErrorControlChain {
 
 	public function setSuppression($suppression) {
 		$this->suppression = (bool)$suppression;
+		if ($this->handleFatalErrors) ini_set('display_errors', !$suppression);
 	}
 
 	/**
@@ -68,24 +69,14 @@ class ErrorControlChain {
 		return $this->then($callback, null);
 	}
 
-	public function handleError($errno, $errstr) {
-		if ((error_reporting() & self::$fatal_errors & $errno) != 0 && $this->suppression) {
-			throw new Exception('Generic Error');
-		}
-		else {
-			return false;
-		}
-	}
-
 	protected function lastErrorWasFatal() {
 		$error = error_get_last();
-		return $error && $error['type'] == 1;
+		return $error && ($error['type'] & self::$fatal_errors) != 0;
 	}
 
 	public function handleFatalError() {
 		if ($this->handleFatalErrors && $this->suppression) {
 			if ($this->lastErrorWasFatal()) {
-				ob_clean();
 				$this->error = true;
 				$this->step();
 			}
@@ -93,9 +84,11 @@ class ErrorControlChain {
 	}
 
 	public function execute() {
-		set_error_handler(array($this, 'handleError'));
 		register_shutdown_function(array($this, 'handleFatalError'));
 		$this->handleFatalErrors = true;
+
+		$this->originalDisplayErrors = ini_get('display_errors');
+		ini_set('display_errors', !$this->suppression);
 
 		$this->step();
 	}
@@ -105,13 +98,7 @@ class ErrorControlChain {
 			$step = array_shift($this->steps);
 
 			if ($step['onErrorState'] === null || $step['onErrorState'] === $this->error) {
-				try {
-					call_user_func($step['callback'], $this);
-				}
-				catch (Exception $e) {
-					if ($this->suppression) $this->error = true;
-					else throw $e;
-				}
+				call_user_func($step['callback'], $this);
 			}
 
 			$this->step();
@@ -119,7 +106,7 @@ class ErrorControlChain {
 		else {
 			// Now clean up
 			$this->handleFatalErrors = false;
-			restore_error_handler();
+			ini_set('display_errors', $this->originalDisplayErrors);
 		}
 	}
 }
