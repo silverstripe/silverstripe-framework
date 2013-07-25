@@ -223,8 +223,11 @@ class GridFieldAddExistingAutocompleter
 			$name = (strpos($searchField, ':') !== FALSE) ? $searchField : "$searchField:StartsWith";
 			$params[$name] = $request->getVar('gridfield_relationsearch');
 		}
+		$existing = $gridField->getList()->column('ID');
+		if ($existing) {
+			$allList = $allList->where(sprintf('"%s"."ID" NOT IN (%s)', $dataClass, implode(',', $existing)));
+		}
 		$results = $allList
-			->subtract($gridField->getList())
 			->filterAny($params)
 			->sort(strtok($searchFields[0], ':'), 'ASC')
 			->limit($this->getResultsLimit());
