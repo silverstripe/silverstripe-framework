@@ -123,6 +123,24 @@ class HtmlEditorField extends TextareaField {
 			$santiser->sanitise($htmlValue);
 		}
 
+		//Track links and images
+		$this->linkTracking();
+		$this->imageTracking();
+		
+		$record->{$this->name} = $htmlValue->getContent();
+	}
+
+	/**
+	 * Track links in the content
+	 * TODO: This has a dependency on SiteTree, move into cms module
+	 * 
+	 * @see HTMLEditorField::saveInto()
+	 * @see SiteTree::syncLinkTracking()
+	 */
+	public function linkTracking() {
+
+		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
+
 		if(class_exists('SiteTree')) {
 			// Populate link tracking for internal links & links to asset files.
 			if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
@@ -153,8 +171,32 @@ class HtmlEditorField extends TextareaField {
 					}
 				}
 			}
+
+			//Save link tracking data
+			if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
+				$tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d',
+					$this->name, $record->ID));
+
+				if($linkedPages) foreach($linkedPages as $item) {
+					$SQL_fieldName = Convert::raw2sql($this->name);
+					DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
+						VALUES ($record->ID, $item, '$SQL_fieldName')");
+				}
+			}
 		}
-		
+	}
+
+	/**
+	 * Track images in the content
+	 * TODO: This has a dependency on SiteTree, move into cms module
+	 * 
+	 * @see HTMLEditorField::saveInto()
+	 * @see SiteTree::syncLinkTracking()
+	 */
+	public function imageTracking() {
+
+		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
+
 		// Resample images, add default attributes and add to assets tracking.
 		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
 			// strip any ?r=n data from the src attribute
@@ -189,20 +231,9 @@ class HtmlEditorField extends TextareaField {
 				$linkedFiles[] = $image->ID;
 			}
 		}
-		
-		// Save file & link tracking data.
-		if(class_exists('SiteTree')) {
-			if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
-				$tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d',
-					$this->name, $record->ID));
 
-				if($linkedPages) foreach($linkedPages as $item) {
-					$SQL_fieldName = Convert::raw2sql($this->name);
-					DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
-						VALUES ($record->ID, $item, '$SQL_fieldName')");
-				}
-			}
-		
+		if(class_exists('SiteTree')) {
+			//Save image tracking data
 			if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
 				$tracker->where(
 					sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID)
@@ -214,8 +245,6 @@ class HtmlEditorField extends TextareaField {
 				}
 			}
 		}
-		
-		$record->{$this->name} = $htmlValue->getContent();
 	}
 
 	/**
