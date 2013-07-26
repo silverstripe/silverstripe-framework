@@ -121,7 +121,8 @@ class i18nTextCollector extends Object {
 			// themes folder)  
 			$isValidModuleFolder = (
 				is_dir("$this->basePath/$module") 
-				&& is_file("$this->basePath/$module/_config.php") 
+				&& is_file("$this->basePath/$module/_config.php")
+				&& is_dir("$this->basePath/$module/_config")
 				&& substr($module,0,1) != '.'
 			) || (
 				substr($module,0,7) == 'themes/'
