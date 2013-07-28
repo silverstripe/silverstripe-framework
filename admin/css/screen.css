@@ -231,7 +231,10 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
 .fieldgroup .fieldgroup-field { float: left; display: block; padding: 8px 8px 0 0; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
-.fieldgroup .fieldgroup-field label { margin-left: 0; margin-right: 1em; width: auto; }
+.fieldgroup .fieldgroup-field .fieldholder-small { padding: 0 0 8px 0; }
+.fieldgroup .fieldgroup-field .fieldgroup input.text, .fieldgroup .fieldgroup-field .fieldgroup textarea, .fieldgroup .fieldgroup-field .fieldgroup select, .fieldgroup .fieldgroup-field .fieldgroup .TreeDropdownField { margin-left: 0; }
+.fieldgroup .fieldgroup-field .fieldholder-small-label { display: block; }
+.fieldgroup .fieldgroup-field label { padding: 8px 8px 8px 0; margin-left: 0; margin-right: 1em; width: auto; }
 .fieldgroup.stacked .fieldgroup-field { float: none; }
 
 .ss-toggle { margin: 8px 0; }

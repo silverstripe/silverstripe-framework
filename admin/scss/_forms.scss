@@ -508,7 +508,22 @@ form.small .field, .field.small {
 			padding-bottom: 0;
 		}
 
+		.fieldholder-small {
+			padding: 0 0 $grid-y 0;
+		}
+
+		.fieldgroup input.text, .fieldgroup textarea, .fieldgroup select, .fieldgroup .TreeDropdownField {
+			margin-left: 0;
+		}
+
+		// Style specific label with display block, otherwise
+		// checkbox falls under the text
+		.fieldholder-small-label {
+			display: block;
+		}
+
 		label {
+			padding: $grid-y $grid-x $grid-y 0;
 			margin-left: 0;
 			margin-right: 1em;
 			width: auto;
