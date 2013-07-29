@@ -120,10 +120,12 @@ class i18nTextCollector extends Object {
 			// Only search for calls in folder with a _config.php file or _config folder
 			// (which means they are modules, including themes folder)  
 			$isValidModuleFolder = (
-				is_dir("$this->basePath/$module") 
-				&& is_file("$this->basePath/$module/_config.php")
-				&& is_dir("$this->basePath/$module/_config")
+				is_dir("$this->basePath/$module")
 				&& substr($module,0,1) != '.'
+				&& (
+					is_file("$this->basePath/$module/_config.php")
+					|| is_dir("$this->basePath/$module/_config")
+				)
 			) || (
 				substr($module,0,7) == 'themes/'
 				&& is_dir("$this->basePath/$module")
