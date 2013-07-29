@@ -227,7 +227,7 @@ Can be re-written as:
 	:::ss
 	<% cached LastEdited %>
 	
-	  <% cached Children.max(LastEdited) %>
+	  <% cached AllChildren.max(LastEdited) %>
 	    <% loop $Children %>
 	      $Name
 	    <% end_loop %>
