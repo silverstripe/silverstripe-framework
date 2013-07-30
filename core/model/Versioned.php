@@ -179,8 +179,12 @@ class Versioned extends DataObjectDecorator {
 		}
 		
 		if(!DB::query("SELECT COUNT(*) FROM \"" . self::$archive_tables[$baseTable] . "\"")->value()) {
-			if($date) $dateClause = "WHERE \"LastEdited\" <= '$date'";
-			else $dateClause = "";
+			if($date) {
+				$SQL_date = Convert::raw2sql($date);
+				$dateClause = "WHERE \"LastEdited\" <= '$SQL_date'";
+			} else {
+				$dateClause = "";
+			}
 
 			DB::query("INSERT INTO \"" . self::$archive_tables[$baseTable] . "\"
 				SELECT \"RecordID\", max(\"Version\") FROM \"{$baseTable}_versions\"
