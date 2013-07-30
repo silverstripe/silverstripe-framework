@@ -47,6 +47,21 @@ class ArrayLibTest extends SapphireTest {
 			)
 		);
 	}
+
+	public function testKeyvalue() {
+		$this->assertEquals(
+			ArrayLib::keyvalue(
+				array(
+					'testkey1' => 'testvalue1',
+					'testkey2' => 'testvalue2'
+				)
+			),
+			array(
+				'testkey1' => 'testkey1',
+				'testkey2' => 'testkey2'
+			)
+		);
+	}
 	
 	public function testArrayMergeRecursive() {
 		$first = array(
