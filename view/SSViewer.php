@@ -97,13 +97,13 @@ class SSViewer_Scope {
 					user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
 				}
 
-				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex) 
-					= $this->itemStack[$this->upIndex];
+				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex,
+					$this->currentIndex) = $this->itemStack[$this->upIndex];
 				break;
 			
 			case 'Top':
-				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex) 
-					= $this->itemStack[0];
+				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex,
+					$this->currentIndex) = $this->itemStack[0];
 				break;
 			
 			default:
