@@ -4,7 +4,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 		<% base_tag %>
 		
-		<title><% _t('FileIFrameField_iframe.ss.TITLE', 'Image Uploading Iframe') %></title>
+		<title><% _t('FileIFrameField_iframe_ss.TITLE', 'Image Uploading Iframe') %></title>
 	</head>
 	
 	<body>

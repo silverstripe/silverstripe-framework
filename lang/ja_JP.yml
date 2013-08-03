@@ -1,59 +1,53 @@
 ja_JP:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: 新しいフォルダ
-    SHOWALLOWEDEXTS: 'Show allowed extensions'
   AssetTableField:
-    CREATED: 初回アップロード日時
-    DIM: Dimensions
+    CREATED: '初回アップロード日時'
     FILENAME: ファイル名
     FOLDER: フォルダ
-    LASTEDIT: 最終更新日
-    OWNER: '所有者'
-    SIZE: ファイルサイズ
+    LASTEDIT: '最終更新日'
+    OWNER: 所有者
+    SIZE: 'ファイルサイズ'
     TITLE: タイトル
-    TYPE: ファイルの種類
-    URL: URL
+    TYPE: 'ファイルの種類'
   AssetUploadField:
-    ChooseFiles: ファイルを選択
-    DRAGFILESHERE: ここにファイルをドラッグ
+    ChooseFiles: 'ファイルを選択'
+    DRAGFILESHERE: 'ここにファイルをドラッグ'
     DROPAREA: 'ドロップ領域'
-    EDITALL: すべて編集
-    EDITANDORGANIZE: 編集と管理
-    EDITINFO: ファイルを編集
+    EDITALL: 'すべて編集'
+    EDITANDORGANIZE: '編集と管理'
+    EDITINFO: 'ファイルを編集'
     FILES: ファイル
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: コンピュータからアップロード
+    FROMCOMPUTERINFO: 'コンピュータからアップロード'
     TOTAL: 合計
-    TOUPLOAD: 'Choose files to upload...'
     UPLOADINPROGRESS: 'しばらくお待ちください...アップロードは進行中です'
     UPLOADOR: もしくは
   BBCodeParser:
     ALIGNEMENT: 整列
-    ALIGNEMENTEXAMPLE: 右寄せ
-    BOLD: テキストを強調する
+    ALIGNEMENTEXAMPLE: '右寄せ'
+    BOLD: 'テキストを強調する'
     BOLDEXAMPLE: 強調
-    CODE: コードブロック
-    CODEDESCRIPTION: 未フォーマットのコードブロックです
-    CODEEXAMPLE: コードブロック
-    COLORED: テキストに色をつける
-    COLOREDEXAMPLE: 青色のテキスト
+    CODE: 'コードブロック'
+    CODEDESCRIPTION: '未フォーマットのコードブロックです'
+    CODEEXAMPLE: 'コードブロック'
+    COLORED: 'テキストに色をつける'
+    COLOREDEXAMPLE: '青色のテキスト'
     EMAILLINK: 'メールアドレス リンク'
-    EMAILLINKDESCRIPTION: メールアドレスのリンクを作成
+    EMAILLINKDESCRIPTION: 'メールアドレスのリンクを作成'
     IMAGE: 画像e
-    IMAGEDESCRIPTION: 投函した画像を閲覧
-    ITALIC: テキストを斜体にする
+    IMAGEDESCRIPTION: '投函した画像を閲覧'
+    ITALIC: 'テキストを斜体にする'
     ITALICEXAMPLE: 斜体
-    LINK: ウェブサイトのリンク
+    LINK: 'ウェブサイトのリンク'
     LINKDESCRIPTION: '別のウェブサイトかURLにリンクしてください'
-    STRUCK: テキストに取り消し線を引く
+    STRUCK: 'テキストに取り消し線を引く'
     STRUCKEXAMPLE: 取り消し線
-    UNDERLINE: テキストに下線を引く
+    UNDERLINE: 'テキストに下線を引く'
     UNDERLINEEXAMPLE: 下線
-    UNORDERED: 不規則なリストです
-    UNORDEREDDESCRIPTION: 不規則なリストです
+    UNORDERED: '不規則なリストです'
+    UNORDEREDDESCRIPTION: '不規則なリストです'
     UNORDEREDEXAMPLE1: '不規則なアイテム 1'
-  BackLink_Button.ss:
+  BackLink_Button_ss:
     Back: 戻る
   BasicAuth:
     ENTERINFO: 'ユーザー名とパスワードを入力してください'
@@ -61,82 +55,51 @@ ja_JP:
     ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
   Boolean:
     ANY: 何でも
-    NOANSWER: 'False'
-    YESANSWER: 'True'
-  CMSLoadingScreen.ss:
+  CMSLoadingScreen_ss:
     LOADING: 読み込み中...
     REQUIREJS: 'CMSを利用するにはJavascriptが有効化されている必要があります。'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: すべてのCMSのセクションへアクセス
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    ACCESSALLINTERFACES: 'すべてのCMSのセクションへアクセス'
     SAVE: 保存
-  CMSPageHistoryController_versions.ss:
-    PREVIEW: 'Website preview'
-  CMSProfileController:
-    MENUTITLE: 'My Profile'
-  ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
+  ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'このサイトのパスワードが変更されました。'
     CHANGEPASSWORDTEXT2: '貴方は現在以下の証明書を使ってログインしています:'
     EMAIL: メールアドレス
     HELLO: こんにちわ！
     PASSWORD: パスワード
-  CheckboxField:
-    NOANSWER: 'False'
-    YESANSWER: 'True'
   ComplexTableField:
-    CLOSEPOPUP: ポップアップを閉じる
+    CLOSEPOPUP: 'ポップアップを閉じる'
     SUCCESSADD2: '{name}を追加しました'
     SUCCESSEDIT: '更新日時 %s %s %s'
-  ComplexTableField.ss:
+  ComplexTableField_ss:
     ADDITEM: '%sを追加する'
     NOITEMSFOUND: '項目が見つかりませんでした'
     SORTASC: '昇順'
     SORTDESC: 'ソート（下順）'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: 次へ
     PREVIOUS: 前へ
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-    SHOWONCLICKTITLE: パスワード変更
+    SHOWONCLICKTITLE: 'パスワード変更'
   CreditCardField:
     FIRST: 一番目
     FOURTH: 四番目
     SECOND: 二番目
     THIRD: 三番目
-  CurrencyField:
-    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: データオブジェクト
-    SINGULARNAME: データオブジェクト
+    PLURALNAME: 'データオブジェクト'
+    SINGULARNAME: 'データオブジェクト'
   Date:
-    DAY: day
-    DAYS: days
-    HOUR: hour
-    HOURS: hours
-    LessThanMinuteAgo: 'less than a minute'
-    MIN: min
-    MINS: mins
-    MONTH: month
-    MONTHS: months
-    SEC: sec
-    SECS: secs
     TIMEDIFFAGO: '{difference}前'
     TIMEDIFFIN: '{difference}以内'
-    YEAR: year
-    YEARS: years
   DateField:
-    NOTSET: セットされていません
+    NOTSET: 'セットされていません'
     TODAY: 今日
     VALIDDATEFORMAT2: '{{format}}日付フォーマットの正しい日付を入力してください。'
     VALIDDATEMAXDATE: '許可されている最も新しい日付{{date}}より古い日付か同じ日付である必要があります。'
     VALIDDATEMINDATE: '許可されている最も古い日付{{date}}より新しい日付か同じ日付である必要があります'
-  DatetimeField:
-    NOTSET: 'Not set'
   Director:
-    INVALID_REQUEST: 不正なリクエスト
+    INVALID_REQUEST: '不正なリクエスト'
   DropdownField:
     CHOOSE: (選択)
   EmailField:
@@ -147,189 +110,117 @@ ja_JP:
   Enum:
     ANY: 何でも
   File:
-    AviType: 'AVI video file'
-    Content: '内容'
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
+    Content: 内容
     Filename: ファイル名
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: ファイルサイズが0バイトです。
-    NOVALIDUPLOAD: 'File is not a valid upload'
+    NOFILESIZE: 'ファイルサイズが0バイトです。'
     Name: 名前
     PLURALNAME: ファイル
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: ファイル
     TOOLARGE: 'ファイルサイズが大きすぎます。許可されている最大サイズは{size}です。'
     TOOLARGESHORT: '{size}をファイルサイズは超えました'
-    TiffType: 'Tagged image format'
     Title: タイトル
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: このファイルの種類はアップロードすることを許可されていません
+    DISALLOWEDFILETYPE: 'このファイルの種類はアップロードすることを許可されていません'
     FILE: ファイル
-    FROMCOMPUTER: コンピューターから
-    FROMFILESTORE: ファイルストレージから
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
-  FileIFrameField_iframe.ss:
-    TITLE: イメージアップロード（Iframe）
+    FROMCOMPUTER: 'コンピューターから'
+    FROMFILESTORE: 'ファイルストレージから'
+  FileIFrameField_iframe_ss:
+    TITLE: 'イメージアップロード（Iframe）'
   Filesystem:
     SYNCRESULTS: '同期が完了しました: {createdcount}項目が作成され、{deletedcount}項目が削除されました。'
-  Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: こんにちわ！
     TEXT1: 'ここ''貴方の'
-    TEXT2: パスワードリセットのリンク
+    TEXT2: 'パスワードリセットのリンク'
     TEXT3: は
   Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: '入力された値はユニークではありません'
-    VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
-    VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONPASSWORDSDONTMATCH: 'パスワードが一致しません'
+    VALIDATIONPASSWORDSNOTEMPTY: 'パスワードが空欄です'
     VALIDATOR: 検証
-    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    Example: 'e.g. %s'
     NONE: 何もありません
   GridAction:
-    DELETE_DESCRIPTION: Delete
     Delete: 削除
     UnlinkRelation: リンク解除
   GridField:
     Add: '{name}を追加'
     Filter: フィルタ
-    FilterBy: 'Filter by '
     Find: 探す
-    LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 新しい%s
+    NewRecord: '新しい%s'
     NoItemsFound: '項目が見つかりませんでした'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
     PlaceHolder: '{type}を探す'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
     ResetFilter: リセット
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 削除権限がありません
-    EditPermissionsFailure: 'No permission to unlink record'
+    DeletePermissionsFailure: '削除権限がありません'
   GridFieldDetailForm:
-    CancelBtn: Cancel
     Create: 作成
     Delete: 削除
-    DeletePermissionsFailure: 削除権限がありません
+    DeletePermissionsFailure: '削除権限がありません'
     Deleted: '削除済み %s %s'
     Save: 保存
-    Saved: 'Saved {name} {link}'
-  GridFieldEditButton.ss:
-    EDIT: Edit
-  GridFieldItemEditView.ss: null
+  GridFieldItemEditView_ss:
+    Go_back: '戻る'
   Group:
-    AddRole: 'このグループに役割を追加する'
-    Code: グループコード
-    DefaultGroupTitleAdministrators: '管理者'
-    DefaultGroupTitleContentAuthors: 'コンテンツの著者'
+    Code: 'グループコード'
+    DefaultGroupTitleAdministrators: 管理者
     Description: 説明文
-    GroupReminder: '元グループを選択された場合、このグループはその役割をすべて受け継ぎます。'
-    Locked: ロックしますか？
-    NoRoles: 役割が見つかりませんでした
-    PLURALNAME: Groups
+    Locked: 'ロックしますか？'
     Parent: '元グループ'
-    RolesAddEditLink: 役割の管理
-    SINGULARNAME: Group
     Sort: '並び順'
     has_many_Permissions: 承認
     many_many_Members: メンバー
   GroupImportForm:
     Help1: '<p><em>CSV</em>フォーマット(カンマ区切り)から一つ以上のグループを取り込みます。<small><a href="#" class="toggle-advanced">高度な利用法について表示</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
     ResultDeleted: '%dグループを削除しました'
     ResultUpdated: '%dグループを更新しました'
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'URLを追加'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: アンカー
-    BUTTONADDURL: 'Add url'
-    BUTTONINSERT: '追加'
+    BUTTONINSERT: 追加
     BUTTONINSERTLINK: 'リンクを追加'
-    BUTTONREMOVELINK: リンクを削除
+    BUTTONREMOVELINK: 'リンクを削除'
     BUTTONUpdate: 更新
-    CAPTIONTEXT: タイトル
+    CAPTIONTEXT: 'タイトル'
     CSSCLASS: '調整 / スタイル'
-    CSSCLASSCENTER: 中央はテキストのみ
+    CSSCLASSCENTER: '中央はテキストのみ'
     CSSCLASSLEFT: '左側にテキストと一緒に処理してください'
-    CSSCLASSLEFTALONE: 中央はテキストのみ
+    CSSCLASSLEFTALONE: '中央はテキストのみ'
     CSSCLASSRIGHT: '右側にテキストと一緒に処理してください'
     DETAILS: 詳細
-    EMAIL: メールアドレス
+    EMAIL: 'メールアドレス'
     FILE: ファイル
     FOLDER: フォルダ
-    FROMCMS: CMSから
-    FROMCOMPUTER: コンピュータから
-    FROMWEB: Webから
+    FROMCMS: 'CMSから'
+    FROMCOMPUTER: 'コンピュータから'
+    FROMWEB: 'Webから'
     FindInFolder: 'フォルダ内を探す'
-    IMAGEALT: 代替テキスト(Alt)
+    IMAGEALT: '代替テキスト(Alt)'
     IMAGEALTTEXT: '代替(Alt)テキスト - 画像が表示されなかった場合に表示されます'
     IMAGEALTTEXTDESC: 'スクリーンリーダー利用者やイメージが表示されなかった場合に表示されます'
     IMAGEDIMENSIONS: サイズ
-    IMAGEHEIGHTPX: Height
     IMAGETITLE: 'タイトル(ツールチップ)テキスト - 画像に対する追加的情報'
-    IMAGETITLETEXT: タイトルテキスト(ツールチップ)
+    IMAGETITLETEXT: 'タイトルテキスト(ツールチップ)'
     IMAGETITLETEXTDESC: '画像に関する追加情報'
-    IMAGEWIDTHPX: Width
     INSERTMEDIA: 'メディアを追加'
     LINK: 'ハイライトテキストへのリンクの挿入/削除'
-    LINKANCHOR: このページにアンカーを置く
-    LINKDESCR: リンクの説明
-    LINKEMAIL: メールアドレス
-    LINKEXTERNAL: 他のウェブサイト
-    LINKFILE: ファイルをダウンロード
-    LINKINTERNAL: サイトのページ
-    LINKOPENNEWWIN: リンクを新しい新規ウインドウで開く
-    LINKTO: リンクする
+    LINKANCHOR: 'このページにアンカーを置く'
+    LINKDESCR: 'リンクの説明'
+    LINKEMAIL: 'メールアドレス'
+    LINKEXTERNAL: '他のウェブサイト'
+    LINKFILE: 'ファイルをダウンロード'
+    LINKINTERNAL: 'サイトのページ'
+    LINKOPENNEWWIN: 'リンクを新しい新規ウインドウで開く'
+    LINKTO: 'リンクする'
     PAGE: ページ
-    URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL''{url}''はメディアリソースとして扱うことができませんでした。'
-    UpdateMEDIA: メディアを更新
-  Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    UpdateMEDIA: 'メディアを更新'
   ImageField:
     IMAGE: 画像
-  Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
-  Image_iframe.ss:
-    TITLE: イメージアップロード（Iframe）
+  Image_iframe_ss:
+    TITLE: 'イメージアップロード（Iframe）'
   LeftAndMain:
-    CANT_REORGANISE: 最上層のページを変更する権限がありません。あなたの変更は保存されませんでした。
+    CANT_REORGANISE: '最上層のページを変更する権限がありません。あなたの変更は保存されませんでした。'
     DELETED: 削除しました。
     DropdownBatchActionsDefault: アクション
     HELP: ヘルプ
@@ -339,31 +230,24 @@ ja_JP:
     PERMDEFAULT: '認証方法を選択し、CMSにアクセスするために利用する認証情報を入力してください。'
     PLEASESAVE: '保存してください: 保存してないため更新できません。'
     PreviewButton: プレビュー
-    REORGANISATIONSUCCESSFUL: サイトツリーの再編集に成功しました。
+    REORGANISATIONSUCCESSFUL: 'サイトツリーの再編集に成功しました。'
     SAVEDUP: 保存済み
-    ShowAsList: 'show as list'
-    TooManyPages: 'Too many pages'
-    ValidationError: 'Validation error'
     VersionUnknown: 不明
-  LeftAndMain_Menu.ss:
+  LeftAndMain_Menu_ss:
     Hello: こんにちは！
-    LOGOUT: ログアウト
+    LOGOUT: 'ログアウト'
   LoginAttempt:
-    Email: メールアドレス
-    IP: IPアドレス
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
+    Email: 'メールアドレス'
+    IP: 'IPアドレス'
     Status: ステータス
   Member:
     ADDGROUP: 'グループを追加'
-    BUTTONCHANGEPASSWORD: パスワードの変更
-    BUTTONLOGIN: ログイン
-    BUTTONLOGINOTHER: 他の誰かとしてログイン
-    BUTTONLOSTPASSWORD: パスワードを紛失
-    CANTEDIT: 'You don''t have permission to do that'
-    CONFIRMNEWPASSWORD: 新しいパスワードを確認します
-    CONFIRMPASSWORD: パスワード（確認のためもう一度）
-    DATEFORMAT: 'Date format'
+    BUTTONCHANGEPASSWORD: 'パスワードの変更'
+    BUTTONLOGIN: 'ログイン'
+    BUTTONLOGINOTHER: '他の誰かとしてログイン'
+    BUTTONLOSTPASSWORD: 'パスワードを紛失'
+    CONFIRMNEWPASSWORD: '新しいパスワードを確認します'
+    CONFIRMPASSWORD: 'パスワード（確認のためもう一度）'
     DefaultAdminFirstname: '初期管理者'
     DefaultDateTime: 初期設定
     EMAIL: メールアドレス
@@ -373,236 +257,153 @@ ja_JP:
     ERRORNEWPASSWORD: '入力されたパスワードが一致しません。再度お試しください'
     ERRORPASSWORDNOTMATCH: '登録されているパスワードと一致しません、もう一度入力し直してください'
     ERRORWRONGCRED: 'メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください'
-    FIRSTNAME: 名
-    INTERFACELANG: 画面言語
+    FIRSTNAME: '名'
+    INTERFACELANG: '画面言語'
     INVALIDNEWPASSWORD: '次のパスワードは受け付けることができません: {password}'
     LOGGEDINAS: '{name}としてログインしています。'
-    NEWPASSWORD: 新しいパスワード
+    NEWPASSWORD: '新しいパスワード'
     PASSWORD: パスワード
     PLURALNAME: メンバー
-    REMEMBERME: パスワードを記憶？
+    REMEMBERME: 'パスワードを記憶？'
     SINGULARNAME: メンバー
-    SUBJECTPASSWORDCHANGED: パスワードが変わりました。
-    SUBJECTPASSWORDRESET: パスワード再発行
+    SUBJECTPASSWORDCHANGED: 'パスワードが変わりました。'
+    SUBJECTPASSWORDRESET: 'パスワード再発行'
     SURNAME: 姓
-    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: '入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: '{firstname}さん、おかえりなさい'
-    YOUROLDPASSWORD: 古いパスワード
+    YOUROLDPASSWORD: '古いパスワード'
     belongs_many_many_Groups: グループ
-    db_LastVisited: 最終訪問日
-    db_Locale: インターフェースの言語地域
-    db_LockedOutUntil: DBロックがされています。
+    db_LastVisited: '最終訪問日'
+    db_Locale: 'インターフェースの言語地域'
+    db_LockedOutUntil: 'DBロックがされています。'
     db_NumVisit: '訪問者数'
     db_Password: パスワード
-    db_PasswordExpiry: パスワードの有効期限
+    db_PasswordExpiry: 'パスワードの有効期限'
   MemberAuthenticator:
-    TITLE: メールアドレスとパスワード
+    TITLE: 'メールアドレスとパスワード'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': フィルタを適用
-    Custom: Custom
-    DATEFORMATBAD: 日付フォーマットが不正です
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
+    DATEFORMATBAD: '日付フォーマットが不正です'
     Preview: プレビュー
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: フォーマットに関するヘルプの表示・非表示
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
-    Toggle: 'Show formatting help'
+    TOGGLEHELP: 'フォーマットに関するヘルプの表示・非表示'
   MemberImportForm:
     Help1: '<p><em>CSVフォーマット</em>(コンマ区切り)でユーザーを取り込みます。 <small><a href="#" class="toggle-advanced">高度な利用方法を表示</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: '{count}メンバーを作成しました'
     ResultDeleted: '%d人のメンバーを削除しました'
-    ResultNone: 変更なし
+    ResultNone: '変更なし'
     ResultUpdated: '{count}メンバーを更新しました'
-  MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
-  MemberTableField: null
+  MemberTableField:
+    APPLY_FILTER: 'フィルタを適用'
   ModelAdmin:
     DELETE: 削除
     DELETEDRECORDS: '{count}レコードを削除しました。'
-    EMPTYBEFOREIMPORT: 'Replace data'
-    IMPORT: CSVからインポート
+    IMPORT: 'CSVからインポート'
     IMPORTEDRECORDS: '{count}レコードを取り込みました。'
     NOCSVFILE: 'インポートするためのCSVファイルを参照してください'
-    NOIMPORT: インポートするものがありません。
+    NOIMPORT: 'インポートするものがありません。'
     RESET: リセット
-    Title: 'Data Models'
     UPDATEDRECORDS: '{count}レコードを更新しました。'
-  ModelAdmin_ImportSpec.ss:
+  ModelAdmin_ImportSpec_ss:
     IMPORTSPECFIELDS: 'データベースカラム'
-    IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: 関連
-    IMPORTSPECTITLE: 'Specification for %s'
-  ModelAdmin_Tools.ss:
+  ModelAdmin_Tools_ss:
     FILTER: フィルタ
     IMPORT: 取り込み
-  ModelSidebar.ss:
+  ModelSidebar_ss:
     IMPORT_TAB_HEADER: 取り込み
     SEARCHLISTINGS: 検索
   MoneyField:
     FIELDLABELAMOUNT: 総計
     FIELDLABELCURRENCY: 通貨
   NullableField:
-    IsNullLabel: NULLである
+    IsNullLabel: 'NULLである'
   NumericField:
     VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
-  Pagination:
-    Page: Page
-    View: View
   Permission:
-    AdminGroup: '管理者'
-    CMS_ACCESS_CATEGORY: 'CMS Access'
+    AdminGroup: 管理者
     FULLADMINRIGHTS: '完全な管理権'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
     FromGroup: 'グループ"{title}"から継承'
     FromRole: '役割"{title}"から継承'
     FromRoleOnGroup: 'グループ "%s" のロール "%s"から継承'
-  PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
-  PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
   Permissions:
-    PERMISSIONS_CATEGORY: 役割とアクセス権限
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+    PERMISSIONS_CATEGORY: '役割とアクセス権限'
   PhoneNumberField:
     VALIDATION: '電話番号を入力してください'
-  RelationComplexTableField.ss:
-    ADD: '追加'
-    CSVEXPORT: CSVへ書き出し
+  RelationComplexTableField_ss:
+    ADD: 追加
+    CSVEXPORT: 'CSVへ書き出し'
     NOTFOUND: '項目が見つかりませんでした'
   Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
     BUTTONSEND: 'パスワードリセットのリンクを送信してください'
-    CHANGEPASSWORDBELOW: 以下のパスワードを変更できます
-    CHANGEPASSWORDHEADER: パスワードを変更しました
+    CHANGEPASSWORDBELOW: '以下のパスワードを変更できます'
+    CHANGEPASSWORDHEADER: 'パスワードを変更しました'
     ENTERNEWPASSWORD: '新しいパスワードを入力してください'
-    ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
+    ERRORPASSWORDPERMISSION: 'パスワードを変更する為に、ログインしなければなりません！'
     LOGGEDOUT: 'ログアウトしました。再度ログインする場合は証明書キーを入力してください'
-    LOGIN: ログイン
+    LOGIN: 'ログイン'
     NOTEPAGESECURED: 'このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'メールアドレスを入力してください、パスワードをリセットするURLを送信致します'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'ユーザを閲覧、追加、編集すること、及び、そのユーザに対して権限や役割を割り当てることを許可'
-    APPLY_ROLES: 役割をグループへ適用
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: グループの権限を編集
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: グループ名
-    IMPORTGROUPS: グループを取り込む
-    IMPORTUSERS: ユーザーの取り込み
+    APPLY_ROLES: '役割をグループへ適用'
+    GROUPNAME: 'グループ名'
+    IMPORTGROUPS: 'グループを取り込む'
     MEMBERS: メンバー
     MENUTITLE: セキュリティ
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 新しいグループを作成
     PERMISSIONS: 承認
-    ROLES: 役割
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: 役割
-    Users: ユーザ
   SecurityAdmin_MemberImportForm:
-    BtnImport: CSVから取り込み
+    BtnImport: 'CSVから取り込み'
     FileFieldLabel: 'CSVファイル <small>(利用可能な拡張子: *.csv)</small>'
   SilverStripeNavigator:
-    Auto: Auto
-    ChangeViewMode: 'Change view mode'
-    Desktop: Desktop
-    DualWindowView: 'Dual Window'
     Edit: 編集
-    EditView: 'Edit mode'
-    Mobile: Mobile
-    PreviewState: 'Preview State'
-    PreviewView: 'Preview mode'
-    Responsive: Responsive
-    SplitView: 'Split mode'
-    Tablet: Tablet
-    ViewDeviceWidth: 'Select a preview width'
-    Width: width
   SimpleImageField:
-    NOUPLOAD: 何も画像がアップロードされていません
+    NOUPLOAD: '何も画像がアップロードされていません'
   SiteTree:
     TABMAIN: メイン
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
+  TableField_ss:
     ADD: '新しい行を追加'
     ADDITEM: '%sを追加'
   TableListField:
-    CSVEXPORT: CSVにエクスポート
+    CSVEXPORT: 'CSVにエクスポート'
     PRINT: 印刷
-    Print: Print
-    SELECT: 選択：
-  TableListField.ss:
+    SELECT: '選択：'
+  TableListField_ss:
     NOITEMSFOUND: '項目が見つかりませんでした'
     SORTASC: '昇順で並べ替え'
     SORTDESC: '降順で並べ替え'
-  TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
-    VIEWFIRST: 一番目を表示
-    VIEWLAST: 最新を表示
-    VIEWNEXT: 次を表示
-    VIEWPREVIOUS: 前回を表示
+  TableListField_PageControls_ss:
+    VIEWFIRST: '一番目を表示'
+    VIEWLAST: '最新を表示'
+    VIEWNEXT: '次を表示'
+    VIEWPREVIOUS: '前回を表示'
   TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   ToggleField:
     LESS: 減少
-    MORE: '増加'
+    MORE: 増加
   UploadField:
-    ATTACHFILE: ファイルを添付
-    ATTACHFILES: ファイルを添付
-    AttachFile: ファイルを添付
-    CHOOSEANOTHERFILE: 'Choose another file'
-    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
-    DELETE: 'Delete from files'
+    ATTACHFILE: 'ファイルを添付'
+    ATTACHFILES: 'ファイルを添付'
+    AttachFile: 'ファイルを添付'
     DELETEINFO: 'ファイルストレージから永久にこのファイルは削除されました'
     DOEDIT: 保存
-    DROPFILE: ファイルをドロップ
-    DROPFILES: ファイルをドロップ
-    Dimensions: Dimensions
+    DROPFILE: 'ファイルをドロップ'
+    DROPFILES: 'ファイルをドロップ'
     EDIT: 編集
-    EDITINFO: このファイルを編集
+    EDITINFO: 'このファイルを編集'
     FIELDNOTSET: 'ファイル情報が見つかりませんでした'
-    FROMCOMPUTER: コンピュータから
-    FROMCOMPUTERINFO: ファイルから選択
-    FROMFILES: ファイルから
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    FROMCOMPUTER: 'コンピュータから'
+    FROMCOMPUTERINFO: 'ファイルから選択'
+    FROMFILES: 'ファイルから'
     MAXNUMBEROFFILES: '最大数の{count}ファイルを超えました。'
-    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: '{count}ファイルしかアップロードすることができません'
-    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: 削除
-    REMOVEERROR: ファイルの削除におけるエラー
+    REMOVEERROR: 'ファイルの削除におけるエラー'
     REMOVEINFO: 'ここからこのファイルを削除。ただし、ファイルのストレージからこのファイルの削除はしない。'
-    STARTALL: すべて開始
-    STARTALLINFO: すべてのアップロードを開始
+    STARTALL: 'すべて開始'
+    STARTALLINFO: 'すべてのアップロードを開始'
     Saved: 保存しました
-    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: バージョン

@@ -17,9 +17,9 @@
 						<span class="sortLink <% if SortBy %><% else %>sortLinkHidden<% end_if %>">
 							<a href="$SortLink">
 								<% if SortDirection = desc %>
-								<img src="$ModulePath(framework)/images/bullet_arrow_up.png" alt="<% _t('ComplexTableField.ss.SORTASC', 'Sort ascending') %>" />
+								<img src="$ModulePath(framework)/images/bullet_arrow_up.png" alt="<% _t('ComplexTableField_ss.SORTASC', 'Sort ascending') %>" />
 								<% else %>
-								<img src="$ModulePath(framework)/images/bullet_arrow_down.png" alt="<% _t('ComplexTableField.ss.SORTDESC', 'Sort descending') %>" />
+								<img src="$ModulePath(framework)/images/bullet_arrow_down.png" alt="<% _t('ComplexTableField_ss.SORTDESC', 'Sort descending') %>" />
 								<% end_if %>
 							</a>
 							&nbsp;
@@ -49,7 +49,7 @@
 				<td colspan="$ItemCount">
 					<input type="hidden" id="{$id}_PopupHeight" value="$PopupHeight" disabled="disabled">
 					<input type="hidden" id="{$id}_PopupWidth" value="$PopupWidth" disabled="disabled">
-					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="$ModulePath(framework)/images/add.gif" alt="<% _t('ComplexTableField.ss.ADDITEM', 'add') %>" />
+					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="$ModulePath(framework)/images/add.gif" alt="<% _t('ComplexTableField_ss.ADDITEM', 'add') %>" />
 						<% sprintf(_t('ADDITEM', 'Add %s', 'Add [name]'),$Title) %>
 					</a>
 				</td>
@@ -65,7 +65,7 @@
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-					<td colspan="$Headings.Count"><i><% _t('ComplexTableField.ss.NOITEMSFOUND', 'No items found') %></i></td>
+					<td colspan="$Headings.Count"><i><% _t('ComplexTableField_ss.NOITEMSFOUND', 'No items found') %></i></td>
 					<% loop Actions %><td width="18">&nbsp;</td><% end_loop %>
 				</tr>
 			<% end_if %>
