@@ -69,6 +69,17 @@ class ArrayLib {
 	public static function valuekey($arr) {
 		return array_combine($arr, $arr);
 	}
+
+	/**
+	 * Return an array where the values are all equal to the keys.
+	 *
+	 * @param $arr array
+	 * @return array
+	 */
+	public static function keyvalue($arr) {
+		$keys = array_keys($arr);
+		return array_combine($keys, $keys);
+	}
 	
 	/**
 	 * @todo Improve documentation
