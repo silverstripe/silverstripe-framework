@@ -10,21 +10,19 @@ Please register a free translator account to get started, even if you just feel 
 
 ## The online translation tool
 
-We provide a GUI for translations through [getlocalization.com](http://getlocalization.com).  If you don't have an account yet, please follow the links there to sign up.  Select a project from the [list of translatable modules](http://www.getlocalization.com/profile/?username=silverstripe) and start translating online!
+We provide a GUI for translations through [transifex.com](http://transifex.com).  If you don't have an account yet, please follow the links there to sign up.  Select a project from the [list of translatable modules](https://www.transifex.com/accounts/profile/silverstripe/) and start translating online!
 
 For all modules listed there, we automatically import new master strings as they get committed to the various codebases, so you're always translating on the latest and greatest version.
 
-Since getlocalization doesn't allow you to download your own work,
-we've created a simple downloader for this purpose at [http://translate.silverstripe.org/download.php](http://translate.silverstripe.org/download.php)
-([sample download of de.yml](http://translate.silverstripe.org/download.php?project=silverstripe_cms&locale=de)).
-Requests count against our own API user on getlocalization.com, so please use the script responsibly.
-
 ## FAQ
 
-### How do I translate a module not listed on getlocalization?
+### What happened to getlocalization.com?
 
-At the moment, only the core modules ("framework" and "cms") are managed through 
-the getlocalization service.
+We migrated from getlocalization.com to transifex in mid 2013.
+
+### How do I translate a module not listed on Transifex?
+
+Most modules maintained by SilverStripe are on Transifex.
 For other modules, have a look in the module README if there's any specific instructions.
 If there aren't, you'll need to translate the YAML files directly. If the module is on github,
 you can create a fork, edit the files, and send back your pull request all directly on
@@ -84,7 +82,7 @@ We are currently investigating the available options, and are eager to get feedb
 
 ### Can I translate/edit the language files in my favourite text editor (on my local installation)
 
-Not for modules managed by getlocalization.com, including "framework" and "cms.
+Not for modules managed by transifex.com, including "framework" and "cms.
 It causes us a lot of work in merging these files back.
 Please use the online translation tool for all new and existing translations.
 
@@ -94,7 +92,7 @@ Currently this is a manual process of a core team member downloading approved tr
 
 ### How does my translation get approved, who is the maintainer?
 
-The online translation tool (getlocalization.com) is designed to be decentralized and collaborative,
+The online translation tool (transifex.com) is designed to be decentralized and collaborative,
 so there's no strict approval or review process.
 Every logged-in user on the system can flag translations,
 and discuss them with other translators.
@@ -108,7 +106,7 @@ Please contact us about any duplicates that might be worth merging.
 
 This was a custom-built online translation tool serving us well for a couple of years,
 but started to show its age (performance and maintainability). It was replaced
-with getlocalization.com. All translations from translate.silverstripe.org were migrated.
+with transifex.com. All translations from translate.silverstripe.org were migrated.
 Unfortunately, the ownership of individual translations couldn't be migrated.
 
 As the new tool doesn't support the PHP format used in SilverStripe 2.x, 
@@ -120,7 +118,7 @@ This also applies for any modules staying compatible with SilverStripe 2.x.
 
 Translators have their own [mailinglist](https://groups.google.com/forum/#!forum/silverstripe-translators),
 but you can also reach a core member on [IRC](http://silverstripe.org/irc).
-The getlocalization.com interface has a built-in discussion board if
+The transifex.com interface has a built-in discussion board if
 you have specific comments on a translation.
 
 ## Related

@@ -1,8 +1,8 @@
 sk:
   AssetAdmin:
     ALLOWEDEXTS: 'Povolené extenzie'
-    NEWFOLDER: 'Nový priečinok'
-    SHOWALLOWEDEXTS: 'Show allowed extensions'
+    NEWFOLDER: Nový priečinok
+    SHOWALLOWEDEXTS: 'Ukázať povolené extenzie'
   AssetTableField:
     CREATED: 'Prvýkrát nahrané'
     DIM: Rozmery
@@ -10,12 +10,10 @@ sk:
     FOLDER: Adresár
     LASTEDIT: 'Posledne zmenené'
     OWNER: Vlastník
-    SIZE: Veľkosť
+    SIZE: 'Veľkosť'
     TITLE: Titulok
-    TYPE: Typ
-    URL: URL
+    TYPE: 'Typ'
   AssetUploadField:
-    ChooseFiles: 'Vyberte súbory'
     DRAGFILESHERE: 'Tiahni súbory sem'
     DROPAREA: 'Oblasť upustenia'
     EDITALL: 'Editovať všetko'
@@ -42,7 +40,7 @@ sk:
     EMAILLINKDESCRIPTION: 'Vytvoriť odkaz na emailovú adresu'
     IMAGE: Obrázok
     IMAGEDESCRIPTION: 'Zobraziť obrázok vo vašom príspevku'
-    ITALIC: Kurziva
+    ITALIC: 'Kurziva'
     ITALICEXAMPLE: Kurziva
     LINK: 'Odkaz na stránku'
     LINKDESCRIPTION: 'Odkaz na inú stránku alebo URL'
@@ -53,7 +51,7 @@ sk:
     UNORDERED: 'neočíslovaný zoznam'
     UNORDEREDDESCRIPTION: 'neočíslovaný zoznam'
     UNORDEREDEXAMPLE1: 'neočíslovaná položka 1'
-  BackLink_Button.ss:
+  BackLink_Button_ss:
     Back: Späť
   BasicAuth:
     ENTERINFO: 'Prosím zadajte používateľské meno a heslo.'
@@ -61,39 +59,31 @@ sk:
     ERRORNOTREC: 'Toto používateľské meno / heslo nebolo rozpoznané'
   Boolean:
     ANY: Ktorýkoľvek
-    NOANSWER: 'False'
-    YESANSWER: 'True'
-  CMSLoadingScreen.ss:
-    LOADING: 'Načíta sa ...'
+  CMSLoadingScreen_ss:
+    LOADING: Načíta sa ...
     REQUIREJS: 'CMS vyžaduje, aby ste mali JavaScript zapnutý.'
   CMSMain:
     ACCESS: 'Prístup k ''{title}'' sekcii'
     ACCESSALLINTERFACES: 'Pristup do všetkých častí CMS.'
     ACCESSALLINTERFACESHELP: 'Prepisuje viac špecifických  nastavení prístupu.'
     SAVE: Uložiť
-  CMSPageHistoryController_versions.ss:
-    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'Môj profil'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
     CHANGEPASSWORDTEXT2: 'Teraz môžete použiť nasledujúce prihlasovacie údaje na prihlásenie:'
-    EMAIL: Email
-    HELLO: 'Dobrý deň'
+    HELLO: Dobrý deň
     PASSWORD: Heslo
-  CheckboxField:
-    NOANSWER: 'False'
-    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Zatvoriť okno'
     SUCCESSADD2: 'Pridané {name}'
     SUCCESSEDIT: 'Uložené %s %s %s'
-  ComplexTableField.ss:
+  ComplexTableField_ss:
     ADDITEM: 'Pridať %s'
     NOITEMSFOUND: 'Žiadne položky'
     SORTASC: 'Zoradiť vzostupne'
     SORTDESC: 'Zoradiť zostupne'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Ďalší
     PREVIOUS: Predchádzajúci
   ConfirmedPasswordField:
@@ -106,29 +96,27 @@ sk:
     FOURTH: štvrtý
     SECOND: druhý
     THIRD: tretí
-  CurrencyField:
-    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Datové objekty'
     SINGULARNAME: 'Dátový objekt'
   Date:
-    DAY: day
-    DAYS: days
-    HOUR: hour
-    HOURS: hours
-    LessThanMinuteAgo: 'less than a minute'
-    MIN: min
-    MINS: mins
-    MONTH: month
-    MONTHS: months
-    SEC: sec
-    SECS: secs
+    DAY: deň
+    DAYS: dni
+    HOUR: hodina
+    HOURS: hodiny
+    MIN: minúta
+    MINS: minúty
+    MONTH: mesiac
+    MONTHS: mesiace
+    SEC: sekunda
+    SECS: sekundy
     TIMEDIFFAGO: '{difference} pred'
     TIMEDIFFIN: 'v {difference}'
-    YEAR: year
-    YEARS: years
+    YEAR: rok
+    YEARS: roky
+    LessThanMinuteAgo: 'menej ako minúta'
   DateField:
-    NOTSET: nezadané
+    NOTSET: 'nezadané'
     TODAY: dnes
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
@@ -138,7 +126,7 @@ sk:
   Director:
     INVALID_REQUEST: 'Neplatná požiadavka'
   DropdownField:
-    CHOOSE: '(Vyberte si)'
+    CHOOSE: (Vyberte si)
   EmailField:
     VALIDATION: 'Prosím zadajte email adresu'
   Email_BounceRecord:
@@ -152,7 +140,7 @@ sk:
     CssType: 'CSS súbor'
     DmgType: 'Apple obraz disku'
     DocType: 'Word dokument'
-    Filename: 'Meno súboru'
+    Filename: Meno súboru
     GifType: 'GIF obrázok - vhodné pre diagramy'
     GzType: 'GZIP komprimačný súbor'
     HtlType: 'HTML súbor'
@@ -189,21 +177,20 @@ sk:
     FROMFILESTORE: 'Z úložiska súborov'
     NOSOURCE: 'Prosím zvolte zdrojový súbor pre priloženie'
     REPLACE: 'Nahradiť {type}'
-  FileIFrameField_iframe.ss:
+  FileIFrameField_iframe_ss:
     TITLE: 'Rámec pre nahranie obrázku'
   Filesystem:
     SYNCRESULTS: 'Synchronizácia kompletná: {createdcount} položky vytvorené, {deletedcount} položky zmazané'
   Folder:
     PLURALNAME: Priečinky
     SINGULARNAME: Priečinok
-  ForgotPasswordEmail.ss:
-    HELLO: 'Dobrý deň'
+  ForgotPasswordEmail_ss:
+    HELLO: Dobrý deň
     TEXT1: 'Tu je váš'
     TEXT2: 'odkaz na resetovanie hesla'
     TEXT3: pre
   Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
+    FIELDISREQUIRED: '{name} je požadované'
     SubmitBtnLabel: Choď
     VALIDATIONCREDITNUMBER: 'Uistite sa, že ste zadali číslo {number} kreditnej karty správne'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota nie je unikátna'
@@ -212,16 +199,16 @@ sk:
     VALIDATIONSTRONGPASSWORD: 'Heslá musia obsahovať aspoň jednu číslicu a jedno písmeno'
     VALIDATOR: Validácia
     VALIDCURRENCY: 'Prosím zadajte platnú menu'
+    CSRF_FAILED_MESSAGE: 'Vyzerá to, že to musí být technický problem. Kliknite prosím na tlačítko späť, obnovte váš prehliadač, a skúste opäť.'
   FormField:
-    Example: 'e.g. %s'
     NONE: žiadne
+    Example: 'napr. %s'
   GridAction:
     DELETE_DESCRIPTION: Zmazať
     Delete: Zmazať
     UnlinkRelation: Odpojiť
   GridField:
     Add: 'Pridať {name}'
-    Filter: Filter
     FilterBy: 'Filtrovať podľa'
     Find: Vyhľadať
     LEVELUP: 'Úroveň vyššie'
@@ -229,14 +216,13 @@ sk:
     NewRecord: 'Nový %s'
     NoItemsFound: 'Žiadne položky'
     PRINTEDAT: 'Vytlačené v'
-    PRINTEDBY: Vytlačené
+    PRINTEDBY: 'Vytlačené'
     PlaceHolder: 'Vyhľadať {type}'
     PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     RelationSearch: 'Vzťah hľadania'
-    ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
-    EditPermissionsFailure: 'No permission to unlink record'
+    EditPermissionsFailure: 'Žiadne oprávnenie pre odpojenie záznamu'
   GridFieldDetailForm:
     CancelBtn: Zrušiť
     Create: Vytvoriť
@@ -244,10 +230,9 @@ sk:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     Deleted: 'Zmazané %s %s'
     Save: Uložiť
-    Saved: 'Saved {name} {link}'
-  GridFieldEditButton.ss:
-    EDIT: Edit
-  GridFieldItemEditView.ss: null
+    Saved: 'Uložené {name} {link}'
+  GridFieldItemEditView_ss:
+    Go_back: 'Choď späť'
   Group:
     AddRole: 'Pridať úlohu pre túto skupinu'
     Code: 'Kód skupiny'
@@ -266,7 +251,7 @@ sk:
     many_many_Members: Členovia
   GroupImportForm:
     Help1: 'Importovať jednu alebo viac skupín v CSV formáte (čiarkov oddelené hodnoty). Zobraziť pokročilé použitie'
-    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použitie</h4>\\n<ul>\\n<li>Povolené stĺpce: <em>%s</em></li>\\n<li>Existujúce skupiny sú porovnávané ich unikátnou vlastnostou <em>Code</em>, a aktualizované s novými hodnotami z\\nimportovaného súboru.</li>\\n<li>Hierarchia skupín môže byť tvorená použitím stĺpce <em>ParentCode</em>.</li>\\n<li>Kódy oprávnení môžu byť priradené stĺpcom <em>PermissionCode</em>. Existujúce oprávnenia nie sú smazáné.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\n<h4>Pokročilé použitie</h4>\n<ul>\n<li>Povolené stĺpce: <em>%s</em></li>\n<li>Existujúce skupiny sú porovnávané ich unikátnou vlastnostou <em>Code</em>, a aktualizované s novými hodnotami z\nimportovaného súboru.</li>\n<li>Hierarchia skupín môže byť tvorená použitím stĺpce <em>ParentCode</em>.</li>\n<li>Kódy oprávnení môžu byť priradené stĺpcom <em>PermissionCode</em>. Existujúce oprávnenia nie sú smazáné.</li>\n</ul>\n</div>"
     ResultCreated: 'Vytvorených {count} skupín'
     ResultDeleted: 'Zmazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
@@ -276,8 +261,6 @@ sk:
     ADDURL: 'Pridať URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozmery'
     ANCHORVALUE: Odkaz
-    BUTTONADDURL: 'Add url'
-    BUTTONINSERT: Vložiť
     BUTTONINSERTLINK: 'Vložiť odkaz'
     BUTTONREMOVELINK: 'Odstrániť odkaz'
     BUTTONUpdate: Aktualizovať
@@ -303,7 +286,7 @@ sk:
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
     IMAGETITLETEXT: 'Text titulky (tooltip)'
     IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
-    IMAGEWIDTHPX: 'Šírka'
+    IMAGEWIDTHPX: Šírka
     INSERTMEDIA: 'Vložiť média'
     LINK: 'Vložiť/upraviť odkaz na zvýraznený text'
     LINKANCHOR: 'Odkaz na tejto stranke'
@@ -315,9 +298,9 @@ sk:
     LINKOPENNEWWIN: 'Otvoriť odkaz v novom okne?'
     LINKTO: 'Odkázať na'
     PAGE: Stránku
-    URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
     UpdateMEDIA: 'Aktualizovať média'
+    BUTTONADDURL: 'Pridať url'
   Image:
     PLURALNAME: Súbory
     SINGULARNAME: Súbor
@@ -326,12 +309,11 @@ sk:
   Image_Cached:
     PLURALNAME: Súbory
     SINGULARNAME: Súbor
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'Rámec pre nahranie obrázku'
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
-    DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
     PAGETYPE: 'Typ stránky:'
     PERMAGAIN: 'Boli ste odhlásený'
@@ -341,11 +323,10 @@ sk:
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
-    ShowAsList: 'show as list'
-    TooManyPages: 'Too many pages'
-    ValidationError: 'Validation error'
-    VersionUnknown: neznáme
-  LeftAndMain_Menu.ss:
+    ShowAsList: 'ukázať ako zoznam'
+    TooManyPages: 'Príliž veľa stránok'
+    ValidationError: 'Chyba platnosti'
+  LeftAndMain_Menu_ss:
     Hello: Ahoj
     LOGOUT: 'Odhlásiť sa'
   LoginAttempt:
@@ -353,9 +334,7 @@ sk:
     IP: 'IP adreasa'
     PLURALNAME: 'Pokusy o prihlásenie'
     SINGULARNAME: 'Pokus o prihlásenie'
-    Status: Status
   Member:
-    ADDGROUP: 'Pridať skupinu'
     BUTTONCHANGEPASSWORD: 'Zmeniť heslo'
     BUTTONLOGIN: 'Prihlásiť sa'
     BUTTONLOGINOTHER: 'Prihlásiť sa ako niekto iný'
@@ -388,7 +367,6 @@ sk:
     TIMEFORMAT: 'Formát času'
     VALIDATIONMEMBEREXISTS: 'Člen s takýmto e-mailom už existuje'
     ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value}))'
-    WELCOMEBACK: 'Vitajte späť, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
     db_LastVisited: 'Dátum poslednej navštevy'
@@ -401,8 +379,6 @@ sk:
     TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (pred poludním) alebo PM (popoludní)'
-    'APPLY FILTER': 'Použiť filter'
-    Custom: Vlastné
     DATEFORMATBAD: 'Formát dátumu je neplatný'
     DAYNOLEADING: 'Deň mesiaca bez úvodnej nuly'
     DIGITSDECFRACTIONSECOND: 'Jedna alebo viac číslic zastupujúcich desatinný zlomok sekundy'
@@ -411,7 +387,6 @@ sk:
     HOURNOLEADING: 'Hodina bez úvodnej nuly'
     MINUTENOLEADING: 'Minúta bez úvodnej nuly'
     MONTHNOLEADING: 'Číslo mesiaca bez úvodnej nuly'
-    Preview: Náhľad
     SHORTMONTH: 'Krátky názov mesiaca (napr. jún)'
     TOGGLEHELP: 'Prepnúť nápovedu formátovania'
     TWODIGITDAY: 'Dvojčíslie dňa mesiaca'
@@ -420,10 +395,10 @@ sk:
     TWODIGITMONTH: 'Dvojčíslie mesiaca (01=január, atď.)'
     TWODIGITSECOND: 'Dvojčíslie sekundy (00 až 59)'
     TWODIGITYEAR: 'Dvojčíslie roka'
-    Toggle: 'Show formatting help'
+    Toggle: 'Ukázať nápovedu formátovania'
   MemberImportForm:
     Help1: 'Importovať členov v <em>CSV formáte</em> (čiarkov oddelené hodnoty). Zobraziť pokročile použitie'
-    Help2: "<div class=\"advanced\">\\n<h4>Pokročilé použitie</h4>\\n<ul>\\n<li>Povolené stĺpce: <em>%s</em></li>\\n<li>Existujúci užívatelia sú porovnávaní ich unikátnou vlastnosťou <em>Code</em>, a aktualizovaní s novými hodnotami z\\nimportovaného súboru.</li>\\n<li>Skupiny môžu byťt priradené stĺpcom <em>Groups</em>. Skupiny sú identifikované ich vlastnosťou <em>Code</em>,\\nviacero skupín môže byť oddelené čiarkou. Existujúce členstvá skupiny nie sú smazané.</li>\\n</ul>\\n</div>"
+    Help2: "<div class=\"advanced\">\n<h4>Pokročilé použitie</h4>\n<ul>\n<li>Povolené stĺpce: <em>%s</em></li>\n<li>Existujúci užívatelia sú porovnávaní ich unikátnou vlastnosťou <em>Code</em>, a aktualizovaní s novými hodnotami z\nimportovaného súboru.</li>\n<li>Skupiny môžu byťt priradené stĺpcom <em>Groups</em>. Skupiny sú identifikované ich vlastnosťou <em>Code</em>,\nviacero skupín môže byť oddelené čiarkou. Existujúce členstvá skupiny nie sú smazané.</li>\n</ul>\n</div>"
     ResultCreated: 'Vytvorených {count} členov'
     ResultDeleted: 'Zmazaných %d členov'
     ResultNone: 'Žiadne zmeny'
@@ -431,34 +406,32 @@ sk:
   MemberPassword:
     PLURALNAME: 'Heslá člena'
     SINGULARNAME: 'Heslo člena'
-  MemberTableField: null
+  MemberTableField:
+    APPLY_FILTER: 'Použiť filter'
   ModelAdmin:
     DELETE: Zmazať
     DELETEDRECORDS: 'Zmazaných {count} záznamov.'
-    EMPTYBEFOREIMPORT: 'Replace data'
+    EMPTYBEFOREIMPORT: 'Nahradiť dáta'
     IMPORT: 'Importovať z CSV'
     IMPORTEDRECORDS: 'Importovaných {count} záznamov.'
     NOCSVFILE: 'Prosím vyhľadajte CSV súbor pre importovanie'
     NOIMPORT: 'Nie je čo importovať'
-    RESET: Reset
     Title: 'Dátové modely'
     UPDATEDRECORDS: 'Aktualizovaných {count} záznamov.'
-  ModelAdmin_ImportSpec.ss:
+  ModelAdmin_ImportSpec_ss:
     IMPORTSPECFIELDS: 'Stĺpce databázy'
     IMPORTSPECLINK: 'Zobraziť špecifikáciu pre %s'
     IMPORTSPECRELATIONS: Relácie
     IMPORTSPECTITLE: 'Špecifikácia pre %s'
-  ModelAdmin_Tools.ss:
+  ModelAdmin_Tools_ss:
     FILTER: Filtrovať
     IMPORT: Importovať
-  ModelSidebar.ss:
+  ModelSidebar_ss:
     IMPORT_TAB_HEADER: Importovať
     SEARCHLISTINGS: Hľadať
   MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
-  NullableField:
-    IsNullLabel: 'Is Null'
   NumericField:
     VALIDATION: '''{value}'' nie je číslo, iba čísla môžu byť akceptované pre toto pole'
   Pagination:
@@ -489,7 +462,7 @@ sk:
     UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
   PhoneNumberField:
     VALIDATION: 'Prosím zadajte platné telefónne číslo'
-  RelationComplexTableField.ss:
+  RelationComplexTableField_ss:
     ADD: Pridať
     CSVEXPORT: 'Exportovať do CSV'
     NOTFOUND: 'Žiadne položky'
@@ -501,7 +474,7 @@ sk:
     ENTERNEWPASSWORD: 'Prosím zadajte nové heslo.'
     ERRORPASSWORDPERMISSION: 'Pre zmenu hesla musíte byť prihlásený!'
     LOGGEDOUT: 'Boli ste odhlásený. Ak sa chcete znovu prihlásiť, zadajte svoje prihlasovacie údaje.'
-    LOGIN: Prihlásiť
+    LOGIN: 'Prihlásiť'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
     NOTERESETLINKINVALID: '<p>Odkaz na resetovanie hesla nie je platný alebo je prošlý.</p><p>Môžte požiadať o nový <a href="{link1}">tu</a> alebo zmeňte svoje heslo až <a href="{link2}">sa prihlásite</a>.</p>'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
@@ -514,7 +487,6 @@ sk:
     EDITPERMISSIONS: 'Spravovať právomoci pre skupiny'
     EDITPERMISSIONS_HELP: 'Schopnosť upravovať právomoci a IP adresi pre skupinu. Vyžaduje prístup do sekcie "Bezpečnosť".'
     GROUPNAME: 'Názov skupiny'
-    IMPORTGROUPS: 'Importovať skupiny'
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
     MENUTITLE: Bezpečnosť
@@ -526,30 +498,27 @@ sk:
     TABROLES: Úlohy
     Users: Bezpečnosť
   SecurityAdmin_MemberImportForm:
-    BtnImport: Importovať
+    BtnImport: 'Importovať'
     FileFieldLabel: 'CSV súbor <small>(Povoléné koncovki súborov: *.csv)</small>'
   SilverStripeNavigator:
-    Auto: Auto
-    ChangeViewMode: 'Change view mode'
-    Desktop: Desktop
-    DualWindowView: 'Dual Window'
     Edit: Editovať
-    EditView: 'Edit mode'
-    Mobile: Mobile
-    PreviewState: 'Preview State'
-    PreviewView: 'Preview mode'
-    Responsive: Responsive
-    SplitView: 'Split mode'
-    Tablet: Tablet
-    ViewDeviceWidth: 'Select a preview width'
-    Width: width
+    ChangeViewMode: 'Zmeniť nód zobrazenia'
+    DualWindowView: 'Duálne okno'
+    EditView: 'Mód editácie'
+    Mobile: Mobilný telefón
+    PreviewState: 'Náhľad stavu'
+    PreviewView: 'Mód náhľadu'
+    Responsive: Responzívny
+    SplitView: 'Mód rozdelenia'
+    ViewDeviceWidth: 'Vyberte šírku náhľadu'
+    Width: šírka
   SimpleImageField:
     NOUPLOAD: 'Nebol nahraný žiaden obrázok'
   SiteTree:
     TABMAIN: Hlavné
   TableField:
     ISREQUIRED: 'V %s ''%s je požadované'
-  TableField.ss:
+  TableField_ss:
     ADD: 'Pridať nový riadok'
     ADDITEM: 'Pridať %s'
   TableListField:
@@ -557,11 +526,11 @@ sk:
     PRINT: Vytlačiť
     Print: Tlačiť
     SELECT: 'Vyberte:'
-  TableListField.ss:
+  TableListField_ss:
     NOITEMSFOUND: 'Žiadne položky'
     SORTASC: 'Triedit v vzostupnom poradí'
     SORTDESC: 'Triediť v zostupnom poradí'
-  TableListField_PageControls.ss:
+  TableListField_PageControls_ss:
     DISPLAYING: Zobrazujem
     OF: z
     TO: do
@@ -575,14 +544,8 @@ sk:
     LESS: menej
     MORE: viac
   UploadField:
-    ATTACHFILE: 'Priložiť súbor'
-    ATTACHFILES: 'Priložiť súbory'
-    AttachFile: 'Priložiť súbor(y)'
-    CHOOSEANOTHERFILE: 'Choose another file'
-    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Zmazať zo súborov'
     DELETEINFO: 'Trvalo zmazať tento súbor z úložiska súborov'
-    DOEDIT: Uložiť
     DROPFILE: 'pusť súbor'
     DROPFILES: 'pusť súbory'
     Dimensions: Rozmery
@@ -591,18 +554,22 @@ sk:
     FIELDNOTSET: 'Žiadna informácia o súbore'
     FROMCOMPUTER: 'Z vášho počitača'
     FROMCOMPUTERINFO: 'Vyberte zo súborov'
-    FROMFILES: 'Zo súborov'
     HOTLINKINFO: 'Info: Tento obrázok bude "hotlinkovaný". Uistete sa prosím, že máte oprávnenie od pôvodneho tvorcu webu, aby sa tak stalo.'
     MAXNUMBEROFFILES: 'Maximálny počet {count} súbor(ov) prekročený.'
-    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Môžte nahrať iba {count} súborov'
-    OVERWRITEWARNING: 'File with the same name already exists'
+    MAXNUMBEROFFILESONE: 'Je možno nahrať iba jeden súbor'
     REMOVE: Odstrániť
     REMOVEERROR: 'Chyba odstránenia súboru'
     REMOVEINFO: 'Odstrániť tento súbor odtiaľ, ale nezmazať z úložiska súborov'
     STARTALL: 'Začni všetko'
     STARTALLINFO: 'Začni všetko nahrávať'
-    Saved: Uložené
-    UPLOADSINTO: 'saves into /{path}'
+    CHOOSEANOTHERFILE: 'Vyberte iný súbor'
+    CHOOSEANOTHERINFO: 'Nahradiť tento súbor iným z úložiska súborov'
+    OVERWRITEWARNING: 'Súbor s rovnakým názvom už existuje'
+    UPLOADSINTO: 'uloží do /{path}'
   Versioned:
     has_many_Versions: verzie
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Náhľad webu'
+  GridFieldEditButton_ss:
+    EDIT: Editovať
