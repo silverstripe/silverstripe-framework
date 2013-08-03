@@ -555,6 +555,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find('.field[id$="AnchorSelector_Holder"]').show();
 					this.find('.field[id$="AnchorRefresh_Holder"]').show();
 				}
+				this.find('.field#Description').show();
 			},
 			/**
 			 * @return Object Keys: 'href', 'target', 'title'

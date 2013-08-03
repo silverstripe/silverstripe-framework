@@ -25,9 +25,9 @@ element, so you can define 'screen' or 'print' for example.
 If you do not want to touch the PHP (for example you are constructing a generic theme) then you can include a file via
 the templates
 
-	<% require css(cms/css/TreeSelector.css) %>
-	<% require themedCSS(TreeSelector) %>
-	<% require javascript(cms/javascript/LeftAndMain.js) %>
+	<% require css("cms/css/TreeSelector.css") %>
+	<% require themedCSS("TreeSelector") %>
+	<% require javascript("cms/javascript/LeftAndMain.js") %>
 
 ## Combining Files
 
