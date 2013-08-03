@@ -16,10 +16,7 @@ form.nostyle {
 
 .field {
 	display: block;
-	border-bottom: 1px solid $color-light-separator;
-    @include box-shadow(0 1px 0 $box-shadow-shine-minimal);
-
-	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
+	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine-minimal);
 	//overflow: hidden;
 
 	// bottom padding accounts for the border and we have a negative
