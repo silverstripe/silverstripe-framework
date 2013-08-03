@@ -1,8 +1,7 @@
 et_EE:
   AssetAdmin:
     ALLOWEDEXTS: 'Lubatud laiendid'
-    NEWFOLDER: 'Uus kaust'
-    SHOWALLOWEDEXTS: 'Show allowed extensions'
+    NEWFOLDER: Uus kaust
   AssetTableField:
     CREATED: 'Esmakordselt üles laaditud'
     DIM: Mõõtmed
@@ -10,14 +9,13 @@ et_EE:
     FOLDER: Kaust
     LASTEDIT: 'Viimati muudetud'
     OWNER: Omanik
-    SIZE: Failisuurus
+    SIZE: 'Failisuurus'
     TITLE: Pealkiri
-    TYPE: Failitüüp
-    URL: URL
+    TYPE: 'Failitüüp'
   AssetUploadField:
     ChooseFiles: 'Valige failid'
     DRAGFILESHERE: 'Lohistage failid siia'
-    DROPAREA: Pukseerimisala
+    DROPAREA: 'Pukseerimisala'
     EDITALL: 'Muuda kõiki'
     EDITANDORGANIZE: 'Muuda ja korralda'
     EDITINFO: 'Muuda faile'
@@ -33,7 +31,7 @@ et_EE:
     ALIGNEMENTEXAMPLE: 'Joondus paremale'
     BOLD: 'Paks tekst'
     BOLDEXAMPLE: Paks
-    CODE: Koodiplokk
+    CODE: 'Koodiplokk'
     CODEDESCRIPTION: 'Kodederimata koodi plokk'
     CODEEXAMPLE: 'Koodi plokk'
     COLORED: 'Värviline tekst'
@@ -53,17 +51,13 @@ et_EE:
     UNORDERED: 'Järjestamata nimekiri'
     UNORDEREDDESCRIPTION: 'Järjestamata nimekiri'
     UNORDEREDEXAMPLE1: 'Järjestamata asi 1'
-  BackLink_Button.ss:
-    Back: Tagasi
   BasicAuth:
     ENTERINFO: 'Palun sisesta kasutajanimi ja parool.'
     ERRORNOTADMIN: 'Antud kasutaja ei ole administraator.'
     ERRORNOTREC: 'See kasutajanimi / parool ei ole tunnustatud'
   Boolean:
     ANY: Kõik
-    NOANSWER: 'False'
-    YESANSWER: 'True'
-  CMSLoadingScreen.ss:
+  CMSLoadingScreen_ss:
     LOADING: Laadimine...
     REQUIREJS: 'Sisuhaldussüsteem nõuab, et JavaScript oleks lubatud.'
   CMSMain:
@@ -71,29 +65,24 @@ et_EE:
     ACCESSALLINTERFACES: 'Ligipääs kõigile Sisuhalduse kasutajaliidestele'
     ACCESSALLINTERFACESHELP: 'Alistab täpsemad juurdepääsuseaded.'
     SAVE: Salvesta
-  CMSPageHistoryController_versions.ss:
-    PREVIEW: 'Website preview'
   CMSProfileController:
     MENUTITLE: 'Minu profiil'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vahetasid oma parooli lehel'
     CHANGEPASSWORDTEXT2: 'Nüüd võid kasutada sisse logimiseks järgnevaid andmeid:'
     EMAIL: E-post
     HELLO: Tere
     PASSWORD: Parool
-  CheckboxField:
-    NOANSWER: 'False'
-    YESANSWER: 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Sulge hüpikaken'
     SUCCESSADD2: '{name} on lisatud'
     SUCCESSEDIT: 'Salvestatud %s %s %s'
-  ComplexTableField.ss:
+  ComplexTableField_ss:
     ADDITEM: 'Lisa %s'
     NOITEMSFOUND: 'Üksusi ei leitud'
     SORTASC: 'Sorteeri kasvavalt'
     SORTDESC: 'Sorteeri kahanevalt'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Eelmine
     PREVIOUS: Järgmine
   ConfirmedPasswordField:
@@ -106,27 +95,9 @@ et_EE:
     FOURTH: neljas
     SECOND: teine
     THIRD: kolmas
-  CurrencyField:
-    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Andme objektid'
     SINGULARNAME: 'Andme objekt'
-  Date:
-    DAY: day
-    DAYS: days
-    HOUR: hour
-    HOURS: hours
-    LessThanMinuteAgo: 'less than a minute'
-    MIN: min
-    MINS: mins
-    MONTH: month
-    MONTHS: months
-    SEC: sec
-    SECS: secs
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
-    YEAR: year
-    YEARS: years
   DateField:
     NOTSET: 'Pole seadistatud'
     TODAY: Täna
@@ -134,7 +105,7 @@ et_EE:
     VALIDDATEMAXDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) varasem või ühtima sellega.'
     VALIDDATEMINDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) hilisem või ühtima sellega.'
   DatetimeField:
-    NOTSET: Määramata
+    NOTSET: 'Määramata'
   Director:
     INVALID_REQUEST: 'Sobimatu taotlus'
   DropdownField:
@@ -147,23 +118,22 @@ et_EE:
   Enum:
     ANY: Kõik
   File:
-    AviType: AVI-videofail
+    AviType: 'AVI-videofail'
     Content: Sisu
-    CssType: CSS-fail
-    DmgType: 'Apple disk image'
+    CssType: 'CSS-fail'
     DocType: 'Wordi dokument'
     Filename: Failinimi
     GifType: 'GIF-kujutis – hea diagrammide jaoks'
     GzType: 'Tihendatud GZIP-fail'
-    HtlType: HTML-fail
-    HtmlType: HTML-fail
+    HtlType: 'HTML-fail'
+    HtmlType: 'HTML-fail'
     INVALIDEXTENSION: 'Laiend ei ole lubatud (sobimatud: {extensions})'
     INVALIDEXTENSIONSHORT: 'Laiend ei ole lubatud'
-    IcoType: Ikoonipilt
+    IcoType: 'Ikoonipilt'
     JpgType: 'JPEG-kujutis – hea fotode jaoks'
     JsType: 'Javascripti fail'
-    Mp3Type: MP3-helifail
-    MpgType: MPEG-videofail
+    Mp3Type: 'MP3-helifail'
+    MpgType: 'MPEG-videofail'
     NOFILESIZE: 'Faili suurus on null baiti.'
     NOVALIDUPLOAD: 'Fail ei ole üleslaadimiseks sobiv'
     Name: Nimi
@@ -173,37 +143,32 @@ et_EE:
     SINGULARNAME: Fail
     TOOLARGE: 'Fail on liiga suur, lubatud on maksimaalselt {size}'
     TOOLARGESHORT: 'Fail on suurem kui {size}'
-    TiffType: 'Tagged image format'
     Title: Pealkiri
-    WavType: WAV-helifail
+    WavType: 'WAV-helifail'
     XlsType: 'Exceli arvutustabel'
     ZipType: 'Tihendatud ZIP-fail'
   FileIFrameField:
     ATTACH: 'Manusta {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Faile saab manustada pärast seda, kui olete kirje salvestanud.'
     DELETE: 'Kustuta {type}'
     DISALLOWEDFILETYPE: 'Seda failitüüpi ei ole lubatud üles laadida'
     FILE: Fail
     FROMCOMPUTER: 'Teie arvutist'
-    FROMFILESTORE: Failihoidlast
+    FROMFILESTORE: 'Failihoidlast'
     NOSOURCE: 'Valige manustamiseks lähtefail'
     REPLACE: 'Asenda {type}'
-  FileIFrameField_iframe.ss:
+  FileIFrameField_iframe_ss:
     TITLE: 'Kujutise üleslaadimise IFrame'
   Filesystem:
     SYNCRESULTS: 'Sünkroonimine on lõpetatud: {createdcount} loodud üksust, {deletedcount} kustutatud üksust'
   Folder:
     PLURALNAME: Kaustad
     SINGULARNAME: Kaust
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Tere
     TEXT1: 'Siin on sinu'
     TEXT2: 'Parooli tühistus link'
-    TEXT3: -
   Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Mine
     VALIDATIONCREDITNUMBER: 'Veenduge, et sisestasite krediitkaardinumbri {number} õigesti'
     VALIDATIONNOTUNIQUE: 'Sisestatud väärtus ei ole unikaalne'
@@ -213,30 +178,26 @@ et_EE:
     VALIDATOR: Kinnitaja
     VALIDCURRENCY: 'Sisestage kehtiv valuuta'
   FormField:
-    Example: 'e.g. %s'
     NONE: puudub
   GridAction:
     DELETE_DESCRIPTION: Kustuta
     Delete: Kustuta
-    UnlinkRelation: 'Tühista linkimine'
+    UnlinkRelation: Tühista linkimine
   GridField:
     Add: 'Lisa {name}'
     Filter: Filtreeri
-    FilterBy: Filtreerimisalus
+    FilterBy: 'Filtreerimisalus'
     Find: Otsi
-    LEVELUP: 'Level up'
     LinkExisting: 'Lingi olemasolev'
     NewRecord: 'Uus %s'
     NoItemsFound: 'Üksusi ei leitud'
     PRINTEDAT: 'Printimiskoht:'
-    PRINTEDBY: Printis
+    PRINTEDBY: 'Printis'
     PlaceHolder: 'Leia {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Seose otsing'
     ResetFilter: Lähtesta
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
-    EditPermissionsFailure: 'No permission to unlink record'
   GridFieldDetailForm:
     CancelBtn: Loobu
     Create: Loo
@@ -244,10 +205,8 @@ et_EE:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     Deleted: '%s %s on kustutatud'
     Save: Salvesta
-    Saved: 'Saved {name} {link}'
-  GridFieldEditButton.ss:
-    EDIT: Edit
-  GridFieldItemEditView.ss: null
+  GridFieldItemEditView_ss:
+    Go_back: 'Mine tagasi'
   Group:
     AddRole: 'Lisa selle grupi jaoks rolle'
     Code: 'Grupi kood'
@@ -261,22 +220,18 @@ et_EE:
     Parent: 'Vanem grupp'
     RolesAddEditLink: 'Halda rolle'
     SINGULARNAME: Grupp
-    Sort: Järjesta
+    Sort: 'Järjesta'
     has_many_Permissions: Õigused
     many_many_Members: Liikmed
   GroupImportForm:
     Help1: '<p>Impordi üks või rohkem gruppe <em>CSV</em>-vormingus (komaeraldusega väärtused). <small><a href="#" class="toggle-advanced">Kuva täpsem kasutus</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: '{count} gruppi on loodud'
     ResultDeleted: '%d gruppi on kustutatud'
     ResultUpdated: '%d gruppi on uuendatud'
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Lisa URL'
     ADJUSTDETAILSDIMENSIONS: 'Üksikasjad ja mõõtmed'
     ANCHORVALUE: Link
-    BUTTONADDURL: 'Add url'
     BUTTONINSERT: Sisesta
     BUTTONINSERTLINK: 'Sisesta link'
     BUTTONREMOVELINK: 'Eemalda link'
@@ -291,9 +246,9 @@ et_EE:
     EMAIL: 'E-posti aadress'
     FILE: Fail
     FOLDER: Kaust
-    FROMCMS: Sisuhaldussüsteemist
+    FROMCMS: 'Sisuhaldussüsteemist'
     FROMCOMPUTER: 'Teie arvutist'
-    FROMWEB: Veebist
+    FROMWEB: 'Veebist'
     FindInFolder: 'Otsi kaustast'
     IMAGEALT: 'Asetekst (alt)'
     IMAGEALTTEXT: 'Asetekst (alt) – kuvatakse, kui kujutist ei ole võimalik kuvada'
@@ -305,7 +260,7 @@ et_EE:
     IMAGETITLETEXTDESC: 'Lisateabe saamiseks kujutise kohta'
     IMAGEWIDTHPX: Kõrgus
     INSERTMEDIA: 'Sisesta meedium'
-    LINK: Link
+    LINK: 'Link'
     LINKANCHOR: 'Link sellele lehele'
     LINKDESCR: 'Lingi kirjeldus'
     LINKEMAIL: 'E-posti aadressi'
@@ -313,9 +268,8 @@ et_EE:
     LINKFILE: 'Salvesta fail'
     LINKINTERNAL: 'Saidil olevat lehekülge'
     LINKOPENNEWWIN: 'Ava link uues aknas?'
-    LINKTO: Lingi
+    LINKTO: 'Lingi'
     PAGE: Leht
-    URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL-i ''{url}'' ei saanud muuta meediumiressursiks.'
     UpdateMEDIA: 'Uuenda meediumi'
   Image:
@@ -326,7 +280,7 @@ et_EE:
   Image_Cached:
     PLURALNAME: Failid
     SINGULARNAME: Fail
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'Pildi üleslaadimise Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'Teil ei ole õigusi kõrgema taseme lehtede muutmiseks. Teie muudatust ei salvestatud.'
@@ -338,21 +292,15 @@ et_EE:
     PERMALREADY: 'Vabandust, aga sul pole lubatud sisuhaldussüsteemi selle osa juurde pääseda. Kui soovid kellegi teisena sisse logida, tee seda allpool.'
     PERMDEFAULT: 'Sisesta oma e-posti aadress ja parool sisuhaldussüsteemi ligipääsemiseks.'
     PLEASESAVE: 'Palun Salvesta Lehekülg: Antud lehekülge ei uuendatud, kuna seda ei ole veel salvestatud.'
-    PreviewButton: Eelvaade
     REORGANISATIONSUCCESSFUL: 'Saidipuu korraldati edukalt ümber.'
-    SAVEDUP: Salvestatud.
-    ShowAsList: 'show as list'
-    TooManyPages: 'Too many pages'
-    ValidationError: 'Validation error'
-    VersionUnknown: Unknown
-  LeftAndMain_Menu.ss:
+  LeftAndMain_Menu_ss:
     Hello: Tere!
     LOGOUT: 'Logi välja'
   LoginAttempt:
     Email: 'E-posti aadress'
     IP: 'IP Aadress'
-    PLURALNAME: Sisselogimiskatsed
-    SINGULARNAME: Sisselogimiskatse
+    PLURALNAME: 'Sisselogimiskatsed'
+    SINGULARNAME: 'Sisselogimiskatse'
     Status: Staatus
   Member:
     ADDGROUP: 'Lisa grupp'
@@ -363,8 +311,8 @@ et_EE:
     CANTEDIT: 'Teil ei ole selleks tegevuseks õigust'
     CONFIRMNEWPASSWORD: 'Kinnita uus parool'
     CONFIRMPASSWORD: 'Kinnita parool'
-    DATEFORMAT: Kuupäevavorming
-    DefaultAdminFirstname: Vaikeadministraator
+    DATEFORMAT: 'Kuupäevavorming'
+    DefaultAdminFirstname: 'Vaikeadministraator'
     DefaultDateTime: vaikeseadistus
     EMAIL: E-post
     EMPTYNEWPASSWORD: 'Uue parooli väli ei saa olla tühi. Proovige uuesti'
@@ -373,9 +321,8 @@ et_EE:
     ERRORNEWPASSWORD: 'Te sisestasite oma parooli erinevalt, proovige uuesti'
     ERRORPASSWORDNOTMATCH: 'Sisestatud paroolid ei kattu, palun proovi uuesti'
     ERRORWRONGCRED: 'Tundub, et e-posti aadress või parool on vale. Palun proovi uuesti.'
-    FIRSTNAME: Eesnimi
+    FIRSTNAME: 'Eesnimi'
     INTERFACELANG: 'Kasutajaliidese keel'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'Olete logitud sisse kui {name}.'
     NEWPASSWORD: 'Uus parool'
     PASSWORD: Parool
@@ -385,7 +332,7 @@ et_EE:
     SUBJECTPASSWORDCHANGED: 'Sinu parool on muudetud'
     SUBJECTPASSWORDRESET: 'Sinu parooli lähtestamise link'
     SURNAME: Perekonnanimi
-    TIMEFORMAT: Kellaajavorming
+    TIMEFORMAT: 'Kellaajavorming'
     VALIDATIONMEMBEREXISTS: 'Sellise e-posti aadressiga liige on juba olemas'
     ValidationIdentifierFailed: 'Olemasolevat kasutajat #{id} ei saa sama identifikaatoriga üle kirjutada ({name} = {value})'
     WELCOMEBACK: 'Tere tulemast tagasi, {firstname}!'
@@ -401,11 +348,9 @@ et_EE:
     TITLE: 'E-post ja parool'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (enne keskpäeva) või PM (pärast keskpäeva)'
-    'APPLY FILTER': 'Rakenda filter'
     Custom: Kohandatud
     DATEFORMATBAD: 'Kuupäevavorming on sobimatu'
     DAYNOLEADING: 'Kuupäev ilma nullita'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
     FOURDIGITYEAR: 'Aasta nelja numbrina'
     FULLNAMEMONTH: 'Kuu täisnimetus (nt august)'
     HOURNOLEADING: 'Tunnid ilma nullita'
@@ -413,17 +358,14 @@ et_EE:
     MONTHNOLEADING: 'Kuu ilma nullita'
     Preview: Eelvaade
     SHORTMONTH: 'Kuu lühinimetus (nt aug)'
-    TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Kuupäev kahe numbrina'
     TWODIGITHOUR: 'Tunnid kahe numbrina (00–23)'
     TWODIGITMINUTE: 'Minutid kahe numbrina (00–59)'
     TWODIGITMONTH: 'Kuu kahe numbrina (nt 01=jaanuar jne)'
     TWODIGITSECOND: 'Sekundid kahe numbrina (00–59)'
     TWODIGITYEAR: 'Aasta kahe numbrina'
-    Toggle: 'Show formatting help'
   MemberImportForm:
     Help1: '<p>Impordi kasutajad <em>CSV-vormingus</em> (komaeraldusega väärtused). <small><a href="#" class="toggle-advanced">Kuva täpsem kasutus</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: '{count} liiget on loodud'
     ResultDeleted: '%d liiget on kustutatud'
     ResultNone: 'Muudatusi pole'
@@ -431,27 +373,27 @@ et_EE:
   MemberPassword:
     PLURALNAME: 'Liikme paroolid'
     SINGULARNAME: 'Liikme parool'
-  MemberTableField: null
+  MemberTableField:
+    APPLY_FILTER: 'Rakenda filter'
   ModelAdmin:
     DELETE: Kustuta
     DELETEDRECORDS: '{count} kirjet on kustutatud.'
-    EMPTYBEFOREIMPORT: 'Replace data'
     IMPORT: 'Impordi CSV-failist'
     IMPORTEDRECORDS: '{count} kirjet on imporditud.'
     NOCSVFILE: 'Avage importimiseks CSV-fail'
     NOIMPORT: 'Pole midagi importida'
     RESET: Lähtesta
-    Title: Andmemudelid
+    Title: 'Andmemudelid'
     UPDATEDRECORDS: '{count} kirjet on uuendatud.'
-  ModelAdmin_ImportSpec.ss:
+  ModelAdmin_ImportSpec_ss:
     IMPORTSPECFIELDS: 'Andmebaasi tulbad'
     IMPORTSPECLINK: 'Kuva üksuse %s spetsifikatsioonid'
     IMPORTSPECRELATIONS: Seosed
     IMPORTSPECTITLE: 'Üksuse %s spetsifikatsioonid'
-  ModelAdmin_Tools.ss:
+  ModelAdmin_Tools_ss:
     FILTER: Filtreeri
     IMPORT: Impordi
-  ModelSidebar.ss:
+  ModelSidebar_ss:
     IMPORT_TAB_HEADER: Impordi
     SEARCHLISTINGS: Otsi
   MoneyField:
@@ -468,7 +410,6 @@ et_EE:
     AdminGroup: Administraator
     CMS_ACCESS_CATEGORY: 'Sisuhaldussüsteemi juurdepääs'
     FULLADMINRIGHTS: 'Täielikud administraatoriõigused'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     PLURALNAME: Õigused
     SINGULARNAME: Õigus
   PermissionCheckboxSetField:
@@ -481,15 +422,12 @@ et_EE:
     PLURALNAME: Rollid
     SINGULARNAME: Roll
     Title: Pealkiri
-  PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollid ja juurdepääsuõigused'
     UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
   PhoneNumberField:
     VALIDATION: 'Sisestage kehtiv telefoninumber'
-  RelationComplexTableField.ss:
+  RelationComplexTableField_ss:
     ADD: Lisa
     CSVEXPORT: 'Ekspordi CSV-vormingusse'
     NOTFOUND: 'Üksusi ei leitud'
@@ -529,27 +467,12 @@ et_EE:
     BtnImport: 'Impordi CSV-failist'
     FileFieldLabel: 'CSV-fail <small>(lubatud laiendid: *.csv)</small>'
   SilverStripeNavigator:
-    Auto: Auto
-    ChangeViewMode: 'Change view mode'
-    Desktop: Desktop
-    DualWindowView: 'Dual Window'
     Edit: Muuda
-    EditView: 'Edit mode'
-    Mobile: Mobile
-    PreviewState: 'Preview State'
-    PreviewView: 'Preview mode'
-    Responsive: Responsive
-    SplitView: 'Split mode'
-    Tablet: Tablet
-    ViewDeviceWidth: 'Select a preview width'
-    Width: width
   SimpleImageField:
     NOUPLOAD: 'Pilte pole üles laaditud'
   SiteTree:
     TABMAIN: Avaleht
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
+  TableField_ss:
     ADD: 'Lisa uus rida'
     ADDITEM: 'Lisa %s'
   TableListField:
@@ -557,14 +480,13 @@ et_EE:
     PRINT: Prindi
     Print: Prindi
     SELECT: 'Vali:'
-  TableListField.ss:
+  TableListField_ss:
     NOITEMSFOUND: 'Üksusi ei leitud'
     SORTASC: 'Sordi kasvavas järjekorras'
     SORTDESC: 'Sordi kahanevas järjekorras'
-  TableListField_PageControls.ss:
+  TableListField_PageControls_ss:
     DISPLAYING: Kuvatakse
     OF: /
-    TO: to
     VIEWFIRST: 'Vaata esimest'
     VIEWLAST: 'Vaata viimast'
     VIEWNEXT: 'Vaata järgmist'
@@ -578,8 +500,6 @@ et_EE:
     ATTACHFILE: 'Manusta fail'
     ATTACHFILES: 'Manusta failid'
     AttachFile: 'Manusta fail(id)'
-    CHOOSEANOTHERFILE: 'Choose another file'
-    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
     DELETE: 'Kustuta failide hulgast'
     DELETEINFO: 'Kustuta see fail lõplikult failihoidlast'
     DOEDIT: Salvesta
@@ -591,18 +511,14 @@ et_EE:
     FIELDNOTSET: 'Failiteavet ei leitud'
     FROMCOMPUTER: 'Teie arvutist'
     FROMCOMPUTERINFO: 'Valige failide hulgast'
-    FROMFILES: Failidest
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
+    FROMFILES: 'Failidest'
     MAXNUMBEROFFILES: 'Maksimaalne failide arv {count} on ületatud.'
-    MAXNUMBEROFFILESONE: 'Can only upload one file'
     MAXNUMBEROFFILESSHORT: 'Üles saab laadida ainult {count} faili'
-    OVERWRITEWARNING: 'File with the same name already exists'
     REMOVE: Eemalda
     REMOVEERROR: 'Viga faili eemaldamisel'
     REMOVEINFO: 'Eemalda see fail siit, kuid ära kustuta seda failihoidlast'
     STARTALL: 'Alusta kõiki'
     STARTALLINFO: 'Alusta kõiki üleslaadimisi'
     Saved: Salvestatud
-    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versioon
