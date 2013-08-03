@@ -1,7 +1,7 @@
 es:
   AssetAdmin:
     ALLOWEDEXTS: 'Extensiones permitidas'
-    NEWFOLDER: Nueva Carpeta
+    NEWFOLDER: NuevaCarpeta
     SHOWALLOWEDEXTS: 'Mostrar extensiones permitidas'
   AssetTableField:
     CREATED: 'Agregado por primera vez'

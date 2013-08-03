@@ -2237,7 +2237,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 					} else if(isset(self::$all_locales[$labelLocale])) {
 						$locales[$locale] = self::$all_locales[$labelLocale];	
 					} 
-				} 
+				}
 			}
 		}
 

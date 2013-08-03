@@ -610,26 +610,10 @@ en:
     PREVIEW: 'Website preview'
   GridFieldEditButton_ss:
     EDIT: Edit
-  CMSPageHistoryController_versions.ss:
-    PREVIEW: 'Website preview'
   ContentController:
     NOTLOGGEDIN: 'Not logged in'
   GridFieldItemEditView:
     Go_back: 'Go back'
-  LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
-  ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
-  ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
-  ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
   PasswordValidator:
     LOWCHARSTRENGTH: 'Please increase password strength by adding some of the following characters: %s'
     PREVPASSWORD: 'You''ve already used that password in the past, please choose a new password'
