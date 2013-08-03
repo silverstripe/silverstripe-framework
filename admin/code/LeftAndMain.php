@@ -830,7 +830,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// match the filter criteria until they're queried (and matched up with previously marked nodes).
 		$nodeThresholdLeaf = Config::inst()->get('Hierarchy', 'node_threshold_leaf');
 		if($nodeThresholdLeaf && !$filterFunction) {
-			$nodeCountCallback = function($parent, $numChildren) use($controller, $className, $nodeThresholdLeaf) {
+			$nodeCountCallback = function($parent, $numChildren) use(&$controller, $className, $nodeThresholdLeaf) {
 				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
 					return sprintf(
 						'<ul><li class="readonly"><span class="item">'
