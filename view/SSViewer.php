@@ -834,8 +834,12 @@ class SSViewer {
 		}
 		$found  = $loader->findTemplates("$type/$identifier", $theme);
 
-		if ($found) {
+		if (isset($found['main'])) {
 			return $found['main'];
+		}
+		else if (!empty($found)) {
+			$founds = array_values($found);
+			return $founds[0];
 		}
 	}
 
