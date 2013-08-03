@@ -123,7 +123,7 @@ By standard SilverStripe uses 3 CSS Files for your site -
 *  **typography.css** contains the styling for the text/fonts/links (used in both front and back ends)
 *  **form.css** styling for forms.
 
-You can add more stylesheets using the template tag `<% require themedCSS(filename) %>`, which will load filename.css from
+You can add more stylesheets using the template tag `<% require themedCSS("filename") %>`, which will load filename.css from
 your css directory.
 
 Note: If you're using a default install of Silverstripe and notice that you're getting layout.css, typography.css and

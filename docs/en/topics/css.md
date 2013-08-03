@@ -28,7 +28,7 @@ In your controller (e.g. `mysite/code/Page.php`):
 Or in your template (e.g. `themes/yourtheme/templates/Page.ss`):
 
 	:::ss
-	<% require css(mymodule/css/my.css) %>
+	<% require css("mymodule/css/my.css") %>
 
 Management through the `Requirements` class has the advantage that modules can include their own CSS files without modifying
 your template. On the other hand, you as a template developer can "block" or change certain CSS files that are included from
