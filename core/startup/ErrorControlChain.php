@@ -74,9 +74,33 @@ class ErrorControlChain {
 		return $error && ($error['type'] & self::$fatal_errors) != 0;
 	}
 
+	protected function lastErrorWasMemoryExhaustion() {
+		$error = error_get_last();
+		$message = $error ? $error['message'] : '';
+		return stripos($message, 'memory') !== false && stripos($message, 'exhausted') !== false;
+	}
+
+	static $transtable = array(
+		'k' => 1024,
+		'm' => 1048576,
+		'g' => 1073741824
+	);
+
+	protected function translateMemstring($memString) {
+		$char = strtolower(substr($memString, -1));
+		$fact = isset(self::$transtable[$char]) ? self::$transtable[$char] : 1;
+		return ((int)$memString) * $fact;
+	}
+
 	public function handleFatalError() {
 		if ($this->handleFatalErrors && $this->suppression) {
 			if ($this->lastErrorWasFatal()) {
+				if ($this->lastErrorWasMemoryExhaustion()) {
+					// Bump up memory limit by an arbitrary 10% / 10MB (whichever is bigger) since we've run out
+					$cur = $this->translateMemstring(ini_get('memory_limit'));
+					if ($cur != -1) ini_set('memory_limit', $cur + max(round($cur*0.1), 10000000));
+				}
+
 				$this->error = true;
 				$this->step();
 			}
