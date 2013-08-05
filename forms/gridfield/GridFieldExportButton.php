@@ -128,8 +128,9 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			}
 		}
 
-		foreach($items as $item) {
+		foreach($items->limit(null) as $item) {
 			$columnData = array();
+
 			foreach($csvColumns as $columnSource => $columnHeader) {
 				if(!is_string($columnHeader) && is_callable($columnHeader)) {
 					if($item->hasMethod($columnSource)) {

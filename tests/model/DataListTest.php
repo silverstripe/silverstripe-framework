@@ -98,6 +98,29 @@ class DataListTest extends SapphireTest {
 		// We can also restrict the output to a range
 		$this->assertEquals(array('Joe', 'Phil'), $list->limit(2, 1)->column('Name'));
 	}
+
+	public function testLimitAndOffset() {
+		$list = DataObjectTest_TeamComment::get();
+		$check = $list->limit(3);
+
+		$this->assertEquals(3, $check->count());
+
+		$check = $list->limit(1);
+		$this->assertEquals(1, $check->count());
+
+		$check = $list->limit(1, 1);
+		$this->assertEquals(1, $check->count());
+
+		$check = $list->limit(false);
+		$this->assertEquals(3, $check->count());
+
+		$check = $list->limit(null);
+		$this->assertEquals(3, $check->count());
+
+		// no limit with an offset is currently not supported by the orm
+		// $check = $list->limit(null, 2);
+		// $this->assertEquals(1, $check->count());
+	}
 	
 	public function testDataClass() {
 		$list = DataObjectTest_TeamComment::get();
