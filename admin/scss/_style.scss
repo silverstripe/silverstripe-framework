@@ -125,8 +125,8 @@ body.cms {
 		float:left;
 		padding-top: 6px;
 
-		& > * {
-			display: inline-block; // align back button and breadcrumbs
+		& * {
+			display: inline-block; // align back button and breadcrumbs and icon
 		}
 	}
 	
