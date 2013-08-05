@@ -3,7 +3,6 @@
 HtmlEditorConfig::get('cms')->setOptions(array(
 	'friendly_name' => 'Default CMS',
 	'priority' => '50',
-	'mode' => 'none', // initialized through LeftAndMain.EditFor.js logic
 
 	'body_class' => 'typography',
 	'document_base_url' => isset($_SERVER['HTTP_HOST']) ? Director::absoluteBaseURL() : null,
