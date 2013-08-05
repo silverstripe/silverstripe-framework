@@ -404,7 +404,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * It works by checking the fields available in the first record of the list.
 	 */
 	public function canFilterBy($by) {
-		return array_key_exists($by, $this->first());
+		$firstRecord = $this->first();
+		if ($firstRecord === false) {
+			return false;
+		}
+		return array_key_exists($by, $firstRecord);
 	}
 
 	/**
@@ -460,7 +464,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	}
 	
 	public function byID($id) {
-		return $this->filter("ID", $id)->First();
+		$firstElement = $this->filter("ID", $id)->first();
+		if ($firstElement === false) {
+			return null;
+		}
+		return $firstElement;
 	}
 
 	/**
