@@ -113,108 +113,37 @@ class HtmlEditorField extends TextareaField {
 			);
 		}
 		
-		$linkedPages = array();
-		$linkedFiles = array();
-		
 		$htmlValue = Injector::inst()->create('HTMLValue', $this->value);
 
+		// Sanitise if requested
 		if($this->config()->sanitise_server_side) {
 			$santiser = Injector::inst()->create('HtmlEditorSanitiser', HtmlEditorConfig::get_active());
 			$santiser->sanitise($htmlValue);
 		}
 
-		if(class_exists('SiteTree')) {
-			// Populate link tracking for internal links & links to asset files.
-			if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
-				$href = Director::makeRelative($link->getAttribute('href'));
-
-				if($href) {
-					if(preg_match('/\[sitetree_link,id=([0-9]+)\]/i', $href, $matches)) {
-						$ID = $matches[1];
-
-						// clear out any broken link classes
-						if($class = $link->getAttribute('class')) {
-							$link->setAttribute('class',
-								preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
-						}
-
-						$linkedPages[] = $ID;
-						if(!DataObject::get_by_id('SiteTree', $ID))  $record->HasBrokenLink = true;
-
-					} else if(substr($href, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR.'/') {
-						$candidateFile = File::find(Convert::raw2sql(urldecode($href)));
-						if($candidateFile) {
-							$linkedFiles[] = $candidateFile->ID;
-						} else {
-							$record->HasBrokenFile = true;
-						}
-					} else if($href == '' || $href[0] == '/') {
-						$record->HasBrokenLink = true;
-					}
-				}
-			}
-		}
-		
-		// Resample images, add default attributes and add to assets tracking.
+		// Resample images and add default attributes
 		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
 			// strip any ?r=n data from the src attribute
 			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
-			if(!$image = File::find($path = urldecode(Director::makeRelative($img->getAttribute('src'))))) {
-				if(substr($path, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR . '/') {
-					$record->HasBrokenFile = true;
-				}
-				
-				continue;
-			}
-			
+
 			// Resample the images if the width & height have changed.
-			$width  = $img->getAttribute('width');
-			$height = $img->getAttribute('height');
-			
-			if($image){
+			if($image = File::find(urldecode(Director::makeRelative($img->getAttribute('src'))))){
+				$width  = $img->getAttribute('width');
+				$height = $img->getAttribute('height');
+
 				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
 					//Make sure that the resized image actually returns an image:
 					$resized=$image->ResizedImage($width, $height);
 					if($resized) $img->setAttribute('src', $resized->getRelativePath());
 				}
 			}
-			
+
 			// Add default empty title & alt attributes.
 			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
 			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
-			
-			//If the src attribute is not set, then we won't add this to the list:
-			if($img->getAttribute('src')){
-				// Add to the tracked files.
-				$linkedFiles[] = $image->ID;
-			}
 		}
-		
-		// Save file & link tracking data.
-		if(class_exists('SiteTree')) {
-			if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
-				$tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d',
-					$this->name, $record->ID));
 
-				if($linkedPages) foreach($linkedPages as $item) {
-					$SQL_fieldName = Convert::raw2sql($this->name);
-					DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
-						VALUES ($record->ID, $item, '$SQL_fieldName')");
-				}
-			}
-		
-			if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
-				$tracker->where(
-					sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID)
-				)->removeAll();
-
-				$fieldName = $this->name;
-				if($linkedFiles) foreach($linkedFiles as $item) {
-					$tracker->add($item, array('FieldName' => $this->name));
-				}
-			}
-		}
-		
+		// Store into record
 		$record->{$this->name} = $htmlValue->getContent();
 	}
 
