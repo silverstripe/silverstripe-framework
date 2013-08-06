@@ -15,7 +15,7 @@
 				<tr>
 					<% if Paginator.PrevLink %>
 						<td id="ComplexTableField_Pagination_Previous">
-							<a href="$Paginator.PrevLink"><img src="$ModulePath(framework)/images/pagination/record-prev.png" /><% _t('ComplexTableField_popup.ss.PREVIOUS', 'Previous') %></a>
+							<a href="$Paginator.PrevLink"><img src="$ModulePath(framework)/images/pagination/record-prev.png" /><% _t('ComplexTableField_popup_ss.PREVIOUS', 'Previous') %></a>
 						</td>
 					<% end_if %>
 					<% if xdsfdsf %>
@@ -32,7 +32,7 @@
 					<% end_if %>
 					<% if Paginator.NextLink %>
 						<td id="ComplexTableField_Pagination_Next">
-							<a href="$Paginator.NextLink"><% _t('ComplexTableField_popup.ss.NEXT', 'Next') %><img src="$ModulePath(framework)/images/pagination/record-next.png" /></a>
+							<a href="$Paginator.NextLink"><% _t('ComplexTableField_popup_ss.NEXT', 'Next') %><img src="$ModulePath(framework)/images/pagination/record-next.png" /></a>
 						</td>
 					<% end_if %>
 				</tr>

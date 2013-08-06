@@ -1,7 +1,7 @@
 nl:
   AssetAdmin:
     ALLOWEDEXTS: 'Toegestane extensies'
-    NEWFOLDER: 'Nieuwe Map'
+    NEWFOLDER: Nieuwe Map
     SHOWALLOWEDEXTS: 'Toon toegestane extensies'
   AssetTableField:
     CREATED: 'Eerste upload'
@@ -10,10 +10,9 @@ nl:
     FOLDER: Map
     LASTEDIT: 'Laatste wijziging'
     OWNER: Eigenaar
-    SIZE: Grootte
+    SIZE: 'Grootte'
     TITLE: Titel
-    TYPE: Type
-    URL: URL
+    TYPE: 'Type'
   AssetUploadField:
     ChooseFiles: 'Selecteer bestanden'
     DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
@@ -24,9 +23,7 @@ nl:
     FILES: Bestanden
     FROMCOMPUTER: 'Selecteer bestand op computer'
     FROMCOMPUTERINFO: 'Uploaden vanaf uw computer'
-    TOTAL: Totaal
     TOUPLOAD: 'Selecteer bestanden'
-    UPLOADINPROGRESS: 'Even geduld... bezig met uploaden'
     UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Uitlijning
@@ -38,13 +35,11 @@ nl:
     CODEEXAMPLE: 'Code Blok'
     COLORED: 'Gekleurde tekst'
     COLOREDEXAMPLE: 'blauwe tekst'
-    EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: 'Maak een koppeling naar een e-mailadres'
     IMAGE: Afbeelding
     IMAGEDESCRIPTION: 'Toon een afbeelding in uw bericht'
     ITALIC: 'Cursieve tekst'
     ITALICEXAMPLE: Cursief
-    LINK: 'Website link'
     LINKDESCRIPTION: 'Link naar een andere website of URL'
     STRUCK: 'Doorgehaalde tekst'
     STRUCKEXAMPLE: Doorgehaald
@@ -53,7 +48,7 @@ nl:
     UNORDERED: 'Ongesorteerde lijst'
     UNORDEREDDESCRIPTION: 'Ongesorteerde lijst'
     UNORDEREDEXAMPLE1: 'ongesorteerd item 1'
-  BackLink_Button.ss:
+  BackLink_Button_ss:
     Back: Terug
   BasicAuth:
     ENTERINFO: 'Voer een gebruikers naam en wachtwoord in.'
@@ -61,39 +56,30 @@ nl:
     ERRORNOTREC: 'De gebruikersnaam en/of wachtwoord wordt niet herkend'
   Boolean:
     ANY: Elke
-    NOANSWER: Nee
-    YESANSWER: Ja
-  CMSLoadingScreen.ss:
-    LOADING: 'Bezig met laden...'
+  CMSLoadingScreen_ss:
     REQUIREJS: 'Het CMS heeft JavaScript nodig om te werken.'
   CMSMain:
     ACCESS: 'Toegang tot het ''{title}'' gedeelte'
     ACCESSALLINTERFACES: 'Toegang tot alle CMS onderdelen'
     ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
     SAVE: Bewaar
-  CMSPageHistoryController_versions.ss:
-    PREVIEW: 'Website voorbeeld'
   CMSProfileController:
     MENUTITLE: 'Mijn Profiel'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
     CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
     EMAIL: E-mail
     HELLO: Hallo
     PASSWORD: Wachtwoord
-  CheckboxField:
-    NOANSWER: Nee
-    YESANSWER: Ja
   ComplexTableField:
     CLOSEPOPUP: 'Sluit Popup'
-    SUCCESSADD2: 'Toegevoegd {name}'
-    SUCCESSEDIT: '%s %s %s Opgeslagen'
-  ComplexTableField.ss:
+    SUCCESSEDIT: '%s %s %s opgeslagen'
+  ComplexTableField_ss:
     ADDITEM: 'Voeg %s toe'
     NOITEMSFOUND: 'Geen items gevonden.'
     SORTASC: 'Sorteer oplopend'
     SORTDESC: 'Sorteer aflopend'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Volgende
     PREVIOUS: Vorige
   ConfirmedPasswordField:
@@ -106,8 +92,6 @@ nl:
     FOURTH: vierde
     SECOND: tweede
     THIRD: derde
-  CurrencyField:
-    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Gegeven Objecten'
     SINGULARNAME: 'Gegeven Object'
@@ -116,7 +100,6 @@ nl:
     DAYS: dagen
     HOUR: uur
     HOURS: uren
-    LessThanMinuteAgo: 'minder dan één minuut'
     MIN: minuut
     MINS: minuten
     MONTH: maand
@@ -127,6 +110,7 @@ nl:
     TIMEDIFFIN: '{difference} geleden'
     YEAR: jaar
     YEARS: jaren
+    LessThanMinuteAgo: 'minder dan één minuut'
   DateField:
     NOTSET: 'niet ingesteld'
     TODAY: vandaag
@@ -150,8 +134,6 @@ nl:
     AviType: 'AVI video bestand'
     Content: Inhoud
     CssType: 'CSS bestand'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
     Filename: 'Bestandsnaam '
     GifType: 'GIF afbeelding - voor diagrammen'
     GzType: 'GZIP gecomprimeerd bestand'
@@ -189,20 +171,17 @@ nl:
     FROMFILESTORE: 'Vanaf de website''s bestandsopslag'
     NOSOURCE: 'Selecteer een bron bestand om toe te voegen'
     REPLACE: 'Vervang {type}'
-  FileIFrameField_iframe.ss:
+  FileIFrameField_iframe_ss:
     TITLE: 'Afbeelding uploaden'
-  Filesystem:
-    SYNCRESULTS: 'Synchroniseren compleet: {createdcount} bestanden aangemaakt, {deletedcount} bestanden verwijderd.'
   Folder:
     PLURALNAME: Mappen
     SINGULARNAME: Map
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Hallo
     TEXT1: 'Hier is uw'
     TEXT2: 'wachtwoord reset link'
     TEXT3: voor
   Form:
-    CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klikt u op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
     FIELDISREQUIRED: '{name} is verplicht'
     SubmitBtnLabel: Gaan
     VALIDATIONCREDITNUMBER: 'Gelieve uw credit card number {number} juist in te vullen'
@@ -212,8 +191,8 @@ nl:
     VALIDATIONSTRONGPASSWORD: 'Wachtwoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter.'
     VALIDATOR: Controleur
     VALIDCURRENCY: 'Vul een geldige valuta in'
+    CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klikt u op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
   FormField:
-    Example: 'e.g. %s'
     NONE: geen
   GridAction:
     DELETE_DESCRIPTION: Verwijderen
@@ -221,8 +200,7 @@ nl:
     UnlinkRelation: Ontkoppelen
   GridField:
     Add: '{name} toevoegen'
-    Filter: Filter
-    FilterBy: Filteren
+    FilterBy: 'Filteren'
     Find: Zoek
     LEVELUP: 'Niveau omhoog'
     LinkExisting: 'Bestaande link'
@@ -236,18 +214,15 @@ nl:
     ResetFilter: Herstellen
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
-    EditPermissionsFailure: 'No permission to unlink record'
+    EditPermissionsFailure: 'Geen permissie'
   GridFieldDetailForm:
     CancelBtn: Annuleren
     Create: Creëren
-    Delete: Verwijder
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '%s %s verwijderd'
-    Save: Opslaan
     Saved: '{name} {link} opgeslagen'
-  GridFieldEditButton.ss:
-    EDIT: Bewerken
-  GridFieldItemEditView.ss: null
+  GridFieldItemEditView_ss:
+    Go_back: 'Ga terug'
   Group:
     AddRole: 'Voeg een rol toe aan deze groep'
     Code: 'Groep code'
@@ -261,12 +236,13 @@ nl:
     Parent: 'Bovenliggende groep'
     RolesAddEditLink: 'Toevoegen/wijzigingen rollen'
     SINGULARNAME: Groep
-    Sort: Sorteer-richting
+    Sort: 'Sorteer-richting'
     has_many_Permissions: Rechten
     many_many_Members: Leden
   GroupImportForm:
     Help1: '<p>Importeer en of meerdere groepen in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Geavanceerd gebruik</h4>\\n<ul>\\n<li>Toegestane kolommen: <em>%s</em></li>\\n<li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>\\n<li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>\\n</ul>\\n</div>\\n</ul>\\n</div>\\n"
+    Help2: "<div class=\"advanced\">\n<h4>Geavanceerd gebruik</h4>\n<ul>\n<li>Toegestane kolommen: <em>%s</em></li>\n<li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>\n<li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>\n</ul>\n</div>\n</ul>\n</div>\\\
+      n"
     ResultCreated: '{count} groepen aangemaakt'
     ResultDeleted: '%d groepen verwijderd'
     ResultUpdated: '%d groepen aangepast'
@@ -276,19 +252,19 @@ nl:
     ADDURL: 'Voeg URL toe'
     ADJUSTDETAILSDIMENSIONS: 'Details $amp; afmeting'
     ANCHORVALUE: Anker
-    BUTTONADDURL: 'Voeg URL toe'
     BUTTONINSERT: Invoegen
     BUTTONINSERTLINK: 'Link invoegen'
     BUTTONREMOVELINK: 'Link verwijderen'
     BUTTONUpdate: Bijwerken
-    CAPTIONTEXT: Onderschrift
+    CAPTIONTEXT: 'Onderschrift'
     CSSCLASS: 'Uitlijning / stijl'
     CSSCLASSCENTER: 'Gecentreerd, op zichzelf staand.'
     CSSCLASSLEFT: 'Aan de linkerkant, met tekst eromheen.'
-    CSSCLASSLEFTALONE: 'Links, losstaand.'
+    CSSCLASSLEFTALONE: 'Links, losstaand.
+
+      '
     CSSCLASSRIGHT: 'Aan de rechterkant, met tekst eromheen.'
-    DETAILS: Details
-    EMAIL: Emailadres
+    EMAIL: 'Emailadres'
     FILE: Bestand
     FOLDER: Map
     FROMCMS: 'Vanaf CMS'
@@ -304,20 +280,19 @@ nl:
     IMAGETITLETEXT: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
     IMAGETITLETEXTDESC: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
     IMAGEWIDTHPX: Breedte
-    INSERTMEDIA: Invoegen
-    LINK: Link
+    INSERTMEDIA: 'Invoegen'
+    LINK: 'Link'
     LINKANCHOR: 'Anker op deze pagina'
     LINKDESCR: 'Link omschrijving'
-    LINKEMAIL: Emailadres
+    LINKEMAIL: 'Emailadres'
     LINKEXTERNAL: 'Een andere website'
     LINKFILE: 'Een bestand downloaden'
     LINKINTERNAL: 'Pagina op deze site'
     LINKOPENNEWWIN: 'Link in een nieuw venster openen?'
     LINKTO: 'Verwijs naar'
     PAGE: Pagina
-    URL: URL
     URLNOTANOEMBEDRESOURCE: '{url} kon niet worden omgezet in een media-bron.'
-    UpdateMEDIA: 'Update Media'
+    BUTTONADDURL: 'Voeg URL toe'
   Image:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
@@ -326,38 +301,34 @@ nl:
   Image_Cached:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'Afbeelding uploaden'
   LeftAndMain:
     CANT_REORGANISE: 'Je hebt geen rechten hiervoor'
     DELETED: Verwijderd.
     DropdownBatchActionsDefault: Acties
-    HELP: Help
     PAGETYPE: 'Pagina type: '
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als U weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hier beneden in.'
     PERMALREADY: 'Helaas, dat deel van het CMS is niet toegankelijk voor U. Hieronder kunt U als iemand anders inloggen.'
     PERMDEFAULT: 'Geef uw e-mailadres en wachtwoord voor toegang tot het CMS.'
     PLEASESAVE: 'Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is bewaard.'
-    PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
-    SAVEDUP: 'Succesvol opgeslagen'
+    SAVEDUP: Succesvol opgeslagen
+    VersionUnknown: onbekend
     ShowAsList: 'Laat als lijst zien'
     TooManyPages: 'Te veel pagina''s'
-    ValidationError: Validatiefout
-    VersionUnknown: onbekend
-  LeftAndMain_Menu.ss:
+    ValidationError: 'Validatiefout'
+  LeftAndMain_Menu_ss:
     Hello: Hallo
-    LOGOUT: Uitloggen
+    LOGOUT: 'Uitloggen'
   LoginAttempt:
     Email: 'Email adres '
     IP: 'IP Adres'
     PLURALNAME: 'Pogingen om in te loggen'
-    SINGULARNAME: 'Poging om in te loggen'
-    Status: Status
   Member:
     ADDGROUP: 'Groep toevoegen'
     BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
-    BUTTONLOGIN: Inloggen
+    BUTTONLOGIN: 'Inloggen'
     BUTTONLOGINOTHER: 'Als iemand anders inloggen'
     BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten...'
     CANTEDIT: 'Je hebt geen rechten hiervoor'
@@ -366,14 +337,13 @@ nl:
     DATEFORMAT: 'Datum formaat'
     DefaultAdminFirstname: 'Standaard Beheerder'
     DefaultDateTime: Standaard
-    EMAIL: Email
     EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
     ENTEREMAIL: 'Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten.'
     ERRORLOCKEDOUT: 'Je account is tijdelijk geblokkeerd wegens te veel mislukte pogingen tot aanmelding. Gelieve het over 20 minuten opnieuw te proberen.'
     ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen met de bevestiging, probeer het nogmaals'
     ERRORPASSWORDNOTMATCH: 'Huidige wachtwoord kom niet overeen, probeer het nogmaals'
     ERRORWRONGCRED: 'Dat is niet het juiste email adres of wachtwoord. Probeert U het a.u.b. opnieuw.'
-    FIRSTNAME: Voornaam
+    FIRSTNAME: 'Voornaam'
     INTERFACELANG: 'Interface Taal'
     INVALIDNEWPASSWORD: 'Dit is geen goed wachtwoord: {password}'
     LOGGEDINAS: 'Je bent ingelogd als {name}.'
@@ -401,7 +371,6 @@ nl:
     TITLE: 'Email &amp; Wachtwoord'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) of PM (Post meridiem)'
-    'APPLY FILTER': 'Filter toepassen'
     Custom: Aangepast
     DATEFORMATBAD: 'Datum is niet correct opgegeven'
     DAYNOLEADING: 'Dag van de maand zonder voorloop-nul'
@@ -411,7 +380,6 @@ nl:
     HOURNOLEADING: 'Uur zonder voorloopnul'
     MINUTENOLEADING: 'Minuut zonder voorloopnul'
     MONTHNOLEADING: 'Dag van de maand zonder voorloop-nul'
-    Preview: Voorbeeld
     SHORTMONTH: 'Korte naam van de maand (Bijv. Jun)'
     TOGGLEHELP: 'Hulp weergeven / verbergen'
     TWODIGITDAY: 'Dag van de maand (met voorloop-nul)'
@@ -423,15 +391,17 @@ nl:
     Toggle: 'Toon opmaak hulp'
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: "<div class=\"advanced\">\\n<h4>Geavanceerd gebruik</h4>\\n<ul>\\n<li>Toegestane kolommen: <em>%s</em></li>\\n<li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>\\n<li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>\\n</ul>\\n</div>\\n</ul>\\n</div>\\n"
+    Help2: "<div class=\"advanced\">\n<h4>Geavanceerd gebruik</h4>\n<ul>\n<li>Toegestane kolommen: <em>%s</em></li>\n<li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>\n<li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>\n</ul>\n</div>\n</ul>\n</div>\\\
+      n"
     ResultCreated: '{count} leden aangemaakt'
     ResultDeleted: '%d leden verwijderd'
     ResultNone: 'Geen wijzingen'
     ResultUpdated: '{count} leden bijgewerkt'
   MemberPassword:
-    PLURALNAME: Gebruikerswachtwoorden
-    SINGULARNAME: Gebruikerswachtwoord
-  MemberTableField: null
+    PLURALNAME: 'Gebruikerswachtwoorden'
+    SINGULARNAME: 'Gebruikerswachtwoord'
+  MemberTableField:
+    APPLY_FILTER: 'Filter toepassen'
   ModelAdmin:
     DELETE: Verwijderen
     DELETEDRECORDS: '{count} records verwijderd'
@@ -443,24 +413,16 @@ nl:
     RESET: Herstel
     Title: 'Gegevens modellen'
     UPDATEDRECORDS: '{count} records bijgewerkt'
-  ModelAdmin_ImportSpec.ss:
+  ModelAdmin_ImportSpec_ss:
     IMPORTSPECFIELDS: 'Database kolommen'
     IMPORTSPECLINK: 'Toon specificaties van %s'
     IMPORTSPECRELATIONS: Relaties
     IMPORTSPECTITLE: 'Specificaties van %s'
-  ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Importeer
-  ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Importeer
-    SEARCHLISTINGS: Zoeken
   MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Valuta
   NullableField:
     IsNullLabel: 'is nul'
-  NumericField:
-    VALIDATION: '''{value}'' is geen getal. Dit velt accepteert alleen getallen.'
   Pagination:
     Page: Pagina
     View: Bekijk
@@ -472,7 +434,6 @@ nl:
     PLURALNAME: Machtigingen
     SINGULARNAME: Machtiging
   PermissionCheckboxSetField:
-    AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'geërfd van de groep "{title}"'
     FromRole: 'geërfd van de rol "{title}"'
     FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
@@ -489,7 +450,7 @@ nl:
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen de permissies aanpassen. Zie de sectie groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
   PhoneNumberField:
     VALIDATION: 'Voer een geldig telefoonnummer in'
-  RelationComplexTableField.ss:
+  RelationComplexTableField_ss:
     ADD: Toevoegen
     CSVEXPORT: 'Exporteren naar CSV'
     NOTFOUND: 'Geen items gevonden.'
@@ -526,21 +487,17 @@ nl:
     TABROLES: Rollen
     Users: Gebruikers
   SecurityAdmin_MemberImportForm:
-    BtnImport: Importeer
+    BtnImport: 'Importeer'
     FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
   SilverStripeNavigator:
     Auto: Automatisch
     ChangeViewMode: 'Wijzig weergavemodus'
-    Desktop: Desktop
-    DualWindowView: Dubbelvenster
-    Edit: Bewerken
-    EditView: Bewerkmodus
+    DualWindowView: 'Dubbelvenster'
+    EditView: 'Bewerkmodus'
     Mobile: Mobiel
-    PreviewState: Voorbeeldstatus
-    PreviewView: Voorbeeldmodus
-    Responsive: Responsive
-    SplitView: Split-modus
-    Tablet: Tablet
+    PreviewState: 'Voorbeeldstatus'
+    PreviewView: 'Voorbeeldmodus'
+    SplitView: 'Split-modus'
     ViewDeviceWidth: 'Selecteer een voorbeeldbreedte'
     Width: breedte
   SimpleImageField:
@@ -549,19 +506,18 @@ nl:
     TABMAIN: Hoofdgedeelte
   TableField:
     ISREQUIRED: 'In %s ''%s'' is verplicht'
-  TableField.ss:
+  TableField_ss:
     ADD: 'Nieuwe rij toevoegen'
     ADDITEM: '%s toevoegen'
   TableListField:
     CSVEXPORT: 'Exporteer naar CSV'
     PRINT: Afdrukken
-    Print: Afdrukken
     SELECT: 'Selecteer:'
-  TableListField.ss:
+  TableListField_ss:
     NOITEMSFOUND: 'Geen items gevonden.'
     SORTASC: 'Sorteer in oplopende volgorde'
     SORTDESC: 'Sorteer in aflopende volgorde'
-  TableListField_PageControls.ss:
+  TableListField_PageControls_ss:
     DISPLAYING: Tonen
     OF: van
     TO: naar
@@ -578,8 +534,6 @@ nl:
     ATTACHFILE: 'Voeg een bestand toe'
     ATTACHFILES: 'Voeg bestanden toe'
     AttachFile: 'Voeg bestand(en) toe'
-    CHOOSEANOTHERFILE: 'Kies een ander bestand'
-    CHOOSEANOTHERINFO: 'Vervang dit bestand met een ander uit de bestandsopslag'
     DELETE: 'Volledig verwijderen'
     DELETEINFO: 'Verwijder dit bestand uit bestandsopslag van de website.'
     DOEDIT: Opslaan
@@ -594,15 +548,21 @@ nl:
     FROMFILES: 'Bestaande bestanden'
     HOTLINKINFO: 'Info: Deze afbeelding wordt hotlinked. Zorg ervoor dat u de machtigingen van de oorspronkelijke site maker om dit te doen.'
     MAXNUMBEROFFILES: 'Maximale aantal van {count} bestand(en) overschreden.'
-    MAXNUMBEROFFILESONE: 'Kan slechts één bestand uploaden'
     MAXNUMBEROFFILESSHORT: 'Kan alleen {count} bestanden uploaden'
-    OVERWRITEWARNING: 'Bestand met dezelfde naam bestaat al'
+    MAXNUMBEROFFILESONE: 'Kan slechts één bestand uploaden'
     REMOVE: Verwijder
     REMOVEERROR: 'Fout bij verwijderen'
     REMOVEINFO: 'Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website.'
     STARTALL: 'Start alle'
     STARTALLINFO: 'Start alle'
     Saved: Opgeslagen
+    CHOOSEANOTHERFILE: 'Kies een ander bestand'
+    CHOOSEANOTHERINFO: 'Vervang dit bestand met een ander uit de bestandsopslag'
+    OVERWRITEWARNING: 'Bestand met dezelfde naam bestaat al'
     UPLOADSINTO: 'Word opgeslagen in /{path}'
   Versioned:
     has_many_Versions: Versies
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Website voorbeeld'
+  GridFieldEditButton_ss:
+    EDIT: Bewerken

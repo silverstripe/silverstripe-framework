@@ -418,7 +418,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'lah_PK' => 'Lahnda (Pakistan)',
 			'lb_LU' => 'Luxembourgish (Luxembourg)',
 			'lbe_RU' => 'Lak (Russia)',
-			'lc_XX' => 'LOLCAT',
 			'lez_RU' => 'Lezghian (Russia)',
 			'lg_UG' => 'Ganda (Uganda)',
 			'lij_IT' => 'Ligurian (Italy)',
@@ -444,6 +443,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'mfe_MU' => 'Morisyen (Mauritius)',
 			'mg_MG' => 'Malagasy (Madagascar)',
 			'mh_MH' => 'Marshallese (Marshall Islands)',
+			'mi' => 'Māori (New Zealand)',
 			'mi_NZ' => 'Māori (New Zealand)',
 			'min_ID' => 'Minangkabau (Indonesia)',
 			'mk_MK' => 'Macedonian (Macedonia)',
@@ -781,7 +781,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'lv_LV' => array('Latvian', 'latvie&#353;u'),
 		'lt_LT' => array('Lithuanian', 'lietuvi&#353;kai'),
 		'mk_MK' => array('Macedonian', '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'),
-		'mi_NZ' => array('Maori', 'Māori'),
+		'mi' => array('Maori', 'Māori'),
 		'ms_MY' => array('Malay', 'Bahasa melayu'),
 		'mt_MT' => array('Maltese', 'Malti'),
 		'mr_IN' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
@@ -929,6 +929,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'ko_KP' => 'ko',
 		'ko_KR' => 'ko',
 		'ko_CN' => 'ko',
+		'mi' => 'mi_NZ',
 		'mi_NZ' => 'mi_NZ',
 		'nb_NO' => 'nb',
 		'nb_SJ' => 'nb',
@@ -1519,12 +1520,19 @@ class i18n extends Object implements TemplateGlobalProvider {
 					i18n::include_by_locale($locale, (isset($_GET['flush'])));
 				}
 
-				$translation = $adapter->translate($entity, $locale);
+				// Backwards compat behaviour for changed template namespaces (dots not allowed in YAML keys)
+				$candidates = array();
+				if(strpos($entity, '_ss') !== false) $candidates[] = str_replace('_ss', '.ss', $entity);
+				$candidates[] = $entity;
 
-				// Return translation only if we found a match thats not the entity itself (Zend fallback)
-				if($translation && $translation != $entity) {
-					$returnValue = $translation;
-					break 2;
+				foreach($candidates as $candidate) {
+					$translation = $adapter->translate($candidate, $locale);	
+
+					// Return translation only if we found a match thats not the entity itself (Zend fallback)
+					if($translation && $translation != $candidate) {
+						$returnValue = $translation;
+						break 3;
+					}
 				}
 			}
 		}
@@ -1699,12 +1707,19 @@ class i18n extends Object implements TemplateGlobalProvider {
 			
 			$moduleLocales = scandir("{$module}/lang/");
 			foreach($moduleLocales as $moduleLocale) {
-				preg_match('/(.*)\.[\w\d]+$/',$moduleLocale, $matches);
-				if($locale = @$matches[1]) {
-					// Normalize locale to include likely region tag.
+				$locale = pathinfo($moduleLocale, PATHINFO_FILENAME);
+				$ext = pathinfo($moduleLocale, PATHINFO_EXTENSION);
+				if($locale && in_array($ext, array('php','yml'))) {
+					// Normalize locale to include likely region tag, avoid repetition in locale labels
 					// TODO Replace with CLDR list of actually available languages/regions
-					$locale = str_replace('-', '_', self::get_locale_from_lang($locale));
-					$locales[$locale] = (@self::$all_locales[$locale]) ? self::$all_locales[$locale] : $locale;
+					// Only allow explicitly registered locales, otherwise we'll get into trouble
+					// if the locale doesn't exist in Zend's CLDR data
+					$labelLocale = str_replace('-', '_', self::get_locale_from_lang($locale));
+					if(isset(self::$all_locales[$locale])) {
+						$locales[$locale] = self::$all_locales[$locale];	
+					} else if(isset(self::$all_locales[$labelLocale])) {
+						$locales[$locale] = self::$all_locales[$labelLocale];	
+					} 
 				}
 			}
 		}
