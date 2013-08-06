@@ -30,8 +30,8 @@
 		<% if Can(add) %>
 			<tr>
 				<td colspan="$ItemCount">
-					<a href="#" class="addrow" title="<% _t('TableField.ss.ADD', 'Add a new row') %>"><img src="$ModulePath(framework)/images/add.gif" alt="<% _t('TableField.ss.ADD','Add a new row') %>" />
-						<% sprintf(_t('TableField.ss.ADDITEM','Add %s'),$Title) %>
+					<a href="#" class="addrow" title="<% _t('TableField_ss.ADD', 'Add a new row') %>"><img src="$ModulePath(framework)/images/add.gif" alt="<% _t('TableField_ss.ADD','Add a new row') %>" />
+						<% sprintf(_t('TableField_ss.ADDITEM','Add %s'),$Title) %>
 					</a>
 				</td>
 				<td style="display: none"></td>
@@ -47,13 +47,13 @@
 						<td class="$FieldClass $extraClass $ClassName $Title tablecolumn">$Field</td>
 					<% end_loop %>
 					<td style="display: none">$ExtraData</td>
-					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('TableField.ss.DELETEROW') %>"><img src="$ModulePath(framework)/images/delete.gif" alt="<% _t('TableField.ss.DELETE') %>" /></a></td><% end_if %>
+					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('TableField_ss.DELETEROW') %>"><img src="$ModulePath(framework)/images/delete.gif" alt="<% _t('TableField_ss.DELETE') %>" /></a></td><% end_if %>
 				</tr>
 			<% end_loop %>
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-					<td colspan="$Headings.Count"><i><% _t('TableField.ss.NOITEMSFOUND') %></i></td>
+					<td colspan="$Headings.Count"><i><% _t('TableField_ss.NOITEMSFOUND') %></i></td>
 					<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
 				</tr>
 			<% end_if %>

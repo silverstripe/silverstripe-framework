@@ -53,7 +53,7 @@ en:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
-  BackLink_Button.ss:
+  BackLink_Button_ss:
     Back: Back
   BasicAuth:
     ENTERINFO: 'Please enter a username and password.'
@@ -61,9 +61,9 @@ en:
     ERRORNOTREC: 'That username / password isn''t recognised'
   Boolean:
     ANY: Any
-    NOANSWER: No
-    YESANSWER: Yes
-  CMSLoadingScreen.ss:
+    NOANSWER: "No"
+    YESANSWER: "Yes"
+  CMSLoadingScreen_ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
@@ -73,7 +73,7 @@ en:
     SAVE: Save
   CMSProfileController:
     MENUTITLE: 'My Profile'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
     EMAIL: Email
@@ -86,12 +86,12 @@ en:
     CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
-  ComplexTableField.ss:
+  ComplexTableField_ss:
     ADDITEM: 'Add %s'
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort ascending'
     SORTDESC: 'Sort descending'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Next
     PREVIOUS: Previous
   ConfirmedPasswordField:
@@ -187,14 +187,14 @@ en:
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
     REPLACE: 'Replace {type}'
-  FileIFrameField_iframe.ss:
+  FileIFrameField_iframe_ss:
     TITLE: 'Image Uploading Iframe'
   Filesystem:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Folder:
     PLURALNAME: Folders
     SINGULARNAME: Folder
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Hi
     TEXT1: 'Here is your'
     TEXT2: 'password reset link'
@@ -243,8 +243,8 @@ en:
     Deleted: 'Deleted %s %s'
     Save: Save
     Saved: 'Saved {name} {link}'
-  GridFieldItemEditView.ss:
-    'Go back': 'Go back'
+  GridFieldItemEditView_ss:
+    'Go_back': 'Go back'
   Group:
     AddRole: 'Add a role for this group'
     Code: 'Group Code'
@@ -323,7 +323,7 @@ en:
   Image_Cached:
     PLURALNAME: Files
     SINGULARNAME: File
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
@@ -342,7 +342,7 @@ en:
     ShowAsList: 'show as list'
     TooManyPages: 'Too many pages'
     ValidationError: 'Validation error'
-  LeftAndMain_Menu.ss:
+  LeftAndMain_Menu_ss:
     Hello: Hi
     LOGOUT: 'Log out'
   LoginAttempt:
@@ -428,7 +428,7 @@ en:
     PLURALNAME: 'Member Passwords'
     SINGULARNAME: 'Member Password'
   MemberTableField:
-    'APPLY FILTER': 'Apply Filter'
+    'APPLY_FILTER': 'Apply Filter'
   ModelAdmin:
     DELETE: Delete
     DELETEDRECORDS: 'Deleted {count} records.'
@@ -440,15 +440,15 @@ en:
     RESET: Reset
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
-  ModelAdmin_ImportSpec.ss:
+  ModelAdmin_ImportSpec_ss:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECLINK: 'Show Specification for %s'
     IMPORTSPECRELATIONS: Relations
     IMPORTSPECTITLE: 'Specification for %s'
-  ModelAdmin_Tools.ss:
+  ModelAdmin_Tools_ss:
     FILTER: Filter
     IMPORT: Import
-  ModelSidebar.ss:
+  ModelSidebar_ss:
     IMPORT_TAB_HEADER: Import
     SEARCHLISTINGS: Search
   MoneyField:
@@ -486,7 +486,7 @@ en:
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Please enter a valid phone number'
-  RelationComplexTableField.ss:
+  RelationComplexTableField_ss:
     ADD: Add
     CSVEXPORT: 'Export to CSV'
     NOTFOUND: 'No items found'
@@ -546,7 +546,7 @@ en:
     TABMAIN: Main
   TableField:
     ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
+  TableField_ss:
     ADD: 'Add a new row'
     ADDITEM: 'Add %s'
   TableListField:
@@ -554,11 +554,11 @@ en:
     PRINT: Print
     Print: Print
     SELECT: 'Select:'
-  TableListField.ss:
+  TableListField_ss:
     NOITEMSFOUND: 'No items found'
     SORTASC: 'Sort in ascending order'
     SORTDESC: 'Sort in descending order'
-  TableListField_PageControls.ss:
+  TableListField_PageControls_ss:
     DISPLAYING: Displaying
     OF: of
     TO: to
@@ -603,7 +603,7 @@ en:
     UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versions
-  CMSPageHistoryController_versions.ss:
+  CMSPageHistoryController_versions_ss:
     PREVIEW: 'Website preview'
-  GridFieldEditButton.ss:
+  GridFieldEditButton_ss:
     EDIT: Edit

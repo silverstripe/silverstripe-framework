@@ -8,10 +8,10 @@
 		</div>
 	
 		<div class="cms-login-status">
-			<a href="Security/logout" class="logout-link" title="<% _t('LeftAndMain_Menu.ss.LOGOUT','Log out') %>"><% _t('LeftAndMain_Menu.ss.LOGOUT','Log out') %></a>
+			<a href="Security/logout" class="logout-link" title="<% _t('LeftAndMain_Menu_ss.LOGOUT','Log out') %>"><% _t('LeftAndMain_Menu_ss.LOGOUT','Log out') %></a>
 			<% with CurrentMember %>
 				<span>
-					<% _t('LeftAndMain_Menu.ss.Hello','Hi') %>
+					<% _t('LeftAndMain_Menu_ss.Hello','Hi') %>
 					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link ss-ui-dialog-link" data-popupclass="edit-profile-popup">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
@@ -27,7 +27,7 @@
 				<a href="$Link" <% if Code == 'Help' %>target="_blank"<% end_if%>>
 					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
 					<span class="text">$Title</span>
-				</a>			
+				</a>
 			</li>
 		<% end_loop %>
 		</ul>
