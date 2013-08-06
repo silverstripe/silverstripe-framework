@@ -433,7 +433,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'lah_PK' => 'Lahnda (Pakistan)',
 			'lb_LU' => 'Luxembourgish (Luxembourg)',
 			'lbe_RU' => 'Lak (Russia)',
-			'lc_XX' => 'LOLCAT',
 			'lez_RU' => 'Lezghian (Russia)',
 			'lg_UG' => 'Ganda (Uganda)',
 			'lij_IT' => 'Ligurian (Italy)',
@@ -459,7 +458,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'mfe_MU' => 'Morisyen (Mauritius)',
 			'mg_MG' => 'Malagasy (Madagascar)',
 			'mh_MH' => 'Marshallese (Marshall Islands)',
-			'mi_NZ' => 'Māori (New Zealand)',
+			'mi' => 'Māori (New Zealand)',
 			'min_ID' => 'Minangkabau (Indonesia)',
 			'mk_MK' => 'Macedonian (Macedonia)',
 			'ml_IN' => 'Malayalam (India)',
@@ -1182,7 +1181,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'name' => 'Macedonian',
 			'native' => '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'
 		),
-		'mi_NZ' => array(
+		'mi' => array(
 			'name' => 'Maori',
 			'native' => 'Māori'
 		),
@@ -1451,6 +1450,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'ko_KP' => 'ko',
 		'ko_KR' => 'ko',
 		'ko_CN' => 'ko',
+		'mi' => 'mi_NZ',
 		'mi_NZ' => 'mi_NZ',
 		'nb_NO' => 'nb',
 		'nb_SJ' => 'nb',
@@ -1633,7 +1633,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 		'mdh' => 'mdh_PH',
 		'mg' => 'mg_MG',
 		'mh' => 'mh_MH',
-		'mi' => 'mi_NZ',
 		'mk' => 'mk_MK',
 		'ml' => 'ml_IN',
 		'mn' => 'mn_MN',
@@ -2224,12 +2223,19 @@ class i18n extends Object implements TemplateGlobalProvider {
 			$allLocales = Config::inst()->get('i18n', 'all_locales');
 			$moduleLocales = scandir("{$module}/lang/");
 			foreach($moduleLocales as $moduleLocale) {
-				preg_match('/(.*)\.[\w\d]+$/',$moduleLocale, $matches);
-				if($locale = @$matches[1]) {
-					// Normalize locale to include likely region tag.
+				$locale = pathinfo($moduleLocale, PATHINFO_FILENAME);
+				$ext = pathinfo($moduleLocale, PATHINFO_EXTENSION);
+				if($locale && in_array($ext, array('php','yml'))) {
+					// Normalize locale to include likely region tag, avoid repetition in locale labels
 					// TODO Replace with CLDR list of actually available languages/regions
-					$locale = str_replace('-', '_', self::get_locale_from_lang($locale));
-					$locales[$locale] = (isset($allLocales[$locale])) ? $allLocales[$locale] : $locale;
+					// Only allow explicitly registered locales, otherwise we'll get into trouble
+					// if the locale doesn't exist in Zend's CLDR data
+					$labelLocale = str_replace('-', '_', self::get_locale_from_lang($locale));
+					if(isset($allLocales[$locale])) {
+						$locales[$locale] = $allLocales[$locale];	
+					} else if(isset($allLocales[$labelLocale])) {
+						$locales[$locale] = $allLocales[$labelLocale];	
+					} 
 				}
 			}
 		}

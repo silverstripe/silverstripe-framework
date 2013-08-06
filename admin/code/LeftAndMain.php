@@ -1281,7 +1281,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				// new LiteralField(
 				// 	'WelcomeText',
 				// 	sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
-				// 		_t('LeftAndMain_right.ss.WELCOMETO','Welcome to'),
+				// 		_t('LeftAndMain_right_ss.WELCOMETO','Welcome to'),
 				// 		$this->getApplicationName(),
 				// 		_t('CHOOSEPAGE','Please choose an item from the left.')
 				// 	)
