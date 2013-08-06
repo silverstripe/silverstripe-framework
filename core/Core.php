@@ -153,13 +153,6 @@ function project() {
 	return $project;
 }
 
-function stripslashes_recursively(&$array) {
-	foreach($array as $k => $v) {
-		if(is_array($v)) stripslashes_recursively($array[$k]);
-		else $array[$k] = stripslashes($v);
-	}
-}
-
 /**
  * @see i18n::_t()
  */

@@ -91,10 +91,17 @@ class ParameterConfirmationToken {
 		unset($params['url']);
 
 		// Join them all together into the original URL
-		$location = "$proto://" . $host . BASE_URL . $url . ($params ? '?'.http_build_query($params) : '');
+		$location = "$proto://" . $host . '/' . ltrim(BASE_URL, '/') . $url . ($params ? '?'.http_build_query($params) : '');
 
 		// And redirect
-		header('location: '.$location, true, 302);
+		if (headers_sent()) {
+			echo "
+<script>location.href='$location';</script>
+<noscript><meta http-equiv='refresh' content='0; url=$location'></noscript>
+You are being redirected. If you are not redirected soon, <a href='$location'>click here to continue the flush</a>
+";
+		}
+		else header('location: '.$location, true, 302);
 		die;
 	}
 }
