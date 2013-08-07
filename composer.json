@@ -17,7 +17,6 @@
 	],
 	"require": {
 		"php": ">=5.2.4",
-		"composer/installers": "*",
-		"silverstripe/cms": "2.4.*"
+		"composer/installers": "*"
 	}
 }
