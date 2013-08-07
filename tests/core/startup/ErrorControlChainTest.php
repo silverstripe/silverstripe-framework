@@ -8,6 +8,11 @@
  */
 class ErrorControlChainTest_Chain extends ErrorControlChain {
 
+	// Change function visibility to be testable directly
+	public function translateMemstring($memstring) {
+		return parent::translateMemstring($memstring);
+	}
+
 	function executeInSubprocess() {
 		// Get the path to the ErrorControlChain class
 		$classpath = SS_ClassLoader::instance()->getItemPath('ErrorControlChain');
@@ -107,6 +112,23 @@ class ErrorControlChainTest extends SapphireTest {
 			->then(function(){
 				$x = function(ErrorControlChain $foo){ };
 				$x(1); // Calling against type
+			})
+			->thenIfErrored(function(){
+				echo "Done";
+			})
+			->executeInSubprocess();
+
+		$this->assertEquals('Done', $out);
+
+		// Memory exhaustion
+
+		$chain = new ErrorControlChainTest_Chain();
+
+		list($out, $code) = $chain
+			->then(function(){
+				ini_set('memory_limit', '10M');
+				$a = array();
+				while(1) $a[] = 1;
 			})
 			->thenIfErrored(function(){
 				echo "Done";
@@ -237,5 +259,24 @@ class ErrorControlChainTest extends SapphireTest {
 			->executeInSubprocess();
 
 		$this->assertContains("Good", $out);
+	}
+
+	function testMemoryConversion() {
+		$chain = new ErrorControlChainTest_Chain();
+
+		$this->assertEquals(200, $chain->translateMemstring('200'));
+		$this->assertEquals(300, $chain->translateMemstring('300'));
+
+		$this->assertEquals(2 * 1024, $chain->translateMemstring('2k'));
+		$this->assertEquals(3 * 1024, $chain->translateMemstring('3K'));
+
+		$this->assertEquals(2 * 1024 * 1024, $chain->translateMemstring('2m'));
+		$this->assertEquals(3 * 1024 * 1024, $chain->translateMemstring('3M'));
+
+		$this->assertEquals(2 * 1024 * 1024 * 1024, $chain->translateMemstring('2g'));
+		$this->assertEquals(3 * 1024 * 1024 * 1024, $chain->translateMemstring('3G'));
+
+		$this->assertEquals(200, $chain->translateMemstring('200foo'));
+		$this->assertEquals(300, $chain->translateMemstring('300foo'));
 	}
 }

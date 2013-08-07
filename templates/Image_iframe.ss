@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
 	<head>
 		<% base_tag %>
-		<title><% _t('Image_iframe.ss.TITLE', 'Image Uploading Iframe') %></title>
+		<title><% _t('Image_iframe_ss.TITLE', 'Image Uploading Iframe') %></title>
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 	</head>
 

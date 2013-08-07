@@ -24,7 +24,7 @@ ini_set('display_errors', 'on');
 error_reporting(E_ALL | E_STRICT);
 
 // Attempt to start a session so that the username and password can be sent back to the user.
-if (function_exists('session_start')) {
+if (function_exists('session_start') && !session_id()) {
 	session_start();
 }
 
@@ -1312,8 +1312,12 @@ PHP
 				$this->statusMessage("Checking that friendly URLs work...");
 				$this->checkRewrite();
 			} else {
+				require_once 'core/startup/ParameterConfirmationToken.php';
+				$token = new ParameterConfirmationToken('flush');
+				$params = http_build_query($token->params());
+
 				$destinationURL = 'index.php/' .
-					($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
+					($this->checkModuleExists('cms') ? "home/successfullyinstalled?$params" : "?$params");
 
 				echo <<<HTML
 				<li>SilverStripe successfully installed; I am now redirecting you to your SilverStripe site...</li>
@@ -1451,8 +1455,12 @@ TEXT;
 	}
 
 	function checkRewrite() {
+		require_once 'core/startup/ParameterConfirmationToken.php';
+		$token = new ParameterConfirmationToken('flush');
+		$params = http_build_query($token->params());
+
 		$destinationURL = str_replace('install.php', '', $_SERVER['SCRIPT_NAME']) .
-			($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
+			($this->checkModuleExists('cms') ? "home/successfullyinstalled?$params" : "?$params");
 
 		echo <<<HTML
 <li id="ModRewriteResult">Testing...</li>
