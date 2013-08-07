@@ -1,33 +1,4 @@
 lt:
-  AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: NewFolder
-    SHOWALLOWEDEXTS: 'Show allowed extensions'
-  AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
-    FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
-    TYPE: 'File type'
-    URL: URL
-  AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
-    EDITINFO: 'Edit files'
-    FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
-    TOUPLOAD: 'Choose files to upload...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
   BBCodeParser:
     ALIGNEMENT: Lygiavimas
     ALIGNEMENTEXAMPLE: 'sulygiuota pagal dešinę'
@@ -43,269 +14,110 @@ lt:
     IMAGE: Paveikslėlis
     IMAGEDESCRIPTION: 'Rodyti paveikslėlį mano skelbime'
     ITALIC: 'Italic tekstas'
-    ITALICEXAMPLE: Italics
     LINK: 'Puslapio nuoroda'
     LINKDESCRIPTION: 'Nuoroda į kitą svetainę ar URL adresą'
     STRUCK: 'Struck-out tekstas'
-    STRUCKEXAMPLE: Struck-out
     UNDERLINE: 'Pabrauktas tekstas'
     UNDERLINEEXAMPLE: Pabraukta
     UNORDERED: 'Nerūšiuotas sąrašas'
     UNORDEREDDESCRIPTION: 'Nerūšiuotas sąrašas'
     UNORDEREDEXAMPLE1: 'nerūšiuota prekė 1'
-  BackLink_Button.ss:
-    Back: Back
   BasicAuth:
     ENTERINFO: 'Įveskite vartotojo vardą ir slaptažodį'
     ERRORNOTADMIN: 'Vartotojas nėra administratorius'
     ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
   Boolean:
-    ANY: 'Bet koks'
-    NOANSWER: 'False'
-    YESANSWER: 'True'
-  CMSLoadingScreen.ss:
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
+    ANY: Bet koks
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Išsaugoti
-  CMSPageHistoryController_versions.ss:
-    PREVIEW: 'Website preview'
-  CMSProfileController:
-    MENUTITLE: 'My Profile'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
     CHANGEPASSWORDTEXT2: 'Nuo šiol galite naudoti šiuos prisijungimo duomenis:'
-    EMAIL: 'E. paštas'
+    EMAIL: E. paštas
     HELLO: Sveiki
     PASSWORD: Slaptažodis
-  CheckboxField:
-    NOANSWER: 'False'
-    YESANSWER: 'True'
   ComplexTableField:
-    CLOSEPOPUP: Uždaryti
-    SUCCESSADD2: 'Added {name}'
+    CLOSEPOPUP: 'Uždaryti'
     SUCCESSEDIT: 'Išsaugota %s %s %s'
-  ComplexTableField.ss:
+  ComplexTableField_ss:
     ADDITEM: 'Pridėti %s'
-    NOITEMSFOUND: 'No items found'
     SORTASC: 'Rūšiuoti A-Z'
     SORTDESC: 'Rūšiuoti Z-A'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Sekantis
     PREVIOUS: Ankstesnis
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Pakeisti slaptažodį'
   CreditCardField:
     FIRST: pirmas
     FOURTH: ketvirtas
     SECOND: antras
     THIRD: trečias
-  CurrencyField:
-    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Duomenų objektai'
     SINGULARNAME: 'Duomenų objektas'
-  Date:
-    DAY: day
-    DAYS: days
-    HOUR: hour
-    HOURS: hours
-    LessThanMinuteAgo: 'less than a minute'
-    MIN: min
-    MINS: mins
-    MONTH: month
-    MONTHS: months
-    SEC: sec
-    SECS: secs
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
-    YEAR: year
-    YEARS: years
   DateField:
-    NOTSET: nenustatyta
+    NOTSET: 'nenustatyta'
     TODAY: šiandien
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
-  DatetimeField:
-    NOTSET: 'Not set'
-  Director:
-    INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Pasirinkti)
-  EmailField:
-    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
     PLURALNAME: 'El.Pašto persiuntimų įrašai'
     SINGULARNAME: 'El.Pašto persiuntimų įrašas'
   Enum:
-    ANY: 'Bet koks'
+    ANY: Bet koks
   File:
-    AviType: 'AVI video file'
     Content: Turinys
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: 'Bylos pavadinimas'
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
+    Filename: Bylos pavadinimas
     NOFILESIZE: 'Bylos dydis 0 baitų.'
     NOVALIDUPLOAD: 'Failas netinkamas įdėjimui'
     Name: Vardas
     PLURALNAME: Bylos
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Byla
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
     Title: Pavadinimas
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: Failas
     FROMCOMPUTER: 'Iš jūsų kompiuterio'
     FROMFILESTORE: 'Š failų saugyklos '
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
-  FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
-  Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
-  Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Sveiki
     TEXT1: 'Štai Jūsų'
     TEXT2: 'slaptažodžio atstatymo nuoroda'
     TEXT3: kam
   Form:
-    CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
-    FIELDISREQUIRED: '{name} is required'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Įvesta reikšmė nėra unikali'
     VALIDATIONPASSWORDSDONTMATCH: 'Nesutampa slaptažodžiai'
     VALIDATIONPASSWORDSNOTEMPTY: 'Slaptažodžiai negali būti tušti'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Tikrintojas
-    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    Example: 'e.g. %s'
     NONE: niekas
-  GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
-  GridField:
-    Add: 'Add {name}'
-    Filter: Filter
-    FilterBy: 'Filter by '
-    Find: Find
-    LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
-  GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
-    EditPermissionsFailure: 'No permission to unlink record'
-  GridFieldDetailForm:
-    CancelBtn: Cancel
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved {name} {link}'
-  GridFieldEditButton.ss:
-    EDIT: Edit
-  GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
     Code: 'Grupės kodas'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
     Description: Aprašymas
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Užrakinta?'
-    NoRoles: 'No roles found'
-    PLURALNAME: Groups
     Parent: 'Priklauso grupei'
-    RolesAddEditLink: 'Manage roles'
-    SINGULARNAME: Group
     Sort: 'Rūšiavimo tvarka'
     has_many_Permissions: Leidimai
     many_many_Members: Nariai
-  GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Pagrindinis
-    BUTTONADDURL: 'Add url'
-    BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Įterpti nuorodą'
     BUTTONREMOVELINK: 'Pašalinti nuorodą'
-    BUTTONUpdate: Update
     CAPTIONTEXT: 'Pavadinimo tekstas'
     CSSCLASS: 'Lygiavimas / stilius'
     CSSCLASSCENTER: 'Centruotas, be nieko.'
     CSSCLASSLEFT: 'Kairėje, su tekstu aplink.'
     CSSCLASSLEFTALONE: 'Kairėje, savaiminis.'
     CSSCLASSRIGHT: 'Dešinėje, su tekstu aplink.'
-    DETAILS: Details
     EMAIL: 'E. pašto adresas'
     FILE: Byla
     FOLDER: Direktorija
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternatyvus tekstas (alt) - rodomas kai nepavyksta parodyti paveikslėlio'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Matmenys
     IMAGEHEIGHTPX: Aukštis
     IMAGETITLE: 'Pavadinimo tekstas (pagalbinis tekstas) - papildomai informacijai apie paveikslėlį'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Plotis
-    INSERTMEDIA: 'Insert Media'
-    LINK: Nuoroda
+    LINK: 'Nuoroda'
     LINKANCHOR: 'Pagrindinis šiame puslapyje'
     LINKDESCR: 'Nuorodos aprašymas'
     LINKEMAIL: 'E. pašto adresas'
@@ -315,68 +127,30 @@ lt:
     LINKOPENNEWWIN: 'Atidaryti nuorodą naujame lange?'
     LINKTO: 'Nuoroda į'
     PAGE: Puslapis
-    URL: 'URL adresas'
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
-  Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
+    URL: URL adresas
   ImageField:
     IMAGE: Paveikslėlis
-  Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'Atvaizdo siuntimas iframe'
-  LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
-    HELP: Help
-    PAGETYPE: 'Page type: '
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
-    PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
-    ShowAsList: 'show as list'
-    TooManyPages: 'Too many pages'
-    ValidationError: 'Validation error'
-    VersionUnknown: Unknown
-  LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'E. pašto adresas'
     IP: 'IP adresas'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
     Status: Statusas
   Member:
-    ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Pakeisti slaptažodį'
-    BUTTONLOGIN: Prisijungti
+    BUTTONLOGIN: 'Prisijungti'
     BUTTONLOGINOTHER: 'Prisijungti kitu vardu'
     BUTTONLOSTPASSWORD: 'Pamiršau savo slaptažodį'
-    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Patvirtinkite naują slaptažodį'
     CONFIRMPASSWORD: 'Patvirtinkite slaptažodį'
-    DATEFORMAT: 'Date format'
-    DefaultAdminFirstname: 'Default Admin'
-    DefaultDateTime: default
-    EMAIL: 'E. paštas'
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    EMAIL: E. paštas
     ENTEREMAIL: 'Įveskite e. pašto adresą norėdami gauti slaptažodžio atstatymo nuorodą.'
     ERRORLOCKEDOUT: 'Jūsų paskyra laikinai sustabdyta dėl per didelio bandymų prisijungti skaičiaus. Pabandykite prisijungti vėliau 20 min. laikotarpyje.'
     ERRORNEWPASSWORD: 'Nesutampa naujas slaptažodis, bandykite dar kartą'
     ERRORPASSWORDNOTMATCH: 'Nesutampa Jūsų senas slaptažodis, bandykite dar kartą'
     ERRORWRONGCRED: 'Neteisingas e. pašto adresas arba slaptažodis. Bandykite dar kartą.'
-    FIRSTNAME: Vardas
-    INTERFACELANG: Kalba
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    FIRSTNAME: 'Vardas'
+    INTERFACELANG: 'Kalba'
     NEWPASSWORD: 'Naujas slaptažodis'
     PASSWORD: Slaptažodis
     PLURALNAME: Nariai
@@ -385,10 +159,7 @@ lt:
     SUBJECTPASSWORDCHANGED: 'Jūsų slaptažodis pakeistas'
     SUBJECTPASSWORDRESET: 'Slaptažodžio atstatymo nuoroda'
     SURNAME: Pavardė
-    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Tokį e. paštą jau naudoja kitas narys.'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Jūsų senas slaptažodis'
     belongs_many_many_Groups: Grupės
     db_LastVisited: 'Paskutinį kartą lankyta'
@@ -399,100 +170,15 @@ lt:
     db_PasswordExpiry: 'Slaptažodžio pabaigos data'
   MemberAuthenticator:
     TITLE: 'E-paštas ir slaptažodis'
-  MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
-    Toggle: 'Show formatting help'
-  MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
-    ResultUpdated: 'Updated {count} members'
-  MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
-  MemberTableField: null
-  ModelAdmin:
-    DELETE: Delete
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Replace data'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
-  ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
-  ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
-  ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Kiekis
     FIELDLABELCURRENCY: Valiuta
-  NullableField:
-    IsNullLabel: 'Is Null'
-  NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
-  Pagination:
-    Page: Page
-    View: View
   Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Pilnos administravimo teisės'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
-  PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
-  PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
-  PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
-  Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Įveskite teisingą telefono numerį'
-  RelationComplexTableField.ss:
+  RelationComplexTableField_ss:
     ADD: Pridėti
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, <a href="%s">spauskite čia</a>.'
     BUTTONSEND: 'Atsiųsti slaptažodžio atstatymo nuorodą'
@@ -501,108 +187,32 @@ lt:
     ENTERNEWPASSWORD: 'Įveskite naują slaptažodį.'
     ERRORPASSWORDPERMISSION: 'Norėdami keisti savo slaptažodį turite būti prisijungęs!'
     LOGGEDOUT: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
-    LOGIN: Prisijungti
+    LOGIN: 'Prisijungti'
     NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo prisijungimo duomenis, esančius žemiau.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Įveskite savo e. pašto adresą ir mes atsiųsime slaptažodžio atstatymui skirtą nuorodą'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Manage permissions for groups'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Grupės pavadinimas'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
     MEMBERS: Nariai
-    MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
     PERMISSIONS: Leidimai
-    ROLES: Roles
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
-    Users: Users
-  SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
-  SilverStripeNavigator:
-    Auto: Auto
-    ChangeViewMode: 'Change view mode'
-    Desktop: Desktop
-    DualWindowView: 'Dual Window'
-    Edit: Edit
-    EditView: 'Edit mode'
-    Mobile: Mobile
-    PreviewState: 'Preview State'
-    PreviewView: 'Preview mode'
-    Responsive: Responsive
-    SplitView: 'Split mode'
-    Tablet: Tablet
-    ViewDeviceWidth: 'Select a preview width'
-    Width: width
   SimpleImageField:
     NOUPLOAD: 'Neįkrauta jokių paveikslėlių'
   SiteTree:
     TABMAIN: Pagrindinis
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
+  TableField_ss:
     ADD: 'Pridėti naują eilutę'
-    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Ekportuoti į CSV'
     PRINT: Spausdinti
-    Print: Print
-    SELECT: 'Select:'
-  TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+  TableListField_ss:
     SORTASC: 'Rūšiuoti didėjimo tvarka'
     SORTDESC: 'Rūšiuoti mažėjimo tvarka'
-  TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+  TableListField_PageControls_ss:
     VIEWFIRST: 'Žiūrėti pirmą'
     VIEWLAST: 'Žiūrėti paskutinį'
     VIEWNEXT: 'Žiūrėti sekantį'
     VIEWPREVIOUS: 'Žiūrėti ankstesnį'
-  TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: mažiau
     MORE: daugiau
-  UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
-    CHOOSEANOTHERFILE: 'Choose another file'
-    CHOOSEANOTHERINFO: 'Replace this file with another one from the file store'
-    DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
-    Dimensions: Dimensions
-    EDIT: Edit
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
-    FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESONE: 'Can only upload one file'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    OVERWRITEWARNING: 'File with the same name already exists'
-    REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
-    STARTALLINFO: 'Start all uploads'
-    Saved: Saved
-    UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versijos

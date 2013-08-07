@@ -187,6 +187,7 @@ class DevelopmentAdmin extends Controller {
 				exit(1);
 			}
 			$yml = "Security:\n  token: $token";
+			Filesystem::makeFolder(dirname(BASE_PATH . '/' . $path));
 			file_put_contents(BASE_PATH . '/' . $path, $yml);
 			echo "Configured token in $path\n";
 		} else {

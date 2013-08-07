@@ -2044,13 +2044,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 
 				$translation = $adapter->translate($entity, $locale);
 
-				// Return translation only if we found a match thats not the entity itself (Zend fallback)
+					// Return translation only if we found a match thats not the entity itself (Zend fallback)
 				if($translation && $translation != $entity) {
-					$returnValue = $translation;
+						$returnValue = $translation;
 					break 2;
+					}
 				}
 			}
-		}
 
 		// inject the variables from injectionArray (if present)
 		if($injectionArray) {
@@ -2230,9 +2230,9 @@ class i18n extends Object implements TemplateGlobalProvider {
 					// TODO Replace with CLDR list of actually available languages/regions
 					$locale = str_replace('-', '_', self::get_locale_from_lang($locale));
 					$locales[$locale] = (isset($allLocales[$locale])) ? $allLocales[$locale] : $locale;
+					} 
 				}
 			}
-		}
 
 		// sort by title (not locale)
 		asort($locales);
@@ -2460,7 +2460,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function set_default_locale($locale) {
 		self::$default_locale = $locale;
 	}
-
+	
 	/**
 	 * Includes all available language files for a certain defined locale.
 	 *
@@ -2472,7 +2472,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			$cache = Zend_Translate::getCache();
 			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		}
-
+		
 		// Get list of module => path pairs, and then just the names
 		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
 		$moduleNames = array_keys($modules);
@@ -2498,7 +2498,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$sortedModules = array();
 		foreach ($order as $module) {
 			if (isset($modules[$module])) $sortedModules[$module] = $modules[$module];
-		}
+			}
 
 		// Loop in reverse order, meaning the translator with the highest priority goes first
 		$translators = array_reverse(self::get_translators(), true);
