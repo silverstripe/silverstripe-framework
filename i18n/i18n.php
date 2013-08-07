@@ -2224,15 +2224,22 @@ class i18n extends Object implements TemplateGlobalProvider {
 			$allLocales = Config::inst()->get('i18n', 'all_locales');
 			$moduleLocales = scandir("{$module}/lang/");
 			foreach($moduleLocales as $moduleLocale) {
-				preg_match('/(.*)\.[\w\d]+$/',$moduleLocale, $matches);
-				if($locale = @$matches[1]) {
-					// Normalize locale to include likely region tag.
+				$locale = pathinfo($moduleLocale, PATHINFO_FILENAME);
+				$ext = pathinfo($moduleLocale, PATHINFO_EXTENSION);
+				if($locale && in_array($ext, array('php','yml'))) {
+					// Normalize locale to include likely region tag, avoid repetition in locale labels
 					// TODO Replace with CLDR list of actually available languages/regions
-					$locale = str_replace('-', '_', self::get_locale_from_lang($locale));
-					$locales[$locale] = (isset($allLocales[$locale])) ? $allLocales[$locale] : $locale;
+					// Only allow explicitly registered locales, otherwise we'll get into trouble
+					// if the locale doesn't exist in Zend's CLDR data
+					$labelLocale = str_replace('-', '_', self::get_locale_from_lang($locale));
+					if(isset(self::$all_locales[$locale])) {
+						$locales[$locale] = self::$all_locales[$locale];	
+					} else if(isset(self::$all_locales[$labelLocale])) {
+						$locales[$locale] = self::$all_locales[$labelLocale];	
 					} 
-				}
+				} 
 			}
+		}
 
 		// sort by title (not locale)
 		asort($locales);
