@@ -493,6 +493,7 @@ en:
     NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
+    LOSTPASSWORDHEADER: 'Lost Password'
     BUTTONSEND: 'Send me the password reset link'
     CHANGEPASSWORDBELOW: 'You can change your password below.'
     CHANGEPASSWORDHEADER: 'Change your password'
