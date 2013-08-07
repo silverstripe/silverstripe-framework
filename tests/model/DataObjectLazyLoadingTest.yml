@@ -1,0 +1,17 @@
+#LazySortTest_BaseDataObject:
+#	base1:
+#    Title: Base object 1
+#	base1:
+#    Title: Base object 2
+#LazySortTest_ExtendedDataObject:
+#  extend1:
+#    Title: Extended 1
+#    SortMe: 2
+#  extend2:
+#    Title: Extended 2
+#    SortMe: 1
+LazySortTest_RelatedDataObject:
+  related1:
+    Title: Related 1
+  related2:
+    Title: Related 2
