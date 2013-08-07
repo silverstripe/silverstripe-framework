@@ -337,6 +337,25 @@
 			background: #FFF;
 			border: 1px solid silver;
 			@include box-shadow(0 0 10px #CCC);
+			&.col-2{
+				width:360px;
+				li{
+					width:50%;
+				}
+			}
+			&.col-3{
+				width:540px;
+				li{
+					width:33%;
+				}
+			}
+			li{
+				min-width:180px;
+				float:left;
+				a{
+					@include hide-text-overflow;
+				}
+			}
 		}
 		li{
 			&.vakata-separator {
