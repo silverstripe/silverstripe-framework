@@ -592,7 +592,6 @@ class UploadFieldTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$parser = new CSSContentParser($response->getBody());
-		var_dump($response->getBody());
 		$this->assertFalse(
 			(bool)$parser->getBySelector(
 				'#UploadFieldTestForm_Form_CanUploadFalseField_Holder .ss-uploadfield-dropzone'
