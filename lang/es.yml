@@ -1,7 +1,8 @@
 es:
   AssetAdmin:
     ALLOWEDEXTS: 'Extensiones permitidas'
-    NEWFOLDER: NuevaCarpeta
+    NEWFOLDER: Nueva Carpeta
+    SHOWALLOWEDEXTS: 'Mostrar extensiones permitidas'
   AssetTableField:
     CREATED: 'Agregado por primera vez'
     DIM: Dimensiones
@@ -12,15 +13,18 @@ es:
     SIZE: 'Tamaño'
     TITLE: Título
     TYPE: 'Tipo'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Seleccione los archivos'
     DRAGFILESHERE: 'Arrastre los archivos aqui'
+    DROPAREA: 'Soltar aquí'
     EDITALL: 'Editar todo'
     EDITANDORGANIZE: 'Editar y organizar'
     EDITINFO: 'Editar archivos'
     FILES: Archivos
     FROMCOMPUTER: 'Seleccione los archivos desde su ordenador'
     FROMCOMPUTERINFO: 'Subir archivos desde tu ordenador'
+    TOTAL: Total
     TOUPLOAD: 'Seleccione los archivos a subir...'
     UPLOADINPROGRESS: 'Por favor espere .... carga en curso'
     UPLOADOR: O
@@ -57,6 +61,8 @@ es:
     ERRORNOTREC: 'Ese nombre de usuario / contraseña no pudo ser reconocido.'
   Boolean:
     ANY: Cualquiera
+    NOANSWER: "No"
+    YESANSWER: "Si"
   CMSLoadingScreen_ss:
     LOADING: Cargando...
     REQUIREJS: 'El CMS requiere que tenga habilitado JavaScript .'
@@ -95,12 +101,27 @@ es:
     FOURTH: cuarto
     SECOND: segundo
     THIRD: tercero
+  CurrencyField:
+    CURRENCYSYMBOL: Símbolo
   DataObject:
     PLURALNAME: 'Objetos de Datos'
     SINGULARNAME: 'Objeto de Datos'
   Date:
+    DAY: Día
+    DAYS: Días
+    HOUR: Hora
+    HOURS: Horas
+    MIN: Min
+    MINS: Mins
+    MONTH: Mes
+    MONTHS: Meses
+    SEC: Seg
+    SECS: Segs
     TIMEDIFFAGO: 'hace {difference}'
     TIMEDIFFIN: 'en {difference}'
+    YEAR: Año
+    YEARS: Años
+    LessThanMinuteAgo: 'Hace menos de un minuto'
   DateField:
     NOTSET: 'sin establecer'
     TODAY: hoy
@@ -115,6 +136,9 @@ es:
     CHOOSE: (Elegir)
   EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
+  Email_BounceRecord:
+    PLURALNAME: 'Plural'
+    SINGULARNAME: 'Singular'
   Enum:
     ANY: Cualquiera
   File:
@@ -173,6 +197,7 @@ es:
     TEXT2: 'enlace para restablecer contraseña'
     TEXT3: para
   Form:
+    FIELDISREQUIRED: 'Se requiere este campo'
     SubmitBtnLabel: Ir
     VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
     VALIDATIONNOTUNIQUE: 'El valor que se ha introducido no es único'
@@ -181,8 +206,10 @@ es:
     VALIDATIONSTRONGPASSWORD: 'Las contraseñas deben tener al menos un dígito y un carácter alfanumérico'
     VALIDATOR: Validador
     VALIDCURRENCY: 'Por favor, introduzca una moneda válida.'
+    CSRF_FAILED_MESSAGE: 'Se detectó exploit malicioso en el formulario'
   FormField:
     NONE: ninguna
+    Example: 'Ejemplo'
   GridAction:
     DELETE_DESCRIPTION: Borrar
     Delete: Borrar
@@ -204,6 +231,7 @@ es:
     ResetFilter: Restaurar
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Sin permiso para borrar'
+    EditPermissionsFailure: 'No se pudo editar permisos'
   GridFieldDetailForm:
     CancelBtn: Cancelar
     Create: Crear
@@ -211,12 +239,18 @@ es:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     Deleted: 'Borrado %s %s'
     Save: Guardar
+    Saved: 'Guardado'
   GridFieldItemEditView_ss:
     Go_back: 'Volver'
   Group:
+    AddRole: 'Agregar rol'
     Code: 'Código de grupo'
+    DefaultGroupTitleAdministrators: Administradores
+    DefaultGroupTitleContentAuthors: 'Editores'
     Description: Descripción
+    GroupReminder: 'Recordatorio'
     Locked: '¿Bloqueado?'
+    NoRoles: 'Sin roles'
     PLURALNAME: Grupos
     Parent: 'Grupo Padre'
     SINGULARNAME: Grupo
@@ -273,8 +307,10 @@ es:
     LINKOPENNEWWIN: '¿Abrir enlace en una ventana nueva?'
     LINKTO: 'Enlazar a'
     PAGE: Página
+    URL: URL
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ''no se puede convertir en un recurso multimedia.'
     UpdateMEDIA: 'Actualizar Media'
+    BUTTONADDURL: 'Agregar URL'
   Image:
     PLURALNAME: Archivos
     SINGULARNAME: Archivo
@@ -298,6 +334,10 @@ es:
     PreviewButton: Vista previa
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado
+    VersionUnknown: Versión desconocida
+    ShowAsList: 'Mostrar como lista'
+    TooManyPages: 'Muchas páginas'
+    ValidationError: 'Error de validación'
   LeftAndMain_Menu_ss:
     Hello: Hola
     LOGOUT: 'Finalizar la sesión'
@@ -372,6 +412,7 @@ es:
     TWODIGITMONTH: 'Meses con dos dígitos (01=Enero,etc.)'
     TWODIGITSECOND: 'Segundos con dos dígitos (00 a 59)'
     TWODIGITYEAR: 'Año de dos dígitos'
+    Toggle: 'Cambiar'
   MemberImportForm:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
     Help2: "<div class=\"advanced\">\n<h4>Uso avanzado</h4>\n<ul>\n<li>Columnas permitidas: <em>%s</em></li>\n<li>Usuarios existentes son relacionados por su propiedad <em>Code</em>, y actualizados con nuevos valores desde el archivo importado.</li>\n<li>Los grupos pueden ser asignaods por la columna <em>Groups</em>. Los grupos son identificados por su propiedad <em>Code</em>,\nmúltiples grupos pueden ser separados por comas. Los grupos de miembros existentes no son borrados.</li>\n</ul>\n</div>"
@@ -387,6 +428,7 @@ es:
   ModelAdmin:
     DELETE: Eliminar
     DELETEDRECORDS: 'Borrados {count} registros.'
+    EMPTYBEFOREIMPORT: 'Variar antes de importar'
     IMPORT: 'Importar desde CSV'
     IMPORTEDRECORDS: 'Importados {count} registros.'
     NOCSVFILE: 'Por favor, selecciona un archivo CSV para importar'
@@ -465,11 +507,13 @@ es:
     EDITPERMISSIONS: 'Editar permisos y direcciones IP de cada grupo'
     GROUPNAME: 'Nombre del grupo'
     IMPORTGROUPS: 'Importar grupos'
+    IMPORTUSERS: 'Importar usuarios'
     MEMBERS: Miembros
     MENUTITLE: Seguridad
     MemberListCaution: 'Precaución: Borrar miembros de esta lista también los eliminará de todos los grupos y la base de datos'
     NEWGROUP: 'Nuevo grupo'
     PERMISSIONS: Permisos
+    ROLES: Roles
     ROLESDESCRIPTION: 'Las reglas son conjuntos predefinidos de permisos, y pueden ser asignadas a grupos.<br /> Pueden ser heredadas desde grupos padres si es necesario.'
     TABROLES: Reglas
     Users: Usuarios
@@ -478,6 +522,19 @@ es:
     FileFieldLabel: 'Archivo CSV <small>(Permitidas extensiones: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Editar
+    Auto: Automático
+    ChangeViewMode: 'Cambiar el modo de visualización'
+    Desktop: Escritorio
+    DualWindowView: 'Modo visualización de 2 ventanas'
+    EditView: 'Vista de edición'
+    Mobile: Móbil
+    PreviewState: 'Estado previsualización'
+    PreviewView: 'Vista de previsualización'
+    Responsive: Responsive
+    SplitView: 'Vista partida'
+    Tablet: Tablet
+    ViewDeviceWidth: 'Ver al ancho'
+    Width: Ancho
   SimpleImageField:
     NOUPLOAD: 'No se han agregado imágenes'
   SiteTree:
@@ -528,11 +585,20 @@ es:
     HOTLINKINFO: 'Información: Esta imagen será hotlinked. Asegúrese de que tiene los permisos del sitio original del creador para hacerlo.'
     MAXNUMBEROFFILES: 'El número máximo de {count} archivo(s) ha sido excedido.'
     MAXNUMBEROFFILESSHORT: 'Sólo puede cargar {count} archivos'
+    MAXNUMBEROFFILESONE: 'El máximo número de archivos es 1'
     REMOVE: Eliminar
     REMOVEERROR: 'Error borrando el fichero'
     REMOVEINFO: 'Eliminar este archivo de este lugar, pero no eliminarlo del almacén de archivos'
     STARTALL: 'Iniciar todos'
     STARTALLINFO: 'Iniciar todas las subidas de archivos'
     Saved: Guardado
+    CHOOSEANOTHERFILE: 'Seleccionar otro archivo'
+    CHOOSEANOTHERINFO: 'Seleccionar otra información'
+    OVERWRITEWARNING: 'Deseas sobreescribir el archivo?'
+    UPLOADSINTO: 'Subir sobre'
   Versioned:
     has_many_Versions: Versiones
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Previsualización'
+  GridFieldEditButton_ss:
+    EDIT: Editar

@@ -13,6 +13,7 @@ fi:
     SIZE: 'Koko'
     TITLE: Otsikko
     TYPE: 'Tyyppi'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Valitse tiedostot'
     DRAGFILESHERE: 'Raahaa tiedotot tähän'
@@ -60,6 +61,8 @@ fi:
     ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
     ANY: Yhtään
+    NOANSWER: "Ei"
+    YESANSWER: "Kyllä"
   CMSLoadingScreen_ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaSkriptit päällä.'
@@ -98,6 +101,8 @@ fi:
     FOURTH: neljäs
     SECOND: toinen
     THIRD: kolmas
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Dataobjektit'
     SINGULARNAME: 'Dataobjekti'
@@ -238,6 +243,7 @@ fi:
   GridFieldItemEditView_ss:
     Go_back: 'Takaisin'
   Group:
+    AddRole: 'Lisää ryhmälle rooli'
     Code: 'Ryhmän koodi'
     DefaultGroupTitleAdministrators: Järjestelmänvalvojat
     DefaultGroupTitleContentAuthors: 'Sisällöntuottajat'
@@ -314,6 +320,8 @@ fi:
   Image_Cached:
     PLURALNAME: Tiedostot
     SINGULARNAME: Tiedosto
+  Image_iframe_ss:
+    TITLE: 'Kuvansiirto IFrame-kehys'
   LeftAndMain:
     CANT_REORGANISE: 'Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu.'
     DELETED: Poistettu.
@@ -356,6 +364,7 @@ fi:
     EMPTYNEWPASSWORD: 'Uusi salasana ei voi olla tyhjä, yritä uudelleen'
     ENTEREMAIL: 'Anna sähköpostiosoitteesi saadaksesi salasanan uudelleenasettamislinkin.'
     ERRORLOCKEDOUT: 'Tunnuksesti on väliaikaisesti poistettu käytöstä liian monien epäonnistuneiden sisäänkirjausyritysten takia. Ole hyvä ja yritä uudelleen 20 minuutin päästä.'
+    ERRORLOCKEDOUT2: 'Tilisi käyttö on evätty hetkeksi liian useiden kirjautumisyritysten takia. Ole hyvä ja kokeile uudelleen {count} minuutin kuluttua.'
     ERRORNEWPASSWORD: 'Syötit uuden salasanasi erilailla, yritä uudelleen.'
     ERRORPASSWORDNOTMATCH: 'Nykyiset salasanasi eivät täsmää, yritä uudelleen.'
     ERRORWRONGCRED: 'Tämä ei näytä oikealta sähköpostiosoitteelta tai salasanalta. Yritä uudelleen.'
@@ -500,6 +509,8 @@ fi:
     EDITPERMISSIONS: 'Muokkaa jokaisen ryhmän oikeuksia ja IP-osotteita.'
     EDITPERMISSIONS_HELP: 'Mahdollisuus muokata ryhmän käyttöoikeuksia ja IP-osoitteita. Vaatii "Pääsy turvallisuusosioon" -oikeuden.'
     GROUPNAME: 'Ryhmän nimi'
+    IMPORTGROUPS: 'Tuo ryhmiä'
+    IMPORTUSERS: 'Tuo käyttäjiä'
     MEMBERS: Jäsenet
     MENUTITLE: Tietosuoja
     MemberListCaution: 'Varoitus: Jäsenten poistaminen listalta poistaa ne kaikista ryhmistä ja tietokannasta'
@@ -561,6 +572,7 @@ fi:
   UploadField:
     ATTACHFILE: 'Liitä tiedosto'
     ATTACHFILES: 'Liitä tiedostoja'
+    AttachFile: 'Liitä tiedosto(ja)'
     DELETE: 'Poista tiedostoista'
     DELETEINFO: 'Poista tiedosto pysyvästi'
     DOEDIT: Tallenna

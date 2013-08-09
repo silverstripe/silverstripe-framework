@@ -57,6 +57,8 @@ et_EE:
     ERRORNOTREC: 'See kasutajanimi / parool ei ole tunnustatud'
   Boolean:
     ANY: Kõik
+    NOANSWER: "Ei"
+    YESANSWER: "Jah"
   CMSLoadingScreen_ss:
     LOADING: Laadimine...
     REQUIREJS: 'Sisuhaldussüsteem nõuab, et JavaScript oleks lubatud.'
@@ -98,6 +100,21 @@ et_EE:
   DataObject:
     PLURALNAME: 'Andme objektid'
     SINGULARNAME: 'Andme objekt'
+  Date:
+    DAY: päev
+    DAYS: päevad
+    HOUR: tund
+    HOURS: tundi
+    MIN: minut
+    MINS: minutit
+    MONTH: kuu
+    MONTHS: kuud
+    SEC: sekund
+    SECS: sekundit
+    TIMEDIFFAGO: 'tagasi'
+    YEAR: aasta
+    YEARS: aastat
+    LessThanMinuteAgo: 'vähem kui minut'
   DateField:
     NOTSET: 'Pole seadistatud'
     TODAY: Täna
@@ -205,6 +222,7 @@ et_EE:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     Deleted: '%s %s on kustutatud'
     Save: Salvesta
+    Saved: 'Salvestatud {name} {link}'
   GridFieldItemEditView_ss:
     Go_back: 'Mine tagasi'
   Group:
@@ -270,8 +288,10 @@ et_EE:
     LINKOPENNEWWIN: 'Ava link uues aknas?'
     LINKTO: 'Lingi'
     PAGE: Leht
+    URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL-i ''{url}'' ei saanud muuta meediumiressursiks.'
     UpdateMEDIA: 'Uuenda meediumi'
+    BUTTONADDURL: 'Lisa url'
   Image:
     PLURALNAME: Failid
     SINGULARNAME: Fail
@@ -292,7 +312,12 @@ et_EE:
     PERMALREADY: 'Vabandust, aga sul pole lubatud sisuhaldussüsteemi selle osa juurde pääseda. Kui soovid kellegi teisena sisse logida, tee seda allpool.'
     PERMDEFAULT: 'Sisesta oma e-posti aadress ja parool sisuhaldussüsteemi ligipääsemiseks.'
     PLEASESAVE: 'Palun Salvesta Lehekülg: Antud lehekülge ei uuendatud, kuna seda ei ole veel salvestatud.'
+    PreviewButton: Eelvaade
     REORGANISATIONSUCCESSFUL: 'Saidipuu korraldati edukalt ümber.'
+    SAVEDUP: Salvestatud.
+    VersionUnknown: Teadmata
+    ShowAsList: 'kuva nimekirjana'
+    TooManyPages: 'Liiga palju lehekülgi'
   LeftAndMain_Menu_ss:
     Hello: Tere!
     LOGOUT: 'Logi välja'
@@ -378,6 +403,7 @@ et_EE:
   ModelAdmin:
     DELETE: Kustuta
     DELETEDRECORDS: '{count} kirjet on kustutatud.'
+    EMPTYBEFOREIMPORT: 'Asenda andmed'
     IMPORT: 'Impordi CSV-failist'
     IMPORTEDRECORDS: '{count} kirjet on imporditud.'
     NOCSVFILE: 'Avage importimiseks CSV-fail'
@@ -468,6 +494,13 @@ et_EE:
     FileFieldLabel: 'CSV-fail <small>(lubatud laiendid: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Muuda
+    Auto: Automaatne
+    ChangeViewMode: 'Muuda kuvarežiimi'
+    Mobile: Mobiilne
+    Responsive: Kohanduv
+    Tablet: Tahvel
+    ViewDeviceWidth: 'Vali eelvaate laiius'
+    Width: laiius
   SimpleImageField:
     NOUPLOAD: 'Pilte pole üles laaditud'
   SiteTree:
@@ -522,3 +555,5 @@ et_EE:
     Saved: Salvestatud
   Versioned:
     has_many_Versions: Versioon
+  GridFieldEditButton_ss:
+    EDIT: Redigeeri
