@@ -1,4 +1,33 @@
 hi:
+  AssetUploadField:
+    ChooseFiles: 'फाइलें चुनें'
+    EDITALL: 'सभी संपादित करें'
+    EDITANDORGANIZE: 'संपादित और व्यवस्थित करें '
+    EDITINFO: 'फ़ाइलों को संपादित करें'
+    FILES: फ़ाइलें
+    FROMCOMPUTER: 'अपने कंप्यूटर से फाइल चुनें'
+    FROMCOMPUTERINFO: 'अपने कंप्यूटर से अपलोड करे '
+    TOTAL: 'कुल '
+    TOUPLOAD: 'अपलोड करने के लिए फ़ाइलों को चुनें'
+    UPLOADINPROGRESS: 'कृपया प्रतीक्षा करें ... अपलोड प्रगति में है'
+    UPLOADOR: या
+  BBCodeParser:
+    ALIGNEMENT: सीध
+    ALIGNEMENTEXAMPLE: 'दाहिनी सीध'
+    BOLD: 'बोल्ड अक्षर '
+    BOLDEXAMPLE: बोल्ड
+    CODE: 'कोड खंड'
+    CODEDESCRIPTION: 'असंरूपित कोड खंड'
+    CODEEXAMPLE: 'कोड खंड'
+    COLORED: 'रंगीन अक्षर'
+    COLOREDEXAMPLE: 'नीले अक्षर'
+    EMAILLINK: 'ईमेल लिंक'
+    EMAILLINKDESCRIPTION: 'एक ईमेल पते के लिए लिंक बनाएं'
+    IMAGE: छवि
+    IMAGEDESCRIPTION: 'अपने पोस्ट में एक छवि दिखाइये '
+    ITALIC: 'तिरछे अक्षर'
+    ITALICEXAMPLE: तिरछे अक्षर
+    LINK: 'वेबसाइट लिंक'
   Group:
     RolesAddEditLink: 'भूमिकाओं का प्रबंधन करे '
     has_many_Permissions: अनुमतियाँ

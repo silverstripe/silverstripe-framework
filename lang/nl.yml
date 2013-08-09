@@ -13,6 +13,7 @@ nl:
     SIZE: 'Grootte'
     TITLE: Titel
     TYPE: 'Type'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Selecteer bestanden'
     DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
@@ -23,7 +24,9 @@ nl:
     FILES: Bestanden
     FROMCOMPUTER: 'Selecteer bestand op computer'
     FROMCOMPUTERINFO: 'Uploaden vanaf uw computer'
+    TOTAL: Totaal
     TOUPLOAD: 'Selecteer bestanden'
+    UPLOADINPROGRESS: 'Een ogenblik geduld ... upload wordt uitgevoerd'
     UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Uitlijning
@@ -35,11 +38,13 @@ nl:
     CODEEXAMPLE: 'Code Blok'
     COLORED: 'Gekleurde tekst'
     COLOREDEXAMPLE: 'blauwe tekst'
+    EMAILLINK: 'Email link'
     EMAILLINKDESCRIPTION: 'Maak een koppeling naar een e-mailadres'
     IMAGE: Afbeelding
     IMAGEDESCRIPTION: 'Toon een afbeelding in uw bericht'
     ITALIC: 'Cursieve tekst'
     ITALICEXAMPLE: Cursief
+    LINK: 'Website link'
     LINKDESCRIPTION: 'Link naar een andere website of URL'
     STRUCK: 'Doorgehaalde tekst'
     STRUCKEXAMPLE: Doorgehaald
@@ -57,6 +62,7 @@ nl:
   Boolean:
     ANY: Elke
   CMSLoadingScreen_ss:
+    LOADING: Laden...
     REQUIREJS: 'Het CMS heeft JavaScript nodig om te werken.'
   CMSMain:
     ACCESS: 'Toegang tot het ''{title}'' gedeelte'
@@ -73,6 +79,7 @@ nl:
     PASSWORD: Wachtwoord
   ComplexTableField:
     CLOSEPOPUP: 'Sluit Popup'
+    SUCCESSADD2: '{name} toevoegen'
     SUCCESSEDIT: '%s %s %s opgeslagen'
   ComplexTableField_ss:
     ADDITEM: 'Voeg %s toe'
@@ -92,6 +99,8 @@ nl:
     FOURTH: vierde
     SECOND: tweede
     THIRD: derde
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Gegeven Objecten'
     SINGULARNAME: 'Gegeven Object'
@@ -134,6 +143,8 @@ nl:
     AviType: 'AVI video bestand'
     Content: Inhoud
     CssType: 'CSS bestand'
+    DmgType: 'Apple disk image'
+    DocType: 'Word document'
     Filename: 'Bestandsnaam '
     GifType: 'GIF afbeelding - voor diagrammen'
     GzType: 'GZIP gecomprimeerd bestand'
@@ -173,6 +184,8 @@ nl:
     REPLACE: 'Vervang {type}'
   FileIFrameField_iframe_ss:
     TITLE: 'Afbeelding uploaden'
+  Filesystem:
+    SYNCRESULTS: 'Synchronisatie voltooid: {createdcount} items gemaakt, {deletedcount} items verwijderd'
   Folder:
     PLURALNAME: Mappen
     SINGULARNAME: Map
@@ -194,12 +207,14 @@ nl:
     CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klikt u op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
   FormField:
     NONE: geen
+    Example: 'e.g. %s'
   GridAction:
     DELETE_DESCRIPTION: Verwijderen
     Delete: Verwijder
     UnlinkRelation: Ontkoppelen
   GridField:
     Add: '{name} toevoegen'
+    Filter: Filter
     FilterBy: 'Filteren'
     Find: Zoek
     LEVELUP: 'Niveau omhoog'
@@ -218,8 +233,10 @@ nl:
   GridFieldDetailForm:
     CancelBtn: Annuleren
     Create: Creëren
+    Delete: Verwijderen
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     Deleted: '%s %s verwijderd'
+    Save: Opslaan
     Saved: '{name} {link} opgeslagen'
   GridFieldItemEditView_ss:
     Go_back: 'Ga terug'
@@ -241,8 +258,7 @@ nl:
     many_many_Members: Leden
   GroupImportForm:
     Help1: '<p>Importeer en of meerdere groepen in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Geavanceerd gebruik</h4>\n<ul>\n<li>Toegestane kolommen: <em>%s</em></li>\n<li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>\n<li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>\n</ul>\n</div>\n</ul>\n</div>\\\
-      n"
+    Help2: "<div class=\"advanced\">\n<h4>Geavanceerd gebruik</h4>\n<ul>\n<li>Toegestane kolommen: <em>%s</em></li>\n<li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>\n<li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>\n</ul>\n</div>\n</ul>\n</div>"
     ResultCreated: '{count} groepen aangemaakt'
     ResultDeleted: '%d groepen verwijderd'
     ResultUpdated: '%d groepen aangepast'
@@ -260,10 +276,9 @@ nl:
     CSSCLASS: 'Uitlijning / stijl'
     CSSCLASSCENTER: 'Gecentreerd, op zichzelf staand.'
     CSSCLASSLEFT: 'Aan de linkerkant, met tekst eromheen.'
-    CSSCLASSLEFTALONE: 'Links, losstaand.
-
-      '
+    CSSCLASSLEFTALONE: 'Links, op zichzelf staand.'
     CSSCLASSRIGHT: 'Aan de rechterkant, met tekst eromheen.'
+    DETAILS: Details
     EMAIL: 'Emailadres'
     FILE: Bestand
     FOLDER: Map
@@ -291,7 +306,9 @@ nl:
     LINKOPENNEWWIN: 'Link in een nieuw venster openen?'
     LINKTO: 'Verwijs naar'
     PAGE: Pagina
+    URL: URL
     URLNOTANOEMBEDRESOURCE: '{url} kon niet worden omgezet in een media-bron.'
+    UpdateMEDIA: 'Media bijwerken'
     BUTTONADDURL: 'Voeg URL toe'
   Image:
     PLURALNAME: Bestanden
@@ -307,13 +324,15 @@ nl:
     CANT_REORGANISE: 'Je hebt geen rechten hiervoor'
     DELETED: Verwijderd.
     DropdownBatchActionsDefault: Acties
+    HELP: Help
     PAGETYPE: 'Pagina type: '
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als U weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hier beneden in.'
     PERMALREADY: 'Helaas, dat deel van het CMS is niet toegankelijk voor U. Hieronder kunt U als iemand anders inloggen.'
     PERMDEFAULT: 'Geef uw e-mailadres en wachtwoord voor toegang tot het CMS.'
     PLEASESAVE: 'Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is bewaard.'
+    PreviewButton: Voorbeeld
     REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
-    SAVEDUP: Succesvol opgeslagen
+    SAVEDUP: Opgeslagen
     VersionUnknown: onbekend
     ShowAsList: 'Laat als lijst zien'
     TooManyPages: 'Te veel pagina''s'
@@ -325,6 +344,8 @@ nl:
     Email: 'Email adres '
     IP: 'IP Adres'
     PLURALNAME: 'Pogingen om in te loggen'
+    SINGULARNAME: 'Pogingen om in te loggen'
+    Status: Status
   Member:
     ADDGROUP: 'Groep toevoegen'
     BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
@@ -337,9 +358,11 @@ nl:
     DATEFORMAT: 'Datum formaat'
     DefaultAdminFirstname: 'Standaard Beheerder'
     DefaultDateTime: Standaard
+    EMAIL: Email
     EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
     ENTEREMAIL: 'Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten.'
     ERRORLOCKEDOUT: 'Je account is tijdelijk geblokkeerd wegens te veel mislukte pogingen tot aanmelding. Gelieve het over 20 minuten opnieuw te proberen.'
+    ERRORLOCKEDOUT2: 'Uw account is tijdelijk uitgeschakeld als gevolg van te veel mislukte pogingen om in te loggen. Probeer het over {count} minuten aub.'
     ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen met de bevestiging, probeer het nogmaals'
     ERRORPASSWORDNOTMATCH: 'Huidige wachtwoord kom niet overeen, probeer het nogmaals'
     ERRORWRONGCRED: 'Dat is niet het juiste email adres of wachtwoord. Probeert U het a.u.b. opnieuw.'
@@ -380,6 +403,7 @@ nl:
     HOURNOLEADING: 'Uur zonder voorloopnul'
     MINUTENOLEADING: 'Minuut zonder voorloopnul'
     MONTHNOLEADING: 'Dag van de maand zonder voorloop-nul'
+    Preview: Voorbeeld
     SHORTMONTH: 'Korte naam van de maand (Bijv. Jun)'
     TOGGLEHELP: 'Hulp weergeven / verbergen'
     TWODIGITDAY: 'Dag van de maand (met voorloop-nul)'
@@ -391,8 +415,7 @@ nl:
     Toggle: 'Toon opmaak hulp'
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: "<div class=\"advanced\">\n<h4>Geavanceerd gebruik</h4>\n<ul>\n<li>Toegestane kolommen: <em>%s</em></li>\n<li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>\n<li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>\n</ul>\n</div>\n</ul>\n</div>\\\
-      n"
+    Help2: "<div class=\"advanced\">\n\t<h4>Advanced usage</h4>\n\t<ul>\n\t<li>Allowed columns: <em>%s</em></li>\n\t<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from\n\tthe imported file.</li>\n\t<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,\n\tmultiple groups can be separated by comma. Existing group memberships are not cleared.</li>\n\t</ul>\n</div>"
     ResultCreated: '{count} leden aangemaakt'
     ResultDeleted: '%d leden verwijderd'
     ResultNone: 'Geen wijzingen'
@@ -418,11 +441,19 @@ nl:
     IMPORTSPECLINK: 'Toon specificaties van %s'
     IMPORTSPECRELATIONS: Relaties
     IMPORTSPECTITLE: 'Specificaties van %s'
+  ModelAdmin_Tools_ss:
+    FILTER: Filter
+    IMPORT: Importeren
+  ModelSidebar_ss:
+    IMPORT_TAB_HEADER: Importeren
+    SEARCHLISTINGS: Zoeken
   MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Valuta
   NullableField:
     IsNullLabel: 'is nul'
+  NumericField:
+    VALIDATION: '''{value}'' is geen getal, enkel getallen worden door dit veld geaccepteerd'
   Pagination:
     Page: Pagina
     View: Bekijk
@@ -434,6 +465,7 @@ nl:
     PLURALNAME: Machtigingen
     SINGULARNAME: Machtiging
   PermissionCheckboxSetField:
+    AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'geërfd van de groep "{title}"'
     FromRole: 'geërfd van de rol "{title}"'
     FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
@@ -490,14 +522,18 @@ nl:
     BtnImport: 'Importeer'
     FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
   SilverStripeNavigator:
+    Edit: Bewerken
     Auto: Automatisch
     ChangeViewMode: 'Wijzig weergavemodus'
+    Desktop: Desktop
     DualWindowView: 'Dubbelvenster'
     EditView: 'Bewerkmodus'
     Mobile: Mobiel
     PreviewState: 'Voorbeeldstatus'
     PreviewView: 'Voorbeeldmodus'
+    Responsive: Responsive
     SplitView: 'Split-modus'
+    Tablet: Tablet
     ViewDeviceWidth: 'Selecteer een voorbeeldbreedte'
     Width: breedte
   SimpleImageField:
@@ -512,6 +548,7 @@ nl:
   TableListField:
     CSVEXPORT: 'Exporteer naar CSV'
     PRINT: Afdrukken
+    Print: Afdrukken
     SELECT: 'Selecteer:'
   TableListField_ss:
     NOITEMSFOUND: 'Geen items gevonden.'
@@ -559,7 +596,7 @@ nl:
     CHOOSEANOTHERFILE: 'Kies een ander bestand'
     CHOOSEANOTHERINFO: 'Vervang dit bestand met een ander uit de bestandsopslag'
     OVERWRITEWARNING: 'Bestand met dezelfde naam bestaat al'
-    UPLOADSINTO: 'Word opgeslagen in /{path}'
+    UPLOADSINTO: 'Wordt opgeslagen in /{path}'
   Versioned:
     has_many_Versions: Versies
   CMSPageHistoryController_versions_ss:
