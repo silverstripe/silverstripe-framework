@@ -165,11 +165,12 @@ class Config {
 	 *
 	 * @throws UnexpectedValueException
 	 */
-	protected static function type_mismatch() {
+	protected static function type_mismatch($debugValue1 = null, $debugValue2 = null) {
 		throw new UnexpectedValueException('Type mismatch in configuration. All values for a particular property must'
-			. ' contain the same type (or no value at all).');
+			. ' contain the same type (or no value at all). Here is some debug info: <blockquote><hr /><h2>Value 1:</h2> '
+			.print_r($debugValue1, 1).'<hr /><h2>Value 2</h2>'.print_r($debugValue2, 1).'</blockquote>');
 	}
-
+	
 	/**
 	 * @todo If we can, replace next static & static methods with DI once that's in 
 	 */
@@ -354,7 +355,7 @@ class Config {
 				$currentType = self::get_value_type($dest[$k]);
 
 				// Throw error if types don't match
-				if ($currentType !== $newType) self::type_mismatch();
+				if ($currentType !== $newType) self::type_mismatch($k, $v);
 
 				if ($currentType == self::IS_ARRAY) self::merge_array_low_into_high($dest[$k], $v);
 				else continue;
@@ -390,7 +391,7 @@ class Config {
 		}
 		else {
 			$currentType = self::get_value_type($result);
-			if ($currentType !== $newType) self::type_mismatch();
+			if ($currentType !== $newType) self::type_mismatch($result, $value);
 
 			if ($currentType == self::ISNT_ARRAY) $result = $value;
 			else self::merge_array_high_into_low($result, $value);
@@ -415,7 +416,7 @@ class Config {
 		}
 		else {
 			$currentType = self::get_value_type($result);
-			if ($currentType !== $newType) self::type_mismatch();
+			if ($currentType !== $newType) self::type_mismatch($result, $value);
 
 			if ($currentType == self::ISNT_ARRAY) return; // PASS
 			else self::merge_array_low_into_high($result, $value);
