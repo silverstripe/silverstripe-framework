@@ -360,6 +360,11 @@ class FormField extends RequestHandler {
 			'disabled' => $this->isDisabled(),
 		);
 
+		if ($this->Required()) {
+			$attrs['required'] = 'required';
+			$attrs['aria-required'] = 'true';
+		}
+
 		return array_merge($attrs, $this->attributes);
 	}
 
