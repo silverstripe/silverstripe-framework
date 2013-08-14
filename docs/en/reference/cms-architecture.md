@@ -380,7 +380,7 @@ Note: You can see any additional HTTP headers through the web developer tools in
 
 The CMS tree for viewing hierarchical structures (mostly pages) is powered
 by the [jstree](http://jstree.com) library. It is configured through
-`sapphire/admin/javascript/LeftAndMain.Tree.js`, as well as some
+`framework/admin/javascript/LeftAndMain.Tree.js`, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
 For more information, see the [Howto: Customize the CMS tree](../howto/customize-cms-tree).
 
