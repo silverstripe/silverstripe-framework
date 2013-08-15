@@ -841,7 +841,7 @@ class Versioned extends DataExtension {
 
 			Session::set('readingMode', 'Stage.' . $stage);
 		}
-		if(isset($_GET['archiveDate'])) {
+		if(isset($_GET['archiveDate']) && strtotime($_GET['archiveDate'])) {
 			Session::set('readingMode', 'Archive.' . $_GET['archiveDate']);
 		}
 		
