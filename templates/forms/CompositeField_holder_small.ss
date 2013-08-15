@@ -1,4 +1,4 @@
-<$Tag class="field CompositeField $extraClass <% if ColumnCount %>multicolumn<% end_if %>">
+<$Tag class="CompositeField $extraClass <% if ColumnCount %>multicolumn<% end_if %>">
 	<% if $Tag == 'fieldset' && $Legend %>
 		<legend>$Legend</legend>
 	<% end_if %>
