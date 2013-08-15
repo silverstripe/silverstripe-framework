@@ -109,7 +109,7 @@ class Zend_Locale_Data_Translation
         'Malayalam'         => 'ml',
         'Maltese'           => 'mt',
         'Manipuri'          => 'mni',
-        'Maori'             => 'mi',
+        'Māori'             => 'mi',
         'Marathi'           => 'mr',
         'Mongolian'         => 'mn',
         'Nepali'            => 'ne',
