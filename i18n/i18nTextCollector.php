@@ -8,7 +8,7 @@
  * 
  * Collects all found entities (and their natural language text for the default locale)
  * into language-files for each module in an array notation. Creates or overwrites these files,
- * e.g. framework/lang/en_US.php.
+ * e.g. framework/lang/en.yml.
  * 
  * The collector needs to be run whenever you make new translatable
  * entities available. Please don't alter the arrays in language tables manually.
@@ -117,12 +117,15 @@ class i18nTextCollector extends Object {
 		$modules = array_merge($modules, $themeFolders);
 
 		foreach($modules as $module) {
-			// Only search for calls in folder with a _config.php file (which means they are modules, including
-			// themes folder)  
+			// Only search for calls in folder with a _config.php file or _config folder
+			// (which means they are modules, including themes folder)
 			$isValidModuleFolder = (
 				is_dir("$this->basePath/$module") 
-				&& is_file("$this->basePath/$module/_config.php") 
 				&& substr($module,0,1) != '.'
+				&& (
+					is_file("$this->basePath/$module/_config.php")
+					|| is_dir("$this->basePath/$module/_config")
+				)
 			) || (
 				substr($module,0,7) == 'themes/'
 				&& is_dir("$this->basePath/$module")
