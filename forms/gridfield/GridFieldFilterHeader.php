@@ -67,8 +67,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
 		$state = $gridField->State->GridFieldFilterHeader;
 		if($actionName === 'filter') {
-			if(isset($data['filter'])){
-				foreach($data['filter'] as $key => $filter ){
+			if(isset($data['filter'][$gridField->getName()])){
+				foreach($data['filter'][$gridField->getName()] as $key => $filter ){
 					$state->Columns->$key = $filter;
 				}
 			}
@@ -121,7 +121,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 				if(isset($filterArguments[$columnField])) {
 					$value = $filterArguments[$columnField];
 				}
-				$field = new TextField('filter['.$columnField.']', '', $value);
+				$field = new TextField('filter[' . $gridField->getName() . '][' . $columnField . ']', '', $value);
 				$field->addExtraClass('ss-gridfield-sort');
 				$field->addExtraClass('no-change-track');
 
