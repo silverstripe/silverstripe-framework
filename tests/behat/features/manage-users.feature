@@ -51,6 +51,6 @@ Feature: Manage users
   Scenario: I can delete an existing user
     When I click the "Users" CMS tab
     And I click "staffmember@test.com" in the "#Root_Users" element
-    And I press the "Delete" button
+    And I press the "Delete" button, confirming the dialog
     Then I should see "admin@test.com"
     And I should not see "staffmember@test.com"

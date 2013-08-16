@@ -43,7 +43,7 @@ Feature: Manage files
   Scenario: I can delete a file
     Given I click on "folder1" in the "Files" table
     And I click on "file1" in the "folder1" table
-    And I press the "Delete" button
+    And I press the "Delete" button, confirming the dialog
     Then the "folder1" table should not contain "file1"
 
   Scenario: I can change the folder of a file
