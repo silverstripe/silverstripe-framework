@@ -135,7 +135,8 @@
 			}
 		});
 
-		$('.ss-gridfield .action.gridfield-button-delete, .cms-content-actions .ss-ui-action-destructive .ui-button-text').entwine({
+		// Covers both tabular delete button, and the button on the detail form 
+		$('.ss-gridfield .Actions .action.gridfield-button-delete, .cms-edit-form .Actions button.action.action-delete').entwine({
 			onclick: function(e){
 				if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 					e.preventDefault();
