@@ -834,7 +834,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'native' => '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'
 		),
 		'mi' => array(
-			'name' => 'Maori', 
+			'name' => 'Māori',
 			'native' => 'Māori'
 		),
 		'ms' => array(
@@ -1183,7 +1183,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'native' => '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'
 		),
 		'mi_NZ' => array(
-			'name' => 'Maori',
+			'name' => 'Māori',
 			'native' => 'Māori'
 		),
 		'ms_MY' => array(

@@ -155,7 +155,7 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	public function createDatabase() {
-		$this->query("CREATE DATABASE \"$this->database\"");
+		$this->query("CREATE DATABASE \"$this->database\" DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci");
 		$this->query("USE \"$this->database\"");
 
 		$this->tableList = $this->fieldList = $this->indexList = null;

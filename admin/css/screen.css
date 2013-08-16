@@ -231,7 +231,10 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
 .fieldgroup .fieldgroup-field { float: left; display: block; padding: 8px 8px 0 0; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
-.fieldgroup .fieldgroup-field label { margin-left: 0; margin-right: 1em; width: auto; }
+.fieldgroup .fieldgroup-field .fieldholder-small { padding: 0 0 8px 0; }
+.fieldgroup .fieldgroup-field .fieldgroup input.text, .fieldgroup .fieldgroup-field .fieldgroup textarea, .fieldgroup .fieldgroup-field .fieldgroup select, .fieldgroup .fieldgroup-field .fieldgroup .TreeDropdownField { margin-left: 0; }
+.fieldgroup .fieldgroup-field .fieldholder-small-label { display: block; }
+.fieldgroup .fieldgroup-field label { padding: 8px 8px 8px 0; margin-left: 0; margin-right: 1em; width: auto; }
 .fieldgroup.stacked .fieldgroup-field { float: none; }
 
 .ss-toggle { margin: 8px 0; }
@@ -789,6 +792,12 @@ form.import-form label.left { width: 250px; }
 .cms #vakata-contextmenu .right, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .right { right: 100%; left: auto; }
 .cms #vakata-contextmenu .bottom, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .bottom { bottom: -1px; top: auto; }
 .cms #vakata-contextmenu li ul, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul { display: none; position: absolute; top: -2px; left: 100%; background: #FFF; border: 1px solid silver; -webkit-box-shadow: 0 0 10px #cccccc; -moz-box-shadow: 0 0 10px #cccccc; box-shadow: 0 0 10px #cccccc; }
+.cms #vakata-contextmenu li ul.col-2, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul.col-2 { width: 360px; }
+.cms #vakata-contextmenu li ul.col-2 li, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul.col-2 li { width: 50%; }
+.cms #vakata-contextmenu li ul.col-3, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul.col-3 { width: 540px; }
+.cms #vakata-contextmenu li ul.col-3 li, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul.col-3 li { width: 33%; }
+.cms #vakata-contextmenu li ul li, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul li { min-width: 180px; float: left; }
+.cms #vakata-contextmenu li ul li a, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul li a { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
 .cms #vakata-contextmenu li.vakata-separator, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li.vakata-separator { min-height: 0; height: 1px; line-height: 1px; font-size: 1px; overflow: hidden; margin: 0 2px; background: #ccc; padding: 0; }
 .cms #vakata-dragged, .TreeDropdownField .treedropdownfield-panel #vakata-dragged { display: block; margin: 0 0 0 0; padding: 4px 4px 4px 24px; position: absolute; top: -2000px; line-height: 16px; z-index: 10000; }
 .cms #vakata-dragged ins, .TreeDropdownField .treedropdownfield-panel #vakata-dragged ins { display: block; text-decoration: none; width: 16px; height: 16px; margin: 0 0 0 0; padding: 0; position: absolute; top: 4px; left: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-border-radius: 4px; }
