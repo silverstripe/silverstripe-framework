@@ -32,10 +32,10 @@ Let's have a look at the folder structure.
  | Directory | | Description  | 
  | --------- | | -----------  | 
  | assets/   | | Contains images and other files uploaded via the SilverStripe CMS. You can also place your own content inside it, and link to it from within the content area of the CMS. | 
- | cms/      | | Contains all the files that form the CMS area of your site. It’s structure is similiar to the mysite/ directory, so if you find something interesting, it should be easy enough to look inside and see how it was built. | 
- | framework/ | | The framework that builds both your own site and as the CMS that powers it. You’ll be utilizing files in this directory often, both directly and indirectly.                                                             | 
- | mysite/   | | Contains all your sites code (mainly PHP)  | 
- | themes/   | | Combines all images, stylesheets, javascript and templates powering your website into a reusable "theme" | 
+ | cms/      | | Contains all the files that form the CMS area of your site. Its structure is similiar to the mysite/ directory, so if you find something interesting, it should be easy enough to look inside and see how it was built. | 
+ | framework/ | | The framework that builds both your own site and the CMS that powers it. You’ll be utilizing files in this directory often, both directly and indirectly.                                                             | 
+ | mysite/   | | Contains all your site's code (mainly PHP).  | 
+ | themes/   | | Combines all images, stylesheets, javascript and templates powering your website into a reusable "theme". | 
       
 When designing your site you should only need to modify the *mysite*, *themes* and *assets* folders. The rest of the folders contain files and data that are not specific to any site.
 
@@ -55,17 +55,17 @@ should see the CMS interface with a list of the pages currently on your website 
 2.  The breadcrumbs on the left will show you a direct path to the page you are currently looking at. You can use this path to navigate up through a page's heirarchy. On the left there are tabs you may use to flick between different aspects of a page. By default, you should be shown three tabs: "Content", "Settings", and "History". 
  * Content - Allows you to set the title, wysiwyg content, URL and Meta data for your page.  
  * Settings - Here you set the type of page behavior, parent page, show in search, show in menu, and who can view or edit the page.  
- * History - This allows you to view previous version of your page, compare change and revert to previous version if need be.  
-3.  Within the "Pages" section (provided you are in the "Content", or "Settings" tab) you can quickly move between pages in the CMS using the site tree. To collapse and expand this sidebar, click the arrow at the bottom. If you are in the history tab, you will notice the site tree has been replaced by a list of the alterations to the current page.  
+ * History - This allows you to view previous version of your page, compare, change, and revert to previous version if need be.  
+3.  Within the "Pages" section (provided you are in the "Content" or "Settings" tab) you can quickly move between pages in the CMS using the site tree. To collapse and expand this sidebar, click the arrow at the bottom. If you are in the history tab, you will notice the site tree has been replaced by a list of the alterations to the current page.  
 ![](_images/tutorial1_cms-numbered-3.jpg)  
-4.  This section allows you to edit the content for the currently selected page, as well as changing other properties of the page such as the page name and URL. The content editor has full [WYSIWYG](http://en.wikipedia.org/wiki/WYSIWYG) abilities, allow you to change formatting and insert links, images and tables.
-5.  These buttons allow you to save your changes to the draft copy, publish your draft copy, unpublish from the live website or remove a page from the draft website. The SilverStripe CMS workflow stores two copies of a page, a draft and a published one. By having separate draft & published copies, we can preview draft changes in the site before publishing them to the live website. You can quickly preview your draft pages without leaving the CMS by clicking the "Preview" button.
+4.  This section allows you to edit the content for the currently selected page, as well as changing other properties of the page such as the page name and URL. The content editor has full [WYSIWYG](http://en.wikipedia.org/wiki/WYSIWYG) capabilities, allowing you to change formatting and insert links, images, and tables.
+5.  These buttons allow you to save your changes to the draft copy, publish your draft copy, unpublish from the live website, or remove a page from the draft website. The SilverStripe CMS workflow stores two copies of a page, a draft and a published copy. By having separate draft and published copies, we can preview draft changes on the site before publishing them to the live website. You can quickly preview your draft pages without leaving the CMS by clicking the "Preview" button.
 
 ![](_images/tutorial1_cms-numbered-5.jpg)  
 
 ### Try it
 
-There are three pages already created for you - "Home", "About Us" and "Contact Us", as well as a 404 page. Experiment
+There are three pages already created for you - "Home", "About Us" and "Contact Us", as well as a 404 error page. Experiment
 with the editor - try different formatting, tables and images. When you are done, click "Save Draft" or "Save
 & Publish" to post the content to the live site. 
 
@@ -88,16 +88,16 @@ Note that if you have sub-pages, changing the Top level URL field for a page wil
 
 When you create a new page, SilverStripe automatically creates an appropriate URL for it. For example, *About Us* will
 become *about-us*. You are able to change it yourself so that you can make long titles more usable or descriptive. For
-example, *Employment Opportunities* could be shortened to *jobs*. The ability to generate easy to type, descriptive URLs
+example, *Employment Opportunities* could be shortened to *jobs*. The ability to generate easy-to-type, descriptive URLs
 for SilverStripe pages improves accessibility for humans and search engines.
 
-You should ensure the URL for the home page is *home*, as that's the page SilverStripe loads by default.
+You should ensure the URL for the home page is *home*, as that is the page SilverStripe loads by default.
 
 
 ## Templates
 
-All pages on a SilverStripe site are rendered using a template. A template is an file 
-with a special `*.ss` file extension, containing HTML augmented with some control codes.  Through the use of templates, you can have as much control over your site’s HTML code as you like. In SilverStripe, these files and others for controlling your sites appearance – the CSS, images, and some javascript – are collectively described as a theme. Themes live in the 'themes' folder of your site.
+All pages on a SilverStripe site are rendered using a template. A template is a file 
+with a special `*.ss` file extension, containing HTML augmented with some control codes.  Through the use of templates, you can have as much control over your site’s HTML code as you like. In SilverStripe, the template files and others for controlling your sites appearance, such as the CSS, images, and some javascript, are collectively described as a theme. Themes live in the 'themes' folder of your site.
 
 Every page in your site has a **page type**. We will briefly talk about page types later, and go into much more detail
 in tutorial two; right now all our pages will be of the page type *Page*. When rendering a page, SilverStripe will look
@@ -116,7 +116,7 @@ ensures the browser knows where to locate your site's images and css files.
 	$Title
 	$SiteConfig.Title
 
-These three variables are found within the html `<title>` tag, and are replaced by the text set in the "Meta Title", "Page Name", or "Settings -> Site Title" in the CMS.
+These three variables are found within the html `<title>` tag, and are replaced by the text set in the "Meta Title", "Page Name", or "Settings -> Site Title" fields in the CMS.
 	
 	:::ss
 	$MetaTags 
@@ -207,7 +207,7 @@ you will then be able to target a section in css (*simple/css/layout.css*), e.g.
 ## A second level of navigation
 
 The top navigation system is currently quite restrictive. There is no way to
-nest pages, we have a completely flat site. Adding a second level in SilverStripe is easy. First (if you haven't already done so), let's add some pages. 
+nest pages, so we have a completely flat site. Adding a second level in SilverStripe is easy. First (if you haven't already done so), let's add some pages. 
 
 The "About Us" section could use some expansion. 
 
@@ -240,7 +240,7 @@ As we can see here, the *Menu* control takes a single
 argument - the level of the menu we want to get. Our css file will style this linked list into the second level menu,
 using our usual *$LinkingMode* technique to highlight the current page.
 
-To make sure the menu is not displayed on every page, even those that *don't* have any nested pages. We use an **if block**. 
+To make sure the menu is not displayed on every page, for example, those that *don't* have any nested pages. We use an **if block**. 
 Look again in the *Sidebar.ss* file and you will see that the menu is surrounded with an **if block**
 like this:
 
@@ -289,9 +289,9 @@ Both the top menu, and the sidebar menu should be updating and highlighting as y
 
 ![](_images/tutorial1_menu-two-level.jpg)
 
-Feel free to experiment with the if and loop statements, for example you could create a drop down style menu from the top navigation using a combination of if statements, loops and some CSS to style it. 
+Feel free to experiment with the if and loop statements. For example, you could create a drop down style menu from the top navigation using a combination of if statements, loops, and some CSS to style it. 
 
-The following example runs an if statement, and a loop on *Children*, checking to see if any sub-pages exist within each top level navigation item, you will need to come up with your own CSS to correctly style this approach.
+The following example runs an if statement and a loop on *Children*, checking to see if any sub-pages exist within each top level navigation item. You will need to come up with your own CSS to correctly style this approach.
 
 	:::ss
 	<ul>
@@ -345,7 +345,7 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
 We can do this by going to [http://localhost/your_site_name/dev/build](http://localhost/your_site_name/dev/build) (replace *localhost/your_site_name* with your own domain name if applicable). 
 
-It may take a moment, so be patient. This add tables and fields needed by your site, and modifies any structures that have changed. It
+It may take a moment, so be patient. This adds tables and fields needed by your site, and modifies any structures that have changed. It
 does this non-destructively - it will never delete your data.
 
 As we have just created a new page type, SilverStripe will add this to the list of page types in the database.
@@ -359,7 +359,7 @@ In the CMS, navigate to the "Home" page and switch to the "Settings" tab. Change
 ![](_images/tutorial1_homepage-type.jpg)
 
 Our homepage is now of the page type *HomePage*. Regardless, it is still
-rendered with the *Page* template. SilverStripe does this the type inherits from *Page*,
+rendered with the *Page* template. SilverStripe does this as our homepage inherits its type from *Page*,
 which acts as a fallback if no *HomePage* template can be found. 
 It always tries to use the most specific template in an inheritance chain.
 
