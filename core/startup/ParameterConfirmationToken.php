@@ -91,7 +91,16 @@ class ParameterConfirmationToken {
 		unset($params['url']);
 
 		// Join them all together into the original URL
-		$location = "$proto://" . $host . '/' . ltrim(BASE_URL, '/') . $url . ($params ? '?'.http_build_query($params) : '');
+		$urlParts = array(
+			$host,
+			BASE_URL,
+			$url,
+			($params ? '?'.http_build_query($params) : '')
+		);
+		array_walk($urlParts, function(&$val) {
+			$val = trim($val, '/');
+		});
+		$location = "$proto://" . implode('/', array_filter($urlParts));
 
 		// And redirect
 		if (headers_sent()) {
