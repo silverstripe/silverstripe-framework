@@ -254,6 +254,7 @@ en:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Locked?'
     NoRoles: 'No roles found'
+    NotAllowed: 'Requires ADMIN permissions to change the group hierarchy'
     PLURALNAME: Groups
     Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
@@ -512,7 +513,7 @@ en:
     APPLY_ROLES: 'Apply roles to groups'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
     EDITPERMISSIONS: 'Manage permissions for groups'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
+    EDITPERMISSIONS_HELP: 'Ability to assign permissions for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Group name'
     IMPORTGROUPS: 'Import groups'
     IMPORTUSERS: 'Import users'
