@@ -104,8 +104,7 @@ jQuery.noConflict();
 				statusMessage(decodeURIComponent(msg), msgType);
 			}
 		});
-		
-		
+
 		/**
 		 * Main LeftAndMain interface with some control panel and an edit form.
 		 * 
@@ -190,13 +189,22 @@ jQuery.noConflict();
 			},
 
 			/**
-			 * Change the options of the threeColumnCompressor layout, and trigger layouting. You can provide any or
-			 * all options. The remaining options will not be changed.
+			 * Change the options of the threeColumnCompressor layout, and trigger layouting if needed.
+			 * You can provide any or all options. The remaining options will not be changed.
 			 */
 			updateLayoutOptions: function(newSpec) {
 				var spec = this.getLayoutOptions();
-				$.extend(spec, newSpec);
-				this.redraw();
+
+				var dirty = false;
+
+				for (var k in newSpec) {
+					if (spec[k] !== newSpec[k]) {
+						spec[k] = newSpec[k];
+						dirty = true;
+					}
+				}
+
+				if (dirty) this.redraw();
 			},
 
 			/**
@@ -206,7 +214,6 @@ jQuery.noConflict();
 				this.updateLayoutOptions({
 					mode: 'split'
 				});
-				this.redraw();
 			},
 
 			/**
@@ -216,7 +223,6 @@ jQuery.noConflict();
 				this.updateLayoutOptions({
 					mode: 'content'
 				});
-				this.redraw();
 			},
 
 			/**
@@ -226,10 +232,13 @@ jQuery.noConflict();
 				this.updateLayoutOptions({
 					mode: 'preview'
 				});
-				this.redraw();
 			},
 
+			RedrawSupression: false,
+
 			redraw: function() {
+				if (this.getRedrawSupression()) return;
+
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
 				// Reset the algorithm.
@@ -247,9 +256,9 @@ jQuery.noConflict();
 				this.layout();
 
 				// Redraw on all the children that need it
-				this.find('.cms-panel-layout').redraw(); 
-				this.find('.cms-content-fields[data-layout-type]').redraw(); 
-				this.find('.cms-edit-form[data-layout-type]').redraw(); 
+				this.find('.cms-panel-layout').redraw();
+				this.find('.cms-content-fields[data-layout-type]').redraw();
+				this.find('.cms-edit-form[data-layout-type]').redraw();
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
 			},
@@ -472,6 +481,8 @@ jQuery.noConflict();
 			handleAjaxResponse: function(data, status, xhr, state) {
 				var self = this, url, selectedTabs, guessFragment;
 
+				this.setRedrawSupression(true);
+
 				// Support a full reload
 				if(xhr.getResponseHeader('X-Reload') && xhr.getResponseHeader('X-ControllerURL')) {
 					document.location.href = $('base').attr('href').replace(/\/*$/, '') 
@@ -557,6 +568,7 @@ jQuery.noConflict();
 				var newForm = newContentEls.filter('form');
 				if(newForm.hasClass('cms-tabset')) newForm.removeClass('cms-tabset').addClass('cms-tabset');
 
+				this.setRedrawSupression(false);
 				this.redraw();
 
 				this.restoreTabState((state && typeof state.data.tabState !== 'undefined') ? state.data.tabState : null);
