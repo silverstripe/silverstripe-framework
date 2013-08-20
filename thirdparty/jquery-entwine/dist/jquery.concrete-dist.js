@@ -753,8 +753,11 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 	 * Add focusin and focusout support to bind and live for browers other than IE. Designed to be usable in a delegated fashion (like $.live)
 	 * Copyright (c) 2007 Jörn Zaefferer
 	 */
-	$.support.focusInOut = !!($.browser.msie);
-	if (!$.support.focusInOut) {
+	if ($.support.focusinBubbles === undefined)  {
+		$.support.focusinBubbles = !!($.browser.msie);
+	}
+
+	if (!$.support.focusinBubbles && !$.event.special.focusin) {
 		// Emulate focusin and focusout by binding focus and blur in capturing mode
 		$.each({focus: 'focusin', blur: 'focusout'}, function(original, fix){
 			$.event.special[fix] = {
@@ -807,8 +810,30 @@ catch (e) {
 	window.console = undefined;
 }
 
-(function($) {	
-	
+(function($) {
+
+	/* Create a subclass of the jQuery object. This was introduced in jQuery 1.5, but removed again in 1.9 */
+	var sub = function() {
+		function jQuerySub( selector, context ) {
+			return new jQuerySub.fn.init( selector, context );
+		}
+
+		jQuery.extend( true, jQuerySub, $ );
+		jQuerySub.superclass = $;
+		jQuerySub.fn = jQuerySub.prototype = $();
+		jQuerySub.fn.constructor = jQuerySub;
+		jQuerySub.fn.init = function init( selector, context ) {
+			if ( context && context instanceof jQuery && !(context instanceof jQuerySub) ) {
+				context = jQuerySub( context );
+			}
+
+			return jQuery.fn.init.call( this, selector, context, rootjQuerySub );
+		};
+		jQuerySub.fn.init.prototype = jQuerySub.fn;
+		var rootjQuerySub = jQuerySub(document);
+		return jQuerySub;
+	};
+
 	var namespaces = {};
 
 	$.entwine = function() {
@@ -928,49 +953,9 @@ catch (e) {
 			}
 			else {
 				// We're in a namespace, so we build a Class that subclasses the jQuery Object Class to inject namespace functions into
-				
-				// jQuery 1.5 already provides a nice way to subclass, so use it
-				if ($.sub) {
-					this.$ = $.sub();
-					this.injectee = this.$.prototype;
-				}
-				// For jQuery < 1.5 we have to do it ourselves
-				else {
-					var subfn = function(){};
-					this.injectee = subfn.prototype = new $;
-				
-					// And then we provide an overriding $ that returns objects of our new Class, and an overriding pushStack to catch further selection building
-					var bound$ = this.$ = function(a) {
-						// Try the simple way first
-						var jq = $.fn.init.apply(new subfn(), arguments);
-						if (jq instanceof subfn) return jq;
-					
-						// That didn't return a bound object, so now we need to copy it
-						var rv = new subfn();
-						rv.selector = jq.selector; rv.context = jq.context; var i = rv.length = jq.length;
-						while (i--) rv[i] = jq[i];
-						return rv;
-					};
-				
-					this.injectee.pushStack = function(elems, name, selector){
-						var ret = bound$(elems);
+				this.$ = $.sub ? $.sub() : sub();
+				this.injectee = this.$.prototype;
 
-						// Add the old object onto the stack (as a reference)
-						ret.prevObject = this;
-						ret.context = this.context;
-					
-						if ( name === "find" ) ret.selector = this.selector + (this.selector ? " " : "") + selector;
-						else if ( name )       ret.selector = this.selector + "." + name + "(" + selector + ")";
-					
-						// Return the newly-formed element set
-						return ret;
-					};
-				
-					// Copy static functions through from $ to this.$ so e.g. $.ajax still works
-					// @bug, @cantfix: Any class functions added to $ after this call won't get mirrored through 
-					$.extend(this.$, $);
-				}
-				
 				// We override entwine to inject the name of this namespace when defining blocks inside this namespace
 				var entwine_wrapper = this.injectee.entwine = function(spacename) {
 					var args = arguments;
