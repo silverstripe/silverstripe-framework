@@ -4,8 +4,11 @@
 	 * Add focusin and focusout support to bind and live for browers other than IE. Designed to be usable in a delegated fashion (like $.live)
 	 * Copyright (c) 2007 Jörn Zaefferer
 	 */
-	$.support.focusInOut = !!($.browser.msie);
-	if (!$.support.focusInOut) {
+	if ($.support.focusinBubbles === undefined)  {
+		$.support.focusinBubbles = !!($.browser.msie);
+	}
+
+	if (!$.support.focusinBubbles && !$.event.special.focusin) {
 		// Emulate focusin and focusout by binding focus and blur in capturing mode
 		$.each({focus: 'focusin', blur: 'focusout'}, function(original, fix){
 			$.event.special[fix] = {
