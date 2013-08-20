@@ -282,14 +282,15 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
 				'help' => _t(
 					'SecurityAdmin.ACCESS_HELP',
-					'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+					'Allow viewing, adding and editing users. ' .
+					'Does not allow creation of new groups, or permission changes on existing groups.'
 				)
 			),
 			'EDIT_PERMISSIONS' => array(
 				'name' => _t('SecurityAdmin.EDITPERMISSIONS', 'Manage permissions for groups'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
 				'help' => _t('SecurityAdmin.EDITPERMISSIONS_HELP',
-					'Ability to edit Permissions and IP Addresses for a group.'
+					'Ability to assign permissions for a group.'
 					. ' Requires the "Access to \'Security\' section" permission.'),
 				'sort' => 0
 			),

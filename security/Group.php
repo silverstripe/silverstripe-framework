@@ -62,14 +62,27 @@ class Group extends DataObject {
 	public function getCMSFields() {
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/PermissionCheckboxSetField.js');
 
+		$parentidfield = DropdownField::create(
+			'ParentID', 
+			$this->fieldLabel('Parent'), 
+			Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
+		)
+			->setEmptyString(' ')
+			->setDescription(
+				_t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
+			);
+
+		// Group hierarchy changes can extend the permissions assigned to this group through
+		// group inheritance, so we have to limit these changes to ADMIN users.
+		if(!Permission::check('ADMIN')) {
+			$parentidfield = $parentidfield->performReadonlyTransformation();
+		}
+
 		$fields = new FieldList(
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
-					$parentidfield = DropdownField::create(						'ParentID', 
-						$this->fieldLabel('Parent'), 
-						Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
-					)->setEmptyString(' '),
+					$parentidfield,
 					new TextareaField('Description', $this->fieldLabel('Description'))
 				),
 
@@ -85,10 +98,6 @@ class Group extends DataObject {
 			)
 		);
 		
-		$parentidfield->setDescription(
-			_t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
-		);
-
 		// Filter permissions
 		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldDetailForm
 		$permissionsField->setHiddenPermissions((array)Config::inst()->get('SecurityAdmin', 'hidden_permissions'));
@@ -334,6 +343,19 @@ class Group extends DataObject {
 	public function setCode($val){
 		$this->setField("Code", Convert::raw2url($val));
 	}
+
+	public function validate() {
+		$result = parent::validate();
+
+		// Group hierarchy changes can extend the permissions assigned to this group through
+		// group inheritance, so we have to limit these changes to ADMIN users.
+		// Only check existing groups since non-admins aren't allowed to create new ones anyway.
+		if($this->ID && $this->isChanged('ParentID') && !Permission::check('ADMIN')) {
+			$result->error(_t('Group.NotAllowed', 'Requires ADMIN permissions to change the group hierarchy'));
+		}
+
+		return $result;
+	}
 	
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
@@ -363,6 +385,7 @@ class Group extends DataObject {
 	/**
 	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
 	 * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.
+	 * Only admins can create groups, to avoid privilege escalation.
 	 * 
 	 * @param $member Member
 	 * @return boolean

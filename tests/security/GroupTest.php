@@ -109,6 +109,24 @@ class GroupTest extends FunctionalTest {
 			'Grandchild groups are removed');
 	}
 
+	public function requiresAdminForParentChange() {
+		$group1 = $this->objFromFixture('Group', 'group1');
+		$group2 = $this->objFromFixture('Group', 'group2');
+		$group1->ParentID = $group2->ID;
+
+		$thrown = false;
+		try {
+			$group1->write();
+		} catch(ValidationException $e) {
+			$thrown = true;
+			$this->assertContains(_t('Group.NotAllowed'), $e->getMessage());
+		}
+		$this->assertTrue($thrown);
+
+		$this->logInWithPermission('ADMIN');
+		$group1->write();
+	}
+
 }
 
 class GroupTest_Member extends Member implements TestOnly {
