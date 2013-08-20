@@ -158,7 +158,7 @@ Model relations can be expressed through the same notation as in the YAML fixtur
 described earlier, through the `=>` prefix on data values.
 
 	:::php
-	$obj = $factory->createObject('MyObject', array(
+	$obj = $factory->createObject('MyObject', 'myobj1', array(
 		'MyHasManyRelation' => '=>MyOtherObject.obj1,=>MyOtherObject.obj2'
 	));
 
