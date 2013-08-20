@@ -954,6 +954,9 @@ catch (e) {
 			else {
 				// We're in a namespace, so we build a Class that subclasses the jQuery Object Class to inject namespace functions into
 				this.$ = $.sub ? $.sub() : sub();
+				// Work around bug in sub() - subclass must share cache with root or data won't get cleared by cleanData
+				this.$.cache = $.cache;
+
 				this.injectee = this.$.prototype;
 
 				// We override entwine to inject the name of this namespace when defining blocks inside this namespace
@@ -1190,32 +1193,37 @@ catch (e) {
 
 	var dontTrigger = false;
 
+	var patchDomManipCallback = function(original) {
+		var patched = function(elem){
+			var added = [];
+
+			if (!dontTrigger) {
+				if (elem.nodeType == 1) added[added.length] = elem;
+				getElements(added, elem);
+			}
+
+			var rv = original.apply(this, arguments);
+
+			if (!dontTrigger && added.length) {
+				var event = $.Event('EntwineElementsAdded');
+				event.targets = added;
+				$(document).triggerHandler(event);
+			}
+
+			return rv;
+		}
+		patched.patched = true;
+
+		return patched;
+	}
+
+	var version = $.prototype.jquery.split('.');
+	var callbackIdx = (version[0] > 1 || version[1] >= 10 ? 1 : 2);
+
 	// Monkey patch $.fn.domManip to catch all regular jQuery add element calls
 	var _domManip = $.prototype.domManip;
-	$.prototype.domManip = function(args, table, callback) {
-		if (!callback.patched) {
-			var original = callback;
-			arguments[2] = function(elem){
-				var added = [];
-
-				if (!dontTrigger) {
-					if (elem.nodeType == 1) added[added.length] = elem;
-					getElements(added, elem);
-				}
-
-				var rv = original.apply(this, arguments);
-
-				if (!dontTrigger && added.length) {
-					var event = $.Event('EntwineElementsAdded');
-					event.targets = added;
-					$(document).triggerHandler(event);
-				}
-
-				return rv;
-			}
-			arguments[2].patched = true;
-		}
-
+	$.prototype.domManip = function() {
+		if (!arguments[callbackIdx].patched) arguments[callbackIdx] = patchDomManipCallback(arguments[callbackIdx]);
 		return _domManip.apply(this, arguments);
 	}
 
@@ -1757,6 +1765,12 @@ catch (e) {
 		}
 	};
 
+	var document_proxy = function(selector, handler, includechildren) {
+		return function(e){
+			if (e.target === document) return handler.apply(this, arguments);
+		}
+	};
+
 	var window_proxy = function(selector, handler, includechildren) {
 		return function(e){
 			if (e.target === window) return handler.apply(this, arguments);
@@ -1790,6 +1804,7 @@ catch (e) {
 
 				if (from.match(/[^\w]/)) proxyGen = selector_proxy;
 				else if (from == 'Window' || from == 'window') proxyGen = window_proxy;
+				else if (from == 'Document' || from == 'document') proxyGen = document_proxy;
 				else proxyGen = property_proxy;
 
 				for (var onevent in v) {
