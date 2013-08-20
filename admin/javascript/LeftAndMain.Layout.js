@@ -104,9 +104,21 @@
 				}
 			}
 
+			// Calculate what columns are already hidden pre-layout
+			var prehidden = {
+				content: spec.content.hasClass('column-hidden'),
+				preview: spec.preview.hasClass('column-hidden')
+			};
+
+			// Calculate what columns will be hidden (zero width) post-layout
+			var posthidden = {
+				content: contentWidth === 0,
+				preview: previewWidth === 0
+			};
+
 			// Apply classes for elements that might not be visible at all.
-			spec.content.toggleClass('column-hidden', contentWidth===0);
-			spec.preview.toggleClass('column-hidden', previewWidth===0);
+			spec.content.toggleClass('column-hidden', posthidden.content);
+			spec.preview.toggleClass('column-hidden', posthidden.preview);
 
 			// Apply the widths to columns, and call subordinate layouts to arrange the children.
 			menu.bounds({'x': left, 'y': top, 'height': bottom - top, 'width': menuWidth});
@@ -115,12 +127,15 @@
 			left += menuWidth;
 
 			content.bounds({'x': left, 'y': top, 'height': bottom - top, 'width': contentWidth});
-			content.doLayout();
+			if (!posthidden.content) content.doLayout();
 
 			left += contentWidth;
 
 			preview.bounds({'x': left, 'y': top, 'height': bottom - top, 'width': previewWidth});
-			preview.doLayout();
+			if (!posthidden.preview) preview.doLayout();
+
+			if (posthidden.content !== prehidden.content) spec.content.trigger('columnvisibilitychanged');
+			if (posthidden.preview !== prehidden.preview) spec.preview.trigger('columnvisibilitychanged');
 
 			return container;
 		};
