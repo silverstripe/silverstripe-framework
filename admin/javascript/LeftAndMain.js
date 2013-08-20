@@ -446,6 +446,7 @@ jQuery.noConflict();
 					headers: headers,
 					url: state.url,
 					complete: function() {
+						self.setCurrentXHR(null);
 						// Remove loading indication from old content els (regardless of which are replaced)
 						contentEls.removeClass('loading');
 					},

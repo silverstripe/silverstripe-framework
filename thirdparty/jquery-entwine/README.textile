@@ -2,9 +2,20 @@ h1. Entwine - Support for Concrete UI style programming in jQuery
 
 By Hamish Friedlander, with thanks to "SilverStripe":http://www.silverstripe.com/
 
-Entwine tries to provide a new model of code organisation - a replacement for Object Oriented programming that is focused on adding functions to groups of DOM elements based on the structure and contents of those DOM elements. It's a merging of the model and view layer that initially seems weird, but can give very powerful results.
+Entwine tries to provide a new model of code organisation - a replacement for Object Oriented programming that is
+focused on adding functions to groups of DOM elements based on the structure and contents of those DOM elements. It's a
+merging of the model and view layer that initially seems weird, but can give very powerful results.
 
-We're standing on the shoulders of giants here - combining ideas from Prototype's behaviour & lowpro and jQuery's effen & livequery (who themselves stole ideals from Self's Morphic UI and others), but extending & combining the concepts presented in those tools to provide a complete alternative to traditional OO concepts - self-aware methods, inheritance, polymorphisim and namespacing without a single class definition.
+We're standing on the shoulders of giants here - combining ideas from Prototype's behaviour & lowpro and jQuery's effen
+& livequery (who themselves stole ideals from Self's Morphic UI and others), but extending & combining the concepts
+presented in those tools to provide a complete alternative to traditional OO concepts - self-aware methods, inheritance,
+polymorphisim and namespacing without a single class definition.
+
+h2. Requirements
+
+Currently Entwine layers itself on top of jQuery. Any patch level of jQuery from 1.7 through 1.10 or 2.0 should work.
+Because we patch some internal jQuery APIs there can be a delay between a new version of jQuery being released
+and Entwine providing support.
 
 h2. Getting Started
 

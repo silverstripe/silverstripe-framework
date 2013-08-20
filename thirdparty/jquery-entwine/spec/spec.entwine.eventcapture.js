@@ -137,5 +137,18 @@ describe('Entwine', function(){
 			$(window).trigger('synthetic');
 			expect(triggercount).toEqual(1);
 		});
+
+		it('can capture from document', function(){
+			var triggercount = 0;
+
+			$('#d').entwine({
+				fromDocument: {
+					onsynthetic: function(){ triggercount += 1;}
+				}
+			});
+
+			$(document).trigger('synthetic');
+			expect(triggercount).toEqual(1);
+		});
 	});
 });
