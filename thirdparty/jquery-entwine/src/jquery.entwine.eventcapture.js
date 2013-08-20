@@ -53,6 +53,12 @@
 		}
 	};
 
+	var document_proxy = function(selector, handler, includechildren) {
+		return function(e){
+			if (e.target === document) return handler.apply(this, arguments);
+		}
+	};
+
 	var window_proxy = function(selector, handler, includechildren) {
 		return function(e){
 			if (e.target === window) return handler.apply(this, arguments);
@@ -86,6 +92,7 @@
 
 				if (from.match(/[^\w]/)) proxyGen = selector_proxy;
 				else if (from == 'Window' || from == 'window') proxyGen = window_proxy;
+				else if (from == 'Document' || from == 'document') proxyGen = document_proxy;
 				else proxyGen = property_proxy;
 
 				for (var onevent in v) {

@@ -2550,6 +2550,7 @@
 					.unbind("drag_start.vakata")
 					.unbind("drag_stop.vakata");	
 			}
+			o = false;
 		},
 		_fn : {
 			dnd_prepare : function () {

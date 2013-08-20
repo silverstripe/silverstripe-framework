@@ -270,6 +270,34 @@ describe('Entwine', function(){
 			expect(res).toEqual([1, 3]);
 		});
 
+		it('properly clears data in namespace', function(){
+			var res = [];
+
+			$('#a').entwine('foo', function($){return{
+				foo: function(){ this.data('foo', 'foo'); }
+			};});
+
+			// Add the data, then check it's there
+			$('#a').entwine('foo').foo();
+			expect($('#a').data('foo')).toEqual('foo');
+
+			// Check cache is shared between root & namespace
+			var rootInitialCacheKeys = $.map($.cache, function(v, k){ return k; });
+			var namespaceInitialCacheKeys = $.map($.entwine.namespaces['foo'].$.cache, function(v, k){ return k; });
+
+			expect(rootInitialCacheKeys).toEqual(namespaceInitialCacheKeys);
+
+			// Remove '#a', and check cache is still shared
+			$('#a').remove();
+			var rootEventualCacheKeys = $.map($.cache, function(v, k){ return k; });
+			var namespaceEventualCacheKeys = $.map($.entwine.namespaces['foo'].$.cache, function(v, k){ return k; });
+
+			expect(rootEventualCacheKeys).toEqual(namespaceEventualCacheKeys);
+
+			// And that it's now smaller that it used to be
+			expect(namespaceEventualCacheKeys.length).toBeLessThan(namespaceInitialCacheKeys.length);
+
+		});
 	});
 
 });
