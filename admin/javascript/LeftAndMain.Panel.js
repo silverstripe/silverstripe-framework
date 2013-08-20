@@ -30,7 +30,7 @@
 			
 			WidthCollapsed: null,
 			
-			onmatch: function() {
+			onadd: function() {
 				if(!this.find('.cms-panel-content').length) throw new Exception('Content panel for ".cms-panel" not found');
 				
 				// Create default controls unless they already exist.
@@ -62,9 +62,6 @@
 				
 				this._super();
 			},
-			onunmatch: function() {
-				this._super();
-			},
 			/**
 			 * @param {Boolean} TRUE to expand, FALSE to collapse.
 			 * @param {Boolean} TRUE means that events won't be fired, which is useful for the component initialization phase.
@@ -89,7 +86,7 @@
 
 				// Save collapsed state in cookie
 				if($.cookie && this.attr('id')) $.cookie('cms-panel-collapsed-' + this.attr('id'), !bool, {path: '/', expires: 31});
-				
+
 				// TODO Fix redraw order (inner to outer), and re-enable silent flag
 				// to avoid multiple expensive redraws on a single load.
 				// if(!silent) {

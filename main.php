@@ -138,7 +138,7 @@ $chain
 
 			// Otherwise, we start up the session if needed, then check for admin
 			if (!$canFlush) {
-				if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) {
+				if(!isset($_SESSION) && Session::request_contains_session_id()) {
 					Session::start();
 				}
 
