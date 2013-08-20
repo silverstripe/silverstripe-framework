@@ -1169,7 +1169,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$password->setCanBeEmpty(true);
 		if(!$this->ID) $password->showOnClick = false;
 		$mainFields->replaceField('Password', $password);
-				
+
 		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
 			_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'), 
@@ -1231,7 +1231,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$permissionsTab = $fields->fieldByName("Root")->fieldByName('Permissions');
 		if($permissionsTab) $permissionsTab->addExtraClass('readonly');
 		
-		$defaultDateFormat = Zend_Locale_Format::getDateFormat($this->Locale);
+		$defaultDateFormat = Zend_Locale_Format::getDateFormat(new Zend_Locale($this->Locale));
 		$dateFormatMap = array(
 			'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
 			'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
@@ -1249,7 +1249,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		);
 		$dateFormatField->setValue($this->DateFormat);
 		
-		$defaultTimeFormat = Zend_Locale_Format::getTimeFormat($this->Locale);
+		$defaultTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($this->Locale));
 		$timeFormatMap = array(
 			'h:mm a' => Zend_Date::now()->toString('h:mm a'),
 			'H:mm' => Zend_Date::now()->toString('H:mm'),
