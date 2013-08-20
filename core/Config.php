@@ -162,13 +162,20 @@ class Config {
 
 	/**
 	 * What to do if there's a type mismatch.
+	 * We show the two variables here, as this exception 
+	 * is all about two variables not "matching".
 	 *
 	 * @throws UnexpectedValueException
+	 * @param any $debugValue1
+	 * @param any $debugvalue2
+	 * 
 	 */
 	protected static function type_mismatch($debugValue1 = null, $debugValue2 = null) {
 		throw new UnexpectedValueException('Type mismatch in configuration. All values for a particular property must'
-			. ' contain the same type (or no value at all). Here is some debug info: <blockquote><hr /><h2>Value 1:</h2> '
-			.print_r($debugValue1, 1).'<hr /><h2>Value 2</h2>'.print_r($debugValue2, 1).'</blockquote>');
+			. ' contain the same type (or no value at all). The two values are: 
+				--------------- Value 1:'.var_dump($debugValue1, 1).'
+				--------------- Value 2:'.var_dump($debugValue2, 1).'
+				---------------';
 	}
 	
 	/**
