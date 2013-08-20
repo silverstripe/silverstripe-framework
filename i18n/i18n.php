@@ -2231,11 +2231,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 					// TODO Replace with CLDR list of actually available languages/regions
 					// Only allow explicitly registered locales, otherwise we'll get into trouble
 					// if the locale doesn't exist in Zend's CLDR data
-					$labelLocale = str_replace('-', '_', self::get_locale_from_lang($locale));
-					if(isset(self::$all_locales[$locale])) {
-						$locales[$locale] = self::$all_locales[$locale];	
-					} else if(isset(self::$all_locales[$labelLocale])) {
-						$locales[$locale] = self::$all_locales[$labelLocale];	
+					$fullLocale = str_replace('-', '_', self::get_locale_from_lang($locale));
+					if(isset($allLocales[$fullLocale])) {
+						$locales[$fullLocale] = $allLocales[$fullLocale];	
+					} else if(isset($allLocales[$locale])) {
+						$locales[$locale] = $allLocales[$locale];	
 					} 
 				} 
 			}

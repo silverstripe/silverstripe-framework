@@ -115,6 +115,8 @@ class DatetimeField extends FormField {
 	 *  the 'date' value may contain array notation was well (see {@link DateField->setValue()}).
 	 */
 	public function setValue($val) {
+		$locale = new Zend_Locale($this->locale);
+
 		// If timezones are enabled, assume user data needs to be reverted to server timezone
 		if($this->getConfig('usertimezone')) {
 			// Accept user input on timezone, but only when timezone support is enabled
@@ -130,7 +132,7 @@ class DatetimeField extends FormField {
 			$this->timeField->setValue(null);
 		} else {
 			// Case 1: String setting from database, in ISO date format
-			if(is_string($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'), $this->locale)) {
+			if(is_string($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'), $locale)) {
 				$this->value = $val;
 			}
 			// Case 2: Array form submission with user date format
@@ -145,13 +147,13 @@ class DatetimeField extends FormField {
 				$this->dateField->setValue($val['date']);
 				$this->timeField->setValue($val['time']);
 				if($this->dateField->dataValue() && $this->timeField->dataValue()) {
-					$userValueObj = new Zend_Date(null, null, $this->locale);
+					$userValueObj = new Zend_Date(null, null, $locale);
 					$userValueObj->setDate($this->dateField->dataValue(),
 						$this->dateField->getConfig('datavalueformat'));
 					$userValueObj->setTime($this->timeField->dataValue(),
 						$this->timeField->getConfig('datavalueformat'));
 					if($userTz) $userValueObj->setTimezone($dataTz);
-					$this->value = $userValueObj->get($this->getConfig('datavalueformat'), $this->locale);
+					$this->value = $userValueObj->get($this->getConfig('datavalueformat'), $locale);
 					unset($userValueObj);
 				} else {
 					// Validation happens later, so set the raw string in case Zend_Date doesn't accept it
@@ -168,8 +170,8 @@ class DatetimeField extends FormField {
 			}
 
 			// view settings (dates might differ from $this->value based on user timezone settings)
-			if (Zend_Date::isDate($this->value, $this->getConfig('datavalueformat'), $this->locale)) {
-				$valueObj = new Zend_Date($this->value, $this->getConfig('datavalueformat'), $this->locale);
+			if (Zend_Date::isDate($this->value, $this->getConfig('datavalueformat'), $locale)) {
+				$valueObj = new Zend_Date($this->value, $this->getConfig('datavalueformat'), $locale);
 				if($userTz) $valueObj->setTimezone($userTz);
 
 				// Set view values in sub-fields
@@ -177,9 +179,9 @@ class DatetimeField extends FormField {
 					$this->dateField->setValue($valueObj->toArray());
 				} else {
 					$this->dateField->setValue(
-						$valueObj->get($this->dateField->getConfig('dateformat'), $this->locale));
+						$valueObj->get($this->dateField->getConfig('dateformat'), $locale));
 				}
-				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat'), $this->locale));
+				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat'), $locale));
 			}
 		}
 
