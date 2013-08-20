@@ -212,22 +212,21 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Return a new DataList instance with the records returned in this query restricted by a limit clause
+	 * Return a new DataList instance with the records returned in this query
+	 * restricted by a limit clause.
 	 * 
 	 * @param int $limit
 	 * @param int $offset
 	 */
 	public function limit($limit, $offset = 0) {
-		if(!$limit && !$offset) {
-			return $this;
-		}
 		return $this->alterDataQuery(function($query) use ($limit, $offset){
 			$query->limit($limit, $offset);
 		});
 	}
 	
 	/**
-	 * Return a new DataList instance as a copy of this data list with the sort order set
+	 * Return a new DataList instance as a copy of this data list with the sort
+	 * order set.
 	 *
 	 * @see SS_List::sort()
 	 * @see SQLQuery::orderby
