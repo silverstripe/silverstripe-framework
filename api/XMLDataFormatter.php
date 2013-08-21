@@ -96,7 +96,6 @@ class XMLDataFormatter extends DataFormatter {
 				$items = $obj->$relName();
 				if ($items) {
 					foreach($items as $item) {
-						//$href = Director::absoluteURL($this->config()->api_base . "$className/$id/$relName/$item->ID");
 						$href = Director::absoluteURL($this->config()->api_base . "$relClass/$item->ID");
 						$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
 					}

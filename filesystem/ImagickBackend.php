@@ -255,9 +255,11 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		$new->setBackgroundColor($backgroundColor);
 		
 		if(($geo['width']/$width) < ($geo['height']/$height)){
-			$new->cropImage($geo['width'], floor($height*$geo['width']/$width), 0, (($geo['height']-($height*$geo['width']/$width))/2));
+			$new->cropImage($geo['width'], floor($height*$geo['width']/$width),
+				0, (($geo['height']-($height*$geo['width']/$width))/2));
 		}else{
-		    $new->cropImage(ceil($width*$geo['height']/$height), $geo['height'], (($geo['width']-($width*$geo['height']/$height))/2), 0);
+			$new->cropImage(ceil($width*$geo['height']/$height), $geo['height'],
+				(($geo['width']-($width*$geo['height']/$height))/2), 0);
 		}
 		$new->ThumbnailImage($width,$height,true);
 		return $new;

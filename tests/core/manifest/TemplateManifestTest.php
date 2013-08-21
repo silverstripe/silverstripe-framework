@@ -48,11 +48,11 @@ class TemplateManifestTest extends SapphireTest {
 				'main' => "{$this->base}/module/subfolder/templates/Subfolder.ss"
 			),
 			'customthemepage' => array (
-			  'Layout' => "{$this->base}/module/templates/Layout/CustomThemePage.ss",
-			  'themes' =>
-			  array(
-			    'theme' => array('main' => "{$this->base}/themes/theme/templates/CustomThemePage.ss",)
-			  )
+				'Layout' => "{$this->base}/module/templates/Layout/CustomThemePage.ss",
+				'themes' =>
+				array(
+					'theme' => array('main' => "{$this->base}/themes/theme/templates/CustomThemePage.ss",)
+				)
 			),
 			'include' => array('themes' => array(
 				'theme' => array(

@@ -145,8 +145,9 @@ class ShortcodeParserTest extends SapphireTest {
 		
 		$this->assertEquals(
 			'[[Doesnt shortcode get confused by double ]] characters',
-			$this->parser->parse('[[Doesnt [test_shortcode]shortcode[/test_shortcode] get confused by double ]] characters'
-		));
+			$this->parser->parse(
+				'[[Doesnt [test_shortcode]shortcode[/test_shortcode] get confused by double ]] characters')
+		);
 	}
 
 	public function testUnquotedArguments() {

@@ -56,7 +56,9 @@ class CheckboxField_Readonly extends ReadonlyField {
 	}
 
 	public function Value() {
-		return Convert::raw2xml($this->value ? _t('CheckboxField.YESANSWER', 'Yes') : _t('CheckboxField.NOANSWER', 'No'));
+		return Convert::raw2xml($this->value ?
+			_t('CheckboxField.YESANSWER', 'Yes') :
+			_t('CheckboxField.NOANSWER', 'No'));
 	}
 
 }

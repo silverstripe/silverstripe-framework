@@ -103,7 +103,8 @@ class HTMLTextTest extends SapphireTest {
 			'<h1>should ignore</h1><p>First Mr. sentence. Second sentence.</p>' => 'First Mr. sentence.',
 			"<h1>should ignore</h1><p>Sentence with {$many}words. Second sentence.</p>"
 				=> "Sentence with {$many}words.",
-			'<p>This classic picture book features a repetitive format that lends itself to audience interaction.&nbsp; Illustrator Eric Carle submitted new, bolder artwork for the 25th anniversary edition.</p>'
+			'<p>This classic picture book features a repetitive format that lends itself to audience interaction.'.
+			'&nbsp; Illustrator Eric Carle submitted new, bolder artwork for the 25th anniversary edition.</p>'
 				=> 'This classic picture book features a repetitive format that lends itself to audience interaction.'
 		);
 		
