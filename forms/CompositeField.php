@@ -248,7 +248,25 @@ class CompositeField extends FormField {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else return $this->children;
 	}
-	
+
+	/**
+	 * Returns a transformed version of this field
+	 * @param FormTransformation $trans
+	 * @return CompositeField
+	 */
+	public function transform(FormTransformation $trans){
+		$newChildren = new FieldList();
+		$clone = clone $this;
+		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
+			if(is_object($child)) $child = $child->transform($trans);
+			$newChildren->push($child, $idx);
+		}
+
+		$clone->children = $newChildren;
+
+		return $clone;
+	}
+
 	/**
 	 * Return a readonly version of this field. Keeps the composition but returns readonly
 	 * versions of all the child {@link FormField} objects.
@@ -256,14 +274,7 @@ class CompositeField extends FormField {
 	 * @return CompositeField
 	 */
 	public function performReadonlyTransformation() {
-		$newChildren = new FieldList();
-		$clone = clone $this;
-		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
-			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
-			$newChildren->push($child, $idx);
-		}
-
-		$clone->children = $newChildren;
+		$clone = $this->transform(new ReadonlyTransformation());
 		$clone->readonly = true;
 		$clone->addExtraClass($this->extraClass());
 		$clone->setDescription($this->getDescription());
@@ -278,14 +289,7 @@ class CompositeField extends FormField {
 	 * @return CompositeField
 	 */
 	public function performDisabledTransformation() {
-		$newChildren = new FieldList();
-		$clone = clone $this;
-		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
-			if(is_object($child)) $child = $child->transform(new DisabledTransformation());
-			$newChildren->push($child, $idx);
-		}
-
-		$clone->children = $newChildren;
+		$clone = $this->transform(new DisabledTransformation());
 		$clone->readonly = true;
 		$clone->addExtraClass($this->extraClass());
 		$clone->setDescription($this->getDescription());
