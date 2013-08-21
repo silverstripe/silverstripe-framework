@@ -77,8 +77,8 @@ class Hierarchy extends DataExtension {
 	 * @param int $nodeCountThreshold The lower bounds for the amount of nodes to mark. If set, the logic will expand
 	 *                          nodes until it eaches at least this number, and then stops. Root nodes will always
 	 *                          show regardless of this settting. Further nodes can be lazy-loaded via ajax.
-	 *                          This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having
-	 *                          30 children, the actual node count will be 50 (all root nodes plus first expanded child).
+	 *                          This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having 30
+	 *                          children, the actual node count will be 50 (all root nodes plus first expanded child).
 	 *                          
 	 * @return string
 	 */
