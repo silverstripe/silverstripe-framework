@@ -130,7 +130,8 @@ class HTTPTest extends SapphireTest {
 			// background-image
 			// Note that using /./ in urls is absolutely acceptable
 			$test->assertEquals(
-				'<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">Content</div>',
+				'<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">'.
+				'Content</div>',
 				HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
 			);
 			
@@ -169,7 +170,8 @@ class HTTPTest extends SapphireTest {
 			// background
 			// Note that using /./ in urls is absolutely acceptable
 			$test->assertEquals(
-				'<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>',
+				'<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">'.
+				'SS Blog</div>',
 				HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
 			);
 			
@@ -210,8 +212,10 @@ class HTTPTest extends SapphireTest {
 
 			// data uri
 			$test->assertEquals(
-				'<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
-				HTTP::absoluteURLs('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />'),
+				'<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38'.
+				'GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />',
+				HTTP::absoluteURLs('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH'.
+					'ElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />'),
 				'Data URI links are not rewritten'
 			);
 

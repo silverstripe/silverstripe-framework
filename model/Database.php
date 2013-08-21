@@ -1157,7 +1157,7 @@ abstract class SS_Query implements Iterator {
 				$result .= "<tr>";
 				foreach($record as $k => $v) {
 					$result .= "<th>" . Convert::raw2xml($k) . "</th> ";
- 				}
+				}
 				$result .= "</tr> \n";
 			}
 
@@ -1234,7 +1234,7 @@ abstract class SS_Query implements Iterator {
 	 */
 	public function valid() {
 		if(!$this->queryHasBegun) $this->next();
-	 	return $this->currentRecord !== false;
+		return $this->currentRecord !== false;
 	}
 
 	/**

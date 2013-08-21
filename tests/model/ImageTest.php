@@ -106,7 +106,7 @@ class ImageTest extends SapphireTest {
 	 * of the output image do not resample the file.
 	 */
 	public function testReluctanceToResampling() {
-		 
+
 		$image = $this->objFromFixture('Image', 'imageWithoutTitle');
 		$this->assertTrue($image->isSize(300, 300));
 		
