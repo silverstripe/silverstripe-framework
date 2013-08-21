@@ -360,7 +360,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				'<h4>' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
 			$remoteURL = new TextField('RemoteURL', 'http://'),
 			new LiteralField('addURLImage',
-				'<button class="action ui-action-constructive ui-button field add-url" data-icon="addMedia">'._t('HtmlEditorField.BUTTONADDURL', 'Add url').'</button>')
+				'<button class="action ui-action-constructive ui-button field add-url" data-icon="addMedia">' .
+				_t('HtmlEditorField.BUTTONADDURL', 'Add url').'</button>')
 		);
 
 		$remoteURL->addExtraClass('remoteurl');
@@ -640,7 +641,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	protected function getFieldsForImage($url, $file) {
 		if($file->File instanceof Image) {
-			$formattedImage = $file->File->generateFormattedImage('SetWidth', Config::inst()->get('Image', 'asset_preview_width'));
+			$formattedImage = $file->File->generateFormattedImage('SetWidth',
+				Config::inst()->get('Image', 'asset_preview_width'));
 			$thumbnailURL = $formattedImage ? $formattedImage->URL : $url;	
 		} else {
 			$thumbnailURL = $url;

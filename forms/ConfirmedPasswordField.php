@@ -66,7 +66,7 @@ class ConfirmedPasswordField extends FormField {
 	 * 
 	 * @var FieldList
 	 */
-	 public $children;
+	public $children;
 	
 	/**
 	 * @param string $name

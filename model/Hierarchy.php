@@ -98,13 +98,15 @@ class Hierarchy extends DataExtension {
 	 *                          should not change this.
 	 * @param int $nodeCountThreshold See {@link self::$node_threshold_total}
 	 * @param callable $nodeCountCallback Called with the node count, which gives the callback an opportunity
-	 *                 to intercept the query. Useful e.g. to avoid excessive children listings (Arguments: $parent, $numChildren)
+	 *                 to intercept the query. Useful e.g. to avoid excessive children listings
+	 *                 (Arguments: $parent, $numChildren)
 	 *                          
 	 * @return string
 	 */
 	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, 
 			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", 
-			$numChildrenMethod = "numChildren", $rootCall = true, $nodeCountThreshold = null, $nodeCountCallback = null) {
+			$numChildrenMethod = "numChildren", $rootCall = true,
+			$nodeCountThreshold = null, $nodeCountCallback = null) {
 
 		if(!is_numeric($nodeCountThreshold)) {
 			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
@@ -154,8 +156,8 @@ class Hierarchy extends DataExtension {
 							$output .= $nodeCountWarning;
 							$child->markClosed();
 						} else {
-							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
-								$numChildrenMethod, false, $nodeCountThreshold);	
+							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked,
+								$childrenMethod,	$numChildrenMethod, false, $nodeCountThreshold);
 						}
 					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either

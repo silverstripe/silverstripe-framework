@@ -28,6 +28,7 @@ DOC;
 nowdoc
 DOC;
 
+	// @codingStandardsIgnoreStart
 	// Assigning multiple values
 	static $onone, $onull = null, $oint = 1, $ofloat = 2.5, $ostring = 'string', $oarray = array(1, 2, array(3, 4), 5), $oheredoc = <<<DOC
 heredoc
@@ -35,6 +36,7 @@ DOC
 , $onowdoc = <<<'DOC'
 nowdoc
 DOC;
+	// @codingStandardsIgnoreEnd
 
 	static
 		$mnone,

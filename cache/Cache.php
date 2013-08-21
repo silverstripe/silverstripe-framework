@@ -257,7 +257,7 @@ class SS_Cache {
 
 		foreach(array('any', $for) as $name) {
 			if(isset(self::$backend_picks[$name])) {
-			 	if(self::$backend_picks[$name]['priority'] > $backend_priority) {
+				if(self::$backend_picks[$name]['priority'] > $backend_priority) {
 					$backend_name = self::$backend_picks[$name]['name'];
 					$backend_priority = self::$backend_picks[$name]['priority'];
 				}

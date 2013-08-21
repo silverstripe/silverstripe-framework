@@ -181,7 +181,8 @@ class CheckboxSetField extends OptionsetField {
 	public function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
-		if($fieldname && $record && $relation && ($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
+		if($fieldname && $record && $relation &&
+			($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
 				if($bool) {
