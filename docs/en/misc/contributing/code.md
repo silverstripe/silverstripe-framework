@@ -71,7 +71,7 @@ If you aren't familiar with git and GitHub, try reading the ["GitHub bootcamp do
 We also found the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/) useful.
 If you're familiar with it, here's the short version of what you need to know. Once you fork and download the code:
 
-  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on [open.silverstripe.org](http://open.silverstripe.org)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
+  *  **Don't develop on the master branch.** Always create a development branch specific to "the issue" you're working on (mostly on our [bugtracker](/misc/contributing/issues)). Name it by issue number and description. For example, if you're working on Issue #100, a `DataObject::get_one()` bugfix, your development branch should be called 100-dataobject-get-one. If you decide to work on another issue mid-stream, create a new branch for that issue--don't work on both in one branch.
 
   * **Do not merge the upstream master** with your development branch; *rebase* your branch on top of the upstream master.
 
@@ -82,7 +82,7 @@ If you're familiar with it, here's the short version of what you need to know. O
   * **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
   Most pull requests should go against the `3.1.x-dev` *pre-release branch*, only critical bugfixes
   against the `3.0.x-dev` *release branch*. If you're changing an API or introducing a major feature,
-  the pull request should go against `master` (read more about our [release process](/misc/release-process)).
+  the pull request should go against `master` (read more about our [release process](/misc/release-process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
 
 ### Editing files directly on GitHub.com
 

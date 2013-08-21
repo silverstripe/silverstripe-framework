@@ -6,8 +6,9 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Behat\Context\TranslatedContextInterface,
 	Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode,
+	Behat\Behat\Exception\PendingException,
+	Behat\Mink\Exception\ElementNotFoundException,
+	Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode;
 
 
@@ -263,7 +264,7 @@ class CmsUiContext extends BehatContext
 	}
 
 	/**
-	 * Workaround for chosen.js dropdowns which hide the original dropdown field.
+	 * Workaround for chosen.js dropdowns or tree dropdowns which hide the original dropdown field.
 	 * 
 	 * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
 	 * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)" dropdown$/
@@ -273,31 +274,86 @@ class CmsUiContext extends BehatContext
 		$field = $this->fixStepArgument($field);
 		$value = $this->fixStepArgument($value);
 
-		$inputField = $this->getSession()->getPage()->findField($field);
-		if(null === $inputField) {
-			throw new ElementNotFoundException(sprintf(
-				'Chosen.js dropdown named "%s" not found',
-				$field
-			));
+		$nativeField = $this->getSession()->getPage()->findField($field);
+		if($nativeField) {
+			$nativeField->selectOption($value);
+			return;
 		}
 
-		$container = $inputField->getParent()->getParent();
-		if(null === $container) throw new ElementNotFoundException('Chosen.js field container not found');
-		
-		$linkEl = $container->find('xpath', './/a');
-		if(null === $linkEl) throw new ElementNotFoundException('Chosen.js link element  not found');
-		$linkEl->click();
-		$this->getSession()->wait(100); // wait for dropdown overlay to appear
+		// Given the fuzzy matching, we might get more than one matching field.
+		$formFields = array();
 
+		// Find by label
+		$formField = $this->getSession()->getPage()->findField($field);
+		if($formField) $formFields[] = $formField;
+
+		// Fall back to finding by title (for dropdowns without a label)
+		if(!$formFields) {
+			$formFields = $this->getSession()->getPage()->findAll(
+				'xpath',
+				sprintf(
+					'//*[self::select][(./@title="%s")]',
+					$field
+				)
+			);
+		}
+
+		// Find by name (incl. hidden fields)
+		if(!$formFields) {
+			$formFields = $this->getSession()->getPage()->findAll('xpath', "//*[@name='$field']");
+		}
+
+		assertGreaterThan(0, count($formFields), sprintf(
+			'Chosen.js dropdown named "%s" not found',
+			$field
+		));
+
+		// Traverse up to field holder
+		$containers = array();
+		foreach($formFields as $formField) {
+			do {
+				$container = $formField->getParent();
+				$containerClasses = explode(' ', $container->getAttribute('class'));
+				$containers[] = $container;
+			} while(
+				$container
+				&& in_array('field', $containerClasses)
+				&& $container->getTagName() != 'form'
+			);
+		}
+
+		assertGreaterThan(0, count($containers), 'Chosen.js field container not found');
+			
+		// Default to first visible container
+		$container = $containers[0];
+		
+		// Click on newly expanded list element, indirectly setting the dropdown value
+		$linkEl = $container->find('xpath', './/a[./@href]');
+		assertNotNull($linkEl, 'Chosen.js link element not found');
+		$this->getSession()->wait(100); // wait for dropdown overlay to appear
+		$linkEl->click();
+
+		if(in_array('treedropdown', $containerClasses)) {
+			// wait for ajax dropdown to load
+			$this->getSession()->wait(
+				5000,
+				"jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
+			); 
+		} else {
+			// wait for dropdown overlay to appear (might be animated)
+			$this->getSession()->wait(300);
+		}
+
+		
 		$listEl = $container->find('xpath', sprintf('.//li[contains(normalize-space(string(.)), \'%s\')]', $value));
-		if(null === $listEl) 
-		{
-			throw new ElementNotFoundException(sprintf(
+		if(null === $listEl) {
+			throw new \InvalidArgumentException(sprintf(
 				'Chosen.js list element with title "%s" not found',
 				$value
 			));
 		}
-		$listEl->click();
+
+		$listEl->find('xpath', './/a')->click();
 	}
 
 	/**

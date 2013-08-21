@@ -888,7 +888,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(substr($SQL_id,0,3) != 'new') {
 			$record = DataObject::get_by_id($className, $SQL_id);
 			if($record && !$record->canEdit()) return Security::permissionFailure($this);
-			if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
+			if(!$record || !$record->ID) $this->httpError(404, "Bad record ID #" . (int)$data['ID']);
 		} else {
 			if(!singleton($this->stat('tree_class'))->canCreate()) return Security::permissionFailure($this);
 			$record = $this->getNewItem($SQL_id, false);
@@ -909,7 +909,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		$record = DataObject::get_by_id($className, Convert::raw2sql($data['ID']));
 		if($record && !$record->canDelete()) return Security::permissionFailure();
-		if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
+		if(!$record || !$record->ID) $this->httpError(404, "Bad record ID #" . (int)$data['ID']);
 		
 		$record->delete();
 
@@ -1183,7 +1183,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				// new LiteralField(
 				// 	'WelcomeText',
 				// 	sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
-				// 		_t('LeftAndMain_right.ss.WELCOMETO','Welcome to'),
+				// 		_t('LeftAndMain_right_ss.WELCOMETO','Welcome to'),
 				// 		$this->getApplicationName(),
 				// 		_t('CHOOSEPAGE','Please choose an item from the left.')
 				// 	)
@@ -1416,7 +1416,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$cache = SS_Cache::factory('LeftAndMain_CMSVersion');
 			$cacheKey = filemtime($composerLockPath);
 			$versions = $cache->load($cacheKey);
-			if(!$versions) $versions = array();
+			if($versions) {
+				$versions = json_decode($versions, true);
+			} else {
+				$versions = array();
+			}
 			if(!$versions && $jsonData = file_get_contents($composerLockPath)) {
 				$lockData = json_decode($jsonData);
 				if($lockData && isset($lockData->packages)) {
@@ -1432,7 +1436,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 		} 
-
+		
 		// Fall back to static version file
 		foreach($modules as $moduleName => $moduleSpec) {
 			if(!isset($versions[$moduleName])) {

@@ -1,302 +1,69 @@
 ro:
-  AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: NewFolder
-  AssetTableField:
-    CREATED: 'First uploaded'
-    DIM: Dimensions
-    FILENAME: Filename
-    FOLDER: Folder
-    LASTEDIT: 'Last changed'
-    OWNER: Owner
-    SIZE: 'File size'
-    TITLE: Title
-    TYPE: 'File type'
-    URL: URL
   AssetUploadField:
     ChooseFiles: 'Alegeti fisierele'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
-    EDITINFO: 'Edit files'
-    FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
-    TOUPLOAD: 'Choose files to upload...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: Alignment
-    ALIGNEMENTEXAMPLE: 'right aligned'
-    BOLD: 'Bold Text'
-    BOLDEXAMPLE: Bold
-    CODE: 'Code Block'
-    CODEDESCRIPTION: 'Unformatted code block'
-    CODEEXAMPLE: 'Code block'
     COLORED: 'Text colorat'
     COLOREDEXAMPLE: 'Text albastru'
-    EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
-    IMAGE: Image
-    IMAGEDESCRIPTION: 'Show an image in your post'
-    ITALIC: 'Italic Text'
-    ITALICEXAMPLE: Italics
-    LINK: 'Website link'
-    LINKDESCRIPTION: 'Link to another website or URL'
-    STRUCK: 'Struck-out Text'
-    STRUCKEXAMPLE: Struck-out
-    UNDERLINE: 'Underlined Text'
     UNDERLINEEXAMPLE: Subliniat
-    UNORDERED: 'Unordered list'
-    UNORDEREDDESCRIPTION: 'Unordered list'
-    UNORDEREDEXAMPLE1: 'unordered item 1'
-  BackLink_Button.ss:
-    Back: Back
   BasicAuth:
     ENTERINFO: 'Va rugam introduceţi un user si o parolă.'
     ERRORNOTADMIN: 'Acest utilizator nu este un administrator.'
-    ERRORNOTREC: 'That username / password isn''t recognised'
-  Boolean:
-    0: 'False'
-    ANY: Any
-    1: 'True'
-  CMSLoadingScreen.ss:
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
-  CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: Save
-  CMSProfileController:
-    MENUTITLE: 'My Profile'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
-    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
-    EMAIL: Email
     HELLO: Salut
-    PASSWORD: Parola
-  CheckboxField:
-    - 'False'
-    - 'True'
-  ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
-    SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: 'Saved %s %s %s'
-  ComplexTableField.ss:
-    ADDITEM: Adaugă
-    NOITEMSFOUND: 'No items found'
+  ComplexTableField_ss:
+    ADDITEM: 'Adaugă'
     SORTASC: 'Sortează ascendent'
     SORTDESC: 'Sortează descendent'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Urmatorul
     PREVIOUS: Anteriorul
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Schimba Parola'
   CreditCardField:
     FIRST: primul
-    FOURTH: 'al patrulea'
-    SECOND: 'al doilea'
-    THIRD: 'al treilea'
-  CurrencyField:
-    CURRENCYSYMBOL: $
+    FOURTH: al patrulea
+    SECOND: al doilea
+    THIRD: al treilea
   DataObject:
     PLURALNAME: 'Obiecte Data'
     SINGULARNAME: 'Obiect Data'
-  Date:
-    DAY: zi
-    DAYS: zile
-    HOUR: oră
-    HOURS: ore
-    MIN: minut
-    MINS: minute
-    MONTH: lună
-    MONTHS: luni
-    SEC: secundă
-    SECS: secunde
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
-    YEAR: an
-    YEARS: ani
-  DateField:
-    NOTSET: 'not set'
-    TODAY: astazi
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
-  DatetimeField:
-    NOTSET: 'Not set'
-  Director:
-    INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Alege)
-  EmailField:
-    VALIDATION: 'Please enter an email address'
-  Email_BounceRecord:
-    PLURALNAME: 'Email Bounce Records'
-    SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Oricare
   File:
-    AviType: 'AVI video file'
-    Content: Content
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: Filename
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'Filesize is zero bytes.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Name: Name
     PLURALNAME: Fisiere
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Fisier
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
-    Title: Title
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
-  FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
-  FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
-  Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
-  Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Salut
-    TEXT1: 'Here is your'
     TEXT2: 'link de resetare a parolei'
     TEXT3: pentru
   Form:
-    FIELDISREQUIRED: '%s is required'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Valoarea introdusă nu este unică'
-    VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validator
-    VALIDCURRENCY: 'Please enter a valid currency'
-  FormField:
-    NONE: none
-  GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
   GridField:
-    Add: 'Add {name}'
     Filter: Filtru
-    FilterBy: 'Filter by '
     Find: Gaseste
-    LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
     PRINTEDAT: 'Imprimat la'
     PRINTEDBY: 'Imprimat de'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
     ResetFilter: Reseteaza
-  GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
-  GridFieldDetailForm:
-    CancelBtn: Cancel
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
-  GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Add a role for this group'
     Code: 'Cod Grup'
-    DefaultGroupTitleAdministrators: Administratori
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Descriere
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Blocat?'
-    NoRoles: 'No roles found'
-    PLURALNAME: Groups
     Parent: 'Grup de Baza'
-    RolesAddEditLink: 'Manage roles'
-    SINGULARNAME: Group
-    Sort: 'Ordine de sortare'
     has_many_Permissions: Permisiuni
     many_many_Members: Membri
-  GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    ANCHORVALUE: Anchor
-    BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Insereaza link'
     BUTTONREMOVELINK: 'Indeparteaza link'
-    BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Aliniere / stil'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
-    DETAILS: Details
     EMAIL: 'Adresa email'
     FILE: Fisier
     FOLDER: Director
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensiuni
     IMAGEHEIGHTPX: Inaltime
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Latime
-    INSERTMEDIA: 'Insert Media'
     LINK: 'Insereaza/editeaza linkul pentru textul selectat'
-    LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 'Descriere link'
     LINKEMAIL: 'Adresa email'
     LINKEXTERNAL: 'Alt site web'
@@ -305,65 +72,20 @@ ro:
     LINKOPENNEWWIN: 'Deschideti link intr-o fereastra noua?'
     LINKTO: 'Link la'
     PAGE: Pagina
-    URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
-  Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
   ImageField:
     IMAGE: Imagine
-  Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
-  Image_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
-  LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
-    HELP: Help
-    PAGETYPE: 'Page type: '
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
-    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
-    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
-    PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
-    VersionUnknown: unknown
-  LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
   LoginAttempt:
-    Email: 'Email Address'
     IP: 'Adresa IP'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
-    Status: Status
   Member:
-    ADDGROUP: 'Add group'
-    BUTTONCHANGEPASSWORD: 'Change Password'
-    BUTTONLOGIN: Autentificare
-    BUTTONLOGINOTHER: 'Log in as someone else'
+    BUTTONLOGIN: 'Autentificare'
     BUTTONLOSTPASSWORD: 'Am uitat parola'
-    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirmati noua parola'
     CONFIRMPASSWORD: 'Confirmati parola'
-    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Administrator implicit'
     DefaultDateTime: implicit
-    EMAIL: Email
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Va rog introduceti o adresa de email pentru a obtine un link de resetare a parolei'
-    ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
-    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
-    FIRSTNAME: Prenume
+    FIRSTNAME: 'Prenume'
     INTERFACELANG: 'Limba interfetei'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola
     PLURALNAME: Membri
@@ -372,205 +94,45 @@ ro:
     SUBJECTPASSWORDCHANGED: 'Parola dumneavoastra a fost schimbata'
     SUBJECTPASSWORDRESET: 'Link-ul de resetare a parolei'
     SURNAME: Nume
-    TIMEFORMAT: 'Time format'
-    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Vechea parola'
     belongs_many_many_Groups: Grupuri
     db_LastVisited: 'Data ultimei vizite'
-    db_Locale: 'Interface Locale'
     db_LockedOutUntil: 'Blocat pana la'
     db_NumVisit: 'Numarul de vizite'
     db_Password: Parola
     db_PasswordExpiry: 'Data de Expirare a Parolei'
   MemberAuthenticator:
     TITLE: 'E-mail si Parolă'
-  MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Aplica filtru'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
-  MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
-    ResultUpdated: 'Updated {count} members'
-  MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
-  MemberTableField: null
-  ModelAdmin:
-    DELETE: Delete
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
-    IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
-  ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
-  ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
-  ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
-  MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
-  NullableField:
-    IsNullLabel: 'Is Null'
-  NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
-  Pagination:
-    Page: Page
-    View: View
-  Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 'Full administrative rights'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
-  PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
-  PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
-  PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
-  Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
-  PhoneNumberField:
-    VALIDATION: 'Please enter a valid phone number'
-  RelationComplexTableField.ss:
+  MemberTableField:
+    APPLY_FILTER: 'Aplica filtru'
+  RelationComplexTableField_ss:
     ADD: Adauga
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
-    BUTTONSEND: 'Send me the password reset link'
-    CHANGEPASSWORDBELOW: 'You can change your password below.'
-    CHANGEPASSWORDHEADER: 'Change your password'
-    ENTERNEWPASSWORD: 'Please enter a new password.'
     ERRORPASSWORDPERMISSION: 'Trebuie sa fii autentificat pentru a schimba parola.'
-    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
-    LOGIN: 'Log in'
-    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    EDITPERMISSIONS: 'Manage permissions for groups'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Numele grupului'
     IMPORTGROUPS: 'Importati grupuri'
     IMPORTUSERS: 'Importa utilizatori'
-    MEMBERS: Membri
-    MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'Grup nou'
-    PERMISSIONS: Permissions
-    ROLES: Roles
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
-    Users: Utilizatori
-  SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
-  SilverStripeNavigator:
-    Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'Nici o imagine incarcata'
   SiteTree:
     TABMAIN: Pincipal
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
-    ADD: 'Add a new row'
-    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Exportati ca CSV'
-    PRINT: Imprima
-    Print: Print
-    SELECT: Selecteaza
-  TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
-  TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+    SELECT: 'Selecteaza'
+  TableListField_PageControls_ss:
     VIEWFIRST: 'Vezi primul'
     VIEWLAST: 'Vezi ultimul'
     VIEWNEXT: 'Vezi urmator'
     VIEWPREVIOUS: 'Vezi anterior'
-  TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: 'mai puţin '
-    MORE: 'mai mult'
+    MORE: mai mult
   UploadField:
     ATTACHFILE: 'Atasati un fisier'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach file(s)'
-    DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Salveaza
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
-    Dimensions: Dimensions
-    EDIT: Edit
     EDITINFO: 'Editeaza acest fisier'
-    FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'Din calculatorul dumneavoastra'
-    FROMCOMPUTERINFO: 'Select from files'
-    FROMFILES: 'From files'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
-    STARTALLINFO: 'Start all uploads'
     Saved: Salvat
   Versioned:
     has_many_Versions: Versiune

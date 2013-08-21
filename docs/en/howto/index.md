@@ -17,7 +17,3 @@ the language and functions which are used in the guides.
 * [How to create a navigation menu](navigation-menu). Create primary navigation for your website.
 * [Paginating A List](pagination). Add pagination for an SS_List object.
 * [How to make a simple contact form](simple-contact-form).
-
-## Feedback
-
-If you have a topic you would like covered in these how to's please ask for it on our [Bug Tracker](http://open.silverstripe.org)

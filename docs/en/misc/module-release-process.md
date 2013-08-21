@@ -52,7 +52,7 @@ your modules page on silverstripe.org
 
 Both Google Code and github.com provide their own bugtracker - we encourage you to use any built-in tools that come with
 your version control hoster. Most Silverstripe-maintained modules have their bugtracker on 
-[open.silverstripe.org](http://open.silverstripe.org).
+[github.com](http://www.github.com) (see [issue reporting guidelines](/misc/contributing/issues)).
 
 Providing bugtracking is a major form of communicating with your users in an efficient way, and will provide a good overview
 of outstanding work and the stability of your code to an interested user.
@@ -111,7 +111,7 @@ that you can link from the `README.md` file. Example:
 			tutorial.md
 			howto-search-mymodule.md
 
-The ["docsviewer" module](http://open.silverstripe.org/browser/modules/docsviewer/trunk) can be used
+The ["docsviewer" module](https://github.com/silverstripe/silverstripe-docsviewer) can be used
 to list and render content inside a `docs/` folder (although it is not required, Markdown is designed
 to be readable in plain text as well).
 
@@ -120,7 +120,6 @@ to be readable in plain text as well).
 In return for all your hard work in putting a high-quality module on the site, the SilverStripe project has the following 
 options to support you:
 
-*  Use of [trac](http://open.silverstripe.org) to keep your bugs and feature requests organised
 *  Advertising of your module on the http://silverstripe.org/modules/ modules page once it has reached a beta stage and shown
 to meet our requirements above.
 *  We might showcase your module on our blog and/or newsletter, when it's first released and/or when a major version with

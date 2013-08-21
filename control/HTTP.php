@@ -41,39 +41,76 @@ class HTTP {
 	 */
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
-		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) :'
-			. ' ( (preg_match("/^[A-Za-z]+:/", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
+		return HTTP::urlRewriter($html, function($url) {
+			return Director::absoluteURL($url, true);
+		});
 	}
 
-	/*
-	 * Rewrite all the URLs in the given content, evaluating the given string as PHP code
+	/**
+	 * Rewrite all the URLs in the given content, evaluating the given string as PHP code.
 	 *
 	 * Put $URL where you want the URL to appear, however, you can't embed $URL in strings
 	 * Some example code:
-	 *  '"../../" . $URL'
-	 *  'myRewriter($URL)'
-	 *  '(substr($URL,0,1)=="/") ? "../" . substr($URL,1) : $URL'
+	 * <ul>
+	 * <li><code>'"../../" . $URL'</code></li>
+	 * <li><code>'myRewriter($URL)'</code></li>
+	 * <li><code>'(substr($URL,0,1)=="/") ? "../" . substr($URL,1) : $URL'</code></li>
+	 * </ul>
+	 * 
+	 * As of 3.2 $code should be a callable which takes a single parameter and returns
+	 * the rewritten URL. e.g.
+	 * 
+	 * <code>
+	 * function($url) { 
+	 *		return Director::absoluteURL($url, true);
+	 * }
+	 * </code>
+	 * 
+	 * @param string $content The HTML to search for links to rewrite
+	 * @param string|callable $code Either a string that can evaluate to an expression
+	 * to rewrite links (depreciated), or a callable that takes a single 
+	 * parameter and returns the rewritten URL
+	 * @return The content with all links rewritten as per the logic specified in $code
 	 */
 	public static function urlRewriter($content, $code) {
+		if(!is_callable($code)) {
+			Deprecation::notice(3.1, 'HTTP::urlRewriter expects a callable as the second parameter');
+		}
+		
+		// Replace attributes
 		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
 			else $tagPrefix = "";
 
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *\")([^\"]*)(\")/ie";
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *')([^']*)(')/ie";
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/ie";
+			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *\")([^\"]*)(\")/i";
+			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *')([^']*)(')/i";
+			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/i";
 		}
-		$regExps[] = '/(background-image:[^;]*url *\()([^)]+)(\))/ie';
-		$regExps[] = '/(background:[^;]*url *\()([^)]+)(\))/ie';
-		$regExps[] = '/(list-style-image:[^;]*url *\()([^)]+)(\))/ie';
-		$regExps[] = '/(list-style:[^;]*url *\()([^)]+)(\))/ie';
+		// Replace css styles
+		// @todo - http://www.css3.info/preview/multiple-backgrounds/
+		$styles = array('background-image', 'background', 'list-style-image', 'list-style', 'content');
+		foreach($styles as $style) {
+			$regExps[] = "/($style:[^;]*url *\(\")([^\"]+)(\"\))/i";
+			$regExps[] = "/($style:[^;]*url *\(')([^']+)('\))/i";
+			$regExps[] = "/($style:[^;]*url *\()([^\"\)')]+)(\))/i";
+		}
 
-		// Make
-		$code = 'stripslashes("$1") . (' . str_replace('$URL', 'stripslashes("$2")', $code) . ') . stripslashes("$3")';
-
+		// Callback for regexp replacement
+		$callback = function($matches) use($code) {
+			if(is_callable($code)) {
+				$rewritten = $code($matches[2]);
+			} else {
+				// Expose the $URL variable to be used by the $code expression
+				$URL = $matches[2];
+				$rewritten = eval("return ($code);");
+			}
+			return $matches[1] . $rewritten . $matches[3];
+		};
+		
+		// Execute each expression
 		foreach($regExps as $regExp) {
-			$content = preg_replace($regExp, $code, $content);
+			$content = preg_replace_callback($regExp, $callback, $content);
 		}
 
 		return $content;

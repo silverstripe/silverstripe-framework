@@ -315,6 +315,12 @@ class TestRunner extends Controller {
 		$phpunitwrapper->setSuite($suite);
 		$phpunitwrapper->setCoverageStatus($coverage);
 
+		// Make sure TearDown is called (even in the case of a fatal error)
+		$self = $this;
+		register_shutdown_function(function() use ($self) {
+			$self->tearDown();
+		});
+
 		$phpunitwrapper->runTests();
 
 		// get results of the PhpUnitWrapper class

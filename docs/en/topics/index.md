@@ -4,6 +4,7 @@ This section provides an overview on how things fit together, the "conceptual gl
 It is where most documentation should live, and is the natural "second step" after finishing the tutorials.
 
  * [Access Control and Page Security](access-control): Restricting access and setting up permissions on your website
+ * [Caching](caching): Explains built-in caches for classes, config and templates. How to use your own caches.
  * [Command line Usage](commandline): Calling controllers via the command line interface using `sake`
  * [Configuring your website](configuration): How to configure the `_config.php` file
  * [Controller](controller): The intermediate layer between your templates and the data model
@@ -24,6 +25,7 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Page Types](page-types): What is a "page type" and how do you create one?
  * [Search](search): Searching for properties in the database as well as other documents
  * [Security](security): How to develop secure SilverStripe applications with good code examples
+ * [Shortcodes](shortcodes): Use simple placeholders for powerful content replacements like multimedia embeds
  * [Templates](templates): SilverStripe template syntax: Variables, loops, includes and much more
  * [Testing](testing): Functional and Unit Testing with PHPUnit and SilverStripe's testing framework
  * [Developing Themes](theme-development): Package templates, images and CSS to a reusable theme

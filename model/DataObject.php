@@ -731,6 +731,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * Return all currently fetched database fields.
+	 *
+	 * This function is similar to toMap() but doesn't trigger the lazy-loading of all unfetched fields.
+	 * Obviously, this makes it a lot faster.
+	 *
+	 * @return array The data as a map.
+	 */
+	public function getQueriedDatabaseFields() {
+		return $this->record;
+	}
+
+	/**
 	 * Update a number of fields on this object, given a map of the desired changes.
 	 * 
 	 * The field names can be simple names, or you can use a dot syntax to access $has_one relations.
@@ -2075,7 +2087,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
 		if(!is_numeric($this->record['ID'])) return false;
 
-		$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
+		// Limit query to the current record, unless it has the Versioned extension,
+		// in which case it requires special handling through augmentLoadLazyFields()
+		if(!$this->hasExtension('Versioned')) {
+			$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
+		}
+
 		$columns = array();
 
 		// Add SQL for fields, both simple & multi-value
@@ -2088,7 +2105,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if ($columns) {
-			$query = $dataQuery->query(); // eh?
+			$query = $dataQuery->query();
+			$this->extend('augmentLoadLazyFields', $query, $dataQuery, $this);
 			$this->extend('augmentSQL', $query, $dataQuery);
 
 			$dataQuery->setQueriedColumns($columns);
@@ -2971,6 +2989,46 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function baseTable() {
 		$tableClasses = ClassInfo::dataClassesFor($this->class);
 		return array_shift($tableClasses);
+	}
+
+	/**
+	 * @var Array Parameters used in the query that built this object.
+	 * This can be used by decorators (e.g. lazy loading) to 
+	 * run additional queries using the same context.
+	 */
+	protected $sourceQueryParams;
+
+	/**
+	 * @see $sourceQueryParams
+	 * @return array
+	 */
+	public function getSourceQueryParams() {
+		return $this->sourceQueryParams;
+	}
+
+	/**
+	 * @see $sourceQueryParams
+	 * @param array
+	 */
+	public function setSourceQueryParams($array) {
+		$this->sourceQueryParams = $array;
+	}
+
+	/**
+	 * @see $sourceQueryParams
+	 * @param array
+	 */
+	public function setSourceQueryParam($key, $value) {
+		$this->sourceQueryParams[$key] = $value;
+	}
+
+	/**
+	 * @see $sourceQueryParams
+	 * @return Mixed
+	 */
+	public function getSourceQueryParam($key) {
+		if(isset($this->sourceQueryParams[$key])) return $this->sourceQueryParams[$key];
+		else return null;
 	}
 
 	//-------------------------------------------------------------------------------------------//

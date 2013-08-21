@@ -9,13 +9,13 @@ The current maintainer responsible for planning and performing releases is Ingo 
 
 ## Release Planning
 
-Our most up-to-date release plans are typically in the [roadmap](http://open.silverstripe.com/roadmap).
+Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/silverstripe-framework/issues/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/issues/milestones).
 New features and API changes are typically discussed on the [core
 mailinglist](http://groups.google.com/group/silverstripe-dev). They are prioritized by the core team as tickets on 
-[open.silverstripe.org](http://open.silverstripe.com/). 
+github.com. 
 
 Release dates are usually not published prior to the release, but you can get a good idea of the release status by
-reviewing the [release milestone](http://open.silverstripe.com/roadmap) on open.silverstripe.org. Releases will be
+reviewing the release milestone on github.com. Releases will be
 announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
 
 Releases of the *cms* and *framework* modules are coupled at the moment, they follow the same numbering scheme. Module
@@ -124,8 +124,8 @@ released version (e.g. 3.1.1), the target version becomes 3.2 instead.
 
 ### Reporting an issue
 
-Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). Please don't file security
-issues in our [bugtracker](http://open.silverstripe.org). 
+Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). 
+Please don't file security issues in our [bugtracker](/misc/contributing/issues). 
 
 ### Acknowledgement and disclosure
 

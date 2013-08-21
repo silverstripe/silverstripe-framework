@@ -1,7 +1,7 @@
 # Gridfield
 
 Gridfield is SilverStripe's implementation of data grids. Its main purpose is to display tabular data
-in a format that is easy to view and modify. It's a can be thought of as a HTML table with some tricks.
+in a format that is easy to view and modify. It can be thought of as a HTML table with some tricks.
 
 It's built in a way that provides developers with an extensible way to display tabular data in a 
 table and minimise the amount of code that needs to be written.
@@ -42,7 +42,7 @@ Here is an example where we display a basic gridfield with the default settings:
 	:::php
 	class GridController extends Page_Controller {
 
-		static $allowed_actions = array('index');
+		static $allowed_actions = array('index', 'AllPages');
 		
 		public function index(SS_HTTPRequest $request) {
 			$this->Content = $this->AllPages();

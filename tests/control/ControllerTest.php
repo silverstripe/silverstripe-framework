@@ -55,6 +55,20 @@ class ControllerTest extends FunctionalTest {
 			'even if action is unsecured on parent class'
 		);
 
+		$response = $this->get("ControllerTest_AccessSecuredController/templateaction");
+		$this->assertEquals(403, $response->getStatusCode(),
+			'Access denied on action with $allowed_actions on defining controller, ' .
+			'if action is not a method but rather a template discovered by naming convention'
+		);
+
+		$this->session()->inst_set('loggedInAs', $adminUser->ID);
+		$response = $this->get("ControllerTest_AccessSecuredController/templateaction");
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Access granted for logged in admin on action with $allowed_actions on defining controller, ' .
+			'if action is not a method but rather a template discovered by naming convention'
+		);
+		$this->session()->inst_set('loggedInAs', null);
+
 		$response = $this->get("ControllerTest_AccessSecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode(),
 			'Access denied on action with $allowed_actions on defining controller, ' .
@@ -296,6 +310,12 @@ class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseCo
 	static $allowed_actions = array(
 		"onlysecuredinsubclassaction" => 'ADMIN',
 		"adminonly" => "ADMIN",
+		// Defined as ControllerTest_templateaction
+		'templateaction' => 'ADMIN'
+	);
+
+	protected $templates = array(
+		'templateaction' => 'ControllerTest_templateaction'
 	);
 		
 	// Accessible by ADMIN only
@@ -315,6 +335,7 @@ class ControllerTest_AccessSecuredController extends ControllerTest_AccessBaseCo
 	public function adminonly() {
 		return "You must be an admin!";
 	}
+
 }
 
 /**

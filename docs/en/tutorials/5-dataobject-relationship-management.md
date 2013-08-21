@@ -293,19 +293,19 @@ a named list of object.
 						</tr>
 					</thead>
 					<tbody>
-					<% loop Children %>
+					<% loop $Children %>
 						<tr>
 							<td>
 								<a href="$Link">$Title</a>
 							</td>	
 							<td>
-								<% loop Students %>	                            
-									$Name ($University)<% if Last !=1 %>,<% end_if %>
+								<% loop $Students %>	                            
+									$Name ($University)<% if $Last !=1 %>,<% end_if %>
 								<% end_loop %>
 							</td>    
 							<td>
-								<% loop Mentor %>
-									$Name<% if Last !=1 %>,<% end_if %>
+								<% loop $Mentor %>
+									$Name<% if $Last !=1 %>,<% end_if %>
 								<% end_loop %>
 							</td>
 						</tr>
@@ -343,9 +343,9 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 			<div class="content">
 				$Content
 				<h2>Students</h2>
-				<% if Students %>
+				<% if $Students %>
 					<ul>
-					<% loop Students %>
+					<% loop $Students %>
 						<li>$Name ($University)</li>
 					<% end_loop %>
 					</ul>
@@ -353,9 +353,9 @@ we can access the "Students" and "Mentors" relationships directly in the templat
 					<p>No students found</p>
 				<% end_if %>
 				<h2>Mentors</h2>
-				<% if Mentors %>
+				<% if $Mentors %>
 					<ul>
-					<% loop Mentors %>
+					<% loop $Mentors %>
 						<li>$Name</li>
 					<% end_loop %>
 					</ul>
@@ -392,7 +392,7 @@ To use this template, we need to add a new method to our student class:
 
 Replace the student template code in both `Project.ss`
 and `ProjectHolder.ss` templates with the new placeholder, `$Info`.
-That's the code enclosed in `<% loop Students %>` and `<% end_loop %>`.
+That's the code enclosed in `<% loop $Students %>` and `<% end_loop %>`.
 With this pattern, you can increase code reuse across templates.
 
 ## Summary

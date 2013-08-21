@@ -24,9 +24,9 @@
 					</span>
 					<span class="sortLink <% if SortBy %><% else %>sortLinkHidden<% end_if %>">
 					<% if SortDirection = desc %>
-						<a href="$SortLink"><img src="$ModulePath(framework)/images/bullet_arrow_up.png" alt="<% _t('TableListField.ss.SORTDESC', 'Sort in descending order') %>" /></a>
+						<a href="$SortLink"><img src="$ModulePath(framework)/images/bullet_arrow_up.png" alt="<% _t('TableListField_ss.SORTDESC', 'Sort in descending order') %>" /></a>
 					<% else %>
-						<a href="$SortLink"><img src="$ModulePath(framework)/images/bullet_arrow_down.png" alt="<% _t('TableListField.ss.SORTASC', 'Sort in ascending order') %>" /></a>
+						<a href="$SortLink"><img src="$ModulePath(framework)/images/bullet_arrow_down.png" alt="<% _t('TableListField_ss.SORTASC', 'Sort in ascending order') %>" /></a>
 					<% end_if %>
 						</a>
 						&nbsp;
@@ -67,7 +67,7 @@
 				<% else %>
 					<tr class="notfound">
 						<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-						<td colspan="$Headings.Count"><i><% _t('TableListField.ss.NOITEMSFOUND','No items found') %></i></td>
+						<td colspan="$Headings.Count"><i><% _t('TableListField_ss.NOITEMSFOUND','No items found') %></i></td>
 						<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
 					</tr>
 				<% end_if %>

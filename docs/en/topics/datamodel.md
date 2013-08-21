@@ -393,7 +393,7 @@ but using the *obj()*-method or accessing through a template will cast the value
 	
 	  // $myPlayer->MembershipFee() returns a float (e.g. 123.45)
 	  // $myPlayer->obj('MembershipFee') returns a object of type Currency
-	  // In a template: <% loop MyPlayer %>MembershipFee.Nice<% end_loop %> returns a casted string (e.g. "$123.45")
+	  // In a template: <% loop $MyPlayer %>MembershipFee.Nice<% end_loop %> returns a casted string (e.g. "$123.45")
 	  public function getMembershipFee() {
 	    return $this->Team()->BaseFee * $this->MembershipYears;
 	  }

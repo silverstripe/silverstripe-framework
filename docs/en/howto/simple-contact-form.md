@@ -44,7 +44,7 @@ First we create all the fields we want in the contact form, and put them inside 
 We then create a `[api:FieldList]` of the form actions, or the buttons that submit the form. Here we add a single form action, with the name 'submit', and the label 'Submit'. We'll use the name of the form action later.
 
 	:::php
-	return new Form('Form', $this, $fields, $actions);
+	return new Form($this, 'Form', $fields, $actions);
 
 Finally we create the `Form` object and return it. The first argument is the name of the form – this has to be the same as the name of the function that creates the form, so we've used 'Form'. The second argument is the controller that the form is on – this is almost always $this. The third and fourth arguments are the fields and actions we created earlier.
 
@@ -61,7 +61,7 @@ Now that we have a contact form, we need some way of collecting the data submitt
 
 	:::php
 	class ContactPage_Controller extends Page_Controller {
-		static $allowed_actions = array('Form');
+		private static $allowed_actions = array('Form');
 		public function Form() {
 			// ...
 		}

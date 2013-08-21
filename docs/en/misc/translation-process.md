@@ -14,12 +14,20 @@ See [i18n](/topics/i18n#collecting-text) for more details.
 
 ### Import master files
 
-If you don't have an account on getlocalization.com yet, [create one](http://www.getlocalization.com/signup).
-Choose the free option for public repositories.
+If you don't have an account on transifex.com yet, [create a free account now](http://www.transifex.com/signup).
+After creating a new project, you have to upload the `en.yml` master file as a new "Resource".
+While you can do this through the web interface, there's a convenient 
+[commandline client](http://support.transifex.com/customer/portal/topics/440187-transifex-client/articles)
+for this purpose. In order to use it, set up a new `.tx/config` file in your module folder:
 
-On the "Files" tab, you can choose "Import from SCM",
-and connect getlocalization to your github account.
-Alternatively, upload the `en.yml` file in the "Ruby on Rails" format.
+	[main]
+	host = https://www.transifex.com
+
+	[my-project.master]
+	file_filter = lang/<lang>.yml
+	source_file = lang/en.yml
+	source_lang = en
+	type = YML
 
 If you don't have existing translations,
 your project is ready to go - simply point translators
@@ -28,65 +36,48 @@ to the URL, have them sign up, and they can create languages and translations as
 ### Import existing translations
 
 In case you have existing translations in YML format,
-there's a "New language file" option in the "Files" tab.
-
-IMPORTANT: Composite locales need to be uploaded with 
-a dash separator, which is different from the core format (underscores).
-For example, to upload a file called en_GB.yml,
-change the first line in this file from "en_GB" to "en-GB".
+there's a "New language" option in the web interface.
+Alternatively, use the [commandline client](http://support.transifex.com/customer/portal/topics/440187-transifex-client/articles).
 
 ### Export existing translations
 
-As a project maintainer, you have the permission can simply download the whole language pack as a ZIP archive
-and add it to your project. But for composite locales (e.g. "en-GB"),
-you have to change the keys in the first line of the file.
-
-We encourage you to use the SilverStripe build tools for this instead,
-as they run some additional sanity checks. They require the "phing" tool.
-Create a 'translation-staging' branch in your module before starting,
-and merge it back manually to your 'master' as required.
-
-Install the [buildtools](https://github.com/silverstripe/silverstripe-buildtools) project.
-
-	# Add your own getlocalization config to 'build.properties'
-	cp buildtools/build.properties.default build.properties
-	phing -Dmodule=<yourmodule> -propertyfile build.properties translations-sync
+You can download new translations in YML format through the web interface,
+but that can get quite tedious for more than a handful of translations.
+Again, the [commandline client](http://support.transifex.com/customer/portal/topics/440187-transifex-client/articles)
+provides a more convenient interface here with the `tx pull` command, downloading all translations as a batch.
 
 ### Merge back existing translations
 
-Since the latest translations are downloaded into a "translations-staging"
-branch, you need to get them back into your main project repository.
-This depends on your release strategy: For simpler modules,
-just merge back to master:
+If you want to backport translations onto release branches, simply run the `tx pull` command on multiple branches.
+This assumes you're adhereing to the following guidelines:
 
-	git checkout master
-	git merge translations-staging
-
-In case you are maintaining release branches, its a bit more complicated:
-The "translations-staging" branch is (correctly) based off master,
-but you don't want to merge all other master changes into your release branch.
-Use the following task to copy & commit the specific files instead:
-
-	phing -Dmodule=<yourmodule> translations-mergeback
+ - For significantly changed content of an entity, create a new entity key
+ - For added/removed placeholders, create a new entity
+ - Run the `i18nTextCollectorTask` with the `merge=true` option to avoid deleting unused entities
+   (which might still be relevant in older release branches)
 
 ### Converting your language files from 2.4 PHP format
 
 The conversion from PHP format to YML is taken care of by a module
 called [i18n_yml_converter](https://github.com/chillu/i18n_yml_converter).
 
-## Download Translations from GetLocalization.com
+## Download Translations from Transifex.com
 
-We are managing our translations through a tool called [getlocalization.com](http://getlocalization.com).
-Most modules are managed under the "silverstripe" user there,
-see [list of translatable modules](http://www.getlocalization.com/profile/?username=silverstripe).
+We are managing our translations through a tool called [transifex.com](http://transifex.com).
+Most modules are handled under the "silverstripe" user,
+see [list of translatable modules](https://www.transifex.com/accounts/profile/silverstripe/).
 
-Translations are exported from there into YML files, generated every hour,
-and committed to a special "translation-staging" branch on github.
-You can download individual files by opening them on github.com (inside the `lang/` folder), and using the "Raw" view.
-Place those files in the appropriate directories on a local silverstripe installation. 
+Translations need to be reviewed before being committed,
+which is a process that happens roughly once per month.
+We're merging back translations into all supported release branches as well as the `master` branch.
+The following script should be applied to the oldest release branch, and then merged forward into newer branches:
+	
+	tx pull
+	# Manually review changes through git diff
+	git add lang/*
+	git commit -m "Updated translations"
 
- * ["translation-staging" branch for framework module](https://github.com/silverstripe/sapphire/tree/translation-staging)
- * ["translation-staging" branch for cms module](https://github.com/silverstripe/silverstripe-cms/tree/translation-staging)
+You can download your work right from Transifex in order to speed up the process for your desired language.
 
 # Related
 

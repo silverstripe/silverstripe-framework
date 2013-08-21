@@ -426,8 +426,8 @@ class DataQuery {
 			$clone->query->addHaving($having);
 			return $clone;
 		} else {
-			return $this;
-		}
+		return $this;
+	}
 	}
 
 	/**
@@ -450,8 +450,8 @@ class DataQuery {
 			$clone->query->addWhere($filter);
 			return $clone;
 		} else {
-			return $this;
-		}
+		return $this;
+	}
 	}
 
 	/**
@@ -469,8 +469,8 @@ class DataQuery {
 			$clone->query->addWhereAny($filter);
 			return $clone;
 		} else {
-			return $this;
-		}
+		return $this;
+	}
 	}
 	
 	/**
@@ -535,10 +535,10 @@ class DataQuery {
 			}
 			return $clone;
 		} else {
-			return $this;
-		}
+		return $this;
 	}
-	
+	}
+
 	/**
 	 * Add an INNER JOIN clause to this query.
 	 * 
@@ -552,8 +552,8 @@ class DataQuery {
 			$clone->query->addInnerJoin($table, $onClause, $alias);
 			return $clone;
 		} else {
-			return $this;
-		}
+		return $this;
+	}
 	}
 
 	/**
@@ -569,8 +569,8 @@ class DataQuery {
 			$clone->query->addLeftJoin($table, $onClause, $alias);
 			return $clone;
 		} else {
-			return $this;
-		}
+		return $this;
+	}
 	}
 
 	/**
@@ -662,7 +662,7 @@ class DataQuery {
 	 * @param string $field 
 	 */
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
-		$subSelect= $subtractQuery->getFinalisedQuery();
+		$subSelect = $subtractQuery->getFinalisedQuery();
 		$fieldExpression = $this->expressionForField($field, $subSelect);
 		$subSelect->setSelect(array());
 		$subSelect->selectField($fieldExpression, $field);
@@ -714,7 +714,7 @@ class DataQuery {
 		// Special case for ID
 		if($field == 'ID') {
 			$baseClass = ClassInfo::baseDataClass($this->dataClass);
-			return "\"$baseClass\".\"ID\"";
+			return "\"$baseClass\".\"ID\"";	
 
 		} else {
 			return $query->expressionForField($field);
@@ -754,5 +754,13 @@ class DataQuery {
 		if(isset($this->queryParams[$key])) return $this->queryParams[$key];
 		else return null;
 	}
-	
+
+	/**
+	 * Returns all query parameters
+	 * @return array query parameters array
+	 */
+	public function getQueryParams() {
+		return $this->queryParams;
+	}
+
 }

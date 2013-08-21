@@ -1,13 +1,13 @@
 # Written Tutorials
 
  * [Tutorial 1: Building a basic site](1-building-a-basic-site): An introduction to building a site with
-SilverStripe
+SilverStripe.
  * [Tutorial 2: Extending a basic site](2-extending-a-basic-site): A tutorial that builds on "Building a basic
-site"
+site".
  * [Tutorial 3: Forms](3-forms): An introduction to forms in SilverStripe.
  * [Tutorial 4: Site Search](4-site-search): Learn how to add search to your site.
  * [Tutorial 5: Dataobject Relationship Management](5-dataobject-relationship-management): Learn how to create
-a simple data relationships
+simple data relationships.
 
 #  Video tutorials
 
@@ -20,4 +20,4 @@ a simple data relationships
 
  * [Common Problems](/installation/common-problems): Review some existing solutions to common problems.
  * [SilverStripe Forums](http://www.silverstripe.com/silverstripe-forum/): Head over to the forums and ask the community
-for help
+for help.

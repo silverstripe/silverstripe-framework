@@ -936,7 +936,7 @@ class File extends DataObject {
 		if(!is_array($exts)) $exts = array($exts);
 		
 		foreach($exts as $ext) {
-			if(!is_subclass_of($ext, 'File')) {
+			if(!is_subclass_of($class, 'File')) {
 				throw new InvalidArgumentException(
 					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
 				);

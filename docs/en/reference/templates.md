@@ -26,9 +26,9 @@ Here is a very simple template:
 				<p>Welcome $FirstName $Surname.</p>
 			<% end_with %>
 			
-			<% if Dishes %>
+			<% if $Dishes %>
 			<ul>
-				<% loop Dishes %>	  
+				<% loop $Dishes %>	  
 					<li>$Title ($Price.Nice)</li>
 				<% end_loop %>
 			</ul>
@@ -106,7 +106,7 @@ The "include" tag can be particularly helpful for nested functionality. In this 
 a variable is true
 
 	:::ss
-	<% if CurrentMember %>
+	<% if $CurrentMember %>
 		<% include MembersOnlyInclude %>
 	<% end_if %>
 
@@ -114,7 +114,7 @@ Includes can't directly access the parent scope of the scope active when the inc
 pass arguments to the include, which are available on the scope top within the include
 
 	:::ss
-	<% with CurrentMember %>
+	<% with $CurrentMember %>
 		<% include MemberDetails PageTitle=$Top.Title, PageID=$Top.ID %>
 	<% end_with %>
 
@@ -146,7 +146,7 @@ quotes, `kipper`, which is a **literal**. If true, the text inside the if-block
 is output.
 
 	:::ss
-	<% if $MyDinner="kipper" %>
+	<% if $MyDinner=="kipper" %>
 		Yummy, kipper for tea.
 	<% end_if %>
 
@@ -159,7 +159,7 @@ This example shows the use of the `else` option. The markup after `else` is
 output if the tested condition is *not* true.
 
 	:::ss
-	<% if $MyDinner="kipper" %>
+	<% if $MyDinner=="kipper" %>
 		Yummy, kipper for tea
 	<% else %>
 		I wish I could have kipper :-(
@@ -171,9 +171,9 @@ and the markup for that condition is used. If none of the conditions are true,
 the markup in the `else` clause is used, if that clause is present.
 
 	:::ss
-	<% if $MyDinner="quiche" %>
+	<% if $MyDinner=="quiche" %>
 		Real men don't eat quiche
-	<% else_if $MyDinner=$YourDinner %>
+	<% else_if $MyDinner==$YourDinner %>
 		We both have good taste
 	<% else %>
 		Can I have some of your chips?
@@ -214,11 +214,17 @@ collection of items. For example:
 		<% end_loop %>
 	</ul>
 
-This loops over the children of a page, and generates an unordered list showing 
-the `Title` property from each one. Note that `$Title` *inside* the loop refers 
-to the `Title` property on each object that is looped over, not the current page. 
-To refer to the current page's `Title` property inside the loop, you can do 
+This loops over the children of a page, and generates an unordered list showing
+the `Title` property from each one. Note that `$Title` *inside* the loop refers
+to the `Title` property on each object that is looped over, not the current page.
+This is know as the `Scope` of the template. For more information about `Scope`
+see the section below.
+
+To refer to the current page's `Title` property inside the loop, you can do
 `$Up.Title`. More about `Up` later.
+
+`$Me` can be used to refer to the current object context the template is rendered
+with.
 
 ### Position Indicators
 
@@ -231,6 +237,50 @@ current position in the list and iteration:
  * `$FirstLast`: Returns a string, "first", "last", or "". Useful for CSS classes.
  * `$Pos`: The current position in the list (integer). Will start at 1.
  * `$TotalItems`: Number of items in the list (integer)
+
+### Altering the list
+
+`<% loop %>` statements iterate over a `[api:DataList]` instance. As the
+template has access to the list object, templates can call `[api:DataList]`
+functions. For instance, see the following examples:
+
+Providing a custom sort.
+
+	:::ss
+	<ul>
+		<% loop $Children.Sort(Title) %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
+
+Limiting the number of items displayed.
+
+	:::ss
+	<ul>
+		<% loop $Children.Limit(10) %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
+
+Reversing the loop.
+
+	:::ss
+	<ul>
+		<% loop $Children.Reverse %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
+
+
+The `DataList` class also supports chaining methods. For example, to reverse
+the list and output the last 3 items we would write:
+
+	:::ss
+	<ul>
+		<% loop $Children.Reverse.Limit(3) %>
+			<li>$Title</li>
+		<% end_loop %>
+	</ul>
 
 ### Modulus and MultipleOf
 
@@ -245,7 +295,7 @@ custom column names based on your loop statement. Note that this works for any
 control statement (not just children).
 
 	:::ss
-	<% loop Children %>
+	<% loop $Children %>
 	<div class="column-{$Modulus(4)}">
 		...
 	</div>
@@ -258,8 +308,8 @@ You can also use $MultipleOf(value, offset) to help build columned layouts. In
 this case we want to add a <br> after every 3th item.
 
 	:::ss
-	<% loop Children %>
-		<% if MultipleOf(3) %>
+	<% loop $Children %>
+		<% if $MultipleOf(3) %>
 			<br>
 		<% end_if %>
 	<% end_loop %>
@@ -282,11 +332,11 @@ the scope back to the previous level. Take the following example:
 	:::ss
 	$Title
 	--
-	<% loop Children %>
+	<% loop $Children %>
 		$Title
 		$Up.Title
 		--
-		<% loop Children %>
+		<% loop $Children %>
 			$Title
 			$Up.Title
 		<% end_loop %>
@@ -314,12 +364,12 @@ include `$Top`:
 	:::ss
 	$Title
 	--
-	<% loop Children %>
+	<% loop $Children %>
 		$Title
 		$Up.Title
 		$Top.Title
 		--
-		<% loop Children %>
+		<% loop $Children %>
 			$Title
 			$Up.Title
 			$Top.Title
@@ -452,11 +502,11 @@ It renders in the template as `<base href="http://www.mydomain.com" /><!--[if lt
 
 Returns the currently logged in member, if there is one.  
 All of their details or any special Member page controls can be called on this.  
-Alternately, you can use `<% if CurrentMember %>` to detect whether someone has logged
+Alternately, you can use `<% if $CurrentMember %>` to detect whether someone has logged
 in. 
 
 	:::ss
-	<% if CurrentMember %>
+	<% if $CurrentMember %>
 	  Welcome Back, $CurrentMember.FirstName
 	<% end_if %>
 
@@ -491,7 +541,7 @@ Your function could return a single value as above or it could be a subclass of 
 And now you could call these values by using
 
 	:::ss
-	<% with MyCustomValues %>
+	<% with $MyCustomValues %>
 	$Hi , $Name
 	<% end_with %>
 	// output "Kia Ora , John Smith" 

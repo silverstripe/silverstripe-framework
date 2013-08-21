@@ -120,4 +120,84 @@ class HTTPTest extends SapphireTest {
 			HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd'));
 		$this->assertEquals('audio/x-wav', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.wav'));
 	}
+	
+	/**
+	 * Test that absoluteURLs correctly transforms urls within CSS to absolute
+	 */
+	public function testAbsoluteURLsCSS() {
+		$this->withBaseURL('http://www.silverstripe.org/', function($test){
+			
+			// background-image
+			// Note that using /./ in urls is absolutely acceptable
+			$test->assertEquals(
+				'<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">'.
+				'Content</div>',
+				HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
+			);
+			
+			// background
+			$test->assertEquals(
+				'<div style="background: url(\'http://www.silverstripe.org/images/mybackground.gif\');">Content</div>',
+				HTTP::absoluteURLs('<div style="background: url(\'images/mybackground.gif\');">Content</div>')
+			);
+			
+			// list-style-image
+			$test->assertEquals(
+				'<div style=\'background: url(http://www.silverstripe.org/list.png);\'>Content</div>',
+				HTTP::absoluteURLs('<div style=\'background: url(list.png);\'>Content</div>')
+			);
+			
+			// list-style
+			$test->assertEquals(
+				'<div style=\'background: url("http://www.silverstripe.org/./assets/list.png");\'>Content</div>',
+				HTTP::absoluteURLs('<div style=\'background: url("./assets/list.png");\'>Content</div>')
+			);
+		});
+	}
+	
+	/**
+	 * Test that absoluteURLs correctly transforms urls within html attributes to absolute
+	 */
+	public function testAbsoluteURLsAttributes() {
+		$this->withBaseURL('http://www.silverstripe.org/', function($test){
+			
+			// links
+			$test->assertEquals(
+				'<a href=\'http://www.silverstripe.org/blog/\'>SS Blog</a>',
+				HTTP::absoluteURLs('<a href=\'/blog/\'>SS Blog</a>')
+			);
+			
+			// background
+			// Note that using /./ in urls is absolutely acceptable
+			$test->assertEquals(
+				'<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">'.
+				'SS Blog</div>',
+				HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
+			);
+			
+			// image
+			$test->assertEquals(
+				'<img src=\'http://www.silverstripe.org/themes/silverstripe/images/logo-org.png\' />',
+				HTTP::absoluteURLs('<img src=\'themes/silverstripe/images/logo-org.png\' />')
+			);
+			
+			// link
+			$test->assertEquals(
+				'<link href=http://www.silverstripe.org/base.css />',
+				HTTP::absoluteURLs('<link href=base.css />')
+			);
+		});
+	}
+	
+	/**
+	 * Run a test while mocking the base url with the provided value
+	 * @param string $url The base URL to use for this test
+	 * @param callable $callback The test to run
+	 */
+	protected function withBaseURL($url, $callback) {
+		$oldBase = Director::$alternateBaseURL;
+		Director::setBaseURL($url);
+		$callback($this);
+		Director::setBaseURL($oldBase);
+	}
 }

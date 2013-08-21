@@ -149,7 +149,7 @@ class HTMLText extends Text {
 		}
 
 		// If it's got a content tag
-		if(preg_match('/<(img|embed|object|iframe)[^>]*>/i', $this->value)) {
+		if(preg_match('/<(img|embed|object|iframe|meta|source)[^>]*>/i', $this->value)) {
 			return true;
 		}
 		

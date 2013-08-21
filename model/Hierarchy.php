@@ -96,9 +96,11 @@ class Hierarchy extends DataExtension {
 	 * @param string $childrenMethod The name of the method used to get children from each object
 	 * @param boolean $rootCall Set to true for this first call, and then to false for calls inside the recursion. You
 	 *                          should not change this.
-	 * @param int $nodeCountThreshold See {@link self::$node_threshold_total}
-	 * @param callable $nodeCountCallback Called with the node count, which gives the callback an opportunity
-	 *                 to intercept the query. Useful e.g. to avoid excessive children listings (Arguments: $parent, $numChildren)
+	 * @param int $nodeCountThreshold The lower bounds for the amount of nodes to mark. If set, the logic will expand
+	 *                          nodes until it eaches at least this number, and then stops. Root nodes will always
+	 *                          show regardless of this settting. Further nodes can be lazy-loaded via ajax.
+	 *                          This isn't a hard limit. Example: On a value of 10, with 20 root nodes, each having 30
+	 *                          children, the actual node count will be 50 (all root nodes plus first expanded child).
 	 *                          
 	 * @return string
 	 */
@@ -154,8 +156,8 @@ class Hierarchy extends DataExtension {
 							$output .= $nodeCountWarning;
 							$child->markClosed();
 						} else {
-							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
-								$numChildrenMethod, false, $nodeCountThreshold);	
+						$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
+							$numChildrenMethod, false, $nodeCountThreshold);
 					} 
 					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either

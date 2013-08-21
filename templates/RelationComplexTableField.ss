@@ -34,7 +34,7 @@
 				<td colspan="$ItemCount">
 					<input type="hidden" id="{$id}_PopupHeight" value="$PopupHeight" disabled="disabled">
 					<input type="hidden" id="{$id}_PopupWidth" value="$PopupWidth" disabled="disabled">
-					<a class="popuplink addlink" href="$AddLink" alt="<% _t('RelationComplexTableField.ss.ADD', 'Add') %>"><img src="$ModulePath(framework)/images/add.gif" alt="<% _t('ADD', 'Add') %>" /><% _t('RelationComplexTableField.ss.ADD', 'Add') %> $Title</a>
+					<a class="popuplink addlink" href="$AddLink" alt="<% _t('RelationComplexTableField_ss.ADD', 'Add') %>"><img src="$ModulePath(framework)/images/add.gif" alt="<% _t('ADD', 'Add') %>" /><% _t('RelationComplexTableField_ss.ADD', 'Add') %> $Title</a>
 				</td>
 				<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 				<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>
@@ -50,7 +50,7 @@
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-					<td colspan="$Headings.Count"><i><% _t('RelationComplexTableField.ss.NOTFOUND', 'No items found') %></i></td>
+					<td colspan="$Headings.Count"><i><% _t('RelationComplexTableField_ss.NOTFOUND', 'No items found') %></i></td>
 					<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 					<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>
 					<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
@@ -61,7 +61,7 @@
 	$ExtraData
 	<div class="utility">
 		<% if Can(export) %>
-			<a href="$ExportLink" target="_blank"><% _t('RelationComplexTableField.ss.CSVEXPORT', 'Export to CSV' ) %></a>
+			<a href="$ExportLink" target="_blank"><% _t('RelationComplexTableField_ss.CSVEXPORT', 'Export to CSV' ) %></a>
 		<% end_if %>
 	</div>
 </div>

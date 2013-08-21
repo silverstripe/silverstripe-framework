@@ -24,22 +24,31 @@ ini_set('display_errors', 'on');
 error_reporting(E_ALL | E_STRICT);
 
 // Attempt to start a session so that the username and password can be sent back to the user.
-if (function_exists('session_start')) {
+if (function_exists('session_start') && !session_id()) {
 	session_start();
 }
 
 // Include environment files
 $usingEnv = false;
 $envFileExists = false;
-$envFiles = array('_ss_environment.php', '../_ss_environment.php', '../../_ss_environment.php');
-foreach($envFiles as $envFile) {
-	if(@file_exists($envFile)) {
-		include_once($envFile);
+//define the name of the environment file
+$envFile = '_ss_environment.php';
+//define the dir to start scanning from
+$dir = '.';
+//check this dir and every parent dir (until we hit the base of the drive)
+do {
+	$dir = realpath($dir) . '/';
+	//if the file exists, then we include it, set relevant vars and break out
+	if (file_exists($dir . $envFile)) {
+		include_once($dir . $envFile);
 		$envFileExists = true;
+		//legacy variable assignment
 		$usingEnv = true;
 		break;
 	}
-}
+//here we need to check that the real path of the last dir and the next one are
+// not the same, if they are, we have hit the root of the drive
+} while (realpath($dir) != realpath($dir .= '../'));
 
 if($envFileExists) {
 	if(!empty($_REQUEST['useEnv'])) {
@@ -85,7 +94,6 @@ $locales = array(
   'it_IT' => 'Italian (Italy)',
   'ja_JP' => 'Japanese (Japan)',
   'km_KH' => 'Khmer (Cambodia)',
-  'lc_XX' => 'LOLCAT',
   'lv_LV' => 'Latvian (Latvia)',
   'lt_LT' => 'Lithuanian (Lithuania)',
   'ms_MY' => 'Malay (Malaysia)',
@@ -1214,8 +1222,12 @@ PHP
 				$this->statusMessage("Checking that friendly URLs work...");
 				$this->checkRewrite();
 			} else {
+				require_once 'core/startup/ParameterConfirmationToken.php';
+				$token = new ParameterConfirmationToken('flush');
+				$params = http_build_query($token->params());
+
 				$destinationURL = 'index.php/' .
-					($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
+					($this->checkModuleExists('cms') ? "home/successfullyinstalled?$params" : "?$params");
 
 				echo <<<HTML
 				<li>SilverStripe successfully installed; I am now redirecting you to your SilverStripe site...</li>
@@ -1278,16 +1290,15 @@ HTML;
 ErrorDocument 404 /assets/error-404.html
 ErrorDocument 500 /assets/error-500.html
 
-<IfModule mod_alias.c>
-	RedirectMatch 403 /silverstripe-cache(/|$)
-	RedirectMatch 403 /vendor(/|$)
-	RedirectMatch 403 /composer\.(json|lock)
-</IfModule>
-
 <IfModule mod_rewrite.c>
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
 	$baseClause
+
+	RewriteRule ^vendor(/|$) - [F,L,NC]
+	RewriteRule silverstripe-cache(/|$) - [F,L,NC]
+	RewriteRule composer\.(json|lock) - [F,L,NC]
+	
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_URI} !\.php$
@@ -1325,7 +1336,14 @@ TEXT;
 			<requestFiltering>
 				<hiddenSegments applyToWebDAV="false">
 					<add segment="silverstripe-cache" />
+					<add segment="vendor" />
+					<add segment="composer.json" />
+					<add segment="composer.lock" />
 				</hiddenSegments>
+				<fileExtensions allowUnlisted="true" >
+					<add fileExtension=".ss" allowed="false"/>
+					<add fileExtension=".yml" allowed="false"/>
+				</fileExtensions>
 			</requestFiltering>
 		</security>
 		<rewrite>
@@ -1347,8 +1365,12 @@ TEXT;
 	}
 
 	function checkRewrite() {
+		require_once 'core/startup/ParameterConfirmationToken.php';
+		$token = new ParameterConfirmationToken('flush');
+		$params = http_build_query($token->params());
+
 		$destinationURL = str_replace('install.php', '', $_SERVER['SCRIPT_NAME']) .
-			($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
+			($this->checkModuleExists('cms') ? "home/successfullyinstalled?$params" : "?$params");
 
 		echo <<<HTML
 <li id="ModRewriteResult">Testing...</li>

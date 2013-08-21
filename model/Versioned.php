@@ -137,7 +137,7 @@ class Versioned extends DataExtension {
 	 */
 	public function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
 		$baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
-
+		
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Noop
 		case '':
@@ -255,6 +255,33 @@ class Versioned extends DataExtension {
 		default:
 			throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: "
 				. $dataQuery->getQueryParam('Versioned.mode'));
+		}
+	}
+
+	/**
+	 * For lazy loaded fields requiring extra sql manipulation, ie versioning
+	 * @param SQLQuery $query
+	 * @param DataQuery $dataQuery
+	 * @param DataObject $dataObject
+	 */
+	function augmentLoadLazyFields(SQLQuery &$query, DataQuery &$dataQuery = null, $dataObject) {
+		// The VersionedMode local variable ensures that this decorator only applies to 
+		// queries that have originated from the Versioned object, and have the Versioned 
+		// metadata set on the query object. This prevents regular queries from 
+		// accidentally querying the *_versions tables.
+		$versionedMode = $dataObject->getSourceQueryParam('Versioned.mode');
+		$dataClass = $dataQuery->dataClass();
+		$modesToAllowVersioning = array('all_versions', 'latest_versions', 'archive');
+		if(
+			!empty($dataObject->Version) &&
+			(!empty($versionedMode) && in_array($versionedMode,$modesToAllowVersioning))
+		) {
+			$dataQuery->where("\"$dataClass\".\"RecordID\" = " . $dataObject->ID);
+			$dataQuery->where("\"$dataClass\".\"Version\" = " . $dataObject->Version);
+			$dataQuery->setQueryParam('Versioned.mode', 'all_versions');
+		} else {
+			// Same behaviour as in DataObject->loadLazyFields
+			$dataQuery->where("\"$dataClass\".\"ID\" = {$dataObject->ID}")->limit(1);
 		}
 	}
 	
@@ -730,7 +757,7 @@ class Versioned extends DataExtension {
 	
 	/**
 	 * Return a list of all the versions available.
-	 * @param string $filter
+	 * @param  string $filter 
 	 */
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)

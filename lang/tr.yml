@@ -1,31 +1,18 @@
 tr:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
     NEWFOLDER: YeniKlasör
   AssetTableField:
     CREATED: 'Yüklenme tarihi'
     DIM: Boyutları
-    FILENAME: 'Dosya Adı'
+    FILENAME: Dosya Adı
     FOLDER: Klasör
     LASTEDIT: 'Güncellenme tarihi'
     OWNER: Sahibi
-    SIZE: Boyutu
+    SIZE: 'Boyutu'
     TITLE: Başlık
-    TYPE: Türü
-    URL: URL
+    TYPE: 'Türü'
   AssetUploadField:
-    ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Dosyaları buraya sürükle'
-    DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
-    EDITINFO: 'Edit files'
-    FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
-    TOUPLOAD: 'Choose files to upload...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: VEYA
   BBCodeParser:
     ALIGNEMENT: Hizalama
@@ -46,57 +33,40 @@ tr:
     LINK: 'Web sitesi linki'
     LINKDESCRIPTION: 'Başka bir web sitesine ya da URL e link'
     STRUCK: 'Üzeri Çizili Yazı'
-    STRUCKEXAMPLE: 'Üzeri Çizili'
+    STRUCKEXAMPLE: Üzeri Çizili
     UNDERLINE: 'Altı Çizili Yazı'
-    UNDERLINEEXAMPLE: 'Altı Çizili'
+    UNDERLINEEXAMPLE: Altı Çizili
     UNORDERED: 'Sıralanmamış liste'
     UNORDEREDDESCRIPTION: 'Sıralanmamış liste'
     UNORDEREDEXAMPLE1: 'sıralanmamış madde 1'
-  BackLink_Button.ss:
+  BackLink_Button_ss:
     Back: Geri
   BasicAuth:
     ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
     ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
   Boolean:
-    0: Yanlış
     ANY: Herhangi
-    1: Doğru
-  CMSLoadingScreen.ss:
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Tüm İYS arayüzlerine erişim'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Kaydet
-  CMSProfileController:
-    MENUTITLE: 'My Profile'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
     CHANGEPASSWORDTEXT2: 'Sisteme giriş yapabilmek için aşağıdaki kullanıcı bilgilerinizi kullanabilirsiniz:'
     EMAIL: E-Posta
     HELLO: Merhaba
     PASSWORD: Parola
-  CheckboxField:
-    - Yanlış
-    - Doğru
   ComplexTableField:
     CLOSEPOPUP: 'Açılır Pancereyi Kapat'
-    SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Kaydedildi %s %s %s'
-  ComplexTableField.ss:
+  ComplexTableField_ss:
     ADDITEM: '%s ekle'
-    NOITEMSFOUND: 'No items found'
     SORTASC: 'Sırala (artan)'
     SORTDESC: 'Sırala (azalan)'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Sonraki
     PREVIOUS: Önceki
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Parola Değiştir'
   CreditCardField:
     FIRST: ilk
@@ -108,194 +78,60 @@ tr:
   DataObject:
     PLURALNAME: 'Data Nesneleri'
     SINGULARNAME: 'Data Nesnesi'
-  Date:
-    DAY: gün
-    DAYS: gün
-    HOUR: saat
-    HOURS: saat
-    MIN: dakika
-    MINS: dakika
-    MONTH: ay
-    MONTHS: ay
-    SEC: saniye
-    SECS: saniye
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
-    YEAR: yıl
-    YEARS: yıl
   DateField:
-    NOTSET: ayarlanmamış
+    NOTSET: 'ayarlanmamış'
     TODAY: bugün
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
-  DatetimeField:
-    NOTSET: 'Not set'
-  Director:
-    INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Seçiniz)
-  EmailField:
-    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
     PLURALNAME: 'Eposta Geri-dönüş Kayıtları'
     SINGULARNAME: 'Eposta Geri-dönüş Kaydı'
-  Enum:
-    ANY: Any
   File:
-    AviType: 'AVI video file'
     Content: İçerik
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: 'Dosya adı'
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
+    Filename: Dosya adı
     NOFILESIZE: 'Dosya boyutu sıfır (0) bayt.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Ad
     PLURALNAME: Dosyalar
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Dosya
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
     Title: Başlık
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
-  FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    FROMFILESTORE: 'From the File Store'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
-  FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
-  Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
-  Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Merhaba
     TEXT1: 'Profilinize ait'
     TEXT2: 'şifre sıfırlama linki'
     TEXT3: için
   Form:
-    FIELDISREQUIRED: '%s alanının girilmesi zorunludur'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Girilen değer benzersiz olmalıdır'
     VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
     VALIDATIONPASSWORDSNOTEMPTY: 'Şifreler boş geçilemez'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: 'Geçerlilik tespiti'
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDATOR: Geçerlilik tespiti
   FormField:
     NONE: hiç
   GridAction:
-    DELETE_DESCRIPTION: Delete
     Delete: Sil
-    UnlinkRelation: Unlink
-  GridField:
-    Add: 'Add {name}'
-    Filter: Filter
-    FilterBy: 'Filter by '
-    Find: Find
-    LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
-  GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
-  GridFieldDetailForm:
-    CancelBtn: Cancel
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
-  GridFieldItemEditView.ss: null
   Group:
-    AddRole: 'Bu gruba rol ekleyin'
     Code: 'Grup Kodu'
-    DefaultGroupTitleAdministrators: Yöneticiler
-    DefaultGroupTitleContentAuthors: 'İçerik Editörleri'
     Description: Açıklama
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Kilitli?'
-    NoRoles: 'Rol bulunamadı'
-    PLURALNAME: Groups
     Parent: 'Ana Grup'
-    RolesAddEditLink: 'Rolleri yönet'
-    SINGULARNAME: Group
-    Sort: Sırala
+    Sort: 'Sırala'
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
-  GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor(çapa)
-    BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Bağlantı ekle'
     BUTTONREMOVELINK: 'Bağlantıyı sil'
-    BUTTONUpdate: Update
-    CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Hizalama / stil'
     CSSCLASSCENTER: 'Ortalanmış, kendi başına'
     CSSCLASSLEFT: 'Sol tarafta, metin ile çevrili.'
     CSSCLASSLEFTALONE: 'Solda, kendisinde.'
     CSSCLASSRIGHT: 'Sağ tarafta, metin ile çevrili'
-    DETAILS: Details
     EMAIL: 'Eposta adresi'
     FILE: Dosya
     FOLDER: Klasör
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Boyutlar
     IMAGEHEIGHTPX: Yükseklik
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Genişlik
-    INSERTMEDIA: 'Insert Media'
-    LINK: Link
+    LINK: 'Link'
     LINKANCHOR: 'Bu sayfadaki Anchor(çapa)'
     LINKDESCR: 'Bağlantı açıklaması'
     LINKEMAIL: 'Eposta adresi'
@@ -305,23 +141,10 @@ tr:
     LINKOPENNEWWIN: 'Bağlantı yeni bir pencerede mi açılsın?'
     LINKTO: 'Bağlantı oluştur'
     PAGE: Sayfa
-    URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
-  Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
-  ImageField:
-    IMAGE: Image
-  Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'Resim göndermek için gerekli IFrame'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Silinmiş.
-    DropdownBatchActionsDefault: Actions
     HELP: Yardım
     PAGETYPE: 'Sayfa tipi:'
     PERMAGAIN: 'İYS yönetiminden çıkış yaptınız.  Eğer tekrar giriş yapmak isterseniz, aşağıya kullanıcı adı ve şifrenizi giriniz.'
@@ -329,41 +152,28 @@ tr:
     PERMDEFAULT: 'İYS erişimi için eposta adresinizi ve parolanızı giriniz.e kolaylık sağlama'
     PLEASESAVE: 'Lütfen Sayfayı Kaydedin: Bu sayfa henüz kaydedilmediği için güncellenemedi.'
     PreviewButton: Önizleme
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Kaydedilmiş.
-    VersionUnknown: unknown
-  LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Eposta Adresi'
     IP: 'IP Adresi'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
     Status: Durum
   Member:
-    ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
-    BUTTONLOGIN: Giriş
+    BUTTONLOGIN: 'Giriş'
     BUTTONLOGINOTHER: 'Başka bir kullanıcı olarak giriş yap'
     BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
-    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
     CONFIRMPASSWORD: 'Şifreyi Onayla'
-    DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Varsayılan Yönetici'
     DefaultDateTime: varsayılan
     EMAIL: Eposta
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
     ERRORLOCKEDOUT: 'Çok miktarda başarısız oturum açma denemesinde bulunduğunuzdan dolayı hesabınız geçici olarak kullanım dışı bırakılmıştır. Lütfen 20 dakika bekleyip tekrar deneyiniz.'
     ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'
     ERRORPASSWORDNOTMATCH: 'Şu anki şifreniz doğru girilmedi, lütfen tekrar deneyin'
     ERRORWRONGCRED: 'Eposta adresi veya şifre hatalı. Lütfen tekrar deneyin.'
-    FIRSTNAME: Ad
+    FIRSTNAME: 'Ad'
     INTERFACELANG: 'Arayüz Dili'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'Yeni Şifre'
     PASSWORD: Şifre
     PLURALNAME: Üyeler
@@ -372,10 +182,7 @@ tr:
     SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
     SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
     SURNAME: Soyad
-    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Bu eposta adresine sahip bir kullanıcı zaten bulunmaktadır'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Eski şifreniz'
     belongs_many_many_Groups: Gruplar
     db_LastVisited: 'Son Ziyaret Tarihi'
@@ -387,101 +194,27 @@ tr:
   MemberAuthenticator:
     TITLE: 'E-posta & Şifre'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
     DATEFORMATBAD: 'Tarih formatı yanlış'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
-  MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
-    ResultUpdated: 'Updated {count} members'
-  MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
-  MemberTableField: null
   ModelAdmin:
     DELETE: Sil
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'CSV''den içer aktar'
-    IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'CSV dosyası ekleme'
     NOIMPORT: 'İçe aktarılacak birşey yok'
     RESET: Sıfırla
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
-  ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
-  ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
-  ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
-  MoneyField:
-    FIELDLABELAMOUNT: Amount
-    FIELDLABELCURRENCY: Currency
   NullableField:
     IsNullLabel: 'Boş değer'
-  NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
-  Pagination:
-    Page: Page
-    View: View
   Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Erişimi'
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
-  PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
-  PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
-  PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
-  RelationComplexTableField.ss:
+  RelationComplexTableField_ss:
     ADD: Ekle
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
-    BUTTONSEND: Gönder
+    BUTTONSEND: 'Gönder'
     CHANGEPASSWORDBELOW: 'Aşağıdaki formu kullanarak şifrenizi değiştirebilirsiniz.'
     CHANGEPASSWORDHEADER: 'Şifre değiştir'
     ENTERNEWPASSWORD: 'Lütfen bir şifre giriniz.'
@@ -489,88 +222,49 @@ tr:
     LOGGEDOUT: 'Çıkış yaptınız. Eğer tekrar giriş yapmak istiyorsanız lütfen kullanıcı bilgilerinizi giriniz.'
     LOGIN: 'Oturum aç'
     NOTEPAGESECURED: 'O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Rolleri grup için uygula'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
     EDITPERMISSIONS: 'Gruplardaki izinleri düzenle'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: 'Grup adı'
-    IMPORTGROUPS: 'Grupları içeri aktar'
-    IMPORTUSERS: 'Kullanıcıları içeri aktar'
     MEMBERS: Üyeler
-    MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Yeni Grup'
     PERMISSIONS: İzinler
-    ROLES: Roller
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roller
-    Users: Kullanıcılar
   SecurityAdmin_MemberImportForm:
-    BtnImport: Aktar
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
-  SilverStripeNavigator:
-    Edit: Edit
+    BtnImport: 'Aktar'
   SimpleImageField:
     NOUPLOAD: 'Henüz Resim Yüklenmemiş'
   SiteTree:
-    TABMAIN: 'Ana (Esas)'
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
+    TABMAIN: Ana (Esas)
+  TableField_ss:
     ADD: 'Yeni bir satır ekle'
-    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'CSV olarak kaydet'
     PRINT: Yazdır
-    Print: Print
-    SELECT: Seç
-  TableListField.ss:
-    NOITEMSFOUND: 'No items found'
+    SELECT: 'Seç'
+  TableListField_ss:
     SORTASC: 'Artan olarak sırala'
     SORTDESC: 'Azalan olarak sırala'
-  TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
+  TableListField_PageControls_ss:
     VIEWFIRST: 'İlkini görüntüle'
     VIEWLAST: 'Sonuncuyu görüntüle'
     VIEWNEXT: 'Sonrakini görüntüle'
     VIEWPREVIOUS: 'Öncekini görüntüle'
-  TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: 'daha az'
-    MORE: 'daha fazla'
+    LESS: daha az
+    MORE: daha fazla
   UploadField:
     ATTACHFILE: 'Dosya ekle'
     ATTACHFILES: 'Dosya ekle'
     AttachFile: 'Dosyalar ekle'
-    DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Kaydet
     DROPFILE: 'dosyası kaldır'
     DROPFILES: 'dosyaları kaldır'
-    Dimensions: Dimensions
-    EDIT: Edit
     EDITINFO: 'Dosyayı düzenle'
     FIELDNOTSET: 'Dosya bilgisi bulunamadı'
     FROMCOMPUTER: 'Kendi makinenizden'
-    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'Kimden dosyaları'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Tümünü başlat'
-    STARTALLINFO: 'Start all uploads'
     Saved: Kaydedilmiş
   Versioned:
     has_many_Versions: Versiyonlar

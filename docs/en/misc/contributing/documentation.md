@@ -12,19 +12,18 @@ and a GitHub user account.
 
 ## Editing online
 
-The easiest way of making a change to the documentation is to find the appropriate .md 
-file in the [github.com/silverstripe/sapphire](https://github.com/silverstripe/sapphire/tree/3.0/docs/) repository
+The easiest way of making a change to the documentation is by clicking the "Edit this page" link at 
+the bottom of the page you want to edit. Alternativly, you can find the appropriate .md file in 
+the [github.com/silverstripe/silverstripe-framework](https://github.com/silverstripe/silverstripe-framework/tree/3.0/docs/) repository
 and press the "edit" button.  You will need a GitHub account to do this.  You should make the changes in the lowest branch they apply to.
 
  * After you have made your change, describe it in the "commit summary" and "extended description" fields below, and press "Commit Changes".
  * After that you will see form to submit a Pull Request.  You should just be able to submit the form, and your changes will be sent to the core team for approval.
 
-Each documentation page has have an "edit" link, to make it easier for you to find this feature.
-
 ## Editing on your computer
 
 If you prefer to edit the content on your local machine, you can "[fork](http://help.github.com/forking/)" 
-the [github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire)
+the [github.com/silverstripe/silverstripe-framework](http://github.com/silverstripe/silverstripe-framework)
 and [github.com/silverstripe/silverstripe-cms](http://github.com/silverstripe/silverstripe-cms) 
 repositories and send us "[pull requests](http://help.github.com/pull-requests/)".   If you have 
 downloaded SilverStripe or a module, chances are that you already have these checkouts.

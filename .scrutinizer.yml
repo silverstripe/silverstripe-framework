@@ -1,0 +1,7 @@
+tools:
+    custom_commands:
+        -
+            scope: file
+            command: php tests/phpcs_runner.php %pathname%
+            filter:
+               excluded_paths: ["*/css/*", "css/*", "thirdparty/*", "*/jquery-changetracker/*", "parsers/HTML/BBCodeParser/*", "*/SSTemplateParser.php$", "docs/*", "*/images/*"]

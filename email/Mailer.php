@@ -424,7 +424,9 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 function QuotedPrintable_encode($quotprint) {
 		$quotprint = (string)str_replace('\r\n',chr(13).chr(10),$quotprint);
 		$quotprint = (string)str_replace('\n',  chr(13).chr(10),$quotprint);
-		$quotprint = (string)preg_replace("~([\x01-\x1F\x3D\x7F-\xFF])~e", "sprintf('=%02X', ord('\\1'))", $quotprint);
+		$quotprint = (string)preg_replace_callback("~([\x01-\x1F\x3D\x7F-\xFF])~", function($matches) {
+			return sprintf('=%02X', ord($matches[1]));
+		}, $quotprint);
 		//$quotprint = (string)str_replace('\=0D=0A',"=0D=0A",$quotprint);
 		$quotprint = (string)str_replace('=0D=0A',"\n",$quotprint);	
 		$quotprint = (string)str_replace('=0A=0D',"\n",$quotprint);	

@@ -1,300 +1,91 @@
 uk:
   AssetAdmin:
-    ALLOWEDEXTS: 'Allowed extensions'
-    NEWFOLDER: 'Нова Тека'
+    NEWFOLDER: Нова Тека
   AssetTableField:
     CREATED: 'Вперше завантажено'
     DIM: Виміри
-    FILENAME: 'Ім''я файлу'
-    FOLDER: Folder
+    FILENAME: Ім'я файлу
     LASTEDIT: 'Востаннє змінено'
     OWNER: Власник
-    SIZE: Розмір
+    SIZE: 'Розмір'
     TITLE: Назва
-    TYPE: Тип
-    URL: URL
-  AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
-    EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
-    EDITINFO: 'Edit files'
-    FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
-    FROMCOMPUTERINFO: 'Upload from your computer'
-    TOTAL: Total
-    TOUPLOAD: 'Choose files to upload...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
-  BBCodeParser:
-    ALIGNEMENT: Alignment
-    ALIGNEMENTEXAMPLE: 'right aligned'
-    BOLD: 'Bold Text'
-    BOLDEXAMPLE: Bold
-    CODE: 'Code Block'
-    CODEDESCRIPTION: 'Unformatted code block'
-    CODEEXAMPLE: 'Code block'
-    COLORED: 'Colored text'
-    COLOREDEXAMPLE: 'blue text'
-    EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
-    IMAGE: Image
-    IMAGEDESCRIPTION: 'Show an image in your post'
-    ITALIC: 'Italic Text'
-    ITALICEXAMPLE: Italics
-    LINK: 'Website link'
-    LINKDESCRIPTION: 'Link to another website or URL'
-    STRUCK: 'Struck-out Text'
-    STRUCKEXAMPLE: Struck-out
-    UNDERLINE: 'Underlined Text'
-    UNDERLINEEXAMPLE: Underlined
-    UNORDERED: 'Unordered list'
-    UNORDEREDDESCRIPTION: 'Unordered list'
-    UNORDEREDEXAMPLE1: 'unordered item 1'
-  BackLink_Button.ss:
-    Back: Back
+    TYPE: 'Тип'
   BasicAuth:
     ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
     ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
     ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
-  Boolean:
-    0: 'False'
-    ANY: Any
-    1: 'True'
-  CMSLoadingScreen.ss:
-    LOADING: Loading...
-    REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
   CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Зберегти
-  CMSProfileController:
-    MENUTITLE: 'My Profile'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
-    EMAIL: Email
     HELLO: Привіт
     PASSWORD: Пароль
-  CheckboxField:
-    - 'False'
-    - 'True'
   ComplexTableField:
     CLOSEPOPUP: 'Закрити Popup'
-    SUCCESSADD2: 'Added {name}'
-    SUCCESSEDIT: 'Saved %s %s %s'
-  ComplexTableField.ss:
-    ADDITEM: Додати
-    NOITEMSFOUND: 'No items found'
+  ComplexTableField_ss:
+    ADDITEM: 'Додати'
     SORTASC: 'За зростанням'
     SORTDESC: 'За спаданням'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Наступна
     PREVIOUS: Попередня
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Змінити пароль'
   CreditCardField:
     FIRST: перший
     FOURTH: четвертий
     SECOND: другий
     THIRD: третій
-  CurrencyField:
-    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Об’єкти даних'
     SINGULARNAME: 'Об’єкт даних'
-  Date:
-    DAY: день
-    DAYS: дні
-    HOUR: година
-    HOURS: годин
-    MIN: хв
-    MINS: хв
-    MONTH: місяць
-    MONTHS: місяці
-    SEC: сек
-    SECS: сек
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
-    YEAR: рік
-    YEARS: роки
   DateField:
     NOTSET: 'не встановлено'
     TODAY: сьогодні
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
-  DatetimeField:
-    NOTSET: 'Not set'
-  Director:
-    INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Оберіть)
-  EmailField:
-    VALIDATION: 'Please enter an email address'
-  Email_BounceRecord:
-    PLURALNAME: 'Email Bounce Records'
-    SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Будь-який
   File:
-    AviType: 'AVI video file'
-    Content: Content
-    CssType: 'CSS file'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: Filename
-    GifType: 'GIF image - good for diagrams'
-    GzType: 'GZIP compressed file'
-    HtlType: 'HTML file'
-    HtmlType: 'HTML file'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    IcoType: 'Icon image'
-    JpgType: 'JPEG image - good for photos'
-    JsType: 'Javascript file'
-    Mp3Type: 'MP3 audio file'
-    MpgType: 'MPEG video file'
-    NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'Цей файл не може бути завантаженим'
-    Name: Name
     PLURALNAME: Файли
-    PdfType: 'Adobe Acrobat PDF file'
-    PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: Файл
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    TiffType: 'Tagged image format'
-    Title: Title
-    WavType: 'WAV audo file'
-    XlsType: 'Excel spreadsheet'
-    ZipType: 'ZIP compressed file'
   FileIFrameField:
-    ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: Файл
     FROMCOMPUTER: 'З Вашого комп’ютера'
     FROMFILESTORE: 'З сервера'
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
-  FileIFrameField_iframe.ss:
-    TITLE: 'Image Uploading Iframe'
-  Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
-  Folder:
-    PLURALNAME: Folders
-    SINGULARNAME: Folder
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Привіт
-    TEXT1: 'Here is your'
-    TEXT2: 'password reset link'
-    TEXT3: for
   Form:
-    FIELDISREQUIRED: '%s є необхідним'
-    SubmitBtnLabel: Go
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'Введене значання не унікальне'
     VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
     VALIDATIONPASSWORDSNOTEMPTY: 'Паролі не можуть бути порожніми'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATOR: Validator
-    VALIDCURRENCY: 'Please enter a valid currency'
-  FormField:
-    NONE: none
-  GridAction:
-    DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
-  GridField:
-    Add: 'Add {name}'
-    Filter: Filter
-    FilterBy: 'Filter by '
-    Find: Find
-    LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
-  GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
-  GridFieldDetailForm:
-    CancelBtn: Cancel
-    Create: Create
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Save: Save
-    Saved: 'Saved %s %s'
-  GridFieldItemEditView.ss: null
   Group:
     AddRole: 'Додати роль до цієї групи'
     Code: 'Код групи'
-    DefaultGroupTitleAdministrators: Адміністратори
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Опис
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Заблокувати?'
-    NoRoles: 'Ролі не знайдені'
-    PLURALNAME: Groups
     Parent: 'Батьківська група'
     RolesAddEditLink: 'Керувати ролями'
-    SINGULARNAME: Group
-    Sort: 'Порядок сортування'
     has_many_Permissions: Права
     many_many_Members: Члени
-  GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} groups'
-    ResultDeleted: 'Deleted %d groups'
-    ResultUpdated: 'Updated %d groups'
-  Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Якір
-    BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Вставити посилання'
     BUTTONREMOVELINK: 'Вмдалити посилання'
-    BUTTONUpdate: Update
     CAPTIONTEXT: 'Текст заголовку'
     CSSCLASS: 'Вирівнювання / стиль'
     CSSCLASSCENTER: 'По центру, без тексту навколо.'
     CSSCLASSLEFT: 'Зліва, з текстом навколо.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
     CSSCLASSRIGHT: 'Справа, з текстом навколо.'
-    DETAILS: Details
     EMAIL: 'Адреса е-пошти'
     FILE: Файл
     FOLDER: Тека
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Альтернативний текст (alt) - відображається якщо зображення не відображається'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Розміри
     IMAGEHEIGHTPX: Висота
     IMAGETITLE: 'Текст заголовку (tooltip) - для додаткової інформації про зображення'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Ширина
-    INSERTMEDIA: 'Insert Media'
     LINK: 'Вставити/редагувати посилання для підсвіченого виразу'
     LINKANCHOR: 'Якір на цю сторінку'
     LINKDESCR: 'Опис посилання'
@@ -305,53 +96,24 @@ uk:
     LINKOPENNEWWIN: 'Відчиняти посилання у новому вікні?'
     LINKTO: 'Посилатися на'
     PAGE: Сторінка
-    URL: URL
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
-  Image:
-    PLURALNAME: Files
-    SINGULARNAME: File
   ImageField:
     IMAGE: Зображення
-  Image_Cached:
-    PLURALNAME: Files
-    SINGULARNAME: File
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'АйФрейм завантаження зображення'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
     HELP: Допомога
     PAGETYPE: 'Тип сторінки:'
     PERMAGAIN: 'Ви вийшли з системи. Якщо Ви хочете повторно ідентифікуватися, введіть дані нижче.'
     PERMALREADY: 'Вибачте, та Ви не маєте доступу до цієї чатини системи. Якщо Ви хочете ідентифікуватися як хтось інший, зробіть це нижче '
     PERMDEFAULT: 'Будь ласка, оберіть метод ідентифікації та введіть дані доступу до системи.'
     PLEASESAVE: 'Будь ласка, збережіть сторінку: Ця сторінка не може бути оновлена, бо вона ще не була збережена.'
-    PreviewButton: Preview
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
-    VersionUnknown: unknown
-  LeftAndMain_Menu.ss:
-    Hello: Hi
-    LOGOUT: 'Log out'
-  LoginAttempt:
-    Email: 'Email Address'
-    IP: 'IP Address'
-    PLURALNAME: 'Login Attempts'
-    SINGULARNAME: 'Login Attempt'
-    Status: Status
   Member:
-    ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Змінити пароль'
-    BUTTONLOGIN: Увійти
+    BUTTONLOGIN: 'Увійти'
     BUTTONLOGINOTHER: 'Увійдіть кимось іншим'
     BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
-    CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
     CONFIRMPASSWORD: 'Підтвердіть пароль'
-    DATEFORMAT: 'Date format'
-    DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: типовий
     EMAIL: Е-пошта
     EMPTYNEWPASSWORD: 'Новий пароль не може бути порожнім, будь-ласка, спробуйте ще раз'
@@ -362,8 +124,6 @@ uk:
     ERRORWRONGCRED: 'Здається, що це невірна адреса е-пошти чи пароль. Спробуйте повторно.'
     FIRSTNAME: 'Ім''я'
     INTERFACELANG: 'Мова Інтерфейсу'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'Новий пароль'
     PASSWORD: Пароль
     PLURALNAME: Члени
@@ -372,113 +132,25 @@ uk:
     SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
     SUBJECTPASSWORDRESET: 'Посилання на відновлення Вашого паролю'
     SURNAME: Прізвище
-    TIMEFORMAT: 'Time format'
     VALIDATIONMEMBEREXISTS: 'Вже існує користувач з таким email'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Ваш старий пароль'
     belongs_many_many_Groups: Групи
     db_LastVisited: 'Дата останнього відвідування'
-    db_Locale: 'Interface Locale'
     db_LockedOutUntil: 'Заблоковано поки'
     db_NumVisit: 'Кількість відвідувань'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
   MemberAuthenticator:
     TITLE: 'Е-пошта та Пароль'
-  MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    'APPLY FILTER': 'Apply Filter'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
-  MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
-    ResultUpdated: 'Updated {count} members'
-  MemberPassword:
-    PLURALNAME: 'Member Passwords'
-    SINGULARNAME: 'Member Password'
-  MemberTableField: null
   ModelAdmin:
-    DELETE: Delete
-    DELETEDRECORDS: 'Deleted {count} records.'
-    EMPTYBEFOREIMPORT: 'Clear Database before import'
     IMPORT: 'Імпортувати з CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    NOIMPORT: 'Nothing to import'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
-  ModelAdmin_ImportSpec.ss:
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECLINK: 'Show Specification for %s'
-    IMPORTSPECRELATIONS: Relations
-    IMPORTSPECTITLE: 'Specification for %s'
-  ModelAdmin_Tools.ss:
-    FILTER: Filter
-    IMPORT: Import
-  ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
-  NullableField:
-    IsNullLabel: 'Is Null'
-  NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
-  Pagination:
-    Page: Page
-    View: View
-  Permission:
-    AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS Access'
-    FULLADMINRIGHTS: 'Full administrative rights'
-    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
-  PermissionRole:
-    OnlyAdminCanApply: 'Only admin can apply'
-    PLURALNAME: Roles
-    SINGULARNAME: Role
-    Title: Title
-  PermissionRoleCode:
-    PLURALNAME: 'Permission Role Cods'
-    SINGULARNAME: 'Permission Role Code'
-  Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Будь ласка, введіть дійсний номер телефону'
-  RelationComplexTableField.ss:
-    ADD: Add
-    CSVEXPORT: 'Export to CSV'
-    NOTFOUND: 'No items found'
   Security:
     ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
     BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
@@ -487,63 +159,22 @@ uk:
     ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
     ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
     LOGGEDOUT: 'Ви вийшли з системи. Якщо Ви хочете знову увійти, то введіть дані нижче.'
-    LOGIN: 'Log in'
     NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Застосувати ролі до груп'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
     EDITPERMISSIONS: 'Керувати дозволами для груп'
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: 'Назва групи'
-    IMPORTGROUPS: 'Імпортувати групи'
     IMPORTUSERS: 'Імпортувати користувачів'
     MEMBERS: Члени
-    MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Нова Група'
     PERMISSIONS: Дозволи
-    ROLES: Ролі
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Ролі
-    Users: Користувачі
-  SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
-  SilverStripeNavigator:
-    Edit: Edit
   SimpleImageField:
     NOUPLOAD: 'Не завантажено жодного зображення'
   SiteTree:
     TABMAIN: Головна
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-  TableField.ss:
-    ADD: 'Add a new row'
-    ADDITEM: 'Add %s'
   TableListField:
     CSVEXPORT: 'Експортувати в CSV'
     PRINT: Друкувати
-    Print: Print
     SELECT: 'Вибрати:'
-  TableListField.ss:
-    NOITEMSFOUND: 'No items found'
-    SORTASC: 'Sort in ascending order'
-    SORTDESC: 'Sort in descending order'
-  TableListField_PageControls.ss:
-    DISPLAYING: Displaying
-    OF: of
-    TO: to
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    VIEWNEXT: 'View next'
-    VIEWPREVIOUS: 'View previous'
-  TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: менше
     MORE: більше
@@ -551,26 +182,9 @@ uk:
     ATTACHFILE: 'Прикріпити файл'
     ATTACHFILES: 'Прикріпити файли'
     AttachFile: 'Прикріпити файл(и)'
-    DELETE: 'Delete from files'
-    DELETEINFO: 'Permanently delete this file from the file store'
     DOEDIT: Зберегти
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
-    Dimensions: Dimensions
-    EDIT: Edit
     EDITINFO: 'Редагувати цей файл'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
-    FROMCOMPUTERINFO: 'Select from files'
     FROMFILES: 'З файлів'
-    HOTLINKINFO: 'Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
     REMOVEERROR: 'Помилка видалення файла'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
-    STARTALLINFO: 'Start all uploads'
-    Saved: Saved
   Versioned:
     has_many_Versions: Версіїї

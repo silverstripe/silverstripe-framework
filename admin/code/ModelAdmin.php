@@ -193,7 +193,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		$form = new Form($this, "SearchForm",
 			$context->getSearchFields(),
 			new FieldList(
-				Object::create('FormAction', 'search', _t('MemberTableField.APPLY FILTER', 'Apply Filter'))
+				Object::create('FormAction', 'search', _t('MemberTableField.APPLY_FILTER', 'Apply Filter'))
 				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive'),
 				Object::create('ResetFormAction','clearsearch', _t('ModelAdmin.RESET','Reset'))
 					->setUseButtonTag(true)

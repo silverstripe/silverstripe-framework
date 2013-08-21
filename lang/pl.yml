@@ -1,18 +1,16 @@
 pl:
   AssetAdmin:
-    ALLOWEDEXTS: 'Dopuszczalne rozszerzenia'
     NEWFOLDER: NowyFolder
   AssetTableField:
     CREATED: 'Po raz pierwszy wgrany'
     DIM: Rozmiar
-    FILENAME: 'Nazwa pliku'
-    FOLDER: Folder
+    FILENAME: Nazwa pliku
     LASTEDIT: 'Ostatnio zmieniony'
     OWNER: Właściciel
     SIZE: 'Rozmiar pliku'
     TITLE: Tytuł
     TYPE: 'Typ pliku'
-    URL: 'Adres URL'
+    URL: Adres URL
   AssetUploadField:
     ChooseFiles: 'Wybierz pliki'
     DRAGFILESHERE: 'Przeciągnij tu pliki'
@@ -41,7 +39,7 @@ pl:
     EMAILLINKDESCRIPTION: 'Stwórz link do adresu e-mail'
     IMAGE: Obrazek
     IMAGEDESCRIPTION: 'Pokaż obrazek w swoim poście'
-    ITALIC: Kursywa
+    ITALIC: 'Kursywa'
     ITALICEXAMPLE: Kursywa
     LINK: 'Link do strony'
     LINKDESCRIPTION: 'Link do innej strony lub URL'
@@ -52,17 +50,15 @@ pl:
     UNORDERED: 'Nienumerowana lista'
     UNORDEREDDESCRIPTION: 'Nienumerowana lista'
     UNORDEREDEXAMPLE1: 'nienumerowany element 1'
-  BackLink_Button.ss:
+  BackLink_Button_ss:
     Back: Wstecz
   BasicAuth:
     ENTERINFO: 'Wprowadź username i hasło'
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
     ERRORNOTREC: 'Nie istnieje taki username/hasło'
   Boolean:
-    0: Nie
     ANY: Jakikolwiek
-    1: Tak
-  CMSLoadingScreen.ss:
+  CMSLoadingScreen_ss:
     LOADING: Wczytywanie...
     REQUIREJS: 'CMS wymaga włączonej obsługi JavaScript.'
   CMSMain:
@@ -70,27 +66,21 @@ pl:
     ACCESSALLINTERFACES: 'Dostęp do wszystkich sekcji CMSa'
     ACCESSALLINTERFACESHELP: 'Nadpisuje bardziej specyficzne ustawienia dostępu.'
     SAVE: Zapisz
-  CMSProfileController:
-    MENUTITLE: 'Mój profil'
-  ChangePasswordEmail.ss:
+  ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT2: 'Teraz możesz używać następujących danych do logowania się:'
-    EMAIL: Email
     HELLO: Cześć
     PASSWORD: Hasło
-  CheckboxField:
-    - Nie
-    - Tak
   ComplexTableField:
     CLOSEPOPUP: 'Zamknij Okienko'
     SUCCESSADD2: 'Dodano {name}'
     SUCCESSEDIT: 'Zapisano %s %s %s'
-  ComplexTableField.ss:
+  ComplexTableField_ss:
     ADDITEM: 'Dodaj %s'
     NOITEMSFOUND: 'Nie znaleziono żadnych elementów'
     SORTASC: 'Sortuj rosnąco'
     SORTDESC: 'Sortuj malejąco'
-  ComplexTableField_popup.ss:
+  ComplexTableField_popup_ss:
     NEXT: Następny
     PREVIOUS: Poprzedni
   ConfirmedPasswordField:
@@ -103,26 +93,12 @@ pl:
     FOURTH: czwarty
     SECOND: drugi
     THIRD: trzeci
-  CurrencyField:
-    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Obiekty danych'
     SINGULARNAME: 'Obiekt danych'
   Date:
-    DAY: dzień
-    DAYS: dni
-    HOUR: godzina
-    HOURS: godziny
-    MIN: min
-    MINS: minuty
-    MONTH: miesiąc
-    MONTHS: miesiące
-    SEC: sekunda
-    SECS: sekundy
     TIMEDIFFAGO: '{difference} temu'
     TIMEDIFFIN: 'w {difference}'
-    YEAR: rok
-    YEARS: lata
   DateField:
     NOTSET: 'nie ustawiono'
     TODAY: dzisiaj
@@ -138,28 +114,24 @@ pl:
   EmailField:
     VALIDATION: 'Proszę podaj adres e-mail'
   Email_BounceRecord:
-    PLURALNAME: 'Historia odrzuconych e-maili'
     SINGULARNAME: 'Odrzucony e-mail'
   Enum:
     ANY: Jakikolwiek
   File:
-    AviType: 'Plik video AVI'
     Content: Zawartość
     CssType: 'Plik CSS'
     DmgType: 'Obraz dysku Apple'
     DocType: 'Dokument Worda'
-    Filename: 'Nazwa pliku'
+    Filename: Nazwa pliku
     GifType: 'Obrazek GIF, dobry do diagramów'
-    GzType: 'Plik skompresowany GZIP'
     HtlType: 'Plik HTML'
     HtmlType: 'Plik HTML'
     INVALIDEXTENSION: 'Rozszerzenie niedozwolone (dozwolone: {extensions})'
     INVALIDEXTENSIONSHORT: 'Rozszerzenie niedozwolone'
-    IcoType: Ikona
+    IcoType: 'Ikona'
     JpgType: 'Obrazek JPEG, dobry do zdjęć'
     JsType: 'Plik JavaScript'
     Mp3Type: 'Plik MP3'
-    MpgType: 'Plik video MPEG'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
@@ -171,8 +143,6 @@ pl:
     TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
     TiffType: 'Plik TIFF'
     Title: Tytuł
-    WavType: 'Plik audio WAV'
-    XlsType: 'Arkusz kalkulacyjny Excel'
     ZipType: 'Plik ZIP, skompresowany'
   FileIFrameField:
     ATTACH: 'Dołącz {type}'
@@ -185,20 +155,18 @@ pl:
     FROMFILESTORE: 'Ze Składnicy Plików'
     NOSOURCE: 'Wybierz źródło pliku do załaczenia'
     REPLACE: 'Zastąp {type}'
-  FileIFrameField_iframe.ss:
+  FileIFrameField_iframe_ss:
     TITLE: 'Iframe wgrywania zdjęć'
   Filesystem:
     SYNCRESULTS: 'Synchronizacja zakończona: stworzono {createdcount} i usunięto {deletedcount} pozycji'
   Folder:
     PLURALNAME: Foldery
-    SINGULARNAME: Folder
-  ForgotPasswordEmail.ss:
+  ForgotPasswordEmail_ss:
     HELLO: Cześć
     TEXT1: 'Oto twój'
     TEXT2: 'link zmiany hasła'
     TEXT3: dla
   Form:
-    FIELDISREQUIRED: '%s jest wymagane'
     SubmitBtnLabel: Przejdź
     VALIDATIONCREDITNUMBER: 'Proszę upewnij się, że wprowadzony numer karty kredytowej {number} jest prawidłowy'
     VALIDATIONNOTUNIQUE: 'Wprowadzona wartość nie jest unikalna'
@@ -212,7 +180,7 @@ pl:
   GridAction:
     DELETE_DESCRIPTION: Usuń
     Delete: Usuń
-    UnlinkRelation: 'Usuń łącze'
+    UnlinkRelation: Usuń łącze
   GridField:
     Add: 'Dodaj {name}'
     Filter: Filtr
@@ -237,8 +205,8 @@ pl:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     Deleted: 'Usunięto %s %s'
     Save: Zapisz
-    Saved: 'Zapisano %s %s'
-  GridFieldItemEditView.ss: null
+  GridFieldItemEditView_ss:
+    Go_back: 'Wstecz'
   Group:
     AddRole: 'Dodaj rolę dla tej grupy'
     Code: 'Kod Grupy'
@@ -247,7 +215,6 @@ pl:
     Description: Opis
     GroupReminder: 'Jeśli wybierzesz nadrzędną grupę, obecna grupa otrzyma wszystkie jej role'
     Locked: 'Zablokowana?'
-    NoRoles: 'Nie znaleziono ról'
     PLURALNAME: Grupy
     Parent: 'Grupa nadrzędna'
     RolesAddEditLink: 'Zarządzaj rolami'
@@ -257,7 +224,6 @@ pl:
     many_many_Members: Członkowie
   GroupImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the 	imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not	cleared.</li>	</ul></div>'
     ResultCreated: 'Stworzono grup: {count}'
     ResultDeleted: 'Usunięto grup: %d'
     ResultUpdated: 'Zaktualizowano grup: %d'
@@ -271,16 +237,15 @@ pl:
     BUTTONINSERTLINK: 'Wstaw link'
     BUTTONREMOVELINK: 'Zmień link'
     BUTTONUpdate: Aktualizuj
-    CAPTIONTEXT: Tekst
-    CSSCLASS: Wyrównanie/styl
-    CSSCLASSCENTER: Wyśrodkowane
+    CAPTIONTEXT: 'Tekst'
+    CSSCLASS: 'Wyrównanie/styl'
+    CSSCLASSCENTER: 'Wyśrodkowane'
     CSSCLASSLEFT: 'Tekst po lewej'
     CSSCLASSLEFTALONE: 'Samo, po lewej.'
     CSSCLASSRIGHT: 'Tekst po prawej'
     DETAILS: Szczegóły
     EMAIL: 'Adres e-mail'
     FILE: Plik
-    FOLDER: Folder
     FROMCMS: 'Z systemu CMS'
     FROMCOMPUTER: 'Z komputera'
     FROMWEB: 'Z WWW'
@@ -289,11 +254,11 @@ pl:
     IMAGEALTTEXT: 'Tekst alternatywny (alt) - pokazywany gdy obrazek nie może być wyświetlony'
     IMAGEALTTEXTDESC: 'Używane przez czytniki dla niewidomych oraz gdy nie można pobrać obrazu'
     IMAGEDIMENSIONS: Rozmiar
-    IMAGEHEIGHTPX: 'Wysokość (px)'
+    IMAGEHEIGHTPX: Wysokość (px)
     IMAGETITLE: 'Tytuł (tooltip) - dodatkowe informacje o obrazku'
     IMAGETITLETEXT: 'Tytuł (wyskakujący dymek)'
     IMAGETITLETEXTDESC: 'Po dodatkowe informacje o obrazku'
-    IMAGEWIDTHPX: 'Szerokość (px)'
+    IMAGEWIDTHPX: Szerokość (px)
     INSERTMEDIA: 'Wstaw Media'
     LINK: 'Wstaw/edytuj link z podświetlonego tekstu '
     LINKANCHOR: 'Odnośnik na tej stronie'
@@ -305,7 +270,6 @@ pl:
     LINKOPENNEWWIN: 'Otworzyć link w nowym oknie?'
     LINKTO: 'Linkuj do'
     PAGE: Strona
-    URL: URL
     URLNOTANOEMBEDRESOURCE: 'Adres URL ''{url}'' nie mógł zostać przekształcony w zasób medialny'
     UpdateMEDIA: 'Zaktualizuj Media'
   Image:
@@ -316,7 +280,7 @@ pl:
   Image_Cached:
     PLURALNAME: Pliki
     SINGULARNAME: Plik
-  Image_iframe.ss:
+  Image_iframe_ss:
     TITLE: 'Ładowanie Zdjęć (Iframe)'
   LeftAndMain:
     CANT_REORGANISE: 'Nie masz uprawnień by zmieniać strony na najwyższym poziomie. Twoje zmiany nie zostały zapisane.'
@@ -331,8 +295,7 @@ pl:
     PreviewButton: Podgląd
     REORGANISATIONSUCCESSFUL: 'Pomyślnie zreorganizowano drzewo serwisu.'
     SAVEDUP: Zapisano.
-    VersionUnknown: nieznany
-  LeftAndMain_Menu.ss:
+  LeftAndMain_Menu_ss:
     Hello: Witaj
     LOGOUT: 'Wyloguj się'
   LoginAttempt:
@@ -340,14 +303,12 @@ pl:
     IP: 'Adres IP'
     PLURALNAME: 'Próby logowania'
     SINGULARNAME: 'Próba logowania'
-    Status: Status
   Member:
     ADDGROUP: 'Dodaj grupę'
     BUTTONCHANGEPASSWORD: 'Zmień hasło'
-    BUTTONLOGIN: Zaloguj
+    BUTTONLOGIN: 'Zaloguj'
     BUTTONLOGINOTHER: 'Zaloguj jako ktoś inny'
     BUTTONLOSTPASSWORD: 'Zgubiłem hasło'
-    CANTEDIT: 'Nie posiadasz odpowiednich uprawnień.'
     CONFIRMNEWPASSWORD: 'Potwierdź nowe hasło'
     CONFIRMPASSWORD: 'Potwierdź hasło'
     DATEFORMAT: 'Format daty'
@@ -360,7 +321,7 @@ pl:
     ERRORNEWPASSWORD: 'Wprowadziłeś niepoprawnie nowe hasło, spróbuj ponownie'
     ERRORPASSWORDNOTMATCH: 'Twoje hasło nie zgadza się, spróbuj ponownie'
     ERRORWRONGCRED: 'E-mail lub hasło są nieprawidłowe. Spróbuj ponownie.'
-    FIRSTNAME: Imię
+    FIRSTNAME: 'Imię'
     INTERFACELANG: 'Język interfejsu'
     INVALIDNEWPASSWORD: 'Nie możesz użyć takiego hasła: {password}'
     LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
@@ -388,7 +349,6 @@ pl:
     TITLE: 'E-mail i Hasło'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (przed południem) lub PM (po południu)'
-    'APPLY FILTER': 'Zastosuj filtr'
     Custom: Własny
     DATEFORMATBAD: 'Nieprawidłowy format daty'
     DAYNOLEADING: 'Dzień miesiąca bez wiodącego zera'
@@ -409,7 +369,6 @@ pl:
     TWODIGITYEAR: 'Dwucyfrowy rok'
   MemberImportForm:
     Help1: '<p>Zaimportuj użytkowników w <em>formacie CSV</em> (tekst rozdzielany przecinkami). <small><a href="#" class="toggle-advanced">Zaawansowane</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from	the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property,	multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Stworzono członków: {count}'
     ResultDeleted: 'Usunięto %d użytkowników'
     ResultNone: 'Bez zmian'
@@ -417,11 +376,11 @@ pl:
   MemberPassword:
     PLURALNAME: 'Hasła użytkownika'
     SINGULARNAME: 'Hasło użytkownika'
-  MemberTableField: null
+  MemberTableField:
+    APPLY_FILTER: 'Zastosuj filtr'
   ModelAdmin:
     DELETE: Usuń
     DELETEDRECORDS: 'Usunięto rekordów: {count}'
-    EMPTYBEFOREIMPORT: 'Wyczyść bazę danych przed importowaniem'
     IMPORT: 'Import z CSV'
     IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
     NOCSVFILE: 'Wybierz plik CSV do zaimportowania'
@@ -429,16 +388,14 @@ pl:
     RESET: Zresetuj
     Title: 'Modele danych'
     UPDATEDRECORDS: 'Zaktualizowano {count} rekordów.'
-  ModelAdmin_ImportSpec.ss:
+  ModelAdmin_ImportSpec_ss:
     IMPORTSPECFIELDS: 'Kolumny bazy danych'
     IMPORTSPECLINK: 'Pokaż specyfikację %s'
     IMPORTSPECRELATIONS: Relacje
     IMPORTSPECTITLE: 'Specyfikacja %s'
-  ModelAdmin_Tools.ss:
+  ModelAdmin_Tools_ss:
     FILTER: Filtr
-    IMPORT: Import
-  ModelSidebar.ss:
-    IMPORT_TAB_HEADER: Import
+  ModelSidebar_ss:
     SEARCHLISTINGS: Znajdź
   MoneyField:
     FIELDLABELAMOUNT: Ilość
@@ -451,7 +408,6 @@ pl:
     Page: Strona
     View: Widok
   Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
@@ -472,10 +428,9 @@ pl:
     SINGULARNAME: 'Kod roli uprawnienia'
   Permissions:
     PERMISSIONS_CATEGORY: 'Role i uprawnienia dostępu'
-    UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Wprowadź poprawny numer telefonu'
-  RelationComplexTableField.ss:
+  RelationComplexTableField_ss:
     ADD: Dodaj
     CSVEXPORT: 'Eksportuj do CSV'
     NOTFOUND: 'Nie znaleziono żadnych elementów'
@@ -487,7 +442,7 @@ pl:
     ENTERNEWPASSWORD: 'Proszę wprowadż nowe hasło'
     ERRORPASSWORDPERMISSION: 'Musisz być zalogowany aby zmienić hasło'
     LOGGEDOUT: 'Zostałeś wylogowany. Jeśli chcesz się zalogować ponownie wpisz dane poniżej'
-    LOGIN: Logowanie
+    LOGIN: 'Logowanie'
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'
     NOTERESETLINKINVALID: '<p>Link resetujący hasło wygasł lub jest nieprawidłowy.</p><p>Możesz poprosić o nowy <a href="{link1}">tutaj</a> lub zmień swoje hasło po <a href="{link2}">zalogowaniu się</a>.</p>'
     NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'
@@ -522,7 +477,7 @@ pl:
     TABMAIN: Główny
   TableField:
     ISREQUIRED: 'W %s ''%s'' jest wymagany'
-  TableField.ss:
+  TableField_ss:
     ADD: 'Dodaj nowy rząd'
     ADDITEM: 'Dodaj %s'
   TableListField:
@@ -530,11 +485,11 @@ pl:
     PRINT: Drukuj
     Print: Drukuj
     SELECT: 'Wybierz:'
-  TableListField.ss:
+  TableListField_ss:
     NOITEMSFOUND: 'Nie znaleziono żadnych elementów'
     SORTASC: 'Sortuj w porządku rosnącym'
     SORTDESC: 'Sortuj w porządku malejącym'
-  TableListField_PageControls.ss:
+  TableListField_PageControls_ss:
     DISPLAYING: Wyświetlane
     OF: z
     TO: do

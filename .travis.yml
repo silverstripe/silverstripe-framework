@@ -1,37 +1,30 @@
 language: php 
-php: 
- - 5.3
- - 5.4
+
+php:
+  - 5.3
 
 env:
- - TESTDB=MYSQL
- - TESTDB=SQLITE
+  - DB=MYSQL CORE_RELEASE=3.0
 
 matrix:
-  exclude:
-    - php: 5.4
-      env: TESTDB=PGSQL
-    - php: 5.4
-      env: TESTDB=SQLITE
   include:
+    - php: 5.3
+      env: DB=PGSQL CORE_RELEASE=3.0
+    - php: 5.3
+      env: DB=SQLITE CORE_RELEASE=3.0
     - php: 5.4
-      env:
-        - PHPCS=1
-  allow_failures:
-    - env: TESTDB=PGSQL
-    - php: 5.4
-      env:
-        - PHPCS=1
-    - env: TESTDB=SQLITE
+      env: DB=MYSQL CORE_RELEASE=3.0
+    - php: 5.5
+      env: DB=MYSQL CORE_RELEASE=3.0
 
 before_script:
- - pear install pear/PHP_CodeSniffer
  - phpenv rehash
- - ./tests/travis/before.php --target ~/builds/ss --version="3.0.x-dev" --installer="3.0"
+ - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
+ - php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss
  - cd ~/builds/ss
 
 script: 
- - sh -c "if [ '$PHPCS' != '1' ]; then phpunit -c phpunit.xml.dist; else phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml -np framework && phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml -np framework; fi"
+ - phpunit framework/tests
 
 branches:
   except:

@@ -325,11 +325,11 @@ The final step is to create the template to display our data. Change the 'Browse
 	:::ss
 	<div id="BrowserPoll">
 		<h2>Browser Poll</h2>
-		<% if BrowserPollForm %>
+		<% if $BrowserPollForm %>
 			$BrowserPollForm
 		<% else %>
 		<ul>
-			<% loop BrowserPollResults %>
+			<% loop $BrowserPollResults %>
 			<li>
 				<div class="browser">$Browser: $Percentage%</div>
 				<div class="bar" style="width:$Percentage%">&nbsp;</div>
