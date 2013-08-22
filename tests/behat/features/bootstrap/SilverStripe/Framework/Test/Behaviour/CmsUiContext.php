@@ -272,14 +272,16 @@ class CmsUiContext extends BehatContext
 	public function iWaitForThePreviewToLoad() 
 	{
 		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+
 		$driver->switchToIFrame('cms-preview-iframe');
-		
 		$this->getSession()->wait(
 			5000, 
 			"!jQuery('iframe[name=cms-preview-iframe]').hasClass('loading')"
 		);
-
-		$driver->switchToWindow();   
+		$driver->switchToWindow($origWindowName);   
 	}
 
 	/**
