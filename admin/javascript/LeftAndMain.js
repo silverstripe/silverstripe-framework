@@ -104,8 +104,7 @@ jQuery.noConflict();
 				statusMessage(decodeURIComponent(msg), msgType);
 			}
 		});
-		
-		
+
 		/**
 		 * Main LeftAndMain interface with some control panel and an edit form.
 		 * 
@@ -116,7 +115,15 @@ jQuery.noConflict();
 		 */
 		$('.cms-container').entwine({
 			
-			CurrentXHR: null,
+			/**
+			 * Tracks current panel request.
+			 */
+			StateChangeXHR: null,
+
+			/**
+			 * Tracks current fragment-only parallel PJAX requests.
+			 */
+			FragmentXHR: {},
 
 			StateChangeCount: 0,
 			
@@ -190,13 +197,22 @@ jQuery.noConflict();
 			},
 
 			/**
-			 * Change the options of the threeColumnCompressor layout, and trigger layouting. You can provide any or
-			 * all options. The remaining options will not be changed.
+			 * Change the options of the threeColumnCompressor layout, and trigger layouting if needed.
+			 * You can provide any or all options. The remaining options will not be changed.
 			 */
 			updateLayoutOptions: function(newSpec) {
 				var spec = this.getLayoutOptions();
-				$.extend(spec, newSpec);
-				this.redraw();
+
+				var dirty = false;
+
+				for (var k in newSpec) {
+					if (spec[k] !== newSpec[k]) {
+						spec[k] = newSpec[k];
+						dirty = true;
+					}
+				}
+
+				if (dirty) this.redraw();
 			},
 
 			/**
@@ -206,7 +222,6 @@ jQuery.noConflict();
 				this.updateLayoutOptions({
 					mode: 'split'
 				});
-				this.redraw();
 			},
 
 			/**
@@ -216,7 +231,6 @@ jQuery.noConflict();
 				this.updateLayoutOptions({
 					mode: 'content'
 				});
-				this.redraw();
 			},
 
 			/**
@@ -226,10 +240,13 @@ jQuery.noConflict();
 				this.updateLayoutOptions({
 					mode: 'preview'
 				});
-				this.redraw();
 			},
 
+			RedrawSuppression: false,
+
 			redraw: function() {
+				if (this.getRedrawSuppression()) return;
+
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
 				// Reset the algorithm.
@@ -247,9 +264,9 @@ jQuery.noConflict();
 				this.layout();
 
 				// Redraw on all the children that need it
-				this.find('.cms-panel-layout').redraw(); 
-				this.find('.cms-content-fields[data-layout-type]').redraw(); 
-				this.find('.cms-edit-form[data-layout-type]').redraw(); 
+				this.find('.cms-panel-layout').redraw();
+				this.find('.cms-content-fields[data-layout-type]').redraw();
+				this.find('.cms-edit-form[data-layout-type]').redraw();
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
 			},
@@ -410,7 +427,7 @@ jQuery.noConflict();
 			 */
 			handleStateChange: function() {
 				// Don't allow parallel loading to avoid edge cases
-				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
+				if(this.getStateChangeXHR()) this.getStateChangeXHR().abort();
 
 				var self = this, h = window.History, state = h.getState(),
 					fragments = state.data.pjax || 'Content', headers = {},
@@ -446,6 +463,7 @@ jQuery.noConflict();
 					headers: headers,
 					url: state.url,
 					complete: function() {
+						self.setStateChangeXHR(null);
 						// Remove loading indication from old content els (regardless of which are replaced)
 						contentEls.removeClass('loading');
 					},
@@ -455,7 +473,75 @@ jQuery.noConflict();
 					}
 				});
 				
-				this.setCurrentXHR(xhr);
+				this.setStateChangeXHR(xhr);
+			},
+
+			/**
+			 * ALternative to loadPanel/submitForm.
+			 *
+			 * Triggers a parallel-fetch of a PJAX fragment, which is a separate request to the
+			 * state change requests. There could be any amount of these fetches going on in the background,
+			 * and they don't register as a HTML5 history states.
+			 *
+			 * This is meant for updating a PJAX areas that are not complete panel/form reloads. These you'd
+			 * normally do via submitForm or loadPanel which have a lot of automation built in.
+			 *
+			 * On receiving successful response, the framework will update the element tagged with appropriate
+			 * data-pjax-fragment attribute (e.g. data-pjax-fragment="<pjax-fragment-name>"). Make sure this element
+			 * is available.
+			 *
+			 * Example usage:
+			 * $('.cms-container').loadFragment('admin/foobar/', 'FragmentName');
+			 *
+			 * @param url string Relative or absolute url of the controller.
+			 * @param pjaxFragments string PJAX fragment(s), comma separated.
+			 */
+			loadFragment: function(url, pjaxFragments) {
+
+				var self = this,
+					xhr,
+					headers = {},
+					baseUrl = $('base').attr('href'),
+					fragmentXHR = this.getFragmentXHR();
+
+				// Make sure only one XHR for a specific fragment is currently in progress.
+				if(
+					typeof fragmentXHR[pjaxFragments]!=='undefined' &&
+					fragmentXHR[pjaxFragments]!==null
+				) {
+					fragmentXHR[pjaxFragments].abort();
+					fragmentXHR[pjaxFragments] = null;
+				}
+
+				url = $.path.isAbsoluteUrl(url) ? url : $.path.makeUrlAbsolute(url, baseUrl);
+				headers['X-Pjax'] = pjaxFragments;
+
+				xhr = $.ajax({
+					headers: headers,
+					url: url,
+					success: function(data, status, xhr) {
+						var elements = self.handleAjaxResponse(data, status, xhr, null);
+
+						// We are fully done now, make it possible for others to hook in here.
+						self.trigger('afterloadfragment', { data: data, status: status, xhr: xhr, elements: elements });
+					},
+					error: function(xhr, status, error) {
+						self.trigger('loadfragmenterror', { xhr: xhr, status: status, error: error });
+					},
+					complete: function() {
+						// Reset the current XHR in tracking object.
+						var fragmentXHR = self.getFragmentXHR();
+						if(
+							typeof fragmentXHR[pjaxFragments]!=='undefined' &&
+							fragmentXHR[pjaxFragments]!==null
+						) {
+							fragmentXHR[pjaxFragments] = null;
+						}
+					}
+				});
+
+				// Store the fragment request so we can abort later, should we get a duplicate request.
+				fragmentXHR[pjaxFragments] = xhr;
 			},
 
 			/**
@@ -503,62 +589,67 @@ jQuery.noConflict();
 					newFragments[guessFragment] = $data;
 				}
 
-				// Replace each fragment individually
-				$.each(newFragments, function(newFragment, html) {
-					var contentEl = $('[data-pjax-fragment]').filter(function() {
-						return $.inArray(newFragment, $(this).data('pjaxFragment').split(' ')) != -1;
-					}), newContentEl = $(html);
+				this.setRedrawSuppression(true);
+				try {
+					// Replace each fragment individually
+					$.each(newFragments, function(newFragment, html) {
+						var contentEl = $('[data-pjax-fragment]').filter(function() {
+							return $.inArray(newFragment, $(this).data('pjaxFragment').split(' ')) != -1;
+						}), newContentEl = $(html);
 
-					// Add to result collection
-					if(newContentEls) newContentEls.add(newContentEl);
-					else newContentEls = newContentEl;
-					
-					// Update panels
-					if(newContentEl.find('.cms-container').length) {
-						throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
-					}
-					
-					// Set loading state and store element state
-					var origStyle = contentEl.attr('style');
-					var origParent = contentEl.parent();
-					var origParentLayoutApplied = (typeof origParent.data('jlayout')!=='undefined');
-					var layoutClasses = ['east', 'west', 'center', 'north', 'south', 'column-hidden'];
-					var elemClasses = contentEl.attr('class');
-					var origLayoutClasses = [];
-					if(elemClasses) {
-						origLayoutClasses = $.grep(
-							elemClasses.split(' '),
-							function(val) { return ($.inArray(val, layoutClasses) >= 0);}
-						);
-					}
-					
-					newContentEl
-						.removeClass(layoutClasses.join(' '))
-						.addClass(origLayoutClasses.join(' '));
-					if(origStyle) newContentEl.attr('style', origStyle);
+						// Add to result collection
+						if(newContentEls) newContentEls.add(newContentEl);
+						else newContentEls = newContentEl;
 
-					// Allow injection of inline styles, as they're not allowed in the document body.
-					// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
-					var styles = newContentEl.find('style').detach();
-					if(styles.length) $(document).find('head').append(styles);
+						// Update panels
+						if(newContentEl.find('.cms-container').length) {
+							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
+						}
 
-					// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
-					contentEl.replaceWith(newContentEl);
+						// Set loading state and store element state
+						var origStyle = contentEl.attr('style');
+						var origParent = contentEl.parent();
+						var origParentLayoutApplied = (typeof origParent.data('jlayout')!=='undefined');
+						var layoutClasses = ['east', 'west', 'center', 'north', 'south', 'column-hidden'];
+						var elemClasses = contentEl.attr('class');
+						var origLayoutClasses = [];
+						if(elemClasses) {
+							origLayoutClasses = $.grep(
+								elemClasses.split(' '),
+								function(val) { return ($.inArray(val, layoutClasses) >= 0);}
+							);
+						}
 
-					// Force jlayout to rebuild internal hierarchy to point to the new elements.
-					// This is only necessary for elements that are at least 3 levels deep. 2nd level elements will
-					// be taken care of when we lay out the top level element (.cms-container).
-					if (!origParent.is('.cms-container') && origParentLayoutApplied) {
-						origParent.layout();
-					}
-				});
+						newContentEl
+							.removeClass(layoutClasses.join(' '))
+							.addClass(origLayoutClasses.join(' '));
+						if(origStyle) newContentEl.attr('style', origStyle);
 
-				// Re-init tabs (in case the form tag itself is a tabset)
-				var newForm = newContentEls.filter('form');
-				if(newForm.hasClass('cms-tabset')) newForm.removeClass('cms-tabset').addClass('cms-tabset');
+						// Allow injection of inline styles, as they're not allowed in the document body.
+						// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
+						var styles = newContentEl.find('style').detach();
+						if(styles.length) $(document).find('head').append(styles);
+
+						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
+						contentEl.replaceWith(newContentEl);
+
+						// Force jlayout to rebuild internal hierarchy to point to the new elements.
+						// This is only necessary for elements that are at least 3 levels deep. 2nd level elements will
+						// be taken care of when we lay out the top level element (.cms-container).
+						if (!origParent.is('.cms-container') && origParentLayoutApplied) {
+							origParent.layout();
+						}
+					});
+
+					// Re-init tabs (in case the form tag itself is a tabset)
+					var newForm = newContentEls.filter('form');
+					if(newForm.hasClass('cms-tabset')) newForm.removeClass('cms-tabset').addClass('cms-tabset');
+				}
+				finally {
+					this.setRedrawSuppression(false);
+				}
 
 				this.redraw();
-
 				this.restoreTabState((state && typeof state.data.tabState !== 'undefined') ? state.data.tabState : null);
 
 				return newContentEls;

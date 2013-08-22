@@ -256,12 +256,14 @@ class RequirementsTest extends SapphireTest {
 		$html = $backend->includeInHTML(false, self::$html_template);
 
 		/* Javascript has correct path */
-		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/', $html),
+		$this->assertTrue(
+			(bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',$html),
 			'javascript has correct path'); 
 
 		/* CSS has correct path */
-		$this->assertTrue((bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',$html),
-			'css has correct path'); 
+		$this->assertTrue(
+			(bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&amp;test=1&amp;test=2&amp;test=3/',$html),
+			'css has correct path');
 	}
 	
 	public function testRequirementsBackend() {

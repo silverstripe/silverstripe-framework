@@ -23,5 +23,7 @@ And I fill in "RemoteURL" with "http://www.silverstripe.com/themes/sscom/images/
 And I press the "Add url" button
 Then I should see "silverstripe_logo_web.png (www.silverstripe.com)" in the ".ss-assetuploadfield span.name" element
 
-When I press the "Update" button  
+When I press the "Insert" button  
 Then the "Content" HTML field should contain "silverstripe_logo_web.png"
+# Required to avoid "unsaved changed" browser dialog
+Then I press the "Save draft" button

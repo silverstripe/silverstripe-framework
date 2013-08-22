@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: 8fe63b186e349433b6da1cd6ec4c9a751fefb13e
-  branch: master
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: git://github.com/visionmedia/jspec.git

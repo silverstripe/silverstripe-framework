@@ -70,7 +70,10 @@ class ParameterConfirmationToken {
 		);
 	}
 
-	public function reloadWithToken() {
+	/** What to use instead of BASE_URL. Must not contain protocol or host. @var string */
+	static public $alternateBaseURL = null;
+
+	protected function currentAbsoluteURL() {
 		global $url;
 
 		// Are we http or https?
@@ -83,15 +86,27 @@ class ParameterConfirmationToken {
 		if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) $proto = 'https';
 		if(isset($_SERVER['SSL'])) $proto = 'https';
 
-		// What's our host
-		$host = $_SERVER['HTTP_HOST'];
+		$parts = array_filter(array(
+			// What's our host
+			$_SERVER['HTTP_HOST'],
+			// SilverStripe base
+			self::$alternateBaseURL !== null ? self::$alternateBaseURL : BASE_URL,
+			// And URL
+			$url
+		));
+
+		// Join together with protocol into our current absolute URL, avoiding duplicated "/" characters
+		return "$proto://" . preg_replace('#/{2,}#', '/', implode('/', $parts));
+	}
+
+	public function reloadWithToken() {
+		$location = $this->currentAbsoluteURL();
 
 		// What's our GET params (ensuring they include the original parameter + a new token)
 		$params = array_merge($_GET, $this->params());
 		unset($params['url']);
 
-		// Join them all together into the original URL
-		$location = "$proto://" . $host . '/' . ltrim(BASE_URL, '/') . $url . ($params ? '?'.http_build_query($params) : '');
+		if ($params) $location .= '?'.http_build_query($params);
 
 		// And redirect
 		if (headers_sent()) {

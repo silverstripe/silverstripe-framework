@@ -179,7 +179,8 @@ class ListboxField extends DropdownField {
 		if($this->multiple) {
 			$fieldname = $this->name;
 			$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
-			if($fieldname && $record && $relation && ($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
+			if($fieldname && $record && $relation &&
+				($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
 				$idList = (is_array($this->value)) ? array_values($this->value) : array();
 				if(!$record->ID) {
 					$record->write(); // record needs to have an ID in order to set relationships

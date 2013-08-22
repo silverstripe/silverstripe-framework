@@ -599,6 +599,48 @@ class ArrayListTest extends SapphireTest {
 		);
 		$this->assertEquals($expected, $list->toArray());
 	}
+
+	public function testCanFilterBy() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve'),
+			array('Name' => 'Bob'),
+			array('Name' => 'John')
+		));
+
+		$this->assertTrue($list->canFilterBy('Name'));
+		$this->assertFalse($list->canFilterBy('Age'));
+	}
+
+	public function testCanFilterByEmpty() {
+		$list = new ArrayList();
+
+		$this->assertFalse($list->canFilterBy('Name'));
+		$this->assertFalse($list->canFilterBy('Age'));
+	}
+
+	public function testByID() {
+		$list = new ArrayList(array(
+			array('ID' => 1, 'Name' => 'Steve'),
+			array('ID' => 2, 'Name' => 'Bob'),
+			array('ID' => 3, 'Name' => 'John')
+		));
+
+		$element = $list->byID(1);
+		$this->assertEquals($element['Name'], 'Steve');
+
+		$element = $list->byID(2);
+		$this->assertEquals($element['Name'], 'Bob');
+
+		$element = $list->byID(4);
+		$this->assertNull($element);
+	}
+
+	public function testByIDEmpty() {
+		$list = new ArrayList();
+
+		$element = $list->byID(1);
+		$this->assertNull($element);
+	}
 }
 
 /**

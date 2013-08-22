@@ -11,6 +11,7 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
  * [3.1.0](3.1.0) - Unreleased
 
+ * [3.0.5](3.0.5) - 2013-02-20
  * [3.0.4](3.0.4) - 19 February 2013
  * [3.0.3](3.0.3) - 26 November 2012
  * [3.0.2](3.0.2) - 17 September 2012
@@ -74,8 +75,7 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Alpha/beta/release candidate ##
 
- * [3.1.0-beta1](beta/3.1.0-beta1) - 17 December 2012
-
+ * [3.0.6-rc1](rc/3.0.6-rc1) - 2013-08-08
  * [3.0.3-rc1](rc/3.0.3-rc1) - 6 November 2012
  * [3.0.2-rc2](rc/3.0.2-rc2) - 12 September 2012
  * [3.0.2-rc1](rc/3.0.2-rc1) - 5 September 2012
@@ -88,7 +88,6 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
  * [3.0.0-alpha2](alpha/3.0.0-alpha2) - 12 January 2012
  * [3.0.0-alpha1](alpha/3.0.0-alpha1) - 1 November 2011
  * [3.0.0-pr1](pr/3.0.0-pr1) - 2 May 2011
-
 
 
  * [2.4.5-rc1](rc/2.4.5-rc1) - 31 January 2011

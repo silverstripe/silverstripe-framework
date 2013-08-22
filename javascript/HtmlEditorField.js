@@ -21,6 +21,7 @@ ss.editorWrappers.tinyMCE = (function() {
 		init: function(config) {
 			if(!ss.editorWrappers.tinyMCE.initialized) {
 				tinyMCE.init(config);
+
 				ss.editorWrappers.tinyMCE.initialized = true;
 			}
 		},
@@ -62,9 +63,25 @@ ss.editorWrappers.tinyMCE = (function() {
 
 			// Patch TinyMCE events into underlying textarea field.
 			this.instance.onInit.add(function(ed) {
+				if(!ss.editorWrappers.tinyMCE.patched) {
+					// Not ideal, but there's a memory leak we need to patch
+					var originalDestroy = tinymce.themes.AdvancedTheme.prototype.destroy;
+
+					tinymce.themes.AdvancedTheme.prototype.destroy = function() {
+						originalDestroy.apply(this, arguments);
+
+						if (this.statusKeyboardNavigation) {
+							this.statusKeyboardNavigation.destroy();
+							this.statusKeyboardNavigation = null;
+						}
+					}
+
+					ss.editorWrappers.tinyMCE.patched = true;
+				}
+
 				jQuery(ed.getElement()).trigger('editorinit');
 
-				// Periodically check for inline changes when focused, 
+				// Periodically check for inline changes when focused,
 				// since TinyMCE's onChange only fires on certain actions
 				// like inserting a new paragraph, as opposed to any user input.
 				// This also works around an issue where the "save" button
@@ -270,6 +287,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var ed = tinyMCE.get(this.attr('id'));
 				if (ed) {
 					ed.remove();
+					ed.destroy();
 
 					// TinyMCE leaves behind events. We should really fix TinyMCE, but lets brute force it for now
 					$.each(jQuery.cache, function(){

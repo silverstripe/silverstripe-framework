@@ -15,7 +15,7 @@ class Hierarchy extends DataExtension {
 	 * @var Int
 	 */
 	protected $_cache_numChildren;
-
+	
 	/**
 	 * @config
 	 * @var integer The lower bounds for the amount of nodes to mark. If set, the logic will expand
@@ -98,13 +98,15 @@ class Hierarchy extends DataExtension {
 	 *                          should not change this.
 	 * @param int $nodeCountThreshold See {@link self::$node_threshold_total}
 	 * @param callable $nodeCountCallback Called with the node count, which gives the callback an opportunity
-	 *                 to intercept the query. Useful e.g. to avoid excessive children listings (Arguments: $parent, $numChildren)
+	 *                 to intercept the query. Useful e.g. to avoid excessive children listings
+	 *                 (Arguments: $parent, $numChildren)
 	 *                          
 	 * @return string
 	 */
 	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, 
 			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", 
-			$numChildrenMethod = "numChildren", $rootCall = true, $nodeCountThreshold = null, $nodeCountCallback = null) {
+			$numChildrenMethod = "numChildren", $rootCall = true,
+			$nodeCountThreshold = null, $nodeCountCallback = null) {
 
 		if(!is_numeric($nodeCountThreshold)) {
 			$nodeCountThreshold = Config::inst()->get('Hierarchy', 'node_threshold_total');
@@ -113,7 +115,7 @@ class Hierarchy extends DataExtension {
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished($numChildrenMethod);
 		}
-
+		
 		if($nodeCountCallback) {
 			$nodeCountWarning = $nodeCountCallback($this->owner, $this->owner->$numChildrenMethod());	
 			if($nodeCountWarning) return $nodeCountWarning;
@@ -154,9 +156,9 @@ class Hierarchy extends DataExtension {
 							$output .= $nodeCountWarning;
 							$child->markClosed();
 						} else {
-							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod,
-								$numChildrenMethod, false, $nodeCountThreshold);	
-						}
+							$output .= $child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked,
+								$childrenMethod,	$numChildrenMethod, false, $nodeCountThreshold);
+					} 
 					} elseif($child->isTreeOpened()) {
 						// Since we're not loading children, don't mark it as open either
 						$child->markClosed();
@@ -455,7 +457,7 @@ class Hierarchy extends DataExtension {
 		$id = $this->owner->ID;
 		return isset(self::$treeOpened[$baseClass][$id]) ? self::$treeOpened[$baseClass][$id] : false;
 	}
-	
+
 	/**
 	 * Get a list of this DataObject's and all it's descendants IDs.
 	 * @return int
@@ -495,7 +497,7 @@ class Hierarchy extends DataExtension {
 			$this->_cache_children = $result->filterByCallback(function($item) {	
 				return $item->canView();
 			});
-		} 
+					} 
 		return $this->_cache_children;
 	}
 
@@ -614,7 +616,7 @@ class Hierarchy extends DataExtension {
 			->exclude('ID', (int)$this->owner->ID);
 		if (!$showAll && $this->owner->db('ShowInMenus')) {
 			$staged = $staged->filter('ShowInMenus', 1);
-		}	
+		}
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
 		return $staged;
 	}
@@ -640,7 +642,7 @@ class Hierarchy extends DataExtension {
 				'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
 				'Versioned.stage' => 'Live'
 			));
-
+		
 		if(!$showAll) $children = $children->filter('ShowInMenus', 1);
 
 		return $children;

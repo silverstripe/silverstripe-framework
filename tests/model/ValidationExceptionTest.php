@@ -78,6 +78,7 @@ class ValidationExceptionTest extends SapphireTest
 		$this->assertEquals(E_USER_WARNING, $exception->getCode());
 		$this->assertEquals('An error has occurred', $exception->getMessage());
 		$this->assertEquals(false, $exception->getResult()->valid());
-		$this->assertEquals('A spork is not a knife; A knife is not a back scratcher', $exception->getResult()->message());
+		$this->assertEquals('A spork is not a knife; A knife is not a back scratcher',
+			$exception->getResult()->message());
 	}
 }

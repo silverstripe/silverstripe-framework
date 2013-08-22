@@ -113,11 +113,13 @@ class Group extends DataObject {
 						} elseif($record && $record->ID) {
 							// TODO Mark disabled once chosen.js supports it
 							// $groupsField->setDisabledItems(array($group->ID));
-							$form->Fields()->replaceField('DirectGroups', $groupsField->performReadonlyTransformation());
+							$form->Fields()->replaceField('DirectGroups',
+								$groupsField->performReadonlyTransformation());
 						}
 					}
 				});
-			$memberList = GridField::create('Members',false, $this->DirectMembers(), $config)->addExtraClass('members_grid');
+			$memberList = GridField::create('Members',false, $this->DirectMembers(), $config)
+				->addExtraClass('members_grid');
 			// @todo Implement permission checking on GridField
 			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 			$fields->addFieldToTab('Root.Members', $memberList);

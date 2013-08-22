@@ -49,8 +49,10 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $admin->ID);
 		$response = $this->get('LeftAndMainTest_Controller');
 
-		$this->assertRegExp('/tests\/assets\/LeftAndMainTest.css/i', $response->getBody(), "body should contain custom css");
-		$this->assertRegExp('/tests\/assets\/LeftAndMainTest.js/i', $response->getBody(), "body should contain custom js");
+		$this->assertRegExp('/tests\/assets\/LeftAndMainTest.css/i', $response->getBody(),
+			"body should contain custom css");
+		$this->assertRegExp('/tests\/assets\/LeftAndMainTest.js/i', $response->getBody(),
+			"body should contain custom js");
 	}
 
 	/**

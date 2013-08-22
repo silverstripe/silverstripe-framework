@@ -198,6 +198,7 @@
 			 * Caveat: the preview will be automatically enabled when ".cms-previewable" class is detected.
 			 */
 			disablePreview: function() {
+				this.setPendingURL(null);
 				this._loadUrl('about:blank');
 				this._block();
 				this.changeMode('content', false);
@@ -304,6 +305,18 @@
 				}
 			},
 
+			/** @var string A URL that should be displayed in this preview panel once it becomes visible */
+			PendingURL: null,
+
+			oncolumnvisibilitychanged: function() {
+				var url = this.getPendingURL();
+				if (url && !this.is('.column-hidden')) {
+					this.setPendingURL(null);
+					this._loadUrl(url);
+					this._unblock();
+				}
+			},
+
 			/**
 			 * Update preview whenever a form is submitted.
 			 * This is an alternative to the LeftAndmMain::loadPanel functionality which we already
@@ -369,19 +382,36 @@
 					});
 				}
 
+				var url = null;
+
 				if (currentState[0]) {
 					// State is available on the newly loaded content. Get it.
-					this._loadUrl(currentState[0].url);
-					this._unblock();
+					url = currentState[0].url;
 				} else if (states.length) {
 					// Fall back to the first available content state.
 					this.setCurrentStateName(states[0].name);
-					this._loadUrl(states[0].url);
-					this._unblock();
+					url = states[0].url;
 				} else {
 					// No state available at all.
 					this.setCurrentStateName(null);
+				}
+
+				// If this preview panel isn't visible at the moment, delay loading the URL until it (maybe) is later
+				if (this.is('.column-hidden')) {
+					this.setPendingURL(url);
+					this._loadUrl('about:blank');
 					this._block();
+				}
+				else {
+					this.setPendingURL(null);
+
+					if (url) {
+						this._loadUrl(url);
+						this._unblock();
+					}
+					else {
+						this._block();
+					}
 				}
 
 				return this;

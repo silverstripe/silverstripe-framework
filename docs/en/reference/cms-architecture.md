@@ -287,6 +287,47 @@ tracked in the browser history, use the `pjax` attribute on the state data.
 
 	$('.cms-container').loadPanel('admin/pages', null, {pjax: 'Content'});
 
+## Loading lightweight PJAX fragments
+
+Normal navigation between URLs in the admin section of the Framework occurs through `loadPanel` and `submitForm`.
+These calls make sure the HTML5 history is updated correctly and back and forward buttons work. They also take
+care of some automation, for example restoring currently selected tabs.
+
+However there are situations when you would like to only update a small area in the CMS, and when this operation should
+not trigger a browser's history pushState. A good example here is reloading a dropdown that relies on backend session
+information that could have been updated as part of action elsewhere, updates to sidebar status, or other areas
+unrelated to the main flow.
+
+In this case you can use the `loadFragment` call supplied by `LeftAndMain.js`. You can trigger as many of these in
+parallel as you want. This will not disturb the main navigation.
+
+		$('.cms-container').loadFragment('admin/foobar/', 'Fragment1');
+		$('.cms-container').loadFragment('admin/foobar/', 'Fragment2');
+		$('.cms-container').loadFragment('admin/foobar/', 'Fragment3');
+
+The ongoing requests are tracked by the PJAX fragment name (Fragment1, 2, and 3 above) - resubmission will
+result in the prior request for this fragment to be aborted. Other parallel requests will continue undisturbed.
+
+You can also load multiple fragments in one request, as long as they are to the same controller (i.e. URL):
+
+		$('.cms-container').loadFragment('admin/foobar/', 'Fragment2,Fragment3');
+
+This counts as a separate request type from the perspective of the request tracking, so will not abort the singular
+`Fragment2` nor `Fragment3`.
+
+Upon the receipt of the response, the fragment will be injected into DOM where a matching `data-pjax-fragment` attribute
+has been found on an element (this element will get completely replaced). Afterwards a `afterloadfragment` event
+will be triggered. In case of a request error a `loadfragmenterror` will be raised and DOM will not be touched.
+
+You can hook up a response handler that obtains all the details of the XHR request like this:
+
+		'from .cms-container': {
+			onafterloadfragment: function(e, data) {
+				// Say 'success'!
+				alert(data.status);
+			}
+		}
+
 ## Ajax Redirects
 
 Sometimes, a server response represents a new URL state, e.g. when submitting an "add record" form,

@@ -12,14 +12,18 @@ if(!empty($_SERVER['argv'][1])) {
 
 $result = array('comments' => array());
 
-// Run each sniff
+$extension = pathinfo($path, PATHINFO_EXTENSION);
 
-// phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml
-run_sniff('tabs.xml', $path, $result);
+// Whitelist of extensions to check (default phpcs list)
+if(in_array($extension, array('php', 'js', 'inc', 'css'))) {
+	// Run each sniff
 
-// phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml
-run_sniff('ruleset.xml', $path, $result, '--tab-width=4');
+	// phpcs --encoding=utf-8 --standard=framework/tests/phpcs/tabs.xml
+	run_sniff('tabs.xml', $path, $result);
 
+	// phpcs --encoding=utf-8 --tab-width=4 --standard=framework/tests/phpcs/ruleset.xml
+	run_sniff('ruleset.xml', $path, $result, '--tab-width=4');
+}
 echo json_encode($result);
 
 function run_sniff($standard, $path, array &$result, $extraFlags = '') {

@@ -31,7 +31,7 @@ class FeatureContext extends SilverStripeContext
 	 * Initializes context.
 	 * Every scenario gets it's own context object.
 	 *
-	 * @param   array   $parameters  context parameters (set them up through behat.yml)
+	 * @param array $parameters context parameters (set them up through behat.yml)
 	 */
 	public function __construct(array $parameters)
 	{
@@ -47,22 +47,22 @@ class FeatureContext extends SilverStripeContext
 		$this->useContext('FixtureContext', $fixtureContext);
 
 		// Use blueprints to set user name from identifier
-    $factory = $fixtureContext->getFixtureFactory();
-    $blueprint = \Injector::inst()->create('FixtureBlueprint', 'Member');
-    $blueprint->addCallback('beforeCreate', function($identifier, &$data, &$fixtures) {
-        if(!isset($data['FirstName'])) $data['FirstName'] = $identifier;
-    });
-    $factory->define('Member', $blueprint);
+		$factory = $fixtureContext->getFixtureFactory();
+		$blueprint = \Injector::inst()->create('FixtureBlueprint', 'Member');
+		$blueprint->addCallback('beforeCreate', function($identifier, &$data, &$fixtures) {
+			if(!isset($data['FirstName'])) $data['FirstName'] = $identifier;
+		});
+		$factory->define('Member', $blueprint);
 	}
 
 	public function setMinkParameters(array $parameters)
-  {
-      parent::setMinkParameters($parameters);
-      
-      if(isset($parameters['files_path'])) {
-      	$this->getSubcontext('FixtureContext')->setFilesPath($parameters['files_path']);	
-      }
-  }
+	{
+		parent::setMinkParameters($parameters);
+		
+		if(isset($parameters['files_path'])) {
+			$this->getSubcontext('FixtureContext')->setFilesPath($parameters['files_path']);	
+		}
+	}
 
 	/**
 	 * @return FixtureFactory

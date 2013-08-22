@@ -94,6 +94,8 @@ class MemberLoginForm extends LoginForm {
 
 		parent::__construct($controller, $name, $fields, $actions);
 
+		$this->setValidator(new RequiredFields('Email', 'Password'));
+
 		// Focus on the email input when the page is loaded
 		Requirements::customScript(<<<JS
 			(function() {
