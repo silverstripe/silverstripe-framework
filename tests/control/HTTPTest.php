@@ -130,7 +130,8 @@ class HTTPTest extends SapphireTest {
 			// background-image
 			// Note that using /./ in urls is absolutely acceptable
 			$test->assertEquals(
-				'<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">Content</div>',
+				'<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">'.
+				'Content</div>',
 				HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
 			);
 			
@@ -169,7 +170,8 @@ class HTTPTest extends SapphireTest {
 			// background
 			// Note that using /./ in urls is absolutely acceptable
 			$test->assertEquals(
-				'<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>',
+				'<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">'.
+				'SS Blog</div>',
 				HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
 			);
 			
