@@ -319,7 +319,7 @@ Upon the receipt of the response, the fragment will be injected into DOM where a
 has been found on an element (this element will get completely replaced). Afterwards a `afterloadfragment` event
 will be triggered. In case of a request error a `loadfragmenterror` will be raised and DOM will not be touched.
 
-You can hook up a response handler that obtains all the details of the XHR request like this:
+You can hook up a response handler that obtains all the details of the XHR request via Entwine handler:
 
 		'from .cms-container': {
 			onafterloadfragment: function(e, data) {
@@ -327,6 +327,15 @@ You can hook up a response handler that obtains all the details of the XHR reque
 				alert(data.status);
 			}
 		}
+
+Alternatively you can use the jQuery deferred API:
+
+		$('.cms-container')
+			.loadFragment('admin/foobar/', 'Fragment1')
+			.success(function(data, status, xhr) {
+				// Say 'success'!
+				alert(status);
+			});
 
 ## Ajax Redirects
 
