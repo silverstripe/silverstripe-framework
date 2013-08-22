@@ -596,7 +596,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		if($file->Type == 'photo') {
 			$filePreview->FieldList()->insertBefore(new TextField(
 				'AltText', 
-				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), 
+				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'), 
 				$file->Title, 
 				80
 			), 'CaptionText');
@@ -679,7 +679,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				$file->Title, 
 				80
 			)->setDescription(
-				_t('HtmlEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can not be displayed')),
+				_t('HtmlEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can\'t be displayed')),
 
 			TextField::create(
 				'Title', 
