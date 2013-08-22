@@ -246,10 +246,13 @@ class CmsUiContext extends BehatContext
 	public function thePreviewContains($content)
 	{
 		$driver = $this->getSession()->getDriver();
-		$driver->switchToIFrame('cms-preview-iframe');
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
 
+		$driver->switchToIFrame('cms-preview-iframe');
 		$this->getMainContext()->assertPageContainsText($content);
-		$driver->switchToWindow();
+		$driver->switchToWindow($origWindowName);
 	}
 
 	/**
@@ -304,10 +307,13 @@ class CmsUiContext extends BehatContext
 	public function thePreviewDoesNotContain($content)
 	{
 		$driver = $this->getSession()->getDriver();
+		// TODO Remove once we have native support in Mink and php-webdriver,
+		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
+		$origWindowName = $driver->getWebDriverSession()->window_handle();
+		
 		$driver->switchToIFrame('cms-preview-iframe');
-
 		$this->getMainContext()->assertPageNotContainsText($content);
-		$driver->switchToWindow();
+		$driver->switchToWindow($origWindowName);
 	}
 
 	/**
