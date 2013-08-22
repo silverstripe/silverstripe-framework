@@ -292,8 +292,8 @@ en:
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
