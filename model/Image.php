@@ -425,6 +425,8 @@ class Image extends File {
 			$cached = new Image_Cached($cacheFile);
 			// Pass through the title so the templates can use it
 			$cached->Title = $this->Title;
+			// Pass through the parent, to store cached images in correct folder.
+			$cached->ParentID = $this->ParentID;
 			return $cached;
 		}
 	}
