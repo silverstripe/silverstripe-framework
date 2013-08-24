@@ -184,7 +184,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @param int $height
 	 * @return Image_Backend
 	 */
-	public function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	public function paddedResize($width, $height, $backgroundColor = "#FFFFFF00") {
 		if(!$this->valid()) return;
 		
 		$width = round($width);
