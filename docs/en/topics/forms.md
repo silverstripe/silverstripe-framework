@@ -156,7 +156,7 @@ data.
 		
 		// Template method
 		public function HelloForm() {
-			return new MyForm($this, 'MyCustomForm');
+			return new MyForm($this, 'HelloForm');
 		}
 	}
 
