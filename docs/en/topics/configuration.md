@@ -13,7 +13,7 @@ SilverStripe system due to three properties:
 
   - Configuration is normally set by a knowledgeable technical user, such as a developer, not the end user
 
-In SilverStripe 3, each class has it's configuration specified as set of named properties and associated values. The
+In SilverStripe 3, each class has its configuration specified as set of named properties and associated values. The
 values at any given time are calculated by merging several sources using rules explained below. These sources are:
 
   - Values set via a call to Config#update
@@ -49,7 +49,7 @@ Each named class configuration property can contain either
 
 If the value is an array, each value in the array may also be one of those three types
 
-As mentioned, this value of any specific class configuration property comes from several sources. These sources do not
+As mentioned, the value of any specific class configuration property comes from several sources. These sources do not
 override each other (except in one specific circumstance) - instead the values from each source are merged together
 to give the final configuration value, using these rules:
 
@@ -61,10 +61,10 @@ to give the final configuration value, using these rules:
 - If the value is not an array, the highest priority value is used without any attempt to merge
 
 It is an error to have mixed types of the same named property in different locations (but an error will not necessarily
-be raised due to optimisations in the lookup code)
+be raised due to optimisations in the lookup code).
 
 The exception to this is "false-ish" values - empty arrays, empty strings, etc. When merging a non-false-ish value with a
-false-ish value, the result will be the non-false-ish value regardless of priority. When merging two false-sh values
+false-ish value, the result will be the non-false-ish value regardless of priority. When merging two false-ish values
 the result will be the higher priority false-ish value.
 
 The locations that configuration values are taken from in highest -> lowest priority order are:
@@ -81,7 +81,7 @@ The locations that configuration values are taken from in highest -> lowest prio
 - The composite configuration value of the parent class of this class
 
 At some of these levels you can also set masks. These remove values from the composite value at their priority point rather than add.
-They are much simpler. They consist of a list of key / value pairs. When applied against the current composite value
+They are much simpler. They consist of a list of key / value pairs. When applied against the current composite value.
 
 - If the composite value is a sequential array, any member of that array that matches any value in the mask is removed
 
@@ -92,7 +92,7 @@ They are much simpler. They consist of a list of key / value pairs. When applied
 ## Reading and updating configuration via the Config class
 
 The Config class is both the primary manner of getting configuration values and one of the locations you can set
-configuration values
+configuration values.
 
 ### Global access
 
@@ -101,7 +101,7 @@ done by calling the static method Config::inst(), like so:
 
 	$config = Config::inst();
 
-There are then three public methods available on the instance so obtained
+There are then three public methods available on the instance so obtained:
 
   - Config#get() returns the value of a specified classes' property
 
@@ -140,7 +140,7 @@ is only one set of values the header can be omitted.
 
 ### The header
 
-Each value section of a YAML file has
+Each value section of a YAML file has:
 
   - A reference path, made up of the module name, the config file name, and a fragment identifier
 
@@ -157,15 +157,15 @@ Each value section has a reference path. Each path looks a little like a URL, an
 
 	module/file#fragment
 
-"module" is the name of the module this YAML file is in
+"module" is the name of the module this YAML file is in.
 
-"file" is the name of this YAML file, stripped of the extension (so for routes.yml, it would be routes)
+"file" is the name of this YAML file, stripped of the extension (so for routes.yml, it would be routes).
 
 "fragment" is a specified identifier. It is specified by putting a `Name: {fragment}` key / value pair into the header
 section. If you don't specify a name, a random one will be assigned.
 
 This reference path has no affect on the value section itself, but is how other header sections refer to this value
-section in their priority chain rules
+section in their priority chain rules.
 
 #### Priorities
 
@@ -198,7 +198,7 @@ one value section can not be both before _and_ after another. However when you h
 was a difference in how many wildcards were used, the one with the least wildcards will be kept and the other one
 ignored.
 
-A more complex example, taken from framework/_config/routes.yml
+A more complex example, taken from framework/_config/routes.yml:
 
 	---
 	Name: adminroutes
@@ -219,8 +219,8 @@ The value section above has two rules:
 
 In this case there would appear to be a problem - adminroutes can not be both before all other value sections _and_
 after value sections with a name of `rootroutes`. However because `\*` has three wildcards
-(it is the equivalent of `\*/\*#\*`) but `#rootroutes` only has two (it is the equivalent of `\*/\*#rootroutes`),
-`\*` in this case means "every value section _except_ ones that have a fragment name of rootroutes"
+(it is the equivalent of `\*/\*#\*`) but `#rootroutes` only has two (it is the equivalent of `\*/\*#rootroutes`). 
+In this case `\*` means "every value section _except_ ones that have a fragment name of rootroutes".
 
 One important thing to note: it is possible to create chains that are unsolvable. For instance, A must be before B,
 B must be before C, C must be before A. In this case you will get an error when accessing your site.
@@ -228,7 +228,7 @@ B must be before C, C must be before A. In this case you will get an error when 
 #### Exclusionary rules
 
 Some value sections might only make sense under certain environmental conditions - a class exists, a module is installed,
-an environment variable or constant is set, or SilverStripe is running in a certain environment mode (live, dev, etc)
+an environment variable or constant is set, or SilverStripe is running in a certain environment mode (live, dev, etc).
 
 To accommodate this, value sections can be filtered to only be used when either a rule matches or doesn't match the
 current environment.
@@ -268,12 +268,12 @@ For instance, to add a property to "foo" when a module exists, and "bar" otherwi
 
 ### The values
 
-The values section of YAML configuration files is quite simple - it is simply a nested key / value pair structure
+The values section of a YAML configuration file is quite simple - it is simply a nested key / value pair structure
 where the top level key is the class name to set the property on, and the sub key / value pairs are the properties
-and values themselves (where values of course can themselves be nested hashes).
+and values themselves (where values, of course, can themselves be nested hashes).
 
 A simple example setting a property called "foo" to the scalar "bar" on class "MyClass", and a property called "baz"
-to a nested array on class "MyOtherClass".
+to a nested array on class "MyOtherClass":
 
 	MyClass:
 	  foo: 'bar'
@@ -286,7 +286,7 @@ Notice that we can leave out the header in this case because there is only a sin
 
 ## Setting configuration via statics
 
-The final location that a property can get it's value from is a static set on the associated class.
+The final location that a property can get its value from is a static set on the associated class.
 
 Statics should be considered immutable. Although in 3.0 the configuration system will include modified
 statics during the merge, this is not guaranteed to always be the case.
@@ -323,27 +323,27 @@ Some configuration has not yet been moved to the SilverStripe 3 configuration sy
 configuration is to call a static method or set a static variable directly within a _config.php file.
 
 You can call most static methods from _config.php - classes will be loaded as required. Here's a list - **this is
-incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
+incomplete - please add to it**. *Try to keep it in alphabetical order too!*.
 
  | Call    |                                                            | Description |
  | ----    |                                                            | ----------- |
  | Authenticator::register_authenticator($authenticator);|              | Enable an authentication method (for more details see [security](/topics/security)). |
  | Authenticator::set_default_authenticator($authenticator); |          | Modify tab-order on login-form.|
  | BBCodeParser::disable_autolink_urls(); |                             | Disables plain hyperlinks from being turned into links when bbcode is parsed. |
- | DataObject::$create_table_options['MySQLDatabase'] = 'ENGINE=MyISAM';|	| Set the default database engine to MyISAM (versions 2.4 and below already default to MyISAM) |
- | Debug::send_errors_to(string $email) |								| Send live errors on your site to this address (site has to be in 'live' mode using Director::set_environment_type(live) for this to occur |
- | Director::set_environment_type(string dev,test,live) | 				| Sets the environment type (e.g. dev site will show errors, live site hides them and displays a 500 error instead) |
- | Director::set_dev_servers(array('localhost', 'dev.mysite.com)) |     | Set servers that should be run in dev mode (see [debugging](debugging)) |
+ | DataObject::$create_table_options['MySQLDatabase'] = 'ENGINE=MyISAM';|	| Set the default database engine to MyISAM (versions 2.4 and below already default to MyISAM). |
+ | Debug::send_errors_to(string $email) |								| Send live errors on your site to this address (site has to be in 'live' mode using Director::set_environment_type(live) for this to occur. |
+ | Director::set_environment_type(string dev,test,live) | 				| Sets the environment type (e.g. dev site will show errors, live site hides them and displays a 500 error instead). |
+ | Director::set_dev_servers(array('localhost', 'dev.mysite.com)) |     | Set servers that should be run in dev mode (see [debugging](debugging)). |
  | Director::addRules(int priority, array rules) |	                    | Create a number of URL rules to be checked against when SilverStripe tries to figure out how to display a page. See cms/_config.php for some examples. Note: Using ->something/ as the value for one of these will redirect the user to the something/ page. |
- | Email::setAdminEmail(string $adminemail)  |                          | Sets the admin email for the site, used if there is no From address specified, or when you call Email::getAdminEmail() |
- | Email::send_all_emails_to(string $email)  |                          | Sends all emails to this address. Useful for debugging your email sending functions  |
- | Email::cc_all_emails_to(string $email)  |                            | Useful for CC'ing all emails to someone checking correspondence |
- | Email::bcc_all_emails_to(string $email) |                            | BCC all emails to this address, similar to CC'ing emails (above)  |
- | Requirements::set_suffix_requirements(false); |                      | Disable appending the current date to included files |
- | Security::encrypt_passwords($encrypt_passwords);  |                  | Specify if you want store your passwords in clear text or encrypted (for more details see [security](/topics/security)) |
+ | Email::setAdminEmail(string $adminemail)  |                          | Sets the admin email for the site, used if there is no From address specified, or when you call Email::getAdminEmail(). |
+ | Email::send_all_emails_to(string $email)  |                          | Sends all emails to this address. Useful for debugging your email sending functions.  |
+ | Email::cc_all_emails_to(string $email)  |                            | Useful for CC'ing all emails to someone checking correspondence. |
+ | Email::bcc_all_emails_to(string $email) |                            | BCC all emails to this address, similar to CC'ing emails (above).  |
+ | Requirements::set_suffix_requirements(false); |                      | Disable appending the current date to included files. |
+ | Security::encrypt_passwords($encrypt_passwords);  |                  | Specify if you want store your passwords in clear text or encrypted (for more details see [security](/topics/security)). |
  | Security::set_password_encryption_algorithm($algorithm, $use_salt);| | If you choose to encrypt your passwords, you can choose which algorithm is used to and if a salt should be used to increase the security level even more (for more details see [security](/topics/security)). |
- | Security::setDefaultAdmin('admin','password'); |                     | Set default admin email and password, helpful for recovering your password |
- | SSViewer::set_theme(string $themename) |                             | Choose the default theme for your site |
+ | Security::setDefaultAdmin('admin','password'); |                     | Set default admin email and password, helpful for recovering your password. |
+ | SSViewer::set_theme(string $themename) |                             | Choose the default theme for your site. |
 
 ## Constants
 
@@ -356,16 +356,16 @@ Some constants are user-defineable within *_ss_environment.php*.
 
 ## No GUI configuration
 
-SilverStripe framework does not provide a method to set configuration via a web panel
+SilverStripe framework does not provide a method to set configuration via a web panel.
 
 This lack of a configuration-GUI is on purpose, as we'd like to keep developer-level options where they belong (into
 code), without cluttering up the interface. See this core forum discussion ["The role of the
 CMS"](http://www.silverstripe.org/archive/show/532) for further reasoning.
 
-In addition to these principle, some settings are 
- * Author-level configuration like interface language or date/time formats can be performed in the CMS "My Profile" section (`admin/myprofile`). 
- * Group-related configuration like `[api:HTMLEditorField]` settings can be found in the "Security" section (`admin/security`).
- * Site-wide settings like page titles can be set (and extended) on the root tree element in the CMS "Content" section (through the [siteconfig](/reference/siteconfig) API).
+In addition to these principles, some settings are: 
+ - Author-level configuration like interface language or date/time formats can be performed in the CMS "My Profile" section (`admin/myprofile`)
+ - Group-related configuration like `[api:HTMLEditorField]` settings can be found in the "Security" section (`admin/security`)
+ - Site-wide settings like page titles can be set (and extended) on the root tree element in the CMS "Content" section (through the [siteconfig](/reference/siteconfig) API)
 
 ## _ss_environment.php
 
