@@ -87,6 +87,17 @@ class HtmlEditorField extends TextareaField {
 					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
 				}
 			}
+			if(function_exists('curl_init')) {
+				$handle = curl_init($link->getAttribute('href'));
+				curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+				$response = curl_exec($handle);
+				$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);  
+				curl_close($handle);
+				if ($httpCode < 200 || $httpCode > 300 && $httpCode != 302) {
+					$class = $link->getAttribute('class');
+					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
+				}
+			}
 		}
 
 		$properties['Value'] = htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8');
