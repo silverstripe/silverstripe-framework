@@ -91,7 +91,11 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function getPageStart() {
 		if ($this->pageStart === null) {
-			if ($this->request && isset($this->request[$this->getVar])) {
+			if(
+				$this->request 
+				&& isset($this->request[$this->getVar])
+				&& $this->request[$this->getVar] > 0
+			) {
 				$this->pageStart = (int) $this->request[$this->getVar];
 			} else {
 				$this->pageStart = 0;
