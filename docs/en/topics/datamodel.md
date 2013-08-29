@@ -584,6 +584,35 @@ object type.
 	}
 
 
+### belongs_to
+
+Defines a 1-to-1 relationship with another object, which declares the other end
+of the relationship with a corresponding $has_one. A single database column named
+`<relationship-name>ID` will be created in the object with the $has_one, but
+the $belongs_to by itself will not create a database field. This field will hold
+the ID of the object declaring the $belongs_to.
+
+Similarly with $has_many, dot notation can be used to explicitly specify the $has_one
+which refers to this relation. This is not mandatory unless the relationship would
+be otherwise ambiguous.
+
+	:::php
+
+	class Torso extends DataObject {
+		// HeadID will be generated on the Torso table
+		private static $has_one = array(
+			'Head' => 'Head'
+		);
+	}
+
+	class Head extends DataObject {
+		// No database field created. The '.Head' suffix could be omitted
+		private static $belongs_to = array(
+			'Torso' => 'Torso.Head'
+		);
+	}
+
+
 ### many_many
 
 Defines many-to-many joins. A new table, (this-class)_(relationship-name), will
