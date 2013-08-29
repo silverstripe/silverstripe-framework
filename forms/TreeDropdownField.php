@@ -86,7 +86,7 @@ class TreeDropdownField extends FormField {
 	 *		entering the text in the input field.
 	 */
 	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', 
-		$labelField = 'TreeTitle', $showSearch = false
+		$labelField = 'TreeTitle', $showSearch = true
 	) {
 
 		$this->sourceObject = $sourceObject;
@@ -181,7 +181,11 @@ class TreeDropdownField extends FormField {
 		if($record) {
 			$title = $record->{$this->labelField};
 		} else {
-			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+			if($this->showSearch){
+				$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
+			}else{
+				$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+			}
 		}
 
 		// TODO Implement for TreeMultiSelectField

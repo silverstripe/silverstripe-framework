@@ -1,3 +1,6 @@
+@import 'compass';
+@import "../admin/scss/_mixins";
+
 div.TreeDropdownField {
 	width: 400px;
 	background: #fff;
@@ -20,20 +23,49 @@ div.TreeDropdownField {
 		line-height: 16px;
 		overflow:hidden;
 		outline: none;
+		z-index:1;
+		@include hide-text-overflow;
+	}
+
+	.treedropdownfield-search{
+		@extend .treedropdownfield-title;
+
+		//Style search box to match chosen search
+		$bgImage: '../admin/thirdparty/chosen/chosen/chosen-sprite.png';
+		
+		background:url($bgImage) no-repeat 100% -22px; //For browers that only support 1 background
+		@include background(
+			url($bgImage) no-repeat 100% -22px, 
+			linear-gradient(top, #eeeeee 1%, #ffffff 15%)
+		);
+		@include box-sizing(border-box);
+		position:relative;
+		z-index:1100; //Needed to work within modales in chrome
+		border: 1px solid #aaa;
+		display:inline-block;
+		font-family: sans-serif;
+		font-size: 1em;
+		margin:1.5%;
+		outline: 0;
+		padding: 4px 20px 4px 5px;
+		width:97%; //optimized for most common tree width
+	}
+
+	&.searchable .treedropdownfield-panel.loading{
+		min-height: 16px /* icon */ + 14px /* padding */ + 34px /* approx height search input */; // Ensure there's room for loading indicator
+		background-position: 98% 39px; 
 	}
 
 	.treedropdownfield-panel {
 		clear: left;
 		position: absolute;
-		overflow: auto;
 		display: none;
 		cursor: default;
 		border: 1px solid #aaa;
 		border-top: none;
 		margin: 1px 0 0 -1px; /* account for border on container div */
-		max-height:200px;
 		background-color: #fff;
-		z-index: 50;
+		z-index: 70;
 		-webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
 		-moz-box-shadow   : 0 4px 5px rgba(0,0,0,.15);
 		-o-box-shadow     : 0 4px 5px rgba(0,0,0,.15);
@@ -41,12 +73,33 @@ div.TreeDropdownField {
 
 		&.loading {
 			min-height: 16px /* icon */ + 14px /* padding */; // Ensure there's room for loading indicator
-			background: #fff url("../images/network-save.gif") 7px 7px no-repeat; 
+			background: #fff url("../images/network-save.gif") 98% 7px no-repeat; 
+		}
+
+		.tree-holder{ 
+			position:relative;
+			z-index:1;
+			> ul{
+				position:relative;
+				max-height:200px;
+				overflow-y: auto;
+			}
+		}
+
+		ul{
+			overflow-x:hidden;
+			float:left;
+			width:100%;
+			.jstree-icon{
+				margin-left:5px; //move to align with possible search box
+			}
+			.jstree-open > ins{
+				background-position:-18px 0; //move to align with possible search box
+			}
 		}
 
 		ul.tree {
 			margin: 0;
-
 			a {
 				font-size: 12px;
 			}
