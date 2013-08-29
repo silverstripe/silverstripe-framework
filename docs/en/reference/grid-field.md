@@ -249,6 +249,32 @@ Here is a list of components for generic use:
  - `[api:GridFieldPaginator]`
  - `[api:GridFieldDetailForm]`
 
+## Flexible Area Assignment through Fragments
+
+GridField layouts can contain many components other than the table itself,
+for example a search bar to find existing relations, a button to add those,
+and buttons to export and print the current data. The GridField has certain
+defined areas called "fragments" where these components can be placed.
+The goal is for multiple components to share the same space, for example a header row.
+
+Built-in components:
+
+ - `header`/`footer`: Renders in a `<thead>`/`<tfoot>`, should contain table markup
+ - `before`/`after`: Renders before/after the actual `<table>`
+ - `buttons-before-left`/`buttons-before-right`/`buttons-after-left`/`buttons-after-right`: 
+    Renders in a shared row before the table. Requires [api:GridFieldButtonRow].
+
+These built-ins can be used by passing the fragment names into the constructor
+of various components. Note that some [api:GridFieldConfig] classes
+will already have rows added to them. The following example will add a print button
+at the bottom right of the table.
+
+	:::php
+	$config->addComponent(new GridFieldButtonRow('after'));
+	$config->addComponent(new GridFieldPrintButton('buttons-after-right'));
+
+Further down we'll explain how to write your own components using fragments.
+
 ## Creating a custom GridFieldComponent
 
 A single component often uses a number of interfaces.
@@ -328,6 +354,42 @@ any logic on your field.
 If you need more granular control, e.g. to consistently deny non-admins from deleting
 records, use the `DataObject->can...()` methods 
 (see [DataObject permissions](/reference/dataobject#permissions)).
+
+## Creating your own Fragments
+
+Fragments are designated areas within a GridField which can be shared between component templates.
+You can define your own fragments by using a `\$DefineFragment' placeholder in your components' template.
+This example will simply create an area rendered before the table wrapped in a simple `<div>`.
+
+	:::php
+	class MyAreaComponent implements GridField_HTMLProvider {
+		public function getHTMLFragments( $gridField) {
+			return array(
+				'before' => '<div class="my-area">$DefineFragment(my-area)</div>'
+			);
+		}
+	}
+
+We're returning raw HTML from the component, usually this would be handled by a SilverStripe template.
+Please note that in templates, you'll need to escape the dollar sign on `$DefineFragment`: 
+These are specially processed placeholders as opposed to native template syntax.
+
+Now you can add other components into this area by returning them as an array from
+your [api:GridFieldComponent->getHTMLFragments()] implementation:
+
+	:::php
+	class MyShareLinkComponent implements GridField_HTMLProvider {
+		public function getHTMLFragments( $gridField) {		
+			return array(
+				'my-area' => '<a href>...</a>'
+			);
+		}
+	}
+
+Your new area can also be used by existing components, e.g. the [api:GridFieldPrintButton]
+
+	:::php
+	new GridFieldPrintButton('my-component-area')
 
 ## Related
 
