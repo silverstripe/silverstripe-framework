@@ -296,25 +296,10 @@
 			cancelSearch: function() {
 				this.closePanel();
 				this.loadTree();
-			},
-			getValue: function(title){
-				//Provide value for IE8 and 9 as they don't support placeholders
-				return ($.browser.msie && parseInt($.browser.version, 10) <= 9) ? title:'';
 			}
 		});
 		
 		$('.TreeDropdownField.searchable input.search').entwine({
-			onfocusin: function(){
-				//IE placeholder support
-				this.val('');
-			},
-			onfocusout: function(){
-				//IE placeholder support
-				var value = this.closest('.TreeDropdownField').getValue(this.attr('placeholder'));
-				if(this.val() === ''){
-					this.val(value);
-				}
-			},
 			onkeydown: function(e) {
 				var field = this.getField();
 				if(e.keyCode == 13) {
