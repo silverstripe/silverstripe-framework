@@ -91,6 +91,17 @@ class Permission extends DataObject {
 	static $hidden_permissions = array();
 
 	/**
+	 * @config These permissions can only be applied by ADMIN users, to prevent
+	 * privilege escalation on group assignments and inheritance.
+	 * @var array
+	 */
+	static $privileged_permissions = array(
+		'ADMIN', 
+		'APPLY_ROLES',
+		'EDIT_PERMISSIONS'
+	);
+
+	/**
 	 * Check that the current member has the given permission.
 	 * 
 	 * @param string $code Code of the permission to check (case-sensitive)
