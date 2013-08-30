@@ -193,6 +193,11 @@ class PermissionCheckboxSetField extends FormField {
 						// show its origin automatically
 						$inheritMessage = ' (' . join(', ', $uninheritedCodes[$code]).')';
 					}
+
+					// Disallow modification of "privileged" permissions unless currently logged-in user is an admin
+					if(!Permission::check('ADMIN') && in_array($code, Permission::$privileged_permissions)) {
+						$disabled = ' disabled="true"';
+					}
 					
 					// If the field is readonly, always mark as "disabled"
 					if($this->readonly) $disabled = ' disabled="true"';
@@ -217,6 +222,16 @@ class PermissionCheckboxSetField extends FormField {
 	function saveInto(DataObject $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
+
+		// Remove all "privileged" permissions if the currently logged-in user is not an admin
+		if(!Permission::check('ADMIN')) {
+			foreach($this->value as $id => $bool) {
+				if(in_array($id, Permission::$privileged_permissions)) {
+					unset($this->value[$id]);
+				}
+			}	
+		}
+		
 
 		// remove all permissions and re-add them afterwards
 		$permissions = $record->$fieldname();
