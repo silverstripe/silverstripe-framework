@@ -334,6 +334,31 @@ class Group extends DataObject {
 	public function setCode($val){
 		$this->setField("Code", Convert::raw2url($val));
 	}
+
+	public function validate() {
+		$result = parent::validate();
+
+		// Check if the new group hierarchy would add certain "privileged permissions",
+		// and require an admin to perform this change in case it does. 
+		// This prevents "sub-admin" users with group editing permissions to increase their privileges.
+		if($this->Parent()->exists() && !Permission::check('ADMIN')) {
+			$inheritedCodes = Permission::get()
+				->filter('GroupID', $this->Parent()->collateAncestorIDs())
+				->column('Code');
+			$privilegedCodes = Config::inst()->get('Permission', 'privileged_permissions');
+			if(array_intersect($inheritedCodes, $privilegedCodes)) {
+				$result->error(sprintf(
+					_t(
+						'Group.HierarchyPermsError',
+						'Can\'t assign parent group "%s" with privileged permissions (requires ADMIN access)'
+					),
+					$this->Parent()->Title
+				));
+			}
+		}
+
+		return $result;
+	}
 	
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
