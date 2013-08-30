@@ -133,6 +133,49 @@ class GroupTest extends FunctionalTest {
 			'Grandchild groups are removed');
 	}
 
+	public function testValidatesPrivilegeLevelOfParent() {
+		$nonAdminUser = $this->objFromFixture('GroupTest_Member', 'childgroupuser');
+		$adminUser = $this->objFromFixture('GroupTest_Member', 'admin');
+		$nonAdminGroup = $this->objFromFixture('Group', 'childgroup');
+		$adminGroup = $this->objFromFixture('Group', 'admingroup');
+
+		$nonAdminValidateMethod = new ReflectionMethod($nonAdminGroup, 'validate');
+		$nonAdminValidateMethod->setAccessible(true);
+
+		// Making admin group parent of a non-admin group, effectively expanding is privileges
+		$nonAdminGroup->ParentID = $adminGroup->ID;
+
+		$this->logInWithPermission('APPLY_ROLES');
+		$result = $nonAdminValidateMethod->invoke($nonAdminGroup);
+		$this->assertFalse(
+			$result->valid(),
+			'Members with only APPLY_ROLES can\'t assign parent groups with direct ADMIN permissions'
+		);
+
+		$this->logInWithPermission('ADMIN');
+		$result = $nonAdminValidateMethod->invoke($nonAdminGroup);
+		$this->assertTrue(
+			$result->valid(),
+			'Members with ADMIN can assign parent groups with direct ADMIN permissions'
+		);
+		$nonAdminGroup->write();
+		$newlyAdminGroup = $nonAdminGroup;
+
+		$this->logInWithPermission('ADMIN');
+		$inheritedAdminGroup = $this->objFromFixture('Group', 'group1');
+		$inheritedAdminMethod = new ReflectionMethod($inheritedAdminGroup, 'validate');
+		$inheritedAdminMethod->setAccessible(true);
+		$inheritedAdminGroup->ParentID = $adminGroup->ID;
+		$inheritedAdminGroup->write(); // only works with ADMIN login
+
+		$this->logInWithPermission('APPLY_ROLES');
+		$result = $inheritedAdminMethod->invoke($nonAdminGroup);
+		$this->assertFalse(
+			$result->valid(),
+			'Members with only APPLY_ROLES can\'t assign parent groups with inherited ADMIN permission'
+		);
+	}
+
 }
 
 class GroupTest_Member extends Member implements TestOnly {
