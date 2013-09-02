@@ -97,8 +97,15 @@ class MemberLoginForm extends LoginForm {
 		// Focus on the email input when the page is loaded
 		Requirements::customScript(<<<JS
 			(function() {
-				var el = document.getElementById("MemberLoginForm_LoginForm_Email");
-				if(el && el.focus) el.focus();
+				function focusInput() {
+					var el = document.getElementById("MemberLoginForm_LoginForm_Email");
+					if(el && el.focus) el.focus();
+				}
+				if(window.addEventListener) {
+					window.addEventListener('DOMContentLoaded', focusInput, false);
+				} else {
+					window.attachEvent('onload', focusInput);
+				}
 			})();
 JS
 		);
