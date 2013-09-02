@@ -7,6 +7,7 @@ So that I can link to a external website or a page on my site
 Background:
 Given a "page" "About Us"
 Given I am logged in with "ADMIN" permissions
+Given "About Us" has text in content "You can fill this page out with your own content, or delete it and create your own pages."
 And I go to "/admin/pages"
 Then I should see "About Us" in CMS Tree
 
