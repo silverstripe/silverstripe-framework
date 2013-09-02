@@ -77,8 +77,8 @@
 					});
 				} else {
 					checkboxes.each(function() {
-						$(this).attr('checked', '');
-						$(this).attr('disabled', '');
+						$(this).prop('checked', false);
+						$(this).prop('disabled', false);
 					});
 				}
 			}
