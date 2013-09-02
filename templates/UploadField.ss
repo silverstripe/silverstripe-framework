@@ -67,4 +67,3 @@
 		<div class="clear"><!-- --></div>
 	</div>
 <% end_if %>
-<% if Description %><span class="description">$Description</span><% end_if %>
