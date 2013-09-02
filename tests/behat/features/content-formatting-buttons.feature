@@ -1,7 +1,7 @@
 @assets
 Feature: Using tinymce buttons to edit formatting of text content
 As a cms author
-I want to format my content to Bold, Italics, and underline
+I want to format my content to Bold, Italics, strikethrough and underline
 So that I can create basic formatted content
 
 Background:
@@ -50,3 +50,18 @@ Then I should see content text "You" is set to "<span style="text-decoration: un
 # Required to avoid "unsaved changed" browser dialog
 Then I press the "Save draft" button
 Then I should see content text "You" is set to "<span style="text-decoration: underline;">You</span>"
+
+@javascript
+Scenario: I can select text within the content and apply strikethrough formatting using a buttton in the HTML Editor
+When I follow "About Us"
+Then I should see an edit page form
+And I should see HTML editor field
+
+When I highlight the content text "You" 
+When I press the "mceIcon mce_strikethrough" button
+Then I should see content text "You" is set to "<span style="text-decoration: line-through;">You</span>"
+
+# Required to avoid "unsaved changed" browser dialog
+Then I press the "Save draft" button
+Then I should see content text "You" is set to "<span style="text-decoration: line-through;">You</span>"
+
