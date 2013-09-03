@@ -91,7 +91,7 @@ JavaScript in a separate file and instead load, via search and replace, several 
 	:::php
 	$vars = array(
 	    "EditorCSS" => "mot/css/editor.css",
-	)
+	);
 	Requirements::javascriptTemplate("cms/javascript/editor.template.js", $vars);
 
 
