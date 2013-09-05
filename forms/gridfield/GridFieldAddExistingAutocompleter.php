@@ -232,10 +232,11 @@ class GridFieldAddExistingAutocompleter
 		$json = array();
 		foreach($results as $result) {
 			// Prevent a circular reference and associated error in CMS/admin
-			$showInSearch = ($result->ID != $gridField->getForm()->getRecord()->ID);
-			if($showInSearch) {
-				$json[$result->ID] = SSViewer::fromString($this->resultsFormat)->process($result);
+			$hideFromSearch = ($gridField->getForm()->getRecord() && ($result->ID == $gridField->getForm()->getRecord()->ID));
+			if($hideFromSearch) {
+				continue;
 			}
+			$json[$result->ID] = SSViewer::fromString($this->resultsFormat)->process($result);
 		}
 		return Convert::array2json($json);
 	}
