@@ -34,6 +34,7 @@ HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen', 'inlinepopups
 HtmlEditorConfig::get('cms')->enablePlugins(array(
 	'ssbuttons' => sprintf('../../../%s/tinymce_ssbuttons/editor_plugin_src.js', THIRDPARTY_DIR)
 ));
+HtmlEditorConfig::get('cms')->enablePlugins('advimagescale');
 			
 HtmlEditorConfig::get('cms')->insertButtonsBefore('formatselect', 'styleselect');
 HtmlEditorConfig::get('cms')->addButtonsToLine(2, 
