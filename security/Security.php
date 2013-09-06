@@ -280,6 +280,9 @@ class Security extends Controller {
 		$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
 	}
 
+	public function index() {
+		return $this->httpError(404); // no-op
+	}
 
 	/**
 	 * Get the login form to process according to the submitted data
