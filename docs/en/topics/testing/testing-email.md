@@ -1,4 +1,4 @@
-# Email Sending
+# Testing Email
 
 SilverStripe's test system has built-in support for testing emails sent using the Email class.
 
