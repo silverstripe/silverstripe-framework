@@ -299,7 +299,10 @@ jQuery.noConflict();
 						if(!$(this).confirmUnsavedChanges()) abort = true;
 					});
 					
-					if(abort) return;
+					if(abort) {
+						this.setRedrawSuppression(true);
+						return;
+					}
 				}
 
 				// Save tab selections so we can restore them later
