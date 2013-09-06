@@ -415,6 +415,31 @@ class SQLQueryTest extends SapphireTest {
 	}
 
 	/**
+	 * Tests that an ORDER BY is only added if a LIMIT is set.
+	 */
+	public function testAggregateNoOrderByIfNoLimit() {
+		$query = new SQLQuery();
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setOrderBy('Common');
+		$query->setLimit(array());
+
+		$aggregate = $query->aggregate('MAX("ID")');
+		$limit = $aggregate->getLimit();
+		$this->assertEquals(array(), $aggregate->getOrderBy());
+		$this->assertEquals(array(), $limit);
+
+		$query = new SQLQuery();
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setOrderBy('Common');
+		$query->setLimit(2);
+
+		$aggregate = $query->aggregate('MAX("ID")');
+		$limit = $aggregate->getLimit();
+		$this->assertEquals(array('Common' => 'ASC'), $aggregate->getOrderBy());
+		$this->assertEquals(array('start' => 0, 'limit' => 2), $limit);
+	}
+
+	/**
 	 * Test that "_SortColumn0" is added for an aggregate in the ORDER BY
 	 * clause, in combination with a LIMIT and GROUP BY clause.
 	 * For some databases, like MSSQL, this is a complicated scenario
