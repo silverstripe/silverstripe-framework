@@ -3,11 +3,8 @@
 The SilverStripe core contains various features designed to simplify the process of creating and managing automated tests.
 
 * [Installing and Configuring PHPUnit](installing-and-configuring-phpunit): Guide on setting up PHPUnit and configuring it with SilverStripe
-* [Create a unit test](create-silverstripe-test): Writing tests to check core data objects
-* [Creating a functional test](create-functional-test): An overview of functional tests and how to write a functional test
-* [Email Sending](email-sending): An overview of the built-in email testing code
-* [Troubleshooting](testing-guide-troubleshooting): Frequently asked questions list for testing issues
-* [Why Unit Test?](why-test): Why should you test and how to start testing
+* [Why Unit Test?](why-should-i-test): Why should you test and how to start testing
+* [Troubleshooting](troubleshooting): Frequently asked questions list for testing issues
 * [Glossary](glossary): Definitions of testing terminology.
 
 If you are familiar with PHP coding but new to unit testing, you should read the [Introduction](/topics/testing) and
@@ -17,9 +14,31 @@ You should also read over [the PHPUnit manual](http://www.phpunit.de/manual/curr
 fundamental concepts that we build on in this documentation.
 
 If you're more familiar with unit testing, but want a refresher of some of the concepts and terminology, you can browse
-the [Testing Glossary](#glossary).
+the [Testing Glossary](glossary).
 To get started now, follow the installation instructions below, and check
-[Troubleshooting](/topics/testing/testing-guide-troubleshooting) in case you run into any problems.
+[Troubleshooting](troubleshooting) in case you run into any problems.
+
+## Writing Tests
+
+Tests are written by creating subclasses of `[api:SapphireTest]`.  You should put tests for your site in the
+`mysite/tests` directory.  If you are writing tests for a module, put them in the `(modulename)/tests` directory.
+
+Generally speaking, there should be one test class for each application class.  The name of the test class should be the
+application class, with "Test" as a suffix.  For instance, we have all the tests for `SiteTree` in
+`framework/tests/SiteTreeTest.php`
+
+You will generally write two different kinds of test classes.
+
+*  **Unit Test:** Test the behaviour of one of your DataObjects.
+*  **Functional Test:** Test the behaviour of one of your controllers.
+
+Some people may note that we have used the same naming convention as Ruby on Rails.
+
+Tutorials and recipes for creating tests using the SilverStripe framework:
+
+* [Creating a SilverStripe test](creating-a-silverstripe-test): Writing tests to check core data objects
+* [Creating a functional test](creating-a-functional-test): An overview of functional tests and how to write a functional test
+* [Testing Outgoing Email](testing-email): An overview of the built-in email testing code
 
 ## Running Tests
 
@@ -74,25 +93,3 @@ test runs in any automated testing environments. If for some reason you don't ha
 access to the command line, you can also run tests through the browser.
 
 	 http://localhost/dev/tests
-
-## Writing Tests
-
-Tests are written by creating subclasses of `[api:SapphireTest]`.  You should put tests for your site in the
-`mysite/tests` directory.  If you are writing tests for a module, put them in the `(modulename)/tests` directory.
-
-Generally speaking, there should be one test class for each application class.  The name of the test class should be the
-application class, with "Test" as a suffix.  For instance, we have all the tests for `SiteTree` in
-`framework/tests/SiteTreeTest.php`
-
-You will generally write two different kinds of test classes.
-
-*  **Unit Test:** Test the behaviour of one of your DataObjects.
-*  **Functional Test:** Test the behaviour of one of your controllers.
-
-Some people may note that we have used the same naming convention as Ruby on Rails.
-
-Tutorials and recipes for creating tests using the SilverStripe framework:
-
-*  **[Create a SilverStripe Test](/topics/testing/create-silverstripe-test)**
-*  **[Create a Functional Test](/topics/testing/create-functional-test)**
-*  **[Test Outgoing Email Sending](/topics/testing/email-sending)**

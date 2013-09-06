@@ -1,4 +1,4 @@
-# Writing functional tests
+# Creating a functional test
 
 Functional tests test your controllers.  The core of these are the same as unit tests:
 
@@ -13,7 +13,7 @@ URLs.  Here is an example from the subsites module:
 	:::php
 	class SubsiteAdminTest extends SapphireTest {
 		private static $fixture_file = 'subsites/tests/SubsiteTest.yml';
-	
+
 		/**
 		 * Return a session that has a user logged in as an administrator
 		 */
@@ -22,27 +22,27 @@ URLs.  Here is an example from the subsites module:
 				'loggedInAs' => $this->idFromFixture('Member', 'admin')
 			));
 		}
-	
+
 		/**
 		 * Test generation of the view
 		 */
 		public function testBasicView() {
 			// Open the admin area logged in as admin
 			$response1 = Director::test('admin/subsites/', null, $this->adminLoggedInSession());
-	
+
 			// Confirm that this URL gets you the entire page, with the edit form loaded
 			$response2 = Director::test('admin/subsites/show/1', null, $this->adminLoggedInSession());
 			$this->assertTrue(strpos($response2->getBody(), 'id="Root_Configuration"') !== false);
 			$this->assertTrue(strpos($response2->getBody(), '<head') !== false);
-	
+
 			// Confirm that this URL gets you just the form content, with the edit form loaded
 			$response3 = Director::test('admin/subsites/show/1', array('ajax' => 1), $this->adminLoggedInSession());
-	
+
 			$this->assertTrue(strpos($response3->getBody(), 'id="Root_Configuration"') !== false);
 			$this->assertTrue(strpos($response3->getBody(), '<form') === false);
 			$this->assertTrue(strpos($response3->getBody(), '<head') === false);
 		}
-	
+
 
 
 We are using a new static method here: **Director::test($url, $postVars, $sessionObj)**
@@ -64,5 +64,5 @@ We can use string processing on the body of the response to then see if it fits 
 If you're testing for natural language responses like error messages, make sure to use [i18n](/topics/i18n) translations through
 the *_t()* method to avoid tests failing when i18n is enabled.
 
-Note that for a more highlevel testing approach, SilverStripe also supports 
+Note that for a more highlevel testing approach, SilverStripe also supports
 [behaviour-driven testing through Behat](https://github.com/silverstripe-labs/silverstripe-behat-extension). It interacts directly with your website or CMS interface by remote controlling an actual browser, driven by natural language assertions.
