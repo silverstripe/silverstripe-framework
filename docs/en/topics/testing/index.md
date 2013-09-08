@@ -94,16 +94,16 @@ The `phpunit` binary should be used from the root directory of your website.
 	phpunit
 
 	# Run all tests of a specific module
- 	phpunit framework/tests/
+	phpunit framework/tests/
 
- 	# Run specific tests within a specific module
- 	phpunit framework/tests/filesystem
+	# Run specific tests within a specific module
+	phpunit framework/tests/filesystem
 
- 	# Run a specific test
+	# Run a specific test
 	phpunit framework/tests/filesystem/FolderTest.php
 
 	# Run tests with optional `$_GET` parameters (you need an empty second argument)
- 	phpunit framework/tests '' flush=all
+	phpunit framework/tests '' flush=all
 
 All command-line arguments are documented on
 [phpunit.de](http://www.phpunit.de/manual/current/en/textui.html).
