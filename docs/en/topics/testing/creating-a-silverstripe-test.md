@@ -1,7 +1,13 @@
 # Creating a SilverStripe Test
 
-A unit test class will test the behaviour of one of your `[api:DataObjects]`.  This simple fragment of `[api:SiteTreeTest]`
-provides us the basics of creating unit tests.
+A test is created by extending one of two classes, SapphireTest and FunctionalTest. You would subclass SapphireTest to
+test your application logic, for example testing the behaviour of one of your `[api:DataObjects]`, whereas FunctionalTest
+is extended when you want to test your application's functionality, such as testing the results of GET and POST requests,
+and validating the content of a page. `[api:FunctionalTest]` is a subclass of `[api:SapphireTest]`.
+
+## Creating a test from SapphireTest
+
+Here is an example of a test which extends SapphireTest:
 
 	:::php
 	<?php
@@ -35,35 +41,26 @@ provides us the basics of creating unit tests.
 		}
 	}
 
+Firstly we define a static member `$fixture_file`, this should point to a file that represents the data we want to test,
+represented in YAML. When our test is run, the data from this file will be loaded into a test database for our test to use.
+This property can be an array of strings pointing to many .yml files, but for our test we are just using a string on its
+own. For more detail on fixtures, see the [page on fixtures](fixtures).
 
+The second part of our class is the `testURLGeneration` method. This method is our test. You can asign many tests, but
+again for our purposes there is just the one. When the test is executed, methods prefixed with the word **test** will be
+run. The test database is rebuilt everytime one of these methods is run.
 
-There are a number of points to note in this code fragment:
+Inside our test method is the `objFromFixture` method that will generate an object for us based on data from our fixture
+file. To identify to the object, we provide a class name and an identifier. The identifier is specified in the YAML file
+but not saved in the database anywhere, `objFromFixture` looks the `[api:DataObject]` up in memory rather than using the
+database. This means that you can use it to test the functions responsible for looking up content in the database.
 
-*  Your test is a **subclass of SapphireTest**.  Both unit tests and functional tests are a subclass of `[api:SapphireTest]`.
-*  **static $fixture_file** is defined.  The testing framework will automatically set up a new database for **each** of
-your tests.  The initial database content will be sourced from the YML file that you list in $fixture_file. The property can take an array of fixture paths.
-*  Each **method that starts with the word "test"** will be executed by the TestRunner.  Define as many as you like; the
-database will be rebuilt for each of these.
-*  **$this->objFromFixture($className, $identifier)** can be used to select one of the objects named in your fixture
-file.  To identify to the object, we provide a class name and an identifier.  The identifier is specified in the YML
-file but not saved in the database anywhere.  objFromFixture() looks the `[api:DataObject]` up in memory rather than using the
-database.  This means that you can use it to test the functions responsible for looking up content in the database.
+The final part of our test is an assertion command, `assertEquals`. An assertion command allows us to test for something
+in our test methods (in this case we are testing if two values are equal). A test method can have more than one assertion
+command, and if anyone of these tests fail, then the whole test method will fail.
 
-## Assertion commands
+For more information on PHPUnit's assertions see the [PHPUnit manual](http://www.phpunit.de/manual/current/en/api.html#api.assert).
 
-**$this->assertEquals()** is an example of an assertion function.
-These functions form the basis of our tests - a test
-fails if and only if one or more of the assertions fail.
-See [the PHPUnit manual](http://www.phpunit.de/manual/current/en/api.html#api.assert)
-for a listing of all PHPUnit's built-in assertions.
-
-The `[api:SapphireTest]` class comes with additional assertions which are more
-specific to the framework, e.g. `[assertEmailSent](api:SapphireTest->assertEmailSent())`
-which can simulate sending emails through the `Email->send()` API without actually
-using a mail server (see the [testing emails](email-sending)) guide.
-
-## Fixtures
-
-Often you need to test your functionality with some existing data, so called "fixtures".
-These records are inserted on a fresh test database automatically.
-[Read more about fixtures](fixtures).
+The `[api:SapphireTest]` class comes with additional assertions which are more specific to the Sapphire, for example the
+`[assertEmailSent](api:SapphireTest->assertEmailSent())` method, which simulates sending emails through the `Email->send()`
+API without actually using a mail server. For more details on this see th [testing emails](testing-email)) guide.
