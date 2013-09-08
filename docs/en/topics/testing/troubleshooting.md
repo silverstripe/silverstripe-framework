@@ -25,7 +25,7 @@ So to make your tests more robust, use the aliases rather than hardcoded IDs.
 
 Also, some databases don't return records in a consistent sort order
 unless you explicitly tell them to. If you don't want to test sort order
-but rather just the returned collection, 
+but rather just the returned collection,
 
 	:::php
 	$myPage = $this->objFromFixture('Page', 'mypage');
@@ -41,7 +41,7 @@ but rather just the returned collection,
 
 Fixtures are great because they're easy to define through YML,
 but sometimes can be a bit of a blackbox when it comes to the actual
-database state they create. These are temporary databases, which are 
+database state they create. These are temporary databases, which are
 destructed directly after the test run - which is intentional,
 but not very helpful if you want to verify that your fixtures have been created correctly.
 

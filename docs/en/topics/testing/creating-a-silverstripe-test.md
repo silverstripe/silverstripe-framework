@@ -1,4 +1,4 @@
-#  How To Create a SilverStripe Test
+# Creating a SilverStripe Test
 
 A unit test class will test the behaviour of one of your `[api:DataObjects]`.  This simple fragment of `[api:SiteTreeTest]`
 provides us the basics of creating unit tests.
@@ -6,11 +6,11 @@ provides us the basics of creating unit tests.
 	:::php
 	<?php
 	class SiteTreeTest extends SapphireTest {
-		
+
 		// Define the fixture file to use for this test class
 		private static $fixture_file = 'SiteTreeTest.yml';
-	
-		/**	
+
+		/**
 		 * Test generation of the URLSegment values.
 		 *  - Turns things into lowercase-hyphen-format
 		 *  - Generates from Title by default, unless URLSegment is explicitly set
@@ -27,14 +27,14 @@ provides us the basics of creating unit tests.
 				'product3' => 'another-product-2',
 				'product4' => 'another-product-3',
 			);
-			
+
 			foreach($expectedURLs as $fixture => $urlSegment) {
 				$obj = $this->objFromFixture('Page', $fixture);
 				$this->assertEquals($urlSegment, $obj->URLSegment);
 			}
 		}
 	}
-	
+
 
 
 There are a number of points to note in this code fragment:
@@ -51,9 +51,9 @@ database.  This means that you can use it to test the functions responsible for 
 
 ## Assertion commands
 
-**$this->assertEquals()** is an example of an assertion function.  
+**$this->assertEquals()** is an example of an assertion function.
 These functions form the basis of our tests - a test
-fails if and only if one or more of the assertions fail.  
+fails if and only if one or more of the assertions fail.
 See [the PHPUnit manual](http://www.phpunit.de/manual/current/en/api.html#api.assert)
 for a listing of all PHPUnit's built-in assertions.
 
@@ -65,5 +65,5 @@ using a mail server (see the [testing emails](email-sending)) guide.
 ## Fixtures
 
 Often you need to test your functionality with some existing data, so called "fixtures".
-These records are inserted on a fresh test database automatically. 
+These records are inserted on a fresh test database automatically.
 [Read more about fixtures](fixtures).
