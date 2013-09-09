@@ -235,7 +235,9 @@ class File extends DataObject {
 	}
 
 	public function RelativeLink() {
-		return $this->Filename;
+		return self::config()->appendmtime && file_exists($fullPath = $this->getFullPath()) ? 
+			Controller::join_links($this->Filename, '?m=' . filemtime($fullPath)) : 
+			$this->Filename;
 	}
 
 	/**
@@ -646,7 +648,11 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getAbsoluteURL() {
-		return Director::absoluteBaseURL() . $this->getFilename();
+		$absUrl =  Director::absoluteBaseURL() . $this->getFilename();
+		if (self::config()->appendmtime && file_exists($fullPath = $this->getFullPath())){
+			$absUrl = Controller::join_links($absUrl, '?m=' . filemtime($fullPath));
+		}
+		return $absUrl;
 	}
 	
 	/**
@@ -656,7 +662,11 @@ class File extends DataObject {
 	 * @return string
 	 */
 	public function getURL() {
-		return Director::baseURL() . $this->getFilename();
+		$url = Director::baseURL() . $this->getFilename();
+		if (self::config()->appendmtime && file_exists($fullPath = $this->getFullPath())){
+			$url = Controller::join_links($url, '?m=' . filemtime($fullPath));
+		}
+		return $url;
 	}
 
 	/**
