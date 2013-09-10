@@ -158,10 +158,9 @@ class DataQuery {
 
 			foreach ($query->getWhere() as $where) {
 				// Check for just the column, in the form '"Column" = ?' and the form '"Table"."Column"' = ?
-				if (preg_match('/^"([^"]+)"/', $where, $matches) ||
-					preg_match('/^"([^"]+)"\."[^"]+"/', $where, $matches)) {
-					if (!in_array($matches[1], $queriedColumns)) $queriedColumns[] = $matches[1];
-				}
+				if (preg_match('/^"[^"]+"\."([^"]+)"|^"([^"]+)"/', $where, $matches)){
+				if (!in_array($matches[1], $queriedColumns)) $queriedColumns[] = $matches[1];
+			    }
 			}
 		}
 		else $tableClasses = ClassInfo::ancestry($this->dataClass, true);
