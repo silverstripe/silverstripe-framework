@@ -286,7 +286,7 @@
 					);
 
 				this.find('.treedropdownfield-panel').prepend(
-					$('<input type="text" class="search treedropdownfield-search" data-skip-autofocus="true" placeholder="' + title + '" value="' + this.getValue(title) + '" />')
+					$('<input type="text" class="search treedropdownfield-search" data-skip-autofocus="true" placeholder="' + title + '" value="" />')
 				);
 			},
 			search: function(str, callback) {
