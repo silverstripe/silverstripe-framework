@@ -3,7 +3,7 @@
 ## Overview
 
 
-In the [first tutorial](1-building-a-basic-site) we learnt how to create a basic site using SilverStripe. This tutorial will build on that, and explore extending SilverStripe by creating our own page types. After doing this we should have a better understanding of how SilverStripe works.
+In the [first tutorial (Building a basic site)](1-building-a-basic-site) we learnt how to create a basic site using SilverStripe. This tutorial will build on that, and explore extending SilverStripe by creating our own page types. After doing this we should have a better understanding of how SilverStripe works.
 
 ## What are we working towards?
 
@@ -54,7 +54,7 @@ A more in-depth introduction of Model-View-Controller can be found
 
 ## Creating the news section page types
 
-To create a news section we'll need two new page types. The first one is obvious: we need an *ArticlePage* page type. The second is a little less obvious: we need an *ArticleHolder* page type to contain our article pages.
+To create a News section we'll need two new page types. The first one is obvious: we need an *ArticlePage* page type. The second is a little less obvious: we need an *ArticleHolder* page type to contain our article pages.
 
 We'll start with the *ArticlePage* page type. First we create the model, a class called "ArticlePage". We put the *ArticlePage* class into a file called "ArticlePage.php" inside *mysite/code*. All other classes relating to *ArticlePage* should be placed within "ArticlePage.php", this includes our controller (*ArticlePage_Controller*). 
 
@@ -69,7 +69,7 @@ We'll start with the *ArticlePage* page type. First we create the model, a class
 	 
 
 
-Here we've created our data object/controller pair, but we haven't extended them at all. Don't worry about the *$db* and *$has_one* arrays just yet, we'll explain them shortly. SilverStripe will use the template for the *Page* page type as explained in the first tutorial, so we don't need
+Here we've created our data object/controller pair, but we haven't extended them at all. SilverStripe will use the template for the *Page* page type as explained in the first tutorial, so we don't need
 to specifically create the view for this page type.
 
 Let's create the *ArticleHolder* page type.
@@ -100,8 +100,8 @@ page type "News", it would conflict with the page name also called "News".
 
 ## Adding date and author fields
 
-Now that we have an *ArticlePage* page type, let's make it a little more useful. Remember the *$db* array? We can use
-this array to add extra fields to the database. It would be nice to know when each article was posted, and who posted
+Now that we have an *ArticlePage* page type, let's make it a little more useful. We can use
+the $db array to add extra fields to the database. It would be nice to know when each article was posted, and who posted
 it. Add a *$db* property definition in the *ArticlePage* class:
 
 	:::php
@@ -188,7 +188,7 @@ Now that we have created our page types, let's add some content. Go into the CMS
 At the moment, your date field will look just like a text field. 
 This makes it confusing and doesn't give the user much help when adding a date. 
 
-To make the date field a bit more user friendly, you can add a dropdown calendar, set the date format and add better title. By default,
+To make the date field a bit more user friendly, you can add a dropdown calendar, set the date format and add a better title. By default,
 the date field will have the date format defined by your locale.
 
 	:::php
@@ -213,7 +213,7 @@ Let's walk through these changes.
 	:::php
 	$fields->addFieldToTab('Root.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 
-*$dateField* is declared only to in order to change the configuration of the DateField.
+*$dateField* is declared in order to change the configuration of the DateField.
 
 	:::php
 	$dateField->setConfig('showcalendar', true);
@@ -303,7 +303,7 @@ Here we use the page control *Children*. As the name suggests, this control allo
 
 ### Using include files in templates
 
-We can make our templates more modular and easier to maintain by separating commonly-used components in to *include files*.  We are already familiar with the `<% include Sidebar %>` line from looking at the menu in the [first tutorial](1-building-a-basic-site).
+We can make our templates more modular and easier to maintain by separating commonly-used components in to *include files*.  We are already familiar with the `<% include Sidebar %>` line from looking at the menu in the [first tutorial (Building a basic site)](1-building-a-basic-site).
 
 We'll separate the display of linked articles as we want to reuse this code later on.
 
@@ -331,7 +331,7 @@ Paste the code that was in ArticleHolder into a new include file called ArticleT
 		
 ### Changing the icons of pages in the CMS
 
-Let's now make a purely cosmetic change that nevertheless helps to make the information presented in the CMS clearer.
+Now let's make a purely cosmetic change that nevertheless helps to make the information presented in the CMS clearer.
 Add the following field to the *ArticleHolder* and *ArticlePage* classes:
 
 	:::php
