@@ -93,7 +93,7 @@ class TreeDropdownField extends FormField {
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
-		
+
 		parent::__construct($name, $title);
 	}
 	
@@ -389,10 +389,32 @@ class TreeDropdownField extends FormField {
 	 */
 	protected function populateIDs() {
 		// get all the leaves to be displayed
-		if ( $this->searchCallback )
+		if ($this->searchCallback) {
 			$res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
-		else
-			$res = DataObject::get($this->sourceObject, "\"$this->labelField\" LIKE '%$this->search%'");
+		} else {
+			$sourceObject = $this->sourceObject;
+			$wheres = array();
+			if(singleton($sourceObject)->hasDatabaseField($this->labelField)) {
+				$wheres[] = "\"$searchField\" LIKE '%$this->search%'";
+			} else {
+				if(singleton($sourceObject)->hasDatabaseField('Title')) {
+					$wheres[] = "\"Title\" LIKE '%$this->search%'";
+				}
+				if(singleton($sourceObject)->hasDatabaseField('Name')) {
+					$wheres[] = "\"Name\" LIKE '%$this->search%'";
+				}
+			} 
+
+			if(!$wheres) {
+				throw new InvalidArgumentException(sprintf(
+					'Cannot query by %s.%s, not a valid database column',
+					$sourceObject,
+					$this->labelField
+				));
+			}
+
+			$res = DataObject::get($this->sourceObject, implode(' OR ', $wheres));
+		}
 		
 		if( $res ) {
 			// iteratively fetch the parents in bulk, until all the leaves can be accessed using the tree control
