@@ -51,8 +51,9 @@ A field can either be provided with raw data (such as the Titles for our Pages),
 as see by the fields prefixed with `=>`.
 
 Taking the `staff` Page as an example, it's Parent field contains `=>Page.about`, which tells the system that we want
-to set up a relationship with the Page `about`. It will populate staff's ParentID with the Page ID of `about`, just like
-a normal relationship is always set up. This can be used for both a `has-one` or a `many-many` relationship.
+to set up a relationship with the Page `about`.
+It will populate staff's ParentID with the Page ID of `about`, just like a normal relationship is always set up.
+This can be used for both a `has-one` or a `many-many` relationship.
 Note that we use the name of the relationship (Parent), and not the name of the database field (ParentID)
 
 For `many-many` relationships, we specify a comma separated list of values.
@@ -104,7 +105,7 @@ Alternatively, you can use the [api:FixtureFactory] class, which allows you to s
 callbacks on object creation, and dynamic/lazy value setting.
 By the way, the `SapphireTest` YAML fixtures rely on internally on this class as well.
 
-The idea is that rather than instanciating objects directly, we'll have a factory class for them.
+The idea is that rather than instantiating objects directly, we'll have a factory class for them.
 This factory can have so called "blueprints" defined on it, which tells the factory how to instantiate an object of a specific type. Blueprints need a name, which is usually set to the class it creates.
 
 ### Usage
