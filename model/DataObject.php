@@ -167,6 +167,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	
 	/**
 	 * Set whether DataObjects should be validated before they are written.
+	 * 
+	 * Caution: Validation can contain safeguards against invalid/malicious data,
+	 * and check permission levels (e.g. on {@link Group}). Therefore it is recommended
+	 * to only disable validation for very specific use cases.
+	 * 
 	 * @param $enable bool
 	 * @see DataObject::validate()
 	 */
