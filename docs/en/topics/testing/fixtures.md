@@ -10,7 +10,7 @@ all we have to do is define them, and we have a few ways in which we can do this
 ## YAML Fixtures
 
 YAML is a markup language which is deliberately simple and easy to read,
-so ideal for our fixture generation.
+so it is ideal for fixture generation.
 
 We will begin with a sample file and talk our way through it.
 
@@ -35,7 +35,8 @@ We will begin with a sample file and talk our way through it.
             LinkTo: =>Page.home
 
 
-The contents of the YAML file are broken into three levels. The first level, `Page` and `RedirectorPage`, are class names.
+The contents of the YAML file are broken into three levels.
+The first level, `Page` and `RedirectorPage`, are class names.
 These are the names of the DataObjects we want to be created.
 The fact that `RedirectorPage` is actually a subclass is irrelevant to the system populating the database.
 It just instantiates the object you specify.
@@ -46,11 +47,11 @@ Each identifier you specify delimits a new database record.
 This means that every record needs to have an identifier, whether you use it or not.
 
 The third and final level represents the object's fields.
-A field can either be provided with raw data (such as the Titles for our Pages), or we can define a relationship, as seen
-by the fields prefixed by `=>`.
+A field can either be provided with raw data (such as the Titles for our Pages), or we can define a relationship,
+as see by the fields prefixed with `=>`.
 
 Taking the `staff` Page as an example, it's Parent field contains `=>Page.about`, which tells the system that we want
-to set up a relationship with the Page `about`. It will populate staff's ParentID with the Page ID of about, just like
+to set up a relationship with the Page `about`. It will populate staff's ParentID with the Page ID of `about`, just like
 a normal relationship is always set up. This can be used for both a `has-one` or a `many-many` relationship.
 Note that we use the name of the relationship (Parent), and not the name of the database field (ParentID)
 
