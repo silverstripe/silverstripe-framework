@@ -87,6 +87,17 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	private static $hidden_permissions = array();
 
 	/**
+	 * @config These permissions can only be applied by ADMIN users, to prevent
+	 * privilege escalation on group assignments and inheritance.
+	 * @var array
+	 */
+	private static $privileged_permissions = array(
+		'ADMIN', 
+		'APPLY_ROLES',
+		'EDIT_PERMISSIONS'
+	);
+
+	/**
 	 * Check that the current member has the given permission.
 	 * 
 	 * @param string|array $code Code of the permission to check (case-sensitive)
