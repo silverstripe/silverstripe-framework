@@ -24,6 +24,7 @@ nb:
     FILES: Filer
     FROMCOMPUTER: 'Velg filer fra din pc'
     FROMCOMPUTERINFO: 'Last opp fra din pc'
+    TOTAL: Total
     TOUPLOAD: 'Velg filer til opplasting ...'
     UPLOADINPROGRESS: 'Vennligst vent... opplasting pågår'
     UPLOADOR: ELLER
@@ -98,6 +99,8 @@ nb:
     FOURTH: fjerde
     SECOND: andre
     THIRD: tredje
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Dataobjekter'
     SINGULARNAME: 'Dataobjekt'
@@ -140,6 +143,7 @@ nb:
     AviType: 'AVI videofil'
     Content: Innhold
     CssType: 'CSS-fil'
+    DmgType: 'Apple disk image'
     DocType: 'Word-dokument'
     Filename: Filnavn
     GifType: 'GIF bilde - bra til diagrammer'
@@ -162,6 +166,7 @@ nb:
     SINGULARNAME: Fil
     TOOLARGE: 'Filstørrelse for stor, maksimum {size} tillatt '
     TOOLARGESHORT: 'Filstørrelse overstiger {size}'
+    TiffType: 'Tagged image format'
     Title: Tittel
     WavType: 'WAV lydfil'
     XlsType: 'Excel regneark'
@@ -188,6 +193,7 @@ nb:
     HELLO: Hei
     TEXT1: 'Her er din'
     TEXT2: 'lenke for nullstilling av passord'
+    TEXT3: for
   Form:
     FIELDISREQUIRED: '{name} er påkrevet'
     SubmitBtnLabel: Utfør
@@ -196,6 +202,7 @@ nb:
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene stemmer ikke overens'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passord kan ikke være tomt'
     VALIDATIONSTRONGPASSWORD: 'Passord må inneholde minst ett siffer og en bokstav'
+    VALIDATOR: Validator
     VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
     CSRF_FAILED_MESSAGE: 'Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt.'
   FormField:
@@ -204,16 +211,21 @@ nb:
   GridAction:
     DELETE_DESCRIPTION: Slett
     Delete: Slett
+    UnlinkRelation: Koble fra
   GridField:
     Add: 'Legg til {name}'
+    Filter: Filtrer
     FilterBy: 'Filtrer på '
     Find: Finn
     LEVELUP: 'Opp ett nivå'
     LinkExisting: 'Eksisterende lenke'
+    NewRecord: 'Ny %s'
     NoItemsFound: 'Ingen elementer ble funnet'
     PRINTEDAT: 'Skrevet ut ved'
     PRINTEDBY: 'Skrevet ut av'
     PlaceHolder: 'Finn {type}'
+    PlaceHolderWithLabels: 'Finn {type} ved {name}'
+    RelationSearch: 'Relasjonssøk'
     ResetFilter: Tilbakestille
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Ikke tillatt å slette'
@@ -232,6 +244,7 @@ nb:
     AddRole: 'Legg til en rolle for denne gruppen'
     Code: 'Gruppekode'
     DefaultGroupTitleAdministrators: Administratorer
+    DefaultGroupTitleContentAuthors: 'Innholdsforfattere'
     Description: Beskrivelse
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
     Locked: 'Låst?'
@@ -244,6 +257,7 @@ nb:
     has_many_Permissions: Tillatelser
     many_many_Members: Medlemmer
   GroupImportForm:
+    Help1: '<p>Importer en eller flere grupper i <em>CSV</em>-format (kommaseparerte verdier). <small><a href="#" class="toggle-advanced">Vis avanserte alternativer</a></small></p>'
     Help2: "<div class=\"advanced\">\n<h4>Avanserte alternativer</h4>\n<ul>\n<li>Tillatte kolonner: <em>%s</em></li>\n<li>Eksisterende grupper matches mot deres <em>Code</em>-verdi og oppdateres med nye verdier fra den importerte filen.</li>\n<li>Gruppehierarkier kan bli opprettet ved å benytte en <em>ParentCode</em>-kolonne.</li>\n<li>Tillatelseskoder kan bli angitt med <em>PermissionCode</em>-kolonnen. Eksisterende tillatelselskoder blir ikke fjernet.</li>\n</ul>\n</div>"
     ResultCreated: 'Opprettet {count} grupper'
     ResultDeleted: 'Slettet %d grupper'
@@ -331,6 +345,7 @@ nb:
     IP: 'IP-adresse'
     PLURALNAME: 'Innloggingsforsøk'
     SINGULARNAME: 'Innloggingsforsøk'
+    Status: Status
   Member:
     ADDGROUP: 'Legg til en gruppe'
     BUTTONCHANGEPASSWORD: 'Bytt passord'
@@ -341,10 +356,13 @@ nb:
     CONFIRMNEWPASSWORD: 'Bekreft nytt passord'
     CONFIRMPASSWORD: 'Bekreft passord'
     DATEFORMAT: 'Datoformat'
+    DefaultAdminFirstname: 'Standard Admin'
+    DefaultDateTime: standard
     EMAIL: Epost
     EMPTYNEWPASSWORD: 'Det nye passordet kan ikke være tomt, vennligst prøv igjen'
     ENTEREMAIL: 'Vennligst skriv en epostadresse så du kan bli tilsendt en lenke til å nullstille passord.'
     ERRORLOCKEDOUT: 'Din konto har blitt sperret på grunn av for mange forsøk på å logge inn. Vennligst prøv igjen om 20 minutter.'
+    ERRORLOCKEDOUT2: 'Din konto har blitt midlertidig sperret på grunn av for mange mislykkede forsøk på å logge inn. Vennligst prøv igjen om {count} minutter.'
     ERRORNEWPASSWORD: 'Du har tastet inn nye passord forskjellig, vennligst prøv igjen.'
     ERRORPASSWORDNOTMATCH: 'Passordene stemmer ikke overens, vennligst prøv igjen.'
     ERRORWRONGCRED: 'Det ser ikke ut til å være riktig epostadresse eller passord. Vennligst prøv igjen.'
@@ -372,9 +390,12 @@ nb:
     db_NumVisit: 'Antall besøk'
     db_Password: Passord
     db_PasswordExpiry: 'Utløpsdato for passord'
+    NoPassword: 'Det finnes ikke noe passord for dette medlemmet.'
   MemberAuthenticator:
     TITLE: 'E-post og passord'
   MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    Custom: Egendefinert
     DATEFORMATBAD: 'Datoformat er ugyldig'
     DAYNOLEADING: 'Dag i måneden uten ledende null'
     DIGITSDECFRACTIONSECOND: 'Ett eller flere siffer som representerer en desimlbrøkdel av et sekund'
@@ -411,6 +432,7 @@ nb:
     EMPTYBEFOREIMPORT: 'Erstatt data'
     IMPORT: 'Importer fra CSV'
     IMPORTEDRECORDS: 'Importerte {count} oppføringer.'
+    NOCSVFILE: 'Vennligst finn en CSV-fil å importere'
     NOIMPORT: 'Ingenting å importere'
     RESET: Tilbakestill
     Title: 'Datamodeller'
@@ -437,6 +459,7 @@ nb:
     Page: Side
     View: Viser
   Permission:
+    AdminGroup: Administratorer
     CMS_ACCESS_CATEGORY: 'Tilgang til publiseringssystem'
     FULLADMINRIGHTS: 'Fulle administrative rettigheter'
     FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
@@ -466,6 +489,7 @@ nb:
     NOTFOUND: 'Ingen elementer ble funnet'
   Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
+    LOSTPASSWORDHEADER: 'Mistet passord'
     BUTTONSEND: 'Send meg en lenke for å nullstille passordet'
     CHANGEPASSWORDBELOW: 'Du kan bytte passord under her.'
     CHANGEPASSWORDHEADER: 'Bytt passord'
@@ -485,15 +509,20 @@ nb:
     EDITPERMISSIONS: 'Administrer tillatelser for grupper'
     EDITPERMISSIONS_HELP: 'Mulighet for å endre tillatelser og IP-adresser for en gruppe. Brukere må ha adgang til sikkerhetsseksjon.'
     GROUPNAME: 'Gruppenavn'
+    IMPORTGROUPS: 'Importer grupper'
+    IMPORTUSERS: 'Importer brukere'
     MEMBERS: Medlemmer
     MENUTITLE: Sikkerhet
     MemberListCaution: 'Advarsel: Hvis du fjerner medlemmer fra denne listen vil det samtidig fjerne dem fra alle grupper og databasen'
+    NEWGROUP: 'Ny gruppe'
     PERMISSIONS: Tilganger
     ROLES: Roller
     ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
     TABROLES: Roller
+    Users: Brukere
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Importer fra CSV'
+    FileFieldLabel: 'CSV-fil <small>(Tillatt filtype: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Rediger
     Auto: Automatisk
@@ -541,6 +570,7 @@ nb:
     LESS: mindre
     MORE: mer
   UploadField:
+    ATTACHFILE: 'Legg ved en fil'
     ATTACHFILES: 'Legg ved filer'
     AttachFile: 'Legg ved fil(er)'
     DELETE: 'Slett fra filer'
@@ -575,3 +605,11 @@ nb:
     PREVIEW: 'Forhåndsvisning'
   GridFieldEditButton_ss:
     EDIT: Rediger
+  ContentController:
+    NOTLOGGEDIN: 'Ikke innlogget'
+  GridFieldItemEditView:
+    Go_back: 'Gå tilbake'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: %s'
+    PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
+    TOOSHORT: 'Passordet er for kort, det må være %s eller flere tegn langt'

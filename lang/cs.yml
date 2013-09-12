@@ -13,12 +13,13 @@ cs:
     SIZE: 'Velikost'
     TITLE: Titulek
     TYPE: 'Typ'
+    URL: URL
   AssetUploadField:
     ChooseFiles: 'Vyberte soubory'
     DRAGFILESHERE: 'Táhni soubory sem'
     DROPAREA: 'Oblast upustění'
     EDITALL: 'Editovat vše'
-    EDITANDORGANIZE: 'Editovat & organizovat'
+    EDITANDORGANIZE: 'Editovat a organizovat'
     EDITINFO: 'Editovat soubory'
     FILES: Soubory
     FROMCOMPUTER: 'Vyberte soubory z vašeho počítače'
@@ -73,6 +74,7 @@ cs:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vaše heslo bylo změněno pro'
     CHANGEPASSWORDTEXT2: 'Nyní můžete použít následující přihlašovací údaje pro přihlášení:'
+    EMAIL: E-mail
     HELLO: Dobrý den
     PASSWORD: Heslo
   ComplexTableField:
@@ -304,6 +306,7 @@ cs:
     LINKOPENNEWWIN: 'Otevřít odkaz v novém okně?'
     LINKTO: 'Odkázat na'
     PAGE: Stránku
+    URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemůže být vloženo do zdroje médií.'
     UpdateMEDIA: 'Aktualizovat média'
     BUTTONADDURL: 'Přidat url'
@@ -342,6 +345,7 @@ cs:
     IP: 'IP adresy'
     PLURALNAME: 'Pokusy přihlášení'
     SINGULARNAME: 'Pokus přihlášení'
+    Status: Stav
   Member:
     ADDGROUP: 'Přidat skupinu'
     BUTTONCHANGEPASSWORD: 'Změnit heslo'
@@ -354,9 +358,11 @@ cs:
     DATEFORMAT: 'Formát datumu'
     DefaultAdminFirstname: 'Implicitní Admin'
     DefaultDateTime: výchozí
+    EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nové heslo nesmí být prázdné, zkuste to znovu'
     ENTEREMAIL: 'Zadejte e-mailovou adresu pro získání odkazu na restart hesla.'
     ERRORLOCKEDOUT: 'Váš účet byl dočasně zablokován, kvůli příliš velkému množství nezdařených pokusů o přihlášení. Zkuste se prosím přihlásit za 20 minut.'
+    ERRORLOCKEDOUT2: 'Váš účet byl dočasně zablokován, kvůli příliš velkému množství nezdařených pokusů o přihlášení. Zkuste se prosím přihlásit za {count} minut.'
     ERRORNEWPASSWORD: 'Zadali jste nové heslo rozdílně, zkuste to znovu'
     ERRORPASSWORDNOTMATCH: 'Váše současné heslo není správně, prosím zkuste to znovu'
     ERRORWRONGCRED: 'Toto nevypadá jako správná emailová adresa nebo heslo. Prosím zkuste to znovu.'
@@ -384,6 +390,7 @@ cs:
     db_NumVisit: 'Počet návštěvníků'
     db_Password: Heslo
     db_PasswordExpiry: 'Datum vypršení hesla'
+    NoPassword: 'Neni zde heslo pro tohoto člena'
   MemberAuthenticator:
     TITLE: 'E-mail a Heslo'
   MemberDatetimeOptionsetField:
@@ -466,6 +473,7 @@ cs:
   PermissionRole:
     OnlyAdminCanApply: 'Pouze administrátor může použít'
     PLURALNAME: Role
+    SINGULARNAME: Role
     Title: Název
   PermissionRoleCode:
     PLURALNAME: 'Kódy role oprávnění'
@@ -481,6 +489,7 @@ cs:
     NOTFOUND: 'Žádné položky'
   Security:
     ALREADYLOGGEDIN: 'K této stránce nemáte přístup. Pokud máte jiný účet, který k ní může přistupovat, můžete se přihlásit níže'
+    LOSTPASSWORDHEADER: 'Ztracené heslo'
     BUTTONSEND: 'Pošlete mi nulovací odkaz pro heslo'
     CHANGEPASSWORDBELOW: 'Svoje heslo si můžete změnit níže.'
     CHANGEPASSWORDHEADER: 'Změnit heslo'
@@ -516,7 +525,9 @@ cs:
     FileFieldLabel: 'Soubor CSV <small>(Povoleny přípony: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Editovat
+    Auto: Auto
     ChangeViewMode: 'Změnit mód zobrazení'
+    Desktop: Desktop
     DualWindowView: 'Dualní okno'
     EditView: 'Mód editace'
     Mobile: Mobilní telefon
@@ -524,6 +535,7 @@ cs:
     PreviewView: 'Mód náhledu'
     Responsive: Responzivní
     SplitView: 'Mód rozdělení'
+    Tablet: Tablet
     ViewDeviceWidth: 'Vyberte šířku náhledu'
     Width: šířka
   SimpleImageField:
@@ -593,3 +605,11 @@ cs:
     PREVIEW: 'Náhled webu'
   GridFieldEditButton_ss:
     EDIT: Editovat
+  ContentController:
+    NOTLOGGEDIN: 'Nepřihlášen'
+  GridFieldItemEditView:
+    Go_back: 'Jdi zpět'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Prosím, posilněte heslo přidáním některých z následujících znaků: %s'
+    PREVPASSWORD: 'Již jste použil toto heslo v minulosti, vyberte nové heslo, prosím'
+    TOOSHORT: 'Heslo je příliš krátké, musí být %s nebo více znaků dlouhé'
