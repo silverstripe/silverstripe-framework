@@ -13,8 +13,10 @@ sk:
     SIZE: 'Veľkosť'
     TITLE: Titulok
     TYPE: 'Typ'
+    URL: URL
   AssetUploadField:
-    DRAGFILESHERE: 'Tiahni súbory sem'
+    ChooseFiles: 'Vyberte súbory'
+    DRAGFILESHERE: 'Tiahni súbory tu'
     DROPAREA: 'Oblasť upustenia'
     EDITALL: 'Editovať všetko'
     EDITANDORGANIZE: 'Editovať a organizovať'
@@ -72,6 +74,7 @@ sk:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
     CHANGEPASSWORDTEXT2: 'Teraz môžete použiť nasledujúce prihlasovacie údaje na prihlásenie:'
+    EMAIL: E-mail
     HELLO: Dobrý deň
     PASSWORD: Heslo
   ComplexTableField:
@@ -96,6 +99,8 @@ sk:
     FOURTH: štvrtý
     SECOND: druhý
     THIRD: tretí
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Datové objekty'
     SINGULARNAME: 'Dátový objekt'
@@ -209,6 +214,7 @@ sk:
     UnlinkRelation: Odpojiť
   GridField:
     Add: 'Pridať {name}'
+    Filter: Filter
     FilterBy: 'Filtrovať podľa'
     Find: Vyhľadať
     LEVELUP: 'Úroveň vyššie'
@@ -220,6 +226,7 @@ sk:
     PlaceHolder: 'Vyhľadať {type}'
     PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     RelationSearch: 'Vzťah hľadania'
+    ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     EditPermissionsFailure: 'Žiadne oprávnenie pre odpojenie záznamu'
@@ -261,6 +268,7 @@ sk:
     ADDURL: 'Pridať URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozmery'
     ANCHORVALUE: Odkaz
+    BUTTONINSERT: Vložiť
     BUTTONINSERTLINK: 'Vložiť odkaz'
     BUTTONREMOVELINK: 'Odstrániť odkaz'
     BUTTONUpdate: Aktualizovať
@@ -298,6 +306,7 @@ sk:
     LINKOPENNEWWIN: 'Otvoriť odkaz v novom okne?'
     LINKTO: 'Odkázať na'
     PAGE: Stránku
+    URL: URL
     URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
     UpdateMEDIA: 'Aktualizovať média'
     BUTTONADDURL: 'Pridať url'
@@ -314,6 +323,7 @@ sk:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
+    DropdownBatchActionsDefault: Akcie
     HELP: Pomoc
     PAGETYPE: 'Typ stránky:'
     PERMAGAIN: 'Boli ste odhlásený'
@@ -323,6 +333,7 @@ sk:
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
+    VersionUnknown: Neznáme
     ShowAsList: 'ukázať ako zoznam'
     TooManyPages: 'Príliž veľa stránok'
     ValidationError: 'Chyba platnosti'
@@ -334,7 +345,9 @@ sk:
     IP: 'IP adreasa'
     PLURALNAME: 'Pokusy o prihlásenie'
     SINGULARNAME: 'Pokus o prihlásenie'
+    Status: Stav
   Member:
+    ADDGROUP: 'Pridať skupinu'
     BUTTONCHANGEPASSWORD: 'Zmeniť heslo'
     BUTTONLOGIN: 'Prihlásiť sa'
     BUTTONLOGINOTHER: 'Prihlásiť sa ako niekto iný'
@@ -349,6 +362,7 @@ sk:
     EMPTYNEWPASSWORD: 'Nové heslo nesmie byť prázdne, skúste to prosím znova'
     ENTEREMAIL: 'Prosím zadajte emailovú adresu pre zaslanie odkazu na resetovanie hesla.'
     ERRORLOCKEDOUT: 'Váš účet bol dočasne zablokovaný, kvôli množstvu neúspešných pokusov o prihlásenie. Prosí skúste to znova za 20 minút.'
+    ERRORLOCKEDOUT2: 'Váš účet bol dočasne zablokovaný, kvôli množstvu neúspešných pokusov o prihlásenie. Prosím skúste to znova za {count} minút.'
     ERRORNEWPASSWORD: 'Zadali ste rozdielne nové heslo, skúste to znovu'
     ERRORPASSWORDNOTMATCH: 'Vaše súčasné heslo nie je správne, prosím skúste to znovu'
     ERRORWRONGCRED: 'Toto nevyzerá ako správna e-mailová adresa alebo heslo. Prosím skúste to znovu.'
@@ -367,6 +381,7 @@ sk:
     TIMEFORMAT: 'Formát času'
     VALIDATIONMEMBEREXISTS: 'Člen s takýmto e-mailom už existuje'
     ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value}))'
+    WELCOMEBACK: 'Vitajte späť, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
     belongs_many_many_Groups: Skupiny
     db_LastVisited: 'Dátum poslednej navštevy'
@@ -375,10 +390,12 @@ sk:
     db_NumVisit: 'Počet návštev'
     db_Password: Heslo
     db_PasswordExpiry: 'Dátum expirácie hesla'
+    NoPassword: 'Nie je tu heslo pre tohto člena.'
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Heslo'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (pred poludním) alebo PM (popoludní)'
+    Custom: Vlastné
     DATEFORMATBAD: 'Formát dátumu je neplatný'
     DAYNOLEADING: 'Deň mesiaca bez úvodnej nuly'
     DIGITSDECFRACTIONSECOND: 'Jedna alebo viac číslic zastupujúcich desatinný zlomok sekundy'
@@ -387,6 +404,7 @@ sk:
     HOURNOLEADING: 'Hodina bez úvodnej nuly'
     MINUTENOLEADING: 'Minúta bez úvodnej nuly'
     MONTHNOLEADING: 'Číslo mesiaca bez úvodnej nuly'
+    Preview: Náhľad
     SHORTMONTH: 'Krátky názov mesiaca (napr. jún)'
     TOGGLEHELP: 'Prepnúť nápovedu formátovania'
     TWODIGITDAY: 'Dvojčíslie dňa mesiaca'
@@ -416,6 +434,7 @@ sk:
     IMPORTEDRECORDS: 'Importovaných {count} záznamov.'
     NOCSVFILE: 'Prosím vyhľadajte CSV súbor pre importovanie'
     NOIMPORT: 'Nie je čo importovať'
+    RESET: Reset
     Title: 'Dátové modely'
     UPDATEDRECORDS: 'Aktualizovaných {count} záznamov.'
   ModelAdmin_ImportSpec_ss:
@@ -432,6 +451,8 @@ sk:
   MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
+  NullableField:
+    IsNullLabel: 'Je Null'
   NumericField:
     VALIDATION: '''{value}'' nie je číslo, iba čísla môžu byť akceptované pre toto pole'
   Pagination:
@@ -468,6 +489,7 @@ sk:
     NOTFOUND: 'Žiadne položky'
   Security:
     ALREADYLOGGEDIN: 'K tejto stránke nemáte prístup. Ak máte iný účet, ktorý k nej má prístup, môžete sa <a href="%s">prihlásiť</a>.'
+    LOSTPASSWORDHEADER: 'Stratené heslo'
     BUTTONSEND: 'Pošlite mi odkaz na resetovanie hesla'
     CHANGEPASSWORDBELOW: 'Svoje heslo si môžete zmeniť nižšie.'
     CHANGEPASSWORDHEADER: 'Zmeniť heslo'
@@ -487,6 +509,7 @@ sk:
     EDITPERMISSIONS: 'Spravovať právomoci pre skupiny'
     EDITPERMISSIONS_HELP: 'Schopnosť upravovať právomoci a IP adresi pre skupinu. Vyžaduje prístup do sekcie "Bezpečnosť".'
     GROUPNAME: 'Názov skupiny'
+    IMPORTGROUPS: 'Importovať skupiny'
     IMPORTUSERS: 'Importovať požívateľov'
     MEMBERS: Členovia
     MENUTITLE: Bezpečnosť
@@ -502,7 +525,9 @@ sk:
     FileFieldLabel: 'CSV súbor <small>(Povoléné koncovki súborov: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Editovať
+    Auto: Auto
     ChangeViewMode: 'Zmeniť nód zobrazenia'
+    Desktop: Desktop
     DualWindowView: 'Duálne okno'
     EditView: 'Mód editácie'
     Mobile: Mobilný telefón
@@ -510,6 +535,7 @@ sk:
     PreviewView: 'Mód náhľadu'
     Responsive: Responzívny
     SplitView: 'Mód rozdelenia'
+    Tablet: Tablet
     ViewDeviceWidth: 'Vyberte šírku náhľadu'
     Width: šírka
   SimpleImageField:
@@ -544,8 +570,12 @@ sk:
     LESS: menej
     MORE: viac
   UploadField:
+    ATTACHFILE: 'Pripojiť súbor'
+    ATTACHFILES: 'Pripojiť súbory'
+    AttachFile: 'Pripojiť súbor(y)'
     DELETE: 'Zmazať zo súborov'
     DELETEINFO: 'Trvalo zmazať tento súbor z úložiska súborov'
+    DOEDIT: Uložiť
     DROPFILE: 'pusť súbor'
     DROPFILES: 'pusť súbory'
     Dimensions: Rozmery
@@ -554,6 +584,7 @@ sk:
     FIELDNOTSET: 'Žiadna informácia o súbore'
     FROMCOMPUTER: 'Z vášho počitača'
     FROMCOMPUTERINFO: 'Vyberte zo súborov'
+    FROMFILES: 'Zo súborov'
     HOTLINKINFO: 'Info: Tento obrázok bude "hotlinkovaný". Uistete sa prosím, že máte oprávnenie od pôvodneho tvorcu webu, aby sa tak stalo.'
     MAXNUMBEROFFILES: 'Maximálny počet {count} súbor(ov) prekročený.'
     MAXNUMBEROFFILESSHORT: 'Môžte nahrať iba {count} súborov'
@@ -563,6 +594,7 @@ sk:
     REMOVEINFO: 'Odstrániť tento súbor odtiaľ, ale nezmazať z úložiska súborov'
     STARTALL: 'Začni všetko'
     STARTALLINFO: 'Začni všetko nahrávať'
+    Saved: Uložené
     CHOOSEANOTHERFILE: 'Vyberte iný súbor'
     CHOOSEANOTHERINFO: 'Nahradiť tento súbor iným z úložiska súborov'
     OVERWRITEWARNING: 'Súbor s rovnakým názvom už existuje'
@@ -573,3 +605,11 @@ sk:
     PREVIEW: 'Náhľad webu'
   GridFieldEditButton_ss:
     EDIT: Editovať
+  ContentController:
+    NOTLOGGEDIN: 'Neprihlásený'
+  GridFieldItemEditView:
+    Go_back: 'Choď späť'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: %s'
+    PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové hoslo, prosím'
+    TOOSHORT: 'Heslo je príliš krátke, musí byť %s alebo viacej znakov dlhé'

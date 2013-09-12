@@ -390,6 +390,7 @@ de:
     db_NumVisit: 'Anzahl der Besuche'
     db_Password: Passwort
     db_PasswordExpiry: 'Ablaufdatum des Passworts'
+    NoPassword: 'Dieser Benutzer hat kein Passwort.'
   MemberAuthenticator:
     TITLE: 'E-Mail &amp; Passwort'
   MemberDatetimeOptionsetField:
@@ -488,6 +489,7 @@ de:
     NOTFOUND: 'Keine Elemente gefunden'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
+    LOSTPASSWORDHEADER: 'Passwort vergessen'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'
     CHANGEPASSWORDBELOW: 'Sie können Ihr Passwort unten ändern.'
     CHANGEPASSWORDHEADER: 'Passwort ändern'
@@ -529,6 +531,7 @@ de:
     DualWindowView: 'Zwei Fenster'
     EditView: 'Bearbeitungsmodus'
     Mobile: Mobil
+    PreviewState: 'Vorschau Status'
     PreviewView: 'Vorschaumodus'
     Responsive: Responsive
     SplitView: 'Geteilter Modus'
@@ -571,23 +574,29 @@ de:
     ATTACHFILES: 'Dateien anhängen'
     AttachFile: 'Datei(en) anhängen'
     DELETE: 'Aus Dateien löschen'
+    DELETEINFO: 'Diese Datei am Server löschen'
     DOEDIT: Speichern
     DROPFILE: 'Datei hier ablegen'
+    DROPFILES: 'Dateien hier ablegen'
     Dimensions: Dimensionen
     EDIT: Bearbeiten
     EDITINFO: 'Diese Datei bearbeiten'
     FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     FROMCOMPUTER: 'Von Ihrem Computer'
     FROMCOMPUTERINFO: 'Aus Dateien auswählen'
+    FROMFILES: 'Aus Dateien'
     HOTLINKINFO: 'Info: Dieses Bild wird verknüpft. Bitte vergewissere dich die Erlaubnis des Inhabers der Ursprungsseite zu haben.'
     MAXNUMBEROFFILES: 'Maximale Anzahl an {count}  Datei(en) überschritten'
     MAXNUMBEROFFILESSHORT: 'SIe können maximal {count} Datei(en) hochladen'
     MAXNUMBEROFFILESONE: 'SIe können maximal eine Datei hochladen'
     REMOVE: Entfernen
     REMOVEERROR: 'Fehler beim Entfernen der Datei'
+    REMOVEINFO: 'Diese Datei entfernen aber nicht am Server löschen'
+    STARTALL: 'Alle starten'
     STARTALLINFO: 'Alle Uploads starten'
     Saved: Gespeichert
     CHOOSEANOTHERFILE: 'Andere Datei auswählen'
+    CHOOSEANOTHERINFO: 'Diese Datei mit einer Datei vom Server ersetzen'
     OVERWRITEWARNING: 'Eine Datei mit dem selben Namen existiert bereits'
     UPLOADSINTO: 'speichert nach /{path}'
   Versioned:
@@ -596,3 +605,11 @@ de:
     PREVIEW: 'Vorschau der Webseite'
   GridFieldEditButton_ss:
     EDIT: Bearbeiten
+  ContentController:
+    NOTLOGGEDIN: 'Nicht eingeloggt'
+  GridFieldItemEditView:
+    Go_back: 'Zurück'
+  PasswordValidator:
+    LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: %s'
+    PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
+    TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens %s Zeichen lang sein'
