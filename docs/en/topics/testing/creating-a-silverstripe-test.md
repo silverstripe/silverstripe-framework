@@ -27,11 +27,7 @@ Here is an example of a test which extends SapphireTest:
 				'home' => 'home',
 				'staff' => 'my-staff',
 				'about' => 'about-us',
-				'staffduplicate' => 'my-staff-2',
-				'product1' => '1-1-test-product',
-				'product2' => 'another-product',
-				'product3' => 'another-product-2',
-				'product4' => 'another-product-3',
+				'staffduplicate' => 'my-staff-2'
 			);
 
 			foreach($expectedURLs as $fixture => $urlSegment) {
