@@ -103,7 +103,10 @@ Since the test database is cleared on every test method, you'll get a fresh set 
 While manually defined fixtures provide full flexibility, they offer very little in terms of structure and convention.
 Alternatively, you can use the [api:FixtureFactory] class, which allows you to set default values,
 callbacks on object creation, and dynamic/lazy value setting.
-By the way, the `SapphireTest` YAML fixtures rely on internally on this class as well.
+
+<div class="hint" markdown='1'>
+SapphireTest uses FixtureFactory under the hood when it is provided with YAML based fixtures.
+</div>
 
 The idea is that rather than instantiating objects directly, we'll have a factory class for them.
 This factory can have so called "blueprints" defined on it, which tells the factory how to instantiate an object of a specific type. Blueprints need a name, which is usually set to the class it creates.
