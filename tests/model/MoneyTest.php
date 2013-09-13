@@ -277,6 +277,36 @@ class MoneyTest extends SapphireTest {
 
 		$this->assertEquals('£2.46', $obj->obj('MyOtherMoney')->Nice());
 	}
+	
+	public function testHasAmount() {
+		$obj = new MoneyTest_DataObject();
+		$m = new Money();
+		$obj->MyMoney = $m;
+		
+		$m->setValue(array('Amount' => 1));		
+		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		
+		$m->setValue(array('Amount' => 1.00));
+		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		
+		$m->setValue(array('Amount' => 1.01));
+		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		
+		$m->setValue(array('Amount' => 0.99));
+		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		
+		$m->setValue(array('Amount' => 0.01));
+		$this->assertEquals(true, $obj->MyMoney->hasAmount());		
+		
+		$m->setValue(array('Amount' => 0));
+		$this->assertEquals(false, $obj->MyMoney->hasAmount());
+		
+		$m->setValue(array('Amount' => 0.0));
+		$this->assertEquals(false, $obj->MyMoney->hasAmount());
+		
+		$m->setValue(array('Amount' => 0.00));
+		$this->assertEquals(false, $obj->MyMoney->hasAmount());
+	}	
 
 }
 
