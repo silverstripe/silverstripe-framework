@@ -140,7 +140,7 @@ class CmsUiContext extends BehatContext
 	}
 
 	/**
-	 * @When /^I should see "([^"]*)" in CMS Tree$/
+	 * @When /^I should see "([^"]*)" in the tree$/
 	 */
 	public function stepIShouldSeeInCmsTree($text)
 	{
@@ -151,7 +151,7 @@ class CmsUiContext extends BehatContext
 	}
 
 	/**
-	 * @When /^I should not see "([^"]*)" in CMS Tree$/
+	 * @When /^I should not see "([^"]*)" in the tree$/
 	 */
 	public function stepIShouldNotSeeInCmsTree($text)
 	{
@@ -159,6 +159,17 @@ class CmsUiContext extends BehatContext
 
 		$element = $cms_tree_element->find('named', array('content', "'$text'"));
 		assertNull($element, sprintf('%s found', $text));
+	}
+
+	/**
+	 * @When /^I click on "([^"]*)" in the tree$/
+	 */
+	public function stepIClickOnElementInTheTree($text)
+	{
+		$treeEl = $this->getCmsTreeElement();
+		$treeNode = $treeEl->findLink($text);
+		assertNotNull($treeNode, sprintf('%s not found', $text));
+		$treeNode->click();
 	}
 
 	/**

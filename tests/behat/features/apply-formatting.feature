@@ -11,7 +11,7 @@ Feature: Apply rich formatting to content
     """<h1>My awesome headline</1>
     <p>Some amazing content</p>"""
     And I go to "/admin/pages"
-    Then I follow "About Us"
+    Then I click on "About Us" in the tree
     And I focus the "Content" field
 
   Scenario: I can control alignment of selected content

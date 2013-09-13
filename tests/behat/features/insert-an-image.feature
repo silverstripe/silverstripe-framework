@@ -8,10 +8,9 @@ Feature: Insert an image into a page
     Given a "page" "About Us"
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
-    Then I should see "About Us" in CMS Tree
+    And I click on "About Us" in the tree
 
   Scenario: I can insert images into the content
-    When I follow "About Us"
     Then I should see an edit page form
 
     When I press the "Insert Media" button
