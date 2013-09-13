@@ -284,28 +284,28 @@ class MoneyTest extends SapphireTest {
 		$obj->MyMoney = $m;
 		
 		$m->setValue(array('Amount' => 1));		
-		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		$this->assertTrue($obj->MyMoney->hasAmount());
 		
 		$m->setValue(array('Amount' => 1.00));
-		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		$this->assertTrue($obj->MyMoney->hasAmount());
 		
 		$m->setValue(array('Amount' => 1.01));
-		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		$this->assertTrue($obj->MyMoney->hasAmount());
 		
 		$m->setValue(array('Amount' => 0.99));
-		$this->assertEquals(true, $obj->MyMoney->hasAmount());
+		$this->assertTrue($obj->MyMoney->hasAmount());
 		
 		$m->setValue(array('Amount' => 0.01));
-		$this->assertEquals(true, $obj->MyMoney->hasAmount());		
+		$this->assertTrue($obj->MyMoney->hasAmount());
 		
 		$m->setValue(array('Amount' => 0));
-		$this->assertEquals(false, $obj->MyMoney->hasAmount());
+		$this->assertFalse($obj->MyMoney->hasAmount());
 		
 		$m->setValue(array('Amount' => 0.0));
-		$this->assertEquals(false, $obj->MyMoney->hasAmount());
+		$this->assertFalse($obj->MyMoney->hasAmount());
 		
 		$m->setValue(array('Amount' => 0.00));
-		$this->assertEquals(false, $obj->MyMoney->hasAmount());
+		$this->assertFalse($obj->MyMoney->hasAmount());
 	}	
 
 }
