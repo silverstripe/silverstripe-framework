@@ -161,6 +161,11 @@ class SQLQueryTest extends SapphireTest {
 	}
 
 	public function testZeroLimitWithOffset() {
+		if(!(DB::getConn() instanceof MySQLDatabase || DB::getConn() instanceof SQLite3Database 
+				|| DB::getConn() instanceof PostgreSQLDatabase)) {
+			$this->markTestIncomplete();
+		}
+
 		$query = new SQLQuery();
 		$query->setFrom("MyTable");
 		$query->setLimit(0, 99);
