@@ -1,5 +1,10 @@
 <?php
 
+require_once dirname(__FILE__) . '/InjectionCreator.php';
+require_once dirname(__FILE__) . '/SilverStripeInjectionCreator.php';
+require_once dirname(__FILE__) . '/ServiceConfigurationLocator.php';
+require_once dirname(__FILE__) . '/SilverStripeServiceConfigurationLocator.php';
+
 /**
  * A simple injection manager that manages creating objects and injecting
  * dependencies between them. It borrows quite a lot from ideas taken from
@@ -829,95 +834,5 @@ class Injector {
 	 */
 	public function createWithArgs($name, $constructorArgs) {
 		return $this->get($name, false, $constructorArgs);
-	}
-}
-
-/**
- * A class for creating new objects by the injector
- */
-class InjectionCreator {
-	/**
-	 *
-	 * @param string $object
-	 *					A string representation of the class to create
-	 * @param array $params
-	 *					An array of parameters to be passed to the constructor
-	 */
-	public function create($class, $params = array()) {
-		$reflector = new ReflectionClass($class);
-		if (count($params)) {
-			return $reflector->newInstanceArgs($params); 
-		}
-		return $reflector->newInstance();
-	}
-}
-
-class SilverStripeInjectionCreator {
-	/**
-	 *
-	 * @param string $object
-	 *					A string representation of the class to create
-	 * @param array $params
-	 *					An array of parameters to be passed to the constructor
-	 */
-	public function create($class, $params = array()) {
-		$class = Object::getCustomClass($class);
-		$reflector = new ReflectionClass($class);
-		return $reflector->newInstanceArgs($params);
-	}
-}
-
-/**
- * Used to locate configuration for a particular named service. 
- * 
- * If it isn't found, return null 
- */
-class ServiceConfigurationLocator {
-	public function locateConfigFor($name) {
-		
-	}
-}
-
-/**
- * Use the SilverStripe configuration system to lookup config for a particular service
- */
-class SilverStripeServiceConfigurationLocator {
-	
-	private $configs = array();
-	
-	public function locateConfigFor($name) {
-		
-		if (isset($this->configs[$name])) {
-			return $this->configs[$name];
-		}
-		
-		$config = Config::inst()->get('Injector', $name);
-		if ($config) {
-			$this->configs[$name] = $config;
-			return $config;
-		}
-		
-		// do parent lookup if it's a class
-		if (class_exists($name)) {
-			$parents = array_reverse(array_keys(ClassInfo::ancestry($name)));
-			array_shift($parents);
-			foreach ($parents as $parent) {
-				// have we already got for this? 
-				if (isset($this->configs[$parent])) {
-					return $this->configs[$parent];
-				}
-				$config = Config::inst()->get('Injector', $parent);
-				if ($config) {
-					$this->configs[$name] = $config;
-					return $config;
-				} else {
-					$this->configs[$parent] = false;
-				}
-			}
-			
-			// there is no parent config, so we'll record that as false so we don't do the expensive
-			// lookup through parents again
-			$this->configs[$name] = false;
-		}
 	}
 }
