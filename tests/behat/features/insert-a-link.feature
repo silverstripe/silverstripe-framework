@@ -1,5 +1,5 @@
 @assets
-Feature: Insert a url link into content using tinymce insert link button
+Feature: Insert links into a page
 As a cms author
 I want to insert a link into my content
 So that I can link to a external website or a page on my site
