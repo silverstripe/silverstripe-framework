@@ -464,6 +464,20 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals('2012-05-01 09:00:00', $records['0']['_SortColumn0']);
 	}
 
+	/**
+	 * Test passing in a LIMIT with OFFSET clause string.
+	 */
+	public function testLimitSetFromClauseString() {
+		$query = new SQLQuery();
+		$query->setSelect('*');
+		$query->setFrom('"SQLQueryTest_DO"');
+
+		$query->setLimit('20 OFFSET 10');
+		$limit = $query->getLimit();
+		$this->assertEquals(20, $limit['limit']);
+		$this->assertEquals(10, $limit['start']);
+	}
+
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {
