@@ -89,7 +89,7 @@ class CmsFormsContext extends BehatContext
 	}
 
 	/**
-	 * @Then /^the "(?P<locator>([^"]*))" HTML field should contain "(?P<html>([^"]*))"$/
+	 * @Then /^the "(?P<locator>([^"]*))" HTML field should contain "(?P<html>.*)"$/
 	 */
 	public function theHtmlFieldShouldContain($locator, $html)
 	{
