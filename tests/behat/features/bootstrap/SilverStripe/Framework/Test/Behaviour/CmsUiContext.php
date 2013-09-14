@@ -340,7 +340,10 @@ class CmsUiContext extends BehatContext
 		$field = $this->fixStepArgument($field);
 		$value = $this->fixStepArgument($value);
 
-		$nativeField = $this->getSession()->getPage()->find('named', array('select', $field));
+		$nativeField = $this->getSession()->getPage()->find(
+			'named', 
+			array('select', $this->getSession()->getSelectorsHandler()->xpathLiteral($field))
+		);
 		if($nativeField) {
 			$nativeField->selectOption($value);
 			return;
