@@ -1,52 +1,84 @@
-@assets
+@assets 
 Feature: Insert links into a page
 As a cms author
 I want to insert a link into my content
 So that I can link to a external website or a page on my site
 
   Background:
-    Given a "page" "About Us"
-    Given I am logged in with "ADMIN" permissions
-    Given "About Us" has text in content "You can fill this page out with your own content, or delete it and create your own pages."
+    Given a "page" "Home"
+    And a "page" "About Us" has the "Content" "My awesome content"
+    #And a "file" "assets/folder1/file1.jpg"
+    And I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
     And I click on "About Us" in the tree
 
-  @javascript
-  Scenario: I can select text within the content and apply an internal sitetree url link using the add url button
-    When I follow "About Us"
-    Then I should see an edit page form
-
-    When I highlight the text "pages" 
-    And the "Insert Link" button activates
-    When I press the "Insert Link" button
-    Then I should see "Form_EditorToolbarLinkForm"
-
-    When I check the "Form_EditorToolbarLinkForm_LinkType_internal" radio button
-    And I select "home" in "treedropdownfield-title" field
-    And I enter "Test Link Description" in "Form_EditorToolbarLinkForm_Description" field
-    And I check the "Form_EditorToolbarLinkForm_TargetBlank" tickbox
-    And I press the "Form_EditorToolbarLinkForm_action_insert" button
-    Then I should see the "content" HTML field contains "pages" with tag "<a href="[sitetree_link,id=1]">pages</a>"
-
+  Scenario: I can link to an internal page
+    Given I select "awesome" in the "Content" HTML field
+    And I press the "Insert Link" button
+    When I check "Page on the site"
+    And I fill in the "Page" dropdown with "Home"
+    And I fill in "my desc" for "Link description"
+    And I press the "Insert" button
+    # TODO Dynamic DB identifiers
+    Then the "Content" HTML field should contain "<a title="my desc" href="[sitetree_link,id=1]">awesome</a>"
     # Required to avoid "unsaved changed" browser dialog
     Then I press the "Save draft" button
 
-  @javascript
-  Scenario: I can select text within the content and apply an external url link using the add url button
-    When I follow "About Us"
-    Then I should see an edit page form
+  @todo
+  Scenario: I can link to an external URL
+    Given I select "awesome" in the "Content" HTML field
+    And I press the "Insert Link" button
 
-    When I highlight the text "pages" 
-    And the "Insert Link" button activates
+    When I check "Another website"
+    And I fill in "http://silverstripe.org" for "URL"
+    And I check "Open link in a new window"
+    And I press the "Insert" button
+    Then the "Content" HTML field should contain "<a href="http://silverstripe.org" target="_blank">awesome</a>"
+    # Required to avoid "unsaved changed" browser dialog
+    Then I press the "Save draft" button
+
+  @todo
+  Scenario: I can link to a file
+    Given I select "awesome" in the "Content" HTML field
     When I press the "Insert Link" button
-    Then I should see "Form_EditorToolbarLinkForm"
+    When I check "Download a file"
+    And I fill in the "File" dropdown with "file1.jpg"
+    And I press the "Insert link" button
+    Then the "Content" HTML field should contain "<a href="assets/folder1/file1.jpg">awesome</a>"
+    # Required to avoid "unsaved changed" browser dialog
+    Then I press the "Save draft" button
 
-    When I check the "Form_EditorToolbarLinkForm_LinkType_external" radio button
-    And I enter "http://silverstripe.com" in "Form_EditorToolbarLinkForm_external" field
-    And I enter "Test Link Description" in "Form_EditorToolbarLinkForm_Description" field
-    And I check the "Form_EditorToolbarLinkForm_TargetBlank" tickbox
-    And I press the "Form_EditorToolbarLinkForm_action_insert" button
-    Then I should see the "content" HTML field contains "pages" with tag "<a href="http://www.silverstripe.com">pages</a>"
 
+  @todo
+  Scenario: I can link to an anchor
+    Given I fill in the "Content" HTML field with "My awesome content <a name=myanchor>"
+    And I select "awesome" in the "Content" HTML field
+    When I press the "Insert Link" button
+    When I check "Anchor on this page"
+    And I fill in the "Select an anchor" dropdown with "myanchor"
+    And I press the "Insert link" button
+    Then the "Content" HTML field should contain "<a href="#myanchor">awesome</a>"
+    # Required to avoid "unsaved changed" browser dialog
+    Then I press the "Save draft" button
+
+  @todo
+  Scenario: I can edit a link
+    Given I fill in the "Content" HTML field with "My <a href="http://silverstripe.org">awesome</a> content"
+    And I select "awesome" 
+    When I press the "Insert Link" button
+    And the "URL" field should contain "http://silverstripe.org"
+    When I fill in "http://wordpress.org" for "URL"
+    And I press the "Insert link" button
+    Then the "Content" HTML field should contain "<a href="http://wordpress.org">awesome</a>"
+    # Required to avoid "unsaved changed" browser dialog
+    Then I press the "Save draft" button
+
+  @todo
+  Scenario: I can delete a link
+    Given I fill in the "Content" HTML field with "My <a href="http://silverstripe.org">awesome</a> content"
+    And I select "awesome" 
+    When I press the "Insert Link" button
+    And I press the "Remove link" button
+    Then the "Content" HTML field should not contain "<a href="http://silverstripe.org">awesome</a>"
     # Required to avoid "unsaved changed" browser dialog
     Then I press the "Save draft" button

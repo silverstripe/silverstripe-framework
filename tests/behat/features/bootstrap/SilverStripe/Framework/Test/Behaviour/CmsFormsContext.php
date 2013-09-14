@@ -112,6 +112,41 @@ class CmsFormsContext extends BehatContext
 	}
 
 	/**
+	 * Selects the first textual match in the HTML editor. Does not support
+	 * selection across DOM node boundaries.
+	 * 
+	 * @When /^I select "(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field$/
+	 */
+	public function stepIHighlightTextInHtmlField($text, $field)
+	{
+		$page = $this->getSession()->getPage();
+		$inputField = $page->findField($field);
+		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+		$inputFieldId = $inputField->getAttribute('id');
+		$text = addcslashes($text, "'");
+
+		$js = <<<JS
+// TODO <IE9 support
+// TODO Allow text matches across nodes
+var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(), 
+	doc = editor.getDOM().doc,
+	sel = editor.getInstance().selection,
+	rng = document.createRange(),
+	matched = false;
+jQuery(doc).find('body *').each(function() {
+	if(!matched && this.firstChild && this.firstChild.nodeValue && this.firstChild.nodeValue.match('$text')) {
+		rng.setStart(this.firstChild, this.firstChild.nodeValue.indexOf('$text'));
+		rng.setEnd(this.firstChild, this.firstChild.nodeValue.indexOf('$text') + '$text'.length);
+		sel.setRng(rng);
+		editor.getInstance().nodeChanged();
+		matched = true;
+	}
+});
+JS;
+		$this->getSession()->evaluateScript($js);
+	}	
+
+	/**
 	 * @Given /^I should see a "([^"]*)" button$/
 	 */
 	public function iShouldSeeAButton($text)
