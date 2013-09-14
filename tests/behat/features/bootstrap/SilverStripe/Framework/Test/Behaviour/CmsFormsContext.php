@@ -11,6 +11,8 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode;
 
+use Symfony\Component\DomCrawler\Crawler;
+
 // PHPUnit
 require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
@@ -108,6 +110,47 @@ class CmsFormsContext extends BehatContext
 				$actual
 			);
 			throw new ElementHtmlException($message, $this->getSession(), $element);
+		}
+	}
+
+	/**
+	 * Checks formatting in the HTML field, by analyzing the HTML node surrounding
+	 * the text for certain properties.
+	 * 
+	 * Example: Given "my text" in the "Content" HTML field should be right aligned
+	 * Example: Given "my text" in the "Content" HTML field should not be bold
+	 *
+	 * @todo Use an actual DOM parser for more accurate assertions
+	 * 
+	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>([^"]*))" HTML field should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
+	 */
+	public function stepContentInHtmlFieldShouldHaveFormatting($text, $field, $negate, $formatting) {
+		$page = $this->getSession()->getPage();
+		$inputField = $page->findField($field);
+		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+
+		$crawler = new Crawler($inputField->getValue());
+		$matchedNode = null;
+		foreach($crawler->filterXPath('//*') as $node) {
+			if(
+				$node->firstChild
+				&& $node->firstChild->nodeType == XML_TEXT_NODE
+				&& stripos($node->firstChild->nodeValue, $text) !== FALSE
+			) {
+				$matchedNode = $node;
+			}
+		}
+		assertNotNull($matchedNode);
+
+		$assertFn = $negate ? 'assertNotEquals' : 'assertEquals';
+		if($formatting == 'bold') {
+			call_user_func($assertFn, 'strong', $matchedNode->nodeName);
+		} else if($formatting == 'left aligned') {
+			if($matchedNode->getAttribute('style')) {
+				call_user_func($assertFn, 'text-align: left;', $matchedNode->getAttribute('style'));	
+			}
+		} else if($formatting == 'right aligned') {
+			call_user_func($assertFn, 'text-align: right;', $matchedNode->getAttribute('style'));	
 		}
 	}
 
