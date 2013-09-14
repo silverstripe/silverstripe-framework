@@ -101,10 +101,11 @@ class CmsFormsContext extends BehatContext
 		$regex = '/'.preg_quote($html, '/').'/ui';
 		if (!preg_match($regex, $actual)) {
 			$message = sprintf(
-				'The string "%s" was not found in the HTML of the element matching %s "%s".', 
+				'The string "%s" was not found in the HTML of the element matching %s "%s". Actual content: "%s"', 
 				$html, 
 				'named', 
-				$locator
+				$locator,
+				$actual
 			);
 			throw new ElementHtmlException($message, $this->getSession(), $element);
 		}
