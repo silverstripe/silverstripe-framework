@@ -24,7 +24,6 @@ So that I can link to a external website or a page on my site
     # Required to avoid "unsaved changed" browser dialog
     Then I press the "Save draft" button
 
-  @todo
   Scenario: I can link to an external URL
     Given I select "awesome" in the "Content" HTML field
     And I press the "Insert Link" button
