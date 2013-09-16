@@ -32,4 +32,3 @@ After:
 Director:
   rules:
     'admin': 'AdminRootController'
-    'dev/buildcache/$Action': 'RebuildStaticCacheTask'
