@@ -147,11 +147,22 @@ class Director implements TemplateGlobalProvider {
 
 		// Return code for a redirection request
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
-			$response = new SS_HTTPResponse();
-			$response->redirect(substr($result, 9));
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-			if ($res !== false) {
-				$response->output();
+			$url = substr($result, 9);
+
+			if(Director::is_cli()) {
+				// on cli, follow SilverStripe redirects automatically
+				return Director::direct(
+					str_replace(Director::absoluteBaseURL(), '', $url), 
+					DataModel::inst()
+				);
+			} else {
+				$response = new SS_HTTPResponse();
+				$response->redirect($url);
+				$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
+
+				if ($res !== false) {
+					$response->output();
+				}
 			}
 		// Handle a controller
 		} else if($result) {
