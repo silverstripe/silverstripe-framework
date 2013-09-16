@@ -46,7 +46,11 @@ class MemberAuthenticator extends Authenticator {
 		if($member) {
 			$result = $member->checkPassword($RAW_data['Password']);
 		} else {
-			$result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
+			$result = new ValidationResult(
+				false,
+				_t('Member.ERRORWRONGCRED', 
+				'That doesn\'t seem to be the right e-mail address or password. Please try again.'
+			));
 		}
 
 		if($member && !$result->valid()) { 
