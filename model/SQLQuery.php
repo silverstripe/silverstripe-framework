@@ -1120,10 +1120,15 @@ class SQLQuery {
 		// shift the first FROM table out from so we only deal with the JOINs
 		$baseFrom = array_shift($from);
 		$this->mergesort($from, function($firstJoin, $secondJoin) {
-			if($firstJoin['order'] == $secondJoin['order']) {
+			if(
+				!is_array($firstJoin) 
+				|| !is_array($secondJoin)
+				|| $firstJoin['order'] == $secondJoin['order']
+			) {
 				return 0;
+			} else {
+				return ($firstJoin['order'] < $secondJoin['order']) ?  -1 : 1;
 			}
-			return ($firstJoin['order'] < $secondJoin['order']) ?  -1 : 1;
 		});
 		
 		// Put the first FROM table back into the results 
