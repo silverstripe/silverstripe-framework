@@ -261,8 +261,8 @@ function increase_time_limit_to($timeLimit = null) {
 			return true;
 		} else {
 			$currTimeLimit = ini_get('max_execution_time');
-			// Only increase if its smaller
-			if($currTimeLimit && $currTimeLimit < $timeLimit) {
+			// Only increase if its smaller (and we're not at 0)
+			if($currTimeLimit && ($currTimeLimit < $timeLimit) && ($currTimeLimit != 0)) {
 				set_time_limit($timeLimit);
 			} 
 			return true;
