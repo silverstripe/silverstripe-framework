@@ -10,7 +10,11 @@ Executes a SilverStripe command"
 fi
 
 # find the silverstripe installation
-if [ -f ./cli-script.php ]; then
+sakedir=`dirname $0`
+if [ -f "$sakedir/cli-script.php" ]; then
+	framework="$sakedir"
+	base=`dirname $sakedir`
+elif [ -f ./cli-script.php ]; then
 	framework=.
 	base=..
 else
