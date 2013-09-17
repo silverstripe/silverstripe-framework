@@ -132,9 +132,20 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->setFrom("MyTable");
 		$query->setOrderBy('RAND()');
-		
 		$this->assertEquals(
 			'SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC',
+			$query->sql());
+
+		$query = new SQLQuery();
+		$query->setFrom("MyTable");
+		$query->addFrom('INNER JOIN SecondTable USING (ID)');
+		$query->addFrom('INNER JOIN ThirdTable USING (ID)');
+		$query->setOrderBy('MyName');
+		$this->assertEquals(
+			'SELECT * FROM MyTable '
+			. 'INNER JOIN SecondTable USING (ID) '
+			. 'INNER JOIN ThirdTable USING (ID) '
+			. 'ORDER BY MyName ASC',
 			$query->sql());
 	}
 
