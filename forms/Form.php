@@ -241,6 +241,8 @@ class Form extends RequestHandler {
 		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
 			$this->setMessage($errorInfo['message'], $errorInfo['type']);
 		}
+
+		return $this;
 	}
 	
 	/**
