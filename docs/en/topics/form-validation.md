@@ -131,6 +131,21 @@ An alternative (or additional) approach to validation is to place it directly
 on the model. SilverStripe provides a `[api:DataObject->validate()]` method for this purpose.
 Refer to the ["datamodel" topic](/topics/datamodel#validation-and-constraints) for more information.
 
+## Validation in the CMS
+
+Since you're not creating the forms for editing CMS records,
+SilverStripe provides you with a `getCMSValidator()` method on your models
+to return a `[api:Validator]` instance.
+
+	:::php
+	class Page extends SiteTree {
+		private static $db = array('MyRequiredField' => 'Text');
+		
+		public function getCMSValidator() {
+			return new RequiredFields(array('MyRequiredField'));
+		}
+	}
+
 ## Subclassing Validator
 
 To create your own validator, you need to subclass validator and define two methods:
