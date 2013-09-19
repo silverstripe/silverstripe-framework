@@ -184,6 +184,7 @@ class ContentNegotiator extends Object {
 		$content = str_replace('<hr>','<hr />', $content);
 		$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
 		$content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
+		$content = preg_replace('#(<param[^>]*[^/>])>#i', '\\1/>', $content);
 		$content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content);
 		$content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content);
 
