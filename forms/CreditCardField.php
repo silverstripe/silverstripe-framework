@@ -35,6 +35,9 @@ class CreditCardField extends TextField {
 	 * @return string
 	 */
 	protected function getTabIndexHTML($increment = 0) {
+		// we can't add a tabindex if there hasn't been one set yet.
+		if($this->getAttribute('tabindex') === null) return false;
+
 		$tabIndex = (int)$this->getAttribute('tabindex') + (int)$increment;
 		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
 	}
