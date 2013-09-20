@@ -224,8 +224,11 @@ class RestfulService extends ViewableData {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-		//include headers in the response
-		curl_setopt($ch, CURLOPT_HEADER, true);
+
+
+		// Write headers to a temporary file
+		$headerfd = tmpfile();
+		curl_setopt($ch, CURLOPT_WRITEHEADER, $headerfd);
 
 		// Add headers
 		if($this->customHeaders) {
@@ -260,8 +263,13 @@ class RestfulService extends ViewableData {
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
-		$rawResponse = curl_exec($ch);
-		$response = $this->extractResponse($ch, $rawResponse);
+		$body = curl_exec($ch);
+
+		rewind($headerfd);
+		$headers = stream_get_contents($headerfd);
+		fclose($headerfd);
+
+		$response = $this->extractResponse($ch, $headers, $body);
 		curl_close($ch);
 
 		return $response;
@@ -308,36 +316,26 @@ class RestfulService extends ViewableData {
 	}
 
 	/**
-	 * Build the response from raw data. The response could have multiple redirection
-	 * and proxy connect headers, so we are only interested in the last header before the body.
+	 * Extracts the response body and headers from a full curl response
 	 *
 	 * @param curl_handle $ch The curl handle for the request
 	 * @param string $rawResponse The raw response text
 	 *
 	 * @return RestfulService_Response The response object
 	 */
-	protected function extractResponse($ch, $rawResponse) {
+	protected function extractResponse($ch, $rawHeaders, $rawBody) {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		//get a curl error if there is one
 		$curlError = curl_error($ch);
 		//normalise the status code
 		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
-
-		// Parse the headers and body from the response.
-		// We cannot rely on CURLINFO_HEADER_SIZE here, it's miscalculated when connecting via
-		// a proxy (see http://sourceforge.net/p/curl/bugs/1204/). This is fixed in curl 7.30.0.
-		$headerParts = array();
-		$parts = explode("\r\n\r\n", $rawResponse);
-		while (isset($parts[0])) {
-			if (strpos($parts[0], 'HTTP/')===0) $headerParts[] = array_shift($parts);
-			else break; // We have reached the body.
-		}
-		$lastHeader = array_pop($headerParts);
-		$body = implode("\r\n\r\n", $parts);
-
-		$parsedHeader = $this->parseRawHeaders($lastHeader);
-		return new RestfulService_Response($body, $statusCode, $parsedHeader);
+		//parse the headers
+		$parts = array_filter(explode("\r\n\r\n", $rawHeaders));
+		$lastHeaders = array_pop($parts);
+		$headers = $this->parseRawHeaders($lastHeaders);
+		//return the response object
+		return new RestfulService_Response($rawBody, $statusCode, $headers);
 	}
 
 	/**

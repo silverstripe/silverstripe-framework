@@ -198,7 +198,7 @@ class RestfulServiceTest extends SapphireTest {
 
 	public function testExtractResponseRedirectionAndProxy() {
 		// This is an example of real raw response for a request via a proxy that gets redirected.
-		$rawResponse =
+		$rawHeaders =
 				"HTTP/1.0 200 Connection established\r\n" .
 			"\r\n" .
 				"HTTP/1.1 301 Moved Permanently\r\n" .
@@ -220,8 +220,8 @@ class RestfulServiceTest extends SapphireTest {
 				"X-Frame-Options: SAMEORIGIN\r\n" .
 				"Cache-Control: no-cache, max-age=0, must-revalidate, no-transform\r\n" .
 				"Vary: Accept-Encoding\r\n" .
-			"\r\n" .
-				"<!doctype html></html>";
+			"\r\n"
+			;
 
 		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
 		$headerFunction->setAccessible(true);
@@ -230,10 +230,10 @@ class RestfulServiceTest extends SapphireTest {
 		$response = $headerFunction->invoke(
 			new RestfulService(Director::absoluteBaseURL(),0),
 			$ch,
-			$rawResponse
+			$rawHeaders,
+			''
 		);
 
-		$this->assertEquals($response->getBody(), '<!doctype html></html>', 'Body is correctly extracted.');
 		$this->assertEquals(
 			$response->getHeaders(),
 			array(
@@ -250,53 +250,7 @@ class RestfulServiceTest extends SapphireTest {
 		);
 	}
 
-	public function testExtractResponseNewlinesInBody() {
-		$rawResponse =
-				"HTTP/1.1 200 OK\r\n" .
-				"Server: nginx\r\n" .
-			"\r\n" .
-				"<!doctype html>\r\n" .
-			"\r\n" .
-				"</html>";
-
-		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
-		$headerFunction->setAccessible(true);
-
-		$ch = curl_init();
-		$response = $headerFunction->invoke(
-			new RestfulService(Director::absoluteBaseURL(),0),
-			$ch,
-			$rawResponse
-		);
-
-		$this->assertEquals($response->getBody(), "<!doctype html>\r\n\r\n</html>", 'Body is correctly extracted.');
-		$this->assertEquals($response->getHeaders(), array('Server' => "nginx"), 'Headers are correctly extracted.');
-	}
-
-	public function testExtractResponseNoBody() {
-		// For example a response to HEAD request.
-		$rawResponse =
-				"HTTP/1.1 200 OK\r\n" .
-				"Server: nginx";
-
-		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
-		$headerFunction->setAccessible(true);
-
-		$ch = curl_init();
-		$response = $headerFunction->invoke(
-			new RestfulService(Director::absoluteBaseURL(),0),
-			$ch,
-			$rawResponse
-		);
-
-		$this->assertEquals($response->getBody(), "", 'Body is correctly extracted.');
-		$this->assertEquals($response->getHeaders(), array('Server' => "nginx"), 'Headers are correctly extracted.');
-	}
-
 	public function testExtractResponseNoHead() {
-		// Malformed response.
-		$rawResponse = "I am a malformed response";
-
 		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
 		$headerFunction->setAccessible(true);
 
@@ -304,10 +258,10 @@ class RestfulServiceTest extends SapphireTest {
 		$response = $headerFunction->invoke(
 			new RestfulService(Director::absoluteBaseURL(),0),
 			$ch,
-			$rawResponse
+			'',
+			''
 		);
 
-		$this->assertEquals($response->getBody(), "I am a malformed response", 'Body is correctly extracted.');
 		$this->assertEquals($response->getHeaders(), array(), 'Headers are correctly extracted.');
 	}
 }
