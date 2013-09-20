@@ -119,7 +119,11 @@ class TreeMultiselectField extends TreeDropdownField {
 		if ($this->form){
 			$dataUrlTree = $this->Link('tree');
 			if (isset($idArray) && count($idArray)){
-				$dataUrlTree .= '?forceValue='.implode(',',$idArray);
+				if(strpos($dataUrlTree, '?') === false){
+					$dataUrlTree .= '?forceValue='.implode(',',$idArray);
+				} else {
+					$dataUrlTree .= '&forceValue='.implode(',',$idArray);
+				}
 			}
 		}
 		return FormField::create_tag(
