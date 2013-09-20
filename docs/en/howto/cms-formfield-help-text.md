@@ -19,7 +19,7 @@ add a `.cms-description-tooltip` class.
 	:::php
 	TextField::create('MyText', 'My Text Label')
 		->setDescription('More <strong>detailed</strong> help')
-		->addExtraClass('cms-help-tooltip');
+		->addExtraClass('cms-description-tooltip');
 
 Tooltips are only supported
 for native, focusable input elements, which excludes
