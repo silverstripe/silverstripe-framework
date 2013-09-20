@@ -308,7 +308,8 @@ class RestfulService extends ViewableData {
 	}
 
 	/**
-	 * Extracts the response body and headers from a full curl response
+	 * Build the response from raw data. The response could have multiple redirection
+	 * and proxy connect headers, so we are only interested in the last header before the body.
 	 *
 	 * @param curl_handle $ch The curl handle for the request
 	 * @param string $rawResponse The raw response text
@@ -322,15 +323,21 @@ class RestfulService extends ViewableData {
 		$curlError = curl_error($ch);
 		//normalise the status code
 		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
-		//calculate the length of the header and extract it
-		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-		$rawHeaders = substr($rawResponse, 0, $headerLength);
-		//extract the body
-		$body = substr($rawResponse, $headerLength);
-		//parse the headers
-		$headers = $this->parseRawHeaders($rawHeaders);
-		//return the response object
-		return new RestfulService_Response($body, $statusCode, $headers);
+
+		// Parse the headers and body from the response.
+		// We cannot rely on CURLINFO_HEADER_SIZE here, it's miscalculated when connecting via
+		// a proxy (see http://sourceforge.net/p/curl/bugs/1204/). This is fixed in curl 7.30.0.
+		$headerParts = array();
+		$parts = explode("\r\n\r\n", $rawResponse);
+		while (isset($parts[0])) {
+			if (strpos($parts[0], 'HTTP/')===0) $headerParts[] = array_shift($parts);
+			else break; // We have reached the body.
+		}
+		$lastHeader = array_pop($headerParts);
+		$body = implode("\r\n\r\n", $parts);
+
+		$parsedHeader = $this->parseRawHeaders($lastHeader);
+		return new RestfulService_Response($body, $statusCode, $parsedHeader);
 	}
 
 	/**
