@@ -111,7 +111,7 @@ All command-line arguments are documented on
 ### Via the "sake" Wrapper on Command Line
 
 The [sake](/topics/commandline) executable that comes with SilverStripe can trigger a customized
-"[api:TestRunner]" class that handles the PHPUnit configuration and output formatting.
+`[api:TestRunner]` class that handles the PHPUnit configuration and output formatting.
 While the custom test runner a handy tool, its also more limited than using `phpunit` directly,
 particularly around formatting test output.
 
