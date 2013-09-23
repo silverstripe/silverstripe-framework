@@ -343,11 +343,14 @@ class HTTP {
 			$responseHeaders['Vary'] = 'Cookie, X-Forwarded-Protocol, User-Agent, Accept';
 		}
 		else {
-			// Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
-			$contentDisposition = $body->getHeader('Content-disposition');
-			if (!$contentDisposition) $contentDisposition = $body->getHeader('Content-Disposition');
+			if($body) {
+				// Grab header for checking. Unfortunately HTTPRequest uses a mistyped variant.
+				$contentDisposition = $body->getHeader('Content-disposition');
+				if (!$contentDisposition) $contentDisposition = $body->getHeader('Content-Disposition');
+			}
 
 			if(
+				$body &&
 				Director::is_https() &&
 				strstr($_SERVER["HTTP_USER_AGENT"], 'MSIE')==true &&
 				strstr($contentDisposition, 'attachment;')==true
