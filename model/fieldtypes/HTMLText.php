@@ -58,6 +58,7 @@ class HTMLText extends Text {
 	 */
 	public function Summary($maxWords = 50, $flex = 15, $add = '...') {
 		$str = false;
+		$parsedValue = $this->forTemplate();
 
 		/* First we need the text of the first paragraph, without tags. Try using SimpleXML first */
 		if (class_exists('SimpleXMLElement')) {
@@ -66,7 +67,7 @@ class HTMLText extends Text {
 			// Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error
 			set_error_handler(create_function('$no, $str', 'throw new Exception("HTML Parse Error: ".$str);'), E_ALL);
 			//  Nonbreaking spaces get converted into weird characters, so strip them
-			$value = str_replace('&nbsp;', ' ', $this->value);
+			$value = str_replace('&nbsp;', ' ', $parsedValue);
 			try {
 				$res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $value);
 			}
@@ -86,11 +87,11 @@ class HTMLText extends Text {
 			/* See if we can pull a paragraph out*/
 
 			// Strip out any images in case there's one at the beginning. Not doing this will return a blank paragraph
-			$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}', '', $this->value);
+			$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}', '', $parsedValue);
 			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $str, $matches)) $str = $matches[2];
 
 			/* If _that_ failed, just use the whole text */
-			if (!$str) $str = $this->value;
+			if (!$str) $str = $parsedValue;
 			
 			/* Now pull out all the html-alike stuff */
 			/* Take out anything that is obviously a tag */
@@ -139,8 +140,16 @@ class HTMLText extends Text {
 		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that
 		 * Summary will limit the result this time */
 		return $this->Summary();
-	}	
-	
+	}
+
+	/**
+	 * Return the value of the field with relative links converted to absolute urls.
+	 * @return string
+	 */
+	public function AbsoluteLinks() {
+		return HTTP::absoluteURLs($this->forTemplate());
+	}
+
 	public function forTemplate() {
 		if ($this->processShortcodes) {
 			return ShortcodeParser::get_active()->parse($this->value);
