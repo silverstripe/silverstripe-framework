@@ -15,7 +15,7 @@ abstract class DataFormatter extends Object {
 	 *
 	 * @var int
 	 */
-	public static $priority = 50;
+	private static $priority = 50;
 	
 	/**
 	 * Follow relations for the {@link DataObject} instances
