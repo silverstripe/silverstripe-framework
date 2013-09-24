@@ -1475,14 +1475,12 @@ class Form extends RequestHandler {
 	 *				names delimited by a single space.
 	 */
 	public function addExtraClass($class) {
-		$classes = explode(' ', $class);
-		
-		foreach($classes as $class) {
-			$value = trim($class);
-			
-			$this->extraClasses[] = $value;
+		//split at white space
+		$classes = preg_split('/\s+/', $class);
+		foreach ($classes as $class) {
+			//add classes one by one
+			$this->extraClasses[$class] = $class;
 		}
-
 		return $this;
 	}
 
@@ -1493,8 +1491,12 @@ class Form extends RequestHandler {
 	 * @param string $class
 	 */
 	public function removeExtraClass($class) {
-		$classes = explode(' ', $class);
-		$this->extraClasses = array_diff($this->extraClasses, $classes);
+		//split at white space
+		$classes = preg_split('/\s+/', $class);
+		foreach ($classes as $class) {
+			//unset one by one
+			unset($this->extraClasses[$class]);
+		}
 		return $this;
 	}
 	
