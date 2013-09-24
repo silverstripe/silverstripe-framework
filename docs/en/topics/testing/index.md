@@ -23,21 +23,21 @@ Unit tests are not included in the normal SilverStripe downloads, you are expect
 
 Once you've got the project up and running, check out the additional requirements to run unit tests:
 
-    composer update --dev
+	composer update --dev
 
 This will install (among other things) the [PHPUnit](http://www.phpunit.de/) dependency, which is the framework we're
 building our unit tests on. Composer installs it alongside the required PHP classes into the `vendor/bin/` directory.
 You can either use it through its full path (`vendor/bin/phpunit`), or symlink it into the root directory of your website:
 
-    ln -s vendor/bin/phpunit phpunit
+	ln -s vendor/bin/phpunit phpunit
 
 ### Via PEAR
 
 Alternatively, you can check out PHPUnit globally via the PEAR packanage manager
 ([instructions](https://github.com/sebastianbergmann/phpunit/)).
 
-    pear config-set auto_discover 1
-    pear install pear.phpunit.de/PHPUnit
+	pear config-set auto_discover 1
+	pear install pear.phpunit.de/PHPUnit
 
 ## Configuration
 
@@ -90,20 +90,20 @@ Tutorials and recipes for creating tests using the SilverStripe framework:
 
 The `phpunit` binary should be used from the root directory of your website.
 
-    # Runs all tests defined in phpunit.xml
-    phpunit
+	# Runs all tests defined in phpunit.xml
+	phpunit
 
-    # Run all tests of a specific module
-    phpunit framework/tests/
+	# Run all tests of a specific module
+	phpunit framework/tests/
 
-    # Run specific tests within a specific module
-    phpunit framework/tests/filesystem
+	# Run specific tests within a specific module
+	phpunit framework/tests/filesystem
 
-    # Run a specific test
-    phpunit framework/tests/filesystem/FolderTest.php
+	# Run a specific test
+	phpunit framework/tests/filesystem/FolderTest.php
 
-    # Run tests with optional `$_GET` parameters (you need an empty second argument)
-    phpunit framework/tests '' flush=all
+	# Run tests with optional `$_GET` parameters (you need an empty second argument)
+	phpunit framework/tests '' flush=all
 
 All command-line arguments are documented on
 [phpunit.de](http://www.phpunit.de/manual/current/en/textui.html).
@@ -115,20 +115,20 @@ The [sake](/topics/commandline) executable that comes with SilverStripe can trig
 While the custom test runner a handy tool, its also more limited than using `phpunit` directly,
 particularly around formatting test output.
 
-    # Run all tests
-    sake dev/tests/all
+	# Run all tests
+	sake dev/tests/all
 
-    # Run all tests of a specific module (comma-separated)
-    sake dev/tests/module/framework,cms
+	# Run all tests of a specific module (comma-separated)
+	sake dev/tests/module/framework,cms
 
-    # Run specific tests (comma-separated)
-    sake dev/tests/FolderTest,OtherTest
+	# Run specific tests (comma-separated)
+	sake dev/tests/FolderTest,OtherTest
 
-    # Run tests with optional `$_GET` parameters
-    sake dev/tests/all flush=all
+	# Run tests with optional `$_GET` parameters
+	sake dev/tests/all flush=all
 
-    # Skip some tests
-    sake dev/tests/all SkipTests=MySkippedTest
+	# Skip some tests
+	sake dev/tests/all SkipTests=MySkippedTest
 
 ### Via Web Browser
 
@@ -136,4 +136,4 @@ Executing tests from the command line is recommended, since it most closely refl
 test runs in any automated testing environments. If for some reason you don't have
 access to the command line, you can also run tests through the browser.
 
-     http://localhost/dev/tests
+	http://localhost/dev/tests

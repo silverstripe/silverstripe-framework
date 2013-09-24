@@ -8,19 +8,19 @@ For this to work, you need to send emails using the `Email` class,
 which is generally the way that we recommend you send emails in your SilverStripe application.
 Here is a simple example of how you might do this:
 
-    :::php
-    $e = new Email();
-    $e->To = "someone@example.com";
-    $e->Subject = "Hi there";
-    $e->Body = "I just really wanted to email you and say hi.";
-    $e->send();
+	:::php
+	$e = new Email();
+	$e->To = "someone@example.com";
+	$e->Subject = "Hi there";
+	$e->Body = "I just really wanted to email you and say hi.";
+	$e->send();
 
 Normally, the `send()` method would send an email using PHP's `mail()` function.
 However, if you are running a `[api:SapphireTest]` test, then it holds off actually sending the email,
 and instead lets you assert that an email was sent using this method.
 
-    :::php
-    $this->assertEmailSent("someone@example.com", null, "/th.*e$/");
+	:::php
+	$this->assertEmailSent("someone@example.com", null, "/th.*e$/");
 
 The arguments are `$to`, `$from`, `$subject`, `$body`, and can take one of the three following types:
 
