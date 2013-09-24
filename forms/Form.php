@@ -65,7 +65,7 @@ class Form extends RequestHandler {
 	protected $validator;
 	
 	protected $formMethod = "post";
-	
+
 	protected static $current_action;
 	
 	/**
@@ -144,6 +144,10 @@ class Form extends RequestHandler {
 	 */
 	protected $attributes = array();
 
+	public static $casting = array(
+		'Message' => 'Text'
+	);
+
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
@@ -203,7 +207,7 @@ class Form extends RequestHandler {
 		'GET ' => 'httpSubmission',
 		'HEAD ' => 'httpSubmission',
 	);
-	
+
 	/**
 	 * Set up current form errors in session to
 	 * the current form if appropriate.
@@ -239,7 +243,7 @@ class Form extends RequestHandler {
 	 * if the form is valid.
 	 */
 	public function httpSubmission($request) {
-		$vars = $request->requestVars();
+			$vars = $request->requestVars();
 		if(isset($funcName)) {
 			Form::set_current_action($funcName);
 		}
@@ -281,7 +285,7 @@ class Form extends RequestHandler {
 		if(isset($funcName)) {
 			$this->setButtonClicked($funcName);
 		}
-		
+
 		// Permission checks (first on controller, then falling back to form)
 		if(
 			// Ensure that the action is actually a button or method on the form,
@@ -355,8 +359,8 @@ class Form extends RequestHandler {
 				}
 				return $this->controller->redirectBack();
 			}
-		}
-		
+	}
+	
 		// First, try a handler method on the controller (has been checked for allowed_actions above already)
 		if($this->controller->hasMethod($funcName)) {
 			return $this->controller->$funcName($vars, $this, $request);
@@ -439,7 +443,7 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * Add an error message to a field on this form.  It will be saved into the session
+	 * Add a plain text error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
 	 */
 	public function addErrorMessage($fieldName, $message, $messageType) {
@@ -865,7 +869,7 @@ class Form extends RequestHandler {
 		$this->formMethod = strtolower($method);
 		return $this;
 	}
-	
+
 	/**
 	 * Return the form's action attribute.
 	 * This is build by adding an executeForm get variable to the parent controller's Link() value
