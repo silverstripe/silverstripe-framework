@@ -293,24 +293,32 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
-	 * Add a CSS-class to the formfield-container.
+	 * Add one or more CSS-classes to the formfield-container.
 	 * 
 	 * @param $class String
 	 */
 	public function addExtraClass($class) {
-		$this->extraClasses[$class] = $class;
+		//split at white space to extract all the classes
+		$classes = preg_split('/\s+/', $class);
+		foreach ($classes as $class) {
+			//add each class one by one
+			$this->extraClasses[$class] = $class;
+		}
 		return $this;
 	}
 
 	/**
-	 * Remove a CSS-class from the formfield-container.
+	 * Remove one or more CSS-classes from the formfield-container.
 	 * 
 	 * @param $class String
 	 */
 	public function removeExtraClass($class) {
-		$pos = array_search($class, $this->extraClasses);
-		if($pos !== false) unset($this->extraClasses[$pos]);
-
+		//split at white space to extract all the classes
+		$classes = preg_split('/\s+/', $class);
+		foreach ($classes as $class) {
+			//unset each class one by one
+			unset($this->extraClasses[$class]);
+		}
 		return $this;
 	}
 
