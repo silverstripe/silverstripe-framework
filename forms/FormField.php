@@ -93,6 +93,10 @@ class FormField extends RequestHandler {
 	 */
 	protected $attributes = array();
 
+	public static $casting = array(
+		'Message' => 'Text'
+	);
+
 	/**
 	 * Takes a fieldname and converts camelcase to spaced
 	 * words. Also resolves combined fieldnames with dot syntax
