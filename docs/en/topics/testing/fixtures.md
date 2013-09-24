@@ -16,48 +16,48 @@ so it is ideal for fixture generation.
 
 Say we have the following two DataObjects:
 
-    :::php
-    class Player extends DataObject {
-        static $db = array (
-            'Name' => 'Varchar(255)'
-        );
+	:::php
+	class Player extends DataObject {
+		static $db = array (
+			'Name' => 'Varchar(255)'
+		);
 
-        static $has_one = array(
-            'Team' => 'Team'
-        );
-    }
+		static $has_one = array(
+			'Team' => 'Team'
+		);
+	}
 
-    class Team extends DataObject {
-        static $db = array (
-            'Name' => 'Varchar(255)',
-            'Origin' => 'Varchar(255)'
-        );
+	class Team extends DataObject {
+		static $db = array (
+			'Name' => 'Varchar(255)',
+			'Origin' => 'Varchar(255)'
+		);
 
-        static $has_many = array(
-            'Players' => 'Player'
-        );
-    }
+		static $has_many = array(
+			'Players' => 'Player'
+		);
+	}
 
 We can represent multiple instances of them in `YAML` as follows:
 
-    :::yml
-    Player:
-        john:
-            Name: John
-            Team: =>Team.hurricanes
-        joe:
-            Name: Joe
-            Team: =>Team.crusaders
-        jack:
-            Name: Jack
-            Team: =>Team.crusaders
-    Team:
-        hurricanes:
-            Name: The Hurricanes
-            Origin: Wellington
-        crusaders:
-            Name: The Crusaders
-            Origin: Bay of Plenty
+	:::yml
+	Player:
+		john:
+			Name: John
+			Team: =>Team.hurricanes
+		joe:
+			Name: Joe
+			Team: =>Team.crusaders
+		jack:
+			Name: Jack
+			Team: =>Team.crusaders
+	Team:
+		hurricanes:
+			Name: The Hurricanes
+			Origin: Wellington
+		crusaders:
+			Name: The Crusaders
+			Origin: Bay of Plenty
 
 Our `YAML` is broken up into three levels, signified by the indentation of each line.
 In the first level of indentation, `Player` and `Team`,
@@ -86,23 +86,23 @@ This style of relationship declaration can be used for both a `has-one` and a `m
 For `many-many` relationships, we specify a comma separated list of values.
 For example we could just as easily write the above as:
 
-    :::yml
-    Player:
-        john:
-            Name: John
-        joe:
-            Name: Joe
-        jack:
-            Name: Jack
-    Team:
-        hurricanes:
-            Name: The Hurricanes
-            Origin: Wellington
-            Players: =>Player.john
-        crusaders:
-            Name: The Crusaders
-            Origin: Bay of Plenty
-            Players: =>Player.joe,=>Player.jack
+	:::yml
+	Player:
+		john:
+			Name: John
+		joe:
+			Name: Joe
+		jack:
+			Name: Jack
+	Team:
+		hurricanes:
+			Name: The Hurricanes
+			Origin: Wellington
+			Players: =>Player.john
+		crusaders:
+			Name: The Crusaders
+			Origin: Bay of Plenty
+			Players: =>Player.joe,=>Player.jack
 
 A crucial thing to note is that **the YAML file specifies DataObjects, not database records**.
 The database is populated by instantiating DataObject objects and setting the fields declared in the YML,
@@ -123,18 +123,18 @@ One common example here is publishing pages (page fixtures aren't published by d
 You can always resort to creating objects manually in the test setup phase.
 Since the test database is cleared on every test method, you'll get a fresh set of test instances every time.
 
-    :::php
-    class SiteTreeTest extends SapphireTest {
-        function setUp() {
-            parent::setUp();
+	:::php
+	class SiteTreeTest extends SapphireTest {
+		function setUp() {
+			parent::setUp();
 
-            for($i=0; $i<100; $i++) {
-                $page = new Page(array('Title' => "Page $i"));
-                $page->write();
-                $page->publish('Stage', 'Live');
-            }
-        }
-    }
+			for($i=0; $i<100; $i++) {
+				$page = new Page(array('Title' => "Page $i"));
+				$page->write();
+				$page->publish('Stage', 'Live');
+			}
+		}
+	}
 
 ## Fixture Factories
 
@@ -156,69 +156,69 @@ This factory can have so called "blueprints" defined on it, which tells the fact
 Since blueprints are auto-created for all available DataObject subclasses,
 you only need to instantiate a factory to start using it.
 
-    :::php
-    $factory = Injector::inst()->create('FixtureFactory');
-    $obj = $factory->createObject('MyClass', 'myobj1');
+	:::php
+	$factory = Injector::inst()->create('FixtureFactory');
+	$obj = $factory->createObject('MyClass', 'myobj1');
 
 It is important to remember that fixtures are referenced by arbitrary
 identifiers ('myobj1'). These are internally mapped to their database identifiers.
 
-    :::
-    $databaseId = $factory->getId('MyClass', 'myobj1');
+	:::php
+	$databaseId = $factory->getId('MyClass', 'myobj1');
 
 In order to create an object with certain properties, just add a second argument:
 
-    :::php
-    $obj = $factory->createObject('MyClass', 'myobj1', array('MyProperty' => 'My Value'));
+	:::php
+	$obj = $factory->createObject('MyClass', 'myobj1', array('MyProperty' => 'My Value'));
 
 #### Default Properties
 
 Blueprints can be overwritten in order to customize their behaviour,
 for example with default properties in case none are passed into `createObject()`.
 
-    :::php
-    $factory->define('MyObject', array(
-        'MyProperty' => 'My Default Value'
-    ));
+	:::php
+	$factory->define('MyObject', array(
+		'MyProperty' => 'My Default Value'
+	));
 
 #### Dependent Properties
 
 Values can be set on demand through anonymous functions, which can either generate random defaults,
 or create composite values based on other fixture data.
 
-    :::php
-    $factory->define('Member', array(
-        'Email' => function($obj, $data, $fixtures) {
-            if(isset($data['FirstName']) {
-                $obj->Email = strtolower($data['FirstName']) . '@example.org';
-            }
-        },
-        'Score' => function($obj, $data, $fixtures) {
-            $obj->Score = rand(0,10);
-        }
-    ));
+	:::php
+	$factory->define('Member', array(
+		'Email' => function($obj, $data, $fixtures) {
+			if(isset($data['FirstName']) {
+				$obj->Email = strtolower($data['FirstName']) . '@example.org';
+			}
+		},
+		'Score' => function($obj, $data, $fixtures) {
+			$obj->Score = rand(0,10);
+		}
+	));
 
 #### Relations
 
 Model relations can be expressed through the same notation as in the YAML fixture format
 described earlier, through the `=>` prefix on data values.
 
-    :::php
-    $obj = $factory->createObject('MyObject', 'myobj1', array(
-        'MyHasManyRelation' => '=>MyOtherObject.obj1,=>MyOtherObject.obj2'
-    ));
+	:::php
+	$obj = $factory->createObject('MyObject', 'myobj1', array(
+		'MyHasManyRelation' => '=>MyOtherObject.obj1,=>MyOtherObject.obj2'
+	));
 
 #### Callbacks
 
 Sometimes new model instances need to be modified in ways which can't be expressed
 in their properties, for example to publish a page, which requires a method call.
 
-    :::php
-    $blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
-    $blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
-        $obj->publish('Stage', 'Live');
-    });
-    $page = $factory->define('Page', $blueprint);
+	:::php
+	$blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
+	$blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
+		$obj->publish('Stage', 'Live');
+	});
+	$page = $factory->define('Page', $blueprint);
 
 Available callbacks:
 
@@ -232,43 +232,43 @@ CMS admins could both inherit from the `Member` class, but have completely
 different properties. This is where named blueprints come in.
 By default, blueprint names equal the class names they manage.
 
-    :::php
-    $memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
-    $adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
-    $adminBlueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
-        if(isset($fixtures['Group']['admin'])) {
-            $adminGroup = Group::get()->byId($fixtures['Group']['admin']);
-            $obj->Groups()->add($adminGroup);
-        }
-    });
+	:::php
+	$memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
+	$adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
+	$adminBlueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
+		if(isset($fixtures['Group']['admin'])) {
+			$adminGroup = Group::get()->byId($fixtures['Group']['admin']);
+			$obj->Groups()->add($adminGroup);
+		}
+	});
 
-    $member = $factory->createObject('Member'); // not in admin group
-    $admin = $factory->createObject('AdminMember'); // in admin group
+	$member = $factory->createObject('Member'); // not in admin group
+	$admin = $factory->createObject('AdminMember'); // in admin group
 
 ### Full Test Example
 
-    :::php
-    class MyObjectTest extends SapphireTest {
+	:::php
+	class MyObjectTest extends SapphireTest {
 
-        protected $factory;
+		protected $factory;
 
-        function __construct() {
-            parent::__construct();
+		function __construct() {
+			parent::__construct();
 
-            $factory = Injector::inst()->create('FixtureFactory');
-            // Defines a "blueprint" for new objects
-            $factory->define('MyObject', array(
-                'MyProperty' => 'My Default Value'
-            ));
-            $this->factory = $factory;
-        }
+			$factory = Injector::inst()->create('FixtureFactory');
+			// Defines a "blueprint" for new objects
+			$factory->define('MyObject', array(
+				'MyProperty' => 'My Default Value'
+			));
+			$this->factory = $factory;
+		}
 
-        function testSomething() {
-            $MyObjectObj = $this->factory->createObject(
-                'MyObject',
-                array('MyOtherProperty' => 'My Custom Value')
-            );
-            // $myPageObj->MyProperty = My Default Value
-            // $myPageObj->MyOtherProperty = My Custom Value
-        }
-    }
+		function testSomething() {
+			$MyObjectObj = $this->factory->createObject(
+				'MyObject',
+				array('MyOtherProperty' => 'My Custom Value')
+			);
+			// $myPageObj->MyProperty = My Default Value
+			// $myPageObj->MyOtherProperty = My Custom Value
+		}
+	}
