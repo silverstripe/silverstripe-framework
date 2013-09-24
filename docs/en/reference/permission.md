@@ -15,23 +15,19 @@ The simple usage, Permission::check("PERM_CODE") will detect if the currently lo
 **Group ACLs**
 
 *  Call **Permission::check("MY_PERMISSION_CODE")** to see if the current user has MY_PERMISSION_CODE.
-*  MY_PERMISSION_CODE can be loaded into the Security admin on the appropriate group, using the "Permissions" tab. 
-
-You can use whatever codes you like, but for the sanity of developers and users, it would be worth listing the codes in
-[permissions:codes](/reference/permission)
+*  MY_PERMISSION_CODE can be loaded into the Security admin on the appropriate group, using the "Permissions" tab.
 
 ## PermissionProvider
 
-`[api:PermissionProvider]` is an interface which lets you define a method *providePermissions()*. This method should return a
-map of permission code names with a human readable explanation of its purpose (see
-[permissions:codes](/reference/permission)).
+`[api:PermissionProvider]` is an interface which lets you define a method *providePermissions()*.
+This method should return a map of permission code names with a human readable explanation of its purpose.
 
 	:::php
 	class Page_Controller implements PermissionProvider {
 	  public function init() {
 	    if(!Permission::check("VIEW_SITE")) Security::permissionFailure();
 	  }
-	
+
 	  public function providePermissions() {
 	    return array(
 	      "VIEW_SITE" => "Access the site",
@@ -53,7 +49,7 @@ By default, permissions are used in the following way:
     * If not logged in, the 'View' permissions must be 'anyone logged in' for a page to be displayed in a menu
     * If logged in, you must be allowed to view a page for it to be displayed in a menu
 
-**NOTE:** Should the canView() method on SiteTree  be updated to call Permission::check("SITETREE_VIEW", $this->ID)? 
+**NOTE:** Should the canView() method on SiteTree  be updated to call Permission::check("SITETREE_VIEW", $this->ID)?
 Making this work well is a subtle business and should be discussed with a few developers.
 
 ## Setting up permissions
