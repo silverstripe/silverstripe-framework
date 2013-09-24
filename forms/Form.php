@@ -155,6 +155,10 @@ class Form extends RequestHandler {
 		'forTemplate',
 	);
 
+	private static $casting = array(
+		'Message' => 'Text'
+	);
+
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
@@ -489,7 +493,7 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * Add an error message to a field on this form.  It will be saved into the session
+	 * Add a plain text error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
 	 */
 	public function addErrorMessage($fieldName, $message, $messageType) {
