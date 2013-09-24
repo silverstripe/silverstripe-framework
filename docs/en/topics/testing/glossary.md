@@ -31,7 +31,7 @@ test.
 **Fake Object**: A substitute object that simply replaces a real object with the same interface, and returns a
 pre-determined (usually fixed) value from each method.
 
-**Mock Object:** A substitute object that mimicks the same behavior as a real object (some people think of mocks as
+**Mock Object:** A substitute object that mimics the same behavior as a real object (some people think of mocks as
 "crash test dummy" objects). Mocks differ from other kinds of substitute objects in that they must understand the
 context of each call to them, setting expectations of which, and what order, methods will be invoked and what parameters
 will be passed.

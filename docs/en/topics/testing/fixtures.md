@@ -2,177 +2,223 @@
 
 ## Overview
 
-Often you need to test your functionality with some existing data, so called "fixtures".
-The `[api:SapphireTest]` class already prepares an empty database for you,
-and you have various ways to define those fixtures.
+You will often find the need to test your functionality with some consistent data.
+If we are testing our code with the same data each time,
+we can trust our tests to yeild reliable results.
+In Silverstripe we define this data via 'fixtures' (so called because of their fixed nature).
+The `[api:SapphireTest]` class takes care of populating a test database with data from these fixtures -
+all we have to do is define them, and we have a few ways in which we can do this.
 
 ## YAML Fixtures
 
 YAML is a markup language which is deliberately simple and easy to read,
-so ideal for our fixture generation. 
+so it is ideal for fixture generation.
 
-We will begin with a sample file and talk our way through it.
+Say we have the following two DataObjects:
 
-	Page:
-	    home:
-	        Title: Home
-	    about:
-	        Title: About Us
-	    staff:
-	        Title: Staff
-	        URLSegment: my-staff
-	        Parent: =>Page.about
-	        
-	RedirectorPage:
-	    redirect_home:
-	        RedirectionType: Internal
-	        LinkTo: =>Page.home
+    :::php
+    class Player extends DataObject {
+        static $db = array (
+            'Name' => 'Varchar(255)'
+        );
 
+        static $has_one = array(
+            'Team' => 'Team'
+        );
+    }
 
-The contents of the YAML file are broken into three levels.
+    class Team extends DataObject {
+        static $db = array (
+            'Name' => 'Varchar(255)',
+            'Origin' => 'Varchar(255)'
+        );
 
-*  **Top level: class names** - `Page` and `RedirectorPage`.  This is the name of the dataobject class that should be created. 
-The fact that `RedirectorPage` is actually a subclass is irrelevant to the system populating the database.  It just
-instantiates the object you specify.
-*  **Second level: identifiers** - `home`, `about`, etc.  These are the identifiers that you pass as
-the second argument of SapphireTest::objFromFixture().  Each identifier you specify delimits a new database record. 
-This means that every record needs to have an identifier, whether you use it or not.
-*  **Third level: fields** - each field for the record is listed as a 3rd level entry.  In most cases, the field's raw
-content is provided.  However, if you want to define a relationship, you can do so using "=>".
+        static $has_many = array(
+            'Players' => 'Player'
+        );
+    }
 
-There are a couple of lines like this:
+We can represent multiple instances of them in `YAML` as follows:
 
-	Parent: =>Page.about
+    :::yml
+    Player:
+        john:
+            Name: John
+            Team: =>Team.hurricanes
+        joe:
+            Name: Joe
+            Team: =>Team.crusaders
+        jack:
+            Name: Jack
+            Team: =>Team.crusaders
+    Team:
+        hurricanes:
+            Name: The Hurricanes
+            Origin: Wellington
+        crusaders:
+            Name: The Crusaders
+            Origin: Bay of Plenty
 
-This will tell the system to set the ParentID database field to the ID of the Page object with the identifier "about". 
-This can be used on any has-one or many-many relationship.  Note that we use the name of the relationship (Parent), and
-not the name of the database field (ParentID)
+Our `YAML` is broken up into three levels, signified by the indentation of each line.
+In the first level of indentation, `Player` and `Team`,
+represent the class names of the objects we want to be created for the test.
 
-On many-many relationships, you should specify a comma separated list of values.
+The second level, `john`/`joe`/`jack` & `hurricanes`/`crusaders`, are identifiers.
+These are what you pass as the second argument of `SapphireTest::objFromFixture()`.
+Each identifier you specify represents a new object.
 
-	MyRelation: =>Class.inst1,=>Class.inst2,=>Class.inst3
+The third and final level represents each individual object's fields.
+A field can either be provided with raw data (such as the Names for our Players),
+or we can define a relationship, as seen by the fields prefixed with `=>`.
 
-An crucial thing to note is that **the YAML file specifies DataObjects, not database records**.  The database is
-populated by instantiating DataObject objects, setting the fields listed, and calling write().  This means that any
-onBeforeWrite() or default value logic will be executed as part of the test.  This forms the basis of our
-testURLGeneration() test above.
+Each one of our Players has a relationship to a Team,
+this is shown with the `Team` field for each `Player` being set to `=>Team.` followed by a team name.
+Take the player John for example, his team is the Hurricanes which is represented by `=>Team.hurricanes`.
+This is tells the system that we want to set up a relationship for the `Player` object `john` with the `Team` object `hurricanes`.
+It will populate the `Player` object's `TeamID` with the ID of `hurricanes`,
+just like how a relationship is always set up.
 
-For example, the URLSegment value of Page.staffduplicate is the same as the URLSegment value of Page.staff.  When the
-fixture is set up, the URLSegment value of Page.staffduplicate will actually be my-staff-2.
+<div class="hint" markdown='1'>
+Note that we use the name of the relationship (Team), and not the name of the database field (TeamID).
+</div>
 
-Finally, be aware that requireDefaultRecords() is **not** called by the database populator - so you will need to specify
-standard pages such as 404 and home in your YAML file.
+This style of relationship declaration can be used for both a `has-one` and a `many-many` relationship.
+For `many-many` relationships, we specify a comma separated list of values.
+For example we could just as easily write the above as:
+
+    :::yml
+    Player:
+        john:
+            Name: John
+        joe:
+            Name: Joe
+        jack:
+            Name: Jack
+    Team:
+        hurricanes:
+            Name: The Hurricanes
+            Origin: Wellington
+            Players: =>Player.john
+        crusaders:
+            Name: The Crusaders
+            Origin: Bay of Plenty
+            Players: =>Player.joe,=>Player.jack
+
+A crucial thing to note is that **the YAML file specifies DataObjects, not database records**.
+The database is populated by instantiating DataObject objects and setting the fields declared in the YML,
+then calling write() on those objects.
+This means that any `onBeforeWrite()` or default value logic will be executed as part of the test.
+The reasoning behind this is to allow us to test the `onBeforeWrite` functionality of our objects.
+You can see this kind of testing in action in the `testURLGeneration()` test from the example in
+[Creating a SilverStripe Test](creating-a-silverstripe-test).
 
 ## Test Class Definition
 
+### Manual Object Creation
 
-
-## Manual Object Creation
-
-Sometimes statically defined fixtures don't suffice, because of the complexity of the tested model, 
-or because the YAML format doesn't allow you to modify all model state.
+Sometimes statically defined fixtures don't suffice. This could be because of the complexity of the tested model,
+or because the YAML format doesn't allow you to modify all of a model's state.
 One common example here is publishing pages (page fixtures aren't published by default).
 
 You can always resort to creating objects manually in the test setup phase.
-Since the test database is cleared on every test method, you'll get a fresh
-set of test instances every time.
+Since the test database is cleared on every test method, you'll get a fresh set of test instances every time.
 
-	:::php
-	class SiteTreeTest extends SapphireTest {
-		function setUp() {
-			parent::setUp();
+    :::php
+    class SiteTreeTest extends SapphireTest {
+        function setUp() {
+            parent::setUp();
 
-			for($i=0; $i<100; $i++) {
-				$page = new Page(array('Title' => "Page $i"));
-				$page->write();
-				$page->publish('Stage', 'Live');
-			}
-		}
-	}
+            for($i=0; $i<100; $i++) {
+                $page = new Page(array('Title' => "Page $i"));
+                $page->write();
+                $page->publish('Stage', 'Live');
+            }
+        }
+    }
 
 ## Fixture Factories
 
 ### Why Factories?
 
-Manually defined fixture provide full flexibility, but very little in terms of structure and convention.
-Alternatively, you can use the `[api:FixtureFactory]` class, which allows you
-to set default values, callbacks on object creation, and dynamic/lazy value setting.
-By the way, the `SapphireTest` YAML fixtures rely on internally on this class as well.
+While manually defined fixtures provide full flexibility, they offer very little in terms of structure and convention.
+Alternatively, you can use the `[api:FixtureFactory]` class, which allows you to set default values,
+callbacks on object creation, and dynamic/lazy value setting.
 
-The idea is that rather than instanciating objects directly, we'll have a factory class for them.
-This factory can have so called "blueprints" defined on it, which tells the factory
-how to instanciate an object of a specific type. Blueprints need a name,
-which is usually set to the class it creates. 
+<div class="hint" markdown='1'>
+SapphireTest uses FixtureFactory under the hood when it is provided with YAML based fixtures.
+</div>
+
+The idea is that rather than instantiating objects directly, we'll have a factory class for them.
+This factory can have so called "blueprints" defined on it, which tells the factory how to instantiate an object of a specific type. Blueprints need a name, which is usually set to the class it creates.
 
 ### Usage
 
 Since blueprints are auto-created for all available DataObject subclasses,
-you only need to instanciate a factory to start using it.
+you only need to instantiate a factory to start using it.
 
-	:::php
-	$factory = Injector::inst()->create('FixtureFactory');
-	$obj = $factory->createObject('MyClass', 'myobj1');
+    :::php
+    $factory = Injector::inst()->create('FixtureFactory');
+    $obj = $factory->createObject('MyClass', 'myobj1');
 
 It is important to remember that fixtures are referenced by arbitrary
 identifiers ('myobj1'). These are internally mapped to their database identifiers.
 
-	:::
-	$databaseId = $factory->getId('MyClass', 'myobj1');
+    :::
+    $databaseId = $factory->getId('MyClass', 'myobj1');
 
 In order to create an object with certain properties, just add a second argument:
 
-	:::php
-	$obj = $factory->createObject('MyClass', 'myobj1', array('MyProperty' => 'My Value'));
+    :::php
+    $obj = $factory->createObject('MyClass', 'myobj1', array('MyProperty' => 'My Value'));
 
-### Default Properties
+#### Default Properties
 
 Blueprints can be overwritten in order to customize their behaviour,
 for example with default properties in case none are passed into `createObject()`.
 
-	:::php
-	$factory->define('MyObject', array(
-		'MyProperty' => 'My Default Value'
-	));
+    :::php
+    $factory->define('MyObject', array(
+        'MyProperty' => 'My Default Value'
+    ));
 
-### Dependent Properties
+#### Dependent Properties
 
-Values can be set on demand through anonymous functions,
-which can either generate random defaults, or create
-composite values based on other fixture data.
+Values can be set on demand through anonymous functions, which can either generate random defaults,
+or create composite values based on other fixture data.
 
-	:::php
-	$factory->define('Member', array(
-		'Email' => function($obj, $data, $fixtures) {
-			if(isset($data['FirstName']) {
-				$obj->Email = strtolower($data['FirstName']) . '@example.org';
-			}
-		},
-		'Score' => function($obj, $data, $fixtures) {
-			$obj->Score = rand(0,10);
-		}
-	));
+    :::php
+    $factory->define('Member', array(
+        'Email' => function($obj, $data, $fixtures) {
+            if(isset($data['FirstName']) {
+                $obj->Email = strtolower($data['FirstName']) . '@example.org';
+            }
+        },
+        'Score' => function($obj, $data, $fixtures) {
+            $obj->Score = rand(0,10);
+        }
+    ));
 
-### Relations
+#### Relations
 
 Model relations can be expressed through the same notation as in the YAML fixture format
 described earlier, through the `=>` prefix on data values.
 
-	:::php
-	$obj = $factory->createObject('MyObject', 'myobj1', array(
-		'MyHasManyRelation' => '=>MyOtherObject.obj1,=>MyOtherObject.obj2'
-	));
+    :::php
+    $obj = $factory->createObject('MyObject', 'myobj1', array(
+        'MyHasManyRelation' => '=>MyOtherObject.obj1,=>MyOtherObject.obj2'
+    ));
 
-### Callbacks
+#### Callbacks
 
 Sometimes new model instances need to be modified in ways which can't be expressed
 in their properties, for example to publish a page, which requires a method call.
 
-	:::php
-	$blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
-	$blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
-		$obj->publish('Stage', 'Live');
-	});
-	$page = $factory->define('Page', $blueprint);
+    :::php
+    $blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
+    $blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
+        $obj->publish('Stage', 'Live');
+    });
+    $page = $factory->define('Page', $blueprint);
 
 Available callbacks:
 
@@ -186,43 +232,43 @@ CMS admins could both inherit from the `Member` class, but have completely
 different properties. This is where named blueprints come in.
 By default, blueprint names equal the class names they manage.
 
-	:::php
-	$memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
-	$adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
-	$adminBlueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
-		if(isset($fixtures['Group']['admin'])) {
-			$adminGroup = Group::get()->byId($fixtures['Group']['admin']);
-			$obj->Groups()->add($adminGroup);
-		}
-	});
-	
-	$member = $factory->createObject('Member'); // not in admin group
-	$admin = $factory->createObject('AdminMember'); // in admin group
+    :::php
+    $memberBlueprint = Injector::inst()->create('FixtureBlueprint', 'Member', 'Member');
+    $adminBlueprint = Injector::inst()->create('FixtureBlueprint', 'AdminMember', 'Member');
+    $adminBlueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
+        if(isset($fixtures['Group']['admin'])) {
+            $adminGroup = Group::get()->byId($fixtures['Group']['admin']);
+            $obj->Groups()->add($adminGroup);
+        }
+    });
+
+    $member = $factory->createObject('Member'); // not in admin group
+    $admin = $factory->createObject('AdminMember'); // in admin group
 
 ### Full Test Example
 
-	:::php
-	class MyObjectTest extends SapphireTest {
+    :::php
+    class MyObjectTest extends SapphireTest {
 
-		protected $factory;
+        protected $factory;
 
-		function __construct() {
-			parent::__construct();
+        function __construct() {
+            parent::__construct();
 
-			$factory = Injector::inst()->create('FixtureFactory');
-			// Defines a "blueprint" for new objects
-			$factory->define('MyObject', array(
-				'MyProperty' => 'My Default Value'
-			));
-			$this->factory = $factory;
-		}
+            $factory = Injector::inst()->create('FixtureFactory');
+            // Defines a "blueprint" for new objects
+            $factory->define('MyObject', array(
+                'MyProperty' => 'My Default Value'
+            ));
+            $this->factory = $factory;
+        }
 
-		function testSomething() {
-			$MyObjectObj = $this->factory->createObject(
-				'MyObject',
-				array('MyOtherProperty' => 'My Custom Value')
-			);
-			// $myPageObj->MyProperty = My Default Value
-			// $myPageObj->MyOtherProperty = My Custom Value
-		}
-	}
+        function testSomething() {
+            $MyObjectObj = $this->factory->createObject(
+                'MyObject',
+                array('MyOtherProperty' => 'My Custom Value')
+            );
+            // $myPageObj->MyProperty = My Default Value
+            // $myPageObj->MyOtherProperty = My Custom Value
+        }
+    }
