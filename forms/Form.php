@@ -137,6 +137,10 @@ class Form extends RequestHandler {
 	 */
 	protected $extraClasses = array();
 
+	public static $casting = array(
+		'Message' => 'Text'
+	);
+
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
