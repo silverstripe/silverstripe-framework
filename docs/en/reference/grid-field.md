@@ -333,3 +333,4 @@ records, use the `DataObject->can...()` methods
 
  * [ModelAdmin: A UI driven by GridField](/reference/modeladmin)
  * [Tutorial 5: Dataobject Relationship Management](/tutorials/5-dataobject-relationship-management)
+ * [How to add a custom action to a GridField row](/howto/gridfield-rowaction)
