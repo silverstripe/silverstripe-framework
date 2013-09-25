@@ -84,7 +84,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		));
 		$columns->setFieldFormatting(array(
 			'Breadcrumbs' => function($val, $item) {
-				return $item->getBreadcrumbs(' > ');
+				return Convert::raw2xml($item->getBreadcrumbs(' > '));
 			}
 		));
 

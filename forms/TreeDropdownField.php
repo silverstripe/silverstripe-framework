@@ -269,9 +269,23 @@ class TreeDropdownField extends FormField {
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
-		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->'
-			. $this->keyField . '\" class=\"class-$child->class"' 
-			. ' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
+
+		$self = $this;
+		$escapeLabelField = ($obj->escapeTypeForField($this->labelField) != 'xml');
+		$titleFn = function(&$child) use(&$self, $escapeLabelField) {
+			$keyField = $self->keyField;
+			$labelField = $self->labelField;
+			return sprintf(
+				'<li id="selector-%s-%s" data-id="%s" class="class-%s %s"><a rel="%d">%s</a>',
+				Convert::raw2xml($self->getName()),
+				Convert::raw2xml($child->$keyField),
+				Convert::raw2xml($child->$keyField),
+				Convert::raw2xml($child->class),
+				Convert::raw2xml($child->markingClasses()),
+				(int)$child->ID,
+				$escapeLabelField ? Convert::raw2xml($child->$labelField) : $child->$labelField
+			);
+		};
 
 		// Limit the amount of nodes shown for performance reasons.
 		// Skip the check if we're filtering the tree, since its not clear how many children will
@@ -294,7 +308,7 @@ class TreeDropdownField extends FormField {
 		if($isSubTree) {
 			$html = $obj->getChildrenAsUL(
 				"",
-				$eval,
+				$titleFn,
 				null,
 				true, 
 				$this->childrenMethod,
@@ -307,7 +321,7 @@ class TreeDropdownField extends FormField {
 		} else {
 			$html = $obj->getChildrenAsUL(
 				'class="tree"',
-				$eval,
+				$titleFn,
 				null,
 				true, 
 				$this->childrenMethod,
