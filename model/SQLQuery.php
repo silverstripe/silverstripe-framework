@@ -1130,6 +1130,8 @@ class SQLQuery {
 			if(
 				!is_array($firstJoin) 
 				|| !is_array($secondJoin)
+				|| !isset($firstJoin['order'])
+				|| !isset($secondJoin['order']) 
 				|| $firstJoin['order'] == $secondJoin['order']
 			) {
 				return 0;
