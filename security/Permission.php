@@ -91,7 +91,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 	 * privilege escalation on group assignments and inheritance.
 	 * @var array
 	 */
-	static $privileged_permissions = array(
+	private static $privileged_permissions = array(
 		'ADMIN', 
 		'APPLY_ROLES',
 		'EDIT_PERMISSIONS'
