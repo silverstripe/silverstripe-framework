@@ -1066,10 +1066,20 @@ class SQLQuery {
 	 * @param $alias An optional alias for the aggregate column.
 	 */
 	public function aggregate($column, $alias = null) {
-		
 		$clone = clone $this;
-		$clone->setLimit($this->limit);
-		$clone->setOrderBy($this->orderby);
+
+		// don't set an ORDER BY clause if no limit has been set. It doesn't make
+		// sense to add an ORDER BY if there is no limit, and it will break
+		// queries to databases like MSSQL if you do so. Note that the reason
+		// this came up is because DataQuery::initialiseQuery() introduces
+		// a default sort.
+		if($this->limit) {
+			$clone->setLimit($this->limit);
+			$clone->setOrderBy($this->orderby);
+		} else {
+			$clone->setOrderBy(array());
+		}
+
 		$clone->setGroupBy($this->groupby);
 		if($alias) {
 			$clone->setSelect(array());
@@ -1077,7 +1087,6 @@ class SQLQuery {
 		} else {
 			$clone->setSelect($column);
 		}
-		
 
 		return $clone;
 	}
@@ -1118,10 +1127,15 @@ class SQLQuery {
 		// shift the first FROM table out from so we only deal with the JOINs
 		$baseFrom = array_shift($from);
 		$this->mergesort($from, function($firstJoin, $secondJoin) {
-			if($firstJoin['order'] == $secondJoin['order']) {
+			if(
+				!is_array($firstJoin) 
+				|| !is_array($secondJoin)
+				|| $firstJoin['order'] == $secondJoin['order']
+			) {
 				return 0;
+			} else {
+				return ($firstJoin['order'] < $secondJoin['order']) ?  -1 : 1;
 			}
-			return ($firstJoin['order'] < $secondJoin['order']) ?  -1 : 1;
 		});
 		
 		// Put the first FROM table back into the results 

@@ -212,7 +212,8 @@ class Money extends DBField implements CompositeDBField {
 	 * @return boolean
 	 */
 	public function hasAmount() {
-		return (int)$this->getAmount() != '0';
+		$a = $this->getAmount();
+		return (!empty($a) && is_numeric($a));
 	}
 	
 	public function isChanged() {

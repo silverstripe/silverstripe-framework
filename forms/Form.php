@@ -155,6 +155,10 @@ class Form extends RequestHandler {
 		'forTemplate',
 	);
 
+	private static $casting = array(
+		'Message' => 'Text'
+	);
+
 	/**
 	 * @var FormTemplateHelper
 	 */
@@ -256,6 +260,8 @@ class Form extends RequestHandler {
 		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
 			$this->setMessage($errorInfo['message'], $errorInfo['type']);
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -504,7 +510,7 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * Add an error message to a field on this form.  It will be saved into the session
+	 * Add a plain text error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
 	 */
 	public function addErrorMessage($fieldName, $message, $messageType) {
@@ -1425,7 +1431,7 @@ class Form extends RequestHandler {
 			$this->getTemplate(),
 			'Form'
 		));
-
+		
 		$return = $view->dontRewriteHashlinks()->process($this);
 
 		// Now that we're rendered, clear message
@@ -1626,14 +1632,12 @@ class Form extends RequestHandler {
 	 * @return Form
 	 */
 	public function addExtraClass($class) {
-		$classes = explode(' ', $class);
-		
+		//split at white space
+		$classes = preg_split('/\s+/', $class);
 		foreach($classes as $class) {
-			$value = trim($class);
-			
-			$this->extraClasses[] = $value;
+			//add classes one by one
+			$this->extraClasses[$class] = $class;
 		}
-
 		return $this;
 	}
 
@@ -1644,9 +1648,12 @@ class Form extends RequestHandler {
 	 * @param string $class
 	 */
 	public function removeExtraClass($class) {
-		$classes = explode(' ', $class);
-		$this->extraClasses = array_diff($this->extraClasses, $classes);
-
+		//split at white space
+		$classes = preg_split('/\s+/', $class);
+		foreach ($classes as $class) {
+			//unset one by one
+			unset($this->extraClasses[$class]);
+		}
 		return $this;
 	}
 	

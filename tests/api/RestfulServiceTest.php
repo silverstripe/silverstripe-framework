@@ -196,6 +196,74 @@ class RestfulServiceTest extends SapphireTest {
 		);
 	}
 
+	public function testExtractResponseRedirectionAndProxy() {
+		// This is an example of real raw response for a request via a proxy that gets redirected.
+		$rawHeaders =
+				"HTTP/1.0 200 Connection established\r\n" .
+			"\r\n" .
+				"HTTP/1.1 301 Moved Permanently\r\n" .
+				"Server: nginx\r\n" .
+				"Date: Fri, 20 Sep 2013 01:53:07 GMT\r\n" .
+				"Content-Type: text/html\r\n" .
+				"Content-Length: 178\r\n" .
+				"Connection: keep-alive\r\n" .
+				"Location: https://www.foobar.org.nz/\r\n" .
+			"\r\n" .
+				"HTTP/1.0 200 Connection established\r\n" .
+			"\r\n" .
+				"HTTP/1.1 200 OK\r\n" .
+				"Server: nginx\r\n" .
+				"Date: Fri, 20 Sep 2013 01:53:08 GMT\r\n" .
+				"Content-Type: text/html; charset=utf-8\r\n" .
+				"Transfer-Encoding: chunked\r\n" .
+				"Connection: keep-alive\r\n" .
+				"X-Frame-Options: SAMEORIGIN\r\n" .
+				"Cache-Control: no-cache, max-age=0, must-revalidate, no-transform\r\n" .
+				"Vary: Accept-Encoding\r\n" .
+			"\r\n"
+			;
+
+		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
+		$headerFunction->setAccessible(true);
+
+		$ch = curl_init();
+		$response = $headerFunction->invoke(
+			new RestfulService(Director::absoluteBaseURL(),0),
+			$ch,
+			$rawHeaders,
+			''
+		);
+
+		$this->assertEquals(
+			$response->getHeaders(),
+			array(
+				'Server' => "nginx",
+				'Date' => "Fri, 20 Sep 2013 01:53:08 GMT",
+				'Content-Type' => "text/html; charset=utf-8",
+				'Transfer-Encoding' => "chunked",
+				'Connection' => "keep-alive",
+				'X-Frame-Options' => "SAMEORIGIN",
+				'Cache-Control' => "no-cache, max-age=0, must-revalidate, no-transform",
+				'Vary' => "Accept-Encoding"
+			),
+			'Only last header is extracted and parsed.'
+		);
+	}
+
+	public function testExtractResponseNoHead() {
+		$headerFunction = new ReflectionMethod('RestfulService', 'extractResponse');
+		$headerFunction->setAccessible(true);
+
+		$ch = curl_init();
+		$response = $headerFunction->invoke(
+			new RestfulService(Director::absoluteBaseURL(),0),
+			$ch,
+			'',
+			''
+		);
+
+		$this->assertEquals($response->getHeaders(), array(), 'Headers are correctly extracted.');
+	}
 }
 
 class RestfulServiceTest_Controller extends Controller implements TestOnly {

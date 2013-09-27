@@ -393,6 +393,61 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals('application/x-www-form-urlencoded', $form->getEncType());
 	}
 
+	public function testAddExtraClass() {
+		$form = $this->getStubForm();
+		$form->addExtraClass('class1');
+		$form->addExtraClass('class2');
+		$this->assertStringEndsWith('class1 class2', $form->extraClass());
+	}
+
+	public function testRemoveExtraClass() {
+		$form = $this->getStubForm();
+		$form->addExtraClass('class1');
+		$form->addExtraClass('class2');
+		$this->assertStringEndsWith('class1 class2', $form->extraClass());
+		$form->removeExtraClass('class1');
+		$this->assertStringEndsWith('class2', $form->extraClass());
+	}
+
+	public function testAddManyExtraClasses() {
+		$form = $this->getStubForm();
+		//test we can split by a range of spaces and tabs
+		$form->addExtraClass('class1 class2     class3	class4		class5');
+		$this->assertStringEndsWith(
+			'class1 class2 class3 class4 class5',
+			$form->extraClass()
+		);
+		//test that duplicate classes don't get added
+		$form->addExtraClass('class1 class2');
+		$this->assertStringEndsWith(
+			'class1 class2 class3 class4 class5',
+			$form->extraClass()
+		);
+	}
+
+	public function testRemoveManyExtraClasses() {
+		$form = $this->getStubForm();
+		$form->addExtraClass('class1 class2     class3	class4		class5');
+		//test we can remove a single class we just added
+		$form->removeExtraClass('class3');
+		$this->assertStringEndsWith(
+			'class1 class2 class4 class5',
+			$form->extraClass()
+		);
+		//check we can remove many classes at once
+		$form->removeExtraClass('class1 class5');
+		$this->assertStringEndsWith(
+			'class2 class4',
+			$form->extraClass()
+		);
+		//check that removing a dud class is fine
+		$form->removeExtraClass('dudClass');
+		$this->assertStringEndsWith(
+			'class2 class4',
+			$form->extraClass()
+		);
+	}
+
 
 	public function testAttributes() {
 		$form = $this->getStubForm();

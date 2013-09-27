@@ -425,8 +425,8 @@ class Image extends File {
 			$cached = new Image_Cached($cacheFile);
 			// Pass through the title so the templates can use it
 			$cached->Title = $this->Title;
+			// Pass through the parent, to store cached images in correct folder.
 			$cached->ParentID = $this->ParentID;
-			$cached->Parent = $this->Parent();			
 			return $cached;
 		}
 	}
@@ -451,7 +451,7 @@ class Image extends File {
 		
 		return $folder . "_resampled/" . $filename;
 	}
-		
+	
 	/**
 	 * Generate an image on the specified format. It will save the image
 	 * at the location specified by cacheFilename(). The image will be generated
@@ -545,13 +545,12 @@ class Image extends File {
 	public function generateCroppedImage(Image_Backend $backend, $width, $height) {
 		return $backend->croppedResize($width, $height);
 	}
-
+	
 	/**
 	 * Generate patterns that will help to match filenames of cached images
-	 *
 	 * @param string $filename Filename of source image
 	 * @return array
-	 */	
+	 */
 	private function getFilenamePatterns($filename) {
 		$methodNames = $this->allMethodNames(true);
 		$generateFuncs = array();
@@ -569,7 +568,7 @@ class Image extends File {
 				'GeneratorPattern' => "/(?P<Generator>{$generateFuncs})(?P<Args>" . $base64Match . ")\-/i"
 		);
 	}
-	
+
 	/**
 	 * Generate a list of images that were generated from this image
 	 */

@@ -96,6 +96,10 @@ class FormField extends RequestHandler {
 	 */
 	protected $attributes = array();
 
+	private static $casting = array(
+		'Message' => 'Text'
+	);
+
 	/**
 	 * Takes a fieldname and converts camelcase to spaced
 	 * words. Also resolves combined fieldnames with dot syntax
@@ -223,7 +227,7 @@ class FormField extends RequestHandler {
 		return $this->name;
 	}
 
-	/** 
+	/**
 	 * Returns the field message, used by form validation.
 	 *
 	 * Use {@link setError()} to set this property.
@@ -352,24 +356,32 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
-	 * Add a CSS-class to the formfield-container.
+	 * Add one or more CSS-classes to the formfield-container.
 	 * 
 	 * @param $class String
 	 */
 	public function addExtraClass($class) {
+		//split at white space to extract all the classes
+		$classes = preg_split('/\s+/', $class);
+		foreach ($classes as $class) {
+			//add each class one by one
 		$this->extraClasses[$class] = $class;
+		}
 		return $this;
 	}
 
 	/**
-	 * Remove a CSS-class from the formfield-container.
+	 * Remove one or more CSS-classes from the formfield-container.
 	 * 
 	 * @param $class String
 	 */
 	public function removeExtraClass($class) {
-		$pos = array_search($class, $this->extraClasses);
-		if($pos !== false) unset($this->extraClasses[$pos]);
-
+		//split at white space to extract all the classes
+		$classes = preg_split('/\s+/', $class);
+		foreach ($classes as $class) {
+			//unset each class one by one
+			unset($this->extraClasses[$class]);
+		}
 		return $this;
 	}
 
@@ -419,7 +431,7 @@ class FormField extends RequestHandler {
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
 		);
-
+		
 		if ($this->Required()) {
 			$attrs['required'] = 'required';
 			$attrs['aria-required'] = 'true';
@@ -847,8 +859,8 @@ class FormField extends RequestHandler {
 			$clone->setDisabled(true);
 		}
 
-		return $clone;
-	}
+			return $clone;
+		}
 
 	public function transform(FormTransformation $trans) {
 		return $trans->transform($this);
@@ -878,7 +890,7 @@ class FormField extends RequestHandler {
 	public function createTag($tag, $attributes, $content = null) {
 		Deprecation::notice('3.2', 'Use FormField::create_tag()');
 		return self::create_tag($tag, $attributes, $content);
-	}
+			}
 
 	/**
 	 * Abstract method each {@link FormField} subclass must implement,
@@ -949,7 +961,7 @@ class FormField extends RequestHandler {
 		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else user_error("rootFieldList() called on $this->class object without a containerFieldList", E_USER_ERROR);
 	}
-
+	
 	/**
 	 * Returns another instance of this field, but "cast" to a different class.
 	 * The logic tries to retain all of the instance properties,
@@ -982,7 +994,7 @@ class FormField extends RequestHandler {
 		// of the field, e.g. its "type" attribute.
 		foreach($this->attributes as $k => $v) {
 			$field->setAttribute($k, $v);
-		}
+}
 		$field->dontEscape = $this->dontEscape;
 
 		return $field;

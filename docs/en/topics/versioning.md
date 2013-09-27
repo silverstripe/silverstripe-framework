@@ -81,7 +81,7 @@ but also include information about when and how a record was published.
 	:::php
 	$record = MyRecord::get()->byID(99); // stage doesn't matter here
 	$versions = $record->allVersions();
-	echo $versions->First()->Version; // instance of Versioned_Versoin
+	echo $versions->First()->Version; // instance of Versioned_Version
 
 ### Writing Versions and Changing Stages
 

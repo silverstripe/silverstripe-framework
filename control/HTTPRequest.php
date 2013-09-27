@@ -393,13 +393,9 @@ class SS_HTTPRequest implements ArrayAccess {
 		}
 		$response = new SS_HTTPResponse($fileData);
 		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
+		// Note a IE-only fix that inspects this header in HTTP::add_cache_headers().
 		$response->addHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
 		$response->addHeader("Content-Length", strlen($fileData));
-		$response->addHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
-		
-		if(strstr($_SERVER["HTTP_USER_AGENT"],"MSIE") == true) {
-			$response->addHeader('Cache-Control', 'max-age=3, must-revalidate'); // Workaround for IE6 and 7
-		}
 		
 		return $response;
 	}

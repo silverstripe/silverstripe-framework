@@ -323,7 +323,11 @@ match the hash stored in the users session, the request is discarded.
 You can disable this behaviour through `[api:Form->disableSecurityToken()]`.
 
 It is also recommended to limit form submissions to the intended HTTP verb (mostly `GET` or `POST`)
-through `[api:Form->setStrictFormMethodCheck()]`.
+through `[api:Form->setStrictFormMethodCheck()]`. 
+
+Sometimes you need to handle state-changing HTTP submissions which aren't handled through
+SilverStripe's form system. In this case, you can also check the current HTTP request
+for a valid token through `[api:SecurityToken::checkRequest()]`.
 
 ## Casting user input
 

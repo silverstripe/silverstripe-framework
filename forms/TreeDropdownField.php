@@ -86,7 +86,7 @@ class TreeDropdownField extends FormField {
 	 *		entering the text in the input field.
 	 */
 	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', 
-		$labelField = 'TreeTitle', $showSearch = false
+		$labelField = 'TreeTitle', $showSearch = true
 	) {
 
 		$this->sourceObject = $sourceObject;
@@ -181,7 +181,11 @@ class TreeDropdownField extends FormField {
 		if($record) {
 			$title = $record->{$this->labelField};
 		} else {
+			if($this->showSearch){
+				$title = _t('DropdownField.CHOOSESEARCH', '(Choose or Search)', 'start value of a dropdown');
+			}else{
 			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+		}
 		}
 
 		// TODO Implement for TreeMultiSelectField
@@ -265,9 +269,23 @@ class TreeDropdownField extends FormField {
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
-		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->'
-			. $this->keyField . '\" class=\"class-$child->class"' 
-			. ' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
+
+		$self = $this;
+		$escapeLabelField = ($obj->escapeTypeForField($this->labelField) != 'xml');
+		$titleFn = function(&$child) use(&$self, $escapeLabelField) {
+			$keyField = $self->keyField;
+			$labelField = $self->labelField;
+			return sprintf(
+				'<li id="selector-%s-%s" data-id="%s" class="class-%s %s"><a rel="%d">%s</a>',
+				Convert::raw2xml($self->getName()),
+				Convert::raw2xml($child->$keyField),
+				Convert::raw2xml($child->$keyField),
+				Convert::raw2xml($child->class),
+				Convert::raw2xml($child->markingClasses()),
+				(int)$child->ID,
+				$escapeLabelField ? Convert::raw2xml($child->$labelField) : $child->$labelField
+			);
+		};
 
 		// Limit the amount of nodes shown for performance reasons.
 		// Skip the check if we're filtering the tree, since its not clear how many children will
@@ -290,7 +308,7 @@ class TreeDropdownField extends FormField {
 		if($isSubTree) {
 			$html = $obj->getChildrenAsUL(
 				"",
-				$eval,
+				$titleFn,
 				null,
 				true, 
 				$this->childrenMethod,
@@ -303,7 +321,7 @@ class TreeDropdownField extends FormField {
 		} else {
 			$html = $obj->getChildrenAsUL(
 				'class="tree"',
-				$eval,
+				$titleFn,
 				null,
 				true, 
 				$this->childrenMethod,
@@ -385,10 +403,32 @@ class TreeDropdownField extends FormField {
 	 */
 	protected function populateIDs() {
 		// get all the leaves to be displayed
-		if ( $this->searchCallback )
+		if ($this->searchCallback) {
 			$res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
-		else
-			$res = DataObject::get($this->sourceObject, "\"$this->labelField\" LIKE '%$this->search%'");
+		} else {
+			$sourceObject = $this->sourceObject;
+			$wheres = array();
+			if(singleton($sourceObject)->hasDatabaseField($this->labelField)) {
+				$wheres[] = "\"$searchField\" LIKE '%$this->search%'";
+			} else {
+				if(singleton($sourceObject)->hasDatabaseField('Title')) {
+					$wheres[] = "\"Title\" LIKE '%$this->search%'";
+				}
+				if(singleton($sourceObject)->hasDatabaseField('Name')) {
+					$wheres[] = "\"Name\" LIKE '%$this->search%'";
+				}
+			} 
+		
+			if(!$wheres) {
+				throw new InvalidArgumentException(sprintf(
+					'Cannot query by %s.%s, not a valid database column',
+					$sourceObject,
+					$this->labelField
+				));
+			}
+
+			$res = DataObject::get($this->sourceObject, implode(' OR ', $wheres));
+		}
 		
 		if( $res ) {
 			// iteratively fetch the parents in bulk, until all the leaves can be accessed using the tree control

@@ -132,9 +132,20 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->setFrom("MyTable");
 		$query->setOrderBy('RAND()');
-		
 		$this->assertEquals(
 			'SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC',
+			$query->sql());
+
+		$query = new SQLQuery();
+		$query->setFrom("MyTable");
+		$query->addFrom('INNER JOIN SecondTable USING (ID)');
+		$query->addFrom('INNER JOIN ThirdTable USING (ID)');
+		$query->setOrderBy('MyName');
+		$this->assertEquals(
+			'SELECT * FROM MyTable '
+			. 'INNER JOIN SecondTable USING (ID) '
+			. 'INNER JOIN ThirdTable USING (ID) '
+			. 'ORDER BY MyName ASC',
 			$query->sql());
 	}
 
@@ -161,6 +172,11 @@ class SQLQueryTest extends SapphireTest {
 	}
 
 	public function testZeroLimitWithOffset() {
+		if(!(DB::getConn() instanceof MySQLDatabase || DB::getConn() instanceof SQLite3Database 
+				|| DB::getConn() instanceof PostgreSQLDatabase)) {
+			$this->markTestIncomplete();
+		}
+
 		$query = new SQLQuery();
 		$query->setFrom("MyTable");
 		$query->setLimit(0, 99);
@@ -415,6 +431,31 @@ class SQLQueryTest extends SapphireTest {
 	}
 
 	/**
+	 * Tests that an ORDER BY is only added if a LIMIT is set.
+	 */
+	public function testAggregateNoOrderByIfNoLimit() {
+		$query = new SQLQuery();
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setOrderBy('Common');
+		$query->setLimit(array());
+
+		$aggregate = $query->aggregate('MAX("ID")');
+		$limit = $aggregate->getLimit();
+		$this->assertEquals(array(), $aggregate->getOrderBy());
+		$this->assertEquals(array(), $limit);
+
+		$query = new SQLQuery();
+		$query->setFrom('"SQLQueryTest_DO"');
+		$query->setOrderBy('Common');
+		$query->setLimit(2);
+
+		$aggregate = $query->aggregate('MAX("ID")');
+		$limit = $aggregate->getLimit();
+		$this->assertEquals(array('Common' => 'ASC'), $aggregate->getOrderBy());
+		$this->assertEquals(array('start' => 0, 'limit' => 2), $limit);
+	}
+
+	/**
 	 * Test that "_SortColumn0" is added for an aggregate in the ORDER BY
 	 * clause, in combination with a LIMIT and GROUP BY clause.
 	 * For some databases, like MSSQL, this is a complicated scenario
@@ -437,6 +478,20 @@ class SQLQueryTest extends SapphireTest {
 
 		$this->assertEquals('Object 2', $records[0]['Name']);
 		$this->assertEquals('2012-05-01 09:00:00', $records['0']['_SortColumn0']);
+	}
+
+	/**
+	 * Test passing in a LIMIT with OFFSET clause string.
+	 */
+	public function testLimitSetFromClauseString() {
+		$query = new SQLQuery();
+		$query->setSelect('*');
+		$query->setFrom('"SQLQueryTest_DO"');
+
+		$query->setLimit('20 OFFSET 10');
+		$limit = $query->getLimit();
+		$this->assertEquals(20, $limit['limit']);
+		$this->assertEquals(10, $limit['start']);
 	}
 
 }

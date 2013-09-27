@@ -67,7 +67,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			false,
 			Member::get(),
 			$memberListConfig = GridFieldConfig_RecordEditor::create()
-				->addComponent(new GridFieldExportButton())
+				->addComponent(new GridFieldButtonRow('after'))
+				->addComponent(new GridFieldExportButton('buttons-after-left'))
 		)->addExtraClass("members_grid");
 		$memberListConfig->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
 
@@ -83,10 +84,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		));
 		$columns->setFieldFormatting(array(
 			'Breadcrumbs' => function($val, $item) {
-				return $item->getBreadcrumbs(' > ');
+				return Convert::raw2xml($item->getBreadcrumbs(' > '));
 			}
 		));
-		
+
 		$fields = new FieldList(
 			$root = new TabSet(
 				'Root',
@@ -100,33 +101,41 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 									. ' database'
 							)
 						)
-					),
-					new HeaderField(_t('SecurityAdmin.IMPORTUSERS', 'Import users'), 3),
-					new LiteralField(
-						'MemberImportFormIframe',
-						sprintf(
-							'<iframe src="%s" id="MemberImportFormIframe" width="100%%" height="250px" frameBorder="0">'
-							. '</iframe>',
-							$this->Link('memberimport')
-						)
 					)
 				),
 				$groupsTab = new Tab('Groups', singleton('Group')->i18n_plural_name(),
-					$groupList,
-					new HeaderField(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
-					new LiteralField(
-						'GroupImportFormIframe',
-						sprintf(
-							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="250px" frameBorder="0">'
-							. '</iframe>',
-							$this->Link('groupimport')
-						)
-					)
+					$groupList
 				)
 			),
 			// necessary for tree node selection in LeftAndMain.EditForm.js
 			new HiddenField('ID', false, 0)
 		);
+
+		// Add import capabilities. Limit to admin since the import logic can affect assigned permissions
+		if(Permission::check('ADMIN')) {
+			$fields->addFieldsToTab('Root.Users', array(
+				new HeaderField(_t('SecurityAdmin.IMPORTUSERS', 'Import users'), 3),
+				new LiteralField(
+					'MemberImportFormIframe',
+					sprintf(
+							'<iframe src="%s" id="MemberImportFormIframe" width="100%%" height="250px" frameBorder="0">'
+						. '</iframe>',
+						$this->Link('memberimport')
+					)
+				)
+			));
+			$fields->addFieldsToTab('Root.Groups', array(
+				new HeaderField(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
+				new LiteralField(
+					'GroupImportFormIframe',
+					sprintf(
+							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="250px" frameBorder="0">'
+						. '</iframe>',
+						$this->Link('groupimport')
+					)
+				)
+			));
+		}
 
 		// Tab nav in CMS is rendered through separate template		
 		$root->setTemplate('CMSTabSet');
@@ -195,6 +204,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @return Form
 	 */
 	public function MemberImportForm() {
+		if(!Permission::check('ADMIN')) return false;
+
 		$group = $this->currentPage();
 		$form = new MemberImportForm(
 			$this,
@@ -225,6 +236,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @return Form
 	 */
 	public function GroupImportForm() {
+		if(!Permission::check('ADMIN')) return false;
+
 		$form = new GroupImportForm(
 			$this,
 			'GroupImportForm'
@@ -306,7 +319,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * The permissions represented in the $codes will not appearing in the form
 	 * containing {@link PermissionCheckboxSetField} so as not to be checked / unchecked.
-	 *
+	 * 
 	 * @deprecated 3.1 Use "Permission.hidden_permissions" config setting instead
 	 * @param $codes String|Array
 	 */

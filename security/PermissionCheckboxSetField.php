@@ -162,6 +162,8 @@ class PermissionCheckboxSetField extends FormField {
 		$options = '';
 		$globalHidden = (array)Config::inst()->get('Permission', 'hidden_permissions');
 		if($this->source) {
+			$privilegedPermissions = Permission::config()->privileged_permissions;
+
 			// loop through all available categorized permissions and see if they're assigned for the given groups
 			foreach($this->source as $categoryName => $permissions) {
 				$options .= "<li><h5>$categoryName</h5></li>";
@@ -192,6 +194,11 @@ class PermissionCheckboxSetField extends FormField {
 						// If code assignments are collected from more than one "source group",
 						// show its origin automatically
 						$inheritMessage = ' (' . join(', ', $uninheritedCodes[$code]).')';
+					}
+
+					// Disallow modification of "privileged" permissions unless currently logged-in user is an admin
+					if(!Permission::check('ADMIN') && in_array($code, $privilegedPermissions)) {
+						$disabled = ' disabled="true"';
 					}
 
 					// If the field is readonly, always mark as "disabled"
@@ -245,6 +252,16 @@ class PermissionCheckboxSetField extends FormField {
 	public function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
+
+		// Remove all "privileged" permissions if the currently logged-in user is not an admin
+		$privilegedPermissions = Permission::config()->privileged_permissions;
+		if(!Permission::check('ADMIN')) {
+			foreach($this->value as $id => $bool) {
+				if(in_array($id, $privilegedPermissions)) {
+					unset($this->value[$id]);
+				}
+			}	
+		}
 
 		// remove all permissions and re-add them afterwards
 		$permissions = $record->$fieldname();

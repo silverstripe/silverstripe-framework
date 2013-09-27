@@ -155,18 +155,16 @@
 	li {
 		a {
 			display: block;
-			height: $grid-y * 3;
-			line-height: $grid-y * 3;
+			line-height: $grid-y * 2;
+			min-height: $grid-y * 2;
 			font-size: $font-base-size;
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
 			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
-			padding: ($grid-y - 1) 5px ($grid-y - 1) 8px;
+			padding: (1.5 * $grid-y - 1) 5px (1.5 * $grid-y - 1) 8px;
 			background-color: $color-base;
 			cursor: pointer;
-			
+			position: relative;
+
 			@include background-image(linear-gradient(
 				$color-base,
 				darken($color-base, 10%)
@@ -200,16 +198,18 @@
 			}
 			
 			.icon {
-				display: inline-block;
-				float: left;
-				margin: 4px 10px 0 4px;
+				display: block;
+				position: absolute;
+				top: 50%;
+				margin-left: $grid-x / 2;
+				margin-top: -8px;
 
 				@include opacity(0.7);
 			}
 			
 			.text {
-				display: inline-block;
-				float: left;
+				display: block;
+				margin-left: 30px;
 			}
 
 			.toggle-children {

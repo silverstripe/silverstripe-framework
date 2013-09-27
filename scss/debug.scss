@@ -1,7 +1,7 @@
 @import "compass/css3";
 
 body { 
- 	background-color: #eee; 
+ 	background: #eee !important; 
  	margin:0; 
  	overflow-x: hidden;
  	padding:0; 
@@ -20,7 +20,8 @@ body {
 		linear-gradient(darken(#003050, 5%), #003050 10%, #003050 90%, darken(#003050, 5%))
 	);
 
-
+	// try to get the info above the template with z-index
+	z-index: 9999;
 	h1 { 
 		margin: 0 0 6px 0; 
 		padding: 0 32px 0 0; 
@@ -71,9 +72,14 @@ body {
 .build,
 .options { 
 	padding:6px 12px;
-
+	
+	background: #eee !important; 
+	// try to get the info above the template with z-index
+	position: relative;
+	z-index: 9999;
 	li { 
-		font-size:14px; margin:6px 0; 
+		font-size:14px;
+		margin:6px 0;
 	}
 }
 

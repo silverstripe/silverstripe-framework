@@ -1,6 +1,8 @@
 hi:
   AssetUploadField:
-    ChooseFiles: 'फाइलें चुनें'
+    ChooseFiles: 'अपलोड करने के लिए फ़ाइलों को चुनें'
+    DRAGFILESHERE: 'अपलोड करने के लिए फाइलें यहाँ लाये '
+    DROPAREA: 'अपलोड छेत्र '
     EDITALL: 'सभी संपादित करें'
     EDITANDORGANIZE: 'संपादित और व्यवस्थित करें '
     EDITINFO: 'फ़ाइलों को संपादित करें'
@@ -28,6 +30,27 @@ hi:
     ITALIC: 'तिरछे अक्षर'
     ITALICEXAMPLE: तिरछे अक्षर
     LINK: 'वेबसाइट लिंक'
+    LINKDESCRIPTION: ' किसी दुसरे वेबसाइट या यूआरएल से जोड़े '
+  BackLink_Button_ss:
+    Back: वापस
+  BasicAuth:
+    ENTERINFO: 'कृपया उपयोगकर्ता का नाम और पासवर्ड दर्ज करें'
+    ERRORNOTADMIN: 'वह उपयोगकर्ता एक व्यवस्थापक नहीं है.'
+  CMSProfileController:
+    MENUTITLE: 'मेरी प्रोफाइल '
+  ComplexTableField_popup_ss:
+    NEXT: अगला
+    PREVIOUS: पिछला
+  ConfirmedPasswordField:
+    ATLEAST: 'पासवर्डों को कम से कम {min} अक्षर लंबा होना चाहिए.'
+    SHOWONCLICKTITLE: 'पासवर्ड बदलें'
+  DataObject:
+    PLURALNAME: 'डेटा ऑब्जेक्ट्स'
+    SINGULARNAME: 'डेटा ऑब्जेक्ट'
+  DateField:
+    NOTSET: 'सेट नहीं'
+    TODAY: आज
+    VALIDDATEFORMAT2: 'कृपया एक मान्य दिनांक स्वरूप दर्ज करें ({format})'
   Group:
     RolesAddEditLink: 'भूमिकाओं का प्रबंधन करे '
     has_many_Permissions: अनुमतियाँ

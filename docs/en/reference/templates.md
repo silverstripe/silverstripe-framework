@@ -417,7 +417,7 @@ have to repeat it on each reference of a property.
 properties of the collection itself, instead of iterating over it. For example:
 
 	:::ss
-	$Children.Length
+	$Children.Count
 
 returns the number of items in the $Children collection.
 

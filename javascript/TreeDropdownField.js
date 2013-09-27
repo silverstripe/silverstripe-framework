@@ -24,8 +24,8 @@
 		
 		var strings = {
 			'openlink': 'Open',
-			'fieldTitle': '(choose)',
-			'searchFieldTitle': '(choose or search)'
+			'fieldTitle': '(Choose)',
+			'searchFieldTitle': '(Choose or Search)'
 		};
 
 		var _clickTestFn = function(e) {
@@ -280,24 +280,14 @@
 		$('.TreeDropdownField.searchable').entwine({
 			onadd: function() {
 				this._super();
-				
-				var title = decodeURIComponent(this.data('title'));
-				this.find('.treedropdownfield-title').replaceWith(
-					$('<input type="text" class="treedropdownfield-title search" data-skip-autofocus="true" />')
+				var title = ss.i18n._t(
+					'DropdownField.ENTERTOSEARCH', 
+					'Press enter to search'
+					);
+
+				this.find('.treedropdownfield-panel').prepend(
+					$('<input type="text" class="search treedropdownfield-search" data-skip-autofocus="true" placeholder="' + title + '" value="" />')
 				);
-				
-				this.setTitle(title ? title : strings.searchFieldTitle);
-			},
-			setTitle: function(title) {
-				if(!title && title !== '') title = strings.fieldTitle;
-				
-				this.find('.treedropdownfield-title').val(title);
-			},
-			getTitle: function() {
-				return this.find('.treedropdownfield-title').val();
-			},
-			resetTitle: function() {
-				this.setTitle(decodeURIComponent(this.data('title')));
 			},
 			search: function(str, callback) {
 				this.openPanel();
@@ -306,19 +296,10 @@
 			cancelSearch: function() {
 				this.closePanel();
 				this.loadTree();
-				this.resetTitle();
 			}
 		});
 		
 		$('.TreeDropdownField.searchable input.search').entwine({
-			onfocusin: function(e) {
-				var field = this.getField();
-				field.setTitle('');
-			},
-			onfocusout: function(e) {
-				var field = this.getField();
-				field.resetTitle();
-			},
 			onkeydown: function(e) {
 				var field = this.getField();
 				if(e.keyCode == 13) {

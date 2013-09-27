@@ -12,7 +12,11 @@ Please register a free translator account to get started, even if you just feel 
 
 We provide a GUI for translations through [transifex.com](http://transifex.com).  If you don't have an account yet, please follow the links there to sign up.  Select a project from the [list of translatable modules](https://www.transifex.com/accounts/profile/silverstripe/) and start translating online!
 
-For all modules listed there, we automatically import new master strings as they get committed to the various codebases, so you're always translating on the latest and greatest version.
+For all modules listed there, we automatically import new master strings 
+as they get committed to the various codebases (via a nightly task), 
+so you're always translating on the latest and greatest version.
+You can check the last successful push of the translation master strings in our 
+[public continuous integration server](http://teamcity.silverstripe.com/viewType.html?buildTypeId=bt112) (select "log in as guest").
 
 ## FAQ
 

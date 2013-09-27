@@ -49,7 +49,7 @@ Feature: Manage files
   Scenario: I can change the folder of a file
     Given I click on "folder1" in the "Files" table
     And I click on "file1" in the "folder1" table
-    And I fill in "folder2" for the "ParentID" dropdown
+    And I fill in "folder2" for the "Folder" dropdown
     And I press the "Save" button
     # /show/0 is to ensure that we are on top level folder
     And I go to "/admin/assets/show/0"

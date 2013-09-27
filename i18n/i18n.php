@@ -2233,12 +2233,10 @@ class i18n extends Object implements TemplateGlobalProvider {
 					// TODO Replace with CLDR list of actually available languages/regions
 					// Only allow explicitly registered locales, otherwise we'll get into trouble
 					// if the locale doesn't exist in Zend's CLDR data
-					$labelLocale = str_replace('-', '_', self::get_locale_from_lang($locale));
-					if(isset(self::$all_locales[$locale])) {
-						$locales[$locale] = self::$all_locales[$locale];	
-					} else if(isset(self::$all_locales[$labelLocale])) {
-						$locales[$locale] = self::$all_locales[$labelLocale];	
-					} 
+					$fullLocale = self::get_locale_from_lang($locale);
+					if(isset($allLocales[$fullLocale])) {
+						$locales[$fullLocale] = $allLocales[$fullLocale];	
+					}
 				}
 			}
 		}
@@ -2356,7 +2354,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	public static function get_locale_from_lang($lang) {
 		$subtags = Config::inst()->get('i18n', 'likely_subtags');
 		if(preg_match('/\-|_/', $lang)) {
-			return $lang;
+			return str_replace('-', '_', $lang);
 		} else if(isset($subtags[$lang])) {
 			return $subtags[$lang];
 		} else {

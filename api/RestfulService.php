@@ -224,8 +224,11 @@ class RestfulService extends ViewableData {
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-		//include headers in the response
-		curl_setopt($ch, CURLOPT_HEADER, true);
+
+
+		// Write headers to a temporary file
+		$headerfd = tmpfile();
+		curl_setopt($ch, CURLOPT_WRITEHEADER, $headerfd);
 
 		// Add headers
 		if($this->customHeaders) {
@@ -260,8 +263,13 @@ class RestfulService extends ViewableData {
 		curl_setopt_array($ch, $curlOptions);
 
 		// Run request
-		$rawResponse = curl_exec($ch);
-		$response = $this->extractResponse($ch, $rawResponse);
+		$body = curl_exec($ch);
+
+		rewind($headerfd);
+		$headers = stream_get_contents($headerfd);
+		fclose($headerfd);
+
+		$response = $this->extractResponse($ch, $headers, $body);
 		curl_close($ch);
 
 		return $response;
@@ -315,22 +323,19 @@ class RestfulService extends ViewableData {
 	 *
 	 * @return RestfulService_Response The response object
 	 */
-	protected function extractResponse($ch, $rawResponse) {
+	protected function extractResponse($ch, $rawHeaders, $rawBody) {
 		//get the status code
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		//get a curl error if there is one
 		$curlError = curl_error($ch);
 		//normalise the status code
 		if(curl_error($ch) !== '' || $statusCode == 0) $statusCode = 500;
-		//calculate the length of the header and extract it
-		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-		$rawHeaders = substr($rawResponse, 0, $headerLength);
-		//extract the body
-		$body = substr($rawResponse, $headerLength);
 		//parse the headers
-		$headers = $this->parseRawHeaders($rawHeaders);
+		$parts = array_filter(explode("\r\n\r\n", $rawHeaders));
+		$lastHeaders = array_pop($parts);
+		$headers = $this->parseRawHeaders($lastHeaders);
 		//return the response object
-		return new RestfulService_Response($body, $statusCode, $headers);
+		return new RestfulService_Response($rawBody, $statusCode, $headers);
 	}
 
 	/**

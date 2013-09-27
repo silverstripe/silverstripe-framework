@@ -542,6 +542,8 @@ jQuery.noConflict();
 
 				// Store the fragment request so we can abort later, should we get a duplicate request.
 				fragmentXHR[pjaxFragments] = xhr;
+
+				return xhr;
 			},
 
 			/**

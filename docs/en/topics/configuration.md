@@ -38,7 +38,7 @@ a description of the configuration setting.
 Each named class configuration property can contain either an array or a non-array value.
 If the value is an array, each value in the array may also be one of those three types
 
-As mentioned, this value of any specific class configuration property comes from several sources. These sources do not
+As mentioned, the value of any specific class configuration property comes from several sources. These sources do not
 override each other (except in one specific circumstance) - instead the values from each source are merged together
 to give the final configuration value, using these rules:
 
@@ -49,10 +49,10 @@ to give the final configuration value, using these rules:
 - If the value is not an array, the highest priority value is used without any attempt to merge
 
 It is an error to have mixed types of the same named property in different locations (but an error will not necessarily
-be raised due to optimisations in the lookup code)
+be raised due to optimisations in the lookup code).
 
 The exception to this is "false-ish" values - empty arrays, empty strings, etc. When merging a non-false-ish value with a
-false-ish value, the result will be the non-false-ish value regardless of priority. When merging two false-sh values
+false-ish value, the result will be the non-false-ish value regardless of priority. When merging two false-ish values
 the result will be the higher priority false-ish value.
 
 The locations that configuration values are taken from in highest -> lowest priority order are:
@@ -85,7 +85,7 @@ done by calling the static method `[api:Config::inst()]`, like so:
 
 	$config = Config::inst();
 
-There are then three public methods available on the instance so obtained
+There are then three public methods available on the instance so obtained:
 
   - Config#get() returns the value of a specified classes' property
   - Config#remove() removes information from the value of a specified classes' property.
@@ -136,7 +136,7 @@ is only one set of values the header can be omitted.
 
 ### The header
 
-Each value section of a YAML file has
+Each value section of a YAML file has:
 
   - A reference path, made up of the module name, the config file name, and a fragment identifier
   - A set of rules for the value section's priority relative to other value sections
@@ -150,13 +150,13 @@ value section in the header section that immediately preceeds the value section.
 Each value section has a reference path. Each path looks a little like a URL, 
 and is of this form: `module/file#fragment`.
 
- - "module" is the name of the module this YAML file is in
- - "file" is the name of this YAML file, stripped of the extension (so for routes.yml, it would be routes)
- - "fragment" is a specified identifier. It is specified by putting a `Name: {fragment}` key / value pair into the header
+ - "module" is the name of the module this YAML file is in.
+ - "file" is the name of this YAML file, stripped of the extension (so for routes.yml, it would be routes).
+ - "fragment" is a specified identifier. It is specified by putting a `Name: {fragment}` key / value pair into the header.
 section. If you don't specify a name, a random one will be assigned.
 
 This reference path has no affect on the value section itself, but is how other header sections refer to this value
-section in their priority chain rules
+section in their priority chain rules.
 
 #### Priorities
 
@@ -190,7 +190,7 @@ one value section can not be both before _and_ after another. However when you h
 was a difference in how many wildcards were used, the one with the least wildcards will be kept and the other one
 ignored.
 
-A more complex example, taken from framework/_config/routes.yml
+A more complex example, taken from framework/_config/routes.yml:
 
 	:::yml
 	---
@@ -212,8 +212,8 @@ The value section above has two rules:
 
 In this case there would appear to be a problem - adminroutes can not be both before all other value sections _and_
 after value sections with a name of `rootroutes`. However because `\*` has three wildcards
-(it is the equivalent of `\*/\*#\*`) but `#rootroutes` only has two (it is the equivalent of `\*/\*#rootroutes`),
-`\*` in this case means "every value section _except_ ones that have a fragment name of rootroutes"
+(it is the equivalent of `\*/\*#\*`) but `#rootroutes` only has two (it is the equivalent of `\*/\*#rootroutes`). 
+In this case `\*` means "every value section _except_ ones that have a fragment name of rootroutes".
 
 One important thing to note: it is possible to create chains that are unsolvable. For instance, A must be before B,
 B must be before C, C must be before A. In this case you will get an error when accessing your site.
@@ -221,7 +221,7 @@ B must be before C, C must be before A. In this case you will get an error when 
 #### Exclusionary rules
 
 Some value sections might only make sense under certain environmental conditions - a class exists, a module is installed,
-an environment variable or constant is set, or SilverStripe is running in a certain environment mode (live, dev, etc)
+an environment variable or constant is set, or SilverStripe is running in a certain environment mode (live, dev, etc).
 
 To accommodate this, value sections can be filtered to only be used when either a rule matches or doesn't match the
 current environment.
@@ -267,12 +267,12 @@ will result in only the latter coming through.
 
 ### The values
 
-The values section of YAML configuration files is quite simple - it is simply a nested key / value pair structure
+The values section of a YAML configuration file is quite simple - it is simply a nested key / value pair structure
 where the top level key is the class name to set the property on, and the sub key / value pairs are the properties
-and values themselves (where values of course can themselves be nested hashes).
+and values themselves (where values, of course, can themselves be nested hashes).
 
 A simple example setting a property called "foo" to the scalar "bar" on class "MyClass", and a property called "baz"
-to a nested array on class "MyOtherClass".
+to a nested array on class "MyOtherClass":
 
 	:::yml
 	MyClass:
@@ -319,8 +319,9 @@ classes (see [common-problems](/installation/common-problems)).
 
 ## Configuration through the CMS
 
-SilverStripe framework does not provide a method to set most system-level configuration via a web panel.
-This lack of a configuration GUI is on purpose, as we'd like to keep developer-level options where they belong (into
+SilverStripe framework does not provide a method to set configuration via a web panel.
+
+This lack of a configuration-GUI is on purpose, as we'd like to keep developer-level options where they belong (into
 code), without cluttering up the interface. See this core forum discussion ["The role of the
 CMS"](http://www.silverstripe.org/archive/show/532) for further reasoning.
 

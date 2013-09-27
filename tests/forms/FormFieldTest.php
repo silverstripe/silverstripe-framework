@@ -21,6 +21,45 @@ class FormFieldTest extends SapphireTest {
 		$this->assertStringEndsWith('class2', $field->extraClass());
 	}
 
+	public function testAddManyExtraClasses() {
+		$field = new FormField('MyField');
+		//test we can split by a range of spaces and tabs
+		$field->addExtraClass('class1 class2     class3	class4		class5');
+		$this->assertStringEndsWith(
+			'class1 class2 class3 class4 class5',
+			$field->extraClass()
+		);
+		//test that duplicate classes don't get added
+		$field->addExtraClass('class1 class2');
+		$this->assertStringEndsWith(
+			'class1 class2 class3 class4 class5',
+			$field->extraClass()
+		);
+	}
+
+	public function testRemoveManyExtraClasses() {
+		$field = new FormField('MyField');
+		$field->addExtraClass('class1 class2     class3	class4		class5');
+		//test we can remove a single class we just added
+		$field->removeExtraClass('class3');
+		$this->assertStringEndsWith(
+			'class1 class2 class4 class5',
+			$field->extraClass()
+		);
+		//check we can remove many classes at once
+		$field->removeExtraClass('class1 class5');
+		$this->assertStringEndsWith(
+			'class2 class4',
+			$field->extraClass()
+		);
+		//check that removing a dud class is fine
+		$field->removeExtraClass('dudClass');
+		$this->assertStringEndsWith(
+			'class2 class4',
+			$field->extraClass()
+		);
+	}
+
 	public function testAttributes() {
 		$field = new FormField('MyField');
 		$field->setAttribute('foo', 'bar');
