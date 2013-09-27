@@ -20,15 +20,22 @@ class RequiredFields extends Validator {
 	 */
 	public function __construct() {
 		$Required = func_get_args();
-		if( isset($Required[0]) && is_array( $Required[0] ) )
+		if (isset($Required[0]) && is_array($Required[0])) {
 			$Required = $Required[0];
-		$this->required = $Required;
+		}
+		if (!empty($Required)) {
+			$this->required = ArrayLib::valuekey($Required);
+		} else {
+			$this->required = array();
+		}
 
 		parent::__construct();
 	}
 
 	public function useLabels($flag) {
+		Deprecation::notice('3.2', 'useLabels will be removed from 3.2, please do not use it or implement it yourself');
 		$this->useLabels = $flag;
+		return $this;
 	}
 
 	/**
@@ -36,6 +43,7 @@ class RequiredFields extends Validator {
 	 */
 	public function removeValidation(){
 		$this->required = array();
+		return $this;
 	}
 
 	/**
@@ -115,22 +123,21 @@ class RequiredFields extends Validator {
 	 * Add's a single required field to requiredfields stack
 	 */
 	public function addRequiredField( $field ) {
-		$this->required[] = $field;
+		$this->required[$field] = $field;
+		return $this;
 	}
 
 	public function removeRequiredField($field) {
-		foreach ($this->required as $i => $required) {
-			if ($field == $required) {
-				array_splice($this->required, $i);
-			}
-		}
+		unset($this->required[$field]);
+		return $this;
 	}
 
 	/**
 	 * allows you too add more required fields to this object after construction.
 	 */
 	public function appendRequiredFields($requiredFields){
-		$this->required = array_merge($this->required,$requiredFields->getRequired());
+		$this->required = $this->required + ArrayLib::valuekey($requiredFields->getRequired());
+		return $this;
 	}
 
 	/**
@@ -138,14 +145,14 @@ class RequiredFields extends Validator {
 	 * Used by FormField to return a value for FormField::Required(), to do things like show *s on the form template.
 	 */
 	public function fieldIsRequired($fieldName) {
-		return in_array($fieldName, $this->required);
+		return isset($this->required[$fieldName]);
 	}
 
 	/**
 	 * getter function for append
 	 */
 	public function getRequired(){
-		return $this->required;
+		return array_values($this->required);
 	}
 }
 
