@@ -1379,7 +1379,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		);
 		$form->addExtraClass('cms-batch-actions nostyle');
 		$form->unsetValidator();
-		
+
+		$this->extend('updateBatchActionsForm', $form);
 		return $form;
 	}
 	
