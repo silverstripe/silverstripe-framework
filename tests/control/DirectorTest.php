@@ -277,7 +277,7 @@ class DirectorTest extends SapphireTest {
 			'HTTP_USER_AGENT'      => 'User Agent',
 			'HTTP_ACCEPT'          => 'text/html',
 			'HTTP_ACCEPT_LANGUAGE' => 'en-us',
-			'HTTP_COOKIE'          => 'PastMember=1',
+			'HTTP_COOKIE'          => 'MyCookie=1',
 			'SERVER_PROTOCOL'      => 'HTTP/1.1',
 			'REQUEST_METHOD'       => 'GET',
 			'REQUEST_URI'          => '/',
@@ -291,7 +291,7 @@ class DirectorTest extends SapphireTest {
 			'User-Agent'      => 'User Agent',
 			'Accept'          => 'text/html',
 			'Accept-Language' => 'en-us',
-			'Cookie'          => 'PastMember=1',
+			'Cookie'          => 'MyCookie=1',
 			'Content-Type'    => 'text/xml',
 			'Content-Length'  => '10'
 		);
