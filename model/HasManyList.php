@@ -25,7 +25,16 @@ class HasManyList extends RelationList {
 
 		$this->foreignKey = $foreignKey;
 	}
-	
+
+	/**
+	 * Gets the field name which holds the related object ID.
+	 *
+	 * @return string
+	 */
+	public function getForeignKey() {
+		return $this->foreignKey;
+	}
+
 	protected function foreignIDFilter($id = null) {
 		if ($id === null) $id = $this->getForeignID();
 
