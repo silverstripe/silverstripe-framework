@@ -107,8 +107,7 @@ class GridFieldAddExistingAutocompleter
 
 		$searchField = new TextField('gridfield_relationsearch',
 			_t('GridField.RelationSearch', "Relation search"), $value);
-		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
-		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
+		$searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
 		$searchField->addExtraClass('relation-search no-change-track');
 		
